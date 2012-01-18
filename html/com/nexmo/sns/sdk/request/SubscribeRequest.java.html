@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET TYPE="text/css" HREF="../../../../../stylesheet.css" TITLE="Style">
+<META NAME="GENERATOR" CONTENT="Java2HTML Version 1.5">
+<TITLE>com.nexmo.sns.sdk.request.SubscribeRequest (Java2HTML)</TITLE>
+</HEAD>
+<BODY><TABLE id="Header" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td colspan="2" width="33%">&nbsp;</td>
+<td align="center" colspan="2" width="33%">
+<font size="4">SubscribeRequest.java</font>
+</td>
+<td align="right" colspan="2" width="33%">&nbsp;</td>
+</tr>
+</TABLE>
+<pre ID="Classes">
+<FONT ID="LN">1 </FONT><A NAME="1"></A><FONT ID="Package">package</FONT> com.nexmo.sns.sdk.request;
+<FONT ID="LN">2 </FONT><A NAME="2"></A>
+<FONT ID="LN">3 </FONT><A NAME="3"></A><FONT ID="FormalComment">/**
+<FONT ID="LN">4 </FONT><A NAME="4"></A> * SubscribeRequest.java&lt;br&gt;&lt;br&gt;
+<FONT ID="LN">5 </FONT><A NAME="5"></A> *
+<FONT ID="LN">6 </FONT><A NAME="6"></A> * Created on 5 January 2011, 17:34&lt;br&gt;&lt;br&gt;
+<FONT ID="LN">7 </FONT><A NAME="7"></A> *
+<FONT ID="LN">8 </FONT><A NAME="8"></A> * Represents the details of a subscribe service request that is to be submitted via the http api.&lt;br&gt;
+<FONT ID="LN">9 </FONT><A NAME="9"></A> *
+<FONT ID="LN">10</FONT><A NAME="10"></A> * @author  Paul Cook
+<FONT ID="LN">11</FONT><A NAME="11"></A> * @version 1.0
+<FONT ID="LN">12</FONT><A NAME="12"></A> */</FONT>
+<FONT ID="LN">13</FONT><A NAME="13"></A><FONT ID="Public">public</FONT> <FONT ID="Class">class</FONT> SubscribeRequest <FONT ID="Extends">extends</FONT> <A HREF="../../../../../com/nexmo/sns/sdk/request/Request.java.html">Request</A> {
+<FONT ID="LN">14</FONT><A NAME="14"></A>
+<FONT ID="LN">15</FONT><A NAME="15"></A>    <FONT ID="Public">public</FONT> SubscribeRequest(<FONT ID="Final">final</FONT> String topicArn,
+<FONT ID="LN">16</FONT><A NAME="16"></A>                            <FONT ID="Final">final</FONT> String msisdn) <FONT ID="Throws">throws</FONT> Exception {
+<FONT ID="LN">17</FONT><A NAME="17"></A>        <FONT ID="Super">super</FONT>(COMMAND_SUBSCRIBE,
+<FONT ID="LN">18</FONT><A NAME="18"></A>              <FONT ID="StringLiteral">"topic-arn"</FONT>, topicArn,
+<FONT ID="LN">19</FONT><A NAME="19"></A>              <FONT ID="StringLiteral">"msisdn"</FONT>, msisdn);
+<FONT ID="LN">20</FONT><A NAME="20"></A>    }
+<FONT ID="LN">21</FONT><A NAME="21"></A>
+<FONT ID="LN">22</FONT><A NAME="22"></A>}
+<FONT ID="LN">23</FONT><A NAME="23"></A></pre>
+</BODY>
+</HTML>

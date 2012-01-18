@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+
+<project name="core" default="compile" basedir=".">
+
+    <taskdef name="java2html" classname="com.java2html.Java2HTMLTask">
+        <classpath>
+            <pathelement location="tools/j2h.jar"/>
+        </classpath>
+    </taskdef>
+
+    <property name="VERSION" value="1.2"/>
+
+    <property name="src.dir" value="src"/>
+    <property name="build.dir" value="build/tmpclasses/sdk"/>
+    <property name="target.dir" value="build"/>
+    <property name="javadoc.dir" value="javadoc"/>
+    <property name="html.dir" value="html"/>
+    <property name="jar.location" value="nexmo-sdk.jar"/>
+    <property name="zip.location" value="../nexmo-java-sdk-v${VERSION}.zip"/>
+
+    <path id="project.classpath">
+        <pathelement location="${build.dir}"/>
+        <pathelement location="../../build/tmpclasses/core/"/>
+        <pathelement location="lib/commons-httpclient-3.1.jar"/>
+        <pathelement location="lib/commons-logging.jar"/>
+        <pathelement location="lib/commons-codec-1.5.jar"/>
+    </path>
+
+    <target name="init">
+        <mkdir dir="${build.dir}"/>
+    </target>
+
+    <target name="compile" depends="init">
+        <echo message="Compile module: sdk" />
+        <javac srcdir="${src.dir}"
+               destdir="${build.dir}"
+               debug="on"
+               optimize="off"
+               deprecation="on"
+               includeAntRuntime="false"
+               includes="**/*.java"
+               classpathref="project.classpath" />
+
+        <jar jarfile="${jar.location}" basedir="${build.dir}" includes="**/*"/>
+
+    </target>
+
+    <target name="javadoc" depends="compile">
+        <javadoc sourcepath="${src.dir}" 
+                 packagenames="com.nexmo.*"
+                 destdir="${javadoc.dir}"
+                 author="true"
+                 version="true"
+                 use="true"
+                 verbose="true"
+                 classpathref="project.classpath"
+        />
+    </target>
+
+    <target name="html" depends="javadoc">
+        <java2html title="Nexmo Java SDK" 
+                   simple="no"
+                   tabsize="4"
+                   marginsize="2"
+                   header="true"
+                   footer="false"
+                   destination="${html.dir}">
+                   <fileset dir="src">
+                       <include name="**/*.java"/>
+                   </fileset>
+                   <javadoc localRef="javadoc" httpRef="http://www.nexmo.com/documentation/gettingstarted/javadoc"/>
+        </java2html>
+    </target>
+
+    <target name="ship" depends="html">
+        <zip destfile="${zip.location}"
+             basedir="."
+             excludes=".svn,${zip.location}" />
+    </target>
+
+    <target name="clean">
+        <delete dir="${target.dir}" quiet="true"/>
+        <delete dir="${javadoc.dir}" quiet="true"/>
+        <delete dir="${html.dir}" quiet="true"/>
+        <delete file="${jar.location}" quiet="true"/>
+    </target>
+
+    <target name="example" depends="compile">
+        <java classname="com.nexmo.messaging.sdk.examples.SendTextMessage"
+              fork="true"
+              classpathref="project.classpath" />
+    </target>
+
+    <target name="example-https" depends="compile">
+        <java classname="com.nexmo.messaging.sdk.examples.SendTextMessageHttps"
+              fork="true"
+              classpathref="project.classpath" />
+    </target>
+
+    <target name="example2" depends="compile">
+        <java classname="com.nexmo.messaging.sdk.examples.SendWapPush"
+              fork="true"
+              classpathref="project.classpath" />
+    </target>
+
+    <target name="sns-example" depends="compile">
+        <java classname="com.nexmo.sns.sdk.examples.SubscribeAndPublishExample"
+              fork="true"
+              classpathref="project.classpath" />
+    </target>
+
+</project>

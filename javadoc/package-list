@@ -1,0 +1,9 @@
+com.nexmo.common.http
+com.nexmo.common.util
+com.nexmo.messaging.sdk
+com.nexmo.messaging.sdk.examples
+com.nexmo.messaging.sdk.messages
+com.nexmo.sns.sdk
+com.nexmo.sns.sdk.examples
+com.nexmo.sns.sdk.request
+com.nexmo.sns.sdk.response

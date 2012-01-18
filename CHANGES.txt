@@ -1,0 +1,17 @@
+
+V1.2 - 2011-07-18
+
+add https support to message submissions
+add 'ant example-https'  example task
+add support for 'messagePrice' in the api response
+add reporting of remaining-balance and message-price in the example scripts
+
+V1.1
+
+add support for nexmo SNS service
+sms submission - report comms-failure as an error response, not as an exception
+sms submission - add support for 'remainingBalance' in the api response
+
+v1.0
+
+Initial release
