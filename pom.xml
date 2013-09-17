@@ -4,17 +4,18 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.nexmo</groupId>
     <artifactId>nexmo-java-sdk</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.5-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Nexmo Java SDK</name>
 
     <properties>
         <github.org>Nexmo</github.org>
     </properties>
+    
     <scm>
-        <connection>scm:git:git@github.com:${github.org}/nexmo-java-sdk.git</connection>
-        <developerConnection>scm:git@github.com:${github.org}/nexmo-java-sdk.git</developerConnection>
-        <url>https://github.com/${github.org}/nexmo-java-sdk</url>
+        <url>https://github.com/Nexmo/nexmo-java-sdk</url>
+        <connection>scm:git:git@github.com:Nexmo/nexmo-java-sdk.git</connection>
+        <developerConnection>scm:git@github.com:Nexmo/nexmo-java-sdk.git</developerConnection>
     </scm>
 
     <build>
@@ -42,6 +43,23 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.4.1</version>
+                <configuration>
+                    <tagNameFormat>releases/@{project.artifactId}-@{project.version}</tagNameFormat>
+                </configuration>
             </plugin>
         </plugins>
     </build>
