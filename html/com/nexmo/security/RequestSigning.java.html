@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET TYPE="text/css" HREF="../../../stylesheet.css" TITLE="Style">
+<META NAME="GENERATOR" CONTENT="Java2HTML Version 1.5">
+<TITLE>com.nexmo.security.RequestSigning (Java2HTML)</TITLE>
+</HEAD>
+<BODY><TABLE id="Header" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td colspan="2" width="33%">&nbsp;</td>
+<td align="center" colspan="2" width="33%">
+<font size="4">RequestSigning.java</font>
+</td>
+<td align="right" colspan="2" width="33%">&nbsp;</td>
+</tr>
+</TABLE>
+<pre ID="Classes">
+<FONT ID="LN">1 </FONT><A NAME="1"></A><FONT ID="Package">package</FONT> com.nexmo.security;
+<FONT ID="LN">2 </FONT><A NAME="2"></A>
+<FONT ID="LN">3 </FONT><A NAME="3"></A><FONT ID="Import">import</FONT> java.util.List;
+<FONT ID="LN">4 </FONT><A NAME="4"></A><FONT ID="Import">import</FONT> java.util.Map;
+<FONT ID="LN">5 </FONT><A NAME="5"></A><FONT ID="Import">import</FONT> java.util.TreeMap;
+<FONT ID="LN">6 </FONT><A NAME="6"></A>
+<FONT ID="LN">7 </FONT><A NAME="7"></A><FONT ID="Import">import</FONT> org.apache.commons.logging.Log;
+<FONT ID="LN">8 </FONT><A NAME="8"></A><FONT ID="Import">import</FONT> org.apache.commons.logging.LogFactory;
+<FONT ID="LN">9 </FONT><A NAME="9"></A>
+<FONT ID="LN">10</FONT><A NAME="10"></A><FONT ID="Import">import</FONT> org.apache.http.NameValuePair;
+<FONT ID="LN">11</FONT><A NAME="11"></A><FONT ID="Import">import</FONT> org.apache.http.message.BasicNameValuePair;
+<FONT ID="LN">12</FONT><A NAME="12"></A>
+<FONT ID="LN">13</FONT><A NAME="13"></A><FONT ID="Import">import</FONT> <A HREF="../../../com/nexmo/common/util/MD5Util.java.html">com.nexmo.common.util.MD5Util</A>;
+<FONT ID="LN">14</FONT><A NAME="14"></A>
+<FONT ID="LN">15</FONT><A NAME="15"></A><FONT ID="FormalComment">/**
+<FONT ID="LN">16</FONT><A NAME="16"></A> * RequestSigning
+<FONT ID="LN">17</FONT><A NAME="17"></A> *
+<FONT ID="LN">18</FONT><A NAME="18"></A> * Helper class for generating signatures when signing REST requests for submission to Nexmo.
+<FONT ID="LN">19</FONT><A NAME="19"></A> * Generates a signature based on the md5 hash of all of the request parameters,
+<FONT ID="LN">20</FONT><A NAME="20"></A> * including a timestamp parameter to protect against replay attacks.
+<FONT ID="LN">21</FONT><A NAME="21"></A> * The signature is generated using a pre-shared secret key that does not form part of the request.
+<FONT ID="LN">22</FONT><A NAME="22"></A> *
+<FONT ID="LN">23</FONT><A NAME="23"></A> * @author  Paul Cook
+<FONT ID="LN">24</FONT><A NAME="24"></A> * @version
+<FONT ID="LN">25</FONT><A NAME="25"></A> */</FONT>
+<FONT ID="LN">26</FONT><A NAME="26"></A><FONT ID="Public">public</FONT> <FONT ID="Class">class</FONT> RequestSigning <FONT ID="Implements">implements</FONT> <A HREF="../../../com/nexmo/security/SecurityConstants.java.html">SecurityConstants</A> {
+<FONT ID="LN">27</FONT><A NAME="27"></A>
+<FONT ID="LN">28</FONT><A NAME="28"></A>    <FONT ID="Private">private</FONT> <FONT ID="Static">static</FONT> Log log = LogFactory.getLog(<A HREF="../../../com/nexmo/security/RequestSigning.java.html">RequestSigning</A>.<FONT ID="Class">class</FONT>);
+<FONT ID="LN">29</FONT><A NAME="29"></A>
+<FONT ID="LN">30</FONT><A NAME="30"></A>    <FONT ID="FormalComment">/**
+<FONT ID="LN">31</FONT><A NAME="31"></A>     * sign a set of request parameters, generating additional parameters to represent the timestamp and generated signature
+<FONT ID="LN">32</FONT><A NAME="32"></A>     * uses the supplied pre-shared secret key to generate the signature
+<FONT ID="LN">33</FONT><A NAME="33"></A>     *
+<FONT ID="LN">34</FONT><A NAME="34"></A>     * @param params List of NameValuePair instances containing the query parameters for the request that is to be signed
+<FONT ID="LN">35</FONT><A NAME="35"></A>     * @param secretKey the pre-shared secret key held by the client
+<FONT ID="LN">36</FONT><A NAME="36"></A>     *
+<FONT ID="LN">37</FONT><A NAME="37"></A>     * @return String the fully constructed url complete with signature
+<FONT ID="LN">38</FONT><A NAME="38"></A>     */</FONT>
+<FONT ID="LN">39</FONT><A NAME="39"></A>    <FONT ID="Public">public</FONT> <FONT ID="Static">static</FONT> <FONT ID="Void">void</FONT> constructSignatureForRequestParameters(List&lt;NameValuePair&gt; params, String secretKey) {
+<FONT ID="LN">40</FONT><A NAME="40"></A>        <FONT ID="SingleLineComment">// First, inject a 'timestamp=' parameter containing the current time in seconds since Jan 1st 1970
+<FONT ID="LN">41</FONT><A NAME="41"></A></FONT>        params.add(<FONT ID="New">new</FONT> BasicNameValuePair(PARAM_TIMESTAMP, <FONT ID="StringLiteral">""</FONT> + System.currentTimeMillis() / <FONT ID="IntegerLiteral">1000</FONT>));
+<FONT ID="LN">42</FONT><A NAME="42"></A>
+<FONT ID="LN">43</FONT><A NAME="43"></A>        Map&lt;String, String&gt; sortedParams = <FONT ID="New">new</FONT> TreeMap&lt;String, String&gt;();
+<FONT ID="LN">44</FONT><A NAME="44"></A>        <FONT ID="For">for</FONT> (NameValuePair param: params) {
+<FONT ID="LN">45</FONT><A NAME="45"></A>            String name = param.getName();
+<FONT ID="LN">46</FONT><A NAME="46"></A>            String value = param.getValue();
+<FONT ID="LN">47</FONT><A NAME="47"></A>            <FONT ID="If">if</FONT> (name.equals(PARAM_SIGNATURE))
+<FONT ID="LN">48</FONT><A NAME="48"></A>                <FONT ID="Continue">continue</FONT>;
+<FONT ID="LN">49</FONT><A NAME="49"></A>            <FONT ID="If">if</FONT> (value == <FONT ID="Null">null</FONT>)
+<FONT ID="LN">50</FONT><A NAME="50"></A>                value = <FONT ID="StringLiteral">""</FONT>;
+<FONT ID="LN">51</FONT><A NAME="51"></A>            <FONT ID="If">if</FONT> (!value.trim().equals(<FONT ID="StringLiteral">""</FONT>))
+<FONT ID="LN">52</FONT><A NAME="52"></A>                sortedParams.put(name, value);
+<FONT ID="LN">53</FONT><A NAME="53"></A>        }
+<FONT ID="LN">54</FONT><A NAME="54"></A>
+<FONT ID="LN">55</FONT><A NAME="55"></A>        <FONT ID="SingleLineComment">// Now, walk through the sorted list of parameters and construct a string
+<FONT ID="LN">56</FONT><A NAME="56"></A></FONT>        StringBuilder sb = <FONT ID="New">new</FONT> StringBuilder();
+<FONT ID="LN">57</FONT><A NAME="57"></A>        <FONT ID="For">for</FONT> (Map.Entry&lt;String, String&gt; param: sortedParams.entrySet()) {
+<FONT ID="LN">58</FONT><A NAME="58"></A>            String name = param.getKey();
+<FONT ID="LN">59</FONT><A NAME="59"></A>            String value = param.getValue();
+<FONT ID="LN">60</FONT><A NAME="60"></A>            sb.append(name).append(value);
+<FONT ID="LN">61</FONT><A NAME="61"></A>        }
+<FONT ID="LN">62</FONT><A NAME="62"></A>
+<FONT ID="LN">63</FONT><A NAME="63"></A>        <FONT ID="SingleLineComment">// Now, append the secret key, and calculate an MD5 signature of the resultant string
+<FONT ID="LN">64</FONT><A NAME="64"></A></FONT>        sb.append(secretKey);
+<FONT ID="LN">65</FONT><A NAME="65"></A>
+<FONT ID="LN">66</FONT><A NAME="66"></A>        String str = sb.toString();
+<FONT ID="LN">67</FONT><A NAME="67"></A>
+<FONT ID="LN">68</FONT><A NAME="68"></A>        String md5 = <FONT ID="StringLiteral">"no signature"</FONT>;
+<FONT ID="LN">69</FONT><A NAME="69"></A>        <FONT ID="Try">try</FONT> {
+<FONT ID="LN">70</FONT><A NAME="70"></A>            md5 = MD5Util.calculateMd5(str);
+<FONT ID="LN">71</FONT><A NAME="71"></A>        } <FONT ID="Catch">catch</FONT> (Exception e) {
+<FONT ID="LN">72</FONT><A NAME="72"></A>            log.error(<FONT ID="StringLiteral">"error..."</FONT>, e);
+<FONT ID="LN">73</FONT><A NAME="73"></A>        }
+<FONT ID="LN">74</FONT><A NAME="74"></A>
+<FONT ID="LN">75</FONT><A NAME="75"></A>        log.debug(<FONT ID="StringLiteral">"SECURITY-KEY-GENERATION -- String [ "</FONT> + str + <FONT ID="StringLiteral">" ] Signature [ "</FONT> + md5 + <FONT ID="StringLiteral">" ] "</FONT>);
+<FONT ID="LN">76</FONT><A NAME="76"></A>
+<FONT ID="LN">77</FONT><A NAME="77"></A>        params.add(<FONT ID="New">new</FONT> BasicNameValuePair(PARAM_SIGNATURE, md5));
+<FONT ID="LN">78</FONT><A NAME="78"></A>    }
+<FONT ID="LN">79</FONT><A NAME="79"></A>
+<FONT ID="LN">80</FONT><A NAME="80"></A>}
+<FONT ID="LN">81</FONT><A NAME="81"></A></pre>
+</BODY>
+</HTML>

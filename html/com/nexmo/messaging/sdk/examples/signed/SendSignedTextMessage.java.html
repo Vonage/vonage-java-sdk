@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET TYPE="text/css" HREF="../../../../../../stylesheet.css" TITLE="Style">
+<META NAME="GENERATOR" CONTENT="Java2HTML Version 1.5">
+<TITLE>com.nexmo.messaging.sdk.examples.signed.SendSignedTextMessage (Java2HTML)</TITLE>
+</HEAD>
+<BODY><TABLE id="Header" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td colspan="2" width="33%">&nbsp;</td>
+<td align="center" colspan="2" width="33%">
+<font size="4">SendSignedTextMessage.java</font>
+</td>
+<td align="right" colspan="2" width="33%">&nbsp;</td>
+</tr>
+</TABLE>
+<pre ID="Classes">
+<FONT ID="LN">1 </FONT><A NAME="1"></A><FONT ID="Package">package</FONT> com.nexmo.messaging.sdk.examples.signed;
+<FONT ID="LN">2 </FONT><A NAME="2"></A>
+<FONT ID="LN">3 </FONT><A NAME="3"></A><FONT ID="Import">import</FONT> <A HREF="../../../../../../com/nexmo/messaging/sdk/NexmoSmsClient.java.html">com.nexmo.messaging.sdk.NexmoSmsClient</A>;
+<FONT ID="LN">4 </FONT><A NAME="4"></A><FONT ID="Import">import</FONT> <A HREF="../../../../../../com/nexmo/messaging/sdk/NexmoSmsClientSignedRequests.java.html">com.nexmo.messaging.sdk.NexmoSmsClientSignedRequests</A>;
+<FONT ID="LN">5 </FONT><A NAME="5"></A><FONT ID="Import">import</FONT> <A HREF="../../../../../../com/nexmo/messaging/sdk/SmsSubmissionResult.java.html">com.nexmo.messaging.sdk.SmsSubmissionResult</A>;
+<FONT ID="LN">6 </FONT><A NAME="6"></A><FONT ID="Import">import</FONT> <A HREF="../../../../../../com/nexmo/messaging/sdk/messages/TextMessage.java.html">com.nexmo.messaging.sdk.messages.TextMessage</A>;
+<FONT ID="LN">7 </FONT><A NAME="7"></A>
+<FONT ID="LN">8 </FONT><A NAME="8"></A><FONT ID="FormalComment">/**
+<FONT ID="LN">9 </FONT><A NAME="9"></A> * SendSignedTextMessage.java&lt;br&gt;&lt;br&gt;
+<FONT ID="LN">10</FONT><A NAME="10"></A> *
+<FONT ID="LN">11</FONT><A NAME="11"></A> * An example of using the nexmo sms api to submit a simple text message ...&lt;br&gt;&lt;br&gt;
+<FONT ID="LN">12</FONT><A NAME="12"></A> * This example uses a {@link com.nexmo.messaging.sdk.NexmoSmsClientSignedRequests} client
+<FONT ID="LN">13</FONT><A NAME="13"></A> * So that the REST requests are signed using the secret key.
+<FONT ID="LN">14</FONT><A NAME="14"></A> *
+<FONT ID="LN">15</FONT><A NAME="15"></A> * Created on 10 April 2012, 17:34
+<FONT ID="LN">16</FONT><A NAME="16"></A> *
+<FONT ID="LN">17</FONT><A NAME="17"></A> * @author  Paul Cook
+<FONT ID="LN">18</FONT><A NAME="18"></A> * @version 1.0
+<FONT ID="LN">19</FONT><A NAME="19"></A> */</FONT>
+<FONT ID="LN">20</FONT><A NAME="20"></A><FONT ID="Public">public</FONT> <FONT ID="Class">class</FONT> SendSignedTextMessage {
+<FONT ID="LN">21</FONT><A NAME="21"></A>
+<FONT ID="LN">22</FONT><A NAME="22"></A>    <FONT ID="Public">public</FONT> <FONT ID="Static">static</FONT> <FONT ID="Final">final</FONT> String API_KEY = <FONT ID="StringLiteral">"your-api-key-goes-here"</FONT>;
+<FONT ID="LN">23</FONT><A NAME="23"></A>    <FONT ID="Public">public</FONT> <FONT ID="Static">static</FONT> <FONT ID="Final">final</FONT> String API_SECRET = <FONT ID="StringLiteral">"your-api-secret-goes-here"</FONT>;
+<FONT ID="LN">24</FONT><A NAME="24"></A>
+<FONT ID="LN">25</FONT><A NAME="25"></A>    <FONT ID="Public">public</FONT> <FONT ID="Static">static</FONT> <FONT ID="Final">final</FONT> String SMS_FROM = <FONT ID="StringLiteral">"12345"</FONT>;
+<FONT ID="LN">26</FONT><A NAME="26"></A>    <FONT ID="Public">public</FONT> <FONT ID="Static">static</FONT> <FONT ID="Final">final</FONT> String SMS_TO = <FONT ID="StringLiteral">"447777111222"</FONT>;
+<FONT ID="LN">27</FONT><A NAME="27"></A>    <FONT ID="Public">public</FONT> <FONT ID="Static">static</FONT> <FONT ID="Final">final</FONT> String SMS_TEXT = <FONT ID="StringLiteral">"Hello World!"</FONT>;
+<FONT ID="LN">28</FONT><A NAME="28"></A>
+<FONT ID="LN">29</FONT><A NAME="29"></A>    <FONT ID="Public">public</FONT> <FONT ID="Static">static</FONT> <FONT ID="Void">void</FONT> main(String[] args) {
+<FONT ID="LN">30</FONT><A NAME="30"></A>
+<FONT ID="LN">31</FONT><A NAME="31"></A>        <FONT ID="SingleLineComment">// Create a client for submitting to Nexmo
+<FONT ID="LN">32</FONT><A NAME="32"></A></FONT>
+<FONT ID="LN">33</FONT><A NAME="33"></A>        <A HREF="../../../../../../com/nexmo/messaging/sdk/NexmoSmsClient.java.html">NexmoSmsClient</A> client = <FONT ID="Null">null</FONT>;
+<FONT ID="LN">34</FONT><A NAME="34"></A>        <FONT ID="Try">try</FONT> {
+<FONT ID="LN">35</FONT><A NAME="35"></A>            client = <FONT ID="New">new</FONT> <A HREF="../../../../../../com/nexmo/messaging/sdk/NexmoSmsClientSignedRequests.java.html">NexmoSmsClientSignedRequests</A>(API_KEY, API_SECRET);
+<FONT ID="LN">36</FONT><A NAME="36"></A>        } <FONT ID="Catch">catch</FONT> (Exception e) {
+<FONT ID="LN">37</FONT><A NAME="37"></A>            System.err.println(<FONT ID="StringLiteral">"Failed to instanciate a Nexmo Client"</FONT>);
+<FONT ID="LN">38</FONT><A NAME="38"></A>            e.printStackTrace();
+<FONT ID="LN">39</FONT><A NAME="39"></A>            <FONT ID="Throw">throw</FONT> <FONT ID="New">new</FONT> RuntimeException(<FONT ID="StringLiteral">"Failed to instanciate a Nexmo Client"</FONT>);
+<FONT ID="LN">40</FONT><A NAME="40"></A>        }
+<FONT ID="LN">41</FONT><A NAME="41"></A>
+<FONT ID="LN">42</FONT><A NAME="42"></A>        <FONT ID="SingleLineComment">// Create a Text SMS Message request object ...
+<FONT ID="LN">43</FONT><A NAME="43"></A></FONT>
+<FONT ID="LN">44</FONT><A NAME="44"></A>        <A HREF="../../../../../../com/nexmo/messaging/sdk/messages/TextMessage.java.html">TextMessage</A> message = <FONT ID="New">new</FONT> <A HREF="../../../../../../com/nexmo/messaging/sdk/messages/TextMessage.java.html">TextMessage</A>(SMS_FROM, SMS_TO, SMS_TEXT);
+<FONT ID="LN">45</FONT><A NAME="45"></A>
+<FONT ID="LN">46</FONT><A NAME="46"></A>        <FONT ID="SingleLineComment">// Use the Nexmo client to submit the Text Message ...
+<FONT ID="LN">47</FONT><A NAME="47"></A></FONT>
+<FONT ID="LN">48</FONT><A NAME="48"></A>        <A HREF="../../../../../../com/nexmo/messaging/sdk/SmsSubmissionResult.java.html">SmsSubmissionResult</A>[] results = <FONT ID="Null">null</FONT>;
+<FONT ID="LN">49</FONT><A NAME="49"></A>        <FONT ID="Try">try</FONT> {
+<FONT ID="LN">50</FONT><A NAME="50"></A>            results = client.submitMessage(message);
+<FONT ID="LN">51</FONT><A NAME="51"></A>        } <FONT ID="Catch">catch</FONT> (Exception e) {
+<FONT ID="LN">52</FONT><A NAME="52"></A>            System.err.println(<FONT ID="StringLiteral">"Failed to communicate with the Nexmo Client"</FONT>);
+<FONT ID="LN">53</FONT><A NAME="53"></A>            e.printStackTrace();
+<FONT ID="LN">54</FONT><A NAME="54"></A>            <FONT ID="Throw">throw</FONT> <FONT ID="New">new</FONT> RuntimeException(<FONT ID="StringLiteral">"Failed to communicate with the Nexmo Client"</FONT>);
+<FONT ID="LN">55</FONT><A NAME="55"></A>        }
+<FONT ID="LN">56</FONT><A NAME="56"></A>
+<FONT ID="LN">57</FONT><A NAME="57"></A>        <FONT ID="SingleLineComment">// Evaluate the results of the submission attempt ...
+<FONT ID="LN">58</FONT><A NAME="58"></A></FONT>        System.out.println(<FONT ID="StringLiteral">"... Message submitted in [ "</FONT> + results.length + <FONT ID="StringLiteral">" ] parts"</FONT>);
+<FONT ID="LN">59</FONT><A NAME="59"></A>        <FONT ID="For">for</FONT> (<FONT ID="Int">int</FONT> i=<FONT ID="IntegerLiteral">0</FONT>;i&lt;results.length;i++) {
+<FONT ID="LN">60</FONT><A NAME="60"></A>            System.out.println(<FONT ID="StringLiteral">"--------- part [ "</FONT> + (i + <FONT ID="IntegerLiteral">1</FONT>) + <FONT ID="StringLiteral">" ] ------------"</FONT>);
+<FONT ID="LN">61</FONT><A NAME="61"></A>            System.out.println(<FONT ID="StringLiteral">"Status [ "</FONT> + results[i].getStatus() + <FONT ID="StringLiteral">" ] ..."</FONT>);
+<FONT ID="LN">62</FONT><A NAME="62"></A>            <FONT ID="If">if</FONT> (results[i].getStatus() == SmsSubmissionResult.STATUS_OK)
+<FONT ID="LN">63</FONT><A NAME="63"></A>                System.out.println(<FONT ID="StringLiteral">"SUCCESS"</FONT>);
+<FONT ID="LN">64</FONT><A NAME="64"></A>            <FONT ID="Else">else</FONT> <FONT ID="If">if</FONT> (results[i].getTemporaryError())
+<FONT ID="LN">65</FONT><A NAME="65"></A>                System.out.println(<FONT ID="StringLiteral">"TEMPORARY FAILURE - PLEASE RETRY"</FONT>);
+<FONT ID="LN">66</FONT><A NAME="66"></A>            <FONT ID="Else">else</FONT>
+<FONT ID="LN">67</FONT><A NAME="67"></A>                System.out.println(<FONT ID="StringLiteral">"SUBMISSION FAILED!"</FONT>);
+<FONT ID="LN">68</FONT><A NAME="68"></A>            System.out.println(<FONT ID="StringLiteral">"Message-Id [ "</FONT> + results[i].getMessageId() + <FONT ID="StringLiteral">" ] ..."</FONT>);
+<FONT ID="LN">69</FONT><A NAME="69"></A>            System.out.println(<FONT ID="StringLiteral">"Error-Text [ "</FONT> + results[i].getErrorText() + <FONT ID="StringLiteral">" ] ..."</FONT>);
+<FONT ID="LN">70</FONT><A NAME="70"></A>
+<FONT ID="LN">71</FONT><A NAME="71"></A>            <FONT ID="If">if</FONT> (results[i].getMessagePrice() != <FONT ID="Null">null</FONT>)
+<FONT ID="LN">72</FONT><A NAME="72"></A>                System.out.println(<FONT ID="StringLiteral">"Message-Price [ "</FONT> + results[i].getMessagePrice() + <FONT ID="StringLiteral">" ] ..."</FONT>);
+<FONT ID="LN">73</FONT><A NAME="73"></A>            <FONT ID="If">if</FONT> (results[i].getRemainingBalance() != <FONT ID="Null">null</FONT>)
+<FONT ID="LN">74</FONT><A NAME="74"></A>                System.out.println(<FONT ID="StringLiteral">"Remaining-Balance [ "</FONT> + results[i].getRemainingBalance() + <FONT ID="StringLiteral">" ] ..."</FONT>);
+<FONT ID="LN">75</FONT><A NAME="75"></A>        }
+<FONT ID="LN">76</FONT><A NAME="76"></A>    }
+<FONT ID="LN">77</FONT><A NAME="77"></A>
+<FONT ID="LN">78</FONT><A NAME="78"></A>}
+<FONT ID="LN">79</FONT><A NAME="79"></A></pre>
+</BODY>
+</HTML>

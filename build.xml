@@ -8,7 +8,7 @@
         </classpath>
     </taskdef>
 
-    <property name="VERSION" value="1.2"/>
+    <property name="VERSION" value="1.4"/>
 
     <property name="src.dir" value="src"/>
     <property name="build.dir" value="build/tmpclasses/sdk"/>
@@ -18,12 +18,17 @@
     <property name="jar.location" value="nexmo-sdk.jar"/>
     <property name="zip.location" value="../nexmo-java-sdk-v${VERSION}.zip"/>
 
+    <property name="zip.tmp.dir" value="${target.dir}/zip-tmp"/>
+    <property name="zip.tmp.contents" value="${zip.tmp.dir}/nexmo-java-sdk-v${VERSION}"/>
+
     <path id="project.classpath">
         <pathelement location="${build.dir}"/>
         <pathelement location="../../build/tmpclasses/core/"/>
-        <pathelement location="lib/commons-httpclient-3.1.jar"/>
+        <pathelement location="lib/httpcore-4.1.jar"/>
+        <pathelement location="lib/httpclient-4.1.1.jar"/>
         <pathelement location="lib/commons-logging.jar"/>
         <pathelement location="lib/commons-codec-1.5.jar"/>
+        <pathelement location="lib/servlet-api-2.5.jar"/>
     </path>
 
     <target name="init">
@@ -39,7 +44,9 @@
                deprecation="on"
                includeAntRuntime="false"
                includes="**/*.java"
-               classpathref="project.classpath" />
+               classpathref="project.classpath">
+            <compilerarg value="-Xlint:-path" />
+        </javac>
 
         <jar jarfile="${jar.location}" basedir="${build.dir}" includes="**/*"/>
 
@@ -73,9 +80,30 @@
     </target>
 
     <target name="ship" depends="html">
+        <delete dir="${zip.tmp.dir}" quiet="true"/>
+        <mkdir dir="${zip.tmp.dir}"/>
+        <mkdir dir="${zip.tmp.contents}"/>
+
+        <copy todir="${zip.tmp.contents}">
+            <fileset dir="." includes="**/*.*" excludes="build,build/**/*,**/.svn" />
+        </copy>
+
+        <zip destfile="${zip.location}"
+             basedir="${zip.tmp.dir}"
+             excludes=".svn,build,build/**/*,${zip.location}" />
+
+<!--
         <zip destfile="${zip.location}"
              basedir="."
-             excludes=".svn,${zip.location}" />
+             excludes=".svn,build,build/**/*,${zip.location}" />
+-->
+
+
+<!--
+    <property name="zip.tmp.dir" value="zip-tmp"/>
+    <property name="zip.tmp.contents" value="zip-tmp/nexmo-java-sdk-v${VERSION}"/>
+-->
+
     </target>
 
     <target name="clean">
@@ -99,6 +127,12 @@
 
     <target name="example2" depends="compile">
         <java classname="com.nexmo.messaging.sdk.examples.SendWapPush"
+              fork="true"
+              classpathref="project.classpath" />
+    </target>
+
+    <target name="example-signed" depends="compile">
+        <java classname="com.nexmo.messaging.sdk.examples.signed.SendSignedTextMessage"
               fork="true"
               classpathref="project.classpath" />
     </target>

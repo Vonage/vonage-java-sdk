@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<HTML>
+<HEAD>
+<LINK REL=STYLESHEET TYPE="text/css" HREF="../../../../stylesheet.css" TITLE="Style">
+<META NAME="GENERATOR" CONTENT="Java2HTML Version 1.5">
+<TITLE>com.nexmo.common.util.MD5Util (Java2HTML)</TITLE>
+</HEAD>
+<BODY><TABLE id="Header" border="0" cellpadding="0" cellspacing="0" width="100%">
+<tr>
+<td colspan="2" width="33%">&nbsp;</td>
+<td align="center" colspan="2" width="33%">
+<font size="4">MD5Util.java</font>
+</td>
+<td align="right" colspan="2" width="33%">&nbsp;</td>
+</tr>
+</TABLE>
+<pre ID="Classes">
+<FONT ID="LN">1 </FONT><A NAME="1"></A><FONT ID="Package">package</FONT> com.nexmo.common.util;
+<FONT ID="LN">2 </FONT><A NAME="2"></A>
+<FONT ID="LN">3 </FONT><A NAME="3"></A><FONT ID="Import">import</FONT> java.security.MessageDigest;
+<FONT ID="LN">4 </FONT><A NAME="4"></A><FONT ID="Import">import</FONT> java.security.NoSuchAlgorithmException;
+<FONT ID="LN">5 </FONT><A NAME="5"></A><FONT ID="Import">import</FONT> java.io.UnsupportedEncodingException;
+<FONT ID="LN">6 </FONT><A NAME="6"></A>
+<FONT ID="LN">7 </FONT><A NAME="7"></A><FONT ID="FormalComment">/**
+<FONT ID="LN">8 </FONT><A NAME="8"></A> * MD5Util.java&lt;br&gt;&lt;br&gt;
+<FONT ID="LN">9 </FONT><A NAME="9"></A> *
+<FONT ID="LN">10</FONT><A NAME="10"></A> * Contains utility methods that use MD5 hashing. The class uses STANDARD JVM MD5 algorithm&lt;br&gt;&lt;br&gt;
+<FONT ID="LN">11</FONT><A NAME="11"></A> *
+<FONT ID="LN">12</FONT><A NAME="12"></A> * Created on 5 January 2011, 17:34
+<FONT ID="LN">13</FONT><A NAME="13"></A> *
+<FONT ID="LN">14</FONT><A NAME="14"></A> * @author  Paul Cook
+<FONT ID="LN">15</FONT><A NAME="15"></A> * @version 1.0
+<FONT ID="LN">16</FONT><A NAME="16"></A> */</FONT>
+<FONT ID="LN">17</FONT><A NAME="17"></A><FONT ID="Public">public</FONT> <FONT ID="Class">class</FONT> MD5Util {
+<FONT ID="LN">18</FONT><A NAME="18"></A>
+<FONT ID="LN">19</FONT><A NAME="19"></A>    <FONT ID="FormalComment">/**
+<FONT ID="LN">20</FONT><A NAME="20"></A>     * Calculates MD5 hash for string. assume string is UTF-8 encoded
+<FONT ID="LN">21</FONT><A NAME="21"></A>     * @param input string which is going to be encoded into MD5 format
+<FONT ID="LN">22</FONT><A NAME="22"></A>     * @return  MD5 representation of the input string
+<FONT ID="LN">23</FONT><A NAME="23"></A>     * @throws NoSuchAlgorithmException
+<FONT ID="LN">24</FONT><A NAME="24"></A>     */</FONT>
+<FONT ID="LN">25</FONT><A NAME="25"></A>    <FONT ID="Public">public</FONT> <FONT ID="Static">static</FONT> String calculateMd5(String input) <FONT ID="Throws">throws</FONT> NoSuchAlgorithmException {
+<FONT ID="LN">26</FONT><A NAME="26"></A>        <FONT ID="Try">try</FONT> {
+<FONT ID="LN">27</FONT><A NAME="27"></A>            <FONT ID="Return">return</FONT> calculateMd5(input, <FONT ID="StringLiteral">"UTF-8"</FONT>);
+<FONT ID="LN">28</FONT><A NAME="28"></A>        } <FONT ID="Catch">catch</FONT> (UnsupportedEncodingException e) {
+<FONT ID="LN">29</FONT><A NAME="29"></A>            <FONT ID="Return">return</FONT> <FONT ID="Null">null</FONT>; <FONT ID="SingleLineComment">// -- impossible --
+<FONT ID="LN">30</FONT><A NAME="30"></A></FONT>        }
+<FONT ID="LN">31</FONT><A NAME="31"></A>    }
+<FONT ID="LN">32</FONT><A NAME="32"></A>
+<FONT ID="LN">33</FONT><A NAME="33"></A>    <FONT ID="FormalComment">/**
+<FONT ID="LN">34</FONT><A NAME="34"></A>     * Calculates MD5 hash for string.
+<FONT ID="LN">35</FONT><A NAME="35"></A>     * @param input string which is going to be encoded into MD5 format
+<FONT ID="LN">36</FONT><A NAME="36"></A>     * @param encoding character encoding of the string which is going to be encoded into MD5 format
+<FONT ID="LN">37</FONT><A NAME="37"></A>     * @return  MD5 representation of the input string
+<FONT ID="LN">38</FONT><A NAME="38"></A>     * @throws NoSuchAlgorithmException
+<FONT ID="LN">39</FONT><A NAME="39"></A>     */</FONT>
+<FONT ID="LN">40</FONT><A NAME="40"></A>    <FONT ID="Public">public</FONT> <FONT ID="Static">static</FONT> String calculateMd5(String input, String encoding) <FONT ID="Throws">throws</FONT> NoSuchAlgorithmException, UnsupportedEncodingException {
+<FONT ID="LN">41</FONT><A NAME="41"></A>        MessageDigest md = MessageDigest.getInstance(<FONT ID="StringLiteral">"MD5"</FONT>);
+<FONT ID="LN">42</FONT><A NAME="42"></A>        md.update(input.getBytes(encoding));
+<FONT ID="LN">43</FONT><A NAME="43"></A>        <FONT ID="Byte">byte</FONT> digest[] = md.digest();
+<FONT ID="LN">44</FONT><A NAME="44"></A>
+<FONT ID="LN">45</FONT><A NAME="45"></A>        <FONT ID="Final">final</FONT> StringBuilder hexString = <FONT ID="New">new</FONT> StringBuilder();
+<FONT ID="LN">46</FONT><A NAME="46"></A>        <FONT ID="For">for</FONT> (<FONT ID="Int">int</FONT> i = <FONT ID="IntegerLiteral">0</FONT>; i &lt; digest.length; i++) {
+<FONT ID="LN">47</FONT><A NAME="47"></A>            <FONT ID="Int">int</FONT> z = <FONT ID="IntegerLiteral">0xFF</FONT> &amp; digest[i];
+<FONT ID="LN">48</FONT><A NAME="48"></A>            <FONT ID="If">if</FONT> (z &lt; <FONT ID="IntegerLiteral">16</FONT>)
+<FONT ID="LN">49</FONT><A NAME="49"></A>                hexString.append(<FONT ID="StringLiteral">"0"</FONT>);
+<FONT ID="LN">50</FONT><A NAME="50"></A>            hexString.append(Integer.toHexString(z));
+<FONT ID="LN">51</FONT><A NAME="51"></A>        }
+<FONT ID="LN">52</FONT><A NAME="52"></A>
+<FONT ID="LN">53</FONT><A NAME="53"></A>        <FONT ID="Return">return</FONT> hexString.toString();
+<FONT ID="LN">54</FONT><A NAME="54"></A>    }
+<FONT ID="LN">55</FONT><A NAME="55"></A>
+<FONT ID="LN">56</FONT><A NAME="56"></A>}
+<FONT ID="LN">57</FONT><A NAME="57"></A></pre>
+</BODY>
+</HTML>
