@@ -1,4 +1,28 @@
 package com.nexmo.messaging.sdk.messages;
+/*
+ * Copyright (c) 2011-2013 Nexmo Inc
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
+import com.nexmo.messaging.sdk.messages.parameters.MessageClass;
+
 /**
  * Message.java<br><br>
  *
@@ -10,7 +34,9 @@ package com.nexmo.messaging.sdk.messages;
  * @author  Paul Cook
  * @version 1.0
  */
-public abstract class Message {
+public abstract class Message implements java.io.Serializable {
+
+    private static final long serialVersionUID = 3847700435531116012L;
 
     /**
      * Message ia a regular TEXT SMS message
@@ -29,6 +55,16 @@ public abstract class Message {
      */
     public static final int MESSAGE_TYPE_UNICODE = 4;
 
+    /**
+     * Message is a USSD 'display' message that displays on handset but does not require a response
+     */
+    public static final int MESSAGE_TYPE_USSD_DISPLAY = 5;
+
+    /**
+     * Message is a USSD 'prompt' message that requires a response from the end user
+     */
+    public static final int MESSAGE_TYPE_USSD_PROMPT = 6;
+
     private final int type;
 
     private final String from;
@@ -42,6 +78,8 @@ public abstract class Message {
     private final String wapPushUrl;
     private final String wapPushTitle;
     private final int wapPushValidity;
+    private final MessageClass messageClass;
+    private final Integer protocolId;
 
     /**
      * Instanciate a new message request.<br>
@@ -73,6 +111,8 @@ public abstract class Message {
      * @param wapPushTitle This is the title that will be associated with the url being submitted to the handset
      * @param wapPushValidity This is the length of time (in seconds) that the message will be available for once delivered to the handset.
      *                        Once this time has expired, the url will no longer be visible on the handset to be browsed (Subject to handset compatibility)
+     * @param messageClass (Optional) The message class that is to be applied to this message.
+     * @param protocolId The value of the GSM Protocol ID field to be submitted with this message. Ordinarily this should be left as the default value of 0
      */
     protected Message(final int type,
                       final String from,
@@ -85,7 +125,9 @@ public abstract class Message {
                       final boolean statusReportRequired,
                       final String wapPushUrl,
                       final String wapPushTitle,
-                      final int wapPushValidity) {
+                      final int wapPushValidity,
+                      final MessageClass messageClass,
+                      final Integer protocolId) {
         this.type = type;
 
         this.from = from;
@@ -99,6 +141,8 @@ public abstract class Message {
         this.wapPushUrl = wapPushUrl;
         this.wapPushTitle = wapPushTitle;
         this.wapPushValidity = wapPushValidity;
+        this.messageClass = messageClass;
+        this.protocolId = protocolId;
     }
 
     /**
@@ -136,7 +180,7 @@ public abstract class Message {
      *                so you should ensure that it is a correctly constructed message
      */
     public byte[] getBinaryMessageBody() {
-        return this.binaryMessageBody;
+        return this.binaryMessageBody == null ? null : this.binaryMessageBody.clone();
     }
 
     /**
@@ -147,7 +191,7 @@ public abstract class Message {
      *                UserDataHeader field that describes the segmentation/re-assembly fields required to sucessfully concatenate multiple short messages.
      */
     public byte[] getBinaryMessageUdh() {
-        return this.binaryMessageUdh;
+        return this.binaryMessageUdh == null ? null : this.binaryMessageUdh.clone();
     }
 
     /**
@@ -195,6 +239,20 @@ public abstract class Message {
      */
     public int getWapPushValidity() {
         return this.wapPushValidity;
+    }
+
+    /**
+     * @return com.nexmo.messaging.sdk.messages.parameters.MessageClass The message class that is to be applied to this message.
+     */
+    public MessageClass getMessageClass() {
+        return this.messageClass;
+    }
+
+    /**
+     * @return Integer The value of the GSM Protocol ID field to be submitted with this message. Ordinarily this should be left as the default value of 0
+     */
+    public Integer getProtocolId() {
+        return this.protocolId;
     }
 
 }

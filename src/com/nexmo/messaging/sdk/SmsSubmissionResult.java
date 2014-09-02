@@ -1,4 +1,25 @@
 package com.nexmo.messaging.sdk;
+/*
+ * Copyright (c) 2011-2013 Nexmo Inc
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 
 import java.math.BigDecimal;
 
@@ -13,7 +34,9 @@ import java.math.BigDecimal;
  * @author  Paul Cook
  * @version 1.0
  */
-public class SmsSubmissionResult {
+public class SmsSubmissionResult implements java.io.Serializable {
+
+    static final long serialVersionUID = 2580996244288340269L;
 
     /**
      * Message was successfully submitted to the Nexmo service
@@ -37,7 +60,7 @@ public class SmsSubmissionResult {
     public static final int STATUS_INVALID_PARAMS = 3;
 
     /**
-     * Message was rejected due to receiving invalid account username and/or password
+     * Message was rejected due to receiving invalid account api key and/or secret
      */
     public static final int STATUS_INVALID_CREDENTIALS = 4;
 
@@ -93,28 +116,68 @@ public class SmsSubmissionResult {
      */
     public static final int STATUS_INVALID_SIGNATURE = 14;
 
+    /**
+     * The 'from' address specified in the message submission was not permitted
+     */
+    public static final int STATUS_INVALID_FROM_ADDRESS = 15;
+
+    /**
+     * invalid TTL -- The ttl parameter values, or combination of parameters is invalid
+     */
+    public static final int STATUS_INVALID_TTL = 16;
+
+    /**
+     * This destination cannot be delivered to at this time (if reachable=true is specified)
+     */
+    public static final int STATUS_NUMBER_UNREACHABKE = 17;
+
+    /**
+     * There are more than the maximum allowed number of destinations in this request
+     */
+    public static final int STATUS_TOO_MANY_DESTINATIONS = 18;
+
+    /**
+     * Your request makes use of a facility that is not enabled on your account
+     */
+    public static final int STATUS_FACILITY_NOT_ALLOWED = 19;
+
+    /**
+     * The message class value supplied was out of range (0 - 3)
+     */
+    public static final int STATUS_INVALID_MESSAFE_CLASS = 20;
+
+
     private final int status;
+    private final String destination;
     private final String messageId;
     private final String errorText;
     private final String clientReference;
     private final BigDecimal remainingBalance;
     private final BigDecimal messagePrice;
     private final boolean temporaryError;
+    private final SmsSubmissionReachabilityStatus smsSubmissionReachabilityStatus;
+    private final String network;
 
     protected SmsSubmissionResult(final int status,
+                                  final String destination,
                                   final String messageId,
                                   final String errorText,
                                   final String clientReference,
                                   final BigDecimal remainingBalance,
                                   final BigDecimal messagePrice,
-                                  final boolean temporaryError) {
+                                  final boolean temporaryError,
+                                  final SmsSubmissionReachabilityStatus smsSubmissionReachabilityStatus,
+                                  final String network) {
         this.status = status;
+        this.destination = destination;
         this.messageId = messageId;
         this.errorText = errorText;
         this.clientReference = clientReference;
         this.remainingBalance = remainingBalance;
         this.messagePrice = messagePrice;
         this.temporaryError = temporaryError;
+        this.smsSubmissionReachabilityStatus = smsSubmissionReachabilityStatus;
+        this.network = network;
     }
 
     /**
@@ -122,6 +185,13 @@ public class SmsSubmissionResult {
      */
     public int getStatus() {
         return this.status;
+    }
+
+    /**
+     * @return String the destination phone number that the message was submitted to
+     */
+    public String getDestination() {
+        return this.destination;
     }
 
     /**
@@ -165,6 +235,39 @@ public class SmsSubmissionResult {
      */
     public boolean getTemporaryError() {
         return this.temporaryError;
+    }
+
+    /**
+     * @return SmsSubmissionReachabilityStatus the result of any reachability check that was performed on this message if one was requested
+     */
+    public SmsSubmissionReachabilityStatus getSmsSubmissionReachabilityStatus() {
+        return this.smsSubmissionReachabilityStatus;
+    }
+
+    /**
+     * @return String the 'estimated' network that has been identified for this destination (Note, this can change during the processing of this message due to HLR lookups)
+     */
+    public String getNetwork() {
+        return this.network;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SMS-SUBMIT-RESULT -- STATUS:").append(this.status);
+        sb.append(" ERR:").append(this.errorText);
+        sb.append(" DEST:").append(this.destination);
+        sb.append(" MSG-IG:").append(this.messageId);
+        sb.append(" CLIENT-REF:").append(this.clientReference);
+        sb.append(" PRICE:").append(this.messagePrice == null ? "-" : this.messagePrice.toPlainString());
+        sb.append(" BALANCE:").append(this.remainingBalance == null ? "-" : this.remainingBalance.toPlainString());
+        sb.append(" TEMP-ERR?:").append(this.temporaryError);
+        if (this.smsSubmissionReachabilityStatus != null)
+            sb.append(" REACHABLE?:").append(this.smsSubmissionReachabilityStatus);
+        if (this.network != null)
+            sb.append("NETWORK:").append(this.network);
+
+        return sb.toString();
     }
 
 }

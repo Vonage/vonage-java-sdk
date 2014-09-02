@@ -1,4 +1,25 @@
 package com.nexmo.sns.sdk.examples;
+/*
+ * Copyright (c) 2011-2013 Nexmo Inc
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 
 import com.nexmo.sns.sdk.NexmoSnsClient;
 import com.nexmo.sns.sdk.request.SubscribeRequest;
@@ -18,15 +39,15 @@ import com.nexmo.sns.sdk.response.SubscribeResult;
  */
 public class SubscribeAndPublishExample {
 
-    public static final String USERNAME = "account-id";
-    public static final String PASSWORD = "password";
+    public static final String API_KEY = "your-api-key-goes-here";
+    public static final String API_SECRET = "your-api-secret-goes-here";
 
     public static final String SMS_FROM = "12345";
     public static final String SMS_TO = "447777111222";
     public static final String SMS_TEXT = "Hello World!";
 
     // -- TODO -- fill in your own topic ARN from your amazon SNS console
-    public static final String TOPIC_ARN = "arn:aws:sns:us-east-1:475338436304:paul"; 
+    public static final String TOPIC_ARN = "arn:aws:sns:us-east-1:475338436304:paul";
 
     public static void main(String[] args) {
 
@@ -34,11 +55,11 @@ public class SubscribeAndPublishExample {
 
         NexmoSnsClient client = null;
         try {
-            client = new NexmoSnsClient(USERNAME, PASSWORD);
+            client = new NexmoSnsClient(API_KEY, API_SECRET);
         } catch (Exception e) {
             System.err.println("Failed to instanciate a Nexmo Client");
             e.printStackTrace();
-            System.exit(1);
+            throw new RuntimeException("Failed to instanciate a Nexmo Client");
         }
 
         // Create a Request to subscribe a phone number to the SNS service
@@ -49,7 +70,7 @@ public class SubscribeAndPublishExample {
         } catch (Exception e) {
             System.err.println("Failed to construct a SubscriptionRequest");
             e.printStackTrace();
-            System.exit(1);
+            throw new RuntimeException("Failed to construct a SubscriptionRequest");
         }
 
         // Use the Nexmo client to submit this subscription
@@ -60,7 +81,7 @@ public class SubscribeAndPublishExample {
         } catch (Exception e) {
             System.err.println("Failed to perform subscription");
             e.printStackTrace();
-            System.exit(1);
+            throw new RuntimeException("Failed to perform subscription");
         }
 
         // Evaluate the subscription response .....
@@ -78,7 +99,7 @@ public class SubscribeAndPublishExample {
         } catch (Exception e) {
             System.err.println("Failed to construct a PublishRequest");
             e.printStackTrace();
-            System.exit(1);
+            throw new RuntimeException("Failed to construct a PublishRequest");
         }
 
         // Use the Nexmo client to submit this subscription
@@ -89,7 +110,7 @@ public class SubscribeAndPublishExample {
         } catch (Exception e) {
             System.err.println("Failed to perform publish");
             e.printStackTrace();
-            System.exit(1);
+            throw new RuntimeException("Failed to perform publish");
         }
 
         // Evaluate the publish response .....

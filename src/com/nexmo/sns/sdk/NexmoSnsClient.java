@@ -1,10 +1,30 @@
 package com.nexmo.sns.sdk;
+/*
+ * Copyright (c) 2011-2013 Nexmo Inc
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.io.StringReader;
-import java.net.URLEncoder;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -17,11 +37,14 @@ import org.xml.sax.InputSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.util.EncodingUtil;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.impl.client.BasicResponseHandler;
 
 import com.nexmo.common.http.HttpClientUtils;
 import com.nexmo.sns.sdk.request.Request;
@@ -37,7 +60,7 @@ import com.nexmo.sns.sdk.response.SnsServiceResult;
  */
 public class NexmoSnsClient {
 
-    protected static Log log = LogFactory.getLog(NexmoSnsClient.class);
+    private static final Log log = LogFactory.getLog(NexmoSnsClient.class);
 
     /**
      * http://rest.nexmo.com/sms/xml<br>
@@ -60,8 +83,8 @@ public class NexmoSnsClient {
 
     private final String baseUrlHttp;
     private final String baseUrlHttps;
-    private final String username;
-    private final String password;
+    private final String apiKey;
+    private final String apiSecret;
 
     private final int connectionTimeout;
     private final int soTimeout;
@@ -71,14 +94,14 @@ public class NexmoSnsClient {
     /**
      * Instanciate a new NexmoSnsClient instance that will communicate using the supplied credentials.
      *
-     * @param username Your Nexmo account id
-     * @param password Your Nexmo account password
+     * @param apiKey Your Nexmo account api key
+     * @param apiSecret Your Nexmo account api secret
      */
-    public NexmoSnsClient(final String username,
-                          final String password) throws Exception {
+    public NexmoSnsClient(final String apiKey,
+                          final String apiSecret) throws Exception {
         this(DEFAULT_BASE_URL,
-             username,
-             password,
+             apiKey,
+             apiSecret,
              DEFAULT_CONNECTION_TIMEOUT,
              DEFAULT_SO_TIMEOUT);
     }
@@ -86,18 +109,18 @@ public class NexmoSnsClient {
     /**
      * Instanciate a new NexmoSnsClient instance that will communicate using the supplied credentials, and will use the supplied connection and read timeout values.
      *
-     * @param username Your Nexmo account id
-     * @param password Your Nexmo account password
+     * @param apiKey Your Nexmo account api key
+     * @param apiSecret Your Nexmo account api secret
      * @param connectionTimeout over-ride the default connection timeout with this value (in milliseconds)
      * @param soTimeout over-ride the default read-timeout with this value (in milliseconds)
      */
-    public NexmoSnsClient(final String username,
-                          final String password,
+    public NexmoSnsClient(final String apiKey,
+                          final String apiSecret,
                           final int connectionTimeout,
                           final int soTimeout) throws Exception {
         this(DEFAULT_BASE_URL,
-             username,
-             password,
+             apiKey,
+             apiSecret,
              connectionTimeout,
              soTimeout);
     }
@@ -107,14 +130,14 @@ public class NexmoSnsClient {
      * Additionally, you can specify an alternative service base url. For example submitting to a testing sandbox environment,
      * or if requested to submit to an alternative address by Nexmo, for example, in cases where it may be necessary to prioritize your traffic.
      *
-     * @param username Your Nexmo account id
-     * @param password Your Nexmo account password
+     * @param apiKey Your Nexmo account api key
+     * @param apiSecret Your Nexmo account api secret
      * @param connectionTimeout over-ride the default connection timeout with this value (in milliseconds)
      * @param soTimeout over-ride the default read-timeout with this value (in milliseconds)
      */
     public NexmoSnsClient(String baseUrl,
-                          final String username,
-                          final String password,
+                          final String apiKey,
+                          final String apiSecret,
                           final int connectionTimeout,
                           final int soTimeout) throws Exception {
 
@@ -131,8 +154,8 @@ public class NexmoSnsClient {
             this.baseUrlHttp = "http://" + baseUrl.substring(8);
         }
 
-        this.username = username;
-        this.password = password;
+        this.apiKey = apiKey;
+        this.apiSecret = apiSecret;
         this.connectionTimeout = connectionTimeout;
         this.soTimeout = soTimeout;
         try {
@@ -159,44 +182,40 @@ public class NexmoSnsClient {
 
         // Construct a query string as a list of NameValuePairs
 
-        List<NameValuePair> params = new ArrayList();
-        boolean doPost = false;
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
 
-        params.add(new NameValuePair("account", this.username));
-        params.add(new NameValuePair("password", this.password));
-        params.add(new NameValuePair("cmd", request.getCommand()));
+        params.add(new BasicNameValuePair("api_key", this.apiKey));
+        params.add(new BasicNameValuePair("api_secret", this.apiSecret));
+        params.add(new BasicNameValuePair("cmd", request.getCommand()));
         if (request.getQueryParameters() != null)
             for (Map.Entry<String, String> entry: request.getQueryParameters().entrySet())
-                params.add(new NameValuePair(entry.getKey(), entry.getValue()));
-
-        NameValuePair[] queryString = (NameValuePair[])params.toArray(new NameValuePair[params.size()]);
+                params.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
 
         String baseUrl = https ? this.baseUrlHttps : this.baseUrlHttp;
 
         // Now that we have generated a query string, we can instanciate a HttpClient,
         // construct a POST or GET method and execute to submit the request
         String response = null;
-        HttpMethod method = new PostMethod(baseUrl);
-        method.setQueryString(EncodingUtil.formUrlEncode(queryString, "UTF-8"));
-        String url = baseUrl + "?" + method.getQueryString();
+        HttpPost method = new HttpPost(baseUrl);
+        method.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+        String url = baseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
         try {
             if (this.httpClient == null)
                 this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
-            int status = this.httpClient.executeMethod(method);
+            HttpResponse httpResponse = this.httpClient.execute(method);
+            int status = httpResponse.getStatusLine().getStatusCode();
             if (status != 200)
                 throw new Exception("got a non-200 response [ " + status + " ] from Nexmo-HTTP for url [ " + url + " ] ");
-            response = method.getResponseBodyAsString();
-            method.releaseConnection();
+            response = new BasicResponseHandler().handleResponse(httpResponse);
             log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
         } catch (Exception e) {
             log.info("communication failure: " + e);
+            method.abort();
             return new SnsServiceResult(request.getCommand(),
                                         SnsServiceResult.STATUS_COMMS_FAILURE,
                                         "Failed to communicate with NEXMO-HTTP url [ " + url + " ] ..." + e,
                                         null,
                                         null);
-        } finally {
-            method.releaseConnection();
         }
 
         // parse the response doc ...

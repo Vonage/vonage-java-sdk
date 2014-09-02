@@ -1,4 +1,28 @@
 package com.nexmo.messaging.sdk.messages;
+/*
+ * Copyright (c) 2011-2013 Nexmo Inc
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
+import com.nexmo.messaging.sdk.messages.parameters.MessageClass;
+
 /**
  * BinaryMessage.java<br><br>
  *
@@ -10,6 +34,8 @@ package com.nexmo.messaging.sdk.messages;
  * @version 1.0
  */
 public class BinaryMessage extends Message {
+
+    static final long serialVersionUID = -5301775803396025570L;
 
     /**
      * Instanciate a new binary sms message request.
@@ -41,11 +67,13 @@ public class BinaryMessage extends Message {
               false,
               null,
               null,
-              0);
+              0,
+              null,
+              null);
     }
 
     /**
-     * Instanciate a new binary sms message request, attaching an optional client reference, and optionally requesting a delivery notification.
+     * Instanciate a new binary sms message request, attaching an optional client reference, message-class or TTL, and optionally requesting a delivery notification.
      *
      * @param from the 'from' address that will be seen on the handset when this message arrives,
      *             typically either a valid short-code / long code that can be replied to, or a short text description of the application sending the message (Max 11 chars)
@@ -63,13 +91,17 @@ public class BinaryMessage extends Message {
      * @param statusReportRequired If set to true, then a delivery notification will be requested for this message delivery attempt.
      *                             Upon receiving notification of delivery or failure from the network, the Nexmo platform will submit a notification to the url configured in your
      *                             Nexmo REST account that represents the outcome of this message.
+     * @param messageClass (Optional) The message class that is to be applied to this message.
+     * @param protocolId The value of the GSM Protocol ID field to be submitted with this message. Ordinarily this should be left as the default value of 0
      */
     public BinaryMessage(final String from,
                          final String to,
                          final byte[] binaryMessageBody,
                          final byte[] binaryMessageUdh,
                          final String clientReference,
-                         final boolean statusReportRequired) {
+                         final boolean statusReportRequired,
+                         final MessageClass messageClass,
+                         final Integer protocolId) {
         super(MESSAGE_TYPE_BINARY,
               from,
               to,
@@ -81,7 +113,9 @@ public class BinaryMessage extends Message {
               statusReportRequired,
               null,
               null,
-              0);
+              0,
+              messageClass,
+              protocolId);
     }
 
 }

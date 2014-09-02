@@ -1,4 +1,25 @@
 package com.nexmo.messaging.sdk.examples;
+/*
+ * Copyright (c) 2011-2013 Nexmo Inc
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 
 import com.nexmo.messaging.sdk.NexmoSmsClient;
 import com.nexmo.messaging.sdk.SmsSubmissionResult;
@@ -16,8 +37,8 @@ import com.nexmo.messaging.sdk.messages.TextMessage;
  */
 public class SendTextMessage {
 
-    public static final String USERNAME = "account-id";
-    public static final String PASSWORD = "password";
+    public static final String API_KEY = "your-api-key-goes-here";
+    public static final String API_SECRET = "your-api-secret-goes-here";
 
     public static final String SMS_FROM = "12345";
     public static final String SMS_TO = "447777111222";
@@ -29,18 +50,18 @@ public class SendTextMessage {
 
         NexmoSmsClient client = null;
         try {
-            client = new NexmoSmsClient(USERNAME, PASSWORD);
+            client = new NexmoSmsClient(API_KEY, API_SECRET);
         } catch (Exception e) {
             System.err.println("Failed to instanciate a Nexmo Client");
             e.printStackTrace();
-            System.exit(1);
+            throw new RuntimeException("Failed to instanciate a Nexmo Client");
         }
 
         // Create a Text SMS Message request object ...
 
         TextMessage message = new TextMessage(SMS_FROM, SMS_TO, SMS_TEXT);
 
-        // Use the Nexmo client top submit the Text Message ...
+        // Use the Nexmo client to submit the Text Message ...
 
         SmsSubmissionResult[] results = null;
         try {
@@ -48,7 +69,7 @@ public class SendTextMessage {
         } catch (Exception e) {
             System.err.println("Failed to communicate with the Nexmo Client");
             e.printStackTrace();
-            System.exit(1);
+            throw new RuntimeException("Failed to communicate with the Nexmo Client");
         }
 
         // Evaluate the results of the submission attempt ...
