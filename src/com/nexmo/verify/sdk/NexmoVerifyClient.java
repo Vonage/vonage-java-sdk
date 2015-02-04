@@ -21,12 +21,34 @@ package com.nexmo.verify.sdk;
  * THE SOFTWARE.
  */
 
+import com.nexmo.common.http.HttpClientUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.message.BasicNameValuePair;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Client for talking to the Nexmo REST interface<br><br>
@@ -40,21 +62,34 @@ import javax.xml.parsers.DocumentBuilderFactory;
 public class NexmoVerifyClient {
     private static final Log log = LogFactory.getLog(NexmoVerifyClient.class);
 
+    public static enum LineType {
+
+        ALL,
+        MOBILE,
+        LANDLINE;
+
+        @Override
+        public String toString() {
+            String name = name();
+            return Character.toUpperCase(name.charAt(0)) + name.substring(1);
+        }
+    }
+
     /**
      * http://rest.nexmo.com<br>
      * Service url used unless over-ridden on the constructor
      */
-    public static final String DEFAULT_BASE_URL = "http://rest.nexmo.com";
+    public static final String DEFAULT_BASE_URL = "https://api.nexmo.com";
 
     /**
      * The endpoint path for submitting verification requests
      */
-    public static final String SUBMISSION_PATH_VERIFY = "/verify/xml";
+    public static final String PATH_VERIFY = "/verify/xml";
 
     /**
      * The endpoint path for submitting ussd 'display' messages
      */
-    public static final String SUBMISSION_PATH_VERIFY_CHECK = "/verify/check/xml";
+    public static final String PATH_VERIFY_CHECK = "/verify/check/xml";
 
     /**
      * Default connection timeout of 5000ms used by this client unless specifically overridden onb the constructor
@@ -66,18 +101,15 @@ public class NexmoVerifyClient {
      */
     public static final int DEFAULT_SO_TIMEOUT = 30000;
 
-    private DocumentBuilderFactory documentBuilderFactory;
-    private DocumentBuilder documentBuilder;
+    private final DocumentBuilderFactory documentBuilderFactory;
+    private final DocumentBuilder documentBuilder;
 
-    private final String baseUrlHttp;
-    private final String baseUrlHttps;
+    private final String baseUrl;
     private final String apiKey;
     private final String apiSecret;
 
     private final int connectionTimeout;
     private final int soTimeout;
-
-    private final boolean useSSL;
 
     private HttpClient httpClient = null;
 
@@ -88,33 +120,12 @@ public class NexmoVerifyClient {
      * @param apiSecret Your Nexmo account api secret
      */
     public NexmoVerifyClient(final String apiKey,
-                          final String apiSecret) throws Exception {
+                          final String apiSecret) throws ParserConfigurationException {
         this(DEFAULT_BASE_URL,
                 apiKey,
                 apiSecret,
                 DEFAULT_CONNECTION_TIMEOUT,
-                DEFAULT_SO_TIMEOUT,
-                false); // useSSL
-    }
-
-    /**
-     * Instanciate a new NexmoVerifyClient instance that will communicate using the supplied credentials, and will use the supplied connection and read timeout values.
-     *
-     * @param apiKey Your Nexmo account api key
-     * @param apiSecret Your Nexmo account api secret
-     * @param connectionTimeout over-ride the default connection timeout with this value (in milliseconds)
-     * @param soTimeout over-ride the default read-timeout with this value (in milliseconds)
-     */
-    public NexmoVerifyClient(final String apiKey,
-                          final String apiSecret,
-                          final int connectionTimeout,
-                          final int soTimeout) throws Exception {
-        this(DEFAULT_BASE_URL,
-                apiKey,
-                apiSecret,
-                connectionTimeout,
-                soTimeout,
-                false); // useSSL
+                DEFAULT_SO_TIMEOUT);
     }
 
     /**
@@ -126,40 +137,174 @@ public class NexmoVerifyClient {
      * @param apiSecret Your Nexmo account api secret
      * @param connectionTimeout over-ride the default connection timeout with this value (in milliseconds)
      * @param soTimeout over-ride the default read-timeout with this value (in milliseconds)
-     * @param useSSL do we use a SSL / HTTPS connection for submitting requests
      */
     public NexmoVerifyClient(String baseUrl,
                           final String apiKey,
                           final String apiSecret,
                           final int connectionTimeout,
-                          final int soTimeout,
-                          final boolean useSSL) throws Exception {
+                          final int soTimeout) throws ParserConfigurationException {
 
         // Derive a http and a https version of the supplied base url
         baseUrl = baseUrl.trim();
         String lc = baseUrl.toLowerCase();
         if (!lc.startsWith("http://") && !lc.startsWith("https://"))
-            throw new Exception("base url does not start with http:// or https://");
-        if (lc.startsWith("http://")) {
-            this.baseUrlHttp = baseUrl;
-            this.baseUrlHttps = "https://" + baseUrl.substring(7);
-        } else {
-            this.baseUrlHttps = baseUrl;
-            this.baseUrlHttp = "http://" + baseUrl.substring(8);
-        }
+            throw new IllegalArgumentException("base url does not start with http:// or https://");
 
+        this.baseUrl = baseUrl;
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
         this.connectionTimeout = connectionTimeout;
         this.soTimeout = soTimeout;
-        try {
-            this.documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            this.documentBuilder = this.documentBuilderFactory.newDocumentBuilder();
-        } catch (javax.xml.parsers.ParserConfigurationException e) {
-            throw new Exception("ERROR initializing XML Document builder!", e);
+        this.documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        this.documentBuilder = this.documentBuilderFactory.newDocumentBuilder();
+    }
+
+    public VerifyResult verify(String number, String brand) throws IOException, SAXException {
+        return verify(number, brand, null, -1, null, null);
+    }
+
+    public VerifyResult verify(String number, String brand, String from) throws IOException, SAXException {
+        return verify(number, brand, from, -1, null, null);
+    }
+
+    public VerifyResult verify(String number, String brand, String from, int length, Locale locale)
+            throws IOException, SAXException {
+        return verify(number, brand, from, length, locale, null);
+    }
+
+    public VerifyResult verify(String number, String brand, String from, int length, Locale locale, LineType type)
+            throws IOException, SAXException {
+
+        if (number == null || brand == null)
+            throw new IllegalArgumentException("number and brand parameters are mandatory.");
+        if (length > 0 && length != 4 && length != 6)
+            throw new IllegalArgumentException("code length must be 4 or 6.");
+
+        log.debug("HTTP-Verify Client .. to [ " + number + " ] brand [ " + brand + " ] ");
+
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+        params.add(new BasicNameValuePair("api_key", this.apiKey));
+        params.add(new BasicNameValuePair("api_secret", this.apiSecret));
+
+        params.add(new BasicNameValuePair("number", number));
+        params.add(new BasicNameValuePair("brand", brand));
+
+        if (from != null)
+            params.add(new BasicNameValuePair("sender_id", from));
+
+        if (length > 0)
+            params.add(new BasicNameValuePair("code_length", String.valueOf(length)));
+
+        if (locale != null)
+            params.add(new BasicNameValuePair("lg",
+                (locale.getLanguage() + "-" + locale.getCountry()).toLowerCase()));
+
+        if (type != null) {
+            params.add(new BasicNameValuePair("require_type", type.toString()));
         }
 
-        this.useSSL = useSSL;
+        String baseUrl = this.baseUrl + PATH_VERIFY;
+
+        // Now that we have generated a query string, we can instanciate a HttpClient,
+        // construct a POST or GET method and execute to submit the request
+        String response = null;
+        for (int pass=1;pass<=2;pass++) {
+            HttpUriRequest method;
+            // TODO what's this for?
+            final boolean doPost = true;
+            String url;
+            if (doPost) {
+                HttpPost httpPost = new HttpPost(baseUrl);
+                httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+                method = httpPost;
+                url = baseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
+            } else {
+                String query = URLEncodedUtils.format(params, "utf-8");
+                method = new HttpGet(baseUrl + "?" + query);
+                url = method.getRequestLine().getUri();
+            }
+
+            try {
+                if (this.httpClient == null)
+                    this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
+                HttpResponse httpResponse = this.httpClient.execute(method);
+                int status = httpResponse.getStatusLine().getStatusCode();
+                if (status != 200)
+                    throw new Exception("got a non-200 response [ " + status + " ] from Nexmo-HTTP for url [ " + url + " ] ");
+                response = new BasicResponseHandler().handleResponse(httpResponse);
+                log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
+                break;
+            }
+            catch (Exception e) {
+                method.abort();
+                log.info("communication failure: " + e);
+                String exceptionMsg = e.getMessage();
+                if (exceptionMsg.indexOf("Read timed out") >= 0) {
+                    log.info("we're still connected, but the target did not respond in a timely manner ..  drop ...");
+                } else {
+                    if (pass == 1) {
+                        log.info("... re-establish http client ...");
+                        this.httpClient = null;
+                        continue;
+                    }
+                }
+
+                // return a COMMS failure ...
+                return new VerifyResult(VerifyResult.STATUS_COMMS_FAILURE,
+                        null,
+                        "Failed to communicate with NEXMO-HTTP url [ " + url + " ] ..." + e,
+                        true);
+            }
+        }
+
+        Document doc;
+        synchronized(this.documentBuilder) {
+            doc = this.documentBuilder.parse(new InputSource(new StringReader(response)));
+        }
+
+        Element root = doc.getDocumentElement();
+        if (!"verify_response".equals(root.getNodeName()))
+            throw new IOException("No valid response found [ " + response + "] ");
+
+        String requestId = null;
+        int status = -1;
+        String errorText = null;
+
+        NodeList fields = root.getChildNodes();
+        for (int i = 0; i < fields.getLength(); i++) {
+            Node node = fields.item(i);
+            if (node.getNodeType() != Node.ELEMENT_NODE)
+                continue;
+
+            String name = node.getNodeName();
+            if ("request_id".equals(name)) {
+                requestId = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+            }
+            else if ("status".equals(name)) {
+                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                try {
+                    if (str != null)
+                        status = Integer.parseInt(str);
+                }
+                catch (NumberFormatException e) {
+                    log.error("xml parser .. invalid value in <status> node [ " + str + " ] ");
+                    status = VerifyResult.STATUS_INTERNAL_ERROR;
+                }
+            }
+            else if ("error_text".equals(name)) {
+                errorText = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+            }
+        }
+
+        if (status == -1)
+            throw new IOException("Xml Parser - did not find a <status> node");
+
+        // Is this a temporary error ?
+        boolean temporaryError = (status == VerifyResult.STATUS_THROTTLED ||
+                status == VerifyResult.STATUS_INTERNAL_ERROR);
+
+        return new VerifyResult(status, requestId, errorText, temporaryError);
     }
 
 }
