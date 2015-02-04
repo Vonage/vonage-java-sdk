@@ -22,23 +22,37 @@ package com.nexmo.verify.sdk;
  */
 
 /**
- * Verification request result.
+ * Verification check result.
  * @author Daniele Ricci
  */
-public class VerifyResult extends BaseResult {
+public class CheckResult extends BaseResult {
 
-    private final String requestId;
+    private final String eventId;
+    private final float price;
+    private final String currency;
 
-    protected VerifyResult(final int status,
-            final String requestId,
-            final String errorText,
-            final boolean temporaryError) {
+    protected CheckResult(final int status,
+                          final String eventId,
+                          final float price,
+                          final String currency,
+                          final String errorText,
+                          final boolean temporaryError) {
         super(status, errorText, temporaryError);
-        this.requestId = requestId;
+        this.eventId = eventId;
+        this.price = price;
+        this.currency = currency;
     }
 
-    public String getRequestId() {
-        return requestId;
+    public String getEventId() {
+        return eventId;
+    }
+
+    public float getPrice() {
+        return price;
+    }
+
+    public String getCurrency() {
+        return currency;
     }
 
 }

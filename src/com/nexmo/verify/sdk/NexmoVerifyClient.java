@@ -307,4 +307,145 @@ public class NexmoVerifyClient {
         return new VerifyResult(status, requestId, errorText, temporaryError);
     }
 
+    public CheckResult check(String requestId, String code) throws IOException, SAXException {
+        return check(requestId, code, null);
+    }
+
+    public CheckResult check(String requestId, String code, String ipAddress) throws IOException, SAXException {
+        if (requestId == null || code == null)
+            throw new IllegalArgumentException("request ID and code parameters are mandatory.");
+
+        log.debug("HTTP-Verify-Check Client .. for [ " + requestId + " ] code [ " + code + " ] ");
+
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+        params.add(new BasicNameValuePair("api_key", this.apiKey));
+        params.add(new BasicNameValuePair("api_secret", this.apiSecret));
+
+        params.add(new BasicNameValuePair("request_id", requestId));
+        params.add(new BasicNameValuePair("code", code));
+
+        if (ipAddress != null)
+            params.add(new BasicNameValuePair("ip_address", ipAddress));
+
+        String baseUrl = this.baseUrl + PATH_VERIFY_CHECK;
+
+        // Now that we have generated a query string, we can instanciate a HttpClient,
+        // construct a POST or GET method and execute to submit the request
+        String response = null;
+        for (int pass=1;pass<=2;pass++) {
+            HttpUriRequest method;
+            // TODO what's this for?
+            final boolean doPost = true;
+            String url;
+            if (doPost) {
+                HttpPost httpPost = new HttpPost(baseUrl);
+                httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+                method = httpPost;
+                url = baseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
+            } else {
+                String query = URLEncodedUtils.format(params, "utf-8");
+                method = new HttpGet(baseUrl + "?" + query);
+                url = method.getRequestLine().getUri();
+            }
+
+            try {
+                if (this.httpClient == null)
+                    this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
+                HttpResponse httpResponse = this.httpClient.execute(method);
+                int status = httpResponse.getStatusLine().getStatusCode();
+                if (status != 200)
+                    throw new Exception("got a non-200 response [ " + status + " ] from Nexmo-HTTP for url [ " + url + " ] ");
+                response = new BasicResponseHandler().handleResponse(httpResponse);
+                log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
+                break;
+            }
+            catch (Exception e) {
+                method.abort();
+                log.info("communication failure: " + e);
+                String exceptionMsg = e.getMessage();
+                if (exceptionMsg.indexOf("Read timed out") >= 0) {
+                    log.info("we're still connected, but the target did not respond in a timely manner ..  drop ...");
+                } else {
+                    if (pass == 1) {
+                        log.info("... re-establish http client ...");
+                        this.httpClient = null;
+                        continue;
+                    }
+                }
+
+                // return a COMMS failure ...
+                return new CheckResult(CheckResult.STATUS_COMMS_FAILURE,
+                        null,
+                        0,
+                        null,
+                        "Failed to communicate with NEXMO-HTTP url [ " + url + " ] ..." + e,
+                        true);
+            }
+        }
+
+        Document doc;
+        synchronized(this.documentBuilder) {
+            doc = this.documentBuilder.parse(new InputSource(new StringReader(response)));
+        }
+
+        Element root = doc.getDocumentElement();
+        if (!"verify_response".equals(root.getNodeName()))
+            throw new IOException("No valid response found [ " + response + "] ");
+
+        String eventId = null;
+        int status = -1;
+        float price = -1;
+        String currency = null;
+        String errorText = null;
+
+        NodeList fields = root.getChildNodes();
+        for (int i = 0; i < fields.getLength(); i++) {
+            Node node = fields.item(i);
+            if (node.getNodeType() != Node.ELEMENT_NODE)
+                continue;
+
+            String name = node.getNodeName();
+            if ("event_id".equals(name)) {
+                eventId = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+            }
+            else if ("status".equals(name)) {
+                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                try {
+                    if (str != null)
+                        status = Integer.parseInt(str);
+                }
+                catch (NumberFormatException e) {
+                    log.error("xml parser .. invalid value in <status> node [ " + str + " ] ");
+                    status = VerifyResult.STATUS_INTERNAL_ERROR;
+                }
+            }
+            else if ("price".equals(name)) {
+                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                try {
+                    if (str != null)
+                        price = Float.parseFloat(str);
+                }
+                catch (NumberFormatException e) {
+                    log.error("xml parser .. invalid value in <price> node [ " + str + " ] ");
+                }
+            }
+            else if ("currency".equals(name)) {
+                currency = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+            }
+            else if ("error_text".equals(name)) {
+                errorText = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+            }
+        }
+
+        if (status == -1)
+            throw new IOException("Xml Parser - did not find a <status> node");
+
+        // Is this a temporary error ?
+        boolean temporaryError = (status == VerifyResult.STATUS_THROTTLED ||
+                status == VerifyResult.STATUS_INTERNAL_ERROR);
+
+        return new CheckResult(status, eventId, price, currency, errorText, temporaryError);
+    }
+
 }
