@@ -36,12 +36,12 @@ import com.nexmo.messaging.sdk.messages.TextMessage;
  * @version 1.0
  */
 public class SendTextMessage {
+	//TODO: CHECKOUT ALL CHANGES
+    public static final String API_KEY = "493178a1";
+    public static final String API_SECRET = "6b932842";
 
-    public static final String API_KEY = "your-api-key-goes-here";
-    public static final String API_SECRET = "your-api-secret-goes-here";
-
-    public static final String SMS_FROM = "12345";
-    public static final String SMS_TO = "447777111222";
+    public static final String SMS_FROM = "12069396346";
+    public static final String SMS_TO = "12154852564";
     public static final String SMS_TEXT = "Hello World!";
 
     public static void main(String[] args) {
