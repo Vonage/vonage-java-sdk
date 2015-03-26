@@ -1,6 +1,9 @@
 package com.nexmo.messaging.sdk;
 
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,49 +25,49 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import com.nexmo.common.http.HttpClientUtils;
+import com.nexmo.messaging.sdk.verify.CheckResponse;
+import com.nexmo.messaging.sdk.verify.SearchResponse;
 import com.nexmo.messaging.sdk.verify.VerifyRequest;
 import com.nexmo.messaging.sdk.verify.VerifyResponse;
 import com.nexmo.security.RequestSigning;
 
-public class NexmoVerifyClient {
+public class NexmoVerifyClient extends BaseConnectionClient {
 	private static final Log log = LogFactory.getLog(NexmoVerifyClient.class);
 
-	public static final String DEFAULT_BASE_URL = "https://api.nexmo.com";
+	public static final String BASE_URL = "https://api.nexmo.com";
 
 	/**
-	 * The endpoint path for submitting sms messages
+	 * The end-point path for submitting verify requests
 	 */
 	public static final String SUBMISSION_PATH_VERIFY = "/verify/json";
+	
+	/**
+	 * The end-point for checking verify requests
+	 */
+	public static final String SUBMISSION_PATH_VERIFY_CHECK = "/verify/check/json";
 
 	/**
-	 * Default connection timeout of 5000ms used by this client unless specifically overridden on the constructor
+	 * Connection timeout
 	 */
-	public static final int DEFAULT_CONNECTION_TIMEOUT = 5000;
+	public static final int CONNECTION_TIMEOUT = BaseConnectionClient.DEFAULT_CONNECTION_TIMEOUT;
 
 	/**
-	 * Default read timeout of 30000ms used by this client unless specifically overridden on the constructor
+	 * Read timeout
 	 */
-	public static final int DEFAULT_SO_TIMEOUT = 30000;
+	public static final int DEFAULT_SO_TIMEOUT = BaseConnectionClient.DEFAULT_SO_TIMEOUT;
 
-	private final String baseUrl;
+	
 	private final String apiKey;
 	private final String apiSecret;
-
-	private final int connectionTimeout;
-	private final int soTimeout;
-
 	private final boolean signRequests;
 	private final String signatureSecretKey;
-
-
-	private HttpClient httpClient = null;
 	
 	public NexmoVerifyClient(final String apiKey,
 							 final String apiSecret) throws Exception {
-		this(DEFAULT_BASE_URL,
+		this(BASE_URL,
 			apiKey,
 			apiSecret,
-			DEFAULT_CONNECTION_TIMEOUT,
+			CONNECTION_TIMEOUT,
 			DEFAULT_SO_TIMEOUT,
 			false,
 			null
@@ -73,31 +76,33 @@ public class NexmoVerifyClient {
 							 
 
 
-	public NexmoVerifyClient(String baseUrl,
+	public NexmoVerifyClient(final String baseUrl,
 			final String apiKey,
 			final String apiSecret,
 			final int connectionTimeout,
 			final int soTimeout,
 			final boolean signRequests,
 			final String signatureSecretKey) throws Exception {
-
-		this.baseUrl = baseUrl.trim();
+		
+		super(baseUrl, connectionTimeout, soTimeout);
+		
 		this.apiKey = apiKey;
 		this.apiSecret = apiSecret;
-		this.connectionTimeout = connectionTimeout;
-		this.soTimeout = soTimeout;
 		this.signRequests = signRequests;
-		this.signatureSecretKey = signatureSecretKey;
+		this.signatureSecretKey = signatureSecretKey;     
 	}
-
+	
+	/**
+	 * Start here by initiating a verify request to the API.
+	 * @see https://docs.nexmo.com/index.php/verify/verify
+	 */
+	
 	public VerifyResponse beginVerifyRequest (VerifyRequest verifyRequest) throws Exception {
-
-		String submitPath = SUBMISSION_PATH_VERIFY;
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		String verifyRequestId = null;
 		Integer verifyStatus = null;
-		String verifyErrorText = "";
+		String verifyErrorText = null;
 
 		params.add(new BasicNameValuePair("api_key", this.apiKey));
 		if (!this.signRequests)
@@ -119,65 +124,16 @@ public class NexmoVerifyClient {
 		if (verifyRequest.getPinExpiry() != null)
 			params.add(new BasicNameValuePair("pin_expiry", "" + verifyRequest.getPinExpiry()));
 		
-		String baseUrl = this.baseUrl;
-		baseUrl = baseUrl + submitPath;
-
-		String response = null;
-		for (int pass=1;pass<=2;pass++) {
-			HttpUriRequest method = null;
-			String url = null;
-
-			HttpPost httpPost = new HttpPost(baseUrl);
-			httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-			method = httpPost;
-			url = baseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
-
-
-			try {
-				if (this.httpClient == null)
-					this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
-				HttpResponse httpResponse = this.httpClient.execute(method);
-				int status = httpResponse.getStatusLine().getStatusCode();
-				if (status != 200)
-					throw new Exception("got a non-200 response [ " + status + " ] from Nexmo-HTTP for url [ " + url + " ] ");
-				response = new BasicResponseHandler().handleResponse(httpResponse);
-				log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
-				break;
-			} catch (Exception e) {
-				method.abort();
-				log.info("communication failure: " + e);
-				String exceptionMsg = e.getMessage();
-				if (exceptionMsg.indexOf("Read timed out") >= 0) {
-					log.info("we're still connected, but the target did not respond in a timely manner ..  drop ...");
-				} else {
-					if (pass == 1) {
-						log.info("... re-establish http client ...");
-						this.httpClient = null;
-						continue;
-					}
-				}
-			}
-		}
-		//TODO: USE LOGGER
-
+		/* MAKE CONNECTION*/
+		String response = makeConnection(SUBMISSION_PATH_VERIFY, params);
+		
+		/* PROCESS THE HTTP RESPONSE */
 		JSONParser parser = new JSONParser();
-		ContainerFactory containerFactory = new ContainerFactory(){
-			public List creatArrayContainer() {
-				return new LinkedList();
-			}
-
-			public Map createObjectContainer() {
-				return new LinkedHashMap();
-			}
-
-		};
-
+		ContainerFactory containerFactory = getContainerFactory(); 
 		try{
 			Map<String,String> json = (Map)parser.parse(response, containerFactory);
-			//Iterator iter = json.entrySet().iterator();
-			//log.info("==iterate result==");
-			
-			String requestIdString = "request_id";
+		
+			final String requestIdString = "request_id";
 			final String statusString = "status";
 			final String errorTextString = "error_text";
 			
@@ -185,22 +141,6 @@ public class NexmoVerifyClient {
 			verifyStatus = Integer.parseInt(json.get(statusString));	
 			if ( json.containsKey(errorTextString)) 
 				verifyErrorText = json.get(errorTextString);
-			
-			
-			/*while(iter.hasNext()){
-				Map.Entry entry = (Map.Entry)iter.next();
-				//log.info(entry.getKey() + "=>" + entry.getValue());
-				if (entry.getKey().equals("request_id")) {
-					log.info("Request ID: " + entry.getValue());
-				} else if ( entry.getKey().equals("status")) {
-					log.info("Status :" + entry.getValue());
-				} else if ( entry.getKey().equals("error_text")) {
-					log.info("Error_Text: " + entry.getValue());
-				}
-			}*/
-
-			//log.info("==toJSONString()==");
-			//log.info(JSONValue.toJSONString(json));
 		}
 		catch(ParseException pe){
 			log.info(pe);
@@ -208,5 +148,94 @@ public class NexmoVerifyClient {
 		
 		return new VerifyResponse(verifyRequestId, verifyStatus, verifyErrorText);
 	}
+	
+	public CheckResponse checkRequest(String requestId, String code) throws Exception {
+		return checkRequest(requestId, code, null);
+	}
+	
+	public CheckResponse checkRequest(String requestId, String code, String ipAddress) throws Exception{
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		String eventId = null;
+		Integer status = null;
+		BigDecimal price = null;
+		String currency = null;
+		String errorText = null;
+		
+		params.add(new BasicNameValuePair("api_key", this.apiKey));
+		if (!this.signRequests)
+			params.add(new BasicNameValuePair("api_secret", this.apiSecret));
+		if (this.signRequests)
+			RequestSigning.constructSignatureForRequestParameters(params, this.signatureSecretKey);
+		params.add(new BasicNameValuePair("request_id", requestId));
+		params.add(new BasicNameValuePair("code", code));
+		if(ipAddress != null)
+			params.add(new BasicNameValuePair("ip_address", requestId));
+		
+		String response = makeConnection(SUBMISSION_PATH_VERIFY_CHECK, params);
+		/* PROCESS THE HTTP RESPONSE */
+		JSONParser parser = new JSONParser();
+		ContainerFactory containerFactory = getContainerFactory(); 
+		try{
+			Map<String,String> json = (Map)parser.parse(response, containerFactory);
+		
+			final String eventIdString = "event_id";
+			final String statusString = "status";
+			final String priceString = "price";
+			final String currencyString = "currency";
+			final String errorTextString = "error_text";
+			
+			eventId =  json.get(eventIdString);
+			status = Integer.parseInt(json.get(statusString));
+			price = new BigDecimal(json.get(priceString));
+			currency = json.get(currencyString);
+			if ( json.containsKey(errorTextString)) 
+				errorText = json.get(errorTextString);
+		}
+		catch(ParseException pe){
+			log.info(pe);
+		}
+		
+		return new CheckResponse(eventId, status, price, currency, errorText);
+		
+	}
+	
+	public SearchResponse search (String requestId) throws TooManyRequestIdsException {
+		List<String> list = new ArrayList<>(1);
+		list.add(requestId);
+		search(list);
+	}
+	
+	public SearchResponse search (List<String> requestIds) throws TooManyRequestIdsException {
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		final String requestIdString = "request_id";
+		final String requestIdsString = "request_ids";
+			
+		if (requestIds.size() == 1) {
+			params.add(new BasicNameValuePair(requestIdString, requestIds.get(0) ));
+		} else if (requestIds.size() > 10 ) {
+			throw new TooManyRequestIdsException("Maximum 10 Request IDs allowed by Nexmo");
+		} else {
+			Iterator<String> it = requestIds.iterator();
+			while(it.hasNext()) {
+				params.add(new BasicNameValuePair(requestIdsString, it.next() ));
+			}
+		}
+		
+	}
+	
+}
+
+class TooManyRequestIdsException extends Exception {
+
+	private static final long serialVersionUID = 267011845743861836L;
+	
+	public TooManyRequestIdsException(){
+		super();
+	}
+	
+	public TooManyRequestIdsException(String message){
+		super(message);
+	}
+	
 }
 
