@@ -1,31 +1,25 @@
 package com.nexmo.messaging.sdk;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.simple.parser.ContainerFactory;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import com.nexmo.common.http.HttpClientUtils;
 import com.nexmo.messaging.sdk.verify.CheckResponse;
+import com.nexmo.messaging.sdk.verify.Checks;
 import com.nexmo.messaging.sdk.verify.SearchResponse;
 import com.nexmo.messaging.sdk.verify.VerifyRequest;
 import com.nexmo.messaging.sdk.verify.VerifyResponse;
@@ -45,7 +39,12 @@ public class NexmoVerifyClient extends BaseConnectionClient {
 	 * The end-point for checking verify requests
 	 */
 	public static final String SUBMISSION_PATH_VERIFY_CHECK = "/verify/check/json";
-
+	
+	/**
+	 * The end-point for verify search requests
+	 */
+	public static final String SUBMISSION_PATH_VERIFY_SEARCH = "/verify/search/json";
+	
 	/**
 	 * Connection timeout
 	 */
@@ -55,8 +54,13 @@ public class NexmoVerifyClient extends BaseConnectionClient {
 	 * Read timeout
 	 */
 	public static final int DEFAULT_SO_TIMEOUT = BaseConnectionClient.DEFAULT_SO_TIMEOUT;
-
 	
+	/**
+	 * Nexmo Date Format
+	 */
+	public static final String DEFAULT_DATE_FORMAT="yyyy-MM-dd HH:mm:ss";
+	
+	private final DateFormat format = new SimpleDateFormat(DEFAULT_DATE_FORMAT, Locale.ENGLISH);
 	private final String apiKey;
 	private final String apiSecret;
 	private final boolean signRequests;
@@ -97,6 +101,7 @@ public class NexmoVerifyClient extends BaseConnectionClient {
 	 * @see https://docs.nexmo.com/index.php/verify/verify
 	 */
 	
+	@SuppressWarnings("unchecked")
 	public VerifyResponse beginVerifyRequest (VerifyRequest verifyRequest) throws Exception {
 
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -131,7 +136,7 @@ public class NexmoVerifyClient extends BaseConnectionClient {
 		JSONParser parser = new JSONParser();
 		ContainerFactory containerFactory = getContainerFactory(); 
 		try{
-			Map<String,String> json = (Map)parser.parse(response, containerFactory);
+			Map<String,String> json = (Map<String,String>)parser.parse(response, containerFactory);
 		
 			final String requestIdString = "request_id";
 			final String statusString = "status";
@@ -153,6 +158,7 @@ public class NexmoVerifyClient extends BaseConnectionClient {
 		return checkRequest(requestId, code, null);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public CheckResponse checkRequest(String requestId, String code, String ipAddress) throws Exception{
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		String eventId = null;
@@ -176,7 +182,7 @@ public class NexmoVerifyClient extends BaseConnectionClient {
 		JSONParser parser = new JSONParser();
 		ContainerFactory containerFactory = getContainerFactory(); 
 		try{
-			Map<String,String> json = (Map)parser.parse(response, containerFactory);
+			Map<String,String> json = (Map<String,String>)parser.parse(response, containerFactory);
 		
 			final String eventIdString = "event_id";
 			final String statusString = "status";
@@ -188,7 +194,7 @@ public class NexmoVerifyClient extends BaseConnectionClient {
 			status = Integer.parseInt(json.get(statusString));
 			price = new BigDecimal(json.get(priceString));
 			currency = json.get(currencyString);
-			if ( json.containsKey(errorTextString)) 
+			if ( json.containsKey(errorTextString) ) 
 				errorText = json.get(errorTextString);
 		}
 		catch(ParseException pe){
@@ -199,21 +205,31 @@ public class NexmoVerifyClient extends BaseConnectionClient {
 		
 	}
 	
-	public SearchResponse search (String requestId) throws TooManyRequestIdsException {
+	public SearchResponse search (String requestId) throws Exception {
 		List<String> list = new ArrayList<>(1);
 		list.add(requestId);
-		search(list);
+		SearchResponse[] searchResponse = search(list);
+		return searchResponse[0];
 	}
 	
-	public SearchResponse search (List<String> requestIds) throws TooManyRequestIdsException {
+	@SuppressWarnings("unchecked")
+	public SearchResponse[] search (List<String> requestIds) throws Exception {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		final String requestIdString = "request_id";
 		final String requestIdsString = "request_ids";
-			
+		String verificationRequestsString = "verification_requests";
+		SearchResponse[] searchResponse = null;
+		
+		params.add(new BasicNameValuePair("api_key", this.apiKey));
+		if (!this.signRequests)
+			params.add(new BasicNameValuePair("api_secret", this.apiSecret));
+		if (this.signRequests)
+			RequestSigning.constructSignatureForRequestParameters(params, this.signatureSecretKey);
+		
 		if (requestIds.size() == 1) {
 			params.add(new BasicNameValuePair(requestIdString, requestIds.get(0) ));
 		} else if (requestIds.size() > 10 ) {
-			throw new TooManyRequestIdsException("Maximum 10 Request IDs allowed by Nexmo");
+			throw new TooManyRequestIdsException("Maximum 10 Request IDs allowed by Nexmo Search API");
 		} else {
 			Iterator<String> it = requestIds.iterator();
 			while(it.hasNext()) {
@@ -221,6 +237,106 @@ public class NexmoVerifyClient extends BaseConnectionClient {
 			}
 		}
 		
+		String response = makeConnection(SUBMISSION_PATH_VERIFY_SEARCH, params);
+		JSONParser parser = new JSONParser();
+		ContainerFactory containerFactory = getContainerFactory(); 
+		
+		try{
+			Map<String,Object> json = (Map<String,Object>)parser.parse(response, containerFactory);
+		
+			if (json.containsKey(verificationRequestsString)) {
+				searchResponse = parseMultipleSearchResults((List<Object>)json.get(verificationRequestsString));
+			} else {
+				searchResponse = new SearchResponse[1];
+				searchResponse[0] = parseSingleSearchResult(json);
+			}
+			
+		}
+		catch(ParseException pe){
+			log.info(pe);
+		}
+		
+		return searchResponse;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private SearchResponse[] parseMultipleSearchResults(List<Object> results) throws java.text.ParseException {
+		List<SearchResponse> searchResponse = new ArrayList<SearchResponse>();
+		Iterator<Object> it = results.iterator();
+		while(it.hasNext()) {
+			searchResponse.add(parseSingleSearchResult((Map<String,Object>)it.next()));
+		}
+		return searchResponse.toArray(new SearchResponse[searchResponse.size()]);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private SearchResponse parseSingleSearchResult(Map<String,Object> json) throws java.text.ParseException{
+		String requestId;
+		String accountId;
+		String status;
+		String number;
+		BigDecimal price;
+		String currency;
+		String senderId;
+		Date dateSubmitted;
+		Date dateFinalized;
+		Date firstEventSent;
+		Date lastEventSent;
+		Checks[] checks;
+		String errorText;
+		
+		String requestIdString ="request_id";
+		String accoundIdString = "account_id";
+	    String statusString = "status";
+	    String numberString = "number";
+	    String priceString = "price";
+	    String currencyString = "currency";
+	    String senderIdString = "sender_id";
+	    String dateSubmittedString = "date_submitted";
+	    String dateFinalizedString = "date_finalized";
+	    String firstEventString = "first_event_date";
+	    String lastEventString = "last_event_date";
+	    String checksString = "checks";
+	    String errorTextString = "error_text";
+	    
+	    requestId = (String) json.get(requestIdString);
+	    accountId = (String) json.get(accoundIdString);
+	    status = (String) json.get(statusString);
+	    number = (String) json.get(numberString);
+	    price = new BigDecimal((String) json.get(priceString));
+	    currency = (String) json.get(currencyString);
+	    senderId = (String) json.get(senderIdString);
+	    dateSubmitted = format.parse((String) json.get(dateSubmittedString));
+	    dateFinalized = format.parse((String) json.get(dateFinalizedString));
+	    firstEventSent = format.parse((String) json.get(firstEventString));
+	    lastEventSent = format.parse((String) json.get(lastEventString));
+	    checks = parseChecks((List<Object>)json.get(checksString));
+	    errorText = (String) json.get(errorTextString);
+	    
+	    return new SearchResponse(requestId, accountId, status, number, price, currency,
+	    		senderId, dateSubmitted, dateFinalized, firstEventSent, lastEventSent, checks, errorText);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private Checks[] parseChecks(List<Object> checkList) throws java.text.ParseException {
+		
+		Date dateRecieved;
+		String code;
+		String status;
+		String ipAddress;
+		
+		List<Checks> checks = new ArrayList<Checks>();
+		Iterator<Object> it = checkList.iterator();
+		Map<String,String> m;
+		while(it.hasNext()) {
+			m = (Map<String, String>) it.next();
+			dateRecieved = format.parse(m.get("date_received"));
+			code = m.get("code");
+			status = m.get("status");
+			ipAddress = m.get("ip_address");
+			checks.add(new Checks(dateRecieved, code, status, ipAddress));
+		}
+		return checks.toArray(new Checks[checks.size()]);
 	}
 	
 }

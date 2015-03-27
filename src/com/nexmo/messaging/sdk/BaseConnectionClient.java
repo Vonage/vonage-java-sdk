@@ -98,12 +98,12 @@ class BaseConnectionClient {
 	
 	protected ContainerFactory getContainerFactory(){
 		return new ContainerFactory(){
-			public List creatArrayContainer() {
-				return new LinkedList();
+			public List<Object> creatArrayContainer() {
+				return new LinkedList<Object>();
 			}
 
-			public Map createObjectContainer() {
-				return new LinkedHashMap();
+			public Map<String, Object> createObjectContainer() {
+				return new LinkedHashMap<String, Object>();
 			}
 
 		};

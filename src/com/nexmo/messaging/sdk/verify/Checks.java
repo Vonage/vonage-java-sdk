@@ -6,7 +6,12 @@ package com.nexmo.messaging.sdk.verify;
  */
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+
+import com.nexmo.messaging.sdk.NexmoVerifyClient;
 /**
  * 
  * @author Wale Olaleye
@@ -21,6 +26,7 @@ public class Checks implements Serializable {
 	private final String code;
 	private final String status;
 	private final String ipAddress;
+	private final DateFormat format = new SimpleDateFormat(NexmoVerifyClient.DEFAULT_DATE_FORMAT, Locale.ENGLISH);
 	
 	public Checks(final Date dateRecieved,
 				  final String code,
@@ -65,7 +71,7 @@ public class Checks implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return "Checks [dateRecieved=" + dateRecieved + ", code=" + code
+		return "Checks [dateRecieved=" + format.format(dateRecieved) + ", code=" + code
 				+ ", status=" + status + ", ipAddress=" + ipAddress + "]";
 	}
 

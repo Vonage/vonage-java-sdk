@@ -6,7 +6,13 @@ package com.nexmo.messaging.sdk.verify;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Locale;
+
+import com.nexmo.messaging.sdk.NexmoVerifyClient;
 
 /**
  * @author Wale Olaleye
@@ -27,8 +33,9 @@ public class SearchResponse implements Serializable {
 	private final Date dateFinalized;
 	private final Date firstEventSent;
 	private final Date lastEventSent;
-	private final Checks checks;
+	private final Checks[] checks;
 	private final String errorText;
+	private final DateFormat format = new SimpleDateFormat(NexmoVerifyClient.DEFAULT_DATE_FORMAT, Locale.ENGLISH);
 	
 	public SearchResponse(final String requestId,
 						  final String accountId,
@@ -41,7 +48,7 @@ public class SearchResponse implements Serializable {
 						  final Date dateFinalized,
 						  final Date firstEventSent,
 						  final Date lastEventSent,
-						  final Checks checks,
+						  final Checks[] checks,
 						  final String errorText) {
 		this.requestId = requestId;
 		this.accountId = accountId;
@@ -138,7 +145,7 @@ public class SearchResponse implements Serializable {
 	/**
 	 * @return the checks
 	 */
-	public Checks getChecks() {
+	public Checks[] getChecks() {
 		return checks;
 	}
 
@@ -157,10 +164,10 @@ public class SearchResponse implements Serializable {
 		return "SearchResponse [requestId=" + requestId + ", accountId="
 				+ accountId + ", status=" + status + ", number=" + number
 				+ ", price=" + price + ", currency=" + currency + ", senderId="
-				+ senderId + ", dateSubmitted=" + dateSubmitted
-				+ ", dateFinalized=" + dateFinalized + ", firstEventSent="
-				+ firstEventSent + ", lastEventSent=" + lastEventSent
-				+ ", checks=" + checks + ", errorText=" + errorText + "]";
+				+ senderId + ", dateSubmitted=" + format.format(dateSubmitted)
+				+ ", dateFinalized=" + format.format(dateFinalized) + ", firstEventSent="
+				+ format.format(firstEventSent) + ", lastEventSent=" + format.format(lastEventSent)
+				+ ", checks=" + Arrays.toString(checks) + ", errorText=" + errorText + "]";
 	}
 	
 	
