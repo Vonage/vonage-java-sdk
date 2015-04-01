@@ -66,6 +66,13 @@ public class NexmoVerifyClient extends BaseConnectionClient {
 	private final boolean signRequests;
 	private final String signatureSecretKey;
 	
+	/**
+	 * 
+	 * @param apiKey Your API public key
+	 * @param apiSecret Your API secret key
+	 * @throws Exception
+	 */
+	
 	public NexmoVerifyClient(final String apiKey,
 							 final String apiSecret) throws Exception {
 		this(BASE_URL,
@@ -79,7 +86,17 @@ public class NexmoVerifyClient extends BaseConnectionClient {
 	}
 							 
 
-
+	/**
+	 * 
+	 * @param baseUrl Base API URL. Does not include the path.
+	 * @param apiKey Your API public key
+	 * @param apiSecret Your API secret key
+	 * @param connectionTimeout HTTP connection timeout
+	 * @param soTimeout HTTP Read timeout
+	 * @param signRequests Should we sign requests?
+	 * @param signatureSecretKey Request signing key
+	 * @throws Exception
+	 */
 	public NexmoVerifyClient(final String baseUrl,
 			final String apiKey,
 			final String apiSecret,
@@ -99,6 +116,8 @@ public class NexmoVerifyClient extends BaseConnectionClient {
 	/**
 	 * Start here by initiating a verify request to the API.
 	 * @see https://docs.nexmo.com/index.php/verify/verify
+	 * @param verifyRequest Takes a VerifyRequest object
+	 * @return VerifyResponse
 	 */
 	
 	@SuppressWarnings("unchecked")
@@ -154,9 +173,30 @@ public class NexmoVerifyClient extends BaseConnectionClient {
 		return new VerifyResponse(verifyRequestId, verifyStatus, verifyErrorText);
 	}
 	
+	/**
+	 * This is the second step. Supply the request_id and authentication code the user received on their cell phone.
+	 * This  method takes only the required parameters as a convenience.
+	 * 
+	 * @param requestId Identifier of the verification request to be checked
+	 * @param code	PIN code your end user provided to you (maximum 6 digits)
+	 * @return
+	 * @throws Exception
+	 */
+	
 	public CheckResponse checkRequest(String requestId, String code) throws Exception {
 		return checkRequest(requestId, code, null);
 	}
+	
+	/**
+	 * 
+	 * This is the second step. Supply the request_id and authentication code the user received on their cell phone.
+	 * 
+	 * @param requestId Identifier of the verification request to be checked.
+	 * @param code PIN code your end user provided to you (maximum 6 digits)
+	 * @param ipAddress The IP Address the end user provided you the PIN code from
+	 * @return
+	 * @throws Exception
+	 */
 	
 	@SuppressWarnings("unchecked")
 	public CheckResponse checkRequest(String requestId, String code, String ipAddress) throws Exception{
@@ -204,6 +244,14 @@ public class NexmoVerifyClient extends BaseConnectionClient {
 		return new CheckResponse(eventId, status, price, currency, errorText);
 		
 	}
+	/**
+	 * The Verification Search API call enables you to get the status and many other attributes of a verification 
+	 * request even if the verification is still in progress.
+	 * 
+	 * @param requestId Identifier of a single request to be looked up
+	 * @return SearchResponse
+	 * @throws Exception
+	 */
 	
 	public SearchResponse search (String requestId) throws Exception {
 		List<String> list = new ArrayList<>(1);
@@ -211,6 +259,15 @@ public class NexmoVerifyClient extends BaseConnectionClient {
 		SearchResponse[] searchResponse = search(list);
 		return searchResponse[0];
 	}
+	
+	/**
+	 * The Verification Search API call enables you to get the status and many other attributes of a verification 
+	 * request even if the verification is still in progress.
+	 * 
+	 * @param requestIds Identifier of up to 10 requests to be looked up.
+	 * @return SearchResponse
+	 * @throws Exception
+	 */
 	
 	@SuppressWarnings("unchecked")
 	public SearchResponse[] search (List<String> requestIds) throws Exception {
@@ -341,8 +398,11 @@ public class NexmoVerifyClient extends BaseConnectionClient {
 	
 }
 
+/**
+ * An exception used only in this file.
+ */
 class TooManyRequestIdsException extends Exception {
-
+	
 	private static final long serialVersionUID = 267011845743861836L;
 	
 	public TooManyRequestIdsException(){
