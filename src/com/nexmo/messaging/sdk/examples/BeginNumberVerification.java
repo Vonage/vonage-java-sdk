@@ -10,11 +10,11 @@ import com.nexmo.messaging.sdk.verify.VerifyResponse;
 
 public class BeginNumberVerification {
 	//TODO Remove my number and API Keys!!!!
-	public static final String API_KEY = "493178a1";
-	public static final String API_SECRET = "6b932842";
+	public static final String API_KEY = "your-api-public-key";
+	public static final String API_SECRET = "your-api-secret-key";
 
 	public static final String SMS_FROM = "12069396346";
-	public static final String SMS_TO = "12154852564";
+	public static final String SMS_TO = "12222222222";
 	public static final String SMS_TEXT = "Hello World!";
 
 	public static void main(String[] args) {
@@ -32,7 +32,7 @@ public class BeginNumberVerification {
 		//verify number
 		
 		try {
-            VerifyResponse vrs = client.beginVerifyRequest(new VerifyRequest("12154852564", "waleBrand"));
+            VerifyResponse vrs = client.beginVerifyRequest(new VerifyRequest("122222222", "testBrand"));
             System.out.println(vrs);
             
 		} catch (Exception e) {

@@ -39,11 +39,11 @@ import com.nexmo.messaging.sdk.messages.TextMessage;
  */
 public class SendTextMessageHttps {
 
-	public static final String API_KEY = "493178a1";
-    public static final String API_SECRET = "6b932842";
+	public static final String API_KEY = "your-api-key";
+    public static final String API_SECRET = "your-api-secret";
 
     public static final String SMS_FROM = "12069396346";
-    public static final String SMS_TO = "12154852564";
+    public static final String SMS_TO = "122222222";
     public static final String SMS_TEXT = "Hello World!";
 
     public static void main(String[] args) {

@@ -13,8 +13,8 @@ import com.nexmo.messaging.sdk.verify.CheckResponse;
  */
 public class CheckVerificationCode {
 
-	public static final String API_KEY = "493178a1";
-	public static final String API_SECRET = "6b932842";
+	public static final String API_KEY = "your-api-key";
+	public static final String API_SECRET = "your-api-secret";
 	public static final String REQUEST_ID = "31aae80d6d2c4feaa1952a4941bd405e";
 	public static final String CODE = "4768";
 	

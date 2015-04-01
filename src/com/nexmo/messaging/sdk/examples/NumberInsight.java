@@ -16,8 +16,8 @@ import com.nexmo.messaging.sdk.insight.InsightRequest;
  */
 public class NumberInsight {
 	
-	public static final String API_KEY = "493178a1";
-	public static final String API_SECRET = "6b932842";
+	public static final String API_KEY = "your-api-key";
+	public static final String API_SECRET = "your-api-secret";
 	public static final String ENDPOINT_BASE_URL = "https://rest.nexmo.com";
 	public static final String ENDPOINT_PATH = "/ni/json";
 	
@@ -43,7 +43,7 @@ public class NumberInsight {
 			features.add(Feature.TYPE);
 			features.add(Feature.VALID);
 			
-			InsightRequest request = new InsightRequest("12154852564", features, "http://requestb.in/125rz6v1", 5000, "GET", "WALE");
+			InsightRequest request = new InsightRequest("122222222", features, "http://requestb.in/1ate3t", 5000, "GET", "TEST");
 			client.submit(request);
             
 		} catch (Exception e) {

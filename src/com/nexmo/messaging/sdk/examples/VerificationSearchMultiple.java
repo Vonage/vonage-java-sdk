@@ -15,8 +15,8 @@ import com.nexmo.messaging.sdk.verify.SearchResponse;
  *
  */
 public class VerificationSearchMultiple {
-	public static final String API_KEY = "493178a1";
-	public static final String API_SECRET = "6b932842";
+	public static final String API_KEY = "your-api-key";
+	public static final String API_SECRET = "your-api-secret";
 	
 	public static void main(String[] args) {
 		
