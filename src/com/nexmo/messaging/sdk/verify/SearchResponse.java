@@ -37,6 +37,22 @@ public class SearchResponse implements Serializable {
 	private final String errorText;
 	private final DateFormat format = new SimpleDateFormat(NexmoVerifyClient.DEFAULT_DATE_FORMAT, Locale.ENGLISH);
 	
+	/**
+	 * 
+	 * @param requestId Verification Request Identifier
+	 * @param accountId Account ID the request was for
+	 * @param status Latest status of the verification request
+	 * @param number Number this verification request is for.
+	 * @param price The price charged for the verification request.
+	 * @param currency Currency code.
+	 * @param senderId Actual sender_id used for SMS attempts.
+	 * @param dateSubmitted Date the Verification Request was submitted.
+	 * @param dateFinalized Date the Verification Request was either successfully checked or failed.
+	 * @param firstEventSent Time first attempt was made.
+	 * @param lastEventSent Time last attempt was made.
+	 * @param checks List of checks made for this verification and their outcomes.
+	 * @param errorText If an error occurred, this will explain in readable terms the error encountered.
+	 */
 	public SearchResponse(final String requestId,
 						  final String accountId,
 						  final String status,

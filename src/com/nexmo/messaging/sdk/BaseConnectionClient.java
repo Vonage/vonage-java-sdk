@@ -45,6 +45,13 @@ class BaseConnectionClient {
 	private final int soTimeout;
 	private HttpClient httpClient = null;
 	
+	/**
+	 * 
+	 * @param baseUrl	The base of the API request URL. Does not include the path.
+	 * @param connectionTimeout HTTP connection timeout
+	 * @param soTimeout	HTTP read timeout
+	 */
+	
 	protected BaseConnectionClient( final String baseUrl,
 									final int connectionTimeout,
 									final int soTimeout){

@@ -62,6 +62,13 @@ public class NexmoInsightClient extends BaseConnectionClient {
 		this.signatureSecretKey = null;
 	}
 	
+	/**
+	 * Submits a request to the number insight API and returns nothing. Check the callback URL for response.
+	 * 
+	 * @param  request A InsightRequest Object
+	 * @throws Exception
+	 */
+	
 	public void submit (InsightRequest request) throws Exception {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		

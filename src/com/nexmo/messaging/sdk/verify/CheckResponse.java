@@ -1,5 +1,5 @@
 /**
- * 
+ * Response from number verification
  */
 package com.nexmo.messaging.sdk.verify;
 
@@ -20,6 +20,15 @@ public class CheckResponse implements Serializable {
 	private final BigDecimal price;
 	private final String currency;
 	private final String errorText;
+	
+	/**
+	 * 
+	 * @param eventId Identifier of either the SMS (message-id) or TTS call (call-id) that enabled the verification. You can get more details on these events using the Nexmo Search API or the Nexmo Dashboard.
+	 * @param status The return code.
+	 * @param price The price charged for the verification request.
+	 * @param currency Currency code.
+	 * @param errorText If an error occurred, this will explain in readable terms the error encountered.
+	 */
 	
 	public CheckResponse(final String eventId,
 						final Integer status,

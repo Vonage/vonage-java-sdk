@@ -9,7 +9,6 @@ import com.nexmo.messaging.sdk.verify.VerifyResponse;
  */
 
 public class BeginNumberVerification {
-	//TODO Remove my number and API Keys!!!!
 	public static final String API_KEY = "your-api-public-key";
 	public static final String API_SECRET = "your-api-secret-key";
 

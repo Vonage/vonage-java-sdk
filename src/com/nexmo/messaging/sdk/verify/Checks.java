@@ -28,6 +28,13 @@ public class Checks implements Serializable {
 	private final String ipAddress;
 	private final DateFormat format = new SimpleDateFormat(NexmoVerifyClient.DEFAULT_DATE_FORMAT, Locale.ENGLISH);
 	
+	/**
+	 * 
+	 * @param dateRecieved Date recieved
+	 * @param code Code
+	 * @param status VALID, INVALID
+	 * @param ipAddress IP Address
+	 */
 	public Checks(final Date dateRecieved,
 				  final String code,
 				  final String status,

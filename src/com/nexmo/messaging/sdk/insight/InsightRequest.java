@@ -1,5 +1,5 @@
 /**
- * A number insight request
+ * A wrapper for Number Insight Requests
  * @see https://docs.nexmo.com/index.php/number-insight/request
  */
 package com.nexmo.messaging.sdk.insight;
@@ -24,7 +24,7 @@ public class InsightRequest implements Serializable {
 	private final String clientRef;
 	
 	/**
-	 * A wrapper for Number Insight Requests
+	 * Main Constructor
 	 * 
 	 * @param number Phone number in international format and one recipient per request. Ex: to=447525856424 when sending to UK
 	 * @param features A set of features to check, using a comma-separated values.
@@ -44,13 +44,34 @@ public class InsightRequest implements Serializable {
 					
 	}
 	
+	/**
+	 * Simplified Constructor 
+	 * 
+	 * @param number Phone number in international format and one recipient per request. Ex: to=447525856424 when sending to UK
+	 * @param callback A URL to which Nexmo will send the request's responses.
+	 */
 	public InsightRequest(String number, String callback) {
 		this(number,null,callback,null,null,null);
 	}
 	
+	/**
+	 * Another Simplified Constructor
+	 * 
+	 * @param number Phone number in international format and one recipient per request. Ex: to=447525856424 when sending to UK
+	 * @param callback A URL to which Nexmo will send the request's responses.
+	 * @param callbackMethod The HTTP method for your error_url. Must be GET (default) or POST.
+	 */
 	public InsightRequest(String number, String callback, String callbackMethod) {
 		this(number, null, callback, null, callbackMethod, null);
 	}
+	
+	/**
+	 * Yet Another Simplified Constructor
+	 * 
+	 * @param number Phone number in international format and one recipient per request. Ex: to=447525856424 when sending to UK
+	 * @param features A set of features to check, using a comma-separated values.
+	 * @param callback A URL to which Nexmo will send the request's responses.
+	 */
 	
 	public InsightRequest(String number, List<Feature> features, String callback){
 		this(number, features, callback, null, null, null);
