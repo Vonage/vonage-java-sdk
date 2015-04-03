@@ -33,7 +33,7 @@ public class BeginNumberVerification {
 		//verify number
 		
 		try {
-            VerifyResponse vrs = client.beginVerifyRequest(new VerifyRequest("122222222", "testBrand"));
+            VerifyResponse vrs = client.beginVerifyRequest(new VerifyRequest(SMS_TO, "testBrand"));
             System.out.println(vrs);
             
 		} catch (Exception e) {
