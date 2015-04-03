@@ -25,6 +25,12 @@ import com.nexmo.messaging.sdk.verify.VerifyRequest;
 import com.nexmo.messaging.sdk.verify.VerifyResponse;
 import com.nexmo.security.RequestSigning;
 
+/**
+ * Java client for the Nexmo Verification API - https://docs.nexmo.com/index.php/verify
+ * 
+ * @author Wale Olaleye
+ *
+ */
 public class NexmoVerifyClient extends BaseConnectionClient {
 	private static final Log log = LogFactory.getLog(NexmoVerifyClient.class);
 
@@ -114,8 +120,8 @@ public class NexmoVerifyClient extends BaseConnectionClient {
 	}
 	
 	/**
-	 * Start here by initiating a verify request to the API.
-	 * @see https://docs.nexmo.com/index.php/verify/verify
+	 * Start here by initiating a verify request to the API. - https://docs.nexmo.com/index.php/verify/verify
+	 * 
 	 * @param verifyRequest Takes a VerifyRequest object
 	 * @return VerifyResponse
 	 */
@@ -179,7 +185,7 @@ public class NexmoVerifyClient extends BaseConnectionClient {
 	 * 
 	 * @param requestId Identifier of the verification request to be checked
 	 * @param code	PIN code your end user provided to you (maximum 6 digits)
-	 * @return
+	 * @return CheckResponse
 	 * @throws Exception
 	 */
 	
@@ -194,7 +200,7 @@ public class NexmoVerifyClient extends BaseConnectionClient {
 	 * @param requestId Identifier of the verification request to be checked.
 	 * @param code PIN code your end user provided to you (maximum 6 digits)
 	 * @param ipAddress The IP Address the end user provided you the PIN code from
-	 * @return
+	 * @return CheckResponse
 	 * @throws Exception
 	 */
 	
@@ -254,7 +260,7 @@ public class NexmoVerifyClient extends BaseConnectionClient {
 	 */
 	
 	public SearchResponse search (String requestId) throws Exception {
-		List<String> list = new ArrayList<>(1);
+		List<String> list = new ArrayList<String>(1);
 		list.add(requestId);
 		SearchResponse[] searchResponse = search(list);
 		return searchResponse[0];

@@ -5,6 +5,8 @@ import com.nexmo.messaging.sdk.verify.VerifyRequest;
 import com.nexmo.messaging.sdk.verify.VerifyResponse;
 
 /**
+ * Example shows how to start a number verification
+ * 
  * @author Wale Olaleye
  */
 

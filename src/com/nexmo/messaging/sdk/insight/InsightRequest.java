@@ -1,14 +1,11 @@
-/**
- * A wrapper for Number Insight Requests
- * @see https://docs.nexmo.com/index.php/number-insight/request
- */
+
 package com.nexmo.messaging.sdk.insight;
 
 import java.io.Serializable;
 import java.util.List;
 
 /**
- * 
+ * A wrapper for Number Insight Requests - https://docs.nexmo.com/index.php/number-insight/request
  * @author Wale Olaleye
  * @version 1.0
  */

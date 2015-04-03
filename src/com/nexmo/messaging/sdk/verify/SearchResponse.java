@@ -1,7 +1,4 @@
-/**
- * A search response.
- * @see https://docs.nexmo.com/index.php/verify/search
- */
+
 package com.nexmo.messaging.sdk.verify;
 
 import java.io.Serializable;
@@ -15,6 +12,8 @@ import java.util.Locale;
 import com.nexmo.messaging.sdk.NexmoVerifyClient;
 
 /**
+ * A search response.
+ * 
  * @author Wale Olaleye
  *
  */

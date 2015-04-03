@@ -1,7 +1,4 @@
-/**
- * Client for Number Insight
- * @see https://docs.nexmo.com/index.php/number-insight/
- */
+
 package com.nexmo.messaging.sdk;
 
 import java.util.ArrayList;
@@ -13,6 +10,8 @@ import com.nexmo.messaging.sdk.insight.InsightRequest;
 import com.nexmo.security.RequestSigning;
 
 /**
+ * Client for Number Insight - https://docs.nexmo.com/index.php/number-insight/
+ * 
  * @author Wale Olaleye
  * @version 1.0
  *

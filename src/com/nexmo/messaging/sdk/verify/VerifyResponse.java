@@ -1,11 +1,11 @@
-/**
- * Represents a response from a verify request
- */
+
 package com.nexmo.messaging.sdk.verify;
 
 import java.io.Serializable;
 
 /**
+ * Represents a response from a verify request
+ * 
  * @author Wale Olaleye
  * @version 1.0
  * 

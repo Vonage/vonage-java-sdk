@@ -1,9 +1,5 @@
 package com.nexmo.messaging.sdk.verify;
 
-/**
- * Checks are part of a SearchResponse
- * @see com.nexmo.messaging.sdk.verify.SearchResponse
- */
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -13,6 +9,7 @@ import java.util.Locale;
 
 import com.nexmo.messaging.sdk.NexmoVerifyClient;
 /**
+ * Checks are part of a SearchResponse
  * 
  * @author Wale Olaleye
  */

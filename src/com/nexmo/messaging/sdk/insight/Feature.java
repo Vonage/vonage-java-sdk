@@ -1,10 +1,8 @@
-/**
- * Possible features in a number insight request
- * @see https://docs.nexmo.com/index.php/number-insight/request#ni_features
- */
+
 package com.nexmo.messaging.sdk.insight;
 
 /**
+ * Possible features in a number insight request - https://docs.nexmo.com/index.php/number-insight/request#ni_features
  * @author Wale Olaleye
  *
  */

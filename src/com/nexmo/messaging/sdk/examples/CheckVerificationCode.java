@@ -1,13 +1,12 @@
-/**
- * Demonstrates a Nexmo verify check
- * @see https://docs.nexmo.com/index.php/verify/check
- */
+
 package com.nexmo.messaging.sdk.examples;
 
 import com.nexmo.messaging.sdk.NexmoVerifyClient;
 import com.nexmo.messaging.sdk.verify.CheckResponse;
 
 /**
+ * Demonstrates a Nexmo verify check - https://docs.nexmo.com/index.php/verify/check
+ * 
  * @author Wale Olaleye
  *
  */

@@ -1,11 +1,11 @@
-/**
- * Represents a request passed to the Nexmo verify API.
- */
+
 package com.nexmo.messaging.sdk.verify;
 
 import java.io.Serializable;
 
 /**
+ * Represents a request passed to the Nexmo verify API.
+ * 
  * @author Wale Olaleye
  * @version 1.0
  * 

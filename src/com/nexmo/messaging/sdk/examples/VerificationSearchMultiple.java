@@ -1,6 +1,4 @@
-/**
- * A verification search with multiple requestIds
- */
+
 package com.nexmo.messaging.sdk.examples;
 
 import java.util.ArrayList;
@@ -11,6 +9,8 @@ import com.nexmo.messaging.sdk.NexmoVerifyClient;
 import com.nexmo.messaging.sdk.verify.SearchResponse;
 
 /**
+ * A verification search with multiple requestIds
+ * 
  * @author Wale Olaleye
  *
  */

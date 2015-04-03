@@ -1,12 +1,12 @@
-/**
- * Response from number verification
- */
+
 package com.nexmo.messaging.sdk.verify;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
+ * Response from number verification
+ * 
  * @author Wale Olaleye
  * @version 1.0
  *

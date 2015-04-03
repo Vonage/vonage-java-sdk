@@ -1,6 +1,4 @@
-/**
- * An example of using the Number Insight API
- */
+
 package com.nexmo.messaging.sdk.examples;
 
 import java.util.ArrayList;
@@ -11,6 +9,8 @@ import com.nexmo.messaging.sdk.insight.Feature;
 import com.nexmo.messaging.sdk.insight.InsightRequest;
 
 /**
+ * An example of using the Number Insight API
+ * 
  * @author Wale Olaleye
  *
  */
