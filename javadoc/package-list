@@ -1,0 +1,15 @@
+com.nexmo.common.http
+com.nexmo.common.util
+com.nexmo.messaging.sdk
+com.nexmo.messaging.sdk.examples
+com.nexmo.messaging.sdk.examples.signed
+com.nexmo.messaging.sdk.examples.ussd
+com.nexmo.messaging.sdk.insight
+com.nexmo.messaging.sdk.messages
+com.nexmo.messaging.sdk.messages.parameters
+com.nexmo.messaging.sdk.verify
+com.nexmo.security
+com.nexmo.sns.sdk
+com.nexmo.sns.sdk.examples
+com.nexmo.sns.sdk.request
+com.nexmo.sns.sdk.response
