@@ -15,6 +15,7 @@ import com.nexmo.messaging.sdk.NexmoVerifyClient;
  * A search response.
  * 
  * @author Wale Olaleye
+ * @version 1.0
  *
  */
 public class SearchResponse implements Serializable {
@@ -179,9 +180,9 @@ public class SearchResponse implements Serializable {
 		return "SearchResponse [requestId=" + requestId + ", accountId="
 				+ accountId + ", status=" + status + ", number=" + number
 				+ ", price=" + price + ", currency=" + currency + ", senderId="
-				+ senderId + ", dateSubmitted=" + format.format(dateSubmitted)
-				+ ", dateFinalized=" + format.format(dateFinalized) + ", firstEventSent="
-				+ format.format(firstEventSent) + ", lastEventSent=" + format.format(lastEventSent)
+				+ senderId + ", dateSubmitted=" + (dateSubmitted == null ? "" : format.format(dateSubmitted))
+				+ ", dateFinalized=" + (dateFinalized == null ? "" : format.format(dateFinalized)) + ", firstEventSent="
+				+ (firstEventSent == null ? "" : format.format(firstEventSent)) + ", lastEventSent=" + (lastEventSent == null ? "" : format.format(lastEventSent))
 				+ ", checks=" + Arrays.toString(checks) + ", errorText=" + errorText + "]";
 	}
 	

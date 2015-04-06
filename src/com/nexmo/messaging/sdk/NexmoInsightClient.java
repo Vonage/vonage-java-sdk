@@ -1,12 +1,22 @@
 
 package com.nexmo.messaging.sdk;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.simple.parser.ContainerFactory;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import com.nexmo.messaging.sdk.insight.Feature;
 import com.nexmo.messaging.sdk.insight.InsightRequest;
+import com.nexmo.messaging.sdk.insight.InsightResponse;
 import com.nexmo.security.RequestSigning;
 
 /**
@@ -17,16 +27,16 @@ import com.nexmo.security.RequestSigning;
  *
  */
 public class NexmoInsightClient extends BaseConnectionClient {
-	
+	private static final Log log = LogFactory.getLog(NexmoInsightClient.class);
+	private static final String ENDPOINT_BASEURL = "https://rest.nexmo.com";
+	private static final String ENDPOINT_PATH = "/ni/json";
 	private final String apiKey;
 	private final String apiSecret;
 	private final boolean signRequests;
 	private final String signatureSecretKey;
-	private final String endpointPath;
 	
 	/**
 	 * @param endpointBaseUrl	The base URL of the api endpoint, e.g "https://rest.nexmo.com"
-	 * @param endpointPath		The path to append to endpointBaseUrl e.g "/ni/json" OR "/ni/xml". Must start with "/".
 	 * @param apiKey			Your API public Key
 	 * @param apiSecret			Your API secret Key
 	 * @param connectionTimeout	Http connection timeout for this client
@@ -35,7 +45,7 @@ public class NexmoInsightClient extends BaseConnectionClient {
 	 * @param signatureSecretKey The secret key we will use to generate the signatures for signed requests
 	 * 
 	 */
-	public NexmoInsightClient(final String endpointBaseUrl, String endpointPath, final String apiKey, 
+	public NexmoInsightClient(final String endpointBaseUrl, final String apiKey, 
 			final String apiSecret, final int connectionTimeout, final int soTimeout, final boolean signRequests, 
 			final String signatureSecretKey) {
 		
@@ -45,16 +55,14 @@ public class NexmoInsightClient extends BaseConnectionClient {
 		this.apiSecret = apiSecret;
 		this.signRequests = signRequests;
 		this.signatureSecretKey = signatureSecretKey;
-		this.endpointPath = endpointPath;
 	}
 	
-	public NexmoInsightClient(final String endpointBaseUrl, final String endpointPath, final String apiKey, 
+	public NexmoInsightClient(final String apiKey, 
 			final String apiSecret) {
 		
-		super(endpointBaseUrl, BaseConnectionClient.DEFAULT_CONNECTION_TIMEOUT, 
+		super(ENDPOINT_BASEURL, BaseConnectionClient.DEFAULT_CONNECTION_TIMEOUT, 
 				BaseConnectionClient.DEFAULT_SO_TIMEOUT);
 		
-		this.endpointPath = endpointPath;
 		this.apiKey = apiKey;
 		this.apiSecret = apiSecret;
 		this.signRequests = false;
@@ -65,11 +73,18 @@ public class NexmoInsightClient extends BaseConnectionClient {
 	 * Submits a request to the number insight API and returns nothing. Check the callback URL for response.
 	 * 
 	 * @param  request A InsightRequest Object
+	 * @return InsightResponse
 	 * @throws Exception
 	 */
 	
-	public void submit (InsightRequest request) throws Exception {
+	public InsightResponse submit (InsightRequest request) throws Exception {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		String responseRequestId = null;
+		String responseNumber = null;
+		Integer responseStatus = null;
+		String responseErrorText = null;
+		BigDecimal responseRemainingBalance = null;
+		Double responseRequestPrice = null;
 		
 		params.add(new BasicNameValuePair("api_key", this.apiKey));
 		if (!this.signRequests)
@@ -102,7 +117,34 @@ public class NexmoInsightClient extends BaseConnectionClient {
 			params.add(new BasicNameValuePair("client_ref", request.getClientRef()));
 		
 		//make connection
-		makeConnection(endpointPath,params);		
+		String response = makeConnection(ENDPOINT_PATH,params);
+		/* PROCESS THE HTTP RESPONSE */
+		JSONParser parser = new JSONParser();
+		ContainerFactory containerFactory = getContainerFactory(); 
+		try{
+			@SuppressWarnings("unchecked")
+			Map<String,Object> json = (Map<String,Object>)parser.parse(response, containerFactory);
+		
+			
+			final String errorTextString = "error_text";
+			responseStatus = Integer.valueOf( ((Long)json.get("status")).intValue() );
+			if (responseStatus == 0) {
+				responseRequestId =  (String)json.get("request_id");
+				responseNumber = (String)json.get("number");
+				responseStatus = Integer.valueOf( ((Long)json.get("status")).intValue() );
+				responseRemainingBalance = new BigDecimal((String)json.get("remaining_balance"));
+				responseRequestPrice = (Double)json.get("request_price");
+			} else {
+				responseErrorText = (String)json.get(errorTextString);
+			}
+			
+		}
+		catch(ParseException pe){
+			log.info(pe);
+		}
+		
+		return new InsightResponse(responseRequestId, responseNumber, responseStatus,
+				responseErrorText, responseRemainingBalance, responseRequestPrice);		
 	}
 
 }

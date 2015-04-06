@@ -11,8 +11,8 @@ import com.nexmo.messaging.sdk.verify.VerifyResponse;
  */
 
 public class BeginNumberVerification {
-	public static final String API_KEY = "your-api-public-key";
-	public static final String API_SECRET = "your-api-secret-key";
+	public static final String API_KEY = "your-public-api-key";
+	public static final String API_SECRET = "your-api-secret";
 
 	public static final String SMS_FROM = "12069396346";
 	public static final String SMS_TO = "12222222222";
@@ -33,7 +33,8 @@ public class BeginNumberVerification {
 		//verify number
 		
 		try {
-            VerifyResponse vrs = client.beginVerifyRequest(new VerifyRequest(SMS_TO, "testBrand"));
+            //VerifyResponse vrs = client.beginVerifyRequest(new VerifyRequest(SMS_TO, "testBrand"));
+			VerifyResponse vrs = client.beginVerifyRequest(new VerifyRequest(SMS_TO, "testBrand", "MEFIY", 6,  "en-US", null, 600));
             System.out.println(vrs);
             
 		} catch (Exception e) {

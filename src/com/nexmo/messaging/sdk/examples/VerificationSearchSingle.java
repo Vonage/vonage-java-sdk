@@ -12,9 +12,9 @@ import com.nexmo.messaging.sdk.verify.SearchResponse;
  */
 public class VerificationSearchSingle {
 	
-	public static final String API_KEY = "your-api-key";
+	public static final String API_KEY = "your-public-api-key";
 	public static final String API_SECRET = "your-api-secret";
-	public static final String REQUEST_ID = "31aae80d6d2c4feaa1952a4941bd405e";
+	public static final String REQUEST_ID = "45f8d1okok8d4072ba6122d68ad9de60";
 	
 	
 	public static void main(String[] args) {

@@ -12,6 +12,7 @@ import com.nexmo.messaging.sdk.NexmoVerifyClient;
  * Checks are part of a SearchResponse
  * 
  * @author Wale Olaleye
+ * @version 1.0
  */
 
 public class Checks implements Serializable {

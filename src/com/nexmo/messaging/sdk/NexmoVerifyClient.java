@@ -166,11 +166,13 @@ public class NexmoVerifyClient extends BaseConnectionClient {
 			final String requestIdString = "request_id";
 			final String statusString = "status";
 			final String errorTextString = "error_text";
-			
-			verifyRequestId =  json.get(requestIdString);
-			verifyStatus = Integer.parseInt(json.get(statusString));	
-			if ( json.containsKey(errorTextString)) 
+			verifyStatus = Integer.parseInt(json.get(statusString));
+			if (verifyStatus == 0) {
+				verifyRequestId =  json.get(requestIdString);
+			} else {
 				verifyErrorText = json.get(errorTextString);
+			}
+		
 		}
 		catch(ParseException pe){
 			log.info(pe);
@@ -236,12 +238,14 @@ public class NexmoVerifyClient extends BaseConnectionClient {
 			final String currencyString = "currency";
 			final String errorTextString = "error_text";
 			
-			eventId =  json.get(eventIdString);
 			status = Integer.parseInt(json.get(statusString));
-			price = new BigDecimal(json.get(priceString));
-			currency = json.get(currencyString);
-			if ( json.containsKey(errorTextString) ) 
+			if ( status == 0 ){
+				eventId =  json.get(eventIdString);
+				price = new BigDecimal(json.get(priceString));
+				currency = json.get(currencyString);
+			} else {
 				errorText = json.get(errorTextString);
+			}
 		}
 		catch(ParseException pe){
 			log.info(pe);
@@ -334,22 +338,22 @@ public class NexmoVerifyClient extends BaseConnectionClient {
 	
 	@SuppressWarnings("unchecked")
 	private SearchResponse parseSingleSearchResult(Map<String,Object> json) throws java.text.ParseException{
-		String requestId;
-		String accountId;
-		String status;
-		String number;
-		BigDecimal price;
-		String currency;
-		String senderId;
-		Date dateSubmitted;
-		Date dateFinalized;
-		Date firstEventSent;
-		Date lastEventSent;
-		Checks[] checks;
-		String errorText;
+		String requestId = null;
+		String accountId = null;
+		String status = null;
+		String number = null;
+		BigDecimal price = null;
+		String currency = null;
+		String senderId = null;
+		Date dateSubmitted = null;
+		Date dateFinalized = null;
+		Date firstEventSent = null;
+		Date lastEventSent = null;
+		Checks[] checks = null;
+		String errorText = null;
 		
 		String requestIdString ="request_id";
-		String accoundIdString = "account_id";
+		String accountIdString = "account_id";
 	    String statusString = "status";
 	    String numberString = "number";
 	    String priceString = "price";
@@ -361,20 +365,24 @@ public class NexmoVerifyClient extends BaseConnectionClient {
 	    String lastEventString = "last_event_date";
 	    String checksString = "checks";
 	    String errorTextString = "error_text";
-	    
-	    requestId = (String) json.get(requestIdString);
-	    accountId = (String) json.get(accoundIdString);
 	    status = (String) json.get(statusString);
-	    number = (String) json.get(numberString);
-	    price = new BigDecimal((String) json.get(priceString));
-	    currency = (String) json.get(currencyString);
-	    senderId = (String) json.get(senderIdString);
-	    dateSubmitted = format.parse((String) json.get(dateSubmittedString));
-	    dateFinalized = format.parse((String) json.get(dateFinalizedString));
-	    firstEventSent = format.parse((String) json.get(firstEventString));
-	    lastEventSent = format.parse((String) json.get(lastEventString));
-	    checks = parseChecks((List<Object>)json.get(checksString));
-	    errorText = (String) json.get(errorTextString);
+	    if (status.equals("SUCCESS") || status.equals("IN PROGRESS") || status.equals("FAILED") || status.equals("EXPIRED")) {
+	    	
+		    requestId = (String) json.get(requestIdString);
+		    accountId = (String) json.get(accountIdString);
+		    number = (String) json.get(numberString);
+		    price = new BigDecimal((String) json.get(priceString));
+		    currency = (String) json.get(currencyString);
+		    senderId = (String) json.get(senderIdString);
+		    dateSubmitted = format.parse((String) json.get(dateSubmittedString));
+		    if ( !((String)json.get(dateFinalizedString)).isEmpty() )
+		    	dateFinalized = format.parse((String) json.get(dateFinalizedString));
+		    firstEventSent = format.parse((String) json.get(firstEventString));
+		    lastEventSent = format.parse((String) json.get(lastEventString));
+		    checks = parseChecks((List<Object>)json.get(checksString));
+	    } else {
+	    	errorText = (String) json.get(errorTextString);
+	    }
 	    
 	    return new SearchResponse(requestId, accountId, status, number, price, currency,
 	    		senderId, dateSubmitted, dateFinalized, firstEventSent, lastEventSent, checks, errorText);

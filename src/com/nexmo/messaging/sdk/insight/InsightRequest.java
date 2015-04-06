@@ -2,6 +2,7 @@
 package com.nexmo.messaging.sdk.insight;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,7 +49,7 @@ public class InsightRequest implements Serializable {
 	 * @param callback A URL to which Nexmo will send the request's responses.
 	 */
 	public InsightRequest(String number, String callback) {
-		this(number,null,callback,null,null,null);
+		this(number,new ArrayList<Feature>(0),callback,null,null,null);
 	}
 	
 	/**
@@ -59,7 +60,7 @@ public class InsightRequest implements Serializable {
 	 * @param callbackMethod The HTTP method for your error_url. Must be GET (default) or POST.
 	 */
 	public InsightRequest(String number, String callback, String callbackMethod) {
-		this(number, null, callback, null, callbackMethod, null);
+		this(number, new ArrayList<Feature>(0), callback, null, callbackMethod, null);
 	}
 	
 	/**

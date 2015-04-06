@@ -7,6 +7,7 @@ import java.util.List;
 import com.nexmo.messaging.sdk.NexmoInsightClient;
 import com.nexmo.messaging.sdk.insight.Feature;
 import com.nexmo.messaging.sdk.insight.InsightRequest;
+import com.nexmo.messaging.sdk.insight.InsightResponse;
 
 /**
  * An example of using the Number Insight API
@@ -16,17 +17,16 @@ import com.nexmo.messaging.sdk.insight.InsightRequest;
  */
 public class NumberInsight {
 	
-	public static final String API_KEY = "your-api-key";
+	public static final String API_KEY = "your-public-api-key";
 	public static final String API_SECRET = "your-api-secret";
-	public static final String ENDPOINT_BASE_URL = "https://rest.nexmo.com";
-	public static final String ENDPOINT_PATH = "/ni/json";
 	
 	
 	
 	public static void main(String[] args) {
 		NexmoInsightClient client = null;
 		try {
-			client = new NexmoInsightClient(ENDPOINT_BASE_URL, ENDPOINT_PATH, API_KEY, API_SECRET);
+			client = new NexmoInsightClient(API_KEY, API_SECRET);
+			//client = new NexmoInsightClient("https://rest.nexmo.com",API_KEY, API_SECRET, 5000, 3000, true, "sryssyjskjy");
 		} catch (Exception e) {
 			System.err.println("Failed to instanciate a Nexmo Client");
 			e.printStackTrace();
@@ -43,8 +43,12 @@ public class NumberInsight {
 			features.add(Feature.TYPE);
 			features.add(Feature.VALID);
 			
-			InsightRequest request = new InsightRequest("122222222", features, "http://requestb.in/1ate3t", 5000, "GET", "TEST");
-			client.submit(request);
+			//InsightRequest request = new InsightRequest("12222222222", features, "http://requestb.in/1ate3t", 5000, "GET", "TEST");
+			//InsightRequest request = new InsightRequest("12222222222", "http://requestb.in/1ate3t");
+			//InsightRequest request = new InsightRequest("12222222222", features, "http://requestb.in/1ate3t");
+			InsightRequest request = new InsightRequest("12222222222", "http://requestb.in/1ate3t", "POST");
+			InsightResponse response = client.submit(request);
+			System.out.println(response);
             
 		} catch (Exception e) {
             System.err.println("Problems were encountered");

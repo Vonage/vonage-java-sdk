@@ -15,14 +15,15 @@ import com.nexmo.messaging.sdk.verify.SearchResponse;
  *
  */
 public class VerificationSearchMultiple {
-	public static final String API_KEY = "your-api-key";
+	public static final String API_KEY = "your-public-api-key";
 	public static final String API_SECRET = "your-api-secret";
 	
 	public static void main(String[] args) {
 		
 		List<String> requestIds = new ArrayList<String>();
-		requestIds.add("31aae80d6d2c4feaa1952a4941bd405e");
-		requestIds.add("ba0a9ffa72ac43b7b15824b0e5248b90");
+		requestIds.add("31aae80d6d2c4feaa1952a4941d45e");
+		requestIds.add("ba9ffa72ac43b7b1580e5248b90");
+		requestIds.add("25f8d1d0a08d4072ba6122d6d9dei");
 		
 		NexmoVerifyClient client = null;
 		
