@@ -30,8 +30,8 @@ You need to copy the nexmo-sdk.jar to your application and ensure that it is in 
 
 The Nexmo sdk is then available for use. All configuration is passed as parameters on the constructors of the various objects.
 
-Usage
------
+SMS Usage
+----------
 
 To submit a message, first you should instanciate a NexmoSmsClient, passing the credentials for your Nexmo account on the constructor.
 Then, you should instanciate the appropriate Message subclass depending on which type of message you are going to submit.
@@ -67,3 +67,18 @@ The list of possible status codes is listed below ..
 // 11 = account not enabled for http -- This account is not provisioned for http / rest submission, you should use SMPP instead
 // 12 = message too long -- The message length exceeds the maximum allowed
 
+Nexmo Verify Usage
+------------------
+
+You can use the nexmo verify client through com.nexmo.messaging.sdk.NexmoVerifyClient
+For usage examples see:
+  com.nexmo.messaging.sdk.examples.BeginNumberVerification
+  com.nexmo.messaging.sdk.examples.CheckVerificationCode
+  com.nexmo.messaging.sdk.examples.VerificationSearchSingle
+  com.nexmo.messaging.sdk.examples.VerificationSearchMultiple
+
+Nexmo Insight Usage
+--------------------
+This library supports nexmo insight api via com.nexmo.messaging.sdk.NexmoInsightClient
+For usage examples see:
+  com.nexmo.messaging.sdk.examples.NumberInsight
