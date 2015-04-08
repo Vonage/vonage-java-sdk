@@ -1,3 +1,6 @@
+v1.6 - 2015-04-06
+Added support for Nexmo Insight API
+Added support for Nexmo Verify API
 
 v1.5 - 2014-08-28
 
