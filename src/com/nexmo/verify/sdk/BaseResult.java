@@ -81,6 +81,11 @@ public abstract class BaseResult implements java.io.Serializable {
     public static final int STATUS_PARTNER_QUOTA_EXCEEDED = 9;
 
     /**
+     * Verify was rejected because another verification to the same number was already requested.
+     */
+    public static final int STATUS_ALREADY_REQUESTED = 10;
+
+    /**
      * The destination number is not in a supported network
      */
     public static final int STATUS_UNSUPPORTED_NETWORK = 15;
