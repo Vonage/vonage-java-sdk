@@ -46,9 +46,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Client for talking to the Nexmo REST interface<br><br>
@@ -62,7 +63,7 @@ import java.util.Locale;
 public class NexmoVerifyClient {
     private static final Log log = LogFactory.getLog(NexmoVerifyClient.class);
 
-    public static enum LineType {
+    public enum LineType {
 
         ALL,
         MOBILE,
@@ -87,9 +88,14 @@ public class NexmoVerifyClient {
     public static final String PATH_VERIFY = "/verify/xml";
 
     /**
-     * The endpoint path for submitting ussd 'display' messages
+     * The endpoint path for submitting verification check requests
      */
     public static final String PATH_VERIFY_CHECK = "/verify/check/xml";
+
+    /**
+     * The endpoint path for submitting verification search requests
+     */
+    public static final String PATH_VERIFY_SEARCH = "/verify/search/xml";
 
     /**
      * Default connection timeout of 5000ms used by this client unless specifically overridden onb the constructor
@@ -100,6 +106,13 @@ public class NexmoVerifyClient {
      * Default read timeout of 30000ms used by this client unless specifically overridden onb the constructor
      */
     public static final int DEFAULT_SO_TIMEOUT = 30000;
+
+    /**
+     * Number of maximum request IDs that can be searched for.
+     */
+    private static final int MAX_SEARCH_REQUESTS = 10;
+
+    private static final DateFormat sDateTimePattern = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private final DocumentBuilderFactory documentBuilderFactory;
     private final DocumentBuilder documentBuilder;
@@ -267,6 +280,10 @@ public class NexmoVerifyClient {
         if (!"verify_response".equals(root.getNodeName()))
             throw new IOException("No valid response found [ " + response + "] ");
 
+        return parseVerifyResult(root);
+    }
+
+    private VerifyResult parseVerifyResult(Element root) throws IOException {
         String requestId = null;
         int status = -1;
         String errorText = null;
@@ -446,6 +463,332 @@ public class NexmoVerifyClient {
                 status == VerifyResult.STATUS_INTERNAL_ERROR);
 
         return new CheckResult(status, eventId, price, currency, errorText, temporaryError);
+    }
+
+    public SearchResult search(String requestId) throws IOException, SAXException {
+        SearchResult[] result = search(new String[] { requestId });
+        return result != null && result.length > 0 ? result[0] : null;
+    }
+
+    public SearchResult[] search(String... requestIds) throws IOException, SAXException {
+        if (requestIds == null || requestIds.length == 0)
+            throw new IllegalArgumentException("request ID parameter is mandatory.");
+
+        if (requestIds.length > MAX_SEARCH_REQUESTS)
+            throw new IllegalArgumentException("too many request IDs. Max is " + MAX_SEARCH_REQUESTS);
+
+        log.debug("HTTP-Verify-Search Client .. for [ " + Arrays.toString(requestIds) + " ] ");
+
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+        params.add(new BasicNameValuePair("api_key", this.apiKey));
+        params.add(new BasicNameValuePair("api_secret", this.apiSecret));
+
+        if (requestIds.length == 1) {
+            params.add(new BasicNameValuePair("request_id", requestIds[0]));
+        }
+        else {
+            for (String requestId : requestIds) {
+                params.add(new BasicNameValuePair("request_ids", requestId));
+            }
+        }
+
+        String baseUrl = this.baseUrl + PATH_VERIFY_SEARCH;
+
+        // Now that we have generated a query string, we can instanciate a HttpClient,
+        // construct a POST or GET method and execute to submit the request
+        String response = null;
+        for (int pass=1;pass<=2;pass++) {
+            HttpUriRequest method;
+            // TODO what's this for?
+            final boolean doPost = true;
+            String url;
+            if (doPost) {
+                HttpPost httpPost = new HttpPost(baseUrl);
+                httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+                method = httpPost;
+                url = baseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
+            } else {
+                String query = URLEncodedUtils.format(params, "utf-8");
+                method = new HttpGet(baseUrl + "?" + query);
+                url = method.getRequestLine().getUri();
+            }
+
+            try {
+                if (this.httpClient == null)
+                    this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
+                HttpResponse httpResponse = this.httpClient.execute(method);
+                int status = httpResponse.getStatusLine().getStatusCode();
+                if (status != 200)
+                    throw new Exception("got a non-200 response [ " + status + " ] from Nexmo-HTTP for url [ " + url + " ] ");
+                response = new BasicResponseHandler().handleResponse(httpResponse);
+                log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
+                break;
+            }
+            catch (Exception e) {
+                method.abort();
+                log.info("communication failure: " + e);
+                String exceptionMsg = e.getMessage();
+                if (exceptionMsg.indexOf("Read timed out") >= 0) {
+                    log.info("we're still connected, but the target did not respond in a timely manner ..  drop ...");
+                } else {
+                    if (pass == 1) {
+                        log.info("... re-establish http client ...");
+                        this.httpClient = null;
+                        continue;
+                    }
+                }
+
+                // return a COMMS failure ...
+                return new SearchResult[] {
+                    new SearchResult(SearchResult.STATUS_COMMS_FAILURE,
+                        null,
+                        null,
+                        null,
+                        null,
+                        0, null,
+                        null,
+                        null, null,
+                        null, null,
+                        null,
+                        "Failed to communicate with NEXMO-HTTP url [ " + url + " ] ..." + e,
+                        true)
+                };
+            }
+        }
+
+        Document doc;
+        synchronized(this.documentBuilder) {
+            doc = this.documentBuilder.parse(new InputSource(new StringReader(response)));
+        }
+
+        Element root = doc.getDocumentElement();
+        if ("verify_response".equals(root.getNodeName())) {
+            // error response
+            VerifyResult result = parseVerifyResult(root);
+            return new SearchResult[] { new SearchResult(result.getStatus(),
+                    result.getRequestId(),
+                    null,
+                    null,
+                    null,
+                    0, null,
+                    null,
+                    null, null,
+                    null, null,
+                    null,
+                    result.getErrorText(),
+                    result.isTemporaryError()) };
+        }
+        else if (("verify_request").equals(root.getNodeName())) {
+            return new SearchResult[] { parseSearchResult(root) };
+        }
+        else if ("verification_requests".equals(root.getNodeName())) {
+            List<SearchResult> results = new ArrayList<SearchResult>();
+
+            NodeList fields = root.getChildNodes();
+            for (int i = 0; i < fields.getLength(); i++) {
+                Node node = fields.item(i);
+                if (node.getNodeType() != Node.ELEMENT_NODE)
+                    continue;
+
+                if ("verify_request".equals(node.getNodeName())) {
+                    results.add(parseSearchResult((Element) node));
+                }
+            }
+
+            return results.toArray(new SearchResult[results.size()]);
+        }
+        else {
+            throw new IOException("No valid response found [ " + response + "] ");
+        }
+    }
+
+    private SearchResult parseSearchResult(Element root) throws IOException {
+        String requestId = null;
+        String accountId = null;
+        String number = null;
+        String senderId = null;
+        Date dateSubmitted = null;
+        Date dateFinalized = null;
+        Date firstEventDate = null;
+        Date lastEventDate = null;
+        float price = -1;
+        String currency = null;
+        SearchResult.VerificationStatus status = null;
+        List<SearchResult.VerifyCheck> checks = new ArrayList<SearchResult.VerifyCheck>();
+        String errorText = null;
+
+        NodeList fields = root.getChildNodes();
+        for (int i = 0; i < fields.getLength(); i++) {
+            Node node = fields.item(i);
+            if (node.getNodeType() != Node.ELEMENT_NODE)
+                continue;
+
+            String name = node.getNodeName();
+            if ("request_id".equals(name)) {
+                requestId = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+            }
+            else if ("account_id".equals(name)) {
+                accountId = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+            }
+            else if ("status".equals(name)) {
+                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                if (str != null) {
+                    try {
+                        status = SearchResult.VerificationStatus.valueOf(str.replace(' ', '_'));
+                    }
+                    catch (IllegalArgumentException e) {
+                        throw new IOException("invalid status name: " + str);
+                    }
+                }
+            }
+            else if ("number".equals(name)) {
+                number = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+            }
+            else if ("price".equals(name)) {
+                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                try {
+                    if (str != null)
+                        price = Float.parseFloat(str);
+                }
+                catch (NumberFormatException e) {
+                    log.error("xml parser .. invalid value in <price> node [ " + str + " ] ");
+                }
+            }
+            else if ("currency".equals(name)) {
+                currency = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+            }
+            else if ("sender_id".equals(name)) {
+                senderId = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+            }
+            else if ("date_submitted".equals(name)) {
+                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                if (str != null) {
+                    try {
+                        dateSubmitted = parseDateTime(str);
+                    }
+                    catch (ParseException e) {
+                        throw new IOException("unable to parse submission date: " + str);
+                    }
+                }
+            }
+            else if ("date_finalized".equals(name)) {
+                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                if (str != null) {
+                    try {
+                        dateFinalized = parseDateTime(str);
+                    }
+                    catch (ParseException e) {
+                        throw new IOException("unable to parse finalization date: " + str);
+                    }
+                }
+            }
+            else if ("first_event_date".equals(name)) {
+                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                if (str != null) {
+                    try {
+                        firstEventDate = parseDateTime(str);
+                    }
+                    catch (ParseException e) {
+                        throw new IOException("unable to parse first event date: " + str);
+                    }
+                }
+            }
+            else if ("last_event_date".equals(name)) {
+                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                if (str != null) {
+                    try {
+                        lastEventDate = parseDateTime(str);
+                    }
+                    catch (ParseException e) {
+                        throw new IOException("unable to parse last event date: " + str);
+                    }
+                }
+            }
+            else if ("checks".equals(name)) {
+                NodeList checkNodes = node.getChildNodes();
+                for (int j = 0; j < checkNodes.getLength(); j++) {
+                    Node checkNode = checkNodes.item(j);
+                    if (checkNode.getNodeType() != Node.ELEMENT_NODE)
+                        continue;
+
+                    if ("check".equals(checkNode.getNodeName())) {
+                        checks.add(parseVerifyCheck((Element) checkNode));
+                    }
+                }
+            }
+            else if ("error_text".equals(name)) {
+                errorText = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+            }
+        }
+
+        if (status == null)
+            throw new IOException("Xml Parser - did not find a <status> node");
+
+        return new SearchResult(SearchResult.STATUS_OK,
+                requestId,
+                accountId,
+                status,
+                number,
+                price, currency,
+                senderId,
+                dateSubmitted, dateFinalized,
+                firstEventDate, lastEventDate,
+                checks,
+                errorText, false);
+    }
+
+    private SearchResult.VerifyCheck parseVerifyCheck(Element root) throws IOException {
+        String code = null;
+        SearchResult.VerifyCheck.Status status = null;
+        Date dateReceived = null;
+        String ipAddress = null;
+
+        NodeList fields = root.getChildNodes();
+        for (int i = 0; i < fields.getLength(); i++) {
+            Node node = fields.item(i);
+            if (node.getNodeType() != Node.ELEMENT_NODE)
+                continue;
+
+            String name = node.getNodeName();
+            if ("code".equals(name)) {
+                code = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+            }
+            else if ("status".equals(name)) {
+                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                if (str != null) {
+                    try {
+                        status = SearchResult.VerifyCheck.Status.valueOf(str);
+                    }
+                    catch (IllegalArgumentException e) {
+                        throw new IOException("invalid check status name: " + str);
+                    }
+                }
+            }
+            else if ("ip_address".equals(name)) {
+                ipAddress = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+            }
+            else if ("date_received".equals(name)) {
+                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                if (str != null) {
+                    try {
+                        dateReceived = parseDateTime(str);
+                    }
+                    catch (ParseException e) {
+                        throw new IOException("unable to parse check date: " + str);
+                    }
+                }
+            }
+        }
+
+        if (status == null)
+            throw new IOException("Xml Parser - did not find a <status> node");
+
+        return new SearchResult.VerifyCheck(dateReceived, code, status, ipAddress);
+    }
+
+    private Date parseDateTime(String str) throws ParseException {
+        return sDateTimePattern.parse(str);
     }
 
 }
