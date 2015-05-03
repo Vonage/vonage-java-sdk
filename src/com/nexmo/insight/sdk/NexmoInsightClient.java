@@ -163,7 +163,7 @@ public class NexmoInsightClient {
         params.add(new BasicNameValuePair("callback", callbackUrl));
 
         if (features != null)
-            params.add(new BasicNameValuePair("features", Arrays.toString(features)));
+            params.add(new BasicNameValuePair("features", strJoin(features, ",")));
 
         if (callbackTimeout >= 0)
             params.add(new BasicNameValuePair("callback_timeout", String.valueOf(callbackTimeout)));
@@ -242,6 +242,16 @@ public class NexmoInsightClient {
             throw new IOException("No valid response found [ " + response + "] ");
 
         return parseInsightResult(root);
+    }
+
+    public static String strJoin(String[] aArr, String sSep) {
+        StringBuilder sbStr = new StringBuilder();
+        for (int i = 0, il = aArr.length; i < il; i++) {
+            if (i > 0)
+                sbStr.append(sSep);
+            sbStr.append(aArr[i]);
+        }
+        return sbStr.toString();
     }
 
     private InsightResult parseInsightResult(Element root) throws IOException {
