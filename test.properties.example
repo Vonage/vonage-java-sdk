@@ -1,0 +1,11 @@
+api.key=API-KEY
+api.secret=API-SECRET
+
+# Number insight
+insight.number=+15555555555
+insight.features=type,reachable
+insight.callback.url=http://some.callback.url/script.php
+insight.callback.timeout=30000
+insight.callback.method=POST
+insight.callback.clientRef=CLIENT-DATA
+insight.callback.ipAddress=127.0.0.1
