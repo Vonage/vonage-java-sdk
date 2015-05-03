@@ -193,7 +193,7 @@ public class NexmoVerifyClient {
         if (length > 0 && length != 4 && length != 6)
             throw new IllegalArgumentException("code length must be 4 or 6.");
 
-        log.debug("HTTP-Verify Client .. to [ " + number + " ] brand [ " + brand + " ] ");
+        log.debug("HTTP-Number-Verify Client .. to [ " + number + " ] brand [ " + brand + " ] ");
 
         List<NameValuePair> params = new ArrayList<NameValuePair>();
 
@@ -213,9 +213,8 @@ public class NexmoVerifyClient {
             params.add(new BasicNameValuePair("lg",
                 (locale.getLanguage() + "-" + locale.getCountry()).toLowerCase()));
 
-        if (type != null) {
+        if (type != null)
             params.add(new BasicNameValuePair("require_type", type.toString()));
-        }
 
         String baseUrl = this.baseUrl + PATH_VERIFY;
 
@@ -332,7 +331,7 @@ public class NexmoVerifyClient {
         if (requestId == null || code == null)
             throw new IllegalArgumentException("request ID and code parameters are mandatory.");
 
-        log.debug("HTTP-Verify-Check Client .. for [ " + requestId + " ] code [ " + code + " ] ");
+        log.debug("HTTP-Number-Verify-Check Client .. for [ " + requestId + " ] code [ " + code + " ] ");
 
         List<NameValuePair> params = new ArrayList<NameValuePair>();
 
@@ -477,7 +476,7 @@ public class NexmoVerifyClient {
         if (requestIds.length > MAX_SEARCH_REQUESTS)
             throw new IllegalArgumentException("too many request IDs. Max is " + MAX_SEARCH_REQUESTS);
 
-        log.debug("HTTP-Verify-Search Client .. for [ " + Arrays.toString(requestIds) + " ] ");
+        log.debug("HTTP-Number-Verify-Search Client .. for [ " + Arrays.toString(requestIds) + " ] ");
 
         List<NameValuePair> params = new ArrayList<NameValuePair>();
 
@@ -638,7 +637,7 @@ public class NexmoVerifyClient {
                         status = SearchResult.VerificationStatus.valueOf(str.replace(' ', '_'));
                     }
                     catch (IllegalArgumentException e) {
-                        throw new IOException("invalid status name: " + str);
+                        log.error("xml parser .. invalid value in <status> node [ " + str + " ] ");
                     }
                 }
             }
@@ -668,7 +667,7 @@ public class NexmoVerifyClient {
                         dateSubmitted = parseDateTime(str);
                     }
                     catch (ParseException e) {
-                        throw new IOException("unable to parse submission date: " + str);
+                        log.error("xml parser .. invalid value in <date_submitted> node [ " + str + " ] ");
                     }
                 }
             }
@@ -679,7 +678,7 @@ public class NexmoVerifyClient {
                         dateFinalized = parseDateTime(str);
                     }
                     catch (ParseException e) {
-                        throw new IOException("unable to parse finalization date: " + str);
+                        log.error("xml parser .. invalid value in <date_finalized> node [ " + str + " ] ");
                     }
                 }
             }
@@ -690,7 +689,7 @@ public class NexmoVerifyClient {
                         firstEventDate = parseDateTime(str);
                     }
                     catch (ParseException e) {
-                        throw new IOException("unable to parse first event date: " + str);
+                        log.error("xml parser .. invalid value in <first_event_date> node [ " + str + " ] ");
                     }
                 }
             }
@@ -701,7 +700,7 @@ public class NexmoVerifyClient {
                         lastEventDate = parseDateTime(str);
                     }
                     catch (ParseException e) {
-                        throw new IOException("unable to parse last event date: " + str);
+                        log.error("xml parser .. invalid value in <last_event_date> node [ " + str + " ] ");
                     }
                 }
             }
@@ -761,7 +760,7 @@ public class NexmoVerifyClient {
                         status = SearchResult.VerifyCheck.Status.valueOf(str);
                     }
                     catch (IllegalArgumentException e) {
-                        throw new IOException("invalid check status name: " + str);
+                        log.error("xml parser .. invalid value in <status> node [ " + str + " ] ");
                     }
                 }
             }
@@ -775,7 +774,7 @@ public class NexmoVerifyClient {
                         dateReceived = parseDateTime(str);
                     }
                     catch (ParseException e) {
-                        throw new IOException("unable to parse check date: " + str);
+                        log.error("xml parser .. invalid value in <date_received> node [ " + str + " ] ");
                     }
                 }
             }
