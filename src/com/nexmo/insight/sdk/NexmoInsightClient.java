@@ -53,7 +53,14 @@ import java.util.*;
  *
  * Usage<br><br>
  *
- * TODO
+ * Number insight searches for information about a phone number and returns it to a single URL callback
+ * via a GET/POST request.<br>
+ * To request an insight, call {@link #request}. Please refer to Nexmo website for current insight fees.<br>
+ * <br>
+ * Error codes are listed in {@link InsightResult} and also on the documentation website.<br>
+ * <br>
+ * More information on method parameters can be found at Nexmo website:
+ * <a href="https://docs.nexmo.com/index.php/number-insight">https://docs.nexmo.com/index.php/number-insight</a>
  *
  * @author Daniele Ricci
  */

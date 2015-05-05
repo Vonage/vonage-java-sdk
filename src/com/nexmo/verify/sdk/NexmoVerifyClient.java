@@ -56,7 +56,19 @@ import java.util.*;
  *
  * Usage<br><br>
  *
- * TODO
+ * To request a verification to Nexmo, call one of the {@link #verify} methods.
+ * The only mandatory parameters are the phone number and the brand name. The verification text message
+ * and/or voice call will have the brand name you provide so the user can recognize it.<br>
+ * <br>
+ * After receiving the verification code from the user, you should send it to Nexmo using the
+ * {@link #check} method.<br>
+ * <br>
+ * You can search for an in-progress or past verification request using {@link #search}.<br>
+ * <br>
+ * Error codes are listed in {@link BaseResult} and also on the documentation website.<br>
+ * <br>
+ * More information on method parameters can be found at Nexmo website:
+ * <a href="https://docs.nexmo.com/index.php/verify">https://docs.nexmo.com/index.php/verify</a>
  *
  * @author Daniele Ricci
  */
