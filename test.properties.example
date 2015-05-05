@@ -1,0 +1,36 @@
+api.key=API-KEY
+api.secret=API-SECRET
+
+# Number verify
+verify.number=15555555555
+verify.brand=TestBrand
+verify.sender=15555215554
+
+# Uncomment to execute check test
+#verify.check.id=XXXX
+#verify.check.code=123456
+
+# Uncomment to execute successful search test
+#verify.search.success.id=XXXXX
+#verify.search.success.dateSubmitted=XXXX
+#verify.search.success.dateFinalized=XXXX
+#verify.search.success.firstEventDate=XXXX
+#verify.search.success.lastEventDate=XXXX
+
+# Uncomment to execute failed search test
+#verify.search.failed.id=XXXX
+
+# Uncomment to execute expired search test
+#verify.search.expired.id=XXXX
+
+# Uncomment to execute in progress search test
+#verify.search.inProgress.id=XXXX
+
+# Number insight
+insight.number=+15555555555
+insight.features=type,reachable
+insight.callback.url=http://some.callback.url/script.php
+insight.callback.timeout=30000
+insight.callback.method=POST
+insight.callback.clientRef=CLIENT-DATA
+insight.callback.ipAddress=127.0.0.1
