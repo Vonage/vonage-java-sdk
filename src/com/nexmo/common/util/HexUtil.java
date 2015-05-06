@@ -1,4 +1,6 @@
 package com.nexmo.common.util;
+
+import java.io.UnsupportedEncodingException;
 /*
  * Copyright (c) 2011-2013 Nexmo Inc
  *
@@ -69,6 +71,56 @@ public class HexUtil {
             }
         }
         return tmpBuffer.toString();
+    }
+
+    /**
+     * Converts a Hex encoded String into a byte vector.
+     *
+     * @param s The String to be encoded.
+     *
+     * @return A byte vector representing the String.
+     */
+    public static byte[] hexToBytes(String str) {
+        if (str == null)
+            return null;
+        byte[] hexChars = null;
+        try {
+            hexChars = str.toUpperCase().getBytes("ISO_8859-1");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("SHOULD NOT HAPPEN  ISO_8859-1 UNSUPPORTED ENCODING!!");
+        }
+        int size = hexChars.length;
+        byte[] bytes = new byte[size / 2];
+        int first;
+        int second;
+
+        int rIndex = 0;
+        // Convert to bytes.
+        for (int i = 0; i+1 <size; i= i + 2) {
+
+            // Convert first
+            first = hexChars[i];
+            if (first < 58)
+                first = ((first - 48) * 16); // 0 - 9
+            else
+                first = ((first - 55) * 16); // A - F
+
+            // Convert second
+            second = hexChars[i + 1];
+            if (second < 58)
+                second = second - 48; // 0 - 9
+            else
+                second = second - 55; // A - F
+
+            //Value must be between -128 and 127
+            int total = (first + second);
+            if (total > 127)
+                total = (256 + total);
+
+            bytes[rIndex] = (byte) total;
+            rIndex++;
+        }
+        return bytes;
     }
 
 }
