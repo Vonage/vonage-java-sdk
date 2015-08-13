@@ -163,7 +163,7 @@ public class NexmoVerifyClient {
      * @param connectionTimeout over-ride the default connection timeout with this value (in milliseconds)
      * @param soTimeout over-ride the default read-timeout with this value (in milliseconds)
      */
-    public NexmoVerifyClient(String baseUrl,
+    public NexmoVerifyClient(final String baseUrl,
                              final String apiKey,
                              final String apiSecret,
                              final int connectionTimeout,

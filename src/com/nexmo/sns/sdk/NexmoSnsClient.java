@@ -135,7 +135,7 @@ public class NexmoSnsClient {
      * @param connectionTimeout over-ride the default connection timeout with this value (in milliseconds)
      * @param soTimeout over-ride the default read-timeout with this value (in milliseconds)
      */
-    public NexmoSnsClient(String baseUrl,
+    public NexmoSnsClient(final String baseUrl,
                           final String apiKey,
                           final String apiSecret,
                           final int connectionTimeout,

@@ -213,7 +213,7 @@ public class NexmoSmsClient {
      * @param signatureSecretKey the secret key we will use to generate the signatures for signed requests
      * @param useSSL do we use a SSL / HTTPS connection for submitting requests
      */
-    public NexmoSmsClient(String baseUrl,
+    public NexmoSmsClient(final String baseUrl,
                           final String apiKey,
                           final String apiSecret,
                           final int connectionTimeout,
