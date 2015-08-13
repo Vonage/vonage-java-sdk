@@ -68,7 +68,8 @@ public class VerifySignature implements SecurityConstants {
         try {
             time = Long.parseLong(timeString) * 1000;
         } catch (NumberFormatException e) {
-        	time = 0;
+            log.debug("Error parsing 'time' parameter [ " + timeString + " ]", e);
+            time = 0;
         }
         long diff = System.currentTimeMillis() - time;
         if (diff > MAX_ALLOWABLE_TIME_DELTA || diff < -MAX_ALLOWABLE_TIME_DELTA) {
@@ -77,7 +78,7 @@ public class VerifySignature implements SecurityConstants {
         }
 
         // Next, construct a sorted list of the name-value pair parameters supplied in the request, excluding the signature parameter
-        Map<String, String> sortedParams = new TreeMap<String, String>();
+        Map<String, String> sortedParams = new TreeMap<>();
         for (Iterator<?> I = request.getParameterMap().entrySet().iterator();I.hasNext();) {
             Map.Entry<?, ?> param = (Map.Entry<?, ?>)I.next();
             String name = (String)param.getKey();

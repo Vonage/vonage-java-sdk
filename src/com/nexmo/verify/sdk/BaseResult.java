@@ -27,6 +27,8 @@ package com.nexmo.verify.sdk;
  */
 public abstract class BaseResult implements java.io.Serializable {
 
+    private static final long serialVersionUID = -2501134793517817181L;
+
     /**
      * Verify was successfully submitted to the Nexmo service
      */
@@ -128,14 +130,14 @@ public abstract class BaseResult implements java.io.Serializable {
     }
 
     public int getStatus() {
-        return status;
+        return this.status;
     }
 
     public String getErrorText() {
-        return errorText;
+        return this.errorText;
     }
 
     public boolean isTemporaryError() {
-        return temporaryError;
+        return this.temporaryError;
     }
 }

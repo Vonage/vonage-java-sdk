@@ -44,7 +44,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
  */
 public class HttpClientUtils {
 
-    private final static Map<String, HttpClientUtils> instances = new HashMap<String, HttpClientUtils>();
+    private final static Map<String, HttpClientUtils> instances = new HashMap<>();
 
     private final ThreadSafeClientConnManager threadSafeClientConnManager;
 

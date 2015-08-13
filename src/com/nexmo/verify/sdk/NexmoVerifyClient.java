@@ -164,18 +164,20 @@ public class NexmoVerifyClient {
      * @param soTimeout over-ride the default read-timeout with this value (in milliseconds)
      */
     public NexmoVerifyClient(String baseUrl,
-                          final String apiKey,
-                          final String apiSecret,
-                          final int connectionTimeout,
-                          final int soTimeout) throws ParserConfigurationException {
+                             final String apiKey,
+                             final String apiSecret,
+                             final int connectionTimeout,
+                             final int soTimeout) throws ParserConfigurationException {
 
         // Derive a http and a https version of the supplied base url
-        baseUrl = baseUrl.trim();
-        String lc = baseUrl.toLowerCase();
+        if (baseUrl == null)
+            throw new IllegalArgumentException("base url is null");
+        String url = baseUrl.trim();
+        String lc = url.toLowerCase();
         if (!lc.startsWith("http://") && !lc.startsWith("https://"))
             throw new IllegalArgumentException("base url does not start with http:// or https://");
 
-        this.baseUrl = baseUrl;
+        this.baseUrl = url;
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
         this.connectionTimeout = connectionTimeout;
@@ -207,7 +209,7 @@ public class NexmoVerifyClient {
 
         log.debug("HTTP-Number-Verify Client .. to [ " + number + " ] brand [ " + brand + " ] ");
 
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
 
         params.add(new BasicNameValuePair("api_key", this.apiKey));
         params.add(new BasicNameValuePair("api_secret", this.apiSecret));
@@ -228,7 +230,7 @@ public class NexmoVerifyClient {
         if (type != null)
             params.add(new BasicNameValuePair("require_type", type.toString()));
 
-        String baseUrl = this.baseUrl + PATH_VERIFY;
+        String verifyBaseUrl = this.baseUrl + PATH_VERIFY;
 
         // Now that we have generated a query string, we can instanciate a HttpClient,
         // construct a POST or GET method and execute to submit the request
@@ -239,13 +241,13 @@ public class NexmoVerifyClient {
             final boolean doPost = true;
             String url;
             if (doPost) {
-                HttpPost httpPost = new HttpPost(baseUrl);
+                HttpPost httpPost = new HttpPost(verifyBaseUrl);
                 httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
                 method = httpPost;
-                url = baseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
+                url = verifyBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
             } else {
                 String query = URLEncodedUtils.format(params, "utf-8");
-                method = new HttpGet(baseUrl + "?" + query);
+                method = new HttpGet(verifyBaseUrl + "?" + query);
                 url = method.getRequestLine().getUri();
             }
 
@@ -276,9 +278,9 @@ public class NexmoVerifyClient {
 
                 // return a COMMS failure ...
                 return new VerifyResult(VerifyResult.STATUS_COMMS_FAILURE,
-                        null,
-                        "Failed to communicate with NEXMO-HTTP url [ " + url + " ] ..." + e,
-                        true);
+                                        null,
+                                        "Failed to communicate with NEXMO-HTTP url [ " + url + " ] ..." + e,
+                                        true);
             }
         }
 
@@ -294,7 +296,7 @@ public class NexmoVerifyClient {
         return parseVerifyResult(root);
     }
 
-    private VerifyResult parseVerifyResult(Element root) throws IOException {
+    private static VerifyResult parseVerifyResult(Element root) throws IOException {
         String requestId = null;
         int status = -1;
         String errorText = null;
@@ -345,7 +347,7 @@ public class NexmoVerifyClient {
 
         log.debug("HTTP-Number-Verify-Check Client .. for [ " + requestId + " ] code [ " + code + " ] ");
 
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
 
         params.add(new BasicNameValuePair("api_key", this.apiKey));
         params.add(new BasicNameValuePair("api_secret", this.apiSecret));
@@ -356,7 +358,7 @@ public class NexmoVerifyClient {
         if (ipAddress != null)
             params.add(new BasicNameValuePair("ip_address", ipAddress));
 
-        String baseUrl = this.baseUrl + PATH_VERIFY_CHECK;
+        String verifyCheckBaseUrl = this.baseUrl + PATH_VERIFY_CHECK;
 
         // Now that we have generated a query string, we can instanciate a HttpClient,
         // construct a POST or GET method and execute to submit the request
@@ -367,13 +369,13 @@ public class NexmoVerifyClient {
             final boolean doPost = true;
             String url;
             if (doPost) {
-                HttpPost httpPost = new HttpPost(baseUrl);
+                HttpPost httpPost = new HttpPost(verifyCheckBaseUrl);
                 httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
                 method = httpPost;
-                url = baseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
+                url = verifyCheckBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
             } else {
                 String query = URLEncodedUtils.format(params, "utf-8");
-                method = new HttpGet(baseUrl + "?" + query);
+                method = new HttpGet(verifyCheckBaseUrl + "?" + query);
                 url = method.getRequestLine().getUri();
             }
 
@@ -490,7 +492,7 @@ public class NexmoVerifyClient {
 
         log.debug("HTTP-Number-Verify-Search Client .. for [ " + Arrays.toString(requestIds) + " ] ");
 
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
 
         params.add(new BasicNameValuePair("api_key", this.apiKey));
         params.add(new BasicNameValuePair("api_secret", this.apiSecret));
@@ -504,7 +506,7 @@ public class NexmoVerifyClient {
             }
         }
 
-        String baseUrl = this.baseUrl + PATH_VERIFY_SEARCH;
+        String verifySearchBaseUrl = this.baseUrl + PATH_VERIFY_SEARCH;
 
         // Now that we have generated a query string, we can instanciate a HttpClient,
         // construct a POST or GET method and execute to submit the request
@@ -515,13 +517,13 @@ public class NexmoVerifyClient {
             final boolean doPost = true;
             String url;
             if (doPost) {
-                HttpPost httpPost = new HttpPost(baseUrl);
+                HttpPost httpPost = new HttpPost(verifySearchBaseUrl);
                 httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
                 method = httpPost;
-                url = baseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
+                url = verifySearchBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
             } else {
                 String query = URLEncodedUtils.format(params, "utf-8");
-                method = new HttpGet(baseUrl + "?" + query);
+                method = new HttpGet(verifySearchBaseUrl + "?" + query);
                 url = method.getRequestLine().getUri();
             }
 
@@ -594,7 +596,7 @@ public class NexmoVerifyClient {
             return new SearchResult[] { parseSearchResult(root) };
         }
         else if ("verification_requests".equals(root.getNodeName())) {
-            List<SearchResult> results = new ArrayList<SearchResult>();
+            List<SearchResult> results = new ArrayList<>();
 
             NodeList fields = root.getChildNodes();
             for (int i = 0; i < fields.getLength(); i++) {
@@ -614,7 +616,7 @@ public class NexmoVerifyClient {
         }
     }
 
-    private SearchResult parseSearchResult(Element root) throws IOException {
+    private static SearchResult parseSearchResult(Element root) throws IOException {
         String requestId = null;
         String accountId = null;
         String number = null;
@@ -626,7 +628,7 @@ public class NexmoVerifyClient {
         float price = -1;
         String currency = null;
         SearchResult.VerificationStatus status = null;
-        List<SearchResult.VerifyCheck> checks = new ArrayList<SearchResult.VerifyCheck>();
+        List<SearchResult.VerifyCheck> checks = new ArrayList<>();
         String errorText = null;
 
         NodeList fields = root.getChildNodes();
@@ -749,7 +751,7 @@ public class NexmoVerifyClient {
                 errorText, false);
     }
 
-    private SearchResult.VerifyCheck parseVerifyCheck(Element root) throws IOException {
+    private static SearchResult.VerifyCheck parseVerifyCheck(Element root) throws IOException {
         String code = null;
         SearchResult.VerifyCheck.Status status = null;
         Date dateReceived = null;
@@ -798,7 +800,7 @@ public class NexmoVerifyClient {
         return new SearchResult.VerifyCheck(dateReceived, code, status, ipAddress);
     }
 
-    private Date parseDateTime(String str) throws ParseException {
+    private static Date parseDateTime(String str) throws ParseException {
         return sDateTimePattern.parse(str);
     }
 

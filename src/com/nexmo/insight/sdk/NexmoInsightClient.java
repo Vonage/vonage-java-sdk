@@ -132,12 +132,14 @@ public class NexmoInsightClient {
                               final int soTimeout) throws ParserConfigurationException {
 
         // Derive a http and a https version of the supplied base url
-        baseUrl = baseUrl.trim();
-        String lc = baseUrl.toLowerCase();
+        if (baseUrl == null)
+            throw new IllegalArgumentException("base url is null");
+        String url = baseUrl.trim();
+        String lc = url.toLowerCase();
         if (!lc.startsWith("http://") && !lc.startsWith("https://"))
             throw new IllegalArgumentException("base url does not start with http:// or https://");
 
-        this.baseUrl = baseUrl;
+        this.baseUrl = url;
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
         this.connectionTimeout = connectionTimeout;
@@ -161,7 +163,7 @@ public class NexmoInsightClient {
 
         log.debug("HTTP-Number-Insight Client .. to [ " + number + " ] ");
 
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
 
         params.add(new BasicNameValuePair("api_key", this.apiKey));
         params.add(new BasicNameValuePair("api_secret", this.apiSecret));
@@ -184,7 +186,7 @@ public class NexmoInsightClient {
         if (clientRef != null)
             params.add(new BasicNameValuePair("client_ref", clientRef));
 
-        String baseUrl = this.baseUrl + PATH_INSIGHT;
+        String inshightBaseUrl = this.baseUrl + PATH_INSIGHT;
 
         // Now that we have generated a query string, we can instanciate a HttpClient,
         // construct a POST or GET method and execute to submit the request
@@ -195,13 +197,13 @@ public class NexmoInsightClient {
             final boolean doPost = true;
             String url;
             if (doPost) {
-                HttpPost httpPost = new HttpPost(baseUrl);
+                HttpPost httpPost = new HttpPost(inshightBaseUrl);
                 httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
                 method = httpPost;
-                url = baseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
+                url = inshightBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
             } else {
                 String query = URLEncodedUtils.format(params, "utf-8");
-                method = new HttpGet(baseUrl + "?" + query);
+                method = new HttpGet(inshightBaseUrl + "?" + query);
                 url = method.getRequestLine().getUri();
             }
 
@@ -261,7 +263,7 @@ public class NexmoInsightClient {
         return sbStr.toString();
     }
 
-    private InsightResult parseInsightResult(Element root) throws IOException {
+    private static InsightResult parseInsightResult(Element root) throws IOException {
         String requestId = null;
         String number = null;
         float price = -1;

@@ -27,6 +27,8 @@ package com.nexmo.verify.sdk;
  */
 public class VerifyResult extends BaseResult {
 
+    private static final long serialVersionUID = 7235020156625478216L;
+
     private final String requestId;
 
     protected VerifyResult(final int status,
@@ -38,7 +40,7 @@ public class VerifyResult extends BaseResult {
     }
 
     public String getRequestId() {
-        return requestId;
+        return this.requestId;
     }
 
 }

@@ -142,16 +142,18 @@ public class NexmoSnsClient {
                           final int soTimeout) throws Exception {
 
         // Derive a http and a https version of the supplied base url
-        baseUrl = baseUrl.trim();
-        String lc = baseUrl.toLowerCase();
+        if (baseUrl == null)
+            throw new IllegalArgumentException("base url is null");
+        String url = baseUrl.trim();
+        String lc = url.toLowerCase();
         if (!lc.startsWith("http://") && !lc.startsWith("https://"))
             throw new Exception("base url does not start with http:// or https://");
         if (lc.startsWith("http://")) {
-            this.baseUrlHttp = baseUrl;
-            this.baseUrlHttps = "https://" + baseUrl.substring(7);
+            this.baseUrlHttp = url;
+            this.baseUrlHttps = "https://" + url.substring(7);
         } else {
-            this.baseUrlHttps = baseUrl;
-            this.baseUrlHttp = "http://" + baseUrl.substring(8);
+            this.baseUrlHttps = url;
+            this.baseUrlHttp = "http://" + url.substring(8);
         }
 
         this.apiKey = apiKey;
@@ -182,7 +184,7 @@ public class NexmoSnsClient {
 
         // Construct a query string as a list of NameValuePairs
 
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
 
         params.add(new BasicNameValuePair("api_key", this.apiKey));
         params.add(new BasicNameValuePair("api_secret", this.apiSecret));

@@ -236,9 +236,10 @@ public abstract class AbstractMOServlet extends HttpServlet {
         this.consumer.execute(task);
         
         // immediately ack the receipt
-        PrintWriter out = response.getWriter();
-        out.print("OK");
-        out.close();
+        try (PrintWriter out = response.getWriter()) {
+            out.print("OK");
+            out.flush();
+        }
     }
 
     /**
