@@ -27,6 +27,8 @@ package com.nexmo.verify.sdk;
  */
 public class CheckResult extends BaseResult {
 
+    private static final long serialVersionUID = 8468662117199934412L;
+
     private final String eventId;
     private final float price;
     private final String currency;
@@ -44,15 +46,15 @@ public class CheckResult extends BaseResult {
     }
 
     public String getEventId() {
-        return eventId;
+        return this.eventId;
     }
 
     public float getPrice() {
-        return price;
+        return this.price;
     }
 
     public String getCurrency() {
-        return currency;
+        return this.currency;
     }
 
 }

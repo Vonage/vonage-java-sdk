@@ -30,6 +30,8 @@ import java.util.List;
  */
 public class SearchResult extends BaseResult {
 
+    private static final long serialVersionUID = -2658346277382866298L;
+
     /** Used to define a verify check attempt. */
     public static class VerifyCheck {
         enum Status {
@@ -53,24 +55,24 @@ public class SearchResult extends BaseResult {
         }
 
         public Date getDate() {
-            return date;
+            return this.date;
         }
 
         public String getCode() {
-            return code;
+            return this.code;
         }
 
         public Status getStatus() {
-            return status;
+            return this.status;
         }
 
         public String getIpAddress() {
-            return ipAddress;
+            return this.ipAddress;
         }
 
         @Override
         public String toString() {
-            return "VerifyCheck [status=" + status + ", code=" + code + ", date=" + date + "]";
+            return "VerifyCheck [status=" + this.status + ", code=" + this.code + ", date=" + this.date + "]";
         }
     }
 
@@ -91,7 +93,7 @@ public class SearchResult extends BaseResult {
         }
 
         public String getName() {
-            return name != null ? name : name();
+            return this.name != null ? this.name : name();
         }
 
         @Override
@@ -144,56 +146,56 @@ public class SearchResult extends BaseResult {
     }
 
     public String getRequestId() {
-        return requestId;
+        return this.requestId;
     }
 
     public String getAccountId() {
-        return accountId;
+        return this.accountId;
     }
 
     public VerificationStatus getVerificationStatus() {
-        return verificationStatus;
+        return this.verificationStatus;
     }
 
     public String getNumber() {
-        return number;
+        return this.number;
     }
 
     public float getPrice() {
-        return price;
+        return this.price;
     }
 
     public String getCurrency() {
-        return currency;
+        return this.currency;
     }
 
     public String getSenderId() {
-        return senderId;
+        return this.senderId;
     }
 
     public Date getDateSubmitted() {
-        return dateSubmitted;
+        return this.dateSubmitted;
     }
 
     public Date getDateFinalized() {
-        return dateFinalized;
+        return this.dateFinalized;
     }
 
     public Date getFirstEventDate() {
-        return firstEventDate;
+        return this.firstEventDate;
     }
 
     public Date getLastEventDate() {
-        return lastEventDate;
+        return this.lastEventDate;
     }
 
     public List<VerifyCheck> getChecks() {
-        return checks;
+        return this.checks;
     }
 
     @Override
     public String toString() {
-        return "SearchResult [status=" + getStatus() + ", requestId=" + requestId +
-                ", verificationStatus=" + verificationStatus + "]";
+        return "SearchResult [status=" + getStatus() + ", requestId=" + this.requestId +
+                ", verificationStatus=" + this.verificationStatus + "]";
     }
 }

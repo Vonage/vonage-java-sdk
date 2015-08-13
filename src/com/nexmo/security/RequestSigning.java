@@ -120,6 +120,7 @@ public class RequestSigning implements SecurityConstants {
             if (timeString != null)
                 time = Long.parseLong(timeString) * 1000;
         } catch (NumberFormatException e) {
+            log.debug("Error parsing 'time' parameter [ " + timeString + " ]", e);
             time = 0;
         }
         long diff = System.currentTimeMillis() - time;

@@ -87,35 +87,35 @@ public class InsightResult {
     }
 
     public int getStatus() {
-        return status;
+        return this.status;
     }
 
     public String getErrorText() {
-        return errorText;
+        return this.errorText;
     }
 
     public boolean isTemporaryError() {
-        return temporaryError;
+        return this.temporaryError;
     }
 
     public String getRequestId() {
-        return requestId;
+        return this.requestId;
     }
 
     public String getNumber() {
-        return number;
+        return this.number;
     }
 
     public float getRequestPrice() {
-        return requestPrice;
+        return this.requestPrice;
     }
 
     public float getRemainingBalance() {
-        return remainingBalance;
+        return this.remainingBalance;
     }
 
     @Override
     public String toString() {
-        return "InsightResult [status=" + getStatus() + ", requestId=" + requestId + "]";
+        return "InsightResult [status=" + getStatus() + ", requestId=" + this.requestId + "]";
     }
 }
