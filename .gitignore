@@ -1,3 +1,7 @@
+.settings
+.classpath
+.project
+/target
 /build
 /test.properties
 /html
