@@ -1,5 +1,12 @@
 
-v1.4 - ????-??-??
+v1.5 - 2014-08-28
+
+Include LICENSE.txt file and license in all source files
+add support for USSD submission
+updated signature generation/verification in line with updates to Nexmo Service
+include the 'network' field in the SmsSubmissionResult object
+
+v1.4 - 2012-10-30
 
 Migrate to apache httpclient 4.1
 Switch from use of username/password to 'api_key' / 'api_secret'

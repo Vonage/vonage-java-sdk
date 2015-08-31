@@ -1,4 +1,25 @@
 package com.nexmo.messaging.sdk;
+/*
+ * Copyright (c) 2011-2013 Nexmo Inc
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 
 import java.util.List;
 import java.util.ArrayList;
@@ -91,10 +112,25 @@ public class NexmoSmsClient {
     private static final Log log = LogFactory.getLog(NexmoSmsClient.class);
 
     /**
-     * http://rest.nexmo.com/sms/xml<br>
-     * Submission url used unless over-ridden on the constructor
+     * http://rest.nexmo.com<br>
+     * Service url used unless over-ridden on the constructor
      */
-    public static final String DEFAULT_BASE_URL = "http://rest.nexmo.com/sms/xml";
+    public static final String DEFAULT_BASE_URL = "http://rest.nexmo.com";
+
+    /**
+     * The endpoint path for submitting sms messages
+     */
+    public static final String SUBMISSION_PATH_SMS = "/sms/xml";
+
+    /**
+     * The endpoint path for submitting ussd 'display' messages
+     */
+    public static final String SUBMISSION_PATH_USSD_DISPLAY = "/ussd/xml";
+
+    /**
+     * The endpoint path for submitting ussd 'prompt' messages that require a response
+     */
+    public static final String SUBMISSION_PATH_USSD_PROMPT = "/ussd-prompt/xml";
 
     /**
      * Default connection timeout of 5000ms used by this client unless specifically overridden onb the constructor
@@ -177,7 +213,7 @@ public class NexmoSmsClient {
      * @param signatureSecretKey the secret key we will use to generate the signatures for signed requests
      * @param useSSL do we use a SSL / HTTPS connection for submitting requests
      */
-    public NexmoSmsClient(String baseUrl,
+    public NexmoSmsClient(final String baseUrl,
                           final String apiKey,
                           final String apiSecret,
                           final int connectionTimeout,
@@ -187,16 +223,18 @@ public class NexmoSmsClient {
                           final boolean useSSL) throws Exception {
 
         // Derive a http and a https version of the supplied base url
-        baseUrl = baseUrl.trim();
-        String lc = baseUrl.toLowerCase();
+        if (baseUrl == null)
+            throw new IllegalArgumentException("base url is null");
+        String url = baseUrl.trim();
+        String lc = url.toLowerCase();
         if (!lc.startsWith("http://") && !lc.startsWith("https://"))
             throw new Exception("base url does not start with http:// or https://");
         if (lc.startsWith("http://")) {
-            this.baseUrlHttp = baseUrl;
-            this.baseUrlHttps = "https://" + baseUrl.substring(7);
+            this.baseUrlHttp = url;
+            this.baseUrlHttps = "https://" + url.substring(7);
         } else {
-            this.baseUrlHttps = baseUrl;
-            this.baseUrlHttp = "http://" + baseUrl.substring(8);
+            this.baseUrlHttps = url;
+            this.baseUrlHttp = "http://" + url.substring(8);
         }
 
         this.apiKey = apiKey;
@@ -291,9 +329,16 @@ public class NexmoSmsClient {
                                                String networkCode,
                                                boolean performReachabilityCheck) throws Exception {
 
-        log.debug("HTTP-SMS-Submission Client .. from [ " + message.getFrom() + " ] to [ " + message.getTo() + " ] msg [ " + message.getMessageBody() + " ] ");
+        log.debug("HTTP-Message-Submission Client .. from [ " + message.getFrom() + " ] to [ " + message.getTo() + " ] msg [ " + message.getMessageBody() + " ] ");
 
         // From the Message object supplied, construct an appropriate request to be submitted to the Nexmo REST Service.
+
+        // Determine what 'product' type we are submitting, and select the appropriate endpoint path
+        String submitPath = SUBMISSION_PATH_SMS;
+        if (message.getType() == Message.MESSAGE_TYPE_USSD_DISPLAY)
+            submitPath = SUBMISSION_PATH_USSD_DISPLAY;
+        if (message.getType() == Message.MESSAGE_TYPE_USSD_PROMPT)
+            submitPath = SUBMISSION_PATH_USSD_PROMPT;
 
         // Determine the type parameter based on the type of Message object.
         boolean binary = message.getType() == Message.MESSAGE_TYPE_BINARY;
@@ -313,7 +358,7 @@ public class NexmoSmsClient {
 
         // Construct a query string as a list of NameValuePairs
 
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
 
         boolean doPost = false;
 
@@ -372,6 +417,7 @@ public class NexmoSmsClient {
             RequestSigning.constructSignatureForRequestParameters(params, this.signatureSecretKey);
 
         String baseUrl = this.useSSL ? this.baseUrlHttps : this.baseUrlHttp;
+        baseUrl = baseUrl + submitPath;
 
         // Now that we have generated a query string, we can instanciate a HttpClient,
         // construct a POST or GET method and execute to submit the request
@@ -382,7 +428,7 @@ public class NexmoSmsClient {
             String url = null;
             if (doPost) {
                 HttpPost httpPost = new HttpPost(baseUrl);
-                httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8")); 
+                httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
                 method = httpPost;
                 url = baseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
             } else {
@@ -390,7 +436,7 @@ public class NexmoSmsClient {
                 method = new HttpGet(baseUrl + "?" + query);
                 url = method.getRequestLine().getUri();
             }
-            
+
             try {
                 if (this.httpClient == null)
                     this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
@@ -425,6 +471,7 @@ public class NexmoSmsClient {
                                                      null,
                                                      null,
                                                      true,
+                                                     null,
                                                      null);
                 return results;
             }
@@ -447,12 +494,13 @@ public class NexmoSmsClient {
                             <remainingBalance>##.##</remainingBalance>
                             <messagePrice>##.##</messagePrice>
                             <reachability status='x' description='xxx' />
+                            <network>23410</network>
                         </message>
                     </messages>
                 </mt-submission-response>
         */
 
-        List<SmsSubmissionResult> results = new ArrayList<SmsSubmissionResult>();
+        List<SmsSubmissionResult> results = new ArrayList<>();
 
         Document doc = null;
         synchronized(this.documentBuilder) {
@@ -486,6 +534,7 @@ public class NexmoSmsClient {
                         BigDecimal remainingBalance = null;
                         BigDecimal messagePrice = null;
                         SmsSubmissionReachabilityStatus smsSubmissionReachabilityStatus = null;
+                        String network = null;
 
                         NodeList nodes = messageNode.getChildNodes();
                         for (int i4=0;i4<nodes.getLength();i4++) {
@@ -541,9 +590,9 @@ public class NexmoSmsClient {
 
                                 smsSubmissionReachabilityStatus = new SmsSubmissionReachabilityStatus(reachabilityStatus, description);
                             } else if (node.getNodeName().equals("network")) {
-                                // placeholder for future functionality
+                                network = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
                             } else
-                                log.error("xml parser .. unknown node found in status-return, expected [ messageId, to, status, errorText, clientRef, messagePrice, remainingBalance, reachability ] -- found [ " + node.getNodeName() + " ] ");
+                                log.error("xml parser .. unknown node found in status-return, expected [ messageId, to, status, errorText, clientRef, messagePrice, remainingBalance, reachability, network ] -- found [ " + node.getNodeName() + " ] ");
                         }
 
                         if (status == -1)
@@ -562,7 +611,8 @@ public class NexmoSmsClient {
                                                             remainingBalance,
                                                             messagePrice,
                                                             temporaryError,
-                                                            smsSubmissionReachabilityStatus));
+                                                            smsSubmissionReachabilityStatus,
+                                                            network));
                     }
                 }
             }

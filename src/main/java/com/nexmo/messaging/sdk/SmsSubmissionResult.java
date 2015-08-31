@@ -1,4 +1,25 @@
 package com.nexmo.messaging.sdk;
+/*
+ * Copyright (c) 2011-2013 Nexmo Inc
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 
 import java.math.BigDecimal;
 
@@ -135,6 +156,7 @@ public class SmsSubmissionResult implements java.io.Serializable {
     private final BigDecimal messagePrice;
     private final boolean temporaryError;
     private final SmsSubmissionReachabilityStatus smsSubmissionReachabilityStatus;
+    private final String network;
 
     protected SmsSubmissionResult(final int status,
                                   final String destination,
@@ -144,7 +166,8 @@ public class SmsSubmissionResult implements java.io.Serializable {
                                   final BigDecimal remainingBalance,
                                   final BigDecimal messagePrice,
                                   final boolean temporaryError,
-                                  final SmsSubmissionReachabilityStatus smsSubmissionReachabilityStatus) {
+                                  final SmsSubmissionReachabilityStatus smsSubmissionReachabilityStatus,
+                                  final String network) {
         this.status = status;
         this.destination = destination;
         this.messageId = messageId;
@@ -154,6 +177,7 @@ public class SmsSubmissionResult implements java.io.Serializable {
         this.messagePrice = messagePrice;
         this.temporaryError = temporaryError;
         this.smsSubmissionReachabilityStatus = smsSubmissionReachabilityStatus;
+        this.network = network;
     }
 
     /**
@@ -220,6 +244,13 @@ public class SmsSubmissionResult implements java.io.Serializable {
         return this.smsSubmissionReachabilityStatus;
     }
 
+    /**
+     * @return String the 'estimated' network that has been identified for this destination (Note, this can change during the processing of this message due to HLR lookups)
+     */
+    public String getNetwork() {
+        return this.network;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -233,6 +264,8 @@ public class SmsSubmissionResult implements java.io.Serializable {
         sb.append(" TEMP-ERR?:").append(this.temporaryError);
         if (this.smsSubmissionReachabilityStatus != null)
             sb.append(" REACHABLE?:").append(this.smsSubmissionReachabilityStatus);
+        if (this.network != null)
+            sb.append("NETWORK:").append(this.network);
 
         return sb.toString();
     }

@@ -1,4 +1,25 @@
 package com.nexmo.sns.sdk;
+/*
+ * Copyright (c) 2011-2013 Nexmo Inc
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,23 +135,25 @@ public class NexmoSnsClient {
      * @param connectionTimeout over-ride the default connection timeout with this value (in milliseconds)
      * @param soTimeout over-ride the default read-timeout with this value (in milliseconds)
      */
-    public NexmoSnsClient(String baseUrl,
+    public NexmoSnsClient(final String baseUrl,
                           final String apiKey,
                           final String apiSecret,
                           final int connectionTimeout,
                           final int soTimeout) throws Exception {
 
         // Derive a http and a https version of the supplied base url
-        baseUrl = baseUrl.trim();
-        String lc = baseUrl.toLowerCase();
+        if (baseUrl == null)
+            throw new IllegalArgumentException("base url is null");
+        String url = baseUrl.trim();
+        String lc = url.toLowerCase();
         if (!lc.startsWith("http://") && !lc.startsWith("https://"))
             throw new Exception("base url does not start with http:// or https://");
         if (lc.startsWith("http://")) {
-            this.baseUrlHttp = baseUrl;
-            this.baseUrlHttps = "https://" + baseUrl.substring(7);
+            this.baseUrlHttp = url;
+            this.baseUrlHttps = "https://" + url.substring(7);
         } else {
-            this.baseUrlHttps = baseUrl;
-            this.baseUrlHttp = "http://" + baseUrl.substring(8);
+            this.baseUrlHttps = url;
+            this.baseUrlHttp = "http://" + url.substring(8);
         }
 
         this.apiKey = apiKey;
@@ -161,7 +184,7 @@ public class NexmoSnsClient {
 
         // Construct a query string as a list of NameValuePairs
 
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
 
         params.add(new BasicNameValuePair("api_key", this.apiKey));
         params.add(new BasicNameValuePair("api_secret", this.apiSecret));
@@ -176,7 +199,7 @@ public class NexmoSnsClient {
         // construct a POST or GET method and execute to submit the request
         String response = null;
         HttpPost method = new HttpPost(baseUrl);
-        method.setEntity(new UrlEncodedFormEntity(params, "UTF-8")); 
+        method.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
         String url = baseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
         try {
             if (this.httpClient == null)

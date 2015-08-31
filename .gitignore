@@ -1,5 +1,9 @@
-/target
 .settings
 .classpath
 .project
-build
+/target
+/build
+/test.properties
+/html
+/javadoc
+nexmo-sdk.jar

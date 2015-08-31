@@ -8,7 +8,7 @@
         </classpath>
     </taskdef>
 
-    <property name="VERSION" value="1.4"/>
+    <property name="VERSION" value="1.6-prerelease"/>
 
     <property name="src.dir" value="src"/>
     <property name="build.dir" value="build/tmpclasses/sdk"/>
@@ -28,7 +28,7 @@
         <pathelement location="lib/httpclient-4.1.1.jar"/>
         <pathelement location="lib/commons-logging.jar"/>
         <pathelement location="lib/commons-codec-1.5.jar"/>
-        <pathelement location="lib/servlet-api-2.5.jar"/>
+        <pathelement location="lib/servlet-api-3.1.jar"/>
     </path>
 
     <target name="init">
@@ -139,6 +139,18 @@
 
     <target name="sns-example" depends="compile">
         <java classname="com.nexmo.sns.sdk.examples.SubscribeAndPublishExample"
+              fork="true"
+              classpathref="project.classpath" />
+    </target>
+
+    <target name="ussd-display-example" depends="compile">
+        <java classname="com.nexmo.messaging.sdk.examples.ussd.SendUSSDDisplayMessage"
+              fork="true"
+              classpathref="project.classpath" />
+    </target>
+
+    <target name="ussd-prompt-example" depends="compile">
+        <java classname="com.nexmo.messaging.sdk.examples.ussd.SendUSSDPromptMessage"
               fork="true"
               classpathref="project.classpath" />
     </target>
