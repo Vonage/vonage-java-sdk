@@ -10,7 +10,7 @@
 
     <property name="VERSION" value="1.6-prerelease"/>
 
-    <property name="src.dir" value="src"/>
+    <property name="src.dir" value="src/main/java"/>
     <property name="build.dir" value="build/tmpclasses/sdk"/>
     <property name="target.dir" value="build"/>
     <property name="javadoc.dir" value="javadoc"/>
