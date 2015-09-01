@@ -28,7 +28,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -65,6 +64,7 @@ import java.util.*;
  * @author Daniele Ricci
  */
 public class NexmoInsightClient {
+    
     private static final Log log = LogFactory.getLog(NexmoInsightClient.class);
 
     /**
@@ -109,10 +109,10 @@ public class NexmoInsightClient {
     public NexmoInsightClient(final String apiKey,
                               final String apiSecret) throws ParserConfigurationException {
         this(DEFAULT_BASE_URL,
-                apiKey,
-                apiSecret,
-                DEFAULT_CONNECTION_TIMEOUT,
-                DEFAULT_SO_TIMEOUT);
+             apiKey,
+             apiSecret,
+             DEFAULT_CONNECTION_TIMEOUT,
+             DEFAULT_SO_TIMEOUT);
     }
 
     /**
@@ -148,14 +148,26 @@ public class NexmoInsightClient {
         this.documentBuilder = this.documentBuilderFactory.newDocumentBuilder();
     }
 
-    public InsightResult request(String number, String callbackUrl) throws IOException, SAXException {
-        return request(number, callbackUrl, null, -1, "GET", null, null);
+    public InsightResult request(final String number,
+                                 final String callbackUrl) throws IOException, 
+                                                                  SAXException {
+        return request(number,
+                       callbackUrl, 
+                       null, 
+                       -1, 
+                       "GET", 
+                       null, 
+                       null);
     }
 
-    public InsightResult request(String number, String callbackUrl, String[] features,
-                                 long callbackTimeout, String callbackMethod, String clientRef, String ipAddress)
-            throws IOException, SAXException {
-
+    public InsightResult request(final String number,
+                                 final String callbackUrl, 
+                                 final String[] features,
+                                 final long callbackTimeout, 
+                                 final String callbackMethod,
+                                 final String clientRef, 
+                                 final String ipAddress) throws IOException, 
+                                                                SAXException {
         if (number == null || callbackUrl == null)
             throw new IllegalArgumentException("number and callbackUrl parameters are mandatory.");
         if (callbackTimeout >= 0 && (callbackTimeout < 1000 || callbackTimeout > 30000))
@@ -192,20 +204,10 @@ public class NexmoInsightClient {
         // construct a POST or GET method and execute to submit the request
         String response = null;
         for (int pass=1;pass<=2;pass++) {
-            HttpUriRequest method;
-            // TODO what's this for?
-            final boolean doPost = true;
-            String url;
-            if (doPost) {
-                HttpPost httpPost = new HttpPost(inshightBaseUrl);
-                httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-                method = httpPost;
-                url = inshightBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
-            } else {
-                String query = URLEncodedUtils.format(params, "utf-8");
-                method = new HttpGet(inshightBaseUrl + "?" + query);
-                url = method.getRequestLine().getUri();
-            }
+            HttpPost httpPost = new HttpPost(inshightBaseUrl);
+            httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+            HttpUriRequest method = httpPost;
+            String url = inshightBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
 
             try {
                 if (this.httpClient == null)
@@ -217,8 +219,7 @@ public class NexmoInsightClient {
                 response = new BasicResponseHandler().handleResponse(httpResponse);
                 log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
                 break;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 method.abort();
                 log.info("communication failure: " + e);
                 String exceptionMsg = e.getMessage();
@@ -234,10 +235,12 @@ public class NexmoInsightClient {
 
                 // return a COMMS failure ...
                 return new InsightResult(InsightResult.STATUS_COMMS_FAILURE,
-                        null, null,
-                        0, 0,
-                        "Failed to communicate with NEXMO-HTTP url [ " + url + " ] ..." + e,
-                        true);
+                                         null, 
+                                         null,
+                                         0, 
+                                         0,
+                                         "Failed to communicate with NEXMO-HTTP url [ " + url + " ] ..." + e,
+                                         true);
             }
         }
 
@@ -253,7 +256,7 @@ public class NexmoInsightClient {
         return parseInsightResult(root);
     }
 
-    public static String strJoin(String[] aArr, String sSep) {
+    private static String strJoin(String[] aArr, String sSep) {
         StringBuilder sbStr = new StringBuilder();
         for (int i = 0, il = aArr.length; i < il; i++) {
             if (i > 0)
@@ -280,42 +283,34 @@ public class NexmoInsightClient {
             String name = node.getNodeName();
             if ("requestId".equals(name)) {
                 requestId = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-            }
-            else if ("number".equals(name)) {
+            } else if ("number".equals(name)) {
                 number = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-            }
-            else if ("status".equals(name)) {
+            } else if ("status".equals(name)) {
                 String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
                 try {
                     if (str != null)
                         status = Integer.parseInt(str);
-                }
-                catch (NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     log.error("xml parser .. invalid value in <status> node [ " + str + " ] ");
                     status = InsightResult.STATUS_INTERNAL_ERROR;
                 }
-            }
-            else if ("requestPrice".equals(name)) {
+            } else if ("requestPrice".equals(name)) {
                 String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
                 try {
                     if (str != null)
                         price = Float.parseFloat(str);
-                }
-                catch (NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     log.error("xml parser .. invalid value in <requestPrice> node [ " + str + " ] ");
                 }
-            }
-            else if ("remainingBalance".equals(name)) {
+            } else if ("remainingBalance".equals(name)) {
                 String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
                 try {
                     if (str != null)
                         balance = Float.parseFloat(str);
-                }
-                catch (NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     log.error("xml parser .. invalid value in <remainingBalance> node [ " + str + " ] ");
                 }
-            }
-            else if ("errorText".equals(name)) {
+            } else if ("errorText".equals(name)) {
                 errorText = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
             }
         }
@@ -324,10 +319,15 @@ public class NexmoInsightClient {
             throw new IOException("Xml Parser - did not find a <status> node");
 
         // Is this a temporary error ?
-        boolean temporaryError = (status == InsightResult.STATUS_THROTTLED ||
-                status == InsightResult.STATUS_INTERNAL_ERROR);
+        boolean temporaryError = (status == InsightResult.STATUS_THROTTLED || status == InsightResult.STATUS_INTERNAL_ERROR);
 
-        return new InsightResult(status, requestId, number, price, balance, errorText, temporaryError);
+        return new InsightResult(status,
+                                 requestId, 
+                                 number, 
+                                 price, 
+                                 balance, 
+                                 errorText, 
+                                 temporaryError);
     }
 
 }

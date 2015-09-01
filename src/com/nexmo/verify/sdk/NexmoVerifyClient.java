@@ -28,7 +28,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -73,6 +72,7 @@ import java.util.*;
  * @author Daniele Ricci
  */
 public class NexmoVerifyClient {
+    
     private static final Log log = LogFactory.getLog(NexmoVerifyClient.class);
 
     public enum LineType {
@@ -86,6 +86,7 @@ public class NexmoVerifyClient {
             String name = name();
             return Character.toUpperCase(name.charAt(0)) + name.substring(1);
         }
+        
     }
 
     /**
@@ -145,12 +146,12 @@ public class NexmoVerifyClient {
      * @param apiSecret Your Nexmo account api secret
      */
     public NexmoVerifyClient(final String apiKey,
-                          final String apiSecret) throws ParserConfigurationException {
+                             final String apiSecret) throws ParserConfigurationException {
         this(DEFAULT_BASE_URL,
-                apiKey,
-                apiSecret,
-                DEFAULT_CONNECTION_TIMEOUT,
-                DEFAULT_SO_TIMEOUT);
+             apiKey,
+             apiSecret,
+             DEFAULT_CONNECTION_TIMEOUT,
+             DEFAULT_SO_TIMEOUT);
     }
 
     /**
@@ -186,22 +187,50 @@ public class NexmoVerifyClient {
         this.documentBuilder = this.documentBuilderFactory.newDocumentBuilder();
     }
 
-    public VerifyResult verify(String number, String brand) throws IOException, SAXException {
-        return verify(number, brand, null, -1, null, null);
+    public VerifyResult verify(final String number,
+                               final String brand) throws IOException,
+                                                          SAXException {
+        return verify(number,
+                      brand, 
+                      null, 
+                      -1, 
+                      null, 
+                      null);
     }
 
-    public VerifyResult verify(String number, String brand, String from) throws IOException, SAXException {
-        return verify(number, brand, from, -1, null, null);
+    public VerifyResult verify(final String number,
+                               final String brand, 
+                               final String from) throws IOException,
+                                                         SAXException {
+        return verify(number,
+                      brand, 
+                      from, 
+                      -1, 
+                      null, 
+                      null);
     }
 
-    public VerifyResult verify(String number, String brand, String from, int length, Locale locale)
-            throws IOException, SAXException {
-        return verify(number, brand, from, length, locale, null);
+    public VerifyResult verify(final String number, 
+                               final String brand, 
+                               final String from, 
+                               final int length, 
+                               final Locale locale) throws IOException, 
+                                                           SAXException {
+        return verify(number,   
+                      brand, 
+                      from, 
+                      length, 
+                      locale, 
+                      null);
     }
 
-    public VerifyResult verify(String number, String brand, String from, int length, Locale locale, LineType type)
-            throws IOException, SAXException {
-
+    public VerifyResult verify(final String number, 
+                               final String brand, 
+                               final String from, 
+                               final int length, 
+                               final Locale locale, 
+                               final LineType type) throws IOException, 
+                                                           SAXException {
         if (number == null || brand == null)
             throw new IllegalArgumentException("number and brand parameters are mandatory.");
         if (length > 0 && length != 4 && length != 6)
@@ -233,23 +262,13 @@ public class NexmoVerifyClient {
         String verifyBaseUrl = this.baseUrl + PATH_VERIFY;
 
         // Now that we have generated a query string, we can instanciate a HttpClient,
-        // construct a POST or GET method and execute to submit the request
+        // construct a POST method and execute to submit the request
         String response = null;
         for (int pass=1;pass<=2;pass++) {
-            HttpUriRequest method;
-            // TODO what's this for?
-            final boolean doPost = true;
-            String url;
-            if (doPost) {
-                HttpPost httpPost = new HttpPost(verifyBaseUrl);
-                httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-                method = httpPost;
-                url = verifyBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
-            } else {
-                String query = URLEncodedUtils.format(params, "utf-8");
-                method = new HttpGet(verifyBaseUrl + "?" + query);
-                url = method.getRequestLine().getUri();
-            }
+            HttpPost httpPost = new HttpPost(verifyBaseUrl);
+            httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+            HttpUriRequest method = httpPost;
+            String url = verifyBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
 
             try {
                 if (this.httpClient == null)
@@ -261,8 +280,7 @@ public class NexmoVerifyClient {
                 response = new BasicResponseHandler().handleResponse(httpResponse);
                 log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
                 break;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 method.abort();
                 log.info("communication failure: " + e);
                 String exceptionMsg = e.getMessage();
@@ -277,7 +295,7 @@ public class NexmoVerifyClient {
                 }
 
                 // return a COMMS failure ...
-                return new VerifyResult(VerifyResult.STATUS_COMMS_FAILURE,
+                return new VerifyResult(BaseResult.STATUS_COMMS_FAILURE,
                                         null,
                                         "Failed to communicate with NEXMO-HTTP url [ " + url + " ] ..." + e,
                                         true);
@@ -310,19 +328,16 @@ public class NexmoVerifyClient {
             String name = node.getNodeName();
             if ("request_id".equals(name)) {
                 requestId = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-            }
-            else if ("status".equals(name)) {
+            } else if ("status".equals(name)) {
                 String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
                 try {
                     if (str != null)
                         status = Integer.parseInt(str);
-                }
-                catch (NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     log.error("xml parser .. invalid value in <status> node [ " + str + " ] ");
-                    status = VerifyResult.STATUS_INTERNAL_ERROR;
+                    status = BaseResult.STATUS_INTERNAL_ERROR;
                 }
-            }
-            else if ("error_text".equals(name)) {
+            } else if ("error_text".equals(name)) {
                 errorText = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
             }
         }
@@ -331,17 +346,19 @@ public class NexmoVerifyClient {
             throw new IOException("Xml Parser - did not find a <status> node");
 
         // Is this a temporary error ?
-        boolean temporaryError = (status == VerifyResult.STATUS_THROTTLED ||
-                status == VerifyResult.STATUS_INTERNAL_ERROR);
+        boolean temporaryError = (status == BaseResult.STATUS_THROTTLED || status == BaseResult.STATUS_INTERNAL_ERROR);
 
-        return new VerifyResult(status, requestId, errorText, temporaryError);
+        return new VerifyResult(status,
+                                requestId, 
+                                errorText, 
+                                temporaryError);
     }
 
-    public CheckResult check(String requestId, String code) throws IOException, SAXException {
+    public CheckResult check(final String requestId, final String code) throws IOException, SAXException {
         return check(requestId, code, null);
     }
 
-    public CheckResult check(String requestId, String code, String ipAddress) throws IOException, SAXException {
+    public CheckResult check(final String requestId, final String code, final String ipAddress) throws IOException, SAXException {
         if (requestId == null || code == null)
             throw new IllegalArgumentException("request ID and code parameters are mandatory.");
 
@@ -361,23 +378,13 @@ public class NexmoVerifyClient {
         String verifyCheckBaseUrl = this.baseUrl + PATH_VERIFY_CHECK;
 
         // Now that we have generated a query string, we can instanciate a HttpClient,
-        // construct a POST or GET method and execute to submit the request
+        // construct a POST method and execute to submit the request
         String response = null;
         for (int pass=1;pass<=2;pass++) {
-            HttpUriRequest method;
-            // TODO what's this for?
-            final boolean doPost = true;
-            String url;
-            if (doPost) {
-                HttpPost httpPost = new HttpPost(verifyCheckBaseUrl);
-                httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-                method = httpPost;
-                url = verifyCheckBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
-            } else {
-                String query = URLEncodedUtils.format(params, "utf-8");
-                method = new HttpGet(verifyCheckBaseUrl + "?" + query);
-                url = method.getRequestLine().getUri();
-            }
+            HttpPost httpPost = new HttpPost(verifyCheckBaseUrl);
+            httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+            HttpUriRequest method = httpPost;
+            String url = verifyCheckBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
 
             try {
                 if (this.httpClient == null)
@@ -389,8 +396,7 @@ public class NexmoVerifyClient {
                 response = new BasicResponseHandler().handleResponse(httpResponse);
                 log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
                 break;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 method.abort();
                 log.info("communication failure: " + e);
                 String exceptionMsg = e.getMessage();
@@ -405,7 +411,7 @@ public class NexmoVerifyClient {
                 }
 
                 // return a COMMS failure ...
-                return new CheckResult(CheckResult.STATUS_COMMS_FAILURE,
+                return new CheckResult(BaseResult.STATUS_COMMS_FAILURE,
                         null,
                         0,
                         null,
@@ -438,32 +444,26 @@ public class NexmoVerifyClient {
             String name = node.getNodeName();
             if ("event_id".equals(name)) {
                 eventId = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-            }
-            else if ("status".equals(name)) {
+            } else if ("status".equals(name)) {
                 String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
                 try {
                     if (str != null)
                         status = Integer.parseInt(str);
-                }
-                catch (NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     log.error("xml parser .. invalid value in <status> node [ " + str + " ] ");
-                    status = VerifyResult.STATUS_INTERNAL_ERROR;
+                    status = BaseResult.STATUS_INTERNAL_ERROR;
                 }
-            }
-            else if ("price".equals(name)) {
+            } else if ("price".equals(name)) {
                 String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
                 try {
                     if (str != null)
                         price = Float.parseFloat(str);
-                }
-                catch (NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     log.error("xml parser .. invalid value in <price> node [ " + str + " ] ");
                 }
-            }
-            else if ("currency".equals(name)) {
+            } else if ("currency".equals(name)) {
                 currency = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-            }
-            else if ("error_text".equals(name)) {
+            } else if ("error_text".equals(name)) {
                 errorText = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
             }
         }
@@ -472,8 +472,7 @@ public class NexmoVerifyClient {
             throw new IOException("Xml Parser - did not find a <status> node");
 
         // Is this a temporary error ?
-        boolean temporaryError = (status == VerifyResult.STATUS_THROTTLED ||
-                status == VerifyResult.STATUS_INTERNAL_ERROR);
+        boolean temporaryError = (status == BaseResult.STATUS_THROTTLED || status == BaseResult.STATUS_INTERNAL_ERROR);
 
         return new CheckResult(status, eventId, price, currency, errorText, temporaryError);
     }
@@ -499,33 +498,21 @@ public class NexmoVerifyClient {
 
         if (requestIds.length == 1) {
             params.add(new BasicNameValuePair("request_id", requestIds[0]));
-        }
-        else {
-            for (String requestId : requestIds) {
-                params.add(new BasicNameValuePair("request_ids", requestId));
-            }
+        } else {
+            for (String requestId : requestIds)
+                params.add(new BasicNameValuePair("request_ids", requestId));            
         }
 
         String verifySearchBaseUrl = this.baseUrl + PATH_VERIFY_SEARCH;
 
         // Now that we have generated a query string, we can instanciate a HttpClient,
-        // construct a POST or GET method and execute to submit the request
+        // construct a POST method and execute to submit the request
         String response = null;
         for (int pass=1;pass<=2;pass++) {
-            HttpUriRequest method;
-            // TODO what's this for?
-            final boolean doPost = true;
-            String url;
-            if (doPost) {
-                HttpPost httpPost = new HttpPost(verifySearchBaseUrl);
-                httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-                method = httpPost;
-                url = verifySearchBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
-            } else {
-                String query = URLEncodedUtils.format(params, "utf-8");
-                method = new HttpGet(verifySearchBaseUrl + "?" + query);
-                url = method.getRequestLine().getUri();
-            }
+            HttpPost httpPost = new HttpPost(verifySearchBaseUrl);
+            httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+            HttpUriRequest method = httpPost;
+            String url = verifySearchBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
 
             try {
                 if (this.httpClient == null)
@@ -537,8 +524,7 @@ public class NexmoVerifyClient {
                 response = new BasicResponseHandler().handleResponse(httpResponse);
                 log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
                 break;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 method.abort();
                 log.info("communication failure: " + e);
                 String exceptionMsg = e.getMessage();
@@ -554,18 +540,18 @@ public class NexmoVerifyClient {
 
                 // return a COMMS failure ...
                 return new SearchResult[] {
-                    new SearchResult(SearchResult.STATUS_COMMS_FAILURE,
-                        null,
-                        null,
-                        null,
-                        null,
-                        0, null,
-                        null,
-                        null, null,
-                        null, null,
-                        null,
-                        "Failed to communicate with NEXMO-HTTP url [ " + url + " ] ..." + e,
-                        true)
+                    new SearchResult(BaseResult.STATUS_COMMS_FAILURE,
+                                     null,
+                                     null,
+                                     null,
+                                     null,
+                                     0, null,
+                                     null,
+                                     null, null,
+                                     null, null,
+                                     null,
+                                     "Failed to communicate with NEXMO-HTTP url [ " + url + " ] ..." + e,
+                                     true)
                 };
             }
         }
@@ -579,23 +565,23 @@ public class NexmoVerifyClient {
         if ("verify_response".equals(root.getNodeName())) {
             // error response
             VerifyResult result = parseVerifyResult(root);
-            return new SearchResult[] { new SearchResult(result.getStatus(),
-                    result.getRequestId(),
-                    null,
-                    null,
-                    null,
-                    0, null,
-                    null,
-                    null, null,
-                    null, null,
-                    null,
-                    result.getErrorText(),
-                    result.isTemporaryError()) };
-        }
-        else if (("verify_request").equals(root.getNodeName())) {
+            return new SearchResult[] { 
+                new SearchResult(result.getStatus(),
+                                 result.getRequestId(),
+                                 null,
+                                 null,
+                                 null,
+                                 0, null,
+                                 null,
+                                 null, null,
+                                 null, null,
+                                 null,
+                                 result.getErrorText(),
+                                 result.isTemporaryError()) 
+            };
+        } else if (("verify_request").equals(root.getNodeName())) {
             return new SearchResult[] { parseSearchResult(root) };
-        }
-        else if ("verification_requests".equals(root.getNodeName())) {
+        } else if ("verification_requests".equals(root.getNodeName())) {
             List<SearchResult> results = new ArrayList<>();
 
             NodeList fields = root.getChildNodes();
@@ -604,14 +590,12 @@ public class NexmoVerifyClient {
                 if (node.getNodeType() != Node.ELEMENT_NODE)
                     continue;
 
-                if ("verify_request".equals(node.getNodeName())) {
-                    results.add(parseSearchResult((Element) node));
-                }
+                if ("verify_request".equals(node.getNodeName()))
+                    results.add(parseSearchResult((Element) node));                
             }
 
             return results.toArray(new SearchResult[results.size()]);
-        }
-        else {
+        } else {
             throw new IOException("No valid response found [ " + response + "] ");
         }
     }
@@ -640,97 +624,78 @@ public class NexmoVerifyClient {
             String name = node.getNodeName();
             if ("request_id".equals(name)) {
                 requestId = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-            }
-            else if ("account_id".equals(name)) {
+            } else if ("account_id".equals(name)) {
                 accountId = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-            }
-            else if ("status".equals(name)) {
+            } else if ("status".equals(name)) {
                 String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
                 if (str != null) {
                     try {
                         status = SearchResult.VerificationStatus.valueOf(str.replace(' ', '_'));
-                    }
-                    catch (IllegalArgumentException e) {
+                    } catch (IllegalArgumentException e) {
                         log.error("xml parser .. invalid value in <status> node [ " + str + " ] ");
                     }
                 }
-            }
-            else if ("number".equals(name)) {
+            } else if ("number".equals(name)) {
                 number = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-            }
-            else if ("price".equals(name)) {
+            } else if ("price".equals(name)) {
                 String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
                 try {
                     if (str != null)
                         price = Float.parseFloat(str);
-                }
-                catch (NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     log.error("xml parser .. invalid value in <price> node [ " + str + " ] ");
                 }
-            }
-            else if ("currency".equals(name)) {
+            } else if ("currency".equals(name)) {
                 currency = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-            }
-            else if ("sender_id".equals(name)) {
+            } else if ("sender_id".equals(name)) {
                 senderId = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-            }
-            else if ("date_submitted".equals(name)) {
+            } else if ("date_submitted".equals(name)) {
                 String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
                 if (str != null) {
                     try {
                         dateSubmitted = parseDateTime(str);
-                    }
-                    catch (ParseException e) {
+                    } catch (ParseException e) {
                         log.error("xml parser .. invalid value in <date_submitted> node [ " + str + " ] ");
                     }
                 }
-            }
-            else if ("date_finalized".equals(name)) {
+            } else if ("date_finalized".equals(name)) {
                 String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
                 if (str != null) {
                     try {
                         dateFinalized = parseDateTime(str);
-                    }
-                    catch (ParseException e) {
+                    } catch (ParseException e) {
                         log.error("xml parser .. invalid value in <date_finalized> node [ " + str + " ] ");
                     }
                 }
-            }
-            else if ("first_event_date".equals(name)) {
+            } else if ("first_event_date".equals(name)) {
                 String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
                 if (str != null) {
                     try {
                         firstEventDate = parseDateTime(str);
-                    }
-                    catch (ParseException e) {
+                    } catch (ParseException e) {
                         log.error("xml parser .. invalid value in <first_event_date> node [ " + str + " ] ");
                     }
                 }
-            }
-            else if ("last_event_date".equals(name)) {
+            } else if ("last_event_date".equals(name)) {
                 String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
                 if (str != null) {
                     try {
                         lastEventDate = parseDateTime(str);
-                    }
-                    catch (ParseException e) {
+                    } catch (ParseException e) {
                         log.error("xml parser .. invalid value in <last_event_date> node [ " + str + " ] ");
                     }
                 }
-            }
-            else if ("checks".equals(name)) {
+            } else if ("checks".equals(name)) {
                 NodeList checkNodes = node.getChildNodes();
                 for (int j = 0; j < checkNodes.getLength(); j++) {
                     Node checkNode = checkNodes.item(j);
                     if (checkNode.getNodeType() != Node.ELEMENT_NODE)
                         continue;
 
-                    if ("check".equals(checkNode.getNodeName())) {
-                        checks.add(parseVerifyCheck((Element) checkNode));
-                    }
+                    if ("check".equals(checkNode.getNodeName()))
+                        checks.add(parseVerifyCheck((Element) checkNode));                    
                 }
-            }
-            else if ("error_text".equals(name)) {
+            } else if ("error_text".equals(name)) {
                 errorText = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
             }
         }
@@ -738,17 +703,17 @@ public class NexmoVerifyClient {
         if (status == null)
             throw new IOException("Xml Parser - did not find a <status> node");
 
-        return new SearchResult(SearchResult.STATUS_OK,
-                requestId,
-                accountId,
-                status,
-                number,
-                price, currency,
-                senderId,
-                dateSubmitted, dateFinalized,
-                firstEventDate, lastEventDate,
-                checks,
-                errorText, false);
+        return new SearchResult(BaseResult.STATUS_OK,
+                                requestId,
+                                accountId,
+                                status,
+                                number,
+                                price, currency,
+                                senderId,
+                                dateSubmitted, dateFinalized,
+                                firstEventDate, lastEventDate,
+                                checks,
+                                errorText, false);
     }
 
     private static SearchResult.VerifyCheck parseVerifyCheck(Element root) throws IOException {
@@ -766,28 +731,23 @@ public class NexmoVerifyClient {
             String name = node.getNodeName();
             if ("code".equals(name)) {
                 code = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-            }
-            else if ("status".equals(name)) {
+            } else if ("status".equals(name)) {
                 String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
                 if (str != null) {
                     try {
                         status = SearchResult.VerifyCheck.Status.valueOf(str);
-                    }
-                    catch (IllegalArgumentException e) {
+                    } catch (IllegalArgumentException e) {
                         log.error("xml parser .. invalid value in <status> node [ " + str + " ] ");
                     }
                 }
-            }
-            else if ("ip_address".equals(name)) {
+            } else if ("ip_address".equals(name)) {
                 ipAddress = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-            }
-            else if ("date_received".equals(name)) {
+            } else if ("date_received".equals(name)) {
                 String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
                 if (str != null) {
                     try {
                         dateReceived = parseDateTime(str);
-                    }
-                    catch (ParseException e) {
+                    } catch (ParseException e) {
                         log.error("xml parser .. invalid value in <date_received> node [ " + str + " ] ");
                     }
                 }
