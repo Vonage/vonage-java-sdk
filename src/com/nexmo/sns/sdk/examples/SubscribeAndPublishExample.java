@@ -22,8 +22,8 @@ package com.nexmo.sns.sdk.examples;
  */
 
 import com.nexmo.sns.sdk.NexmoSnsClient;
-import com.nexmo.sns.sdk.request.SubscribeRequest;
 import com.nexmo.sns.sdk.request.PublishRequest;
+import com.nexmo.sns.sdk.request.SubscribeRequest;
 import com.nexmo.sns.sdk.response.PublishResult;
 import com.nexmo.sns.sdk.response.SubscribeResult;
 

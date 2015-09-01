@@ -21,8 +21,8 @@ package com.nexmo.messaging.sdk.messages.parameters;
  * THE SOFTWARE.
  */
 
-import java.util.Date;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * ValidityPeriod.java<br><br>

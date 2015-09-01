@@ -21,7 +21,15 @@ package com.nexmo.insight.sdk;
  * THE SOFTWARE.
  */
 
-import com.nexmo.common.http.HttpClientUtils;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -40,12 +48,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.*;
+import com.nexmo.common.http.HttpClientUtils;
 
 /**
  * Client for talking to the Nexmo REST interface<br><br>
@@ -64,7 +67,7 @@ import java.util.*;
  * @author Daniele Ricci
  */
 public class NexmoInsightClient {
-    
+
     private static final Log log = LogFactory.getLog(NexmoInsightClient.class);
 
     /**
@@ -149,24 +152,24 @@ public class NexmoInsightClient {
     }
 
     public InsightResult request(final String number,
-                                 final String callbackUrl) throws IOException, 
+                                 final String callbackUrl) throws IOException,
                                                                   SAXException {
         return request(number,
-                       callbackUrl, 
-                       null, 
-                       -1, 
-                       "GET", 
-                       null, 
+                       callbackUrl,
+                       null,
+                       -1,
+                       "GET",
+                       null,
                        null);
     }
 
     public InsightResult request(final String number,
-                                 final String callbackUrl, 
+                                 final String callbackUrl,
                                  final String[] features,
-                                 final long callbackTimeout, 
+                                 final long callbackTimeout,
                                  final String callbackMethod,
-                                 final String clientRef, 
-                                 final String ipAddress) throws IOException, 
+                                 final String clientRef,
+                                 final String ipAddress) throws IOException,
                                                                 SAXException {
         if (number == null || callbackUrl == null)
             throw new IllegalArgumentException("number and callbackUrl parameters are mandatory.");
@@ -235,9 +238,9 @@ public class NexmoInsightClient {
 
                 // return a COMMS failure ...
                 return new InsightResult(InsightResult.STATUS_COMMS_FAILURE,
-                                         null, 
                                          null,
-                                         0, 
+                                         null,
+                                         0,
                                          0,
                                          "Failed to communicate with NEXMO-HTTP url [ " + url + " ] ..." + e,
                                          true);
@@ -322,11 +325,11 @@ public class NexmoInsightClient {
         boolean temporaryError = (status == InsightResult.STATUS_THROTTLED || status == InsightResult.STATUS_INTERNAL_ERROR);
 
         return new InsightResult(status,
-                                 requestId, 
-                                 number, 
-                                 price, 
-                                 balance, 
-                                 errorText, 
+                                 requestId,
+                                 number,
+                                 price,
+                                 balance,
+                                 errorText,
                                  temporaryError);
     }
 

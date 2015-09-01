@@ -21,7 +21,21 @@ package com.nexmo.verify.sdk;
  * THE SOFTWARE.
  */
 
-import com.nexmo.common.http.HttpClientUtils;
+import java.io.IOException;
+import java.io.StringReader;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -40,15 +54,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.io.StringReader;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import com.nexmo.common.http.HttpClientUtils;
 
 /**
  * Client for talking to the Nexmo REST interface<br><br>
@@ -72,7 +78,7 @@ import java.util.*;
  * @author Daniele Ricci
  */
 public class NexmoVerifyClient {
-    
+
     private static final Log log = LogFactory.getLog(NexmoVerifyClient.class);
 
     public enum LineType {
@@ -86,7 +92,7 @@ public class NexmoVerifyClient {
             String name = name();
             return Character.toUpperCase(name.charAt(0)) + name.substring(1);
         }
-        
+
     }
 
     /**
@@ -191,45 +197,45 @@ public class NexmoVerifyClient {
                                final String brand) throws IOException,
                                                           SAXException {
         return verify(number,
-                      brand, 
-                      null, 
-                      -1, 
-                      null, 
+                      brand,
+                      null,
+                      -1,
+                      null,
                       null);
     }
 
     public VerifyResult verify(final String number,
-                               final String brand, 
+                               final String brand,
                                final String from) throws IOException,
                                                          SAXException {
         return verify(number,
-                      brand, 
-                      from, 
-                      -1, 
-                      null, 
+                      brand,
+                      from,
+                      -1,
+                      null,
                       null);
     }
 
-    public VerifyResult verify(final String number, 
-                               final String brand, 
-                               final String from, 
-                               final int length, 
-                               final Locale locale) throws IOException, 
+    public VerifyResult verify(final String number,
+                               final String brand,
+                               final String from,
+                               final int length,
+                               final Locale locale) throws IOException,
                                                            SAXException {
-        return verify(number,   
-                      brand, 
-                      from, 
-                      length, 
-                      locale, 
+        return verify(number,
+                      brand,
+                      from,
+                      length,
+                      locale,
                       null);
     }
 
-    public VerifyResult verify(final String number, 
-                               final String brand, 
-                               final String from, 
-                               final int length, 
-                               final Locale locale, 
-                               final LineType type) throws IOException, 
+    public VerifyResult verify(final String number,
+                               final String brand,
+                               final String from,
+                               final int length,
+                               final Locale locale,
+                               final LineType type) throws IOException,
                                                            SAXException {
         if (number == null || brand == null)
             throw new IllegalArgumentException("number and brand parameters are mandatory.");
@@ -349,8 +355,8 @@ public class NexmoVerifyClient {
         boolean temporaryError = (status == BaseResult.STATUS_THROTTLED || status == BaseResult.STATUS_INTERNAL_ERROR);
 
         return new VerifyResult(status,
-                                requestId, 
-                                errorText, 
+                                requestId,
+                                errorText,
                                 temporaryError);
     }
 
@@ -500,7 +506,7 @@ public class NexmoVerifyClient {
             params.add(new BasicNameValuePair("request_id", requestIds[0]));
         } else {
             for (String requestId : requestIds)
-                params.add(new BasicNameValuePair("request_ids", requestId));            
+                params.add(new BasicNameValuePair("request_ids", requestId));
         }
 
         String verifySearchBaseUrl = this.baseUrl + PATH_VERIFY_SEARCH;
@@ -565,7 +571,7 @@ public class NexmoVerifyClient {
         if ("verify_response".equals(root.getNodeName())) {
             // error response
             VerifyResult result = parseVerifyResult(root);
-            return new SearchResult[] { 
+            return new SearchResult[] {
                 new SearchResult(result.getStatus(),
                                  result.getRequestId(),
                                  null,
@@ -577,7 +583,7 @@ public class NexmoVerifyClient {
                                  null, null,
                                  null,
                                  result.getErrorText(),
-                                 result.isTemporaryError()) 
+                                 result.isTemporaryError())
             };
         } else if (("verify_request").equals(root.getNodeName())) {
             return new SearchResult[] { parseSearchResult(root) };
@@ -591,7 +597,7 @@ public class NexmoVerifyClient {
                     continue;
 
                 if ("verify_request".equals(node.getNodeName()))
-                    results.add(parseSearchResult((Element) node));                
+                    results.add(parseSearchResult((Element) node));
             }
 
             return results.toArray(new SearchResult[results.size()]);
@@ -693,7 +699,7 @@ public class NexmoVerifyClient {
                         continue;
 
                     if ("check".equals(checkNode.getNodeName()))
-                        checks.add(parseVerifyCheck((Element) checkNode));                    
+                        checks.add(parseVerifyCheck((Element) checkNode));
                 }
             } else if ("error_text".equals(name)) {
                 errorText = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();

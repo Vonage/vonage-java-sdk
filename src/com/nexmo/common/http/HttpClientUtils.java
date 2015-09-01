@@ -21,16 +21,16 @@ package com.nexmo.common.http;
  * THE SOFTWARE.
  */
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.http.client.HttpClient;
-import org.apache.http.params.HttpParams;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 /**
  * HttpClientUtils.java<br><br>

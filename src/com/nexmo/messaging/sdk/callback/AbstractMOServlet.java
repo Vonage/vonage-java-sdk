@@ -41,16 +41,16 @@ import com.nexmo.security.RequestSigning;
 
 /**
  * AbstractMOServlet.java
- *   
+ *
  * An abstract callback servlet that receives and parses an incoming callback request for an MO message.
  * This class parses and validates the request, optionally checks any signature supplied or credentials,
  * and constructs an MO object for your subclass implementation to consume.
- *   
- * Note, this servlet will immediately ack the callback as soon as it is validated, your subclass will 
+ *
+ * Note, this servlet will immediately ack the callback as soon as it is validated, your subclass will
  * consume the callback object asynchronously to this. This is because it is important to keep latency of
  * the acknowledgement to a minimum in order to maintain throughput when operating at any sort of volume.
  * You are responsible for persisting this object in the event of any failure whilst processing
- * 
+ *
  * @author  Paul Cook
  * @version
  */
@@ -59,7 +59,7 @@ public abstract class AbstractMOServlet extends HttpServlet {
     static final long serialVersionUID = 8745764381059238419L;
 
     public static final int MAX_CONSUMER_THREADS = 10;
-    
+
     private static final ThreadLocal<SimpleDateFormat> TIMESTAMP_DATE_FORMAT = new ThreadLocal<SimpleDateFormat>() {
         @Override
         protected SimpleDateFormat initialValue() {
@@ -72,9 +72,9 @@ public abstract class AbstractMOServlet extends HttpServlet {
     private final boolean validateUsernamePassword;
     private final String expectedUsername;
     private final String expectedPassword;
-    
+
     private final ThreadPoolExecutor consumer;
-    
+
     public AbstractMOServlet(final boolean validateSignature,
                              final String signatureSharedSecret,
                              final boolean validateUsernamePassword,
@@ -85,7 +85,7 @@ public abstract class AbstractMOServlet extends HttpServlet {
         this.validateUsernamePassword = validateUsernamePassword;
         this.expectedUsername = expectedUsername;
         this.expectedPassword = expectedPassword;
-        
+
         this.consumer = (ThreadPoolExecutor)Executors.newFixedThreadPool(MAX_CONSUMER_THREADS);
     }
 
@@ -124,7 +124,7 @@ public abstract class AbstractMOServlet extends HttpServlet {
                 return;
             }
         }
-        
+
         String sender = request.getParameter("msisdn");
         String destination = request.getParameter("to");
         String networkCode = request.getParameter("network-code");
@@ -138,7 +138,7 @@ public abstract class AbstractMOServlet extends HttpServlet {
             response.sendError(400, "Missing mandatory fields");
             return;
         }
-        
+
         MO.MESSAGE_TYPE messageType = null;
         String str = request.getParameter("type");
         if (str != null)
@@ -149,11 +149,11 @@ public abstract class AbstractMOServlet extends HttpServlet {
             response.sendError(400, "Unrecognized message type");
             return;
         }
-                
+
         String messageBody = null;
         byte[] binaryMessageBody = null;
         byte[] userDataHeader = null;
-                
+
         if (messageType == MO.MESSAGE_TYPE.TEXT || messageType == MO.MESSAGE_TYPE.UNICODE) {
             messageBody = request.getParameter("text");
             if (messageBody == null) {
@@ -168,11 +168,11 @@ public abstract class AbstractMOServlet extends HttpServlet {
             }
             binaryMessageBody = HexUtil.hexToBytes(binaryBodyStr);
         }
-        
+
         String binaryBodyUdh = request.getParameter("udh");
         if (binaryBodyUdh != null)
             userDataHeader = HexUtil.hexToBytes(binaryBodyUdh);
-        
+
         BigDecimal price = null;
         str = request.getParameter("price");
         if (str != null) {
@@ -183,7 +183,7 @@ public abstract class AbstractMOServlet extends HttpServlet {
                 return;
             }
         }
-        
+
         Date timeStamp = null;
         str = request.getParameter("message-timestamp");
         if (str != null) {
@@ -199,7 +199,7 @@ public abstract class AbstractMOServlet extends HttpServlet {
         String concatReferenceNumber = null;
         int concatTotalParts = 0;
         int concatPartNumber = 0;
-        
+
         str = request.getParameter("concat");
         if (str != null && str.equals("true")) {
             concatReferenceNumber = request.getParameter("concat-ref");
@@ -213,28 +213,28 @@ public abstract class AbstractMOServlet extends HttpServlet {
         }
 
         // Now we have validated all of the request parameters, construct an MO POJO and push it to the consumer thread
-        
+
         MO mo = new MO(messageId,
                        messageType,
                        sender,
                        destination,
                        networkCode,
                        keyword,
-                       messageBody,    
+                       messageBody,
                        binaryMessageBody,
                        userDataHeader,
                        price,
-                       sessionId,   
+                       sessionId,
                        concat,
                        concatReferenceNumber,
                        concatTotalParts,
                        concatPartNumber,
                        timeStamp);
-        
+
         // Push the task to an async consumption thread
         ConsumeTask task = new ConsumeTask(this, mo);
         this.consumer.execute(task);
-        
+
         // immediately ack the receipt
         try (PrintWriter out = response.getWriter()) {
             out.print("OK");
@@ -247,29 +247,29 @@ public abstract class AbstractMOServlet extends HttpServlet {
      * It detatches the consumption of the MO from the acknowledgement of the incoming http request
      */
     private static final class ConsumeTask implements Runnable, java.io.Serializable {
-    
+
         private static final long serialVersionUID = -5270583545977374866L;
 
         private final AbstractMOServlet parent;
         private final MO mo;
-        
+
         public ConsumeTask(final AbstractMOServlet parent,
                            final MO mo) {
             this.parent = parent;
             this.mo = mo;
         }
-        
+
         @Override
         public void run() {
             this.parent.consume(this.mo);
         }
     }
-    
+
     /**
      * This method is asynchronosly passed a complete MO instance to be dealt with by your application logic
-     * 
+     *
      * @param mo
      */
     public abstract void consume(MO mo);
- 
+
 }

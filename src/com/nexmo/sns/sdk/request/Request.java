@@ -21,9 +21,9 @@ package com.nexmo.sns.sdk.request;
  * THE SOFTWARE.
  */
 
-import java.util.Map;
-import java.util.LinkedHashMap;
 import java.net.URLEncoder;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Request.java<br><br>

@@ -21,9 +21,9 @@ package com.nexmo.common.util;
  * THE SOFTWARE.
  */
 
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.io.UnsupportedEncodingException;
 
 /**
  * MD5Util.java<br><br>
