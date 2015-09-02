@@ -269,10 +269,10 @@ public class NexmoSmsClient {
      * @throws Exception There has been a general failure either within the Client class, or whilst attempting to communicate with the Nexmo service (eg, Network failure)
      */
     public SmsSubmissionResult[] submitMessage(Message message) throws Exception {
-        boolean performReachabilityCheck = false;
-        ValidityPeriod validityPeriod = null;
-        String networkCode = null;
-        return submitMessage(message, validityPeriod, networkCode, performReachabilityCheck);
+        return submitMessage(message, 
+                             null,     // validityPeriod 
+                             null,     // networkCode 
+                             false);   // performReachabilityCheck
     }
 
     /**
@@ -293,9 +293,10 @@ public class NexmoSmsClient {
      * @throws Exception There has been a general failure either within the Client class, or whilst attempting to communicate with the Nexmo service (eg, Network failure)
      */
     public SmsSubmissionResult[] submitMessage(Message message, ValidityPeriod validityPeriod) throws Exception {
-        boolean performReachabilityCheck = false;
-        String networkCode = null;
-        return submitMessage(message, validityPeriod, networkCode, performReachabilityCheck);
+        return submitMessage(message,
+                             validityPeriod, 
+                             null,   // networkCode 
+                             false); // performReachabilityCheck
     }
 
     /**
@@ -616,7 +617,7 @@ public class NexmoSmsClient {
             }
         }
 
-        return results.toArray(new SmsSubmissionResult[0]);
+        return results.toArray(new SmsSubmissionResult[results.size()]);
     }
 
 }
