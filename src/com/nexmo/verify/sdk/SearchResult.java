@@ -33,7 +33,10 @@ public class SearchResult extends BaseResult {
     private static final long serialVersionUID = -2658346277382866298L;
 
     /** Used to define a verify check attempt. */
-    public static class VerifyCheck {
+    public static class VerifyCheck implements java.io.Serializable {
+        
+        private static final long serialVersionUID = -5933303841261513099L;
+
         enum Status {
             VALID,
             INVALID,
@@ -74,9 +77,11 @@ public class SearchResult extends BaseResult {
         public String toString() {
             return "VerifyCheck [status=" + this.status + ", code=" + this.code + ", date=" + this.date + "]";
         }
+        
     }
 
     public enum VerificationStatus {
+        
         IN_PROGRESS("IN PROGRESS"),
         SUCCESS,    // FIXME documented as "SUCCESSFUL"
         FAILED,
@@ -100,6 +105,7 @@ public class SearchResult extends BaseResult {
         public String toString() {
             return getName();
         }
+        
     }
 
     private final String requestId;
@@ -195,7 +201,7 @@ public class SearchResult extends BaseResult {
 
     @Override
     public String toString() {
-        return "SearchResult [status=" + getStatus() + ", requestId=" + this.requestId +
-                ", verificationStatus=" + this.verificationStatus + "]";
+        return "SearchResult [status=" + getStatus() + ", requestId=" + this.requestId + ", verificationStatus=" + this.verificationStatus + "]";
     }
+    
 }
