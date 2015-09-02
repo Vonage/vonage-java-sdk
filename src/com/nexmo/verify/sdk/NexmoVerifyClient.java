@@ -131,7 +131,15 @@ public class NexmoVerifyClient {
      */
     private static final int MAX_SEARCH_REQUESTS = 10;
 
-    private static final DateFormat sDateTimePattern = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final ThreadLocal<SimpleDateFormat> sDateTimePattern = new ThreadLocal<SimpleDateFormat>() {
+        @Override
+        protected SimpleDateFormat initialValue() {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            sdf.setLenient(false);
+
+            return sdf;
+        }
+    };
 
     private final DocumentBuilderFactory documentBuilderFactory;
     private final DocumentBuilder documentBuilder;
@@ -767,7 +775,7 @@ public class NexmoVerifyClient {
     }
 
     private static Date parseDateTime(String str) throws ParseException {
-        return sDateTimePattern.parse(str);
+        return sDateTimePattern.get().parse(str);
     }
 
 }
