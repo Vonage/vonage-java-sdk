@@ -620,4 +620,8 @@ public class NexmoSmsClient {
         return results.toArray(new SmsSubmissionResult[results.size()]);
     }
 
+    // Allowing users of this client to plugin their own HttpClient.
+    public void setHttpClient(HttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
 }
