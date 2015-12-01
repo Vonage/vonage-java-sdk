@@ -121,16 +121,6 @@ public class NexmoSmsClient {
     public static final String SUBMISSION_PATH_SMS = "/sms/xml";
 
     /**
-     * The endpoint path for submitting ussd 'display' messages
-     */
-    public static final String SUBMISSION_PATH_USSD_DISPLAY = "/ussd/xml";
-
-    /**
-     * The endpoint path for submitting ussd 'prompt' messages that require a response
-     */
-    public static final String SUBMISSION_PATH_USSD_PROMPT = "/ussd-prompt/xml";
-
-    /**
      * Default connection timeout of 5000ms used by this client unless specifically overridden onb the constructor
      */
     public static final int DEFAULT_CONNECTION_TIMEOUT = 5000;
@@ -323,10 +313,10 @@ public class NexmoSmsClient {
      *
      * @throws Exception There has been a general failure either within the Client class, or whilst attempting to communicate with the Nexmo service (eg, Network failure)
      */
-    public SmsSubmissionResult[] submitMessage(Message message,
-                                               ValidityPeriod validityPeriod,
-                                               String networkCode,
-                                               boolean performReachabilityCheck) throws Exception {
+    public SmsSubmissionResult[] submitMessage(final Message message,
+                                               final ValidityPeriod validityPeriod,
+                                               final String networkCode,
+                                               final boolean performReachabilityCheck) throws Exception {
 
         log.debug("HTTP-Message-Submission Client .. from [ " + message.getFrom() + " ] to [ " + message.getTo() + " ] msg [ " + message.getMessageBody() + " ] ");
 
@@ -334,10 +324,6 @@ public class NexmoSmsClient {
 
         // Determine what 'product' type we are submitting, and select the appropriate endpoint path
         String submitPath = SUBMISSION_PATH_SMS;
-        if (message.getType() == Message.MESSAGE_TYPE_USSD_DISPLAY)
-            submitPath = SUBMISSION_PATH_USSD_DISPLAY;
-        if (message.getType() == Message.MESSAGE_TYPE_USSD_PROMPT)
-            submitPath = SUBMISSION_PATH_USSD_PROMPT;
 
         // Determine the type parameter based on the type of Message object.
         boolean binary = message.getType() == Message.MESSAGE_TYPE_BINARY;

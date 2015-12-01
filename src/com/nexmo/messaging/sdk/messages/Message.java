@@ -55,16 +55,6 @@ public abstract class Message implements java.io.Serializable {
      */
     public static final int MESSAGE_TYPE_UNICODE = 4;
 
-    /**
-     * Message is a USSD 'display' message that displays on handset but does not require a response
-     */
-    public static final int MESSAGE_TYPE_USSD_DISPLAY = 5;
-
-    /**
-     * Message is a USSD 'prompt' message that requires a response from the end user
-     */
-    public static final int MESSAGE_TYPE_USSD_PROMPT = 6;
-
     private final int type;
 
     private final String from;

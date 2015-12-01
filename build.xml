@@ -143,16 +143,4 @@
               classpathref="project.classpath" />
     </target>
 
-    <target name="ussd-display-example" depends="compile">
-        <java classname="com.nexmo.messaging.sdk.examples.ussd.SendUSSDDisplayMessage"
-              fork="true"
-              classpathref="project.classpath" />
-    </target>
-
-    <target name="ussd-prompt-example" depends="compile">
-        <java classname="com.nexmo.messaging.sdk.examples.ussd.SendUSSDPromptMessage"
-              fork="true"
-              classpathref="project.classpath" />
-    </target>
-
 </project>

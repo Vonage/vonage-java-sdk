@@ -1,5 +1,6 @@
 package com.nexmo.verify.sdk.examples;
 
+import com.nexmo.verify.sdk.BaseResult;
 import com.nexmo.verify.sdk.NexmoVerifyClient;
 import com.nexmo.verify.sdk.VerifyResult;
 
@@ -37,10 +38,9 @@ public class VerifyNumber {
             throw new RuntimeException("Failed to communicate with the Nexmo Client");
         }
 
-        if (result.getStatus() == VerifyResult.STATUS_OK) {
+        if (result.getStatus() == BaseResult.STATUS_OK) {
             System.out.println("... Verify request submitted with ID " + result.getRequestId());
-        }
-        else {
+        } else {
             System.out.println("... Verify request failed with status " + result.getStatus());
             if (result.isTemporaryError())
                 System.out.println("TEMPORARY FAILURE - PLEASE RETRY");

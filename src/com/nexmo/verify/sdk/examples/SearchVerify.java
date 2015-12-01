@@ -1,5 +1,6 @@
 package com.nexmo.verify.sdk.examples;
 
+import com.nexmo.verify.sdk.BaseResult;
 import com.nexmo.verify.sdk.NexmoVerifyClient;
 import com.nexmo.verify.sdk.SearchResult;
 
@@ -36,7 +37,7 @@ public class SearchVerify {
             throw new RuntimeException("Failed to communicate with the Nexmo Client");
         }
 
-        if (result.getStatus() == SearchResult.STATUS_OK) {
+        if (result.getStatus() == BaseResult.STATUS_OK) {
             System.out.println("... Verify search was successful!");
             System.out.println("Account: " + result.getAccountId());
             System.out.println("Number: " + result.getNumber());
@@ -46,8 +47,7 @@ public class SearchVerify {
             System.out.println("Date finalized: " + result.getDateFinalized());
             System.out.println("Price: " + result.getPrice() + " " + result.getCurrency());
             System.out.println("Checks: " + result.getChecks());
-        }
-        else {
+        } else {
             System.out.println("... Verify search failed with status " + result.getStatus());
             if (result.isTemporaryError())
                 System.out.println("TEMPORARY FAILURE - PLEASE RETRY");
