@@ -110,10 +110,10 @@ public class NexmoSmsClient {
     private static final Log log = LogFactory.getLog(NexmoSmsClient.class);
 
     /**
-     * http://rest.nexmo.com<br>
+     * https://rest.nexmo.com<br>
      * Service url used unless over-ridden on the constructor
      */
-    public static final String DEFAULT_BASE_URL = "http://rest.nexmo.com";
+    public static final String DEFAULT_BASE_URL = "https://rest.nexmo.com";
 
     /**
      * The endpoint path for submitting sms messages
@@ -133,7 +133,6 @@ public class NexmoSmsClient {
     private DocumentBuilderFactory documentBuilderFactory;
     private DocumentBuilder documentBuilder;
 
-    private final String baseUrlHttp;
     private final String baseUrlHttps;
     private final String apiKey;
     private final String apiSecret;
@@ -143,8 +142,6 @@ public class NexmoSmsClient {
 
     private final boolean signRequests;
     private final String signatureSecretKey;
-
-    private final boolean useSSL;
 
     private HttpClient httpClient = null;
 
@@ -162,8 +159,7 @@ public class NexmoSmsClient {
              DEFAULT_CONNECTION_TIMEOUT,
              DEFAULT_SO_TIMEOUT,
              false,  // signRequests
-             null,   // signatureSecretKey
-             false); // useSSL
+             null);  // signatureSecretKey
     }
 
     /**
@@ -184,8 +180,7 @@ public class NexmoSmsClient {
              connectionTimeout,
              soTimeout,
              false,  // signRequests
-             null,   // signatureSecretKey
-             false); // useSSL
+             null);  // signatureSecretKey
     }
 
     /**
@@ -199,7 +194,6 @@ public class NexmoSmsClient {
      * @param soTimeout over-ride the default read-timeout with this value (in milliseconds)
      * @param signRequests do we generate a signature for this request using the secret key
      * @param signatureSecretKey the secret key we will use to generate the signatures for signed requests
-     * @param useSSL do we use a SSL / HTTPS connection for submitting requests
      */
     public NexmoSmsClient(final String baseUrl,
                           final String apiKey,
@@ -207,23 +201,14 @@ public class NexmoSmsClient {
                           final int connectionTimeout,
                           final int soTimeout,
                           final boolean signRequests,
-                          final String signatureSecretKey,
-                          final boolean useSSL) throws Exception {
-
-        // Derive a http and a https version of the supplied base url
+                          final String signatureSecretKey) throws Exception {
         if (baseUrl == null)
             throw new IllegalArgumentException("base url is null");
         String url = baseUrl.trim();
         String lc = url.toLowerCase();
-        if (!lc.startsWith("http://") && !lc.startsWith("https://"))
-            throw new Exception("base url does not start with http:// or https://");
-        if (lc.startsWith("http://")) {
-            this.baseUrlHttp = url;
-            this.baseUrlHttps = "https://" + url.substring(7);
-        } else {
-            this.baseUrlHttps = url;
-            this.baseUrlHttp = "http://" + url.substring(8);
-        }
+        if (!lc.startsWith("https://"))
+            throw new Exception("base url does not start with https://");
+        this.baseUrlHttps = "https://" + url.substring(8);
 
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
@@ -238,8 +223,6 @@ public class NexmoSmsClient {
 
         this.signRequests = signRequests;
         this.signatureSecretKey = signatureSecretKey;
-
-        this.useSSL = useSSL;
     }
 
     /**
@@ -401,8 +384,7 @@ public class NexmoSmsClient {
         if (this.signRequests)
             RequestSigning.constructSignatureForRequestParameters(params, this.signatureSecretKey);
 
-        String baseUrl = this.useSSL ? this.baseUrlHttps : this.baseUrlHttp;
-        baseUrl = baseUrl + submitPath;
+        String baseUrl = this.baseUrlHttps + submitPath;
 
         // Now that we have generated a query string, we can instanciate a HttpClient,
         // construct a POST or GET method and execute to submit the request

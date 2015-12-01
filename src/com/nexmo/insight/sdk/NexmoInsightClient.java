@@ -71,7 +71,7 @@ public class NexmoInsightClient {
     private static final Log log = LogFactory.getLog(NexmoInsightClient.class);
 
     /**
-     * http://rest.nexmo.com<br>
+     * https://rest.nexmo.com<br>
      * Service url used unless over-ridden on the constructor
      */
     public static final String DEFAULT_BASE_URL = "https://rest.nexmo.com";
@@ -139,8 +139,8 @@ public class NexmoInsightClient {
             throw new IllegalArgumentException("base url is null");
         String url = baseUrl.trim();
         String lc = url.toLowerCase();
-        if (!lc.startsWith("http://") && !lc.startsWith("https://"))
-            throw new IllegalArgumentException("base url does not start with http:// or https://");
+        if (!lc.startsWith("https://"))
+            throw new IllegalArgumentException("base url does not start with https://");
 
         this.baseUrl = url;
         this.apiKey = apiKey;

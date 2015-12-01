@@ -119,12 +119,6 @@
               classpathref="project.classpath" />
     </target>
 
-    <target name="example-https" depends="compile">
-        <java classname="com.nexmo.messaging.sdk.examples.SendTextMessageHttps"
-              fork="true"
-              classpathref="project.classpath" />
-    </target>
-
     <target name="example2" depends="compile">
         <java classname="com.nexmo.messaging.sdk.examples.SendWapPush"
               fork="true"

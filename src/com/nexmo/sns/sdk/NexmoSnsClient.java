@@ -61,10 +61,10 @@ public class NexmoSnsClient {
     private static final Log log = LogFactory.getLog(NexmoSnsClient.class);
 
     /**
-     * http://rest.nexmo.com/sms/xml<br>
+     * https://rest.nexmo.com/sms/xml<br>
      * Submission url used unless over-ridden on the constructor
      */
-    public static final String DEFAULT_BASE_URL = "http://sns.nexmo.com/sns/xml";
+    public static final String DEFAULT_BASE_URL = "https://sns.nexmo.com/sns/xml";
 
     /**
      * Default connection timeout of 5000ms used by this client unless specifically overridden onb the constructor
@@ -79,8 +79,7 @@ public class NexmoSnsClient {
     private DocumentBuilderFactory documentBuilderFactory;
     private DocumentBuilder documentBuilder;
 
-    private final String baseUrlHttp;
-    private final String baseUrlHttps;
+    private final String baseUrl;
     private final String apiKey;
     private final String apiSecret;
 
@@ -144,15 +143,9 @@ public class NexmoSnsClient {
             throw new IllegalArgumentException("base url is null");
         String url = baseUrl.trim();
         String lc = url.toLowerCase();
-        if (!lc.startsWith("http://") && !lc.startsWith("https://"))
-            throw new Exception("base url does not start with http:// or https://");
-        if (lc.startsWith("http://")) {
-            this.baseUrlHttp = url;
-            this.baseUrlHttps = "https://" + url.substring(7);
-        } else {
-            this.baseUrlHttps = url;
-            this.baseUrlHttp = "http://" + url.substring(8);
-        }
+        if (!lc.startsWith("https://"))
+            throw new Exception("base url does not start with https://");
+        this.baseUrl = "https://" + url.substring(7);
 
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
@@ -166,17 +159,7 @@ public class NexmoSnsClient {
         }
     }
 
-    public SnsServiceResult submit(Request request) throws Exception {
-        boolean https = false;
-        return submit(request, https);
-    }
-
-    public SnsServiceResult submitHttps(Request request) throws Exception {
-        boolean https = true;
-        return submit(request, https);
-    }
-
-    public SnsServiceResult submit(Request request, boolean https) throws Exception {
+    public SnsServiceResult submit(final Request request) throws Exception {
 
         log.info("NEXMO-REST-SNS-SERVICE-CLIENT ... submit request [ " + request.toString() + " ] ");
 
@@ -191,21 +174,21 @@ public class NexmoSnsClient {
             for (Map.Entry<String, String> entry: request.getQueryParameters().entrySet())
                 params.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
 
-        String baseUrl = https ? this.baseUrlHttps : this.baseUrlHttp;
+        //String baseUrl = https ? this.baseUrlHttps : this.baseUrlHttp;
 
         // Now that we have generated a query string, we can instanciate a HttpClient,
         // construct a POST or GET method and execute to submit the request
         String response = null;
-        HttpPost method = new HttpPost(baseUrl);
+        HttpPost method = new HttpPost(this.baseUrl);
         method.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-        String url = baseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
+        String url = this.baseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
         try {
             if (this.httpClient == null)
                 this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
             HttpResponse httpResponse = this.httpClient.execute(method);
             int status = httpResponse.getStatusLine().getStatusCode();
             if (status != 200)
-                throw new Exception("got a non-200 response [ " + status + " ] from Nexmo-HTTP for url [ " + url + " ] ");
+                throw new Exception("got a non-200 response [ " + status + " ] from Nexmo-HTTPS for url [ " + url + " ] ");
             response = new BasicResponseHandler().handleResponse(httpResponse);
             log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
         } catch (Exception e) {

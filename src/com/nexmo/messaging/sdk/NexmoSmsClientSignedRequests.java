@@ -47,8 +47,7 @@ public class NexmoSmsClientSignedRequests extends NexmoSmsClient {
              DEFAULT_CONNECTION_TIMEOUT,
              DEFAULT_SO_TIMEOUT,
              true,   // signRequests
-             signatureSecretKey,
-             false); // useSSL
+             signatureSecretKey);
     }
 
     /**
@@ -69,8 +68,7 @@ public class NexmoSmsClientSignedRequests extends NexmoSmsClient {
              connectionTimeout,
              soTimeout,
              true,   // signRequests
-             signatureSecretKey,
-             false); // useSSL
+             signatureSecretKey);
     }
 
 }
