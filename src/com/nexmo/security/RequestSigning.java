@@ -159,6 +159,7 @@ public class RequestSigning implements SecurityConstants {
             md5 = MD5Util.calculateMd5(str);
         } catch (Exception e) {
             log.error("error...", e);
+            return false;
         }
 
         log.info("SECURITY-KEY-VERIFICATION -- String [ " + str + " ] Signature [ " + md5 + " ] SUPPLIED SIGNATURE [ " + suppliedSignature + " ] ");
