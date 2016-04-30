@@ -1,3 +1,20 @@
+
+apply plugin: 'eclipse'
+apply plugin: 'java'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile 'commons-codec:commons-codec:1.5'
+	compile 'commons-logging:commons-logging:1.0.3'
+	compile 'org.apache.httpcomponents:httpclient:4.1.1'
+	compile 'javax.servlet:javax.servlet-api:3.1.0'
+	
+	testCompile 'junit:junit:4.4'
+}
+
 task wrapper(type: Wrapper) {
     gradleVersion = '2.13'
 }

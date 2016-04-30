@@ -4,3 +4,7 @@
 /javadoc
 nexmo-sdk.jar
 .gradle
+.classpath
+.project
+.settings
+bin
