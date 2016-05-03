@@ -21,6 +21,8 @@ package com.nexmo.security;
  * THE SOFTWARE.
  */
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -164,9 +166,15 @@ public class RequestSigning implements SecurityConstants {
 
         log.info("SECURITY-KEY-VERIFICATION -- String [ " + str + " ] Signature [ " + md5 + " ] SUPPLIED SIGNATURE [ " + suppliedSignature + " ] ");
 
-        // verify that the secre
-        if (!md5.equals(suppliedSignature))
+        // verify that the supplied signature matches generated one
+        // use MessageDigest.isEqual as an alternative to String.equals() to defend against timing based attacks
+        try {
+            if (!MessageDigest.isEqual(md5.getBytes("UTF-8"), suppliedSignature.getBytes("UTF-8")))
+                return false;
+        } catch (UnsupportedEncodingException e) {
+            log.error("This should not occur!!", e);
             return false;
+        }
 
         return true;
     }
