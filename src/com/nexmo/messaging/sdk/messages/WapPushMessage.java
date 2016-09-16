@@ -1,6 +1,6 @@
 package com.nexmo.messaging.sdk.messages;
 /*
- * Copyright (c) 2011-2013 Nexmo Inc
+ * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,7 @@ public class WapPushMessage extends Message {
     static final long serialVersionUID = -8412926886570923963L;
 
     /**
-     * Instanciate a new wap-push message request, to submit a browsable / downloadable URL to the handset
+     * Instantiate a new wap-push message request, to submit a browsable / downloadable URL to the handset
      *
      * @param from the 'from' address that will be seen on the handset when this message arrives,
      *             typically either a valid short-code / long code that can be replied to, or a short text description of the application sending the message (Max 11 chars)
@@ -65,14 +65,14 @@ public class WapPushMessage extends Message {
     }
 
     /**
-     * Instanciate a new wap-push message request, to submit a browsable / downloadable URL to the handset,
+     * Instantiate a new wap-push message request, to submit a browsable / downloadable URL to the handset,
      * attaching an optional client reference, and optionally requesting a delivery notification
      *
      * @param from the 'from' address that will be seen on the handset when this message arrives,
      *             typically either a valid short-code / long code that can be replied to, or a short text description of the application sending the message (Max 11 chars)
      * @param to   the phone number of the handset that you wish to send the message to
      * @param clientReference This is a user definable reference that will be stored in the Nexmo messaging records. It will be available in detailed reporting / analytics
-     *                        In order to help with reconcilliation of messages
+     *                        In order to help with reconciliation of messages
      * @param statusReportRequired If set to true, then a delivery notification will be requested for this message delivery attempt.
      *                             Upon receiving notification of delivery or failure from the network, the Nexmo platform will submit a notification to the url configured in your
      *                             Nexmo REST account that represents the outcome of this message.

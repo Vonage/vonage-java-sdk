@@ -1,6 +1,6 @@
 package com.nexmo.insight.sdk;
 /*
- * Copyright (c) 2011-2013 Nexmo Inc
+ * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -56,7 +56,7 @@ public class InsightResult {
     public static final int STATUS_INTERNAL_ERROR = 5;
 
     /**
-     * A network error occured
+     * A network error occurred
      */
     public static final int STATUS_COMMS_FAILURE = -1;
 

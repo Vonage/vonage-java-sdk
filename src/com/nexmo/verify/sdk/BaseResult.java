@@ -1,6 +1,6 @@
 package com.nexmo.verify.sdk;
 /*
- * Copyright (c) 2011-2013 Nexmo Inc
+ * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -113,7 +113,7 @@ public abstract class BaseResult implements java.io.Serializable {
     public static final int STATUS_NO_RESPONSE = 101;
 
     /**
-     * A network error occured
+     * A network error occurred
      */
     public static final int STATUS_COMMS_FAILURE = -1;
 

@@ -1,6 +1,6 @@
 package com.nexmo.messaging.sdk.messages;
 /*
- * Copyright (c) 2011-2013 Nexmo Inc
+ * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@ import com.nexmo.messaging.sdk.messages.parameters.MessageClass;
  * Created on 5 January 2011, 17:34<br><br>
  *
  * Represents the details of a message that is to be submitted via the http api.<br>
- * Not instanciated directly, but instead via one of the sub-classes that represent a particular message type
+ * Not instantiated directly, but instead via one of the sub-classes that represent a particular message type
  *
  * @author  Paul Cook
  * @version 1.0
@@ -39,11 +39,11 @@ public abstract class Message implements java.io.Serializable {
     private static final long serialVersionUID = 3847700435531116012L;
 
     /**
-     * Message ia a regular TEXT SMS message
+     * Message is a regular TEXT SMS message
      */
     public static final int MESSAGE_TYPE_TEXT = 1;
     /**
-     * Message ia a binary SMS message with a custom UDH and binary payload
+     * Message is a binary SMS message with a custom UDH and binary payload
      */
     public static final int MESSAGE_TYPE_BINARY = 2;
     /**
@@ -72,7 +72,7 @@ public abstract class Message implements java.io.Serializable {
     private final Integer protocolId;
 
     /**
-     * Instanciate a new message request.<br>
+     * Instantiate a new message request.<br>
      * This constructor exposes the full range of possible parameters and is not for general use
      * Instead, it is accessed via super() in the constructors of various sub-classes that expose a relevant
      * sub-set of the available parameters
@@ -89,9 +89,9 @@ public abstract class Message implements java.io.Serializable {
      *                         (for example, a binary ringtone, a wap-push, OverTheAir configuration, etc).
      *                         Additionally, if you are sending a long text message as multiple concatenated messages and are performing this operation manually rather than
      *                         using the automated long messaging handling in the Nexmo messaging service, then you will need to construct and include here an appropriate
-     *                         UserDataHeader field that describes the segmentation/re-assembly fields required to sucessfully concatenate multiple short messages.
+     *                         UserDataHeader field that describes the segmentation/re-assembly fields required to successfully concatenate multiple short messages.
      * @param clientReference This is a user definable reference that will be stored in the Nexmo messaging records. It will be available in detailed reporting / analytics
-     *                        In order to help with reconcilliation of messages
+     *                        In order to help with reconciliation of messages
      * @param unicode This flag is set to true if the message needs to be submitted as a unicode message. This would be for scenario's where the message contains text that does not
      *                fit within the Latin GSM alphabet. Examples would be messages to be sent in non-western scripts, such as Arabic, Kanji, Chinese, etc.
      * @param statusReportRequired If set to true, then a delivery notification will be requested for this message delivery attempt.
@@ -178,7 +178,7 @@ public abstract class Message implements java.io.Serializable {
      *                (for example, a binary ringtone, a wap-push, OverTheAir configuration, etc).
      *                Additionally, if you are sending a long text message as multiple concatenated messages and are performing this operation manually rather than
      *                using the automated long messaging handling in the Nexmo messaging service, then you will need to construct and include here an appropriate
-     *                UserDataHeader field that describes the segmentation/re-assembly fields required to sucessfully concatenate multiple short messages.
+     *                UserDataHeader field that describes the segmentation/re-assembly fields required to successfully concatenate multiple short messages.
      */
     public byte[] getBinaryMessageUdh() {
         return this.binaryMessageUdh == null ? null : this.binaryMessageUdh.clone();
@@ -186,7 +186,7 @@ public abstract class Message implements java.io.Serializable {
 
     /**
      * @return String This is a user definable reference that will be stored in the Nexmo messaging records. It will be available in detailed reporting / analytics
-     *                In order to help with reconcilliation of messages
+     *                In order to help with reconciliation of messages
      */
     public String getClientReference() {
         return this.clientReference;

@@ -1,6 +1,6 @@
 package com.nexmo.sns.sdk.examples;
 /*
- * Copyright (c) 2011-2013 Nexmo Inc
+ * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -47,7 +47,7 @@ public class SubscribeAndPublishExample {
     public static final String SMS_TEXT = "Hello World!";
 
     // -- TODO -- fill in your own topic ARN from your amazon SNS console
-    public static final String TOPIC_ARN = "arn:aws:sns:us-east-1:475338436304:paul";
+    public static final String TOPIC_ARN = "arn:aws:sns:region:num:id";
 
     public static void main(String[] args) {
 
@@ -57,9 +57,9 @@ public class SubscribeAndPublishExample {
         try {
             client = new NexmoSnsClient(API_KEY, API_SECRET);
         } catch (Exception e) {
-            System.err.println("Failed to instanciate a Nexmo Client");
+            System.err.println("Failed to instantiate a Nexmo Client");
             e.printStackTrace();
-            throw new RuntimeException("Failed to instanciate a Nexmo Client");
+            throw new RuntimeException("Failed to instantiate a Nexmo Client");
         }
 
         // Create a Request to subscribe a phone number to the SNS service

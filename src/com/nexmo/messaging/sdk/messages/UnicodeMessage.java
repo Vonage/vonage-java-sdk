@@ -1,6 +1,6 @@
 package com.nexmo.messaging.sdk.messages;
 /*
- * Copyright (c) 2011-2013 Nexmo Inc
+ * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -41,7 +41,7 @@ public class UnicodeMessage extends Message {
     static final long serialVersionUID = 8327129506926552344L;
 
     /**
-     * Instanciate a new unicode text-message request<br>
+     * Instantiate a new unicode text-message request<br>
      * This message will be submitted as a unicode 16 bit text message
      *
      * @param from the 'from' address that will be seen on the handset when this message arrives,
@@ -69,7 +69,7 @@ public class UnicodeMessage extends Message {
     }
 
     /**
-     * Instanciate a new unicode text-message request, exposing all of the available parameters, and optionally requesting a delivery notification<br>
+     * Instantiate a new unicode text-message request, exposing all of the available parameters, and optionally requesting a delivery notification<br>
      * This message will be submitted as a unicode 16 bit text message
      *
      * @param from the 'from' address that will be seen on the handset when this message arrives,
@@ -77,7 +77,7 @@ public class UnicodeMessage extends Message {
      * @param to   the phone number of the handset that you wish to send the message to
      * @param messageBody The text of the message to be sent to the handset
      * @param clientReference This is a user definable reference that will be stored in the Nexmo messaging records. It will be available in detailed reporting / analytics
-     *                        In order to help with reconcilliation of messages
+     *                        In order to help with reconciliation of messages
      * @param statusReportRequired If set to true, then a delivery notification will be requested for this message delivery attempt.
      *                             Upon receiving notification of delivery or failure from the network, the Nexmo platform will submit a notification to the url configured in your
      *                             Nexmo REST account that represents the outcome of this message.

@@ -25,9 +25,9 @@ public class InsightNumber {
         try {
             client = new NexmoInsightClient(API_KEY, API_SECRET);
         } catch (Exception e) {
-            System.err.println("Failed to instanciate a Nexmo Client");
+            System.err.println("Failed to instantiate a Nexmo Client");
             e.printStackTrace();
-            throw new RuntimeException("Failed to instanciate a Nexmo Client");
+            throw new RuntimeException("Failed to instantiate a Nexmo Client");
         }
 
         InsightResult result;
@@ -42,7 +42,7 @@ public class InsightNumber {
         if (result.getStatus() == InsightResult.STATUS_OK) {
             System.out.println("... Insight request submitted with ID " + result.getRequestId());
             System.out.println("Your URL will be called soon with the result...");
-            System.out.println("See here for documentation on the results: https://docs.nexmo.com/index.php/number-insight/response");
+            System.out.println("See here for documentation on the results: https://docs.nexmo.com/number-insight");
         }
         else {
             System.out.println("... Insight request failed with status " + result.getStatus());

@@ -1,6 +1,6 @@
 package com.nexmo.messaging.sdk;
 /*
- * Copyright (c) 2011-2013 Nexmo Inc
+ * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,7 @@ package com.nexmo.messaging.sdk;
 public class NexmoSmsClientSignedRequests extends NexmoSmsClient {
 
     /**
-     * Instanciate a new NexmoSmsClientSignedRequests instance that will communicate using the supplied credentials.
+     * Instantiate a new NexmoSmsClientSignedRequests instance that will communicate using the supplied credentials.
      *
      * @param apiKey Your Nexmo account api key
      * @param signatureSecretKey Your Nexmo account secret key for signing api requests
@@ -51,7 +51,7 @@ public class NexmoSmsClientSignedRequests extends NexmoSmsClient {
     }
 
     /**
-     * Instanciate a new NexmoSmsClientSignedRequests instance that will communicate using the supplied credentials, and will use the supplied connection and read timeout values.
+     * Instantiate a new NexmoSmsClientSignedRequests instance that will communicate using the supplied credentials, and will use the supplied connection and read timeout values.
      *
      * @param apiKey Your Nexmo account api key
      * @param signatureSecretKey Your Nexmo account secret key for signing api requests

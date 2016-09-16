@@ -1,6 +1,6 @@
 package com.nexmo.messaging.sdk;
 /*
- * Copyright (c) 2011-2013 Nexmo Inc
+ * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -60,8 +60,8 @@ import com.nexmo.security.RequestSigning;
  *
  * Usage
  *
- * To submit a message, first you should instanciate a NexmoSmsClient, passing the credentials for your Nexmo account on the constructor.
- * Then, you should instanciate the appropriate {@link com.nexmo.messaging.sdk.messages.Message} subclass depending on which type of message you are going to submit.<br>
+ * To submit a message, first you should instantiate a NexmoSmsClient, passing the credentials for your Nexmo account on the constructor.
+ * Then, you should instantiate the appropriate {@link com.nexmo.messaging.sdk.messages.Message} subclass depending on which type of message you are going to submit.<br>
  * The following subclasses are available ...<br><br>
  *
  * com.nexmo.messaging.sdk.messages.{@link com.nexmo.messaging.sdk.messages.TextMessage}<br>
@@ -146,7 +146,7 @@ public class NexmoSmsClient {
     private HttpClient httpClient = null;
 
     /**
-     * Instanciate a new NexmoSmsClient instance that will communicate using the supplied credentials.
+     * Instantiate a new NexmoSmsClient instance that will communicate using the supplied credentials.
      *
      * @param apiKey Your Nexmo account api key
      * @param apiSecret Your Nexmo account api secret
@@ -163,7 +163,7 @@ public class NexmoSmsClient {
     }
 
     /**
-     * Instanciate a new NexmoSmsClient instance that will communicate using the supplied credentials, and will use the supplied connection and read timeout values.
+     * Instantiate a new NexmoSmsClient instance that will communicate using the supplied credentials, and will use the supplied connection and read timeout values.
      *
      * @param apiKey Your Nexmo account api key
      * @param apiSecret Your Nexmo account api secret
@@ -184,7 +184,7 @@ public class NexmoSmsClient {
     }
 
     /**
-     * Instanciate a new NexmoSmsClient instance that will communicate using the supplied credentials, and will use the supplied connection and read timeout values.<br>
+     * Instantiate a new NexmoSmsClient instance that will communicate using the supplied credentials, and will use the supplied connection and read timeout values.<br>
      * Additionally, you can specify an alternative service base url. For example submitting to a testing sandbox environment,
      * or if requested to submit to an alternative address by Nexmo, for example, in cases where it may be necessary to prioritize your traffic.
      *
@@ -259,7 +259,7 @@ public class NexmoSmsClient {
      * Delivery notifications will be generated for each sms message within this set and will be posted to your application containing the appropriate message id.
      *
      * @param message The message request object that describes the type of message and the contents to be submitted.
-     * @param validityPeriod The validity period (Time-To-Live) for this message. Specifies the time before this mesage will be expired if not yet delivered
+     * @param validityPeriod The validity period (Time-To-Live) for this message. Specifies the time before this message will be expired if not yet delivered
      *
      * @return SmsSubmissionResult[] an array of results, 1 object for each sms message that was required to submit this message in its entirety
      *
@@ -283,11 +283,11 @@ public class NexmoSmsClient {
      * Delivery notifications will be generated for each sms message within this set and will be posted to your application containing the appropriate message id.
      *
      * @param message The message request object that describes the type of message and the contents to be submitted.
-     * @param validityPeriod The validity period (Time-To-Live) for this message. Specifies the time before this mesage will be expired if not yet delivered
+     * @param validityPeriod The validity period (Time-To-Live) for this message. Specifies the time before this message will be expired if not yet delivered
      * @param networkCode (Optional) use this parameter to force this message to be associated with and delivered on this network. Use this in cases where you want to over-ride
      *                               the automatic network detection provided by Nexmo. This value will be used in order to determine the pricing and routing for this message.<br>
      *                               (Note) This feature must be enabled and available on your account or else this value will be ignored.
-     * @param performReachabilityCheck Flag to indicate wether a reachability check should be performed on this message before delivery is attempted. If the destination is
+     * @param performReachabilityCheck Flag to indicate whether a reachability check should be performed on this message before delivery is attempted. If the destination is
      *                                 not reachable, the message will be rejected and a reachability status will be returned in the response field smsSubmissionReachabilityStatus<br>
      *                                 (Note) This feature must be enabled and available on your account or else the message request will be rejected. There may be additional cost
      *                                 associated with the use of this feature.
@@ -386,7 +386,7 @@ public class NexmoSmsClient {
 
         String baseUrl = this.baseUrlHttps + submitPath;
 
-        // Now that we have generated a query string, we can instanciate a HttpClient,
+        // Now that we have generated a query string, we can instantiate a HttpClient,
         // construct a POST or GET method and execute to submit the request
         String response = null;
         for (int pass=1;pass<=2;pass++) {

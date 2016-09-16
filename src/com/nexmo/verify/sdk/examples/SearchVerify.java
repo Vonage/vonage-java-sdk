@@ -22,9 +22,9 @@ public class SearchVerify {
         try {
             client = new NexmoVerifyClient(API_KEY, API_SECRET);
         } catch (Exception e) {
-            System.err.println("Failed to instanciate a Nexmo Client");
+            System.err.println("Failed to instantiate a Nexmo Client");
             e.printStackTrace();
-            throw new RuntimeException("Failed to instanciate a Nexmo Client");
+            throw new RuntimeException("Failed to instantiate a Nexmo Client");
         }
 
         SearchResult result;

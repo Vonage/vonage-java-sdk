@@ -1,6 +1,6 @@
 package com.nexmo.messaging.sdk;
 /*
- * Copyright (c) 2011-2013 Nexmo Inc
+ * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -51,7 +51,7 @@ public class SmsSubmissionReachabilityStatus implements java.io.Serializable {
     public static final int REACHABILITY_STATUS_UNDELIVERABLE = 2;
 
     /**
-     * The destinationof this message is temporarily unavailable (eg, switched off)
+     * The destination of this message is temporarily unavailable (eg, switched off)
      */
     public static final int REACHABILITY_STATUS_ABSENT = 3;
 
