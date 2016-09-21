@@ -1,6 +1,6 @@
 package com.nexmo.messaging.sdk.messages.parameters;
 /*
- * Copyright (c) 2011-2013 Nexmo Inc
+ * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -47,11 +47,11 @@ public class ValidityPeriod implements java.io.Serializable {
     private final Integer validityPeriodSeconds;
 
     /**
-     * Instanciate a new ValidityPeriod instance ..
+     * Instantiate a new ValidityPeriod instance ..
      *
      * @param timeToLive the number of seconds before this message will be expired
      *
-     * @throws IllegalArgumentException if the validity period is a negative timespam
+     * @throws IllegalArgumentException if the validity period is a negative timespan
      */
     public ValidityPeriod(final int timeToLive) {
         if (timeToLive < 1)
@@ -63,13 +63,13 @@ public class ValidityPeriod implements java.io.Serializable {
     }
 
     /**
-     * Instanciate a new ValidityPeriod instance, specifying the time-to-live as a number of hours, minutes and seconds
+     * Instantiate a new ValidityPeriod instance, specifying the time-to-live as a number of hours, minutes and seconds
      *
      * @param validityPeriodHours the number of hours that make up the validity period for this message
      * @param validityPeriodMinutes the number of minutes that make up the validity period for this message
      * @param validityPeriodSeconds the number of seconds that make up the validity period for this message
      *
-     * @throws IllegalArgumentException if the validity period is a negative timespam
+     * @throws IllegalArgumentException if the validity period is a negative timespan
      */
     public ValidityPeriod(final int validityPeriodHours,
                           final int validityPeriodMinutes,
@@ -81,22 +81,22 @@ public class ValidityPeriod implements java.io.Serializable {
     }
 
     /**
-     * Instanciate a new ValidityPeriod instance ..
+     * Instantiate a new ValidityPeriod instance ..
      *
-     * @param validUntil The apsolute time when the message will expire (in the timezone local to this JVM)
+     * @param validUntil The absolute time when the message will expire (in the timezone local to this JVM)
      *
-     * @throws IllegalArgumentException if the validity period is a negative timespam
+     * @throws IllegalArgumentException if the validity period is a negative timespan
      */
     public ValidityPeriod(final Date validUntil) {
         this((int)((validUntil.getTime() - System.currentTimeMillis()) / 1000));
     }
 
     /**
-     * Instanciate a new ValidityPeriod instance ..
+     * Instantiate a new ValidityPeriod instance ..
      *
-     * @param validUntil The apsolute time when the message will expire (in the timezone local to this JVM)
+     * @param validUntil The absolute time when the message will expire (in the timezone local to this JVM)
      *
-     * @throws IllegalArgumentException if the validity period is a negative timespam
+     * @throws IllegalArgumentException if the validity period is a negative timespan
      */
     public ValidityPeriod(final Calendar validUntil) {
         this((int)((validUntil.getTime().getTime() - System.currentTimeMillis()) / 1000));

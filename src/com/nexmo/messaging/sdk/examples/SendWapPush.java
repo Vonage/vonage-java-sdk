@@ -1,6 +1,6 @@
 package com.nexmo.messaging.sdk.examples;
 /*
- * Copyright (c) 2011-2013 Nexmo Inc
+ * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -53,9 +53,9 @@ public class SendWapPush {
         try {
             client = new NexmoSmsClient(API_KEY, API_SECRET);
         } catch (Exception e) {
-            System.err.println("Failed to instanciate a Nexmo Client");
+            System.err.println("Failed to instantiate a Nexmo Client");
             e.printStackTrace();
-            throw new RuntimeException("Failed to instanciate a Nexmo Client");
+            throw new RuntimeException("Failed to instantiate a Nexmo Client");
         }
 
         // Create a Wap-Push Message request object ...

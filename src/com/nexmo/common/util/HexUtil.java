@@ -2,7 +2,7 @@ package com.nexmo.common.util;
 
 import java.io.UnsupportedEncodingException;
 /*
- * Copyright (c) 2011-2013 Nexmo Inc
+ * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -53,7 +53,7 @@ public class HexUtil {
      * Each octet will be separated with a specific separator.
      *
      * @param bytes raw binary data
-     * @param separator This string will be injected into the output inbetween each octet in the stream
+     * @param separator This string will be injected into the output in between each octet in the stream
      *
      * @return String Hex representation of the raw data with each octet separated by 'separator'
      */
