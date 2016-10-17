@@ -23,6 +23,7 @@ package com.nexmo.verify.sdk;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.sql.SQLSyntaxErrorException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -150,7 +152,7 @@ public class NexmoVerifyClient {
     private final int connectionTimeout;
     private final int soTimeout;
 
-    private HttpClient httpClient = null;
+    HttpClient httpClient = null;
 
     /**
      * Instantiate a new NexmoVerifyClient instance that will communicate using the supplied credentials.
@@ -521,52 +523,37 @@ public class NexmoVerifyClient {
         // Now that we have generated a query string, we can instantiate a HttpClient,
         // construct a POST method and execute to submit the request
         String response = null;
-        for (int pass=1;pass<=2;pass++) {
-            HttpPost httpPost = new HttpPost(verifySearchBaseUrl);
-            httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-            HttpUriRequest method = httpPost;
-            String url = verifySearchBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
 
-            try {
-                if (this.httpClient == null)
-                    this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
-                HttpResponse httpResponse = this.httpClient.execute(method);
-                int status = httpResponse.getStatusLine().getStatusCode();
-                if (status != 200)
-                    throw new Exception("got a non-200 response [ " + status + " ] from Nexmo-HTTP for url [ " + url + " ] ");
-                response = new BasicResponseHandler().handleResponse(httpResponse);
-                log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
-                break;
-            } catch (Exception e) {
-                method.abort();
-                log.info("communication failure: " + e);
-                String exceptionMsg = e.getMessage();
-                if (exceptionMsg.indexOf("Read timed out") >= 0) {
-                    log.info("we're still connected, but the target did not respond in a timely manner ..  drop ...");
-                } else {
-                    if (pass == 1) {
-                        log.info("... re-establish http client ...");
-                        this.httpClient = null;
-                        continue;
-                    }
-                }
+        HttpPost httpPost = new HttpPost(verifySearchBaseUrl);
+        httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+        HttpUriRequest method = httpPost;
+        String url = verifySearchBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
 
-                // return a COMMS failure ...
-                return new SearchResult[] {
+        try {
+            if (this.httpClient == null)
+                this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
+            HttpResponse httpResponse = this.httpClient.execute(method);
+            response = new BasicResponseHandler().handleResponse(httpResponse);
+            log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
+        } catch (HttpResponseException e) {
+            method.abort();
+            log.error("communication failure", e);
+
+            // return a COMMS failure ...
+            return new SearchResult[]{
                     new SearchResult(BaseResult.STATUS_COMMS_FAILURE,
-                                     null,
-                                     null,
-                                     null,
-                                     null,
-                                     0, null,
-                                     null,
-                                     null, null,
-                                     null, null,
-                                     null,
-                                     "Failed to communicate with NEXMO-HTTP url [ " + url + " ] ..." + e,
-                                     true)
-                };
-            }
+                            null,
+                            null,
+                            null,
+                            null,
+                            0, null,
+                            null,
+                            null, null,
+                            null, null,
+                            null,
+                            "Failed to communicate with NEXMO-HTTP url [ " + url + " ] ..." + e,
+                            true)
+            };
         }
 
         Document doc;
