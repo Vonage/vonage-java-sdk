@@ -50,7 +50,6 @@ public class NexmoVerifyClientTest extends NexmoBaseTest {
     }
 
     @Test
-    @Ignore
     public void testVerify() throws IOException, SAXException {
         VerifyResult r = client.verify(getProperty("verify.number"),
                 getProperty("verify.brand"),
@@ -90,7 +89,6 @@ public class NexmoVerifyClientTest extends NexmoBaseTest {
     }
 
     @Test
-    @Ignore
     public void testSearchError() throws IOException, SAXException, ParseException {
         SearchResult c = client.search("AAAAA");
         assertEquals(SearchResult.STATUS_NO_RESPONSE, c.getStatus());
