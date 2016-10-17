@@ -39,7 +39,6 @@ public class NexmoInsightClientTest extends NexmoBaseTest {
                 getProperty("insight.callback.method", false),
                 getProperty("insight.callback.clientRef", false),
                 getProperty("insight.callback.ipAddress", false));
-        System.out.println(r.toString());
         assertEquals(InsightResult.STATUS_OK, r.getStatus());
         assertEquals(getProperty("insight.number"), r.getNumber());
         assertEquals(0.03f, r.getRequestPrice(), 0);
