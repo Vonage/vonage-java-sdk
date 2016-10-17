@@ -76,7 +76,7 @@ public class HexUtil {
     /**
      * Converts a Hex encoded String into a byte vector.
      *
-     * @param s The String to be encoded.
+     * @param str The String to be encoded.
      *
      * @return A byte vector representing the String.
      */

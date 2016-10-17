@@ -22,8 +22,7 @@ package com.nexmo.verify.sdk;
  */
 
 import com.nexmo.NexmoBaseTest;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -51,6 +50,7 @@ public class NexmoVerifyClientTest extends NexmoBaseTest {
     }
 
     @Test
+    @Ignore
     public void testVerify() throws IOException, SAXException {
         VerifyResult r = client.verify(getProperty("verify.number"),
                 getProperty("verify.brand"),
@@ -90,6 +90,7 @@ public class NexmoVerifyClientTest extends NexmoBaseTest {
     }
 
     @Test
+    @Ignore
     public void testSearchError() throws IOException, SAXException, ParseException {
         SearchResult c = client.search("AAAAA");
         assertEquals(SearchResult.STATUS_NO_RESPONSE, c.getStatus());
