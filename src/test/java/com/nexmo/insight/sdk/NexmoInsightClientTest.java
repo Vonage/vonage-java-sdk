@@ -16,8 +16,6 @@ import static org.mockito.Mockito.*;
 
 
 public class NexmoInsightClientTest {
-    private HttpResponse response = null;
-
     private NexmoInsightClient client;
 
     public NexmoInsightClientTest() throws IOException {
@@ -26,24 +24,21 @@ public class NexmoInsightClientTest {
 
     @Before
     public void setUp() throws ParserConfigurationException {
-
         client = new NexmoInsightClient("not-an-api-key", "secret");
-
-        this.response = mock(HttpResponse.class);
-
     }
 
     private HttpClient stubHttpClient(int statusCode, String content) {
         HttpClient result = mock(HttpClient.class);
         try {
-            when(result.execute(any(HttpUriRequest.class))).thenReturn(this.response);
-
+            HttpResponse response = mock(HttpResponse.class);
             StatusLine sl = mock(StatusLine.class);
             HttpEntity entity = mock(HttpEntity.class);
+
+            when(result.execute(any(HttpUriRequest.class))).thenReturn(response);
             when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes("UTF-8")));
             when(sl.getStatusCode()).thenReturn(statusCode);
-            when(this.response.getStatusLine()).thenReturn(sl);
-            when(this.response.getEntity()).thenReturn(entity);
+            when(response.getStatusLine()).thenReturn(sl);
+            when(response.getEntity()).thenReturn(entity);
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
         }
