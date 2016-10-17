@@ -1,8 +1,7 @@
 package com.nexmo.insight.sdk;
 
 import com.nexmo.NexmoBaseTest;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;

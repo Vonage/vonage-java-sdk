@@ -58,7 +58,6 @@ public class RequestSigning implements SecurityConstants {
      * @param params List of NameValuePair instances containing the query parameters for the request that is to be signed
      * @param secretKey the pre-shared secret key held by the client
      *
-     * @return String the fully constructed url complete with signature
      */
     public static void constructSignatureForRequestParameters(List<NameValuePair> params, String secretKey) {
         // First, inject a 'timestamp=' parameter containing the current time in seconds since Jan 1st 1970
