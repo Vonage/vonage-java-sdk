@@ -1,6 +1,6 @@
 package com.nexmo.insight.sdk;
 
-import com.nexmo.NexmoBaseTest;
+import org.apache.http.client.HttpClient;
 import org.junit.*;
 import org.xml.sax.SAXException;
 
@@ -9,9 +9,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 
-public class NexmoInsightClientTest extends NexmoBaseTest {
+public class NexmoInsightClientTest {
 
     private NexmoInsightClient client;
 
@@ -21,27 +22,27 @@ public class NexmoInsightClientTest extends NexmoBaseTest {
 
     @Before
     public void setUp() throws ParserConfigurationException {
-        client = new NexmoInsightClient(getApiKey(), getApiSecret());
+
+        client = new NexmoInsightClient("not-an-api-key", "secret");
+        client.httpClient = mock(HttpClient.class);
     }
 
     @Test
     public void testInsight() throws IOException, SAXException {
-        String[] features = null;
-        String _features = getProperty("insight.features", false);
-        if (_features != null)
-            features = _features.split(",");
+        String[] features = new String[] { "type", "reachable"};
 
+        System.out.println(client);
+        System.out.println(client.httpClient);
         InsightResult r = client.request(
-                getProperty("insight.number"),
-                getProperty("insight.callback.url"),
+                "447700900999",
+                "http://some.callback.url/script.php",
                 features,
-                getLong("insight.callback.timeout"),
-                getProperty("insight.callback.method", false),
-                getProperty("insight.callback.clientRef", false),
-                getProperty("insight.callback.ipAddress", false));
+                30000,
+                "POST",
+                "CLIENT-DATA",
+                "127.0.0.1");
         assertEquals(InsightResult.STATUS_OK, r.getStatus());
-        assertEquals(getProperty("insight.number"), r.getNumber());
+        assertEquals("447700900999", r.getNumber());
         assertEquals(0.03f, r.getRequestPrice(), 0);
     }
-
 }

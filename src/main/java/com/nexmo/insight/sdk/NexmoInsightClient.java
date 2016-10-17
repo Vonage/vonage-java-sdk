@@ -101,7 +101,7 @@ public class NexmoInsightClient {
     private final int connectionTimeout;
     private final int soTimeout;
 
-    private HttpClient httpClient = null;
+    HttpClient httpClient = null;
 
     /**
      * Instantiate a new NexmoInsightClient instance that will communicate using the supplied credentials.

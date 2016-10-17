@@ -21,7 +21,6 @@ package com.nexmo.verify.sdk;
  * THE SOFTWARE.
  */
 
-import com.nexmo.NexmoBaseTest;
 import org.junit.*;
 import org.xml.sax.SAXException;
 
@@ -30,13 +29,12 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Locale;
 
 import static org.junit.Assert.*;
 
 
-public class NexmoVerifyClientTest extends NexmoBaseTest {
+public class NexmoVerifyClientTest {
 
     private NexmoVerifyClient client;
 
@@ -46,85 +44,86 @@ public class NexmoVerifyClientTest extends NexmoBaseTest {
 
     @Before
     public void setUp() throws ParserConfigurationException {
-        client = new NexmoVerifyClient(getApiKey(), getApiSecret());
+        client = new NexmoVerifyClient("not-an-api-key", "secret");
     }
+//
+//    @Test
+//    public void testVerify() throws IOException, SAXException {
+//        VerifyResult r = client.verify(getProperty("verify.number"),
+//                getProperty("verify.brand"),
+//                getProperty("verify.sender"), 6, Locale.US);
+//        assertEquals(VerifyResult.STATUS_OK, r.getStatus());
+//    }
+//
+//    @Test
+//    public void testCheck() throws IOException, SAXException {
+//        String id = getProperty("verify.check.id", false);
+//        String code = getProperty("verify.check.code", false);
+//        if (id != null && code != null) {
+//            CheckResult c = client.check(id, code);
+//            assertEquals(CheckResult.STATUS_OK, c.getStatus());
+//        }
+//    }
+//
+//    @Test
+//    public void testSearchSuccess() throws IOException, SAXException, ParseException {
+//        String id = getProperty("verify.search.success.id", false);
+//        if (id != null) {
+//            SearchResult c = client.search(id);
+//            assertEquals(SearchResult.STATUS_OK, c.getStatus());
+//            assertEquals(id, c.getRequestId());
+//            assertEquals(SearchResult.VerificationStatus.SUCCESS, c.getVerificationStatus());
+//            assertEquals(getProperty("verify.number"), c.getNumber());
+//            assertEquals(getProperty("verify.sender"), c.getSenderId());
+//            assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(getProperty("verify.search.success.dateSubmitted")),
+//                    c.getDateSubmitted());
+//            assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(getProperty("verify.search.success.dateFinalized")),
+//                    c.getDateFinalized());
+//            assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(getProperty("verify.search.success.firstEventDate")),
+//                    c.getFirstEventDate());
+//            assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(getProperty("verify.search.success.lastEventDate")),
+//                    c.getLastEventDate());
+//        }
+//    }
+//
+//    @Test
+//    public void testSearchError() throws IOException, SAXException, ParseException {
+//        SearchResult c = client.search("AAAAA");
+//        assertEquals(SearchResult.STATUS_NO_RESPONSE, c.getStatus());
+//    }
+//
+//    @Test
+//    public void testSearchFailed() throws IOException, SAXException {
+//        String id = getProperty("verify.search.failed.id", false);
+//        if (id != null) {
+//            SearchResult c = client.search(id);
+//            assertEquals(SearchResult.STATUS_OK, c.getStatus());
+//            assertEquals(id, c.getRequestId());
+//            assertEquals(SearchResult.VerificationStatus.FAILED, c.getVerificationStatus());
+//        }
+//    }
+//
+//    @Test
+//    public void testSearchExpired() throws IOException, SAXException {
+//        String id = getProperty("verify.search.expired.id", false);
+//        if (id != null) {
+//            SearchResult c = client.search(id);
+//            assertEquals(SearchResult.STATUS_OK, c.getStatus());
+//            assertEquals(id, c.getRequestId());
+//            assertEquals(SearchResult.VerificationStatus.EXPIRED, c.getVerificationStatus());
+//        }
+//    }
+//
+//    @Test
+//    public void testSearchInProgress() throws IOException, SAXException {
+//        String id = getProperty("verify.search.inProgress.id", false);
+//        if (id != null) {
+//            SearchResult c = client.search(id);
+//            assertEquals(SearchResult.STATUS_OK, c.getStatus());
+//            assertEquals(id, c.getRequestId());
+//            assertEquals(SearchResult.VerificationStatus.IN_PROGRESS, c.getVerificationStatus());
+//        }
+//    }
 
-    @Test
-    public void testVerify() throws IOException, SAXException {
-        VerifyResult r = client.verify(getProperty("verify.number"),
-                getProperty("verify.brand"),
-                getProperty("verify.sender"), 6, Locale.US);
-        assertEquals(VerifyResult.STATUS_OK, r.getStatus());
-    }
-
-    @Test
-    public void testCheck() throws IOException, SAXException {
-        String id = getProperty("verify.check.id", false);
-        String code = getProperty("verify.check.code", false);
-        if (id != null && code != null) {
-            CheckResult c = client.check(id, code);
-            assertEquals(CheckResult.STATUS_OK, c.getStatus());
-        }
-    }
-
-    @Test
-    public void testSearchSuccess() throws IOException, SAXException, ParseException {
-        String id = getProperty("verify.search.success.id", false);
-        if (id != null) {
-            SearchResult c = client.search(id);
-            assertEquals(SearchResult.STATUS_OK, c.getStatus());
-            assertEquals(id, c.getRequestId());
-            assertEquals(SearchResult.VerificationStatus.SUCCESS, c.getVerificationStatus());
-            assertEquals(getProperty("verify.number"), c.getNumber());
-            assertEquals(getProperty("verify.sender"), c.getSenderId());
-            assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(getProperty("verify.search.success.dateSubmitted")),
-                    c.getDateSubmitted());
-            assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(getProperty("verify.search.success.dateFinalized")),
-                    c.getDateFinalized());
-            assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(getProperty("verify.search.success.firstEventDate")),
-                    c.getFirstEventDate());
-            assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(getProperty("verify.search.success.lastEventDate")),
-                    c.getLastEventDate());
-        }
-    }
-
-    @Test
-    public void testSearchError() throws IOException, SAXException, ParseException {
-        SearchResult c = client.search("AAAAA");
-        assertEquals(SearchResult.STATUS_NO_RESPONSE, c.getStatus());
-    }
-
-    @Test
-    public void testSearchFailed() throws IOException, SAXException {
-        String id = getProperty("verify.search.failed.id", false);
-        if (id != null) {
-            SearchResult c = client.search(id);
-            assertEquals(SearchResult.STATUS_OK, c.getStatus());
-            assertEquals(id, c.getRequestId());
-            assertEquals(SearchResult.VerificationStatus.FAILED, c.getVerificationStatus());
-        }
-    }
-
-    @Test
-    public void testSearchExpired() throws IOException, SAXException {
-        String id = getProperty("verify.search.expired.id", false);
-        if (id != null) {
-            SearchResult c = client.search(id);
-            assertEquals(SearchResult.STATUS_OK, c.getStatus());
-            assertEquals(id, c.getRequestId());
-            assertEquals(SearchResult.VerificationStatus.EXPIRED, c.getVerificationStatus());
-        }
-    }
-
-    @Test
-    public void testSearchInProgress() throws IOException, SAXException {
-        String id = getProperty("verify.search.inProgress.id", false);
-        if (id != null) {
-            SearchResult c = client.search(id);
-            assertEquals(SearchResult.STATUS_OK, c.getStatus());
-            assertEquals(id, c.getRequestId());
-            assertEquals(SearchResult.VerificationStatus.IN_PROGRESS, c.getVerificationStatus());
-        }
-    }
 
 }
