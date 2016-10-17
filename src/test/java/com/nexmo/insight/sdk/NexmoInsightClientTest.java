@@ -67,8 +67,6 @@ public class NexmoInsightClientTest {
 
         String[] features = new String[] { "type", "reachable"};
 
-        System.out.println(client);
-        System.out.println(client.httpClient);
         InsightResult r = client.request(
                 "447700900999",
                 "http://some.callback.url/script.php",
