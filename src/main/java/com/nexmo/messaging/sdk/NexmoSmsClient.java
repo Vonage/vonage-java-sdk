@@ -115,22 +115,22 @@ public class NexmoSmsClient {
     /**
      * Service url used unless over-ridden on the constructor
      */
-    static final String DEFAULT_BASE_URL = "https://rest.nexmo.com";
+    public static final String DEFAULT_BASE_URL = "https://rest.nexmo.com";
 
     /**
      * The endpoint path for submitting sms messages
      */
-    private static final String SUBMISSION_PATH_SMS = "/sms/xml";
+    public static final String SUBMISSION_PATH_SMS = "/sms/xml";
 
     /**
      * Default connection timeout of 5000ms used by this client unless specifically overridden onb the constructor
      */
-    static final int DEFAULT_CONNECTION_TIMEOUT = 5000;
+    public static final int DEFAULT_CONNECTION_TIMEOUT = 5000;
 
     /**
      * Default read timeout of 30000ms used by this client unless specifically overridden onb the constructor
      */
-    static final int DEFAULT_SO_TIMEOUT = 30000;
+    public static final int DEFAULT_SO_TIMEOUT = 30000;
 
     private DocumentBuilder documentBuilder;
 
