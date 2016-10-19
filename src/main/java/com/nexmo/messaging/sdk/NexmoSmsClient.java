@@ -329,8 +329,6 @@ public class NexmoSmsClient {
 
         List<NameValuePair> params = new ArrayList<>();
 
-        boolean doPost = false;
-
         params.add(new BasicNameValuePair("api_key", this.apiKey));
         if (!this.signRequests)
             params.add(new BasicNameValuePair("api_secret", this.apiSecret));
@@ -350,8 +348,6 @@ public class NexmoSmsClient {
         } else {
             // Text Message
             params.add(new BasicNameValuePair("text", message.getMessageBody()));
-            if (message.getMessageBody() != null && message.getMessageBody().length() > 255)
-                doPost = true;
         }
 
         if (message.getClientReference() != null)
@@ -388,21 +384,15 @@ public class NexmoSmsClient {
         String baseUrl = this.baseUrlHttps + submitPath;
 
         // Now that we have generated a query string, we can instantiate a HttpClient,
-        // construct a POST or GET method and execute to submit the request
+        // and construct a POST request:
         String response = null;
         HttpUriRequest method = null;
-        doPost = true;
         String url = null;
-        if (doPost) {
-            HttpPost httpPost = new HttpPost(baseUrl);
-            httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-            method = httpPost;
-            url = baseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
-        } else {
-            String query = URLEncodedUtils.format(params, "utf-8");
-            method = new HttpGet(baseUrl + "?" + query);
-            url = method.getRequestLine().getUri();
-        }
+
+        HttpPost httpPost = new HttpPost(baseUrl);
+        httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+        method = httpPost;
+        url = baseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
 
         try {
             if (this.httpClient == null)
