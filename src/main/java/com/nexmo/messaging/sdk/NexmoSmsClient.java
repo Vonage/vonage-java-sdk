@@ -34,6 +34,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -143,7 +144,7 @@ public class NexmoSmsClient {
     private final boolean signRequests;
     private final String signatureSecretKey;
 
-    private HttpClient httpClient = null;
+    HttpClient httpClient = null;
 
     /**
      * Instantiate a new NexmoSmsClient instance that will communicate using the supplied credentials.
@@ -152,7 +153,7 @@ public class NexmoSmsClient {
      * @param apiSecret Your Nexmo account api secret
      */
     public NexmoSmsClient(final String apiKey,
-                          final String apiSecret) throws Exception {
+                          final String apiSecret) {
         this(DEFAULT_BASE_URL,
              apiKey,
              apiSecret,
@@ -173,7 +174,7 @@ public class NexmoSmsClient {
     public NexmoSmsClient(final String apiKey,
                           final String apiSecret,
                           final int connectionTimeout,
-                          final int soTimeout) throws Exception {
+                          final int soTimeout) {
         this(DEFAULT_BASE_URL,
              apiKey,
              apiSecret,
@@ -201,13 +202,13 @@ public class NexmoSmsClient {
                           final int connectionTimeout,
                           final int soTimeout,
                           final boolean signRequests,
-                          final String signatureSecretKey) throws Exception {
+                          final String signatureSecretKey) {
         if (baseUrl == null)
             throw new IllegalArgumentException("base url is null");
         String url = baseUrl.trim();
         String lc = url.toLowerCase();
         if (!lc.startsWith("https://"))
-            throw new Exception("base url does not start with https://");
+            throw new IllegalArgumentException("base url does not start with https://");
         this.baseUrlHttps = "https://" + url.substring(8);
 
         this.apiKey = apiKey;
@@ -218,7 +219,7 @@ public class NexmoSmsClient {
             this.documentBuilderFactory = DocumentBuilderFactory.newInstance();
             this.documentBuilder = this.documentBuilderFactory.newDocumentBuilder();
         } catch (javax.xml.parsers.ParserConfigurationException e) {
-            throw new Exception("ERROR initializing XML Document builder!", e);
+            throw new RuntimeException("ERROR initializing XML Document builder!", e);
         }
 
         this.signRequests = signRequests;
@@ -389,59 +390,44 @@ public class NexmoSmsClient {
         // Now that we have generated a query string, we can instantiate a HttpClient,
         // construct a POST or GET method and execute to submit the request
         String response = null;
-        for (int pass=1;pass<=2;pass++) {
-            HttpUriRequest method = null;
-            doPost = true;
-            String url = null;
-            if (doPost) {
-                HttpPost httpPost = new HttpPost(baseUrl);
-                httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-                method = httpPost;
-                url = baseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
-            } else {
-                String query = URLEncodedUtils.format(params, "utf-8");
-                method = new HttpGet(baseUrl + "?" + query);
-                url = method.getRequestLine().getUri();
-            }
+        HttpUriRequest method = null;
+        doPost = true;
+        String url = null;
+        if (doPost) {
+            HttpPost httpPost = new HttpPost(baseUrl);
+            httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+            method = httpPost;
+            url = baseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
+        } else {
+            String query = URLEncodedUtils.format(params, "utf-8");
+            method = new HttpGet(baseUrl + "?" + query);
+            url = method.getRequestLine().getUri();
+        }
 
-            try {
-                if (this.httpClient == null)
-                    this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
-                HttpResponse httpResponse = this.httpClient.execute(method);
-                int status = httpResponse.getStatusLine().getStatusCode();
-                if (status != 200)
-                    throw new Exception("got a non-200 response [ " + status + " ] from Nexmo-HTTP for url [ " + url + " ] ");
-                response = new BasicResponseHandler().handleResponse(httpResponse);
-                log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
-                break;
-            } catch (Exception e) {
-                method.abort();
-                log.info("communication failure: " + e);
-                String exceptionMsg = e.getMessage();
-                if (exceptionMsg.indexOf("Read timed out") >= 0) {
-                    log.info("we're still connected, but the target did not respond in a timely manner ..  drop ...");
-                } else {
-                    if (pass == 1) {
-                        log.info("... re-establish http client ...");
-                        this.httpClient = null;
-                        continue;
-                    }
-                }
+        try {
+            if (this.httpClient == null)
+                this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
+            HttpResponse httpResponse = this.httpClient.execute(method);
+            response = new BasicResponseHandler().handleResponse(httpResponse);
+            log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
+        } catch (HttpResponseException e) {
+            method.abort();
+            log.error("communication failure", e);
 
-                // return a COMMS failure ...
-                SmsSubmissionResult[] results = new SmsSubmissionResult[1];
-                results[0] = new SmsSubmissionResult(SmsSubmissionResult.STATUS_COMMS_FAILURE,
-                                                     null,
-                                                     null,
-                                                     "Failed to communicate with NEXMO-HTTP url [ " + url + " ] ..." + e,
-                                                     message.getClientReference(),
-                                                     null,
-                                                     null,
-                                                     true,
-                                                     null,
-                                                     null);
-                return results;
-            }
+            // return a COMMS failure ...
+            SmsSubmissionResult[] results = new SmsSubmissionResult[] {
+                    new SmsSubmissionResult(SmsSubmissionResult.STATUS_COMMS_FAILURE,
+                            null,
+                            null,
+                            "Failed to communicate with NEXMO-HTTP url [ " + url + " ] ..." + e,
+                            message.getClientReference(),
+                            null,
+                            null,
+                            true,
+                            null,
+                            null)
+            };
+            return results;
         }
 
         // parse the response doc ...
