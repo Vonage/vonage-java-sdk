@@ -64,7 +64,7 @@ public class NexmoInsightClientTest {
 
     @Test
     public void testInsight() throws IOException, SAXException {
-        this.client.httpClient = this.stubHttpClient(
+        this.client.setHttpClient(this.stubHttpClient(
                 200,
                 "<?xml version='1.0' encoding='UTF-8' ?>\n" +
                         "  <lookup>\n" +
@@ -74,7 +74,7 @@ public class NexmoInsightClientTest {
                         "      <errorText>error</errorText>\n" +
                         "      <requestPrice>0.03</requestPrice>\n" +
                         "      <remainingBalance>1.97</remainingBalance>\n" +
-                        "  </lookup>");
+                        "  </lookup>"));
 
 
         String[] features = new String[] { "type", "reachable"};

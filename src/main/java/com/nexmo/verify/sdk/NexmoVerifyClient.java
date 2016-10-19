@@ -152,7 +152,7 @@ public class NexmoVerifyClient {
     private final int connectionTimeout;
     private final int soTimeout;
 
-    HttpClient httpClient = null;
+    private HttpClient httpClient = null;
 
     /**
      * Instantiate a new NexmoVerifyClient instance that will communicate using the supplied credentials.
@@ -764,4 +764,8 @@ public class NexmoVerifyClient {
         return sDateTimePattern.get().parse(str);
     }
 
+    // Allowing users of this client to plugin their own HttpClient.
+    public void setHttpClient(HttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
 }

@@ -102,7 +102,7 @@ public class NexmoInsightClient {
     private final int connectionTimeout;
     private final int soTimeout;
 
-    HttpClient httpClient = null;
+    private HttpClient httpClient = null;
 
     /**
      * Instantiate a new NexmoInsightClient instance that will communicate using the supplied credentials.
@@ -313,6 +313,11 @@ public class NexmoInsightClient {
                                  balance,
                                  errorText,
                                  temporaryError);
+    }
+
+    // Allowing users of this client to plugin their own HttpClient.
+    public void setHttpClient(HttpClient httpClient) {
+        this.httpClient = httpClient;
     }
 
 }

@@ -72,12 +72,12 @@ public class NexmoVerifyClientTest {
 
     @Test
     public void testVerify() throws IOException, SAXException {
-        client.httpClient = this.stubHttpClient(200, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
+        client.setHttpClient(this.stubHttpClient(200, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
                 "    <verify_response>\n" +
                 "        <request_id>not-really-a-request-id</request_id>\n" +
                 "        <status>0</status>\n" +
                 "        <error_text>error</error_text>\n" +
-                "    </verify_response>");
+                "    </verify_response>"));
         VerifyResult r = client.verify(
                 "447700900999",
                 "TestBrand",
@@ -87,14 +87,14 @@ public class NexmoVerifyClientTest {
 
     @Test
     public void testCheck() throws IOException, SAXException {
-        client.httpClient = this.stubHttpClient(200, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
+        client.setHttpClient(this.stubHttpClient(200, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
                 "    <verify_response>\n" +
                 "        <event_id>verify-check-id</event_id>\n" +
                 "        <status>0</status>\n" +
                 "        <price>100.00</price>\n" +
                 "        <currency>EUR</currency>\n" +
                 "        <error_text>error</error_text>\n" +
-                "    </verify_response>");
+                "    </verify_response>"));
 
         String id = "verify-check-id";
         String code = "1234";
@@ -106,7 +106,7 @@ public class NexmoVerifyClientTest {
 
     @Test
     public void testSearchSuccess() throws IOException, SAXException, ParseException {
-        client.httpClient = this.stubHttpClient(200, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
+        client.setHttpClient(this.stubHttpClient(200, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
                 "    <verify_request>\n" +
                 "        <request_id>not-a-search-request-id</request_id>\n" +
                 "        <account_id>not-an-account-id</account_id>\n" +
@@ -132,7 +132,7 @@ public class NexmoVerifyClientTest {
                 "        <currency> currency</currency>\n" +
                 "        <error_text>error</error_text>\n" +
                 "        <status>SUCCESS</status>\n" +
-                "    </verify_request>");
+                "    </verify_request>"));
 
 
         SearchResult c = client.search("not-a-search-request-id");
@@ -153,12 +153,12 @@ public class NexmoVerifyClientTest {
 
     @Test
     public void testSearchError() throws IOException, SAXException, ParseException {
-        client.httpClient = this.stubHttpClient(200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+        client.setHttpClient(this.stubHttpClient(200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<verify_response>\n" +
                 "  <request_id />\n" +
                 "  <status>101</status>\n" +
                 "  <error_text>No response found</error_text>\n" +
-                "</verify_response>");
+                "</verify_response>"));
 
         SearchResult c = client.search("AAAAA");
         assertEquals(SearchResult.STATUS_NO_RESPONSE, c.getStatus());
@@ -166,7 +166,7 @@ public class NexmoVerifyClientTest {
 
     @Test
     public void testSearchFailed() throws IOException, SAXException {
-        client.httpClient = this.stubHttpClient(200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+        client.setHttpClient(this.stubHttpClient(200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<verify_request>\n" +
                 "  <request_id>a-random-request-id</request_id>\n" +
                 "  <account_id>account-id</account_id>\n" +
@@ -199,7 +199,7 @@ public class NexmoVerifyClientTest {
                 "  <price>0</price>\n" +
                 "  <currency>EUR</currency>\n" +
                 "  <status>FAILED</status>\n" +
-                "</verify_request>");
+                "</verify_request>"));
 
             SearchResult c = client.search("a-random-request-id");
             assertEquals(SearchResult.STATUS_OK, c.getStatus());
@@ -209,7 +209,7 @@ public class NexmoVerifyClientTest {
 
     @Test
     public void testSearchExpired() throws IOException, SAXException {
-        client.httpClient = this.stubHttpClient(200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+        client.setHttpClient(this.stubHttpClient(200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<verify_request>\n" +
                 "  <request_id>a-random-request-id</request_id>\n" +
                 "  <account_id>account-id</account_id>\n" +
@@ -223,7 +223,7 @@ public class NexmoVerifyClientTest {
                 "  <price>0</price>\n" +
                 "  <currency>EUR</currency>\n" +
                 "  <status>EXPIRED</status>\n" +
-                "</verify_request>");
+                "</verify_request>"));
 
         SearchResult c = client.search("a-random-request-id");
         assertEquals(SearchResult.STATUS_OK, c.getStatus());
@@ -233,7 +233,7 @@ public class NexmoVerifyClientTest {
 
     @Test
     public void testSearchInProgress() throws IOException, SAXException {
-        client.httpClient = this.stubHttpClient(200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+        client.setHttpClient(this.stubHttpClient(200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<verify_request>\n" +
                 "  <request_id>a-random-request-id</request_id>\n" +
                 "  <account_id>account-id</account_id>\n" +
@@ -247,12 +247,10 @@ public class NexmoVerifyClientTest {
                 "  <price>0.10000000</price>\n" +
                 "  <currency>EUR</currency>\n" +
                 "  <status>IN PROGRESS</status>\n" +
-                "</verify_request>");
+                "</verify_request>"));
         SearchResult c = client.search("a-random-request-id");
         assertEquals(SearchResult.STATUS_OK, c.getStatus());
         assertEquals("a-random-request-id", c.getRequestId());
         assertEquals(SearchResult.VerificationStatus.IN_PROGRESS, c.getVerificationStatus());
     }
-
-
 }
