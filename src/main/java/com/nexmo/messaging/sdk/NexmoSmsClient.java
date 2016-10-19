@@ -21,7 +21,9 @@ package com.nexmo.messaging.sdk;
  * THE SOFTWARE.
  */
 
+import java.io.IOException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -239,7 +241,7 @@ public class NexmoSmsClient {
      *
      * @throws Exception There has been a general failure either within the Client class, or whilst attempting to communicate with the Nexmo service (eg, Network failure)
      */
-    public SmsSubmissionResult[] submitMessage(Message message) {
+    public SmsSubmissionResult[] submitMessage(Message message) throws IOException {
         return submitMessage(message, 
                              null,     // validityPeriod 
                              null,     // networkCode 
@@ -263,7 +265,7 @@ public class NexmoSmsClient {
      *
      * @throws Exception There has been a general failure either within the Client class, or whilst attempting to communicate with the Nexmo service (eg, Network failure)
      */
-    public SmsSubmissionResult[] submitMessage(Message message, ValidityPeriod validityPeriod) {
+    public SmsSubmissionResult[] submitMessage(Message message, ValidityPeriod validityPeriod) throws IOException {
         return submitMessage(message,
                              validityPeriod, 
                              null,   // networkCode 
@@ -297,7 +299,7 @@ public class NexmoSmsClient {
     public SmsSubmissionResult[] submitMessage(final Message message,
                                                final ValidityPeriod validityPeriod,
                                                final String networkCode,
-                                               final boolean performReachabilityCheck) {
+                                               final boolean performReachabilityCheck) throws IOException {
 
         log.debug("HTTP-Message-Submission Client .. from [ " + message.getFrom() + " ] to [ " + message.getTo() + " ] msg [ " + message.getMessageBody() + " ] ");
 
