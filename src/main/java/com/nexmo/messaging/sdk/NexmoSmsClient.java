@@ -29,6 +29,7 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import com.nexmo.common.NexmoResponseParseException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -110,27 +111,25 @@ public class NexmoSmsClient {
     private static final Log log = LogFactory.getLog(NexmoSmsClient.class);
 
     /**
-     * https://rest.nexmo.com<br>
      * Service url used unless over-ridden on the constructor
      */
-    public static final String DEFAULT_BASE_URL = "https://rest.nexmo.com";
+    static final String DEFAULT_BASE_URL = "https://rest.nexmo.com";
 
     /**
      * The endpoint path for submitting sms messages
      */
-    public static final String SUBMISSION_PATH_SMS = "/sms/xml";
+    private static final String SUBMISSION_PATH_SMS = "/sms/xml";
 
     /**
      * Default connection timeout of 5000ms used by this client unless specifically overridden onb the constructor
      */
-    public static final int DEFAULT_CONNECTION_TIMEOUT = 5000;
+    static final int DEFAULT_CONNECTION_TIMEOUT = 5000;
 
     /**
      * Default read timeout of 30000ms used by this client unless specifically overridden onb the constructor
      */
-    public static final int DEFAULT_SO_TIMEOUT = 30000;
+    static final int DEFAULT_SO_TIMEOUT = 30000;
 
-    private DocumentBuilderFactory documentBuilderFactory;
     private DocumentBuilder documentBuilder;
 
     private final String baseUrlHttps;
@@ -215,8 +214,7 @@ public class NexmoSmsClient {
         this.connectionTimeout = connectionTimeout;
         this.soTimeout = soTimeout;
         try {
-            this.documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            this.documentBuilder = this.documentBuilderFactory.newDocumentBuilder();
+            this.documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         } catch (javax.xml.parsers.ParserConfigurationException e) {
             throw new RuntimeException("ERROR initializing XML Document builder!", e);
         }
@@ -241,7 +239,7 @@ public class NexmoSmsClient {
      *
      * @throws Exception There has been a general failure either within the Client class, or whilst attempting to communicate with the Nexmo service (eg, Network failure)
      */
-    public SmsSubmissionResult[] submitMessage(Message message) throws Exception {
+    public SmsSubmissionResult[] submitMessage(Message message) {
         return submitMessage(message, 
                              null,     // validityPeriod 
                              null,     // networkCode 
@@ -265,7 +263,7 @@ public class NexmoSmsClient {
      *
      * @throws Exception There has been a general failure either within the Client class, or whilst attempting to communicate with the Nexmo service (eg, Network failure)
      */
-    public SmsSubmissionResult[] submitMessage(Message message, ValidityPeriod validityPeriod) throws Exception {
+    public SmsSubmissionResult[] submitMessage(Message message, ValidityPeriod validityPeriod) {
         return submitMessage(message,
                              validityPeriod, 
                              null,   // networkCode 
@@ -299,7 +297,7 @@ public class NexmoSmsClient {
     public SmsSubmissionResult[] submitMessage(final Message message,
                                                final ValidityPeriod validityPeriod,
                                                final String networkCode,
-                                               final boolean performReachabilityCheck) throws Exception {
+                                               final boolean performReachabilityCheck) {
 
         log.debug("HTTP-Message-Submission Client .. from [ " + message.getFrom() + " ] to [ " + message.getTo() + " ] msg [ " + message.getMessageBody() + " ] ");
 
@@ -312,7 +310,7 @@ public class NexmoSmsClient {
 
         // Now that we have generated a query string, we can instantiate a HttpClient,
         // and construct a POST request:
-        String response = null;
+
         HttpUriRequest method = null;
         String url = null;
 
@@ -325,8 +323,9 @@ public class NexmoSmsClient {
             if (this.httpClient == null)
                 this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
             HttpResponse httpResponse = this.httpClient.execute(method);
-            response = new BasicResponseHandler().handleResponse(httpResponse);
+            String response = new BasicResponseHandler().handleResponse(httpResponse);
             log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
+            return parseResponse(response);
         } catch (HttpResponseException e) {
             method.abort();
             log.error("communication failure", e);
@@ -347,148 +346,7 @@ public class NexmoSmsClient {
             return results;
         }
 
-        // parse the response doc ...
 
-        /*
-            We receive a response from the api that looks like this, parse the document
-            and turn it into an array of SmsSubmissionResult, one object per <message> node
-
-                <mt-submission-response>
-                    <messages count='x'>
-                        <message>
-                            <to>xxx</to>
-                            <messageId>xxx</messageId>
-                            <status>xx</status>
-                            <errorText>ff</errorText>
-                            <clientRef>xxx</clientRef>
-                            <remainingBalance>##.##</remainingBalance>
-                            <messagePrice>##.##</messagePrice>
-                            <reachability status='x' description='xxx' />
-                            <network>23410</network>
-                        </message>
-                    </messages>
-                </mt-submission-response>
-        */
-
-        List<SmsSubmissionResult> results = new ArrayList<>();
-
-        Document doc = null;
-        synchronized(this.documentBuilder) {
-            try {
-                doc = this.documentBuilder.parse(new InputSource(new StringReader(response)));
-            } catch (Exception e) {
-                throw new Exception("Failed to build a DOM doc for the xml document [ " + response + " ] ", e);
-            }
-        }
-
-        NodeList replies = doc.getElementsByTagName("mt-submission-response");
-        for (int i=0;i<replies.getLength();i++) {
-            Node reply = replies.item(i);
-            NodeList messageLists = reply.getChildNodes();
-            for (int i2=0;i2<messageLists.getLength();i2++) {
-                Node messagesNode = messageLists.item(i2);
-                if (messagesNode.getNodeType() != Node.ELEMENT_NODE)
-                    continue;
-                if (messagesNode.getNodeName().equals("messages")) {
-                    NodeList messages = messagesNode.getChildNodes();
-                    for (int i3=0;i3<messages.getLength();i3++) {
-                        Node messageNode = messages.item(i3);
-                        if (messageNode.getNodeType() != Node.ELEMENT_NODE)
-                            continue;
-
-                        int status = -1;
-                        String messageId = null;
-                        String destination = null;
-                        String errorText = null;
-                        String clientReference = null;
-                        BigDecimal remainingBalance = null;
-                        BigDecimal messagePrice = null;
-                        SmsSubmissionReachabilityStatus smsSubmissionReachabilityStatus = null;
-                        String network = null;
-
-                        NodeList nodes = messageNode.getChildNodes();
-                        for (int i4=0;i4<nodes.getLength();i4++) {
-                            Node node = nodes.item(i4);
-                            if (node.getNodeType() != Node.ELEMENT_NODE)
-                                continue;
-                            if (node.getNodeName().equals("messageId")) {
-                                messageId = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-                            } else if (node.getNodeName().equals("to")) {
-                                destination = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-                            } else if (node.getNodeName().equals("status")) {
-                                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-                                try {
-                                    status = Integer.parseInt(str);
-                                } catch (NumberFormatException e) {
-                                    log.error("xml parser .. invalid value in <status> node [ " + str + " ] ");
-                                    status = SmsSubmissionResult.STATUS_INTERNAL_ERROR;
-                                }
-                            } else if (node.getNodeName().equals("errorText")) {
-                                errorText = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-                            } else if (node.getNodeName().equals("clientRef")) {
-                                clientReference = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-                            } else if (node.getNodeName().equals("remainingBalance")) {
-                                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-                                try {
-                                    if (str != null)
-                                        remainingBalance = new BigDecimal(str);
-                                } catch (NumberFormatException e) {
-                                    log.error("xml parser .. invalid value in <remainingBalance> node [ " + str + " ] ");
-                                }
-                            } else if (node.getNodeName().equals("messagePrice")) {
-                                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-                                try {
-                                    if (str != null)
-                                        messagePrice = new BigDecimal(str);
-                                } catch (NumberFormatException e) {
-                                    log.error("xml parser .. invalid value in <messagePrice> node [ " + str + " ] ");
-                                }
-                            } else if (node.getNodeName().equals("reachability")) {
-                                NamedNodeMap attributes = node.getAttributes();
-                                Node attr = attributes.getNamedItem("status");
-                                String str = attr == null ? "" + SmsSubmissionReachabilityStatus.REACHABILITY_STATUS_UNKNOWN : attr.getNodeValue();
-                                int reachabilityStatus = SmsSubmissionReachabilityStatus.REACHABILITY_STATUS_UNKNOWN;
-                                try {
-                                    reachabilityStatus = Integer.parseInt(str);
-                                } catch (NumberFormatException e) {
-                                    log.error("xml parser .. invalid value in 'status' attribute in <reachability> node [ " + str + " ] ");
-                                    reachabilityStatus = SmsSubmissionReachabilityStatus.REACHABILITY_STATUS_UNKNOWN;
-                                }
-
-                                attr = attributes.getNamedItem("description");
-                                String description = attr == null ? "-UNKNOWN-" : attr.getNodeValue();
-
-                                smsSubmissionReachabilityStatus = new SmsSubmissionReachabilityStatus(reachabilityStatus, description);
-                            } else if (node.getNodeName().equals("network")) {
-                                network = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-                            } else
-                                log.error("xml parser .. unknown node found in status-return, expected [ messageId, to, status, errorText, clientRef, messagePrice, remainingBalance, reachability, network ] -- found [ " + node.getNodeName() + " ] ");
-                        }
-
-                        if (status == -1)
-                            throw new Exception("Xml Parser - did not find a <status> node");
-
-                        // Is this a temporary error ?
-                        boolean temporaryError = (status == SmsSubmissionResult.STATUS_THROTTLED ||
-                                                  status == SmsSubmissionResult.STATUS_INTERNAL_ERROR ||
-                                                  status == SmsSubmissionResult.STATUS_TOO_MANY_BINDS);
-
-                        results.add(new SmsSubmissionResult(status,
-                                                            destination,
-                                                            messageId,
-                                                            errorText,
-                                                            clientReference,
-                                                            remainingBalance,
-                                                            messagePrice,
-                                                            temporaryError,
-                                                            smsSubmissionReachabilityStatus,
-                                                            network));
-                    }
-                }
-            }
-        }
-
-        return results.toArray(new SmsSubmissionResult[results.size()]);
     }
 
     // Allowing users of this client to plugin their own HttpClient.
@@ -573,5 +431,150 @@ public class NexmoSmsClient {
             RequestSigning.constructSignatureForRequestParameters(params, this.signatureSecretKey);
 
         return params;
+    }
+
+    SmsSubmissionResult[] parseResponse(String response) {
+        // parse the response doc ...
+
+        /*
+            We receive a response from the api that looks like this, parse the document
+            and turn it into an array of SmsSubmissionResult, one object per <message> node
+
+                <mt-submission-response>
+                    <messages count='x'>
+                        <message>
+                            <to>xxx</to>
+                            <messageId>xxx</messageId>
+                            <status>xx</status>
+                            <errorText>ff</errorText>
+                            <clientRef>xxx</clientRef>
+                            <remainingBalance>##.##</remainingBalance>
+                            <messagePrice>##.##</messagePrice>
+                            <reachability status='x' description='xxx' />
+                            <network>23410</network>
+                        </message>
+                    </messages>
+                </mt-submission-response>
+        */
+
+        List<SmsSubmissionResult> results = new ArrayList<>();
+
+        Document doc = null;
+        synchronized(this.documentBuilder) {
+            try {
+                doc = this.documentBuilder.parse(new InputSource(new StringReader(response)));
+            } catch (Exception e) {
+                throw new NexmoResponseParseException("Failed to build a DOM doc for the xml document [ " + response + " ] ", e);
+            }
+        }
+
+        NodeList replies = doc.getElementsByTagName("mt-submission-response");
+        for (int i=0;i<replies.getLength();i++) {
+            Node reply = replies.item(i);
+            NodeList messageLists = reply.getChildNodes();
+            for (int i2=0;i2<messageLists.getLength();i2++) {
+                Node messagesNode = messageLists.item(i2);
+                if (messagesNode.getNodeType() != Node.ELEMENT_NODE)
+                    continue;
+                if (messagesNode.getNodeName().equals("messages")) {
+                    NodeList messages = messagesNode.getChildNodes();
+                    for (int i3=0;i3<messages.getLength();i3++) {
+                        Node messageNode = messages.item(i3);
+                        if (messageNode.getNodeType() != Node.ELEMENT_NODE)
+                            continue;
+
+                        int status = -1;
+                        String messageId = null;
+                        String destination = null;
+                        String errorText = null;
+                        String clientReference = null;
+                        BigDecimal remainingBalance = null;
+                        BigDecimal messagePrice = null;
+                        SmsSubmissionReachabilityStatus smsSubmissionReachabilityStatus = null;
+                        String network = null;
+
+                        NodeList nodes = messageNode.getChildNodes();
+                        for (int i4=0;i4<nodes.getLength();i4++) {
+                            Node node = nodes.item(i4);
+                            if (node.getNodeType() != Node.ELEMENT_NODE)
+                                continue;
+                            if (node.getNodeName().equals("messageId")) {
+                                messageId = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                            } else if (node.getNodeName().equals("to")) {
+                                destination = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                            } else if (node.getNodeName().equals("status")) {
+                                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                                try {
+                                    status = Integer.parseInt(str);
+                                } catch (NumberFormatException e) {
+                                    log.error("xml parser .. invalid value in <status> node [ " + str + " ] ");
+                                    status = SmsSubmissionResult.STATUS_INTERNAL_ERROR;
+                                }
+                            } else if (node.getNodeName().equals("errorText")) {
+                                errorText = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                            } else if (node.getNodeName().equals("clientRef")) {
+                                clientReference = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                            } else if (node.getNodeName().equals("remainingBalance")) {
+                                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                                try {
+                                    if (str != null)
+                                        remainingBalance = new BigDecimal(str);
+                                } catch (NumberFormatException e) {
+                                    log.error("xml parser .. invalid value in <remainingBalance> node [ " + str + " ] ");
+                                }
+                            } else if (node.getNodeName().equals("messagePrice")) {
+                                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                                try {
+                                    if (str != null)
+                                        messagePrice = new BigDecimal(str);
+                                } catch (NumberFormatException e) {
+                                    log.error("xml parser .. invalid value in <messagePrice> node [ " + str + " ] ");
+                                }
+                            } else if (node.getNodeName().equals("reachability")) {
+                                NamedNodeMap attributes = node.getAttributes();
+                                Node attr = attributes.getNamedItem("status");
+                                String str = attr == null ? "" + SmsSubmissionReachabilityStatus.REACHABILITY_STATUS_UNKNOWN : attr.getNodeValue();
+                                int reachabilityStatus;
+                                try {
+                                    reachabilityStatus = Integer.parseInt(str);
+                                } catch (NumberFormatException e) {
+                                    log.error("xml parser .. invalid value in 'status' attribute in <reachability> node [ " + str + " ] ");
+                                    reachabilityStatus = SmsSubmissionReachabilityStatus.REACHABILITY_STATUS_UNKNOWN;
+                                }
+
+                                attr = attributes.getNamedItem("description");
+                                String description = attr == null ? "-UNKNOWN-" : attr.getNodeValue();
+
+                                smsSubmissionReachabilityStatus = new SmsSubmissionReachabilityStatus(reachabilityStatus, description);
+                            } else if (node.getNodeName().equals("network")) {
+                                network = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                            } else
+                                log.error("xml parser .. unknown node found in status-return, expected [ messageId, to, status, errorText, clientRef, messagePrice, remainingBalance, reachability, network ] -- found [ " + node.getNodeName() + " ] ");
+                        }
+
+                        if (status == -1)
+                            throw new NexmoResponseParseException("Xml Parser - did not find a <status> node");
+
+                        // Is this a temporary error ?
+                        boolean temporaryError = (status == SmsSubmissionResult.STATUS_THROTTLED ||
+                                status == SmsSubmissionResult.STATUS_INTERNAL_ERROR ||
+                                status == SmsSubmissionResult.STATUS_TOO_MANY_BINDS);
+
+                        results.add(new SmsSubmissionResult(status,
+                                destination,
+                                messageId,
+                                errorText,
+                                clientReference,
+                                remainingBalance,
+                                messagePrice,
+                                temporaryError,
+                                smsSubmissionReachabilityStatus,
+                                network));
+                    }
+                }
+            }
+        }
+
+        return results.toArray(new SmsSubmissionResult[results.size()]);
     }
 }
