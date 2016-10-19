@@ -21,10 +21,8 @@ package com.nexmo.messaging.sdk;
  * THE SOFTWARE.
  */
 
-import com.nexmo.messaging.sdk.messages.BinaryMessage;
-import com.nexmo.messaging.sdk.messages.Message;
-import com.nexmo.messaging.sdk.messages.TextMessage;
-import com.nexmo.messaging.sdk.messages.UnicodeMessage;
+import com.nexmo.messaging.sdk.messages.*;
+import com.nexmo.messaging.sdk.messages.parameters.ValidityPeriod;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -163,6 +161,38 @@ public class NexmoSmsClientTest {
         assertContainsParam(params, "body", "616263");
     }
 
+    @Test
+    public void testConstructParamsWapPush() {
+        Message message = new WapPushMessage("TestSender", "not-a-number", "http://the-url", "A Title");
+        List<NameValuePair> params = client.constructParams(message, null, null, false);
+
+        assertContainsParam(params, "api_key", "not-an-api-key");
+        assertContainsParam(params, "api_secret", "secret");
+        assertContainsParam(params, "from", "TestSender");
+        assertContainsParam(params, "to", "not-a-number");
+        assertContainsParam(params, "type", "wappush");
+        assertContainsParam(params, "status-report-req", "false");
+        assertContainsParam(params, "url", "http://the-url");
+        assertContainsParam(params, "title", "A Title");
+    }
+
+    @Test
+    public void testConstructParamsValidityPeriodTTL() {
+        Message message = new BinaryMessage("TestSender", "not-a-number", "abc".getBytes(), "def".getBytes());
+        List<NameValuePair> params = client.constructParams(message, new ValidityPeriod(50), null, false);
+
+        assertContainsParam(params, "ttl", "50");
+    }
+
+    @Test
+    public void testConstructParamsValidityPeriodTTLComponents() {
+        Message message = new BinaryMessage("TestSender", "not-a-number", "abc".getBytes(), "def".getBytes());
+        List<NameValuePair> params = client.constructParams(message, new ValidityPeriod(5, 4, 3), null, false);
+
+        assertContainsParam(params, "ttl-hours", "5");
+        assertContainsParam(params, "ttl-minutes", "4");
+        assertContainsParam(params, "ttl-seconds", "3");
+    }
 
     @Test
     public void testParseResponse() {
