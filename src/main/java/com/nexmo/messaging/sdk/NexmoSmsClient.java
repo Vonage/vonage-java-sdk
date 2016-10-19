@@ -57,9 +57,7 @@ import com.nexmo.messaging.sdk.messages.parameters.ValidityPeriod;
 import com.nexmo.security.RequestSigning;
 
 /**
- * NexmoSmsClient.java<br><br>
- *
- * Client for talking to the Nexmo REST interface<br><br>
+ * Client for talking to the Nexmo REST interface.
  *
  * Usage
  *
@@ -132,7 +130,7 @@ public class NexmoSmsClient {
      */
     public static final int DEFAULT_SO_TIMEOUT = 30000;
 
-    private DocumentBuilder documentBuilder;
+    private final DocumentBuilder documentBuilder;
 
     private final String baseUrlHttps;
     private final String apiKey;
@@ -249,11 +247,14 @@ public class NexmoSmsClient {
     }
 
     /**
-     * submit a message submission request object.
-     * This will use the supplied object to construct a request and post it to the Nexmo REST interface.<br>
+     * Send an SMS message.
+     *
+     * This will use the supplied object to construct a request and post it to the Nexmo REST interface.
+     * <p>
      * This method will respond with an array of SmsSubmissionResult objects. Depending on the nature and length of the submitted message, Nexmo may automatically
      * split the message into multiple sms messages in order to deliver to the handset. For example, a long text sms of greater than 160 chars will need to be split
-     * into multiple 'concatenated' sms messages. The Nexmo service will handle this automatically for you.<br>
+     * into multiple 'concatenated' sms messages. The Nexmo service will handle this automatically for you.
+     * <p>
      * The array of SmsSubmissionResult objects will contain a SmsSubmissionResult object for every actual sms that was required to submit the message.
      * each message can potentially have a different status result, and each message will have a different message id.
      * Delivery notifications will be generated for each sms message within this set and will be posted to your application containing the appropriate message id.
@@ -263,7 +264,7 @@ public class NexmoSmsClient {
      *
      * @return SmsSubmissionResult[] an array of results, 1 object for each sms message that was required to submit this message in its entirety
      *
-     * @throws Exception There has been a general failure either within the Client class, or whilst attempting to communicate with the Nexmo service (eg, Network failure)
+     * @throws IOException There has been a general failure either within the Client class, or whilst attempting to communicate with the Nexmo service (eg, Network failure)
      */
     public SmsSubmissionResult[] submitMessage(Message message, ValidityPeriod validityPeriod) throws IOException {
         return submitMessage(message,
@@ -321,19 +322,20 @@ public class NexmoSmsClient {
         method = httpPost;
         url = baseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
 
+        if (this.httpClient == null)
+            this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
+        HttpResponse httpResponse = this.httpClient.execute(method);
+
+        String response;
         try {
-            if (this.httpClient == null)
-                this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
-            HttpResponse httpResponse = this.httpClient.execute(method);
-            String response = new BasicResponseHandler().handleResponse(httpResponse);
+            response = new BasicResponseHandler().handleResponse(httpResponse);
             log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
-            return parseResponse(response);
         } catch (HttpResponseException e) {
             method.abort();
             log.error("communication failure", e);
 
             // return a COMMS failure ...
-            SmsSubmissionResult[] results = new SmsSubmissionResult[] {
+            return new SmsSubmissionResult[] {
                     new SmsSubmissionResult(SmsSubmissionResult.STATUS_COMMS_FAILURE,
                             null,
                             null,
@@ -345,10 +347,9 @@ public class NexmoSmsClient {
                             null,
                             null)
             };
-            return results;
         }
 
-
+        return parseResponse(response);
     }
 
     // Allowing users of this client to plugin their own HttpClient.
@@ -375,8 +376,6 @@ public class NexmoSmsClient {
 
         if (wapPush)
             mode = "wappush";
-
-        // Construct a query string as a list of NameValuePairs
 
         List<NameValuePair> params = new ArrayList<>();
 
@@ -461,7 +460,7 @@ public class NexmoSmsClient {
 
         List<SmsSubmissionResult> results = new ArrayList<>();
 
-        Document doc = null;
+        Document doc;
         synchronized(this.documentBuilder) {
             try {
                 doc = this.documentBuilder.parse(new InputSource(new StringReader(response)));

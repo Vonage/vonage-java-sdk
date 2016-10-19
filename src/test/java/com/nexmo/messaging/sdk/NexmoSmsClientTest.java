@@ -21,20 +21,26 @@ package com.nexmo.messaging.sdk;
  * THE SOFTWARE.
  */
 
+import com.nexmo.messaging.sdk.messages.BinaryMessage;
 import com.nexmo.messaging.sdk.messages.Message;
 import com.nexmo.messaging.sdk.messages.TextMessage;
+import com.nexmo.messaging.sdk.messages.UnicodeMessage;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.message.BasicNameValuePair;
 import org.junit.Before;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+import javax.xml.crypto.dsig.keyinfo.KeyValue;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -103,18 +109,95 @@ public class NexmoSmsClientTest {
     }
 
     @Test
-    public void testSubmitMessageHttpError() throws IOException, SAXException {
+    public void testSubmitMessageHttpError() throws IOException {
         this.client.setHttpClient(this.stubHttpClient(500, ""));
 
         Message message = new TextMessage("TestSender", "not-a-number", "Test");
-        try {
-            SmsSubmissionResult[] r = client.submitMessage(message);
-            assertEquals(r.length, 1);
-            SmsSubmissionResult e = r[0];
-            assertEquals(e.getStatus(), SmsSubmissionResult.STATUS_COMMS_FAILURE);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        SmsSubmissionResult[] r = client.submitMessage(message);
+        assertEquals(r.length, 1);
+
+        SmsSubmissionResult e = r[0];
+        assertEquals(e.getStatus(), SmsSubmissionResult.STATUS_COMMS_FAILURE);
     }
 
+    @Test
+    public void testConstructParamsText() {
+        Message message = new TextMessage("TestSender", "not-a-number", "Test");
+        List<NameValuePair> params = client.constructParams(message, null, null, false);
+
+        assertContainsParam(params, "api_key", "not-an-api-key");
+        assertContainsParam(params, "api_secret", "secret");
+        assertContainsParam(params, "from", "TestSender");
+        assertContainsParam(params, "to", "not-a-number");
+        assertContainsParam(params, "type", "text");
+        assertContainsParam(params, "status-report-req", "false");
+        assertContainsParam(params, "text", "Test");
+    }
+
+    @Test
+    public void testConstructParamsUnicode() {
+        Message message = new UnicodeMessage("TestSender", "not-a-number", "Test");
+        List<NameValuePair> params = client.constructParams(message, null, null, false);
+
+        assertContainsParam(params, "api_key", "not-an-api-key");
+        assertContainsParam(params, "api_secret", "secret");
+        assertContainsParam(params, "from", "TestSender");
+        assertContainsParam(params, "to", "not-a-number");
+        assertContainsParam(params, "type", "unicode");
+        assertContainsParam(params, "status-report-req", "false");
+        assertContainsParam(params, "text", "Test");
+    }
+
+    @Test
+    public void testConstructParamsBinary() {
+        Message message = new BinaryMessage("TestSender", "not-a-number", "abc".getBytes(), "def".getBytes());
+        List<NameValuePair> params = client.constructParams(message, null, null, false);
+
+        assertContainsParam(params, "api_key", "not-an-api-key");
+        assertContainsParam(params, "api_secret", "secret");
+        assertContainsParam(params, "from", "TestSender");
+        assertContainsParam(params, "to", "not-a-number");
+        assertContainsParam(params, "type", "binary");
+        assertContainsParam(params, "status-report-req", "false");
+        assertContainsParam(params, "udh", "646566");
+        assertContainsParam(params, "body", "616263");
+    }
+
+
+    @Test
+    public void testParseResponse() {
+        SmsSubmissionResult[] rs = client.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
+                "<mt-submission-response>\n" +
+                "    <messages count='2'>\n" +
+                "        <message>\n" +
+                "            <to>not-a-number</to>\n" +
+                "            <messageId>message-id-1</messageId>\n" +
+                "            <status>0</status>\n" +
+                "            <remainingBalance>26.43133450</remainingBalance>\n" +
+                "            <messagePrice>0.03330000</messagePrice>\n" +
+                "            <network>12345</network>\n" +
+                "        </message>\n" +
+                "        <message>\n" +
+                "            <to>not-a-number</to>\n" +
+                "            <messageId>message-id-2</messageId>\n" +
+                "            <status>0</status>\n" +
+                "            <remainingBalance>26.39803450</remainingBalance>\n" +
+                "            <messagePrice>0.03330000</messagePrice>\n" +
+                "            <network>12345</network>\n" +
+                "        </message>\n" +
+                "    </messages>\n" +
+                "</mt-submission-response>");
+        assertEquals(rs.length, 2);
+
+        SmsSubmissionResult r = rs[1];
+        assertEquals(r.getDestination(), "not-a-number");
+    }
+
+    private static void assertContainsParam(List<NameValuePair> params, String key, String value) {
+        NameValuePair item = new BasicNameValuePair(key, value);
+        assertTrue(
+                "" + params + " should contain " + item,
+                params.contains(item)
+        );
+    }
 }
