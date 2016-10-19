@@ -36,7 +36,6 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -144,7 +143,7 @@ public class NexmoSmsClient {
     private final boolean signRequests;
     private final String signatureSecretKey;
 
-    HttpClient httpClient = null;
+    private HttpClient httpClient = null;
 
     /**
      * Instantiate a new NexmoSmsClient instance that will communicate using the supplied credentials.
@@ -307,81 +306,9 @@ public class NexmoSmsClient {
         // From the Message object supplied, construct an appropriate request to be submitted to the Nexmo REST Service.
 
         // Determine what 'product' type we are submitting, and select the appropriate endpoint path
-        String submitPath = SUBMISSION_PATH_SMS;
+        List<NameValuePair> params = constructParams(message, validityPeriod, networkCode, performReachabilityCheck);
 
-        // Determine the type parameter based on the type of Message object.
-        boolean binary = message.getType() == Message.MESSAGE_TYPE_BINARY;
-        boolean unicode = message.isUnicode();
-        boolean wapPush = message.getType() == Message.MESSAGE_TYPE_WAPPUSH;
-
-        String mode = "text";
-
-        if (binary)
-            mode = "binary";
-
-        if (unicode)
-            mode = "unicode";
-
-        if (wapPush)
-            mode = "wappush";
-
-        // Construct a query string as a list of NameValuePairs
-
-        List<NameValuePair> params = new ArrayList<>();
-
-        params.add(new BasicNameValuePair("api_key", this.apiKey));
-        if (!this.signRequests)
-            params.add(new BasicNameValuePair("api_secret", this.apiSecret));
-        params.add(new BasicNameValuePair("from", message.getFrom()));
-        params.add(new BasicNameValuePair("to", message.getTo()));
-        params.add(new BasicNameValuePair("type", mode));
-        if (wapPush) {
-            params.add(new BasicNameValuePair("url", message.getWapPushUrl()));
-            params.add(new BasicNameValuePair("title", message.getWapPushTitle()));
-            if (message.getWapPushValidity() > 0)
-                params.add(new BasicNameValuePair("validity", "" + message.getWapPushValidity()));
-        } else if (binary) {
-            // Binary Message
-            if (message.getBinaryMessageUdh() != null)
-                params.add(new BasicNameValuePair("udh", HexUtil.bytesToHex(message.getBinaryMessageUdh())));
-            params.add(new BasicNameValuePair("body", HexUtil.bytesToHex(message.getBinaryMessageBody())));
-        } else {
-            // Text Message
-            params.add(new BasicNameValuePair("text", message.getMessageBody()));
-        }
-
-        if (message.getClientReference() != null)
-            params.add(new BasicNameValuePair("client-ref", message.getClientReference()));
-
-        params.add(new BasicNameValuePair("status-report-req", "" + message.getStatusReportRequired()));
-
-        if (message.getMessageClass() != null)
-            params.add(new BasicNameValuePair("message-class", "" + message.getMessageClass().getMessageClass()));
-
-        if (message.getProtocolId() != null)
-            params.add(new BasicNameValuePair("protocol-id", "" + message.getProtocolId()));
-
-        if (validityPeriod != null) {
-            if (validityPeriod.getTimeToLive() != null)
-                params.add(new BasicNameValuePair("ttl", "" + validityPeriod.getTimeToLive().intValue()));
-            if (validityPeriod.getValidityPeriodHours() != null)
-                params.add(new BasicNameValuePair("ttl-hours", "" + validityPeriod.getValidityPeriodHours().intValue()));
-            if (validityPeriod.getValidityPeriodMinutes() != null)
-                params.add(new BasicNameValuePair("ttl-minutes", "" + validityPeriod.getValidityPeriodMinutes().intValue()));
-            if (validityPeriod.getValidityPeriodSeconds() != null)
-                params.add(new BasicNameValuePair("ttl-seconds", "" + validityPeriod.getValidityPeriodSeconds().intValue()));
-        }
-
-        if (networkCode != null)
-            params.add(new BasicNameValuePair("network-code", networkCode));
-
-        if (performReachabilityCheck)
-            params.add(new BasicNameValuePair("test-reachable", "true"));
-
-        if (this.signRequests)
-            RequestSigning.constructSignatureForRequestParameters(params, this.signatureSecretKey);
-
-        String baseUrl = this.baseUrlHttps + submitPath;
+        String baseUrl = this.baseUrlHttps + SUBMISSION_PATH_SMS;
 
         // Now that we have generated a query string, we can instantiate a HttpClient,
         // and construct a POST request:
@@ -567,5 +494,84 @@ public class NexmoSmsClient {
     // Allowing users of this client to plugin their own HttpClient.
     public void setHttpClient(HttpClient httpClient) {
         this.httpClient = httpClient;
+    }
+
+    List<NameValuePair> constructParams(final Message message,
+                                        final ValidityPeriod validityPeriod,
+                                        final String networkCode,
+                                        final boolean performReachabilityCheck) {
+        // Determine the type parameter based on the type of Message object.
+        boolean binary = message.getType() == Message.MESSAGE_TYPE_BINARY;
+        boolean unicode = message.isUnicode();
+        boolean wapPush = message.getType() == Message.MESSAGE_TYPE_WAPPUSH;
+
+        String mode = "text";
+
+        if (binary)
+            mode = "binary";
+
+        if (unicode)
+            mode = "unicode";
+
+        if (wapPush)
+            mode = "wappush";
+
+        // Construct a query string as a list of NameValuePairs
+
+        List<NameValuePair> params = new ArrayList<>();
+
+        params.add(new BasicNameValuePair("api_key", this.apiKey));
+        if (!this.signRequests)
+            params.add(new BasicNameValuePair("api_secret", this.apiSecret));
+        params.add(new BasicNameValuePair("from", message.getFrom()));
+        params.add(new BasicNameValuePair("to", message.getTo()));
+        params.add(new BasicNameValuePair("type", mode));
+        if (wapPush) {
+            params.add(new BasicNameValuePair("url", message.getWapPushUrl()));
+            params.add(new BasicNameValuePair("title", message.getWapPushTitle()));
+            if (message.getWapPushValidity() > 0)
+                params.add(new BasicNameValuePair("validity", "" + message.getWapPushValidity()));
+        } else if (binary) {
+            // Binary Message
+            if (message.getBinaryMessageUdh() != null)
+                params.add(new BasicNameValuePair("udh", HexUtil.bytesToHex(message.getBinaryMessageUdh())));
+            params.add(new BasicNameValuePair("body", HexUtil.bytesToHex(message.getBinaryMessageBody())));
+        } else {
+            // Text Message
+            params.add(new BasicNameValuePair("text", message.getMessageBody()));
+        }
+
+        if (message.getClientReference() != null)
+            params.add(new BasicNameValuePair("client-ref", message.getClientReference()));
+
+        params.add(new BasicNameValuePair("status-report-req", "" + message.getStatusReportRequired()));
+
+        if (message.getMessageClass() != null)
+            params.add(new BasicNameValuePair("message-class", "" + message.getMessageClass().getMessageClass()));
+
+        if (message.getProtocolId() != null)
+            params.add(new BasicNameValuePair("protocol-id", "" + message.getProtocolId()));
+
+        if (validityPeriod != null) {
+            if (validityPeriod.getTimeToLive() != null)
+                params.add(new BasicNameValuePair("ttl", "" + validityPeriod.getTimeToLive().intValue()));
+            if (validityPeriod.getValidityPeriodHours() != null)
+                params.add(new BasicNameValuePair("ttl-hours", "" + validityPeriod.getValidityPeriodHours().intValue()));
+            if (validityPeriod.getValidityPeriodMinutes() != null)
+                params.add(new BasicNameValuePair("ttl-minutes", "" + validityPeriod.getValidityPeriodMinutes().intValue()));
+            if (validityPeriod.getValidityPeriodSeconds() != null)
+                params.add(new BasicNameValuePair("ttl-seconds", "" + validityPeriod.getValidityPeriodSeconds().intValue()));
+        }
+
+        if (networkCode != null)
+            params.add(new BasicNameValuePair("network-code", networkCode));
+
+        if (performReachabilityCheck)
+            params.add(new BasicNameValuePair("test-reachable", "true"));
+
+        if (this.signRequests)
+            RequestSigning.constructSignatureForRequestParameters(params, this.signatureSecretKey);
+
+        return params;
     }
 }

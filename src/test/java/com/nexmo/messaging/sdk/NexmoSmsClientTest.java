@@ -69,7 +69,7 @@ public class NexmoSmsClientTest {
 
     @Test
     public void testSubmitMessage() throws IOException, SAXException {
-        this.client.httpClient = this.stubHttpClient(
+        this.client.setHttpClient(this.stubHttpClient(
                 200,
                 "<?xml version='1.0' encoding='UTF-8' ?>\n" +
                         "<mt-submission-response>\n" +
@@ -91,7 +91,7 @@ public class NexmoSmsClientTest {
                         "            <network>12345</network>\n" +
                         "        </message>\n" +
                         "    </messages>\n" +
-                        "</mt-submission-response>");
+                        "</mt-submission-response>"));
 
         Message message = new TextMessage("TestSender", "not-a-number", "Test");
         try {
@@ -104,7 +104,7 @@ public class NexmoSmsClientTest {
 
     @Test
     public void testSubmitMessageHttpError() throws IOException, SAXException {
-        this.client.httpClient = this.stubHttpClient(500, "");
+        this.client.setHttpClient(this.stubHttpClient(500, ""));
 
         Message message = new TextMessage("TestSender", "not-a-number", "Test");
         try {
