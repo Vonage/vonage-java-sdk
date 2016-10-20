@@ -1,78 +1,110 @@
+# Nexmo Client Library for Java
 
-# Quick Start
+You can use this [LANGUAGE] client library to add [Nexmo's API](#api-coverage) to your application. To use this, you'll
+need a Nexmo account. Sign up [for free at nexmo.com][signup].
 
-To compile the SDK and execute the examples, issue the following command
+ * [Installation](#installation)
+ * [Configuration](#configuration)
+ * [Usage](#usage)
+ * [Examples](#examples)
+ * [Coverage](#api-coverage)
+ * [Contributing](#contributing)
+
+
+## Installation
+
+To use the client library you'll need to have [created a Nexmo account][signup].
+
+To install the Java client library using Gradle, add the following to `build.gradle`:
+
+```groovy
+compile 'com.nexmo:nexmo-java:1.6'
+```
+
+Alternatively you can clone the repo and build the jar yourself:
 
 ```bash
-ant example
+git clone git@github.com:nexmo/nexmo-java.git
+gradle build
 ```
 
-This will construct a message request and use the SDK to attempt to submit it.
+## Usage
 
-The code can be seen in this class [SendTextMessage.java](src/main/java/com/nexmo/messaging/sdk/examples/SendTextMessage.java)
+Check the Javadoc for full documentation. In the meantime, check out the example below:
 
-You can modify the constants at the top of the class to inject your own account credentials and message parameters.
+## Example
+
+### Sending A Message
+
+Use [Nexmo's SMS API][doc_sms] to send an SMS message.
 
 ```java
-public static final String USERNAME = "account-id";
-public static final String PASSWORD = "password";
-
-public static final String SMS_FROM = "12345";
-public static final String SMS_TO = "447777111222";
-public static final String SMS_TEXT = "Hello World!";
+NexmoSmsClient client = new NexmoSmsClient("your-api-key", "your-api-secret");
+Message message = new TextMessage("from-number", "to-number", "Hello Nexmo!");
+SmsSubmissionResult[] parts;
+try {
+    parts = client.submitMessage(message);
+    System.out.println("The message was sent in " + parts.length + " parts.")
+    for (int i = 0; i < parts.length; i++) {
+        SmsSubmissionResult part = parts[i];
+        String part_success = part.getStatus() == SmsSubmissionResult.STATUS_OK ? 'OK' : "ERROR";
+        System.out.println("Part " + (i + 1) + ": " +  part_success);
+    }
+} catch (Exception e) {
+    System.err.println("Could not send message due to error!", e)
+}
 ```
 
-`ant example2` will execute an example wap-push submission.
-The code can be found here [SendWapPush.java](src/main/java/com/nexmo/messaging/sdk/examples/SendWapPush.java)
 
-# Installation
+API Coverage
+------------
 
-You need to copy the nexmo-sdk.jar to your application and ensure that it is in your classpath. Additionally, there are some library dependancies under the /lib dir that must also be copied to your applications classpath if they are not already there.
+* Account
+    * [x] Balance
+    * [ ] Pricing
+    * [ ] Settings
+    * [ ] Top Up
+    * [ ] Numbers
+        * [ ] Search
+        * [ ] Buy
+        * [ ] Cancel
+        * [ ] Update
+* Number Insight
+    * [ ] Basic
+    * [x] Standard (Currently uses the deprecated API)
+    * [x] Advanced (Currently uses the deprecated API)
+    * [ ] Webhook Notification
+* Verify
+    * [x] Verify
+    * [x] Check
+    * [x] Search
+    * [ ] Control
+* Messaging
+    * [x] Send
+    * [x] Delivery Receipt (Callback can only be set in the Dashboard)
+    * [ ] Inbound Messages
+    * [ ] Search
+        * [ ] Message
+        * [ ] Messages
+        * [ ] Rejections
+    * [ ] US Short Codes
+        * [ ] Two-Factor Authentication
+        * [ ] Event Based Alerts
+            * [ ] Sending Alerts
+            * [ ] Campaign Subscription Management
+* Voice
+    * [ ] Outbound Calls
+    * [ ] Inbound Call
+    * [ ] Text-To-Speech Call
+    * [ ] Text-To-Speech Prompt
 
-The Nexmo SDK is then available for use. All configuration is passed as parameters on the constructors of the various objects.
 
-# Usage
+License
+-------
 
-To submit a message, first you should instantiate a NexmoSmsClient, passing the credentials for your Nexmo account on the constructor.
-Then, you should instantiate the appropriate Message subclass depending on which type of message you are going to submit.
-The following subclasses are available:
+This library is released under the [MIT License][license]
 
-* com.nexmo.messaging.sdk.messages.TextMessage;
-* com.nexmo.messaging.sdk.messages.BinaryMessage;
-* com.nexmo.messaging.sdk.messages.WapPushMessage;
-* com.nexmo.messaging.sdk.messages.UnicodeMessage;
-
-Each of these subclasses requires different message parameters to be passed on the constructor.
-See the included Javadocs for further details.
-
-Once you have a Message object, you simply pass this to the `submitMessage()` method in the `NexmoSmsClient` instance.
-This will construct and post the request to the Nexmo REST service.
-This method will return an array of `SmsSubmissionResult[]`, with 1 entry for every sms message that was sent.
-Certain messages, for example, long text messages greater than 160 characters, will require multiple SMS messages to be submitted.
-Each entry in this array will contain an individual `messageId` as well as an individual status detailing the success or reason for failure of each message.
-
-The list of possible status codes is listed below:
-
-| Code | Summary                      | Description                                                                                        |
-|-----:|------------------------------|----------------------------------------------------------------------------------------------------|
-|    0 | Success                      | The message was successfully accepted for delivery by Nexmo                                        |
-|    1 | Throttled                    | You have exceeded the submission capacity allowed on this account, please back-off and retry       |
-|    2 | Missing params               | Your request is incomplete and missing some mandatory parameters                                   |
-|    3 | Invalid params               | The value of 1 or more parameters is invalid                                                       |
-|    4 | Invalid credentials          | The api key / secret you supplied is either invalid or disabled                                    |
-|    5 | Internal error               | An error has occurred in the Nexmo platform whilst processing this message                         |
-|    6 | Invalid message              | The Nexmo platform was unable to process this message, for example, an un-recognized number prefix |
-|    7 | Number barred                | The number you are trying to submit to is blacklisted and may not receive messages                 |
-|    8 | Partner account barred       | The api key you supplied is for an account that has been barred from submitting messages           |
-|    9 | Partner quota exceeded       | Your pre-pay account does not have sufficient credit to process this message                       |
-|   10 | Too many existing binds      | The number of simultaneous connections to the platform exceeds the capabilities of your account    |
-|   11 | Account not enabled for http | This account is not provisioned for http / rest submission, you should use SMPP instead            |
-|   12 | Message too long             | The message length exceeds the maximum allowed                                                     |
-|   13 | Comms failure                | There was a network failure attempting to contact Nexmo                                            |
-|   14 | Invalid Signature            | The signature supplied with this request was not verified successfully                             |
-|   15 | Invalid sender address       | The sender address was not allowed for this message                                                |
-|   16 | Invalid TTL                  | The `ttl` parameter values, or combination of parameters is invalid                                |
-|   17 | Number unreachable           | This destination cannot be delivered to at this time (if reachable=true is specified)              |
-|   18 | Too many destinations        | There are more than the maximum allowed number of destinations in this request                     |
-|   19 | Facility Not Allowed         | Your request makes use of a facility that is not enabled on your account                           |
-|   20 | Invalid Message Class        | The message class value supplied was out of range (0 - 3)                                          |
+[create_account]: https://docs.nexmo.com/tools/dashboard#setting-up-your-nexmo-account
+[signup]: https://dashboard.nexmo.com/sign-up?utm_source=DEV_REL&utm_medium=github&utm_campaign=[LANGUAGE]-client-library
+[doc_sms]: https://docs.nexmo.com/api-ref/sms-api?utm_source=DEV_REL&utm_medium=github&utm_campaign=[LANGUAGE]-client-library
+[license]: LICENSE.txt
