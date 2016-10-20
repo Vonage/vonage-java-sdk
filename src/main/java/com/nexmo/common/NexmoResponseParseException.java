@@ -1,7 +1,7 @@
 package com.nexmo.common;
 
 
-public class NexmoResponseParseException extends RuntimeException {
+public class NexmoResponseParseException extends Exception {
     public NexmoResponseParseException(String message) {
         this(message, null);
     }

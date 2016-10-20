@@ -21,6 +21,7 @@ package com.nexmo.messaging.sdk;
  * THE SOFTWARE.
  */
 
+import com.nexmo.common.NexmoResponseParseException;
 import com.nexmo.messaging.sdk.messages.*;
 import com.nexmo.messaging.sdk.messages.parameters.ValidityPeriod;
 import org.apache.http.HttpEntity;
@@ -72,7 +73,7 @@ public class NexmoSmsClientTest {
     }
 
     @Test
-    public void testSubmitMessage() throws IOException, SAXException {
+    public void testSubmitMessage() throws IOException, NexmoResponseParseException {
         this.client.setHttpClient(this.stubHttpClient(
                 200,
                 "<?xml version='1.0' encoding='UTF-8' ?>\n" +
@@ -107,7 +108,7 @@ public class NexmoSmsClientTest {
     }
 
     @Test
-    public void testSubmitMessageHttpError() throws IOException {
+    public void testSubmitMessageHttpError() throws IOException, NexmoResponseParseException {
         this.client.setHttpClient(this.stubHttpClient(500, ""));
 
         Message message = new TextMessage("TestSender", "not-a-number", "Test");
@@ -195,7 +196,7 @@ public class NexmoSmsClientTest {
     }
 
     @Test
-    public void testParseResponse() {
+    public void testParseResponse() throws NexmoResponseParseException{
         SmsSubmissionResult[] rs = client.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
                 "<mt-submission-response>\n" +
                 "    <messages count='2'>\n" +

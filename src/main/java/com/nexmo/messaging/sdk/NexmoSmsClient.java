@@ -237,7 +237,7 @@ public class NexmoSmsClient {
      *
      * @throws IOException There has been an error attempting to communicate with the Nexmo service (e.g. Network failure).
      */
-    public SmsSubmissionResult[] submitMessage(Message message) throws IOException {
+    public SmsSubmissionResult[] submitMessage(Message message) throws IOException, NexmoResponseParseException {
         return submitMessage(message, 
                              null,     // validityPeriod 
                              null,     // networkCode 
@@ -264,7 +264,7 @@ public class NexmoSmsClient {
      *
      * @throws IOException There has been a general failure either within the Client class, or whilst attempting to communicate with the Nexmo service (eg, Network failure)
      */
-    public SmsSubmissionResult[] submitMessage(Message message, ValidityPeriod validityPeriod) throws IOException {
+    public SmsSubmissionResult[] submitMessage(Message message, ValidityPeriod validityPeriod) throws IOException, NexmoResponseParseException {
         return submitMessage(message,
                              validityPeriod, 
                              null,   // networkCode 
@@ -298,7 +298,7 @@ public class NexmoSmsClient {
     public SmsSubmissionResult[] submitMessage(final Message message,
                                                final ValidityPeriod validityPeriod,
                                                final String networkCode,
-                                               final boolean performReachabilityCheck) throws IOException {
+                                               final boolean performReachabilityCheck) throws IOException, NexmoResponseParseException {
 
         log.debug("HTTP-Message-Submission Client .. from [ " + message.getFrom() + " ] to [ " + message.getTo() + " ] msg [ " + message.getMessageBody() + " ] ");
 
@@ -432,7 +432,7 @@ public class NexmoSmsClient {
         return params;
     }
 
-    SmsSubmissionResult[] parseResponse(String response) {
+    SmsSubmissionResult[] parseResponse(String response) throws NexmoResponseParseException {
         // parse the response doc ...
 
         /*
