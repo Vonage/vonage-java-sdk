@@ -122,7 +122,7 @@ public class NexmoSmsClientTest {
     @Test
     public void testConstructParamsText() {
         Message message = new TextMessage("TestSender", "not-a-number", "Test");
-        List<NameValuePair> params = client.constructParams(message, null, null, false);
+        List<NameValuePair> params = client.constructParams(message, null);
 
         assertContainsParam(params, "api_key", "not-an-api-key");
         assertContainsParam(params, "api_secret", "secret");
@@ -136,7 +136,7 @@ public class NexmoSmsClientTest {
     @Test
     public void testConstructParamsUnicode() {
         Message message = new UnicodeMessage("TestSender", "not-a-number", "Test");
-        List<NameValuePair> params = client.constructParams(message, null, null, false);
+        List<NameValuePair> params = client.constructParams(message, null);
 
         assertContainsParam(params, "api_key", "not-an-api-key");
         assertContainsParam(params, "api_secret", "secret");
@@ -150,7 +150,7 @@ public class NexmoSmsClientTest {
     @Test
     public void testConstructParamsBinary() {
         Message message = new BinaryMessage("TestSender", "not-a-number", "abc".getBytes(), "def".getBytes());
-        List<NameValuePair> params = client.constructParams(message, null, null, false);
+        List<NameValuePair> params = client.constructParams(message, null);
 
         assertContainsParam(params, "api_key", "not-an-api-key");
         assertContainsParam(params, "api_secret", "secret");
@@ -165,7 +165,7 @@ public class NexmoSmsClientTest {
     @Test
     public void testConstructParamsWapPush() {
         Message message = new WapPushMessage("TestSender", "not-a-number", "http://the-url", "A Title");
-        List<NameValuePair> params = client.constructParams(message, null, null, false);
+        List<NameValuePair> params = client.constructParams(message, null);
 
         assertContainsParam(params, "api_key", "not-an-api-key");
         assertContainsParam(params, "api_secret", "secret");
@@ -180,7 +180,7 @@ public class NexmoSmsClientTest {
     @Test
     public void testConstructParamsValidityPeriodTTL() {
         Message message = new BinaryMessage("TestSender", "not-a-number", "abc".getBytes(), "def".getBytes());
-        List<NameValuePair> params = client.constructParams(message, new ValidityPeriod(50), null, false);
+        List<NameValuePair> params = client.constructParams(message, new ValidityPeriod(50));
 
         assertContainsParam(params, "ttl", "50");
     }
@@ -188,7 +188,7 @@ public class NexmoSmsClientTest {
     @Test
     public void testConstructParamsValidityPeriodTTLComponents() {
         Message message = new BinaryMessage("TestSender", "not-a-number", "abc".getBytes(), "def".getBytes());
-        List<NameValuePair> params = client.constructParams(message, new ValidityPeriod(5, 4, 3), null, false);
+        List<NameValuePair> params = client.constructParams(message, new ValidityPeriod(5, 4, 3));
 
         assertContainsParam(params, "ttl-hours", "5");
         assertContainsParam(params, "ttl-minutes", "4");

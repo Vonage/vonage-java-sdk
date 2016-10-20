@@ -238,37 +238,7 @@ public class NexmoSmsClient {
      * @throws IOException There has been an error attempting to communicate with the Nexmo service (e.g. Network failure).
      */
     public SmsSubmissionResult[] submitMessage(Message message) throws IOException, NexmoResponseParseException {
-        return submitMessage(message, 
-                             null,     // validityPeriod 
-                             null,     // networkCode 
-                             false);   // performReachabilityCheck
-    }
-
-    /**
-     * Send an SMS message.
-     *
-     * This will use the supplied object to construct a request and post it to the Nexmo REST interface.
-     * <p>
-     * This method will respond with an array of SmsSubmissionResult objects. Depending on the nature and length of the submitted message, Nexmo may automatically
-     * split the message into multiple sms messages in order to deliver to the handset. For example, a long text sms of greater than 160 chars will need to be split
-     * into multiple 'concatenated' sms messages. The Nexmo service will handle this automatically for you.
-     * <p>
-     * The array of SmsSubmissionResult objects will contain a SmsSubmissionResult object for every actual sms that was required to submit the message.
-     * each message can potentially have a different status result, and each message will have a different message id.
-     * Delivery notifications will be generated for each sms message within this set and will be posted to your application containing the appropriate message id.
-     *
-     * @param message The message request object that describes the type of message and the contents to be submitted.
-     * @param validityPeriod The validity period (Time-To-Live) for this message. Specifies the time before this message will be expired if not yet delivered
-     *
-     * @return SmsSubmissionResult[] an array of results, 1 object for each sms message that was required to submit this message in its entirety
-     *
-     * @throws IOException There has been a general failure either within the Client class, or whilst attempting to communicate with the Nexmo service (eg, Network failure)
-     */
-    public SmsSubmissionResult[] submitMessage(Message message, ValidityPeriod validityPeriod) throws IOException, NexmoResponseParseException {
-        return submitMessage(message,
-                             validityPeriod, 
-                             null,   // networkCode 
-                             false); // performReachabilityCheck
+        return submitMessage(message,  null);
     }
 
     /**
@@ -283,29 +253,20 @@ public class NexmoSmsClient {
      *
      * @param message The message request object that describes the type of message and the contents to be submitted.
      * @param validityPeriod The validity period (Time-To-Live) for this message. Specifies the time before this message will be expired if not yet delivered
-     * @param networkCode (Optional) use this parameter to force this message to be associated with and delivered on this network. Use this in cases where you want to over-ride
-     *                               the automatic network detection provided by Nexmo. This value will be used in order to determine the pricing and routing for this message.<br>
-     *                               (Note) This feature must be enabled and available on your account or else this value will be ignored.
-     * @param performReachabilityCheck Flag to indicate whether a reachability check should be performed on this message before delivery is attempted. If the destination is
-     *                                 not reachable, the message will be rejected and a reachability status will be returned in the response field smsSubmissionReachabilityStatus<br>
-     *                                 (Note) This feature must be enabled and available on your account or else the message request will be rejected. There may be additional cost
-     *                                 associated with the use of this feature.
      *
      * @return SmsSubmissionResult[] an array of results, 1 object for each sms message that was required to submit this message in its entirety
      *
      * @throws IOException There has been a general failure either within the Client class, or whilst attempting to communicate with the Nexmo service (eg, Network failure)
      */
     public SmsSubmissionResult[] submitMessage(final Message message,
-                                               final ValidityPeriod validityPeriod,
-                                               final String networkCode,
-                                               final boolean performReachabilityCheck) throws IOException, NexmoResponseParseException {
+                                               final ValidityPeriod validityPeriod) throws IOException, NexmoResponseParseException {
 
         log.debug("HTTP-Message-Submission Client .. from [ " + message.getFrom() + " ] to [ " + message.getTo() + " ] msg [ " + message.getMessageBody() + " ] ");
 
         // From the Message object supplied, construct an appropriate request to be submitted to the Nexmo REST Service.
 
         // Determine what 'product' type we are submitting, and select the appropriate endpoint path
-        List<NameValuePair> params = constructParams(message, validityPeriod, networkCode, performReachabilityCheck);
+        List<NameValuePair> params = constructParams(message, validityPeriod);
 
         String baseUrl = this.baseUrlHttps + SUBMISSION_PATH_SMS;
 
@@ -356,9 +317,7 @@ public class NexmoSmsClient {
     }
 
     List<NameValuePair> constructParams(final Message message,
-                                        final ValidityPeriod validityPeriod,
-                                        final String networkCode,
-                                        final boolean performReachabilityCheck) {
+                                        final ValidityPeriod validityPeriod) {
         // Determine the type parameter based on the type of Message object.
         boolean binary = message.getType() == Message.MESSAGE_TYPE_BINARY;
         boolean unicode = message.isUnicode();
@@ -419,12 +378,6 @@ public class NexmoSmsClient {
             if (validityPeriod.getValidityPeriodSeconds() != null)
                 params.add(new BasicNameValuePair("ttl-seconds", "" + validityPeriod.getValidityPeriodSeconds().intValue()));
         }
-
-        if (networkCode != null)
-            params.add(new BasicNameValuePair("network-code", networkCode));
-
-        if (performReachabilityCheck)
-            params.add(new BasicNameValuePair("test-reachable", "true"));
 
         if (this.signRequests)
             RequestSigning.constructSignatureForRequestParameters(params, this.signatureSecretKey);
@@ -529,22 +482,6 @@ public class NexmoSmsClient {
                                 } catch (NumberFormatException e) {
                                     log.error("xml parser .. invalid value in <messagePrice> node [ " + str + " ] ");
                                 }
-                            } else if (node.getNodeName().equals("reachability")) {
-                                NamedNodeMap attributes = node.getAttributes();
-                                Node attr = attributes.getNamedItem("status");
-                                String str = attr == null ? "" + SmsSubmissionReachabilityStatus.REACHABILITY_STATUS_UNKNOWN : attr.getNodeValue();
-                                int reachabilityStatus;
-                                try {
-                                    reachabilityStatus = Integer.parseInt(str);
-                                } catch (NumberFormatException e) {
-                                    log.error("xml parser .. invalid value in 'status' attribute in <reachability> node [ " + str + " ] ");
-                                    reachabilityStatus = SmsSubmissionReachabilityStatus.REACHABILITY_STATUS_UNKNOWN;
-                                }
-
-                                attr = attributes.getNamedItem("description");
-                                String description = attr == null ? "-UNKNOWN-" : attr.getNodeValue();
-
-                                smsSubmissionReachabilityStatus = new SmsSubmissionReachabilityStatus(reachabilityStatus, description);
                             } else if (node.getNodeName().equals("network")) {
                                 network = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
                             } else
