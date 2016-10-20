@@ -7,7 +7,7 @@ need a Nexmo account. Sign up [for free at nexmo.com][signup].
  * [Configuration](#configuration)
  * [Usage](#usage)
  * [Examples](#examples)
- * [Coverage](#api-coverage)
+ * [API Coverage](#api-coverage)
  * [Contributing](#contributing)
 
 
@@ -36,7 +36,7 @@ Check the Javadoc for full documentation. In the meantime, check out the example
 
 ### Sending A Message
 
-Use [Nexmo's SMS API][doc_sms] to send an SMS message.
+Use the [Nexmo SMS API][doc_sms] to send an SMS message.
 
 ```java
 NexmoSmsClient client = new NexmoSmsClient("your-api-key", "your-api-secret");
