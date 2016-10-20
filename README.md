@@ -30,30 +30,7 @@ gradle build
 
 ## Usage
 
-Check the Javadoc for full documentation. In the meantime, check out the example below:
-
-## Example
-
-### Sending A Message
-
-Use the [Nexmo SMS API][doc_sms] to send an SMS message.
-
-```java
-NexmoSmsClient client = new NexmoSmsClient("your-api-key", "your-api-secret");
-Message message = new TextMessage("from-number", "to-number", "Hello Nexmo!");
-SmsSubmissionResult[] parts;
-try {
-    parts = client.submitMessage(message);
-    System.out.println("The message was sent in " + parts.length + " parts.")
-    for (int i = 0; i < parts.length; i++) {
-        SmsSubmissionResult part = parts[i];
-        String part_success = part.getStatus() == SmsSubmissionResult.STATUS_OK ? 'OK' : "ERROR";
-        System.out.println("Part " + (i + 1) + ": " +  part_success);
-    }
-} catch (Exception e) {
-    System.err.println("Could not send message due to error!", e)
-}
-```
+Check the Javadoc for full documentation.
 
 
 API Coverage
