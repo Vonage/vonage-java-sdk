@@ -23,7 +23,6 @@ package com.nexmo.verify.sdk;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.sql.SQLSyntaxErrorException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -58,21 +57,19 @@ import org.xml.sax.SAXException;
 import com.nexmo.common.http.HttpClientUtils;
 
 /**
- * Client for talking to the Nexmo REST interface<br><br>
- *
- * Usage<br><br>
+ * Client for talking to the Nexmo REST interface.
  *
  * To request a verification to Nexmo, call one of the {@link #verify} methods.
  * The only mandatory parameters are the phone number and the brand name. The verification text message
- * and/or voice call will have the brand name you provide so the user can recognize it.<br>
- * <br>
+ * and/or voice call will have the brand name you provide so the user can recognize it.
+ * <p>
  * After receiving the verification code from the user, you should send it to Nexmo using the
- * {@link #check} method.<br>
- * <br>
- * You can search for an in-progress or past verification request using {@link #search}.<br>
- * <br>
- * Error codes are listed in {@link BaseResult} and also on the documentation website.<br>
- * <br>
+ * {@link #check} method.
+ * <p>
+ * You can search for an in-progress or past verification request using {@link #search}.
+ * <p>
+ * Error codes are listed in {@link BaseResult} and also on the documentation website.
+ * <p>
  * More information on method parameters can be found at Nexmo website:
  * <a href="https://docs.nexmo.com/verify">https://docs.nexmo.com/verify</a>
  *
@@ -246,6 +243,49 @@ public class NexmoVerifyClient {
                                final Locale locale,
                                final LineType type) throws IOException,
                                                            SAXException {
+        List<NameValuePair> params = constructVerifyParams(number, brand, from, length, locale, type);
+
+        String verifyBaseUrl = this.baseUrl + PATH_VERIFY;
+
+        // Now that we have generated a query string, we can instantiate a HttpClient,
+        // construct a POST method and execute to submit the request
+        String response = null;
+        HttpPost httpPost = new HttpPost(verifyBaseUrl);
+        httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+        HttpUriRequest method = httpPost;
+        String url = verifyBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
+
+        try {
+            if (this.httpClient == null)
+                this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
+            HttpResponse httpResponse = this.httpClient.execute(method);
+            response = new BasicResponseHandler().handleResponse(httpResponse);
+            log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
+        } catch (HttpResponseException e) {
+            method.abort();
+            log.error("communication failure: ", e);
+
+            // return a COMMS failure ...
+            return new VerifyResult(BaseResult.STATUS_COMMS_FAILURE,
+                                    null,
+                                    "Failed to communicate with NEXMO-HTTP url [ " + url + " ] ..." + e,
+                                    true);
+        }
+
+        Document doc;
+        synchronized(this.documentBuilder) {
+            doc = this.documentBuilder.parse(new InputSource(new StringReader(response)));
+        }
+
+        Element root = doc.getDocumentElement();
+        if (!"verify_response".equals(root.getNodeName()))
+            throw new IOException("No valid response found [ " + response + "] ");
+
+        return parseVerifyResult(root);
+    }
+
+    private List<NameValuePair> constructVerifyParams(
+            String number, String brand, String from, int length, Locale locale, LineType type) {
         if (number == null || brand == null)
             throw new IllegalArgumentException("number and brand parameters are mandatory.");
         if (length > 0 && length != 4 && length != 6)
@@ -273,60 +313,7 @@ public class NexmoVerifyClient {
 
         if (type != null)
             params.add(new BasicNameValuePair("require_type", type.toString()));
-
-        String verifyBaseUrl = this.baseUrl + PATH_VERIFY;
-
-        // Now that we have generated a query string, we can instantiate a HttpClient,
-        // construct a POST method and execute to submit the request
-        String response = null;
-        for (int pass=1;pass<=2;pass++) {
-            HttpPost httpPost = new HttpPost(verifyBaseUrl);
-            httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-            HttpUriRequest method = httpPost;
-            String url = verifyBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
-
-            try {
-                if (this.httpClient == null)
-                    this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
-                HttpResponse httpResponse = this.httpClient.execute(method);
-                int status = httpResponse.getStatusLine().getStatusCode();
-                if (status != 200)
-                    throw new Exception("got a non-200 response [ " + status + " ] from Nexmo-HTTP for url [ " + url + " ] ");
-                response = new BasicResponseHandler().handleResponse(httpResponse);
-                log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
-                break;
-            } catch (Exception e) {
-                method.abort();
-                log.info("communication failure: " + e);
-                String exceptionMsg = e.getMessage();
-                if (exceptionMsg.indexOf("Read timed out") >= 0) {
-                    log.info("we're still connected, but the target did not respond in a timely manner ..  drop ...");
-                } else {
-                    if (pass == 1) {
-                        log.info("... re-establish http client ...");
-                        this.httpClient = null;
-                        continue;
-                    }
-                }
-
-                // return a COMMS failure ...
-                return new VerifyResult(BaseResult.STATUS_COMMS_FAILURE,
-                                        null,
-                                        "Failed to communicate with NEXMO-HTTP url [ " + url + " ] ..." + e,
-                                        true);
-            }
-        }
-
-        Document doc;
-        synchronized(this.documentBuilder) {
-            doc = this.documentBuilder.parse(new InputSource(new StringReader(response)));
-        }
-
-        Element root = doc.getDocumentElement();
-        if (!"verify_response".equals(root.getNodeName()))
-            throw new IOException("No valid response found [ " + response + "] ");
-
-        return parseVerifyResult(root);
+        return params;
     }
 
     private static VerifyResult parseVerifyResult(Element root) throws IOException {
@@ -373,19 +360,14 @@ public class NexmoVerifyClient {
         return check(requestId, code, null);
     }
 
-    public CheckResult check(final String requestId, final String code, final String ipAddress) throws IOException, SAXException {
+    public CheckResult check(
+            final String requestId, final String code, final String ipAddress) throws IOException, SAXException {
         if (requestId == null || code == null)
             throw new IllegalArgumentException("request ID and code parameters are mandatory.");
 
         log.debug("HTTP-Number-Verify-Check Client .. for [ " + requestId + " ] code [ " + code + " ] ");
 
-        List<NameValuePair> params = new ArrayList<>();
-
-        params.add(new BasicNameValuePair("api_key", this.apiKey));
-        params.add(new BasicNameValuePair("api_secret", this.apiSecret));
-
-        params.add(new BasicNameValuePair("request_id", requestId));
-        params.add(new BasicNameValuePair("code", code));
+        List<NameValuePair> params = constructCheckParams(requestId, code);
 
         if (ipAddress != null)
             params.add(new BasicNameValuePair("ip_address", ipAddress));
@@ -395,44 +377,28 @@ public class NexmoVerifyClient {
         // Now that we have generated a query string, we can instantiate a HttpClient,
         // construct a POST method and execute to submit the request
         String response = null;
-        for (int pass=1;pass<=2;pass++) {
-            HttpPost httpPost = new HttpPost(verifyCheckBaseUrl);
-            httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-            HttpUriRequest method = httpPost;
-            String url = verifyCheckBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
+        HttpPost httpPost = new HttpPost(verifyCheckBaseUrl);
+        httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+        HttpUriRequest method = httpPost;
+        String url = verifyCheckBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
 
-            try {
-                if (this.httpClient == null)
-                    this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
-                HttpResponse httpResponse = this.httpClient.execute(method);
-                int status = httpResponse.getStatusLine().getStatusCode();
-                if (status != 200)
-                    throw new Exception("got a non-200 response [ " + status + " ] from Nexmo-HTTP for url [ " + url + " ] ");
-                response = new BasicResponseHandler().handleResponse(httpResponse);
-                log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
-                break;
-            } catch (Exception e) {
-                method.abort();
-                log.info("communication failure: " + e);
-                String exceptionMsg = e.getMessage();
-                if (exceptionMsg.indexOf("Read timed out") >= 0) {
-                    log.info("we're still connected, but the target did not respond in a timely manner ..  drop ...");
-                } else {
-                    if (pass == 1) {
-                        log.info("... re-establish http client ...");
-                        this.httpClient = null;
-                        continue;
-                    }
-                }
+        try {
+            if (this.httpClient == null)
+                this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
+            HttpResponse httpResponse = this.httpClient.execute(method);
+            response = new BasicResponseHandler().handleResponse(httpResponse);
+            log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
+        } catch (HttpResponseException e) {
+            method.abort();
+            log.error("communication failure: ", e);
 
-                // return a COMMS failure ...
-                return new CheckResult(BaseResult.STATUS_COMMS_FAILURE,
-                        null,
-                        0,
-                        null,
-                        "Failed to communicate with NEXMO-HTTP url [ " + url + " ] ..." + e,
-                        true);
-            }
+            // return a COMMS failure ...
+            return new CheckResult(BaseResult.STATUS_COMMS_FAILURE,
+                    null,
+                    0,
+                    null,
+                    "Failed to communicate with NEXMO-HTTP url [ " + url + " ] ..." + e,
+                    true);
         }
 
         Document doc;
@@ -492,6 +458,17 @@ public class NexmoVerifyClient {
         return new CheckResult(status, eventId, price, currency, errorText, temporaryError);
     }
 
+    private List<NameValuePair> constructCheckParams(String requestId, String code) {
+        List<NameValuePair> params = new ArrayList<>();
+
+        params.add(new BasicNameValuePair("api_key", this.apiKey));
+        params.add(new BasicNameValuePair("api_secret", this.apiSecret));
+
+        params.add(new BasicNameValuePair("request_id", requestId));
+        params.add(new BasicNameValuePair("code", code));
+        return params;
+    }
+
     public SearchResult search(String requestId) throws IOException, SAXException {
         SearchResult[] result = search(new String[] { requestId });
         return result != null && result.length > 0 ? result[0] : null;
@@ -506,17 +483,7 @@ public class NexmoVerifyClient {
 
         log.debug("HTTP-Number-Verify-Search Client .. for [ " + Arrays.toString(requestIds) + " ] ");
 
-        List<NameValuePair> params = new ArrayList<>();
-
-        params.add(new BasicNameValuePair("api_key", this.apiKey));
-        params.add(new BasicNameValuePair("api_secret", this.apiSecret));
-
-        if (requestIds.length == 1) {
-            params.add(new BasicNameValuePair("request_id", requestIds[0]));
-        } else {
-            for (String requestId : requestIds)
-                params.add(new BasicNameValuePair("request_ids", requestId));
-        }
+        List<NameValuePair> params = constructSearchParams(requestIds);
 
         String verifySearchBaseUrl = this.baseUrl + PATH_VERIFY_SEARCH;
 
@@ -598,6 +565,21 @@ public class NexmoVerifyClient {
         } else {
             throw new IOException("No valid response found [ " + response + "] ");
         }
+    }
+
+    private List<NameValuePair> constructSearchParams(String[] requestIds) {
+        List<NameValuePair> params = new ArrayList<>();
+
+        params.add(new BasicNameValuePair("api_key", this.apiKey));
+        params.add(new BasicNameValuePair("api_secret", this.apiSecret));
+
+        if (requestIds.length == 1) {
+            params.add(new BasicNameValuePair("request_id", requestIds[0]));
+        } else {
+            for (String requestId : requestIds)
+                params.add(new BasicNameValuePair("request_ids", requestId));
+        }
+        return params;
     }
 
     private static SearchResult parseSearchResult(Element root) throws IOException {
