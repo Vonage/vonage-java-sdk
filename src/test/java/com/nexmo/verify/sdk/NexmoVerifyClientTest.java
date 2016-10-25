@@ -96,12 +96,50 @@ public class NexmoVerifyClientTest {
                 "        <error_text>error</error_text>\n" +
                 "    </verify_response>"));
 
-        String id = "verify-check-id";
-        String code = "1234";
-        if (id != null && code != null) {
-            CheckResult c = client.check(id, code);
-            assertEquals(CheckResult.STATUS_OK, c.getStatus());
+        CheckResult c = client.check("verify-check-id", "1234", "my-ip-address");
+        assertEquals(CheckResult.STATUS_OK, c.getStatus());
+    }
+
+    @Test
+    public void testCheckMissingParams() throws IOException, SAXException {
+        client.setHttpClient(this.stubHttpClient(200, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
+                "    <verify_response>\n" +
+                "        <event_id>verify-check-id</event_id>\n" +
+                "        <status>0</status>\n" +
+                "        <price>100.00</price>\n" +
+                "        <currency>EUR</currency>\n" +
+                "        <error_text>error</error_text>\n" +
+                "    </verify_response>"));
+
+        try {
+            CheckResult c = client.check(null, null);
+            fail("Calling check with null destination should throw IllegalArgumentException");
+        } catch (IllegalArgumentException e) {
+            // This is expected
         }
+    }
+
+    @Test
+    public void testCheckError() throws IOException, SAXException {
+        client.setHttpClient(this.stubHttpClient(500, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
+                "    <verify_response>\n" +
+                "        <status>6</status>\n" +
+                "        <error_text>Something has gone terribly wrong!</error_text>\n" +
+                "    </verify_response>"));
+
+        CheckResult c = client.check("verify-check-id", "1234", "my-ip-address");
+        assertEquals(CheckResult.STATUS_COMMS_FAILURE, c.getStatus());
+    }
+
+    @Test
+    public void testCheckInvalidResponse() throws IOException, SAXException {
+        client.setHttpClient(this.stubHttpClient(
+                500,
+                "<?xml version='1.0' encoding='UTF-8' ?>\n" +
+                "<not_valid_response />"));
+
+        CheckResult c = client.check("verify-check-id", "1234", "my-ip-address");
+        assertEquals(CheckResult.STATUS_COMMS_FAILURE, c.getStatus());
     }
 
     @Test
@@ -252,5 +290,87 @@ public class NexmoVerifyClientTest {
         assertEquals(SearchResult.STATUS_OK, c.getStatus());
         assertEquals("a-random-request-id", c.getRequestId());
         assertEquals(SearchResult.VerificationStatus.IN_PROGRESS, c.getVerificationStatus());
+    }
+
+    @Test
+    public void testSearchWithWrongParams() throws IOException, SAXException {
+        client.setHttpClient(this.stubHttpClient(200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<verify_response>\n" +
+                "  <request_id />\n" +
+                "  <status>6</status>\n" +
+                "  <error_text>The Nexmo platform was unable to process this message for the following reason: Wrong parameters</error_text>\n" +
+                "</verify_response>"));
+        SearchResult c = client.search("a-random-request-id");
+        assertEquals(SearchResult.STATUS_INVALID_REQUEST, c.getStatus());
+    }
+
+    @Test
+    public void testSearchWithMultipleResults() throws IOException, SAXException {
+        client.setHttpClient(this.stubHttpClient(200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<verification_requests>\n" +
+                "  <verify_request>\n" +
+                "    <request_id>a-random-request-id</request_id>\n" +
+                "    <account_id>abcde</account_id>\n" +
+                "    <number>447700900999</number>\n" +
+                "    <sender_id>verify</sender_id>\n" +
+                "    <date_submitted>2016-10-21 15:41:02</date_submitted>\n" +
+                "    <date_finalized />\n" +
+                "    <checks />\n" +
+                "    <first_event_date>2016-10-21 15:41:02</first_event_date>\n" +
+                "    <last_event_date>2016-10-21 15:43:07</last_event_date>\n" +
+                "    <price>0.10000000</price>\n" +
+                "    <currency>EUR</currency>\n" +
+                "    <status>IN PROGRESS</status>\n" +
+                "  </verify_request>\n" +
+                "  <verify_request>\n" +
+                "    <request_id>another-random-request-id</request_id>\n" +
+                "    <account_id>abcde</account_id>\n" +
+                "    <number>447700900991</number>\n" +
+                "    <sender_id>verify</sender_id>\n" +
+                "    <date_submitted>2016-10-21 15:41:58</date_submitted>\n" +
+                "    <date_finalized />\n" +
+                "    <checks />\n" +
+                "    <first_event_date>2016-10-21 15:41:58</first_event_date>\n" +
+                "    <last_event_date>2016-10-21 15:41:58</last_event_date>\n" +
+                "    <price>0.10000000</price>\n" +
+                "    <currency>EUR</currency>\n" +
+                "    <status>IN PROGRESS</status>\n" +
+                "  </verify_request>\n" +
+                "</verification_requests>"));
+        SearchResult[] c = client.search("a-random-request-id", "another-random-request-id");
+        assertEquals(SearchResult.STATUS_OK, c[0].getStatus());
+    }
+
+    @Test
+    public void testSearchDodgyDates() throws IOException, SAXException {
+        client.setHttpClient(this.stubHttpClient(200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<verify_request>\n" +
+                "  <request_id>a-random-request-id</request_id>\n" +
+                "  <account_id>account-id</account_id>\n" +
+                "  <number>not-a-number</number>\n" +
+                "  <sender_id>verify</sender_id>\n" +
+                "  <date_submitted>aaa</date_submitted>\n" +
+                "  <date_finalized>ddd</date_finalized>\n" +
+                "  <checks />\n" +
+                "  <first_event_date>bbb</first_event_date>\n" +
+                "  <last_event_date>ccc</last_event_date>\n" +
+                "  <price>0.10000000</price>\n" +
+                "  <currency>EUR</currency>\n" +
+                "  <status>SUCCESS</status>\n" +
+                "</verify_request>"));
+        SearchResult c = client.search("a-random-request-id");
+        assertEquals(SearchResult.STATUS_OK, c.getStatus());
+        assertEquals("a-random-request-id", c.getRequestId());
+        assertEquals(SearchResult.VerificationStatus.SUCCESS, c.getVerificationStatus());
+    }
+
+    @Test
+    public void testSearchHttpError() throws IOException, SAXException {
+        client.setHttpClient(this.stubHttpClient(500, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<verify_request />"));
+
+        SearchResult c = client.search("a-random-request-id");
+        assertEquals(SearchResult.STATUS_COMMS_FAILURE, c.getStatus());
+
     }
 }
