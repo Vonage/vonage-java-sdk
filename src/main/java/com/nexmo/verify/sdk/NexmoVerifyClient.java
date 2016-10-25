@@ -87,6 +87,7 @@ public class NexmoVerifyClient {
 
         @Override
         public String toString() {
+            // TODO: This returns "ALL" and not "All", so can be simplified.
             String name = name();
             return Character.toUpperCase(name.charAt(0)) + name.substring(1);
         }

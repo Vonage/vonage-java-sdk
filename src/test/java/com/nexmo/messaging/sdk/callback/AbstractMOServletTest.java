@@ -51,7 +51,6 @@ public class AbstractMOServletTest {
         HttpServletResponse response = mock(HttpServletResponse.class);
         StringWriter dummyResponseWriter = new StringWriter();
 
-
         when(response.getWriter()).thenReturn(new PrintWriter(dummyResponseWriter));
 
         new TestMOServlet().doPost(request, response);

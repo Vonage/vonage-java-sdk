@@ -52,16 +52,34 @@ public class RequestSigning implements SecurityConstants {
     private static Log log = LogFactory.getLog(RequestSigning.class);
 
     /**
-     * sign a set of request parameters, generating additional parameters to represent the timestamp and generated signature
-     * uses the supplied pre-shared secret key to generate the signature
+     * Signs a set of request parameters.
+     * <p>
+     * Generates additional parameters to represent the timestamp and generated signature.
+     * Uses the supplied pre-shared secret key to generate the signature.
      *
      * @param params List of NameValuePair instances containing the query parameters for the request that is to be signed
      * @param secretKey the pre-shared secret key held by the client
      *
      */
     public static void constructSignatureForRequestParameters(List<NameValuePair> params, String secretKey) {
+        constructSignatureForRequestParameters(params, secretKey, System.currentTimeMillis() / 1000);
+    }
+
+    /**
+     * Signs a set of request parameters.
+     * <p>
+     * Generates additional parameters to represent the timestamp and generated signature.
+     * Uses the supplied pre-shared secret key to generate the signature.
+     *
+     * @param params List of NameValuePair instances containing the query parameters for the request that is to be signed
+     * @param secretKey the pre-shared secret key held by the client
+     * @param currentTimeSeconds the current time in seconds since 1970-01-01
+     *
+     */
+     static void constructSignatureForRequestParameters(
+            List<NameValuePair> params, String secretKey, long currentTimeSeconds) {
         // First, inject a 'timestamp=' parameter containing the current time in seconds since Jan 1st 1970
-        params.add(new BasicNameValuePair(PARAM_TIMESTAMP, "" + System.currentTimeMillis() / 1000));
+        params.add(new BasicNameValuePair(PARAM_TIMESTAMP, Long.toString(currentTimeSeconds)));
 
         Map<String, String> sortedParams = new TreeMap<>();
         for (NameValuePair param: params) {
@@ -101,14 +119,26 @@ public class RequestSigning implements SecurityConstants {
     }
 
     /**
-     * looks at the current http request and verifies that the request signature, if supplied is valid.
+     * Verifies the signature in an HttpServletRequest.
      *
-     * @param request The servlet request object to be verified
-     * @param secretKey the pre-shared secret key used by the sender of the request to create the signature
+     * @param request The HttpServletRequest to be verified
+     * @param secretKey The pre-shared secret key used by the sender of the request to create the signature
      *
-     * @return boolean returns true only if the signature is correct for this request and secret key.
+     * @return true if the signature is correct for this request and secret key.
      */
     public static boolean verifyRequestSignature(HttpServletRequest request, String secretKey) {
+        return verifyRequestSignature(request, secretKey, System.currentTimeMillis());
+    }
+
+    /**
+     * Verifies the signature in an HttpServletRequest.
+     *
+     * @param request The HttpServletRequest to be verified
+     * @param secretKey The pre-shared secret key used by the sender of the request to create the signature
+     *
+     * @return true if the signature is correct for this request and secret key.
+     */
+     static boolean verifyRequestSignature(HttpServletRequest request, String secretKey, long currentTimeMillis) {
         // identify the signature supplied in the request ...
         String suppliedSignature = request.getParameter(PARAM_SIGNATURE);
         if (suppliedSignature == null)
@@ -121,10 +151,10 @@ public class RequestSigning implements SecurityConstants {
             if (timeString != null)
                 time = Long.parseLong(timeString) * 1000;
         } catch (NumberFormatException e) {
-            log.debug("Error parsing 'time' parameter [ " + timeString + " ]", e);
+            log.error("Error parsing 'time' parameter [ " + timeString + " ]", e);
             time = 0;
         }
-        long diff = System.currentTimeMillis() - time;
+        long diff = currentTimeMillis - time;
         if (diff > MAX_ALLOWABLE_TIME_DELTA || diff < -MAX_ALLOWABLE_TIME_DELTA) {
             log.warn("SECURITY-KEY-VERIFICATION -- BAD-TIMESTAMP ... Timestamp [ " + time + " ] delta [ " + diff + " ] max allowed delta [ " + -MAX_ALLOWABLE_TIME_DELTA + " ] ");
             return false;
@@ -135,10 +165,12 @@ public class RequestSigning implements SecurityConstants {
         for (Map.Entry<String, String[]> entry: request.getParameterMap().entrySet()) {
             String name = entry.getKey();
             String value = entry.getValue()[0];
+            log.info("" + name + " = " + value);
             if (name.equals(PARAM_SIGNATURE))
                 continue;
-            if (value == null || value.trim().equals(""))
+            if (value == null || value.trim().equals("")) {
                 continue;
+            }
             sortedParams.put(name, value);
         }
 
@@ -171,6 +203,7 @@ public class RequestSigning implements SecurityConstants {
             if (!MessageDigest.isEqual(md5.getBytes("UTF-8"), suppliedSignature.getBytes("UTF-8")))
                 return false;
         } catch (UnsupportedEncodingException e) {
+            // TODO: Should raise a RuntimeException wrapping this.
             log.error("This should not occur!!", e);
             return false;
         }

@@ -71,6 +71,22 @@ public class NexmoVerifyClientTest {
     }
 
     @Test
+    public void testConstructorNullBaseUrl() throws ParserConfigurationException {
+        try {
+            new NexmoVerifyClient(null, "api-key", "api-secret", 5000, 5000);
+            fail("null baseUrl should have raised IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    @Test
+    public void testConstructorHttpBaseUrl() throws ParserConfigurationException {
+        try {
+            new NexmoVerifyClient("http://not.a.real.domain/api", "api-key", "api-secret", 5000, 5000);
+            fail("null baseUrl should have raised IllegalArgumentException");
+        } catch (IllegalArgumentException e) {}
+    }
+
+    @Test
     public void testVerify() throws IOException, SAXException {
         client.setHttpClient(this.stubHttpClient(200, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
                 "    <verify_response>\n" +
@@ -372,5 +388,11 @@ public class NexmoVerifyClientTest {
         SearchResult c = client.search("a-random-request-id");
         assertEquals(SearchResult.STATUS_COMMS_FAILURE, c.getStatus());
 
+    }
+
+    @Test
+    public void testLineType() {
+        NexmoVerifyClient.LineType all = NexmoVerifyClient.LineType.ALL;
+        assertEquals("ALL", all.toString());
     }
 }
