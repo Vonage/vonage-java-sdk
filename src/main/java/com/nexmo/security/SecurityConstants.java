@@ -22,8 +22,9 @@ package com.nexmo.security;
  */
 
 /**
+ * A set of constants used for request signing and validation.
+ *
  * @author  Paul Cook
- * @version
  */
 public interface SecurityConstants {
 

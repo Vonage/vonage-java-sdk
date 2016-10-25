@@ -24,15 +24,9 @@ package com.nexmo.messaging.sdk.messages;
 import com.nexmo.messaging.sdk.messages.parameters.MessageClass;
 
 /**
- * Message.java<br><br>
- *
- * Created on 5 January 2011, 17:34<br><br>
- *
- * Represents the details of a message that is to be submitted via the http api.<br>
- * Not instantiated directly, but instead via one of the sub-classes that represent a particular message type
+ * Represents the details of a message that is to be submitted to the Nexmo SMS API.
  *
  * @author  Paul Cook
- * @version 1.0
  */
 public abstract class Message implements java.io.Serializable {
 

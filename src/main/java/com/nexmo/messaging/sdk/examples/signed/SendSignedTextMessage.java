@@ -27,16 +27,11 @@ import com.nexmo.messaging.sdk.SmsSubmissionResult;
 import com.nexmo.messaging.sdk.messages.TextMessage;
 
 /**
- * SendSignedTextMessage.java<br><br>
- *
- * An example of using the nexmo sms api to submit a simple text message ...<br><br>
+ * An example of using the Nexmo SMS API to submit a simple text message.
  * This example uses a {@link com.nexmo.messaging.sdk.NexmoSmsClientSignedRequests} client
  * So that the REST requests are signed using the secret key.
  *
- * Created on 10 April 2012, 17:34
- *
  * @author  Paul Cook
- * @version 1.0
  */
 public class SendSignedTextMessage {
 

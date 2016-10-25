@@ -24,14 +24,9 @@ package com.nexmo.messaging.sdk.messages;
 import com.nexmo.messaging.sdk.messages.parameters.MessageClass;
 
 /**
- * TextMessage.java<br><br>
- *
- * Represents the details of a plain-text message that is to be submitted via the Nexmo REST api<br><br>
- *
- * Created on 5 January 2011, 17:34
+ * Represents the details of a plain-text message that is to be submitted via the Nexmo REST api.
  *
  * @author  Paul Cook
- * @version 1.0
  */
 public class TextMessage extends Message {
 

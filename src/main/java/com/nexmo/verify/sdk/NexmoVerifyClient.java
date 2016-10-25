@@ -57,8 +57,8 @@ import org.xml.sax.SAXException;
 import com.nexmo.common.http.HttpClientUtils;
 
 /**
- * Client for talking to the Nexmo REST interface.
- *
+ * A client for talking to the Nexmo Verify API interface.
+ * <p>
  * To request a verification to Nexmo, call one of the {@link #verify} methods.
  * The only mandatory parameters are the phone number and the brand name. The verification text message
  * and/or voice call will have the brand name you provide so the user can recognize it.

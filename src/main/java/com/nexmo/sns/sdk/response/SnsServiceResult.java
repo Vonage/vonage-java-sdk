@@ -22,14 +22,9 @@ package com.nexmo.sns.sdk.response;
  */
 
 /**
- * SnsServiceResult.java<br><br>
- *
- * Created on 5 January 2011, 17:34<br><br>
- *
- * Represents the result of the service request to the Nexmo SNS Service
+ * Represents the result of the service request to the Nexmo SNS Service.
  *
  * @author  Paul Cook
- * @version 1.0
  */
 public class SnsServiceResult implements PublishResult,
                                          SubscribeResult {

@@ -49,12 +49,9 @@ import com.nexmo.sns.sdk.request.Request;
 import com.nexmo.sns.sdk.response.SnsServiceResult;
 
 /**
- * NexmoSmsClient.java<br><br>
- *
- * Client for talking to the Nexmo REST interface<br><br>
+ * Client for talking to the Nexmo REST interface.
  *
  * @author  Paul Cook
- * @version 1.0
  */
 public class NexmoSnsClient {
 

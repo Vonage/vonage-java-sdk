@@ -24,14 +24,9 @@ package com.nexmo.messaging.sdk.messages;
 import com.nexmo.messaging.sdk.messages.parameters.MessageClass;
 
 /**
- * BinaryMessage.java<br><br>
- *
- * Represents the details of a binary message that is to be submitted via the Nexmo REST api<br><br>
- *
- * Created on 5 January 2011, 17:34
+ * Represents the details of a binary message that is to be submitted via the Nexmo REST API.
  *
  * @author  Paul Cook
- * @version 1.0
  */
 public class BinaryMessage extends Message {
 

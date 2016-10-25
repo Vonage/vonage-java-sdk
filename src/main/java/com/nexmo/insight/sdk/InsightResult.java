@@ -24,6 +24,7 @@ package com.nexmo.insight.sdk;
 
 /**
  * Number insight request result.
+ *
  * @author Daniele Ricci
  */
 public class InsightResult {

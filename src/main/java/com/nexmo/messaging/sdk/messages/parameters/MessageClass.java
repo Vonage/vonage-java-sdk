@@ -22,14 +22,9 @@ package com.nexmo.messaging.sdk.messages.parameters;
  */
 
 /**
- * MessageClass.java<br><br>
- *
- * Created on 5 January 2011, 17:34<br><br>
- *
- * An enum of the valid values that may be supplied to as the message-class parameter of a rest submission
+ * An enum of the valid values that may be supplied to as the message-class parameter of a rest submission.
  *
  * @author  Paul Cook
- * @version 1.0
  */
 public enum MessageClass {
 

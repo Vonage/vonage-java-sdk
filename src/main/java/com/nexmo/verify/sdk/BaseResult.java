@@ -22,7 +22,8 @@ package com.nexmo.verify.sdk;
  */
 
 /**
- * Verification base result class.
+ * An abstract base class for verification results.
+ *
  * @author Daniele Ricci
  */
 public abstract class BaseResult implements java.io.Serializable {

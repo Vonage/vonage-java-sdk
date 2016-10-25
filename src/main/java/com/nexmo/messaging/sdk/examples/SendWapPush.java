@@ -26,14 +26,9 @@ import com.nexmo.messaging.sdk.SmsSubmissionResult;
 import com.nexmo.messaging.sdk.messages.WapPushMessage;
 
 /**
- * SendWapPush.java<br><br>
- *
- * An example of using the nexmo sms api to submit a wap push message ...<br><br>
- *
- * Created on 5 January 2011, 17:34
+ * An example of using the Nexmo SMS API to submit a wap push message.
  *
  * @author  Paul Cook
- * @version 1.0
  */
 public class SendWapPush {
 

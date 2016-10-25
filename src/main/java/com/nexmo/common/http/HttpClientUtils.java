@@ -33,14 +33,9 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 
 /**
- * HttpClientUtils.java<br><br>
+ * A Helper factory for instantiating HttpClient instances.
  *
- * A Helper factory for instantiating HttpClient instances<br><br>
- *
- * Created on 5 January 2011, 17:34
- *
- * @author  Paul Cook
- * @version 1.0
+ * @author Paul Cook
  */
 public class HttpClientUtils {
 

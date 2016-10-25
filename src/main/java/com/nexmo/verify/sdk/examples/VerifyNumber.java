@@ -5,7 +5,8 @@ import com.nexmo.verify.sdk.NexmoVerifyClient;
 import com.nexmo.verify.sdk.VerifyResult;
 
 /**
- * An example on how to request a number verification.
+ * An example of how to request a number verification.
+ *
  * @author Daniele Ricci
  */
 public class VerifyNumber {

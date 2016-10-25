@@ -22,14 +22,11 @@ package com.nexmo.messaging.sdk;
  */
 
 /**
- * NexmoSmsClientSignedRequests.java<br><br>
- *
- * Client for talking to the Nexmo REST interface that signs requests using a MD5 signature derived from a secret key<br><br>
- *
- * For usage information see {@link com.nexmo.messaging.sdk.NexmoSmsClient}<br>
+ * Client for talking to the Nexmo REST interface that signs requests using a MD5 signature derived from a secret key.
+ * <p>
+ * For usage information see {@link com.nexmo.messaging.sdk.NexmoSmsClient}.
  *
  * @author  Paul Cook
- * @version 1.0
  */
 public class NexmoSmsClientSignedRequests extends NexmoSmsClient {
 

@@ -24,14 +24,9 @@ import java.io.UnsupportedEncodingException;
  */
 
 /**
- * HexUtil.java<br><br>
+ * Static helper methods for working with hex values.
  *
- * Static helper methods for working with hex values<br><br>
- *
- * Created on 5 January 2011, 17:34
- *
- * @author  Paul Cook
- * @version 1.0
+ * @author Paul Cook
  */
 public class HexUtil {
 

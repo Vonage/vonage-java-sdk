@@ -26,14 +26,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * MD5Util.java<br><br>
+ * Contains utility methods that use MD5 hashing. The class uses STANDARD JVM MD5 algorithm.
  *
- * Contains utility methods that use MD5 hashing. The class uses STANDARD JVM MD5 algorithm<br><br>
- *
- * Created on 5 January 2011, 17:34
- *
- * @author  Paul Cook
- * @version 1.0
+ * @author Paul Cook
  */
 public class MD5Util {
 

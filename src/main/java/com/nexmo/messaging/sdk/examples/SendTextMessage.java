@@ -26,14 +26,9 @@ import com.nexmo.messaging.sdk.SmsSubmissionResult;
 import com.nexmo.messaging.sdk.messages.TextMessage;
 
 /**
- * SendTextMessage.java<br><br>
- *
- * An example of using the nexmo sms api to submit a simple text message ...<br><br>
- *
- * Created on 5 January 2011, 17:34
+ * An example of using the Nexmo SMS API to submit a simple text message.
  *
  * @author  Paul Cook
- * @version 1.0
  */
 public class SendTextMessage {
 

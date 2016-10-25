@@ -22,14 +22,9 @@ package com.nexmo.messaging.sdk.messages;
  */
 
 /**
- * WapPushMessage.java<br><br>
- *
- * Represents the details of a wap-push message that is to be submitted via the Nexmo REST api<br><br>
- *
- * Created on 5 January 2011, 17:34
+ * Represents the details of a wap-push message that is to be submitted via the Nexmo REST api.
  *
  * @author  Paul Cook
- * @version 1.0
  */
 public class WapPushMessage extends Message {
 

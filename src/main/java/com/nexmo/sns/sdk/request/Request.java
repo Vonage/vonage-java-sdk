@@ -26,15 +26,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Request.java<br><br>
- *
- * Created on 5 January 2011, 17:34<br><br>
- *
- * Represents the details of a service request that is to be submitted via the http api.<br>
- * Not instantiated directly, but instead via one of the sub-classes that represent a particular service command
+ * Represents the details of a service request that is to be submitted via the http api.
  *
  * @author  Paul Cook
- * @version 1.0
  */
 public abstract class Request {
 

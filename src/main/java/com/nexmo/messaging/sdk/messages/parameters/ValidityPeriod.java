@@ -25,16 +25,12 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * ValidityPeriod.java<br><br>
- *
- * Created on 5 January 2011, 17:34<br><br>
- *
- * Represents the time period that the submitted message is valid for.
+ * The time period that the submitted message is valid for.
+ * <p>
  * Once this time period has elapsed, if it has not yet been delivered, then delivery will be aborted
  * and the message will be expired.
  *
  * @author  Paul Cook
- * @version 1.0
  */
 public class ValidityPeriod implements java.io.Serializable {
 

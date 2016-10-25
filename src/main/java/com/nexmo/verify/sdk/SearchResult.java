@@ -26,6 +26,7 @@ import java.util.List;
 
 /**
  * Verification search result.
+ *
  * @author Daniele Ricci
  */
 public class SearchResult extends BaseResult {

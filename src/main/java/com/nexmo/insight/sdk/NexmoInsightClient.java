@@ -52,18 +52,14 @@ import org.xml.sax.SAXException;
 import com.nexmo.common.http.HttpClientUtils;
 
 /**
- * Client for talking to the Nexmo REST interface<br><br>
- *
- * Usage<br><br>
- *
+ * Client for talking to the Nexmo REST interface.
+ * <p>
  * Number insight searches for information about a phone number and returns it to a single URL callback
- * via a GET/POST request.<br>
- * To request an insight, call {@link #request}. Please refer to Nexmo website for current insight fees.<br>
- * <br>
- * Error codes are listed in {@link InsightResult} and also on the documentation website.<br>
- * <br>
+ * via a GET/POST request.
+ * To request an insight, call {@link #request}. Please refer to Nexmo website for current insight fees.
+ * Error codes are listed in {@link InsightResult} and also on the documentation website.
  * More information on method parameters can be found at Nexmo website:
- * <a href="https://docs.nexmo.com/number-insight">https://docs.nexmo.com/number-insight</a>
+ * <a href="https://docs.nexmo.com/number-insight">https://docs.nexmo.com/number-insight</a>.
  *
  * @author Daniele Ricci
  */
@@ -72,8 +68,7 @@ public class NexmoInsightClient {
     private static final Log log = LogFactory.getLog(NexmoInsightClient.class);
 
     /**
-     * https://rest.nexmo.com<br>
-     * Service url used unless over-ridden on the constructor
+     * The service url used unless over-ridden on the constructor
      */
     public static final String DEFAULT_BASE_URL = "https://rest.nexmo.com";
 

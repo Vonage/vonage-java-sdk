@@ -26,12 +26,9 @@ import java.util.Date;
  */
 
 /**
- * MO.java
- *
  * This represents an incoming MO callback request
  *
  * @author  Paul Cook
- * @version
  */
 public class MO implements java.io.Serializable {
 

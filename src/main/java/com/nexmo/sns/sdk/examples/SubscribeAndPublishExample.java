@@ -28,14 +28,9 @@ import com.nexmo.sns.sdk.response.PublishResult;
 import com.nexmo.sns.sdk.response.SubscribeResult;
 
 /**
- * SubscribeAndPublishExample.java<br><br>
- *
- * An example of using the nexmo sns api to subscribe a user, then broadcast a message ...<br><br>
- *
- * Created on 5 January 2011, 17:34
+ * An example of using the nexmo sns api to subscribe a user, then broadcast a message.
  *
  * @author  Paul Cook
- * @version 1.0
  */
 public class SubscribeAndPublishExample {
 

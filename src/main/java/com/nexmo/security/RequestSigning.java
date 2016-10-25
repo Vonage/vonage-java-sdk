@@ -37,15 +37,9 @@ import org.apache.http.message.BasicNameValuePair;
 import com.nexmo.common.util.MD5Util;
 
 /**
- * RequestSigning
- *
- * Helper class for generating signatures when signing REST requests for submission to Nexmo.
- * Generates a signature based on the md5 hash of all of the request parameters,
- * including a timestamp parameter to protect against replay attacks.
- * The signature is generated using a pre-shared secret key that does not form part of the request.
+ * A helper class for generating or verifying MD5 signatures when signing REST requests for submission to Nexmo.
  *
  * @author  Paul Cook
- * @version
  */
 public class RequestSigning implements SecurityConstants {
 

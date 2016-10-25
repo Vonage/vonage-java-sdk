@@ -40,19 +40,16 @@ import com.nexmo.messaging.sdk.callback.messages.MO;
 import com.nexmo.security.RequestSigning;
 
 /**
- * AbstractMOServlet.java
+ * An abstract Servlet that receives and parses an incoming callback request for an MO message.
+ * This class parses and validates the request, optionally checks any provided signature or credentials,
+ * and constructs an MO object for your subclass to consume.
  *
- * An abstract callback servlet that receives and parses an incoming callback request for an MO message.
- * This class parses and validates the request, optionally checks any signature supplied or credentials,
- * and constructs an MO object for your subclass implementation to consume.
- *
- * Note, this servlet will immediately ack the callback as soon as it is validated, your subclass will
- * consume the callback object asynchronously to this. This is because it is important to keep latency of
+ * Note: This servlet will immediately ack the callback as soon as it is validated. Your subclass will
+ * consume the callback object asynchronously. This is because it is important to keep latency of
  * the acknowledgement to a minimum in order to maintain throughput when operating at any sort of volume.
  * You are responsible for persisting this object in the event of any failure whilst processing
  *
  * @author  Paul Cook
- * @version
  */
 public abstract class AbstractMOServlet extends HttpServlet {
 

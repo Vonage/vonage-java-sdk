@@ -24,17 +24,12 @@ package com.nexmo.messaging.sdk.messages;
 import com.nexmo.messaging.sdk.messages.parameters.MessageClass;
 
 /**
- * UnicodeMessage.java<br><br>
- *
- * Represents the details of a unicode text message that is to be submitted via the Nexmo REST api
+ * Represents the details of a unicode text message that is to be submitted via the Nexmo SMS API.
+ * <p>
  * Unicode messages are required when sending messages to the handset that contain characters that are not
- * within the GSM alphabet.<br>
- * For example, sending messages in Arabic or Chinese<br><br>
- *
- * Created on 5 January 2011, 17:34
+ * within the GSM character set, for example when sending messages in Arabic or Chinese.
  *
  * @author  Paul Cook
- * @version 1.0
  */
 public class UnicodeMessage extends Message {
 

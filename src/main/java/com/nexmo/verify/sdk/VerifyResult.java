@@ -23,6 +23,7 @@ package com.nexmo.verify.sdk;
 
 /**
  * Verification request result.
+ * 
  * @author Daniele Ricci
  */
 public class VerifyResult extends BaseResult {

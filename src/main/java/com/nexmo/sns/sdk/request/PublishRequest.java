@@ -22,14 +22,9 @@ package com.nexmo.sns.sdk.request;
  */
 
 /**
- * PublishRequest.java<br><br>
- *
- * Created on 5 January 2011, 17:34<br><br>
- *
- * Represents the details of a publish service request that is to be submitted via the http api.<br>
+ * Represents the details of a publish service request that is to be submitted via the http api.
  *
  * @author  Paul Cook
- * @version 1.0
  */
 public class PublishRequest extends Request {
 

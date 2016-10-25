@@ -24,15 +24,10 @@ package com.nexmo.messaging.sdk;
 import java.math.BigDecimal;
 
 /**
- * SmsSubmissionResult.java<br><br>
- *
- * Created on 5 January 2011, 17:34<br><br>
- *
  * Represents the result of the submission of a single sms message,
  * or a single part of a long / multi-part message
  *
  * @author  Paul Cook
- * @version 1.0
  */
 public class SmsSubmissionResult implements java.io.Serializable {
 

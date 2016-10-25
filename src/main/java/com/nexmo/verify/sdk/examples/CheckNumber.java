@@ -5,7 +5,8 @@ import com.nexmo.verify.sdk.CheckResult;
 import com.nexmo.verify.sdk.NexmoVerifyClient;
 
 /**
- * An example on how to check a verification code.
+ * An example og how to check a verification code.
+ *
  * @author Daniele Ricci
  */
 public class CheckNumber {

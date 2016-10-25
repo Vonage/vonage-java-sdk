@@ -22,14 +22,11 @@ package com.nexmo.messaging.sdk;
  */
 
 /**
- * SmsSubmissionReachabilityStatus.java<br><br>
- *
- * Created on 5 January 2011, 17:34<br><br>
- *
- * Represents the result of the reachability check that was performed when submitting the message if such a check was requested
+ * Represents the result of the reachability check that was performed.
+ * <p>
+ * This is only provided if a reachability check was requested when submitting the message.
  *
  * @author  Paul Cook
- * @version 1.0
  */
 public class SmsSubmissionReachabilityStatus implements java.io.Serializable {
 

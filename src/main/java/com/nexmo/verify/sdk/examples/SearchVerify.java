@@ -5,7 +5,8 @@ import com.nexmo.verify.sdk.NexmoVerifyClient;
 import com.nexmo.verify.sdk.SearchResult;
 
 /**
- * An example on how to search for a previous verify request.
+ * An example of how to search for a previous verify request.
+ *
  * @author Daniele Ricci
  */
 public class SearchVerify {
