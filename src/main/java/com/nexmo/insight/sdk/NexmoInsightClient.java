@@ -104,6 +104,8 @@ public class NexmoInsightClient {
      *
      * @param apiKey Your Nexmo account api key
      * @param apiSecret Your Nexmo account api secret
+     *
+     * @throws ParserConfigurationException if the XML parser is misconfigured.
      */
     public NexmoInsightClient(final String apiKey,
                               final String apiSecret) throws ParserConfigurationException {
@@ -119,10 +121,13 @@ public class NexmoInsightClient {
      * Additionally, you can specify an alternative service base url. For example submitting to a testing sandbox environment,
      * or if requested to submit to an alternative address by Nexmo, for example, in cases where it may be necessary to prioritize your traffic.
      *
+     * @param baseUrl The base URL to use instead of <code>DEFAULT_BASE_URL</code>
      * @param apiKey Your Nexmo account api key
      * @param apiSecret Your Nexmo account api secret
      * @param connectionTimeout over-ride the default connection timeout with this value (in milliseconds)
      * @param soTimeout over-ride the default read-timeout with this value (in milliseconds)
+     *
+     * @throws ParserConfigurationException if the XML parser is misconfigured.
      */
     public NexmoInsightClient(final String baseUrl,
                               final String apiKey,

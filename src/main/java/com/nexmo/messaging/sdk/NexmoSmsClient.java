@@ -184,6 +184,7 @@ public class NexmoSmsClient {
      * Additionally, you can specify an alternative service base url. For example submitting to a testing sandbox environment,
      * or if requested to submit to an alternative address by Nexmo, for example, in cases where it may be necessary to prioritize your traffic.
      *
+     * @param baseUrl The base URL to be used instead of <code>DEFAULT_BASE_URL</code>
      * @param apiKey Your Nexmo account api key
      * @param apiSecret Your Nexmo account api secret
      * @param connectionTimeout over-ride the default connection timeout with this value (in milliseconds)
@@ -235,6 +236,7 @@ public class NexmoSmsClient {
      *
      * @return SmsSubmissionResult[] an array of results, 1 object for each sms message that was required to submit this message in its entirety
      *
+     * @throws NexmoResponseParseException if the HTTP response could not be parsed.
      * @throws IOException There has been an error attempting to communicate with the Nexmo service (e.g. Network failure).
      */
     public SmsSubmissionResult[] submitMessage(Message message) throws IOException, NexmoResponseParseException {
@@ -256,6 +258,7 @@ public class NexmoSmsClient {
      *
      * @return SmsSubmissionResult[] an array of results, 1 object for each sms message that was required to submit this message in its entirety
      *
+     * @throws NexmoResponseParseException if the HTTP response could not be parsed.
      * @throws IOException There has been a general failure either within the Client class, or whilst attempting to communicate with the Nexmo service (eg, Network failure)
      */
     public SmsSubmissionResult[] submitMessage(final Message message,

@@ -36,7 +36,7 @@ public class MD5Util {
      * Calculates MD5 hash for string. assume string is UTF-8 encoded
      * @param input string which is going to be encoded into MD5 format
      * @return  MD5 representation of the input string
-     * @throws NoSuchAlgorithmException
+     * @throws NoSuchAlgorithmException if the MD5 algorithm is not available.
      */
     public static String calculateMd5(String input) throws NoSuchAlgorithmException {
         try {
@@ -51,7 +51,8 @@ public class MD5Util {
      * @param input string which is going to be encoded into MD5 format
      * @param encoding character encoding of the string which is going to be encoded into MD5 format
      * @return  MD5 representation of the input string
-     * @throws NoSuchAlgorithmException
+     * @throws NoSuchAlgorithmException if the MD5 algorithm is not available.
+     * @throws UnsupportedEncodingException if the specified encoding is unavailable.
      */
     public static String calculateMd5(String input, String encoding) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest md = MessageDigest.getInstance("MD5");

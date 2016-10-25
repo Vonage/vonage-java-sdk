@@ -265,7 +265,7 @@ public abstract class AbstractMOServlet extends HttpServlet {
     /**
      * This method is asynchronously passed a complete MO instance to be dealt with by your application logic
      *
-     * @param mo
+     * @param mo The message object that was provided in the HTTP request.
      */
     public abstract void consume(MO mo);
 

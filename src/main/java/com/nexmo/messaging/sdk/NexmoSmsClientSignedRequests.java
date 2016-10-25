@@ -22,7 +22,7 @@ package com.nexmo.messaging.sdk;
  */
 
 /**
- * Client for talking to the Nexmo REST interface that signs requests using a MD5 signature derived from a secret key.
+ * Client for talking to the Nexmo SMS API that signs requests using a MD5 signature derived from a secret key.
  * <p>
  * For usage information see {@link com.nexmo.messaging.sdk.NexmoSmsClient}.
  *
@@ -37,7 +37,7 @@ public class NexmoSmsClientSignedRequests extends NexmoSmsClient {
      * @param signatureSecretKey Your Nexmo account secret key for signing api requests
      */
     public NexmoSmsClientSignedRequests(final String apiKey,
-                                        final String signatureSecretKey) throws Exception {
+                                        final String signatureSecretKey) {
         super(DEFAULT_BASE_URL,
              apiKey,
              null,   // password,
@@ -58,7 +58,7 @@ public class NexmoSmsClientSignedRequests extends NexmoSmsClient {
     public NexmoSmsClientSignedRequests(final String apiKey,
                                         final String signatureSecretKey,
                                         final int connectionTimeout,
-                                        final int soTimeout) throws Exception {
+                                        final int soTimeout) {
         super(DEFAULT_BASE_URL,
              apiKey,
              null,   // password,

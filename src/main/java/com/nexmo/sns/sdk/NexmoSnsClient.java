@@ -90,6 +90,8 @@ public class NexmoSnsClient {
      *
      * @param apiKey Your Nexmo account api key
      * @param apiSecret Your Nexmo account api secret
+     *
+     * @throws Exception If the XML parser could not be configured.
      */
     public NexmoSnsClient(final String apiKey,
                           final String apiSecret) throws Exception {
@@ -107,6 +109,8 @@ public class NexmoSnsClient {
      * @param apiSecret Your Nexmo account api secret
      * @param connectionTimeout over-ride the default connection timeout with this value (in milliseconds)
      * @param soTimeout over-ride the default read-timeout with this value (in milliseconds)
+     *
+     * @throws Exception If the XML parser could not be configured.
      */
     public NexmoSnsClient(final String apiKey,
                           final String apiSecret,
@@ -124,10 +128,13 @@ public class NexmoSnsClient {
      * Additionally, you can specify an alternative service base url. For example submitting to a testing sandbox environment,
      * or if requested to submit to an alternative address by Nexmo, for example, in cases where it may be necessary to prioritize your traffic.
      *
+     * @param baseUrl The URL to be used instead of <code>DEFAULT_BASE_URL</code>
      * @param apiKey Your Nexmo account api key
      * @param apiSecret Your Nexmo account api secret
      * @param connectionTimeout over-ride the default connection timeout with this value (in milliseconds)
      * @param soTimeout over-ride the default read-timeout with this value (in milliseconds)
+     *
+     * @throws Exception If the XML parser could not be configured.
      */
     public NexmoSnsClient(final String baseUrl,
                           final String apiKey,
