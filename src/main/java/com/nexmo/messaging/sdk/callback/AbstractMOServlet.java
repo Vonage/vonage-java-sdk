@@ -157,7 +157,7 @@ public abstract class AbstractMOServlet extends HttpServlet {
         if (messageType == MO.MESSAGE_TYPE.TEXT || messageType == MO.MESSAGE_TYPE.UNICODE) {
             messageBody = request.getParameter("text");
             if (messageBody == null) {
-                response.sendError(400, "Missing text fied");
+                response.sendError(400, "Missing text field");
                 return;
             }
         } else if (messageType == MO.MESSAGE_TYPE.BINARY) {
