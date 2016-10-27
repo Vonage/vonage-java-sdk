@@ -244,6 +244,187 @@ public class NexmoSmsClientTest {
         assertEquals(r.getDestination(), "not-a-number");
     }
 
+    @Test
+    public void testParseResponseInvalidStatus() throws Exception {
+        SmsSubmissionResult[] rs = client.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
+                "<mt-submission-response>\n" +
+                "    <messages count='2'>\n" +
+                "        <message>\n" +
+                "            <to>not-a-number</to>\n" +
+                "            <messageId>message-id-1</messageId>\n" +
+                "            <status>this-should-be-a-number</status>\n" +
+                "            <remainingBalance>26.43133450</remainingBalance>\n" +
+                "            <messagePrice>0.03330000</messagePrice>\n" +
+                "            <network>12345</network>\n" +
+                "            <clientRef>abcde</clientRef>\n" +
+                "        </message>\n" +
+                "        <message>\n" +
+                "            <to>not-a-number</to>\n" +
+                "            <messageId>message-id-2</messageId>\n" +
+                "            <status>0</status>\n" +
+                "            <remainingBalance>26.39803450</remainingBalance>\n" +
+                "            <messagePrice>0.03330000</messagePrice>\n" +
+                "            <network>12345</network>\n" +
+                "        </message>\n" +
+                "    </messages>\n" +
+                "</mt-submission-response>");
+        assertEquals(SmsSubmissionResult.STATUS_INTERNAL_ERROR, rs[0].getStatus());
+    }
+
+    @Test
+    public void testParseResponseStatusMissing() throws Exception {
+        try {
+            client.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
+                    "<mt-submission-response>\n" +
+                    "    <messages count='1'>\n" +
+                    "        <message>\n" +
+                    "            <to>not-a-number</to>\n" +
+                    "            <messageId>message-id-1</messageId>\n" +
+                    "            <remainingBalance>26.43133450</remainingBalance>\n" +
+                    "            <messagePrice>0.03330000</messagePrice>\n" +
+                    "            <network>12345</network>\n" +
+                    "        </message>\n" +
+                    "    </messages>\n" +
+                    "</mt-submission-response>");
+            fail("A missing <status> should result in a NexmoResponseParseException being thrown");
+        } catch (NexmoResponseParseException e) {
+            // this is expected
+        }
+    }
+
+    @Test
+    public void testParseResponseMissingValues() throws Exception {
+        SmsSubmissionResult[] rs = client.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
+                "<mt-submission-response>\n" +
+                "    <messages count='1'>\n" +
+                "        <message>\n" +
+                "            <to></to>\n" +
+                "            <messageId></messageId>\n" +
+                "            <status></status>\n" +
+                "            <remainingBalance></remainingBalance>\n" +
+                "            <messagePrice></messagePrice>\n" +
+                "            <network></network>\n" +
+                "            <errorText></errorText>\n" +
+                "            <clientRef></clientRef>\n" +
+                "            <errorText></errorText>\n" +
+                "        </message>\n" +
+                "    </messages>\n" +
+
+                "</mt-submission-response>");
+        assertNull(rs[0].getMessageId());
+        assertNull(rs[0].getDestination());
+        assertEquals(SmsSubmissionResult.STATUS_INTERNAL_ERROR, rs[0].getStatus());
+        assertNull(rs[0].getErrorText());
+        assertNull(rs[0].getClientReference());
+        assertNull(rs[0].getRemainingBalance());
+        assertNull(rs[0].getMessagePrice());
+        assertNull(rs[0].getNetwork());
+    }
+
+    @Test
+    public void testParseResponseError() throws Exception {
+        SmsSubmissionResult[] rs = client.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
+                "<mt-submission-response>\n" +
+                "    <messages count='1'>\n" +
+                "        <message>\n" +
+                "            <status>6</status>\n" +
+                "            <errorText>The message was invalid</errorText>\n" +
+                "        </message>\n" +
+                "    </messages>\n" +
+                "</mt-submission-response>");
+        assertEquals(SmsSubmissionResult.STATUS_INVALID_MESSAGE, rs[0].getStatus());
+    }
+
+    @Test
+    public void testParseResponseUnexpectedNode() throws Exception {
+        SmsSubmissionResult[] rs = client.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
+                "<mt-submission-response>\n" +
+                "    <messages count='1'>\n" +
+                "        <message>\n" +
+                "            <status>0</status>\n" +
+                "            <to>not-a-number</to>\n" +
+                "            <messageId>message-id-1</messageId>\n" +
+                "            <remainingBalance>26.43133450</remainingBalance>\n" +
+                "            <messagePrice>0.03330000</messagePrice>\n" +
+                "            <network>12345</network>\n" +
+                "            <WHATISTHIS></WHATISTHIS>\n" +
+                "        </message>\n" +
+                "    </messages>\n" +
+                "</mt-submission-response>");
+        assertEquals(SmsSubmissionResult.STATUS_OK, rs[0].getStatus());
+    }
+
+    @Test
+    public void testParseResponseInvalidNumbers() throws Exception {
+        SmsSubmissionResult[] rs = client.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
+                "<mt-submission-response>\n" +
+                "    <messages count='1'>\n" +
+                "        <message>\n" +
+                "            <status>0</status>\n" +
+                "            <to>not-a-number</to>\n" +
+                "            <messageId>message-id-1</messageId>\n" +
+                "            <remainingBalance>NOTANUMBER</remainingBalance>\n" +
+                "            <messagePrice>ALSONOTANUMBER</messagePrice>\n" +
+                "            <network>12345</network>\n" +
+                "        </message>\n" +
+                "    </messages>\n" +
+                "</mt-submission-response>");
+        assertNull(rs[0].getRemainingBalance());
+        assertNull(rs[0].getMessagePrice());
+    }
+
+    @Test
+    public void testParseResponseStatusThrottled() throws Exception {
+        SmsSubmissionResult[] rs = client.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
+                "<mt-submission-response>\n" +
+                "    <messages count='1'>\n" +
+                "        <message>\n" +
+                "            <status>1</status>\n" +
+                "        </message>\n" +
+                "    </messages>\n" +
+                "</mt-submission-response>");
+        assertEquals(SmsSubmissionResult.STATUS_THROTTLED, rs[0].getStatus());
+        assertTrue(rs[0].getTemporaryError());
+    }
+
+    @Test
+    public void testParseResponseStatusInternalError() throws Exception {
+        SmsSubmissionResult[] rs = client.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
+                "<mt-submission-response>\n" +
+                "    <messages count='1'>\n" +
+                "        <message>\n" +
+                "            <status>5</status>\n" +
+                "        </message>\n" +
+                "    </messages>\n" +
+                "</mt-submission-response>");
+        assertEquals(SmsSubmissionResult.STATUS_INTERNAL_ERROR, rs[0].getStatus());
+        assertTrue(rs[0].getTemporaryError());
+    }
+
+    @Test
+    public void testParseResponseStatusTooManyBinds() throws Exception {
+        SmsSubmissionResult[] rs = client.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
+                "<mt-submission-response>\n" +
+                "    <messages count='1'>\n" +
+                "        <message>\n" +
+                "            <status>10</status>\n" +
+                "        </message>\n" +
+                "    </messages>\n" +
+                "</mt-submission-response>");
+        assertEquals(SmsSubmissionResult.STATUS_TOO_MANY_BINDS, rs[0].getStatus());
+        assertTrue(rs[0].getTemporaryError());
+    }
+
+    @Test
+    public void testParseResponseBadXml() throws Exception {
+        try {
+            SmsSubmissionResult[] rs = client.parseResponse("not-xml");
+        } catch (NexmoResponseParseException e) {
+            // this is expected
+        }
+    }
+
+
     private static void assertContainsParam(List<NameValuePair> params, String key, String value) {
         NameValuePair item = new BasicNameValuePair(key, value);
         assertTrue(

@@ -199,6 +199,5 @@ public class NexmoSnsClientTest {
         } catch (Exception e) {
             // this is expected
         }
-
     }
 }

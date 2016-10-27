@@ -487,8 +487,9 @@ public class NexmoSmsClient {
                                 }
                             } else if (node.getNodeName().equals("network")) {
                                 network = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-                            } else
+                            } else {
                                 log.error("xml parser .. unknown node found in status-return, expected [ messageId, to, status, errorText, clientRef, messagePrice, remainingBalance, reachability, network ] -- found [ " + node.getNodeName() + " ] ");
+                            }
                         }
 
                         if (status == -1)
