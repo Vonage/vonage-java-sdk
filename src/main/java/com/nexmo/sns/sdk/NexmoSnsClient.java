@@ -29,6 +29,8 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import com.nexmo.common.NexmoResponseParseException;
+import com.nexmo.common.util.XmlUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -74,7 +76,7 @@ public class NexmoSnsClient {
     public static final int DEFAULT_SO_TIMEOUT = 30000;
 
     private DocumentBuilderFactory documentBuilderFactory;
-    private DocumentBuilder documentBuilder;
+    private final DocumentBuilder documentBuilder;
 
     private final String baseUrl;
     private final String apiKey;
@@ -143,11 +145,11 @@ public class NexmoSnsClient {
                           final int soTimeout) throws Exception {
 
         if (baseUrl == null)
-            throw new IllegalArgumentException("base url is null");
+            throw new IllegalArgumentException("baseUrl is null");
         String url = baseUrl.trim();
         String lc = url.toLowerCase();
         if (!lc.startsWith("https://"))
-            throw new Exception("base url does not start with https://");
+            throw new IllegalArgumentException("baseUrl does not start with https://");
         this.baseUrl = "https://" + url.substring(7);
 
         this.apiKey = apiKey;
@@ -165,17 +167,8 @@ public class NexmoSnsClient {
     public SnsServiceResult submit(final Request request) throws Exception {
 
         log.info("NEXMO-REST-SNS-SERVICE-CLIENT ... submit request [ " + request.toString() + " ] ");
+        List<NameValuePair> params = constructSubmitParams(request);
 
-        // Construct a query string as a list of NameValuePairs
-
-        List<NameValuePair> params = new ArrayList<>();
-
-        params.add(new BasicNameValuePair("api_key", this.apiKey));
-        params.add(new BasicNameValuePair("api_secret", this.apiSecret));
-        params.add(new BasicNameValuePair("cmd", request.getCommand()));
-        if (request.getQueryParameters() != null)
-            for (Map.Entry<String, String> entry: request.getQueryParameters().entrySet())
-                params.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
 
         //String baseUrl = https ? this.baseUrlHttps : this.baseUrlHttp;
 
@@ -189,9 +182,6 @@ public class NexmoSnsClient {
             if (this.httpClient == null)
                 this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
             HttpResponse httpResponse = this.httpClient.execute(method);
-            int status = httpResponse.getStatusLine().getStatusCode();
-            if (status != 200)
-                throw new Exception("got a non-200 response [ " + status + " ] from Nexmo-HTTPS for url [ " + url + " ] ");
             response = new BasicResponseHandler().handleResponse(httpResponse);
             log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
         } catch (Exception e) {
@@ -204,6 +194,10 @@ public class NexmoSnsClient {
                                         null);
         }
 
+        return parseSubmitResponse(response);
+    }
+
+    protected SnsServiceResult parseSubmitResponse(String response) throws Exception {
         // parse the response doc ...
 
         /*
@@ -220,12 +214,12 @@ public class NexmoSnsClient {
 
         */
 
-        Document doc = null;
+        Document doc;
         synchronized(this.documentBuilder) {
             try {
                 doc = this.documentBuilder.parse(new InputSource(new StringReader(response)));
             } catch (Exception e) {
-                throw new Exception("Failed to build a DOM doc for the xml document [ " + response + " ] ", e);
+                throw new NexmoResponseParseException("Failed to build a DOM doc for the xml document [ " + response + " ] ", e);
             }
         }
 
@@ -236,30 +230,28 @@ public class NexmoSnsClient {
         String subscriberArn = null;
 
         NodeList replies = doc.getElementsByTagName("nexmo-sns");
-        for (int i=0;i<replies.getLength();i++) {
-            Node reply = replies.item(i);
-            NodeList nodes = reply.getChildNodes();
+        Node reply = replies.item(0);   // If there's more than one reply, we ignore the extras.
+        NodeList nodes = reply.getChildNodes();
 
-            for (int i2=0;i2<nodes.getLength();i2++) {
-                Node node = nodes.item(i2);
-                if (node.getNodeType() != Node.ELEMENT_NODE)
-                    continue;
+        for (int i2=0;i2<nodes.getLength();i2++) {
+            Node node = nodes.item(i2);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
                 if (node.getNodeName().equals("command")) {
-                    command = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                    command = XmlUtil.stringValue(node);
                 } else if (node.getNodeName().equals("resultCode")) {
-                    String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
                     try {
-                        resultCode = Integer.parseInt(str);
+                        resultCode = XmlUtil.intValue(node);
                     } catch (Exception e) {
-                        log.error("xml parser .. invalid value in <resultCode> node [ " + str + " ] ");
+                        log.error("xml parser .. invalid value in <resultCode> node [ " + XmlUtil.stringValue(node) +
+                                " ] ");
                         resultCode = SnsServiceResult.STATUS_INTERNAL_ERROR;
                     }
                 } else if (node.getNodeName().equals("resultMessage")) {
-                    resultMessage = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                    resultMessage = XmlUtil.stringValue(node);
                 } else if (node.getNodeName().equals("transactionId")) {
-                    transactionId = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                    transactionId = XmlUtil.stringValue(node);
                 } else if (node.getNodeName().equals("subscriberArn")) {
-                    subscriberArn = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                    subscriberArn = XmlUtil.stringValue(node);
                 } else
                     log.error("xml parser .. unknown node found in nexmo-sns [ " + node.getNodeName() + " ] ");
             }
@@ -275,4 +267,20 @@ public class NexmoSnsClient {
                                     subscriberArn);
     }
 
+    private List<NameValuePair> constructSubmitParams(Request request) {
+        // Construct a query string as a list of NameValuePairs
+        List<NameValuePair> params = new ArrayList<>();
+
+        params.add(new BasicNameValuePair("api_key", this.apiKey));
+        params.add(new BasicNameValuePair("api_secret", this.apiSecret));
+        params.add(new BasicNameValuePair("cmd", request.getCommand()));
+        if (request.getQueryParameters() != null)
+            for (Map.Entry<String, String> entry: request.getQueryParameters().entrySet())
+                params.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+        return params;
+    }
+
+    public void setHttpClient(HttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
 }
