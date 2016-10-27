@@ -1,5 +1,9 @@
 # Nexmo Client Library for Java
 
+[![Build Status](https://travis-ci.org/Nexmo/nexmo-java.svg?branch=version-2)](https://travis-ci.org/Nexmo/nexmo-java)
+[![codecov](https://codecov.io/gh/Nexmo/nexmo-java/branch/version-2/graph/badge.svg)](https://codecov.io/gh/Nexmo/nexmo-java)
+
+
 You can use this [LANGUAGE] client library to add [Nexmo's API](#api-coverage) to your application. To use this, you'll
 need a Nexmo account. Sign up [for free at nexmo.com][signup].
 
