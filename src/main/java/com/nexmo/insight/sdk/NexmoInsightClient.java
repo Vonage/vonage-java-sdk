@@ -23,6 +23,7 @@ package com.nexmo.insight.sdk;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.nexmo.common.NexmoResponseParseException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -153,7 +155,7 @@ public class NexmoInsightClient {
 
     public InsightResult request(final String number,
                                  final String callbackUrl) throws IOException,
-                                                                  SAXException {
+                                                                  NexmoResponseParseException {
         return request(number,
                        callbackUrl,
                        null,
@@ -170,7 +172,7 @@ public class NexmoInsightClient {
                                  final String callbackMethod,
                                  final String clientRef,
                                  final String ipAddress) throws IOException,
-                                                                SAXException {
+                                                                NexmoResponseParseException {
         if (number == null || callbackUrl == null)
             throw new IllegalArgumentException("number and callbackUrl parameters are mandatory.");
         if (callbackTimeout >= 0 && (callbackTimeout < 1000 || callbackTimeout > 30000))
@@ -223,22 +225,15 @@ public class NexmoInsightClient {
             return new InsightResult(InsightResult.STATUS_COMMS_FAILURE,
                                      null,
                                      null,
-                                     0,
-                                     0,
+                                     null,
+                                     null,
                                      "Failed to communicate with NEXMO-HTTP url [ " + url + " ] ..." + e,
                                      true);
         }
 
-        Document doc;
-        synchronized(this.documentBuilder) {
-            doc = this.documentBuilder.parse(new InputSource(new StringReader(response)));
-        }
 
-        Element root = doc.getDocumentElement();
-        if (!"lookup".equals(root.getNodeName()))
-            throw new IOException("No valid response found [ " + response + "] ");
 
-        return parseInsightResult(root);
+        return parseInsightResult(response);
     }
 
     private static String strJoin(String[] aArr, String sSep) {
@@ -251,11 +246,24 @@ public class NexmoInsightClient {
         return sbStr.toString();
     }
 
-    private static InsightResult parseInsightResult(Element root) throws IOException {
+    protected InsightResult parseInsightResult(String response) throws NexmoResponseParseException, IOException {
+        Document doc;
+        synchronized(this.documentBuilder) {
+            try {
+                doc = this.documentBuilder.parse(new InputSource(new StringReader(response)));
+            } catch (SAXException se) {
+                throw new NexmoResponseParseException("Could not parse response XML", se);
+            }
+        }
+
+        Element root = doc.getDocumentElement();
+        if (!"lookup".equals(root.getNodeName()))
+            throw new NexmoResponseParseException("No valid response found [ " + response + "] ");
+
         String requestId = null;
         String number = null;
-        float price = -1;
-        float balance = -1;
+        BigDecimal price = null;
+        BigDecimal balance = null;
         int status = -1;
         String errorText = null;
 
@@ -272,36 +280,36 @@ public class NexmoInsightClient {
                 number = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
             } else if ("status".equals(name)) {
                 String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-                try {
-                    if (str != null)
-                        status = Integer.parseInt(str);
-                } catch (NumberFormatException e) {
-                    log.error("xml parser .. invalid value in <status> node [ " + str + " ] ");
-                    status = InsightResult.STATUS_INTERNAL_ERROR;
-                }
+                if (str != null)
+                    try {
+                            status = Integer.parseInt(str);
+                    } catch (NumberFormatException e) {
+                        log.error("xml parser .. invalid value in <status> node [ " + str + " ] ");
+                        status = InsightResult.STATUS_INTERNAL_ERROR;
+                    }
             } else if ("requestPrice".equals(name)) {
                 String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-                try {
-                    if (str != null)
-                        price = Float.parseFloat(str);
-                } catch (NumberFormatException e) {
-                    log.error("xml parser .. invalid value in <requestPrice> node [ " + str + " ] ");
-                }
+                if (str != null)
+                    try {
+                        price = new BigDecimal(str);
+                    } catch (NumberFormatException nfe) {
+                        log.error(String.format("<requestPrice> contained invalid value: %s", str));
+                    }
             } else if ("remainingBalance".equals(name)) {
                 String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-                try {
-                    if (str != null)
-                        balance = Float.parseFloat(str);
-                } catch (NumberFormatException e) {
-                    log.error("xml parser .. invalid value in <remainingBalance> node [ " + str + " ] ");
-                }
+                if (str != null)
+                    try {
+                        balance = new BigDecimal(str);
+                    } catch (NumberFormatException nfe) {
+                        log.error(String.format("<balance> contained invalid value: %s", str));
+                    }
             } else if ("errorText".equals(name)) {
                 errorText = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
             }
         }
 
         if (status == -1)
-            throw new IOException("Xml Parser - did not find a <status> node");
+            throw new NexmoResponseParseException("Xml Parser - did not find a <status> node");
 
         // Is this a temporary error ?
         boolean temporaryError = (status == InsightResult.STATUS_THROTTLED || status == InsightResult.STATUS_INTERNAL_ERROR);

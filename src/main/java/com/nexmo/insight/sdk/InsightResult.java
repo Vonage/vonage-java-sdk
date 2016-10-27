@@ -22,6 +22,8 @@ package com.nexmo.insight.sdk;
  */
 
 
+import java.math.BigDecimal;
+
 /**
  * Number insight request result.
  *
@@ -68,14 +70,14 @@ public class InsightResult {
     private final String errorText;
     private final boolean temporaryError;
 
-    private final float requestPrice;
-    private final float remainingBalance;
+    private final BigDecimal requestPrice;
+    private final BigDecimal remainingBalance;
 
     protected InsightResult(final int status,
                             final String requestId,
                             final String number,
-                            final float requestPrice,
-                            final float remainingBalance,
+                            final BigDecimal requestPrice,
+                            final BigDecimal remainingBalance,
                             final String errorText,
                             final boolean temporaryError) {
         this.status = status;
@@ -108,11 +110,11 @@ public class InsightResult {
     }
 
     public float getRequestPrice() {
-        return this.requestPrice;
+        return this.requestPrice == null ? 0.0f : this.requestPrice.floatValue();
     }
 
     public float getRemainingBalance() {
-        return this.remainingBalance;
+        return this.remainingBalance == null ? 0.0f : this.remainingBalance.floatValue();
     }
 
     @Override
