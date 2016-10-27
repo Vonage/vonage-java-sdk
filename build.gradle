@@ -55,15 +55,15 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 	classifier = 'javadoc'
 	from javadoc.destinationDir
 }
+assemble.dependsOn javadocJar
 
 jacocoTestReport {
     reports {
-        xml.enabled true
+        xml.enabled  = true
+		html.enabled = true
     }
 }
-
-assemble.dependsOn javadocJar
-
+check.dependsOn jacocoTestReport
 
 uploadArchives { repositories { mavenDeployer {
 	beforeDeployment {
