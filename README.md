@@ -4,7 +4,7 @@
 [![codecov](https://codecov.io/gh/Nexmo/nexmo-java/branch/version-2/graph/badge.svg)](https://codecov.io/gh/Nexmo/nexmo-java)
 
 
-You can use this [LANGUAGE] client library to add [Nexmo's API](#api-coverage) to your application. To use this, you'll
+You can use this Java client library to add [Nexmo's API](#api-coverage) to your application. To use this, you'll
 need a Nexmo account. Sign up [for free at nexmo.com][signup].
 
  * [Installation](#installation)
@@ -22,7 +22,7 @@ To use the client library you'll need to have [created a Nexmo account][signup].
 To install the Java client library using Gradle, add the following to `build.gradle`:
 
 ```groovy
-compile 'com.nexmo:nexmo-java:1.6'
+compile 'com.nexmo:nexmo-java:2.0'
 ```
 
 Alternatively you can clone the repo and build the jar yourself:
