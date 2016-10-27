@@ -252,7 +252,7 @@ public class SmsSubmissionResult implements java.io.Serializable {
         sb.append("SMS-SUBMIT-RESULT -- STATUS:").append(this.status);
         sb.append(" ERR:").append(this.errorText);
         sb.append(" DEST:").append(this.destination);
-        sb.append(" MSG-IG:").append(this.messageId);
+        sb.append(" MSG-ID:").append(this.messageId);
         sb.append(" CLIENT-REF:").append(this.clientReference);
         sb.append(" PRICE:").append(this.messagePrice == null ? "-" : this.messagePrice.toPlainString());
         sb.append(" BALANCE:").append(this.remainingBalance == null ? "-" : this.remainingBalance.toPlainString());

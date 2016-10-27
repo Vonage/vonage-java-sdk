@@ -85,4 +85,13 @@ public class SmsSubmissionReachabilityStatus implements java.io.Serializable {
         return "REACHABILITY -- STAT [ " + this.status + " ] [ " + this.description + " ] ";
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof  SmsSubmissionReachabilityStatus) {
+            SmsSubmissionReachabilityStatus other = (SmsSubmissionReachabilityStatus)obj;
+            return this.getStatus() == other.getStatus() && this.getDescription().equals(other.getDescription());
+        } else {
+            return false;
+        }
+    }
 }

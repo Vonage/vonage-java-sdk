@@ -54,6 +54,26 @@ public class NexmoSmsClientTest {
         client = new NexmoSmsClient("not-an-api-key", "secret");
     }
 
+    @Before
+    public void testConstructorNullBaseUrl() {
+        try {
+            client = new NexmoSmsClient(null, "not-an-api-key", "secret", 0, 0, false, null);
+            fail("Null baseUrl should raise IllegalArgumentException");
+        } catch (IllegalArgumentException e) {
+            // this is expected
+        }
+    }
+
+    @Before
+    public void testConstructorInsecureBaseUrl() {
+        try {
+            client = new NexmoSmsClient("http://insecure.example.com/", "not-an-api-key", "secret", 0, 0, false, null);
+            fail("Insecure baseUrl should raise IllegalArgumentException");
+        } catch (IllegalArgumentException e) {
+            // this is expected
+        }
+    }
+
     private HttpClient stubHttpClient(int statusCode, String content) {
         HttpClient result = mock(HttpClient.class);
         try {
