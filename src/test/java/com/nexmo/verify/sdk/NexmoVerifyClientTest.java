@@ -30,13 +30,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.message.BasicNameValuePair;
 import org.junit.*;
-import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashSet;
 import java.util.List;
@@ -81,7 +79,9 @@ public class NexmoVerifyClientTest {
         try {
             new NexmoVerifyClient(null, "api-key", "api-secret", 5000, 5000);
             fail("null baseUrl should have raised IllegalArgumentException");
-        } catch (IllegalArgumentException e) {}
+        } catch (IllegalArgumentException e) {
+            // This is expected
+        }
     }
 
     @Test
@@ -89,7 +89,9 @@ public class NexmoVerifyClientTest {
         try {
             new NexmoVerifyClient("http://not.a.real.domain/api", "api-key", "api-secret", 5000, 5000);
             fail("null baseUrl should have raised IllegalArgumentException");
-        } catch (IllegalArgumentException e) {}
+        } catch (IllegalArgumentException e) {
+            // This is expected
+        }
     }
 
     @Test
@@ -149,7 +151,7 @@ public class NexmoVerifyClientTest {
                 "    </verify_response>"));
 
         try {
-            CheckResult c = client.check(null, null);
+            client.check(null, null);
             fail("Calling check with null destination should throw IllegalArgumentException");
         } catch (IllegalArgumentException e) {
             // This is expected
@@ -447,12 +449,15 @@ public class NexmoVerifyClientTest {
                 "        <status>0</status>\n" +
                 "        <error_text>error</error_text>\n" +
                 "    </verify_response>");
+        assertEquals("not-really-a-request-id", r.getRequestId());
+        assertEquals(VerifyResult.STATUS_OK, r.getStatus());
+        assertEquals("error", r.getErrorText());
     }
 
     @Test
     public void testParseVerifyResponseBadXml() throws Exception {
         try {
-            VerifyResult r = client.parseVerifyResponse("NOT XML");
+            client.parseVerifyResponse("NOT XML");
             fail("Invalid XML should cause NexmoResponseParseException");
         } catch (NexmoResponseParseException e) {
             // this is expected
@@ -462,7 +467,7 @@ public class NexmoVerifyClientTest {
     @Test
     public void testParseVerifyResponseIncorrectXmlRoot() throws Exception {
         try {
-            VerifyResult r = client.parseVerifyResponse("<?xml version=\"1.0\" encoding=\"UTF-8\"?><INCORRECTROOT/>");
+            client.parseVerifyResponse("<?xml version=\"1.0\" encoding=\"UTF-8\"?><INCORRECTROOT/>");
             fail("Incorrect XML root should cause NexmoResponseParseException");
         } catch (NexmoResponseParseException e) {
             // this is expected
@@ -588,7 +593,7 @@ public class NexmoVerifyClientTest {
     @Test
     public void testConstructVerifyParamsNullNumber() throws Exception {
         try {
-            List<NameValuePair> params = client.constructVerifyParams(
+            client.constructVerifyParams(
                     null,
                     "Brand.com",
                     "Your friend",
@@ -605,7 +610,7 @@ public class NexmoVerifyClientTest {
     @Test
     public void testConstructVerifyParamsNullBrand() throws Exception {
         try {
-            List<NameValuePair> params = client.constructVerifyParams(
+            client.constructVerifyParams(
                     null,
                     "Brand.com",
                     "Your friend",
@@ -645,7 +650,7 @@ public class NexmoVerifyClientTest {
     }
 
     private static void assertParamMissing(List<NameValuePair> params, String key) {
-        Set<String> keys = new HashSet<String>();
+        Set<String> keys = new HashSet<>();
         for (NameValuePair pair : params) {
             keys.add(pair.getName());
         }
