@@ -30,7 +30,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 
 public class SnsSubmissionResultTest {
-    SmsSubmissionResult result;
+    private SmsSubmissionResult result;
 
     @Before
     public void setUp() {

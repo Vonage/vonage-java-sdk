@@ -34,7 +34,7 @@ import java.util.Date;
  */
 public class ValidityPeriod implements java.io.Serializable {
 
-    static final long serialVersionUID = -194856825408876712L;
+    private static final long serialVersionUID = -194856825408876712L;
 
     private final Integer timeToLive;
 

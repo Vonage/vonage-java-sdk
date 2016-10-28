@@ -30,7 +30,7 @@ package com.nexmo.messaging.sdk;
  */
 public class SmsSubmissionReachabilityStatus implements java.io.Serializable {
 
-    static final long serialVersionUID = 8121497095898864184L;
+    private static final long serialVersionUID = 8121497095898864184L;
 
     /**
      * The reachability status of this messages destination could not be determined

@@ -33,7 +33,7 @@ import com.nexmo.messaging.sdk.messages.parameters.MessageClass;
  */
 public class UnicodeMessage extends Message {
 
-    static final long serialVersionUID = 8327129506926552344L;
+    private static final long serialVersionUID = 8327129506926552344L;
 
     /**
      * Instantiate a new unicode text-message request<br>

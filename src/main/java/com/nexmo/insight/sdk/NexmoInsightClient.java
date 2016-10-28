@@ -89,7 +89,6 @@ public class NexmoInsightClient {
      */
     public static final int DEFAULT_SO_TIMEOUT = 30000;
 
-    private final DocumentBuilderFactory documentBuilderFactory;
     private final DocumentBuilder documentBuilder;
 
     private final String baseUrl;
@@ -149,8 +148,8 @@ public class NexmoInsightClient {
         this.apiSecret = apiSecret;
         this.connectionTimeout = connectionTimeout;
         this.soTimeout = soTimeout;
-        this.documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        this.documentBuilder = this.documentBuilderFactory.newDocumentBuilder();
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        this.documentBuilder = documentBuilderFactory.newDocumentBuilder();
     }
 
     public InsightResult request(final String number,

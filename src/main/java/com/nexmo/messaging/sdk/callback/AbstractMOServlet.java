@@ -53,7 +53,7 @@ import com.nexmo.security.RequestSigning;
  */
 public abstract class AbstractMOServlet extends HttpServlet {
 
-    static final long serialVersionUID = 8745764381059238419L;
+    private static final long serialVersionUID = 8745764381059238419L;
 
     public static final int MAX_CONSUMER_THREADS = 10;
 

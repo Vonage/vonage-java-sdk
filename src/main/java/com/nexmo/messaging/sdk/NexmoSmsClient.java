@@ -319,7 +319,7 @@ public class NexmoSmsClient {
         this.httpClient = httpClient;
     }
 
-    List<NameValuePair> constructParams(final Message message,
+    protected List<NameValuePair> constructParams(final Message message,
                                         final ValidityPeriod validityPeriod) {
         // Determine the type parameter based on the type of Message object.
         boolean binary = message.getType() == Message.MESSAGE_TYPE_BINARY;
@@ -388,7 +388,7 @@ public class NexmoSmsClient {
         return params;
     }
 
-    SmsSubmissionResult[] parseResponse(String response) throws NexmoResponseParseException {
+    protected SmsSubmissionResult[] parseResponse(String response) throws NexmoResponseParseException {
         // parse the response doc ...
 
         /*

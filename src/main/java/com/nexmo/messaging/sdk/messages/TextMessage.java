@@ -30,7 +30,7 @@ import com.nexmo.messaging.sdk.messages.parameters.MessageClass;
  */
 public class TextMessage extends Message {
 
-    static final long serialVersionUID = 6258872793039443129L;
+    private static final long serialVersionUID = 6258872793039443129L;
 
     /**
      * Instantiate a new text-message request.<br>

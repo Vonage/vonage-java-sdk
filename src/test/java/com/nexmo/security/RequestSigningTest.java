@@ -136,9 +136,12 @@ public class RequestSigningTest {
         return params;
     }
 
-    private HttpServletRequest constructDummyRequest(Map<String, String[]> params) {
-        if (params == null) {
+    private HttpServletRequest constructDummyRequest(final Map<String, String[]> nullableParams) {
+        Map<String, String[]> params;
+        if (nullableParams == null) {
             params = constructDummyParams();
+        } else {
+            params = nullableParams;
         }
 
         HttpServletRequest request = mock(HttpServletRequest.class);

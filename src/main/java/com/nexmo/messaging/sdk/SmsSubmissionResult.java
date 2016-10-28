@@ -31,7 +31,7 @@ import java.math.BigDecimal;
  */
 public class SmsSubmissionResult implements java.io.Serializable {
 
-    static final long serialVersionUID = 2580996244288340269L;
+    private static final long serialVersionUID = 2580996244288340269L;
 
     /**
      * Message was successfully submitted to the Nexmo service

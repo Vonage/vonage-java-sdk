@@ -70,7 +70,7 @@ public class RequestSigning implements SecurityConstants {
      * @param currentTimeSeconds the current time in seconds since 1970-01-01
      *
      */
-     static void constructSignatureForRequestParameters(
+     protected static void constructSignatureForRequestParameters(
             List<NameValuePair> params, String secretKey, long currentTimeSeconds) {
         // First, inject a 'timestamp=' parameter containing the current time in seconds since Jan 1st 1970
         params.add(new BasicNameValuePair(PARAM_TIMESTAMP, Long.toString(currentTimeSeconds)));
@@ -132,7 +132,8 @@ public class RequestSigning implements SecurityConstants {
      *
      * @return true if the signature is correct for this request and secret key.
      */
-     static boolean verifyRequestSignature(HttpServletRequest request, String secretKey, long currentTimeMillis) {
+     protected static boolean verifyRequestSignature(HttpServletRequest request, String secretKey, long
+            currentTimeMillis) {
         // identify the signature supplied in the request ...
         String suppliedSignature = request.getParameter(PARAM_SIGNATURE);
         if (suppliedSignature == null)

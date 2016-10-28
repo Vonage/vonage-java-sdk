@@ -30,7 +30,7 @@ import com.nexmo.messaging.sdk.messages.parameters.MessageClass;
  */
 public class BinaryMessage extends Message {
 
-    static final long serialVersionUID = -5301775803396025570L;
+    private static final long serialVersionUID = -5301775803396025570L;
 
     /**
      * Instantiate a new binary sms message request.

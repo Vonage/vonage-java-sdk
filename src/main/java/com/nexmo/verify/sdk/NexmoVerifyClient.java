@@ -143,7 +143,6 @@ public class NexmoVerifyClient {
         }
     };
 
-    private final DocumentBuilderFactory documentBuilderFactory;
     private final DocumentBuilder documentBuilder;
 
     private final String baseUrl;
@@ -204,8 +203,8 @@ public class NexmoVerifyClient {
         this.apiSecret = apiSecret;
         this.connectionTimeout = connectionTimeout;
         this.soTimeout = soTimeout;
-        this.documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        this.documentBuilder = this.documentBuilderFactory.newDocumentBuilder();
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        this.documentBuilder = documentBuilderFactory.newDocumentBuilder();
     }
 
     public VerifyResult verify(final String number,

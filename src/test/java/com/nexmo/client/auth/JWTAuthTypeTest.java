@@ -40,7 +40,7 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Map;
 
 public class JWTAuthTypeTest {
-    JWTAuthType auth;
+    private JWTAuthType auth;
 
     @Before
     public void setUp() throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, IOException {

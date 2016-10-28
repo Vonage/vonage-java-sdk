@@ -76,7 +76,6 @@ public class NexmoSnsClient {
      */
     public static final int DEFAULT_SO_TIMEOUT = 30000;
 
-    private DocumentBuilderFactory documentBuilderFactory;
     private final DocumentBuilder documentBuilder;
 
     private final String baseUrl;
@@ -158,8 +157,8 @@ public class NexmoSnsClient {
         this.connectionTimeout = connectionTimeout;
         this.soTimeout = soTimeout;
         try {
-            this.documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            this.documentBuilder = this.documentBuilderFactory.newDocumentBuilder();
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            this.documentBuilder = documentBuilderFactory.newDocumentBuilder();
         } catch (javax.xml.parsers.ParserConfigurationException e) {
             throw new Exception("ERROR initializing XML Document builder!", e);
         }

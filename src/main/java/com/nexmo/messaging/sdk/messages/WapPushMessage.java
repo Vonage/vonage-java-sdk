@@ -28,7 +28,7 @@ package com.nexmo.messaging.sdk.messages;
  */
 public class WapPushMessage extends Message {
 
-    static final long serialVersionUID = -8412926886570923963L;
+    private static final long serialVersionUID = -8412926886570923963L;
 
     /**
      * Instantiate a new wap-push message request, to submit a browsable / downloadable URL to the handset

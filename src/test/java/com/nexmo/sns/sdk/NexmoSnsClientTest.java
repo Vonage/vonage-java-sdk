@@ -38,7 +38,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 public class NexmoSnsClientTest {
-    NexmoSnsClient client;
+    private NexmoSnsClient client;
 
     @Before
     public void setUp() throws Exception {
