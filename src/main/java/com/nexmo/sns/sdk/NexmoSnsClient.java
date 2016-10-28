@@ -61,20 +61,19 @@ public class NexmoSnsClient {
     private static final Log log = LogFactory.getLog(NexmoSnsClient.class);
 
     /**
-     * https://rest.nexmo.com/sms/xml<br>
-     * Submission url used unless over-ridden on the constructor
+     * Submission url used unless over-ridden on the constructor.
      */
-    public static final String DEFAULT_BASE_URL = "https://sns.nexmo.com/sns/xml";
+    private static final String DEFAULT_BASE_URL = "https://sns.nexmo.com/sns/xml";
 
     /**
-     * Default connection timeout of 5000ms used by this client unless specifically overridden on the constructor
+     * Default connection timeout of 5000ms used by this client unless specifically overridden on the constructor.
      */
-    public static final int DEFAULT_CONNECTION_TIMEOUT = 5000;
+    private static final int DEFAULT_CONNECTION_TIMEOUT = 5000;
 
     /**
-     * Default read timeout of 30000ms used by this client unless specifically overridden on the constructor
+     * Default read timeout of 30000ms used by this client unless specifically overridden on the constructor.
      */
-    public static final int DEFAULT_SO_TIMEOUT = 30000;
+    private static final int DEFAULT_SO_TIMEOUT = 30000;
 
     private final DocumentBuilder documentBuilder;
 
@@ -88,7 +87,7 @@ public class NexmoSnsClient {
     private HttpClient httpClient = null;
 
     /**
-     * Instantiate a new NexmoSnsClient instance that will communicate using the supplied credentials.
+     * Constructs a NexmoSnsClient with the default base URL, a connection timeout of 5000ms and a read timeout of 30s.
      *
      * @param apiKey Your Nexmo account api key
      * @param apiSecret Your Nexmo account api secret
@@ -105,7 +104,7 @@ public class NexmoSnsClient {
     }
 
     /**
-     * Instantiate a new NexmoSnsClient instance that will communicate using the supplied credentials, and will use the supplied connection and read timeout values.
+     * Constructs a NexmoSnsClient with the default base URL.
      *
      * @param apiKey Your Nexmo account api key
      * @param apiSecret Your Nexmo account api secret
@@ -130,7 +129,7 @@ public class NexmoSnsClient {
      * Additionally, you can specify an alternative service base url. For example submitting to a testing sandbox environment,
      * or if requested to submit to an alternative address by Nexmo, for example, in cases where it may be necessary to prioritize your traffic.
      *
-     * @param baseUrl The URL to be used instead of <code>DEFAULT_BASE_URL</code>
+     * @param baseUrl The URL to be used instead of <pre>https://sns.nexmo.com/sns/xml</pre>
      * @param apiKey Your Nexmo account api key
      * @param apiSecret Your Nexmo account api secret
      * @param connectionTimeout over-ride the default connection timeout with this value (in milliseconds)
@@ -165,12 +164,8 @@ public class NexmoSnsClient {
     }
 
     public SnsServiceResult submit(final Request request) throws Exception {
-
         log.info("NEXMO-REST-SNS-SERVICE-CLIENT ... submit request [ " + request.toString() + " ] ");
         List<NameValuePair> params = constructSubmitParams(request);
-
-
-        //String baseUrl = https ? this.baseUrlHttps : this.baseUrlHttp;
 
         // Now that we have generated a query string, we can instantiate a HttpClient,
         // construct a POST or GET method and execute to submit the request

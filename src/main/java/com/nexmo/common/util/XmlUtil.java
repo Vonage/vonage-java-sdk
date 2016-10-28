@@ -53,7 +53,7 @@ public class XmlUtil {
             throw new NexmoResponseParseException("XML parse failure", se);
         } catch (IOException ioe) {
             // Should never happen:
-            throw new RuntimeException(ioe);
+            throw new NexmoResponseParseException("IOException while parsing response XML!", ioe);
         }
     }
 }
