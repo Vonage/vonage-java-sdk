@@ -20,14 +20,40 @@ package com.nexmo.common.util;/*
  * THE SOFTWARE.
  */
 
+import com.nexmo.common.NexmoResponseParseException;
+import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import java.io.IOException;
+import java.io.StringReader;
 
 public class XmlUtil {
+
     public static String stringValue(Node node) {
         return node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
     }
 
     public static int intValue(Node node) {
-        return Integer.parseInt(stringValue(node), 10);
+        String str = stringValue(node);
+        if (str != null) {
+            return Integer.parseInt(str, 10);
+        } else {
+            throw new NullPointerException("Null or empty value provided for numeric value: " + node.getNodeName());
+        }
+    }
+
+    public static Document parseXmlString(final DocumentBuilder documentBuilder,
+                                          final String response) throws NexmoResponseParseException {
+        try {
+            return documentBuilder.parse(new InputSource(new StringReader(response)));
+        } catch (SAXException se) {
+            throw new NexmoResponseParseException("XML parse failure", se);
+        } catch (IOException ioe) {
+            // Should never happen:
+            throw new RuntimeException(ioe);
+        }
     }
 }

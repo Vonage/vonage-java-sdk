@@ -23,6 +23,7 @@ package com.nexmo.verify.sdk;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,6 +36,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.nexmo.common.NexmoResponseParseException;
+import com.nexmo.common.util.XmlUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -207,7 +210,7 @@ public class NexmoVerifyClient {
 
     public VerifyResult verify(final String number,
                                final String brand) throws IOException,
-                                                          SAXException {
+                                                          NexmoResponseParseException {
         return verify(number,
                       brand,
                       null,
@@ -219,7 +222,7 @@ public class NexmoVerifyClient {
     public VerifyResult verify(final String number,
                                final String brand,
                                final String from) throws IOException,
-                                                         SAXException {
+                                                         NexmoResponseParseException {
         return verify(number,
                       brand,
                       from,
@@ -233,7 +236,7 @@ public class NexmoVerifyClient {
                                final String from,
                                final int length,
                                final Locale locale) throws IOException,
-                                                           SAXException {
+                                                           NexmoResponseParseException {
         return verify(number,
                       brand,
                       from,
@@ -248,7 +251,7 @@ public class NexmoVerifyClient {
                                final int length,
                                final Locale locale,
                                final LineType type) throws IOException,
-                                                           SAXException {
+                                                           NexmoResponseParseException {
         List<NameValuePair> params = constructVerifyParams(number, brand, from, length, locale, type);
 
         String verifyBaseUrl = this.baseUrl + PATH_VERIFY;
@@ -278,19 +281,24 @@ public class NexmoVerifyClient {
                                     true);
         }
 
+        return parseVerifyResponse(response);
+    }
+
+    protected VerifyResult parseVerifyResponse(String response) throws NexmoResponseParseException {
         Document doc;
         synchronized(this.documentBuilder) {
-            doc = this.documentBuilder.parse(new InputSource(new StringReader(response)));
+            doc = XmlUtil.parseXmlString(this.documentBuilder, response);
         }
 
         Element root = doc.getDocumentElement();
         if (!"verify_response".equals(root.getNodeName()))
-            throw new IOException("No valid response found [ " + response + "] ");
+            throw new NexmoResponseParseException("No valid response found [ " + response + "] ");
 
         return parseVerifyResult(root);
     }
 
-    private List<NameValuePair> constructVerifyParams(
+
+    protected List<NameValuePair> constructVerifyParams(
             String number, String brand, String from, int length, Locale locale, LineType type) {
         if (number == null || brand == null)
             throw new IllegalArgumentException("number and brand parameters are mandatory.");
@@ -322,7 +330,7 @@ public class NexmoVerifyClient {
         return params;
     }
 
-    private static VerifyResult parseVerifyResult(Element root) throws IOException {
+    private static VerifyResult parseVerifyResult(Element root) throws NexmoResponseParseException {
         String requestId = null;
         int status = -1;
         String errorText = null;
@@ -335,9 +343,9 @@ public class NexmoVerifyClient {
 
             String name = node.getNodeName();
             if ("request_id".equals(name)) {
-                requestId = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                requestId = XmlUtil.stringValue(node);
             } else if ("status".equals(name)) {
-                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                String str = XmlUtil.stringValue(node);
                 try {
                     if (str != null)
                         status = Integer.parseInt(str);
@@ -346,12 +354,12 @@ public class NexmoVerifyClient {
                     status = BaseResult.STATUS_INTERNAL_ERROR;
                 }
             } else if ("error_text".equals(name)) {
-                errorText = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                errorText = XmlUtil.stringValue(node);
             }
         }
 
         if (status == -1)
-            throw new IOException("Xml Parser - did not find a <status> node");
+            throw new NexmoResponseParseException("Xml Parser - did not find a <status> node");
 
         // Is this a temporary error ?
         boolean temporaryError = (status == BaseResult.STATUS_THROTTLED || status == BaseResult.STATUS_INTERNAL_ERROR);
@@ -362,12 +370,14 @@ public class NexmoVerifyClient {
                                 temporaryError);
     }
 
-    public CheckResult check(final String requestId, final String code) throws IOException, SAXException {
+    public CheckResult check(final String requestId,
+                             final String code) throws IOException, NexmoResponseParseException {
         return check(requestId, code, null);
     }
 
-    public CheckResult check(
-            final String requestId, final String code, final String ipAddress) throws IOException, SAXException {
+    public CheckResult check(final String requestId,
+                             final String code,
+                             final String ipAddress) throws IOException, NexmoResponseParseException {
         if (requestId == null || code == null)
             throw new IllegalArgumentException("request ID and code parameters are mandatory.");
 
@@ -384,7 +394,12 @@ public class NexmoVerifyClient {
         // construct a POST method and execute to submit the request
         String response = null;
         HttpPost httpPost = new HttpPost(verifyCheckBaseUrl);
-        httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+        try {
+            httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+        } catch (UnsupportedEncodingException uee) {
+            // This should never happen:
+            throw new RuntimeException(uee);
+        }
         HttpUriRequest method = httpPost;
         String url = verifyCheckBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
 
@@ -407,9 +422,13 @@ public class NexmoVerifyClient {
                     true);
         }
 
+        return parseCheckResponse(response);
+    }
+
+    private CheckResult parseCheckResponse(String response) throws NexmoResponseParseException, IOException {
         Document doc;
         synchronized(this.documentBuilder) {
-            doc = this.documentBuilder.parse(new InputSource(new StringReader(response)));
+            doc = XmlUtil.parseXmlString(this.documentBuilder, response);
         }
 
         Element root = doc.getDocumentElement();
@@ -430,9 +449,9 @@ public class NexmoVerifyClient {
 
             String name = node.getNodeName();
             if ("event_id".equals(name)) {
-                eventId = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                eventId = XmlUtil.stringValue(node);
             } else if ("status".equals(name)) {
-                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                String str = XmlUtil.stringValue(node);
                 try {
                     if (str != null)
                         status = Integer.parseInt(str);
@@ -441,7 +460,7 @@ public class NexmoVerifyClient {
                     status = BaseResult.STATUS_INTERNAL_ERROR;
                 }
             } else if ("price".equals(name)) {
-                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                String str = XmlUtil.stringValue(node);
                 try {
                     if (str != null)
                         price = Float.parseFloat(str);
@@ -449,9 +468,9 @@ public class NexmoVerifyClient {
                     log.error("xml parser .. invalid value in <price> node [ " + str + " ] ");
                 }
             } else if ("currency".equals(name)) {
-                currency = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                currency = XmlUtil.stringValue(node);
             } else if ("error_text".equals(name)) {
-                errorText = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                errorText = XmlUtil.stringValue(node);
             }
         }
 
@@ -475,12 +494,12 @@ public class NexmoVerifyClient {
         return params;
     }
 
-    public SearchResult search(String requestId) throws IOException, SAXException {
+    public SearchResult search(String requestId) throws IOException, NexmoResponseParseException {
         SearchResult[] result = search(new String[] { requestId });
         return result != null && result.length > 0 ? result[0] : null;
     }
 
-    public SearchResult[] search(String... requestIds) throws IOException, SAXException {
+    public SearchResult[] search(String... requestIds) throws IOException, NexmoResponseParseException {
         if (requestIds == null || requestIds.length == 0)
             throw new IllegalArgumentException("request ID parameter is mandatory.");
 
@@ -529,9 +548,13 @@ public class NexmoVerifyClient {
             };
         }
 
+        return parseSearchResponse(response);
+    }
+
+    protected SearchResult[] parseSearchResponse(String response) throws NexmoResponseParseException {
         Document doc;
-        synchronized(this.documentBuilder) {
-            doc = this.documentBuilder.parse(new InputSource(new StringReader(response)));
+        synchronized (this.documentBuilder) {
+            doc = XmlUtil.parseXmlString(this.documentBuilder, response);
         }
 
         Element root = doc.getDocumentElement();
@@ -539,18 +562,18 @@ public class NexmoVerifyClient {
             // error response
             VerifyResult result = parseVerifyResult(root);
             return new SearchResult[] {
-                new SearchResult(result.getStatus(),
-                                 result.getRequestId(),
-                                 null,
-                                 null,
-                                 null,
-                                 0, null,
-                                 null,
-                                 null, null,
-                                 null, null,
-                                 null,
-                                 result.getErrorText(),
-                                 result.isTemporaryError())
+                    new SearchResult(result.getStatus(),
+                            result.getRequestId(),
+                            null,
+                            null,
+                            null,
+                            0, null,
+                            null,
+                            null, null,
+                            null, null,
+                            null,
+                            result.getErrorText(),
+                            result.isTemporaryError())
             };
         } else if (("verify_request").equals(root.getNodeName())) {
             return new SearchResult[] { parseSearchResult(root) };
@@ -569,11 +592,11 @@ public class NexmoVerifyClient {
 
             return results.toArray(new SearchResult[results.size()]);
         } else {
-            throw new IOException("No valid response found [ " + response + "] ");
+            throw new NexmoResponseParseException("No valid response found [ " + response + "] ");
         }
     }
 
-    private List<NameValuePair> constructSearchParams(String[] requestIds) {
+    protected List<NameValuePair> constructSearchParams(String[] requestIds) {
         List<NameValuePair> params = new ArrayList<>();
 
         params.add(new BasicNameValuePair("api_key", this.apiKey));
@@ -588,7 +611,7 @@ public class NexmoVerifyClient {
         return params;
     }
 
-    private static SearchResult parseSearchResult(Element root) throws IOException {
+    protected static SearchResult parseSearchResult(Element root) throws NexmoResponseParseException {
         String requestId = null;
         String accountId = null;
         String number = null;
@@ -611,11 +634,11 @@ public class NexmoVerifyClient {
 
             String name = node.getNodeName();
             if ("request_id".equals(name)) {
-                requestId = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                requestId = XmlUtil.stringValue(node);
             } else if ("account_id".equals(name)) {
-                accountId = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                accountId = XmlUtil.stringValue(node);
             } else if ("status".equals(name)) {
-                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                String str = XmlUtil.stringValue(node);
                 if (str != null) {
                     try {
                         status = SearchResult.VerificationStatus.valueOf(str.replace(' ', '_'));
@@ -624,9 +647,9 @@ public class NexmoVerifyClient {
                     }
                 }
             } else if ("number".equals(name)) {
-                number = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                number = XmlUtil.stringValue(node);
             } else if ("price".equals(name)) {
-                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                String str = XmlUtil.stringValue(node);
                 try {
                     if (str != null)
                         price = Float.parseFloat(str);
@@ -634,11 +657,11 @@ public class NexmoVerifyClient {
                     log.error("xml parser .. invalid value in <price> node [ " + str + " ] ");
                 }
             } else if ("currency".equals(name)) {
-                currency = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                currency = XmlUtil.stringValue(node);
             } else if ("sender_id".equals(name)) {
-                senderId = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                senderId = XmlUtil.stringValue(node);
             } else if ("date_submitted".equals(name)) {
-                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                String str = XmlUtil.stringValue(node);
                 if (str != null) {
                     try {
                         dateSubmitted = parseDateTime(str);
@@ -647,7 +670,7 @@ public class NexmoVerifyClient {
                     }
                 }
             } else if ("date_finalized".equals(name)) {
-                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                String str = XmlUtil.stringValue(node);
                 if (str != null) {
                     try {
                         dateFinalized = parseDateTime(str);
@@ -656,7 +679,7 @@ public class NexmoVerifyClient {
                     }
                 }
             } else if ("first_event_date".equals(name)) {
-                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                String str = XmlUtil.stringValue(node);
                 if (str != null) {
                     try {
                         firstEventDate = parseDateTime(str);
@@ -665,7 +688,7 @@ public class NexmoVerifyClient {
                     }
                 }
             } else if ("last_event_date".equals(name)) {
-                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                String str = XmlUtil.stringValue(node);
                 if (str != null) {
                     try {
                         lastEventDate = parseDateTime(str);
@@ -684,12 +707,12 @@ public class NexmoVerifyClient {
                         checks.add(parseVerifyCheck((Element) checkNode));
                 }
             } else if ("error_text".equals(name)) {
-                errorText = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                errorText = XmlUtil.stringValue(node);
             }
         }
 
         if (status == null)
-            throw new IOException("Xml Parser - did not find a <status> node");
+            throw new NexmoResponseParseException("Xml Parser - did not find a <status> node");
 
         return new SearchResult(BaseResult.STATUS_OK,
                                 requestId,
@@ -704,7 +727,7 @@ public class NexmoVerifyClient {
                                 errorText, false);
     }
 
-    private static SearchResult.VerifyCheck parseVerifyCheck(Element root) throws IOException {
+    protected static SearchResult.VerifyCheck parseVerifyCheck(Element root) throws NexmoResponseParseException {
         String code = null;
         SearchResult.VerifyCheck.Status status = null;
         Date dateReceived = null;
@@ -718,9 +741,9 @@ public class NexmoVerifyClient {
 
             String name = node.getNodeName();
             if ("code".equals(name)) {
-                code = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                code = XmlUtil.stringValue(node);
             } else if ("status".equals(name)) {
-                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                String str = XmlUtil.stringValue(node);
                 if (str != null) {
                     try {
                         status = SearchResult.VerifyCheck.Status.valueOf(str);
@@ -729,9 +752,9 @@ public class NexmoVerifyClient {
                     }
                 }
             } else if ("ip_address".equals(name)) {
-                ipAddress = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                ipAddress = XmlUtil.stringValue(node);
             } else if ("date_received".equals(name)) {
-                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                String str = XmlUtil.stringValue(node);
                 if (str != null) {
                     try {
                         dateReceived = parseDateTime(str);
@@ -743,7 +766,7 @@ public class NexmoVerifyClient {
         }
 
         if (status == null)
-            throw new IOException("Xml Parser - did not find a <status> node");
+            throw new NexmoResponseParseException("Xml Parser - did not find a <status> node");
 
         return new SearchResult.VerifyCheck(dateReceived, code, status, ipAddress);
     }
