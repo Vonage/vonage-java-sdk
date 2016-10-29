@@ -1,5 +1,4 @@
-package com.nexmo.verify.sdk;
-/*
+package com.nexmo.verify.sdk.endpoints;/*
  * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,41 +20,5 @@ package com.nexmo.verify.sdk;
  * THE SOFTWARE.
  */
 
-/**
- * Verification check result.
- *
- * @author Daniele Ricci
- */
-public class CheckResult extends BaseResult {
-
-    private static final long serialVersionUID = 8468662117199934412L;
-
-    private final String eventId;
-    private final float price;
-    private final String currency;
-
-    public CheckResult(final int status,
-                          final String eventId,
-                          final float price,
-                          final String currency,
-                          final String errorText,
-                          final boolean temporaryError) {
-        super(status, errorText, temporaryError);
-        this.eventId = eventId;
-        this.price = price;
-        this.currency = currency;
-    }
-
-    public String getEventId() {
-        return this.eventId;
-    }
-
-    public float getPrice() {
-        return this.price;
-    }
-
-    public String getCurrency() {
-        return this.currency;
-    }
-
+public class VerifyClient {
 }

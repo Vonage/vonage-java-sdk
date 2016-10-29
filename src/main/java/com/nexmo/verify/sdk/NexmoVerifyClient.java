@@ -110,11 +110,6 @@ public class NexmoVerifyClient extends LegacyClient {
     public static final String PATH_VERIFY = "/verify/xml";
 
     /**
-     * The endpoint path for submitting verification check requests
-     */
-    public static final String PATH_VERIFY_CHECK = "/verify/check/xml";
-
-    /**
      * The endpoint path for submitting verification search requests
      */
     public static final String PATH_VERIFY_SEARCH = "/verify/search/xml";
@@ -147,11 +142,6 @@ public class NexmoVerifyClient extends LegacyClient {
     private final String baseUrl;
     private final String apiKey;
     private final String apiSecret;
-
-    private final int connectionTimeout;
-    private final int soTimeout;
-
-    private HttpClient httpClient = null;
 
     /**
      * Instantiate a new NexmoVerifyClient instance that will communicate using the supplied credentials.
@@ -261,8 +251,6 @@ public class NexmoVerifyClient extends LegacyClient {
         String url = verifyBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
 
         try {
-            if (this.httpClient == null)
-                this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
             HttpResponse httpResponse = this.httpClient.execute(method);
             response = new BasicResponseHandler().handleResponse(httpResponse);
             log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
@@ -418,71 +406,7 @@ public class NexmoVerifyClient extends LegacyClient {
         return parseCheckResponse(response);
     }
 
-    private CheckResult parseCheckResponse(String response) throws NexmoResponseParseException, IOException {
-        Document doc = parseXml(response);
 
-        Element root = doc.getDocumentElement();
-        if (!"verify_response".equals(root.getNodeName()))
-            throw new IOException("No valid response found [ " + response + "] ");
-
-        String eventId = null;
-        int status = -1;
-        float price = -1;
-        String currency = null;
-        String errorText = null;
-
-        NodeList fields = root.getChildNodes();
-        for (int i = 0; i < fields.getLength(); i++) {
-            Node node = fields.item(i);
-            if (node.getNodeType() != Node.ELEMENT_NODE)
-                continue;
-
-            String name = node.getNodeName();
-            if ("event_id".equals(name)) {
-                eventId = XmlUtil.stringValue(node);
-            } else if ("status".equals(name)) {
-                String str = XmlUtil.stringValue(node);
-                try {
-                    if (str != null)
-                        status = Integer.parseInt(str);
-                } catch (NumberFormatException e) {
-                    log.error("xml parser .. invalid value in <status> node [ " + str + " ] ");
-                    status = BaseResult.STATUS_INTERNAL_ERROR;
-                }
-            } else if ("price".equals(name)) {
-                String str = XmlUtil.stringValue(node);
-                try {
-                    if (str != null)
-                        price = Float.parseFloat(str);
-                } catch (NumberFormatException e) {
-                    log.error("xml parser .. invalid value in <price> node [ " + str + " ] ");
-                }
-            } else if ("currency".equals(name)) {
-                currency = XmlUtil.stringValue(node);
-            } else if ("error_text".equals(name)) {
-                errorText = XmlUtil.stringValue(node);
-            }
-        }
-
-        if (status == -1)
-            throw new IOException("Xml Parser - did not find a <status> node");
-
-        // Is this a temporary error ?
-        boolean temporaryError = (status == BaseResult.STATUS_THROTTLED || status == BaseResult.STATUS_INTERNAL_ERROR);
-
-        return new CheckResult(status, eventId, price, currency, errorText, temporaryError);
-    }
-
-    private List<NameValuePair> constructCheckParams(String requestId, String code) {
-        List<NameValuePair> params = new ArrayList<>();
-
-        params.add(new BasicNameValuePair("api_key", this.apiKey));
-        params.add(new BasicNameValuePair("api_secret", this.apiSecret));
-
-        params.add(new BasicNameValuePair("request_id", requestId));
-        params.add(new BasicNameValuePair("code", code));
-        return params;
-    }
 
     public SearchResult search(String requestId) throws IOException, NexmoResponseParseException {
         SearchResult[] result = search(new String[] { requestId });
@@ -760,10 +684,5 @@ public class NexmoVerifyClient extends LegacyClient {
 
     private static Date parseDateTime(String str) throws ParseException {
         return sDateTimePattern.get().parse(str);
-    }
-
-    // Allowing users of this client to plugin their own HttpClient.
-    public void setHttpClient(HttpClient httpClient) {
-        this.httpClient = httpClient;
     }
 }

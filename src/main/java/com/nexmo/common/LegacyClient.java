@@ -21,12 +21,18 @@ package com.nexmo.common;
  * THE SOFTWARE.
  */
 
+import com.nexmo.common.http.HttpClientUtils;
 import com.nexmo.common.util.XmlUtil;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -44,6 +50,39 @@ public abstract class LegacyClient {
      * Do not use this without locking on {@link #documentBuilderLock}
      */
     private DocumentBuilder documentBuilder;
+
+    private HttpClient httpClient;
+
+    private final String baseUrl;
+
+    private final String apiKey;
+
+    private final String apiSecret;
+
+    protected final int connectionTimeout;
+
+    private final int soTimeout;
+
+    public LegacyClient(final String baseUrl,
+                        final String apiKey,
+                        final String apiSecret,
+                        final int connectionTimeout,
+                        final int soTimeout) {
+
+        // Derive a http and a https version of the supplied base url
+        if (baseUrl == null)
+            throw new IllegalArgumentException("base url is null");
+        String url = baseUrl.trim();
+        String lc = url.toLowerCase();
+        if (!lc.startsWith("https://"))
+            throw new IllegalArgumentException("base url does not start with https://");
+
+        this.baseUrl = url;
+        this.apiKey = apiKey;
+        this.apiSecret = apiSecret;
+        this.connectionTimeout = connectionTimeout;
+        this.soTimeout = soTimeout;
+    }
 
     /**
      * Parse a provided XML String and return the generated DOM Document.
@@ -64,7 +103,34 @@ public abstract class LegacyClient {
             doc = XmlUtil.parseXmlString(this.documentBuilder, xml);
         } catch (ParserConfigurationException e) {
             throw new NexmoResponseParseException("Exception initialing XML parser", e);
+        } finally {
+            this.documentBuilderLock.unlock();
         }
         return doc;
+    }
+
+    protected HttpClient getHttpClient() {
+        if (this.httpClient == null) {
+            this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
+        }
+        return this.httpClient;
+    }
+
+    protected List<NameValuePair> constructParams() {
+        List<NameValuePair> params = new ArrayList<>();
+
+        params.add(new BasicNameValuePair("api_key", this.apiKey));
+        params.add(new BasicNameValuePair("api_secret", this.apiSecret));
+
+        return params;
+    }
+
+    protected String makeUrl(String path) {
+        return this.baseUrl + path;
+    }
+
+    // Allowing users of this client to plugin their own HttpClient.
+    public void setHttpClient(HttpClient httpClient) {
+        this.httpClient = httpClient;
     }
 }
