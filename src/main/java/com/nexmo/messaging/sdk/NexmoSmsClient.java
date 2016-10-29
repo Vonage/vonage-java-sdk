@@ -22,15 +22,11 @@ package com.nexmo.messaging.sdk;
  */
 
 import java.io.IOException;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
+import com.nexmo.common.LegacyClient;
 import com.nexmo.common.NexmoResponseParseException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -45,10 +41,8 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 
 import com.nexmo.common.http.HttpClientUtils;
 import com.nexmo.common.util.HexUtil;
@@ -101,33 +95,30 @@ import com.nexmo.security.RequestSigning;
  *  <li>20 = Invalid Message Class - The message class value supplied was out of range (0 - 3)
  * </ul>
  * @author  Paul Cook
- * @version 1.0
  */
-public class NexmoSmsClient {
+public class NexmoSmsClient extends LegacyClient {
 
     private static final Log log = LogFactory.getLog(NexmoSmsClient.class);
 
     /**
      * Service url used unless over-ridden on the constructor
      */
-    public static final String DEFAULT_BASE_URL = "https://rest.nexmo.com";
+    protected static final String DEFAULT_BASE_URL = "https://rest.nexmo.com";
 
     /**
      * The endpoint path for submitting sms messages
      */
-    public static final String SUBMISSION_PATH_SMS = "/sms/xml";
+    protected static final String SUBMISSION_PATH_SMS = "/sms/xml";
 
     /**
      * Default connection timeout of 5000ms used by this client unless specifically overridden onb the constructor
      */
-    public static final int DEFAULT_CONNECTION_TIMEOUT = 5000;
+    protected static final int DEFAULT_CONNECTION_TIMEOUT = 5000;
 
     /**
      * Default read timeout of 30000ms used by this client unless specifically overridden onb the constructor
      */
-    public static final int DEFAULT_SO_TIMEOUT = 30000;
-
-    private final DocumentBuilder documentBuilder;
+    protected static final int DEFAULT_SO_TIMEOUT = 30000;
 
     private final String baseUrlHttps;
     private final String apiKey;
@@ -142,7 +133,7 @@ public class NexmoSmsClient {
     private HttpClient httpClient = null;
 
     /**
-     * Instantiate a new NexmoSmsClient instance that will communicate using the supplied credentials.
+     * Instantiate a new NexmoSmsClient without request signing.
      *
      * @param apiKey Your Nexmo account api key
      * @param apiSecret Your Nexmo account api secret
@@ -159,7 +150,7 @@ public class NexmoSmsClient {
     }
 
     /**
-     * Instantiate a new NexmoSmsClient instance that will communicate using the supplied credentials, and will use the supplied connection and read timeout values.
+     * Instantiate a new NexmoSmsClient without request signing.
      *
      * @param apiKey Your Nexmo account api key
      * @param apiSecret Your Nexmo account api secret
@@ -180,9 +171,10 @@ public class NexmoSmsClient {
     }
 
     /**
-     * Instantiate a new NexmoSmsClient instance that will communicate using the supplied credentials, and will use the supplied connection and read timeout values.<br>
-     * Additionally, you can specify an alternative service base url. For example submitting to a testing sandbox environment,
-     * or if requested to submit to an alternative address by Nexmo, for example, in cases where it may be necessary to prioritize your traffic.
+     * Instantiate a new NexmoSmsClient.
+     * <p>
+     * This constructor can set the baseUrl used to construct URLs for submitting to a testing sandbox or other
+     * environment.
      *
      * @param baseUrl The base URL to be used instead of <code>DEFAULT_BASE_URL</code>
      * @param apiKey Your Nexmo account api key
@@ -211,11 +203,6 @@ public class NexmoSmsClient {
         this.apiSecret = apiSecret;
         this.connectionTimeout = connectionTimeout;
         this.soTimeout = soTimeout;
-        try {
-            this.documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        } catch (javax.xml.parsers.ParserConfigurationException e) {
-            throw new RuntimeException("ERROR initializing XML Document builder!", e);
-        }
 
         this.signRequests = signRequests;
         this.signatureSecretKey = signatureSecretKey;
@@ -244,7 +231,7 @@ public class NexmoSmsClient {
     }
 
     /**
-     * submit a message submission request object.
+     * Submit a message submission request object.
      * This will use the supplied object to construct a request and post it to the Nexmo REST interface.<br>
      * This method will respond with an array of SmsSubmissionResult objects. Depending on the nature and length of the submitted message, Nexmo may automatically
      * split the message into multiple sms messages in order to deliver to the handset. For example, a long text sms of greater than 160 chars will need to be split
@@ -414,14 +401,7 @@ public class NexmoSmsClient {
 
         List<SmsSubmissionResult> results = new ArrayList<>();
 
-        Document doc;
-        synchronized(this.documentBuilder) {
-            try {
-                doc = this.documentBuilder.parse(new InputSource(new StringReader(response)));
-            } catch (Exception e) {
-                throw new NexmoResponseParseException("Failed to build a DOM doc for the xml document [ " + response + " ] ", e);
-            }
-        }
+        Document doc = parseXml(response);
 
         NodeList replies = doc.getElementsByTagName("mt-submission-response");
         for (int i=0;i<replies.getLength();i++) {

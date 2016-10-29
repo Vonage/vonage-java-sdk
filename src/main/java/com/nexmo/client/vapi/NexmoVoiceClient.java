@@ -1,4 +1,5 @@
-package com.nexmo.client.vapi;/*
+package com.nexmo.client.vapi;
+/*
  * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy

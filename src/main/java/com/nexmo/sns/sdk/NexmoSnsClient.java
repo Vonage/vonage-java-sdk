@@ -21,16 +21,13 @@ package com.nexmo.sns.sdk;
  * THE SOFTWARE.
  */
 
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import com.nexmo.common.NexmoResponseParseException;
+import com.nexmo.common.LegacyClient;
 import com.nexmo.common.util.XmlUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -45,7 +42,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 
 import com.nexmo.common.http.HttpClientUtils;
 import com.nexmo.sns.sdk.request.Request;
@@ -56,7 +52,7 @@ import com.nexmo.sns.sdk.response.SnsServiceResult;
  *
  * @author  Paul Cook
  */
-public class NexmoSnsClient {
+public class NexmoSnsClient extends LegacyClient {
 
     private static final Log log = LogFactory.getLog(NexmoSnsClient.class);
 
@@ -74,8 +70,6 @@ public class NexmoSnsClient {
      * Default read timeout of 30000ms used by this client unless specifically overridden on the constructor.
      */
     private static final int DEFAULT_SO_TIMEOUT = 30000;
-
-    private final DocumentBuilder documentBuilder;
 
     private final String baseUrl;
     private final String apiKey;
@@ -155,12 +149,6 @@ public class NexmoSnsClient {
         this.apiSecret = apiSecret;
         this.connectionTimeout = connectionTimeout;
         this.soTimeout = soTimeout;
-        try {
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            this.documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        } catch (javax.xml.parsers.ParserConfigurationException e) {
-            throw new Exception("ERROR initializing XML Document builder!", e);
-        }
     }
 
     public SnsServiceResult submit(final Request request) throws Exception {
@@ -209,14 +197,7 @@ public class NexmoSnsClient {
 
         */
 
-        Document doc;
-        synchronized(this.documentBuilder) {
-            try {
-                doc = this.documentBuilder.parse(new InputSource(new StringReader(response)));
-            } catch (Exception e) {
-                throw new NexmoResponseParseException("Failed to build a DOM doc for the xml document [ " + response + " ] ", e);
-            }
-        }
+        Document doc = parseXml(response);
 
         String command = null;
         int resultCode = -1;

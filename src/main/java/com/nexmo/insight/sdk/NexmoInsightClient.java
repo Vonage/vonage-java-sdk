@@ -22,16 +22,15 @@ package com.nexmo.insight.sdk;
  */
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.nexmo.common.LegacyClient;
 import com.nexmo.common.NexmoResponseParseException;
+import com.nexmo.common.util.XmlUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -40,7 +39,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.message.BasicNameValuePair;
@@ -48,8 +46,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import com.nexmo.common.http.HttpClientUtils;
 
@@ -65,31 +61,29 @@ import com.nexmo.common.http.HttpClientUtils;
  *
  * @author Daniele Ricci
  */
-public class NexmoInsightClient {
+public class NexmoInsightClient extends LegacyClient {
 
     private static final Log log = LogFactory.getLog(NexmoInsightClient.class);
 
     /**
      * The service url used unless over-ridden on the constructor
      */
-    public static final String DEFAULT_BASE_URL = "https://rest.nexmo.com";
+    private static final String DEFAULT_BASE_URL = "https://rest.nexmo.com";
 
     /**
      * The endpoint path for submitting number insight requests
      */
-    public static final String PATH_INSIGHT = "/ni/xml";
+    private static final String PATH_INSIGHT = "/ni/xml";
 
     /**
      * Default connection timeout of 5000ms used by this client unless specifically overridden onb the constructor
      */
-    public static final int DEFAULT_CONNECTION_TIMEOUT = 5000;
+    private static final int DEFAULT_CONNECTION_TIMEOUT = 5000;
 
     /**
      * Default read timeout of 30000ms used by this client unless specifically overridden onb the constructor
      */
-    public static final int DEFAULT_SO_TIMEOUT = 30000;
-
-    private final DocumentBuilder documentBuilder;
+    private static final int DEFAULT_SO_TIMEOUT = 30000;
 
     private final String baseUrl;
     private final String apiKey;
@@ -148,8 +142,6 @@ public class NexmoInsightClient {
         this.apiSecret = apiSecret;
         this.connectionTimeout = connectionTimeout;
         this.soTimeout = soTimeout;
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        this.documentBuilder = documentBuilderFactory.newDocumentBuilder();
     }
 
     public InsightResult request(final String number,
@@ -204,20 +196,19 @@ public class NexmoInsightClient {
 
         String inshightBaseUrl = this.baseUrl + PATH_INSIGHT;
 
-        String response = null;
+        String response;
         HttpPost httpPost = new HttpPost(inshightBaseUrl);
         httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-        HttpUriRequest method = httpPost;
         String url = inshightBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
 
         try {
             if (this.httpClient == null)
                 this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
-            HttpResponse httpResponse = this.httpClient.execute(method);
+            HttpResponse httpResponse = this.httpClient.execute(httpPost);
             response = new BasicResponseHandler().handleResponse(httpResponse);
             log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
         } catch (HttpResponseException e) {
-            method.abort();
+            httpPost.abort();
             log.error("Communication failure", e);
 
             // return a COMMS failure ...
@@ -229,8 +220,6 @@ public class NexmoInsightClient {
                                      "Failed to communicate with NEXMO-HTTP url [ " + url + " ] ..." + e,
                                      true);
         }
-
-
 
         return parseInsightResult(response);
     }
@@ -246,14 +235,7 @@ public class NexmoInsightClient {
     }
 
     protected InsightResult parseInsightResult(String response) throws NexmoResponseParseException, IOException {
-        Document doc;
-        synchronized(this.documentBuilder) {
-            try {
-                doc = this.documentBuilder.parse(new InputSource(new StringReader(response)));
-            } catch (SAXException se) {
-                throw new NexmoResponseParseException("Could not parse response XML", se);
-            }
-        }
+        Document doc = parseXml(response);
 
         Element root = doc.getDocumentElement();
         if (!"lookup".equals(root.getNodeName()))
@@ -274,11 +256,11 @@ public class NexmoInsightClient {
 
             String name = node.getNodeName();
             if ("requestId".equals(name)) {
-                requestId = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                requestId = XmlUtil.stringValue(node);
             } else if ("number".equals(name)) {
-                number = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                number = XmlUtil.stringValue(node);
             } else if ("status".equals(name)) {
-                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                String str = XmlUtil.stringValue(node);
                 if (str != null)
                     try {
                             status = Integer.parseInt(str);
@@ -287,7 +269,7 @@ public class NexmoInsightClient {
                         status = InsightResult.STATUS_INTERNAL_ERROR;
                     }
             } else if ("requestPrice".equals(name)) {
-                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                String str = XmlUtil.stringValue(node);
                 if (str != null)
                     try {
                         price = new BigDecimal(str);
@@ -295,7 +277,7 @@ public class NexmoInsightClient {
                         log.error(String.format("<requestPrice> contained invalid value: %s", str));
                     }
             } else if ("remainingBalance".equals(name)) {
-                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                String str = XmlUtil.stringValue(node);
                 if (str != null)
                     try {
                         balance = new BigDecimal(str);
@@ -303,7 +285,7 @@ public class NexmoInsightClient {
                         log.error(String.format("<balance> contained invalid value: %s", str));
                     }
             } else if ("errorText".equals(name)) {
-                errorText = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                errorText = XmlUtil.stringValue(node);
             }
         }
 

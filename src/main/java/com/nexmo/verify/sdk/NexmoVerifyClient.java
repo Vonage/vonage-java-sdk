@@ -36,6 +36,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.nexmo.common.LegacyClient;
 import com.nexmo.common.NexmoResponseParseException;
 import com.nexmo.common.util.XmlUtil;
 import org.apache.commons.logging.Log;
@@ -78,7 +79,7 @@ import com.nexmo.common.http.HttpClientUtils;
  *
  * @author Daniele Ricci
  */
-public class NexmoVerifyClient {
+public class NexmoVerifyClient extends LegacyClient {
 
     private static final Log log = LogFactory.getLog(NexmoVerifyClient.class);
 
@@ -143,8 +144,6 @@ public class NexmoVerifyClient {
         }
     };
 
-    private final DocumentBuilder documentBuilder;
-
     private final String baseUrl;
     private final String apiKey;
     private final String apiSecret;
@@ -203,8 +202,6 @@ public class NexmoVerifyClient {
         this.apiSecret = apiSecret;
         this.connectionTimeout = connectionTimeout;
         this.soTimeout = soTimeout;
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        this.documentBuilder = documentBuilderFactory.newDocumentBuilder();
     }
 
     public VerifyResult verify(final String number,
@@ -284,10 +281,7 @@ public class NexmoVerifyClient {
     }
 
     protected VerifyResult parseVerifyResponse(String response) throws NexmoResponseParseException {
-        Document doc;
-        synchronized(this.documentBuilder) {
-            doc = XmlUtil.parseXmlString(this.documentBuilder, response);
-        }
+        Document doc = parseXml(response);
 
         Element root = doc.getDocumentElement();
         if (!"verify_response".equals(root.getNodeName()))
@@ -425,10 +419,7 @@ public class NexmoVerifyClient {
     }
 
     private CheckResult parseCheckResponse(String response) throws NexmoResponseParseException, IOException {
-        Document doc;
-        synchronized(this.documentBuilder) {
-            doc = XmlUtil.parseXmlString(this.documentBuilder, response);
-        }
+        Document doc = parseXml(response);
 
         Element root = doc.getDocumentElement();
         if (!"verify_response".equals(root.getNodeName()))
@@ -551,10 +542,7 @@ public class NexmoVerifyClient {
     }
 
     protected SearchResult[] parseSearchResponse(String response) throws NexmoResponseParseException {
-        Document doc;
-        synchronized (this.documentBuilder) {
-            doc = XmlUtil.parseXmlString(this.documentBuilder, response);
-        }
+        Document doc = parseXml(response);
 
         Element root = doc.getDocumentElement();
         if ("verify_response".equals(root.getNodeName())) {
