@@ -162,7 +162,7 @@ public class NexmoSnsClientTest {
     @Test
     public void testParseResponseMissingResultCode() throws Exception {
         try {
-            SnsServiceResult result = this.client.parseSubmitResponse("<nexmo-sns>\n" +
+            this.client.parseSubmitResponse("<nexmo-sns>\n" +
                     "   <command>dummy command</command>\n" +
                     "   <resultMessage>a result message</resultMessage>\n" +
                     "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n" +
@@ -194,7 +194,7 @@ public class NexmoSnsClientTest {
     @Test
     public void testParseResponseUnparseable() throws Exception {
         try {
-            SnsServiceResult result = this.client.parseSubmitResponse("not-xml");
+            this.client.parseSubmitResponse("not-xml");
             fail();
         } catch (Exception e) {
             // this is expected

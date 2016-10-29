@@ -26,7 +26,6 @@ import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.junit.*;
-import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -111,7 +110,7 @@ public class NexmoInsightClientTest {
     @Test
     public void testParseInsightResultBadXml() throws Exception {
         try {
-            InsightResult r = this.client.parseInsightResult("NOT-XML");
+            this.client.parseInsightResult("NOT-XML");
             fail("A non-XML response should raise NexmoResponseParseException");
         } catch (NexmoResponseParseException e) {
             // this is expected
@@ -121,7 +120,7 @@ public class NexmoInsightClientTest {
     @Test
     public void testParseInsightResultIncorrectRoot() throws Exception {
         try {
-            InsightResult r = this.client.parseInsightResult("<?xml version='1.0' encoding='UTF-8' ?><not-lookup/>");
+            this.client.parseInsightResult("<?xml version='1.0' encoding='UTF-8' ?><not-lookup/>");
             fail("A non-XML response should raise NexmoResponseParseException");
         } catch (NexmoResponseParseException e) {
             // this is expected
@@ -181,7 +180,7 @@ public class NexmoInsightClientTest {
     @Test
     public void testParseInsightResultStatusMissing() throws Exception {
         try {
-            InsightResult r = this.client.parseInsightResult("<?xml version='1.0' encoding='UTF-8' ?>\n" +
+            this.client.parseInsightResult("<?xml version='1.0' encoding='UTF-8' ?>\n" +
                     "  <lookup>\n" +
                     "      <requestId>a-fictitious-request-id</requestId>\n" +
                     "      <number>447700900999</number>\n" +
