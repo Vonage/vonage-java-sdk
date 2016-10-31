@@ -32,7 +32,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
@@ -321,13 +320,13 @@ public class NexmoSmsClient extends LegacyClient {
 
         if (validityPeriod != null) {
             if (validityPeriod.getTimeToLive() != null)
-                params.add(new BasicNameValuePair("ttl", "" + validityPeriod.getTimeToLive().intValue()));
+                params.add(new BasicNameValuePair("ttl", "" + validityPeriod.getTimeToLive()));
             if (validityPeriod.getValidityPeriodHours() != null)
-                params.add(new BasicNameValuePair("ttl-hours", "" + validityPeriod.getValidityPeriodHours().intValue()));
+                params.add(new BasicNameValuePair("ttl-hours", "" + validityPeriod.getValidityPeriodHours()));
             if (validityPeriod.getValidityPeriodMinutes() != null)
-                params.add(new BasicNameValuePair("ttl-minutes", "" + validityPeriod.getValidityPeriodMinutes().intValue()));
+                params.add(new BasicNameValuePair("ttl-minutes", "" + validityPeriod.getValidityPeriodMinutes()));
             if (validityPeriod.getValidityPeriodSeconds() != null)
-                params.add(new BasicNameValuePair("ttl-seconds", "" + validityPeriod.getValidityPeriodSeconds().intValue()));
+                params.add(new BasicNameValuePair("ttl-seconds", "" + validityPeriod.getValidityPeriodSeconds()));
         }
 
         this.signParams(params);
@@ -374,87 +373,94 @@ public class NexmoSmsClient extends LegacyClient {
                 if (messagesNode.getNodeName().equals("messages")) {
                     NodeList messages = messagesNode.getChildNodes();
                     for (int i3=0;i3<messages.getLength();i3++) {
-                        Node messageNode = messages.item(i3);
-                        if (messageNode.getNodeType() != Node.ELEMENT_NODE)
-                            continue;
-
-                        int status = -1;
-                        String messageId = null;
-                        String destination = null;
-                        String errorText = null;
-                        String clientReference = null;
-                        BigDecimal remainingBalance = null;
-                        BigDecimal messagePrice = null;
-                        SmsSubmissionReachabilityStatus smsSubmissionReachabilityStatus = null;
-                        String network = null;
-
-                        NodeList nodes = messageNode.getChildNodes();
-                        for (int i4=0;i4<nodes.getLength();i4++) {
-                            Node node = nodes.item(i4);
-                            if (node.getNodeType() != Node.ELEMENT_NODE)
-                                continue;
-                            if (node.getNodeName().equals("messageId")) {
-                                messageId = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-                            } else if (node.getNodeName().equals("to")) {
-                                destination = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-                            } else if (node.getNodeName().equals("status")) {
-                                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-                                try {
-                                    status = Integer.parseInt(str);
-                                } catch (NumberFormatException e) {
-                                    log.error("xml parser .. invalid value in <status> node [ " + str + " ] ");
-                                    status = SmsSubmissionResult.STATUS_INTERNAL_ERROR;
-                                }
-                            } else if (node.getNodeName().equals("errorText")) {
-                                errorText = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-                            } else if (node.getNodeName().equals("clientRef")) {
-                                clientReference = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-                            } else if (node.getNodeName().equals("remainingBalance")) {
-                                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-                                try {
-                                    if (str != null)
-                                        remainingBalance = new BigDecimal(str);
-                                } catch (NumberFormatException e) {
-                                    log.error("xml parser .. invalid value in <remainingBalance> node [ " + str + " ] ");
-                                }
-                            } else if (node.getNodeName().equals("messagePrice")) {
-                                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-                                try {
-                                    if (str != null)
-                                        messagePrice = new BigDecimal(str);
-                                } catch (NumberFormatException e) {
-                                    log.error("xml parser .. invalid value in <messagePrice> node [ " + str + " ] ");
-                                }
-                            } else if (node.getNodeName().equals("network")) {
-                                network = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
-                            } else {
-                                log.error("xml parser .. unknown node found in status-return, expected [ messageId, to, status, errorText, clientRef, messagePrice, remainingBalance, reachability, network ] -- found [ " + node.getNodeName() + " ] ");
-                            }
+                        SmsSubmissionResult message = parseMessageXmlNode(messages.item(i3));
+                        if (message != null) {
+                            results.add(message);
                         }
-
-                        if (status == -1)
-                            throw new NexmoResponseParseException("Xml Parser - did not find a <status> node");
-
-                        // Is this a temporary error ?
-                        boolean temporaryError = (status == SmsSubmissionResult.STATUS_THROTTLED ||
-                                status == SmsSubmissionResult.STATUS_INTERNAL_ERROR ||
-                                status == SmsSubmissionResult.STATUS_TOO_MANY_BINDS);
-
-                        results.add(new SmsSubmissionResult(status,
-                                destination,
-                                messageId,
-                                errorText,
-                                clientReference,
-                                remainingBalance,
-                                messagePrice,
-                                temporaryError,
-                                smsSubmissionReachabilityStatus,
-                                network));
                     }
                 }
             }
         }
 
         return results.toArray(new SmsSubmissionResult[results.size()]);
+    }
+
+    private SmsSubmissionResult parseMessageXmlNode(Node messageNode)
+        throws NexmoResponseParseException {
+        if (messageNode.getNodeType() != Node.ELEMENT_NODE)
+            return null;
+
+        int status = -1;
+        String messageId = null;
+        String destination = null;
+        String errorText = null;
+        String clientReference = null;
+        BigDecimal remainingBalance = null;
+        BigDecimal messagePrice = null;
+        SmsSubmissionReachabilityStatus smsSubmissionReachabilityStatus = null;
+        String network = null;
+
+        NodeList nodes = messageNode.getChildNodes();
+        for (int i4=0;i4<nodes.getLength();i4++) {
+            Node node = nodes.item(i4);
+            if (node.getNodeType() != Node.ELEMENT_NODE)
+                continue;
+            if (node.getNodeName().equals("messageId")) {
+                messageId = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+            } else if (node.getNodeName().equals("to")) {
+                destination = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+            } else if (node.getNodeName().equals("status")) {
+                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                try {
+                    status = Integer.parseInt(str);
+                } catch (NumberFormatException e) {
+                    log.error("xml parser .. invalid value in <status> node [ " + str + " ] ");
+                    status = SmsSubmissionResult.STATUS_INTERNAL_ERROR;
+                }
+            } else if (node.getNodeName().equals("errorText")) {
+                errorText = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+            } else if (node.getNodeName().equals("clientRef")) {
+                clientReference = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+            } else if (node.getNodeName().equals("remainingBalance")) {
+                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                try {
+                    if (str != null)
+                        remainingBalance = new BigDecimal(str);
+                } catch (NumberFormatException e) {
+                    log.error("xml parser .. invalid value in <remainingBalance> node [ " + str + " ] ");
+                }
+            } else if (node.getNodeName().equals("messagePrice")) {
+                String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+                try {
+                    if (str != null)
+                        messagePrice = new BigDecimal(str);
+                } catch (NumberFormatException e) {
+                    log.error("xml parser .. invalid value in <messagePrice> node [ " + str + " ] ");
+                }
+            } else if (node.getNodeName().equals("network")) {
+                network = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
+            } else {
+                log.error("xml parser .. unknown node found in status-return, expected [ messageId, to, status, errorText, clientRef, messagePrice, remainingBalance, reachability, network ] -- found [ " + node.getNodeName() + " ] ");
+            }
+        }
+
+        if (status == -1)
+            throw new NexmoResponseParseException("Xml Parser - did not find a <status> node");
+
+        // Is this a temporary error ?
+        boolean temporaryError = (status == SmsSubmissionResult.STATUS_THROTTLED ||
+                status == SmsSubmissionResult.STATUS_INTERNAL_ERROR ||
+                status == SmsSubmissionResult.STATUS_TOO_MANY_BINDS);
+
+        return new SmsSubmissionResult(status,
+                destination,
+                messageId,
+                errorText,
+                clientReference,
+                remainingBalance,
+                messagePrice,
+                temporaryError,
+                smsSubmissionReachabilityStatus,
+                network);
     }
 }

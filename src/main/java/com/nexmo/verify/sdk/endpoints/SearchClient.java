@@ -56,7 +56,7 @@ public class SearchClient extends LegacyClient {
     /**
      * The endpoint path for submitting verification search requests
      */
-    public static final String PATH_VERIFY_SEARCH = "/verify/search/xml";
+    private static final String PATH_VERIFY_SEARCH = "/verify/search/xml";
 
     /**
      * Number of maximum request IDs that can be searched for.
@@ -117,15 +117,13 @@ public class SearchClient extends LegacyClient {
 
         HttpPost httpPost = new HttpPost(verifySearchBaseUrl);
         httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-        HttpUriRequest method = httpPost;
         String url = verifySearchBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
-
         try {
-            HttpResponse httpResponse = this.getHttpClient().execute(method);
+            HttpResponse httpResponse = this.getHttpClient().execute(httpPost);
             response = new BasicResponseHandler().handleResponse(httpResponse);
             log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
         } catch (HttpResponseException e) {
-            method.abort();
+            httpPost.abort();
             log.error("communication failure", e);
 
             // return a COMMS failure ...

@@ -1,5 +1,7 @@
 package com.nexmo.common.util;
 
+import com.auth0.jwt.internal.org.apache.commons.codec.binary.Hex;
+
 import java.io.UnsupportedEncodingException;
 /*
  * Copyright (c) 2011-2016 Nexmo Inc
@@ -31,6 +33,10 @@ import java.io.UnsupportedEncodingException;
 public class HexUtil {
 
     private static final char[] HEX_CHARS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', };
+
+    private HexUtil() {
+        // This class may not be instantiated.
+    }
 
     /**
      * translate a byte array of raw data into a String with a hex representation of that data

@@ -33,6 +33,19 @@ public class SearchResult extends BaseResult {
 
     private static final long serialVersionUID = -2658346277382866298L;
 
+    private final String requestId;
+    private final String accountId;
+    private final VerificationStatus verificationStatus;
+    private final String number;
+    private final float price;
+    private final String currency;
+    private final String senderId;
+    private final Date dateSubmitted;
+    private final Date dateFinalized;
+    private final Date firstEventDate;
+    private final Date lastEventDate;
+    private final List<VerifyCheck> checks;
+
     /** Used to define a verify check attempt. */
     public static class VerifyCheck implements java.io.Serializable {
         
@@ -108,19 +121,6 @@ public class SearchResult extends BaseResult {
         }
         
     }
-
-    private final String requestId;
-    private final String accountId;
-    private final VerificationStatus verificationStatus;
-    private final String number;
-    private final float price;
-    private final String currency;
-    private final String senderId;
-    private final Date dateSubmitted;
-    private final Date dateFinalized;
-    private final Date firstEventDate;
-    private final Date lastEventDate;
-    private final List<VerifyCheck> checks;
 
     public SearchResult(final int status,
                            final String requestId,
