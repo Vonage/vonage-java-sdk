@@ -93,7 +93,7 @@ public class NexmoInsightClient extends LegacyClient {
      * @throws ParserConfigurationException if the XML parser is misconfigured.
      */
     public NexmoInsightClient(final String apiKey,
-                              final String apiSecret) throws ParserConfigurationException {
+                              final String apiSecret) {
         this(DEFAULT_BASE_URL,
              apiKey,
              apiSecret,
@@ -111,8 +111,6 @@ public class NexmoInsightClient extends LegacyClient {
      * @param apiSecret Your Nexmo account api secret
      * @param connectionTimeout over-ride the default connection timeout with this value (in milliseconds)
      * @param soTimeout over-ride the default read-timeout with this value (in milliseconds)
-     *
-     * @throws ParserConfigurationException if the XML parser is misconfigured.
      */
     public NexmoInsightClient(final String baseUrl,
                               final String apiKey,

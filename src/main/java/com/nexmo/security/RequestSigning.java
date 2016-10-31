@@ -129,11 +129,13 @@ public class RequestSigning implements SecurityConstants {
      *
      * @param request The HttpServletRequest to be verified
      * @param secretKey The pre-shared secret key used by the sender of the request to create the signature
+     * @param currentTimeMillis The current time, in milliseconds.
      *
      * @return true if the signature is correct for this request and secret key.
      */
-     protected static boolean verifyRequestSignature(HttpServletRequest request, String secretKey, long
-            currentTimeMillis) {
+     protected static boolean verifyRequestSignature(HttpServletRequest request,
+                                                     String secretKey,
+                                                     long currentTimeMillis) {
         // identify the signature supplied in the request ...
         String suppliedSignature = request.getParameter(PARAM_SIGNATURE);
         if (suppliedSignature == null)
