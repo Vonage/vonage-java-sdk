@@ -32,7 +32,7 @@ public class VerifyResult extends BaseResult {
 
     private final String requestId;
 
-    protected VerifyResult(final int status,
+    public VerifyResult(final int status,
             final String requestId,
             final String errorText,
             final boolean temporaryError) {

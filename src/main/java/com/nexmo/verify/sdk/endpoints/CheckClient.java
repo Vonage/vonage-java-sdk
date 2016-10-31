@@ -53,9 +53,9 @@ public class CheckClient extends LegacyClient {
     private static final String ENDPOINT_PATH = "/verify/check/xml";
 
     /**
-     * Instantiate a new NexmoVerifyClient instance that will communicate using the supplied credentials, and will use the supplied connection and read timeout values.<br>
-     * Additionally, you can specify an alternative service base url. For example submitting to a testing sandbox environment,
-     * or if requested to submit to an alternative address by Nexmo, for example, in cases where it may be necessary to prioritize your traffic.
+     * Create a new CheckClient.
+     * <p>
+     * This client is used for calling the verify API's check endpoint.
      *
      * @param baseUrl The base URL to be used instead of <code>DEFAULT_BASE_URL</code>
      * @param apiKey Your Nexmo account api key

@@ -38,7 +38,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 
-// TODO: This may be better as a field inside the various clients.
 public abstract class LegacyClient {
     /**
      * A lock associated with {@link #documentBuilder}.

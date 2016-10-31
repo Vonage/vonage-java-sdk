@@ -38,7 +38,7 @@ public class SearchResult extends BaseResult {
         
         private static final long serialVersionUID = -5933303841261513099L;
 
-        enum Status {
+        public enum Status {
             VALID,
             INVALID,
         }
@@ -122,7 +122,7 @@ public class SearchResult extends BaseResult {
     private final Date lastEventDate;
     private final List<VerifyCheck> checks;
 
-    protected SearchResult(final int status,
+    public SearchResult(final int status,
                            final String requestId,
                            final String accountId,
                            final VerificationStatus verificationStatus,

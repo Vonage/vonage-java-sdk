@@ -33,9 +33,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.message.BasicNameValuePair;
 import org.junit.Before;
 import org.junit.Test;
-import org.xml.sax.SAXException;
 
-import javax.xml.crypto.dsig.keyinfo.KeyValue;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -419,6 +417,7 @@ public class NexmoSmsClientTest {
     public void testParseResponseBadXml() throws Exception {
         try {
             SmsSubmissionResult[] rs = client.parseResponse("not-xml");
+            fail("Invalid XML should result in a NexmoResponseParseException");
         } catch (NexmoResponseParseException e) {
             // this is expected
         }
