@@ -44,11 +44,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.nexmo.common.http.HttpClientUtils;
 import com.nexmo.common.util.HexUtil;
 import com.nexmo.messaging.sdk.messages.Message;
 import com.nexmo.messaging.sdk.messages.parameters.ValidityPeriod;
-import com.nexmo.security.RequestSigning;
 
 /**
  * Client for talking to the Nexmo API.
@@ -120,18 +118,6 @@ public class NexmoSmsClient extends LegacyClient {
      */
     protected static final int DEFAULT_SO_TIMEOUT = 30000;
 
-    private final String baseUrlHttps;
-    private final String apiKey;
-    private final String apiSecret;
-
-    private final int connectionTimeout;
-    private final int soTimeout;
-
-    private final boolean signRequests;
-    private final String signatureSecretKey;
-
-    private HttpClient httpClient = null;
-
     /**
      * Instantiate a new NexmoSmsClient without request signing.
      *
@@ -191,21 +177,7 @@ public class NexmoSmsClient extends LegacyClient {
                           final int soTimeout,
                           final boolean signRequests,
                           final String signatureSecretKey) {
-        if (baseUrl == null)
-            throw new IllegalArgumentException("base url is null");
-        String url = baseUrl.trim();
-        String lc = url.toLowerCase();
-        if (!lc.startsWith("https://"))
-            throw new IllegalArgumentException("base url does not start with https://");
-        this.baseUrlHttps = "https://" + url.substring(8);
-
-        this.apiKey = apiKey;
-        this.apiSecret = apiSecret;
-        this.connectionTimeout = connectionTimeout;
-        this.soTimeout = soTimeout;
-
-        this.signRequests = signRequests;
-        this.signatureSecretKey = signatureSecretKey;
+        super(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout, signRequests, signatureSecretKey);
     }
 
     /**
@@ -258,22 +230,20 @@ public class NexmoSmsClient extends LegacyClient {
         // Determine what 'product' type we are submitting, and select the appropriate endpoint path
         List<NameValuePair> params = constructParams(message, validityPeriod);
 
-        String baseUrl = this.baseUrlHttps + SUBMISSION_PATH_SMS;
+        String baseUrl = makeUrl(SUBMISSION_PATH_SMS);
 
         // Now that we have generated a query string, we can instantiate a HttpClient,
         // and construct a POST request:
 
-        HttpUriRequest method = null;
-        String url = null;
+        HttpUriRequest method;
+        String url;
 
         HttpPost httpPost = new HttpPost(baseUrl);
         httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
         method = httpPost;
         url = baseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
 
-        if (this.httpClient == null)
-            this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
-        HttpResponse httpResponse = this.httpClient.execute(method);
+        HttpResponse httpResponse = this.getHttpClient().execute(method);
 
         String response;
         try {
@@ -301,11 +271,6 @@ public class NexmoSmsClient extends LegacyClient {
         return parseResponse(response);
     }
 
-    // Allowing users of this client to plugin their own HttpClient.
-    public void setHttpClient(HttpClient httpClient) {
-        this.httpClient = httpClient;
-    }
-
     protected List<NameValuePair> constructParams(final Message message,
                                         final ValidityPeriod validityPeriod) {
         // Determine the type parameter based on the type of Message object.
@@ -324,11 +289,7 @@ public class NexmoSmsClient extends LegacyClient {
         if (wapPush)
             mode = "wappush";
 
-        List<NameValuePair> params = new ArrayList<>();
-
-        params.add(new BasicNameValuePair("api_key", this.apiKey));
-        if (!this.signRequests)
-            params.add(new BasicNameValuePair("api_secret", this.apiSecret));
+        List<NameValuePair> params = constructParams();
         params.add(new BasicNameValuePair("from", message.getFrom()));
         params.add(new BasicNameValuePair("to", message.getTo()));
         params.add(new BasicNameValuePair("type", mode));
@@ -369,8 +330,7 @@ public class NexmoSmsClient extends LegacyClient {
                 params.add(new BasicNameValuePair("ttl-seconds", "" + validityPeriod.getValidityPeriodSeconds().intValue()));
         }
 
-        if (this.signRequests)
-            RequestSigning.constructSignatureForRequestParameters(params, this.signatureSecretKey);
+        this.signParams(params);
 
         return params;
     }

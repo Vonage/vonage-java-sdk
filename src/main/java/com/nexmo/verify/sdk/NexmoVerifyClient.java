@@ -22,8 +22,6 @@ package com.nexmo.verify.sdk;
  */
 
 import java.io.IOException;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,13 +30,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import com.nexmo.common.LegacyClient;
 import com.nexmo.common.NexmoResponseParseException;
 import com.nexmo.common.util.XmlUtil;
+import com.nexmo.verify.sdk.endpoints.CheckClient;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -55,10 +52,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-import com.nexmo.common.http.HttpClientUtils;
 
 /**
  * A client for talking to the Nexmo Verify API interface.
@@ -89,12 +82,12 @@ public class NexmoVerifyClient extends LegacyClient {
         MOBILE,
         LANDLINE;
 
-        @Override
-        public String toString() {
-            // TODO: This returns "ALL" and not "All", so can be simplified.
-            String name = name();
-            return Character.toUpperCase(name.charAt(0)) + name.substring(1);
-        }
+//        @Override
+//        public String toString() {
+//            // TODO: This returns "ALL" and not "All", so can be simplified.
+//            String name = name();
+//            return Character.toUpperCase(name.charAt(0)) + name.substring(1);
+//        }
 
     }
 
@@ -139,9 +132,7 @@ public class NexmoVerifyClient extends LegacyClient {
         }
     };
 
-    private final String baseUrl;
-    private final String apiKey;
-    private final String apiSecret;
+    private CheckClient checkClient;
 
     /**
      * Instantiate a new NexmoVerifyClient instance that will communicate using the supplied credentials.
@@ -179,19 +170,8 @@ public class NexmoVerifyClient extends LegacyClient {
                              final int connectionTimeout,
                              final int soTimeout) throws ParserConfigurationException {
 
-        // Derive a http and a https version of the supplied base url
-        if (baseUrl == null)
-            throw new IllegalArgumentException("base url is null");
-        String url = baseUrl.trim();
-        String lc = url.toLowerCase();
-        if (!lc.startsWith("https://"))
-            throw new IllegalArgumentException("base url does not start with https://");
-
-        this.baseUrl = url;
-        this.apiKey = apiKey;
-        this.apiSecret = apiSecret;
-        this.connectionTimeout = connectionTimeout;
-        this.soTimeout = soTimeout;
+        super(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout);
+        this.checkClient = new CheckClient(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout);
     }
 
     public VerifyResult verify(final String number,
@@ -240,7 +220,7 @@ public class NexmoVerifyClient extends LegacyClient {
                                                            NexmoResponseParseException {
         List<NameValuePair> params = constructVerifyParams(number, brand, from, length, locale, type);
 
-        String verifyBaseUrl = this.baseUrl + PATH_VERIFY;
+        String verifyBaseUrl = this.makeUrl(PATH_VERIFY);
 
         // Now that we have generated a query string, we can instantiate a HttpClient,
         // construct a POST method and execute to submit the request
@@ -251,7 +231,7 @@ public class NexmoVerifyClient extends LegacyClient {
         String url = verifyBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
 
         try {
-            HttpResponse httpResponse = this.httpClient.execute(method);
+            HttpResponse httpResponse = this.getHttpClient().execute(method);
             response = new BasicResponseHandler().handleResponse(httpResponse);
             log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
         } catch (HttpResponseException e) {
@@ -288,11 +268,7 @@ public class NexmoVerifyClient extends LegacyClient {
 
         log.debug("HTTP-Number-Verify Client .. to [ " + number + " ] brand [ " + brand + " ] ");
 
-        List<NameValuePair> params = new ArrayList<>();
-
-        params.add(new BasicNameValuePair("api_key", this.apiKey));
-        params.add(new BasicNameValuePair("api_secret", this.apiSecret));
-
+        List<NameValuePair> params = this.constructParams();
         params.add(new BasicNameValuePair("number", number));
         params.add(new BasicNameValuePair("brand", brand));
 
@@ -353,57 +329,13 @@ public class NexmoVerifyClient extends LegacyClient {
 
     public CheckResult check(final String requestId,
                              final String code) throws IOException, NexmoResponseParseException {
-        return check(requestId, code, null);
+        return checkClient.check(requestId, code, null);
     }
 
     public CheckResult check(final String requestId,
                              final String code,
                              final String ipAddress) throws IOException, NexmoResponseParseException {
-        if (requestId == null || code == null)
-            throw new IllegalArgumentException("request ID and code parameters are mandatory.");
-
-        log.debug("HTTP-Number-Verify-Check Client .. for [ " + requestId + " ] code [ " + code + " ] ");
-
-        List<NameValuePair> params = constructCheckParams(requestId, code);
-
-        if (ipAddress != null)
-            params.add(new BasicNameValuePair("ip_address", ipAddress));
-
-        String verifyCheckBaseUrl = this.baseUrl + PATH_VERIFY_CHECK;
-
-        // Now that we have generated a query string, we can instantiate a HttpClient,
-        // construct a POST method and execute to submit the request
-        String response = null;
-        HttpPost httpPost = new HttpPost(verifyCheckBaseUrl);
-        try {
-            httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-        } catch (UnsupportedEncodingException uee) {
-            // This should never happen:
-            throw new RuntimeException(uee);
-        }
-        HttpUriRequest method = httpPost;
-        String url = verifyCheckBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
-
-        try {
-            if (this.httpClient == null)
-                this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
-            HttpResponse httpResponse = this.httpClient.execute(method);
-            response = new BasicResponseHandler().handleResponse(httpResponse);
-            log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
-        } catch (HttpResponseException e) {
-            method.abort();
-            log.error("communication failure: ", e);
-
-            // return a COMMS failure ...
-            return new CheckResult(BaseResult.STATUS_COMMS_FAILURE,
-                    null,
-                    0,
-                    null,
-                    "Failed to communicate with NEXMO-HTTP url [ " + url + " ] ..." + e,
-                    true);
-        }
-
-        return parseCheckResponse(response);
+        return checkClient.check(requestId, code, ipAddress);
     }
 
 
@@ -424,11 +356,11 @@ public class NexmoVerifyClient extends LegacyClient {
 
         List<NameValuePair> params = constructSearchParams(requestIds);
 
-        String verifySearchBaseUrl = this.baseUrl + PATH_VERIFY_SEARCH;
+        String verifySearchBaseUrl = this.makeUrl(PATH_VERIFY_SEARCH);
 
         // Now that we have generated a query string, we can instantiate a HttpClient,
         // construct a POST method and execute to submit the request
-        String response = null;
+        String response;
 
         HttpPost httpPost = new HttpPost(verifySearchBaseUrl);
         httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
@@ -436,9 +368,7 @@ public class NexmoVerifyClient extends LegacyClient {
         String url = verifySearchBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
 
         try {
-            if (this.httpClient == null)
-                this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
-            HttpResponse httpResponse = this.httpClient.execute(method);
+            HttpResponse httpResponse = this.getHttpClient().execute(method);
             response = new BasicResponseHandler().handleResponse(httpResponse);
             log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
         } catch (HttpResponseException e) {
@@ -508,10 +438,7 @@ public class NexmoVerifyClient extends LegacyClient {
     }
 
     protected List<NameValuePair> constructSearchParams(String[] requestIds) {
-        List<NameValuePair> params = new ArrayList<>();
-
-        params.add(new BasicNameValuePair("api_key", this.apiKey));
-        params.add(new BasicNameValuePair("api_secret", this.apiSecret));
+        List<NameValuePair> params = this.constructParams();
 
         if (requestIds.length == 1) {
             params.add(new BasicNameValuePair("request_id", requestIds[0]));
@@ -684,5 +611,11 @@ public class NexmoVerifyClient extends LegacyClient {
 
     private static Date parseDateTime(String str) throws ParseException {
         return sDateTimePattern.get().parse(str);
+    }
+
+    @Override
+    public void setHttpClient(HttpClient httpClient) {
+        super.setHttpClient(httpClient);
+        this.checkClient.setHttpClient(httpClient);
     }
 }

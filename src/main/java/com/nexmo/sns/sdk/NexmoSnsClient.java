@@ -21,11 +21,8 @@ package com.nexmo.sns.sdk;
  * THE SOFTWARE.
  */
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import com.nexmo.common.LegacyClient;
 import com.nexmo.common.util.XmlUtil;
@@ -33,17 +30,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.nexmo.common.http.HttpClientUtils;
 import com.nexmo.sns.sdk.request.Request;
 import com.nexmo.sns.sdk.response.SnsServiceResult;
 
@@ -70,15 +64,6 @@ public class NexmoSnsClient extends LegacyClient {
      * Default read timeout of 30000ms used by this client unless specifically overridden on the constructor.
      */
     private static final int DEFAULT_SO_TIMEOUT = 30000;
-
-    private final String baseUrl;
-    private final String apiKey;
-    private final String apiSecret;
-
-    private final int connectionTimeout;
-    private final int soTimeout;
-
-    private HttpClient httpClient = null;
 
     /**
      * Constructs a NexmoSnsClient with the default base URL, a connection timeout of 5000ms and a read timeout of 30s.
@@ -137,18 +122,7 @@ public class NexmoSnsClient extends LegacyClient {
                           final int connectionTimeout,
                           final int soTimeout) throws Exception {
 
-        if (baseUrl == null)
-            throw new IllegalArgumentException("baseUrl is null");
-        String url = baseUrl.trim();
-        String lc = url.toLowerCase();
-        if (!lc.startsWith("https://"))
-            throw new IllegalArgumentException("baseUrl does not start with https://");
-        this.baseUrl = "https://" + url.substring(7);
-
-        this.apiKey = apiKey;
-        this.apiSecret = apiSecret;
-        this.connectionTimeout = connectionTimeout;
-        this.soTimeout = soTimeout;
+        super(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout, false, null);
     }
 
     public SnsServiceResult submit(final Request request) throws Exception {
@@ -158,21 +132,18 @@ public class NexmoSnsClient extends LegacyClient {
         // Now that we have generated a query string, we can instantiate a HttpClient,
         // construct a POST or GET method and execute to submit the request
         String response = null;
-        HttpPost method = new HttpPost(this.baseUrl);
+        HttpPost method = new HttpPost(makeUrl(null));
         method.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-        String url = this.baseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
         try {
-            if (this.httpClient == null)
-                this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
-            HttpResponse httpResponse = this.httpClient.execute(method);
+            HttpResponse httpResponse = this.getHttpClient().execute(method);
             response = new BasicResponseHandler().handleResponse(httpResponse);
-            log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
+            log.info(".. SUBMITTED NEXMO-HTTP URL [ " + method.toString() + " ] -- response [ " + response + " ] ");
         } catch (Exception e) {
             log.info("communication failure: " + e);
             method.abort();
             return new SnsServiceResult(request.getCommand(),
                                         SnsServiceResult.STATUS_COMMS_FAILURE,
-                                        "Failed to communicate with NEXMO-HTTP url [ " + url + " ] ..." + e,
+                                        "Failed to communicate with NEXMO-HTTP url [ " + method.toString() + " ] ..." + e,
                                         null,
                                         null);
         }
@@ -245,18 +216,11 @@ public class NexmoSnsClient extends LegacyClient {
 
     private List<NameValuePair> constructSubmitParams(Request request) {
         // Construct a query string as a list of NameValuePairs
-        List<NameValuePair> params = new ArrayList<>();
-
-        params.add(new BasicNameValuePair("api_key", this.apiKey));
-        params.add(new BasicNameValuePair("api_secret", this.apiSecret));
+        List<NameValuePair> params = constructParams();
         params.add(new BasicNameValuePair("cmd", request.getCommand()));
         if (request.getQueryParameters() != null)
             for (Map.Entry<String, String> entry: request.getQueryParameters().entrySet())
                 params.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
         return params;
-    }
-
-    public void setHttpClient(HttpClient httpClient) {
-        this.httpClient = httpClient;
     }
 }

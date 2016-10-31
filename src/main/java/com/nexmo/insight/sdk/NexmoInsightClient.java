@@ -23,7 +23,6 @@ package com.nexmo.insight.sdk;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -46,8 +45,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-import com.nexmo.common.http.HttpClientUtils;
 
 /**
  * Client for talking to the Nexmo REST interface.
@@ -85,13 +82,6 @@ public class NexmoInsightClient extends LegacyClient {
      */
     private static final int DEFAULT_SO_TIMEOUT = 30000;
 
-    private final String baseUrl;
-    private final String apiKey;
-    private final String apiSecret;
-
-    private final int connectionTimeout;
-    private final int soTimeout;
-
     private HttpClient httpClient = null;
 
     /**
@@ -128,20 +118,9 @@ public class NexmoInsightClient extends LegacyClient {
                               final String apiKey,
                               final String apiSecret,
                               final int connectionTimeout,
-                              final int soTimeout) throws ParserConfigurationException {
+                              final int soTimeout) {
 
-        if (baseUrl == null)
-            throw new IllegalArgumentException("base url is null");
-        String url = baseUrl.trim();
-        String lc = url.toLowerCase();
-        if (!lc.startsWith("https://"))
-            throw new IllegalArgumentException("base url does not start with https://");
-
-        this.baseUrl = url;
-        this.apiKey = apiKey;
-        this.apiSecret = apiSecret;
-        this.connectionTimeout = connectionTimeout;
-        this.soTimeout = soTimeout;
+        super(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout);
     }
 
     public InsightResult request(final String number,
@@ -171,10 +150,7 @@ public class NexmoInsightClient extends LegacyClient {
 
         log.debug("HTTP-Number-Insight Client .. to [ " + number + " ] ");
 
-        List<NameValuePair> params = new ArrayList<>();
-
-        params.add(new BasicNameValuePair("api_key", this.apiKey));
-        params.add(new BasicNameValuePair("api_secret", this.apiSecret));
+        List<NameValuePair> params = constructParams();
 
         params.add(new BasicNameValuePair("number", number));
         params.add(new BasicNameValuePair("callback", callbackUrl));
@@ -194,7 +170,7 @@ public class NexmoInsightClient extends LegacyClient {
         if (clientRef != null)
             params.add(new BasicNameValuePair("client_ref", clientRef));
 
-        String inshightBaseUrl = this.baseUrl + PATH_INSIGHT;
+        String inshightBaseUrl = this.makeUrl(PATH_INSIGHT);
 
         String response;
         HttpPost httpPost = new HttpPost(inshightBaseUrl);
@@ -202,8 +178,6 @@ public class NexmoInsightClient extends LegacyClient {
         String url = inshightBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
 
         try {
-            if (this.httpClient == null)
-                this.httpClient = HttpClientUtils.getInstance(this.connectionTimeout, this.soTimeout).getNewHttpClient();
             HttpResponse httpResponse = this.httpClient.execute(httpPost);
             response = new BasicResponseHandler().handleResponse(httpResponse);
             log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");

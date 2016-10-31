@@ -23,6 +23,7 @@ package com.nexmo.common;
 
 import com.nexmo.common.http.HttpClientUtils;
 import com.nexmo.common.util.XmlUtil;
+import com.nexmo.security.RequestSigning;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -59,15 +60,29 @@ public abstract class LegacyClient {
 
     private final String apiSecret;
 
-    protected final int connectionTimeout;
+    private final int connectionTimeout;
 
     private final int soTimeout;
+
+    private final boolean signRequests;
+
+    private final String signatureSecretKey;
 
     public LegacyClient(final String baseUrl,
                         final String apiKey,
                         final String apiSecret,
                         final int connectionTimeout,
                         final int soTimeout) {
+        this(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout, false, null);
+    }
+
+    public LegacyClient(final String baseUrl,
+                        final String apiKey,
+                        final String apiSecret,
+                        final int connectionTimeout,
+                        final int soTimeout,
+                        boolean signRequests,
+                        String signatureKey) {
 
         // Derive a http and a https version of the supplied base url
         if (baseUrl == null)
@@ -82,6 +97,8 @@ public abstract class LegacyClient {
         this.apiSecret = apiSecret;
         this.connectionTimeout = connectionTimeout;
         this.soTimeout = soTimeout;
+        this.signRequests = signRequests;
+        this.signatureSecretKey = signatureKey;
     }
 
     /**
@@ -120,13 +137,25 @@ public abstract class LegacyClient {
         List<NameValuePair> params = new ArrayList<>();
 
         params.add(new BasicNameValuePair("api_key", this.apiKey));
-        params.add(new BasicNameValuePair("api_secret", this.apiSecret));
+        if (!this.signRequests) {
+            params.add(new BasicNameValuePair("api_secret", this.apiSecret));
+        }
 
         return params;
     }
 
-    protected String makeUrl(String path) {
-        return this.baseUrl + path;
+    protected void signParams(List<NameValuePair> params) {
+        if (this.signRequests) {
+            RequestSigning.constructSignatureForRequestParameters(params, this.signatureSecretKey);
+        }
+    }
+
+    protected String makeUrl(final String path) {
+        if (path != null) {
+            return this.baseUrl + path;
+        } else {
+            return this.baseUrl;
+        }
     }
 
     // Allowing users of this client to plugin their own HttpClient.
