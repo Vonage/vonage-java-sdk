@@ -25,8 +25,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import com.nexmo.common.LegacyClient;
 import com.nexmo.common.NexmoResponseParseException;
 import com.nexmo.common.util.XmlUtil;
@@ -89,8 +87,6 @@ public class NexmoInsightClient extends LegacyClient {
      *
      * @param apiKey Your Nexmo account api key
      * @param apiSecret Your Nexmo account api secret
-     *
-     * @throws ParserConfigurationException if the XML parser is misconfigured.
      */
     public NexmoInsightClient(final String apiKey,
                               final String apiSecret) {
