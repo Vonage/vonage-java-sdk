@@ -121,7 +121,7 @@ public class VerifyClient extends LegacyClient {
 
         // Now that we have generated a query string, we can instantiate a HttpClient,
         // construct a POST method and execute to submit the request
-        String response = null;
+        String response;
         HttpPost httpPost = new HttpPost(verifyBaseUrl);
         httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
         HttpUriRequest method = httpPost;

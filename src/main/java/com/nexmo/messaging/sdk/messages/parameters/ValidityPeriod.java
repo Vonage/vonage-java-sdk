@@ -52,7 +52,7 @@ public class ValidityPeriod implements java.io.Serializable {
     public ValidityPeriod(final int timeToLive) {
         if (timeToLive < 1)
             throw new IllegalArgumentException("Negative TTL Not Allowed!");
-        this.timeToLive = Integer.valueOf(timeToLive);
+        this.timeToLive = timeToLive;
         this.validityPeriodHours = null;
         this.validityPeriodMinutes = null;
         this.validityPeriodSeconds = null;
@@ -71,9 +71,9 @@ public class ValidityPeriod implements java.io.Serializable {
                           final int validityPeriodMinutes,
                           final int validityPeriodSeconds) {
         this.timeToLive = null;
-        this.validityPeriodHours = Integer.valueOf(validityPeriodHours);
-        this.validityPeriodMinutes = Integer.valueOf(validityPeriodMinutes);
-        this.validityPeriodSeconds = Integer.valueOf(validityPeriodSeconds);
+        this.validityPeriodHours = validityPeriodHours;
+        this.validityPeriodMinutes = validityPeriodMinutes;
+        this.validityPeriodSeconds = validityPeriodSeconds;
     }
 
     /**

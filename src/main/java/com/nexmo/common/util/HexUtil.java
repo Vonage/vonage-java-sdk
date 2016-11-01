@@ -84,7 +84,7 @@ public class HexUtil {
     public static byte[] hexToBytes(String str) {
         if (str == null)
             return null;
-        byte[] hexChars = null;
+        byte[] hexChars;
         try {
             hexChars = str.toUpperCase().getBytes("ISO_8859-1");
         } catch (UnsupportedEncodingException e) {

@@ -84,7 +84,7 @@ public class JWTAuthType implements AuthType {
     public void apply(HttpRequest request) {
         String token = this.constructToken(
                 System.currentTimeMillis() / 1000L,
-                this.constructJTI());
+                constructJTI());
         request.setHeader("Authorization", "Bearer " + token);
     }
 

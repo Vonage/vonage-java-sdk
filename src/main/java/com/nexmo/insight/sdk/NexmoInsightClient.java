@@ -202,7 +202,7 @@ public class NexmoInsightClient extends LegacyClient {
         return sbStr.toString();
     }
 
-    protected InsightResult parseInsightResult(String response) throws NexmoResponseParseException, IOException {
+    protected InsightResult parseInsightResult(String response) throws NexmoResponseParseException {
         Document doc = parseXml(response);
 
         Element root = doc.getDocumentElement();

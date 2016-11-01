@@ -120,7 +120,7 @@ public class NexmoSnsClient extends LegacyClient {
                           final String apiKey,
                           final String apiSecret,
                           final int connectionTimeout,
-                          final int soTimeout) throws Exception {
+                          final int soTimeout) {
 
         super(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout, false, null);
     }
@@ -131,7 +131,7 @@ public class NexmoSnsClient extends LegacyClient {
 
         // Now that we have generated a query string, we can instantiate a HttpClient,
         // construct a POST or GET method and execute to submit the request
-        String response = null;
+        String response;
         HttpPost method = new HttpPost(makeUrl(null));
         method.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
         try {

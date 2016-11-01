@@ -22,38 +22,18 @@ package com.nexmo.verify.sdk;
  */
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import com.nexmo.common.LegacyClient;
 import com.nexmo.common.NexmoResponseParseException;
-import com.nexmo.common.util.XmlUtil;
 import com.nexmo.verify.sdk.endpoints.CheckClient;
 import com.nexmo.verify.sdk.endpoints.SearchClient;
 import com.nexmo.verify.sdk.endpoints.VerifyClient;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.HttpResponseException;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.message.BasicNameValuePair;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * A client for talking to the Nexmo Verify API interface.
@@ -133,14 +113,12 @@ public class NexmoVerifyClient extends LegacyClient {
      * @param apiSecret Your Nexmo account api secret
      * @param connectionTimeout over-ride the default connection timeout with this value (in milliseconds)
      * @param soTimeout over-ride the default read-timeout with this value (in milliseconds)
-     *
-     * @throws ParserConfigurationException if the XML parser could not be configured.
      */
     public NexmoVerifyClient(final String baseUrl,
                              final String apiKey,
                              final String apiSecret,
                              final int connectionTimeout,
-                             final int soTimeout) throws ParserConfigurationException {
+                             final int soTimeout) {
 
         super(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout);
         this.checkClient = new CheckClient(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout);

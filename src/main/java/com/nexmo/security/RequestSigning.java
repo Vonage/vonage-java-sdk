@@ -184,7 +184,7 @@ public class RequestSigning implements SecurityConstants {
 
         String str = sb.toString();
 
-        String md5 = "no signature";
+        String md5;
         try {
             md5 = MD5Util.calculateMd5(str);
         } catch (Exception e) {

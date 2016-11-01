@@ -23,8 +23,6 @@ package com.nexmo.client.vapi.endpoints;/*
 import org.apache.http.*;
 import org.apache.http.client.methods.HttpPost;
 
-import java.net.URI;
-
 public class CreateCallEndpoint {
     protected String constructURI(String baseUri) {
         return baseUri + "/calls";
