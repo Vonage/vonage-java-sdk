@@ -96,23 +96,27 @@ public abstract class AbstractMOServlet extends HttpServlet {
         handleRequest(request, response);
     }
 
-    private void handleRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("text/plain");
-
+    private boolean validateRequest(HttpServletRequest request) {
+        boolean passed = true;
         if (this.validateUsernamePassword) {
-            boolean failed = false;
             String username = request.getParameter("username");
             String password = request.getParameter("password");
             if (this.expectedUsername != null)
                 if (username == null || !this.expectedUsername.equals(username))
-                    failed = true;
+                    passed = false;
             if (this.expectedPassword != null)
                 if (password == null || !this.expectedPassword.equals(password))
-                    failed = true;
-            if (failed) {
-                response.sendError(400, "Bad Credentials");
-                return;
-            }
+                    passed = false;
+        }
+        return passed;
+    }
+
+    private void handleRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("text/plain");
+
+        if (!validateRequest(request)) {
+            response.sendError(400, "Bad Credentials");
+            return;
         }
 
         if (this.validateSignature) {

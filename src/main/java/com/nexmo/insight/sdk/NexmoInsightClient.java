@@ -144,32 +144,14 @@ public class NexmoInsightClient extends LegacyClient {
 
         log.debug("HTTP-Number-Insight Client .. to [ " + number + " ] ");
 
-        List<NameValuePair> params = constructParams();
+        List<NameValuePair> params = constructParams(number, callbackUrl, features, callbackTimeout, callbackMethod, clientRef, ipAddress);
 
-        params.add(new BasicNameValuePair("number", number));
-        params.add(new BasicNameValuePair("callback", callbackUrl));
-
-        if (features != null)
-            params.add(new BasicNameValuePair("features", strJoin(features, ",")));
-
-        if (callbackTimeout >= 0)
-            params.add(new BasicNameValuePair("callback_timeout", String.valueOf(callbackTimeout)));
-
-        if (callbackMethod != null)
-            params.add(new BasicNameValuePair("callback_method", callbackMethod));
-
-        if (ipAddress != null)
-            params.add(new BasicNameValuePair("ip", ipAddress));
-
-        if (clientRef != null)
-            params.add(new BasicNameValuePair("client_ref", clientRef));
-
-        String inshightBaseUrl = this.makeUrl(PATH_INSIGHT);
+        String insightBaseUrl = this.makeUrl(PATH_INSIGHT);
 
         String response;
-        HttpPost httpPost = new HttpPost(inshightBaseUrl);
+        HttpPost httpPost = new HttpPost(insightBaseUrl);
         httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-        String url = inshightBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
+        String url = insightBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
 
         try {
             HttpResponse httpResponse = this.httpClient.execute(httpPost);
@@ -190,6 +172,29 @@ public class NexmoInsightClient extends LegacyClient {
         }
 
         return parseInsightResult(response);
+    }
+
+    private List<NameValuePair> constructParams(String number, String callbackUrl, String[] features, long callbackTimeout, String callbackMethod, String clientRef, String ipAddress) {
+        List<NameValuePair> params = constructParams();
+
+        params.add(new BasicNameValuePair("number", number));
+        params.add(new BasicNameValuePair("callback", callbackUrl));
+
+        if (features != null)
+            params.add(new BasicNameValuePair("features", strJoin(features, ",")));
+
+        if (callbackTimeout >= 0)
+            params.add(new BasicNameValuePair("callback_timeout", String.valueOf(callbackTimeout)));
+
+        if (callbackMethod != null)
+            params.add(new BasicNameValuePair("callback_method", callbackMethod));
+
+        if (ipAddress != null)
+            params.add(new BasicNameValuePair("ip", ipAddress));
+
+        if (clientRef != null)
+            params.add(new BasicNameValuePair("client_ref", clientRef));
+        return params;
     }
 
     private static String strJoin(String[] aArr, String sSep) {

@@ -36,12 +36,12 @@ public class XmlUtil {
         return node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
     }
 
-    public static int intValue(Node node) {
+    public static int intValue(Node node) throws NexmoResponseParseException {
         String str = stringValue(node);
         if (str != null) {
             return Integer.parseInt(str, 10);
         } else {
-            throw new NullPointerException("Null or empty value provided for numeric value: " + node.getNodeName());
+            throw new NexmoResponseParseException("Null or empty value provided for numeric value: " + node.getNodeName());
         }
     }
 
