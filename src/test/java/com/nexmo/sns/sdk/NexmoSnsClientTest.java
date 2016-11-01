@@ -35,7 +35,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 
 public class NexmoSnsClientTest {
     private NexmoSnsClient client;
@@ -45,21 +44,19 @@ public class NexmoSnsClientTest {
         this.client = new NexmoSnsClient("not-api-key", "not-api-secret");
     }
 
-    private HttpClient stubHttpClient(int statusCode, String content) {
+    private HttpClient stubHttpClient(int statusCode, String content) throws Exception {
         HttpClient result = mock(HttpClient.class);
-        try {
-            HttpResponse response = mock(HttpResponse.class);
-            StatusLine sl = mock(StatusLine.class);
-            HttpEntity entity = mock(HttpEntity.class);
 
-            when(result.execute(any(HttpUriRequest.class))).thenReturn(response);
-            when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes("UTF-8")));
-            when(sl.getStatusCode()).thenReturn(statusCode);
-            when(response.getStatusLine()).thenReturn(sl);
-            when(response.getEntity()).thenReturn(entity);
-        } catch (IOException ioe) {
-            throw new RuntimeException(ioe);
-        }
+        HttpResponse response = mock(HttpResponse.class);
+        StatusLine sl = mock(StatusLine.class);
+        HttpEntity entity = mock(HttpEntity.class);
+
+        when(result.execute(any(HttpUriRequest.class))).thenReturn(response);
+        when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes("UTF-8")));
+        when(sl.getStatusCode()).thenReturn(statusCode);
+        when(response.getStatusLine()).thenReturn(sl);
+        when(response.getEntity()).thenReturn(entity);
+
         return result;
     }
 

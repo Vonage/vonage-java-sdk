@@ -22,6 +22,7 @@ package com.nexmo.client.auth;/*
 
 import com.auth0.jwt.Algorithm;
 import com.auth0.jwt.JWTSigner;
+import com.nexmo.client.NexmoUnexpectedException;
 import org.apache.http.HttpRequest;
 
 import javax.xml.bind.DatatypeConverter;
@@ -40,7 +41,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class JWTAuthType implements AuthType {
-    // ---+[^\n]*----+\n(.*\n)----+[^\n]*----+
     private static final Pattern pemPattern = Pattern.compile("-----BEGIN PRIVATE KEY-----\\n(.*\\n)-----END PRIVATE KEY-----", Pattern.MULTILINE| Pattern.DOTALL);
     private String applicationId;
     private JWTSigner signer;
@@ -76,7 +76,7 @@ public class JWTAuthType implements AuthType {
             }
         } catch (UnsupportedEncodingException exc) {
             // This should never happen.
-            throw new RuntimeException(exc);
+            throw new NexmoUnexpectedException("UTF-8 is an unsupported encoding in this JVM", exc);
         }
     }
 

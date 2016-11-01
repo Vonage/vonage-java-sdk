@@ -20,6 +20,7 @@ package com.nexmo.verify.sdk.endpoints;/*
  * THE SOFTWARE.
  */
 
+import com.nexmo.client.NexmoUnexpectedException;
 import com.nexmo.common.LegacyClient;
 import com.nexmo.common.NexmoResponseParseException;
 import com.nexmo.common.util.XmlUtil;
@@ -100,7 +101,7 @@ public class CheckClient extends LegacyClient {
             httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
         } catch (UnsupportedEncodingException uee) {
             // This should never happen:
-            throw new RuntimeException(uee);
+            throw new NexmoUnexpectedException("UTF-8 is an unsupported encoding in this JVM", uee);
         }
         String url = verifyCheckBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
 

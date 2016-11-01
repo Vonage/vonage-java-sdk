@@ -36,7 +36,6 @@ import org.junit.Test;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -72,26 +71,24 @@ public class NexmoSmsClientTest {
         }
     }
 
-    private HttpClient stubHttpClient(int statusCode, String content) {
+    private HttpClient stubHttpClient(int statusCode, String content) throws Exception {
         HttpClient result = mock(HttpClient.class);
-        try {
-            HttpResponse response = mock(HttpResponse.class);
-            StatusLine sl = mock(StatusLine.class);
-            HttpEntity entity = mock(HttpEntity.class);
 
-            when(result.execute(any(HttpUriRequest.class))).thenReturn(response);
-            when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes("UTF-8")));
-            when(sl.getStatusCode()).thenReturn(statusCode);
-            when(response.getStatusLine()).thenReturn(sl);
-            when(response.getEntity()).thenReturn(entity);
-        } catch (IOException ioe) {
-            throw new RuntimeException(ioe);
-        }
+        HttpResponse response = mock(HttpResponse.class);
+        StatusLine sl = mock(StatusLine.class);
+        HttpEntity entity = mock(HttpEntity.class);
+
+        when(result.execute(any(HttpUriRequest.class))).thenReturn(response);
+        when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes("UTF-8")));
+        when(sl.getStatusCode()).thenReturn(statusCode);
+        when(response.getStatusLine()).thenReturn(sl);
+        when(response.getEntity()).thenReturn(entity);
+
         return result;
     }
 
     @Test
-    public void testSubmitMessage() throws IOException, NexmoResponseParseException {
+    public void testSubmitMessage() throws Exception {
         this.client.setHttpClient(this.stubHttpClient(
                 200,
                 "<?xml version='1.0' encoding='UTF-8' ?>\n" +
@@ -117,16 +114,13 @@ public class NexmoSmsClientTest {
                         "</mt-submission-response>"));
 
         Message message = new TextMessage("TestSender", "not-a-number", "Test");
-        try {
-            SmsSubmissionResult[] r = client.submitMessage(message);
-            assertEquals(r.length, 2);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+
+        SmsSubmissionResult[] r = client.submitMessage(message);
+        assertEquals(r.length, 2);
     }
 
     @Test
-    public void testSubmitMessageHttpError() throws IOException, NexmoResponseParseException {
+    public void testSubmitMessageHttpError() throws Exception {
         this.client.setHttpClient(this.stubHttpClient(500, ""));
 
         Message message = new TextMessage("TestSender", "not-a-number", "Test");

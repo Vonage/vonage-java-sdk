@@ -21,25 +21,18 @@ package com.nexmo.verify.sdk;
  * THE SOFTWARE.
  */
 
-import com.nexmo.common.NexmoResponseParseException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.message.BasicNameValuePair;
 import org.junit.*;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -56,26 +49,24 @@ public class NexmoVerifyClientTest {
         client = new NexmoVerifyClient("not-an-api-key", "secret");
     }
 
-    private HttpClient stubHttpClient(int statusCode, String content) {
+    private HttpClient stubHttpClient(int statusCode, String content) throws Exception {
         HttpClient result = mock(HttpClient.class);
-        try {
-            HttpResponse response = mock(HttpResponse.class);
-            StatusLine sl = mock(StatusLine.class);
-            HttpEntity entity = mock(HttpEntity.class);
 
-            when(result.execute(any(HttpUriRequest.class))).thenReturn(response);
-            when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes("UTF-8")));
-            when(sl.getStatusCode()).thenReturn(statusCode);
-            when(response.getStatusLine()).thenReturn(sl);
-            when(response.getEntity()).thenReturn(entity);
-        } catch (IOException ioe) {
-            throw new RuntimeException(ioe);
-        }
+        HttpResponse response = mock(HttpResponse.class);
+        StatusLine sl = mock(StatusLine.class);
+        HttpEntity entity = mock(HttpEntity.class);
+
+        when(result.execute(any(HttpUriRequest.class))).thenReturn(response);
+        when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes("UTF-8")));
+        when(sl.getStatusCode()).thenReturn(statusCode);
+        when(response.getStatusLine()).thenReturn(sl);
+        when(response.getEntity()).thenReturn(entity);
+
         return result;
     }
 
     @Test
-    public void testConstructorNullBaseUrl() throws ParserConfigurationException {
+    public void testConstructorNullBaseUrl() throws Exception {
         try {
             new NexmoVerifyClient(null, "api-key", "api-secret", 5000, 5000);
             fail("null baseUrl should have raised IllegalArgumentException");
@@ -85,7 +76,7 @@ public class NexmoVerifyClientTest {
     }
 
     @Test
-    public void testConstructorHttpBaseUrl() throws ParserConfigurationException {
+    public void testConstructorHttpBaseUrl() throws Exception {
         try {
             new NexmoVerifyClient("http://not.a.real.domain/api", "api-key", "api-secret", 5000, 5000);
             fail("null baseUrl should have raised IllegalArgumentException");

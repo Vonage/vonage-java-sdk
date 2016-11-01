@@ -1,6 +1,6 @@
 package com.nexmo.common.util;
 
-import com.auth0.jwt.internal.org.apache.commons.codec.binary.Hex;
+import com.nexmo.client.NexmoUnexpectedException;
 
 import java.io.UnsupportedEncodingException;
 /*
@@ -88,7 +88,7 @@ public class HexUtil {
         try {
             hexChars = str.toUpperCase().getBytes("ISO_8859-1");
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("SHOULD NOT HAPPEN  ISO_8859-1 UNSUPPORTED ENCODING!!");
+            throw new NexmoUnexpectedException("ISO_8859_1 is an unsupported encoding in this JVM");
         }
         int size = hexChars.length;
         byte[] bytes = new byte[size / 2];
