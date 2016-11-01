@@ -1,4 +1,4 @@
-package com.nexmo.common;
+package com.nexmo.client;
 /*
  * Copyright (c) 2011-2016 Nexmo Inc
  *

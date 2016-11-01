@@ -22,9 +22,8 @@ package com.nexmo.verify.sdk.endpoints;
  */
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
-import com.nexmo.common.NexmoResponseParseException;
+import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.verify.sdk.NexmoVerifyClient;
 import com.nexmo.verify.sdk.VerifyResult;
 import org.apache.http.NameValuePair;

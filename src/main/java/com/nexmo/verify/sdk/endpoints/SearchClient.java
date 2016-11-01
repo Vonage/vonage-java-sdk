@@ -21,7 +21,7 @@ package com.nexmo.verify.sdk.endpoints;/*
  */
 
 import com.nexmo.common.LegacyClient;
-import com.nexmo.common.NexmoResponseParseException;
+import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.common.util.XmlUtil;
 import com.nexmo.verify.sdk.BaseResult;
 import com.nexmo.verify.sdk.SearchResult;

@@ -21,6 +21,7 @@ package com.nexmo.common;
  * THE SOFTWARE.
  */
 
+import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.common.http.HttpClientUtils;
 import com.nexmo.common.util.XmlUtil;
 import com.nexmo.security.RequestSigning;

@@ -23,7 +23,7 @@ package com.nexmo.verify.sdk.endpoints;
 
 import static org.junit.Assert.*;
 
-import com.nexmo.common.NexmoResponseParseException;
+import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.verify.sdk.SearchResult;
 import org.junit.Before;
 import org.junit.Test;

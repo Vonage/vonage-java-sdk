@@ -27,7 +27,7 @@ import java.util.Locale;
 import javax.xml.parsers.ParserConfigurationException;
 
 import com.nexmo.common.LegacyClient;
-import com.nexmo.common.NexmoResponseParseException;
+import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.verify.sdk.endpoints.CheckClient;
 import com.nexmo.verify.sdk.endpoints.SearchClient;
 import com.nexmo.verify.sdk.endpoints.VerifyClient;

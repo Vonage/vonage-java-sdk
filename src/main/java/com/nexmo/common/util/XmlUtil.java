@@ -20,7 +20,7 @@ package com.nexmo.common.util;/*
  * THE SOFTWARE.
  */
 
-import com.nexmo.common.NexmoResponseParseException;
+import com.nexmo.client.NexmoResponseParseException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;

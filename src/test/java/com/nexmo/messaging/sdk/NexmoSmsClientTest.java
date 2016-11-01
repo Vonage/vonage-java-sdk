@@ -21,7 +21,7 @@ package com.nexmo.messaging.sdk;
  * THE SOFTWARE.
  */
 
-import com.nexmo.common.NexmoResponseParseException;
+import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.messaging.sdk.messages.*;
 import com.nexmo.messaging.sdk.messages.parameters.ValidityPeriod;
 import org.apache.http.HttpEntity;

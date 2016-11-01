@@ -20,7 +20,7 @@ package com.nexmo.verify.sdk.endpoints;/*
  * THE SOFTWARE.
  */
 
-import com.nexmo.common.NexmoResponseParseException;
+import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.common.util.XmlUtil;
 import com.nexmo.verify.sdk.BaseResult;
 import com.nexmo.verify.sdk.VerifyResult;

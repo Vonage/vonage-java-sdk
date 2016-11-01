@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.nexmo.common.LegacyClient;
-import com.nexmo.common.NexmoResponseParseException;
+import com.nexmo.client.NexmoResponseParseException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;

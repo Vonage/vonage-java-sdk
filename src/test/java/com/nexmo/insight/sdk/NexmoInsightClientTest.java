@@ -21,7 +21,7 @@ package com.nexmo.insight.sdk;
  * THE SOFTWARE.
  */
 
-import com.nexmo.common.NexmoResponseParseException;
+import com.nexmo.client.NexmoResponseParseException;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;

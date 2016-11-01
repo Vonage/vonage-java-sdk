@@ -26,7 +26,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.nexmo.common.LegacyClient;
-import com.nexmo.common.NexmoResponseParseException;
+import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.common.util.XmlUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
