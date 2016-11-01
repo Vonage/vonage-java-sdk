@@ -113,8 +113,6 @@ public class NexmoSnsClient extends LegacyClient {
      * @param apiSecret Your Nexmo account api secret
      * @param connectionTimeout over-ride the default connection timeout with this value (in milliseconds)
      * @param soTimeout over-ride the default read-timeout with this value (in milliseconds)
-     *
-     * @throws Exception If the XML parser could not be configured.
      */
     public NexmoSnsClient(final String baseUrl,
                           final String apiKey,
