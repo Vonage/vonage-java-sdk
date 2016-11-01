@@ -50,7 +50,8 @@ public class SendWapPush {
         } catch (Exception e) {
             System.err.println("Failed to instantiate a Nexmo Client");
             e.printStackTrace();
-            throw new RuntimeException("Failed to instantiate a Nexmo Client");
+            System.exit(1);
+            return;
         }
 
         // Create a Wap-Push Message request object ...
@@ -65,7 +66,8 @@ public class SendWapPush {
         } catch (Exception e) {
             System.err.println("Failed to communicate with the Nexmo Client");
             e.printStackTrace();
-            throw new RuntimeException("Failed to communicate with the Nexmo Client");
+            System.exit(1);
+            return;
         }
 
         // Evaluate the results of the submission attempt ...

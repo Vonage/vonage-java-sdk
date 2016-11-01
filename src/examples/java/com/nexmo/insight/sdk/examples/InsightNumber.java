@@ -27,7 +27,8 @@ public class InsightNumber {
         } catch (Exception e) {
             System.err.println("Failed to instantiate a Nexmo Client");
             e.printStackTrace();
-            throw new RuntimeException("Failed to instantiate a Nexmo Client");
+            System.exit(1);
+            return;
         }
 
         InsightResult result;
@@ -36,7 +37,8 @@ public class InsightNumber {
         } catch (Exception e) {
             System.err.println("Failed to communicate with the Nexmo Client");
             e.printStackTrace();
-            throw new RuntimeException("Failed to communicate with the Nexmo Client");
+            System.exit(1);
+            return;
         }
 
         if (result.getStatus() == InsightResult.STATUS_OK) {

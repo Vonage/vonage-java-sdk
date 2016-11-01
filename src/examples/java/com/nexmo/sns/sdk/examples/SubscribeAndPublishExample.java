@@ -54,7 +54,8 @@ public class SubscribeAndPublishExample {
         } catch (Exception e) {
             System.err.println("Failed to instantiate a Nexmo Client");
             e.printStackTrace();
-            throw new RuntimeException("Failed to instantiate a Nexmo Client");
+            System.exit(1);
+            return;
         }
 
         // Create a Request to subscribe a phone number to the SNS service
@@ -65,7 +66,8 @@ public class SubscribeAndPublishExample {
         } catch (Exception e) {
             System.err.println("Failed to construct a SubscriptionRequest");
             e.printStackTrace();
-            throw new RuntimeException("Failed to construct a SubscriptionRequest");
+            System.exit(1);
+            return;
         }
 
         // Use the Nexmo client to submit this subscription
@@ -76,7 +78,8 @@ public class SubscribeAndPublishExample {
         } catch (Exception e) {
             System.err.println("Failed to perform subscription");
             e.printStackTrace();
-            throw new RuntimeException("Failed to perform subscription");
+            System.exit(1);
+            return;
         }
 
         // Evaluate the subscription response .....
@@ -94,7 +97,8 @@ public class SubscribeAndPublishExample {
         } catch (Exception e) {
             System.err.println("Failed to construct a PublishRequest");
             e.printStackTrace();
-            throw new RuntimeException("Failed to construct a PublishRequest");
+            System.exit(1);
+            return;
         }
 
         // Use the Nexmo client to submit this subscription
@@ -105,7 +109,8 @@ public class SubscribeAndPublishExample {
         } catch (Exception e) {
             System.err.println("Failed to perform publish");
             e.printStackTrace();
-            throw new RuntimeException("Failed to perform publish");
+            System.exit(1);
+            return;
         }
 
         // Evaluate the publish response .....
