@@ -21,7 +21,7 @@ package com.nexmo.client;
  * THE SOFTWARE.
  */
 
-import com.nexmo.client.vapi.NexmoVoiceClient;
+import com.nexmo.client.voice.NexmoVoiceClient;
 
 public class NexmoClient {
     public final NexmoVoiceClient voice;

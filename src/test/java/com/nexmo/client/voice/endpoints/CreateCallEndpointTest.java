@@ -1,4 +1,5 @@
-package com.nexmo.client.vapi.endpoints;/*
+package com.nexmo.client.voice.endpoints;
+/*
  * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,17 +21,15 @@ package com.nexmo.client.vapi.endpoints;/*
  * THE SOFTWARE.
  */
 
-import org.apache.http.*;
-import org.apache.http.client.methods.HttpPost;
+import static org.junit.Assert.*;
 
-public class CreateCallEndpoint {
-    protected String constructURI(String baseUri) {
-        return baseUri + "/calls";
-    }
+import org.junit.Test;
 
-    public HttpRequest constructRequest() {
-        HttpRequest request = new HttpPost();
-
-        return request;
+public class CreateCallEndpointTest {
+    @Test
+    public void testConstructUri() {
+        assertEquals(
+                "https://api.nexmo.com/v1/calls",
+                new CreateCallEndpoint().constructURI("https://api.nexmo.com/v1"));
     }
 }

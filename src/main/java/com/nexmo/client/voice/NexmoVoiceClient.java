@@ -1,4 +1,4 @@
-package com.nexmo.client.vapi.endpoints;
+package com.nexmo.client.voice;
 /*
  * Copyright (c) 2011-2016 Nexmo Inc
  *
@@ -21,16 +21,8 @@ package com.nexmo.client.vapi.endpoints;
  * THE SOFTWARE.
  */
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+public class NexmoVoiceClient {
+    public void createCall() {
 
-import org.junit.Test;
-
-public class CreateCallEndpointTest {
-    @Test
-    public void testConstructUri() {
-        assertEquals(
-                "https://api.nexmo.com/v1/calls",
-                new CreateCallEndpoint().constructURI("https://api.nexmo.com/v1"));
     }
 }
