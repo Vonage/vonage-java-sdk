@@ -22,7 +22,6 @@ package com.nexmo.client.auth;
  */
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.JWTVerifyException;
@@ -30,12 +29,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Map;
 
@@ -79,7 +74,7 @@ public class JWTAuthTypeTest {
                 bos.write(buf, 0, len);
             }
         } else {
-            throw new RuntimeException("Could not find resource at: " + this.getClass().getResource(path));
+            throw new IOException("Could not find resource at: " + this.getClass().getResource(path));
         }
         return bos.toByteArray();
 

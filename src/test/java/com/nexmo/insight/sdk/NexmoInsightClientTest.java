@@ -44,21 +44,17 @@ public class NexmoInsightClientTest {
         client = new NexmoInsightClient("not-an-api-key", "secret");
     }
 
-    private HttpClient stubHttpClient(int statusCode, String content) {
+    private HttpClient stubHttpClient(int statusCode, String content) throws Exception {
         HttpClient result = mock(HttpClient.class);
-        try {
-            HttpResponse response = mock(HttpResponse.class);
-            StatusLine sl = mock(StatusLine.class);
-            HttpEntity entity = mock(HttpEntity.class);
+        HttpResponse response = mock(HttpResponse.class);
+        StatusLine sl = mock(StatusLine.class);
+        HttpEntity entity = mock(HttpEntity.class);
 
-            when(result.execute(any(HttpUriRequest.class))).thenReturn(response);
-            when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes("UTF-8")));
-            when(sl.getStatusCode()).thenReturn(statusCode);
-            when(response.getStatusLine()).thenReturn(sl);
-            when(response.getEntity()).thenReturn(entity);
-        } catch (IOException ioe) {
-            throw new RuntimeException(ioe);
-        }
+        when(result.execute(any(HttpUriRequest.class))).thenReturn(response);
+        when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes("UTF-8")));
+        when(sl.getStatusCode()).thenReturn(statusCode);
+        when(response.getStatusLine()).thenReturn(sl);
+        when(response.getEntity()).thenReturn(entity);
         return result;
     }
 
@@ -172,6 +168,7 @@ public class NexmoInsightClientTest {
                     "      <requestPrice>0.03</requestPrice>\n" +
                     "      <remainingBalance>1.97</remainingBalance>\n" +
                     "  </lookup>");
+            fail("Empty status should result in NexmoResponseParseException");
         } catch (NexmoResponseParseException e) {
             // this is expected
         }
