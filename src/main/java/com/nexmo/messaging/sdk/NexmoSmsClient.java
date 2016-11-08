@@ -234,22 +234,20 @@ public class NexmoSmsClient extends LegacyClient {
         // Now that we have generated a query string, we can instantiate a HttpClient,
         // and construct a POST request:
 
-        HttpUriRequest method;
         String url;
 
         HttpPost httpPost = new HttpPost(baseUrl);
         httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-        method = httpPost;
         url = baseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
 
-        HttpResponse httpResponse = this.getHttpClient().execute(method);
+        HttpResponse httpResponse = this.getHttpClient().execute(httpPost);
 
         String response;
         try {
             response = new BasicResponseHandler().handleResponse(httpResponse);
             log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
         } catch (HttpResponseException e) {
-            method.abort();
+            httpPost.abort();
             log.error("communication failure", e);
 
             // return a COMMS failure ...

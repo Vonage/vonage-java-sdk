@@ -1,4 +1,4 @@
-package com.nexmo.client.auth;/*
+package com.nexmo.client.voice.endpoints;/*
  * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,10 +20,24 @@ package com.nexmo.client.auth;/*
  * THE SOFTWARE.
  */
 
-import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpUriRequest;
 
+import java.io.IOException;
 
-public interface AuthType extends Comparable<AuthType> {
-    int SORT_KEY = 1000;
-    public void apply(HttpRequest request);
+public abstract class AbstractMethod<RequestT, ResultT> implements Method<RequestT, ResultT> {
+    private HttpClient httpClient;
+
+    public ResultT execute(RequestT request) throws IOException {
+        return parseResponse(httpClient.execute(makeRequest(request)));
+    }
+
+    public abstract HttpUriRequest makeRequest(RequestT request);
+
+    public abstract ResultT parseResponse(HttpResponse response);
+
+    public void setHttpClient(HttpClient client) {
+        this.httpClient = client;
+    }
 }

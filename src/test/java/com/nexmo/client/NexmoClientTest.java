@@ -1,4 +1,4 @@
-package com.nexmo.client.voice.endpoints;/*
+package com.nexmo.client;/*
  * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,17 +20,22 @@ package com.nexmo.client.voice.endpoints;/*
  * THE SOFTWARE.
  */
 
-import org.apache.http.*;
-import org.apache.http.client.methods.HttpPost;
+import static org.junit.Assert.*;
 
-public class CreateCallEndpoint {
-    protected String constructURI(String baseUri) {
-        return baseUri + "/calls";
-    }
+import com.nexmo.client.auth.JWTAuthMethod;
+import org.junit.Test;
 
-    public HttpRequest constructRequest() {
-        HttpRequest request = new HttpPost();
+import java.nio.file.FileSystems;
 
-        return request;
+public class NexmoClientTest {
+    @Test
+    public void testConstructNexmoClient() throws Exception {
+        NexmoClient client = new NexmoClient(
+                new JWTAuthMethod(
+                        "951614e0-eec4-4087-a6b1-3f4c2f169cb0",
+                        FileSystems.getDefault().getPath(".", "valid_application_key.pem")
+                )
+        );
+        client.voice.calls.post();
     }
 }

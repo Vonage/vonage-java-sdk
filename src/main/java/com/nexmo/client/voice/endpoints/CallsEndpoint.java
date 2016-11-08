@@ -1,5 +1,4 @@
-package com.nexmo.client;
-/*
+package com.nexmo.client.voice.endpoints;/*
  * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,18 +21,21 @@ package com.nexmo.client;
  */
 
 import com.nexmo.client.auth.AuthCollection;
-import com.nexmo.client.auth.AuthMethod;
-import com.nexmo.client.voice.NexmoVoiceClient;
 
-public class NexmoClient {
-    private AuthCollection authMethods = new AuthCollection();
-    public final NexmoVoiceClient voice;
+public class CallsEndpoint {
+    private final AuthCollection authMethods;
 
-    public NexmoClient(AuthMethod... authMethods) {
-        for (AuthMethod method: authMethods) {
-            this.authMethods.add(method);
-        }
-
-        this.voice = new NexmoVoiceClient(this.authMethods);
+    public CallsEndpoint(AuthCollection authMethods) {
+        this.authMethods = authMethods;
     }
+
+    public void post() {
+
+    }
+
+    public void get() {}
+
+    public void get(String uuid) {}
+
+    public void put(String uuid) {}
 }

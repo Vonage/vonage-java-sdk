@@ -21,15 +21,8 @@ package com.nexmo.client.voice.endpoints;
  * THE SOFTWARE.
  */
 
-import static org.junit.Assert.*;
+import java.io.IOException;
 
-import org.junit.Test;
-
-public class CreateCallEndpointTest {
-    @Test
-    public void testConstructUri() {
-        assertEquals(
-                "https://api.nexmo.com/v1/calls",
-                new CreateCallEndpoint().constructURI("https://api.nexmo.com/v1"));
-    }
+public interface Method<RequestT, ResultT> {
+    public ResultT execute(RequestT request) throws IOException;
 }

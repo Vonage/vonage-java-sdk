@@ -1,5 +1,4 @@
-package com.nexmo.client;
-/*
+package com.nexmo.client.voice.endpoints;/*
  * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,19 +20,40 @@ package com.nexmo.client;
  * THE SOFTWARE.
  */
 
-import com.nexmo.client.auth.AuthCollection;
 import com.nexmo.client.auth.AuthMethod;
-import com.nexmo.client.voice.NexmoVoiceClient;
+import com.nexmo.client.auth.JWTAuthMethod;
+import com.nexmo.client.voice.Call;
+import org.apache.http.*;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 
-public class NexmoClient {
-    private AuthCollection authMethods = new AuthCollection();
-    public final NexmoVoiceClient voice;
+import java.io.IOException;
 
-    public NexmoClient(AuthMethod... authMethods) {
-        for (AuthMethod method: authMethods) {
-            this.authMethods.add(method);
-        }
+// TODO: Create a package for these endpoint methods
+public class CreateCallMethod extends AbstractMethod<Call, Call> {
+    private static final String DEFAULT_BASE_URI = "https://api.nexmo.com/v1";
+    private final String baseUri;
+    private static final Class[] allowed_auth_methods = new Class[] {JWTAuthMethod.class};
 
-        this.voice = new NexmoVoiceClient(this.authMethods);
+    public CreateCallMethod() {
+        this(DEFAULT_BASE_URI);
+    }
+
+    public CreateCallMethod(String baseUri) {
+        this.baseUri = baseUri;
+    }
+
+    protected String constructURI(String baseUri) {
+        return baseUri + "/calls";
+    }
+
+    @Override
+    public HttpUriRequest makeRequest(Call request) {
+        return new HttpPost(constructURI(this.baseUri));
+    }
+
+    @Override
+    public Call parseResponse(HttpResponse response) {
+        return new Call();
     }
 }

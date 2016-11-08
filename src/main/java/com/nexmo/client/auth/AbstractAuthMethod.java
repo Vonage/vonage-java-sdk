@@ -1,4 +1,4 @@
-package com.nexmo.client;
+package com.nexmo.client.auth;
 /*
  * Copyright (c) 2011-2016 Nexmo Inc
  *
@@ -21,19 +21,9 @@ package com.nexmo.client;
  * THE SOFTWARE.
  */
 
-import com.nexmo.client.auth.AuthCollection;
-import com.nexmo.client.auth.AuthMethod;
-import com.nexmo.client.voice.NexmoVoiceClient;
-
-public class NexmoClient {
-    private AuthCollection authMethods = new AuthCollection();
-    public final NexmoVoiceClient voice;
-
-    public NexmoClient(AuthMethod... authMethods) {
-        for (AuthMethod method: authMethods) {
-            this.authMethods.add(method);
-        }
-
-        this.voice = new NexmoVoiceClient(this.authMethods);
+public abstract class AbstractAuthMethod implements AuthMethod {
+    @Override
+    public int compareTo(AuthMethod other) {
+        return Integer.compare(this.SORT_KEY, other.SORT_KEY);
     }
 }

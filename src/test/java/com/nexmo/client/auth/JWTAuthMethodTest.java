@@ -34,13 +34,13 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Map;
 
-public class JWTAuthTypeTest {
-    private JWTAuthType auth;
+public class JWTAuthMethodTest {
+    private JWTAuthMethod auth;
 
     @Before
     public void setUp() throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, IOException {
         byte[] keyBytes = loadKey("keys/application_key");
-        auth = new JWTAuthType("application-id", keyBytes);
+        auth = new JWTAuthMethod("application-id", keyBytes);
     }
 
     @Test

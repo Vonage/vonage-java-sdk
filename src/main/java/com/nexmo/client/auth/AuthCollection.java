@@ -20,34 +20,29 @@ package com.nexmo.client.auth;/*
  * THE SOFTWARE.
  */
 
-import org.apache.http.HttpRequest;
+import com.nexmo.client.NexmoClientException;
 
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class AuthCollection {
-    private SortedSet<AuthType> authList;
+    private SortedSet<AuthMethod> authList;
 
     public AuthCollection() {
         authList = new TreeSet<>();
     }
 
-    public void add(AuthType auth) {
+    public void add(AuthMethod auth) {
         this.authList.add(auth);
     }
 
-    @Override
-    public void apply(HttpRequest request, Set<Class> acceptableAuthTypes) throws NexmoClientException {
-        AuthType authToBeUsed;
-        for (AuthType availableType: this.authList) {
-            if (acceptableAuthTypes.contains(availableType.getClass())) {
-                authToBeUsed = availableType;
-                break;
+    public AuthMethod getAcceptableAuthMethod(Set<Class> acceptableAuthMethods) throws NexmoClientException {
+        for (AuthMethod availableType: this.authList) {
+            if (acceptableAuthMethods.contains(availableType.getClass())) {
+                return availableType;
             }
         }
-        if (authToBeUsed == null) {
-            throw new NexmoClientException();
-        }
+        throw new NexmoClientException("There is no compatible authentication method for this call.");
     }
 }

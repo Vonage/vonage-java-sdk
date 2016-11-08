@@ -28,10 +28,10 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class NexmoUnacceptableAuthException extends NexmoAuthException {
-    Iterable<AuthType> availableAuths;
+    Iterable<AuthMethod> availableAuths;
     Iterable<Class> acceptableAuthClasses;
 
-    private NexmoUnacceptableAuthException(Collection<AuthType> availableAuths, Collection<Class>
+    private NexmoUnacceptableAuthException(Collection<AuthMethod> availableAuths, Collection<Class>
             acceptableAuthClasses) {
         super();
         this.availableAuths = new ArrayList<>(availableAuths);
@@ -44,7 +44,7 @@ public class NexmoUnacceptableAuthException extends NexmoAuthException {
 
     private String generateErrorMessage() {
         SortedSet<String> availableTypes = new TreeSet<>();
-        for (AuthType auth: this.availableAuths) {
+        for (AuthMethod auth: this.availableAuths) {
             availableTypes.add(auth.getClass().getSimpleName());
         }
 

@@ -1,4 +1,4 @@
-package com.nexmo.client;
+package com.nexmo.client.voice.endpoints;
 /*
  * Copyright (c) 2011-2016 Nexmo Inc
  *
@@ -21,19 +21,15 @@ package com.nexmo.client;
  * THE SOFTWARE.
  */
 
-import com.nexmo.client.auth.AuthCollection;
-import com.nexmo.client.auth.AuthMethod;
-import com.nexmo.client.voice.NexmoVoiceClient;
+import static org.junit.Assert.*;
 
-public class NexmoClient {
-    private AuthCollection authMethods = new AuthCollection();
-    public final NexmoVoiceClient voice;
+import org.junit.Test;
 
-    public NexmoClient(AuthMethod... authMethods) {
-        for (AuthMethod method: authMethods) {
-            this.authMethods.add(method);
-        }
-
-        this.voice = new NexmoVoiceClient(this.authMethods);
+public class CreateCallMethodTest {
+    @Test
+    public void testConstructUri() {
+        assertEquals(
+                "https://api.nexmo.com/v1/calls",
+                new CreateCallMethod().constructURI("https://api.nexmo.com/v1"));
     }
 }

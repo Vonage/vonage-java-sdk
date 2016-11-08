@@ -40,14 +40,14 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class JWTAuthType implements AuthType {
+public class JWTAuthMethod extends AbstractAuthMethod {
     public static final int SORT_KEY = 10;
 
     private static final Pattern pemPattern = Pattern.compile("-----BEGIN PRIVATE KEY-----\\n(.*\\n)-----END PRIVATE KEY-----", Pattern.MULTILINE| Pattern.DOTALL);
     private String applicationId;
     private JWTSigner signer;
 
-    public JWTAuthType(final String applicationId, final byte[] privateKey)
+    public JWTAuthMethod(final String applicationId, final byte[] privateKey)
             throws NoSuchAlgorithmException, InvalidKeyException, InvalidKeySpecException {
         this.applicationId = applicationId;
 
@@ -61,7 +61,7 @@ public class JWTAuthType implements AuthType {
         this.signer = new JWTSigner(key);
     }
 
-    public JWTAuthType(String applicationId, Path path)
+    public JWTAuthMethod(String applicationId, Path path)
             throws NoSuchAlgorithmException, InvalidKeyException, InvalidKeySpecException, IOException {
         this(applicationId, Files.readAllBytes(path));
     }

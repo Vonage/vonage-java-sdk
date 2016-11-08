@@ -21,7 +21,18 @@ package com.nexmo.client.voice;
  * THE SOFTWARE.
  */
 
-public class NexmoVoiceClient {
+import com.nexmo.client.AbstractClient;
+import com.nexmo.client.auth.AuthCollection;
+import com.nexmo.client.voice.endpoints.CallsEndpoint;
+
+public class NexmoVoiceClient extends AbstractClient {
+    public final CallsEndpoint calls;
+    public NexmoVoiceClient(AuthCollection authCollection) {
+        super(authCollection);
+
+        calls = new CallsEndpoint(authCollection);
+    }
+
     public void createCall() {
 
     }
