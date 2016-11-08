@@ -1,4 +1,4 @@
-package com.nexmo.client.auth;/*
+package com.nexmo.client;/*
  * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,10 +20,20 @@ package com.nexmo.client.auth;/*
  * THE SOFTWARE.
  */
 
-import org.apache.http.HttpRequest;
+public class NexmoClientException extends Exception {
+    public NexmoClientException() {
+        super();
+    }
 
+    public NexmoClientException(String message) {
+        super(message);
+    }
 
-public interface AuthType extends Comparable<AuthType> {
-    int SORT_KEY = 1000;
-    public void apply(HttpRequest request);
+    public NexmoClientException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public NexmoClientException(Throwable cause) {
+        super(cause);
+    }
 }

@@ -20,10 +20,22 @@ package com.nexmo.client.auth;/*
  * THE SOFTWARE.
  */
 
-import org.apache.http.HttpRequest;
+import com.nexmo.client.NexmoClientException;
 
+public class NexmoAuthException extends NexmoClientException {
+    public NexmoAuthException() {
+        super();
+    }
 
-public interface AuthType extends Comparable<AuthType> {
-    int SORT_KEY = 1000;
-    public void apply(HttpRequest request);
+    public NexmoAuthException(String message) {
+        super(message);
+    }
+
+    public NexmoAuthException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public NexmoAuthException(Throwable cause) {
+        super(cause);
+    }
 }

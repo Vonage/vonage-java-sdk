@@ -22,8 +22,32 @@ package com.nexmo.client.auth;/*
 
 import org.apache.http.HttpRequest;
 
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
-public interface AuthType extends Comparable<AuthType> {
-    int SORT_KEY = 1000;
-    public void apply(HttpRequest request);
+public class AuthCollection {
+    private SortedSet<AuthType> authList;
+
+    public AuthCollection() {
+        authList = new TreeSet<>();
+    }
+
+    public void add(AuthType auth) {
+        this.authList.add(auth);
+    }
+
+    @Override
+    public void apply(HttpRequest request, Set<Class> acceptableAuthTypes) throws NexmoClientException {
+        AuthType authToBeUsed;
+        for (AuthType availableType: this.authList) {
+            if (acceptableAuthTypes.contains(availableType.getClass())) {
+                authToBeUsed = availableType;
+                break;
+            }
+        }
+        if (authToBeUsed == null) {
+            throw new NexmoClientException();
+        }
+    }
 }

@@ -1,4 +1,5 @@
-package com.nexmo.client.auth;/*
+package com.nexmo.client.auth;
+/*
  * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,10 +21,9 @@ package com.nexmo.client.auth;/*
  * THE SOFTWARE.
  */
 
-import org.apache.http.HttpRequest;
-
-
-public interface AuthType extends Comparable<AuthType> {
-    int SORT_KEY = 1000;
-    public void apply(HttpRequest request);
+public abstract class AbstractAuthType implements AuthType {
+    @Override
+    public int compareTo(AuthType other) {
+        return Integer.compare(this.SORT_KEY, other.SORT_KEY);
+    }
 }

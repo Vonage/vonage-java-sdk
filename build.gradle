@@ -17,6 +17,7 @@ dependencies {
 	compile 'commons-codec:commons-codec:1.5'
 	compile 'commons-logging:commons-logging:1.0.3'
 	compile 'org.apache.httpcomponents:httpclient:4.1.1'
+	compile 'org.apache.commons:commons-lang3:3.5'
 	compile 'javax.servlet:javax.servlet-api:3.1.0'
 	compile 'com.fasterxml.jackson.core:jackson-databind:2.8.4'
 	compile 'com.auth0:java-jwt:2.2.1'
