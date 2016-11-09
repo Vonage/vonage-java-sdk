@@ -1,4 +1,5 @@
-package com.nexmo.client;/*
+package com.nexmo.client;
+/*
  * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,13 +21,11 @@ package com.nexmo.client;/*
  * THE SOFTWARE.
  */
 
-import com.nexmo.client.auth.AuthCollection;
-
 public abstract class AbstractClient {
-    protected final AuthCollection authMethods;
+    protected final HttpWrapper httpWrapper;
 
-    public AbstractClient(AuthCollection authMethods) {
-        this.authMethods = authMethods;
+    public AbstractClient(HttpWrapper httpWrapper) {
+        this.httpWrapper = httpWrapper;
     }
 
 }

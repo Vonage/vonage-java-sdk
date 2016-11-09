@@ -20,6 +20,8 @@ package com.nexmo.client.voice.endpoints;/*
  * THE SOFTWARE.
  */
 
+import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.auth.AuthCollection;
 import com.nexmo.client.auth.JWTAuthMethod;
 import com.nexmo.client.voice.Call;
 import org.apache.http.HttpResponse;
@@ -29,21 +31,18 @@ import org.apache.http.client.methods.HttpUriRequest;
 
 // TODO: Create a package for these endpoint methods
 public class ReadCallMethod extends AbstractMethod<String, Call> {
-    private static final String DEFAULT_BASE_URI = "https://api.nexmo.com/v1";
-    private final String baseUri;
+    private HttpWrapper httpWrapper;
+    private static final String DEFAULT_BASE_URI = "https://api.nexmo.com/v1/calls/";
+    private String baseUri = DEFAULT_BASE_URI;
     private static final Class[] allowed_auth_methods = new Class[]{JWTAuthMethod.class};
 
-    public ReadCallMethod() {
-        this(DEFAULT_BASE_URI);
-    }
-
-    public ReadCallMethod(String baseUri) {
-        this.baseUri = baseUri;
+    public ReadCallMethod(HttpWrapper httpWrapper) {
+        super(httpWrapper);
     }
 
     @Override
     public HttpUriRequest makeRequest(String callId) {
-        String uri = baseUri + "/calls/" + callId;
+        String uri = this.baseUri + callId;
         HttpGet result = new HttpGet(uri);
 
         return result;
@@ -51,6 +50,11 @@ public class ReadCallMethod extends AbstractMethod<String, Call> {
 
     @Override
     public Call parseResponse(HttpResponse response) {
-        return new Call();
+        //FIXME
+        return null;
+    }
+
+    public void setBaseUri(String baseUri) {
+        this.baseUri = baseUri;
     }
 }

@@ -20,6 +20,8 @@ package com.nexmo.client.voice.endpoints;/*
  * THE SOFTWARE.
  */
 
+import com.nexmo.client.AbstractClient;
+import com.nexmo.client.HttpWrapper;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -27,10 +29,14 @@ import org.apache.http.client.methods.HttpUriRequest;
 import java.io.IOException;
 
 public abstract class AbstractMethod<RequestT, ResultT> implements Method<RequestT, ResultT> {
-    private HttpClient httpClient;
+    private final HttpWrapper httpWrapper;
+
+    public AbstractMethod(HttpWrapper httpWrapper) {
+        this.httpWrapper = httpWrapper;
+    }
 
     public ResultT execute(RequestT request) throws IOException {
-        return parseResponse(httpClient.execute(makeRequest(request)));
+        return parseResponse(this.httpWrapper.getHttpClient().execute(makeRequest(request)));
     }
 
     public abstract HttpUriRequest makeRequest(RequestT request);
@@ -38,6 +44,6 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
     public abstract ResultT parseResponse(HttpResponse response);
 
     public void setHttpClient(HttpClient client) {
-        this.httpClient = client;
+        this.httpWrapper.setHttpClient(client);
     }
 }

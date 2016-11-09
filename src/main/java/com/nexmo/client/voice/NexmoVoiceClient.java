@@ -22,15 +22,16 @@ package com.nexmo.client.voice;
  */
 
 import com.nexmo.client.AbstractClient;
+import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.auth.AuthCollection;
 import com.nexmo.client.voice.endpoints.CallsEndpoint;
 
 public class NexmoVoiceClient extends AbstractClient {
     public final CallsEndpoint calls;
-    public NexmoVoiceClient(AuthCollection authCollection) {
-        super(authCollection);
+    public NexmoVoiceClient(HttpWrapper httpWrapper) {
+        super(httpWrapper);
 
-        calls = new CallsEndpoint(authCollection);
+        calls = new CallsEndpoint(httpWrapper);
     }
 
     public void createCall() {

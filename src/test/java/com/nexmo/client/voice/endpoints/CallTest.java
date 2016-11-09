@@ -1,5 +1,4 @@
-package com.nexmo.client.voice.endpoints;
-/*
+package com.nexmo.client.voice.endpoints;/*
  * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,14 +22,16 @@ package com.nexmo.client.voice.endpoints;
 
 import static org.junit.Assert.*;
 
-import com.nexmo.client.auth.AuthCollection;
+import com.nexmo.client.voice.Call;
 import org.junit.Test;
 
-public class CreateCallMethodTest {
+public class CallTest {
     @Test
-    public void testConstructUri() {
-//        assertEquals(
-//                "https://api.nexmo.com/v1/calls",
-//                new CreateCallMethod(new AuthCollection()).constructURI("https://api.nexmo.com/v1"));
+    public void testToJson() throws Exception {
+        Call call = new Call("4477999000", "44111222333", "https://callback.example.com/");
+        assertEquals(
+                "{\"to\":{\"type\":\"phone\",\"number\":\"4477999000\"},\"from\":{\"type\":\"phone\",\"number\":\"44111222333\"" +
+                        "},\"answer_url\":\"https://callback.example.com/\",\"answer_method\":\"GET\"}",
+                call.toJson());
     }
 }

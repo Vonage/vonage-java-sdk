@@ -20,6 +20,8 @@ package com.nexmo.client.voice.endpoints;/*
  * THE SOFTWARE.
  */
 
+import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.auth.AuthCollection;
 import com.nexmo.client.auth.AuthMethod;
 import com.nexmo.client.auth.JWTAuthMethod;
 import com.nexmo.client.voice.Call;
@@ -31,29 +33,28 @@ import java.io.IOException;
 
 // TODO: Create a package for these endpoint methods
 public class CreateCallMethod extends AbstractMethod<Call, Call> {
-    private static final String DEFAULT_BASE_URI = "https://api.nexmo.com/v1";
-    private final String baseUri;
+    private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls";
+
+    private String uri = DEFAULT_URI;
     private static final Class[] allowed_auth_methods = new Class[] {JWTAuthMethod.class};
 
-    public CreateCallMethod() {
-        this(DEFAULT_BASE_URI);
-    }
 
-    public CreateCallMethod(String baseUri) {
-        this.baseUri = baseUri;
-    }
-
-    protected String constructURI(String baseUri) {
-        return baseUri + "/calls";
+    public CreateCallMethod(HttpWrapper httpWrapper) {
+        super(httpWrapper);
     }
 
     @Override
     public HttpUriRequest makeRequest(Call request) {
-        return new HttpPost(constructURI(this.baseUri));
+        return new HttpPost(this.uri);
     }
 
     @Override
     public Call parseResponse(HttpResponse response) {
-        return new Call();
+        // FIXME: Fill this in
+        return null;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 }

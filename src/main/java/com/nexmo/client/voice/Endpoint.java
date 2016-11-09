@@ -1,5 +1,4 @@
-package com.nexmo.client.voice.endpoints;
-/*
+package com.nexmo.client.voice;/*
  * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,16 +20,40 @@ package com.nexmo.client.voice.endpoints;
  * THE SOFTWARE.
  */
 
-import static org.junit.Assert.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-import com.nexmo.client.auth.AuthCollection;
-import org.junit.Test;
+@JsonInclude(value=JsonInclude.Include.NON_NULL)
+public class Endpoint {
+    private String type = "phone";
+    private String number;
+    private String dtmfAnswer = null;
 
-public class CreateCallMethodTest {
-    @Test
-    public void testConstructUri() {
-//        assertEquals(
-//                "https://api.nexmo.com/v1/calls",
-//                new CreateCallMethod(new AuthCollection()).constructURI("https://api.nexmo.com/v1"));
+    public Endpoint(String number) {
+        this.number = number;
+    }
+
+    public Endpoint(String number, String dtmfAnswer) {
+        this.number = number;
+        this.dtmfAnswer = dtmfAnswer;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public String getDtmfAnswer() {
+        return dtmfAnswer;
+    }
+
+    public void setDtmfAnswer(String dtmfAnswer) {
+        this.dtmfAnswer = dtmfAnswer;
     }
 }

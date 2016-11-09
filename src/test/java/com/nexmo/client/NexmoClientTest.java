@@ -21,21 +21,55 @@ package com.nexmo.client;/*
  */
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.nexmo.client.auth.JWTAuthMethod;
+import com.nexmo.client.voice.Call;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.nio.file.FileSystems;
 
 public class NexmoClientTest {
+
+    private HttpClient stubHttpClient(int statusCode, String content) throws Exception {
+        HttpClient result = mock(HttpClient.class);
+
+        HttpResponse response = mock(HttpResponse.class);
+        StatusLine sl = mock(StatusLine.class);
+        HttpEntity entity = mock(HttpEntity.class);
+
+        when(result.execute(any(HttpUriRequest.class))).thenReturn(response);
+        when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes("UTF-8")));
+        when(sl.getStatusCode()).thenReturn(statusCode);
+        when(response.getStatusLine()).thenReturn(sl);
+        when(response.getEntity()).thenReturn(entity);
+
+        return result;
+    }
+
     @Test
     public void testConstructNexmoClient() throws Exception {
+
+
         NexmoClient client = new NexmoClient(
                 new JWTAuthMethod(
                         "951614e0-eec4-4087-a6b1-3f4c2f169cb0",
                         FileSystems.getDefault().getPath(".", "valid_application_key.pem")
                 )
         );
-        client.voice.calls.post();
+        client.setHttpClient(stubHttpClient(200, "{\n" +
+                "  \"conversation_uuid\": \"63f61863-4a51-4f6b-86e1-46edebio0391\",\n" +
+                "  \"status\": \"started\",\n" +
+                "  \"direction\": \"outbound\"\n" +
+                "}"));
+        client.voice.calls.post(new Call("4499991111", "44111222333", "https://callback.example.com/"));
     }
 }

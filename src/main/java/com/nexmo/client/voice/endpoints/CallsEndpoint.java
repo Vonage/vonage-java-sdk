@@ -20,22 +20,30 @@ package com.nexmo.client.voice.endpoints;/*
  * THE SOFTWARE.
  */
 
+import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.auth.AuthCollection;
+import com.nexmo.client.voice.Call;
+
+import java.io.IOException;
 
 public class CallsEndpoint {
-    private final AuthCollection authMethods;
+    private final CreateCallMethod createCall;
+    private final ReadCallMethod readCall;
 
-    public CallsEndpoint(AuthCollection authMethods) {
-        this.authMethods = authMethods;
+    public CallsEndpoint(HttpWrapper httpWrapper) {
+        this.createCall = new CreateCallMethod(httpWrapper);
+        this.readCall = new ReadCallMethod(httpWrapper);
     }
 
-    public void post() {
-
+    public Call post(Call callRequest) throws IOException {
+        return this.createCall.execute(callRequest);
     }
 
     public void get() {}
 
-    public void get(String uuid) {}
+    public void get(String uuid) {
+
+    }
 
     public void put(String uuid) {}
 }
