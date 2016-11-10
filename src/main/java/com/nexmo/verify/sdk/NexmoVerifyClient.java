@@ -31,8 +31,6 @@ import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.verify.sdk.endpoints.CheckClient;
 import com.nexmo.verify.sdk.endpoints.SearchClient;
 import com.nexmo.verify.sdk.endpoints.VerifyClient;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.HttpClient;
 
 /**

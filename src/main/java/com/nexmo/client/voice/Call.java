@@ -108,6 +108,7 @@ public class Call {
         return machineDetection;
     }
 
+    // TODO: This should be an enum param:
     public void setMachineDetection(String machineDetection) {
         this.machineDetection = machineDetection;
     }
