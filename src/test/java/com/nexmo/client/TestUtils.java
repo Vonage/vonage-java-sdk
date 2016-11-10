@@ -1,4 +1,4 @@
-package com.nexmo.client.voice.endpoints;/*
+package com.nexmo.client;/*
  * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,38 +20,26 @@ package com.nexmo.client.voice.endpoints;/*
  * THE SOFTWARE.
  */
 
-import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.auth.JWTAuthMethod;
-import com.nexmo.client.voice.Call;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
-// TODO: Create a package for these endpoint methods
-public class ReadCallMethod extends AbstractMethod<String, Call> {
-    private static final String DEFAULT_BASE_URI = "https://api.nexmo.com/v1/calls/";
-    private String baseUri = DEFAULT_BASE_URI;
-    private static final Class[] allowed_auth_methods = new Class[]{JWTAuthMethod.class};
+public class TestUtils {
+    public byte[] loadKey(String path) throws IOException {
+        int len;
+        int size = 1024;
+        byte[] buf = new byte[size];
 
-    public ReadCallMethod(HttpWrapper httpWrapper) {
-        super(httpWrapper);
-    }
+        ByteArrayOutputStream bos = new ByteArrayOutputStream(2048);
+        InputStream is = this.getClass().getResourceAsStream(path);
+        if (is != null) {
+            while ((len = is.read(buf, 0, size)) != -1) {
+                bos.write(buf, 0, len);
+            }
+        } else {
+            throw new IOException("Could not find resource at: " + this.getClass().getResource(path));
+        }
+        return bos.toByteArray();
 
-    @Override
-    public HttpUriRequest makeRequest(String callId) {
-        String uri = this.baseUri + callId;
-        HttpGet result = new HttpGet(uri);
-
-        return result;
-    }
-
-    @Override
-    public Call parseResponse(HttpResponse response) {
-        //FIXME
-        return null;
-    }
-
-    public void setBaseUri(String baseUri) {
-        this.baseUri = baseUri;
     }
 }
