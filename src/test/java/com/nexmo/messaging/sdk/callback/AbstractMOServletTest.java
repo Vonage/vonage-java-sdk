@@ -13,11 +13,24 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.PrintWriter;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.concurrent.Executor;
+
+
+class SynchronousExecutor implements Executor {
+    @Override
+    public void execute(Runnable command) {
+        command.run();
+    }
+}
 
 
 class TestMOServlet extends AbstractMOServlet {
+    public MO result;
+
     TestMOServlet() {
-        super(false, null, false, null, null);
+        this(false, null, false, null, null);
     }
 
     TestMOServlet(final boolean validateSignature,
@@ -26,11 +39,12 @@ class TestMOServlet extends AbstractMOServlet {
                          final String expectedUsername,
                          final String expectedPassword) {
         super(validateSignature, signatureSharedSecret, validateUsernamePassword, expectedUsername, expectedPassword);
+        this.consumer = new SynchronousExecutor();
     }
 
     @Override
     public void consume(MO mo) {
-
+        this.result = mo;
     }
 }
 
@@ -53,9 +67,21 @@ public class AbstractMOServletTest {
 
         when(response.getWriter()).thenReturn(new PrintWriter(dummyResponseWriter));
 
-        new TestMOServlet().doPost(request, response);
+        TestMOServlet servlet = new TestMOServlet();
+        servlet.doPost(request, response);
         assertEquals("OK", dummyResponseWriter.toString());
-        // TODO: Validate produced MO object.
+
+        MO mo = servlet.result;
+        assertEquals("anisdn", mo.getSender());
+        assertEquals("to", mo.getDestination());
+        assertEquals("networkcode", mo.getNetworkCode());
+        assertEquals("messageid", mo.getMessageId());
+        assertEquals("asessionid", mo.getSessionId());
+        assertEquals("akeyword", mo.getKeyword());
+        assertEquals("text", mo.getMessageType().getType());
+        assertEquals("Dear John", mo.getMessageBody());
+        assertEquals(false, mo.isConcat());
+        assertEquals(new GregorianCalendar(2016, 10, 7, 6, 5, 4).getTime(), mo.getTimeStamp());
     }
 
     @Test
@@ -68,9 +94,19 @@ public class AbstractMOServletTest {
 
         when(response.getWriter()).thenReturn(new PrintWriter(dummyResponseWriter));
 
-        new TestMOServlet().doPost(request, response);
+        TestMOServlet servlet = new TestMOServlet();
+        servlet.doPost(request, response);
         assertEquals("OK", dummyResponseWriter.toString());
-        // TODO: Validate produced MO object.
+
+        MO mo = servlet.result;
+        assertEquals("anisdn", mo.getSender());
+        assertEquals("to", mo.getDestination());
+        assertEquals("networkcode", mo.getNetworkCode());
+        assertEquals("messageid", mo.getMessageId());
+        assertEquals("asessionid", mo.getSessionId());
+        assertEquals("akeyword", mo.getKeyword());
+        assertEquals("unicode", mo.getMessageType().getType());
+        assertEquals("Dear John", mo.getMessageBody());
     }
 
     @Test
@@ -86,14 +122,47 @@ public class AbstractMOServletTest {
         when(request.getParameter("sessionId")).thenReturn("asessionid");
         when(request.getParameter("keyword")).thenReturn("akeyword");
         when(request.getParameter("type")).thenReturn("binary");
-        when(request.getParameter("data")).thenReturn("01234567890abcde");
+        when(request.getParameter("data")).thenReturn("00107F70FF");
         when(request.getParameter("price")).thenReturn("12.00");
         when(request.getParameter("message-timestamp")).thenReturn("2016-10-09 08:07:06");
         when(response.getWriter()).thenReturn(new PrintWriter(dummyResponseWriter));
 
-        new TestMOServlet().doPost(request, response);
+        TestMOServlet servlet = new TestMOServlet();
+        servlet.doPost(request, response);
         assertEquals("OK", dummyResponseWriter.toString());
-        // TODO: Validate produced MO object.
+
+        MO mo = servlet.result;
+        assertEquals("anisdn", mo.getSender());
+        assertEquals("to", mo.getDestination());
+        assertEquals("networkcode", mo.getNetworkCode());
+        assertEquals("messageid", mo.getMessageId());
+        assertEquals("asessionid", mo.getSessionId());
+        assertEquals("binary", mo.getMessageType().getType());
+        assertArrayEquals(new byte[] {0x00, 0x10, 0x7f, 0x70, -1}, mo.getBinaryMessageBody());
+    }
+
+    @Test
+    public void testHandleBinaryRequestMissingData() throws IOException, ServletException {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        StringWriter dummyResponseWriter = new StringWriter();
+
+        when(request.getParameter("msisdn")).thenReturn("anisdn");
+        when(request.getParameter("to")).thenReturn("to");
+        when(request.getParameter("network-code")).thenReturn("networkcode");
+        when(request.getParameter("messageId")).thenReturn("messageid");
+        when(request.getParameter("sessionId")).thenReturn("asessionid");
+        when(request.getParameter("keyword")).thenReturn("akeyword");
+        when(request.getParameter("type")).thenReturn("binary");
+        when(request.getParameter("data")).thenReturn(null);
+        when(request.getParameter("price")).thenReturn("12.00");
+        when(request.getParameter("message-timestamp")).thenReturn("2016-10-09 08:07:06");
+        when(response.getWriter()).thenReturn(new PrintWriter(dummyResponseWriter));
+
+        TestMOServlet servlet = new TestMOServlet();
+        servlet.doGet(request, response);
+        verify(response, atLeastOnce()).sendError(400, "Missing data field");
+
     }
 
     @Test
@@ -121,7 +190,7 @@ public class AbstractMOServletTest {
         when(response.getWriter()).thenReturn(new PrintWriter(dummyResponseWriter));
 
         new TestMOServlet().doPost(request, response);
-        verify(response, atLeastOnce()).sendError(400, "Unrecognized message type");
+        verify(response, atLeastOnce()).sendError(400, "Unrecognized message type: fluffy");
     }
 
     @Test
@@ -163,9 +232,19 @@ public class AbstractMOServletTest {
 
         when(response.getWriter()).thenReturn(new PrintWriter(dummyResponseWriter));
 
-        new TestMOServlet(false, null, true, "admin", "default").doPost(request, response);
+        TestMOServlet servlet = new TestMOServlet(false, null, true, "admin", "default");
+        servlet.doPost(request, response);
         assertEquals("OK", dummyResponseWriter.toString());
-        // TODO: Validate produced MO object.
+
+        MO mo = servlet.result;
+        assertEquals("anisdn", mo.getSender());
+        assertEquals("to", mo.getDestination());
+        assertEquals("networkcode", mo.getNetworkCode());
+        assertEquals("messageid", mo.getMessageId());
+        assertEquals("asessionid", mo.getSessionId());
+        assertEquals("akeyword", mo.getKeyword());
+        assertEquals("text", mo.getMessageType().getType());
+        assertEquals("Dear John", mo.getMessageBody());
     }
 
     @Test
@@ -243,10 +322,20 @@ public class AbstractMOServletTest {
 
         when(response.getWriter()).thenReturn(new PrintWriter(dummyResponseWriter));
 
-        new TestMOServlet(false, null, true, null, null).doPost(request, response);
+        TestMOServlet servlet = new TestMOServlet(false, null, true, null, null);
+        servlet.doPost(request, response);
         // TODO: Not sure this is correct behaviour!
         assertEquals("OK", dummyResponseWriter.toString());
-        // TODO: Validate produced MO object.
+
+        MO mo = servlet.result;
+        assertEquals("anisdn", mo.getSender());
+        assertEquals("to", mo.getDestination());
+        assertEquals("networkcode", mo.getNetworkCode());
+        assertEquals("messageid", mo.getMessageId());
+        assertEquals("asessionid", mo.getSessionId());
+        assertEquals("akeyword", mo.getKeyword());
+        assertEquals("text", mo.getMessageType().getType());
+        assertEquals("Dear John", mo.getMessageBody());
     }
 
     private HttpServletRequest dummyTextRequest() {
@@ -260,6 +349,7 @@ public class AbstractMOServletTest {
         when(request.getParameter("keyword")).thenReturn("akeyword");
         when(request.getParameter("type")).thenReturn("text");
         when(request.getParameter("text")).thenReturn("Dear John");
+        when(request.getParameter("message-timestamp")).thenReturn("2016-11-07 06:05:04");
 
         return request;
     }

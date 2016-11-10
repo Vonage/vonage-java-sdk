@@ -38,25 +38,25 @@ public class MO implements java.io.Serializable {
     private final MESSAGE_TYPE messageType;
     private final String sender;
     private final String destination;
-    private final String networkCode;
-    private final String keyword;
-    private final String messageBody;
-    private final byte[] binaryMessageBody;
-    private final byte[] userDataHeader;
-    private final BigDecimal price;
-    private final String sessionId;
-
-    private final boolean concat;
-    private final String concatReferenceNumber;
-    private final int concatTotalParts;
-    private final int concatPartNumber;
-
     private final Date timeStamp;
 
+    private String networkCode;
+    private String keyword;
+    private String messageBody;
+    private byte[] binaryMessageBody;
+    private byte[] userDataHeader;
+    private BigDecimal price;
+    private String sessionId;
+
+    private boolean concat;
+    private String concatReferenceNumber;
+    private int concatTotalParts;
+    private int concatPartNumber;
+    
     /**
      * Describes the type of payload this message carries
      */
-    public static enum MESSAGE_TYPE {
+    public enum MESSAGE_TYPE {
 
         /**
          * This is a plain text (8 bit alphabet) message
@@ -75,7 +75,7 @@ public class MO implements java.io.Serializable {
 
         final String type;
 
-        private MESSAGE_TYPE(final String type) {
+        MESSAGE_TYPE(final String type) {
             this.type = type;
         }
 
@@ -92,35 +92,95 @@ public class MO implements java.io.Serializable {
               final MESSAGE_TYPE messageType,
               final String sender,
               final String destination,
-              final String networkCode,
-              final String keyword,
-              final String messageBody,
-              final byte[] binaryMessageBody,
-              final byte[] userDataHeader,
               final BigDecimal price,
-              final String sessionId,
-              final boolean concat,
-              final String concatReferenceNumber,
-              final int concatTotalParts,
-              final int concatPartNumber,
               final Date timeStamp) {
         this.messageId = messageId;
         this.messageType = messageType;
         this.sender = sender;
         this.destination = destination;
-        this.networkCode = networkCode;
+        this.price = price;
+        this.timeStamp = timeStamp;
+
+        // Set the rest to defaults:
+
+        // text & unicode:
+        messageBody = null;
+        keyword = null;
+
+        // binary:
+        binaryMessageBody = null;
+        userDataHeader = null;
+
+        // concatenation data:
+        concat = false;
+        concatReferenceNumber = null;
+        concatTotalParts = 1;
+        concatPartNumber = 1;
+
+        // TODO: UNDOCUMENTED
+        networkCode = null;
+        sessionId = null;
+    }
+
+    public void setTextData(String text,
+                            String keyword) {
+        this.messageBody = text;
         this.keyword = keyword;
-        this.messageBody = messageBody;
+    }
+
+    public void setBinaryData(byte[] binaryMessageBody, byte[] userDataHeader) {
         this.binaryMessageBody = binaryMessageBody;
         this.userDataHeader = userDataHeader;
-        this.price = price;
-        this.sessionId = sessionId;
-        this.concat = concat;
+    }
+    
+    public void setConcatenationData(String concatReferenceNumber, int concatTotalParts, int concatPartNumber) {
+        concat = true;
         this.concatReferenceNumber = concatReferenceNumber;
         this.concatTotalParts = concatTotalParts;
         this.concatPartNumber = concatPartNumber;
-        this.timeStamp = timeStamp;
     }
+
+    public void setNetworkCode(String networkCode) {
+        this.networkCode = networkCode;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
+    //    public MO(final String messageId,
+//              final MESSAGE_TYPE messageType,
+//              final String sender,
+//              final String destination,
+//              final String networkCode,
+//              final String keyword,
+//              final String messageBody,
+//              final byte[] binaryMessageBody,
+//              final byte[] userDataHeader,
+//              final BigDecimal price,
+//              final String sessionId,
+//              final boolean concat,
+//              final String concatReferenceNumber,
+//              final int concatTotalParts,
+//              final int concatPartNumber,
+//              final Date timeStamp) {
+//        this.messageId = messageId;
+//        this.messageType = messageType;
+//        this.sender = sender;
+//        this.destination = destination;
+//        this.networkCode = networkCode;
+//        this.keyword = keyword;
+//        this.messageBody = messageBody;
+//        this.binaryMessageBody = binaryMessageBody;
+//        this.userDataHeader = userDataHeader;
+//        this.price = price;
+//        this.sessionId = sessionId;
+//        this.concat = concat;
+//        this.concatReferenceNumber = concatReferenceNumber;
+//        this.concatTotalParts = concatTotalParts;
+//        this.concatPartNumber = concatPartNumber;
+//        this.timeStamp = timeStamp;
+//    }
 
     /**
      * @return String the id assigned to this message by Nexmo before delivery

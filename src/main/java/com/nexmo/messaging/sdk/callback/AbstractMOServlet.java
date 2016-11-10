@@ -27,8 +27,8 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -55,7 +55,7 @@ public abstract class AbstractMOServlet extends HttpServlet {
 
     private static final long serialVersionUID = 8745764381059238419L;
 
-    public static final int MAX_CONSUMER_THREADS = 10;
+    private static final int MAX_CONSUMER_THREADS = 10;
 
     private static final ThreadLocal<SimpleDateFormat> TIMESTAMP_DATE_FORMAT = new ThreadLocal<SimpleDateFormat>() {
         @Override
@@ -70,7 +70,7 @@ public abstract class AbstractMOServlet extends HttpServlet {
     private final String expectedUsername;
     private final String expectedPassword;
 
-    private final ThreadPoolExecutor consumer;
+    protected Executor consumer;
 
     public AbstractMOServlet(final boolean validateSignature,
                              final String signatureSharedSecret,
@@ -83,7 +83,7 @@ public abstract class AbstractMOServlet extends HttpServlet {
         this.expectedUsername = expectedUsername;
         this.expectedPassword = expectedPassword;
 
-        this.consumer = (ThreadPoolExecutor)Executors.newFixedThreadPool(MAX_CONSUMER_THREADS);
+        this.consumer = Executors.newFixedThreadPool(MAX_CONSUMER_THREADS);
     }
 
     @Override
@@ -96,7 +96,7 @@ public abstract class AbstractMOServlet extends HttpServlet {
         handleRequest(request, response);
     }
 
-    private boolean validateRequest(HttpServletRequest request) {
+    private void validateRequest(HttpServletRequest request) throws NexmoCallbackRequestValidationException {
         boolean passed = true;
         if (this.validateUsernamePassword) {
             String username = request.getParameter("username");
@@ -108,139 +108,123 @@ public abstract class AbstractMOServlet extends HttpServlet {
                 if (password == null || !this.expectedPassword.equals(password))
                     passed = false;
         }
-        return passed;
+
+        if (!passed) {
+            throw new NexmoCallbackRequestValidationException("Bad Credentials");
+        }
+
+        if (this.validateSignature) {
+            if (!RequestSigning.verifyRequestSignature(request, this.signatureSharedSecret)) {
+                throw new NexmoCallbackRequestValidationException("Bad Signature");
+            }
+        }
     }
 
     private void handleRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/plain");
 
-        if (!validateRequest(request)) {
-            response.sendError(400, "Bad Credentials");
-            return;
-        }
+        try {
+            validateRequest(request);
 
-        if (this.validateSignature) {
-            if (!RequestSigning.verifyRequestSignature(request, this.signatureSharedSecret)) {
-                response.sendError(400, "Bad Signature");
-                return;
+            String messageId = request.getParameter("messageId");
+            String sender = request.getParameter("msisdn");
+            String destination = request.getParameter("to");
+            if (sender == null ||
+                    destination == null ||
+                    messageId == null) {
+                throw new NexmoCallbackRequestValidationException("Missing mandatory fields");
             }
+
+            MO.MESSAGE_TYPE messageType = parseMessageType(request.getParameter("type"));
+
+            BigDecimal price = parsePrice(request.getParameter("price"));
+            Date timeStamp = parseTimeStamp(request.getParameter("message-timestamp"));
+
+            MO mo = new MO(messageId, messageType, sender, destination, price, timeStamp);
+            if (messageType == MO.MESSAGE_TYPE.TEXT || messageType == MO.MESSAGE_TYPE.UNICODE) {
+                String messageBody = request.getParameter("text");
+                if (messageBody == null) {
+                    throw new NexmoCallbackRequestValidationException("Missing text field");
+                }
+                mo.setTextData(messageBody, request.getParameter("keyword"));
+            } else if (messageType == MO.MESSAGE_TYPE.BINARY) {
+                byte[] data = parseBinaryData(request.getParameter("data"));
+                if (data == null) {
+                    throw new NexmoCallbackRequestValidationException("Missing data field");
+                }
+                mo.setBinaryData(data, parseBinaryData(request.getParameter("udh")));
+            }
+            extractConcatenationData(request, mo);
+
+            // TODO: These are undocumented:
+            mo.setNetworkCode(request.getParameter("network-code"));
+            mo.setSessionId(request.getParameter("sessionId"));
+
+            // Push the task to an async consumption thread
+            ConsumeTask task = new ConsumeTask(this, mo);
+            this.consumer.execute(task);
+
+            // immediately ack the receipt
+            try (PrintWriter out = response.getWriter()) {
+                out.print("OK");
+                out.flush();
+            }
+        } catch (NexmoCallbackRequestValidationException exc) {
+            // TODO: Log this - it's mainly for our own use!
+            response.sendError(400, exc.getMessage());
         }
+    }
 
-        String sender = request.getParameter("msisdn");
-        String destination = request.getParameter("to");
-        String networkCode = request.getParameter("network-code");
-        String messageId = request.getParameter("messageId");
-        String sessionId = request.getParameter("sessionId");
-        String keyword = request.getParameter("keyword");
-
-        if (sender == null ||
-            destination == null ||
-            messageId == null) {
-            response.sendError(400, "Missing mandatory fields");
-            return;
+    private static void extractConcatenationData(HttpServletRequest request, MO mo) throws NexmoCallbackRequestValidationException {
+        String concatString = request.getParameter("concat");
+        if (concatString != null && concatString.equals("true")) {
+            int totalParts;
+            int partNumber;
+            String reference = request.getParameter("concat-ref");
+            try {
+                totalParts = Integer.parseInt(request.getParameter("concat-total"));
+                partNumber = Integer.parseInt(request.getParameter("concat-part"));
+            } catch (Exception e) {
+                throw new NexmoCallbackRequestValidationException("bad concat fields");
+            }
+            mo.setConcatenationData(reference, totalParts, partNumber);
         }
+    }
 
-        MO.MESSAGE_TYPE messageType = null;
-        String str = request.getParameter("type");
+    private static MO.MESSAGE_TYPE parseMessageType(String str) throws NexmoCallbackRequestValidationException {
         if (str != null)
-            for (MO.MESSAGE_TYPE type: MO.MESSAGE_TYPE.values())
+            for (MO.MESSAGE_TYPE type : MO.MESSAGE_TYPE.values())
                 if (type.getType().equals(str))
-                    messageType = type;
-        if (messageType == null) {
-            response.sendError(400, "Unrecognized message type");
-            return;
-        }
+                    return type;
+            throw new NexmoCallbackRequestValidationException("Unrecognized message type: " + str);
+    }
 
-        String messageBody = null;
-        byte[] binaryMessageBody = null;
-        byte[] userDataHeader = null;
-
-        if (messageType == MO.MESSAGE_TYPE.TEXT || messageType == MO.MESSAGE_TYPE.UNICODE) {
-            messageBody = request.getParameter("text");
-            if (messageBody == null) {
-                response.sendError(400, "Missing text field");
-                return;
-            }
-        } else if (messageType == MO.MESSAGE_TYPE.BINARY) {
-            String binaryBodyStr = request.getParameter("data");
-            if (binaryBodyStr == null) {
-                response.sendError(400, "Missing data field");
-                return;
-            }
-            binaryMessageBody = HexUtil.hexToBytes(binaryBodyStr);
-        }
-
-        String binaryBodyUdh = request.getParameter("udh");
-        if (binaryBodyUdh != null)
-            userDataHeader = HexUtil.hexToBytes(binaryBodyUdh);
-
-        BigDecimal price = null;
-        str = request.getParameter("price");
+    private static Date parseTimeStamp(String str) throws NexmoCallbackRequestValidationException {
         if (str != null) {
             try {
-                price = new BigDecimal(str);
-            } catch (Exception e) {
-                response.sendError(400, "Bad price field");
-                return;
-            }
-        }
-
-        Date timeStamp = null;
-        str = request.getParameter("message-timestamp");
-        if (str != null) {
-            try {
-                timeStamp = TIMESTAMP_DATE_FORMAT.get().parse(str);
+                return TIMESTAMP_DATE_FORMAT.get().parse(str);
             } catch (ParseException e) {
-                response.sendError(400, "Bad message-timestamp format");
-                return;
+                throw new NexmoCallbackRequestValidationException("Bad message-timestamp format", e);
             }
         }
+        return null;
+    }
 
-        boolean concat = false;
-        String concatReferenceNumber = null;
-        int concatTotalParts = 0;
-        int concatPartNumber = 0;
-
-        str = request.getParameter("concat");
-        if (str != null && str.equals("true")) {
-            concatReferenceNumber = request.getParameter("concat-ref");
+    private static BigDecimal parsePrice(String str) throws NexmoCallbackRequestValidationException {
+        if (str != null) {
             try {
-                concatTotalParts = Integer.parseInt(request.getParameter("concat-total"));
-                concatPartNumber = Integer.parseInt(request.getParameter("concat-part"));
+                return new BigDecimal(str);
             } catch (Exception e) {
-                response.sendError(400, "bad concat fields");
-                return;
+                throw new NexmoCallbackRequestValidationException("Bad price field", e);
             }
         }
+        return null;
+    }
 
-        // Now we have validated all of the request parameters, construct an MO POJO and push it to the consumer thread
-
-        MO mo = new MO(messageId,
-                       messageType,
-                       sender,
-                       destination,
-                       networkCode,
-                       keyword,
-                       messageBody,
-                       binaryMessageBody,
-                       userDataHeader,
-                       price,
-                       sessionId,
-                       concat,
-                       concatReferenceNumber,
-                       concatTotalParts,
-                       concatPartNumber,
-                       timeStamp);
-
-        // Push the task to an async consumption thread
-        ConsumeTask task = new ConsumeTask(this, mo);
-        this.consumer.execute(task);
-
-        // immediately ack the receipt
-        try (PrintWriter out = response.getWriter()) {
-            out.print("OK");
-            out.flush();
-        }
+    private static byte[] parseBinaryData(String str) {
+        if (str != null)
+            return HexUtil.hexToBytes(str);
+        return null;
     }
 
     /**
