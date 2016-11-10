@@ -21,7 +21,6 @@ package com.nexmo.client.voice.endpoints;/*
  */
 
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.auth.AuthCollection;
 import com.nexmo.client.voice.Call;
 
 import java.io.IOException;

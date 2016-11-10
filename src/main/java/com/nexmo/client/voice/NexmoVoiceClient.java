@@ -23,7 +23,6 @@ package com.nexmo.client.voice;
 
 import com.nexmo.client.AbstractClient;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.auth.AuthCollection;
 import com.nexmo.client.voice.endpoints.CallsEndpoint;
 
 public class NexmoVoiceClient extends AbstractClient {
@@ -34,7 +33,7 @@ public class NexmoVoiceClient extends AbstractClient {
         calls = new CallsEndpoint(httpWrapper);
     }
 
-    public void createCall() {
-
+    public void createCall(Call callRequest) throws IOException {
+        calls.post(callRequest);
     }
 }

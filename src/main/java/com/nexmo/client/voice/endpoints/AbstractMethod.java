@@ -20,7 +20,6 @@ package com.nexmo.client.voice.endpoints;/*
  * THE SOFTWARE.
  */
 
-import com.nexmo.client.AbstractClient;
 import com.nexmo.client.HttpWrapper;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -35,6 +34,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
         this.httpWrapper = httpWrapper;
     }
 
+    // TODO: Consider wrapping IOException in a nexmo-specific transport exception.
     public ResultT execute(RequestT request) throws IOException {
         return parseResponse(this.httpWrapper.getHttpClient().execute(makeRequest(request)));
     }

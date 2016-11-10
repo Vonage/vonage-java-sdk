@@ -21,15 +21,11 @@ package com.nexmo.client.voice.endpoints;/*
  */
 
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.auth.AuthCollection;
-import com.nexmo.client.auth.AuthMethod;
 import com.nexmo.client.auth.JWTAuthMethod;
 import com.nexmo.client.voice.Call;
 import org.apache.http.*;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
-
-import java.io.IOException;
 
 // TODO: Create a package for these endpoint methods
 public class CreateCallMethod extends AbstractMethod<Call, Call> {

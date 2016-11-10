@@ -22,7 +22,6 @@ package com.nexmo.client;/*
 
 import com.nexmo.client.auth.AuthCollection;
 import org.apache.http.client.HttpClient;
-import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
