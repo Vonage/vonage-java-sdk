@@ -25,6 +25,8 @@ import com.nexmo.client.AbstractClient;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.voice.endpoints.CallsEndpoint;
 
+import java.io.IOException;
+
 public class NexmoVoiceClient extends AbstractClient {
     public final CallsEndpoint calls;
     public NexmoVoiceClient(HttpWrapper httpWrapper) {
