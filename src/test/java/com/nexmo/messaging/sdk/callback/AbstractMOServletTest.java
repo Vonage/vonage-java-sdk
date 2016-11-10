@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.PrintWriter;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.concurrent.Executor;
 
@@ -324,7 +323,6 @@ public class AbstractMOServletTest {
 
         TestMOServlet servlet = new TestMOServlet(false, null, true, null, null);
         servlet.doPost(request, response);
-        // TODO: Not sure this is correct behaviour!
         assertEquals("OK", dummyResponseWriter.toString());
 
         MO mo = servlet.result;

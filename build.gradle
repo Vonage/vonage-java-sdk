@@ -30,6 +30,14 @@ test {
 	// testLogging.showStandardStreams = true
 }
 
+sourceSets {
+	examples
+}
+
+dependencies {
+    examplesCompile sourceSets.main.output
+}
+
 javadoc {
 	/* info for JavaDoc options http://docs.oracle.com/javase/6/docs/technotes/tools/windows/javadoc.html#overviewcomment */
 	title "Nexmo Java SDK"
