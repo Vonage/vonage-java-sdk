@@ -1,4 +1,5 @@
-package com.nexmo.client.auth;/*
+package com.nexmo.client;
+/*
  * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,10 +21,30 @@ package com.nexmo.client.auth;/*
  * THE SOFTWARE.
  */
 
-import org.apache.http.HttpRequest;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
+import com.nexmo.client.auth.AuthCollection;
+import org.apache.http.client.HttpClient;
+import org.junit.Before;
+import org.junit.Test;
 
-public interface AuthMethod extends Comparable<AuthMethod> {
-    public void apply(HttpRequest request);
-    public int getSortKey();
+public class HttpWrapperTest {
+    HttpWrapper hw;
+    @Before
+    public void setUp() {
+        this.hw = new HttpWrapper(new AuthCollection());
+    }
+
+    @Test
+    public void basicTest() {
+        assertNotNull(this.hw.getHttpClient());
+    }
+
+    @Test
+    public void testAuthMethodAccessors() {
+        AuthCollection auths = new AuthCollection();
+        this.hw.setAuthMethods(auths);
+        assertEquals(auths, this.hw.getAuthMethods());
+    }
 }

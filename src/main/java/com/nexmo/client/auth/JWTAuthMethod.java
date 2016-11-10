@@ -41,7 +41,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class JWTAuthMethod extends AbstractAuthMethod {
-    public static final int SORT_KEY = 10;
+    public final int SORT_KEY = 10;
 
     private static final Pattern pemPattern = Pattern.compile("-----BEGIN PRIVATE KEY-----\\n(.*\\n)-----END PRIVATE KEY-----", Pattern.MULTILINE| Pattern.DOTALL);
     private String applicationId;
@@ -105,5 +105,10 @@ public class JWTAuthMethod extends AbstractAuthMethod {
 
     protected static String constructJTI() {
         return UUID.randomUUID().toString();
+    }
+
+    @Override
+    public int getSortKey() {
+        return this.SORT_KEY;
     }
 }

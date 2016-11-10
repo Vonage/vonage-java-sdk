@@ -24,6 +24,8 @@ package com.nexmo.client.auth;
 public abstract class AbstractAuthMethod implements AuthMethod {
     @Override
     public int compareTo(AuthMethod other) {
-        return Integer.compare(this.SORT_KEY, other.SORT_KEY);
+        return Integer.compare(this.getSortKey(), other.getSortKey());
     }
+
+    public abstract int getSortKey();
 }

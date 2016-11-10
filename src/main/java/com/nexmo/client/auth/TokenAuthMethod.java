@@ -20,10 +20,19 @@ package com.nexmo.client.auth;/*
  * THE SOFTWARE.
  */
 
+
 import org.apache.http.HttpRequest;
 
+public class TokenAuthMethod extends AbstractAuthMethod {
+    public final int SORT_KEY = 20;
 
-public interface AuthMethod extends Comparable<AuthMethod> {
-    public void apply(HttpRequest request);
-    public int getSortKey();
+    @Override
+    public void apply(HttpRequest request) {
+        // FIXME: This is a stub.
+    }
+
+    @Override
+    public int getSortKey() {
+        return SORT_KEY;
+    }
 }

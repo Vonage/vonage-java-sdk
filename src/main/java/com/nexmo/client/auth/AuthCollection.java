@@ -30,7 +30,7 @@ public class AuthCollection {
     private SortedSet<AuthMethod> authList;
 
     public AuthCollection() {
-        authList = new TreeSet<>();
+        this.authList = new TreeSet<>();
     }
 
     public void add(AuthMethod auth) {
@@ -43,6 +43,6 @@ public class AuthCollection {
                 return availableType;
             }
         }
-        throw new NexmoClientException("There is no compatible authentication method for this call.");
+        throw new NexmoUnacceptableAuthException(this.authList, acceptableAuthMethods);
     }
 }
