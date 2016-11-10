@@ -20,23 +20,35 @@ package com.nexmo.client.voice.endpoints;/*
  * THE SOFTWARE.
  */
 
-import static org.junit.Assert.*;
-
-import com.nexmo.client.voice.Call;
+import com.nexmo.client.voice.Endpoint;
+import org.junit.Before;
 import org.junit.Test;
 
-public class CallTest {
-    @Test
-    public void testToJson() throws Exception {
-        Call call = new Call("4477999000", "44111222333", "https://callback.example.com/");
-        assertEquals(
-                "{\"to\":{\"type\":\"phone\",\"number\":\"4477999000\"},\"from\":{\"type\":\"phone\",\"number\":\"44111222333\"" +
-                        "},\"answer_url\":\"https://callback.example.com/\",\"answer_method\":\"GET\"}",
-                call.toJson());
-    }
-    
-    @Test
-    public void testSetters() throws Exception {
+import static org.junit.Assert.*;
 
+
+public class EndpointTest {
+    @Before
+    public void setUp() {}
+
+    @Test
+    public void testConstructor() throws Exception {
+        Endpoint e = new Endpoint("number", "dtmf");
+        assertEquals("number", e.getNumber());
+        assertEquals("dtmf", e.getDtmfAnswer());
+    }
+
+    @Test
+    public void testSetNumber() throws Exception {
+        Endpoint e = new Endpoint("number", "dtmf");
+        e.setNumber("1234");
+        assertEquals("1234", e.getNumber());
+    }
+
+    @Test
+    public void testSetDtmf() throws Exception {
+        Endpoint e = new Endpoint("number", "dtmf");
+        e.setDtmfAnswer("#123");
+        assertEquals("#123", e.getDtmfAnswer());
     }
 }

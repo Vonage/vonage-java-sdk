@@ -55,15 +55,10 @@ import org.apache.http.client.HttpClient;
  * @author Daniele Ricci
  */
 public class NexmoVerifyClient extends LegacyClient {
-
-    private static final Log log = LogFactory.getLog(NexmoVerifyClient.class);
-
     public enum LineType {
-
         ALL,
         MOBILE,
         LANDLINE;
-
     }
 
     /**

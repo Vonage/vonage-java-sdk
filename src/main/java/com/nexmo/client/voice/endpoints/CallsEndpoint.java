@@ -38,11 +38,11 @@ public class CallsEndpoint {
         return this.createCall.execute(callRequest);
     }
 
-    public void get() {}
+//    public void get() {}
 
-    public void get(String uuid) {
-
+    public Call get(String uuid) throws IOException {
+        return this.readCall.execute(uuid);
     }
 
-    public void put(String uuid) {}
+//    public void put(String uuid) {}
 }
