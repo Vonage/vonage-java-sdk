@@ -30,7 +30,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class AuthCollectionTest {
-    TestUtils testUtils = new TestUtils();
+    private TestUtils testUtils = new TestUtils();
 
     @Test
     public void testGetAcceptableAuthMethod() throws Exception {

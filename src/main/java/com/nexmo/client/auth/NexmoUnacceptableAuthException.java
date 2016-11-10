@@ -28,8 +28,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class NexmoUnacceptableAuthException extends NexmoAuthException {
-    Iterable<AuthMethod> availableAuths;
-    Iterable<Class> acceptableAuthClasses;
+    private final Iterable<AuthMethod> availableAuths;
+    private final Iterable<Class> acceptableAuthClasses;
 
     public NexmoUnacceptableAuthException(Collection<AuthMethod> availableAuths, Collection<Class>
             acceptableAuthClasses) {

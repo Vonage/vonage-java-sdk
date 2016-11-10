@@ -16,11 +16,11 @@ import java.io.PrintWriter;
 
 
 class TestMOServlet extends AbstractMOServlet {
-    public TestMOServlet() {
+    TestMOServlet() {
         super(false, null, false, null, null);
     }
 
-    public TestMOServlet(final boolean validateSignature,
+    TestMOServlet(final boolean validateSignature,
                          final String signatureSharedSecret,
                          final boolean validateUsernamePassword,
                          final String expectedUsername,

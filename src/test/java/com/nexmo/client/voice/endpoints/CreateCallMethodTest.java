@@ -23,7 +23,6 @@ package com.nexmo.client.voice.endpoints;
 
 import static org.junit.Assert.*;
 
-import com.nexmo.client.auth.AuthCollection;
 import org.junit.Test;
 
 public class CreateCallMethodTest {
@@ -32,5 +31,7 @@ public class CreateCallMethodTest {
 //        assertEquals(
 //                "https://api.nexmo.com/v1/calls",
 //                new CreateCallMethod(new AuthCollection()).constructURI("https://api.nexmo.com/v1"));
+        // TODO: Need a test here.
+        assertTrue(true);
     }
 }

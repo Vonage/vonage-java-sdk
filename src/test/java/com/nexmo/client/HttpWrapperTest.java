@@ -22,15 +22,13 @@ package com.nexmo.client;
  */
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 import com.nexmo.client.auth.AuthCollection;
-import org.apache.http.client.HttpClient;
 import org.junit.Before;
 import org.junit.Test;
 
 public class HttpWrapperTest {
-    HttpWrapper hw;
+    private HttpWrapper hw;
     @Before
     public void setUp() {
         this.hw = new HttpWrapper(new AuthCollection());

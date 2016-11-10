@@ -24,6 +24,7 @@ package com.nexmo.sns.sdk;
 import java.util.List;
 import java.util.Map;
 
+import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.common.LegacyClient;
 import com.nexmo.common.util.XmlUtil;
 import org.apache.commons.logging.Log;
@@ -203,7 +204,7 @@ public class NexmoSnsClient extends LegacyClient {
         }
 
         if (resultCode == -1)
-            throw new Exception("Xml Parser - did not find a <resultCode> node");
+            throw new NexmoResponseParseException("Xml Parser - did not find a <resultCode> node");
 
         return new SnsServiceResult(command,
                                     resultCode,

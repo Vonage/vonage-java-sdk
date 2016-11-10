@@ -30,7 +30,6 @@ import org.junit.*;
 import javax.xml.parsers.ParserConfigurationException;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
