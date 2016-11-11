@@ -21,8 +21,10 @@ package com.nexmo.client.voice.endpoints;
  * THE SOFTWARE.
  */
 
+import com.nexmo.client.NexmoClientException;
+
 import java.io.IOException;
 
 public interface Method<RequestT, ResultT> {
-    public ResultT execute(RequestT request) throws IOException;
+    public ResultT execute(RequestT request) throws IOException, NexmoClientException;
 }

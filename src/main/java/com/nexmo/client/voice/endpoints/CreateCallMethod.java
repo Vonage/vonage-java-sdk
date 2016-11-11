@@ -21,14 +21,25 @@ package com.nexmo.client.voice.endpoints;/*
  */
 
 import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.auth.AuthMethod;
 import com.nexmo.client.auth.JWTAuthMethod;
 import com.nexmo.client.voice.Call;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.*;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.StringEntity;
+
+import java.io.UnsupportedEncodingException;
 
 // TODO: Create a package for these endpoint methods
 public class CreateCallMethod extends AbstractMethod<Call, Call> {
+    private static final Log LOG = LogFactory.getLog(CreateCallMethod.class);
+
     private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls";
 
     private String uri = DEFAULT_URI;
@@ -40,8 +51,18 @@ public class CreateCallMethod extends AbstractMethod<Call, Call> {
     }
 
     @Override
-    public HttpUriRequest makeRequest(Call request) {
-        return new HttpPost(this.uri);
+    public HttpUriRequest makeRequest(Call request) throws NexmoClientException {
+        HttpPost post = new HttpPost(this.uri);
+        try {
+            post.setHeader("Content-Type", "application/json");
+            post.setEntity(new StringEntity(request.toJson()));
+            LOG.info("Request: " + request.toJson());
+            AuthMethod auth = getAuthMethod(allowed_auth_methods);
+            auth.apply(post);
+        } catch (UnsupportedEncodingException uee) {
+            throw new NexmoUnexpectedException("UTF-8 encoding is not supported by this JVM.", uee);
+        }
+        return post;
     }
 
     @Override

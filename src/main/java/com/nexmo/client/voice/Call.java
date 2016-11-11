@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexmo.client.NexmoUnexpectedException;
 
 @JsonInclude(value=JsonInclude.Include.NON_NULL)
 public class Call {
@@ -51,8 +52,8 @@ public class Call {
         this.answerUrl = answerUrl;
     }
 
-    public Endpoint getTo() {
-        return to;
+    public Endpoint[] getTo() {
+        return new Endpoint[] { to };
     }
 
     public void setTo(Endpoint to) {
@@ -68,8 +69,8 @@ public class Call {
     }
 
     @JsonProperty("answer_url")
-    public String getAnswerUrl() {
-        return answerUrl;
+    public String[] getAnswerUrl() {
+        return new String[] { answerUrl };
     }
 
     public void setAnswerUrl(String answerUrl) {
@@ -140,8 +141,12 @@ public class Call {
         this.callId = callId;
     }
 
-    public String toJson() throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(this);
+    public String toJson() {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(this);
+        } catch (JsonProcessingException jpe) {
+            throw new NexmoUnexpectedException("Failed to produce json from Call object.", jpe);
+        }
     }
 }

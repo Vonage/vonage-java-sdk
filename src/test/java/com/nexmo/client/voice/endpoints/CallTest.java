@@ -31,8 +31,9 @@ public class CallTest {
     public void testToJson() throws Exception {
         Call call = new Call("4477999000", "44111222333", "https://callback.example.com/");
         assertEquals(
-                "{\"to\":{\"type\":\"phone\",\"number\":\"4477999000\"},\"from\":{\"type\":\"phone\",\"number\":\"44111222333\"" +
-                        "},\"answer_url\":\"https://callback.example.com/\",\"answer_method\":\"GET\"}",
+                "{\"to\":[{\"type\":\"phone\",\"number\":\"4477999000\"}],\"from\":{\"type\":\"phone\"," +
+                        "\"number\":\"44111222333\"" +
+                        "},\"answer_url\":[\"https://callback.example.com/\"],\"answer_method\":\"GET\"}",
                 call.toJson());
     }
     
@@ -53,7 +54,7 @@ public class CallTest {
         call.setTo(to);
 
         assertEquals("BREW", call.getAnswerMethod());
-        assertEquals("https://answer.example.com/", call.getAnswerUrl());
+        assertEquals("https://answer.example.com/", call.getAnswerUrl()[0]);
         assertEquals("call-id", call.getCallId());
         assertEquals("RUN", call.getEventMethod());
         assertEquals("https://events.example.com/", call.getEventUrl());
@@ -61,6 +62,6 @@ public class CallTest {
         assertEquals(101, call.getLengthTimer().intValue());
         assertEquals("YES", call.getMachineDetection());
         assertEquals(300, call.getRingingTimer().intValue());
-        assertEquals(to, call.getTo());
+        assertEquals(to, call.getTo()[0]);
     }
 }

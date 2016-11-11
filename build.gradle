@@ -145,7 +145,9 @@ task wrapper(type: Wrapper) {
 task examplesJar(type: com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
     classifier = 'examples'
     from sourceSets.examples.output
-    configurations = [project.configurations.examplesRuntime]
+    configurations = [
+            project.configurations.runtime,
+            project.configurations.examplesRuntime]
     manifest {
         attributes 'Main-Class': 'com.nexmo.client.examples.TestVoiceCall'
     }

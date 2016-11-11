@@ -124,15 +124,14 @@ public class VerifyClient extends LegacyClient {
         String response;
         HttpPost httpPost = new HttpPost(verifyBaseUrl);
         httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-        HttpUriRequest method = httpPost;
         String url = verifyBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
 
         try {
-            HttpResponse httpResponse = this.getHttpClient().execute(method);
+            HttpResponse httpResponse = this.getHttpClient().execute(httpPost);
             response = new BasicResponseHandler().handleResponse(httpResponse);
             log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
         } catch (HttpResponseException e) {
-            method.abort();
+            httpPost.abort();
             log.error("communication failure: ", e);
 
             // return a COMMS failure ...

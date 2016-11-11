@@ -21,6 +21,7 @@ package com.nexmo.client.voice.endpoints;/*
  */
 
 import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.voice.Call;
 
 import java.io.IOException;
@@ -34,13 +35,13 @@ public class CallsEndpoint {
         this.readCall = new ReadCallMethod(httpWrapper);
     }
 
-    public Call post(Call callRequest) throws IOException {
+    public Call post(Call callRequest) throws IOException, NexmoClientException {
         return this.createCall.execute(callRequest);
     }
 
 //    public void get() {}
 
-    public Call get(String uuid) throws IOException {
+    public Call get(String uuid) throws IOException, NexmoClientException {
         return this.readCall.execute(uuid);
     }
 

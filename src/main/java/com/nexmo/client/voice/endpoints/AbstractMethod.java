@@ -21,13 +21,20 @@ package com.nexmo.client.voice.endpoints;/*
  */
 
 import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.auth.AuthMethod;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class AbstractMethod<RequestT, ResultT> implements Method<RequestT, ResultT> {
+    private static final Log LOG = LogFactory.getLog(AbstractMethod.class);
     private final HttpWrapper httpWrapper;
 
     public AbstractMethod(HttpWrapper httpWrapper) {
@@ -35,11 +42,23 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
     }
 
     // TODO: Consider wrapping IOException in a nexmo-specific transport exception.
-    public ResultT execute(RequestT request) throws IOException {
-        return parseResponse(this.httpWrapper.getHttpClient().execute(makeRequest(request)));
+    public ResultT execute(RequestT request) throws IOException, NexmoClientException {
+        HttpResponse response = this.httpWrapper.getHttpClient().execute(makeRequest(request));
+        LOG.info("Response: " + response.getStatusLine());
+        return parseResponse(response);
     }
 
-    public abstract HttpUriRequest makeRequest(RequestT request);
+    protected AuthMethod getAuthMethod(Class[] acceptableAuthMethods) throws NexmoClientException {
+        // TODO: This is inefficient:
+        Set<Class> acceptable = new HashSet<>();
+        for (Class c : acceptableAuthMethods) {
+            acceptable.add(c);
+        }
+
+        return this.httpWrapper.getAuthMethods().getAcceptableAuthMethod(acceptable);
+    }
+
+    public abstract HttpUriRequest makeRequest(RequestT request) throws NexmoClientException;
 
     public abstract ResultT parseResponse(HttpResponse response);
 
