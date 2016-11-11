@@ -65,8 +65,8 @@ public class HttpWrapper {
         threadSafeClientConnManager.setMaxTotal(200);
 
         HttpParams httpClientParams = new BasicHttpParams();
-        // TODO: Set user agent
-        HttpProtocolParams.setUserAgent(httpClientParams, "Nexmo Java SDK 1.5");
+        // TODO: Fix user agent
+        HttpProtocolParams.setUserAgent(httpClientParams, "nexmo-java/2.0.0-prerelease");
         HttpProtocolParams.setContentCharset(httpClientParams, "UTF-8");
         HttpProtocolParams.setHttpElementCharset(httpClientParams, "UTF-8");
         HttpConnectionParams.setStaleCheckingEnabled(httpClientParams, true);

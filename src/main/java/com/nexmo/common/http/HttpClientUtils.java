@@ -80,7 +80,7 @@ public class HttpClientUtils {
      */
     public HttpClient getNewHttpClient() {
         HttpParams httpClientParams = new BasicHttpParams();
-        HttpProtocolParams.setUserAgent(httpClientParams, "Nexmo Java SDK 1.5");
+        HttpProtocolParams.setUserAgent(httpClientParams, "nexmo-java/2.0.0-prerelease");
         HttpProtocolParams.setContentCharset(httpClientParams, "UTF-8");
         HttpProtocolParams.setHttpElementCharset(httpClientParams, "UTF-8");
         HttpConnectionParams.setConnectionTimeout(httpClientParams, this.connectionTimeout);
