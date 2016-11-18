@@ -57,7 +57,7 @@ public class TestVoiceCall {
             new JWTAuthMethod(
                     "951614e0-eec4-4087-a6b1-3f4c2f169cb0",
                     FileSystems.getDefault().getPath("valid_application_key.pem")));
-        client.voice.calls.post(
+        client.getVoiceClient().createCall(
                 new Call(to, from, "https://nexmo-community.github.io/ncco-examples/first_call_talk.json"));
     }
 }

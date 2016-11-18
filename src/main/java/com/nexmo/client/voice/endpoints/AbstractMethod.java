@@ -22,6 +22,7 @@ package com.nexmo.client.voice.endpoints;/*
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.NexmoUnexpectedException;
 import com.nexmo.client.auth.AuthMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,6 +31,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -43,9 +45,17 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
 
     // TODO: Consider wrapping IOException in a nexmo-specific transport exception.
     public ResultT execute(RequestT request) throws IOException, NexmoClientException {
-        HttpResponse response = this.httpWrapper.getHttpClient().execute(makeRequest(request));
-        LOG.info("Response: " + response.getStatusLine());
-        return parseResponse(response);
+        try {
+            HttpResponse response = this.httpWrapper.getHttpClient().execute(applyAuth(makeRequest(request)));
+            LOG.info("Response: " + response.getStatusLine());
+            return parseResponse(response);
+        } catch (UnsupportedEncodingException uee) {
+            throw new NexmoUnexpectedException("UTF-8 encoding is not supported by this JVM.", uee);
+        }
+    }
+
+    protected HttpUriRequest applyAuth(HttpUriRequest request) throws NexmoClientException {
+        return getAuthMethod(getAcceptableAuthMethods()).apply(request);
     }
 
     protected AuthMethod getAuthMethod(Class[] acceptableAuthMethods) throws NexmoClientException {
@@ -58,9 +68,12 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
         return this.httpWrapper.getAuthMethods().getAcceptableAuthMethod(acceptable);
     }
 
-    public abstract HttpUriRequest makeRequest(RequestT request) throws NexmoClientException;
+    protected abstract Class[] getAcceptableAuthMethods();
 
-    public abstract ResultT parseResponse(HttpResponse response);
+    public abstract HttpUriRequest makeRequest(RequestT request) throws NexmoClientException,
+                                                                        UnsupportedEncodingException;
+
+    public abstract ResultT parseResponse(HttpResponse response) throws IOException;
 
     public void setHttpClient(HttpClient client) {
         this.httpWrapper.setHttpClient(client);

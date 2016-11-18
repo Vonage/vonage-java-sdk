@@ -69,7 +69,7 @@ public class NexmoClientTest {
                 "  \"status\": \"started\",\n" +
                 "  \"direction\": \"outbound\"\n" +
                 "}"));
-        client.voice.calls.post(new Call("4499991111", "44111222333", "https://callback.example.com/"));
+        client.getVoiceClient().createCall(new Call("4499991111", "44111222333", "https://callback.example.com/"));
         // TODO: Should have real assertion here:
         assertTrue(true);
     }

@@ -20,11 +20,11 @@ package com.nexmo.client.auth;/*
  * THE SOFTWARE.
  */
 
-import org.apache.http.HttpRequest;
+import org.apache.http.client.methods.HttpUriRequest;
 
 
 public interface AuthMethod extends Comparable<AuthMethod> {
-    public void apply(HttpRequest request);
+    public HttpUriRequest apply(HttpUriRequest request);
 
     public int getSortKey();
 }

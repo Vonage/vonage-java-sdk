@@ -28,6 +28,7 @@ import com.auth0.jwt.JWTVerifyException;
 import com.nexmo.client.TestUtils;
 import org.apache.http.HttpRequest;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -90,7 +91,7 @@ public class JWTAuthMethodTest {
 
     @Test
     public void testApply() throws Exception {
-        HttpRequest req = new HttpGet();
+        HttpUriRequest req = new HttpGet();
         auth.apply(req);
 
         assertEquals(1, req.getHeaders("Authorization").length);

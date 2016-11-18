@@ -1,4 +1,4 @@
-package com.nexmo.client.voice.endpoints;/*
+package com.nexmo.client.voice;/*
  * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,31 +20,48 @@ package com.nexmo.client.voice.endpoints;/*
  * THE SOFTWARE.
  */
 
-import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.voice.Call;
-import com.nexmo.client.voice.CallEvent;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexmo.client.NexmoUnexpectedException;
 
 import java.io.IOException;
 
-public class CallsEndpoint {
-    private final CreateCallMethod createCall;
-    private final ReadCallMethod readCall;
+public class CallEvent {
+    String conversationUuid;
+    String status;
+    String direction;
 
-    public CallsEndpoint(HttpWrapper httpWrapper) {
-        this.createCall = new CreateCallMethod(httpWrapper);
-        this.readCall = new ReadCallMethod(httpWrapper);
+    public static CallEvent fromJson(String json) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(json, CallEvent.class);
+        } catch (IOException jpe) {
+            throw new NexmoUnexpectedException("Failed to produce json from Call object.", jpe);
+        }
     }
 
-    public CallEvent post(Call callRequest) throws IOException, NexmoClientException {
-        return this.createCall.execute(callRequest);
+    @JsonProperty("conversation_uuid")
+    public String getConversationUuid() {
+        return conversationUuid;
     }
 
-//    public void get() {}
-
-    public Call get(String uuid) throws IOException, NexmoClientException {
-        return this.readCall.execute(uuid);
+    public void setConversationUuid(String conversationUuid) {
+        this.conversationUuid = conversationUuid;
     }
 
-//    public void put(String uuid) {}
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getDirection() {
+        return direction;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
+    }
 }

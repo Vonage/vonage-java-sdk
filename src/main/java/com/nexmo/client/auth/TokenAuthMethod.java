@@ -21,14 +21,15 @@ package com.nexmo.client.auth;/*
  */
 
 
-import org.apache.http.HttpRequest;
+import org.apache.http.client.methods.HttpUriRequest;
 
 public class TokenAuthMethod extends AbstractAuthMethod {
     public final int SORT_KEY = 20;
 
     @Override
-    public void apply(HttpRequest request) {
+    public HttpUriRequest apply(HttpUriRequest request) {
         // FIXME: This is a stub.
+        return request;
     }
 
     @Override
