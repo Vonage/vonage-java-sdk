@@ -27,12 +27,12 @@ import com.nexmo.client.voice.NexmoVoiceClient;
 import org.apache.http.client.HttpClient;
 
 public class NexmoClient {
+    private final NexmoVoiceClient voice;
     private HttpWrapper httpWrapper;
-    public final NexmoVoiceClient voice;
 
     public NexmoClient(AuthMethod... authMethods) {
         AuthCollection authCollection = new AuthCollection();
-        for (AuthMethod method: authMethods) {
+        for (AuthMethod method : authMethods) {
             authCollection.add(method);
         }
 
@@ -43,5 +43,9 @@ public class NexmoClient {
 
     public void setHttpClient(HttpClient client) {
         this.httpWrapper.setHttpClient(client);
+    }
+
+    public NexmoVoiceClient getVoiceClient() {
+        return this.voice;
     }
 }

@@ -25,5 +25,6 @@ import org.apache.http.HttpRequest;
 
 public interface AuthMethod extends Comparable<AuthMethod> {
     public void apply(HttpRequest request);
+
     public int getSortKey();
 }

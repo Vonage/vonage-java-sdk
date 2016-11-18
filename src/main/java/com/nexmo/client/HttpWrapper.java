@@ -40,10 +40,6 @@ public class HttpWrapper {
         this.authMethods = authMethods;
     }
 
-    public void setHttpClient(HttpClient httpClient) {
-        this.httpClient = httpClient;
-    }
-
     public HttpClient getHttpClient() {
         if (this.httpClient == null) {
             this.httpClient = createHttpClient();
@@ -51,12 +47,16 @@ public class HttpWrapper {
         return this.httpClient;
     }
 
-    public void setAuthMethods(AuthCollection authMethods) {
-        this.authMethods = authMethods;
+    public void setHttpClient(HttpClient httpClient) {
+        this.httpClient = httpClient;
     }
 
     public AuthCollection getAuthMethods() {
         return authMethods;
+    }
+
+    public void setAuthMethods(AuthCollection authMethods) {
+        this.authMethods = authMethods;
     }
 
     protected HttpClient createHttpClient() {

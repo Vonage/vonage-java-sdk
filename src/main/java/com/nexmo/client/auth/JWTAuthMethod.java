@@ -36,14 +36,15 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class JWTAuthMethod extends AbstractAuthMethod {
+    private static final Pattern pemPattern = Pattern.compile("-----BEGIN PRIVATE KEY-----\\n(.*\\n)-----END PRIVATE KEY-----", Pattern.MULTILINE | Pattern.DOTALL);
     public final int SORT_KEY = 10;
-
-    private static final Pattern pemPattern = Pattern.compile("-----BEGIN PRIVATE KEY-----\\n(.*\\n)-----END PRIVATE KEY-----", Pattern.MULTILINE| Pattern.DOTALL);
     private String applicationId;
     private JWTSigner signer;
 
@@ -64,6 +65,10 @@ public class JWTAuthMethod extends AbstractAuthMethod {
     public JWTAuthMethod(String applicationId, Path path)
             throws NoSuchAlgorithmException, InvalidKeyException, InvalidKeySpecException, IOException {
         this(applicationId, Files.readAllBytes(path));
+    }
+
+    protected static String constructJTI() {
+        return UUID.randomUUID().toString();
     }
 
     protected byte[] decodePrivateKey(byte[] data) throws InvalidKeyException {
@@ -101,10 +106,6 @@ public class JWTAuthMethod extends AbstractAuthMethod {
         String signed = this.signer.sign(claims, options);
 
         return signed;
-    }
-
-    protected static String constructJTI() {
-        return UUID.randomUUID().toString();
     }
 
     @Override

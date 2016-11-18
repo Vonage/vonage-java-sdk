@@ -28,8 +28,7 @@ import com.nexmo.client.auth.JWTAuthMethod;
 import com.nexmo.client.voice.Call;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.*;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
@@ -41,9 +40,8 @@ public class CreateCallMethod extends AbstractMethod<Call, Call> {
     private static final Log LOG = LogFactory.getLog(CreateCallMethod.class);
 
     private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls";
-
+    private static final Class[] allowed_auth_methods = new Class[]{JWTAuthMethod.class};
     private String uri = DEFAULT_URI;
-    private static final Class[] allowed_auth_methods = new Class[] {JWTAuthMethod.class};
 
 
     public CreateCallMethod(HttpWrapper httpWrapper) {

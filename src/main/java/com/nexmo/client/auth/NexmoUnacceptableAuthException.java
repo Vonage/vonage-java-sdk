@@ -44,12 +44,12 @@ public class NexmoUnacceptableAuthException extends NexmoAuthException {
 
     private String generateErrorMessage() {
         SortedSet<String> availableTypes = new TreeSet<>();
-        for (AuthMethod auth: this.availableAuths) {
+        for (AuthMethod auth : this.availableAuths) {
             availableTypes.add(auth.getClass().getSimpleName());
         }
 
         SortedSet<String> acceptableTypes = new TreeSet<>();
-        for (Class klass: this.acceptableAuthClasses) {
+        for (Class klass : this.acceptableAuthClasses) {
             acceptableTypes.add(klass.getSimpleName());
         }
 

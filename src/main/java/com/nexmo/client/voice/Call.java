@@ -27,7 +27,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
 
-@JsonInclude(value=JsonInclude.Include.NON_NULL)
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Call {
     private Endpoint to;
     private Endpoint from;
@@ -53,7 +53,7 @@ public class Call {
     }
 
     public Endpoint[] getTo() {
-        return new Endpoint[] { to };
+        return new Endpoint[]{to};
     }
 
     public void setTo(Endpoint to) {
@@ -70,7 +70,7 @@ public class Call {
 
     @JsonProperty("answer_url")
     public String[] getAnswerUrl() {
-        return new String[] { answerUrl };
+        return new String[]{answerUrl};
     }
 
     public void setAnswerUrl(String answerUrl) {

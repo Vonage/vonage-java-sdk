@@ -30,8 +30,8 @@ import org.apache.http.client.methods.HttpUriRequest;
 // TODO: Create a package for these endpoint methods
 public class ReadCallMethod extends AbstractMethod<String, Call> {
     private static final String DEFAULT_BASE_URI = "https://api.nexmo.com/v1/calls/";
-    private String baseUri = DEFAULT_BASE_URI;
     private static final Class[] allowed_auth_methods = new Class[]{JWTAuthMethod.class};
+    private String baseUri = DEFAULT_BASE_URI;
 
     public ReadCallMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);

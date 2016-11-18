@@ -30,6 +30,7 @@ import java.io.IOException;
 
 public class NexmoVoiceClient extends AbstractClient {
     public final CallsEndpoint calls;
+
     public NexmoVoiceClient(HttpWrapper httpWrapper) {
         super(httpWrapper);
 

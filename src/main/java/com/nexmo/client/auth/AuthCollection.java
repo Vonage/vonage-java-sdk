@@ -38,7 +38,7 @@ public class AuthCollection {
     }
 
     public AuthMethod getAcceptableAuthMethod(Set<Class> acceptableAuthMethods) throws NexmoClientException {
-        for (AuthMethod availableType: this.authList) {
+        for (AuthMethod availableType : this.authList) {
             if (acceptableAuthMethods.contains(availableType.getClass())) {
                 return availableType;
             }

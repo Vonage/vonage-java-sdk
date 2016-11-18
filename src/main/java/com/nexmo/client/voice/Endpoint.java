@@ -22,7 +22,7 @@ package com.nexmo.client.voice;/*
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-@JsonInclude(value=JsonInclude.Include.NON_NULL)
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Endpoint {
     private String type = "phone";
     private String number;
