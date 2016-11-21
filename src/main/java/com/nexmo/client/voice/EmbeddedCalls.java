@@ -20,43 +20,10 @@ package com.nexmo.client.voice;/*
  * THE SOFTWARE.
  */
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+public class EmbeddedCalls {
+    private Call[] calls;
 
-// TODO: Maybe rename Endpoint
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class Endpoint {
-    private String type = "phone";
-    private String number;
-    private String dtmfAnswer = null;
-
-    public Endpoint(){}
-
-    public Endpoint(String number) {
-        this.number = number;
-    }
-
-    public Endpoint(String number, String dtmfAnswer) {
-        this.number = number;
-        this.dtmfAnswer = dtmfAnswer;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public String getDtmfAnswer() {
-        return dtmfAnswer;
-    }
-
-    public void setDtmfAnswer(String dtmfAnswer) {
-        this.dtmfAnswer = dtmfAnswer;
+    public Call[] getCalls() {
+        return calls;
     }
 }

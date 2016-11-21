@@ -1,4 +1,4 @@
-package com.nexmo.client.voice.endpoints;/*
+package com.nexmo.client.voice;/*
  * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,37 +20,30 @@ package com.nexmo.client.voice.endpoints;/*
  * THE SOFTWARE.
  */
 
-import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.voice.Call;
-import com.nexmo.client.voice.CallEvent;
-import com.nexmo.client.voice.CallsFilter;
-import com.nexmo.client.voice.CallsPage;
+public class PageLinks {
+    private PageLink self;
+    private PageLink next;
+    private PageLink prev;
+    private PageLink first;
+    private PageLink last;
 
-import java.io.IOException;
-
-public class CallsEndpoint {
-    private final CreateCallMethod createCall;
-    private final ReadCallMethod readCall;
-    private final ListCallsMethod listCalls;
-
-    public CallsEndpoint(HttpWrapper httpWrapper) {
-        this.createCall = new CreateCallMethod(httpWrapper);
-        this.readCall = new ReadCallMethod(httpWrapper);
-        this.listCalls = new ListCallsMethod(httpWrapper);
+    public PageLink getSelf() {
+        return self;
     }
 
-    public CallEvent post(Call callRequest) throws IOException, NexmoClientException {
-        return this.createCall.execute(callRequest);
+    public PageLink getNext() {
+        return next;
     }
 
-    public CallsPage get(CallsFilter filter) throws IOException, NexmoClientException {
-        return this.listCalls.execute(filter);
+    public PageLink getPrev() {
+        return prev;
     }
 
-    public Call get(String uuid) throws IOException, NexmoClientException {
-        return this.readCall.execute(uuid);
+    public PageLink getFirst() {
+        return first;
     }
 
-//    public void put(String uuid) {}
+    public PageLink getLast() {
+        return last;
+    }
 }

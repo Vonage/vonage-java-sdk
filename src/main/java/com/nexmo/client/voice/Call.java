@@ -21,13 +21,17 @@ package com.nexmo.client.voice;
  * THE SOFTWARE.
  */
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
 
+// TODO: Re-insert 'rate' and 'price'
+// TODO: Convert direction and status to enum values
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties({ "_links", "rate", "price", "duration", "start_time", "end_time" })
 public class Call {
     private Endpoint to;
     private Endpoint from;
@@ -37,10 +41,17 @@ public class Call {
     private String eventUrl = null;
     private String eventMethod = null;
     private String machineDetection = null;
+    private String status = null;
+    private String direction = null;
     private Integer lengthTimer = null;
     private Integer ringingTimer = null;
+    private Integer duration = null;
+    private String network = null;
 
     private String callId = null;
+    private String conversationId = null;
+
+    public Call() {}
 
     public Call(String to, String from, String answerUrl) {
         this(new Endpoint(to), new Endpoint(from), answerUrl);
@@ -56,8 +67,8 @@ public class Call {
         return new Endpoint[]{to};
     }
 
-    public void setTo(Endpoint to) {
-        this.to = to;
+    public void setTo(Endpoint[] to) {
+        this.to = to[0];
     }
 
     public Endpoint getFrom() {
@@ -139,6 +150,39 @@ public class Call {
 
     public void setCallId(String callId) {
         this.callId = callId;
+    }
+
+    @JsonProperty("conversation_uuid")
+    public String getConversationId() {
+        return conversationId;
+    }
+
+    public void setConversationId(String conversationId) {
+        this.conversationId = conversationId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getDirection() {
+        return direction;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
+    }
+
+    public String getNetwork() {
+        return network;
+    }
+
+    public void setNetwork(String network) {
+        this.network = network;
     }
 
     public String toJson() {

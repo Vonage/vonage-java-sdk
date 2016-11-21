@@ -51,7 +51,7 @@ public class CallTest {
         call.setLengthTimer(101);
         call.setMachineDetection("YES");
         call.setRingingTimer(300);
-        call.setTo(to);
+        call.setTo(new Endpoint[]{to});
 
         assertEquals("BREW", call.getAnswerMethod());
         assertEquals("https://answer.example.com/", call.getAnswerUrl()[0]);
