@@ -144,4 +144,13 @@ public class Call {
             throw new NexmoUnexpectedException("Failed to produce json from Call object.", jpe);
         }
     }
+
+    public static Call fromJson(String json) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(json, Call.class);
+        } catch (IOException jpe) {
+            throw new NexmoUnexpectedException("Failed to produce json from Call object.", jpe);
+        }
+    }
 }

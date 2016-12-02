@@ -30,11 +30,13 @@ public class CallsEndpoint {
     private final CreateCallMethod createCall;
     private final ReadCallMethod readCall;
     private final ListCallsMethod listCalls;
+    private final ModifyCallMethod modifyCall;
 
     public CallsEndpoint(HttpWrapper httpWrapper) {
         this.createCall = new CreateCallMethod(httpWrapper);
         this.readCall = new ReadCallMethod(httpWrapper);
         this.listCalls = new ListCallsMethod(httpWrapper);
+        this.modifyCall = new ModifyCallMethod(httpWrapper);
     }
 
     public CallEvent post(Call callRequest) throws IOException, NexmoClientException {
@@ -47,5 +49,9 @@ public class CallsEndpoint {
 
     public CallRecord get(String uuid) throws IOException, NexmoClientException {
         return this.readCall.execute(uuid);
+    }
+
+    public Call put(CallModifier modifier) throws IOException, NexmoClientException {
+        return this.modifyCall.execute(modifier);
     }
 }
