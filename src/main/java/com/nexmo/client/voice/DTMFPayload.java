@@ -20,14 +20,18 @@ package com.nexmo.client.voice;/*
  * THE SOFTWARE.
  */
 
-public class Payload {
-    private String action;
+public class DTMFPayload {
+    private String digits;
 
-    public Payload(String action) {
-        this.action = action;
+    public DTMFPayload(String digits) {
+        this.digits = digits;
     }
 
-    public String getAction() {
-        return action;
+    public String getDigits() {
+        return digits;
+    }
+
+    public void setDigits(String digits) {
+        this.digits = digits;
     }
 }

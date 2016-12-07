@@ -1,8 +1,11 @@
 package com.nexmo.client.voice;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /*
  * Copyright (c) 2011-2016 Nexmo Inc
@@ -24,30 +27,33 @@ import com.nexmo.client.NexmoUnexpectedException;
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- */
-public class CallModifier {
-    private String uuid;
-    private Payload payload;
+ */public class DTMFResponseTest {
+    private DTMFResponse response;
 
-    public CallModifier(String uuid, Payload payload) {
-        this.uuid = uuid;
-        this.payload = payload;
+    @Before
+    public void setUp() {
+        response = DTMFResponse.fromJson("{\n" +
+                "  \"message\": \"DTMF sent\",\n" +
+                "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
+                "}");
     }
 
-    public String getUuid() {
-        return uuid;
+    @Test
+    public void testBasics() {
+        assertEquals("DTMF sent", response.getMessage());
+        assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
     }
 
-    public Payload getPayload() {
-        return payload;
-    }
-
-    public String toJson() {
+    @Test
+    public void testNexmoUnexpectedException() {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(this.payload);
-        } catch (JsonProcessingException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce json from CallModifier object.", jpe);
+            DTMFResponse.fromJson("{\n" +
+                    "    \"unknownProperty\": \"unknown\"\n" +
+                    "}");
+            fail("Expected a NexmoUnexpectedException to be thrown");
+        } catch (NexmoUnexpectedException e) {
+            assertEquals("Failed to produce json from DTMFResponse object.", e.getMessage());
         }
     }
 }
+

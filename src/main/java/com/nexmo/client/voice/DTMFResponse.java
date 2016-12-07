@@ -20,14 +20,29 @@ package com.nexmo.client.voice;/*
  * THE SOFTWARE.
  */
 
-public class Payload {
-    private String action;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexmo.client.NexmoUnexpectedException;
 
-    public Payload(String action) {
-        this.action = action;
+import java.io.IOException;
+
+public class DTMFResponse {
+    private String message;
+    private String uuid;
+
+    public String getMessage() {
+        return message;
     }
 
-    public String getAction() {
-        return action;
+    public String getUuid() {
+        return uuid;
+    }
+
+    public static DTMFResponse fromJson(String json) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(json, DTMFResponse.class);
+        } catch (IOException jpe) {
+            throw new NexmoUnexpectedException("Failed to produce json from DTMFResponse object.", jpe);
+        }
     }
 }

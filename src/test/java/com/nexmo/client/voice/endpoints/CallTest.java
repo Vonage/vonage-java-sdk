@@ -20,12 +20,14 @@ package com.nexmo.client.voice.endpoints;/*
  * THE SOFTWARE.
  */
 
+import com.nexmo.client.NexmoUnexpectedException;
 import com.nexmo.client.voice.Call;
 import com.nexmo.client.voice.Endpoint;
 import com.nexmo.client.voice.MachineDetection;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class CallTest {
     @Test
@@ -74,4 +76,29 @@ public class CallTest {
         assertEquals(300, call.getRingingTimer().intValue());
         assertEquals(to, call.getTo()[0]);
     }
+
+    @Test
+    public void testFromJson() {
+        String jsonString = "{\"to\":" +
+                "[{\"type\":\"phone\",\"number\":\"441632960960\"}]," +
+                "\"from\":{\"type\":\"phone\",\"number\":\"441632960961\"}," +
+                "\"answer_url\":\"http://example.com/answer\"}";
+
+        Call newCall = new Call("441632960960", "441632960961", "http://example.com/answer");
+        Call fromJson = Call.fromJson(jsonString);
+        assertEquals(newCall.toJson(), fromJson.toJson());
+    }
+
+    @Test
+    public void testMalformedJson() throws Exception {
+        try {
+            Call.fromJson("{\n" +
+                    "    \"unknownProperty\": \"unknown\"\n" +
+                    "}");
+            fail("Expected a NexmoUnexpectedException to be thrown");
+        } catch (NexmoUnexpectedException e) {
+            assertEquals("Failed to produce json from Call object.", e.getMessage());
+        }
+    }
+
 }

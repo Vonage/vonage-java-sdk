@@ -1,4 +1,4 @@
-package com.nexmo.client.voice;/*
+package com.nexmo.client.dtmf;/*
  * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,14 +20,22 @@ package com.nexmo.client.voice;/*
  * THE SOFTWARE.
  */
 
-public class Payload {
-    private String action;
+import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.voice.DTMFRequest;
+import com.nexmo.client.voice.DTMFResponse;
+import com.nexmo.client.voice.SendDTMFMethod;
 
-    public Payload(String action) {
-        this.action = action;
+import java.io.IOException;
+
+public class DTMFEndpoint {
+    private final SendDTMFMethod sendDTMF;
+
+    public DTMFEndpoint(HttpWrapper httpWrapper) {
+        this.sendDTMF = new SendDTMFMethod(httpWrapper);
     }
 
-    public String getAction() {
-        return action;
+    public DTMFResponse put(DTMFRequest dtmfRequest) throws IOException, NexmoClientException {
+        return this.sendDTMF.execute(dtmfRequest);
     }
 }

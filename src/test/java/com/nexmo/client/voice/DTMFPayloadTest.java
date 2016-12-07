@@ -1,5 +1,12 @@
-package com.nexmo.client.voice;/*
- * Copyright (c) 2011-2016 Nexmo Inc
+package com.nexmo.client.voice;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+/*
+ * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,15 +26,23 @@ package com.nexmo.client.voice;/*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+public class DTMFPayloadTest {
+    private DTMFPayload payload;
 
-public class Payload {
-    private String action;
-
-    public Payload(String action) {
-        this.action = action;
+    @Before
+    public void setUp() {
+        payload = new DTMFPayload("8675309");
     }
 
-    public String getAction() {
-        return action;
+    @Test
+    public void getDigits() throws Exception {
+        assertEquals("8675309", payload.getDigits());
     }
+
+    @Test
+    public void setDigits() throws Exception {
+        payload.setDigits("1234");
+        assertEquals("1234", payload.getDigits());
+    }
+
 }

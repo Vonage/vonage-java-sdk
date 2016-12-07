@@ -20,14 +20,41 @@ package com.nexmo.client.voice;/*
  * THE SOFTWARE.
  */
 
-public class Payload {
-    private String action;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexmo.client.NexmoUnexpectedException;
 
-    public Payload(String action) {
-        this.action = action;
+public class DTMFRequest {
+    private String uuid;
+    private DTMFPayload payload;
+
+    public DTMFRequest(String uuid, DTMFPayload payload) {
+        this.uuid = uuid;
+        this.payload = payload;
     }
 
-    public String getAction() {
-        return action;
+    public String getUuid() {
+        return uuid;
+    }
+
+    public DTMFPayload getPayload() {
+        return payload;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public void setPayload(DTMFPayload payload) {
+        this.payload = payload;
+    }
+
+    public String toJson() {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(this.payload);
+        } catch (JsonProcessingException jpe) {
+            throw new NexmoUnexpectedException("Failed to produce json from DTMFRequest object.", jpe);
+        }
     }
 }

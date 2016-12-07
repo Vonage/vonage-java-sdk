@@ -1,5 +1,12 @@
-package com.nexmo.client.voice;/*
- * Copyright (c) 2011-2016 Nexmo Inc
+package com.nexmo.client.voice;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+/*
+ * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,15 +26,31 @@ package com.nexmo.client.voice;/*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+public class CallModifierTest {
+    private Payload payload;
+    private CallModifier callModifier;
 
-import java.util.List;
-
-public class Destination {
-    private String type;
-    private List<String> url;
-
-    public Destination(String type, List<String> url) {
-        this.type = type;
-        this.url = url;
+    @Before
+    public void setUp() throws Exception {
+        payload = new Payload("hangup");
+        callModifier = new CallModifier("abc-123", payload);
     }
+
+    @Test
+    public void getUuid() throws Exception {
+        assertEquals("abc-123", callModifier.getUuid());
+    }
+
+    @Test
+    public void getPayload() throws Exception {
+        assertEquals(payload, callModifier.getPayload());
+        assertEquals("hangup", payload.getAction());
+    }
+
+    @Test
+    public void toJson() throws Exception {
+        String jsonString = "{" + "\"action\":\"hangup\"" + "}";
+        assertEquals(jsonString, callModifier.toJson());
+    }
+
 }
