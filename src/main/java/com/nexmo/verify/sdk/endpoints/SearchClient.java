@@ -169,7 +169,7 @@ public class SearchClient extends LegacyClient {
         } else if (("verify_request").equals(root.getNodeName())) {
             return new SearchResult[] { parseVerifyRequestXmlNode(root) };
         } else if ("verification_requests".equals(root.getNodeName())) {
-            List<SearchResult> results = new ArrayList<>();
+            List<SearchResult> results = new ArrayList<SearchResult>();
 
             NodeList fields = root.getChildNodes();
             for (int i = 0; i < fields.getLength(); i++) {
@@ -199,7 +199,7 @@ public class SearchClient extends LegacyClient {
         float price = -1;
         String currency = null;
         SearchResult.VerificationStatus status = null;
-        List<SearchResult.VerifyCheck> checks = new ArrayList<>();
+        List<SearchResult.VerifyCheck> checks = new ArrayList<SearchResult.VerifyCheck>();
         String errorText = null;
 
         NodeList fields = root.getChildNodes();

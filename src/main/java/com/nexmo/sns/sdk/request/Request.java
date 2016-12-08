@@ -43,7 +43,7 @@ public abstract class Request {
                    String... queryParams) throws Exception {
         this.command = command;
 
-        Map<String, String> params = new LinkedHashMap<>();
+        Map<String, String> params = new LinkedHashMap<String, String>();
 
         // Construct a query string and a name/value pair Map from the query params supplied by the sub-class implementation
         int i = 0;

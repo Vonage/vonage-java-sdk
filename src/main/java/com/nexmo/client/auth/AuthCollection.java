@@ -30,7 +30,7 @@ public class AuthCollection {
     private SortedSet<AuthMethod> authList;
 
     public AuthCollection() {
-        this.authList = new TreeSet<>();
+        this.authList = new TreeSet<AuthMethod>();
     }
 
     public void add(AuthMethod auth) {

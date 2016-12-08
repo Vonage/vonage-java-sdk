@@ -38,7 +38,7 @@ public class AuthCollectionTest {
         AuthCollection auths = new AuthCollection();
         auths.add(jAuth);
 
-        Set<Class> acceptableAuths = new HashSet<>();
+        Set<Class> acceptableAuths = new HashSet<Class>();
         acceptableAuths.add(JWTAuthMethod.class);
 
         assertEquals(jAuth, auths.getAcceptableAuthMethod(acceptableAuths));
@@ -48,7 +48,7 @@ public class AuthCollectionTest {
     public void testNoAcceptableAuthMethod() throws Exception {
         AuthCollection auths = new AuthCollection();
 
-        Set<Class> acceptableAuths = new HashSet<>();
+        Set<Class> acceptableAuths = new HashSet<Class>();
         acceptableAuths.add(JWTAuthMethod.class);
 
         try {
@@ -70,7 +70,7 @@ public class AuthCollectionTest {
         auths.add(tAuth);
         auths.add(jAuth);
 
-        Set<Class> acceptableAuths = new HashSet<>();
+        Set<Class> acceptableAuths = new HashSet<Class>();
         acceptableAuths.add(JWTAuthMethod.class);
 
         assertEquals(jAuth, auths.getAcceptableAuthMethod(acceptableAuths));
@@ -82,7 +82,7 @@ public class AuthCollectionTest {
         AuthCollection auths = new AuthCollection();
         auths.add(tAuth);
 
-        Set<Class> acceptableAuths = new HashSet<>();
+        Set<Class> acceptableAuths = new HashSet<Class>();
         acceptableAuths.add(JWTAuthMethod.class);
 
         try {

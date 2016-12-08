@@ -255,7 +255,7 @@ public class VerifyClientTest {
     }
 
     private static void assertParamMissing(List<NameValuePair> params, String key) {
-        Set<String> keys = new HashSet<>();
+        Set<String> keys = new HashSet<String>();
         for (NameValuePair pair : params) {
             keys.add(pair.getName());
         }
