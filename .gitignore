@@ -1,10 +1,11 @@
-/build
-/test.properties
-/html
-/javadoc
-nexmo-sdk.jar
-.gradle
 .classpath
+.gradle
 .project
 .settings
+/build
+/html
+/javadoc
+/test.properties
 bin
+classes
+nexmo-sdk.jar

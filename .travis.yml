@@ -1,16 +1,9 @@
 ---
 language: java
 
-before_install:
-  - sudo apt-get -qq update
-  - sudo dpkg --purge --force-depends ca-certificates-java
-  - sudo apt-get install -y ca-certificates-java
-  - ./gradlew clean
-
 jdk:
   - oraclejdk8
   - oraclejdk7
-  - openjdk6
   
 after_success:
   - bash <(curl -s https://codecov.io/bash)
