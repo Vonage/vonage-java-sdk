@@ -165,10 +165,9 @@ public abstract class AbstractMOServlet extends HttpServlet {
             this.consumer.execute(task);
 
             // immediately ack the receipt
-            try (PrintWriter out = response.getWriter()) {
-                out.print("OK");
-                out.flush();
-            }
+            PrintWriter out = response.getWriter();
+            out.print("OK");
+            out.flush();
         } catch (NexmoCallbackRequestValidationException exc) {
             // TODO: Log this - it's mainly for our own use!
             response.sendError(400, exc.getMessage());

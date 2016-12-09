@@ -355,7 +355,7 @@ public class NexmoSmsClient extends LegacyClient {
                 </mt-submission-response>
         */
 
-        List<SmsSubmissionResult> results = new ArrayList<>();
+        List<SmsSubmissionResult> results = new ArrayList<SmsSubmissionResult>();
 
         Document doc = parseXml(response);
 

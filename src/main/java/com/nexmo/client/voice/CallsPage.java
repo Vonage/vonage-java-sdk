@@ -63,7 +63,7 @@ public class CallsPage implements Iterable<Call> {
 
     @Override
     public Iterator<Call> iterator() {
-        return new ArrayIterator<>(embedded.getCalls());
+        return new ArrayIterator<Call>(embedded.getCalls());
     }
 
     public static CallsPage fromJson(String json) {

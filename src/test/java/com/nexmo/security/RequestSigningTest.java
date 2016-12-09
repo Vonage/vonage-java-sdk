@@ -74,7 +74,7 @@ public class RequestSigningTest {
     }
 
     private static Map<String, String> constructParamMap(List<NameValuePair> params) {
-        Map<String, String> paramMap = new HashMap<>();
+        Map<String, String> paramMap = new HashMap<String, String>();
         for (NameValuePair pair : params) {
             paramMap.put(pair.getName(), pair.getValue());
         }
@@ -127,7 +127,7 @@ public class RequestSigningTest {
     }
 
     private Map<String, String[]> constructDummyParams() {
-        Map<String, String[]> params = new HashMap<>();
+        Map<String, String[]> params = new HashMap<String, String[]>();
         params.put("a", new String[]{"alphabet"});
         params.put("b", new String[]{"bananas"});
         params.put("timestamp", new String[]{"2100"});

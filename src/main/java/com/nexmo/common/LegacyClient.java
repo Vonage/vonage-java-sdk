@@ -134,7 +134,7 @@ public abstract class LegacyClient {
     }
 
     protected List<NameValuePair> constructParams() {
-        List<NameValuePair> params = new ArrayList<>();
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
 
         params.add(new BasicNameValuePair("api_key", this.apiKey));
         if (!this.signRequests) {

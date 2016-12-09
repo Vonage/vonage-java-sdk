@@ -97,7 +97,7 @@ public class JWTAuthMethod extends AbstractAuthMethod {
     }
 
     protected String constructToken(long iat, String jti) {
-        Map<String, Object> claims = new HashMap<>();
+        Map<String, Object> claims = new HashMap<String, Object>();
         claims.put("iat", iat);
         claims.put("application_id", this.applicationId);
         claims.put("jti", jti);

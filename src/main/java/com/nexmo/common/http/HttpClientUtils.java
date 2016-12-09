@@ -39,7 +39,7 @@ import org.apache.http.params.HttpProtocolParams;
  */
 public class HttpClientUtils {
 
-    private final static Map<String, HttpClientUtils> instances = new HashMap<>();
+    private final static Map<String, HttpClientUtils> instances = new HashMap<String, HttpClientUtils>();
 
     private final ThreadSafeClientConnManager threadSafeClientConnManager;
 

@@ -75,7 +75,7 @@ public class RequestSigning implements SecurityConstants {
         // First, inject a 'timestamp=' parameter containing the current time in seconds since Jan 1st 1970
         params.add(new BasicNameValuePair(PARAM_TIMESTAMP, Long.toString(currentTimeSeconds)));
 
-        Map<String, String> sortedParams = new TreeMap<>();
+        Map<String, String> sortedParams = new TreeMap<String, String>();
         for (NameValuePair param: params) {
             String name = param.getName();
             String value = param.getValue();
@@ -158,7 +158,7 @@ public class RequestSigning implements SecurityConstants {
         }
 
         // Next, construct a sorted list of the name-value pair parameters supplied in the request, excluding the signature parameter
-        Map<String, String> sortedParams = new TreeMap<>();
+        Map<String, String> sortedParams = new TreeMap<String, String>();
         for (Map.Entry<String, String[]> entry: request.getParameterMap().entrySet()) {
             String name = entry.getKey();
             String value = entry.getValue()[0];

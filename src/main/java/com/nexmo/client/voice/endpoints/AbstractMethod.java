@@ -60,7 +60,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
 
     protected AuthMethod getAuthMethod(Class[] acceptableAuthMethods) throws NexmoClientException {
         // TODO: This is inefficient:
-        Set<Class> acceptable = new HashSet<>();
+        Set<Class> acceptable = new HashSet<Class>();
         for (Class c : acceptableAuthMethods) {
             acceptable.add(c);
         }
