@@ -32,7 +32,7 @@ import com.nexmo.client.NexmoUnexpectedException;
 // TODO: Convert direction and status to enum values
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "_links", "rate", "price", "duration", "start_time", "end_time" })
-public class Call {
+public class CallRecord {
     private Endpoint to;
     private Endpoint from;
     private String answerUrl;
@@ -51,24 +51,24 @@ public class Call {
     private String callId = null;
     private String conversationId = null;
 
-    public Call() {}
+    public CallRecord() {}
 
-    public Call(String to, String from, String answerUrl) {
+    public CallRecord(String to, String from, String answerUrl) {
         this(new Endpoint(to), new Endpoint(from), answerUrl);
     }
 
-    public Call(Endpoint to, Endpoint from, String answerUrl) {
+    public CallRecord(Endpoint to, Endpoint from, String answerUrl) {
         this.to = to;
         this.from = from;
         this.answerUrl = answerUrl;
     }
 
-    public Endpoint[] getTo() {
-        return new Endpoint[]{to};
+    public Endpoint getTo() {
+        return to;
     }
 
-    public void setTo(Endpoint[] to) {
-        this.to = to[0];
+    public void setTo(Endpoint to) {
+        this.to = to;
     }
 
     public Endpoint getFrom() {

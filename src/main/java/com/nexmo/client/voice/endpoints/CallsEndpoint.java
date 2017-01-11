@@ -25,7 +25,7 @@ import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.voice.Call;
 import com.nexmo.client.voice.CallEvent;
 import com.nexmo.client.voice.CallsFilter;
-import com.nexmo.client.voice.CallsPage;
+import com.nexmo.client.voice.CallRecordPage;
 
 import java.io.IOException;
 
@@ -44,7 +44,7 @@ public class CallsEndpoint {
         return this.createCall.execute(callRequest);
     }
 
-    public CallsPage get(CallsFilter filter) throws IOException, NexmoClientException {
+    public CallRecordPage get(CallsFilter filter) throws IOException, NexmoClientException {
         return this.listCalls.execute(filter);
     }
 

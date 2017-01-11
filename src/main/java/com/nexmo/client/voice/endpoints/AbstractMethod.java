@@ -38,6 +38,7 @@ import java.util.Set;
 public abstract class AbstractMethod<RequestT, ResultT> implements Method<RequestT, ResultT> {
     private static final Log LOG = LogFactory.getLog(AbstractMethod.class);
     private final HttpWrapper httpWrapper;
+    Set<Class> acceptable;
 
     public AbstractMethod(HttpWrapper httpWrapper) {
         this.httpWrapper = httpWrapper;
@@ -59,10 +60,11 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
     }
 
     protected AuthMethod getAuthMethod(Class[] acceptableAuthMethods) throws NexmoClientException {
-        // TODO: This is inefficient:
-        Set<Class> acceptable = new HashSet<>();
-        for (Class c : acceptableAuthMethods) {
-            acceptable.add(c);
+        if (acceptable == null) {
+            this.acceptable = new HashSet<>();
+            for (Class c : acceptableAuthMethods) {
+                acceptable.add(c);
+            }
         }
 
         return this.httpWrapper.getAuthMethods().getAcceptableAuthMethod(acceptable);

@@ -20,10 +20,18 @@ package com.nexmo.client.voice;/*
  * THE SOFTWARE.
  */
 
-public class EmbeddedCalls {
-    private Call[] calls;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    public Call[] getCalls() {
-        return calls;
+public class EmbeddedCalls {
+    private CallRecord[] callRecords;
+
+    @JsonProperty("calls")
+    private void setCallRecords(CallRecord[] callRecords) {
+        this.callRecords = callRecords;
+    }
+
+    @JsonProperty("calls")
+    public CallRecord[] getCallRecords() {
+        return callRecords;
     }
 }

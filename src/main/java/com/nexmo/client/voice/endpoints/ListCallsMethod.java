@@ -25,7 +25,7 @@ import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.JWTAuthMethod;
 import com.nexmo.client.voice.CallsFilter;
-import com.nexmo.client.voice.CallsPage;
+import com.nexmo.client.voice.CallRecordPage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -36,7 +36,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class ListCallsMethod extends AbstractMethod<CallsFilter, CallsPage>{
+public class ListCallsMethod extends AbstractMethod<CallsFilter, CallRecordPage>{
     private static final Log LOG = LogFactory.getLog(CreateCallMethod.class);
 
     private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls";
@@ -49,7 +49,7 @@ public class ListCallsMethod extends AbstractMethod<CallsFilter, CallsPage>{
 
     @Override
     protected Class[] getAcceptableAuthMethods() {
-        return new Class[0];
+        return ALLOWED_AUTH_METHODS;
     }
 
     @Override
@@ -60,9 +60,11 @@ public class ListCallsMethod extends AbstractMethod<CallsFilter, CallsPage>{
     }
 
     @Override
-    public CallsPage parseResponse(HttpResponse response) throws IOException {
+    public CallRecordPage parseResponse(HttpResponse response) throws IOException {
         String json = EntityUtils.toString(response.getEntity());
         LOG.info("Received: " + json);
-        return CallsPage.fromJson(json);
+        return CallRecordPage.fromJson(json);
     }
+
+
 }

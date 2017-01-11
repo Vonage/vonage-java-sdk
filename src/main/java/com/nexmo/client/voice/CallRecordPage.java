@@ -27,9 +27,8 @@ import com.nexmo.client.NexmoUnexpectedException;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.ListIterator;
 
-public class CallsPage implements Iterable<Call> {
+public class CallRecordPage implements Iterable<CallRecord> {
     private int count;
     private int pageSize;
     private int recordIndex;
@@ -62,14 +61,14 @@ public class CallsPage implements Iterable<Call> {
     }
 
     @Override
-    public Iterator<Call> iterator() {
-        return new ArrayIterator<>(embedded.getCalls());
+    public Iterator<CallRecord> iterator() {
+        return new ArrayIterator<>(embedded.getCallRecords());
     }
 
-    public static CallsPage fromJson(String json) {
+    public static CallRecordPage fromJson(String json) {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, CallsPage.class);
+            return mapper.readValue(json, CallRecordPage.class);
         } catch (IOException jpe) {
             throw new NexmoUnexpectedException("Failed to produce json from Call object.", jpe);
         }

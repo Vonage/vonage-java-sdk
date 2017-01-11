@@ -1,4 +1,5 @@
-package com.nexmo.client;/*
+package com.nexmo.client;
+/*
  * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,6 +21,9 @@ package com.nexmo.client;/*
  * THE SOFTWARE.
  */
 
+/**
+ * NexmoUnexpectedException indicates an exception that should not happen in an ideal world.
+ */
 public class NexmoUnexpectedException extends RuntimeException {
     public NexmoUnexpectedException() {
         super();
