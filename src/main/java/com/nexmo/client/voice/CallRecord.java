@@ -193,4 +193,15 @@ public class CallRecord {
             throw new NexmoUnexpectedException("Failed to produce json from Call object.", jpe);
         }
     }
+
+    public String toString() {
+        return new StringBuilder()
+                .append("<CallRecord ")
+                .append("ID: ").append(this.getCallId()).append(", ")
+                .append("From: ").append(this.getFrom().getNumber()).append(", ")
+                .append("To: ").append(this.getTo().getNumber()).append(", ")
+                .append("Status: ").append(this.getStatus())
+                .append(">")
+                .toString();
+    }
 }
