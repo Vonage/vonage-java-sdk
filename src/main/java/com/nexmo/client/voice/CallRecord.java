@@ -24,9 +24,6 @@ package com.nexmo.client.voice;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.NexmoUnexpectedException;
 
 // TODO: Re-insert 'rate' and 'price' (currently being ignored)
 // TODO: Convert direction and status to enum values
@@ -35,32 +32,27 @@ import com.nexmo.client.NexmoUnexpectedException;
 public class CallRecord {
     private Endpoint to;
     private Endpoint from;
-    private String answerUrl;
 
-    private String answerMethod = "GET";
-    private String eventUrl = null;
-    private String eventMethod = null;
-    private String machineDetection = null;
-    private String status = null;
-    private String direction = null;
-    private Integer lengthTimer = null;
-    private Integer ringingTimer = null;
-    private Integer duration = null;
-    private String network = null;
-
-    private String callId = null;
     private String conversationId = null;
+    private String direction = null;
+    private Integer duration = null;
+    private String endTime = null;
+    private String network = null;
+    private String price = null;
+    private String rate = null;
+    private String startTime = null;
+    private String status = null;
+    private String callId = null;   // uuid
 
     public CallRecord() {}
 
-    public CallRecord(String to, String from, String answerUrl) {
-        this(new Endpoint(to), new Endpoint(from), answerUrl);
+    public CallRecord(String to, String from) {
+        this(new Endpoint(to), new Endpoint(from));
     }
 
-    public CallRecord(Endpoint to, Endpoint from, String answerUrl) {
+    public CallRecord(Endpoint to, Endpoint from) {
         this.to = to;
         this.from = from;
-        this.answerUrl = answerUrl;
     }
 
     public Endpoint getTo() {
@@ -79,70 +71,6 @@ public class CallRecord {
         this.from = from;
     }
 
-    @JsonProperty("answer_url")
-    public String[] getAnswerUrl() {
-        return new String[]{answerUrl};
-    }
-
-    public void setAnswerUrl(String answerUrl) {
-        this.answerUrl = answerUrl;
-    }
-
-    @JsonProperty("answer_method")
-    public String getAnswerMethod() {
-        return answerMethod;
-    }
-
-    public void setAnswerMethod(String answerMethod) {
-        this.answerMethod = answerMethod;
-    }
-
-    @JsonProperty("event_url")
-    public String getEventUrl() {
-        return eventUrl;
-    }
-
-    public void setEventUrl(String eventUrl) {
-        this.eventUrl = eventUrl;
-    }
-
-    @JsonProperty("event_method")
-    public String getEventMethod() {
-        return eventMethod;
-    }
-
-    public void setEventMethod(String eventMethod) {
-        this.eventMethod = eventMethod;
-    }
-
-    @JsonProperty("machine_detection")
-    public String getMachineDetection() {
-        return machineDetection;
-    }
-
-    // TODO: This should be an enum param:
-    public void setMachineDetection(String machineDetection) {
-        this.machineDetection = machineDetection;
-    }
-
-    @JsonProperty("length_timer")
-    public Integer getLengthTimer() {
-        return lengthTimer;
-    }
-
-    public void setLengthTimer(Integer lengthTimer) {
-        this.lengthTimer = lengthTimer;
-    }
-
-    @JsonProperty("ringing_timer")
-    public Integer getRingingTimer() {
-        return ringingTimer;
-    }
-
-    public void setRingingTimer(Integer ringingTimer) {
-        this.ringingTimer = ringingTimer;
-    }
-
     @JsonProperty("uuid")
     public String getCallId() {
         return callId;
@@ -159,6 +87,48 @@ public class CallRecord {
 
     public void setConversationId(String conversationId) {
         this.conversationId = conversationId;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
+    }
+
+    @JsonProperty("end_time")
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public String getRate() {
+        return rate;
+    }
+
+    public void setRate(String rate) {
+        this.rate = rate;
+    }
+
+    @JsonProperty("start_time")
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 
     public String getStatus() {
@@ -183,15 +153,6 @@ public class CallRecord {
 
     public void setNetwork(String network) {
         this.network = network;
-    }
-
-    public String toJson() {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(this);
-        } catch (JsonProcessingException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce json from Call object.", jpe);
-        }
     }
 
     public String toString() {

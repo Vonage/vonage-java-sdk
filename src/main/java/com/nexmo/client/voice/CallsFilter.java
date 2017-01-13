@@ -39,6 +39,62 @@ public class CallsFilter {
     private String order;
     private String conversationUuid;
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Date getDateStart() {
+        return dateStart;
+    }
+
+    public void setDateStart(Date dateStart) {
+        this.dateStart = dateStart;
+    }
+
+    public Date getDateEnd() {
+        return dateEnd;
+    }
+
+    public void setDateEnd(Date dateEnd) {
+        this.dateEnd = dateEnd;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public Integer getRecordIndex() {
+        return recordIndex;
+    }
+
+    public void setRecordIndex(Integer recordIndex) {
+        this.recordIndex = recordIndex;
+    }
+
+    public String getOrder() {
+        return order;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
+    }
+
+    public String getConversationUuid() {
+        return conversationUuid;
+    }
+
+    public void setConversationUuid(String conversationUuid) {
+        this.conversationUuid = conversationUuid;
+    }
+
     public List<NameValuePair> toUrlParams() {
         List<NameValuePair> result = new ArrayList<NameValuePair>(10);
         conditionalAdd(result, "status", this.status);
