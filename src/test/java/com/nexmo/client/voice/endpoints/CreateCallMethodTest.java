@@ -1,6 +1,4 @@
-package com.nexmo.client.voice.endpoints;
-/*
- * Copyright (c) 2011-2016 Nexmo Inc
+/* Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,17 +19,77 @@ package com.nexmo.client.voice.endpoints;
  * THE SOFTWARE.
  */
 
-import static org.junit.Assert.*;
+package com.nexmo.client.voice.endpoints;
 
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.voice.Call;
+import com.nexmo.client.voice.CallEvent;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpResponse;
+import org.apache.http.ProtocolVersion;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.BasicHttpEntity;
+import org.apache.http.message.BasicHttpResponse;
+import org.apache.http.message.BasicStatusLine;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+
+import static org.junit.Assert.assertEquals;
+
 public class CreateCallMethodTest {
+    private static final Log LOG = LogFactory.getLog(CreateCallMethodTest.class);
+
     @Test
-    public void testConstructUri() {
-//        assertEquals(
-//                "https://api.nexmo.com/v1/calls",
-//                new CreateCallMethod(new AuthCollection()).constructURI("https://api.nexmo.com/v1"));
-        // TODO: Need a test here.
-        assertTrue(true);
+    public void testMakeRequest() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(null);
+        CreateCallMethod methodUnderTest = new CreateCallMethod(wrapper);
+
+        // Execute test call:
+        HttpUriRequest request = methodUnderTest.makeRequest(
+                new Call("447700900903", "447700900904", "https://example.com/answer"));
+
+        assertEquals(HttpPost.class, request.getClass());
+        assertEquals("application/json", request.getFirstHeader("Content-Type").getValue());
+        HttpPost postRequest = (HttpPost) request;
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode node =  objectMapper.readValue(postRequest.getEntity().getContent(), JsonNode.class);
+        LOG.info(postRequest.getEntity().getContent());
+        assertEquals("447700900903", node.get("to").get(0).get("number").asText());
+        assertEquals("447700900904", node.get("from").get("number").asText());
+        assertEquals("https://example.com/answer", node.get("answer_url").get(0).asText());
+    }
+
+    @Test
+    public void testParseResponse() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(null);
+        CreateCallMethod methodUnderTest = new CreateCallMethod(wrapper);
+
+        HttpResponse stubResponse = new BasicHttpResponse(
+                new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 200, "OK")
+        );
+
+        // TODO: The following deep inspection may be better implemented under CallEventTest
+        String json = " {\"uuid\":\"93137ee3-580e-45f7-a61a-e0b5716000ea\",\"status\":\"started\",\"direction\":\"outbound\",\"conversation_uuid\":\"aa17bd11-c895-4225-840d-30dc78c31e50\"}";
+        InputStream jsonStream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
+        BasicHttpEntity entity = new BasicHttpEntity();
+        entity.setContent(jsonStream);
+        stubResponse.setEntity(entity);
+
+        // Execute test call:
+        CallEvent callEvent = methodUnderTest.parseResponse(stubResponse);
+        assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ea", callEvent.getUuid());
+        assertEquals("aa17bd11-c895-4225-840d-30dc78c31e50", callEvent.getConversationUuid());
+        assertEquals("started", callEvent.getStatus());
+        assertEquals("outbound", callEvent.getDirection());
+
     }
 }

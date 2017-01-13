@@ -27,6 +27,7 @@ import com.nexmo.client.NexmoUnexpectedException;
 import java.io.IOException;
 
 public class CallEvent {
+    String uuid;
     String conversationUuid;
     String status;
     String direction;
@@ -38,6 +39,14 @@ public class CallEvent {
         } catch (IOException jpe) {
             throw new NexmoUnexpectedException("Failed to produce json from Call object.", jpe);
         }
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     @JsonProperty("conversation_uuid")

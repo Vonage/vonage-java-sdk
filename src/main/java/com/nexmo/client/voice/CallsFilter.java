@@ -1,4 +1,6 @@
-package com.nexmo.client.voice;/*
+package com.nexmo.client.voice;
+
+/*
  * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,14 +22,51 @@ package com.nexmo.client.voice;/*
  * THE SOFTWARE.
  */
 
+import com.fasterxml.jackson.databind.util.ISO8601Utils;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class CallsFilter {
     private String status;
     private Date dateStart;
     private Date dateEnd;
-    private int pageSize;
-    private int recordIndex;
+    private Integer pageSize;
+    private Integer recordIndex;
     private String order;
     private String conversationUuid;
+
+    public List<NameValuePair> toUrlParams() {
+        List<NameValuePair> result = new ArrayList<NameValuePair>(10);
+        conditionalAdd(result, "status", this.status);
+        conditionalAdd(result, "date_start", this.dateStart);
+        conditionalAdd(result, "date_end", this.dateEnd);
+        conditionalAdd(result, "page_size", this.pageSize);
+        conditionalAdd(result, "record_index", this.recordIndex);
+        conditionalAdd(result, "order", this.order);
+        conditionalAdd(result, "conversation_uuid", this.conversationUuid);
+
+        return result;
+    }
+
+    private void conditionalAdd(List<NameValuePair> params, String name, String value) {
+        if (value != null) {
+            params.add(new BasicNameValuePair(name, value));
+        }
+    }
+
+    private void conditionalAdd(List<NameValuePair> params, String name, Date value) {
+        if (value != null) {
+            params.add(new BasicNameValuePair(name, ISO8601Utils.format(value)));
+        }
+    }
+
+    private void conditionalAdd(List<NameValuePair> params, String name, Integer value) {
+        if (value != null) {
+            params.add(new BasicNameValuePair(name, value.toString()));
+        }
+    }
 }
