@@ -14,6 +14,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -66,13 +67,14 @@ public class AbstractMethodTest {
         when(mockWrapper.getAuthMethods()).thenReturn(mockAuthMethods);
     }
 
-//    @Test
-//    public void testExecute() throws Exception {
-//        ConcreteMethod method = new ConcreteMethod(mockWrapper);
-//
-//        String result = method.execute("url");
-//        assertEquals("response", result);
-//    }
+    @Ignore
+    @Test
+    public void testExecute() throws Exception {
+        ConcreteMethod method = new ConcreteMethod(mockWrapper);
+
+        String result = method.execute("url");
+        assertEquals("response", result);
+    }
 
     @Test
     public void testGetAuthMethod() throws Exception {
