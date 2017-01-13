@@ -21,13 +21,12 @@ package com.nexmo.messaging.sdk;
  * THE SOFTWARE.
  */
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+
+import static org.junit.Assert.assertEquals;
 
 public class SnsSubmissionResultTest {
     private SmsSubmissionResult result;

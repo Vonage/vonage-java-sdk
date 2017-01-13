@@ -22,16 +22,19 @@ package com.nexmo.insight.sdk;
  */
 
 import com.nexmo.client.NexmoResponseParseException;
-import org.apache.http.*;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.xml.parsers.ParserConfigurationException;
-
 import java.io.ByteArrayInputStream;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
 

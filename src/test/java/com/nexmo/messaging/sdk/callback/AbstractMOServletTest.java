@@ -1,20 +1,20 @@
 package com.nexmo.messaging.sdk.callback;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
 import com.nexmo.messaging.sdk.callback.messages.MO;
-
 import org.junit.Test;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.GregorianCalendar;
 import java.util.concurrent.Executor;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
 
 
 class SynchronousExecutor implements Executor {

@@ -21,9 +21,6 @@ package com.nexmo.security;
  * THE SOFTWARE.
  */
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.junit.Test;
@@ -33,6 +30,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class RequestSigningTest {
     @Test

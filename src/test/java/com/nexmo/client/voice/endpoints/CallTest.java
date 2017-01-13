@@ -20,11 +20,11 @@ package com.nexmo.client.voice.endpoints;/*
  * THE SOFTWARE.
  */
 
-import static org.junit.Assert.*;
-
 import com.nexmo.client.voice.Call;
 import com.nexmo.client.voice.Endpoint;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class CallTest {
     @Test

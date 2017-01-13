@@ -21,12 +21,12 @@ package com.nexmo.common.http;
  * THE SOFTWARE.
  */
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
 import org.apache.http.client.HttpClient;
 import org.apache.http.params.HttpConnectionParams;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 public class HttpClientUtilsTest {
     @Test
@@ -39,6 +39,6 @@ public class HttpClientUtilsTest {
     @Test
     public void testGetInstanceReturnsSameResult() {
         assertSame(HttpClientUtils.getInstance(1000, 2000),
-                   HttpClientUtils.getInstance(1000, 2000));
+                HttpClientUtils.getInstance(1000, 2000));
     }
 }

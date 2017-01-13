@@ -20,11 +20,6 @@ package com.nexmo.client;/*
  * THE SOFTWARE.
  */
 
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import com.nexmo.client.auth.JWTAuthMethod;
 import com.nexmo.client.voice.Call;
 import org.apache.http.HttpEntity;
@@ -35,6 +30,11 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class NexmoClientTest {
     private TestUtils testUtils = new TestUtils();

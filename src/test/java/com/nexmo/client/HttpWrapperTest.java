@@ -21,11 +21,12 @@ package com.nexmo.client;
  * THE SOFTWARE.
  */
 
-import static org.junit.Assert.*;
-
 import com.nexmo.client.auth.AuthCollection;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class HttpWrapperTest {
     private HttpWrapper hw;

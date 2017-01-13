@@ -21,8 +21,6 @@ package com.nexmo.verify.sdk.endpoints;
  * THE SOFTWARE.
  */
 
-import static org.junit.Assert.*;
-
 import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.verify.sdk.SearchResult;
 import org.junit.Before;
@@ -30,6 +28,8 @@ import org.junit.Test;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.util.GregorianCalendar;
+
+import static org.junit.Assert.*;
 
 public class SearchClientTest {
 

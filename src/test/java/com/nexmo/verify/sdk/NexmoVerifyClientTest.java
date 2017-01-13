@@ -26,15 +26,16 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.xml.parsers.ParserConfigurationException;
-
 import java.io.ByteArrayInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

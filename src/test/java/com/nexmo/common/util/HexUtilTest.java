@@ -21,10 +21,9 @@ package com.nexmo.common.util;
  * THE SOFTWARE.
  */
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class HexUtilTest {
     @Test

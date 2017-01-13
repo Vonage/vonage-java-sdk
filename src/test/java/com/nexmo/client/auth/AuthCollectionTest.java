@@ -21,13 +21,14 @@ package com.nexmo.client.auth;
  * THE SOFTWARE.
  */
 
-import static org.junit.Assert.*;
-
 import com.nexmo.client.TestUtils;
 import org.junit.Test;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class AuthCollectionTest {
     private TestUtils testUtils = new TestUtils();

@@ -21,11 +21,11 @@ package com.nexmo.client;
  * THE SOFTWARE.
  */
 
-import static org.junit.Assert.*;
-
 import com.nexmo.client.voice.CallRecordPage;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class CallRecordPageTest {
     CallRecordPage page;

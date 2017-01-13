@@ -21,8 +21,6 @@ package com.nexmo.verify.sdk.endpoints;
  * THE SOFTWARE.
  */
 
-import static org.junit.Assert.*;
-
 import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.verify.sdk.NexmoVerifyClient;
 import com.nexmo.verify.sdk.VerifyResult;
@@ -36,6 +34,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+
+import static org.junit.Assert.*;
 
 public class VerifyClientTest {
 
