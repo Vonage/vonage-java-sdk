@@ -65,6 +65,4 @@ public class ListCallsMethod extends AbstractMethod<CallsFilter, CallRecordPage>
         LOG.info("Received: " + json);
         return CallRecordPage.fromJson(json);
     }
-
-
 }

@@ -37,12 +37,19 @@ public class AuthCollection {
         this.authList.add(auth);
     }
 
-    public AuthMethod getAcceptableAuthMethod(Set<Class> acceptableAuthMethods) throws NexmoClientException {
-        for (AuthMethod availableType : this.authList) {
-            if (acceptableAuthMethods.contains(availableType.getClass())) {
-                return availableType;
+    /**
+     * Obtain an auth method instance for a set of acceptable AuthMethod classes.
+     *
+     * @param acceptableAuthMethodClasses
+     * @return
+     * @throws NexmoClientException
+     */
+    public AuthMethod getAcceptableAuthMethod(Set<Class> acceptableAuthMethodClasses) throws NexmoClientException {
+        for (AuthMethod availableAuthMethod : this.authList) {
+            if (acceptableAuthMethodClasses.contains(availableAuthMethod.getClass())) {
+                return availableAuthMethod;
             }
         }
-        throw new NexmoUnacceptableAuthException(this.authList, acceptableAuthMethods);
+        throw new NexmoUnacceptableAuthException(this.authList, acceptableAuthMethodClasses);
     }
 }

@@ -48,7 +48,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
     public ResultT execute(RequestT request) throws IOException, NexmoClientException {
         try {
             HttpResponse response = this.httpWrapper.getHttpClient().execute(applyAuth(makeRequest(request)));
-            LOG.info("Response: " + response.getStatusLine());
+            LOG.debug("Response: " + response.getStatusLine());
             return parseResponse(response);
         } catch (UnsupportedEncodingException uee) {
             throw new NexmoUnexpectedException("UTF-8 encoding is not supported by this JVM.", uee);
@@ -59,6 +59,14 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
         return getAuthMethod(getAcceptableAuthMethods()).apply(request);
     }
 
+    /**
+     *
+     *
+     * Takes an array of classes, representing auth methods that are acceptable for this
+     * @param acceptableAuthMethods
+     * @return
+     * @throws NexmoClientException
+     */
     protected AuthMethod getAuthMethod(Class[] acceptableAuthMethods) throws NexmoClientException {
         if (acceptable == null) {
             this.acceptable = new HashSet<>();
@@ -70,14 +78,14 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
         return this.httpWrapper.getAuthMethods().getAcceptableAuthMethod(acceptable);
     }
 
-    protected abstract Class[] getAcceptableAuthMethods();
-
-    public abstract HttpUriRequest makeRequest(RequestT request) throws NexmoClientException,
-                                                                        UnsupportedEncodingException;
-
-    public abstract ResultT parseResponse(HttpResponse response) throws IOException;
-
     public void setHttpClient(HttpClient client) {
         this.httpWrapper.setHttpClient(client);
     }
+
+    protected abstract Class[] getAcceptableAuthMethods();
+
+    public abstract HttpUriRequest makeRequest(RequestT request) throws NexmoClientException,
+            UnsupportedEncodingException;
+
+    public abstract ResultT parseResponse(HttpResponse response) throws IOException;
 }
