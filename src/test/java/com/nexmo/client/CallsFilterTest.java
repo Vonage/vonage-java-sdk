@@ -41,7 +41,7 @@ public class CallsFilterTest {
 
         List<NameValuePair> params = filter.toUrlParams();
         Map<String, String> paramLookup = new HashMap<String, String>();
-        for(NameValuePair pair : params) {
+        for (NameValuePair pair : params) {
             paramLookup.put(pair.getName(), pair.getValue());
         }
 
