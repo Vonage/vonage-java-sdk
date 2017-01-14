@@ -55,4 +55,12 @@ public class NexmoVoiceClient extends AbstractClient {
     public CallRecord getCallDetails(String uuid) throws IOException, NexmoClientException {
         return calls.get(uuid);
     }
+
+    public void sendDTMF(DTMFRequest dtmfRequest) throws IOException, NexmoClientException {
+        dtmf.put(dtmfRequest);
+    }
+
+    public void modifyCall(CallModifier modifier) throws IOException, NexmoClientException {
+        calls.put(modifier);
+    }
 }

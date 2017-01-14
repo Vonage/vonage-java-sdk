@@ -57,7 +57,7 @@ public class ModifyCallMethod extends AbstractMethod<CallModifier, Call> {
     public HttpUriRequest makeRequest(CallModifier request) throws NexmoClientException, UnsupportedEncodingException {
         String uri = this.uri + request.getUuid();
         HttpPut put = new HttpPut(uri);
-        put.setHeader("Content-Type", " application/json");
+        put.setHeader("Content-Type", "application/json");
         put.setEntity(new StringEntity(request.toJson()));
         LOG.info("Request: " + request.toJson());
         return put;
