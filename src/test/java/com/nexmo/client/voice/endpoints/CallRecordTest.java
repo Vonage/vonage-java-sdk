@@ -28,7 +28,6 @@ import com.nexmo.client.voice.CallRecord;
 import com.nexmo.client.voice.Endpoint;
 import org.junit.Test;
 
-import java.time.Month;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
