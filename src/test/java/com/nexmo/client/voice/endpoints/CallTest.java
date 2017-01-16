@@ -44,7 +44,6 @@ public class CallTest {
         Call call = new Call("", "", "https://callback.example.com/");
         call.setAnswerMethod("BREW");
         call.setAnswerUrl("https://answer.example.com/");
-        call.setCallId("call-id");
         call.setEventMethod("RUN");
         call.setEventUrl("https://events.example.com/");
         call.setFrom(from);
@@ -55,7 +54,6 @@ public class CallTest {
 
         assertEquals("BREW", call.getAnswerMethod());
         assertEquals("https://answer.example.com/", call.getAnswerUrl()[0]);
-        assertEquals("call-id", call.getCallId());
         assertEquals("RUN", call.getEventMethod());
         assertEquals("https://events.example.com/", call.getEventUrl());
         assertEquals(from, call.getFrom());

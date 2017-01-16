@@ -27,8 +27,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
 
-// TODO: Re-insert 'rate' and 'price' (currently being ignored)
-// TODO: Convert direction and status to enum values
+/**
+ * CallRecord holds the information related to a call. It is obtained using {@link NexmoVoiceClient#listCalls}
+ */
+// TODO: Convert status to enum
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "_links" })
 public class CallRecord {
@@ -44,7 +46,7 @@ public class CallRecord {
     private String rate = null;
     private Date startTime = null;
     private String status = null;
-    private String uuid = null;   // uuid
+    private String uuid = null;
 
     public CallRecord() {}
 
