@@ -30,7 +30,7 @@ public class CallEvent {
     private String uuid;
     private String conversationUuid;
     private CallStatus status;
-    private Direction direction;
+    private CallDirection direction;
 
     public static CallEvent fromJson(String json) {
         try {
@@ -66,11 +66,11 @@ public class CallEvent {
         this.status = status;
     }
 
-    public Direction getDirection() {
+    public CallDirection getDirection() {
         return direction;
     }
 
-    public void setDirection(Direction direction) {
+    public void setDirection(CallDirection direction) {
         this.direction = direction;
     }
 }

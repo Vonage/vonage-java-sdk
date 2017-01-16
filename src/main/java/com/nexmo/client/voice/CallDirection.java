@@ -24,7 +24,7 @@ package com.nexmo.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-public enum Direction {
+public enum CallDirection {
     OUTBOUND,
     INBOUND;
 
@@ -34,7 +34,7 @@ public enum Direction {
     }
 
     @JsonCreator
-    public static Direction fromString(String name) {
-        return Direction.valueOf(name.toUpperCase());
+    public static CallDirection fromString(String name) {
+        return CallDirection.valueOf(name.toUpperCase());
     }
 }

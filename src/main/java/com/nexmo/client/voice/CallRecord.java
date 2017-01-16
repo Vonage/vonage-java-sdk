@@ -38,7 +38,7 @@ public class CallRecord {
     private Endpoint from;
 
     private String conversationUuid = null;
-    private Direction direction = null;
+    private CallDirection direction = null;
     private Integer duration = null;
     private Date endTime = null;
     private String network = null;
@@ -142,11 +142,11 @@ public class CallRecord {
         this.status = status;
     }
 
-    public Direction getDirection() {
+    public CallDirection getDirection() {
         return direction;
     }
 
-    public void setDirection(Direction direction) {
+    public void setDirection(CallDirection direction) {
         this.direction = direction;
     }
 
