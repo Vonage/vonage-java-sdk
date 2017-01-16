@@ -25,6 +25,7 @@ package com.nexmo.client.voice.endpoints;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.voice.CallRecord;
+import com.nexmo.client.voice.CallStatus;
 import com.nexmo.client.voice.Endpoint;
 import org.junit.Test;
 
@@ -72,7 +73,7 @@ public class CallRecordTest {
     public void testToString() throws Exception {
         CallRecord record = new CallRecord(new Endpoint("447700900104"), new Endpoint("447700900105"));
         record.setUuid("93137ee3-580e-45f7-a61a-e0b5716000ef");
-        record.setStatus("completed");
+        record.setStatus(CallStatus.COMPLETED);
         assertEquals(
                 "<CallRecord ID: 93137ee3-580e-45f7-a61a-e0b5716000ef, From: 447700900105, To: 447700900104, Status: completed>",
                 record.toString());

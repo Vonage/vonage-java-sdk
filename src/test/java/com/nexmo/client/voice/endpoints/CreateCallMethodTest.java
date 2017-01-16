@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.voice.Call;
 import com.nexmo.client.voice.CallEvent;
+import com.nexmo.client.voice.CallStatus;
 import com.nexmo.client.voice.Direction;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -89,7 +90,7 @@ public class CreateCallMethodTest {
         CallEvent callEvent = methodUnderTest.parseResponse(stubResponse);
         assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ea", callEvent.getUuid());
         assertEquals("aa17bd11-c895-4225-840d-30dc78c31e50", callEvent.getConversationUuid());
-        assertEquals("started", callEvent.getStatus());
+        assertEquals(CallStatus.STARTED, callEvent.getStatus());
         assertEquals(Direction.OUTBOUND, callEvent.getDirection());
     }
 }

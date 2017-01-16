@@ -20,35 +20,25 @@
  * THE SOFTWARE.
  */
 
-package com.nexmo.client;
+package com.nexmo.client.voice;
 
-import com.nexmo.client.voice.CallStatus;
-import com.nexmo.client.voice.CallsFilter;
-import org.apache.http.NameValuePair;
-import org.junit.Test;
+import com.fasterxml.jackson.annotation.JsonCreator;
 
-import java.util.*;
+public enum CallStatus {
+    STARTED,
+    RINGING,
+    ANSWERED,
+    TIMEOUT,
+    MACHINE,
+    COMPLETED;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+    @Override
+    public String toString() {
+        return name().toLowerCase();
+    }
 
-public class CallsFilterTest {
-    @Test
-    public void testToUrlParams() {
-        CallsFilter filter = new CallsFilter();
-        filter.setStatus(CallStatus.COMPLETED);
-        filter.setDateStart(new GregorianCalendar(2016, Calendar.JANUARY, 1, 7, 8, 20).getTime());
-        filter.setPageSize(10);
-
-        List<NameValuePair> params = filter.toUrlParams();
-        Map<String, String> paramLookup = new HashMap<String, String>();
-        for (NameValuePair pair : params) {
-            paramLookup.put(pair.getName(), pair.getValue());
-        }
-
-        assertEquals("completed", paramLookup.get("status"));
-        assertNull(paramLookup.get("date_end"));
-        assertEquals("2016-01-01T07:08:20Z", paramLookup.get("date_start"));
-        assertEquals("10", paramLookup.get("page_size"));
+    @JsonCreator
+    public static CallStatus fromString(String name) {
+        return CallStatus.valueOf(name.toUpperCase());
     }
 }

@@ -45,7 +45,7 @@ public class CallRecord {
     private String price = null;
     private String rate = null;
     private Date startTime = null;
-    private String status = null;
+    private CallStatus status = null;
     private String uuid = null;
 
     public CallRecord() {}
@@ -134,11 +134,11 @@ public class CallRecord {
         this.startTime = startTime;
     }
 
-    public String getStatus() {
+    public CallStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(CallStatus status) {
         this.status = status;
     }
 

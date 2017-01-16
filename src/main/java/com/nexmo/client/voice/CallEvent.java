@@ -29,7 +29,7 @@ import java.io.IOException;
 public class CallEvent {
     private String uuid;
     private String conversationUuid;
-    private String status;
+    private CallStatus status;
     private Direction direction;
 
     public static CallEvent fromJson(String json) {
@@ -58,11 +58,11 @@ public class CallEvent {
         this.conversationUuid = conversationUuid;
     }
 
-    public String getStatus() {
+    public CallStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(CallStatus status) {
         this.status = status;
     }
 
