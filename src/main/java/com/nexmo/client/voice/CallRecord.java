@@ -33,7 +33,7 @@ public class CallRecord {
     private Endpoint to;
     private Endpoint from;
 
-    private String conversationId = null;
+    private String conversationUuid = null;
     private Direction direction = null;
     private Integer duration = null;
     private String endTime = null;
@@ -42,7 +42,7 @@ public class CallRecord {
     private String rate = null;
     private String startTime = null;
     private String status = null;
-    private String callId = null;   // uuid
+    private String uuid = null;   // uuid
 
     public CallRecord() {}
 
@@ -71,22 +71,21 @@ public class CallRecord {
         this.from = from;
     }
 
-    @JsonProperty("uuid")
-    public String getCallId() {
-        return callId;
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setCallId(String callId) {
-        this.callId = callId;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     @JsonProperty("conversation_uuid")
-    public String getConversationId() {
-        return conversationId;
+    public String getConversationUuid() {
+        return conversationUuid;
     }
 
-    public void setConversationId(String conversationId) {
-        this.conversationId = conversationId;
+    public void setConversationUuid(String conversationUuid) {
+        this.conversationUuid = conversationUuid;
     }
 
     public Integer getDuration() {
@@ -158,7 +157,7 @@ public class CallRecord {
     public String toString() {
         return new StringBuilder()
                 .append("<CallRecord ")
-                .append("ID: ").append(this.getCallId()).append(", ")
+                .append("ID: ").append(this.getUuid()).append(", ")
                 .append("From: ").append(this.getFrom().getNumber()).append(", ")
                 .append("To: ").append(this.getTo().getNumber()).append(", ")
                 .append("Status: ").append(this.getStatus())

@@ -60,14 +60,14 @@ public class CallRecordTest {
                 "  }\n" +
                 "}\n";
         CallRecord record = new ObjectMapper().readValue(json, CallRecord.class);
-        assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", record.getCallId());
+        assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", record.getUuid());
         assertNotNull("start time should not be null!", record.getStartTime());
     }
 
     @Test
     public void testToString() throws Exception {
         CallRecord record = new CallRecord(new Endpoint("447700900104"), new Endpoint("447700900105"));
-        record.setCallId("93137ee3-580e-45f7-a61a-e0b5716000ef");
+        record.setUuid("93137ee3-580e-45f7-a61a-e0b5716000ef");
         record.setStatus("completed");
         assertEquals(
                 "<CallRecord ID: 93137ee3-580e-45f7-a61a-e0b5716000ef, From: 447700900105, To: 447700900104, Status: completed>",
