@@ -28,8 +28,11 @@ import com.nexmo.client.voice.CallRecord;
 import com.nexmo.client.voice.Endpoint;
 import org.junit.Test;
 
+import java.time.Month;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class CallRecordTest {
     @Test
@@ -61,7 +64,9 @@ public class CallRecordTest {
                 "}\n";
         CallRecord record = new ObjectMapper().readValue(json, CallRecord.class);
         assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", record.getUuid());
-        assertNotNull("start time should not be null!", record.getStartTime());
+
+        // 2017-01-13T13:55:02.000Z
+        assertEquals(new GregorianCalendar(2017, Calendar.JANUARY, 13 ,13, 55, 2).getTime(), record.getStartTime());
     }
 
     @Test

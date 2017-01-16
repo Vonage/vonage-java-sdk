@@ -25,6 +25,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Date;
+
 // TODO: Re-insert 'rate' and 'price' (currently being ignored)
 // TODO: Convert direction and status to enum values
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -36,11 +38,11 @@ public class CallRecord {
     private String conversationUuid = null;
     private Direction direction = null;
     private Integer duration = null;
-    private String endTime = null;
+    private Date endTime = null;
     private String network = null;
     private String price = null;
     private String rate = null;
-    private String startTime = null;
+    private Date startTime = null;
     private String status = null;
     private String uuid = null;   // uuid
 
@@ -97,11 +99,11 @@ public class CallRecord {
     }
 
     @JsonProperty("end_time")
-    public String getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 
@@ -122,11 +124,11 @@ public class CallRecord {
     }
 
     @JsonProperty("start_time")
-    public String getStartTime() {
+    public Date getStartTime() {
         return this.startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
