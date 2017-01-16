@@ -36,7 +36,6 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-// TODO: Create a package for these endpoint methods
 public class CreateCallMethod extends AbstractMethod<Call, CallEvent> {
     private static final Log LOG = LogFactory.getLog(CreateCallMethod.class);
 

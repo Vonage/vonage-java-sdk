@@ -24,13 +24,16 @@ package com.nexmo.client.voice;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.nexmo.client.NexmoUnexpectedException;
 
+import java.io.IOException;
 import java.util.Date;
 
 /**
  * CallRecord holds the information related to a call. It is obtained using {@link NexmoVoiceClient#listCalls}
  */
-// TODO: Convert status to enum
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "_links" })
 public class CallRecord {
@@ -167,5 +170,15 @@ public class CallRecord {
                 .append("Status: ").append(this.getStatus())
                 .append(">")
                 .toString();
+    }
+
+    public static CallRecord fromJson(String json) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+            return mapper.readValue(json, CallRecord.class);
+        } catch (IOException jpe) {
+            throw new NexmoUnexpectedException("Failed to produce json from Call object.", jpe);
+        }
     }
 }

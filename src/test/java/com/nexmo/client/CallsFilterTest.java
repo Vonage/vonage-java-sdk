@@ -30,15 +30,23 @@ import org.junit.Test;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 public class CallsFilterTest {
     @Test
-    public void testToUrlParams() {
+    public void testAllParams() {
+        /*
+    private Integer recordIndex;
+    private String order;
+         */
+
         CallsFilter filter = new CallsFilter();
         filter.setStatus(CallStatus.COMPLETED);
         filter.setDateStart(new GregorianCalendar(2016, Calendar.JANUARY, 1, 7, 8, 20).getTime());
+        filter.setDateEnd(new GregorianCalendar(2016, Calendar.JANUARY, 1, 7, 8, 55).getTime());
+        filter.setRecordIndex(12);
+        filter.setOrder("asc");
         filter.setPageSize(10);
+        filter.setConversationUuid("this-is-not-a-uuid");
 
         List<NameValuePair> params = filter.toUrlParams();
         Map<String, String> paramLookup = new HashMap<String, String>();
@@ -47,8 +55,18 @@ public class CallsFilterTest {
         }
 
         assertEquals("completed", paramLookup.get("status"));
-        assertNull(paramLookup.get("date_end"));
+        assertEquals("2016-01-01T07:08:55Z", paramLookup.get("date_end"));
         assertEquals("2016-01-01T07:08:20Z", paramLookup.get("date_start"));
+        assertEquals("12", paramLookup.get("record_index"));
+        assertEquals("asc", paramLookup.get("order"));
         assertEquals("10", paramLookup.get("page_size"));
+        assertEquals("this-is-not-a-uuid", paramLookup.get("conversation_uuid"));
+    }
+
+    @Test
+    public void testNoParams() throws Exception {
+        CallsFilter filter = new CallsFilter();
+        List<NameValuePair> params = filter.toUrlParams();
+        assertEquals(0, params.size());
     }
 }

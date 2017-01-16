@@ -31,7 +31,6 @@ import com.nexmo.client.NexmoUnexpectedException;
 /**
  * Call encapsulates the information required to create a call using {@link NexmoVoiceClient#createCall(Call)}
  */
-// TODO: Convert status to an enum value
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "_links"})
 public class Call {
