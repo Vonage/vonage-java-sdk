@@ -58,10 +58,12 @@ public class ListCallsMethod extends AbstractMethod<CallsFilter, CallRecordPage>
     @Override
     public HttpUriRequest makeRequest(CallsFilter filter) throws NexmoClientException, UnsupportedEncodingException {
         HttpUriRequest request = new HttpGet(this.uri);
-        HttpParams httpParams = request.getParams();
-        List<NameValuePair> params = filter.toUrlParams();
-        for (NameValuePair param: params) {
-            httpParams.setParameter(param.getName(), param.getValue());
+        if (filter != null) {
+            HttpParams httpParams = request.getParams();
+            List<NameValuePair> params = filter.toUrlParams();
+            for (NameValuePair param : params) {
+                httpParams.setParameter(param.getName(), param.getValue());
+            }
         }
         return request;
     }

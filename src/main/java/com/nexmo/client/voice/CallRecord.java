@@ -28,13 +28,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 // TODO: Re-insert 'rate' and 'price' (currently being ignored)
 // TODO: Convert direction and status to enum values
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties({ "_links", "rate", "price", "duration", "start_time", "end_time" })
+@JsonIgnoreProperties({ "_links" })
 public class CallRecord {
     private Endpoint to;
     private Endpoint from;
 
     private String conversationId = null;
-    private String direction = null;
+    private Direction direction = null;
     private Integer duration = null;
     private String endTime = null;
     private String network = null;
@@ -124,7 +124,7 @@ public class CallRecord {
 
     @JsonProperty("start_time")
     public String getStartTime() {
-        return startTime;
+        return this.startTime;
     }
 
     public void setStartTime(String startTime) {
@@ -139,11 +139,11 @@ public class CallRecord {
         this.status = status;
     }
 
-    public String getDirection() {
+    public Direction getDirection() {
         return direction;
     }
 
-    public void setDirection(String direction) {
+    public void setDirection(Direction direction) {
         this.direction = direction;
     }
 

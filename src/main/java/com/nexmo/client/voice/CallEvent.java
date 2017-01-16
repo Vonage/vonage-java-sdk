@@ -27,10 +27,10 @@ import com.nexmo.client.NexmoUnexpectedException;
 import java.io.IOException;
 
 public class CallEvent {
-    String uuid;
-    String conversationUuid;
-    String status;
-    String direction;
+    private String uuid;
+    private String conversationUuid;
+    private String status;
+    private Direction direction;
 
     public static CallEvent fromJson(String json) {
         try {
@@ -66,11 +66,11 @@ public class CallEvent {
         this.status = status;
     }
 
-    public String getDirection() {
+    public Direction getDirection() {
         return direction;
     }
 
-    public void setDirection(String direction) {
+    public void setDirection(Direction direction) {
         this.direction = direction;
     }
 }

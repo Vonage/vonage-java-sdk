@@ -29,6 +29,7 @@ import com.nexmo.client.voice.Endpoint;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class CallRecordTest {
     @Test
@@ -60,6 +61,7 @@ public class CallRecordTest {
                 "}\n";
         CallRecord record = new ObjectMapper().readValue(json, CallRecord.class);
         assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", record.getCallId());
+        assertNotNull("start time should not be null!", record.getStartTime());
     }
 
     @Test
