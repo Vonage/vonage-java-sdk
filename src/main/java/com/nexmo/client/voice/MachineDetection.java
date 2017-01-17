@@ -25,13 +25,9 @@ package com.nexmo.client.voice;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum CallStatus {
-    STARTED,
-    RINGING,
-    ANSWERED,
-    TIMEOUT,
-    MACHINE,
-    COMPLETED;
+public enum MachineDetection {
+    CONTINUE,
+    HANGUP;
 
     @JsonValue
     @Override
@@ -40,7 +36,7 @@ public enum CallStatus {
     }
 
     @JsonCreator
-    public static CallStatus fromString(String name) {
-        return CallStatus.valueOf(name.toUpperCase());
+    public static CallDirection fromString(String name) {
+        return CallDirection.valueOf(name.toUpperCase());
     }
 }

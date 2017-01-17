@@ -41,7 +41,7 @@ public class Call {
     private String answerMethod = "GET";
     private String eventUrl = null;
     private String eventMethod = null;
-    private String machineDetection = null;
+    private MachineDetection machineDetection = null;
     private Integer lengthTimer = null;
     private Integer ringingTimer = null;
 
@@ -110,12 +110,11 @@ public class Call {
     }
 
     @JsonProperty("machine_detection")
-    public String getMachineDetection() {
+    public MachineDetection getMachineDetection() {
         return machineDetection;
     }
 
-    // TODO: This should be an enum param:
-    public void setMachineDetection(String machineDetection) {
+    public void setMachineDetection(MachineDetection machineDetection) {
         this.machineDetection = machineDetection;
     }
 
