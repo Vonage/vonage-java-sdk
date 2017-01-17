@@ -1,11 +1,8 @@
-package com.nexmo.client.voice.endpoints;
+package com.nexmo.client.voice;
 
 import com.auth0.jwt.internal.com.fasterxml.jackson.databind.JsonNode;
 import com.auth0.jwt.internal.com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.voice.Call;
-import com.nexmo.client.voice.CallModifier;
-import com.nexmo.client.voice.Payload;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -44,16 +41,16 @@ import static org.junit.Assert.assertEquals;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-public class ModifyCallMethodTest {
-    private static final Log LOG = LogFactory.getLog(ModifyCallMethodTest.class);
+public class SendDTMFMethodTest {
+    private static final Log LOG = LogFactory.getLog(SendDTMFMethodTest.class);
 
     @Test
     public void makeRequest() throws Exception {
         HttpWrapper httpWrapper = new HttpWrapper(null);
-        ModifyCallMethod methodUnderTest = new ModifyCallMethod(httpWrapper);
+        SendDTMFMethod methodUnderTest = new SendDTMFMethod(httpWrapper);
 
         HttpUriRequest request = methodUnderTest.makeRequest(
-                new CallModifier("abc-123", new Payload("hangup"))
+                new DTMFRequest("abc-123", new DTMFPayload("867"))
         );
 
         assertEquals(HttpPut.class, request.getClass());
@@ -63,38 +60,27 @@ public class ModifyCallMethodTest {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode node = objectMapper.readValue(putRequest.getEntity().getContent(), JsonNode.class);
         LOG.info(putRequest.getEntity().getContent());
-        assertEquals("hangup", node.get("action").asText());
+        assertEquals("867", node.get("digits").asText());
     }
 
     @Test
     public void parseResponse() throws Exception {
         HttpWrapper wrapper = new HttpWrapper(null);
-        ModifyCallMethod methodUnderTest = new ModifyCallMethod(wrapper);
+        SendDTMFMethod methodUnderTest = new SendDTMFMethod(wrapper);
 
         HttpResponse stubResponse = new BasicHttpResponse(
-                new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 200, "OK")
+                new BasicStatusLine(new ProtocolVersion("1.1", 1,1), 200, "OK")
         );
 
-        String json = "{\"uuid\": \"63f61863-4a51-4f6b-86e1-46edebcf9356\"," +
-                "\"conversation_uuid\": \"63f61863-4a51-4f6b-86e1-46edebio0123\"," +
-                "\"to\": [{\"type\": \"phone\",\"number\": \"441632960960\"}]," +
-                "\"from\": {\"type\": \"phone\",\"number\": \"441632960961\"}," +
-                "\"status\": \"complete\",\"direction\": \"outbound\",\"rate\": \"0.39\"," +
-                "\"price\": \"23.40\",\"network\": \"65512\"}";
+        String json = "{\"message\": \"DTMF sent\",\"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"}";
         InputStream jsonStream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
         BasicHttpEntity entity = new BasicHttpEntity();
         entity.setContent(jsonStream);
         stubResponse.setEntity(entity);
 
-        Call call = methodUnderTest.parseResponse(stubResponse);
-        assertEquals("63f61863-4a51-4f6b-86e1-46edebcf9356", call.getCallId());
-        assertEquals("63f61863-4a51-4f6b-86e1-46edebio0123", call.getConversationId());
-        assertEquals("complete", call.getStatus());
-        assertEquals("outbound", call.getDirection());
-        assertEquals("65512", call.getNetwork());
-        assertEquals("phone", call.getFrom().getType());
-        assertEquals("441632960961", call.getFrom().getNumber());
-        assertEquals("441632960960", call.getTo()[0].getNumber());
-        assertEquals("phone", call.getTo()[0].getType());
+        DTMFResponse response = methodUnderTest.parseResponse(stubResponse);
+        assertEquals("DTMF sent", response.getMessage());
+        assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
     }
+
 }

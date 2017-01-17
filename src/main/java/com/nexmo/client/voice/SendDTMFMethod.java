@@ -55,7 +55,7 @@ public class SendDTMFMethod extends AbstractMethod<DTMFRequest, DTMFResponse> {
     public HttpUriRequest makeRequest(DTMFRequest request) throws NexmoClientException, UnsupportedEncodingException {
         String uri = this.uri + request.getUuid() + "/dtmf";
         HttpPut put = new HttpPut(uri);
-        put.setHeader("Content-Type", " application/json");
+        put.setHeader("Content-Type", "application/json");
         put.setEntity(new StringEntity(request.toJson()));
         LOG.info("Request: " + request.toJson());
         return put;
