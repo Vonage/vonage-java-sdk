@@ -21,6 +21,8 @@ package com.nexmo.client.voice;/*
  */
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 // TODO: Maybe rename Endpoint
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -58,5 +60,34 @@ public class Endpoint {
 
     public void setDtmfAnswer(String dtmfAnswer) {
         this.dtmfAnswer = dtmfAnswer;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        Endpoint rhs = (Endpoint) obj;
+        return new EqualsBuilder()
+                .append(this.type, rhs.type)
+                .append(this.number, rhs.number)
+                .append(this.dtmfAnswer, rhs.dtmfAnswer)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(277, 11)
+                .appendSuper(super.hashCode())
+                .append(this.type)
+                .append(this.number)
+                .append(this.dtmfAnswer)
+                .toHashCode();
     }
 }

@@ -24,7 +24,7 @@ import com.nexmo.client.voice.Endpoint;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 
 public class EndpointTest {
@@ -50,5 +50,20 @@ public class EndpointTest {
         Endpoint e = new Endpoint("number", "dtmf");
         e.setDtmfAnswer("#123");
         assertEquals("#123", e.getDtmfAnswer());
+    }
+
+    @Test
+    public void testComparison() throws Exception {
+        Endpoint e1 = new Endpoint("number");
+        Endpoint e2 = new Endpoint("number");
+        assertTrue("Endpoints with the same values should be equal", e1.equals(e2));
+
+        e1 = new Endpoint("number");
+        e2 = new Endpoint("number1");
+        assertFalse("Endpoints with different numbers should not be equal", e1.equals(e2));
+
+        e1 = new Endpoint("number", "dtmf");
+        e2 = new Endpoint("number", "dtmf1");
+        assertFalse("Endpoints with different dtmfAnswers should not be equal", e1.equals(e2));
     }
 }
