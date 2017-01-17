@@ -39,14 +39,26 @@ public class CallsFilterTest {
     private String order;
          */
 
+        Date startDate = new GregorianCalendar(2016, Calendar.JANUARY, 1, 7, 8, 20).getTime();
+        Date endDate = new GregorianCalendar(2016, Calendar.JANUARY, 1, 7, 8, 55).getTime();
+
         CallsFilter filter = new CallsFilter();
         filter.setStatus(CallStatus.COMPLETED);
-        filter.setDateStart(new GregorianCalendar(2016, Calendar.JANUARY, 1, 7, 8, 20).getTime());
-        filter.setDateEnd(new GregorianCalendar(2016, Calendar.JANUARY, 1, 7, 8, 55).getTime());
+        filter.setDateStart(startDate);
+        filter.setDateEnd(endDate);
         filter.setRecordIndex(12);
         filter.setOrder("asc");
         filter.setPageSize(10);
         filter.setConversationUuid("this-is-not-a-uuid");
+
+        assertEquals(CallStatus.COMPLETED, filter.getStatus());
+        assertEquals(startDate, filter.getDateStart());
+        assertEquals(endDate, filter.getDateEnd());
+        assertEquals(12, (int)filter.getRecordIndex());
+        assertEquals("asc", filter.getOrder());
+        assertEquals(10, (int)filter.getPageSize());
+        assertEquals("this-is-not-a-uuid", filter.getConversationUuid());
+
 
         List<NameValuePair> params = filter.toUrlParams();
         Map<String, String> paramLookup = new HashMap<String, String>();

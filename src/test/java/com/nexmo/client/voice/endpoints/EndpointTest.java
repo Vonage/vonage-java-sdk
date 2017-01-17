@@ -29,7 +29,8 @@ import static org.junit.Assert.*;
 
 public class EndpointTest {
     @Before
-    public void setUp() {}
+    public void setUp() {
+    }
 
     @Test
     public void testConstructor() throws Exception {
@@ -54,16 +55,27 @@ public class EndpointTest {
 
     @Test
     public void testComparison() throws Exception {
+
         Endpoint e1 = new Endpoint("number");
         Endpoint e2 = new Endpoint("number");
         assertTrue("Endpoints with the same values should be equal", e1.equals(e2));
+        assertTrue("Endpoints with the same values should have the same hash", e1.hashCode() == e2.hashCode());
 
         e1 = new Endpoint("number");
         e2 = new Endpoint("number1");
-        assertFalse("Endpoints with different numbers should not be equal", e1.equals(e2));
+        assertFalse("Endpoints with different numbers should not be equal",  e1.equals(e2));
+        assertFalse("Endpoints with different numbers should have different hashes", e1.hashCode() == e2.hashCode());
 
         e1 = new Endpoint("number", "dtmf");
         e2 = new Endpoint("number", "dtmf1");
-        assertFalse("Endpoints with different dtmfAnswers should not be equal", e1.equals(e2));
+        assertFalse("Endpoints with different dtmfAnswers should not be equal",  e1.equals(e2));
+
+        e1 = new Endpoint("number", "dtmf");
+        e2 = null;
+        assertFalse("An instance is not equal to null",  e1.equals(e2));
+
+        e1 = new Endpoint("number", "dtmf");
+        Object o = new Object();
+        assertFalse("An instance is not equal to a different type.",  e1.equals(o));
     }
 }

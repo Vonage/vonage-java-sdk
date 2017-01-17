@@ -51,8 +51,7 @@ public class CreateCallMethodTest {
 
     @Test
     public void testMakeRequest() throws Exception {
-        HttpWrapper wrapper = new HttpWrapper(null);
-        CreateCallMethod methodUnderTest = new CreateCallMethod(wrapper);
+        CreateCallMethod methodUnderTest = new CreateCallMethod(null);
 
         // Execute test call:
         HttpUriRequest request = methodUnderTest.makeRequest(
@@ -68,6 +67,15 @@ public class CreateCallMethodTest {
         assertEquals("447700900903", node.get("to").get(0).get("number").asText());
         assertEquals("447700900904", node.get("from").get("number").asText());
         assertEquals("https://example.com/answer", node.get("answer_url").get(0).asText());
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        CreateCallMethod methodUnderTest = new CreateCallMethod(null);
+        methodUnderTest.setUri("https://api.example.com/calls");
+        HttpUriRequest request = methodUnderTest.makeRequest(
+                new Call("447700900903", "447700900904", "https://example.com/answer"));
+        assertEquals("https://api.example.com/calls", request.getURI().toString());
     }
 
     @Test

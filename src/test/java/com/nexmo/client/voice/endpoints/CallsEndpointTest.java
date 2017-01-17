@@ -1,6 +1,5 @@
-package com.nexmo.client.voice;
 /*
- * Copyright (c) 2011-2016 Nexmo Inc
+ * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,35 +20,32 @@ package com.nexmo.client.voice;
  * THE SOFTWARE.
  */
 
-import com.nexmo.client.AbstractClient;
-import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.voice.endpoints.CallsEndpoint;
+package com.nexmo.client.voice.endpoints;
 
-import java.io.IOException;
+import org.junit.Before;
+import org.junit.Test;
 
-public class NexmoVoiceClient extends AbstractClient {
-    public final CallsEndpoint calls;
+import static org.junit.Assert.*;
 
-    public NexmoVoiceClient(HttpWrapper httpWrapper) {
-        super(httpWrapper);
+public class CallsEndpointTest {
+    @Before
+    public void setUp() throws Exception {
 
-        calls = new CallsEndpoint(httpWrapper);
     }
 
-    public CallEvent createCall(Call callRequest) throws IOException, NexmoClientException {
-        return calls.post(callRequest);
+    @Test
+    public void post() throws Exception {
+
     }
 
-    public CallRecordPage listCalls() throws IOException, NexmoClientException {
-        return this.listCalls(null);
+    @Test
+    public void get() throws Exception {
+
     }
 
-    public CallRecordPage listCalls(CallsFilter filter) throws IOException, NexmoClientException {
-        return calls.get(filter);
+    @Test
+    public void get1() throws Exception {
+
     }
 
-    public CallRecord getCallDetails(String uuid) throws IOException, NexmoClientException {
-        return calls.get(uuid);
-    }
 }

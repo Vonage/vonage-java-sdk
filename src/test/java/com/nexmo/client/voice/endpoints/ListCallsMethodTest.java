@@ -22,9 +22,12 @@
 
 package com.nexmo.client.voice.endpoints;
 
+import com.nexmo.client.NexmoUnexpectedException;
 import com.nexmo.client.auth.JWTAuthMethod;
 import com.nexmo.client.voice.CallRecordPage;
 import com.nexmo.client.voice.CallsFilter;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -40,8 +43,10 @@ import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class ListCallsMethodTest {
+    private static final Log LOG = LogFactory.getLog(ListCallsMethodTest.class);
     ListCallsMethod method;
 
     @Before
@@ -161,4 +166,19 @@ public class ListCallsMethodTest {
         assertEquals("/v1/calls?page_size=10", page.getLinks().getLast().getHref());
     }
 
+    @Test
+    public void testBadUriThrowsException() throws Exception {
+        method.setUri(":this::///isnota_uri");
+        assertEquals(":this::///isnota_uri", method.getUri());
+        try {
+            CallsFilter filter = new CallsFilter();
+            filter.setPageSize(30);
+            HttpUriRequest request = method.makeRequest(filter);
+            // Anything past here only executes if our assertion is incorrect:
+            LOG.error("Request URI: " + request.getURI());
+            fail("Making a request with a bad URI should throw a NexmoUnexpectedException");
+        } catch (NexmoUnexpectedException nue) {
+            // This is expected
+        }
+    }
 }
