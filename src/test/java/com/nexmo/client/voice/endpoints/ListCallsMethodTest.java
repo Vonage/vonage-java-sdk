@@ -22,7 +22,6 @@
 
 package com.nexmo.client.voice.endpoints;
 
-import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.auth.JWTAuthMethod;
 import com.nexmo.client.voice.CallRecordPage;
 import com.nexmo.client.voice.CallsFilter;
@@ -75,9 +74,6 @@ public class ListCallsMethodTest {
 
     @Test
     public void parseResponse() throws Exception {
-        HttpWrapper wrapper = new HttpWrapper(null);
-        CreateCallMethod methodUnderTest = new CreateCallMethod(wrapper);
-
         HttpResponse stubResponse = new BasicHttpResponse(
                 new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 200, "OK")
         );
@@ -163,7 +159,6 @@ public class ListCallsMethodTest {
         assertEquals(2, page.getEmbedded().getCallRecords().length);
         assertEquals("/v1/calls?page_size=10", page.getLinks().getFirst().getHref());
         assertEquals("/v1/calls?page_size=10", page.getLinks().getLast().getHref());
-
     }
 
 }
