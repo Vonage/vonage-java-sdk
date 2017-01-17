@@ -24,6 +24,7 @@ package com.nexmo.client.voice.endpoints;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexmo.client.voice.CallDirection;
 import com.nexmo.client.voice.CallRecord;
 import com.nexmo.client.voice.CallStatus;
 import com.nexmo.client.voice.Endpoint;
@@ -63,10 +64,26 @@ public class CallRecordTest {
                 "  }\n" +
                 "}\n";
         CallRecord record = new ObjectMapper().readValue(json, CallRecord.class);
-        assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", record.getUuid());
 
+        assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", record.getUuid());
+        assertEquals(CallStatus.COMPLETED, record.getStatus());
+        assertEquals(CallDirection.OUTBOUND, record.getDirection());
+        assertEquals("0.02400000", record.getRate());
+        assertEquals("0.00280000", record.getPrice());
+        assertEquals(7, (long)record.getDuration());
+        assertEquals("23410", record.getNetwork());
         // 2017-01-13T13:55:02.000Z
-        assertEquals(new GregorianCalendar(2017, Calendar.JANUARY, 13 ,13, 55, 2).getTime(), record.getStartTime());
+        assertEquals(
+                new GregorianCalendar(2017, Calendar.JANUARY, 13 ,13, 55, 2).getTime(),
+                record.getStartTime());
+        // 2017-01-13T13:55:09.000Z
+        assertEquals(
+                new GregorianCalendar(2017, Calendar.JANUARY, 13 ,13, 55, 9).getTime(),
+                record.getEndTime());
+        assertEquals(new Endpoint("447700900104"), record.getTo());
+        assertEquals(new Endpoint("447700900105"), record.getFrom());
+
+
     }
 
     @Test
