@@ -41,7 +41,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.List;
 
-public class ListCallsMethod extends AbstractMethod<CallsFilter, CallRecordPage>{
+public class ListCallsMethod extends AbstractMethod<CallsFilter, CallRecordPage> {
     private static final Log LOG = LogFactory.getLog(CreateCallMethod.class);
 
     private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls";
@@ -79,7 +79,7 @@ public class ListCallsMethod extends AbstractMethod<CallsFilter, CallRecordPage>
     @Override
     public CallRecordPage parseResponse(HttpResponse response) throws IOException {
         String json = EntityUtils.toString(response.getEntity());
-        LOG.info("Received: " + json);
+        LOG.debug("Received: " + json);
         return CallRecordPage.fromJson(json);
     }
 }

@@ -22,13 +22,20 @@ package com.nexmo.client.voice.endpoints;/*
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.auth.JWTAuthMethod;
-import com.nexmo.client.voice.Call;
+import com.nexmo.client.voice.CallRecord;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.util.EntityUtils;
+
+import java.io.IOException;
 
 // TODO: Create a package for these endpoint methods
-public class ReadCallMethod extends AbstractMethod<String, Call> {
+public class ReadCallMethod extends AbstractMethod<String, CallRecord> {
+    private static final Log LOG = LogFactory.getLog(ReadCallMethod.class);
+
     private static final String DEFAULT_BASE_URI = "https://api.nexmo.com/v1/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
     private String baseUri = DEFAULT_BASE_URI;
@@ -51,12 +58,17 @@ public class ReadCallMethod extends AbstractMethod<String, Call> {
     }
 
     @Override
-    public Call parseResponse(HttpResponse response) {
-        //FIXME
-        return null;
+    public CallRecord parseResponse(HttpResponse response) throws IOException {
+        String json = EntityUtils.toString(response.getEntity());
+        LOG.info("Received: " + json);
+        return CallRecord.fromJson(json);
     }
 
     public void setBaseUri(String baseUri) {
         this.baseUri = baseUri;
+    }
+
+    public String getBaseUri() {
+        return baseUri;
     }
 }
