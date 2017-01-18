@@ -4,3 +4,6 @@ language: java
 sudo: false
 
 script: ant compile
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
