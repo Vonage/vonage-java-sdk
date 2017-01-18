@@ -1,6 +1,6 @@
 codecov:
   branch: version-2
-  bot: null
+  bot: judy2k
 
 coverage:
   precision: 2
