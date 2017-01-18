@@ -1,12 +1,5 @@
-package com.nexmo.client.voice;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,23 +19,25 @@ import static org.junit.Assert.*;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-public class DTMFPayloadTest {
-    private DTMFPayload payload;
 
-    @Before
-    public void setUp() {
-        payload = new DTMFPayload("8675309");
+package com.nexmo.client;
+
+import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.voice.DTMFRequest;
+import com.nexmo.client.voice.DTMFResponse;
+import com.nexmo.client.voice.SendDTMFMethod;
+
+import java.io.IOException;
+
+public class DTMFEndpoint {
+    private final SendDTMFMethod sendDTMF;
+
+    public DTMFEndpoint(HttpWrapper httpWrapper) {
+        this.sendDTMF = new SendDTMFMethod(httpWrapper);
     }
 
-    @Test
-    public void getDigits() throws Exception {
-        assertEquals("8675309", payload.getDigits());
+    public DTMFResponse put(String uuid, String digits) throws IOException, NexmoClientException {
+        return this.sendDTMF.execute(new DTMFRequest(uuid, digits));
     }
-
-    @Test
-    public void setDigits() throws Exception {
-        payload.setDigits("1234");
-        assertEquals("1234", payload.getDigits());
-    }
-
 }

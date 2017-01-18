@@ -28,6 +28,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
 
+import java.io.IOException;
+
 /**
  * Call encapsulates the information required to create a call using {@link NexmoVoiceClient#createCall(Call)}
  */

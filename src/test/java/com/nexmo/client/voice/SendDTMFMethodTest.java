@@ -50,7 +50,7 @@ public class SendDTMFMethodTest {
         SendDTMFMethod methodUnderTest = new SendDTMFMethod(httpWrapper);
 
         HttpUriRequest request = methodUnderTest.makeRequest(
-                new DTMFRequest("abc-123", new DTMFPayload("867"))
+                new DTMFRequest("abc-123", "867")
         );
 
         assertEquals(HttpPut.class, request.getClass());

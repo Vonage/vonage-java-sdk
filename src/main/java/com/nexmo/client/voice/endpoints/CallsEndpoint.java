@@ -51,7 +51,7 @@ public class CallsEndpoint {
         return this.readCall.execute(uuid);
     }
 
-    public Call put(CallModifier modifier) throws IOException, NexmoClientException {
-        return this.modifyCall.execute(modifier);
+    public Call put(String uuid, String action) throws IOException, NexmoClientException {
+        return this.modifyCall.execute(new CallModifier(uuid, action));
     }
 }

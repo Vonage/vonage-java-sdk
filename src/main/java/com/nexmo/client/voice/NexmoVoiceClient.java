@@ -24,7 +24,7 @@ package com.nexmo.client.voice;
 import com.nexmo.client.AbstractClient;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.dtmf.DTMFEndpoint;
+import com.nexmo.client.DTMFEndpoint;
 import com.nexmo.client.voice.endpoints.CallsEndpoint;
 
 import java.io.IOException;
@@ -56,11 +56,11 @@ public class NexmoVoiceClient extends AbstractClient {
         return calls.get(uuid);
     }
 
-    public void sendDTMF(DTMFRequest dtmfRequest) throws IOException, NexmoClientException {
-        dtmf.put(dtmfRequest);
+    public void sendDTMF(String uuid, String digits) throws IOException, NexmoClientException {
+        dtmf.put(uuid, digits);
     }
 
-    public void modifyCall(CallModifier modifier) throws IOException, NexmoClientException {
-        calls.put(modifier);
+    public void modifyCall(String uuid, String action) throws IOException, NexmoClientException {
+        calls.put(uuid, action);
     }
 }

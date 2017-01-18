@@ -27,13 +27,11 @@ import static org.junit.Assert.*;
  * THE SOFTWARE.
  */
 public class CallModifierTest {
-    private Payload payload;
     private CallModifier callModifier;
 
     @Before
     public void setUp() throws Exception {
-        payload = new Payload("hangup");
-        callModifier = new CallModifier("abc-123", payload);
+        callModifier = new CallModifier("abc-123", "hangup");
     }
 
     @Test
@@ -42,9 +40,15 @@ public class CallModifierTest {
     }
 
     @Test
-    public void getPayload() throws Exception {
-        assertEquals(payload, callModifier.getPayload());
-        assertEquals("hangup", payload.getAction());
+    public void getAction() throws Exception {
+        assertEquals("hangup", callModifier.getAction());
+    }
+
+    @Test
+    public void setAction() throws Exception {
+        //this is not a real action
+        callModifier.setAction("pause");
+        assertEquals("pause", callModifier.getAction());
     }
 
     @Test

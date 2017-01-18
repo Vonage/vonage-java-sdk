@@ -27,25 +27,29 @@ import com.nexmo.client.NexmoUnexpectedException;
  */
 public class CallModifier {
     private String uuid;
-    private Payload payload;
+    private ModifyCallPayload modifyCallPayload;
 
-    public CallModifier(String uuid, Payload payload) {
+    public CallModifier(String uuid, String action) {
         this.uuid = uuid;
-        this.payload = payload;
+        this.modifyCallPayload = new ModifyCallPayload(action);
     }
 
     public String getUuid() {
         return uuid;
     }
 
-    public Payload getPayload() {
-        return payload;
+    public String getAction() {
+        return modifyCallPayload.getAction();
+    }
+
+    public void setAction(String action) {
+        this.modifyCallPayload.setAction(action);
     }
 
     public String toJson() {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(this.payload);
+            return mapper.writeValueAsString(this.modifyCallPayload);
         } catch (JsonProcessingException jpe) {
             throw new NexmoUnexpectedException("Failed to produce json from CallModifier object.", jpe);
         }

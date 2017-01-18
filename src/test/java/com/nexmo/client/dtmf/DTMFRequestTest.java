@@ -29,13 +29,11 @@ import static org.junit.Assert.assertEquals;
  * THE SOFTWARE.
  */
 public class DTMFRequestTest {
-    private DTMFPayload payload;
     private DTMFRequest request;
 
     @Before
     public void setUp() throws Exception {
-        payload = new DTMFPayload("8675309");
-        request = new DTMFRequest("123-abc", payload);
+        request = new DTMFRequest("123-abc", "8675309");
     }
 
     @Test
@@ -44,8 +42,8 @@ public class DTMFRequestTest {
     }
 
     @Test
-    public void getPayload() throws Exception {
-        assertEquals(payload, request.getPayload());
+    public void getDigits() throws Exception {
+        assertEquals("8675309", request.getDigits());
     }
 
     @Test
@@ -55,10 +53,9 @@ public class DTMFRequestTest {
     }
 
     @Test
-    public void setPayload() throws Exception {
-        DTMFPayload newPayload = new DTMFPayload("555");
-        request.setPayload(newPayload);
-        assertEquals(newPayload, request.getPayload());
+    public void setDigits() throws Exception {
+        request.setDigits("555");
+        assertEquals("555", request.getDigits());
     }
 
     @Test

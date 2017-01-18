@@ -28,25 +28,25 @@ public class DTMFRequest {
     private String uuid;
     private DTMFPayload payload;
 
-    public DTMFRequest(String uuid, DTMFPayload payload) {
+    public DTMFRequest(String uuid, String digits) {
         this.uuid = uuid;
-        this.payload = payload;
+        this.payload = new DTMFPayload(digits);
     }
 
     public String getUuid() {
         return uuid;
     }
 
-    public DTMFPayload getPayload() {
-        return payload;
+    public String getDigits() {
+        return payload.getDigits();
     }
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
 
-    public void setPayload(DTMFPayload payload) {
-        this.payload = payload;
+    public void setDigits(String digits) {
+        this.payload.setDigits(digits);
     }
 
     public String toJson() {
