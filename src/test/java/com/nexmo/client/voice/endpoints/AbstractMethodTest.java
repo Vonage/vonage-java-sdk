@@ -89,7 +89,7 @@ public class AbstractMethodTest {
         ConcreteMethod method = new ConcreteMethod(mockWrapper);
 
         HttpUriRequest request = new HttpGet("url");
-        HttpUriRequest result = method.applyAuth(request);
+        method.applyAuth(request);
         verify(mockAuthMethod).apply(request);
     }
 }

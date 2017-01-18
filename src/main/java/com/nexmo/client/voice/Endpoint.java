@@ -23,18 +23,16 @@ package com.nexmo.client.voice;/*
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 // TODO: Maybe rename Endpoint
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Endpoint {
-    private static final Log LOG = LogFactory.getLog(Endpoint.class);
     private String type = "phone";
     private String number;
     private String dtmfAnswer = null;
 
-    public Endpoint(){}
+    public Endpoint() {
+    }
 
     public Endpoint(String number) {
         this.number = number;

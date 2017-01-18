@@ -47,7 +47,7 @@ import static org.junit.Assert.fail;
 
 public class ListCallsMethodTest {
     private static final Log LOG = LogFactory.getLog(ListCallsMethodTest.class);
-    ListCallsMethod method;
+    private ListCallsMethod method;
 
     @Before
     public void setUp() throws Exception {

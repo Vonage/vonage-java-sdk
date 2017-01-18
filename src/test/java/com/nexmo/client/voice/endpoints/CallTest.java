@@ -21,7 +21,6 @@ package com.nexmo.client.voice.endpoints;/*
  */
 
 import com.nexmo.client.voice.Call;
-import com.nexmo.client.voice.CallDirection;
 import com.nexmo.client.voice.Endpoint;
 import com.nexmo.client.voice.MachineDetection;
 import org.junit.Test;
@@ -49,7 +48,7 @@ public class CallTest {
                         "},\"answer_url\":[\"https://callback.example.com/\"],\"answer_method\":\"GET\",\"machine_detection\":\"continue\"}",
                 call.toJson());
     }
-    
+
     @Test
     public void testSetters() throws Exception {
         Endpoint from = new Endpoint("44-AAA-FROM");

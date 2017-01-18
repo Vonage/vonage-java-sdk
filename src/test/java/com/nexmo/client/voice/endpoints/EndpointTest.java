@@ -28,10 +28,6 @@ import static org.junit.Assert.*;
 
 
 public class EndpointTest {
-    @Before
-    public void setUp() {
-    }
-
     @Test
     public void testConstructor() throws Exception {
         Endpoint e = new Endpoint("number", "dtmf");

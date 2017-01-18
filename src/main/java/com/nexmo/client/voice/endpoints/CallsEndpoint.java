@@ -48,6 +48,4 @@ public class CallsEndpoint {
     public CallRecord get(String uuid) throws IOException, NexmoClientException {
         return this.readCall.execute(uuid);
     }
-
-//    public void put(String uuid) {}
 }
