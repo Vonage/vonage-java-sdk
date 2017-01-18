@@ -7,14 +7,6 @@ coverage:
   round: down
   range: "70...90"
 
-  # notify:
-  #   slack:
-  #     default:
-  #       url: null
-  #       threshold: null
-  #       branches: null
-  #       attachments: "sunburst, diff"
-
   status:
     project:
       default:
