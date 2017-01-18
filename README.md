@@ -37,9 +37,33 @@ gradle build
 
 Check the Javadoc for full documentation.
 
+### Examples
 
-API Coverage
-------------
+The following code initiates an outbound call which then reads the user [a message](https://nexmo-community.github.io/ncco-examples/first_call_talk.json):
+
+```java
+import java.nio.file.Paths;
+
+import com.nexmo.client.auth.JWTAuthMethod;
+import com.nexmo.client.voice.NexmoClient;
+import com.nexmo.client.voice.Call;
+
+JWTAuthMethod auth = new JWTAuthMethod(application_id, Paths.get("application_key.pem"));
+NexmoClient client = new NexmoClient(auth);
+Call call = new Call(to, from,
+                     "https://nexmo-community.github.io/ncco-examples/first_call_talk.json");
+CallEvent event = client.getVoiceClient().createCall(call);
+```
+
+After the call is answered, you can get more information about it, including
+the amount it cost with:
+
+```java
+CallRecord info = client.getVoiceClient().getCallDetails(event.getUuid());
+System.out.println("This cost: " + info.getPrice() + " EUR");
+```
+
+## API Coverage
 
 * Account
     * [x] Balance
@@ -75,14 +99,13 @@ API Coverage
             * [ ] Sending Alerts
             * [ ] Campaign Subscription Management
 * Voice
-    * [ ] Outbound Calls
+    * [x] Outbound Calls
     * [ ] Inbound Call
     * [ ] Text-To-Speech Call
     * [ ] Text-To-Speech Prompt
 
 
-License
--------
+## License
 
 This library is released under the [MIT License][license]
 
