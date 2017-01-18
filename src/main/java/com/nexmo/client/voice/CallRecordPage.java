@@ -22,6 +22,7 @@ package com.nexmo.client.voice;/*
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.ArrayIterator;
 import com.nexmo.client.NexmoUnexpectedException;
 
@@ -68,6 +69,7 @@ public class CallRecordPage implements Iterable<CallRecord> {
     public static CallRecordPage fromJson(String json) {
         try {
             ObjectMapper mapper = new ObjectMapper();
+            mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
             return mapper.readValue(json, CallRecordPage.class);
         } catch (IOException jpe) {
             throw new NexmoUnexpectedException("Failed to produce json from Call object.", jpe);

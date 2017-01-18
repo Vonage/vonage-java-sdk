@@ -26,6 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class CallRecordPageTest {
     CallRecordPage page;
@@ -80,9 +81,22 @@ public class CallRecordPageTest {
     }
 
     @Test
+    public void testFailedUnmarshal() throws Exception {
+        try {
+            CallRecordPage.fromJson("Notvalidjson");
+            fail("Parsing invalid JSON should raise a NexmoUnexpectedException");
+        } catch (NexmoUnexpectedException nue) {
+            // This is expected.
+        }
+
+    }
+
+    @Test
     public void testBasics() {
         assertEquals("/v1/calls?page_size=10&record_index=20&order=asc", page.getLinks().getSelf().getHref());
         assertEquals("447700900549", page.getEmbedded().getCallRecords()[0].getTo().getNumber());
+        assertEquals(10, page.getPageSize());
+        assertEquals(0, page.getRecordIndex());
     }
 
     @Test

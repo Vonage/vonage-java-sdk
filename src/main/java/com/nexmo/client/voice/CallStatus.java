@@ -1,6 +1,5 @@
-package com.nexmo.client.voice;
 /*
- * Copyright (c) 2011-2016 Nexmo Inc
+ * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,35 +20,27 @@ package com.nexmo.client.voice;
  * THE SOFTWARE.
  */
 
-import com.nexmo.client.AbstractClient;
-import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.voice.endpoints.CallsEndpoint;
+package com.nexmo.client.voice;
 
-import java.io.IOException;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-public class NexmoVoiceClient extends AbstractClient {
-    public final CallsEndpoint calls;
+public enum CallStatus {
+    STARTED,
+    RINGING,
+    ANSWERED,
+    TIMEOUT,
+    MACHINE,
+    COMPLETED;
 
-    public NexmoVoiceClient(HttpWrapper httpWrapper) {
-        super(httpWrapper);
-
-        calls = new CallsEndpoint(httpWrapper);
+    @JsonValue
+    @Override
+    public String toString() {
+        return name().toLowerCase();
     }
 
-    public CallEvent createCall(Call callRequest) throws IOException, NexmoClientException {
-        return calls.post(callRequest);
-    }
-
-    public CallRecordPage listCalls() throws IOException, NexmoClientException {
-        return this.listCalls(null);
-    }
-
-    public CallRecordPage listCalls(CallsFilter filter) throws IOException, NexmoClientException {
-        return calls.get(filter);
-    }
-
-    public CallRecord getCallDetails(String uuid) throws IOException, NexmoClientException {
-        return calls.get(uuid);
+    @JsonCreator
+    public static CallStatus fromString(String name) {
+        return CallStatus.valueOf(name.toUpperCase());
     }
 }

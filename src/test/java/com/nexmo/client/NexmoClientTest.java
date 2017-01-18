@@ -22,6 +22,8 @@ package com.nexmo.client;/*
 
 import com.nexmo.client.auth.JWTAuthMethod;
 import com.nexmo.client.voice.Call;
+import com.nexmo.client.voice.CallEvent;
+import com.nexmo.client.voice.CallStatus;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -31,7 +33,7 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -69,8 +71,8 @@ public class NexmoClientTest {
                 "  \"status\": \"started\",\n" +
                 "  \"direction\": \"outbound\"\n" +
                 "}"));
-        client.getVoiceClient().createCall(new Call("4499991111", "44111222333", "https://callback.example.com/"));
-        // TODO: Should have real assertion here:
-        assertTrue(true);
+
+        CallEvent evt = client.getVoiceClient().createCall(new Call("4499991111", "44111222333", "https://callback.example.com/"));
+        assertEquals(CallStatus.STARTED, evt.getStatus());
     }
 }

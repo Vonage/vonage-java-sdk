@@ -1,0 +1,39 @@
+codecov:
+  branch: version-2
+  bot: null
+
+coverage:
+  precision: 2
+  round: down
+  range: "70...90"
+
+  # notify:
+  #   slack:
+  #     default:
+  #       url: null
+  #       threshold: null
+  #       branches: null
+  #       attachments: "sunburst, diff"
+
+  status:
+    project:
+      default:
+        target: 80
+        threshold: null
+        branches: null
+
+    patch:
+      default:
+        target: 80
+        branches: null
+
+    changes:
+      default:
+        branches: null
+
+  ignore: null
+
+comment:
+  layout: "header, diff, changes, sunburst, uncovered, tree"
+  branches: null
+  behavior: default

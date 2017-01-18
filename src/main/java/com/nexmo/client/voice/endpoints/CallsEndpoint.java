@@ -22,10 +22,7 @@ package com.nexmo.client.voice.endpoints;/*
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.voice.Call;
-import com.nexmo.client.voice.CallEvent;
-import com.nexmo.client.voice.CallsFilter;
-import com.nexmo.client.voice.CallRecordPage;
+import com.nexmo.client.voice.*;
 
 import java.io.IOException;
 
@@ -48,9 +45,7 @@ public class CallsEndpoint {
         return this.listCalls.execute(filter);
     }
 
-    public Call get(String uuid) throws IOException, NexmoClientException {
+    public CallRecord get(String uuid) throws IOException, NexmoClientException {
         return this.readCall.execute(uuid);
     }
-
-//    public void put(String uuid) {}
 }

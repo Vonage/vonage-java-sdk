@@ -31,13 +31,69 @@ import java.util.Date;
 import java.util.List;
 
 public class CallsFilter {
-    private String status;
+    private CallStatus status;
     private Date dateStart;
     private Date dateEnd;
     private Integer pageSize;
     private Integer recordIndex;
     private String order;
     private String conversationUuid;
+
+    public CallStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(CallStatus status) {
+        this.status = status;
+    }
+
+    public Date getDateStart() {
+        return dateStart;
+    }
+
+    public void setDateStart(Date dateStart) {
+        this.dateStart = dateStart;
+    }
+
+    public Date getDateEnd() {
+        return dateEnd;
+    }
+
+    public void setDateEnd(Date dateEnd) {
+        this.dateEnd = dateEnd;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public Integer getRecordIndex() {
+        return recordIndex;
+    }
+
+    public void setRecordIndex(Integer recordIndex) {
+        this.recordIndex = recordIndex;
+    }
+
+    public String getOrder() {
+        return order;
+    }
+
+    public void setOrder(String order) {
+        this.order = order;
+    }
+
+    public String getConversationUuid() {
+        return conversationUuid;
+    }
+
+    public void setConversationUuid(String conversationUuid) {
+        this.conversationUuid = conversationUuid;
+    }
 
     public List<NameValuePair> toUrlParams() {
         List<NameValuePair> result = new ArrayList<NameValuePair>(10);
@@ -64,7 +120,7 @@ public class CallsFilter {
         }
     }
 
-    private void conditionalAdd(List<NameValuePair> params, String name, Integer value) {
+    private void conditionalAdd(List<NameValuePair> params, String name, Object value) {
         if (value != null) {
             params.add(new BasicNameValuePair(name, value.toString()));
         }

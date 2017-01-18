@@ -23,20 +23,25 @@ package com.nexmo.client.voice.endpoints;
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.NexmoUnexpectedException;
 import com.nexmo.client.auth.JWTAuthMethod;
-import com.nexmo.client.voice.CallsFilter;
 import com.nexmo.client.voice.CallRecordPage;
+import com.nexmo.client.voice.CallsFilter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.util.List;
 
-public class ListCallsMethod extends AbstractMethod<CallsFilter, CallRecordPage>{
+public class ListCallsMethod extends AbstractMethod<CallsFilter, CallRecordPage> {
     private static final Log LOG = LogFactory.getLog(CreateCallMethod.class);
 
     private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls";
@@ -54,15 +59,35 @@ public class ListCallsMethod extends AbstractMethod<CallsFilter, CallRecordPage>
 
     @Override
     public HttpUriRequest makeRequest(CallsFilter filter) throws NexmoClientException, UnsupportedEncodingException {
-        HttpUriRequest request = new HttpGet(this.uri);
-        // TODO: Load the filter params into the request.
+        URIBuilder uriBuilder;
+        try {
+            uriBuilder = new URIBuilder(this.uri);
+        } catch (URISyntaxException e) {
+            throw new NexmoUnexpectedException("Could not parse URI: " + this.uri);
+        }
+        if (filter != null) {
+            List<NameValuePair> params = filter.toUrlParams();
+            for (NameValuePair param : params) {
+                uriBuilder.setParameter(param.getName(), param.getValue());
+            }
+        }
+        HttpUriRequest request = new HttpGet(uriBuilder.toString());
+        LOG.debug("List Calls request: " + request.getURI());
         return request;
     }
 
     @Override
     public CallRecordPage parseResponse(HttpResponse response) throws IOException {
         String json = EntityUtils.toString(response.getEntity());
-        LOG.info("Received: " + json);
+        LOG.debug("Received: " + json);
         return CallRecordPage.fromJson(json);
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
+    public String getUri() {
+        return this.uri;
     }
 }

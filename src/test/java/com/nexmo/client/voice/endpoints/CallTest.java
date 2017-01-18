@@ -22,6 +22,7 @@ package com.nexmo.client.voice.endpoints;/*
 
 import com.nexmo.client.voice.Call;
 import com.nexmo.client.voice.Endpoint;
+import com.nexmo.client.voice.MachineDetection;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -36,7 +37,18 @@ public class CallTest {
                         "},\"answer_url\":[\"https://callback.example.com/\"],\"answer_method\":\"GET\"}",
                 call.toJson());
     }
-    
+
+    @Test
+    public void testToJsonMachineDetection() throws Exception {
+        Call call = new Call("4477999000", "44111222333", "https://callback.example.com/");
+        call.setMachineDetection(MachineDetection.CONTINUE);
+        assertEquals(
+                "{\"to\":[{\"type\":\"phone\",\"number\":\"4477999000\"}],\"from\":{\"type\":\"phone\"," +
+                        "\"number\":\"44111222333\"" +
+                        "},\"answer_url\":[\"https://callback.example.com/\"],\"answer_method\":\"GET\",\"machine_detection\":\"continue\"}",
+                call.toJson());
+    }
+
     @Test
     public void testSetters() throws Exception {
         Endpoint from = new Endpoint("44-AAA-FROM");
@@ -44,23 +56,21 @@ public class CallTest {
         Call call = new Call("", "", "https://callback.example.com/");
         call.setAnswerMethod("BREW");
         call.setAnswerUrl("https://answer.example.com/");
-        call.setCallId("call-id");
         call.setEventMethod("RUN");
         call.setEventUrl("https://events.example.com/");
         call.setFrom(from);
         call.setLengthTimer(101);
-        call.setMachineDetection("YES");
+        call.setMachineDetection(MachineDetection.CONTINUE);
         call.setRingingTimer(300);
         call.setTo(new Endpoint[]{to});
 
         assertEquals("BREW", call.getAnswerMethod());
         assertEquals("https://answer.example.com/", call.getAnswerUrl()[0]);
-        assertEquals("call-id", call.getCallId());
         assertEquals("RUN", call.getEventMethod());
         assertEquals("https://events.example.com/", call.getEventUrl());
         assertEquals(from, call.getFrom());
         assertEquals(101, call.getLengthTimer().intValue());
-        assertEquals("YES", call.getMachineDetection());
+        assertEquals(MachineDetection.CONTINUE, call.getMachineDetection());
         assertEquals(300, call.getRingingTimer().intValue());
         assertEquals(to, call.getTo()[0]);
     }
