@@ -60,6 +60,11 @@ public class NexmoVoiceClient extends AbstractClient {
         return streams.put(new StreamRequest(streamUrl, loop));
     }
 
+    //Send a stream that will not loop.
+    public NexmoResponse startStream(String streamUrl) throws IOException, NexmoClientException {
+        return streams.put(new StreamRequest(streamUrl, false));
+    }
+
     public NexmoResponse stopStream() throws IOException, NexmoClientException {
         return streams.delete(null);
     }
