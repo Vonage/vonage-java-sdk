@@ -22,10 +22,7 @@ package com.nexmo.client.voice.endpoints;/*
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.voice.Call;
-import com.nexmo.client.voice.CallEvent;
-import com.nexmo.client.voice.CallRecordPage;
-import com.nexmo.client.voice.CallsFilter;
+import com.nexmo.client.voice.*;
 
 import java.io.IOException;
 
@@ -33,23 +30,16 @@ public class StreamsEndpoint {
     private final StartStreamMethod startStream;
     private final StopStreamMethod stopStream;
 
-    public StreamsEndpoint(HttpWrapper httpWrapper) {
-        this.createCall = new CreateCallMethod(httpWrapper);
-        this.readCall = new ReadCallMethod(httpWrapper);
-        this.listCalls = new ListCallsMethod(httpWrapper);
+    public StreamsEndpoint(HttpWrapper wrapper) {
+        this.startStream = new StartStreamMethod(wrapper);
+        this.stopStream = new StopStreamMethod(wrapper);
     }
 
-    public CallEvent post(Call callRequest) throws IOException, NexmoClientException {
-        return this.createCall.execute(callRequest);
+    public NexmoResponse put(StreamRequest request) throws IOException, NexmoClientException {
+        return this.startStream.execute(request);
     }
 
-    public CallRecordPage get(CallsFilter filter) throws IOException, NexmoClientException {
-        return this.listCalls.execute(filter);
+    public NexmoResponse delete(Void aVoid) throws IOException, NexmoClientException {
+        return this.stopStream.execute(aVoid);
     }
-
-    public Call get(String uuid) throws IOException, NexmoClientException {
-        return this.readCall.execute(uuid);
-    }
-
-//    public void put(String uuid) {}
 }

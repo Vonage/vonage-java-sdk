@@ -25,16 +25,19 @@ import com.nexmo.client.AbstractClient;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.voice.endpoints.CallsEndpoint;
+import com.nexmo.client.voice.endpoints.StreamsEndpoint;
 
 import java.io.IOException;
 
 public class NexmoVoiceClient extends AbstractClient {
     public final CallsEndpoint calls;
+    public final StreamsEndpoint streams;
 
     public NexmoVoiceClient(HttpWrapper httpWrapper) {
         super(httpWrapper);
 
         calls = new CallsEndpoint(httpWrapper);
+        streams = new StreamsEndpoint(httpWrapper);
     }
 
     public CallEvent createCall(Call callRequest) throws IOException, NexmoClientException {
@@ -51,5 +54,13 @@ public class NexmoVoiceClient extends AbstractClient {
 
     public CallRecord getCallDetails(String uuid) throws IOException, NexmoClientException {
         return calls.get(uuid);
+    }
+
+    public NexmoResponse startStream(String streamUrl, boolean loop) throws IOException, NexmoClientException {
+        return streams.put(new StreamRequest(streamUrl, loop));
+    }
+
+    public NexmoResponse stopStream() throws IOException, NexmoClientException {
+        return streams.delete(null);
     }
 }

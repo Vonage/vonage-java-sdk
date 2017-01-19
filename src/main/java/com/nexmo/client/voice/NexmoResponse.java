@@ -42,7 +42,7 @@ public class NexmoResponse {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(json, NexmoResponse.class);
         } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce json from the Nexmo Response object.", jpe);
+            throw new NexmoUnexpectedException("Failed to produce json from the NexmoResponse object.", jpe);
         }
     }
 

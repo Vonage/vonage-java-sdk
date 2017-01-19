@@ -24,26 +24,24 @@ import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.JWTAuthMethod;
 import com.nexmo.client.voice.NexmoResponse;
-import com.nexmo.client.voice.StreamRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class StartStreamMethod extends AbstractMethod<StreamRequest, NexmoResponse> {
+public class StopStreamMethod extends AbstractMethod<Void, NexmoResponse> {
     private static final Log LOG = LogFactory.getLog(CreateCallMethod.class);
 
     private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
     private String uri = DEFAULT_URI;
 
-    public StartStreamMethod(HttpWrapper httpWrapper) {
+    public StopStreamMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -53,13 +51,11 @@ public class StartStreamMethod extends AbstractMethod<StreamRequest, NexmoRespon
     }
 
     @Override
-    public HttpUriRequest makeRequest(StreamRequest request) throws NexmoClientException, UnsupportedEncodingException {
-        HttpPut put = new HttpPut(this.uri);
-        put.setHeader("Content-Type", "application/json");
-        put.setEntity(new StringEntity(request.toJson()));
-        LOG.info("Request: " + request.toJson());
-
-        return put;
+    public HttpUriRequest makeRequest(Void request) throws NexmoClientException, UnsupportedEncodingException {
+        HttpDelete delete = new HttpDelete(this.uri);
+        delete.setHeader("Content-Type", "application/json");
+        LOG.info("StopStreamRequest made.");
+        return delete;
     }
 
     @Override

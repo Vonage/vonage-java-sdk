@@ -20,6 +20,23 @@ package com.nexmo.client.voice;/*
  * THE SOFTWARE.
  */
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexmo.client.NexmoUnexpectedException;
+
 public class StreamRequest {
     private StreamPayload streamPayload;
+
+    public StreamRequest(String streamUrl, boolean loop) {
+        this.streamPayload = new StreamPayload(streamUrl, (loop ? 1 : 0));
+    }
+
+    public String toJson() {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(this.streamPayload);
+        } catch (JsonProcessingException jpe) {
+            throw new NexmoUnexpectedException("Failed to produce json from StreamRequest object.", jpe);
+        }
+    }
 }
