@@ -1,6 +1,5 @@
 package com.nexmo.client.dtmf;
 
-import com.nexmo.client.voice.DTMFPayload;
 import com.nexmo.client.voice.DTMFRequest;
 import org.junit.Before;
 import org.junit.Test;
