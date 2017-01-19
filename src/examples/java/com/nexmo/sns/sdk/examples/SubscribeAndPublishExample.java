@@ -41,7 +41,7 @@ public class SubscribeAndPublishExample {
     public static final String SMS_TO = "447777111222";
     public static final String SMS_TEXT = "Hello World!";
 
-    // -- TODO -- fill in your own topic ARN from your amazon SNS console
+    // TODO: fill in your own topic ARN from your amazon SNS console
     public static final String TOPIC_ARN = "arn:aws:sns:region:num:id";
 
     public static void main(String[] args) {

@@ -34,8 +34,8 @@ import com.nexmo.client.NexmoUnexpectedException;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "_links"})
 public class Call {
-    private Endpoint to;
-    private Endpoint from;
+    private CallEndpoint to;
+    private CallEndpoint from;
     private String answerUrl;
 
     private String answerMethod = "GET";
@@ -48,28 +48,28 @@ public class Call {
     public Call() {}
 
     public Call(String to, String from, String answerUrl) {
-        this(new Endpoint(to), new Endpoint(from), answerUrl);
+        this(new CallEndpoint(to), new CallEndpoint(from), answerUrl);
     }
 
-    public Call(Endpoint to, Endpoint from, String answerUrl) {
+    public Call(CallEndpoint to, CallEndpoint from, String answerUrl) {
         this.to = to;
         this.from = from;
         this.answerUrl = answerUrl;
     }
 
-    public Endpoint[] getTo() {
-        return new Endpoint[]{to};
+    public CallEndpoint[] getTo() {
+        return new CallEndpoint[]{to};
     }
 
-    public void setTo(Endpoint[] to) {
+    public void setTo(CallEndpoint[] to) {
         this.to = to[0];
     }
 
-    public Endpoint getFrom() {
+    public CallEndpoint getFrom() {
         return from;
     }
 
-    public void setFrom(Endpoint from) {
+    public void setFrom(CallEndpoint from) {
         this.from = from;
     }
 
