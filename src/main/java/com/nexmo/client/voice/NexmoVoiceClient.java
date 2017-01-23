@@ -32,12 +32,14 @@ import java.io.IOException;
 public class NexmoVoiceClient extends AbstractClient {
     public final CallsEndpoint calls;
     public final StreamsEndpoint streams;
+    public final TalkEndpoint talk;
 
     public NexmoVoiceClient(HttpWrapper httpWrapper) {
         super(httpWrapper);
 
         calls = new CallsEndpoint(httpWrapper);
         streams = new StreamsEndpoint(httpWrapper);
+        talk = new TalkEndpoint(httpWrapper);
     }
 
     public CallEvent createCall(Call callRequest) throws IOException, NexmoClientException {
@@ -67,5 +69,9 @@ public class NexmoVoiceClient extends AbstractClient {
 
     public NexmoResponse stopStream() throws IOException, NexmoClientException {
         return streams.delete(null);
+    }
+
+    public NexmoResponse startTalk(String text, VoiceName voiceName, boolean loop) throws IOException, NexmoClientException {
+        return talk.put(new TalkRequest(text, voiceName, loop));
     }
 }
