@@ -22,6 +22,10 @@
 
 package com.nexmo.client.voice.ncco;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class TalkNcco implements Ncco {
     private static final String ACTION = "talk";
 
@@ -62,6 +66,7 @@ public class TalkNcco implements Ncco {
         this.voiceName = voiceName;
     }
 
+    @JsonProperty(access= JsonProperty.Access.READ_ONLY)
     @Override
     public String getAction() {
         return ACTION;

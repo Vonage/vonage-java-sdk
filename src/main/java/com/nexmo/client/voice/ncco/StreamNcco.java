@@ -22,8 +22,10 @@
 
 package com.nexmo.client.voice.ncco;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class StreamNcco implements Ncco {
     private static final String ACTION = "stream";
 
@@ -68,6 +70,7 @@ public class StreamNcco implements Ncco {
         this.loop = loop;
     }
 
+    @JsonProperty(access= JsonProperty.Access.READ_ONLY)
     @Override
     public String getAction() {
         return ACTION;
