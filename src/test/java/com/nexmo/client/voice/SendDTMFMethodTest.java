@@ -1,7 +1,7 @@
 package com.nexmo.client.voice;
 
-import com.auth0.jwt.internal.com.fasterxml.jackson.databind.JsonNode;
-import com.auth0.jwt.internal.com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.HttpWrapper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
