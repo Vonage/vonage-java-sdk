@@ -24,7 +24,6 @@ import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.JWTAuthMethod;
 import com.nexmo.client.voice.CallModifier;
-import com.nexmo.client.voice.Call;
 import com.nexmo.client.voice.CallRecord;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
