@@ -74,4 +74,20 @@ public class NexmoVoiceClient extends AbstractClient {
     public NexmoResponse startTalk(String text, VoiceName voiceName, boolean loop) throws IOException, NexmoClientException {
         return talk.put(new TalkRequest(text, voiceName, loop));
     }
+
+    public NexmoResponse startTalk(String text, boolean loop) throws IOException, NexmoClientException {
+        return talk.put(new TalkRequest(text, loop));
+    }
+
+    public NexmoResponse startTalk(String text, VoiceName voiceName) throws IOException, NexmoClientException {
+        return talk.put(new TalkRequest(text, voiceName));
+    }
+
+    public NexmoResponse startTalk(String text) throws IOException, NexmoClientException {
+        return talk.put(new TalkRequest(text));
+    }
+
+    public NexmoResponse stopTalk() throws IOException, NexmoClientException {
+        return talk.delete();
+    }
 }

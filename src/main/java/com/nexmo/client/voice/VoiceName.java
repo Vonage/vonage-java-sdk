@@ -21,61 +21,70 @@ package com.nexmo.client.voice;/*
  */
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import org.apache.commons.lang3.StringUtils;
 
 public enum VoiceName {
-    Salli,
-    Joey,
-    Naja,
-    Mads,
-    Marlene,
-    Hans,
-    Nicole,
-    Russell,
-    Amy,
-    Brian,
-    Emma,
-    Gwyneth,
-    Geraint,
-    Raveena,
-    Chipmunk,
-    Eric,
-    Ivy,
-    Jennifer,
-    Justin,
-    Kendra,
-    Kimberly,
-    Conchita,
-    Enrique,
-    Penelope,
-    Miguel,
-    Chantal,
-    Celine,
-    Mathieu,
-    Dora,
-    Karl,
-    Carla,
-    Giorgio,
-    Liv,
-    Lotte,
-    Ruben,
-    Agnieszka,
-    Jacek,
-    Ewa,
-    Jan,
-    Maja,
-    Vitoria,
-    Ricardo,
-    Cristiano,
-    Ines,
-    Carmen,
-    Maxim,
-    Tatyana,
-    Astrid,
-    Filiz;
+    SALLI,
+    JOEY,
+    NAJA,
+    MADS,
+    MARLENE,
+    HANS,
+    NICOLE,
+    RUSSELL,
+    AMY,
+    BRIAN,
+    EMMA,
+    GWYNETH,
+    GERAINT,
+    RAVEENA,
+    CHIPMUNK,
+    ERIC,
+    IVY,
+    JENNIFER,
+    JUSTIN,
+    KENDRA,
+    KIMBERLY,
+    CONCHITA,
+    ENRIQUE,
+    PENELOPE,
+    MIGUEL,
+    CHANTAL,
+    CELINE,
+    MATHIEU,
+    DORA,
+    KARL,
+    CARLA,
+    GIORGIO,
+    LIV,
+    LOTTE,
+    RUBEN,
+    AGNIESZKA,
+    JACEK,
+    EWA,
+    JAN,
+    MAJA,
+    VITORIA,
+    RICARDO,
+    CRISTIANO,
+    INES,
+    CARMEN,
+    MAXIM,
+    TATYANA,
+    ASTRID,
+    FILIZ;
+
+    @JsonValue
+    @Override
+    public String toString() {
+        //API requires voice_name to be sent with first character upper cased
+        return StringUtils.capitalize(name().toLowerCase());
+    }
 
     @JsonCreator
     public static VoiceName fromString(String name) {
-        return VoiceName.valueOf(name);
+        return VoiceName.valueOf(name.toUpperCase());
     }
 
 }

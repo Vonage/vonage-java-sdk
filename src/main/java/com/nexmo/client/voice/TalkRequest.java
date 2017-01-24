@@ -32,7 +32,7 @@ public class TalkRequest {
     }
 
     public TalkRequest(String text) {
-        new TalkRequest(text, VoiceName.Kimberly, true);
+        new TalkRequest(text, VoiceName.KIMBERLY, true);
     }
 
     public TalkRequest(String text, VoiceName voiceName) {
@@ -40,7 +40,7 @@ public class TalkRequest {
     }
 
     public TalkRequest(String text, boolean loop) {
-        new TalkRequest(text, VoiceName.Kimberly, loop);
+        new TalkRequest(text, VoiceName.KIMBERLY, loop);
     }
 
     public String toJson() {
