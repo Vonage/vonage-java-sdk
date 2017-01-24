@@ -1,7 +1,7 @@
 package com.nexmo.client.voice.endpoints;
 
-import com.auth0.jwt.internal.com.fasterxml.jackson.databind.JsonNode;
-import com.auth0.jwt.internal.com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.voice.CallDirection;
 import com.nexmo.client.voice.CallModifier;

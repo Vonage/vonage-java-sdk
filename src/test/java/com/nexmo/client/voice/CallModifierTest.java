@@ -53,7 +53,7 @@ public class CallModifierTest {
 
     @Test
     public void toJson() throws Exception {
-        String jsonString = "{" + "\"action\":\"hangup\"" + "}";
+        String jsonString = "{\"action\":\"hangup\"}";
         assertEquals(jsonString, callModifier.toJson());
     }
 
