@@ -28,6 +28,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
 
+import java.io.IOException;
+
 /**
  * Call encapsulates the information required to create a call using {@link NexmoVoiceClient#createCall(Call)}
  */
@@ -141,6 +143,15 @@ public class Call {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.writeValueAsString(this);
         } catch (JsonProcessingException jpe) {
+            throw new NexmoUnexpectedException("Failed to produce json from Call object.", jpe);
+        }
+    }
+
+    public static Call fromJson(String json) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(json, Call.class);
+        } catch (IOException jpe) {
             throw new NexmoUnexpectedException("Failed to produce json from Call object.", jpe);
         }
     }

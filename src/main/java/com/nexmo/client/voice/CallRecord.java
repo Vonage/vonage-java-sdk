@@ -178,7 +178,7 @@ public class CallRecord {
             mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
             return mapper.readValue(json, CallRecord.class);
         } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce json from Call object.", jpe);
+            throw new NexmoUnexpectedException("Failed to produce json from CallRecord object.", jpe);
         }
     }
 }
