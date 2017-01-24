@@ -22,22 +22,36 @@
 
 package com.nexmo.client.voice.ncco;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.nexmo.client.voice.CallDirection;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Test;
 
-public enum RecordingFormat {
-    MP3,
-    WAV;
+import static org.junit.Assert.*;
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return name().toLowerCase();
+public class StreamNccoTest {
+    @Test
+    public void testToJson() throws Exception {
+        assertEquals(
+                "{\"streamUrl\":\"https://api.example.com/stream\",\"action\":\"stream\"}",
+                new StreamNcco("https://api.example.com/stream").toJson());
     }
 
-    @JsonCreator
-    public static RecordingFormat fromString(String name) {
-        return RecordingFormat.valueOf(name.toUpperCase());
+    @Test
+    public void testJson() throws Exception {
+        String json;
+        {
+            StreamNcco ncco = new StreamNcco("https://api.example.com/stream");
+            ncco.setStreamUrl("https://api.example.com/stream2");
+            ncco.setLevel(0.5f);
+            ncco.setBargeIn(true);
+            ncco.setLoop(3);
+
+            json = ncco.toJson();
+        }
+
+        StreamNcco ncco = new ObjectMapper().readValue(json, StreamNcco.class);
+        assertEquals("https://api.example.com/stream2", ncco.getStreamUrl());
+        assertEquals(0.5f, (float)ncco.getLevel(), 0.001f);
+        assertEquals(true, ncco.getBargeIn());
+        assertEquals(3, (int)ncco.getLoop());
     }
 }

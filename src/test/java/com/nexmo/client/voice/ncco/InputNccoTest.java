@@ -22,22 +22,36 @@
 
 package com.nexmo.client.voice.ncco;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.nexmo.client.voice.CallDirection;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Test;
 
-public enum RecordingFormat {
-    MP3,
-    WAV;
+import static org.junit.Assert.*;
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return name().toLowerCase();
+public class InputNccoTest {
+    @Test
+    public void testToJSON() throws Exception {
+        assertEquals("{\"action\":\"input\"}", new InputNcco().toJson());
     }
 
-    @JsonCreator
-    public static RecordingFormat fromString(String name) {
-        return RecordingFormat.valueOf(name.toUpperCase());
+    @Test
+    public void testJSON() throws Exception {
+        String json;
+        {
+            InputNcco ncco = new InputNcco();
+            ncco.setEventUrl("https://api.example.com/event");
+            ncco.setEventMethod("GET");
+            ncco.setMaxDigits(4);
+            ncco.setSubmitOnHash(true);
+            ncco.setTimeOut(5);
+
+            json = ncco.toJson();
+        }
+
+        InputNcco ncco = new ObjectMapper().readValue(json, InputNcco.class);
+        assertEquals("https://api.example.com/event", ncco.getEventUrl());
+        assertEquals("GET", ncco.getEventMethod());
+        assertEquals(4, (int)ncco.getMaxDigits());
+        assertEquals(true, ncco.getSubmitOnHash());
+        assertEquals(5, (int)ncco.getTimeOut());
     }
 }

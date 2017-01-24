@@ -22,22 +22,27 @@
 
 package com.nexmo.client.voice.ncco;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.nexmo.client.voice.CallDirection;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexmo.client.NexmoUnexpectedException;
+import org.junit.Test;
+import static org.mockito.Mockito.*;
 
-public enum RecordingFormat {
-    MP3,
-    WAV;
+import static org.junit.Assert.*;
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return name().toLowerCase();
+public class NccoSerializerTest {
+    @Test
+    public void serializeNccoException() throws Exception {
+        ObjectMapper mapper = mock(ObjectMapper.class);
+        when(mapper.writeValueAsString(any())).thenThrow(JsonProcessingException.class);
+
+        NccoSerializer serializer = new NccoSerializer(mapper);
+        try {
+            serializer.serializeNcco(new ConnectNcco("447700900637"));
+            fail();
+        } catch (NexmoUnexpectedException nue) {
+            // This is expected
+        }
     }
 
-    @JsonCreator
-    public static RecordingFormat fromString(String name) {
-        return RecordingFormat.valueOf(name.toUpperCase());
-    }
 }

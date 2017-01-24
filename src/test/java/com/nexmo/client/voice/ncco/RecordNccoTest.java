@@ -22,35 +22,40 @@
 
 package com.nexmo.client.voice.ncco;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.NexmoUnexpectedException;
+import org.junit.Test;
 
-public class NccoSerializer {
-    private static NccoSerializer instance;
+import static org.junit.Assert.*;
 
-    private ObjectMapper mapper;
-
-    public NccoSerializer() {
-        this.mapper = new ObjectMapper();
+public class RecordNccoTest {
+    @Test
+    public void testToJson() throws Exception {
+        assertEquals("{\"action\":\"record\"}", new RecordNcco().toJson());
     }
 
-    public NccoSerializer(ObjectMapper mapper) {
-        this.mapper = mapper;
-    }
+    @Test
+    public void testJson() throws Exception {
+        String json;
+        {
+            RecordNcco ncco = new RecordNcco();
+            ncco.setEventUrl("https://api.example.com/event");
+            ncco.setEventMethod("GET");
+            ncco.setBeepStart(true);
+            ncco.setEndOnKey('#');
+            ncco.setEndOnSilence(3);
+            ncco.setFormat(RecordingFormat.MP3);
+            ncco.setTimeout(20);
 
-    public static NccoSerializer getInstance() {
-        if (instance == null) {
-            instance = new NccoSerializer();
+            json = ncco.toJson();
         }
-        return instance;
-    }
 
-    public String serializeNcco(Ncco ncco) {
-        try {
-            return this.mapper.writeValueAsString(ncco);
-        } catch (JsonProcessingException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce json from Call object.", jpe);
-        }
+        RecordNcco ncco = new ObjectMapper().readValue(json, RecordNcco.class);
+        assertEquals("https://api.example.com/event", ncco.getEventUrl());
+        assertEquals("GET", ncco.getEventMethod());
+        assertEquals(true, ncco.getBeepStart());
+        assertEquals('#', (char)ncco.getEndOnKey());
+        assertEquals(3, (int)ncco.getEndOnSilence());
+        assertEquals(RecordingFormat.MP3, ncco.getFormat());
+        assertEquals(20, (int)ncco.getTimeout());
     }
 }

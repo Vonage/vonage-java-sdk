@@ -22,22 +22,35 @@
 
 package com.nexmo.client.voice.ncco;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.nexmo.client.voice.CallDirection;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Test;
 
-public enum RecordingFormat {
-    MP3,
-    WAV;
+import static org.junit.Assert.assertEquals;
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return name().toLowerCase();
+public class TalkNccoTest {
+    @Test
+    public void testToJson() throws Exception {
+        assertEquals("{\"text\":\"Talk to me\",\"action\":\"talk\"}", new TalkNcco("Talk to me").toJson());
     }
 
-    @JsonCreator
-    public static RecordingFormat fromString(String name) {
-        return RecordingFormat.valueOf(name.toUpperCase());
+    @Test
+    public void testJson() throws Exception {
+        String json;
+        {
+            TalkNcco ncco = new TalkNcco("Talk to me");
+            ncco.setText("Don't talk to me");
+            ncco.setBargeIn(true);
+            ncco.setLoop(3);
+            ncco.setVoiceName("Larry");
+
+            json = ncco.toJson();
+        }
+
+        TalkNcco ncco = new ObjectMapper().readValue(json, TalkNcco.class);
+        assertEquals("Don't talk to me", ncco.getText());
+        assertEquals(true, ncco.getBargeIn());
+        assertEquals(3, (int) ncco.getLoop());
+        assertEquals("Larry", ncco.getVoiceName());
+
     }
 }
