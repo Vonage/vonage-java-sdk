@@ -25,7 +25,6 @@ package com.nexmo.client.voice.ncco;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.voice.Endpoint;
 import com.nexmo.client.voice.MachineDetection;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -67,7 +66,7 @@ public class ConnectNccoTest {
         assertEquals("GET", ncco2.getEventMethod());
         assertEquals("https://api.example.com/event", ncco2.getEventUrl());
         assertEquals("447700900723", ncco2.getFrom());
-        assertEquals(12, (int)ncco2.getLimit());
-        assertEquals(1000, (int)ncco2.getTimeout());
+        assertEquals(12, (int) ncco2.getLimit());
+        assertEquals(1000, (int) ncco2.getTimeout());
     }
 }

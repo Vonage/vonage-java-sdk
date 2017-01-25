@@ -24,7 +24,6 @@ package com.nexmo.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.nexmo.client.voice.CallDirection;
 
 public enum RecordingFormat {
     MP3,
