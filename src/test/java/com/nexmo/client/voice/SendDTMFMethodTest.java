@@ -78,7 +78,7 @@ public class SendDTMFMethodTest {
         entity.setContent(jsonStream);
         stubResponse.setEntity(entity);
 
-        DTMFResponse response = methodUnderTest.parseResponse(stubResponse);
+        NexmoResponse response = methodUnderTest.parseResponse(stubResponse);
         assertEquals("DTMF sent", response.getMessage());
         assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
     }

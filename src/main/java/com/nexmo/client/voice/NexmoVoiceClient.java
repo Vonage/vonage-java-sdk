@@ -61,12 +61,12 @@ public class NexmoVoiceClient extends AbstractClient {
         return calls.get(uuid);
     }
 
-    public void sendDTMF(String uuid, String digits) throws IOException, NexmoClientException {
-        dtmf.put(uuid, digits);
+    public NexmoResponse sendDTMF(String uuid, String digits) throws IOException, NexmoClientException {
+        return dtmf.put(uuid, digits);
     }
 
-    public void modifyCall(String uuid, String action) throws IOException, NexmoClientException {
-        calls.put(uuid, action);
+    public CallRecord modifyCall(String uuid, String action) throws IOException, NexmoClientException {
+        return calls.put(uuid, action);
     }
 
     public NexmoResponse startStream(String uuid, String streamUrl, int loop) throws IOException, NexmoClientException {

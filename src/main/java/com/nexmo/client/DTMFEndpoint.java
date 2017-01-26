@@ -22,10 +22,8 @@
 
 package com.nexmo.client;
 
-import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.voice.DTMFRequest;
-import com.nexmo.client.voice.DTMFResponse;
+import com.nexmo.client.voice.NexmoResponse;
 import com.nexmo.client.voice.SendDTMFMethod;
 
 import java.io.IOException;
@@ -37,7 +35,7 @@ public class DTMFEndpoint {
         this.sendDTMF = new SendDTMFMethod(httpWrapper);
     }
 
-    public DTMFResponse put(String uuid, String digits) throws IOException, NexmoClientException {
+    public NexmoResponse put(String uuid, String digits) throws IOException, NexmoClientException {
         return this.sendDTMF.execute(new DTMFRequest(uuid, digits));
     }
 }

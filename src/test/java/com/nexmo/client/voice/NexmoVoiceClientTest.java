@@ -163,6 +163,50 @@ public class NexmoVoiceClientTest {
     }
 
     @Test
+    public void testSendDTMF() throws Exception {
+        NexmoVoiceClient client = new NexmoVoiceClient(stubHttpWrapper(200,
+                "{\n" +
+                        "  \"message\": \"DTMF sent\",\n" +
+                        "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
+                        "}"));
+
+        NexmoResponse response = client.sendDTMF("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", "332393");
+
+    }
+
+    @Test
+    public void testModifyCall() throws Exception {
+        NexmoVoiceClient client = new NexmoVoiceClient(stubHttpWrapper(200, "      {\n" +
+                "        \"uuid\": \"93137ee3-580e-45f7-a61a-e0b5716000ef\",\n" +
+                "        \"status\": \"completed\",\n" +
+                "        \"direction\": \"outbound\",\n" +
+                "        \"rate\": \"0.02400000\",\n" +
+                "        \"price\": \"0.00280000\",\n" +
+                "        \"duration\": \"7\",\n" +
+                "        \"network\": \"23410\",\n" +
+                "        \"conversation_uuid\": \"aa17bd11-c895-4225-840d-30dc38c31e50\",\n" +
+                "        \"start_time\": \"2017-01-13T13:55:02.000Z\",\n" +
+                "        \"end_time\": \"2017-01-13T13:55:09.000Z\",\n" +
+                "        \"to\": {\n" +
+                "          \"type\": \"phone\",\n" +
+                "          \"number\": \"447700900104\"\n" +
+                "        },\n" +
+                "        \"from\": {\n" +
+                "          \"type\": \"phone\",\n" +
+                "          \"number\": \"447700900105\"\n" +
+                "        },\n" +
+                "        \"_links\": {\n" +
+                "          \"self\": {\n" +
+                "            \"href\": \"/v1/calls/93137ee3-580e-45f7-a61a-e0b5716000ef\"\n" +
+                "          }\n" +
+                "        }\n" +
+                "      }\n"));
+        CallRecord call = client.modifyCall("93137ee3-580e-45f7-a61a-e0b5716000ef", "hangup");
+        assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", call.getUuid());
+
+    }
+
+    @Test
     public void testStartStreamNonLooping() throws Exception {
         NexmoVoiceClient client = new NexmoVoiceClient(stubHttpWrapper(200,
                 "{\n" +

@@ -35,7 +35,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class SendDTMFMethod extends AbstractMethod<DTMFRequest, DTMFResponse> {
+public class SendDTMFMethod extends AbstractMethod<DTMFRequest, NexmoResponse> {
     private static final Log LOG = LogFactory.getLog(SendDTMFMethod.class);
 
     private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls/";
@@ -62,10 +62,10 @@ public class SendDTMFMethod extends AbstractMethod<DTMFRequest, DTMFResponse> {
     }
 
     @Override
-    public DTMFResponse parseResponse(HttpResponse response) throws IOException {
+    public NexmoResponse parseResponse(HttpResponse response) throws IOException {
         String json = EntityUtils.toString(response.getEntity());
         LOG.info("Received: " + json);
-        return DTMFResponse.fromJson(json);
+        return NexmoResponse.fromJson(json);
     }
 
     public void setUri(String uri) {
