@@ -21,6 +21,7 @@ package com.nexmo.client.voice.endpoints;/*
  */
 
 import com.nexmo.client.voice.CallEndpoint;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
