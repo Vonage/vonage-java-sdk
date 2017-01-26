@@ -34,10 +34,10 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class StopStreamMethod extends AbstractMethod<Void, NexmoResponse> {
-    private static final Log LOG = LogFactory.getLog(CreateCallMethod.class);
+public class StopStreamMethod extends AbstractMethod<String, NexmoResponse> {
+    private static final Log LOG = LogFactory.getLog(StopStreamMethod.class);
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls";
+    private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
     private String uri = DEFAULT_URI;
 
@@ -51,10 +51,11 @@ public class StopStreamMethod extends AbstractMethod<Void, NexmoResponse> {
     }
 
     @Override
-    public HttpUriRequest makeRequest(Void request) throws NexmoClientException, UnsupportedEncodingException {
-        HttpDelete delete = new HttpDelete(this.uri);
+    public HttpUriRequest makeRequest(String uuid) throws NexmoClientException, UnsupportedEncodingException {
+        String uri = this.uri + uuid + "/stream";
+        HttpDelete delete = new HttpDelete(uri);
         delete.setHeader("Content-Type", "application/json");
-        LOG.info("StopStreamRequest made.");
+        LOG.info("StopStreamRequest made for " + uuid);
         return delete;
     }
 
@@ -63,5 +64,9 @@ public class StopStreamMethod extends AbstractMethod<Void, NexmoResponse> {
         String json = EntityUtils.toString(response.getEntity());
         LOG.info("Received: " + json);
         return NexmoResponse.fromJson(json);
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 }

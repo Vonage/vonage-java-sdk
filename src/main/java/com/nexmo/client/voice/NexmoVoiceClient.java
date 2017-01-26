@@ -58,36 +58,39 @@ public class NexmoVoiceClient extends AbstractClient {
         return calls.get(uuid);
     }
 
-    public NexmoResponse startStream(String streamUrl, boolean loop) throws IOException, NexmoClientException {
-        return streams.put(new StreamRequest(streamUrl, loop));
+    public NexmoResponse startStream(String uuid, String streamUrl, int loop) throws IOException, NexmoClientException {
+        return streams.put(new StreamRequest(uuid, streamUrl, loop));
     }
 
-    //Send a stream that will not loop.
-    public NexmoResponse startStream(String streamUrl) throws IOException, NexmoClientException {
-        return streams.put(new StreamRequest(streamUrl, false));
+    //Start a stream that only plays once.
+    public NexmoResponse startStream(String uuid, String streamUrl) throws IOException, NexmoClientException {
+        return streams.put(new StreamRequest(uuid, streamUrl, 1));
     }
 
-    public NexmoResponse stopStream() throws IOException, NexmoClientException {
-        return streams.delete(null);
+    public NexmoResponse stopStream(String uuid) throws IOException, NexmoClientException {
+        return streams.delete(uuid);
     }
 
-    public NexmoResponse startTalk(String text, VoiceName voiceName, boolean loop) throws IOException, NexmoClientException {
-        return talk.put(new TalkRequest(text, voiceName, loop));
+    public NexmoResponse startTalk(String uuid, String text, VoiceName voiceName, int loop) throws IOException, NexmoClientException {
+        return talk.put(new TalkRequest(uuid, text, voiceName, loop));
     }
 
-    public NexmoResponse startTalk(String text, boolean loop) throws IOException, NexmoClientException {
-        return talk.put(new TalkRequest(text, loop));
+    //Send a synthesized speech message that only plays once
+    public NexmoResponse startTalk(String uuid, String text, VoiceName voiceName) throws IOException, NexmoClientException {
+        return talk.put(new TalkRequest(uuid, text, voiceName));
     }
 
-    public NexmoResponse startTalk(String text, VoiceName voiceName) throws IOException, NexmoClientException {
-        return talk.put(new TalkRequest(text, voiceName));
+    //Send a synthesized speech message with the default voice of Kimberly
+    public NexmoResponse startTalk(String uuid, String text, int loop) throws IOException, NexmoClientException {
+        return talk.put(new TalkRequest(uuid, text, loop));
     }
 
-    public NexmoResponse startTalk(String text) throws IOException, NexmoClientException {
-        return talk.put(new TalkRequest(text));
+    //Send a synthesized speech message that only plays once with the default voice of Kimberly
+    public NexmoResponse startTalk(String uuid, String text) throws IOException, NexmoClientException {
+        return talk.put(new TalkRequest(uuid, text));
     }
 
-    public NexmoResponse stopTalk() throws IOException, NexmoClientException {
-        return talk.delete();
+    public NexmoResponse stopTalk(String uuid) throws IOException, NexmoClientException {
+        return talk.delete(uuid);
     }
 }

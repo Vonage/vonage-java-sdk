@@ -39,7 +39,7 @@ public class StreamsEndpoint {
         return this.startStream.execute(request);
     }
 
-    public NexmoResponse delete(Void aVoid) throws IOException, NexmoClientException {
-        return this.stopStream.execute(aVoid);
+    public NexmoResponse delete(String uuid) throws IOException, NexmoClientException {
+        return this.stopStream.execute(uuid);
     }
 }

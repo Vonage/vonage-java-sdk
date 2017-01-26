@@ -38,7 +38,7 @@ public class TalkEndpoint {
         return this.startTalk.execute(request);
     }
 
-    public NexmoResponse delete() throws IOException, NexmoClientException {
-        return this.stopTalk.execute(null);
+    public NexmoResponse delete(String uuid) throws IOException, NexmoClientException {
+        return this.stopTalk.execute(uuid);
     }
 }

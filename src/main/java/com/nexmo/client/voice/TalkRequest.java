@@ -26,21 +26,31 @@ import com.nexmo.client.NexmoUnexpectedException;
 
 public class TalkRequest {
     private TalkPayload talkPayload;
+    private String uuid;
 
-    public TalkRequest(String text, VoiceName voiceName, boolean loop) {
-        this.talkPayload = new TalkPayload(text, voiceName, (loop ? 0 : 1));
+    public TalkRequest(String uuid, String text, VoiceName voiceName, int loop) {
+        this.talkPayload = new TalkPayload(text, voiceName, loop);
+        this.uuid = uuid;
     }
 
-    public TalkRequest(String text) {
-        new TalkRequest(text, VoiceName.KIMBERLY, true);
+    public TalkRequest(String uuid, String text) {
+        new TalkRequest(uuid, text, VoiceName.KIMBERLY, 1);
     }
 
-    public TalkRequest(String text, VoiceName voiceName) {
-        new TalkRequest(text, voiceName, true);
+    public TalkRequest(String uuid, String text, VoiceName voiceName) {
+        new TalkRequest(uuid, text, voiceName, 1);
     }
 
-    public TalkRequest(String text, boolean loop) {
-        new TalkRequest(text, VoiceName.KIMBERLY, loop);
+    public TalkRequest(String uuid, String text, int loop) {
+        new TalkRequest(uuid, text, VoiceName.KIMBERLY, loop);
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String toJson() {

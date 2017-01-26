@@ -38,7 +38,7 @@ import java.io.UnsupportedEncodingException;
 public class StartTalkMethod extends AbstractMethod<TalkRequest, NexmoResponse> {
     private static final Log LOG = LogFactory.getLog(StartTalkMethod.class);
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls";
+    private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
     private String uri = DEFAULT_URI;
 
@@ -53,7 +53,8 @@ public class StartTalkMethod extends AbstractMethod<TalkRequest, NexmoResponse> 
 
     @Override
     public HttpUriRequest makeRequest(TalkRequest request) throws NexmoClientException, UnsupportedEncodingException {
-        HttpPut put = new HttpPut(this.uri);
+        String uri = this.uri + request.getUuid() + "/talk";
+        HttpPut put = new HttpPut(uri);
         put.setHeader("Content-Type", "application/json");
         put.setEntity(new StringEntity(request.toJson()));
         LOG.info("Request: " + request.toJson());

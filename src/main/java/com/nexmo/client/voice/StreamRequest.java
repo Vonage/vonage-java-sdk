@@ -26,9 +26,19 @@ import com.nexmo.client.NexmoUnexpectedException;
 
 public class StreamRequest {
     private StreamPayload streamPayload;
+    private String uuid;
 
-    public StreamRequest(String streamUrl, boolean loop) {
-        this.streamPayload = new StreamPayload(streamUrl, (loop ? 1 : 0));
+    public StreamRequest(String uuid, String streamUrl, int loop) {
+        this.streamPayload = new StreamPayload(streamUrl, loop);
+        this.uuid = uuid;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String toJson() {
