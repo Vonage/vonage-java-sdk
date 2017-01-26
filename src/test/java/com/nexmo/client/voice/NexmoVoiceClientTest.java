@@ -171,7 +171,8 @@ public class NexmoVoiceClientTest {
                         "}"));
 
         NexmoResponse response = client.sendDTMF("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", "332393");
-
+        assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
+        assertEquals("DTMF sent", response.getMessage());
     }
 
     @Test
