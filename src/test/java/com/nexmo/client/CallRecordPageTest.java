@@ -29,7 +29,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class CallRecordPageTest {
-    CallRecordPage page;
+    private CallRecordPage page;
 
     @Before
     public void setUp() {

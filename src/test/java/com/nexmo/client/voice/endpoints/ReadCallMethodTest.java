@@ -65,7 +65,6 @@ public class ReadCallMethodTest {
                 new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 200, "OK")
         );
 
-        // TODO: The following deep inspection may be better implemented under CallEventTest
         String json =
                 "      {\n" +
                         "        \"uuid\": \"93137ee3-580e-45f7-a61a-e0b5716000ef\",\n" +

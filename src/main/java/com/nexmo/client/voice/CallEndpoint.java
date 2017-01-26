@@ -24,21 +24,20 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-// TODO: Maybe rename Endpoint
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class Endpoint {
+public class CallEndpoint {
     private String type = "phone";
     private String number;
     private String dtmfAnswer = null;
 
-    public Endpoint() {
+    public CallEndpoint() {
     }
 
-    public Endpoint(String number) {
+    public CallEndpoint(String number) {
         this.number = number;
     }
 
-    public Endpoint(String number, String dtmfAnswer) {
+    public CallEndpoint(String number, String dtmfAnswer) {
         this.number = number;
         this.dtmfAnswer = dtmfAnswer;
     }
@@ -74,7 +73,7 @@ public class Endpoint {
         if (obj.getClass() != getClass()) {
             return false;
         }
-        Endpoint rhs = (Endpoint) obj;
+        CallEndpoint rhs = (CallEndpoint) obj;
         return new EqualsBuilder()
                 .append(this.type, rhs.type)
                 .append(this.number, rhs.number)
