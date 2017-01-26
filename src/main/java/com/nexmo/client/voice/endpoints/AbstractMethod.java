@@ -38,7 +38,7 @@ import java.util.Set;
 public abstract class AbstractMethod<RequestT, ResultT> implements Method<RequestT, ResultT> {
     private static final Log LOG = LogFactory.getLog(AbstractMethod.class);
     private final HttpWrapper httpWrapper;
-    Set<Class> acceptable;
+    private Set<Class> acceptable;
 
     public AbstractMethod(HttpWrapper httpWrapper) {
         this.httpWrapper = httpWrapper;
