@@ -48,7 +48,7 @@ public class InputNccoTest {
         }
 
         InputNcco ncco = new ObjectMapper().readValue(json, InputNcco.class);
-        assertEquals("https://api.example.com/event", ncco.getEventUrl());
+        assertArrayEquals(new String[]{"https://api.example.com/event"}, ncco.getEventUrl());
         assertEquals("GET", ncco.getEventMethod());
         assertEquals(4, (int)ncco.getMaxDigits());
         assertEquals(true, ncco.getSubmitOnHash());

@@ -50,7 +50,7 @@ public class RecordNccoTest {
         }
 
         RecordNcco ncco = new ObjectMapper().readValue(json, RecordNcco.class);
-        assertEquals("https://api.example.com/event", ncco.getEventUrl());
+        assertArrayEquals(new String[]{"https://api.example.com/event"}, ncco.getEventUrl());
         assertEquals("GET", ncco.getEventMethod());
         assertEquals(true, ncco.getBeepStart());
         assertEquals('#', (char)ncco.getEndOnKey());

@@ -24,6 +24,7 @@ package com.nexmo.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -33,7 +34,7 @@ public class InputNcco implements Ncco {
     private Integer timeOut = null;
     private Integer maxDigits = null;
     private Boolean submitOnHash = null;
-    private String eventUrl = null;
+    private String[] eventUrl = null;
     private String eventMethod = null;
 
     public Integer getTimeOut() {
@@ -60,11 +61,16 @@ public class InputNcco implements Ncco {
         this.submitOnHash = submitOnHash;
     }
 
-    public String getEventUrl() {
+    public String[] getEventUrl() {
         return eventUrl;
     }
 
     public void setEventUrl(String eventUrl) {
+        setEventUrl(new String[]{eventUrl});
+    }
+
+    @JsonProperty("eventUrl")
+    public void setEventUrl(String[] eventUrl) {
         this.eventUrl = eventUrl;
     }
 

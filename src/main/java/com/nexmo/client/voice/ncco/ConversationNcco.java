@@ -36,7 +36,7 @@ public class ConversationNcco implements Ncco {
     private Boolean startOnEnter = null;
     private Boolean endOnExit = null;
     private Boolean record = null;
-    private String eventUrl = null;
+    private String[] eventUrl = null;
     private String eventMethod = null;
 
 
@@ -84,11 +84,16 @@ public class ConversationNcco implements Ncco {
         this.record = record;
     }
 
-    public String getEventUrl() {
+    public String[] getEventUrl() {
         return eventUrl;
     }
 
     public void setEventUrl(String eventUrl) {
+        setEventUrl(new String[]{eventUrl});
+    }
+
+    @JsonProperty("eventUrl")
+    public void setEventUrl(String[] eventUrl) {
         this.eventUrl = eventUrl;
     }
 

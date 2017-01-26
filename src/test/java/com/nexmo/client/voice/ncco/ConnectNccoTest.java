@@ -40,7 +40,7 @@ public class ConnectNccoTest {
     @Test
     public void testToJson() throws Exception {
         assertEquals(
-                "{\"endpoint\":{\"type\":\"phone\",\"number\":\"447700900637\"},\"action\":\"connect\"}",
+                "{\"endpoint\":[{\"type\":\"phone\",\"number\":\"447700900637\"}],\"action\":\"connect\"}",
                 new ConnectNcco(new Endpoint("447700900637")).toJson());
     }
 
@@ -61,10 +61,10 @@ public class ConnectNccoTest {
         }
 
         ConnectNcco ncco2 = new ObjectMapper().readValue(json, ConnectNcco.class);
-        assertEquals(new Endpoint("447700900642"), ncco2.getEndpoint());
+        assertArrayEquals(new Endpoint[]{new Endpoint("447700900642")}, ncco2.getEndpoint());
         assertEquals(MachineDetection.HANGUP, ncco2.getMachineDetection());
         assertEquals("GET", ncco2.getEventMethod());
-        assertEquals("https://api.example.com/event", ncco2.getEventUrl());
+        assertArrayEquals(new String[]{"https://api.example.com/event"}, ncco2.getEventUrl());
         assertEquals("447700900723", ncco2.getFrom());
         assertEquals(12, (int) ncco2.getLimit());
         assertEquals(1000, (int) ncco2.getTimeout());

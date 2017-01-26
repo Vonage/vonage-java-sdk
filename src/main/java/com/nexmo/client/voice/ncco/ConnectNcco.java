@@ -33,27 +33,36 @@ import com.nexmo.client.voice.MachineDetection;
 public class ConnectNcco implements Ncco {
     private static final String ACTION = "connect";
 
-    private Endpoint endpoint;
+    private Endpoint[] endpoint;
     private String from = null;
     private Integer timeout = null;
     private Integer limit = null;
     private MachineDetection machineDetection = null;
-    private String eventUrl = null;
+    private String[] eventUrl = null;
     private String eventMethod = null;
 
-    public ConnectNcco(@JsonProperty("endpoint") Endpoint endpoint) {
+    public ConnectNcco(@JsonProperty("endpoint") Endpoint[] endpoint) {
         this.endpoint = endpoint;
     }
 
-    public ConnectNcco(String number) {
-        this.endpoint = new Endpoint(number);
+    public ConnectNcco(Endpoint endpoint) {
+        this(new Endpoint[]{endpoint});
     }
 
-    public Endpoint getEndpoint() {
+    public ConnectNcco(String number) {
+        this(new Endpoint(number));
+    }
+
+    public Endpoint[] getEndpoint() {
         return endpoint;
     }
 
     public void setEndpoint(Endpoint endpoint) {
+        setEndpoint(new Endpoint[]{endpoint});
+    }
+
+    @JsonProperty("endpoint")
+    public void setEndpoint(Endpoint[] endpoint) {
         this.endpoint = endpoint;
     }
 
@@ -89,11 +98,16 @@ public class ConnectNcco implements Ncco {
         this.machineDetection = machineDetection;
     }
 
-    public String getEventUrl() {
+    public String[] getEventUrl() {
         return eventUrl;
     }
 
     public void setEventUrl(String eventUrl) {
+        setEventUrl(new String[]{eventUrl});
+    }
+
+    @JsonProperty("eventUrl")
+    public void setEventUrl(String[] eventUrl) {
         this.eventUrl = eventUrl;
     }
 

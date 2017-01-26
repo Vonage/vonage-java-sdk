@@ -50,7 +50,7 @@ public class ConversationNccoTest {
         ConversationNcco ncco2 = new ObjectMapper().readValue(ncco.toJson(), ConversationNcco.class);
         assertEquals("overwrite-name", ncco.getName());
         assertEquals("GET", ncco2.getEventMethod());
-        assertEquals("https://api.example.com/event", ncco2.getEventUrl());
+        assertArrayEquals(new String[]{"https://api.example.com/event"}, ncco2.getEventUrl());
         assertEquals(true, ncco2.getEndOnExit());
         assertEquals("https://api.example.com/on-hold-music", ncco2.getMusicOnHoldUrl());
         assertEquals(true, ncco2.getRecord());
