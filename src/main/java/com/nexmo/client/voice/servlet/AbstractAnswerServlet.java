@@ -28,18 +28,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class AbstractAnswerServlet extends HttpServlet {
+public abstract class AbstractAnswerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp);
+        serializeNccoResponse(resp, this.handleRequest(req));
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp);
+        serializeNccoResponse(resp, this.handleRequest(req));
     }
 
-    protected abstract NccoResponse handleRequest(HttpServletRequest request) {
-
+    private void serializeNccoResponse(HttpServletResponse httpResponse, NccoResponse nccoResponse) throws IOException {
+        byte[] json = nccoResponse.toJson().getBytes("UTF-8");
+        httpResponse.setCharacterEncoding("UTF-8");
+        httpResponse.setContentType("application/json");
+        httpResponse.setContentLength(json.length);
+        httpResponse.getOutputStream().write(json);
     }
+
+    protected abstract NccoResponse handleRequest(HttpServletRequest request);
 }

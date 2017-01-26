@@ -13,6 +13,7 @@ apply plugin: 'java'
 apply plugin: "jacoco"
 apply plugin: 'maven'
 apply plugin: 'eclipse'
+apply plugin: 'jetty'
 
 group = "com.nexmo"
 version = "2.0.0-prerelease"
@@ -20,7 +21,7 @@ sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 sourceSets {
@@ -28,115 +29,123 @@ sourceSets {
 }
 
 dependencies {
-	compile 'commons-codec:commons-codec:1.5'
-	compile 'commons-logging:commons-logging:1.0.3'
-	compile 'org.apache.httpcomponents:httpclient:4.5'
-	compile 'org.apache.commons:commons-lang3:3.5'
-	compile 'javax.servlet:javax.servlet-api:3.1.0'
-	compile 'com.fasterxml.jackson.core:jackson-databind:2.8.4'
-	compile 'com.auth0:java-jwt:2.2.1'
+    compile 'commons-codec:commons-codec:1.5'
+    compile 'commons-logging:commons-logging:1.0.3'
+    compile 'org.apache.httpcomponents:httpclient:4.5'
+    compile 'org.apache.commons:commons-lang3:3.5'
+    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.4'
+    compile 'com.auth0:java-jwt:2.2.1'
 
-	testCompile 'junit:junit:4.4'
-	testCompile "org.mockito:mockito-core:2.+"
+    testCompile 'junit:junit:4.4'
+    testCompile "org.mockito:mockito-core:2.+"
 
     examplesCompile sourceSets.main.output
     examplesCompile 'commons-cli:commons-cli:1.3.1'
 }
 
 test {
-	// testLogging.minGranularity = 2
-	// testLogging.showStandardStreams = true
+    // testLogging.minGranularity = 2
+    // testLogging.showStandardStreams = true
 }
 
 build.dependsOn compileExamplesJava
 
 javadoc {
-	/* info for JavaDoc options http://docs.oracle.com/javase/6/docs/technotes/tools/windows/javadoc.html#overviewcomment */
-	title "Nexmo Java SDK"
-	// uncomment this to use a custom javadoc overview
-	//options.overview = file("src/main/javadoc/overview.html")
-	// uncomment this to use the custom javadoc styles
-	//options.stylesheetFile = file("src/main/javadoc/css/styles.css")
-	//exclude "..."
-	options.linkSource = true
+    /* info for JavaDoc options http://docs.oracle.com/javase/6/docs/technotes/tools/windows/javadoc.html#overviewcomment */
+    title "Nexmo Java SDK"
+    // uncomment this to use a custom javadoc overview
+    //options.overview = file("src/main/javadoc/overview.html")
+    // uncomment this to use the custom javadoc styles
+    //options.stylesheetFile = file("src/main/javadoc/css/styles.css")
+    //exclude "..."
+    options.linkSource = true
 }
 
 jar {
-	manifest {
-		attributes(
-			"Created-By"			: 'Nexmo',
-			'Implementation-Vendor'	: 'Nexmo',
-			'Implementation-Title'	: 'Nexmo Java SDK',
-			'Implementation-Version': version
-		)
-	}
+    manifest {
+        attributes(
+                "Created-By": 'Nexmo',
+                'Implementation-Vendor': 'Nexmo',
+                'Implementation-Title': 'Nexmo Java SDK',
+                'Implementation-Version': version
+        )
+    }
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-	classifier = 'javadoc'
-	from javadoc.destinationDir
+    classifier = 'javadoc'
+    from javadoc.destinationDir
 }
 assemble.dependsOn javadocJar
 
 jacocoTestReport {
     reports {
-        xml.enabled  = true
-		html.enabled = true
+        xml.enabled = true
+        html.enabled = true
     }
 }
 check.dependsOn jacocoTestReport
 
-uploadArchives { repositories { mavenDeployer {
-	beforeDeployment {
-		MavenDeployment deployment -> signing.signPom(deployment)
-	}
-	repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-		authentication(
-			userName: { getProperty("maven.username") },
-			password: { getProperty("maven.password") }
-		)
-	}
-	snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-		authentication(
-			userName: { getProperty("maven.username") },
-			password: { getProperty("maven.password") }
-		)
-	}
-	pom.project {
-		name 'Nexo Java Client Library'
-		packaging 'jar'
-		artifactId 'nexmo-java'
-		description 'Java client for Nexmo.'
-		url 'https://github.com/Nexmo/nexmo-java/'
-		scm {
-			connection 'scm:git:git@github.com:Nexmo/nexmo-java'
-			developerConnection 'scm:git:git@github.com:Nexmo/nexmo-java'
-			url 'http://github.com/Nexmo/nexmo-java'
-		}
-		licenses {
-			license {
-				//name 'MIT'
-				//url 'https://raw.github.com/Nexmo/nexmo-java/master/LICENCE.txt'
-				//distribution 'https://raw.github.com/Nexmo/nexmo-java/mvn-repo/'
-			}
-		}
-		organization {
-			name 'Nemo'
-			url 'https://docs.nexmo.com/tools/developer-api'
-		}
-		issueManagement {
-			system 'GitHub'
-			url 'https://github.com/Nexmo/nexmo-java/issues'
-		}
-		developers {
-			// developer {
-			// 	id '...'
-			// 	name '...'
-			// 	email '...'
-			// }
-		}
-	}
-}}}
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment {
+                MavenDeployment deployment -> signing.signPom(deployment)
+            }
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(
+                        userName: { getProperty("maven.username") },
+                        password: { getProperty("maven.password") }
+                )
+            }
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(
+                        userName: { getProperty("maven.username") },
+                        password: { getProperty("maven.password") }
+                )
+            }
+            pom.project {
+                name 'Nexo Java Client Library'
+                packaging 'jar'
+                artifactId 'nexmo-java'
+                description 'Java client for Nexmo.'
+                url 'https://github.com/Nexmo/nexmo-java/'
+                scm {
+                    connection 'scm:git:git@github.com:Nexmo/nexmo-java'
+                    developerConnection 'scm:git:git@github.com:Nexmo/nexmo-java'
+                    url 'http://github.com/Nexmo/nexmo-java'
+                }
+                licenses {
+                    license {
+                        //name 'MIT'
+                        //url 'https://raw.github.com/Nexmo/nexmo-java/master/LICENCE.txt'
+                        //distribution 'https://raw.github.com/Nexmo/nexmo-java/mvn-repo/'
+                    }
+                }
+                organization {
+                    name 'Nemo'
+                    url 'https://docs.nexmo.com/tools/developer-api'
+                }
+                issueManagement {
+                    system 'GitHub'
+                    url 'https://github.com/Nexmo/nexmo-java/issues'
+                }
+                developers {
+                    // developer {
+                    // 	id '...'
+                    // 	name '...'
+                    // 	email '...'
+                    // }
+                }
+            }
+        }
+    }
+}
+
+war {
+    classpath sourceSets.examples.output
+}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '3.1'
@@ -148,7 +157,4 @@ task examplesJar(type: com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJa
     configurations = [
             project.configurations.runtime,
             project.configurations.examplesRuntime]
-    manifest {
-        attributes 'Main-Class': 'com.nexmo.client.examples.TestVoiceCall'
-    }
 }
