@@ -48,7 +48,7 @@ public class StreamPayload {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.writeValueAsString(this);
         } catch (JsonProcessingException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce json from Call object.", jpe);
+            throw new NexmoUnexpectedException("Failed to produce json from StreamPayload object.", jpe);
         }
     }
 }

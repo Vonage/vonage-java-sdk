@@ -39,7 +39,7 @@ import java.io.UnsupportedEncodingException;
 public class StartStreamMethod extends AbstractMethod<StreamRequest, NexmoResponse> {
     private static final Log LOG = LogFactory.getLog(StartStreamMethod.class);
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls";
+    private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
     private String uri = DEFAULT_URI;
 

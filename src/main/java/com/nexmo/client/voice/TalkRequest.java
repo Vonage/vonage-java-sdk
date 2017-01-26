@@ -33,16 +33,16 @@ public class TalkRequest {
         this.uuid = uuid;
     }
 
-    public TalkRequest(String uuid, String text) {
-        new TalkRequest(uuid, text, VoiceName.KIMBERLY, 1);
-    }
-
     public TalkRequest(String uuid, String text, VoiceName voiceName) {
         new TalkRequest(uuid, text, voiceName, 1);
     }
 
     public TalkRequest(String uuid, String text, int loop) {
         new TalkRequest(uuid, text, VoiceName.KIMBERLY, loop);
+    }
+
+    public TalkRequest(String uuid, String text) {
+        new TalkRequest(uuid, text, VoiceName.KIMBERLY, 1);
     }
 
     public String getUuid() {
