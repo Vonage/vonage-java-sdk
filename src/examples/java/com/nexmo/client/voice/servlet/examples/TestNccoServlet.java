@@ -20,18 +20,23 @@
  * THE SOFTWARE.
  */
 
-package com.nexmo.client.examples.com.nexmo.client.voice.servlet.examples;
+package com.nexmo.client.voice.servlet.examples;
 
 import com.nexmo.client.voice.ncco.TalkNcco;
 import com.nexmo.client.voice.servlet.AbstractAnswerServlet;
 import com.nexmo.client.voice.servlet.NccoResponse;
 import com.nexmo.client.voice.servlet.NccoResponseBuilder;
 
+import javax.servlet.http.HttpServletRequest;
+
 public class TestNccoServlet extends AbstractAnswerServlet {
     @Override
     protected NccoResponse handleRequest(HttpServletRequest request) {
+        TalkNcco talk = new TalkNcco("Hello from Nexmo!");
+        talk.setVoiceName("Russell");
+
         return new NccoResponseBuilder()
-                .appendNcco(new TalkNcco("Hello from Nexmo!"))
+                .appendNcco(talk)
                 .getValue();
     }
 }
