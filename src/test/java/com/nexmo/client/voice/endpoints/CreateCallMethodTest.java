@@ -26,9 +26,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.voice.Call;
+import com.nexmo.client.voice.CallDirection;
 import com.nexmo.client.voice.CallEvent;
 import com.nexmo.client.voice.CallStatus;
-import com.nexmo.client.voice.CallDirection;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -87,7 +87,6 @@ public class CreateCallMethodTest {
                 new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 200, "OK")
         );
 
-        // TODO: The following deep inspection may be better implemented under CallEventTest
         String json = " {\"uuid\":\"93137ee3-580e-45f7-a61a-e0b5716000ea\",\"status\":\"started\",\"direction\":\"outbound\",\"conversation_uuid\":\"aa17bd11-c895-4225-840d-30dc78c31e50\"}";
         InputStream jsonStream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
         BasicHttpEntity entity = new BasicHttpEntity();

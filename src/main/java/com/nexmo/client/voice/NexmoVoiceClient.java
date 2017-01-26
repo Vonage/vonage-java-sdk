@@ -24,6 +24,7 @@ package com.nexmo.client.voice;
 import com.nexmo.client.AbstractClient;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.DTMFEndpoint;
 import com.nexmo.client.voice.endpoints.CallsEndpoint;
 import com.nexmo.client.voice.endpoints.StreamsEndpoint;
 
@@ -33,6 +34,7 @@ public class NexmoVoiceClient extends AbstractClient {
     public final CallsEndpoint calls;
     public final StreamsEndpoint streams;
     public final TalkEndpoint talk;
+    public final DTMFEndpoint dtmf;
 
     public NexmoVoiceClient(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -40,6 +42,7 @@ public class NexmoVoiceClient extends AbstractClient {
         calls = new CallsEndpoint(httpWrapper);
         streams = new StreamsEndpoint(httpWrapper);
         talk = new TalkEndpoint(httpWrapper);
+        dtmf = new DTMFEndpoint(httpWrapper);
     }
 
     public CallEvent createCall(Call callRequest) throws IOException, NexmoClientException {
@@ -56,6 +59,14 @@ public class NexmoVoiceClient extends AbstractClient {
 
     public CallRecord getCallDetails(String uuid) throws IOException, NexmoClientException {
         return calls.get(uuid);
+    }
+
+    public void sendDTMF(String uuid, String digits) throws IOException, NexmoClientException {
+        dtmf.put(uuid, digits);
+    }
+
+    public void modifyCall(String uuid, String action) throws IOException, NexmoClientException {
+        calls.put(uuid, action);
     }
 
     public NexmoResponse startStream(String uuid, String streamUrl, int loop) throws IOException, NexmoClientException {

@@ -37,8 +37,8 @@ import java.util.Date;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "_links" })
 public class CallRecord {
-    private Endpoint to;
-    private Endpoint from;
+    private CallEndpoint to;
+    private CallEndpoint from;
 
     private String conversationUuid = null;
     private CallDirection direction = null;
@@ -54,27 +54,27 @@ public class CallRecord {
     public CallRecord() {}
 
     public CallRecord(String to, String from) {
-        this(new Endpoint(to), new Endpoint(from));
+        this(new CallEndpoint(to), new CallEndpoint(from));
     }
 
-    public CallRecord(Endpoint to, Endpoint from) {
+    public CallRecord(CallEndpoint to, CallEndpoint from) {
         this.to = to;
         this.from = from;
     }
 
-    public Endpoint getTo() {
+    public CallEndpoint getTo() {
         return to;
     }
 
-    public void setTo(Endpoint to) {
+    public void setTo(CallEndpoint to) {
         this.to = to;
     }
 
-    public Endpoint getFrom() {
+    public CallEndpoint getFrom() {
         return from;
     }
 
-    public void setFrom(Endpoint from) {
+    public void setFrom(CallEndpoint from) {
         this.from = from;
     }
 
@@ -178,7 +178,7 @@ public class CallRecord {
             mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
             return mapper.readValue(json, CallRecord.class);
         } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce json from Call object.", jpe);
+            throw new NexmoUnexpectedException("Failed to produce json from CallRecord object.", jpe);
         }
     }
 }

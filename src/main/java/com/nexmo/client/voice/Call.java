@@ -28,14 +28,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
 
+import java.io.IOException;
+
 /**
  * Call encapsulates the information required to create a call using {@link NexmoVoiceClient#createCall(Call)}
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "_links"})
 public class Call {
-    private Endpoint to;
-    private Endpoint from;
+    private CallEndpoint to;
+    private CallEndpoint from;
     private String answerUrl;
 
     private String answerMethod = "GET";
@@ -48,28 +50,28 @@ public class Call {
     public Call() {}
 
     public Call(String to, String from, String answerUrl) {
-        this(new Endpoint(to), new Endpoint(from), answerUrl);
+        this(new CallEndpoint(to), new CallEndpoint(from), answerUrl);
     }
 
-    public Call(Endpoint to, Endpoint from, String answerUrl) {
+    public Call(CallEndpoint to, CallEndpoint from, String answerUrl) {
         this.to = to;
         this.from = from;
         this.answerUrl = answerUrl;
     }
 
-    public Endpoint[] getTo() {
-        return new Endpoint[]{to};
+    public CallEndpoint[] getTo() {
+        return new CallEndpoint[]{to};
     }
 
-    public void setTo(Endpoint[] to) {
+    public void setTo(CallEndpoint[] to) {
         this.to = to[0];
     }
 
-    public Endpoint getFrom() {
+    public CallEndpoint getFrom() {
         return from;
     }
 
-    public void setFrom(Endpoint from) {
+    public void setFrom(CallEndpoint from) {
         this.from = from;
     }
 
@@ -141,6 +143,15 @@ public class Call {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.writeValueAsString(this);
         } catch (JsonProcessingException jpe) {
+            throw new NexmoUnexpectedException("Failed to produce json from Call object.", jpe);
+        }
+    }
+
+    public static Call fromJson(String json) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(json, Call.class);
+        } catch (IOException jpe) {
             throw new NexmoUnexpectedException("Failed to produce json from Call object.", jpe);
         }
     }

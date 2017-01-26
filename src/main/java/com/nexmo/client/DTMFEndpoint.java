@@ -1,4 +1,4 @@
-package com.nexmo.client.voice.endpoints;/*
+/*
  * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,38 +20,24 @@ package com.nexmo.client.voice.endpoints;/*
  * THE SOFTWARE.
  */
 
+package com.nexmo.client;
+
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.voice.*;
+import com.nexmo.client.voice.DTMFRequest;
+import com.nexmo.client.voice.DTMFResponse;
+import com.nexmo.client.voice.SendDTMFMethod;
 
 import java.io.IOException;
 
-public class CallsEndpoint {
-    private final CreateCallMethod createCall;
-    private final ReadCallMethod readCall;
-    private final ListCallsMethod listCalls;
-    private final ModifyCallMethod modifyCall;
+public class DTMFEndpoint {
+    private final SendDTMFMethod sendDTMF;
 
-    public CallsEndpoint(HttpWrapper httpWrapper) {
-        this.createCall = new CreateCallMethod(httpWrapper);
-        this.readCall = new ReadCallMethod(httpWrapper);
-        this.listCalls = new ListCallsMethod(httpWrapper);
-        this.modifyCall = new ModifyCallMethod(httpWrapper);
+    public DTMFEndpoint(HttpWrapper httpWrapper) {
+        this.sendDTMF = new SendDTMFMethod(httpWrapper);
     }
 
-    public CallEvent post(Call callRequest) throws IOException, NexmoClientException {
-        return this.createCall.execute(callRequest);
-    }
-
-    public CallRecordPage get(CallsFilter filter) throws IOException, NexmoClientException {
-        return this.listCalls.execute(filter);
-    }
-
-    public CallRecord get(String uuid) throws IOException, NexmoClientException {
-        return this.readCall.execute(uuid);
-    }
-
-    public CallRecord put(String uuid, String action) throws IOException, NexmoClientException {
-        return this.modifyCall.execute(new CallModifier(uuid, action));
+    public DTMFResponse put(String uuid, String digits) throws IOException, NexmoClientException {
+        return this.sendDTMF.execute(new DTMFRequest(uuid, digits));
     }
 }

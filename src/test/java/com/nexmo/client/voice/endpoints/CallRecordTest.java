@@ -27,7 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.voice.CallDirection;
 import com.nexmo.client.voice.CallRecord;
 import com.nexmo.client.voice.CallStatus;
-import com.nexmo.client.voice.Endpoint;
+import com.nexmo.client.voice.CallEndpoint;
 import org.junit.Test;
 
 import java.util.Calendar;
@@ -80,15 +80,15 @@ public class CallRecordTest {
         assertEquals(
                 new GregorianCalendar(2017, Calendar.JANUARY, 13 ,13, 55, 9).getTime(),
                 record.getEndTime());
-        assertEquals(new Endpoint("447700900104"), record.getTo());
-        assertEquals(new Endpoint("447700900105"), record.getFrom());
+        assertEquals(new CallEndpoint("447700900104"), record.getTo());
+        assertEquals(new CallEndpoint("447700900105"), record.getFrom());
 
 
     }
 
     @Test
     public void testToString() throws Exception {
-        CallRecord record = new CallRecord(new Endpoint("447700900104"), new Endpoint("447700900105"));
+        CallRecord record = new CallRecord(new CallEndpoint("447700900104"), new CallEndpoint("447700900105"));
         record.setUuid("93137ee3-580e-45f7-a61a-e0b5716000ef");
         record.setStatus(CallStatus.COMPLETED);
         assertEquals(
