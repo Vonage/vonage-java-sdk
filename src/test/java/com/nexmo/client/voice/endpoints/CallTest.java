@@ -22,7 +22,7 @@ package com.nexmo.client.voice.endpoints;/*
 
 import com.nexmo.client.NexmoUnexpectedException;
 import com.nexmo.client.voice.Call;
-import com.nexmo.client.voice.Endpoint;
+import com.nexmo.client.voice.CallEndpoint;
 import com.nexmo.client.voice.MachineDetection;
 import org.junit.Test;
 
@@ -53,8 +53,8 @@ public class CallTest {
 
     @Test
     public void testSetters() throws Exception {
-        Endpoint from = new Endpoint("44-AAA-FROM");
-        Endpoint to = new Endpoint("44-BBB-TO");
+        CallEndpoint from = new CallEndpoint("44-AAA-FROM");
+        CallEndpoint to = new CallEndpoint("44-BBB-TO");
         Call call = new Call("", "", "https://callback.example.com/");
         call.setAnswerMethod("BREW");
         call.setAnswerUrl("https://answer.example.com/");
@@ -64,7 +64,7 @@ public class CallTest {
         call.setLengthTimer(101);
         call.setMachineDetection(MachineDetection.CONTINUE);
         call.setRingingTimer(300);
-        call.setTo(new Endpoint[]{to});
+        call.setTo(new CallEndpoint[]{to});
 
         assertEquals("BREW", call.getAnswerMethod());
         assertEquals("https://answer.example.com/", call.getAnswerUrl()[0]);

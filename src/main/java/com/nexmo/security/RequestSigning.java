@@ -29,6 +29,7 @@ import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.nexmo.client.NexmoUnexpectedException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
@@ -200,9 +201,7 @@ public class RequestSigning implements SecurityConstants {
             if (!MessageDigest.isEqual(md5.getBytes("UTF-8"), suppliedSignature.getBytes("UTF-8")))
                 return false;
         } catch (UnsupportedEncodingException e) {
-            // TODO: Should raise a RuntimeException wrapping this.
-            log.error("This should not occur!!", e);
-            return false;
+            throw new NexmoUnexpectedException("Failed to decode signature as UTF-8", e);
         }
 
         return true;

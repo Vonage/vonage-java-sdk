@@ -83,7 +83,6 @@ public class ListCallsMethodTest {
                 new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 200, "OK")
         );
 
-        // TODO: The following deep inspection may be better implemented under CallEventTest
         String json = "{\n" +
                 "  \"page_size\": 10,\n" +
                 "  \"record_index\": 0,\n" +
