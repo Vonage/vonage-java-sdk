@@ -20,37 +20,37 @@
  * THE SOFTWARE.
  */
 
-package com.nexmo.client.voice.ncco;
+package com.nexmo.client.voice.servlet;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.voice.ncco.Ncco;
 
-public class NccoSerializer {
-    private static NccoSerializer instance;
+import java.util.ArrayList;
+import java.util.List;
 
-    private ObjectMapper mapper;
+public class NccoResponse {
+    // This object has been purposefully designed to be relatively opaque, as
+    // the internal structure of this response may become more complex, and so
+    // we don't want users to become dependent on it being a simple list of
+    // Ncco objects.
 
-    public NccoSerializer() {
-        this.mapper = new ObjectMapper();
+    private List<Ncco> nccoList;
+
+    public NccoResponse() {
+        nccoList = new ArrayList<Ncco>();
     }
 
-    public NccoSerializer(ObjectMapper mapper) {
-        this.mapper = mapper;
+    public void appendNcco(Ncco ncco) {
+        this.nccoList.add(ncco);
     }
 
-    public static NccoSerializer getInstance() {
-        if (instance == null) {
-            instance = new NccoSerializer();
-        }
-        return instance;
-    }
-
-    public String serializeNcco(Ncco ncco) {
+    public String toJson() {
         try {
-            return this.mapper.writeValueAsString(ncco);
-        } catch (JsonProcessingException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce json from Ncco object.", jpe);
+            return new ObjectMapper().writeValueAsString(nccoList);
+        } catch (JsonProcessingException e) {
+            throw new NexmoUnexpectedException("Failed to serialize NccoResponse object.", e);
         }
     }
 }

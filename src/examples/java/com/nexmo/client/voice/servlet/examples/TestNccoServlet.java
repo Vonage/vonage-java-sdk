@@ -20,37 +20,23 @@
  * THE SOFTWARE.
  */
 
-package com.nexmo.client.voice.ncco;
+package com.nexmo.client.voice.servlet.examples;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.voice.ncco.TalkNcco;
+import com.nexmo.client.voice.servlet.AbstractAnswerServlet;
+import com.nexmo.client.voice.servlet.NccoResponse;
+import com.nexmo.client.voice.servlet.NccoResponseBuilder;
 
-public class NccoSerializer {
-    private static NccoSerializer instance;
+import javax.servlet.http.HttpServletRequest;
 
-    private ObjectMapper mapper;
+public class TestNccoServlet extends AbstractAnswerServlet {
+    @Override
+    protected NccoResponse handleRequest(HttpServletRequest request) {
+        TalkNcco talk = new TalkNcco("Hello from Nexmo!");
+        talk.setVoiceName("Russell");
 
-    public NccoSerializer() {
-        this.mapper = new ObjectMapper();
-    }
-
-    public NccoSerializer(ObjectMapper mapper) {
-        this.mapper = mapper;
-    }
-
-    public static NccoSerializer getInstance() {
-        if (instance == null) {
-            instance = new NccoSerializer();
-        }
-        return instance;
-    }
-
-    public String serializeNcco(Ncco ncco) {
-        try {
-            return this.mapper.writeValueAsString(ncco);
-        } catch (JsonProcessingException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce json from Ncco object.", jpe);
-        }
+        return new NccoResponseBuilder()
+                .appendNcco(talk)
+                .getValue();
     }
 }
