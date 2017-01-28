@@ -163,14 +163,14 @@ public class NexmoVoiceClientTest {
     }
 
     @Test
-    public void testSendDTMF() throws Exception {
+    public void testSendDtmf() throws Exception {
         NexmoVoiceClient client = new NexmoVoiceClient(stubHttpWrapper(200,
                 "{\n" +
                         "  \"message\": \"DTMF sent\",\n" +
                         "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
                         "}"));
 
-        NexmoResponse response = client.sendDTMF("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", "332393");
+        DtmfResponse response = client.sendDtmf("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", "332393");
         assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
         assertEquals("DTMF sent", response.getMessage());
     }
@@ -214,7 +214,7 @@ public class NexmoVoiceClientTest {
                         "  \"message\": \"Stream started\",\n" +
                         "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
                         "}"));
-        NexmoResponse response = client.startStream("ssf61863-4a51-ef6b-11e1-w6edebcf93bb","https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3");
+        StreamResponse response = client.startStream("ssf61863-4a51-ef6b-11e1-w6edebcf93bb","https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3");
         assertEquals("Stream started", response.getMessage());
         assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
     }
@@ -226,7 +226,7 @@ public class NexmoVoiceClientTest {
                         "  \"message\": \"Stream started\",\n" +
                         "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
                         "}"));
-        NexmoResponse response = client.startStream("ssf61863-4a51-ef6b-11e1-w6edebcf93bb","https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3", 5);
+        StreamResponse response = client.startStream("ssf61863-4a51-ef6b-11e1-w6edebcf93bb","https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3", 5);
         assertEquals("Stream started", response.getMessage());
         assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
     }
@@ -238,7 +238,7 @@ public class NexmoVoiceClientTest {
                 "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
                 "}\n"));
 
-        NexmoResponse response = client.stopStream("ssf61863-4a51-ef6b-11e1-w6edebcf93bb");
+        StreamResponse response = client.stopStream("ssf61863-4a51-ef6b-11e1-w6edebcf93bb");
         assertEquals("Stream stopped", response.getMessage());
         assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
     }
@@ -251,7 +251,7 @@ public class NexmoVoiceClientTest {
                         "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
                         "}\n"));
 
-        NexmoResponse response = client.startTalk("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", "Hello World", VoiceName.CELINE, 8);
+        TalkResponse response = client.startTalk("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", "Hello World", VoiceName.CELINE, 8);
         assertEquals("Talk started", response.getMessage());
         assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
     }
@@ -264,7 +264,7 @@ public class NexmoVoiceClientTest {
                         "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
                         "}\n"));
 
-        NexmoResponse response = client.startTalk("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", "Hello World", VoiceName.EMMA);
+        TalkResponse response = client.startTalk("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", "Hello World", VoiceName.EMMA);
         assertEquals("Talk started", response.getMessage());
         assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
     }
@@ -277,7 +277,7 @@ public class NexmoVoiceClientTest {
                         "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
                         "}\n"));
 
-        NexmoResponse response = client.startTalk("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", "Hello World", 3);
+        TalkResponse response = client.startTalk("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", "Hello World", 3);
         assertEquals("Talk started", response.getMessage());
         assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
     }
@@ -290,7 +290,7 @@ public class NexmoVoiceClientTest {
                         "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
                         "}\n"));
 
-        NexmoResponse response = client.startTalk("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", "Hello World");
+        TalkResponse response = client.startTalk("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", "Hello World");
         assertEquals("Talk started", response.getMessage());
         assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
     }
@@ -303,7 +303,7 @@ public class NexmoVoiceClientTest {
                         "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
                         "}\n"));
 
-        NexmoResponse response = client.stopTalk("ssf61863-4a51-ef6b-11e1-w6edebcf93bb");
+        TalkResponse response = client.stopTalk("ssf61863-4a51-ef6b-11e1-w6edebcf93bb");
         assertEquals("Talk stopped", response.getMessage());
         assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
 

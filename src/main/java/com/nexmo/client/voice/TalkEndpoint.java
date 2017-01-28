@@ -34,11 +34,11 @@ public class TalkEndpoint {
         this.stopTalk = new StopTalkMethod(wrapper);
     }
 
-    public NexmoResponse put(TalkRequest request) throws IOException, NexmoClientException {
+    public TalkResponse put(TalkRequest request) throws IOException, NexmoClientException {
         return this.startTalk.execute(request);
     }
 
-    public NexmoResponse delete(String uuid) throws IOException, NexmoClientException {
+    public TalkResponse delete(String uuid) throws IOException, NexmoClientException {
         return this.stopTalk.execute(uuid);
     }
 }

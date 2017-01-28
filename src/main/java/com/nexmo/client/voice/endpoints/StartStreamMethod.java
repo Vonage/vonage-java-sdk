@@ -23,8 +23,8 @@ package com.nexmo.client.voice.endpoints;/*
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.JWTAuthMethod;
-import com.nexmo.client.voice.NexmoResponse;
 import com.nexmo.client.voice.StreamRequest;
+import com.nexmo.client.voice.StreamResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -36,7 +36,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class StartStreamMethod extends AbstractMethod<StreamRequest, NexmoResponse> {
+public class StartStreamMethod extends AbstractMethod<StreamRequest, StreamResponse> {
     private static final Log LOG = LogFactory.getLog(StartStreamMethod.class);
 
     private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls/";
@@ -64,10 +64,10 @@ public class StartStreamMethod extends AbstractMethod<StreamRequest, NexmoRespon
     }
 
     @Override
-    public NexmoResponse parseResponse(HttpResponse response) throws IOException {
+    public StreamResponse parseResponse(HttpResponse response) throws IOException {
         String json = EntityUtils.toString(response.getEntity());
         LOG.info("Received: " + json);
-        return NexmoResponse.fromJson(json);
+        return StreamResponse.fromJson(json);
     }
 
     public void setUri(String uri) {

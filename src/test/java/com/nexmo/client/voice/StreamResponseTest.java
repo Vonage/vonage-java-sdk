@@ -27,32 +27,32 @@ import static org.junit.Assert.fail;
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- */public class NexmoResponseTest {
-    private NexmoResponse response;
+ */public class StreamResponseTest {
+    private StreamResponse response;
 
     @Before
     public void setUp() {
-        response = NexmoResponse.fromJson("{\n" +
-                "  \"message\": \"DTMF sent\",\n" +
+        response = StreamResponse.fromJson("{\n" +
+                "  \"message\": \"Stream started\",\n" +
                 "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
                 "}");
     }
 
     @Test
     public void testBasics() {
-        assertEquals("DTMF sent", response.getMessage());
+        assertEquals("Stream started", response.getMessage());
         assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
     }
 
     @Test
     public void testNexmoUnexpectedException() {
         try {
-            NexmoResponse.fromJson("{\n" +
+            StreamResponse.fromJson("{\n" +
                     "    \"unknownProperty\": \"unknown\"\n" +
                     "}");
             fail("Expected a NexmoUnexpectedException to be thrown");
         } catch (NexmoUnexpectedException e) {
-            assertEquals("Failed to produce json from the NexmoResponse object.", e.getMessage());
+            assertEquals("Failed to produce json from StreamResponse object.", e.getMessage());
         }
     }
 }

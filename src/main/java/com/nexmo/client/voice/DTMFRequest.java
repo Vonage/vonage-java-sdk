@@ -24,13 +24,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
 
-public class DTMFRequest {
+public class DtmfRequest {
     private String uuid;
-    private DTMFPayload payload;
+    private DtmfPayload payload;
 
-    public DTMFRequest(String uuid, String digits) {
+    public DtmfRequest(String uuid, String digits) {
         this.uuid = uuid;
-        this.payload = new DTMFPayload(digits);
+        this.payload = new DtmfPayload(digits);
     }
 
     public String getUuid() {
@@ -54,7 +54,7 @@ public class DTMFRequest {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.writeValueAsString(this.payload);
         } catch (JsonProcessingException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce json from DTMFRequest object.", jpe);
+            throw new NexmoUnexpectedException("Failed to produce json from DtmfRequest object.", jpe);
         }
     }
 }

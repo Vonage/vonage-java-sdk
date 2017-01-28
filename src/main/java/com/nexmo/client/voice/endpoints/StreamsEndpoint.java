@@ -35,11 +35,11 @@ public class StreamsEndpoint {
         this.stopStream = new StopStreamMethod(wrapper);
     }
 
-    public NexmoResponse put(StreamRequest request) throws IOException, NexmoClientException {
+    public StreamResponse put(StreamRequest request) throws IOException, NexmoClientException {
         return this.startStream.execute(request);
     }
 
-    public NexmoResponse delete(String uuid) throws IOException, NexmoClientException {
+    public StreamResponse delete(String uuid) throws IOException, NexmoClientException {
         return this.stopStream.execute(uuid);
     }
 }

@@ -20,12 +20,14 @@ package com.nexmo.client.voice;/*
  * THE SOFTWARE.
  */
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
 
 import java.io.IOException;
 
-public class NexmoResponse {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class DtmfResponse {
     private String uuid;
     private String message;
 
@@ -37,12 +39,12 @@ public class NexmoResponse {
         return message;
     }
 
-    public static NexmoResponse fromJson(String json) {
+    public static DtmfResponse fromJson(String json) {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, NexmoResponse.class);
+            return mapper.readValue(json, DtmfResponse.class);
         } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce json from the NexmoResponse object.", jpe);
+            throw new NexmoUnexpectedException("Failed to produce json from DtmfResponse object.", jpe);
         }
     }
 

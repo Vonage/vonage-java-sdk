@@ -35,14 +35,14 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class SendDTMFMethod extends AbstractMethod<DTMFRequest, NexmoResponse> {
-    private static final Log LOG = LogFactory.getLog(SendDTMFMethod.class);
+public class SendDtmfMethod extends AbstractMethod<DtmfRequest, DtmfResponse> {
+    private static final Log LOG = LogFactory.getLog(SendDtmfMethod.class);
 
     private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
     private String uri = DEFAULT_URI;
 
-    public SendDTMFMethod(HttpWrapper httpWrapper) {
+    public SendDtmfMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -52,7 +52,7 @@ public class SendDTMFMethod extends AbstractMethod<DTMFRequest, NexmoResponse> {
     }
 
     @Override
-    public HttpUriRequest makeRequest(DTMFRequest request) throws NexmoClientException, UnsupportedEncodingException {
+    public HttpUriRequest makeRequest(DtmfRequest request) throws NexmoClientException, UnsupportedEncodingException {
         String uri = this.uri + request.getUuid() + "/dtmf";
         HttpPut put = new HttpPut(uri);
         put.setHeader("Content-Type", "application/json");
@@ -62,10 +62,10 @@ public class SendDTMFMethod extends AbstractMethod<DTMFRequest, NexmoResponse> {
     }
 
     @Override
-    public NexmoResponse parseResponse(HttpResponse response) throws IOException {
+    public DtmfResponse parseResponse(HttpResponse response) throws IOException {
         String json = EntityUtils.toString(response.getEntity());
         LOG.info("Received: " + json);
-        return NexmoResponse.fromJson(json);
+        return DtmfResponse.fromJson(json);
     }
 
     public void setUri(String uri) {

@@ -1,3 +1,12 @@
+package com.nexmo.client.voice;
+
+import com.nexmo.client.NexmoUnexpectedException;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 /*
  * Copyright (c) 2011-2016 Nexmo Inc
  *
@@ -18,22 +27,33 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- */
+ */public class DtmfResponseTest {
+    private DtmfResponse response;
 
-package com.nexmo.client.voice;
-
-public class DtmfPayload {
-    private String digits;
-
-    public DtmfPayload(String digits) {
-        this.digits = digits;
+    @Before
+    public void setUp() {
+        response = DtmfResponse.fromJson("{\n" +
+                "  \"message\": \"DTMF sent\",\n" +
+                "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
+                "}");
     }
 
-    public String getDigits() {
-        return digits;
+    @Test
+    public void testBasics() {
+        assertEquals("DTMF sent", response.getMessage());
+        assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
     }
 
-    public void setDigits(String digits) {
-        this.digits = digits;
+    @Test
+    public void testNexmoUnexpectedException() {
+        try {
+            DtmfResponse.fromJson("{\n" +
+                    "    \"unknownProperty\": \"unknown\"\n" +
+                    "}");
+            fail("Expected a NexmoUnexpectedException to be thrown");
+        } catch (NexmoUnexpectedException e) {
+            assertEquals("Failed to produce json from DtmfResponse object.", e.getMessage());
+        }
     }
 }
+

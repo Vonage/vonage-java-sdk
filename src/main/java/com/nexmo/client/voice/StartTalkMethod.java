@@ -35,7 +35,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class StartTalkMethod extends AbstractMethod<TalkRequest, NexmoResponse> {
+public class StartTalkMethod extends AbstractMethod<TalkRequest, TalkResponse> {
     private static final Log LOG = LogFactory.getLog(StartTalkMethod.class);
 
     private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls/";
@@ -63,10 +63,10 @@ public class StartTalkMethod extends AbstractMethod<TalkRequest, NexmoResponse> 
     }
 
     @Override
-    public NexmoResponse parseResponse(HttpResponse response) throws IOException {
+    public TalkResponse parseResponse(HttpResponse response) throws IOException {
         String json = EntityUtils.toString(response.getEntity());
         LOG.info("Received: " + json);
-        return NexmoResponse.fromJson(json);
+        return TalkResponse.fromJson(json);
     }
 
     public void setUri(String uri) {

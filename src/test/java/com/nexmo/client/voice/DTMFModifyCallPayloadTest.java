@@ -26,12 +26,12 @@ import static org.junit.Assert.*;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-public class DTMFModifyCallPayloadTest {
-    private DTMFPayload payload;
+public class DtmfModifyCallPayloadTest {
+    private DtmfPayload payload;
 
     @Before
     public void setUp() {
-        payload = new DTMFPayload("8675309");
+        payload = new DtmfPayload("8675309");
     }
 
     @Test

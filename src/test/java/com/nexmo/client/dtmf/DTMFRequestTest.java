@@ -1,6 +1,6 @@
 package com.nexmo.client.dtmf;
 
-import com.nexmo.client.voice.DTMFRequest;
+import com.nexmo.client.voice.DtmfRequest;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,12 +27,12 @@ import static org.junit.Assert.assertEquals;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-public class DTMFRequestTest {
-    private DTMFRequest request;
+public class DtmfRequestTest {
+    private DtmfRequest request;
 
     @Before
     public void setUp() throws Exception {
-        request = new DTMFRequest("123-abc", "8675309");
+        request = new DtmfRequest("123-abc", "8675309");
     }
 
     @Test
