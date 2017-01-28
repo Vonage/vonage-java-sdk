@@ -20,37 +20,23 @@
  * THE SOFTWARE.
  */
 
-package com.nexmo.client.voice.ncco;
+package com.nexmo.client.voice.servlet;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.voice.ncco.Ncco;
 
-public class NccoSerializer {
-    private static NccoSerializer instance;
+public class NccoResponseBuilder {
+    private NccoResponse value;
 
-    private ObjectMapper mapper;
-
-    public NccoSerializer() {
-        this.mapper = new ObjectMapper();
+    public NccoResponseBuilder() {
+        this.value = new NccoResponse();
     }
 
-    public NccoSerializer(ObjectMapper mapper) {
-        this.mapper = mapper;
+    public NccoResponseBuilder appendNcco(Ncco ncco) {
+        this.value.appendNcco(ncco);
+        return this;
     }
 
-    public static NccoSerializer getInstance() {
-        if (instance == null) {
-            instance = new NccoSerializer();
-        }
-        return instance;
-    }
-
-    public String serializeNcco(Ncco ncco) {
-        try {
-            return this.mapper.writeValueAsString(ncco);
-        } catch (JsonProcessingException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce json from Ncco object.", jpe);
-        }
+    public NccoResponse getValue() {
+        return this.value;
     }
 }
