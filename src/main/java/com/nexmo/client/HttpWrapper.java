@@ -22,7 +22,10 @@ package com.nexmo.client;/*
 
 import com.nexmo.client.auth.AuthCollection;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
@@ -60,15 +63,25 @@ public class HttpWrapper {
     }
 
     protected HttpClient createHttpClient() {
-        ThreadSafeClientConnManager threadSafeClientConnManager = new ThreadSafeClientConnManager();
+        PoolingHttpClientConnectionManager threadSafeClientConnManager = new PoolingHttpClientConnectionManager();
         threadSafeClientConnManager.setDefaultMaxPerRoute(200);
         threadSafeClientConnManager.setMaxTotal(200);
+        // threadSafeClientConnManager.setValidateAfterInactivity();
+
+        RequestConfig requestConfig = RequestConfig.custom()
+                .build();
+
+
+        HttpClientBuilder clientBuilder = HttpClientBuilder.create()
+                .setUserAgent("nexmo-java/2.0.0-prerelease")
+                .setDefaultRequestConfig();
+
 
         HttpParams httpClientParams = new BasicHttpParams();
-        HttpProtocolParams.setUserAgent(httpClientParams, "nexmo-java/2.0.0-prerelease");
+        // HttpProtocolParams.setUserAgent(httpClientParams, );
         HttpProtocolParams.setContentCharset(httpClientParams, "UTF-8");
         HttpProtocolParams.setHttpElementCharset(httpClientParams, "UTF-8");
-        HttpConnectionParams.setStaleCheckingEnabled(httpClientParams, true);
+        // HttpConnectionParams.setStaleCheckingEnabled(httpClientParams, true);
         HttpConnectionParams.setTcpNoDelay(httpClientParams, true);
 
         return new DefaultHttpClient(threadSafeClientConnManager, httpClientParams);
