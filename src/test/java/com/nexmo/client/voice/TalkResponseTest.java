@@ -1,11 +1,13 @@
 package com.nexmo.client.voice;
 
-import com.nexmo.client.NexmoUnexpectedException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertNull;
 
 /*
  * Copyright (c) 2011-2016 Nexmo Inc
@@ -45,15 +47,13 @@ import static org.junit.Assert.fail;
     }
 
     @Test
-    public void testNexmoUnexpectedException() {
-        try {
-            TalkResponse.fromJson("{\n" +
-                    "    \"unknownProperty\": \"unknown\"\n" +
-                    "}");
-            fail("Expected a NexmoUnexpectedException to be thrown");
-        } catch (NexmoUnexpectedException e) {
-            assertEquals("Failed to produce json from TalkResponse object.", e.getMessage());
-        }
+    public void testUnknownJson() throws IOException {
+        String json = "{\n" +
+                "    \"unknownProperty\": \"unknown\"\n" +
+                "}";
+        ObjectMapper mapper = new ObjectMapper();
+        TalkResponse tr = mapper.readValue(json, TalkResponse.class);
+        assertNull(tr.getUuid());
     }
 }
 
