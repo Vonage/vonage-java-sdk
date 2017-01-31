@@ -1,12 +1,4 @@
-package com.nexmo.client.dtmf;
-
-import com.nexmo.client.voice.DTMFRequest;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-
-/*
+package com.nexmo.client.voice;/*
  * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,40 +19,34 @@ import static org.junit.Assert.assertEquals;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-public class DTMFRequestTest {
-    private DTMFRequest request;
 
-    @Before
-    public void setUp() throws Exception {
-        request = new DTMFRequest("123-abc", "8675309");
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexmo.client.NexmoUnexpectedException;
+
+public class StreamRequest {
+    private StreamPayload streamPayload;
+    private String uuid;
+
+    public StreamRequest(String uuid, String streamUrl, int loop) {
+        this.streamPayload = new StreamPayload(streamUrl, loop);
+        this.uuid = uuid;
     }
 
-    @Test
-    public void getUuid() throws Exception {
-        assertEquals("123-abc", request.getUuid());
+    public String getUuid() {
+        return uuid;
     }
 
-    @Test
-    public void getDigits() throws Exception {
-        assertEquals("8675309", request.getDigits());
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
-    @Test
-    public void setUuid() throws Exception {
-        request.setUuid("000-xyz");
-        assertEquals("000-xyz", request.getUuid());
+    public String toJson() {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(this.streamPayload);
+        } catch (JsonProcessingException jpe) {
+            throw new NexmoUnexpectedException("Failed to produce json from StreamRequest object.", jpe);
+        }
     }
-
-    @Test
-    public void setDigits() throws Exception {
-        request.setDigits("555");
-        assertEquals("555", request.getDigits());
-    }
-
-    @Test
-    public void toJson() throws Exception {
-        String jsonString = "{" + "\"digits\":\"8675309\"" + "}";
-        assertEquals(jsonString, request.toJson());
-    }
-
 }

@@ -41,16 +41,16 @@ import static org.junit.Assert.assertEquals;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-public class SendDTMFMethodTest {
-    private static final Log LOG = LogFactory.getLog(SendDTMFMethodTest.class);
+public class SendDtmfMethodTest {
+    private static final Log LOG = LogFactory.getLog(SendDtmfMethodTest.class);
 
     @Test
     public void makeRequest() throws Exception {
         HttpWrapper httpWrapper = new HttpWrapper(null);
-        SendDTMFMethod methodUnderTest = new SendDTMFMethod(httpWrapper);
+        SendDtmfMethod methodUnderTest = new SendDtmfMethod(httpWrapper);
 
         HttpUriRequest request = methodUnderTest.makeRequest(
-                new DTMFRequest("abc-123", "867")
+                new DtmfRequest("abc-123", "867")
         );
 
         assertEquals(HttpPut.class, request.getClass());
@@ -66,7 +66,7 @@ public class SendDTMFMethodTest {
     @Test
     public void parseResponse() throws Exception {
         HttpWrapper wrapper = new HttpWrapper(null);
-        SendDTMFMethod methodUnderTest = new SendDTMFMethod(wrapper);
+        SendDtmfMethod methodUnderTest = new SendDtmfMethod(wrapper);
 
         HttpResponse stubResponse = new BasicHttpResponse(
                 new BasicStatusLine(new ProtocolVersion("1.1", 1,1), 200, "OK")
@@ -78,7 +78,7 @@ public class SendDTMFMethodTest {
         entity.setContent(jsonStream);
         stubResponse.setEntity(entity);
 
-        DTMFResponse response = methodUnderTest.parseResponse(stubResponse);
+        DtmfResponse response = methodUnderTest.parseResponse(stubResponse);
         assertEquals("DTMF sent", response.getMessage());
         assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
     }

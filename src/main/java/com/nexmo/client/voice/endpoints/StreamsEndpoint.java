@@ -1,13 +1,4 @@
-package com.nexmo.client.voice;
-
-import com.nexmo.client.NexmoUnexpectedException;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-/*
+package com.nexmo.client.voice.endpoints;/*
  * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,33 +18,28 @@ import static org.junit.Assert.fail;
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- */public class DTMFResponseTest {
-    private DTMFResponse response;
+ */
 
-    @Before
-    public void setUp() {
-        response = DTMFResponse.fromJson("{\n" +
-                "  \"message\": \"DTMF sent\",\n" +
-                "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
-                "}");
+import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.voice.*;
+
+import java.io.IOException;
+
+public class StreamsEndpoint {
+    private final StartStreamMethod startStream;
+    private final StopStreamMethod stopStream;
+
+    public StreamsEndpoint(HttpWrapper wrapper) {
+        this.startStream = new StartStreamMethod(wrapper);
+        this.stopStream = new StopStreamMethod(wrapper);
     }
 
-    @Test
-    public void testBasics() {
-        assertEquals("DTMF sent", response.getMessage());
-        assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
+    public StreamResponse put(StreamRequest request) throws IOException, NexmoClientException {
+        return this.startStream.execute(request);
     }
 
-    @Test
-    public void testNexmoUnexpectedException() {
-        try {
-            DTMFResponse.fromJson("{\n" +
-                    "    \"unknownProperty\": \"unknown\"\n" +
-                    "}");
-            fail("Expected a NexmoUnexpectedException to be thrown");
-        } catch (NexmoUnexpectedException e) {
-            assertEquals("Failed to produce json from DTMFResponse object.", e.getMessage());
-        }
+    public StreamResponse delete(String uuid) throws IOException, NexmoClientException {
+        return this.stopStream.execute(uuid);
     }
 }
-

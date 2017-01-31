@@ -25,13 +25,14 @@ package com.nexmo.client.voice.endpoints;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.voice.CallDirection;
+import com.nexmo.client.voice.CallEndpoint;
 import com.nexmo.client.voice.CallRecord;
 import com.nexmo.client.voice.CallStatus;
-import com.nexmo.client.voice.CallEndpoint;
 import org.junit.Test;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import static org.junit.Assert.assertEquals;
 
@@ -73,12 +74,18 @@ public class CallRecordTest {
         assertEquals(7, (long)record.getDuration());
         assertEquals("23410", record.getNetwork());
         // 2017-01-13T13:55:02.000Z
+        Calendar expectedStart = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
+        expectedStart.set(2017, Calendar.JANUARY, 13 ,13, 55, 2);
+        expectedStart.set(Calendar.MILLISECOND, 0);
         assertEquals(
-                new GregorianCalendar(2017, Calendar.JANUARY, 13 ,13, 55, 2).getTime(),
+                expectedStart.getTime(),
                 record.getStartTime());
         // 2017-01-13T13:55:09.000Z
+        Calendar expectedEnd = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
+        expectedEnd.set(2017, Calendar.JANUARY, 13 ,13, 55, 9);
+        expectedEnd.set(Calendar.MILLISECOND, 0);
         assertEquals(
-                new GregorianCalendar(2017, Calendar.JANUARY, 13 ,13, 55, 9).getTime(),
+                expectedEnd.getTime(),
                 record.getEndTime());
         assertEquals(new CallEndpoint("447700900104"), record.getTo());
         assertEquals(new CallEndpoint("447700900105"), record.getFrom());

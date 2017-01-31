@@ -1,5 +1,5 @@
 package com.nexmo.client.voice;/*
- * Copyright (c) 2011-2016 Nexmo Inc
+ * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,29 +20,29 @@ package com.nexmo.client.voice;/*
  * THE SOFTWARE.
  */
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.NexmoUnexpectedException;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.io.IOException;
+public class TalkPayload {
+    private String text;
+    private VoiceName voiceName;
+    private int loop;
 
-public class DTMFResponse {
-    private String message;
-    private String uuid;
-
-    public String getMessage() {
-        return message;
+    public TalkPayload(String text, VoiceName voiceName, int loop) {
+        this.text = text;
+        this.voiceName = voiceName;
+        this.loop = loop;
     }
 
-    public String getUuid() {
-        return uuid;
+    public String getText() {
+        return text;
     }
 
-    public static DTMFResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, DTMFResponse.class);
-        } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce json from DTMFResponse object.", jpe);
-        }
+    @JsonProperty("voice_name")
+    public VoiceName getVoiceName() {
+        return voiceName;
+    }
+
+    public int getLoop() {
+        return loop;
     }
 }
