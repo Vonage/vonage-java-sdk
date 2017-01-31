@@ -74,35 +74,19 @@ public class CallRecordTest {
         assertEquals(7, (long)record.getDuration());
         assertEquals("23410", record.getNetwork());
         // 2017-01-13T13:55:02.000Z
-        Calendar expectedStart = new GregorianCalendar(2017, Calendar.JANUARY, 13 ,13, 55, 2);
-        expectedStart.getTime();
-        expectedStart.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-        Calendar actualStart = Calendar.getInstance();
-        actualStart.setTimeZone(TimeZone.getTimeZone("UTC"));
-        actualStart.setTime(record.getStartTime());
-
+        Calendar expectedStart = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
+        expectedStart.set(2017, Calendar.JANUARY, 13 ,13, 55, 2);
+        expectedStart.set(Calendar.MILLISECOND, 0);
         assertEquals(
-                //getTime() prints out a date in the default timezone. In my case EST
-                //but we want everything to be in UTC time
-                //can't set the default to timezone to UTC, that fixes the symptom, not the cause
-                expectedStart,
-
-                //but why does getStartTime() print out in EST? Jackson should use UTC as default
-                //it prints out in EST because the test is calling toString() on it?
-                //focus on this first
-                actualStart);
+                expectedStart.getTime(),
+                record.getStartTime());
         // 2017-01-13T13:55:09.000Z
-        Calendar expectedEnd = new GregorianCalendar(2017, Calendar.JANUARY, 13 ,13, 55, 9);
-        expectedEnd.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-        Calendar actualEnd = Calendar.getInstance();
-        actualEnd.setTimeZone(TimeZone.getTimeZone("UTC"));
-        actualEnd.setTime(record.getEndTime());
-
+        Calendar expectedEnd = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
+        expectedEnd.set(2017, Calendar.JANUARY, 13 ,13, 55, 9);
+        expectedEnd.set(Calendar.MILLISECOND, 0);
         assertEquals(
-                expectedEnd,
-                actualEnd);
+                expectedEnd.getTime(),
+                record.getEndTime());
         assertEquals(new CallEndpoint("447700900104"), record.getTo());
         assertEquals(new CallEndpoint("447700900105"), record.getFrom());
 
