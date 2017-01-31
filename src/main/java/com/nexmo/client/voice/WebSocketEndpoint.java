@@ -44,6 +44,11 @@ public class WebSocketEndpoint implements Endpoint {
         return type;
     }
 
+    @Override
+    public String toLog() {
+        return "uri=" + uri + " content-type=" + contentType;
+    }
+
     public String getUri() {
         return uri;
     }

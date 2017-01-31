@@ -43,4 +43,9 @@ public class SipEndpoint implements Endpoint {
     public String getType() {
         return type;
     }
+
+    @Override
+    public String toLog() {
+        return uri;
+    }
 }

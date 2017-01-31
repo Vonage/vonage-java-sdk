@@ -20,6 +20,20 @@ package com.nexmo.client.voice;/*
  * THE SOFTWARE.
  */
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.EXISTING_PROPERTY,
+        property = "type"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = CallEndpoint.class, name = "phone"),
+        @JsonSubTypes.Type(value = SipEndpoint.class, name = "sip"),
+        @JsonSubTypes.Type(value = WebSocketEndpoint.class, name = "websocket")
+})
 public interface Endpoint {
     public String getType();
+    public String toLog();
 }

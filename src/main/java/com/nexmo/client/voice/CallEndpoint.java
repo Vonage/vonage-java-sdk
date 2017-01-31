@@ -47,6 +47,11 @@ public class CallEndpoint implements Endpoint {
         return type;
     }
 
+    @Override
+    public String toLog() {
+        return number;
+    }
+
     public String getNumber() {
         return number;
     }

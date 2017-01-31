@@ -37,8 +37,8 @@ import java.util.Date;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "_links" })
 public class CallRecord {
-    private CallEndpoint to;
-    private CallEndpoint from;
+    private Endpoint to;
+    private Endpoint from;
 
     private String conversationUuid = null;
     private CallDirection direction = null;
@@ -62,19 +62,29 @@ public class CallRecord {
         this.from = from;
     }
 
-    public CallEndpoint getTo() {
+    public CallRecord(SipEndpoint to, SipEndpoint from) {
+        this.to = to;
+        this.from = from;
+    }
+
+    public CallRecord(WebSocketEndpoint to, WebSocketEndpoint from) {
+        this.to = to;
+        this.from = from;
+    }
+
+    public Endpoint getTo() {
         return to;
     }
 
-    public void setTo(CallEndpoint to) {
+    public void setTo(Endpoint to) {
         this.to = to;
     }
 
-    public CallEndpoint getFrom() {
+    public Endpoint getFrom() {
         return from;
     }
 
-    public void setFrom(CallEndpoint from) {
+    public void setFrom(Endpoint from) {
         this.from = from;
     }
 
@@ -165,8 +175,8 @@ public class CallRecord {
         return new StringBuilder()
                 .append("<CallRecord ")
                 .append("ID: ").append(this.getUuid()).append(", ")
-                .append("From: ").append(this.getFrom().getNumber()).append(", ")
-                .append("To: ").append(this.getTo().getNumber()).append(", ")
+                .append("From: ").append(this.getFrom().toLog()).append(", ")
+                .append("To: ").append(this.getTo().toLog()).append(", ")
                 .append("Status: ").append(this.getStatus())
                 .append(">")
                 .toString();
