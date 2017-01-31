@@ -25,7 +25,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class CallEndpoint {
+public class CallEndpoint implements Endpoint {
     private String type = "phone";
     private String number;
     private String dtmfAnswer = null;
@@ -42,6 +42,7 @@ public class CallEndpoint {
         this.dtmfAnswer = dtmfAnswer;
     }
 
+    @Override
     public String getType() {
         return type;
     }
