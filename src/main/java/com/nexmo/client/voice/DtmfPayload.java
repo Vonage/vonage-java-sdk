@@ -1,12 +1,5 @@
-package com.nexmo.client.voice;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2016 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,23 +19,21 @@ import static org.junit.Assert.*;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-public class DTMFModifyCallPayloadTest {
-    private DTMFPayload payload;
 
-    @Before
-    public void setUp() {
-        payload = new DTMFPayload("8675309");
+package com.nexmo.client.voice;
+
+public class DtmfPayload {
+    private String digits;
+
+    public DtmfPayload(String digits) {
+        this.digits = digits;
     }
 
-    @Test
-    public void getDigits() throws Exception {
-        assertEquals("8675309", payload.getDigits());
+    public String getDigits() {
+        return digits;
     }
 
-    @Test
-    public void setDigits() throws Exception {
-        payload.setDigits("1234");
-        assertEquals("1234", payload.getDigits());
+    public void setDigits(String digits) {
+        this.digits = digits;
     }
-
 }

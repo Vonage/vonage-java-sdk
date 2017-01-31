@@ -1,5 +1,5 @@
-package com.nexmo.client.voice;/*
- * Copyright (c) 2011-2016 Nexmo Inc
+package com.nexmo.client.voice.endpoints;/*
+ * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,25 +23,25 @@ package com.nexmo.client.voice;/*
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.JWTAuthMethod;
-import com.nexmo.client.voice.endpoints.AbstractMethod;
+import com.nexmo.client.voice.StreamResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.entity.StringEntity;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class SendDTMFMethod extends AbstractMethod<DTMFRequest, DTMFResponse> {
-    private static final Log LOG = LogFactory.getLog(SendDTMFMethod.class);
+public class StopStreamMethod extends AbstractMethod<String, StreamResponse> {
+    private static final Log LOG = LogFactory.getLog(StopStreamMethod.class);
 
     private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
     private String uri = DEFAULT_URI;
 
-    public SendDTMFMethod(HttpWrapper httpWrapper) {
+    public StopStreamMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -51,18 +51,19 @@ public class SendDTMFMethod extends AbstractMethod<DTMFRequest, DTMFResponse> {
     }
 
     @Override
-    public RequestBuilder makeRequest(DTMFRequest request) throws NexmoClientException, UnsupportedEncodingException {
-        String uri = this.uri + request.getUuid() + "/dtmf";
-        return RequestBuilder.put(uri)
-                .setHeader("Content-Type", "application/json")
-                .setEntity(new StringEntity(request.toJson()));
+    public HttpUriRequest makeRequest(String uuid) throws NexmoClientException, UnsupportedEncodingException {
+        String uri = this.uri + uuid + "/stream";
+        HttpDelete delete = new HttpDelete(uri);
+        delete.setHeader("Content-Type", "application/json");
+        LOG.info("StopStreamRequest made for " + uuid);
+        return delete;
     }
 
     @Override
-    public DTMFResponse parseResponse(HttpResponse response) throws IOException {
+    public StreamResponse parseResponse(HttpResponse response) throws IOException {
         String json = EntityUtils.toString(response.getEntity());
         LOG.info("Received: " + json);
-        return DTMFResponse.fromJson(json);
+        return StreamResponse.fromJson(json);
     }
 
     public void setUri(String uri) {

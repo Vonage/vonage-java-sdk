@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2011-2016 Nexmo Inc
+package com.nexmo.client.voice;/*
+ * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,24 +20,32 @@
  * THE SOFTWARE.
  */
 
-package com.nexmo.client;
-
-import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.voice.DTMFRequest;
-import com.nexmo.client.voice.DTMFResponse;
-import com.nexmo.client.voice.SendDTMFMethod;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexmo.client.NexmoUnexpectedException;
 
 import java.io.IOException;
 
-public class DTMFEndpoint {
-    private final SendDTMFMethod sendDTMF;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class DtmfResponse {
+    private String uuid;
+    private String message;
 
-    public DTMFEndpoint(HttpWrapper httpWrapper) {
-        this.sendDTMF = new SendDTMFMethod(httpWrapper);
+    public String getUuid() {
+        return uuid;
     }
 
-    public DTMFResponse put(String uuid, String digits) throws IOException, NexmoClientException {
-        return this.sendDTMF.execute(new DTMFRequest(uuid, digits));
+    public String getMessage() {
+        return message;
     }
+
+    public static DtmfResponse fromJson(String json) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(json, DtmfResponse.class);
+        } catch (IOException jpe) {
+            throw new NexmoUnexpectedException("Failed to produce json from DtmfResponse object.", jpe);
+        }
+    }
+
 }

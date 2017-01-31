@@ -39,8 +39,14 @@ public class CallsFilterTest {
     private String order;
          */
 
-        Date startDate = new GregorianCalendar(2016, Calendar.JANUARY, 1, 7, 8, 20).getTime();
-        Date endDate = new GregorianCalendar(2016, Calendar.JANUARY, 1, 7, 8, 55).getTime();
+        Calendar startCalendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
+        startCalendar.set(2016, Calendar.JANUARY, 1, 7, 8, 20);
+        startCalendar.set(Calendar.MILLISECOND, 0);
+        Date startDate = startCalendar.getTime();
+        Calendar endCalendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
+        endCalendar.set(2016, Calendar.JANUARY, 1, 7, 8, 55);
+        endCalendar.set(Calendar.MILLISECOND, 0);
+        Date endDate = endCalendar.getTime();
 
         CallsFilter filter = new CallsFilter();
         filter.setStatus(CallStatus.COMPLETED);

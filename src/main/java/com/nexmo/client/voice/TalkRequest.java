@@ -1,5 +1,5 @@
 package com.nexmo.client.voice;/*
- * Copyright (c) 2011-2016 Nexmo Inc
+ * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,37 +24,41 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
 
-public class DTMFRequest {
+public class TalkRequest {
+    private TalkPayload talkPayload;
     private String uuid;
-    private DTMFPayload payload;
 
-    public DTMFRequest(String uuid, String digits) {
+    public TalkRequest(String uuid, String text, VoiceName voiceName, int loop) {
+        this.talkPayload = new TalkPayload(text, voiceName, loop);
         this.uuid = uuid;
-        this.payload = new DTMFPayload(digits);
+    }
+
+    public TalkRequest(String uuid, String text, VoiceName voiceName) {
+        new TalkRequest(uuid, text, voiceName, 1);
+    }
+
+    public TalkRequest(String uuid, String text, int loop) {
+        new TalkRequest(uuid, text, VoiceName.KIMBERLY, loop);
+    }
+
+    public TalkRequest(String uuid, String text) {
+        new TalkRequest(uuid, text, VoiceName.KIMBERLY, 1);
     }
 
     public String getUuid() {
         return uuid;
     }
 
-    public String getDigits() {
-        return payload.getDigits();
-    }
-
     public void setUuid(String uuid) {
         this.uuid = uuid;
-    }
-
-    public void setDigits(String digits) {
-        this.payload.setDigits(digits);
     }
 
     public String toJson() {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(this.payload);
+            return mapper.writeValueAsString(this.talkPayload);
         } catch (JsonProcessingException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce json from DTMFRequest object.", jpe);
+            throw new NexmoUnexpectedException("Failed to produce json from TalkRequest object.", jpe);
         }
     }
 }

@@ -20,20 +20,22 @@
  * THE SOFTWARE.
  */
 
-package com.nexmo.client.voice;
+package com.nexmo.client;
 
-public class DTMFPayload {
-    private String digits;
+import com.nexmo.client.voice.DtmfRequest;
+import com.nexmo.client.voice.DtmfResponse;
+import com.nexmo.client.voice.SendDtmfMethod;
 
-    public DTMFPayload(String digits) {
-        this.digits = digits;
+import java.io.IOException;
+
+public class DtmfEndpoint {
+    private final SendDtmfMethod sendDtmf;
+
+    public DtmfEndpoint(HttpWrapper httpWrapper) {
+        this.sendDtmf = new SendDtmfMethod(httpWrapper);
     }
 
-    public String getDigits() {
-        return digits;
-    }
-
-    public void setDigits(String digits) {
-        this.digits = digits;
+    public DtmfResponse put(String uuid, String digits) throws IOException, NexmoClientException {
+        return this.sendDtmf.execute(new DtmfRequest(uuid, digits));
     }
 }

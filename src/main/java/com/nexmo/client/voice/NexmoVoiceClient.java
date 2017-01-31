@@ -24,20 +24,25 @@ package com.nexmo.client.voice;
 import com.nexmo.client.AbstractClient;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.DTMFEndpoint;
+import com.nexmo.client.DtmfEndpoint;
 import com.nexmo.client.voice.endpoints.CallsEndpoint;
+import com.nexmo.client.voice.endpoints.StreamsEndpoint;
 
 import java.io.IOException;
 
 public class NexmoVoiceClient extends AbstractClient {
     public final CallsEndpoint calls;
-    public final DTMFEndpoint dtmf;
+    public final StreamsEndpoint streams;
+    public final TalkEndpoint talk;
+    public final DtmfEndpoint dtmf;
 
     public NexmoVoiceClient(HttpWrapper httpWrapper) {
         super(httpWrapper);
 
         calls = new CallsEndpoint(httpWrapper);
-        dtmf = new DTMFEndpoint(httpWrapper);
+        streams = new StreamsEndpoint(httpWrapper);
+        talk = new TalkEndpoint(httpWrapper);
+        dtmf = new DtmfEndpoint(httpWrapper);
     }
 
     public CallEvent createCall(Call callRequest) throws IOException, NexmoClientException {
@@ -56,11 +61,47 @@ public class NexmoVoiceClient extends AbstractClient {
         return calls.get(uuid);
     }
 
-    public void sendDTMF(String uuid, String digits) throws IOException, NexmoClientException {
-        dtmf.put(uuid, digits);
+    public DtmfResponse sendDtmf(String uuid, String digits) throws IOException, NexmoClientException {
+        return dtmf.put(uuid, digits);
     }
 
-    public void modifyCall(String uuid, String action) throws IOException, NexmoClientException {
-        calls.put(uuid, action);
+    public CallRecord modifyCall(String uuid, String action) throws IOException, NexmoClientException {
+        return calls.put(uuid, action);
+    }
+
+    public StreamResponse startStream(String uuid, String streamUrl, int loop) throws IOException, NexmoClientException {
+        return streams.put(new StreamRequest(uuid, streamUrl, loop));
+    }
+
+    //Start a stream that only plays once.
+    public StreamResponse startStream(String uuid, String streamUrl) throws IOException, NexmoClientException {
+        return streams.put(new StreamRequest(uuid, streamUrl, 1));
+    }
+
+    public StreamResponse stopStream(String uuid) throws IOException, NexmoClientException {
+        return streams.delete(uuid);
+    }
+
+    public TalkResponse startTalk(String uuid, String text, VoiceName voiceName, int loop) throws IOException, NexmoClientException {
+        return talk.put(new TalkRequest(uuid, text, voiceName, loop));
+    }
+
+    //Send a synthesized speech message that only plays once
+    public TalkResponse startTalk(String uuid, String text, VoiceName voiceName) throws IOException, NexmoClientException {
+        return talk.put(new TalkRequest(uuid, text, voiceName));
+    }
+
+    //Send a synthesized speech message with the default voice of Kimberly
+    public TalkResponse startTalk(String uuid, String text, int loop) throws IOException, NexmoClientException {
+        return talk.put(new TalkRequest(uuid, text, loop));
+    }
+
+    //Send a synthesized speech message that only plays once with the default voice of Kimberly
+    public TalkResponse startTalk(String uuid, String text) throws IOException, NexmoClientException {
+        return talk.put(new TalkRequest(uuid, text));
+    }
+
+    public TalkResponse stopTalk(String uuid) throws IOException, NexmoClientException {
+        return talk.delete(uuid);
     }
 }
