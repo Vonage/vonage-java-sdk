@@ -26,8 +26,7 @@ import com.nexmo.client.voice.CallRecord;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
@@ -50,11 +49,9 @@ public class ReadCallMethod extends AbstractMethod<String, CallRecord> {
     }
 
     @Override
-    public HttpUriRequest makeRequest(String callId) {
+    public RequestBuilder makeRequest(String callId) {
         String uri = this.baseUri + callId;
-        HttpGet result = new HttpGet(uri);
-
-        return result;
+        return RequestBuilder.get(uri);
     }
 
     @Override

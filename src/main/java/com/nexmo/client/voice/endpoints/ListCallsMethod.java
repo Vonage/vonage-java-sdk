@@ -31,8 +31,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.util.EntityUtils;
 
@@ -58,7 +57,7 @@ public class ListCallsMethod extends AbstractMethod<CallsFilter, CallRecordPage>
     }
 
     @Override
-    public HttpUriRequest makeRequest(CallsFilter filter) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(CallsFilter filter) throws NexmoClientException, UnsupportedEncodingException {
         URIBuilder uriBuilder;
         try {
             uriBuilder = new URIBuilder(this.uri);
@@ -71,9 +70,7 @@ public class ListCallsMethod extends AbstractMethod<CallsFilter, CallRecordPage>
                 uriBuilder.setParameter(param.getName(), param.getValue());
             }
         }
-        HttpUriRequest request = new HttpGet(uriBuilder.toString());
-        LOG.debug("List Calls request: " + request.getURI());
-        return request;
+        return RequestBuilder.get().setUri(uriBuilder.toString());
     }
 
     @Override

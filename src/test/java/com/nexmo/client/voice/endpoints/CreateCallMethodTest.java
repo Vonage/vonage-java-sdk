@@ -33,8 +33,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
@@ -54,16 +53,15 @@ public class CreateCallMethodTest {
         CreateCallMethod methodUnderTest = new CreateCallMethod(null);
 
         // Execute test call:
-        HttpUriRequest request = methodUnderTest.makeRequest(
+        RequestBuilder request = methodUnderTest.makeRequest(
                 new Call("447700900903", "447700900904", "https://example.com/answer"));
 
-        assertEquals(HttpPost.class, request.getClass());
+        assertEquals("POST", request.getMethod());
         assertEquals("application/json", request.getFirstHeader("Content-Type").getValue());
-        HttpPost postRequest = (HttpPost) request;
 
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode node =  objectMapper.readValue(postRequest.getEntity().getContent(), JsonNode.class);
-        LOG.info(postRequest.getEntity().getContent());
+        JsonNode node = objectMapper.readValue(request.getEntity().getContent(), JsonNode.class);
+        LOG.info(request.getEntity().getContent());
         assertEquals("447700900903", node.get("to").get(0).get("number").asText());
         assertEquals("447700900904", node.get("from").get("number").asText());
         assertEquals("https://example.com/answer", node.get("answer_url").get(0).asText());
@@ -73,9 +71,9 @@ public class CreateCallMethodTest {
     public void testCustomUri() throws Exception {
         CreateCallMethod methodUnderTest = new CreateCallMethod(null);
         methodUnderTest.setUri("https://api.example.com/calls");
-        HttpUriRequest request = methodUnderTest.makeRequest(
+        RequestBuilder request = methodUnderTest.makeRequest(
                 new Call("447700900903", "447700900904", "https://example.com/answer"));
-        assertEquals("https://api.example.com/calls", request.getURI().toString());
+        assertEquals("https://api.example.com/calls", request.getUri().toString());
     }
 
     @Test

@@ -7,8 +7,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
@@ -49,17 +48,16 @@ public class SendDTMFMethodTest {
         HttpWrapper httpWrapper = new HttpWrapper(null);
         SendDTMFMethod methodUnderTest = new SendDTMFMethod(httpWrapper);
 
-        HttpUriRequest request = methodUnderTest.makeRequest(
+        RequestBuilder request = methodUnderTest.makeRequest(
                 new DTMFRequest("abc-123", "867")
         );
 
-        assertEquals(HttpPut.class, request.getClass());
+        assertEquals("PUT", request.getMethod());
         assertEquals("application/json", request.getFirstHeader("Content-Type").getValue());
-        HttpPut putRequest = (HttpPut) request;
 
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode node = objectMapper.readValue(putRequest.getEntity().getContent(), JsonNode.class);
-        LOG.info(putRequest.getEntity().getContent());
+        JsonNode node = objectMapper.readValue(request.getEntity().getContent(), JsonNode.class);
+        LOG.info(request.getEntity().getContent());
         assertEquals("867", node.get("digits").asText());
     }
 
@@ -69,7 +67,7 @@ public class SendDTMFMethodTest {
         SendDTMFMethod methodUnderTest = new SendDTMFMethod(wrapper);
 
         HttpResponse stubResponse = new BasicHttpResponse(
-                new BasicStatusLine(new ProtocolVersion("1.1", 1,1), 200, "OK")
+                new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 200, "OK")
         );
 
         String json = "{\"message\": \"DTMF sent\",\"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"}";

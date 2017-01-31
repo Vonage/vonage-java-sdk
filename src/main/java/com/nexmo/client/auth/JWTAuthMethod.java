@@ -23,7 +23,7 @@ package com.nexmo.client.auth;/*
 import com.auth0.jwt.Algorithm;
 import com.auth0.jwt.JWTSigner;
 import com.nexmo.client.NexmoUnexpectedException;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 
 import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
@@ -88,7 +88,7 @@ public class JWTAuthMethod extends AbstractAuthMethod {
     }
 
     @Override
-    public HttpUriRequest apply(HttpUriRequest request) {
+    public RequestBuilder apply(RequestBuilder request) {
         String token = this.constructToken(
                 System.currentTimeMillis() / 1000L,
                 constructJTI());

@@ -30,7 +30,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
@@ -41,9 +41,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class ListCallsMethodTest {
     private static final Log LOG = LogFactory.getLog(ListCallsMethodTest.class);
@@ -63,18 +61,18 @@ public class ListCallsMethodTest {
 
     @Test
     public void makeRequestWithNoFilter() throws Exception {
-        HttpUriRequest request = method.makeRequest(null);
+        RequestBuilder request = method.makeRequest(null);
         assertEquals("GET", request.getMethod());
-        assertEquals("https://api.nexmo.com/v1/calls", request.getURI().toString());
+        assertEquals("https://api.nexmo.com/v1/calls", request.getUri().toString());
     }
 
     @Test
     public void makeRequestWithFilter() throws Exception {
         CallsFilter callsFilter = new CallsFilter();
         callsFilter.setPageSize(3);
-        HttpUriRequest request = method.makeRequest(callsFilter);
+        RequestBuilder request = method.makeRequest(callsFilter);
         assertEquals("GET", request.getMethod());
-        assertEquals("https://api.nexmo.com/v1/calls?page_size=3", request.getURI().toString());
+        assertEquals("https://api.nexmo.com/v1/calls?page_size=3", request.getUri().toString());
     }
 
     @Test
@@ -172,9 +170,9 @@ public class ListCallsMethodTest {
         try {
             CallsFilter filter = new CallsFilter();
             filter.setPageSize(30);
-            HttpUriRequest request = method.makeRequest(filter);
+            RequestBuilder request = method.makeRequest(filter);
             // Anything past here only executes if our assertion is incorrect:
-            LOG.error("Request URI: " + request.getURI());
+            LOG.error("Request URI: " + request.getUri());
             fail("Making a request with a bad URI should throw a NexmoUnexpectedException");
         } catch (NexmoUnexpectedException nue) {
             // This is expected
