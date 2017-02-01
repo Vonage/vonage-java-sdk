@@ -28,7 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
@@ -51,12 +51,10 @@ public class StopStreamMethod extends AbstractMethod<String, StreamResponse> {
     }
 
     @Override
-    public HttpUriRequest makeRequest(String uuid) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(String uuid) throws NexmoClientException, UnsupportedEncodingException {
         String uri = this.uri + uuid + "/stream";
-        HttpDelete delete = new HttpDelete(uri);
-        delete.setHeader("Content-Type", "application/json");
-        LOG.info("StopStreamRequest made for " + uuid);
-        return delete;
+        return RequestBuilder.delete(uri)
+                .setHeader("Content-Type", "application/json");
     }
 
     @Override

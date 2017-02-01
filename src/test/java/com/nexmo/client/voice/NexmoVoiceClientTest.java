@@ -306,6 +306,5 @@ public class NexmoVoiceClientTest {
         TalkResponse response = client.stopTalk("ssf61863-4a51-ef6b-11e1-w6edebcf93bb");
         assertEquals("Talk stopped", response.getMessage());
         assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
-
     }
 }
