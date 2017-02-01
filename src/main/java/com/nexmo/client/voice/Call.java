@@ -50,10 +50,10 @@ public class Call {
     public Call() {}
 
     public Call(String to, String from, String answerUrl) {
-        this(new CallEndpoint(to), new CallEndpoint(from), answerUrl);
+        this(new PhoneEndpoint(to), new PhoneEndpoint(from), answerUrl);
     }
 
-    public Call(CallEndpoint to, CallEndpoint from, String answerUrl) {
+    public Call(PhoneEndpoint to, PhoneEndpoint from, String answerUrl) {
         this.to = to;
         this.from = from;
         this.answerUrl = answerUrl;

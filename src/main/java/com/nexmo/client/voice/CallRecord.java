@@ -54,20 +54,10 @@ public class CallRecord {
     public CallRecord() {}
 
     public CallRecord(String to, String from) {
-        this(new CallEndpoint(to), new CallEndpoint(from));
+        this(new PhoneEndpoint(to), new PhoneEndpoint(from));
     }
 
-    public CallRecord(CallEndpoint to, CallEndpoint from) {
-        this.to = to;
-        this.from = from;
-    }
-
-    public CallRecord(SipEndpoint to, SipEndpoint from) {
-        this.to = to;
-        this.from = from;
-    }
-
-    public CallRecord(WebSocketEndpoint to, WebSocketEndpoint from) {
+    public CallRecord(Endpoint to, Endpoint from) {
         this.to = to;
         this.from = from;
     }

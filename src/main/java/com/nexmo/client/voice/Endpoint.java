@@ -29,7 +29,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         property = "type"
 )
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = CallEndpoint.class, name = "phone"),
+        @JsonSubTypes.Type(value = PhoneEndpoint.class, name = "phone"),
         @JsonSubTypes.Type(value = SipEndpoint.class, name = "sip"),
         @JsonSubTypes.Type(value = WebSocketEndpoint.class, name = "websocket")
 })
