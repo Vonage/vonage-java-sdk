@@ -27,8 +27,7 @@ import com.nexmo.client.voice.endpoints.AbstractMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
@@ -51,12 +50,10 @@ public class StopTalkMethod extends AbstractMethod<String, TalkResponse> {
     }
 
     @Override
-    public HttpUriRequest makeRequest(String uuid) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(String uuid) throws NexmoClientException, UnsupportedEncodingException {
         String uri = this.uri + uuid + "/talk";
-        HttpDelete delete = new HttpDelete(uri);
-        delete.setHeader("Content-Type", "application/json");
-        LOG.info("StopTalkRequest made for" + uuid);
-        return delete;
+        return RequestBuilder.delete(uri)
+                .setHeader("Content-Type", "application/json");
     }
 
     @Override

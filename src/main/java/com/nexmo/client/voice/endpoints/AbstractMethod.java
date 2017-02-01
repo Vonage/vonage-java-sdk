@@ -29,6 +29,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -47,7 +48,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
     // TODO: Consider wrapping IOException in a nexmo-specific transport exception.
     public ResultT execute(RequestT request) throws IOException, NexmoClientException {
         try {
-            HttpResponse response = this.httpWrapper.getHttpClient().execute(applyAuth(makeRequest(request)));
+            HttpResponse response = this.httpWrapper.getHttpClient().execute(applyAuth(makeRequest(request)).build());
             LOG.debug("Response: " + response.getStatusLine());
             return parseResponse(response);
         } catch (UnsupportedEncodingException uee) {
@@ -55,7 +56,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
         }
     }
 
-    protected HttpUriRequest applyAuth(HttpUriRequest request) throws NexmoClientException {
+    protected RequestBuilder applyAuth(RequestBuilder request) throws NexmoClientException {
         return getAuthMethod(getAcceptableAuthMethods()).apply(request);
     }
 
@@ -84,8 +85,8 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
 
     protected abstract Class[] getAcceptableAuthMethods();
 
-    public abstract HttpUriRequest makeRequest(RequestT request) throws NexmoClientException,
-            UnsupportedEncodingException;
+    public abstract RequestBuilder makeRequest(RequestT request)
+            throws NexmoClientException, UnsupportedEncodingException;
 
     public abstract ResultT parseResponse(HttpResponse response) throws IOException;
 }

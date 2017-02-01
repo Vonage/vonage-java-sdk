@@ -28,8 +28,7 @@ import com.nexmo.client.voice.CallEvent;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 
@@ -48,13 +47,11 @@ public class CreateCallMethod extends AbstractMethod<Call, CallEvent> {
     }
 
     @Override
-    public HttpUriRequest makeRequest(Call request) throws NexmoClientException, UnsupportedEncodingException {
-        HttpPost post = new HttpPost(this.uri);
-        post.setHeader("Content-Type", "application/json");
-        post.setEntity(new StringEntity(request.toJson()));
-        LOG.info("Request: " + request.toJson());
-
-        return post;
+    public RequestBuilder makeRequest(Call request) throws NexmoClientException, UnsupportedEncodingException {
+        return RequestBuilder
+                .post(this.uri)
+                .setHeader("Content-Type", "application/json")
+                .setEntity(new StringEntity(request.toJson()));
     }
 
     @Override

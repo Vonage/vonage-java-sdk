@@ -27,6 +27,7 @@ import com.nexmo.client.voice.CallRecord;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
@@ -55,8 +56,8 @@ public class ReadCallMethodTest {
 
     @Test
     public void makeRequest() throws Exception {
-        HttpUriRequest request = method.makeRequest("abcd-efgh");
-        assertEquals("https://api.nexmo.com/v1/calls/abcd-efgh", request.getURI().toString());
+        RequestBuilder request = method.makeRequest("abcd-efgh");
+        assertEquals("https://api.nexmo.com/v1/calls/abcd-efgh", request.getUri().toString());
     }
 
     @Test

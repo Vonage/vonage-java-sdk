@@ -11,8 +11,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
@@ -53,17 +52,16 @@ public class ModifyCallMethodTest {
         HttpWrapper httpWrapper = new HttpWrapper(null);
         ModifyCallMethod methodUnderTest = new ModifyCallMethod(httpWrapper);
 
-        HttpUriRequest request = methodUnderTest.makeRequest(
+        RequestBuilder request = methodUnderTest.makeRequest(
                 new CallModifier("abc-123", "hangup")
         );
 
-        assertEquals(HttpPut.class, request.getClass());
+        assertEquals("PUT", request.getMethod());
         assertEquals("application/json", request.getFirstHeader("Content-Type").getValue());
-        HttpPut putRequest = (HttpPut) request;
 
         ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode node = objectMapper.readValue(putRequest.getEntity().getContent(), JsonNode.class);
-        LOG.info(putRequest.getEntity().getContent());
+        JsonNode node = objectMapper.readValue(request.getEntity().getContent(), JsonNode.class);
+        LOG.info(request.getEntity().getContent());
         assertEquals("hangup", node.get("action").asText());
     }
 

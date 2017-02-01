@@ -24,8 +24,7 @@ package com.nexmo.client.auth;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.JWTVerifyException;
 import com.nexmo.client.TestUtils;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -72,7 +71,7 @@ public class JWTAuthMethodTest {
     @Test
     public void testDecodePrivateKeyInvalid() throws Exception {
         try {
-            auth = new JWTAuthMethod("application-id", new byte[] { 0x00 });
+            auth = new JWTAuthMethod("application-id", new byte[]{0x00});
             fail("Invalid bytes should result in InvalidKeySpecException");
         } catch (InvalidKeySpecException e) {
             // this is expected
@@ -82,7 +81,7 @@ public class JWTAuthMethodTest {
     @Test
     public void testDecodePrivateKeyCannotDecode() throws Exception {
         try {
-            auth = new JWTAuthMethod("application-id", new byte[] { '-' });
+            auth = new JWTAuthMethod("application-id", new byte[]{'-'});
             fail("Invalid key should result in InvalidKeySpecException");
         } catch (InvalidKeyException e) {
             // this is expected
@@ -91,7 +90,7 @@ public class JWTAuthMethodTest {
 
     @Test
     public void testApply() throws Exception {
-        HttpUriRequest req = new HttpGet();
+        RequestBuilder req = RequestBuilder.get();
         auth.apply(req);
 
         assertEquals(1, req.getHeaders("Authorization").length);

@@ -9,8 +9,8 @@ import com.nexmo.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 import org.junit.Before;
@@ -33,12 +33,12 @@ public class AbstractMethodTest {
 
         @Override
         protected Class[] getAcceptableAuthMethods() {
-            return new Class[]{ JWTAuthMethod.class };
+            return new Class[]{JWTAuthMethod.class};
         }
 
         @Override
-        public HttpUriRequest makeRequest(String request) throws NexmoClientException, UnsupportedEncodingException {
-            return new HttpGet(request);
+        public RequestBuilder makeRequest(String request) throws NexmoClientException, UnsupportedEncodingException {
+            return RequestBuilder.get(request);
         }
 
         @Override
@@ -88,7 +88,7 @@ public class AbstractMethodTest {
     public void testApplyAuth() throws Exception {
         ConcreteMethod method = new ConcreteMethod(mockWrapper);
 
-        HttpUriRequest request = new HttpGet("url");
+        RequestBuilder request = RequestBuilder.get("url");
         method.applyAuth(request);
         verify(mockAuthMethod).apply(request);
     }

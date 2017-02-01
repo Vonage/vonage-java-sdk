@@ -27,8 +27,7 @@ import com.nexmo.client.voice.endpoints.AbstractMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 
@@ -52,13 +51,11 @@ public class SendDtmfMethod extends AbstractMethod<DtmfRequest, DtmfResponse> {
     }
 
     @Override
-    public HttpUriRequest makeRequest(DtmfRequest request) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(DtmfRequest request) throws NexmoClientException, UnsupportedEncodingException {
         String uri = this.uri + request.getUuid() + "/dtmf";
-        HttpPut put = new HttpPut(uri);
-        put.setHeader("Content-Type", "application/json");
-        put.setEntity(new StringEntity(request.toJson()));
-        LOG.info("Request: " + request.toJson());
-        return put;
+        return RequestBuilder.put(uri)
+                .setHeader("Content-Type", "application/json")
+                .setEntity(new StringEntity(request.toJson()));
     }
 
     @Override

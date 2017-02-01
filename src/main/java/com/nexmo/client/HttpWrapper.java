@@ -22,12 +22,19 @@ package com.nexmo.client;/*
 
 import com.nexmo.client.auth.AuthCollection;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.config.ConnectionConfig;
+import org.apache.http.config.SocketConfig;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
+
+import java.nio.charset.Charset;
 
 /**
  * Internal class that holds available authentication methods and a shared HttpClient.
@@ -60,17 +67,22 @@ public class HttpWrapper {
     }
 
     protected HttpClient createHttpClient() {
-        ThreadSafeClientConnManager threadSafeClientConnManager = new ThreadSafeClientConnManager();
-        threadSafeClientConnManager.setDefaultMaxPerRoute(200);
-        threadSafeClientConnManager.setMaxTotal(200);
+        PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+        connectionManager.setDefaultMaxPerRoute(200);
+        connectionManager.setMaxTotal(200);
+        connectionManager.setDefaultConnectionConfig(
+                ConnectionConfig.custom().setCharset(Charset.forName("UTF-8")).build());
+        connectionManager.setDefaultSocketConfig(SocketConfig.custom().setTcpNoDelay(true).build());
 
-        HttpParams httpClientParams = new BasicHttpParams();
-        HttpProtocolParams.setUserAgent(httpClientParams, "nexmo-java/2.0.0-prerelease");
-        HttpProtocolParams.setContentCharset(httpClientParams, "UTF-8");
-        HttpProtocolParams.setHttpElementCharset(httpClientParams, "UTF-8");
-        HttpConnectionParams.setStaleCheckingEnabled(httpClientParams, true);
-        HttpConnectionParams.setTcpNoDelay(httpClientParams, true);
+        // Need to work out a good value for the following:
+        // threadSafeClientConnManager.setValidateAfterInactivity();
 
-        return new DefaultHttpClient(threadSafeClientConnManager, httpClientParams);
+        RequestConfig requestConfig = RequestConfig.custom().build();
+
+        return HttpClientBuilder.create()
+                .setConnectionManager(connectionManager)
+                .setUserAgent("nexmo-java/2.0.0-prerelease")
+                .setDefaultRequestConfig(requestConfig)
+                .build();
     }
 }
