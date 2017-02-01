@@ -25,7 +25,7 @@ package com.nexmo.client.voice.ncco;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.nexmo.client.voice.CallEndpoint;
+import com.nexmo.client.voice.PhoneEndpoint;
 import com.nexmo.client.voice.MachineDetection;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -33,7 +33,7 @@ import com.nexmo.client.voice.MachineDetection;
 public class ConnectNcco implements Ncco {
     private static final String ACTION = "connect";
 
-    private CallEndpoint[] endpoint;
+    private PhoneEndpoint[] endpoint;
     private String from = null;
     private Integer timeout = null;
     private Integer limit = null;
@@ -41,28 +41,28 @@ public class ConnectNcco implements Ncco {
     private String[] eventUrl = null;
     private String eventMethod = null;
 
-    public ConnectNcco(@JsonProperty("endpoint") CallEndpoint[] endpoint) {
+    public ConnectNcco(@JsonProperty("endpoint") PhoneEndpoint[] endpoint) {
         this.endpoint = endpoint;
     }
 
-    public ConnectNcco(CallEndpoint endpoint) {
-        this(new CallEndpoint[]{endpoint});
+    public ConnectNcco(PhoneEndpoint endpoint) {
+        this(new PhoneEndpoint[]{endpoint});
     }
 
     public ConnectNcco(String number) {
-        this(new CallEndpoint(number));
+        this(new PhoneEndpoint(number));
     }
 
-    public CallEndpoint[] getEndpoint() {
+    public PhoneEndpoint[] getEndpoint() {
         return endpoint;
     }
 
-    public void setEndpoint(CallEndpoint endpoint) {
-        setEndpoint(new CallEndpoint[]{endpoint});
+    public void setEndpoint(PhoneEndpoint endpoint) {
+        setEndpoint(new PhoneEndpoint[]{endpoint});
     }
 
     @JsonProperty("endpoint")
-    public void setEndpoint(CallEndpoint[] endpoint) {
+    public void setEndpoint(PhoneEndpoint[] endpoint) {
         this.endpoint = endpoint;
     }
 
