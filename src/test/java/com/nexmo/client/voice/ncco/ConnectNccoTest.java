@@ -22,7 +22,7 @@
 package com.nexmo.client.voice.ncco;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.voice.CallEndpoint;
+import com.nexmo.client.voice.PhoneEndpoint;
 import com.nexmo.client.voice.MachineDetection;
 import org.junit.Test;
 
@@ -32,7 +32,7 @@ public class ConnectNccoTest {
 
     @Test
     public void getAction() throws Exception {
-        ConnectNcco ncco = new ConnectNcco(new CallEndpoint("447700900637"));
+        ConnectNcco ncco = new ConnectNcco(new PhoneEndpoint("447700900637"));
         assertEquals("connect", ncco.getAction());
     }
 
@@ -40,7 +40,7 @@ public class ConnectNccoTest {
     public void testToJson() throws Exception {
         assertEquals(
                 "{\"endpoint\":[{\"type\":\"phone\",\"number\":\"447700900637\"}],\"action\":\"connect\"}",
-                new ConnectNcco(new CallEndpoint("447700900637")).toJson());
+                new ConnectNcco(new PhoneEndpoint("447700900637")).toJson());
     }
 
     @Test
@@ -48,7 +48,7 @@ public class ConnectNccoTest {
         String json;
         {
             ConnectNcco ncco = new ConnectNcco("447700900637");
-            ncco.setEndpoint(new CallEndpoint("447700900642"));
+            ncco.setEndpoint(new PhoneEndpoint("447700900642"));
             ncco.setMachineDetection(MachineDetection.HANGUP);
             ncco.setEventMethod("GET");
             ncco.setEventUrl("https://api.example.com/event");
@@ -60,7 +60,7 @@ public class ConnectNccoTest {
         }
 
         ConnectNcco ncco2 = new ObjectMapper().readValue(json, ConnectNcco.class);
-        assertArrayEquals(new CallEndpoint[]{new CallEndpoint("447700900642")}, ncco2.getEndpoint());
+        assertArrayEquals(new PhoneEndpoint[]{new PhoneEndpoint("447700900642")}, ncco2.getEndpoint());
         assertEquals(MachineDetection.HANGUP, ncco2.getMachineDetection());
         assertEquals("GET", ncco2.getEventMethod());
         assertArrayEquals(new String[]{"https://api.example.com/event"}, ncco2.getEventUrl());

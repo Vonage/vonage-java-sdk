@@ -42,7 +42,6 @@ import java.nio.charset.StandardCharsets;
 import static org.junit.Assert.assertEquals;
 
 
-
 public class SendDtmfMethodTest {
     private static final Log LOG = LogFactory.getLog(SendDtmfMethodTest.class);
 

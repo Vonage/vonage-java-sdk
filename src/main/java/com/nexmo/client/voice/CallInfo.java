@@ -38,8 +38,8 @@ import java.util.Date;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(value = { "_links" }, ignoreUnknown = true)
 public class CallInfo {
-    private CallEndpoint to;
-    private CallEndpoint from;
+    private Endpoint to;
+    private Endpoint from;
 
     private String conversationUuid = null;
     private CallDirection direction = null;
@@ -55,27 +55,27 @@ public class CallInfo {
     public CallInfo() {}
 
     public CallInfo(String to, String from) {
-        this(new CallEndpoint(to), new CallEndpoint(from));
+        this(new PhoneEndpoint(to), new PhoneEndpoint(from));
     }
 
-    public CallInfo(CallEndpoint to, CallEndpoint from) {
+    public CallInfo(Endpoint to, Endpoint from) {
         this.to = to;
         this.from = from;
     }
 
-    public CallEndpoint getTo() {
+    public Endpoint getTo() {
         return to;
     }
 
-    public void setTo(CallEndpoint to) {
+    public void setTo(Endpoint to) {
         this.to = to;
     }
 
-    public CallEndpoint getFrom() {
+    public Endpoint getFrom() {
         return from;
     }
 
-    public void setFrom(CallEndpoint from) {
+    public void setFrom(Endpoint from) {
         this.from = from;
     }
 
@@ -166,8 +166,8 @@ public class CallInfo {
         return new StringBuilder()
                 .append("<CallInfo ")
                 .append("ID: ").append(this.getUuid()).append(", ")
-                .append("From: ").append(this.getFrom().getNumber()).append(", ")
-                .append("To: ").append(this.getTo().getNumber()).append(", ")
+                .append("From: ").append(this.getFrom().toLog()).append(", ")
+                .append("To: ").append(this.getTo().toLog()).append(", ")
                 .append("Status: ").append(this.getStatus())
                 .append(">")
                 .toString();

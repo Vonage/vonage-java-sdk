@@ -21,8 +21,6 @@
  */
 package com.nexmo.client.voice;
 
-import com.nexmo.client.voice.CallStatus;
-import com.nexmo.client.voice.CallsFilter;
 import org.apache.http.NameValuePair;
 import org.junit.Test;
 
@@ -59,9 +57,9 @@ public class CallsFilterTest {
         assertEquals(CallStatus.COMPLETED, filter.getStatus());
         assertEquals(startDate, filter.getDateStart());
         assertEquals(endDate, filter.getDateEnd());
-        assertEquals(12, (int)filter.getRecordIndex());
+        assertEquals(12, (int) filter.getRecordIndex());
         assertEquals("asc", filter.getOrder());
-        assertEquals(10, (int)filter.getPageSize());
+        assertEquals(10, (int) filter.getPageSize());
         assertEquals("this-is-not-a-uuid", filter.getConversationUuid());
 
 

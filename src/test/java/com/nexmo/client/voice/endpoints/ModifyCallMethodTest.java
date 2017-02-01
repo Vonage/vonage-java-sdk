@@ -94,8 +94,8 @@ public class ModifyCallMethodTest {
         assertEquals(CallDirection.OUTBOUND, callInfo.getDirection());
         assertEquals("65512", callInfo.getNetwork());
         assertEquals("phone", callInfo.getFrom().getType());
-        assertEquals("441632960961", callInfo.getFrom().getNumber());
-        assertEquals("441632960960", callInfo.getTo().getNumber());
+        assertEquals("441632960961", callInfo.getFrom().toLog());
+        assertEquals("441632960960", callInfo.getTo().toLog());
         assertEquals("phone", callInfo.getTo().getType());
     }
 }

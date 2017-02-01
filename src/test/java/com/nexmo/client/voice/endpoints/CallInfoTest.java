@@ -21,12 +21,11 @@
  */
 package com.nexmo.client.voice.endpoints;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.voice.CallDirection;
-import com.nexmo.client.voice.CallEndpoint;
 import com.nexmo.client.voice.CallInfo;
 import com.nexmo.client.voice.CallStatus;
+import com.nexmo.client.voice.PhoneEndpoint;
 import org.junit.Test;
 
 import java.util.Calendar;
@@ -70,31 +69,31 @@ public class CallInfoTest {
         assertEquals(CallDirection.OUTBOUND, record.getDirection());
         assertEquals("0.02400000", record.getRate());
         assertEquals("0.00280000", record.getPrice());
-        assertEquals(7, (long)record.getDuration());
+        assertEquals(7, (long) record.getDuration());
         assertEquals("23410", record.getNetwork());
         // 2017-01-13T13:55:02.000Z
         Calendar expectedStart = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
-        expectedStart.set(2017, Calendar.JANUARY, 13 ,13, 55, 2);
+        expectedStart.set(2017, Calendar.JANUARY, 13, 13, 55, 2);
         expectedStart.set(Calendar.MILLISECOND, 0);
         assertEquals(
                 expectedStart.getTime(),
                 record.getStartTime());
         // 2017-01-13T13:55:09.000Z
         Calendar expectedEnd = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
-        expectedEnd.set(2017, Calendar.JANUARY, 13 ,13, 55, 9);
+        expectedEnd.set(2017, Calendar.JANUARY, 13, 13, 55, 9);
         expectedEnd.set(Calendar.MILLISECOND, 0);
         assertEquals(
                 expectedEnd.getTime(),
                 record.getEndTime());
-        assertEquals(new CallEndpoint("447700900104"), record.getTo());
-        assertEquals(new CallEndpoint("447700900105"), record.getFrom());
+        assertEquals(new PhoneEndpoint("447700900104"), record.getTo());
+        assertEquals(new PhoneEndpoint("447700900105"), record.getFrom());
 
 
     }
 
     @Test
     public void testToString() throws Exception {
-        CallInfo record = new CallInfo(new CallEndpoint("447700900104"), new CallEndpoint("447700900105"));
+        CallInfo record = new CallInfo(new PhoneEndpoint("447700900104"), new PhoneEndpoint("447700900105"));
         record.setUuid("93137ee3-580e-45f7-a61a-e0b5716000ef");
         record.setStatus(CallStatus.COMPLETED);
         assertEquals(

@@ -37,8 +37,8 @@ import java.io.IOException;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "_links"})
 public class Call {
-    private CallEndpoint to;
-    private CallEndpoint from;
+    private Endpoint to;
+    private Endpoint from;
     private String answerUrl;
 
     private String answerMethod = "GET";
@@ -51,28 +51,40 @@ public class Call {
     public Call() {}
 
     public Call(String to, String from, String answerUrl) {
-        this(new CallEndpoint(to), new CallEndpoint(from), answerUrl);
+        this(new PhoneEndpoint(to), new PhoneEndpoint(from), answerUrl);
     }
 
-    public Call(CallEndpoint to, CallEndpoint from, String answerUrl) {
+    public Call(PhoneEndpoint to, PhoneEndpoint from, String answerUrl) {
         this.to = to;
         this.from = from;
         this.answerUrl = answerUrl;
     }
 
-    public CallEndpoint[] getTo() {
-        return new CallEndpoint[]{to};
+    public Call(SipEndpoint to, SipEndpoint from, String answerUrl) {
+        this.to = to;
+        this.from = from;
+        this.answerUrl = answerUrl;
     }
 
-    public void setTo(CallEndpoint[] to) {
+    public Call(WebSocketEndpoint to, WebSocketEndpoint from, String answerUrl) {
+        this.to = to;
+        this.from = from;
+        this.answerUrl = answerUrl;
+    }
+
+    public Endpoint[] getTo() {
+        return new Endpoint[]{to};
+    }
+
+    public void setTo(Endpoint[] to) {
         this.to = to[0];
     }
 
-    public CallEndpoint getFrom() {
+    public Endpoint getFrom() {
         return from;
     }
 
-    public void setFrom(CallEndpoint from) {
+    public void setFrom(Endpoint from) {
         this.from = from;
     }
 
