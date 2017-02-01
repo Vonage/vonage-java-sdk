@@ -47,11 +47,11 @@ public class CallsEndpoint {
         return this.listCalls.execute(filter);
     }
 
-    public CallRecord get(String uuid) throws IOException, NexmoClientException {
+    public CallInfo get(String uuid) throws IOException, NexmoClientException {
         return this.readCall.execute(uuid);
     }
 
-    public CallRecord put(String uuid, String action) throws IOException, NexmoClientException {
+    public CallInfo put(String uuid, String action) throws IOException, NexmoClientException {
         return this.modifyCall.execute(new CallModifier(uuid, action));
     }
 }

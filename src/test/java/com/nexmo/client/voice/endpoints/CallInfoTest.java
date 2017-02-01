@@ -26,7 +26,7 @@ package com.nexmo.client.voice.endpoints;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.voice.CallDirection;
 import com.nexmo.client.voice.CallEndpoint;
-import com.nexmo.client.voice.CallRecord;
+import com.nexmo.client.voice.CallInfo;
 import com.nexmo.client.voice.CallStatus;
 import org.junit.Test;
 
@@ -36,7 +36,7 @@ import java.util.TimeZone;
 
 import static org.junit.Assert.assertEquals;
 
-public class CallRecordTest {
+public class CallInfoTest {
     @Test
     public void testJson() throws Exception {
         String json = "{\n" +
@@ -64,7 +64,7 @@ public class CallRecordTest {
                 "    }\n" +
                 "  }\n" +
                 "}\n";
-        CallRecord record = new ObjectMapper().readValue(json, CallRecord.class);
+        CallInfo record = new ObjectMapper().readValue(json, CallInfo.class);
 
         assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", record.getUuid());
         assertEquals(CallStatus.COMPLETED, record.getStatus());
@@ -95,11 +95,11 @@ public class CallRecordTest {
 
     @Test
     public void testToString() throws Exception {
-        CallRecord record = new CallRecord(new CallEndpoint("447700900104"), new CallEndpoint("447700900105"));
+        CallInfo record = new CallInfo(new CallEndpoint("447700900104"), new CallEndpoint("447700900105"));
         record.setUuid("93137ee3-580e-45f7-a61a-e0b5716000ef");
         record.setStatus(CallStatus.COMPLETED);
         assertEquals(
-                "<CallRecord ID: 93137ee3-580e-45f7-a61a-e0b5716000ef, From: 447700900105, To: 447700900104, Status: completed>",
+                "<CallInfo ID: 93137ee3-580e-45f7-a61a-e0b5716000ef, From: 447700900105, To: 447700900104, Status: completed>",
                 record.toString());
     }
 }

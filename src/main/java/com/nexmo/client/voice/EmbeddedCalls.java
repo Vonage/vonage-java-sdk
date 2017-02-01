@@ -23,15 +23,15 @@ package com.nexmo.client.voice;/*
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class EmbeddedCalls {
-    private CallRecord[] callRecords;
+    private CallInfo[] callInfos;
 
     @JsonProperty("calls")
-    private void setCallRecords(CallRecord[] callRecords) {
-        this.callRecords = callRecords;
+    private void setCallInfos(CallInfo[] callInfos) {
+        this.callInfos = callInfos;
     }
 
     @JsonProperty("calls")
-    public CallRecord[] getCallRecords() {
-        return callRecords;
+    public CallInfo[] getCallInfos() {
+        return callInfos;
     }
 }

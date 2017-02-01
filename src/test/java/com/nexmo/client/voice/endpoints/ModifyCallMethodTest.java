@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.voice.CallDirection;
 import com.nexmo.client.voice.CallModifier;
-import com.nexmo.client.voice.CallRecord;
+import com.nexmo.client.voice.CallInfo;
 import com.nexmo.client.voice.CallStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -85,15 +85,15 @@ public class ModifyCallMethodTest {
         entity.setContent(jsonStream);
         stubResponse.setEntity(entity);
 
-        CallRecord callRecord = methodUnderTest.parseResponse(stubResponse);
-        assertEquals("63f61863-4a51-4f6b-86e1-46edebcf9356", callRecord.getUuid());
-        assertEquals("63f61863-4a51-4f6b-86e1-46edebio0123", callRecord.getConversationUuid());
-        assertEquals(CallStatus.COMPLETED, callRecord.getStatus());
-        assertEquals(CallDirection.OUTBOUND, callRecord.getDirection());
-        assertEquals("65512", callRecord.getNetwork());
-        assertEquals("phone", callRecord.getFrom().getType());
-        assertEquals("441632960961", callRecord.getFrom().getNumber());
-        assertEquals("441632960960", callRecord.getTo().getNumber());
-        assertEquals("phone", callRecord.getTo().getType());
+        CallInfo callInfo = methodUnderTest.parseResponse(stubResponse);
+        assertEquals("63f61863-4a51-4f6b-86e1-46edebcf9356", callInfo.getUuid());
+        assertEquals("63f61863-4a51-4f6b-86e1-46edebio0123", callInfo.getConversationUuid());
+        assertEquals(CallStatus.COMPLETED, callInfo.getStatus());
+        assertEquals(CallDirection.OUTBOUND, callInfo.getDirection());
+        assertEquals("65512", callInfo.getNetwork());
+        assertEquals("phone", callInfo.getFrom().getType());
+        assertEquals("441632960961", callInfo.getFrom().getNumber());
+        assertEquals("441632960960", callInfo.getTo().getNumber());
+        assertEquals("phone", callInfo.getTo().getType());
     }
 }

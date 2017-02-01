@@ -158,7 +158,7 @@ public class ListCallsMethodTest {
 
         CallRecordPage page = method.parseResponse(stubResponse);
         assertEquals(2, page.getCount());
-        assertEquals(2, page.getEmbedded().getCallRecords().length);
+        assertEquals(2, page.getEmbedded().getCallInfos().length);
         assertEquals("/v1/calls?page_size=10", page.getLinks().getFirst().getHref());
         assertEquals("/v1/calls?page_size=10", page.getLinks().getLast().getHref());
     }

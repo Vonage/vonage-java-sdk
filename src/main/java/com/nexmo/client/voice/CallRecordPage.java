@@ -29,7 +29,7 @@ import com.nexmo.client.NexmoUnexpectedException;
 import java.io.IOException;
 import java.util.Iterator;
 
-public class CallRecordPage implements Iterable<CallRecord> {
+public class CallRecordPage implements Iterable<CallInfo> {
     private int count;
     private int pageSize;
     private int recordIndex;
@@ -62,8 +62,8 @@ public class CallRecordPage implements Iterable<CallRecord> {
     }
 
     @Override
-    public Iterator<CallRecord> iterator() {
-        return new ArrayIterator<>(embedded.getCallRecords());
+    public Iterator<CallInfo> iterator() {
+        return new ArrayIterator<>(embedded.getCallInfos());
     }
 
     public static CallRecordPage fromJson(String json) {

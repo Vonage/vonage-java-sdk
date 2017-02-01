@@ -32,11 +32,11 @@ import java.io.IOException;
 import java.util.Date;
 
 /**
- * CallRecord holds the information related to a call. It is obtained using {@link NexmoVoiceClient#listCalls}
+ * CallInfo holds the information related to a call. It is obtained using {@link NexmoVoiceClient#listCalls}
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "_links" })
-public class CallRecord {
+public class CallInfo {
     private CallEndpoint to;
     private CallEndpoint from;
 
@@ -51,13 +51,13 @@ public class CallRecord {
     private CallStatus status = null;
     private String uuid = null;
 
-    public CallRecord() {}
+    public CallInfo() {}
 
-    public CallRecord(String to, String from) {
+    public CallInfo(String to, String from) {
         this(new CallEndpoint(to), new CallEndpoint(from));
     }
 
-    public CallRecord(CallEndpoint to, CallEndpoint from) {
+    public CallInfo(CallEndpoint to, CallEndpoint from) {
         this.to = to;
         this.from = from;
     }
@@ -163,7 +163,7 @@ public class CallRecord {
 
     public String toString() {
         return new StringBuilder()
-                .append("<CallRecord ")
+                .append("<CallInfo ")
                 .append("ID: ").append(this.getUuid()).append(", ")
                 .append("From: ").append(this.getFrom().getNumber()).append(", ")
                 .append("To: ").append(this.getTo().getNumber()).append(", ")
@@ -172,13 +172,13 @@ public class CallRecord {
                 .toString();
     }
 
-    public static CallRecord fromJson(String json) {
+    public static CallInfo fromJson(String json) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-            return mapper.readValue(json, CallRecord.class);
+            return mapper.readValue(json, CallInfo.class);
         } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce json from CallRecord object.", jpe);
+            throw new NexmoUnexpectedException("Failed to produce json from CallInfo object.", jpe);
         }
     }
 }

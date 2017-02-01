@@ -22,7 +22,7 @@ package com.nexmo.client.voice.endpoints;/*
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.auth.JWTAuthMethod;
-import com.nexmo.client.voice.CallRecord;
+import com.nexmo.client.voice.CallInfo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -32,7 +32,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 
 // TODO: Create a package for these endpoint methods
-public class ReadCallMethod extends AbstractMethod<String, CallRecord> {
+public class ReadCallMethod extends AbstractMethod<String, CallInfo> {
     private static final Log LOG = LogFactory.getLog(ReadCallMethod.class);
 
     private static final String DEFAULT_BASE_URI = "https://api.nexmo.com/v1/calls/";
@@ -55,10 +55,10 @@ public class ReadCallMethod extends AbstractMethod<String, CallRecord> {
     }
 
     @Override
-    public CallRecord parseResponse(HttpResponse response) throws IOException {
+    public CallInfo parseResponse(HttpResponse response) throws IOException {
         String json = EntityUtils.toString(response.getEntity());
         LOG.info("Received: " + json);
-        return CallRecord.fromJson(json);
+        return CallInfo.fromJson(json);
     }
 
     public void setBaseUri(String baseUri) {

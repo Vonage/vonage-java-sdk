@@ -58,7 +58,7 @@ public class NexmoVoiceClient extends AbstractClient {
         return calls.get(filter);
     }
 
-    public CallRecord getCallDetails(String uuid) throws IOException, NexmoClientException {
+    public CallInfo getCallDetails(String uuid) throws IOException, NexmoClientException {
         return calls.get(uuid);
     }
 
@@ -66,7 +66,7 @@ public class NexmoVoiceClient extends AbstractClient {
         return dtmf.put(uuid, digits);
     }
 
-    public CallRecord modifyCall(String uuid, String action) throws IOException, NexmoClientException {
+    public CallInfo modifyCall(String uuid, String action) throws IOException, NexmoClientException {
         return calls.put(uuid, action);
     }
 

@@ -158,7 +158,7 @@ public class NexmoVoiceClientTest {
                 "          }\n" +
                 "        }\n" +
                 "      }\n"));
-        CallRecord call = client.getCallDetails("93137ee3-580e-45f7-a61a-e0b5716000ef");
+        CallInfo call = client.getCallDetails("93137ee3-580e-45f7-a61a-e0b5716000ef");
         assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", call.getUuid());
     }
 
@@ -202,7 +202,7 @@ public class NexmoVoiceClientTest {
                 "          }\n" +
                 "        }\n" +
                 "      }\n"));
-        CallRecord call = client.modifyCall("93137ee3-580e-45f7-a61a-e0b5716000ef", "hangup");
+        CallInfo call = client.modifyCall("93137ee3-580e-45f7-a61a-e0b5716000ef", "hangup");
         assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", call.getUuid());
 
     }
