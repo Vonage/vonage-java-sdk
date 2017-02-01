@@ -25,25 +25,31 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class CallEndpoint {
+public class PhoneEndpoint implements Endpoint {
     private String type = "phone";
     private String number;
     private String dtmfAnswer = null;
 
-    public CallEndpoint() {
+    public PhoneEndpoint() {
     }
 
-    public CallEndpoint(String number) {
+    public PhoneEndpoint(String number) {
         this.number = number;
     }
 
-    public CallEndpoint(String number, String dtmfAnswer) {
+    public PhoneEndpoint(String number, String dtmfAnswer) {
         this.number = number;
         this.dtmfAnswer = dtmfAnswer;
     }
 
+    @Override
     public String getType() {
         return type;
+    }
+
+    @Override
+    public String toLog() {
+        return number;
     }
 
     public String getNumber() {
@@ -73,7 +79,7 @@ public class CallEndpoint {
         if (obj.getClass() != getClass()) {
             return false;
         }
-        CallEndpoint rhs = (CallEndpoint) obj;
+        PhoneEndpoint rhs = (PhoneEndpoint) obj;
         return new EqualsBuilder()
                 .append(this.type, rhs.type)
                 .append(this.number, rhs.number)

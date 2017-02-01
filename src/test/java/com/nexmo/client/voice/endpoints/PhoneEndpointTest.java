@@ -20,31 +20,31 @@ package com.nexmo.client.voice.endpoints;/*
  * THE SOFTWARE.
  */
 
-import com.nexmo.client.voice.CallEndpoint;
+import com.nexmo.client.voice.PhoneEndpoint;
 
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 
-public class CallEndpointTest {
+public class PhoneEndpointTest {
     @Test
     public void testConstructor() throws Exception {
-        CallEndpoint e = new CallEndpoint("number", "dtmf");
+        PhoneEndpoint e = new PhoneEndpoint("number", "dtmf");
         assertEquals("number", e.getNumber());
         assertEquals("dtmf", e.getDtmfAnswer());
     }
 
     @Test
     public void testSetNumber() throws Exception {
-        CallEndpoint e = new CallEndpoint("number", "dtmf");
+        PhoneEndpoint e = new PhoneEndpoint("number", "dtmf");
         e.setNumber("1234");
         assertEquals("1234", e.getNumber());
     }
 
     @Test
     public void testSetDtmf() throws Exception {
-        CallEndpoint e = new CallEndpoint("number", "dtmf");
+        PhoneEndpoint e = new PhoneEndpoint("number", "dtmf");
         e.setDtmfAnswer("#123");
         assertEquals("#123", e.getDtmfAnswer());
     }
@@ -52,25 +52,25 @@ public class CallEndpointTest {
     @Test
     public void testComparison() throws Exception {
 
-        CallEndpoint e1 = new CallEndpoint("number");
-        CallEndpoint e2 = new CallEndpoint("number");
+        PhoneEndpoint e1 = new PhoneEndpoint("number");
+        PhoneEndpoint e2 = new PhoneEndpoint("number");
         assertTrue("Endpoints with the same values should be equal", e1.equals(e2));
         assertTrue("Endpoints with the same values should have the same hash", e1.hashCode() == e2.hashCode());
 
-        e1 = new CallEndpoint("number");
-        e2 = new CallEndpoint("number1");
+        e1 = new PhoneEndpoint("number");
+        e2 = new PhoneEndpoint("number1");
         assertFalse("Endpoints with different numbers should not be equal",  e1.equals(e2));
         assertFalse("Endpoints with different numbers should have different hashes", e1.hashCode() == e2.hashCode());
 
-        e1 = new CallEndpoint("number", "dtmf");
-        e2 = new CallEndpoint("number", "dtmf1");
+        e1 = new PhoneEndpoint("number", "dtmf");
+        e2 = new PhoneEndpoint("number", "dtmf1");
         assertFalse("Endpoints with different dtmfAnswers should not be equal",  e1.equals(e2));
 
-        e1 = new CallEndpoint("number", "dtmf");
+        e1 = new PhoneEndpoint("number", "dtmf");
         e2 = null;
         assertFalse("An instance is not equal to null",  e1.equals(e2));
 
-        e1 = new CallEndpoint("number", "dtmf");
+        e1 = new PhoneEndpoint("number", "dtmf");
         Object o = new Object();
         assertFalse("An instance is not equal to a different type.",  e1.equals(o));
     }
