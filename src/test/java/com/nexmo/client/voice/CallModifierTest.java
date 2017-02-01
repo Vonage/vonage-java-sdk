@@ -1,10 +1,3 @@
-package com.nexmo.client.voice;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-
 /*
  * Copyright (c) 2011-2017 Nexmo Inc
  *
@@ -26,6 +19,15 @@ import static org.junit.Assert.*;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package com.nexmo.client.voice;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+
+
 public class CallModifierTest {
     private CallModifier callModifier;
 
