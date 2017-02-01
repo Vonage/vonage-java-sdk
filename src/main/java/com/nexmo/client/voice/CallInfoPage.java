@@ -29,7 +29,7 @@ import com.nexmo.client.NexmoUnexpectedException;
 import java.io.IOException;
 import java.util.Iterator;
 
-public class CallRecordPage implements Iterable<CallInfo> {
+public class CallInfoPage implements Iterable<CallInfo> {
     private int count;
     private int pageSize;
     private int recordIndex;
@@ -66,11 +66,11 @@ public class CallRecordPage implements Iterable<CallInfo> {
         return new ArrayIterator<>(embedded.getCallInfos());
     }
 
-    public static CallRecordPage fromJson(String json) {
+    public static CallInfoPage fromJson(String json) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-            return mapper.readValue(json, CallRecordPage.class);
+            return mapper.readValue(json, CallInfoPage.class);
         } catch (IOException jpe) {
             throw new NexmoUnexpectedException("Failed to produce json from Call object.", jpe);
         }

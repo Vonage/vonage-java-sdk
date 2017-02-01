@@ -102,7 +102,7 @@ public class NexmoVoiceClientTest {
                 "    }\n" +
                 "  }\n" +
                 "}\n"));
-        CallRecordPage page = client.listCalls();
+        CallInfoPage page = client.listCalls();
         assertEquals(0, page.getCount());
     }
 
@@ -127,7 +127,7 @@ public class NexmoVoiceClientTest {
                 "    }\n" +
                 "  }\n" +
                 "}\n"));
-        CallRecordPage page = client.listCalls(new CallsFilter());
+        CallInfoPage page = client.listCalls(new CallsFilter());
         assertEquals(0, page.getCount());
     }
 

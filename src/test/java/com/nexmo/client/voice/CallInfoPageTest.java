@@ -30,11 +30,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class CallInfoPageTest {
-    private CallRecordPage page;
+    private CallInfoPage page;
 
     @Before
     public void setUp() {
-        page = CallRecordPage.fromJson("{\n" +
+        page = CallInfoPage.fromJson("{\n" +
                 "  \"page_size\": 10,\n" +
                 "  \"record_index\": 0,\n" +
                 "  \"count\": 1,\n" +
@@ -84,7 +84,7 @@ public class CallInfoPageTest {
     @Test
     public void testFailedUnmarshal() throws Exception {
         try {
-            CallRecordPage.fromJson("Notvalidjson");
+            CallInfoPage.fromJson("Notvalidjson");
             fail("Parsing invalid JSON should raise a NexmoUnexpectedException");
         } catch (NexmoUnexpectedException nue) {
             // This is expected.

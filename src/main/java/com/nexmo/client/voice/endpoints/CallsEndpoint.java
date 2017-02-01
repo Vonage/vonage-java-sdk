@@ -43,7 +43,7 @@ public class CallsEndpoint {
         return this.createCall.execute(callRequest);
     }
 
-    public CallRecordPage get(CallsFilter filter) throws IOException, NexmoClientException {
+    public CallInfoPage get(CallsFilter filter) throws IOException, NexmoClientException {
         return this.listCalls.execute(filter);
     }
 

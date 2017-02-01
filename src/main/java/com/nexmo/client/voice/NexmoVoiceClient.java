@@ -50,11 +50,11 @@ public class NexmoVoiceClient extends AbstractClient {
         return calls.post(callRequest);
     }
 
-    public CallRecordPage listCalls() throws IOException, NexmoClientException {
+    public CallInfoPage listCalls() throws IOException, NexmoClientException {
         return this.listCalls(null);
     }
 
-    public CallRecordPage listCalls(CallsFilter filter) throws IOException, NexmoClientException {
+    public CallInfoPage listCalls(CallsFilter filter) throws IOException, NexmoClientException {
         return calls.get(filter);
     }
 

@@ -25,7 +25,7 @@ import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.NexmoUnexpectedException;
 import com.nexmo.client.auth.JWTAuthMethod;
-import com.nexmo.client.voice.CallRecordPage;
+import com.nexmo.client.voice.CallInfoPage;
 import com.nexmo.client.voice.CallsFilter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,7 +40,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.List;
 
-public class ListCallsMethod extends AbstractMethod<CallsFilter, CallRecordPage> {
+public class ListCallsMethod extends AbstractMethod<CallsFilter, CallInfoPage> {
     private static final Log LOG = LogFactory.getLog(CreateCallMethod.class);
 
     private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls";
@@ -74,10 +74,10 @@ public class ListCallsMethod extends AbstractMethod<CallsFilter, CallRecordPage>
     }
 
     @Override
-    public CallRecordPage parseResponse(HttpResponse response) throws IOException {
+    public CallInfoPage parseResponse(HttpResponse response) throws IOException {
         String json = EntityUtils.toString(response.getEntity());
         LOG.debug("Received: " + json);
-        return CallRecordPage.fromJson(json);
+        return CallInfoPage.fromJson(json);
     }
 
     public void setUri(String uri) {
