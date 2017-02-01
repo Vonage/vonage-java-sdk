@@ -20,8 +20,10 @@ package com.nexmo.client.voice;/*
  * THE SOFTWARE.
  */
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EmbeddedCalls {
     private CallInfo[] callInfos;
 

@@ -20,6 +20,7 @@ package com.nexmo.client.voice;/*
  * THE SOFTWARE.
  */
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -29,6 +30,7 @@ import com.nexmo.client.NexmoUnexpectedException;
 import java.io.IOException;
 import java.util.Iterator;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CallInfoPage implements Iterable<CallInfo> {
     private int count;
     private int pageSize;
