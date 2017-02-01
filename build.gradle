@@ -12,8 +12,9 @@ apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'java'
 apply plugin: "jacoco"
 apply plugin: 'maven'
+apply plugin: 'signing'
 apply plugin: 'eclipse'
-apply plugin: 'war'
+// apply plugin: 'war'
 
 group = "com.nexmo"
 version = "2.0.0-prerelease"
@@ -76,9 +77,14 @@ jar {
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
-    from javadoc.destinationDir
+    from javadoc
 }
 assemble.dependsOn javadocJar
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
 
 jacocoTestReport {
     reports {
@@ -119,13 +125,13 @@ uploadArchives {
                 }
                 licenses {
                     license {
-                        //name 'MIT'
-                        //url 'https://raw.github.com/Nexmo/nexmo-java/master/LICENCE.txt'
-                        //distribution 'https://raw.github.com/Nexmo/nexmo-java/mvn-repo/'
+                        name 'MIT'
+                        url 'https://raw.github.com/Nexmo/nexmo-java/master/LICENCE.txt'
+                        distribution 'https://raw.github.com/Nexmo/nexmo-java/mvn-repo/'
                     }
                 }
                 organization {
-                    name 'Nemo'
+                    name 'Nexmo'
                     url 'https://docs.nexmo.com/tools/developer-api'
                 }
                 issueManagement {
@@ -144,9 +150,14 @@ uploadArchives {
     }
 }
 
-war {
-    classpath sourceSets.examples.output
+// war {
+//     classpath sourceSets.examples.output
+// }
+
+artifacts {
+    archives javadocJar, sourcesJar
 }
+
 
 task wrapper(type: Wrapper) {
     gradleVersion = '3.1'
