@@ -31,13 +31,13 @@ import com.nexmo.client.voice.endpoints.TalkEndpoint;
 
 import java.io.IOException;
 
-public class NexmoVoiceClient extends AbstractClient {
+public class VoiceClient extends AbstractClient {
     public final CallsEndpoint calls;
     public final StreamsEndpoint streams;
     public final TalkEndpoint talk;
     public final DtmfEndpoint dtmf;
 
-    public NexmoVoiceClient(HttpWrapper httpWrapper) {
+    public VoiceClient(HttpWrapper httpWrapper) {
         super(httpWrapper);
 
         calls = new CallsEndpoint(httpWrapper);

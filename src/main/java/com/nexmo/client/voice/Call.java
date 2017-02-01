@@ -31,7 +31,7 @@ import com.nexmo.client.NexmoUnexpectedException;
 import java.io.IOException;
 
 /**
- * Call encapsulates the information required to create a call using {@link NexmoVoiceClient#createCall(Call)}
+ * Call encapsulates the information required to create a call using {@link VoiceClient#createCall(Call)}
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "_links"})
