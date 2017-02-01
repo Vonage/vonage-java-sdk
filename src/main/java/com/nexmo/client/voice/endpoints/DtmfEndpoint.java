@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2016 Nexmo Inc
+ * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,11 +20,12 @@
  * THE SOFTWARE.
  */
 
-package com.nexmo.client;
+package com.nexmo.client.voice.endpoints;
 
+import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.voice.DtmfRequest;
 import com.nexmo.client.voice.DtmfResponse;
-import com.nexmo.client.voice.SendDtmfMethod;
 
 import java.io.IOException;
 

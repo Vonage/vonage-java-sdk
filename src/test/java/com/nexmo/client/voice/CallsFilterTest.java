@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package com.nexmo.client;
+package com.nexmo.client.voice;
 
 import com.nexmo.client.voice.CallStatus;
 import com.nexmo.client.voice.CallsFilter;

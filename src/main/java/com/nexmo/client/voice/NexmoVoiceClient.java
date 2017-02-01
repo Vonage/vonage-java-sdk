@@ -24,9 +24,10 @@ package com.nexmo.client.voice;
 import com.nexmo.client.AbstractClient;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.DtmfEndpoint;
 import com.nexmo.client.voice.endpoints.CallsEndpoint;
+import com.nexmo.client.voice.endpoints.DtmfEndpoint;
 import com.nexmo.client.voice.endpoints.StreamsEndpoint;
+import com.nexmo.client.voice.endpoints.TalkEndpoint;
 
 import java.io.IOException;
 
@@ -73,7 +74,9 @@ public class NexmoVoiceClient extends AbstractClient {
         return streams.put(new StreamRequest(uuid, streamUrl, loop));
     }
 
-    //Start a stream that only plays once.
+    /**
+     * Start a stream that only plays once.
+     */
     public StreamResponse startStream(String uuid, String streamUrl) throws IOException, NexmoClientException {
         return streams.put(new StreamRequest(uuid, streamUrl, 1));
     }
@@ -86,17 +89,23 @@ public class NexmoVoiceClient extends AbstractClient {
         return talk.put(new TalkRequest(uuid, text, voiceName, loop));
     }
 
-    //Send a synthesized speech message that only plays once
+    /**
+     * Send a synthesized speech message that only plays once
+     */
     public TalkResponse startTalk(String uuid, String text, VoiceName voiceName) throws IOException, NexmoClientException {
         return talk.put(new TalkRequest(uuid, text, voiceName));
     }
 
-    //Send a synthesized speech message with the default voice of Kimberly
+    /**
+     * Send a synthesized speech message with the default voice of Kimberly
+     */
     public TalkResponse startTalk(String uuid, String text, int loop) throws IOException, NexmoClientException {
         return talk.put(new TalkRequest(uuid, text, loop));
     }
 
-    //Send a synthesized speech message that only plays once with the default voice of Kimberly
+    /**
+     * Send a synthesized speech message that only plays once with the default voice of Kimberly
+     */
     public TalkResponse startTalk(String uuid, String text) throws IOException, NexmoClientException {
         return talk.put(new TalkRequest(uuid, text));
     }
