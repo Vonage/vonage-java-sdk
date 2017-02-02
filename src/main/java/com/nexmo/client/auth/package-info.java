@@ -19,29 +19,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.voice.servlet;
-
-import com.nexmo.client.voice.ncco.Ncco;
 
 /**
- * Provides a fluent interface for constructing instances of {@link NccoResponse}.
- * <p>
- * Currently, an NccoResponse consists of a flat series of Ncco objects which are implemented sequentially (except for
- * NCCOs where bargeIn is set to true, when more than one NCCO can be executed in parallel).
+ * Provides support for the various authentication methods supported by different Nexmo APIs.
  */
-public class NccoResponseBuilder {
-    private NccoResponse value;
-
-    public NccoResponseBuilder() {
-        this.value = new NccoResponse();
-    }
-
-    public NccoResponseBuilder appendNcco(Ncco ncco) {
-        this.value.appendNcco(ncco);
-        return this;
-    }
-
-    public NccoResponse getValue() {
-        return this.value;
-    }
-}
+package com.nexmo.client.auth;

@@ -21,7 +21,12 @@
  */
 package com.nexmo.client;
 
-
+/**
+ * Abstract class for different API clients.
+ * <p>
+ * Currently this class simply provides boiler-plate for storing an {@link HttpWrapper} object, which is required by
+ * all client implementations.
+ */
 public abstract class AbstractClient {
     protected final HttpWrapper httpWrapper;
 

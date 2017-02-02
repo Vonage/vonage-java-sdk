@@ -19,29 +19,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.voice.servlet;
-
-import com.nexmo.client.voice.ncco.Ncco;
 
 /**
- * Provides a fluent interface for constructing instances of {@link NccoResponse}.
+ * Provides useful NCCO classes which can be serialized using Jackson when
+ * implementing webhooks to drive the Nexmo Voice API.
  * <p>
- * Currently, an NccoResponse consists of a flat series of Ncco objects which are implemented sequentially (except for
- * NCCOs where bargeIn is set to true, when more than one NCCO can be executed in parallel).
+ * The simplest way to use these classes is to subclass {@link com.nexmo.client.voice.servlet.AbstractAnswerServlet}
+ * and implement {@link com.nexmo.client.voice.servlet.AbstractAnswerServlet#handleRequest(javax.servlet.http.HttpServletRequest)}.
+ * the returned NCCOResponse will automatically be serialized correctly.
  */
-public class NccoResponseBuilder {
-    private NccoResponse value;
-
-    public NccoResponseBuilder() {
-        this.value = new NccoResponse();
-    }
-
-    public NccoResponseBuilder appendNcco(Ncco ncco) {
-        this.value.appendNcco(ncco);
-        return this;
-    }
-
-    public NccoResponse getValue() {
-        return this.value;
-    }
-}
+package com.nexmo.client.voice.ncco;
