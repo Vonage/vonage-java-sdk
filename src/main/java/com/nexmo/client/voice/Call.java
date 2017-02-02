@@ -59,6 +59,12 @@ public class Call {
         this.answerUrl = answerUrl;
     }
 
+    public Call(Endpoint[] to, Endpoint from, String answerUrl) {
+        this.to = to;
+        this.from = from;
+        this.answerUrl = answerUrl;
+    }
+
     public Endpoint[] getTo() {
         return to;
     }
