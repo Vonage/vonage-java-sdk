@@ -22,7 +22,6 @@ package com.nexmo.client.voice;
  */
 
 import com.nexmo.client.AbstractClient;
-import com.nexmo.client.DtmfEndpoint;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.voice.endpoints.CallsEndpoint;
