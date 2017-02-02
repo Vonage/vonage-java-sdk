@@ -24,7 +24,7 @@ import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.JWTAuthMethod;
 import com.nexmo.client.voice.CallModifier;
-import com.nexmo.client.voice.CallRecord;
+import com.nexmo.client.voice.ModifyCallResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -36,7 +36,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 // TODO: Create a package for these endpoint methods
-public class ModifyCallMethod extends AbstractMethod<CallModifier, CallRecord> {
+public class ModifyCallMethod extends AbstractMethod<CallModifier, ModifyCallResponse> {
     private static final Log LOG = LogFactory.getLog(ModifyCallMethod.class);
 
     private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls/";
@@ -62,10 +62,10 @@ public class ModifyCallMethod extends AbstractMethod<CallModifier, CallRecord> {
     }
 
     @Override
-    public CallRecord parseResponse(HttpResponse response) throws IOException {
+    public ModifyCallResponse parseResponse(HttpResponse response) throws IOException {
         String json = EntityUtils.toString(response.getEntity());
         LOG.info("Received: " + json);
-        return CallRecord.fromJson(json);
+        return ModifyCallResponse.fromJson(json);
     }
 
     public void setUri(String uri) {

@@ -1,5 +1,13 @@
-package com.nexmo.client.voice.endpoints;/*
- * Copyright (c) 2011-2016 Nexmo Inc
+package com.nexmo.client.voice;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+
+/*
+ * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,28 +27,28 @@ package com.nexmo.client.voice.endpoints;/*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+public class StreamPayloadTest {
+    private StreamPayload payload;
 
-import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.voice.StreamRequest;
-import com.nexmo.client.voice.StreamResponse;
-
-import java.io.IOException;
-
-public class StreamsEndpoint {
-    private final StartStreamMethod startStream;
-    private final StopStreamMethod stopStream;
-
-    public StreamsEndpoint(HttpWrapper wrapper) {
-        this.startStream = new StartStreamMethod(wrapper);
-        this.stopStream = new StopStreamMethod(wrapper);
+    @Before
+    public void setUp() throws Exception {
+        payload = new StreamPayload("https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3", 1);
     }
 
-    public StreamResponse put(StreamRequest request) throws IOException, NexmoClientException {
-        return this.startStream.execute(request);
+    @Test
+    public void getStreamUrl() throws Exception {
+        assertArrayEquals(new String[]{"https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3"}, payload.getStreamUrl());
     }
 
-    public StreamResponse delete(String uuid) throws IOException, NexmoClientException {
-        return this.stopStream.execute(uuid);
+    @Test
+    public void getLoop() throws Exception {
+        assertEquals(1, payload.getLoop());
     }
+
+    @Test
+    public void toJson() throws Exception {
+        String jsonString = "{\"loop\":1,\"stream_url\":[\"https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3\"]}";
+        assertEquals(jsonString, payload.toJson());
+    }
+
 }

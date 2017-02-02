@@ -22,6 +22,7 @@ package com.nexmo.client.voice;
  */
 
 import com.nexmo.client.AbstractClient;
+import com.nexmo.client.DtmfEndpoint;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.voice.endpoints.CallsEndpoint;
@@ -66,7 +67,7 @@ public class NexmoVoiceClient extends AbstractClient {
         return dtmf.put(uuid, digits);
     }
 
-    public CallRecord modifyCall(String uuid, String action) throws IOException, NexmoClientException {
+    public ModifyCallResponse modifyCall(String uuid, String action) throws IOException, NexmoClientException {
         return calls.put(uuid, action);
     }
 

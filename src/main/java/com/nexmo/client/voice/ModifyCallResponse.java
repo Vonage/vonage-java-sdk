@@ -1,5 +1,5 @@
-package com.nexmo.client.voice.endpoints;/*
- * Copyright (c) 2011-2016 Nexmo Inc
+package com.nexmo.client.voice;/*
+ * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,27 +20,27 @@ package com.nexmo.client.voice.endpoints;/*
  * THE SOFTWARE.
  */
 
-import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.voice.StreamRequest;
-import com.nexmo.client.voice.StreamResponse;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexmo.client.NexmoUnexpectedException;
 
 import java.io.IOException;
 
-public class StreamsEndpoint {
-    private final StartStreamMethod startStream;
-    private final StopStreamMethod stopStream;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ModifyCallResponse {
+    private String message;
 
-    public StreamsEndpoint(HttpWrapper wrapper) {
-        this.startStream = new StartStreamMethod(wrapper);
-        this.stopStream = new StopStreamMethod(wrapper);
+    public String getMessage() {
+        return message;
     }
 
-    public StreamResponse put(StreamRequest request) throws IOException, NexmoClientException {
-        return this.startStream.execute(request);
+    public static ModifyCallResponse fromJson(String json) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(json, ModifyCallResponse.class);
+        } catch (IOException jpe) {
+            throw new NexmoUnexpectedException("Failed to produce json from ModifyCallResponse object.", jpe);
+        }
     }
 
-    public StreamResponse delete(String uuid) throws IOException, NexmoClientException {
-        return this.stopStream.execute(uuid);
-    }
 }
