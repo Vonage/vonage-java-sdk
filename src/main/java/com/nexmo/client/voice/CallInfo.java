@@ -1,6 +1,5 @@
-package com.nexmo.client.voice;
 /*
- * Copyright (c) 2011-2016 Nexmo Inc
+ * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +19,8 @@ package com.nexmo.client.voice;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package com.nexmo.client.voice;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -32,11 +33,11 @@ import java.io.IOException;
 import java.util.Date;
 
 /**
- * CallRecord holds the information related to a call. It is obtained using {@link NexmoVoiceClient#listCalls}
+ * CallInfo holds the information related to a call. It is obtained using {@link VoiceClient#listCalls}
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties({ "_links" })
-public class CallRecord {
+@JsonIgnoreProperties(value = { "_links" }, ignoreUnknown = true)
+public class CallInfo {
     private Endpoint to;
     private Endpoint from;
 
@@ -51,13 +52,13 @@ public class CallRecord {
     private CallStatus status = null;
     private String uuid = null;
 
-    public CallRecord() {}
+    public CallInfo() {}
 
-    public CallRecord(String to, String from) {
+    public CallInfo(String to, String from) {
         this(new PhoneEndpoint(to), new PhoneEndpoint(from));
     }
 
-    public CallRecord(Endpoint to, Endpoint from) {
+    public CallInfo(Endpoint to, Endpoint from) {
         this.to = to;
         this.from = from;
     }
@@ -163,7 +164,7 @@ public class CallRecord {
 
     public String toString() {
         return new StringBuilder()
-                .append("<CallRecord ")
+                .append("<CallInfo ")
                 .append("ID: ").append(this.getUuid()).append(", ")
                 .append("From: ").append(this.getFrom().toLog()).append(", ")
                 .append("To: ").append(this.getTo().toLog()).append(", ")
@@ -172,13 +173,13 @@ public class CallRecord {
                 .toString();
     }
 
-    public static CallRecord fromJson(String json) {
+    public static CallInfo fromJson(String json) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-            return mapper.readValue(json, CallRecord.class);
+            return mapper.readValue(json, CallInfo.class);
         } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce json from CallRecord object.", jpe);
+            throw new NexmoUnexpectedException("Failed to produce json from CallInfo object.", jpe);
         }
     }
 }

@@ -1,6 +1,5 @@
-package com.nexmo.verify.sdk;
 /*
- * Copyright (c) 2011-2016 Nexmo Inc
+ * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +19,8 @@ package com.nexmo.verify.sdk;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package com.nexmo.verify.sdk;
+
 
 import java.io.IOException;
 import java.util.Locale;

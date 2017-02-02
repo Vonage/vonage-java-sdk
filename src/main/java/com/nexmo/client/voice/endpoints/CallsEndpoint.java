@@ -1,5 +1,5 @@
-package com.nexmo.client.voice.endpoints;/*
- * Copyright (c) 2011-2016 Nexmo Inc
+/*
+ * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,6 +19,7 @@ package com.nexmo.client.voice.endpoints;/*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package com.nexmo.client.voice.endpoints;
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
@@ -43,11 +44,11 @@ public class CallsEndpoint {
         return this.createCall.execute(callRequest);
     }
 
-    public CallRecordPage get(CallsFilter filter) throws IOException, NexmoClientException {
+    public CallInfoPage get(CallsFilter filter) throws IOException, NexmoClientException {
         return this.listCalls.execute(filter);
     }
 
-    public CallRecord get(String uuid) throws IOException, NexmoClientException {
+    public CallInfo get(String uuid) throws IOException, NexmoClientException {
         return this.readCall.execute(uuid);
     }
 

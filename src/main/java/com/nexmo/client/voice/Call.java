@@ -1,6 +1,5 @@
-package com.nexmo.client.voice;
 /*
- * Copyright (c) 2011-2016 Nexmo Inc
+ * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +19,8 @@ package com.nexmo.client.voice;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package com.nexmo.client.voice;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -31,7 +32,7 @@ import com.nexmo.client.NexmoUnexpectedException;
 import java.io.IOException;
 
 /**
- * Call encapsulates the information required to create a call using {@link NexmoVoiceClient#createCall(Call)}
+ * Call encapsulates the information required to create a call using {@link VoiceClient#createCall(Call)}
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "_links"})
