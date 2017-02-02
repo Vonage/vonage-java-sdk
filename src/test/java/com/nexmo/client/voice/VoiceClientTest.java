@@ -19,7 +19,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package com.nexmo.client.voice;
 
 import com.nexmo.client.HttpWrapper;
@@ -40,7 +39,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class NexmoVoiceClientTest {
+public class VoiceClientTest {
     private TestUtils testUtils = new TestUtils();
 
     private HttpWrapper stubHttpWrapper(int statusCode, String content) throws Exception {
@@ -71,7 +70,7 @@ public class NexmoVoiceClientTest {
 
     @Test
     public void testCreateCall() throws Exception {
-        NexmoVoiceClient client = new NexmoVoiceClient(stubHttpWrapper(200, "{\n" +
+        VoiceClient client = new VoiceClient(stubHttpWrapper(200, "{\n" +
                 "  \"conversation_uuid\": \"63f61863-4a51-4f6b-86e1-46edebio0391\",\n" +
                 "  \"status\": \"started\",\n" +
                 "  \"direction\": \"outbound\"\n" +
@@ -83,7 +82,7 @@ public class NexmoVoiceClientTest {
 
     @Test
     public void testListCallsNoFilter() throws Exception {
-        NexmoVoiceClient client = new NexmoVoiceClient(stubHttpWrapper(200, "{\n" +
+        VoiceClient client = new VoiceClient(stubHttpWrapper(200, "{\n" +
                 "  \"page_size\": 10,\n" +
                 "  \"record_index\": 0,\n" +
                 "  \"count\": 0,\n" +
@@ -102,13 +101,13 @@ public class NexmoVoiceClientTest {
                 "    }\n" +
                 "  }\n" +
                 "}\n"));
-        CallRecordPage page = client.listCalls();
+        CallInfoPage page = client.listCalls();
         assertEquals(0, page.getCount());
     }
 
     @Test
     public void testListCallsWithFilter() throws Exception {
-        NexmoVoiceClient client = new NexmoVoiceClient(stubHttpWrapper(200, "{\n" +
+        VoiceClient client = new VoiceClient(stubHttpWrapper(200, "{\n" +
                 "  \"page_size\": 10,\n" +
                 "  \"record_index\": 0,\n" +
                 "  \"count\": 0,\n" +
@@ -127,13 +126,13 @@ public class NexmoVoiceClientTest {
                 "    }\n" +
                 "  }\n" +
                 "}\n"));
-        CallRecordPage page = client.listCalls(new CallsFilter());
+        CallInfoPage page = client.listCalls(new CallsFilter());
         assertEquals(0, page.getCount());
     }
 
     @Test
     public void testGetCallDetails() throws Exception {
-        NexmoVoiceClient client = new NexmoVoiceClient(stubHttpWrapper(200, "      {\n" +
+        VoiceClient client = new VoiceClient(stubHttpWrapper(200, "      {\n" +
                 "        \"uuid\": \"93137ee3-580e-45f7-a61a-e0b5716000ef\",\n" +
                 "        \"status\": \"completed\",\n" +
                 "        \"direction\": \"outbound\",\n" +
@@ -158,13 +157,13 @@ public class NexmoVoiceClientTest {
                 "          }\n" +
                 "        }\n" +
                 "      }\n"));
-        CallRecord call = client.getCallDetails("93137ee3-580e-45f7-a61a-e0b5716000ef");
+        CallInfo call = client.getCallDetails("93137ee3-580e-45f7-a61a-e0b5716000ef");
         assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", call.getUuid());
     }
 
     @Test
     public void testSendDtmf() throws Exception {
-        NexmoVoiceClient client = new NexmoVoiceClient(stubHttpWrapper(200,
+        VoiceClient client = new VoiceClient(stubHttpWrapper(200,
                 "{\n" +
                         "  \"message\": \"DTMF sent\",\n" +
                         "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
@@ -177,7 +176,7 @@ public class NexmoVoiceClientTest {
 
     @Test
     public void testModifyCall() throws Exception {
-        NexmoVoiceClient client = new NexmoVoiceClient(stubHttpWrapper(200, "      {\n" +
+        VoiceClient client = new VoiceClient(stubHttpWrapper(200, "      {\n" +
                 "        \"uuid\": \"93137ee3-580e-45f7-a61a-e0b5716000ef\",\n" +
                 "        \"status\": \"completed\",\n" +
                 "        \"direction\": \"outbound\",\n" +
@@ -202,14 +201,14 @@ public class NexmoVoiceClientTest {
                 "          }\n" +
                 "        }\n" +
                 "      }\n"));
-        CallRecord call = client.modifyCall("93137ee3-580e-45f7-a61a-e0b5716000ef", "hangup");
+        CallInfo call = client.modifyCall("93137ee3-580e-45f7-a61a-e0b5716000ef", "hangup");
         assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", call.getUuid());
 
     }
 
     @Test
     public void testStartStreamNonLooping() throws Exception {
-        NexmoVoiceClient client = new NexmoVoiceClient(stubHttpWrapper(200,
+        VoiceClient client = new VoiceClient(stubHttpWrapper(200,
                 "{\n" +
                         "  \"message\": \"Stream started\",\n" +
                         "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
@@ -221,7 +220,7 @@ public class NexmoVoiceClientTest {
 
     @Test
     public void testStartStreamLooping() throws Exception {
-        NexmoVoiceClient client = new NexmoVoiceClient(stubHttpWrapper(200,
+        VoiceClient client = new VoiceClient(stubHttpWrapper(200,
                 "{\n" +
                         "  \"message\": \"Stream started\",\n" +
                         "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
@@ -233,7 +232,7 @@ public class NexmoVoiceClientTest {
 
     @Test
     public void testStopStream() throws Exception {
-        NexmoVoiceClient client = new NexmoVoiceClient(stubHttpWrapper(200, "{\n" +
+        VoiceClient client = new VoiceClient(stubHttpWrapper(200, "{\n" +
                 "  \"message\": \"Stream stopped\",\n" +
                 "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
                 "}\n"));
@@ -245,7 +244,7 @@ public class NexmoVoiceClientTest {
 
     @Test
     public void testStartTalkAllParams() throws Exception {
-        NexmoVoiceClient client = new NexmoVoiceClient(stubHttpWrapper(200,
+        VoiceClient client = new VoiceClient(stubHttpWrapper(200,
                 "{\n" +
                         "  \"message\": \"Talk started\",\n" +
                         "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
@@ -258,7 +257,7 @@ public class NexmoVoiceClientTest {
 
     @Test
     public void testStartTalkNonLooping() throws Exception {
-        NexmoVoiceClient client = new NexmoVoiceClient(stubHttpWrapper(200,
+        VoiceClient client = new VoiceClient(stubHttpWrapper(200,
                 "{\n" +
                         "  \"message\": \"Talk started\",\n" +
                         "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
@@ -271,7 +270,7 @@ public class NexmoVoiceClientTest {
 
     @Test
     public void testStartTalkLoopingWithDefaultVoice() throws Exception {
-        NexmoVoiceClient client = new NexmoVoiceClient(stubHttpWrapper(200,
+        VoiceClient client = new VoiceClient(stubHttpWrapper(200,
                 "{\n" +
                         "  \"message\": \"Talk started\",\n" +
                         "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
@@ -284,7 +283,7 @@ public class NexmoVoiceClientTest {
 
     @Test
     public void testStartTalkNonLoopingWithDefaultVoice() throws Exception {
-        NexmoVoiceClient client = new NexmoVoiceClient(stubHttpWrapper(200,
+        VoiceClient client = new VoiceClient(stubHttpWrapper(200,
                 "{\n" +
                         "  \"message\": \"Talk started\",\n" +
                         "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
@@ -297,7 +296,7 @@ public class NexmoVoiceClientTest {
 
     @Test
     public void testStopTalk() throws Exception {
-        NexmoVoiceClient client = new NexmoVoiceClient(stubHttpWrapper(200,
+        VoiceClient client = new VoiceClient(stubHttpWrapper(200,
                 "{\n" +
                         "  \"message\": \"Talk stopped\",\n" +
                         "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +

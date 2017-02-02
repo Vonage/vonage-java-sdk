@@ -1,6 +1,5 @@
-package com.nexmo.messaging.sdk.messages.parameters;
 /*
- * Copyright (c) 2011-2016 Nexmo Inc
+ * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +19,8 @@ package com.nexmo.messaging.sdk.messages.parameters;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package com.nexmo.messaging.sdk.messages.parameters;
+
 
 /**
  * An enum of the valid values that may be supplied to as the message-class parameter of a rest submission.

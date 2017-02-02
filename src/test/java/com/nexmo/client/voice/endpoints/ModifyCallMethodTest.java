@@ -1,28 +1,3 @@
-package com.nexmo.client.voice.endpoints;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.voice.CallDirection;
-import com.nexmo.client.voice.CallModifier;
-import com.nexmo.client.voice.CallRecord;
-import com.nexmo.client.voice.CallStatus;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.http.HttpResponse;
-import org.apache.http.ProtocolVersion;
-import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.entity.BasicHttpEntity;
-import org.apache.http.message.BasicHttpResponse;
-import org.apache.http.message.BasicStatusLine;
-import org.junit.Test;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-
-import static org.junit.Assert.assertEquals;
-
 /*
  * Copyright (c) 2011-2017 Nexmo Inc
  *
@@ -44,6 +19,33 @@ import static org.junit.Assert.assertEquals;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package com.nexmo.client.voice.endpoints;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.voice.CallDirection;
+import com.nexmo.client.voice.CallModifier;
+import com.nexmo.client.voice.CallInfo;
+import com.nexmo.client.voice.CallStatus;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpResponse;
+import org.apache.http.ProtocolVersion;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.BasicHttpEntity;
+import org.apache.http.message.BasicHttpResponse;
+import org.apache.http.message.BasicStatusLine;
+import org.junit.Test;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+
+import static org.junit.Assert.assertEquals;
+
+
+
 public class ModifyCallMethodTest {
     private static final Log LOG = LogFactory.getLog(ModifyCallMethodTest.class);
 
@@ -85,15 +87,15 @@ public class ModifyCallMethodTest {
         entity.setContent(jsonStream);
         stubResponse.setEntity(entity);
 
-        CallRecord callRecord = methodUnderTest.parseResponse(stubResponse);
-        assertEquals("63f61863-4a51-4f6b-86e1-46edebcf9356", callRecord.getUuid());
-        assertEquals("63f61863-4a51-4f6b-86e1-46edebio0123", callRecord.getConversationUuid());
-        assertEquals(CallStatus.COMPLETED, callRecord.getStatus());
-        assertEquals(CallDirection.OUTBOUND, callRecord.getDirection());
-        assertEquals("65512", callRecord.getNetwork());
-        assertEquals("phone", callRecord.getFrom().getType());
-        assertEquals("441632960961", callRecord.getFrom().toLog());
-        assertEquals("441632960960", callRecord.getTo().toLog());
-        assertEquals("phone", callRecord.getTo().getType());
+        CallInfo callInfo = methodUnderTest.parseResponse(stubResponse);
+        assertEquals("63f61863-4a51-4f6b-86e1-46edebcf9356", callInfo.getUuid());
+        assertEquals("63f61863-4a51-4f6b-86e1-46edebio0123", callInfo.getConversationUuid());
+        assertEquals(CallStatus.COMPLETED, callInfo.getStatus());
+        assertEquals(CallDirection.OUTBOUND, callInfo.getDirection());
+        assertEquals("65512", callInfo.getNetwork());
+        assertEquals("phone", callInfo.getFrom().getType());
+        assertEquals("441632960961", callInfo.getFrom().toLog());
+        assertEquals("441632960960", callInfo.getTo().toLog());
+        assertEquals("phone", callInfo.getTo().getType());
     }
 }

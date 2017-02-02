@@ -19,15 +19,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package com.nexmo.client.voice.endpoints;
-
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.voice.CallDirection;
-import com.nexmo.client.voice.PhoneEndpoint;
-import com.nexmo.client.voice.CallRecord;
+import com.nexmo.client.voice.CallInfo;
 import com.nexmo.client.voice.CallStatus;
+import com.nexmo.client.voice.PhoneEndpoint;
 import org.junit.Test;
 
 import java.util.Calendar;
@@ -36,7 +34,7 @@ import java.util.TimeZone;
 
 import static org.junit.Assert.assertEquals;
 
-public class CallRecordTest {
+public class CallInfoTest {
     @Test
     public void testJson() throws Exception {
         String json = "{\n" +
@@ -64,25 +62,25 @@ public class CallRecordTest {
                 "    }\n" +
                 "  }\n" +
                 "}\n";
-        CallRecord record = new ObjectMapper().readValue(json, CallRecord.class);
+        CallInfo record = new ObjectMapper().readValue(json, CallInfo.class);
 
         assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", record.getUuid());
         assertEquals(CallStatus.COMPLETED, record.getStatus());
         assertEquals(CallDirection.OUTBOUND, record.getDirection());
         assertEquals("0.02400000", record.getRate());
         assertEquals("0.00280000", record.getPrice());
-        assertEquals(7, (long)record.getDuration());
+        assertEquals(7, (long) record.getDuration());
         assertEquals("23410", record.getNetwork());
         // 2017-01-13T13:55:02.000Z
         Calendar expectedStart = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
-        expectedStart.set(2017, Calendar.JANUARY, 13 ,13, 55, 2);
+        expectedStart.set(2017, Calendar.JANUARY, 13, 13, 55, 2);
         expectedStart.set(Calendar.MILLISECOND, 0);
         assertEquals(
                 expectedStart.getTime(),
                 record.getStartTime());
         // 2017-01-13T13:55:09.000Z
         Calendar expectedEnd = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
-        expectedEnd.set(2017, Calendar.JANUARY, 13 ,13, 55, 9);
+        expectedEnd.set(2017, Calendar.JANUARY, 13, 13, 55, 9);
         expectedEnd.set(Calendar.MILLISECOND, 0);
         assertEquals(
                 expectedEnd.getTime(),
@@ -95,11 +93,11 @@ public class CallRecordTest {
 
     @Test
     public void testToString() throws Exception {
-        CallRecord record = new CallRecord(new PhoneEndpoint("447700900104"), new PhoneEndpoint("447700900105"));
+        CallInfo record = new CallInfo(new PhoneEndpoint("447700900104"), new PhoneEndpoint("447700900105"));
         record.setUuid("93137ee3-580e-45f7-a61a-e0b5716000ef");
         record.setStatus(CallStatus.COMPLETED);
         assertEquals(
-                "<CallRecord ID: 93137ee3-580e-45f7-a61a-e0b5716000ef, From: 447700900105, To: 447700900104, Status: completed>",
+                "<CallInfo ID: 93137ee3-580e-45f7-a61a-e0b5716000ef, From: 447700900105, To: 447700900104, Status: completed>",
                 record.toString());
     }
 }

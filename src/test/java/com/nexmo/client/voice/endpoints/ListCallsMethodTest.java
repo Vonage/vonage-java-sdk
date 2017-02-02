@@ -19,12 +19,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package com.nexmo.client.voice.endpoints;
 
 import com.nexmo.client.NexmoUnexpectedException;
 import com.nexmo.client.auth.JWTAuthMethod;
-import com.nexmo.client.voice.CallRecordPage;
+import com.nexmo.client.voice.CallInfoPage;
 import com.nexmo.client.voice.CallsFilter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -156,9 +155,9 @@ public class ListCallsMethodTest {
         entity.setContent(jsonStream);
         stubResponse.setEntity(entity);
 
-        CallRecordPage page = method.parseResponse(stubResponse);
+        CallInfoPage page = method.parseResponse(stubResponse);
         assertEquals(2, page.getCount());
-        assertEquals(2, page.getEmbedded().getCallRecords().length);
+        assertEquals(2, page.getEmbedded().getCallInfos().length);
         assertEquals("/v1/calls?page_size=10", page.getLinks().getFirst().getHref());
         assertEquals("/v1/calls?page_size=10", page.getLinks().getLast().getHref());
     }
