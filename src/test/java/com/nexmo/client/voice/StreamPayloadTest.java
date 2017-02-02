@@ -19,40 +19,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package com.nexmo.client.voice;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
-import static org.junit.Assert.*;
-
-public class StreamResponseTest {
-    private StreamResponse response;
+public class StreamPayloadTest {
+    private StreamPayload payload;
 
     @Before
-    public void setUp() {
-        response = StreamResponse.fromJson("{\n" +
-                "  \"message\": \"Stream started\",\n" +
-                "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
-                "}");
+    public void setUp() throws Exception {
+        payload = new StreamPayload("https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3", 1);
     }
 
     @Test
-    public void testBasics() {
-        assertEquals("Stream started", response.getMessage());
-        assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
+    public void getStreamUrl() throws Exception {
+        assertArrayEquals(new String[]{"https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3"}, payload.getStreamUrl());
     }
 
     @Test
-    public void testUnknownJson() throws IOException {
-        String json = "{\n" +
-                "    \"unknownProperty\": \"unknown\"\n" +
-                "}";
-        ObjectMapper mapper = new ObjectMapper();
-        StreamResponse sr = mapper.readValue(json, StreamResponse.class);
-        assertNull(sr.getUuid());
+    public void getLoop() throws Exception {
+        assertEquals(1, payload.getLoop());
     }
+
+    @Test
+    public void toJson() throws Exception {
+        String jsonString = "{\"loop\":1,\"stream_url\":[\"https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3\"]}";
+        assertEquals(jsonString, payload.toJson());
+    }
+
 }

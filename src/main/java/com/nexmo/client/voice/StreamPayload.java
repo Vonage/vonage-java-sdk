@@ -27,11 +27,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
 
 public class StreamPayload {
-    private String streamUrl;
+    private String[] streamUrl;
     private int loop;
 
     @JsonProperty("stream_url")
-    public String getStreamUrl() {
+    public String[] getStreamUrl() {
         return streamUrl;
     }
 
@@ -40,7 +40,7 @@ public class StreamPayload {
     }
 
     public StreamPayload(String streamUrl, int loop) {
-        this.streamUrl = streamUrl;
+        this.streamUrl = new String[]{streamUrl};
         this.loop = loop;
     }
 

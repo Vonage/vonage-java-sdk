@@ -19,40 +19,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package com.nexmo.client.voice;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
+import com.nexmo.client.NexmoUnexpectedException;
 
 import java.io.IOException;
 
-import static org.junit.Assert.*;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ModifyCallResponse {
+    private String message;
 
-public class StreamResponseTest {
-    private StreamResponse response;
-
-    @Before
-    public void setUp() {
-        response = StreamResponse.fromJson("{\n" +
-                "  \"message\": \"Stream started\",\n" +
-                "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
-                "}");
+    public String getMessage() {
+        return message;
     }
 
-    @Test
-    public void testBasics() {
-        assertEquals("Stream started", response.getMessage());
-        assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
+    public static ModifyCallResponse fromJson(String json) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(json, ModifyCallResponse.class);
+        } catch (IOException jpe) {
+            throw new NexmoUnexpectedException("Failed to produce json from ModifyCallResponse object.", jpe);
+        }
     }
 
-    @Test
-    public void testUnknownJson() throws IOException {
-        String json = "{\n" +
-                "    \"unknownProperty\": \"unknown\"\n" +
-                "}";
-        ObjectMapper mapper = new ObjectMapper();
-        StreamResponse sr = mapper.readValue(json, StreamResponse.class);
-        assertNull(sr.getUuid());
-    }
 }

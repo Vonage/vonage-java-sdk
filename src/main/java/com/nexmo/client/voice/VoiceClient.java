@@ -67,7 +67,7 @@ public class VoiceClient extends AbstractClient {
         return dtmf.put(uuid, digits);
     }
 
-    public CallInfo modifyCall(String uuid, String action) throws IOException, NexmoClientException {
+    public ModifyCallResponse modifyCall(String uuid, String action) throws IOException, NexmoClientException {
         return calls.put(uuid, action);
     }
 

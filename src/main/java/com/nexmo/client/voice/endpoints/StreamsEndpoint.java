@@ -23,7 +23,8 @@ package com.nexmo.client.voice.endpoints;
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.voice.*;
+import com.nexmo.client.voice.StreamRequest;
+import com.nexmo.client.voice.StreamResponse;
 
 import java.io.IOException;
 
