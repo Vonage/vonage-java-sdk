@@ -25,6 +25,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
 
+/**
+ * The request object to send DTMF tones.
+ * <p>
+ * Contains the {@code uuid} of the {@link Call} and the {@link DtmfPayload} to be sent in the request.
+ */
+
 public class DtmfRequest {
     private String uuid;
     private DtmfPayload payload;

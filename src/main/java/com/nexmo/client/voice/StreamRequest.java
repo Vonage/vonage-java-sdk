@@ -25,6 +25,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
 
+/**
+ * The request object to stream an audio file.
+ * <p>
+ * Contains the {@code uuid} of the {@link Call} and the {@link StreamPayload} to be sent in the request.
+ */
+
 public class StreamRequest {
     private StreamPayload streamPayload;
     private String uuid;
