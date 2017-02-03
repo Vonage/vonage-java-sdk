@@ -28,6 +28,12 @@ import com.nexmo.client.NexmoUnexpectedException;
 
 import java.io.IOException;
 
+/**
+ * Response if a {@link Call} was successfully modified.
+ * <p>
+ * This would be returned by {@link VoiceClient#modifyCall(String, String)}
+ */
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ModifyCallResponse {
     private String message;

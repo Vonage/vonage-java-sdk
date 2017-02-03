@@ -27,6 +27,12 @@ import com.nexmo.client.NexmoUnexpectedException;
 
 import java.io.IOException;
 
+/**
+ * Response from successfully sending a synthesized speech message or stopping a message to an active {@link Call}.
+ * <p>
+ * This would be returned by {@link VoiceClient#startTalk(String, String)} or {@link VoiceClient#stopTalk(String)}
+ */
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TalkResponse {
     private String uuid;

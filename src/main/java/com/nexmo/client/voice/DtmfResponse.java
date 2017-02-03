@@ -27,6 +27,12 @@ import com.nexmo.client.NexmoUnexpectedException;
 
 import java.io.IOException;
 
+/**
+ * Response if DTMF tones were successfully sent to an active {@link Call}.
+ * <p>
+ * Returned by {@link VoiceClient#sendDtmf(String, String)}
+ */
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DtmfResponse {
     private String uuid;

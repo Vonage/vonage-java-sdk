@@ -26,6 +26,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
 
+/**
+ * The JSON payload that will be sent in a {@link StreamRequest}.
+ * <p>
+ * {@code streamUrl}: An array containing a single URL to an mp3 or wav (16-bit) audio file.
+ * {@code loop}: The number of times the audio file at {@code streamUrl} is repeated before the stream ends.
+ */
+
 public class StreamPayload {
     private String[] streamUrl;
     private int loop;
