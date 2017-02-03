@@ -17,6 +17,7 @@ apply plugin: 'eclipse'
 // apply plugin: 'war'
 
 group = "com.nexmo"
+archivesBaseName = "nexmo-java"
 version = "2.0.0-prerelease"
 sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
@@ -102,8 +103,8 @@ uploadArchives {
             }
             repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
                 authentication(
-                        userName: { getProperty("maven.username") },
-                        password: { getProperty("maven.password") }
+                        userName: getProperty("maven.username"),
+                        password: getProperty("maven.password")
                 )
             }
             snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
@@ -113,10 +114,10 @@ uploadArchives {
                 )
             }
             pom.project {
-                name 'Nexo Java Client Library'
+                name 'Nexmo Java Client Library'
                 packaging 'jar'
                 artifactId 'nexmo-java'
-                description 'Java client for Nexmo.'
+                description 'Java client for Nexmo APIs'
                 url 'https://github.com/Nexmo/nexmo-java/'
                 scm {
                     connection 'scm:git:git@github.com:Nexmo/nexmo-java'
@@ -127,7 +128,6 @@ uploadArchives {
                     license {
                         name 'MIT'
                         url 'https://raw.github.com/Nexmo/nexmo-java/master/LICENCE.txt'
-                        distribution 'https://raw.github.com/Nexmo/nexmo-java/mvn-repo/'
                     }
                 }
                 organization {
@@ -139,11 +139,11 @@ uploadArchives {
                     url 'https://github.com/Nexmo/nexmo-java/issues'
                 }
                 developers {
-                    // developer {
-                    // 	id '...'
-                    // 	name '...'
-                    // 	email '...'
-                    // }
+                    developer {
+                        id 'devrel'
+                        name 'Nexmo Developer Relations Team'
+                        email 'devrel@nexmo.com'
+                    }
                 }
             }
         }
@@ -158,6 +158,9 @@ artifacts {
     archives javadocJar, sourcesJar
 }
 
+signing {
+    sign configurations.archives
+}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '3.1'
