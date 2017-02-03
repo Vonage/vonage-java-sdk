@@ -1,5 +1,5 @@
-package com.nexmo.client.voice;/*
- * Copyright (c) 2011-2016 Nexmo Inc
+/*
+ * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,19 +19,22 @@ package com.nexmo.client.voice;/*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package com.nexmo.client.voice;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EmbeddedCalls {
-    private CallRecord[] callRecords;
+    private CallInfo[] callInfos;
 
     @JsonProperty("calls")
-    private void setCallRecords(CallRecord[] callRecords) {
-        this.callRecords = callRecords;
+    private void setCallInfos(CallInfo[] callInfos) {
+        this.callInfos = callInfos;
     }
 
     @JsonProperty("calls")
-    public CallRecord[] getCallRecords() {
-        return callRecords;
+    public CallInfo[] getCallInfos() {
+        return callInfos;
     }
 }

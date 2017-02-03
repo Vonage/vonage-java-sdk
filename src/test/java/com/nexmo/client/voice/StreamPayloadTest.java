@@ -1,4 +1,4 @@
-package com.nexmo.client.voice;/*
+/*
  * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,25 +20,36 @@ package com.nexmo.client.voice;/*
  * THE SOFTWARE.
  */
 
-import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
+package com.nexmo.client.voice;
 
-import java.io.IOException;
+import org.junit.Before;
+import org.junit.Test;
 
-public class TalkEndpoint {
-    private final StartTalkMethod startTalk;
-    private final StopTalkMethod stopTalk;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
-    public TalkEndpoint(HttpWrapper wrapper) {
-        this.startTalk = new StartTalkMethod(wrapper);
-        this.stopTalk = new StopTalkMethod(wrapper);
+public class StreamPayloadTest {
+    private StreamPayload payload;
+
+    @Before
+    public void setUp() throws Exception {
+        payload = new StreamPayload("https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3", 1);
     }
 
-    public TalkResponse put(TalkRequest request) throws IOException, NexmoClientException {
-        return this.startTalk.execute(request);
+    @Test
+    public void getStreamUrl() throws Exception {
+        assertArrayEquals(new String[]{"https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3"}, payload.getStreamUrl());
     }
 
-    public TalkResponse delete(String uuid) throws IOException, NexmoClientException {
-        return this.stopTalk.execute(uuid);
+    @Test
+    public void getLoop() throws Exception {
+        assertEquals(1, payload.getLoop());
     }
+
+    @Test
+    public void toJson() throws Exception {
+        String jsonString = "{\"loop\":1,\"stream_url\":[\"https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3\"]}";
+        assertEquals(jsonString, payload.toJson());
+    }
+
 }

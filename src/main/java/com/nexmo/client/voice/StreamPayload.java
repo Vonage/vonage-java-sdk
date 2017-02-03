@@ -1,4 +1,4 @@
-package com.nexmo.client.voice;/*
+/*
  * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,6 +19,7 @@ package com.nexmo.client.voice;/*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package com.nexmo.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,11 +27,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
 
 public class StreamPayload {
-    private String streamUrl;
+    private String[] streamUrl;
     private int loop;
 
     @JsonProperty("stream_url")
-    public String getStreamUrl() {
+    public String[] getStreamUrl() {
         return streamUrl;
     }
 
@@ -39,7 +40,7 @@ public class StreamPayload {
     }
 
     public StreamPayload(String streamUrl, int loop) {
-        this.streamUrl = streamUrl;
+        this.streamUrl = new String[]{streamUrl};
         this.loop = loop;
     }
 

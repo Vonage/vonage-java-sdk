@@ -1,6 +1,5 @@
-package com.nexmo.client.voice;
 /*
- * Copyright (c) 2011-2016 Nexmo Inc
+ * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,6 +19,8 @@ package com.nexmo.client.voice;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package com.nexmo.client.voice;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -31,12 +32,12 @@ import com.nexmo.client.NexmoUnexpectedException;
 import java.io.IOException;
 
 /**
- * Call encapsulates the information required to create a call using {@link NexmoVoiceClient#createCall(Call)}
+ * Call encapsulates the information required to create a call using {@link VoiceClient#createCall(Call)}
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "_links"})
 public class Call {
-    private Endpoint to;
+    private Endpoint[] to;
     private Endpoint from;
     private String answerUrl;
 
@@ -53,30 +54,24 @@ public class Call {
         this(new PhoneEndpoint(to), new PhoneEndpoint(from), answerUrl);
     }
 
-    public Call(PhoneEndpoint to, PhoneEndpoint from, String answerUrl) {
-        this.to = to;
+    public Call(Endpoint to, Endpoint from, String answerUrl) {
+        this.to = new Endpoint[]{to};
         this.from = from;
         this.answerUrl = answerUrl;
     }
 
-    public Call(SipEndpoint to, SipEndpoint from, String answerUrl) {
-        this.to = to;
-        this.from = from;
-        this.answerUrl = answerUrl;
-    }
-
-    public Call(WebSocketEndpoint to, WebSocketEndpoint from, String answerUrl) {
+    public Call(Endpoint[] to, Endpoint from, String answerUrl) {
         this.to = to;
         this.from = from;
         this.answerUrl = answerUrl;
     }
 
     public Endpoint[] getTo() {
-        return new Endpoint[]{to};
+        return to;
     }
 
     public void setTo(Endpoint[] to) {
-        this.to = to[0];
+        this.to = to;
     }
 
     public Endpoint getFrom() {

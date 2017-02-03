@@ -1,6 +1,5 @@
-package com.nexmo.client;
 /*
- * Copyright (c) 2011-2016 Nexmo Inc
+ * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,20 +19,21 @@ package com.nexmo.client;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package com.nexmo.client.voice;
 
-import com.nexmo.client.voice.CallRecordPage;
+import com.nexmo.client.NexmoUnexpectedException;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-public class CallRecordPageTest {
-    private CallRecordPage page;
+public class CallInfoPageTest {
+    private CallInfoPage page;
 
     @Before
     public void setUp() {
-        page = CallRecordPage.fromJson("{\n" +
+        page = CallInfoPage.fromJson("{\n" +
                 "  \"page_size\": 10,\n" +
                 "  \"record_index\": 0,\n" +
                 "  \"count\": 1,\n" +
@@ -83,7 +83,7 @@ public class CallRecordPageTest {
     @Test
     public void testFailedUnmarshal() throws Exception {
         try {
-            CallRecordPage.fromJson("Notvalidjson");
+            CallInfoPage.fromJson("Notvalidjson");
             fail("Parsing invalid JSON should raise a NexmoUnexpectedException");
         } catch (NexmoUnexpectedException nue) {
             // This is expected.
@@ -94,7 +94,7 @@ public class CallRecordPageTest {
     @Test
     public void testBasics() {
         assertEquals("/v1/calls?page_size=10&record_index=20&order=asc", page.getLinks().getSelf().getHref());
-        assertEquals("447700900549", page.getEmbedded().getCallRecords()[0].getTo().toLog());
+        assertEquals("447700900549", page.getEmbedded().getCallInfos()[0].getTo().toLog());
         assertEquals(10, page.getPageSize());
         assertEquals(0, page.getRecordIndex());
     }

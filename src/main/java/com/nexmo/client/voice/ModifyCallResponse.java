@@ -19,24 +19,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.auth;
 
-import com.nexmo.client.NexmoClientException;
+package com.nexmo.client.voice;
 
-public class NexmoAuthException extends NexmoClientException {
-    public NexmoAuthException() {
-        super();
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexmo.client.NexmoUnexpectedException;
+
+import java.io.IOException;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ModifyCallResponse {
+    private String message;
+
+    public String getMessage() {
+        return message;
     }
 
-    public NexmoAuthException(String message) {
-        super(message);
+    public static ModifyCallResponse fromJson(String json) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(json, ModifyCallResponse.class);
+        } catch (IOException jpe) {
+            throw new NexmoUnexpectedException("Failed to produce json from ModifyCallResponse object.", jpe);
+        }
     }
 
-    public NexmoAuthException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public NexmoAuthException(Throwable cause) {
-        super(cause);
-    }
 }

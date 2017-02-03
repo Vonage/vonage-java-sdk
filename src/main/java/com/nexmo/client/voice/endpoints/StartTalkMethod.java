@@ -1,4 +1,4 @@
-package com.nexmo.client.voice;/*
+/*
  * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,11 +19,13 @@ package com.nexmo.client.voice;/*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package com.nexmo.client.voice.endpoints;
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.JWTAuthMethod;
-import com.nexmo.client.voice.endpoints.AbstractMethod;
+import com.nexmo.client.voice.TalkRequest;
+import com.nexmo.client.voice.TalkResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;

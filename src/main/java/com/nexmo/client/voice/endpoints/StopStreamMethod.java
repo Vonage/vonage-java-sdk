@@ -1,4 +1,4 @@
-package com.nexmo.client.voice.endpoints;/*
+/*
  * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,6 +19,7 @@ package com.nexmo.client.voice.endpoints;/*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package com.nexmo.client.voice.endpoints;
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;

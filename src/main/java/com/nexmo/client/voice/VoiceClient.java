@@ -1,6 +1,5 @@
-package com.nexmo.client.voice;
 /*
- * Copyright (c) 2011-2016 Nexmo Inc
+ * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,23 +19,26 @@ package com.nexmo.client.voice;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package com.nexmo.client.voice;
+
 
 import com.nexmo.client.AbstractClient;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.DtmfEndpoint;
 import com.nexmo.client.voice.endpoints.CallsEndpoint;
+import com.nexmo.client.voice.endpoints.DtmfEndpoint;
 import com.nexmo.client.voice.endpoints.StreamsEndpoint;
+import com.nexmo.client.voice.endpoints.TalkEndpoint;
 
 import java.io.IOException;
 
-public class NexmoVoiceClient extends AbstractClient {
+public class VoiceClient extends AbstractClient {
     public final CallsEndpoint calls;
     public final StreamsEndpoint streams;
     public final TalkEndpoint talk;
     public final DtmfEndpoint dtmf;
 
-    public NexmoVoiceClient(HttpWrapper httpWrapper) {
+    public VoiceClient(HttpWrapper httpWrapper) {
         super(httpWrapper);
 
         calls = new CallsEndpoint(httpWrapper);
@@ -49,15 +51,15 @@ public class NexmoVoiceClient extends AbstractClient {
         return calls.post(callRequest);
     }
 
-    public CallRecordPage listCalls() throws IOException, NexmoClientException {
+    public CallInfoPage listCalls() throws IOException, NexmoClientException {
         return this.listCalls(null);
     }
 
-    public CallRecordPage listCalls(CallsFilter filter) throws IOException, NexmoClientException {
+    public CallInfoPage listCalls(CallsFilter filter) throws IOException, NexmoClientException {
         return calls.get(filter);
     }
 
-    public CallRecord getCallDetails(String uuid) throws IOException, NexmoClientException {
+    public CallInfo getCallDetails(String uuid) throws IOException, NexmoClientException {
         return calls.get(uuid);
     }
 
@@ -65,7 +67,7 @@ public class NexmoVoiceClient extends AbstractClient {
         return dtmf.put(uuid, digits);
     }
 
-    public CallRecord modifyCall(String uuid, String action) throws IOException, NexmoClientException {
+    public ModifyCallResponse modifyCall(String uuid, String action) throws IOException, NexmoClientException {
         return calls.put(uuid, action);
     }
 
@@ -73,7 +75,9 @@ public class NexmoVoiceClient extends AbstractClient {
         return streams.put(new StreamRequest(uuid, streamUrl, loop));
     }
 
-    //Start a stream that only plays once.
+    /**
+     * Start a stream that only plays once.
+     */
     public StreamResponse startStream(String uuid, String streamUrl) throws IOException, NexmoClientException {
         return streams.put(new StreamRequest(uuid, streamUrl, 1));
     }
@@ -86,17 +90,23 @@ public class NexmoVoiceClient extends AbstractClient {
         return talk.put(new TalkRequest(uuid, text, voiceName, loop));
     }
 
-    //Send a synthesized speech message that only plays once
+    /**
+     * Send a synthesized speech message that only plays once
+     */
     public TalkResponse startTalk(String uuid, String text, VoiceName voiceName) throws IOException, NexmoClientException {
         return talk.put(new TalkRequest(uuid, text, voiceName));
     }
 
-    //Send a synthesized speech message with the default voice of Kimberly
+    /**
+     * Send a synthesized speech message with the default voice of Kimberly
+     */
     public TalkResponse startTalk(String uuid, String text, int loop) throws IOException, NexmoClientException {
         return talk.put(new TalkRequest(uuid, text, loop));
     }
 
-    //Send a synthesized speech message that only plays once with the default voice of Kimberly
+    /**
+     * Send a synthesized speech message that only plays once with the default voice of Kimberly
+     */
     public TalkResponse startTalk(String uuid, String text) throws IOException, NexmoClientException {
         return talk.put(new TalkRequest(uuid, text));
     }

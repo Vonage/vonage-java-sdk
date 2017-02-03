@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2016 Nexmo Inc
+ * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,23 +19,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package com.nexmo.client.voice.endpoints;
 
-package com.nexmo.client;
-
-import com.nexmo.client.voice.DtmfRequest;
-import com.nexmo.client.voice.DtmfResponse;
-import com.nexmo.client.voice.SendDtmfMethod;
+import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.voice.TalkRequest;
+import com.nexmo.client.voice.TalkResponse;
 
 import java.io.IOException;
 
-public class DtmfEndpoint {
-    private final SendDtmfMethod sendDtmf;
+public class TalkEndpoint {
+    private final StartTalkMethod startTalk;
+    private final StopTalkMethod stopTalk;
 
-    public DtmfEndpoint(HttpWrapper httpWrapper) {
-        this.sendDtmf = new SendDtmfMethod(httpWrapper);
+    public TalkEndpoint(HttpWrapper wrapper) {
+        this.startTalk = new StartTalkMethod(wrapper);
+        this.stopTalk = new StopTalkMethod(wrapper);
     }
 
-    public DtmfResponse put(String uuid, String digits) throws IOException, NexmoClientException {
-        return this.sendDtmf.execute(new DtmfRequest(uuid, digits));
+    public TalkResponse put(TalkRequest request) throws IOException, NexmoClientException {
+        return this.startTalk.execute(request);
+    }
+
+    public TalkResponse delete(String uuid) throws IOException, NexmoClientException {
+        return this.stopTalk.execute(uuid);
     }
 }

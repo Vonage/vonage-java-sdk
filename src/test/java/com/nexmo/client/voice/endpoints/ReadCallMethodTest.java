@@ -19,14 +19,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package com.nexmo.client.voice.endpoints;
 
 import com.nexmo.client.auth.JWTAuthMethod;
-import com.nexmo.client.voice.CallRecord;
+import com.nexmo.client.voice.CallInfo;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
@@ -97,7 +95,7 @@ public class ReadCallMethodTest {
         entity.setContent(jsonStream);
         stubResponse.setEntity(entity);
 
-        CallRecord record = method.parseResponse(stubResponse);
+        CallInfo record = method.parseResponse(stubResponse);
         assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", record.getUuid());
     }
 

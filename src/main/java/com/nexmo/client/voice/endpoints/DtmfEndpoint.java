@@ -19,24 +19,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.auth;
+package com.nexmo.client.voice.endpoints;
 
+import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.voice.DtmfRequest;
+import com.nexmo.client.voice.DtmfResponse;
 
-public class NexmoAuthException extends NexmoClientException {
-    public NexmoAuthException() {
-        super();
+import java.io.IOException;
+
+public class DtmfEndpoint {
+    private final SendDtmfMethod sendDtmf;
+
+    public DtmfEndpoint(HttpWrapper httpWrapper) {
+        this.sendDtmf = new SendDtmfMethod(httpWrapper);
     }
 
-    public NexmoAuthException(String message) {
-        super(message);
-    }
-
-    public NexmoAuthException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public NexmoAuthException(Throwable cause) {
-        super(cause);
+    public DtmfResponse put(String uuid, String digits) throws IOException, NexmoClientException {
+        return this.sendDtmf.execute(new DtmfRequest(uuid, digits));
     }
 }
