@@ -63,6 +63,46 @@ CallRecord info = client.getVoiceClient().getCallDetails(event.getUuid());
 System.out.println("This cost: " + info.getPrice() + " EUR");
 ```
 
+You can modify an existing call in progress, for example by hanging up on the current call:
+ 
+```java
+ModifyCallResponse modifyResponse = client.getVoiceClient().modifyCall(event.getUuid(), "hangup");
+System.out.println(modifyResponse.getMessage());
+```
+
+While a call is in progress, you can send Dual-tone multi-frequency(DTMF) tones like so:
+ 
+```java
+DtmfResponse dtmfResponse = client.getVoiceClient().sendDtmf(event.getUuid(), "332393");
+System.out.println("Success! " + dtmfResponse.getMessage());
+```
+
+To stream an audio file to an active call, simply use the following method:
+
+```java
+StreamResponse startStreamResponse = client.getVoiceClient().startStream(event.getUuid(), "https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3");
+System.out.println("Success! " + startStreamResponse.getMessage());
+```
+
+If you'd like to stop streaming an audio file to an active call, you can do so with:
+```java
+StreamResponse stopStreamResponse = client.getVoiceClient().stopStream(event.getUuid());
+System.out.println("Alright. " + stopStreamResponse.getMessage());
+```
+
+To send a synthesized speech message to an active call, just use the following method:
+
+```java
+TalkResponse startTalkResponse = client.getVoiceClient().startTalk(event.getUuid(), "Hello World");
+System.out.println("Success! " + startTalkResponse.getMessage());
+```
+
+If you'd like to stop sending a synthesized speech message to an active call, you can do so with:
+```java
+TalkResponse stopTalkResponse = client.getVoiceClient().stopTalk(event.getUuid());
+System.out.println("Alright. " + stopTalkResponse.getMessage());
+```
+
 ## API Coverage
 
 * Account
