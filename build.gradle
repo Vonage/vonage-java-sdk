@@ -103,14 +103,14 @@ uploadArchives {
             }
             repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
                 authentication(
-                        userName: properties["maven.username"] ?: "",
-                        password: properties["maven.password"] ?: ""
+                        userName: project.properties["maven.username"] ?: "",
+                        password: project.properties["maven.password"] ?: ""
                 )
             }
             snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
                 authentication(
-                        userName: properties["maven.username"] ?: "",
-                        password: properties["maven.password"] ?: ""
+                        userName: project.properties["maven.username"] ?: "",
+                        password: project.properties["maven.password"] ?: ""
                 )
             }
             pom.project {
@@ -159,7 +159,7 @@ artifacts {
 }
 
 signing {
-    required { hasProperty('maven.username') }
+    required { gradle.taskGraph.hasTask("uploadArchives") }
     sign configurations.archives
 }
 
