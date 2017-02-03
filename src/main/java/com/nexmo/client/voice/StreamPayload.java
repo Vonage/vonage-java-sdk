@@ -30,7 +30,7 @@ import com.nexmo.client.NexmoUnexpectedException;
  * The JSON payload that will be sent in a {@link StreamRequest}.
  * <p>
  * {@code streamUrl}: An array containing a single URL to an mp3 or wav (16-bit) audio file.
- * {@code loop}: The number of times the audio file at {@code streamUrl} is repeated before the stream ends.
+ * {@code loop}: The number of times the audio file at {@code streamUrl} is repeated before the stream ends. Set to 0 to loop infinitely
  */
 
 public class StreamPayload {

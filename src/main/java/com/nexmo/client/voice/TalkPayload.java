@@ -26,10 +26,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * The JSON payload that will be sent in a {@link TalkRequest}.
  * <p>
- * {@code text}: A UTF-8 and URL encoded string of up to 1500 characters containing the message to be synthesized
+ * {@code text}: A string of up to 1500 characters containing the message to be synthesized
  * in the Call or Conversation. Each comma in text adds a short pause to the synthesized speech.
  * {@link VoiceName}: The name of the voice used to deliver {@code text}.
- * {@code loop}: The number of times the audio file at stream_url is repeated before the stream ends.
+ * {@code loop}: The number of times the audio file at stream_url is repeated before the stream ends. Set to 0 to loop infinitely.
  */
 
 public class TalkPayload {
