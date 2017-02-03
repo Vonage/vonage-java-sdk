@@ -27,6 +27,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Useful abstract HttpServlet for implementing NCCO callbacks.
+ * <p>
+ *     Implement {@link #handleRequest(HttpServletRequest)} to return an {@link NccoResponse} and this servlet will
+ *     ensure that the response is serialized correctly for the Nexmo Voice API.
+ * </p>
+ */
 public abstract class AbstractAnswerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -46,5 +53,13 @@ public abstract class AbstractAnswerServlet extends HttpServlet {
         httpResponse.getOutputStream().write(json);
     }
 
+    /**
+     * Handle a request for NCCO instructions from the Nexmo Voice API.
+     * <p>
+     * Implementations should return an NccoResponse object (most easily constructed using {@link NccoResponseBuilder}.
+     *
+     * @param request the HttpServletRequest parsed from the request made by the Nexmo Voice API
+     * @return An NccoResponse containing Ncco instructions for the Nexmo Voice API
+     */
     protected abstract NccoResponse handleRequest(HttpServletRequest request);
 }

@@ -59,8 +59,8 @@ public class CallsEndpoint {
 
     /**
      * List calls which have been conducted by
-     * @param callRequest A Call object configuring the call to be created
-     * @return A CallEvent describing the call that was initiated.
+     * @param filter A CallsFilter describing the calls to be searched, or {@code null} for all calls.
+     * @return A CallInfoPage containing a single page of {@link CallInfo} results
      * @throws IOException if an error occurs communicating with the Nexmo API
      * @throws NexmoClientException if an error occurs constructing the Nexmo API request or response
      */
@@ -68,10 +68,25 @@ public class CallsEndpoint {
         return this.listCalls.execute(filter);
     }
 
+    /**
+     * List calls which have been conducted by
+     * @param uuid The uuid of the CallInfo object to be retrieved
+     * @return A CallInfo object describing the state of the call that was made or is in progress
+     * @throws IOException if an error occurs communicating with the Nexmo API
+     * @throws NexmoClientException if an error occurs constructing the Nexmo API request or response
+     */
     public CallInfo get(String uuid) throws IOException, NexmoClientException {
         return this.readCall.execute(uuid);
     }
 
+    /**
+     * Modify an ongoing call.
+     *
+     * @param uuid The uuid of the CallInfo object to be modified
+     * @return A CallInfo object describing the state of the call that was modified
+     * @throws IOException if an error occurs communicating with the Nexmo API
+     * @throws NexmoClientException if an error occurs constructing the Nexmo API request or response
+     */
     public CallInfo put(String uuid, String action) throws IOException, NexmoClientException {
         return this.modifyCall.execute(new CallModifier(uuid, action));
     }
