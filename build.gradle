@@ -103,14 +103,14 @@ uploadArchives {
             }
             repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
                 authentication(
-                        userName: getProperty("maven.username"),
-                        password: getProperty("maven.password")
+                        userName: properties["maven.username"] ?: "",
+                        password: properties["maven.password"] ?: ""
                 )
             }
             snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
                 authentication(
-                        userName: { getProperty("maven.username") },
-                        password: { getProperty("maven.password") }
+                        userName: properties["maven.username"] ?: "",
+                        password: properties["maven.password"] ?: ""
                 )
             }
             pom.project {
@@ -159,6 +159,7 @@ artifacts {
 }
 
 signing {
+    required { hasProperty('maven.username') }
     sign configurations.archives
 }
 
