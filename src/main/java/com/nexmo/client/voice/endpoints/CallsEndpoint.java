@@ -27,6 +27,9 @@ import com.nexmo.client.voice.*;
 
 import java.io.IOException;
 
+/**
+ * Represents Nexmo Voice API endpoints below <pre>/calls</pre>, and provides methods to read and update those endpoints.
+ */
 public class CallsEndpoint {
     private final CreateCallMethod createCall;
     private final ReadCallMethod readCall;
@@ -40,10 +43,27 @@ public class CallsEndpoint {
         this.modifyCall = new ModifyCallMethod(httpWrapper);
     }
 
+    /**
+     * Start a call configured by the provided {@link Call} object.
+     * <p>
+     * Requires a {@link com.nexmo.client.auth.JWTAuthMethod} to be provided to the NexmoClient which constructs
+     *
+     * @param callRequest A Call object configuring the call to be created
+     * @return A CallEvent describing the call that was initiated.
+     * @throws IOException if an error occurs communicating with the Nexmo API
+     * @throws NexmoClientException if an error occurs constructing the Nexmo API request or response
+     */
     public CallEvent post(Call callRequest) throws IOException, NexmoClientException {
         return this.createCall.execute(callRequest);
     }
 
+    /**
+     * List calls which have been conducted by
+     * @param callRequest A Call object configuring the call to be created
+     * @return A CallEvent describing the call that was initiated.
+     * @throws IOException if an error occurs communicating with the Nexmo API
+     * @throws NexmoClientException if an error occurs constructing the Nexmo API request or response
+     */
     public CallInfoPage get(CallsFilter filter) throws IOException, NexmoClientException {
         return this.listCalls.execute(filter);
     }
