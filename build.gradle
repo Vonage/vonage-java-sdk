@@ -17,7 +17,7 @@ apply plugin: 'eclipse'
 // apply plugin: 'war'
 
 group = "com.nexmo"
-archivesBaseName = "nexmo-java"
+archivesBaseName = "client"
 version = "2.0.0-prerelease"
 sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
@@ -116,7 +116,7 @@ uploadArchives {
             pom.project {
                 name 'Nexmo Java Client Library'
                 packaging 'jar'
-                artifactId 'nexmo-java'
+                artifactId 'client'
                 description 'Java client for Nexmo APIs'
                 url 'https://github.com/Nexmo/nexmo-java/'
                 scm {
