@@ -166,7 +166,7 @@ System.out.println("Alright. " + stopTalkResponse.getMessage());
 This library is released under the [MIT License][license]
 
 
-# Contribute!
+## Contribute!
 
 _We welcome contributions to this library!_
 
