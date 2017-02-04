@@ -21,6 +21,12 @@
  */
 package com.nexmo.client.voice;
 
+/**
+ * The JSON payload that will be sent in a {@link DtmfRequest}.
+ * <p>
+ * {@code digits} are the DTMF tones to be sent to a {@link Call}.
+ */
+
 public class DtmfPayload {
     private String digits;
 

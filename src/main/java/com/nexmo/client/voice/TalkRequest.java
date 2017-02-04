@@ -25,6 +25,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
 
+/**
+ * The request object to send synthesized audio.
+ * <p>
+ * Contains the {@code uuid} of the {@link Call} and the {@link TalkPayload} to be sent in the request.
+ */
+
 public class TalkRequest {
     private TalkPayload talkPayload;
     private String uuid;

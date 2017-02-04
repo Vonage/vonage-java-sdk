@@ -25,6 +25,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * Voice used to deliver text to a {@link Call} in a {@link TalkRequest}.
+ */
+
 public enum VoiceName {
     SALLI,
     JOEY,

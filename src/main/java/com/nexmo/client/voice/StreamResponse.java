@@ -27,6 +27,12 @@ import com.nexmo.client.NexmoUnexpectedException;
 
 import java.io.IOException;
 
+/**
+ * Response from successfully streaming an audio file or stopping a stream to an active {@link Call}.
+ * <p>
+ * This would be returned by {@link VoiceClient#startStream(String, String)} or {@link VoiceClient#stopStream(String)}
+ */
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StreamResponse {
     private String uuid;

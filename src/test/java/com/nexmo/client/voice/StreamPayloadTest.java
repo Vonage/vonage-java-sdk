@@ -19,40 +19,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package com.nexmo.client.voice;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.NexmoUnexpectedException;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.io.IOException;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
-/**
- * Response from successfully sending a synthesized speech message or stopping a message to an active {@link Call}.
- * <p>
- * This would be returned by {@link VoiceClient#startTalk(String, String)} or {@link VoiceClient#stopTalk(String)}
- */
+public class StreamPayloadTest {
+    private StreamPayload payload;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class TalkResponse {
-    private String uuid;
-    private String message;
-
-    public String getUuid() {
-        return uuid;
+    @Before
+    public void setUp() throws Exception {
+        payload = new StreamPayload("https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3", 1);
     }
 
-    public String getMessage() {
-        return message;
+    @Test
+    public void getStreamUrl() throws Exception {
+        assertArrayEquals(new String[]{"https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3"}, payload.getStreamUrl());
     }
 
-    public static TalkResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, TalkResponse.class);
-        } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce json from TalkResponse object.", jpe);
-        }
+    @Test
+    public void getLoop() throws Exception {
+        assertEquals(1, payload.getLoop());
+    }
+
+    @Test
+    public void toJson() throws Exception {
+        String jsonString = "{\"loop\":1,\"stream_url\":[\"https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3\"]}";
+        assertEquals(jsonString, payload.toJson());
     }
 
 }

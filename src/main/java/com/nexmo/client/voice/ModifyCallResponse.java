@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package com.nexmo.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -28,30 +29,25 @@ import com.nexmo.client.NexmoUnexpectedException;
 import java.io.IOException;
 
 /**
- * Response from successfully sending a synthesized speech message or stopping a message to an active {@link Call}.
+ * Response if a {@link Call} was successfully modified.
  * <p>
- * This would be returned by {@link VoiceClient#startTalk(String, String)} or {@link VoiceClient#stopTalk(String)}
+ * This would be returned by {@link VoiceClient#modifyCall(String, String)}
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TalkResponse {
-    private String uuid;
+public class ModifyCallResponse {
     private String message;
-
-    public String getUuid() {
-        return uuid;
-    }
 
     public String getMessage() {
         return message;
     }
 
-    public static TalkResponse fromJson(String json) {
+    public static ModifyCallResponse fromJson(String json) {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, TalkResponse.class);
+            return mapper.readValue(json, ModifyCallResponse.class);
         } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce json from TalkResponse object.", jpe);
+            throw new NexmoUnexpectedException("Failed to produce json from ModifyCallResponse object.", jpe);
         }
     }
 
