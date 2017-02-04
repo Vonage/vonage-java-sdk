@@ -8,4 +8,7 @@
 /javadoc
 /test.properties
 binvalid_application_key.pem
+gradle.properties
 nexmo-sdk.jar
+publishing
+valid_application_key.pem

@@ -12,10 +12,12 @@ apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'java'
 apply plugin: "jacoco"
 apply plugin: 'maven'
+apply plugin: 'signing'
 apply plugin: 'eclipse'
-apply plugin: 'war'
+// apply plugin: 'war'
 
 group = "com.nexmo"
+archivesBaseName = "nexmo-java"
 version = "2.0.0-prerelease"
 sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
@@ -38,7 +40,7 @@ dependencies {
     compile 'com.auth0:java-jwt:2.2.1'
 
     testCompile 'junit:junit:4.4'
-    testCompile "org.mockito:mockito-core:2.+"
+    testCompile "org.mockito:mockito-core:2.7.1"
 
     examplesCompile sourceSets.main.output
     examplesCompile 'commons-cli:commons-cli:1.3.1'
@@ -76,9 +78,14 @@ jar {
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
-    from javadoc.destinationDir
+    from javadoc
 }
 assemble.dependsOn javadocJar
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
 
 jacocoTestReport {
     reports {
@@ -96,21 +103,21 @@ uploadArchives {
             }
             repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
                 authentication(
-                        userName: { getProperty("maven.username") },
-                        password: { getProperty("maven.password") }
+                        userName: project.properties["maven.username"] ?: "",
+                        password: project.properties["maven.password"] ?: ""
                 )
             }
             snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
                 authentication(
-                        userName: { getProperty("maven.username") },
-                        password: { getProperty("maven.password") }
+                        userName: project.properties["maven.username"] ?: "",
+                        password: project.properties["maven.password"] ?: ""
                 )
             }
             pom.project {
-                name 'Nexo Java Client Library'
+                name 'Nexmo Java Client Library'
                 packaging 'jar'
                 artifactId 'nexmo-java'
-                description 'Java client for Nexmo.'
+                description 'Java client for Nexmo APIs'
                 url 'https://github.com/Nexmo/nexmo-java/'
                 scm {
                     connection 'scm:git:git@github.com:Nexmo/nexmo-java'
@@ -119,13 +126,12 @@ uploadArchives {
                 }
                 licenses {
                     license {
-                        //name 'MIT'
-                        //url 'https://raw.github.com/Nexmo/nexmo-java/master/LICENCE.txt'
-                        //distribution 'https://raw.github.com/Nexmo/nexmo-java/mvn-repo/'
+                        name 'MIT'
+                        url 'https://raw.github.com/Nexmo/nexmo-java/master/LICENCE.txt'
                     }
                 }
                 organization {
-                    name 'Nemo'
+                    name 'Nexmo'
                     url 'https://docs.nexmo.com/tools/developer-api'
                 }
                 issueManagement {
@@ -133,19 +139,28 @@ uploadArchives {
                     url 'https://github.com/Nexmo/nexmo-java/issues'
                 }
                 developers {
-                    // developer {
-                    // 	id '...'
-                    // 	name '...'
-                    // 	email '...'
-                    // }
+                    developer {
+                        id 'devrel'
+                        name 'Nexmo Developer Relations Team'
+                        email 'devrel@nexmo.com'
+                    }
                 }
             }
         }
     }
 }
 
-war {
-    classpath sourceSets.examples.output
+// war {
+//     classpath sourceSets.examples.output
+// }
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    required { gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
 }
 
 task wrapper(type: Wrapper) {
