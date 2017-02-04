@@ -23,7 +23,15 @@ To use the client library you'll need to have [created a Nexmo account][signup].
 To install the Java client library using Gradle, add the following to `build.gradle`:
 
 ```groovy
-compile 'com.nexmo:client:2.0-SNAPSHOT'
+repositories {
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots/'
+    }
+}
+
+dependencies {
+    compile 'com.nexmo:client:2.0.0-SNAPSHOT'
+}
 ```
 
 Alternatively you can clone the repo and build the jar yourself:
