@@ -165,6 +165,18 @@ System.out.println("Alright. " + stopTalkResponse.getMessage());
 
 This library is released under the [MIT License][license]
 
+
+# Contribute!
+
+_We welcome contributions to this library!_
+
+It is a good idea to [talk to us](https://nexmo-community-invite.herokuapp.com/)
+first if you plan to add any new functionality.
+Otherwise, [bug reports](https://github.com/Nexmo/nexmo-java/issues),
+[bug fixes](https://github.com/Nexmo/nexmo-java/pulls) and feedback on the
+library is always appreciated.
+
+
 [create_account]: https://docs.nexmo.com/tools/dashboard#setting-up-your-nexmo-account
 [signup]: https://dashboard.nexmo.com/sign-up?utm_source=DEV_REL&utm_medium=github&utm_campaign=[LANGUAGE]-client-library
 [doc_sms]: https://docs.nexmo.com/api-ref/sms-api?utm_source=DEV_REL&utm_medium=github&utm_campaign=[LANGUAGE]-client-library
