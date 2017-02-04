@@ -9,11 +9,10 @@ You can use this Java client library to add [Nexmo's API](#api-coverage) to your
 need a Nexmo account. Sign up [for free at nexmo.com][signup].
 
  * [Installation](#installation)
- * [Configuration](#configuration)
  * [Usage](#usage)
  * [Examples](#examples)
  * [API Coverage](#api-coverage)
- * [Contributing](#contributing)
+ * [Contribute](#contribute)
 
 
 ## Installation
@@ -168,7 +167,7 @@ This library is released under the [MIT License][license]
 
 ## Contribute!
 
-_We welcome contributions to this library!_
+_We :heart: contributions to this library!_
 
 It is a good idea to [talk to us](https://nexmo-community-invite.herokuapp.com/)
 first if you plan to add any new functionality.
