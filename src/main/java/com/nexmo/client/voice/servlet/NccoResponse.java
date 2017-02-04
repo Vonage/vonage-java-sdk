@@ -26,9 +26,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
 import com.nexmo.client.voice.ncco.Ncco;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Encapsulates a set of NCCO objects for driving the Nexmo Voice API.
+ * <p>
+ * This would usually be returned by {@link AbstractAnswerServlet#handleRequest(HttpServletRequest)}, which serializes
+ * it correctly for the Voice API. {@link NccoResponseBuilder} provides a fluent interface for constructing instances
+ * of this class.
+ */
 public class NccoResponse {
     // This object has been purposefully designed to be relatively opaque, as
     // the internal structure of this response may become more complex, and so

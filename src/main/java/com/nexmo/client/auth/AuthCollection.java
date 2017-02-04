@@ -27,23 +27,36 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+/**
+ * Internal class, managing a collection of {@link AuthMethod}s.
+ * <p>
+ * This holds a collection of AuthMethod instances, in order of preference, and
+ * allow for simple selection of an appropriate AuthMethod for a particular REST endpoint.
+ */
 public class AuthCollection {
     private SortedSet<AuthMethod> authList;
 
+    /**
+     * Create a new AuthCollection with an empty set of AuthMethods.
+     */
     public AuthCollection() {
         this.authList = new TreeSet<>();
     }
 
+    /**
+     * Add a new {@link AuthMethod} to the set managed by this AuthCollection
+     * @param auth AuthMethod method to be added to this collection
+     */
     public void add(AuthMethod auth) {
         this.authList.add(auth);
     }
 
     /**
-     * Obtain an auth method instance for a set of acceptable AuthMethod classes.
+     * Obtain an {@link AuthMethod} instance for a set of acceptable AuthMethod classes.
      *
-     * @param acceptableAuthMethodClasses
-     * @return
-     * @throws NexmoClientException
+     * @param acceptableAuthMethodClasses A Set of AuthMethod classes which are suitable for the target REST endpoint.
+     * @return the preferred AuthMethod from the provided set of acceptable AuthMethod classes
+     * @throws NexmoUnacceptableAuthException if no appropriate AuthMethod is held by this AuthCollection
      */
     public AuthMethod getAcceptableAuthMethod(Set<Class> acceptableAuthMethodClasses) throws NexmoClientException {
         for (AuthMethod availableAuthMethod : this.authList) {

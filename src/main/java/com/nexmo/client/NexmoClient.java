@@ -27,6 +27,15 @@ import com.nexmo.client.auth.AuthMethod;
 import com.nexmo.client.voice.VoiceClient;
 import org.apache.http.client.HttpClient;
 
+/**
+ * Top-level Nexmo API client object.
+ * <p>
+ * Construct an instance of this object with one or more {@link AuthMethod}s (providing all the authentication methods
+ * for the APIs you wish to use), and then call {@link #getVoiceClient()} to obtain a client for the Nexmo Voice API.
+ * <p>
+ * Currently this object only constructs and provides access to {@link VoiceClient}. In the future it will manage
+ * clients for all of the Nexmo APIs.
+ */
 public class NexmoClient {
     private final VoiceClient voice;
     private HttpWrapper httpWrapper;

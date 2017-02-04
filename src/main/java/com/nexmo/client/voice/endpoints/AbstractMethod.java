@@ -29,7 +29,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 
 import java.io.IOException;
@@ -37,6 +36,19 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Abstract class to assist in implementing a call against a REST endpoint.
+ * <p>
+ * Concrete implementations must implement {@link #makeRequest(Object)} to construct a {@link RequestBuilder} from the
+ * provided parameterized request object, and {@link #parseResponse(HttpResponse)} to construct the parameterized
+ * {@link HttpResponse} object.
+ * <p>
+ * The REST call is executed by calling {@link #execute(Object)}.
+ *
+ * @param <RequestT> The type of the method-specific request object that will be used to construct an HTTP request
+ * @param <ResultT>  The type of method-specific response object which will be constructed from the returned
+ *                   HTTP response
+ */
 public abstract class AbstractMethod<RequestT, ResultT> implements Method<RequestT, ResultT> {
     private static final Log LOG = LogFactory.getLog(AbstractMethod.class);
     private final HttpWrapper httpWrapper;
@@ -46,6 +58,14 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
         this.httpWrapper = httpWrapper;
     }
 
+    /**
+     * Execute the REST call represented by this method object.
+     *
+     * @param request A RequestT representing input to the REST call to be made
+     * @return A ResultT representing the response from the executed REST call
+     * @throws IOException          if an exception occurs making the REST call
+     * @throws NexmoClientException if there is a problem parsing the HTTP response
+     */
     // TODO: Consider wrapping IOException in a nexmo-specific transport exception.
     public ResultT execute(RequestT request) throws IOException, NexmoClientException {
         try {
@@ -57,17 +77,26 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
         }
     }
 
+    /**
+     * Apply an appropriate authentication method (specified by {@link #getAcceptableAuthMethods()} to the provided
+     * {@link RequestBuilder}, and return the result.
+     *
+     * @param request A RequestBuilder which has not yet had authentication information applied
+     * @return A RequestBuilder with appropriate authentication information applied (may or not be the same instance as
+     * <pre>request</pre>)
+     * @throws NexmoClientException If no appropriate {@link AuthMethod} is available
+     */
     protected RequestBuilder applyAuth(RequestBuilder request) throws NexmoClientException {
         return getAuthMethod(getAcceptableAuthMethods()).apply(request);
     }
 
     /**
+     * Utility method for obtaining an appropriate {@link AuthMethod} for this call.
      *
-     *
-     * Takes an array of classes, representing auth methods that are acceptable for this
-     * @param acceptableAuthMethods
-     * @return
-     * @throws NexmoClientException
+     * @param acceptableAuthMethods an array of classes, representing authentication methods that are acceptable for
+     *                              this endpoint
+     * @return An AuthMethod created from one of the provided acceptableAuthMethods.
+     * @throws NexmoClientException If no AuthMethod is available from the provided array of acceptableAuthMethods.
      */
     protected AuthMethod getAuthMethod(Class[] acceptableAuthMethods) throws NexmoClientException {
         if (acceptable == null) {
@@ -86,8 +115,23 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
 
     protected abstract Class[] getAcceptableAuthMethods();
 
+    /**
+     * Construct and return a RequestBuilder instance from the provided request.
+     *
+     * @param request A RequestT representing input to the REST call to be made
+     * @return A ResultT representing the response from the executed REST call
+     * @throws NexmoClientException         if a problem is encountered constructing the request or response.
+     * @throws UnsupportedEncodingException if UTF-8 encoding is not supported by the JVM
+     */
     public abstract RequestBuilder makeRequest(RequestT request)
             throws NexmoClientException, UnsupportedEncodingException;
 
+    /**
+     * Construct a ResultT representing the contents of the HTTP response returned from the Nexmo Voice API.
+     *
+     * @param response An HttpResponse returned from the Nexmo Voice API
+     * @return A ResultT type representing the result of the REST call
+     * @throws IOException if a problem occurs parsing the response
+     */
     public abstract ResultT parseResponse(HttpResponse response) throws IOException;
 }
