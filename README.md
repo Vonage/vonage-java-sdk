@@ -23,7 +23,7 @@ To use the client library you'll need to have [created a Nexmo account][signup].
 To install the Java client library using Gradle, add the following to `build.gradle`:
 
 ```groovy
-compile 'com.nexmo:nexmo-java:2.0'
+compile 'com.nexmo:client:2.0-SNAPSHOT'
 ```
 
 Alternatively you can clone the repo and build the jar yourself:
@@ -35,7 +35,8 @@ gradle build
 
 ## Usage
 
-Check the Javadoc for full documentation.
+Check the [Javadoc](http://nexmo.github.io/nexmo-java/) for full
+reference documentation.
 
 ### Examples
 
@@ -64,14 +65,14 @@ System.out.println("This cost: " + info.getPrice() + " EUR");
 ```
 
 You can modify an existing call in progress, for example by hanging up on the current call:
- 
+
 ```java
 ModifyCallResponse modifyResponse = client.getVoiceClient().modifyCall(event.getUuid(), "hangup");
 System.out.println(modifyResponse.getMessage());
 ```
 
 While a call is in progress, you can send Dual-tone multi-frequency(DTMF) tones like so:
- 
+
 ```java
 DtmfResponse dtmfResponse = client.getVoiceClient().sendDtmf(event.getUuid(), "332393");
 System.out.println("Success! " + dtmfResponse.getMessage());
@@ -139,10 +140,17 @@ System.out.println("Alright. " + stopTalkResponse.getMessage());
             * [ ] Sending Alerts
             * [ ] Campaign Subscription Management
 * Voice
-    * [x] Outbound Calls
-    * [ ] Inbound Call
-    * [ ] Text-To-Speech Call
-    * [ ] Text-To-Speech Prompt
+    * [x] Create call
+    * [x] List calls
+    * [x] Get call info
+    * [x] Modify existing call
+    * [x] Stream audio to an existing call
+    * [x] Stop streaming audio to an existing call
+    * [x] Send speech to an existing call
+    * [x] Stop speech in an existing call
+    * [x] Send DTMF to an existing call
+    * [ ] eventUrl webhook support
+    * [x] answerUrl webhook support
 
 
 ## License
