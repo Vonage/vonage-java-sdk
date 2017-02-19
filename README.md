@@ -52,9 +52,10 @@ The following code initiates an outbound call which then reads the user [a messa
 ```java
 import java.nio.file.Paths;
 
+import com.nexmo.client.NexmoClient;
 import com.nexmo.client.auth.JWTAuthMethod;
-import com.nexmo.client.voice.NexmoClient;
 import com.nexmo.client.voice.Call;
+import com.nexmo.client.voice.CallEvent;
 
 JWTAuthMethod auth = new JWTAuthMethod(application_id, Paths.get("application_key.pem"));
 NexmoClient client = new NexmoClient(auth);
