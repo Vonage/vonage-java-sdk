@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Migrate to Gradle
 - Internal refactoring for unit testing
+- Moved example code into separate source-set
 
 ## [1.5] - 2014-08-28
 ### Added
