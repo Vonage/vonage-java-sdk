@@ -23,13 +23,11 @@ package com.nexmo.client.auth;
 
 
 import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.JWTVerifyException;
 import com.nexmo.client.TestUtils;
 import org.apache.http.client.methods.RequestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
@@ -43,17 +41,20 @@ public class JWTAuthMethodTest {
     private JWTAuthMethod auth;
 
     @Before
-    public void setUp() throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, IOException {
+    public void setUp() throws Exception {
         this.testUtils = new TestUtils();
 
         byte[] keyBytes = testUtils.loadKey("test/keys/application_key");
         auth = new JWTAuthMethod("application-id", keyBytes);
     }
 
+    @Test public void testSavedKey() throws Exception {
+        byte[] keyBytes = testUtils.loadKey("test/keys/application_key2");
+        auth = new JWTAuthMethod("application-id", keyBytes);
+    }
+
     @Test
-    public void testConstructToken()
-            throws NoSuchAlgorithmException, InvalidKeyException, InvalidKeySpecException, IOException,
-            SignatureException, JWTVerifyException {
+    public void testConstructToken() throws Exception {
         String constructedToken = auth.constructToken(1234, "1111111");
 
         byte[] keyBytes = testUtils.loadKey("test/keys/application_public_key.der");

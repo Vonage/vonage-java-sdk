@@ -44,7 +44,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class JWTAuthMethod extends AbstractAuthMethod {
-    private static final Pattern pemPattern = Pattern.compile("-----BEGIN PRIVATE KEY-----\\n(.*\\n)-----END PRIVATE KEY-----", Pattern.MULTILINE | Pattern.DOTALL);
+    private static final Pattern pemPattern = Pattern.compile("-----BEGIN PRIVATE KEY-----" +
+            "(.*\\n)" +
+            "-----END PRIVATE KEY-----\\n?", Pattern.MULTILINE | Pattern.DOTALL);
     public final int SORT_KEY = 10;
     private String applicationId;
     private JWTSigner signer;
