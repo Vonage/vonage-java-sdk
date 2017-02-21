@@ -25,12 +25,10 @@ package com.nexmo.client.verify;
 import com.nexmo.client.AbstractClient;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.client.verify.endpoints.CheckEndpoint;
 import com.nexmo.client.verify.endpoints.SearchEndpoint;
 import com.nexmo.client.verify.endpoints.VerifyEndpoint;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.Locale;
 
@@ -60,21 +58,14 @@ public class VerifyClient extends AbstractClient {
         LANDLINE,
     }
 
-    /**
-     * Service url used unless over-ridden on the constructor
-     */
-    public static final String DEFAULT_BASE_URL = "https://api.nexmo.com";
-
     private CheckEndpoint check;
     private VerifyEndpoint verify;
     private SearchEndpoint search;
 
     /**
      * Instantiate a new VerifyEndpoint instance that will communicate using the supplied credentials.
-     *
-     * @throws ParserConfigurationException if the XML parser could not be configured.
      */
-    public VerifyClient(HttpWrapper httpWrapper) throws ParserConfigurationException {
+    public VerifyClient(HttpWrapper httpWrapper) {
         super(httpWrapper);
 
         this.check = new CheckEndpoint(httpWrapper);
