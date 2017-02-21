@@ -40,10 +40,22 @@ public class AuthCollectionTest {
         AuthCollection auths = new AuthCollection();
         auths.add(jAuth);
 
-        Set<Class> acceptableAuths = new HashSet<>();
-        acceptableAuths.add(JWTAuthMethod.class);
+        Set<Class> acceptableAuths = acceptableClassSet(JWTAuthMethod.class);
 
         assertEquals(jAuth, auths.getAcceptableAuthMethod(acceptableAuths));
+    }
+
+    @Test
+    public void testMultipleAuthMethods() throws Exception {
+        JWTAuthMethod jwtAuth = new JWTAuthMethod("application_id", testUtils.loadKey("test/keys/application_key"));
+        TokenAuthMethod tokenAuth = new TokenAuthMethod("api_key", "api_secret");
+
+        AuthCollection auths = new AuthCollection(
+                jwtAuth, tokenAuth
+        );
+
+        assertEquals(jwtAuth, auths.getAcceptableAuthMethod(acceptableClassSet(JWTAuthMethod.class)));
+        assertEquals(tokenAuth, auths.getAcceptableAuthMethod(acceptableClassSet(TokenAuthMethod.class)));
     }
 
     @Test
@@ -94,5 +106,13 @@ public class AuthCollectionTest {
             assertEquals("No acceptable authentication type could be found. Acceptable types are: JWTAuthMethod. Supplied " +
                     "types were: TokenAuthMethod", ex.getMessage());
         }
+    }
+
+    public Set<Class> acceptableClassSet(Class... classes) {
+        Set<Class> result = new HashSet<Class>();
+        for (Class c : classes) {
+            result.add(c);
+        }
+        return result;
     }
 }
