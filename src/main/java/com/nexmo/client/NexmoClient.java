@@ -41,12 +41,7 @@ public class NexmoClient {
     private HttpWrapper httpWrapper;
 
     public NexmoClient(AuthMethod... authMethods) {
-        AuthCollection authCollection = new AuthCollection();
-        for (AuthMethod method : authMethods) {
-            authCollection.add(method);
-        }
-
-        this.httpWrapper = new HttpWrapper(authCollection);
+        this.httpWrapper = new HttpWrapper(authMethods);
 
         this.voice = new VoiceClient(this.httpWrapper);
     }

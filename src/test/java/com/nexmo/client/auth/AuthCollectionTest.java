@@ -67,7 +67,7 @@ public class AuthCollectionTest {
     @Test
     public void testAuthMethodPrecedence() throws Exception {
         JWTAuthMethod jAuth = new JWTAuthMethod("application_id", testUtils.loadKey("test/keys/application_key"));
-        TokenAuthMethod tAuth = new TokenAuthMethod();
+        TokenAuthMethod tAuth = new TokenAuthMethod("key", "secret");
         AuthCollection auths = new AuthCollection();
         auths.add(tAuth);
         auths.add(jAuth);
@@ -80,7 +80,7 @@ public class AuthCollectionTest {
 
     @Test
     public void testIncompatibleAuths() throws Exception {
-        TokenAuthMethod tAuth = new TokenAuthMethod();
+        TokenAuthMethod tAuth = new TokenAuthMethod("key", "secret");
         AuthCollection auths = new AuthCollection();
         auths.add(tAuth);
 

@@ -85,7 +85,7 @@ public class AbstractMethodTest {
         when(mockHttpClient.execute(any(HttpUriRequest.class))).thenReturn(new BasicHttpResponse(
                 new BasicStatusLine(
                         new ProtocolVersion("1.1", 1, 1), 200, "OK")));
-        when(mockWrapper.getAuthMethods()).thenReturn(mockAuthMethods);
+        when(mockWrapper.getAuthCollection()).thenReturn(mockAuthMethods);
     }
 
     @Ignore

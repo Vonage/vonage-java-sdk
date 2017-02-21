@@ -47,7 +47,7 @@ public class ModifyCallMethodTest {
 
     @Test
     public void makeRequest() throws Exception {
-        HttpWrapper httpWrapper = new HttpWrapper(null);
+        HttpWrapper httpWrapper = new HttpWrapper();
         ModifyCallMethod methodUnderTest = new ModifyCallMethod(httpWrapper);
 
         RequestBuilder request = methodUnderTest.makeRequest(
@@ -65,7 +65,7 @@ public class ModifyCallMethodTest {
 
     @Test
     public void parseResponse() throws Exception {
-        HttpWrapper wrapper = new HttpWrapper(null);
+        HttpWrapper wrapper = new HttpWrapper();
         ModifyCallMethod methodUnderTest = new ModifyCallMethod(wrapper);
 
         HttpResponse stubResponse = new BasicHttpResponse(

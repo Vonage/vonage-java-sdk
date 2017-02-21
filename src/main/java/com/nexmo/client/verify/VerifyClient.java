@@ -22,17 +22,17 @@
 package com.nexmo.client.verify;
 
 
-import java.io.IOException;
-import java.util.Locale;
+import com.nexmo.client.AbstractClient;
+import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.NexmoResponseParseException;
+import com.nexmo.client.verify.endpoints.CheckEndpoint;
+import com.nexmo.client.verify.endpoints.SearchEndpoint;
+import com.nexmo.client.verify.endpoints.VerifyEndpoint;
 
 import javax.xml.parsers.ParserConfigurationException;
-
-import com.nexmo.client.verify.endpoints.CheckEndpoint;
-import com.nexmo.client.verify.endpoints.VerifyEndpoint;
-import com.nexmo.common.LegacyClient;
-import com.nexmo.client.NexmoResponseParseException;
-import com.nexmo.client.verify.endpoints.SearchEndpoint;
-import org.apache.http.client.HttpClient;
+import java.io.IOException;
+import java.util.Locale;
 
 /**
  * A client for talking to the Nexmo Verify API interface.
@@ -53,28 +53,17 @@ import org.apache.http.client.HttpClient;
  *
  * @author Daniele Ricci
  */
-public class VerifyClient extends LegacyClient {
+public class VerifyClient extends AbstractClient {
     public enum LineType {
         ALL,
         MOBILE,
-        LANDLINE;
+        LANDLINE,
     }
 
     /**
-     * https://rest.nexmo.com<br>
      * Service url used unless over-ridden on the constructor
      */
     public static final String DEFAULT_BASE_URL = "https://api.nexmo.com";
-
-    /**
-     * Default connection timeout of 5000ms used by this client unless specifically overridden onb the constructor
-     */
-    public static final int DEFAULT_CONNECTION_TIMEOUT = 5000;
-
-    /**
-     * Default read timeout of 30000ms used by this client unless specifically overridden onb the constructor
-     */
-    public static final int DEFAULT_SO_TIMEOUT = 30000;
 
     private CheckEndpoint check;
     private VerifyEndpoint verify;
@@ -83,41 +72,14 @@ public class VerifyClient extends LegacyClient {
     /**
      * Instantiate a new VerifyEndpoint instance that will communicate using the supplied credentials.
      *
-     * @param apiKey Your Nexmo account api key
-     * @param apiSecret Your Nexmo account api secret
-     *
      * @throws ParserConfigurationException if the XML parser could not be configured.
      */
-    public VerifyClient(final String apiKey,
-                        final String apiSecret) throws ParserConfigurationException {
-        this(DEFAULT_BASE_URL,
-             apiKey,
-             apiSecret,
-             DEFAULT_CONNECTION_TIMEOUT,
-             DEFAULT_SO_TIMEOUT);
-    }
+    public VerifyClient(HttpWrapper httpWrapper) throws ParserConfigurationException {
+        super(httpWrapper);
 
-    /**
-     * Instantiate a new VerifyEndpoint instance that will communicate using the supplied credentials, and will use the supplied connection and read timeout values.<br>
-     * Additionally, you can specify an alternative service base url. For example submitting to a testing sandbox environment,
-     * or if requested to submit to an alternative address by Nexmo, for example, in cases where it may be necessary to prioritize your traffic.
-     *
-     * @param baseUrl The base URL to be used instead of <code>DEFAULT_BASE_URL</code>
-     * @param apiKey Your Nexmo account api key
-     * @param apiSecret Your Nexmo account api secret
-     * @param connectionTimeout over-ride the default connection timeout with this value (in milliseconds)
-     * @param soTimeout over-ride the default read-timeout with this value (in milliseconds)
-     */
-    public VerifyClient(final String baseUrl,
-                        final String apiKey,
-                        final String apiSecret,
-                        final int connectionTimeout,
-                        final int soTimeout) {
-
-        super(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout);
-        this.check = new CheckEndpoint(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout);
-        this.search = new SearchEndpoint(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout);
-        this.verify = new VerifyEndpoint(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout);
+        this.check = new CheckEndpoint(httpWrapper);
+        //this.search = new SearchEndpoint(httpWrapper);
+        //this.verify = new VerifyEndpoint(httpWrapper);
     }
 
     public VerifyResult verify(final String number,
@@ -153,15 +115,14 @@ public class VerifyClient extends LegacyClient {
     }
 
 
-
     public CheckResult check(final String requestId,
-                             final String code) throws IOException, NexmoResponseParseException {
+                             final String code) throws IOException, NexmoClientException {
         return check.check(requestId, code, null);
     }
 
     public CheckResult check(final String requestId,
                              final String code,
-                             final String ipAddress) throws IOException, NexmoResponseParseException {
+                             final String ipAddress) throws IOException, NexmoClientException {
         return check.check(requestId, code, ipAddress);
     }
 
@@ -171,13 +132,5 @@ public class VerifyClient extends LegacyClient {
 
     public SearchResult[] search(String... requestIds) throws IOException, NexmoResponseParseException {
         return search.search(requestIds);
-    }
-
-    @Override
-    public void setHttpClient(HttpClient httpClient) {
-        super.setHttpClient(httpClient);
-        this.check.setHttpClient(httpClient);
-        this.search.setHttpClient(httpClient);
-        this.verify.setHttpClient(httpClient);
     }
 }

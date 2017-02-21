@@ -1,4 +1,4 @@
-/*
+package com.nexmo.client.verify;/*
  * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,32 +19,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client;
 
+public class VerifyCheckRequest {
+    private final String requestId;
+    private final String code;
+    private final String ipAddress;
 
-import com.nexmo.client.auth.AuthCollection;
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-public class HttpWrapperTest {
-    private HttpWrapper hw;
-    @Before
-    public void setUp() {
-        this.hw = new HttpWrapper(new AuthCollection());
+    public VerifyCheckRequest(String requestId, String code) {
+        this(requestId, code, null);
     }
 
-    @Test
-    public void basicTest() {
-        assertNotNull(this.hw.getHttpClient());
+    public VerifyCheckRequest(String requestId, String code, String ipAddress) {
+        this.requestId = requestId;
+        this.code = code;
+        this.ipAddress = ipAddress;
     }
 
-    @Test
-    public void testAuthMethodAccessors() {
-        AuthCollection auths = new AuthCollection();
-        this.hw.setAuthCollection(auths);
-        assertEquals(auths, this.hw.getAuthCollection());
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
     }
 }

@@ -22,18 +22,13 @@
 package com.nexmo.client;
 
 import com.nexmo.client.auth.AuthCollection;
+import com.nexmo.client.auth.AuthMethod;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.ConnectionConfig;
 import org.apache.http.config.SocketConfig;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
 
 import java.nio.charset.Charset;
 
@@ -41,11 +36,19 @@ import java.nio.charset.Charset;
  * Internal class that holds available authentication methods and a shared HttpClient.
  */
 public class HttpWrapper {
-    private AuthCollection authMethods;
+    private AuthCollection authCollection;
     private HttpClient httpClient = null;
 
-    public HttpWrapper(AuthCollection authMethods) {
-        this.authMethods = authMethods;
+    public HttpWrapper(AuthCollection authCollection) {
+        this.authCollection = authCollection;
+    }
+
+    public HttpWrapper(AuthMethod... authMethods) {
+        this(new AuthCollection());
+        for (AuthMethod authMethod : authMethods) {
+            authCollection.add(authMethod);
+        }
+
     }
 
     public HttpClient getHttpClient() {
@@ -59,12 +62,12 @@ public class HttpWrapper {
         this.httpClient = httpClient;
     }
 
-    public AuthCollection getAuthMethods() {
-        return authMethods;
+    public AuthCollection getAuthCollection() {
+        return authCollection;
     }
 
-    public void setAuthMethods(AuthCollection authMethods) {
-        this.authMethods = authMethods;
+    public void setAuthCollection(AuthCollection authCollection) {
+        this.authCollection = authCollection;
     }
 
     protected HttpClient createHttpClient() {
