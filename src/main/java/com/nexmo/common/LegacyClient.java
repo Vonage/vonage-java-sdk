@@ -25,20 +25,14 @@ package com.nexmo.common;
 import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.client.legacyutils.XmlParser;
 import com.nexmo.common.http.HttpClientUtils;
-import com.nexmo.common.util.XmlUtil;
 import com.nexmo.security.RequestSigning;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.Document;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 
 public abstract class LegacyClient {

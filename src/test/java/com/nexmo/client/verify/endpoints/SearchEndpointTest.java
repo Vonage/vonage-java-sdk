@@ -38,7 +38,7 @@ public class SearchEndpointTest {
 
     @Before
     public void setUp() throws ParserConfigurationException {
-        client = new SearchEndpoint("https://base-url.example.com/verify", "api-key", "api-secret", 1000, 1000);
+        client = new SearchEndpoint(null);
     }
 
     @Test

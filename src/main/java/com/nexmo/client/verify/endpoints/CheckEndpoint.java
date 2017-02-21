@@ -24,7 +24,7 @@ package com.nexmo.client.verify.endpoints;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.verify.CheckResult;
-import com.nexmo.client.verify.VerifyCheckRequest;
+import com.nexmo.client.verify.CheckRequest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -46,13 +46,13 @@ public class CheckEndpoint {
 
     public CheckResult check(final String requestId,
                              final String code) throws IOException, NexmoClientException {
-        return this.checkMethod.execute(new VerifyCheckRequest(requestId, code));
+        return this.checkMethod.execute(new CheckRequest(requestId, code));
     }
 
     public CheckResult check(final String requestId,
                              final String code,
                              final String ipAddress) throws IOException, NexmoClientException {
-        return this.checkMethod.execute(new VerifyCheckRequest(requestId, code, ipAddress));
+        return this.checkMethod.execute(new CheckRequest(requestId, code, ipAddress));
     }
 
 }
