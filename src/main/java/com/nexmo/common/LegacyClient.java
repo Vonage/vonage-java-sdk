@@ -23,6 +23,7 @@ package com.nexmo.common;
 
 
 import com.nexmo.client.NexmoResponseParseException;
+import com.nexmo.client.legacyutils.XmlParser;
 import com.nexmo.common.http.HttpClientUtils;
 import com.nexmo.common.util.XmlUtil;
 import com.nexmo.security.RequestSigning;
@@ -41,17 +42,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 
 public abstract class LegacyClient {
-    /**
-     * A lock associated with {@link #documentBuilder}.
-     */
-    private final Lock documentBuilderLock = new ReentrantLock();
-
-    /**
-     * Used for parsing XML data.
-     *
-     * Do not use this without locking on {@link #documentBuilderLock}
-     */
-    private DocumentBuilder documentBuilder;
+    private XmlParser parser;
 
     private HttpClient httpClient;
 
@@ -100,6 +91,7 @@ public abstract class LegacyClient {
         this.soTimeout = soTimeout;
         this.signRequests = signRequests;
         this.signatureSecretKey = signatureKey;
+        this.parser = new XmlParser();
     }
 
     /**
@@ -110,21 +102,7 @@ public abstract class LegacyClient {
      * @throws NexmoResponseParseException If there is a problem initializing the XML parser or parsing the XML.
      */
     protected Document parseXml(String xml) throws NexmoResponseParseException {
-        // TODO: Maybe an Error subclass for XML initialization errors, as these are serious and unexpected.
-        Document doc;
-        this.documentBuilderLock.lock();
-        try {
-            if (this.documentBuilder == null) {
-                DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-                this.documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            }
-            doc = XmlUtil.parseXmlString(this.documentBuilder, xml);
-        } catch (ParserConfigurationException e) {
-            throw new NexmoResponseParseException("Exception initialing XML parser", e);
-        } finally {
-            this.documentBuilderLock.unlock();
-        }
-        return doc;
+        return this.parser.parseXml(xml);
     }
 
     protected HttpClient getHttpClient() {

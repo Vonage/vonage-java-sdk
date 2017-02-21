@@ -22,6 +22,8 @@
 package com.nexmo.client.verify;
 
 
+import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -30,7 +32,6 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -43,12 +44,13 @@ import static org.mockito.Mockito.when;
 
 
 public class VerifyClientTest {
-
+    private HttpWrapper wrapper;
     private VerifyClient client;
 
     @Before
-    public void setUp() throws ParserConfigurationException {
-        client = new VerifyClient("not-an-api-key", "secret");
+    public void setUp() throws Exception {
+        wrapper = new HttpWrapper(new TokenAuthMethod("not-an-api-key", "secret"));
+        client = new VerifyClient(wrapper);
     }
 
     private HttpClient stubHttpClient(int statusCode, String content) throws Exception {
@@ -68,28 +70,8 @@ public class VerifyClientTest {
     }
 
     @Test
-    public void testConstructorNullBaseUrl() throws Exception {
-        try {
-            new VerifyClient(null, "api-key", "api-secret", 5000, 5000);
-            fail("null baseUrl should have raised IllegalArgumentException");
-        } catch (IllegalArgumentException e) {
-            // This is expected
-        }
-    }
-
-    @Test
-    public void testConstructorHttpBaseUrl() throws Exception {
-        try {
-            new VerifyClient("http://not.a.real.domain/api", "api-key", "api-secret", 5000, 5000);
-            fail("null baseUrl should have raised IllegalArgumentException");
-        } catch (IllegalArgumentException e) {
-            // This is expected
-        }
-    }
-
-    @Test
     public void testVerify() throws Exception {
-        client.setHttpClient(this.stubHttpClient(200, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
+        wrapper.setHttpClient(this.stubHttpClient(200, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
                 "    <verify_response>\n" +
                 "        <request_id>not-really-a-request-id</request_id>\n" +
                 "        <status>0</status>\n" +
@@ -104,7 +86,7 @@ public class VerifyClientTest {
 
     @Test
     public void testVerifyHttpError() throws Exception {
-        client.setHttpClient(this.stubHttpClient(500, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
+        wrapper.setHttpClient(this.stubHttpClient(500, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
                 "    <verify_response>\n" +
                 "        <request_id>not-really-a-request-id</request_id>\n" +
                 "        <status>0</status>\n" +
@@ -119,7 +101,7 @@ public class VerifyClientTest {
 
     @Test
     public void testCheck() throws Exception {
-        client.setHttpClient(this.stubHttpClient(200, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
+        wrapper.setHttpClient(this.stubHttpClient(200, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
                 "    <verify_response>\n" +
                 "        <event_id>verify-check-id</event_id>\n" +
                 "        <status>0</status>\n" +
@@ -134,7 +116,7 @@ public class VerifyClientTest {
 
     @Test
     public void testCheckMissingParams() throws Exception {
-        client.setHttpClient(this.stubHttpClient(200, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
+        wrapper.setHttpClient(this.stubHttpClient(200, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
                 "    <verify_response>\n" +
                 "        <event_id>verify-check-id</event_id>\n" +
                 "        <status>0</status>\n" +
@@ -153,7 +135,7 @@ public class VerifyClientTest {
 
     @Test
     public void testCheckError() throws Exception {
-        client.setHttpClient(this.stubHttpClient(200, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
+        wrapper.setHttpClient(this.stubHttpClient(200, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
                 "    <verify_response>\n" +
                 "        <status>6</status>\n" +
                 "        <error_text>Something has gone terribly wrong!</error_text>\n" +
@@ -165,10 +147,10 @@ public class VerifyClientTest {
 
     @Test
     public void testCheckInvalidResponse() throws Exception {
-        client.setHttpClient(this.stubHttpClient(
+        wrapper.setHttpClient(this.stubHttpClient(
                 500,
                 "<?xml version='1.0' encoding='UTF-8' ?>\n" +
-                "<not_valid_response />"));
+                        "<not_valid_response />"));
 
         CheckResult c = client.check("verify-check-id", "1234", "my-ip-address");
         assertEquals(CheckResult.STATUS_COMMS_FAILURE, c.getStatus());
@@ -176,7 +158,7 @@ public class VerifyClientTest {
 
     @Test
     public void testSearchSuccess() throws Exception {
-        client.setHttpClient(this.stubHttpClient(200, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
+        wrapper.setHttpClient(this.stubHttpClient(200, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
                 "    <verify_request>\n" +
                 "        <request_id>not-a-search-request-id</request_id>\n" +
                 "        <account_id>not-an-account-id</account_id>\n" +
@@ -223,7 +205,7 @@ public class VerifyClientTest {
 
     @Test
     public void testSearchError() throws Exception {
-        client.setHttpClient(this.stubHttpClient(200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+        wrapper.setHttpClient(this.stubHttpClient(200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<verify_response>\n" +
                 "  <request_id />\n" +
                 "  <status>101</status>\n" +
@@ -236,7 +218,7 @@ public class VerifyClientTest {
 
     @Test
     public void testSearchFailed() throws Exception {
-        client.setHttpClient(this.stubHttpClient(200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+        wrapper.setHttpClient(this.stubHttpClient(200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<verify_request>\n" +
                 "  <request_id>a-random-request-id</request_id>\n" +
                 "  <account_id>account-id</account_id>\n" +
@@ -271,15 +253,15 @@ public class VerifyClientTest {
                 "  <status>FAILED</status>\n" +
                 "</verify_request>"));
 
-            SearchResult c = client.search("a-random-request-id");
-            assertEquals(SearchResult.STATUS_OK, c.getStatus());
-            assertEquals("a-random-request-id", c.getRequestId());
-            assertEquals(SearchResult.VerificationStatus.FAILED, c.getVerificationStatus());
+        SearchResult c = client.search("a-random-request-id");
+        assertEquals(SearchResult.STATUS_OK, c.getStatus());
+        assertEquals("a-random-request-id", c.getRequestId());
+        assertEquals(SearchResult.VerificationStatus.FAILED, c.getVerificationStatus());
     }
 
     @Test
     public void testSearchExpired() throws Exception {
-        client.setHttpClient(this.stubHttpClient(200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+        wrapper.setHttpClient(this.stubHttpClient(200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<verify_request>\n" +
                 "  <request_id>a-random-request-id</request_id>\n" +
                 "  <account_id>account-id</account_id>\n" +
@@ -303,7 +285,7 @@ public class VerifyClientTest {
 
     @Test
     public void testSearchInProgress() throws Exception {
-        client.setHttpClient(this.stubHttpClient(200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+        wrapper.setHttpClient(this.stubHttpClient(200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<verify_request>\n" +
                 "  <request_id>a-random-request-id</request_id>\n" +
                 "  <account_id>account-id</account_id>\n" +
@@ -326,7 +308,7 @@ public class VerifyClientTest {
 
     @Test
     public void testSearchWithWrongParams() throws Exception {
-        client.setHttpClient(this.stubHttpClient(200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+        wrapper.setHttpClient(this.stubHttpClient(200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<verify_response>\n" +
                 "  <request_id />\n" +
                 "  <status>6</status>\n" +
@@ -338,7 +320,7 @@ public class VerifyClientTest {
 
     @Test
     public void testSearchWithMultipleResults() throws Exception {
-        client.setHttpClient(this.stubHttpClient(200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+        wrapper.setHttpClient(this.stubHttpClient(200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<verification_requests>\n" +
                 "  <verify_request>\n" +
                 "    <request_id>a-random-request-id</request_id>\n" +
@@ -375,7 +357,7 @@ public class VerifyClientTest {
 
     @Test
     public void testSearchDodgyDates() throws Exception {
-        client.setHttpClient(this.stubHttpClient(200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+        wrapper.setHttpClient(this.stubHttpClient(200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<verify_request>\n" +
                 "  <request_id>a-random-request-id</request_id>\n" +
                 "  <account_id>account-id</account_id>\n" +
@@ -398,7 +380,7 @@ public class VerifyClientTest {
 
     @Test
     public void testSearchHttpError() throws Exception {
-        client.setHttpClient(this.stubHttpClient(500, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+        wrapper.setHttpClient(this.stubHttpClient(500, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<verify_request />"));
 
         SearchResult c = client.search("a-random-request-id");

@@ -99,7 +99,7 @@ public class CreateCallMethodTest {
 
     @Test
     public void testParseResponse() throws Exception {
-        HttpWrapper wrapper = new HttpWrapper(null);
+        HttpWrapper wrapper = new HttpWrapper();
         CreateCallMethod methodUnderTest = new CreateCallMethod(wrapper);
 
         HttpResponse stubResponse = new BasicHttpResponse(

@@ -25,10 +25,18 @@ import org.apache.http.client.methods.RequestBuilder;
 
 public class TokenAuthMethod extends AbstractAuthMethod {
     public final int SORT_KEY = 20;
+    private String apiKey;
+    private String apiSecret;
+
+    public TokenAuthMethod(String apiKey, String apiSecret) {
+        this.apiKey = apiKey;
+        this.apiSecret = apiSecret;
+    }
 
     @Override
     public RequestBuilder apply(RequestBuilder request) {
-        // FIXME: This is a stub.
+        request.addParameter("api_key", this.apiKey);
+        request.addParameter("api_secret", this.apiSecret);
         return request;
     }
 
