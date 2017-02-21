@@ -22,7 +22,7 @@
 package com.nexmo.client.verify.examples;
 
 import com.nexmo.client.verify.BaseResult;
-import com.nexmo.client.verify.NexmoVerifyClient;
+import com.nexmo.client.verify.VerifyClient;
 import com.nexmo.client.verify.VerifyResult;
 
 /**
@@ -42,9 +42,9 @@ public class VerifyNumber {
     public static void main(String[] args) {
         // Create a client for submitting to Nexmo
 
-        NexmoVerifyClient client;
+        VerifyClient client;
         try {
-            client = new NexmoVerifyClient(API_KEY, API_SECRET);
+            client = new VerifyClient(API_KEY, API_SECRET);
         } catch (Exception e) {
             System.err.println("Failed to instantiate a Nexmo Client");
             e.printStackTrace();

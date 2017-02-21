@@ -42,13 +42,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
-public class NexmoVerifyClientTest {
+public class VerifyClientTest {
 
-    private NexmoVerifyClient client;
+    private VerifyClient client;
 
     @Before
     public void setUp() throws ParserConfigurationException {
-        client = new NexmoVerifyClient("not-an-api-key", "secret");
+        client = new VerifyClient("not-an-api-key", "secret");
     }
 
     private HttpClient stubHttpClient(int statusCode, String content) throws Exception {
@@ -70,7 +70,7 @@ public class NexmoVerifyClientTest {
     @Test
     public void testConstructorNullBaseUrl() throws Exception {
         try {
-            new NexmoVerifyClient(null, "api-key", "api-secret", 5000, 5000);
+            new VerifyClient(null, "api-key", "api-secret", 5000, 5000);
             fail("null baseUrl should have raised IllegalArgumentException");
         } catch (IllegalArgumentException e) {
             // This is expected
@@ -80,7 +80,7 @@ public class NexmoVerifyClientTest {
     @Test
     public void testConstructorHttpBaseUrl() throws Exception {
         try {
-            new NexmoVerifyClient("http://not.a.real.domain/api", "api-key", "api-secret", 5000, 5000);
+            new VerifyClient("http://not.a.real.domain/api", "api-key", "api-secret", 5000, 5000);
             fail("null baseUrl should have raised IllegalArgumentException");
         } catch (IllegalArgumentException e) {
             // This is expected
@@ -408,7 +408,7 @@ public class NexmoVerifyClientTest {
 
     @Test
     public void testLineType() {
-        NexmoVerifyClient.LineType all = NexmoVerifyClient.LineType.ALL;
+        VerifyClient.LineType all = VerifyClient.LineType.ALL;
         assertEquals("ALL", all.toString());
     }
 }

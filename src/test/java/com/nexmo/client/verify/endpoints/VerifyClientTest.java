@@ -23,7 +23,7 @@ package com.nexmo.client.verify.endpoints;
 
 
 import com.nexmo.client.NexmoResponseParseException;
-import com.nexmo.client.verify.NexmoVerifyClient;
+import com.nexmo.client.verify.VerifyClient;
 import com.nexmo.client.verify.VerifyResult;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -40,11 +40,11 @@ import static org.junit.Assert.*;
 
 public class VerifyClientTest {
 
-    private VerifyClient client;
+    private com.nexmo.client.verify.endpoints.VerifyClient client;
 
     @Before
     public void setUp() throws ParserConfigurationException {
-        client = new VerifyClient("https://base-url.example.com/verify", "api-key", "api-secret", 1000, 1000);
+        client = new com.nexmo.client.verify.endpoints.VerifyClient("https://base-url.example.com/verify", "api-key", "api-secret", 1000, 1000);
     }
 
     @Test
@@ -55,7 +55,7 @@ public class VerifyClientTest {
                 "Your friend",
                 4,
                 new Locale("en", "GB"),
-                NexmoVerifyClient.LineType.MOBILE
+                com.nexmo.client.verify.VerifyClient.LineType.MOBILE
         );
         assertContainsParam(params, "number", "4477990090090");
         assertContainsParam(params, "brand", "Brand.com");
@@ -90,7 +90,7 @@ public class VerifyClientTest {
                     "Your friend",
                     4,
                     new Locale("en", "GB"),
-                    NexmoVerifyClient.LineType.MOBILE
+                    VerifyClient.LineType.MOBILE
             );
             fail();
         } catch (IllegalArgumentException e) {
@@ -107,7 +107,7 @@ public class VerifyClientTest {
                     "Your friend",
                     4,
                     new Locale("en", "GB"),
-                    NexmoVerifyClient.LineType.MOBILE
+                    VerifyClient.LineType.MOBILE
             );
             fail();
         } catch (IllegalArgumentException e) {
@@ -124,7 +124,7 @@ public class VerifyClientTest {
                     "Your friend",
                     3,
                     new Locale("en", "GB"),
-                    NexmoVerifyClient.LineType.MOBILE
+                    com.nexmo.client.verify.VerifyClient.LineType.MOBILE
             );
             fail();
         } catch (IllegalArgumentException e) {
