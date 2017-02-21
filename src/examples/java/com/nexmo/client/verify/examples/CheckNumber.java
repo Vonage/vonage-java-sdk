@@ -23,7 +23,7 @@ package com.nexmo.client.verify.examples;
 
 import com.nexmo.client.verify.BaseResult;
 import com.nexmo.client.verify.CheckResult;
-import com.nexmo.client.verify.NexmoVerifyClient;
+import com.nexmo.client.verify.VerifyClient;
 
 /**
  * An example og how to check a verification code.
@@ -41,9 +41,9 @@ public class CheckNumber {
     public static void main(String[] args) {
         // Create a client for submitting to Nexmo
 
-        NexmoVerifyClient client;
+        VerifyClient client;
         try {
-            client = new NexmoVerifyClient(API_KEY, API_SECRET);
+            client = new VerifyClient(API_KEY, API_SECRET);
         } catch (Exception e) {
             System.err.println("Failed to instantiate a Nexmo Client");
             e.printStackTrace();

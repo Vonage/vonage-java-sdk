@@ -31,7 +31,6 @@ import com.nexmo.common.LegacyClient;
 import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.client.verify.endpoints.CheckClient;
 import com.nexmo.client.verify.endpoints.SearchClient;
-import com.nexmo.client.verify.endpoints.VerifyClient;
 import org.apache.http.client.HttpClient;
 
 /**
@@ -53,7 +52,7 @@ import org.apache.http.client.HttpClient;
  *
  * @author Daniele Ricci
  */
-public class NexmoVerifyClient extends LegacyClient {
+public class VerifyClient extends LegacyClient {
     public enum LineType {
         ALL,
         MOBILE,
@@ -77,19 +76,19 @@ public class NexmoVerifyClient extends LegacyClient {
     public static final int DEFAULT_SO_TIMEOUT = 30000;
 
     private CheckClient checkClient;
-    private VerifyClient verifyClient;
+    private com.nexmo.client.verify.endpoints.VerifyClient verifyClient;
     private SearchClient searchClient;
 
     /**
-     * Instantiate a new NexmoVerifyClient instance that will communicate using the supplied credentials.
+     * Instantiate a new VerifyClient instance that will communicate using the supplied credentials.
      *
      * @param apiKey Your Nexmo account api key
      * @param apiSecret Your Nexmo account api secret
      *
      * @throws ParserConfigurationException if the XML parser could not be configured.
      */
-    public NexmoVerifyClient(final String apiKey,
-                             final String apiSecret) throws ParserConfigurationException {
+    public VerifyClient(final String apiKey,
+                        final String apiSecret) throws ParserConfigurationException {
         this(DEFAULT_BASE_URL,
              apiKey,
              apiSecret,
@@ -98,7 +97,7 @@ public class NexmoVerifyClient extends LegacyClient {
     }
 
     /**
-     * Instantiate a new NexmoVerifyClient instance that will communicate using the supplied credentials, and will use the supplied connection and read timeout values.<br>
+     * Instantiate a new VerifyClient instance that will communicate using the supplied credentials, and will use the supplied connection and read timeout values.<br>
      * Additionally, you can specify an alternative service base url. For example submitting to a testing sandbox environment,
      * or if requested to submit to an alternative address by Nexmo, for example, in cases where it may be necessary to prioritize your traffic.
      *
@@ -108,16 +107,16 @@ public class NexmoVerifyClient extends LegacyClient {
      * @param connectionTimeout over-ride the default connection timeout with this value (in milliseconds)
      * @param soTimeout over-ride the default read-timeout with this value (in milliseconds)
      */
-    public NexmoVerifyClient(final String baseUrl,
-                             final String apiKey,
-                             final String apiSecret,
-                             final int connectionTimeout,
-                             final int soTimeout) {
+    public VerifyClient(final String baseUrl,
+                        final String apiKey,
+                        final String apiSecret,
+                        final int connectionTimeout,
+                        final int soTimeout) {
 
         super(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout);
         this.checkClient = new CheckClient(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout);
         this.searchClient = new SearchClient(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout);
-        this.verifyClient = new VerifyClient(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout);
+        this.verifyClient = new com.nexmo.client.verify.endpoints.VerifyClient(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout);
     }
 
     public VerifyResult verify(final String number,
@@ -147,8 +146,8 @@ public class NexmoVerifyClient extends LegacyClient {
                                final String from,
                                final int length,
                                final Locale locale,
-                               final NexmoVerifyClient.LineType type) throws IOException,
-                                                                             NexmoResponseParseException {
+                               final VerifyClient.LineType type) throws IOException,
+                                                                        NexmoResponseParseException {
         return verifyClient.verify(number, brand, from, length, locale, type);
     }
 

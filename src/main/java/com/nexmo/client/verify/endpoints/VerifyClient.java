@@ -24,7 +24,6 @@ package com.nexmo.client.verify.endpoints;
 import com.nexmo.common.LegacyClient;
 import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.client.verify.BaseResult;
-import com.nexmo.client.verify.NexmoVerifyClient;
 import com.nexmo.client.verify.VerifyResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -113,8 +112,8 @@ public class VerifyClient extends LegacyClient {
                                final String from,
                                final int length,
                                final Locale locale,
-                               final NexmoVerifyClient.LineType type) throws IOException,
-                                                                             NexmoResponseParseException {
+                               final com.nexmo.client.verify.VerifyClient.LineType type) throws IOException,
+                                                                                                NexmoResponseParseException {
         List<NameValuePair> params = constructVerifyParams(number, brand, from, length, locale, type);
 
         String verifyBaseUrl = this.makeUrl(PATH_VERIFY);
@@ -156,7 +155,7 @@ public class VerifyClient extends LegacyClient {
 
 
     protected List<NameValuePair> constructVerifyParams(
-            String number, String brand, String from, int length, Locale locale, NexmoVerifyClient.LineType type) {
+            String number, String brand, String from, int length, Locale locale, com.nexmo.client.verify.VerifyClient.LineType type) {
         if (number == null || brand == null)
             throw new IllegalArgumentException("number and brand parameters are mandatory.");
         if (length > 0 && length != 4 && length != 6)
