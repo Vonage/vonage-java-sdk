@@ -46,8 +46,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-public class CheckClient extends LegacyClient {
-    private static final Log log = LogFactory.getLog(CheckClient.class);
+public class CheckEndpoint extends LegacyClient {
+    private static final Log log = LogFactory.getLog(CheckEndpoint.class);
 
     /**
      * The endpoint path for submitting verification check requests
@@ -55,7 +55,7 @@ public class CheckClient extends LegacyClient {
     private static final String ENDPOINT_PATH = "/verify/check/xml";
 
     /**
-     * Create a new CheckClient.
+     * Create a new CheckEndpoint.
      * <p>
      * This client is used for calling the verify API's check endpoint.
      *
@@ -65,11 +65,11 @@ public class CheckClient extends LegacyClient {
      * @param connectionTimeout over-ride the default connection timeout with this value (in milliseconds)
      * @param soTimeout over-ride the default read-timeout with this value (in milliseconds)
      */
-    public CheckClient(final String baseUrl,
-                       final String apiKey,
-                       final String apiSecret,
-                       final int connectionTimeout,
-                       final int soTimeout) {
+    public CheckEndpoint(final String baseUrl,
+                         final String apiKey,
+                         final String apiSecret,
+                         final int connectionTimeout,
+                         final int soTimeout) {
 
         super(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout);
     }

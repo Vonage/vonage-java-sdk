@@ -38,13 +38,13 @@ import java.util.Set;
 
 import static org.junit.Assert.*;
 
-public class VerifyClientTest {
+public class VerifyEndpointTest {
 
-    private com.nexmo.client.verify.endpoints.VerifyClient client;
+    private VerifyEndpoint client;
 
     @Before
     public void setUp() throws ParserConfigurationException {
-        client = new com.nexmo.client.verify.endpoints.VerifyClient("https://base-url.example.com/verify", "api-key", "api-secret", 1000, 1000);
+        client = new VerifyEndpoint("https://base-url.example.com/verify", "api-key", "api-secret", 1000, 1000);
     }
 
     @Test

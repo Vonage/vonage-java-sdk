@@ -32,13 +32,13 @@ import java.util.GregorianCalendar;
 
 import static org.junit.Assert.*;
 
-public class SearchClientTest {
+public class SearchEndpointTest {
 
-    private SearchClient client;
+    private SearchEndpoint client;
 
     @Before
     public void setUp() throws ParserConfigurationException {
-        client = new SearchClient("https://base-url.example.com/verify", "api-key", "api-secret", 1000, 1000);
+        client = new SearchEndpoint("https://base-url.example.com/verify", "api-key", "api-secret", 1000, 1000);
     }
 
     @Test
