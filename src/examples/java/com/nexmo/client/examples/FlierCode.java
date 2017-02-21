@@ -26,8 +26,8 @@ import com.nexmo.client.auth.JWTAuthMethod;
 import com.nexmo.client.voice.Call;
 import com.nexmo.messaging.sdk.NexmoSmsClient;
 import com.nexmo.messaging.sdk.messages.TextMessage;
-import com.nexmo.verify.sdk.NexmoVerifyClient;
-import com.nexmo.verify.sdk.VerifyResult;
+import com.nexmo.client.verify.NexmoVerifyClient;
+import com.nexmo.client.verify.VerifyResult;
 
 import java.nio.file.Paths;
 

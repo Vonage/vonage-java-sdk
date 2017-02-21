@@ -227,7 +227,7 @@ public abstract class Message implements java.io.Serializable {
     }
 
     /**
-     * @return com.nexmo.messaging.sdk.messages.parameters.MessageClass The message class that is to be applied to this message.
+     * @return com.nexmo.messaging.verify.messages.parameters.MessageClass The message class that is to be applied to this message.
      */
     public MessageClass getMessageClass() {
         return this.messageClass;

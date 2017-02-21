@@ -19,22 +19,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.verify.sdk.examples;
+package com.nexmo.client.verify.examples;
 
-import com.nexmo.verify.sdk.BaseResult;
-import com.nexmo.verify.sdk.NexmoVerifyClient;
-import com.nexmo.verify.sdk.SearchResult;
+import com.nexmo.client.verify.BaseResult;
+import com.nexmo.client.verify.CheckResult;
+import com.nexmo.client.verify.NexmoVerifyClient;
 
 /**
- * An example of how to search for a previous verify request.
+ * An example og how to check a verification code.
  *
  * @author Daniele Ricci
  */
-public class SearchVerify {
+public class CheckNumber {
 
     public static final String API_KEY = "your-api-key-goes-here";
     public static final String API_SECRET = "your-api-secret-goes-here";
 
+    public static final String VERIFICATION_CODE = "your-verification-code-goes-here";
     public static final String REQUEST_ID = "your-request-id-goes-here";
 
     public static void main(String[] args) {
@@ -50,10 +51,9 @@ public class SearchVerify {
             return;
         }
 
-        SearchResult result;
+        CheckResult result;
         try {
-            // you can also pass multiple request IDs and you'll have an array of results
-            result = client.search(REQUEST_ID);
+            result = client.check(REQUEST_ID, VERIFICATION_CODE);
         } catch (Exception e) {
             System.err.println("Failed to communicate with the Nexmo Client");
             e.printStackTrace();
@@ -62,17 +62,10 @@ public class SearchVerify {
         }
 
         if (result.getStatus() == BaseResult.STATUS_OK) {
-            System.out.println("... Verify search was successful!");
-            System.out.println("Account: " + result.getAccountId());
-            System.out.println("Number: " + result.getNumber());
-            System.out.println("Sender: " + result.getSenderId());
-            System.out.println("Status: " + result.getVerificationStatus());
-            System.out.println("Date submitted: " + result.getDateSubmitted());
-            System.out.println("Date finalized: " + result.getDateFinalized());
+            System.out.println("... Verify check was successful!");
             System.out.println("Price: " + result.getPrice() + " " + result.getCurrency());
-            System.out.println("Checks: " + result.getChecks());
         } else {
-            System.out.println("... Verify search failed with status " + result.getStatus());
+            System.out.println("... Verify check failed with status " + result.getStatus());
             if (result.isTemporaryError())
                 System.out.println("TEMPORARY FAILURE - PLEASE RETRY");
             System.out.println("Error: " + result.getErrorText());
