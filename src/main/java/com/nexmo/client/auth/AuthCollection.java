@@ -44,9 +44,9 @@ public class AuthCollection {
     }
 
     public AuthCollection(AuthMethod... authMethods) {
-        AuthCollection authCollection = new AuthCollection();
+        this();
         for (AuthMethod method : authMethods) {
-            authCollection.add(method);
+            add(method);
         }
     }
 
