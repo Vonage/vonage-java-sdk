@@ -19,11 +19,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.verify.sdk.examples;
+package com.nexmo.client.verify.examples;
 
-import com.nexmo.verify.sdk.BaseResult;
-import com.nexmo.verify.sdk.NexmoVerifyClient;
-import com.nexmo.verify.sdk.VerifyResult;
+import com.nexmo.client.verify.BaseResult;
+import com.nexmo.client.verify.NexmoVerifyClient;
+import com.nexmo.client.verify.VerifyResult;
 
 /**
  * An example of how to request a number verification.

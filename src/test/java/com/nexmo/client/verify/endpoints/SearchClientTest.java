@@ -19,11 +19,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.verify.sdk.endpoints;
+package com.nexmo.client.verify.endpoints;
 
 
 import com.nexmo.client.NexmoResponseParseException;
-import com.nexmo.verify.sdk.SearchResult;
+import com.nexmo.client.verify.SearchResult;
 import org.junit.Before;
 import org.junit.Test;
 

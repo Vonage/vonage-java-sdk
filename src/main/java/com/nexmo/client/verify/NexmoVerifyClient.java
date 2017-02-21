@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.verify.sdk;
+package com.nexmo.client.verify;
 
 
 import java.io.IOException;
@@ -29,9 +29,9 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import com.nexmo.common.LegacyClient;
 import com.nexmo.client.NexmoResponseParseException;
-import com.nexmo.verify.sdk.endpoints.CheckClient;
-import com.nexmo.verify.sdk.endpoints.SearchClient;
-import com.nexmo.verify.sdk.endpoints.VerifyClient;
+import com.nexmo.client.verify.endpoints.CheckClient;
+import com.nexmo.client.verify.endpoints.SearchClient;
+import com.nexmo.client.verify.endpoints.VerifyClient;
 import org.apache.http.client.HttpClient;
 
 /**
