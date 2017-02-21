@@ -23,6 +23,8 @@ package com.nexmo.client.verify;
 
 
 import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -33,6 +35,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
@@ -92,11 +95,15 @@ public class VerifyClientTest {
                 "        <status>0</status>\n" +
                 "        <error_text>error</error_text>\n" +
                 "    </verify_response>"));
-        VerifyResult r = client.verify(
-                "447700900999",
-                "TestBrand",
-                "15555215554", 6, Locale.US);
-        assertEquals(VerifyResult.STATUS_COMMS_FAILURE, r.getStatus());
+        try {
+            VerifyResult r = client.verify(
+                    "447700900999",
+                    "TestBrand",
+                    "15555215554", 6, Locale.US);
+            fail();
+        } catch (IOException ioe) {
+            // This is expected
+        }
     }
 
     @Test
@@ -152,8 +159,12 @@ public class VerifyClientTest {
                 "<?xml version='1.0' encoding='UTF-8' ?>\n" +
                         "<not_valid_response />"));
 
-        CheckResult c = client.check("verify-check-id", "1234", "my-ip-address");
-        assertEquals(CheckResult.STATUS_COMMS_FAILURE, c.getStatus());
+        try {
+            CheckResult c = client.check("verify-check-id", "1234", "my-ip-address");
+            fail("Parsing an invalid response should raise NexmoResponseParseException");
+        } catch (NexmoResponseParseException parseException) {
+            // This is expected
+        }
     }
 
     @Test
@@ -382,10 +393,12 @@ public class VerifyClientTest {
     public void testSearchHttpError() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(500, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<verify_request />"));
-
-        SearchResult c = client.search("a-random-request-id");
-        assertEquals(SearchResult.STATUS_COMMS_FAILURE, c.getStatus());
-
+        try {
+            SearchResult c = client.search("a-random-request-id");
+            fail("Invalid content should raise NexmoResponseParseException");
+        } catch (NexmoResponseParseException e) {
+            // This is expected
+        }
     }
 
     @Test

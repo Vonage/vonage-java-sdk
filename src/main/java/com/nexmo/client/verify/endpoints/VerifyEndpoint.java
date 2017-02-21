@@ -21,76 +21,94 @@
  */
 package com.nexmo.client.verify.endpoints;
 
-import com.nexmo.common.LegacyClient;
+import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.NexmoResponseParseException;
-import com.nexmo.client.verify.BaseResult;
+import com.nexmo.client.auth.TokenAuthMethod;
+import com.nexmo.client.legacyutils.XmlParser;
+import com.nexmo.client.verify.VerifyRequest;
 import com.nexmo.client.verify.VerifyResult;
+import com.nexmo.client.voice.endpoints.AbstractMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpResponseException;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.message.BasicNameValuePair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.io.IOException;
-import java.util.List;
+import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
-public class VerifyEndpoint extends LegacyClient {
+public class VerifyEndpoint extends AbstractMethod<VerifyRequest, VerifyResult> {
     private static final Log log = LogFactory.getLog(VerifyEndpoint.class);
 
-    /**
-     * The endpoint path for submitting verification requests
-     */
-    public static final String PATH_VERIFY = "/verify/xml";
+    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
+
+    private static final String DEFAULT_URI = "https://api.nexmo.com/verify/xml";
+
+    private XmlParser xmlParser = new XmlParser();
+
+    private String uri = DEFAULT_URI;
 
     /**
      * Create a new VerifyEndpoint.
      * <p>
      * This client is used for calling the verify API's verify endpoint.
-     *
-     * @param baseUrl The base URL to be used instead of <code>DEFAULT_BASE_URL</code>
-     * @param apiKey Your Nexmo account api key
-     * @param apiSecret Your Nexmo account api secret
-     * @param connectionTimeout over-ride the default connection timeout with this value (in milliseconds)
-     * @param soTimeout over-ride the default read-timeout with this value (in milliseconds)
      */
-    public VerifyEndpoint(final String baseUrl,
-                          final String apiKey,
-                          final String apiSecret,
-                          final int connectionTimeout,
-                          final int soTimeout) {
+    public VerifyEndpoint(HttpWrapper httpWrapper) {
+        super(httpWrapper);
+    }
 
-        super(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout);
+    @Override
+    protected Class[] getAcceptableAuthMethods() {
+        return ALLOWED_AUTH_METHODS;
+    }
+
+    @Override
+    public RequestBuilder makeRequest(VerifyRequest request) throws NexmoClientException, UnsupportedEncodingException {
+        RequestBuilder result = RequestBuilder.post(this.uri)
+                .addParameter("number", request.getNumber())
+                .addParameter("brand", request.getBrand());
+
+        if (request.getFrom() != null) {
+            result.addParameter("sender_id", request.getFrom());
+        }
+
+        if (request.getLength() > 0) {
+            result.addParameter("code_length", Integer.toString(request.getLength()));
+        }
+
+        if (request.getLocale() != null) {
+            result.addParameter(new BasicNameValuePair("lg",
+                    (request.getLocale().getLanguage() + "-" + request.getLocale().getCountry()).toLowerCase()));
+        }
+
+        if (request.getType() != null) {
+            result.addParameter("require_type", request.getType().toString());
+        }
+
+        return result;
+    }
+
+    @Override
+    public VerifyResult parseResponse(HttpResponse response) throws IOException {
+        return parseVerifyResponse(new BasicResponseHandler().handleResponse(response));
     }
 
     public VerifyResult verify(final String number,
                                final String brand) throws IOException,
-                                                          NexmoResponseParseException {
-        return verify(number,
-                brand,
-                null,
-                -1,
-                null,
-                null);
+                                                          NexmoClientException {
+        return execute(new VerifyRequest(number, brand));
     }
 
     public VerifyResult verify(final String number,
                                final String brand,
                                final String from) throws IOException,
-                                                         NexmoResponseParseException {
-        return verify(number,
-                brand,
-                from,
-                -1,
-                null,
-                null);
+                                                         NexmoClientException {
+        return execute(new VerifyRequest(number, brand, from));
     }
 
     public VerifyResult verify(final String number,
@@ -98,13 +116,8 @@ public class VerifyEndpoint extends LegacyClient {
                                final String from,
                                final int length,
                                final Locale locale) throws IOException,
-                                                           NexmoResponseParseException {
-        return verify(number,
-                brand,
-                from,
-                length,
-                locale,
-                null);
+                                                           NexmoClientException {
+        return execute(new VerifyRequest(number, brand, from, length, locale));
     }
 
     public VerifyResult verify(final String number,
@@ -113,72 +126,17 @@ public class VerifyEndpoint extends LegacyClient {
                                final int length,
                                final Locale locale,
                                final com.nexmo.client.verify.VerifyClient.LineType type) throws IOException,
-                                                                                                NexmoResponseParseException {
-        List<NameValuePair> params = constructVerifyParams(number, brand, from, length, locale, type);
-
-        String verifyBaseUrl = this.makeUrl(PATH_VERIFY);
-
-        // Now that we have generated a query string, we can instantiate a HttpClient,
-        // construct a POST method and execute to submit the request
-        String response;
-        HttpPost httpPost = new HttpPost(verifyBaseUrl);
-        httpPost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-        String url = verifyBaseUrl + "?" + URLEncodedUtils.format(params, "utf-8");
-
-        try {
-            HttpResponse httpResponse = this.getHttpClient().execute(httpPost);
-            response = new BasicResponseHandler().handleResponse(httpResponse);
-            log.info(".. SUBMITTED NEXMO-HTTP URL [ " + url + " ] -- response [ " + response + " ] ");
-        } catch (HttpResponseException e) {
-            httpPost.abort();
-            log.error("communication failure: ", e);
-
-            // return a COMMS failure ...
-            return new VerifyResult(BaseResult.STATUS_COMMS_FAILURE,
-                    null,
-                    "Failed to communicate with NEXMO-HTTP url [ " + url + " ] ..." + e,
-                    true);
-        }
-
-        return parseVerifyResponse(response);
+                                                                                                NexmoClientException {
+        return execute(new VerifyRequest(number, brand, from, length, locale, type));
     }
 
     protected VerifyResult parseVerifyResponse(String response) throws NexmoResponseParseException {
-        Document doc = parseXml(response);
+        Document doc = xmlParser.parseXml(response);
 
         Element root = doc.getDocumentElement();
         if (!"verify_response".equals(root.getNodeName()))
             throw new NexmoResponseParseException("No valid response found [ " + response + "] ");
 
         return SharedParsers.parseVerifyResponseXmlNode(root);
-    }
-
-
-    protected List<NameValuePair> constructVerifyParams(
-            String number, String brand, String from, int length, Locale locale, com.nexmo.client.verify.VerifyClient.LineType type) {
-        if (number == null || brand == null)
-            throw new IllegalArgumentException("number and brand parameters are mandatory.");
-        if (length > 0 && length != 4 && length != 6)
-            throw new IllegalArgumentException("code length must be 4 or 6.");
-
-        log.debug("HTTP-Number-Verify Client .. to [ " + number + " ] brand [ " + brand + " ] ");
-
-        List<NameValuePair> params = this.constructParams();
-        params.add(new BasicNameValuePair("number", number));
-        params.add(new BasicNameValuePair("brand", brand));
-
-        if (from != null)
-            params.add(new BasicNameValuePair("sender_id", from));
-
-        if (length > 0)
-            params.add(new BasicNameValuePair("code_length", String.valueOf(length)));
-
-        if (locale != null)
-            params.add(new BasicNameValuePair("lg",
-                    (locale.getLanguage() + "-" + locale.getCountry()).toLowerCase()));
-
-        if (type != null)
-            params.add(new BasicNameValuePair("require_type", type.toString()));
-        return params;
     }
 }

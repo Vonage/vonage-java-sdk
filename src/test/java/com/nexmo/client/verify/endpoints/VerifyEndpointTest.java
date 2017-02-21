@@ -24,8 +24,10 @@ package com.nexmo.client.verify.endpoints;
 
 import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.client.verify.VerifyClient;
+import com.nexmo.client.verify.VerifyRequest;
 import com.nexmo.client.verify.VerifyResult;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,12 +46,12 @@ public class VerifyEndpointTest {
 
     @Before
     public void setUp() throws ParserConfigurationException {
-        client = new VerifyEndpoint("https://base-url.example.com/verify", "api-key", "api-secret", 1000, 1000);
+        client = new VerifyEndpoint(null);
     }
 
     @Test
     public void testConstructVerifyParams() throws Exception {
-        List<NameValuePair> params = client.constructVerifyParams(
+        VerifyRequest verifyRequest = new VerifyRequest(
                 "4477990090090",
                 "Brand.com",
                 "Your friend",
@@ -57,6 +59,10 @@ public class VerifyEndpointTest {
                 new Locale("en", "GB"),
                 com.nexmo.client.verify.VerifyClient.LineType.MOBILE
         );
+        VerifyEndpoint endpoint = new VerifyEndpoint(null);
+        RequestBuilder request = endpoint.makeRequest(verifyRequest);
+        List<NameValuePair> params = request.getParameters();
+
         assertContainsParam(params, "number", "4477990090090");
         assertContainsParam(params, "brand", "Brand.com");
         assertContainsParam(params, "sender_id", "Your friend");
@@ -67,7 +73,7 @@ public class VerifyEndpointTest {
 
     @Test
     public void testConstructVerifyParamsMissingValues() throws Exception {
-        List<NameValuePair> params = client.constructVerifyParams(
+        VerifyRequest verifyRequest = new VerifyRequest(
                 "4477990090090",
                 "Brand.com",
                 null,
@@ -75,6 +81,9 @@ public class VerifyEndpointTest {
                 null,
                 null
         );
+        VerifyEndpoint endpoint = new VerifyEndpoint(null);
+        RequestBuilder request = endpoint.makeRequest(verifyRequest);
+        List<NameValuePair> params = request.getParameters();
         assertParamMissing(params, "code_length");
         assertParamMissing(params, "lg");
         assertParamMissing(params, "from");
@@ -84,7 +93,7 @@ public class VerifyEndpointTest {
     @Test
     public void testConstructVerifyParamsNullNumber() throws Exception {
         try {
-            client.constructVerifyParams(
+            new VerifyRequest(
                     null,
                     "Brand.com",
                     "Your friend",
@@ -101,7 +110,7 @@ public class VerifyEndpointTest {
     @Test
     public void testConstructVerifyParamsNullBrand() throws Exception {
         try {
-            client.constructVerifyParams(
+            new VerifyRequest(
                     null,
                     "Brand.com",
                     "Your friend",
@@ -118,7 +127,7 @@ public class VerifyEndpointTest {
     @Test
     public void testConstructVerifyParamsInvalidCode() throws Exception {
         try {
-            client.constructVerifyParams(
+            new VerifyRequest(
                     "4477990090090",
                     "Brand.com",
                     "Your friend",

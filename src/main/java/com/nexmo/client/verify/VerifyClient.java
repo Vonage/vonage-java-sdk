@@ -78,20 +78,20 @@ public class VerifyClient extends AbstractClient {
         super(httpWrapper);
 
         this.check = new CheckEndpoint(httpWrapper);
-        //this.search = new SearchEndpoint(httpWrapper);
-        //this.verify = new VerifyEndpoint(httpWrapper);
+        this.search = new SearchEndpoint(httpWrapper);
+        this.verify = new VerifyEndpoint(httpWrapper);
     }
 
     public VerifyResult verify(final String number,
                                final String brand) throws IOException,
-                                                          NexmoResponseParseException {
+                                                          NexmoClientException {
         return verify.verify(number, brand);
     }
 
     public VerifyResult verify(final String number,
                                final String brand,
                                final String from) throws IOException,
-                                                         NexmoResponseParseException {
+                                                         NexmoClientException {
         return verify.verify(number, brand, from);
     }
 
@@ -100,7 +100,7 @@ public class VerifyClient extends AbstractClient {
                                final String from,
                                final int length,
                                final Locale locale) throws IOException,
-                                                           NexmoResponseParseException {
+                                                           NexmoClientException {
         return verify.verify(number, brand, from, length, locale);
     }
 
@@ -110,7 +110,7 @@ public class VerifyClient extends AbstractClient {
                                final int length,
                                final Locale locale,
                                final VerifyClient.LineType type) throws IOException,
-                                                                        NexmoResponseParseException {
+                                                                        NexmoClientException {
         return verify.verify(number, brand, from, length, locale, type);
     }
 
@@ -126,11 +126,11 @@ public class VerifyClient extends AbstractClient {
         return check.check(requestId, code, ipAddress);
     }
 
-    public SearchResult search(String requestId) throws IOException, NexmoResponseParseException {
+    public SearchResult search(String requestId) throws IOException, NexmoClientException {
         return search.search(requestId);
     }
 
-    public SearchResult[] search(String... requestIds) throws IOException, NexmoResponseParseException {
+    public SearchResult[] search(String... requestIds) throws IOException, NexmoClientException {
         return search.search(requestIds);
     }
 }

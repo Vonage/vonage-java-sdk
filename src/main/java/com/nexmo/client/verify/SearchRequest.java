@@ -1,4 +1,4 @@
-package com.nexmo.client.verify;/*
+/*
  * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,31 +19,26 @@ package com.nexmo.client.verify;/*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package com.nexmo.client.verify;
 
-public class VerifyCheckRequest {
-    private final String requestId;
-    private final String code;
-    private final String ipAddress;
+public class SearchRequest {
+    /**
+     * Number of maximum request IDs that can be searched for.
+     */
+    private static final int MAX_SEARCH_REQUESTS = 10;
 
-    public VerifyCheckRequest(String requestId, String code) {
-        this(requestId, code, null);
+    private final String[] requestIds;
+
+    public SearchRequest(final String... requestIds) {
+        if (requestIds.length == 0) {
+            throw new IllegalArgumentException("At least one Request ID must be provided in a SearchRequest");
+        } else if (requestIds.length > MAX_SEARCH_REQUESTS) {
+                throw new IllegalArgumentException("too many request IDs. Max is " + MAX_SEARCH_REQUESTS);
+        }
+        this.requestIds = requestIds;
     }
 
-    public VerifyCheckRequest(String requestId, String code, String ipAddress) {
-        this.requestId = requestId;
-        this.code = code;
-        this.ipAddress = ipAddress;
-    }
-
-    public String getRequestId() {
-        return requestId;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public String getIpAddress() {
-        return ipAddress;
+    public String[] getRequestIds() {
+        return requestIds;
     }
 }

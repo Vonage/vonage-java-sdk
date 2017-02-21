@@ -22,11 +22,12 @@ package com.nexmo.client.verify.endpoints;/*
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.legacyutils.XmlParser;
 import com.nexmo.client.verify.BaseResult;
 import com.nexmo.client.verify.CheckResult;
-import com.nexmo.client.verify.VerifyCheckRequest;
+import com.nexmo.client.verify.CheckRequest;
 import com.nexmo.client.voice.endpoints.AbstractMethod;
 import com.nexmo.common.util.XmlUtil;
 import org.apache.commons.logging.Log;
@@ -42,7 +43,7 @@ import org.w3c.dom.NodeList;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class VerifyCheckMethod extends AbstractMethod<VerifyCheckRequest, CheckResult> {
+public class VerifyCheckMethod extends AbstractMethod<CheckRequest, CheckResult> {
     private static final Log log = LogFactory.getLog(VerifyCheckMethod.class);
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
@@ -61,12 +62,13 @@ public class VerifyCheckMethod extends AbstractMethod<VerifyCheckRequest, CheckR
     }
 
     @Override
-    public RequestBuilder makeRequest(VerifyCheckRequest request) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(CheckRequest request) throws NexmoClientException, UnsupportedEncodingException {
         if (request.getRequestId() == null || request.getCode() == null)
             throw new IllegalArgumentException("request ID and code parameters are mandatory.");
 
         RequestBuilder result = RequestBuilder.post(this.uri)
                 .addParameter("request_id", request.getRequestId())
+
                 .addParameter("code", request.getCode());
         if (request.getIpAddress() != null)
             result.addParameter("ip_address", request.getIpAddress());
@@ -79,12 +81,12 @@ public class VerifyCheckMethod extends AbstractMethod<VerifyCheckRequest, CheckR
         return parseCheckResponse(EntityUtils.toString(response.getEntity()));
     }
 
-    private CheckResult parseCheckResponse(String response) throws IOException {
+    private CheckResult parseCheckResponse(String response) throws NexmoResponseParseException {
         Document doc = xmlParser.parseXml(response);
 
         Element root = doc.getDocumentElement();
         if (!"verify_response".equals(root.getNodeName()))
-            throw new IOException("No valid response found [ " + response + "] ");
+            throw new NexmoResponseParseException("No valid response found [ " + response + "] ");
 
         String eventId = null;
         int status = -1;
@@ -126,7 +128,7 @@ public class VerifyCheckMethod extends AbstractMethod<VerifyCheckRequest, CheckR
         }
 
         if (status == -1)
-            throw new IOException("Xml Parser - did not find a <status> node");
+            throw new NexmoResponseParseException("Xml Parser - did not find a <status> node");
 
         // Is this a temporary error ?
         boolean temporaryError = (status == BaseResult.STATUS_THROTTLED || status == BaseResult.STATUS_INTERNAL_ERROR);
