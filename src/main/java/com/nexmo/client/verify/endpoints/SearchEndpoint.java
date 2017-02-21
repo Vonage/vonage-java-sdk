@@ -50,8 +50,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class SearchClient extends LegacyClient {
-    private static final Log log = LogFactory.getLog(SearchClient.class);
+public class SearchEndpoint extends LegacyClient {
+    private static final Log log = LogFactory.getLog(SearchEndpoint.class);
 
     /**
      * The endpoint path for submitting verification search requests
@@ -74,7 +74,7 @@ public class SearchClient extends LegacyClient {
     };
 
     /**
-     * Create a new SearchClient.
+     * Create a new SearchEndpoint.
      * <p>
      * This client is used for calling the verify API's search endpoint.
      *
@@ -84,11 +84,11 @@ public class SearchClient extends LegacyClient {
      * @param connectionTimeout over-ride the default connection timeout with this value (in milliseconds)
      * @param soTimeout over-ride the default read-timeout with this value (in milliseconds)
      */
-    public SearchClient(final String baseUrl,
-                       final String apiKey,
-                       final String apiSecret,
-                       final int connectionTimeout,
-                       final int soTimeout) {
+    public SearchEndpoint(final String baseUrl,
+                          final String apiKey,
+                          final String apiSecret,
+                          final int connectionTimeout,
+                          final int soTimeout) {
 
         super(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout);
     }

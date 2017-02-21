@@ -42,8 +42,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class VerifyClient extends LegacyClient {
-    private static final Log log = LogFactory.getLog(VerifyClient.class);
+public class VerifyEndpoint extends LegacyClient {
+    private static final Log log = LogFactory.getLog(VerifyEndpoint.class);
 
     /**
      * The endpoint path for submitting verification requests
@@ -51,7 +51,7 @@ public class VerifyClient extends LegacyClient {
     public static final String PATH_VERIFY = "/verify/xml";
 
     /**
-     * Create a new VerifyClient.
+     * Create a new VerifyEndpoint.
      * <p>
      * This client is used for calling the verify API's verify endpoint.
      *
@@ -61,11 +61,11 @@ public class VerifyClient extends LegacyClient {
      * @param connectionTimeout over-ride the default connection timeout with this value (in milliseconds)
      * @param soTimeout over-ride the default read-timeout with this value (in milliseconds)
      */
-    public VerifyClient(final String baseUrl,
-                        final String apiKey,
-                        final String apiSecret,
-                        final int connectionTimeout,
-                        final int soTimeout) {
+    public VerifyEndpoint(final String baseUrl,
+                          final String apiKey,
+                          final String apiSecret,
+                          final int connectionTimeout,
+                          final int soTimeout) {
 
         super(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout);
     }

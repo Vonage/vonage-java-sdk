@@ -27,10 +27,11 @@ import java.util.Locale;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.nexmo.client.verify.endpoints.CheckEndpoint;
+import com.nexmo.client.verify.endpoints.VerifyEndpoint;
 import com.nexmo.common.LegacyClient;
 import com.nexmo.client.NexmoResponseParseException;
-import com.nexmo.client.verify.endpoints.CheckClient;
-import com.nexmo.client.verify.endpoints.SearchClient;
+import com.nexmo.client.verify.endpoints.SearchEndpoint;
 import org.apache.http.client.HttpClient;
 
 /**
@@ -75,12 +76,12 @@ public class VerifyClient extends LegacyClient {
      */
     public static final int DEFAULT_SO_TIMEOUT = 30000;
 
-    private CheckClient checkClient;
-    private com.nexmo.client.verify.endpoints.VerifyClient verifyClient;
-    private SearchClient searchClient;
+    private CheckEndpoint check;
+    private VerifyEndpoint verify;
+    private SearchEndpoint search;
 
     /**
-     * Instantiate a new VerifyClient instance that will communicate using the supplied credentials.
+     * Instantiate a new VerifyEndpoint instance that will communicate using the supplied credentials.
      *
      * @param apiKey Your Nexmo account api key
      * @param apiSecret Your Nexmo account api secret
@@ -97,7 +98,7 @@ public class VerifyClient extends LegacyClient {
     }
 
     /**
-     * Instantiate a new VerifyClient instance that will communicate using the supplied credentials, and will use the supplied connection and read timeout values.<br>
+     * Instantiate a new VerifyEndpoint instance that will communicate using the supplied credentials, and will use the supplied connection and read timeout values.<br>
      * Additionally, you can specify an alternative service base url. For example submitting to a testing sandbox environment,
      * or if requested to submit to an alternative address by Nexmo, for example, in cases where it may be necessary to prioritize your traffic.
      *
@@ -114,22 +115,22 @@ public class VerifyClient extends LegacyClient {
                         final int soTimeout) {
 
         super(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout);
-        this.checkClient = new CheckClient(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout);
-        this.searchClient = new SearchClient(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout);
-        this.verifyClient = new com.nexmo.client.verify.endpoints.VerifyClient(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout);
+        this.check = new CheckEndpoint(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout);
+        this.search = new SearchEndpoint(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout);
+        this.verify = new VerifyEndpoint(baseUrl, apiKey, apiSecret, connectionTimeout, soTimeout);
     }
 
     public VerifyResult verify(final String number,
                                final String brand) throws IOException,
                                                           NexmoResponseParseException {
-        return verifyClient.verify(number, brand);
+        return verify.verify(number, brand);
     }
 
     public VerifyResult verify(final String number,
                                final String brand,
                                final String from) throws IOException,
                                                          NexmoResponseParseException {
-        return verifyClient.verify(number, brand, from);
+        return verify.verify(number, brand, from);
     }
 
     public VerifyResult verify(final String number,
@@ -138,7 +139,7 @@ public class VerifyClient extends LegacyClient {
                                final int length,
                                final Locale locale) throws IOException,
                                                            NexmoResponseParseException {
-        return verifyClient.verify(number, brand, from, length, locale);
+        return verify.verify(number, brand, from, length, locale);
     }
 
     public VerifyResult verify(final String number,
@@ -148,35 +149,35 @@ public class VerifyClient extends LegacyClient {
                                final Locale locale,
                                final VerifyClient.LineType type) throws IOException,
                                                                         NexmoResponseParseException {
-        return verifyClient.verify(number, brand, from, length, locale, type);
+        return verify.verify(number, brand, from, length, locale, type);
     }
 
 
 
     public CheckResult check(final String requestId,
                              final String code) throws IOException, NexmoResponseParseException {
-        return checkClient.check(requestId, code, null);
+        return check.check(requestId, code, null);
     }
 
     public CheckResult check(final String requestId,
                              final String code,
                              final String ipAddress) throws IOException, NexmoResponseParseException {
-        return checkClient.check(requestId, code, ipAddress);
+        return check.check(requestId, code, ipAddress);
     }
 
     public SearchResult search(String requestId) throws IOException, NexmoResponseParseException {
-        return searchClient.search(requestId);
+        return search.search(requestId);
     }
 
     public SearchResult[] search(String... requestIds) throws IOException, NexmoResponseParseException {
-        return searchClient.search(requestIds);
+        return search.search(requestIds);
     }
 
     @Override
     public void setHttpClient(HttpClient httpClient) {
         super.setHttpClient(httpClient);
-        this.checkClient.setHttpClient(httpClient);
-        this.searchClient.setHttpClient(httpClient);
-        this.verifyClient.setHttpClient(httpClient);
+        this.check.setHttpClient(httpClient);
+        this.search.setHttpClient(httpClient);
+        this.verify.setHttpClient(httpClient);
     }
 }
