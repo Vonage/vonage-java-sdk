@@ -24,14 +24,14 @@ package com.nexmo.client.verify;
 import java.util.Locale;
 
 public class VerifyRequest {
-    final String number;
-    final String brand;
-    final String from;
-    final int length;
-    final Locale locale;
-    final com.nexmo.client.verify.VerifyClient.LineType type;
+    private final String number;
+    private final String brand;
+    private final String from;
+    private final int length;
+    private final Locale locale;
+    private final com.nexmo.client.verify.VerifyClient.LineType type;
 
-    public VerifyRequest(String number, String brand) {
+    public VerifyRequest(final String number, final String brand) {
         this(number,
                 brand,
                 null,
@@ -40,15 +40,17 @@ public class VerifyRequest {
                 null);
     }
 
-    public VerifyRequest(String number, String brand, String from) {
+    public VerifyRequest(final String number, final String brand, final String from) {
         this(number, brand, from, -1, null, null);
     }
 
-    public VerifyRequest(String number, String brand, String from, int length, Locale locale) {
+    public VerifyRequest(final String number, final String brand, final String from, final int length,
+                         final Locale locale) {
         this(number, brand, from, length, locale, null);
     }
 
-    public VerifyRequest(String number, String brand, String from, int length, Locale locale, VerifyClient.LineType type) {
+    public VerifyRequest(final String number, final String brand, final String from, final int length,
+                         final Locale locale, final VerifyClient.LineType type) {
         if (number == null || brand == null)
             throw new IllegalArgumentException("Number and brand parameters cannot be null.");
         if (length > 0 && length != 4 && length != 6)
