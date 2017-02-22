@@ -29,8 +29,6 @@ import com.nexmo.client.legacyutils.XmlParser;
 import com.nexmo.client.verify.VerifyRequest;
 import com.nexmo.client.verify.VerifyResult;
 import com.nexmo.client.voice.endpoints.AbstractMethod;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
