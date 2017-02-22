@@ -21,6 +21,7 @@
  */
 package com.nexmo.client.auth;
 
+import com.nexmo.security.RequestSigning;
 import org.apache.http.client.methods.RequestBuilder;
 
 // TODO: This is a stub!
@@ -37,7 +38,9 @@ public class SignatureAuthMethod extends AbstractAuthMethod {
 
     @Override
     public RequestBuilder apply(RequestBuilder request) {
-        return null;
+        request.addParameter("api_key", apiKey);
+        RequestSigning.constructSignatureForRequestParameters(request.getParameters(), secret);
+        return request;
     }
 
     @Override
