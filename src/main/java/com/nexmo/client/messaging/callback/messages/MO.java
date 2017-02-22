@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.messaging.sdk.callback.messages;
+package com.nexmo.client.messaging.callback.messages;
 
 import java.math.BigDecimal;
 import java.util.Date;

@@ -19,12 +19,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.messaging.sdk;
+package com.nexmo.client.messaging;
 
 
 import com.nexmo.client.NexmoResponseParseException;
-import com.nexmo.messaging.sdk.messages.*;
-import com.nexmo.messaging.sdk.messages.parameters.ValidityPeriod;
+import com.nexmo.client.messaging.messages.*;
+import com.nexmo.client.messaging.messages.parameters.ValidityPeriod;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;

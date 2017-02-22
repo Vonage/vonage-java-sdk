@@ -19,19 +19,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.messaging.sdk.examples;
+package com.nexmo.client.messaging.examples.signed;
 
 
-import com.nexmo.messaging.sdk.NexmoSmsClient;
-import com.nexmo.messaging.sdk.SmsSubmissionResult;
-import com.nexmo.messaging.sdk.messages.TextMessage;
+import com.nexmo.client.messaging.NexmoSmsClient;
+import com.nexmo.client.messaging.NexmoSmsClientSignedRequests;
+import com.nexmo.client.messaging.SmsSubmissionResult;
+import com.nexmo.client.messaging.messages.TextMessage;
 
 /**
  * An example of using the Nexmo SMS API to submit a simple text message.
+ * This example uses a {@link com.nexmo.client.messaging.NexmoSmsClientSignedRequests} client
+ * So that the REST requests are signed using the secret key.
  *
  * @author  Paul Cook
  */
-public class SendTextMessage {
+public class SendSignedTextMessage {
 
     public static final String API_KEY = "your-api-key-goes-here";
     public static final String API_SECRET = "your-api-secret-goes-here";
@@ -46,7 +49,7 @@ public class SendTextMessage {
 
         NexmoSmsClient client = null;
         try {
-            client = new NexmoSmsClient(API_KEY, API_SECRET);
+            client = new NexmoSmsClientSignedRequests(API_KEY, API_SECRET);
         } catch (Exception e) {
             System.err.println("Failed to instantiate a Nexmo Client");
             e.printStackTrace();

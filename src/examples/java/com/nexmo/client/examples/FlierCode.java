@@ -24,8 +24,8 @@ package com.nexmo.client.examples;
 import com.nexmo.client.NexmoClient;
 import com.nexmo.client.auth.JWTAuthMethod;
 import com.nexmo.client.voice.Call;
-import com.nexmo.messaging.sdk.NexmoSmsClient;
-import com.nexmo.messaging.sdk.messages.TextMessage;
+import com.nexmo.client.messaging.NexmoSmsClient;
+import com.nexmo.client.messaging.messages.TextMessage;
 import com.nexmo.client.verify.VerifyClient;
 import com.nexmo.client.verify.VerifyResult;
 

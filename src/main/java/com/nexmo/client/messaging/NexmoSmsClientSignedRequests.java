@@ -19,13 +19,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.messaging.sdk;
+package com.nexmo.client.messaging;
 
 
 /**
  * Client for talking to the Nexmo SMS API that signs requests using a MD5 signature derived from a secret key.
  * <p>
- * For usage information see {@link com.nexmo.messaging.sdk.NexmoSmsClient}.
+ * For usage information see {@link com.nexmo.client.messaging.NexmoSmsClient}.
  *
  * @author  Paul Cook
  */

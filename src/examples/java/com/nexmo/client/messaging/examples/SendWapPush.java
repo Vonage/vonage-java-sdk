@@ -19,12 +19,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.messaging.sdk.examples;
+package com.nexmo.client.messaging.examples;
 
 
-import com.nexmo.messaging.sdk.NexmoSmsClient;
-import com.nexmo.messaging.sdk.SmsSubmissionResult;
-import com.nexmo.messaging.sdk.messages.WapPushMessage;
+import com.nexmo.client.messaging.NexmoSmsClient;
+import com.nexmo.client.messaging.SmsSubmissionResult;
+import com.nexmo.client.messaging.messages.WapPushMessage;
 
 /**
  * An example of using the Nexmo SMS API to submit a wap push message.

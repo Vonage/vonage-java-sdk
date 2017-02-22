@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.messaging.sdk;
+package com.nexmo.client.messaging;
 
 
 import java.io.IOException;
@@ -44,26 +44,26 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.nexmo.common.util.HexUtil;
-import com.nexmo.messaging.sdk.messages.Message;
-import com.nexmo.messaging.sdk.messages.parameters.ValidityPeriod;
+import com.nexmo.client.messaging.messages.Message;
+import com.nexmo.client.messaging.messages.parameters.ValidityPeriod;
 
 /**
  * Client for talking to the Nexmo API.
  * <p>
  * To submit a message, instantiate a NexmoSmsClient, passing the credentials for your Nexmo account on
- * the constructor. Then instantiate the appropriate {@link com.nexmo.messaging.sdk.messages.Message}
+ * the constructor. Then instantiate the appropriate {@link com.nexmo.client.messaging.messages.Message}
  * subclass depending on which type of message you are going to submit. The following subclasses are available:
  *
  * <ul>
- * <li>{@link com.nexmo.messaging.sdk.messages.TextMessage}
- * <li>{@link com.nexmo.messaging.sdk.messages.BinaryMessage}
- * <li>{@link com.nexmo.messaging.sdk.messages.WapPushMessage}
- * <li>{@link com.nexmo.messaging.sdk.messages.UnicodeMessage}
+ * <li>{@link com.nexmo.client.messaging.messages.TextMessage}
+ * <li>{@link com.nexmo.client.messaging.messages.BinaryMessage}
+ * <li>{@link com.nexmo.client.messaging.messages.WapPushMessage}
+ * <li>{@link com.nexmo.client.messaging.messages.UnicodeMessage}
  * </ul>
  * <p>
- * Once you have a {@link com.nexmo.messaging.sdk.messages.Message} object, pass it to {@link #submitMessage(Message)}
+ * Once you have a {@link com.nexmo.client.messaging.messages.Message} object, pass it to {@link #submitMessage(Message)}
  * which will submit the message to the Nexmo API. It returns an array of
- * {@link com.nexmo.messaging.sdk.SmsSubmissionResult}, with 1 entry for every sms message that was sent.
+ * {@link com.nexmo.client.messaging.SmsSubmissionResult}, with 1 entry for every sms message that was sent.
  * Text messages greater than 160 characters will require multiple SMS messages to be submitted.
  * Each entry in this array will contain an individual messageId as well as an individual status detailing the success or reason for failure of each message.
  * <p>

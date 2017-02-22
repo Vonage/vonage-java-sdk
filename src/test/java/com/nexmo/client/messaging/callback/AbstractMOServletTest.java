@@ -19,9 +19,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.messaging.sdk.callback;
+package com.nexmo.client.messaging.callback;
 
-import com.nexmo.messaging.sdk.callback.messages.MO;
+import com.nexmo.client.messaging.callback.messages.MO;
 import org.junit.Test;
 
 import javax.servlet.ServletException;

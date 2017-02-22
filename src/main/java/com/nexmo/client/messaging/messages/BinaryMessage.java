@@ -19,10 +19,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.messaging.sdk.messages;
+package com.nexmo.client.messaging.messages;
 
 
-import com.nexmo.messaging.sdk.messages.parameters.MessageClass;
+import com.nexmo.client.messaging.messages.parameters.MessageClass;
 
 /**
  * Represents the details of a binary message that is to be submitted via the Nexmo REST API.

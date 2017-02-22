@@ -19,21 +19,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.messaging.sdk.callback;
+package com.nexmo.client.messaging.messages.parameters;
 
-public class NexmoCallbackRequestValidationException extends Exception {
-    public NexmoCallbackRequestValidationException() {
+
+/**
+ * An enum of the valid values that may be supplied to as the message-class parameter of a rest submission.
+ *
+ * @author  Paul Cook
+ */
+public enum MessageClass {
+
+    /**
+     * Message Class 0
+     */
+    MESSAGE_CLASS_0(0),
+
+    /**
+     * Message Class 1
+     */
+    MESSAGE_CLASS_1(1),
+
+    /**
+     * Message Class 2
+     */
+    MESSAGE_CLASS_2(2),
+
+    /**
+     * Message Class 3
+     */
+    MESSAGE_CLASS_3(3);
+
+    private final int messageClass;
+
+    private MessageClass(int messageClass) {
+        this.messageClass = messageClass;
     }
 
-    public NexmoCallbackRequestValidationException(String message) {
-        super(message);
+    public int getMessageClass() {
+        return this.messageClass;
     }
 
-    public NexmoCallbackRequestValidationException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public NexmoCallbackRequestValidationException(Throwable cause) {
-        super(cause);
-    }
 }
