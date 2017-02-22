@@ -21,6 +21,8 @@
  */
 package com.nexmo.client.verify.examples;
 
+import com.nexmo.client.NexmoClient;
+import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.verify.BaseResult;
 import com.nexmo.client.verify.VerifyClient;
 import com.nexmo.client.verify.SearchResult;
@@ -42,7 +44,7 @@ public class SearchVerify {
 
         VerifyClient client;
         try {
-            client = new VerifyClient(API_KEY, API_SECRET);
+            client = new NexmoClient(new TokenAuthMethod(API_KEY, API_SECRET)).getVerifyClient();
         } catch (Exception e) {
             System.err.println("Failed to instantiate a Nexmo Client");
             e.printStackTrace();

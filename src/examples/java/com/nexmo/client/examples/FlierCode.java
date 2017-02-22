@@ -23,6 +23,7 @@ package com.nexmo.client.examples;
 
 import com.nexmo.client.NexmoClient;
 import com.nexmo.client.auth.JWTAuthMethod;
+import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.voice.Call;
 import com.nexmo.client.messaging.NexmoSmsClient;
 import com.nexmo.client.messaging.messages.TextMessage;
@@ -45,7 +46,7 @@ public class FlierCode {
         String toNumber = "447700900275";
 
         // Sending an SMS
-        NexmoSmsClient smsClient = new NexmoSmsClient(apiKey, apiSecret);
+        NexmoSmsClient smsClient = new NexmoClient(new TokenAuthMethod(apiKey, apiSecret)).getSmsClient();
         smsClient.submitMessage(new TextMessage(
                 fromNumber, toNumber, "Hello from Nexmo!"
         ));
@@ -61,7 +62,7 @@ public class FlierCode {
         ));
 
         // Verifying a phone number:
-        VerifyClient verifyClient = new VerifyClient(apiKey, apiSecret);
+        VerifyClient verifyClient = new NexmoClient(new TokenAuthMethod(apiKey, apiSecret)).getVerifyClient();
         VerifyResult result = verifyClient.verify(toNumber, "AcmeCorp");
 
         // Confirming the code the user provides:

@@ -22,6 +22,8 @@
 package com.nexmo.client.messaging.examples;
 
 
+import com.nexmo.client.NexmoClient;
+import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.messaging.NexmoSmsClient;
 import com.nexmo.client.messaging.SmsSubmissionResult;
 import com.nexmo.client.messaging.messages.TextMessage;
@@ -46,7 +48,7 @@ public class SendTextMessage {
 
         NexmoSmsClient client = null;
         try {
-            client = new NexmoSmsClient(API_KEY, API_SECRET);
+            client = new NexmoClient(new TokenAuthMethod(API_KEY, API_SECRET)).getSmsClient();
         } catch (Exception e) {
             System.err.println("Failed to instantiate a Nexmo Client");
             e.printStackTrace();
