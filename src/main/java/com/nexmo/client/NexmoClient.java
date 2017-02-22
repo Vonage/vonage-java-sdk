@@ -23,10 +23,7 @@ package com.nexmo.client;
 
 
 import com.nexmo.client.auth.AuthMethod;
-<<<<<<< HEAD
 import com.nexmo.client.messaging.NexmoSmsClient;
-=======
->>>>>>> master
 import com.nexmo.client.verify.VerifyClient;
 import com.nexmo.client.voice.VoiceClient;
 import org.apache.http.client.HttpClient;
