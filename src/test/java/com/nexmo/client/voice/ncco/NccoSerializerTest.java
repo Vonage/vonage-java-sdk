@@ -38,7 +38,7 @@ public class NccoSerializerTest {
         NccoSerializer serializer = new NccoSerializer(mapper);
         try {
             serializer.serializeNcco(new ConnectNcco("447700900637"));
-            fail();
+            fail("This test should have raised a NexmoUnexpectedException (wrapping a forced JsonProcessingException)");
         } catch (NexmoUnexpectedException nue) {
             // This is expected
         }

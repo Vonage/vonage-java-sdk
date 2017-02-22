@@ -100,7 +100,7 @@ public class VerifyClientTest {
                     "447700900999",
                     "TestBrand",
                     "15555215554", 6, Locale.US);
-            fail();
+            fail("An IOException should be thrown if an HTTP 500 response is received.");
         } catch (IOException ioe) {
             // This is expected
         }
