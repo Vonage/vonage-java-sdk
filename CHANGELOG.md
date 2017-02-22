@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Nexmo Voice API
 - Automated testing and code quality with Travis CI, Codecov and Codacy
 - Publishing to Maven Central
+- Move the `com.nexmo.verify.sdk` package to `com.nexmo.client.verify` and restructure
 
 ### Changed
 - Migrate to Gradle
