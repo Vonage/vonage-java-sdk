@@ -23,6 +23,7 @@ package com.nexmo.client;
 
 
 import com.nexmo.client.auth.AuthMethod;
+import com.nexmo.client.messaging.NexmoSmsClient;
 import com.nexmo.client.verify.VerifyClient;
 import com.nexmo.client.voice.VoiceClient;
 import org.apache.http.client.HttpClient;
@@ -39,6 +40,7 @@ import org.apache.http.client.HttpClient;
 public class NexmoClient {
     private final VoiceClient voice;
     private final VerifyClient verify;
+    private final NexmoSmsClient sms;
     private HttpWrapper httpWrapper;
 
     public NexmoClient(AuthMethod... authMethods) {
@@ -46,6 +48,7 @@ public class NexmoClient {
 
         this.voice = new VoiceClient(this.httpWrapper);
         this.verify = new VerifyClient(this.httpWrapper);
+        this.sms = new NexmoSmsClient(this.httpWrapper);
     }
 
     public void setHttpClient(HttpClient client) {
@@ -58,5 +61,9 @@ public class NexmoClient {
 
     public VerifyClient getVerifyClient() {
         return this.verify;
+    }
+
+    public NexmoSmsClient getSmsClient() {
+        return this.sms;
     }
 }

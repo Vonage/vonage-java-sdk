@@ -22,82 +22,71 @@
 package com.nexmo.client.messaging.messages;
 
 
+import org.apache.http.client.methods.RequestBuilder;
+
 /**
  * Represents the details of a wap-push message that is to be submitted via the Nexmo REST api.
  *
- * @author  Paul Cook
+ * @author Paul Cook
  */
 public class WapPushMessage extends Message {
-
-    private static final long serialVersionUID = -8412926886570923963L;
+    private final String url;
+    private final String title;
+    private Integer validity;
 
     /**
      * Instantiate a new wap-push message request, to submit a browsable / downloadable URL to the handset
      *
-     * @param from the 'from' address that will be seen on the handset when this message arrives,
-     *             typically either a valid short-code / long code that can be replied to, or a short text description of the application sending the message (Max 11 chars)
-     * @param to   the phone number of the handset that you wish to send the message to
-     * @param wapPushUrl This is the url that will be submitted to the handset and will appear as a browsable message in the Inbox.
-     * @param wapPushTitle This is the title that will be associated with the url being submitted to the handset
+     * @param from  the 'from' address that will be seen on the handset when this message arrives,
+     *              typically either a valid short-code / long code that can be replied to, or a short text description of the application sending the message (Max 11 chars)
+     * @param to    the phone number of the handset that you wish to send the message to
+     * @param url   This is the url that will be submitted to the handset and will appear as a browsable message in the Inbox.
+     * @param title This is the title that will be associated with the url being submitted to the handset
      */
     public WapPushMessage(final String from,
                           final String to,
-                          final String wapPushUrl,
-                          final String wapPushTitle) {
-        super(MESSAGE_TYPE_WAPPUSH,
-              from,
-              to,
-              null,
-              null,
-              null,
-              null,
-              false,
-              false,
-              wapPushUrl,
-              wapPushTitle,
-              0,
-              null,
-              null);
+                          final String url,
+                          final String title) {
+        super(MessageType.WAPPUSH, from, to);
+
+        this.url = url;
+        this.title = title;
     }
 
     /**
-     * Instantiate a new wap-push message request, to submit a browsable / downloadable URL to the handset,
-     * attaching an optional client reference, and optionally requesting a delivery notification
-     *
-     * @param from the 'from' address that will be seen on the handset when this message arrives,
-     *             typically either a valid short-code / long code that can be replied to, or a short text description of the application sending the message (Max 11 chars)
-     * @param to   the phone number of the handset that you wish to send the message to
-     * @param clientReference This is a user definable reference that will be stored in the Nexmo messaging records. It will be available in detailed reporting / analytics
-     *                        In order to help with reconciliation of messages
-     * @param statusReportRequired If set to true, then a delivery notification will be requested for this message delivery attempt.
-     *                             Upon receiving notification of delivery or failure from the network, the Nexmo platform will submit a notification to the url configured in your
-     *                             Nexmo REST account that represents the outcome of this message.
-     * @param wapPushUrl This is the url that will be submitted to the handset and will appear as a browsable message in the Inbox.
-     * @param wapPushTitle This is the title that will be associated with the url being submitted to the handset
-     * @param wapPushValidity This is the length of time (in seconds) that the message will be available for once delivered to the handset.
-     *                        Once this time has expired, the url will no longer be visible on the handset to be browsed (Subject to handset compatibility)
+     * @return String This is the url that will be submitted to the handset and will appear as a browsable message in the Inbox.
      */
-    public WapPushMessage(final String from,
-                          final String to,
-                          final String clientReference,
-                          final boolean statusReportRequired,
-                          final String wapPushUrl,
-                          final String wapPushTitle,
-                          final int wapPushValidity) {
-        super(MESSAGE_TYPE_WAPPUSH,
-              from,
-              to,
-              null,
-              null,
-              null,
-              clientReference,
-              false,
-              statusReportRequired,
-              wapPushUrl,
-              wapPushTitle,
-              wapPushValidity,
-              null,
-              null);
+    public String getUrl() {
+        return this.url;
     }
 
+    /**
+     * @return String This is the title that will be associated with the url being submitted to the handset
+     */
+    public String getTitle() {
+        return this.title;
+    }
+
+    /**
+     * @return Integer This is the length of time (in seconds) that the message will be available for once delivered to
+     * the handset.
+     * Once this time has expired, the url will no longer be visible on the handset to be browsed (Subject to handset compatibility)
+     */
+    public Integer getValidity() {
+        return this.validity;
+    }
+
+    public void setValidity(Integer validity) {
+        this.validity = validity;
+    }
+
+    @Override
+    public void addParams(RequestBuilder request) {
+        super.addParams(request);
+        request.addParameter("title", title)
+                .addParameter("url", url);
+        if (validity != null) {
+            request.addParameter("validity", validity.toString());
+        }
+    }
 }

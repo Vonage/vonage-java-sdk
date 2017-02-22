@@ -22,15 +22,17 @@
 package com.nexmo.client.messaging.examples.signed;
 
 
+import com.nexmo.client.NexmoClient;
+import com.nexmo.client.auth.SignatureAuthMethod;
 import com.nexmo.client.messaging.NexmoSmsClient;
-import com.nexmo.client.messaging.NexmoSmsClientSignedRequests;
 import com.nexmo.client.messaging.SmsSubmissionResult;
 import com.nexmo.client.messaging.messages.TextMessage;
 
 /**
  * An example of using the Nexmo SMS API to submit a simple text message.
- * This example uses a {@link com.nexmo.client.messaging.NexmoSmsClientSignedRequests} client
- * So that the REST requests are signed using the secret key.
+ * <p>
+ * This example uses a {@link com.nexmo.client.messaging.NexmoSmsClient} with a SignedAuthMethod so that requests are
+ * signed.
  *
  * @author  Paul Cook
  */
@@ -49,7 +51,7 @@ public class SendSignedTextMessage {
 
         NexmoSmsClient client = null;
         try {
-            client = new NexmoSmsClientSignedRequests(API_KEY, API_SECRET);
+            client = new NexmoClient(new SignatureAuthMethod(API_KEY, API_SECRET)).getSmsClient();
         } catch (Exception e) {
             System.err.println("Failed to instantiate a Nexmo Client");
             e.printStackTrace();

@@ -23,21 +23,21 @@ package com.nexmo.client.auth;
 
 import org.apache.http.client.methods.RequestBuilder;
 
-public class TokenAuthMethod extends AbstractAuthMethod {
-    public final int SORT_KEY = 30;
-    private String apiKey;
-    private String apiSecret;
+// TODO: This is a stub!
+public class SignatureAuthMethod extends AbstractAuthMethod {
+    public final int SORT_KEY = 20;
 
-    public TokenAuthMethod(String apiKey, String apiSecret) {
+    private String apiKey;
+    private String secret;
+
+    public SignatureAuthMethod(String apiKey, String secret) {
         this.apiKey = apiKey;
-        this.apiSecret = apiSecret;
+        this.secret = secret;
     }
 
     @Override
     public RequestBuilder apply(RequestBuilder request) {
-        request.addParameter("api_key", this.apiKey);
-        request.addParameter("api_secret", this.apiSecret);
-        return request;
+        return null;
     }
 
     @Override
