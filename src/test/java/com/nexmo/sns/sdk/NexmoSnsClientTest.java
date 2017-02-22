@@ -22,6 +22,7 @@
 package com.nexmo.sns.sdk;
 
 
+import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.sns.sdk.request.SubscribeRequest;
 import com.nexmo.sns.sdk.response.SnsServiceResult;
 import org.apache.http.HttpEntity;
@@ -167,8 +168,8 @@ public class NexmoSnsClientTest {
                     "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n" +
                     "   <transactionId>1234</transactionId>\n" +
                     "</nexmo-sns>");
-            fail();
-        } catch (Exception e) {
+            fail("A missing <resultCode> tag should raise NexmoResponseParseException");
+        } catch (NexmoResponseParseException e) {
             // this is expected
         }
     }
@@ -194,8 +195,8 @@ public class NexmoSnsClientTest {
     public void testParseResponseUnparseable() throws Exception {
         try {
             this.client.parseSubmitResponse("not-xml");
-            fail();
-        } catch (Exception e) {
+            fail("Attempting to parse non-xml should throw NexmoResponseParseException");
+        } catch (NexmoResponseParseException e) {
             // this is expected
         }
     }

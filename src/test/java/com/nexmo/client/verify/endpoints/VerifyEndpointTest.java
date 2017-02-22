@@ -101,7 +101,7 @@ public class VerifyEndpointTest {
                     new Locale("en", "GB"),
                     VerifyClient.LineType.MOBILE
             );
-            fail();
+            fail("A null 'number' argument should throw IllegalArgumentException");
         } catch (IllegalArgumentException e) {
             // this is expected
         }
@@ -111,14 +111,14 @@ public class VerifyEndpointTest {
     public void testConstructVerifyParamsNullBrand() throws Exception {
         try {
             new VerifyRequest(
+                    "4477990090090",
                     null,
-                    "Brand.com",
                     "Your friend",
                     4,
                     new Locale("en", "GB"),
                     VerifyClient.LineType.MOBILE
             );
-            fail();
+            fail("A null 'brand' argument should throw IllegalArgumentException");
         } catch (IllegalArgumentException e) {
             // this is expected
         }
@@ -135,7 +135,7 @@ public class VerifyEndpointTest {
                     new Locale("en", "GB"),
                     com.nexmo.client.verify.VerifyClient.LineType.MOBILE
             );
-            fail();
+            fail("A VerifyRequest with length 3 should raise IllegalArgumentException.");
         } catch (IllegalArgumentException e) {
             // this is expected
         }
