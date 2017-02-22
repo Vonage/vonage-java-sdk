@@ -21,16 +21,12 @@
  */
 package com.nexmo.client.messaging;
 
-import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoResponseParseException;
-import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.messaging.messages.BinaryMessage;
 import com.nexmo.client.messaging.messages.Message;
 import com.nexmo.client.messaging.messages.TextMessage;
 import com.nexmo.client.messaging.messages.WapPushMessage;
-import com.nexmo.client.messaging.messages.parameters.ValidityPeriod;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,19 +37,17 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class SendMessageEndpointTest {
-    private HttpWrapper wrapper;
-    private SendMessageEndpoint client;
+    private SendMessageEndpoint endpoint;
 
     @Before
     public void setUp() throws ParserConfigurationException {
-        wrapper = new HttpWrapper(new TokenAuthMethod("not-an-api-key", "secret"));
-        client = new SendMessageEndpoint(wrapper);
+        endpoint = new SendMessageEndpoint(null);
     }
 
     @Test
     public void testConstructParamsText() throws Exception {
         Message message = new TextMessage("TestSender", "not-a-number", "Test");
-        List<NameValuePair> params = client.makeRequest(message).getParameters();
+        List<NameValuePair> params = endpoint.makeRequest(message).getParameters();
 
         assertContainsParam(params, "from", "TestSender");
         assertContainsParam(params, "to", "not-a-number");
@@ -65,7 +59,7 @@ public class SendMessageEndpointTest {
     @Test
     public void testConstructParamsUnicode() throws Exception {
         Message message = new TextMessage("TestSender", "not-a-number", "Test", true);
-        List<NameValuePair> params = client.makeRequest(message).getParameters();
+        List<NameValuePair> params = endpoint.makeRequest(message).getParameters();
 
         assertContainsParam(params, "from", "TestSender");
         assertContainsParam(params, "to", "not-a-number");
@@ -77,7 +71,7 @@ public class SendMessageEndpointTest {
     @Test
     public void testConstructParamsBinary() throws Exception {
         Message message = new BinaryMessage("TestSender", "not-a-number", "abc".getBytes(), "def".getBytes());
-        List<NameValuePair> params = client.makeRequest(message).getParameters();
+        List<NameValuePair> params = endpoint.makeRequest(message).getParameters();
 
         assertContainsParam(params, "from", "TestSender");
         assertContainsParam(params, "to", "not-a-number");
@@ -90,7 +84,7 @@ public class SendMessageEndpointTest {
     @Test
     public void testConstructParamsWapPush() throws Exception {
         Message message = new WapPushMessage("TestSender", "not-a-number", "http://the-url", "A Title");
-        List<NameValuePair> params = client.makeRequest(message).getParameters();
+        List<NameValuePair> params = endpoint.makeRequest(message).getParameters();
 
         assertContainsParam(params, "from", "TestSender");
         assertContainsParam(params, "to", "not-a-number");
@@ -104,14 +98,14 @@ public class SendMessageEndpointTest {
     public void testConstructParamsValidityPeriodTTL() throws Exception {
         Message message = new BinaryMessage("TestSender", "not-a-number", "abc".getBytes(), "def".getBytes());
         message.setTimeToLive(50L);
-        List<NameValuePair> params = client.makeRequest(message).getParameters();
+        List<NameValuePair> params = endpoint.makeRequest(message).getParameters();
 
         assertContainsParam(params, "ttl", "50");
     }
 
     @Test
     public void testParseResponse() throws NexmoResponseParseException {
-        SmsSubmissionResult[] rs = client.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
+        SmsSubmissionResult[] rs = endpoint.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
                 "<mt-submission-response>\n" +
                 "    <messages count='2'>\n" +
                 "        <message>\n" +
@@ -140,7 +134,7 @@ public class SendMessageEndpointTest {
 
     @Test
     public void testParseResponseInvalidStatus() throws Exception {
-        SmsSubmissionResult[] rs = client.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
+        SmsSubmissionResult[] rs = endpoint.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
                 "<mt-submission-response>\n" +
                 "    <messages count='2'>\n" +
                 "        <message>\n" +
@@ -168,7 +162,7 @@ public class SendMessageEndpointTest {
     @Test
     public void testParseResponseStatusMissing() throws Exception {
         try {
-            client.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
+            endpoint.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
                     "<mt-submission-response>\n" +
                     "    <messages count='1'>\n" +
                     "        <message>\n" +
@@ -188,7 +182,7 @@ public class SendMessageEndpointTest {
 
     @Test
     public void testParseResponseMissingValues() throws Exception {
-        SmsSubmissionResult[] rs = client.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
+        SmsSubmissionResult[] rs = endpoint.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
                 "<mt-submission-response>\n" +
                 "    <messages count='1'>\n" +
                 "        <message>\n" +
@@ -217,7 +211,7 @@ public class SendMessageEndpointTest {
 
     @Test
     public void testParseResponseError() throws Exception {
-        SmsSubmissionResult[] rs = client.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
+        SmsSubmissionResult[] rs = endpoint.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
                 "<mt-submission-response>\n" +
                 "    <messages count='1'>\n" +
                 "        <message>\n" +
@@ -231,7 +225,7 @@ public class SendMessageEndpointTest {
 
     @Test
     public void testParseResponseUnexpectedNode() throws Exception {
-        SmsSubmissionResult[] rs = client.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
+        SmsSubmissionResult[] rs = endpoint.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
                 "<mt-submission-response>\n" +
                 "    <messages count='1'>\n" +
                 "        <message>\n" +
@@ -250,7 +244,7 @@ public class SendMessageEndpointTest {
 
     @Test
     public void testParseResponseInvalidNumbers() throws Exception {
-        SmsSubmissionResult[] rs = client.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
+        SmsSubmissionResult[] rs = endpoint.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
                 "<mt-submission-response>\n" +
                 "    <messages count='1'>\n" +
                 "        <message>\n" +
@@ -269,7 +263,7 @@ public class SendMessageEndpointTest {
 
     @Test
     public void testParseResponseStatusThrottled() throws Exception {
-        SmsSubmissionResult[] rs = client.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
+        SmsSubmissionResult[] rs = endpoint.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
                 "<mt-submission-response>\n" +
                 "    <messages count='1'>\n" +
                 "        <message>\n" +
@@ -283,7 +277,7 @@ public class SendMessageEndpointTest {
 
     @Test
     public void testParseResponseStatusInternalError() throws Exception {
-        SmsSubmissionResult[] rs = client.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
+        SmsSubmissionResult[] rs = endpoint.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
                 "<mt-submission-response>\n" +
                 "    <messages count='1'>\n" +
                 "        <message>\n" +
@@ -297,7 +291,7 @@ public class SendMessageEndpointTest {
 
     @Test
     public void testParseResponseStatusTooManyBinds() throws Exception {
-        SmsSubmissionResult[] rs = client.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
+        SmsSubmissionResult[] rs = endpoint.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
                 "<mt-submission-response>\n" +
                 "    <messages count='1'>\n" +
                 "        <message>\n" +
@@ -312,7 +306,7 @@ public class SendMessageEndpointTest {
     @Test
     public void testParseResponseBadXml() throws Exception {
         try {
-            SmsSubmissionResult[] rs = client.parseResponse("not-xml");
+            SmsSubmissionResult[] rs = endpoint.parseResponse("not-xml");
             fail("Invalid XML should result in a NexmoResponseParseException");
         } catch (NexmoResponseParseException e) {
             // this is expected
@@ -328,7 +322,7 @@ public class SendMessageEndpointTest {
     }
 
     private static void assertMissingParam(List<NameValuePair> params, String key) {
-        for( NameValuePair pair : params) {
+        for (NameValuePair pair : params) {
             if (pair.getName().equals(key)) {
                 fail("" + params + " should not contain " + key);
             }
