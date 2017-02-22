@@ -25,6 +25,7 @@ import org.apache.http.client.methods.RequestBuilder;
 
 public class TokenAuthMethod extends AbstractAuthMethod {
     public final int SORT_KEY = 30;
+
     private String apiKey;
     private String apiSecret;
 
