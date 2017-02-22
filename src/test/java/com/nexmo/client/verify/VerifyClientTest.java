@@ -23,7 +23,6 @@ package com.nexmo.client.verify;
 
 
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpEntity;
@@ -96,7 +95,7 @@ public class VerifyClientTest {
                 "        <error_text>error</error_text>\n" +
                 "    </verify_response>"));
         try {
-            VerifyResult r = client.verify(
+            client.verify(
                     "447700900999",
                     "TestBrand",
                     "15555215554", 6, Locale.US);
@@ -160,7 +159,7 @@ public class VerifyClientTest {
                         "<not_valid_response />"));
 
         try {
-            CheckResult c = client.check("verify-check-id", "1234", "my-ip-address");
+            client.check("verify-check-id", "1234", "my-ip-address");
             fail("Parsing an invalid response should raise NexmoResponseParseException");
         } catch (NexmoResponseParseException parseException) {
             // This is expected
@@ -394,7 +393,7 @@ public class VerifyClientTest {
         wrapper.setHttpClient(this.stubHttpClient(500, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<verify_request />"));
         try {
-            SearchResult c = client.search("a-random-request-id");
+            client.search("a-random-request-id");
             fail("Invalid content should raise NexmoResponseParseException");
         } catch (NexmoResponseParseException e) {
             // This is expected

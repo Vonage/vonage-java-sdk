@@ -23,10 +23,8 @@ package com.nexmo.client.verify.endpoints;
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.verify.CheckResult;
 import com.nexmo.client.verify.CheckRequest;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.nexmo.client.verify.CheckResult;
 
 import java.io.IOException;
 
