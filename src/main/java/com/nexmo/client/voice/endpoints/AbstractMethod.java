@@ -107,7 +107,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
             }
         }
 
-        return this.httpWrapper.getAuthMethods().getAcceptableAuthMethod(acceptable);
+        return this.httpWrapper.getAuthCollection().getAcceptableAuthMethod(acceptable);
     }
 
     public void setHttpClient(HttpClient client) {

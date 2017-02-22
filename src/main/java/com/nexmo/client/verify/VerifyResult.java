@@ -19,32 +19,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client;
+package com.nexmo.client.verify;
 
 
-import com.nexmo.client.auth.AuthCollection;
-import org.junit.Before;
-import org.junit.Test;
+/**
+ * Verification request result.
+ * 
+ * @author Daniele Ricci
+ */
+public class VerifyResult extends BaseResult {
+    private final String requestId;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-public class HttpWrapperTest {
-    private HttpWrapper hw;
-    @Before
-    public void setUp() {
-        this.hw = new HttpWrapper(new AuthCollection());
+    public VerifyResult(final int status,
+            final String requestId,
+            final String errorText,
+            final boolean temporaryError) {
+        super(status, errorText, temporaryError);
+        this.requestId = requestId;
     }
 
-    @Test
-    public void basicTest() {
-        assertNotNull(this.hw.getHttpClient());
+    public String getRequestId() {
+        return this.requestId;
     }
 
-    @Test
-    public void testAuthMethodAccessors() {
-        AuthCollection auths = new AuthCollection();
-        this.hw.setAuthCollection(auths);
-        assertEquals(auths, this.hw.getAuthCollection());
-    }
 }

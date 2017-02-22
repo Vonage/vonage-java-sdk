@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.verify.sdk;
+package com.nexmo.client.verify;
 
 
 import java.util.Date;
@@ -31,9 +31,6 @@ import java.util.List;
  * @author Daniele Ricci
  */
 public class SearchResult extends BaseResult {
-
-    private static final long serialVersionUID = -2658346277382866298L;
-
     private final String requestId;
     private final String accountId;
     private final VerificationStatus verificationStatus;

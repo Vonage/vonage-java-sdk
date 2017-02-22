@@ -19,31 +19,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.verify.sdk.examples;
+package com.nexmo.client.verify.examples;
 
-import com.nexmo.verify.sdk.BaseResult;
-import com.nexmo.verify.sdk.CheckResult;
-import com.nexmo.verify.sdk.NexmoVerifyClient;
+import com.nexmo.client.verify.BaseResult;
+import com.nexmo.client.verify.VerifyClient;
+import com.nexmo.client.verify.VerifyResult;
 
 /**
- * An example og how to check a verification code.
+ * An example of how to request a number verification.
  *
  * @author Daniele Ricci
  */
-public class CheckNumber {
+public class VerifyNumber {
 
     public static final String API_KEY = "your-api-key-goes-here";
     public static final String API_SECRET = "your-api-secret-goes-here";
 
-    public static final String VERIFICATION_CODE = "your-verification-code-goes-here";
-    public static final String REQUEST_ID = "your-request-id-goes-here";
+    public static final String BRAND_NAME = "Nexmo Verify Test";
+    public static final String VERIFY_FROM = "12345";
+    public static final String VERIFY_NUMBER = "447777111222";
 
     public static void main(String[] args) {
         // Create a client for submitting to Nexmo
 
-        NexmoVerifyClient client;
+        VerifyClient client;
         try {
-            client = new NexmoVerifyClient(API_KEY, API_SECRET);
+            client = new VerifyClient(API_KEY, API_SECRET);
         } catch (Exception e) {
             System.err.println("Failed to instantiate a Nexmo Client");
             e.printStackTrace();
@@ -51,9 +52,9 @@ public class CheckNumber {
             return;
         }
 
-        CheckResult result;
+        VerifyResult result;
         try {
-            result = client.check(REQUEST_ID, VERIFICATION_CODE);
+            result = client.verify(VERIFY_NUMBER, BRAND_NAME, VERIFY_FROM);
         } catch (Exception e) {
             System.err.println("Failed to communicate with the Nexmo Client");
             e.printStackTrace();
@@ -62,10 +63,9 @@ public class CheckNumber {
         }
 
         if (result.getStatus() == BaseResult.STATUS_OK) {
-            System.out.println("... Verify check was successful!");
-            System.out.println("Price: " + result.getPrice() + " " + result.getCurrency());
+            System.out.println("... Verify request submitted with ID " + result.getRequestId());
         } else {
-            System.out.println("... Verify check failed with status " + result.getStatus());
+            System.out.println("... Verify request failed with status " + result.getStatus());
             if (result.isTemporaryError())
                 System.out.println("TEMPORARY FAILURE - PLEASE RETRY");
             System.out.println("Error: " + result.getErrorText());

@@ -19,44 +19,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.verify.sdk;
+package com.nexmo.client.verify;
 
+public class SearchRequest {
+    /**
+     * Number of maximum request IDs that can be searched for.
+     */
+    private static final int MAX_SEARCH_REQUESTS = 10;
 
-/**
- * Verification check result.
- *
- * @author Daniele Ricci
- */
-public class CheckResult extends BaseResult {
+    private final String[] requestIds;
 
-    private static final long serialVersionUID = 8468662117199934412L;
-
-    private final String eventId;
-    private final float price;
-    private final String currency;
-
-    public CheckResult(final int status,
-                          final String eventId,
-                          final float price,
-                          final String currency,
-                          final String errorText,
-                          final boolean temporaryError) {
-        super(status, errorText, temporaryError);
-        this.eventId = eventId;
-        this.price = price;
-        this.currency = currency;
+    public SearchRequest(final String... requestIds) {
+        if (requestIds.length == 0) {
+            throw new IllegalArgumentException("At least one Request ID must be provided in a SearchRequest");
+        } else if (requestIds.length > MAX_SEARCH_REQUESTS) {
+                throw new IllegalArgumentException("too many request IDs. Max is " + MAX_SEARCH_REQUESTS);
+        }
+        this.requestIds = requestIds;
     }
 
-    public String getEventId() {
-        return this.eventId;
+    public String[] getRequestIds() {
+        return requestIds;
     }
-
-    public float getPrice() {
-        return this.price;
-    }
-
-    public String getCurrency() {
-        return this.currency;
-    }
-
 }

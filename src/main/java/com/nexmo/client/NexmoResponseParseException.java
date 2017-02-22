@@ -25,7 +25,7 @@ package com.nexmo.client;
 /**
  * An exception that indicates the contents of an HttpResponse could not be parsed.
  */
-public class NexmoResponseParseException extends Exception {
+public class NexmoResponseParseException extends NexmoUnexpectedException {
     public NexmoResponseParseException(String message) {
         this(message, null);
     }

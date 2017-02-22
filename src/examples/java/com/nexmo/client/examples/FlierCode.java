@@ -26,8 +26,8 @@ import com.nexmo.client.auth.JWTAuthMethod;
 import com.nexmo.client.voice.Call;
 import com.nexmo.messaging.sdk.NexmoSmsClient;
 import com.nexmo.messaging.sdk.messages.TextMessage;
-import com.nexmo.verify.sdk.NexmoVerifyClient;
-import com.nexmo.verify.sdk.VerifyResult;
+import com.nexmo.client.verify.VerifyClient;
+import com.nexmo.client.verify.VerifyResult;
 
 import java.nio.file.Paths;
 
@@ -61,7 +61,7 @@ public class FlierCode {
         ));
 
         // Verifying a phone number:
-        NexmoVerifyClient verifyClient = new NexmoVerifyClient(apiKey, apiSecret);
+        VerifyClient verifyClient = new VerifyClient(apiKey, apiSecret);
         VerifyResult result = verifyClient.verify(toNumber, "AcmeCorp");
 
         // Confirming the code the user provides:

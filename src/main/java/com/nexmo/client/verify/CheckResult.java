@@ -19,32 +19,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client;
+package com.nexmo.client.verify;
 
 
-import com.nexmo.client.auth.AuthCollection;
-import org.junit.Before;
-import org.junit.Test;
+/**
+ * Verification check result.
+ *
+ * @author Daniele Ricci
+ */
+public class CheckResult extends BaseResult {
+    private final String eventId;
+    private final float price;
+    private final String currency;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-public class HttpWrapperTest {
-    private HttpWrapper hw;
-    @Before
-    public void setUp() {
-        this.hw = new HttpWrapper(new AuthCollection());
+    public CheckResult(final int status,
+                          final String eventId,
+                          final float price,
+                          final String currency,
+                          final String errorText,
+                          final boolean temporaryError) {
+        super(status, errorText, temporaryError);
+        this.eventId = eventId;
+        this.price = price;
+        this.currency = currency;
     }
 
-    @Test
-    public void basicTest() {
-        assertNotNull(this.hw.getHttpClient());
+    public String getEventId() {
+        return this.eventId;
     }
 
-    @Test
-    public void testAuthMethodAccessors() {
-        AuthCollection auths = new AuthCollection();
-        this.hw.setAuthCollection(auths);
-        assertEquals(auths, this.hw.getAuthCollection());
+    public float getPrice() {
+        return this.price;
     }
+
+    public String getCurrency() {
+        return this.currency;
+    }
+
 }

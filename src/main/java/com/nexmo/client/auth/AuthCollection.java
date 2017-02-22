@@ -43,8 +43,16 @@ public class AuthCollection {
         this.authList = new TreeSet<>();
     }
 
+    public AuthCollection(AuthMethod... authMethods) {
+        this();
+        for (AuthMethod method : authMethods) {
+            add(method);
+        }
+    }
+
     /**
      * Add a new {@link AuthMethod} to the set managed by this AuthCollection
+     *
      * @param auth AuthMethod method to be added to this collection
      */
     public void add(AuthMethod auth) {

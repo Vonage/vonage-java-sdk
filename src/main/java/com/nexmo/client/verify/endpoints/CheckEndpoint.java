@@ -19,30 +19,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.verify.sdk;
+package com.nexmo.client.verify.endpoints;
 
+import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.verify.CheckRequest;
+import com.nexmo.client.verify.CheckResult;
 
-/**
- * Verification request result.
- * 
- * @author Daniele Ricci
- */
-public class VerifyResult extends BaseResult {
+import java.io.IOException;
 
-    private static final long serialVersionUID = 7235020156625478216L;
+public class CheckEndpoint {
+    private VerifyCheckMethod checkMethod;
 
-    private final String requestId;
-
-    public VerifyResult(final int status,
-            final String requestId,
-            final String errorText,
-            final boolean temporaryError) {
-        super(status, errorText, temporaryError);
-        this.requestId = requestId;
+    /**
+     * Create a new CheckEndpoint.
+     * <p>
+     * This client is used for calling the verify API's check endpoint.
+     */
+    public CheckEndpoint(HttpWrapper httpWrapper) {
+        this.checkMethod = new VerifyCheckMethod(httpWrapper);
     }
 
-    public String getRequestId() {
-        return this.requestId;
+    public CheckResult check(final String requestId,
+                             final String code) throws IOException, NexmoClientException {
+        return this.checkMethod.execute(new CheckRequest(requestId, code));
+    }
+
+    public CheckResult check(final String requestId,
+                             final String code,
+                             final String ipAddress) throws IOException, NexmoClientException {
+        return this.checkMethod.execute(new CheckRequest(requestId, code, ipAddress));
     }
 
 }

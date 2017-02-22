@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.verify.sdk;
+package com.nexmo.client.verify;
 
 
 /**
@@ -27,10 +27,7 @@ package com.nexmo.verify.sdk;
  *
  * @author Daniele Ricci
  */
-public abstract class BaseResult implements java.io.Serializable {
-
-    private static final long serialVersionUID = -2501134793517817181L;
-
+public abstract class BaseResult {
     /**
      * Verify was successfully submitted to the Nexmo service
      */

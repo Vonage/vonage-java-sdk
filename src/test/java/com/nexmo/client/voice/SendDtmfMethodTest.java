@@ -47,7 +47,7 @@ public class SendDtmfMethodTest {
 
     @Test
     public void makeRequest() throws Exception {
-        HttpWrapper httpWrapper = new HttpWrapper(null);
+        HttpWrapper httpWrapper = new HttpWrapper();
         SendDtmfMethod methodUnderTest = new SendDtmfMethod(httpWrapper);
 
         RequestBuilder request = methodUnderTest.makeRequest(new DtmfRequest("abc-123", "867"));
@@ -63,7 +63,7 @@ public class SendDtmfMethodTest {
 
     @Test
     public void parseResponse() throws Exception {
-        HttpWrapper wrapper = new HttpWrapper(null);
+        HttpWrapper wrapper = new HttpWrapper();
         SendDtmfMethod methodUnderTest = new SendDtmfMethod(wrapper);
 
         HttpResponse stubResponse = new BasicHttpResponse(

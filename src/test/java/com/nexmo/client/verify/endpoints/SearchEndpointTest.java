@@ -19,11 +19,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.verify.sdk.endpoints;
+package com.nexmo.client.verify.endpoints;
 
 
 import com.nexmo.client.NexmoResponseParseException;
-import com.nexmo.verify.sdk.SearchResult;
+import com.nexmo.client.verify.SearchResult;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,13 +32,13 @@ import java.util.GregorianCalendar;
 
 import static org.junit.Assert.*;
 
-public class SearchClientTest {
+public class SearchEndpointTest {
 
-    private SearchClient client;
+    private SearchEndpoint client;
 
     @Before
     public void setUp() throws ParserConfigurationException {
-        client = new SearchClient("https://base-url.example.com/verify", "api-key", "api-secret", 1000, 1000);
+        client = new SearchEndpoint(null);
     }
 
     @Test

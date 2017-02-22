@@ -22,8 +22,8 @@
 package com.nexmo.client;
 
 
-import com.nexmo.client.auth.AuthCollection;
 import com.nexmo.client.auth.AuthMethod;
+import com.nexmo.client.verify.VerifyClient;
 import com.nexmo.client.voice.VoiceClient;
 import org.apache.http.client.HttpClient;
 
@@ -38,17 +38,14 @@ import org.apache.http.client.HttpClient;
  */
 public class NexmoClient {
     private final VoiceClient voice;
+    private final VerifyClient verify;
     private HttpWrapper httpWrapper;
 
     public NexmoClient(AuthMethod... authMethods) {
-        AuthCollection authCollection = new AuthCollection();
-        for (AuthMethod method : authMethods) {
-            authCollection.add(method);
-        }
-
-        this.httpWrapper = new HttpWrapper(authCollection);
+        this.httpWrapper = new HttpWrapper(authMethods);
 
         this.voice = new VoiceClient(this.httpWrapper);
+        this.verify = new VerifyClient(this.httpWrapper);
     }
 
     public void setHttpClient(HttpClient client) {
@@ -57,5 +54,9 @@ public class NexmoClient {
 
     public VoiceClient getVoiceClient() {
         return this.voice;
+    }
+
+    public VerifyClient getVerifyClient() {
+        return this.verify;
     }
 }

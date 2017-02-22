@@ -19,13 +19,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.verify.sdk.endpoints;
+package com.nexmo.client.verify.endpoints;
 
 
 import com.nexmo.client.NexmoResponseParseException;
-import com.nexmo.verify.sdk.NexmoVerifyClient;
-import com.nexmo.verify.sdk.VerifyResult;
+import com.nexmo.client.verify.VerifyClient;
+import com.nexmo.client.verify.VerifyRequest;
+import com.nexmo.client.verify.VerifyResult;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,25 +40,29 @@ import java.util.Set;
 
 import static org.junit.Assert.*;
 
-public class VerifyClientTest {
+public class VerifyEndpointTest {
 
-    private VerifyClient client;
+    private VerifyEndpoint client;
 
     @Before
     public void setUp() throws ParserConfigurationException {
-        client = new VerifyClient("https://base-url.example.com/verify", "api-key", "api-secret", 1000, 1000);
+        client = new VerifyEndpoint(null);
     }
 
     @Test
     public void testConstructVerifyParams() throws Exception {
-        List<NameValuePair> params = client.constructVerifyParams(
+        VerifyRequest verifyRequest = new VerifyRequest(
                 "4477990090090",
                 "Brand.com",
                 "Your friend",
                 4,
                 new Locale("en", "GB"),
-                NexmoVerifyClient.LineType.MOBILE
+                com.nexmo.client.verify.VerifyClient.LineType.MOBILE
         );
+        VerifyEndpoint endpoint = new VerifyEndpoint(null);
+        RequestBuilder request = endpoint.makeRequest(verifyRequest);
+        List<NameValuePair> params = request.getParameters();
+
         assertContainsParam(params, "number", "4477990090090");
         assertContainsParam(params, "brand", "Brand.com");
         assertContainsParam(params, "sender_id", "Your friend");
@@ -67,7 +73,7 @@ public class VerifyClientTest {
 
     @Test
     public void testConstructVerifyParamsMissingValues() throws Exception {
-        List<NameValuePair> params = client.constructVerifyParams(
+        VerifyRequest verifyRequest = new VerifyRequest(
                 "4477990090090",
                 "Brand.com",
                 null,
@@ -75,6 +81,9 @@ public class VerifyClientTest {
                 null,
                 null
         );
+        VerifyEndpoint endpoint = new VerifyEndpoint(null);
+        RequestBuilder request = endpoint.makeRequest(verifyRequest);
+        List<NameValuePair> params = request.getParameters();
         assertParamMissing(params, "code_length");
         assertParamMissing(params, "lg");
         assertParamMissing(params, "from");
@@ -84,15 +93,15 @@ public class VerifyClientTest {
     @Test
     public void testConstructVerifyParamsNullNumber() throws Exception {
         try {
-            client.constructVerifyParams(
+            new VerifyRequest(
                     null,
                     "Brand.com",
                     "Your friend",
                     4,
                     new Locale("en", "GB"),
-                    NexmoVerifyClient.LineType.MOBILE
+                    VerifyClient.LineType.MOBILE
             );
-            fail();
+            fail("A null 'number' argument should throw IllegalArgumentException");
         } catch (IllegalArgumentException e) {
             // this is expected
         }
@@ -101,15 +110,15 @@ public class VerifyClientTest {
     @Test
     public void testConstructVerifyParamsNullBrand() throws Exception {
         try {
-            client.constructVerifyParams(
+            new VerifyRequest(
+                    "4477990090090",
                     null,
-                    "Brand.com",
                     "Your friend",
                     4,
                     new Locale("en", "GB"),
-                    NexmoVerifyClient.LineType.MOBILE
+                    VerifyClient.LineType.MOBILE
             );
-            fail();
+            fail("A null 'brand' argument should throw IllegalArgumentException");
         } catch (IllegalArgumentException e) {
             // this is expected
         }
@@ -118,15 +127,15 @@ public class VerifyClientTest {
     @Test
     public void testConstructVerifyParamsInvalidCode() throws Exception {
         try {
-            client.constructVerifyParams(
+            new VerifyRequest(
                     "4477990090090",
                     "Brand.com",
                     "Your friend",
                     3,
                     new Locale("en", "GB"),
-                    NexmoVerifyClient.LineType.MOBILE
+                    com.nexmo.client.verify.VerifyClient.LineType.MOBILE
             );
-            fail();
+            fail("A VerifyRequest with length 3 should raise IllegalArgumentException.");
         } catch (IllegalArgumentException e) {
             // this is expected
         }
