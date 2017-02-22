@@ -31,9 +31,6 @@ import java.util.List;
  * @author Daniele Ricci
  */
 public class SearchResult extends BaseResult {
-
-    private static final long serialVersionUID = -2658346277382866298L;
-
     private final String requestId;
     private final String accountId;
     private final VerificationStatus verificationStatus;

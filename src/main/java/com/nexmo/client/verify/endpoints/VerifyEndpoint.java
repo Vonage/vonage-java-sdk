@@ -43,8 +43,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
 public class VerifyEndpoint extends AbstractMethod<VerifyRequest, VerifyResult> {
-    private static final Log log = LogFactory.getLog(VerifyEndpoint.class);
-
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
     private static final String DEFAULT_URI = "https://api.nexmo.com/verify/xml";

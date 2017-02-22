@@ -31,8 +31,6 @@ import org.apache.commons.logging.LogFactory;
 import java.io.IOException;
 
 public class CheckEndpoint {
-    private static final Log log = LogFactory.getLog(CheckEndpoint.class);
-
     private VerifyCheckMethod checkMethod;
 
     /**

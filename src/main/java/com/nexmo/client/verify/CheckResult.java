@@ -28,9 +28,6 @@ package com.nexmo.client.verify;
  * @author Daniele Ricci
  */
 public class CheckResult extends BaseResult {
-
-    private static final long serialVersionUID = 8468662117199934412L;
-
     private final String eventId;
     private final float price;
     private final String currency;
