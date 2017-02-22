@@ -55,12 +55,10 @@ public class SendMessageEndpointTest {
         Message message = new TextMessage("TestSender", "not-a-number", "Test");
         List<NameValuePair> params = client.makeRequest(message).getParameters();
 
-        assertContainsParam(params, "api_key", "not-an-api-key");
-        assertContainsParam(params, "api_secret", "secret");
         assertContainsParam(params, "from", "TestSender");
         assertContainsParam(params, "to", "not-a-number");
         assertContainsParam(params, "type", "text");
-        assertContainsParam(params, "status-report-req", "false");
+        assertMissingParam(params, "status-report-req");
         assertContainsParam(params, "text", "Test");
     }
 
@@ -69,12 +67,10 @@ public class SendMessageEndpointTest {
         Message message = new TextMessage("TestSender", "not-a-number", "Test", true);
         List<NameValuePair> params = client.makeRequest(message).getParameters();
 
-        assertContainsParam(params, "api_key", "not-an-api-key");
-        assertContainsParam(params, "api_secret", "secret");
         assertContainsParam(params, "from", "TestSender");
         assertContainsParam(params, "to", "not-a-number");
         assertContainsParam(params, "type", "unicode");
-        assertContainsParam(params, "status-report-req", "false");
+        assertMissingParam(params, "status-report-req");
         assertContainsParam(params, "text", "Test");
     }
 
@@ -83,12 +79,10 @@ public class SendMessageEndpointTest {
         Message message = new BinaryMessage("TestSender", "not-a-number", "abc".getBytes(), "def".getBytes());
         List<NameValuePair> params = client.makeRequest(message).getParameters();
 
-        assertContainsParam(params, "api_key", "not-an-api-key");
-        assertContainsParam(params, "api_secret", "secret");
         assertContainsParam(params, "from", "TestSender");
         assertContainsParam(params, "to", "not-a-number");
         assertContainsParam(params, "type", "binary");
-        assertContainsParam(params, "status-report-req", "false");
+        assertMissingParam(params, "status-report-req");
         assertContainsParam(params, "udh", "646566");
         assertContainsParam(params, "body", "616263");
     }
@@ -98,12 +92,10 @@ public class SendMessageEndpointTest {
         Message message = new WapPushMessage("TestSender", "not-a-number", "http://the-url", "A Title");
         List<NameValuePair> params = client.makeRequest(message).getParameters();
 
-        assertContainsParam(params, "api_key", "not-an-api-key");
-        assertContainsParam(params, "api_secret", "secret");
         assertContainsParam(params, "from", "TestSender");
         assertContainsParam(params, "to", "not-a-number");
         assertContainsParam(params, "type", "wappush");
-        assertContainsParam(params, "status-report-req", "false");
+        assertMissingParam(params, "status-report-req");
         assertContainsParam(params, "url", "http://the-url");
         assertContainsParam(params, "title", "A Title");
     }
@@ -333,5 +325,13 @@ public class SendMessageEndpointTest {
                 "" + params + " should contain " + item,
                 params.contains(item)
         );
+    }
+
+    private static void assertMissingParam(List<NameValuePair> params, String key) {
+        for( NameValuePair pair : params) {
+            if (pair.getName().equals(key)) {
+                fail("" + params + " should not contain " + key);
+            }
+        }
     }
 }

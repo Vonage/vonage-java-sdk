@@ -36,6 +36,7 @@ import org.junit.Test;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -51,26 +52,6 @@ public class NexmoSmsClientTest {
     public void setUp() throws ParserConfigurationException {
         wrapper = new HttpWrapper(new TokenAuthMethod("not-an-api-key", "secret"));
         client = new NexmoSmsClient(wrapper);
-    }
-
-    @Before
-    public void testConstructorNullBaseUrl() {
-        try {
-            client = new NexmoSmsClient(null);
-            fail("Null baseUrl should raise IllegalArgumentException");
-        } catch (IllegalArgumentException e) {
-            // this is expected
-        }
-    }
-
-    @Before
-    public void testConstructorInsecureBaseUrl() {
-        try {
-            client = new NexmoSmsClient(null);
-            fail("Insecure baseUrl should raise IllegalArgumentException");
-        } catch (IllegalArgumentException e) {
-            // this is expected
-        }
     }
 
     private HttpClient stubHttpClient(int statusCode, String content) throws Exception {
@@ -126,11 +107,12 @@ public class NexmoSmsClientTest {
         this.wrapper.setHttpClient(this.stubHttpClient(500, ""));
 
         Message message = new TextMessage("TestSender", "not-a-number", "Test");
-        SmsSubmissionResult[] r = client.submitMessage(message);
-        assertEquals(r.length, 1);
-
-        SmsSubmissionResult e = r[0];
-        assertEquals(e.getStatus(), SmsSubmissionResult.STATUS_COMMS_FAILURE);
+        try {
+            SmsSubmissionResult[] r = client.submitMessage(message);
+            fail("An IOException should be thrown if an HTTP 500 response is received.");
+        } catch (IOException ioe) {
+            // This is expected
+        }
     }
 
 
