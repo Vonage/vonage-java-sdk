@@ -28,9 +28,6 @@ package com.nexmo.client.verify;
  * @author Daniele Ricci
  */
 public class VerifyResult extends BaseResult {
-
-    private static final long serialVersionUID = 7235020156625478216L;
-
     private final String requestId;
 
     public VerifyResult(final int status,
