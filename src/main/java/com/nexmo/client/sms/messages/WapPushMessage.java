@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.messaging.messages;
+package com.nexmo.client.sms.messages;
 
 
 import org.apache.http.client.methods.RequestBuilder;

@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.messaging.callback;
+package com.nexmo.client.sms.callback;
 
 public class NexmoCallbackRequestValidationException extends Exception {
     public NexmoCallbackRequestValidationException() {

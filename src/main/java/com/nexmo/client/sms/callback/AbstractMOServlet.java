@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.messaging.callback;
+package com.nexmo.client.sms.callback;
 
 
 import java.io.IOException;
@@ -37,7 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.nexmo.common.util.HexUtil;
-import com.nexmo.client.messaging.callback.messages.MO;
+import com.nexmo.client.sms.callback.messages.MO;
 import com.nexmo.security.RequestSigning;
 
 /**

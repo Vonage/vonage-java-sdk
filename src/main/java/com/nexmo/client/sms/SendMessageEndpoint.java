@@ -19,14 +19,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.messaging;
+package com.nexmo.client.sms;
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.legacyutils.XmlParser;
-import com.nexmo.client.messaging.messages.Message;
+import com.nexmo.client.sms.messages.Message;
 import com.nexmo.client.voice.endpoints.AbstractMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SendMessageEndpoint extends AbstractMethod<Message, SmsSubmissionResult[]> {
-    private static final Log log = LogFactory.getLog(NexmoSmsClient.class);
+    private static final Log log = LogFactory.getLog(SmsClient.class);
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 

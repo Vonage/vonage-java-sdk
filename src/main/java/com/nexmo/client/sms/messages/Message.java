@@ -19,10 +19,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.messaging.messages;
+package com.nexmo.client.sms.messages;
 
 
-import com.nexmo.client.messaging.messages.parameters.MessageClass;
+import com.nexmo.client.sms.messages.parameters.MessageClass;
 import org.apache.http.client.methods.RequestBuilder;
 
 /**
@@ -117,7 +117,7 @@ public abstract class Message {
     }
 
     /**
-     * @return String A user definable value that will be stored in the Nexmo messaging records. It will
+     * @return String A user definable value that will be stored in the Nexmo sms records. It will
      * be available in detailed reporting &amp; analytics in order to help with reconciliation of messages
      */
     public String getClientReference() {
@@ -132,7 +132,7 @@ public abstract class Message {
     }
 
     /**
-     * @return com.nexmo.messaging.verify.messages.parameters.MessageClass The message class that is to be applied to this message.
+     * @return com.nexmo.sms.verify.messages.parameters.MessageClass The message class that is to be applied to this message.
      */
     public MessageClass getMessageClass() {
         return this.messageClass;

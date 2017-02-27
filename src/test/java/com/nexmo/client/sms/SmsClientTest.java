@@ -19,13 +19,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.messaging;
+package com.nexmo.client.sms;
 
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.auth.TokenAuthMethod;
-import com.nexmo.client.messaging.messages.Message;
-import com.nexmo.client.messaging.messages.TextMessage;
+import com.nexmo.client.sms.messages.Message;
+import com.nexmo.client.sms.messages.TextMessage;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -44,14 +44,14 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class NexmoSmsClientTest {
+public class SmsClientTest {
     private HttpWrapper wrapper;
-    private NexmoSmsClient client;
+    private SmsClient client;
 
     @Before
     public void setUp() throws ParserConfigurationException {
         wrapper = new HttpWrapper(new TokenAuthMethod("not-an-api-key", "secret"));
-        client = new NexmoSmsClient(wrapper);
+        client = new SmsClient(wrapper);
     }
 
     private HttpClient stubHttpClient(int statusCode, String content) throws Exception {

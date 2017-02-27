@@ -19,13 +19,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.messaging;
+package com.nexmo.client.sms;
 
 import com.nexmo.client.NexmoResponseParseException;
-import com.nexmo.client.messaging.messages.BinaryMessage;
-import com.nexmo.client.messaging.messages.Message;
-import com.nexmo.client.messaging.messages.TextMessage;
-import com.nexmo.client.messaging.messages.WapPushMessage;
+import com.nexmo.client.sms.messages.BinaryMessage;
+import com.nexmo.client.sms.messages.Message;
+import com.nexmo.client.sms.messages.TextMessage;
+import com.nexmo.client.sms.messages.WapPushMessage;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.junit.Before;

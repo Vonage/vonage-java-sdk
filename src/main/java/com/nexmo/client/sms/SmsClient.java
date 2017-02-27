@@ -19,32 +19,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.messaging;
+package com.nexmo.client.sms;
 
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.NexmoResponseParseException;
-import com.nexmo.client.messaging.messages.Message;
+import com.nexmo.client.sms.messages.Message;
 
 import java.io.IOException;
 
 /**
  * Client for talking to the Nexmo API.
  * <p>
- * To submit a message, instantiate a NexmoSmsClient, passing the credentials for your Nexmo account on
- * the constructor. Then instantiate the appropriate {@link com.nexmo.client.messaging.messages.Message}
+ * To submit a message, instantiate a SmsClient, passing the credentials for your Nexmo account on
+ * the constructor. Then instantiate the appropriate {@link com.nexmo.client.sms.messages.Message}
  * subclass depending on which type of message you are going to submit. The following subclasses are available:
  * <p>
  * <ul>
- * <li>{@link com.nexmo.client.messaging.messages.TextMessage}
- * <li>{@link com.nexmo.client.messaging.messages.BinaryMessage}
- * <li>{@link com.nexmo.client.messaging.messages.WapPushMessage}
+ * <li>{@link com.nexmo.client.sms.messages.TextMessage}
+ * <li>{@link com.nexmo.client.sms.messages.BinaryMessage}
+ * <li>{@link com.nexmo.client.sms.messages.WapPushMessage}
  * </ul>
  * <p>
- * Once you have a {@link com.nexmo.client.messaging.messages.Message} object, pass it to {@link #submitMessage(Message)}
+ * Once you have a {@link com.nexmo.client.sms.messages.Message} object, pass it to {@link #submitMessage(Message)}
  * which will submit the message to the Nexmo API. It returns an array of
- * {@link com.nexmo.client.messaging.SmsSubmissionResult}, with 1 entry for every sms message that was sent.
+ * {@link com.nexmo.client.sms.SmsSubmissionResult}, with 1 entry for every sms message that was sent.
  * Text messages greater than 160 characters will require multiple SMS messages to be submitted.
  * Each entry in this array will contain an individual messageId as well as an individual status detailing the success or reason for failure of each message.
  * <p>
@@ -75,13 +75,13 @@ import java.io.IOException;
  *
  * @author Paul Cook
  */
-public class NexmoSmsClient {
+public class SmsClient {
     private SendMessageEndpoint message;
 
     /**
-     * Instantiate a new NexmoSmsClient without request signing.
+     * Instantiate a new SmsClient without request signing.
      */
-    public NexmoSmsClient(HttpWrapper httpWrapper) {
+    public SmsClient(HttpWrapper httpWrapper) {
         this.message = new SendMessageEndpoint(httpWrapper);
     }
 

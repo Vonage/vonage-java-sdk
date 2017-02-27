@@ -19,14 +19,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.messaging.examples;
+package com.nexmo.client.sms.examples;
 
 
 import com.nexmo.client.NexmoClient;
 import com.nexmo.client.auth.TokenAuthMethod;
-import com.nexmo.client.messaging.NexmoSmsClient;
-import com.nexmo.client.messaging.SmsSubmissionResult;
-import com.nexmo.client.messaging.messages.WapPushMessage;
+import com.nexmo.client.sms.SmsClient;
+import com.nexmo.client.sms.SmsSubmissionResult;
+import com.nexmo.client.sms.messages.WapPushMessage;
 
 /**
  * An example of using the Nexmo SMS API to submit a wap push message.
@@ -47,7 +47,7 @@ public class SendWapPush {
 
         // Create a client for submitting to Nexmo
 
-        NexmoSmsClient client = null;
+        SmsClient client = null;
         try {
             client = new NexmoClient(new TokenAuthMethod(API_KEY, API_SECRET)).getSmsClient();
         } catch (Exception e) {

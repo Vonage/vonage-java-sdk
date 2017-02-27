@@ -19,19 +19,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.messaging.examples.signed;
+package com.nexmo.client.sms.examples.signed;
 
 
 import com.nexmo.client.NexmoClient;
 import com.nexmo.client.auth.SignatureAuthMethod;
-import com.nexmo.client.messaging.NexmoSmsClient;
-import com.nexmo.client.messaging.SmsSubmissionResult;
-import com.nexmo.client.messaging.messages.TextMessage;
+import com.nexmo.client.sms.SmsClient;
+import com.nexmo.client.sms.SmsSubmissionResult;
+import com.nexmo.client.sms.messages.TextMessage;
 
 /**
  * An example of using the Nexmo SMS API to submit a simple text message.
  * <p>
- * This example uses a {@link com.nexmo.client.messaging.NexmoSmsClient} with a SignedAuthMethod so that requests are
+ * This example uses a {@link SmsClient} with a SignedAuthMethod so that requests are
  * signed.
  *
  * @author  Paul Cook
@@ -49,7 +49,7 @@ public class SendSignedTextMessage {
 
         // Create a client for submitting to Nexmo
 
-        NexmoSmsClient client = null;
+        SmsClient client = null;
         try {
             client = new NexmoClient(new SignatureAuthMethod(API_KEY, API_SECRET)).getSmsClient();
         } catch (Exception e) {
