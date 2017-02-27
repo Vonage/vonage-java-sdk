@@ -22,7 +22,6 @@
 package com.nexmo.client.sms.messages;
 
 
-import com.nexmo.client.sms.messages.parameters.MessageClass;
 import org.apache.http.client.methods.RequestBuilder;
 
 /**
@@ -186,5 +185,44 @@ public abstract class Message {
         if (messageClass != null) {
             request.addParameter("message-class", Integer.toString(messageClass.getMessageClass()));
         }
+    }
+
+    /**
+     * An enum of the valid values that may be supplied to as the message-class parameter of a rest submission.
+     *
+     * @author  Paul Cook
+     */
+    public static enum MessageClass {
+
+        /**
+         * Message Class 0
+         */
+        CLASS_0(0),
+
+        /**
+         * Message Class 1
+         */
+        CLASS_1(1),
+
+        /**
+         * Message Class 2
+         */
+        CLASS_2(2),
+
+        /**
+         * Message Class 3
+         */
+        CLASS_3(3);
+
+        private final int messageClass;
+
+        private MessageClass(int messageClass) {
+            this.messageClass = messageClass;
+        }
+
+        public int getMessageClass() {
+            return this.messageClass;
+        }
+
     }
 }
