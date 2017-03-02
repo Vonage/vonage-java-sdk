@@ -19,7 +19,7 @@ need a Nexmo account. Sign up [for free at nexmo.com][signup].
 
 To use the client library you'll need to have [created a Nexmo account][signup].
 
-### Groovy
+### Gradle
 
 To install the Java client library using Gradle, add the following to `build.gradle`:
 
