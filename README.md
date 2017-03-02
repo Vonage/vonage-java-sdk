@@ -37,7 +37,7 @@ dependencies {
 
 ### Maven
 
-Add the following to the correct places in your project's pom file:
+Add the following to the correct places in your project's POM file:
 
 ```xml
 <repositories>
@@ -58,7 +58,7 @@ Add the following to the correct places in your project's pom file:
 
 ### Build It Yourself
 
-Alternatively you can clone the repo and build the jar yourself:
+Alternatively you can clone the repo and build the JAR file yourself:
 
 ```bash
 git clone git@github.com:nexmo/nexmo-java.git
@@ -71,7 +71,7 @@ gradle build
 or [Ivy]
 
 We provide a [zip file](https://github.com/Nexmo/nexmo-java/releases/download/v2.0.0-SNAPSHOT/client-2.0.0-SNAPSHOT.zip)
-containing the client library jar, along with all the dependencies. Download the file, unzip it, and add the jar files
+containing the client library JAR, along with all the dependencies. Download the file, unzip it, and add the JAR files
 to your project's classpath.
 
 [Gradle]: https://gradle.org/
