@@ -174,3 +174,9 @@ task examplesJar(type: com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJa
             project.configurations.runtime,
             project.configurations.examplesRuntime]
 }
+
+task zip(type: Zip) {
+    from configurations.runtime.allArtifacts.files
+    from configurations.runtime
+    into(project.name + '-' + project.version)
+}
