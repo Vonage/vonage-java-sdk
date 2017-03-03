@@ -70,7 +70,7 @@ gradle build
 **Note**: We *strongly recommend* that you use a tool that supports dependency management, such as [Gradle], [Maven],
 or [Ivy]
 
-We provide a [ZIP file](https://github.com/Nexmo/nexmo-java/releases/)
+We provide a [ZIP file for each release](https://github.com/Nexmo/nexmo-java/releases/),
 containing the client library JAR, along with all the dependencies. Download the file, unzip it, and add the JAR files
 to your project's classpath.
 
