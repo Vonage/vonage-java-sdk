@@ -19,6 +19,8 @@ need a Nexmo account. Sign up [for free at nexmo.com][signup].
 
 To use the client library you'll need to have [created a Nexmo account][signup].
 
+### Gradle
+
 To install the Java client library using Gradle, add the following to `build.gradle`:
 
 ```groovy
@@ -33,12 +35,49 @@ dependencies {
 }
 ```
 
-Alternatively you can clone the repo and build the jar yourself:
+### Maven
+
+Add the following to the correct places in your project's POM file:
+
+```xml
+<repositories>
+    <repository>
+            <id>nexmo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+    </repository>
+<repositories>
+```
+
+```xml
+<dependency>
+      <groupId>com.nexmo</groupId>
+      <artifactId>client</artifactId>
+      <version>2.0.0-SNAPSHOT</version>
+</dependency>
+```
+
+### Build It Yourself
+
+Alternatively you can clone the repo and build the JAR file yourself:
 
 ```bash
 git clone git@github.com:nexmo/nexmo-java.git
 gradle build
 ```
+
+### Download everything in a ZIP file
+
+**Note**: We *strongly recommend* that you use a tool that supports dependency management, such as [Gradle], [Maven],
+or [Ivy]
+
+We provide a [ZIP file for each release](https://github.com/Nexmo/nexmo-java/releases/),
+containing the client library JAR, along with all the dependencies. Download the file, unzip it, and add the JAR files
+to your project's classpath.
+
+[Gradle]: https://gradle.org/
+[Maven]: https://maven.apache.org/
+[Ivy]: http://ant.apache.org/ivy/
+
 
 ## Usage
 
