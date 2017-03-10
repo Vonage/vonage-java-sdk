@@ -30,7 +30,7 @@ import com.nexmo.client.verify.BaseResult;
 import com.nexmo.client.verify.CheckResult;
 import com.nexmo.client.verify.CheckRequest;
 import com.nexmo.client.voice.endpoints.AbstractMethod;
-import com.nexmo.common.util.XmlUtil;
+import com.nexmo.client.legacyutils.XmlUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;

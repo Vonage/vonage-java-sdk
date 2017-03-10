@@ -19,31 +19,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.auth;
+package com.nexmo.client.insight.standard;
 
-import org.apache.http.client.methods.RequestBuilder;
+import com.nexmo.client.insight.BaseInsightRequest;
 
-// TODO: This is a stub!
-public class SignatureAuthMethod extends AbstractAuthMethod {
-    public final int SORT_KEY = 20;
-
-    private String apiKey;
-    private String secret;
-
-    public SignatureAuthMethod(String apiKey, String secret) {
-        this.apiKey = apiKey;
-        this.secret = secret;
+public class StandardInsightRequest extends BaseInsightRequest {
+    public StandardInsightRequest(String number) {
+        super(number, null);
     }
 
-    @Override
-    public RequestBuilder apply(RequestBuilder request) {
-        request.addParameter("api_key", apiKey);
-        RequestSigning.constructSignatureForRequestParameters(request.getParameters(), secret);
-        return request;
+    public StandardInsightRequest(String number, String country) {
+        super(number, country);
     }
 
-    @Override
-    public int getSortKey() {
-        return SORT_KEY;
-    }
 }

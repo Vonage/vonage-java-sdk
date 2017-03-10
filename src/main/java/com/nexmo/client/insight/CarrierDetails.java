@@ -19,31 +19,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.auth;
+package com.nexmo.client.insight;
 
-import org.apache.http.client.methods.RequestBuilder;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-// TODO: This is a stub!
-public class SignatureAuthMethod extends AbstractAuthMethod {
-    public final int SORT_KEY = 20;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class CarrierDetails {
+    private String networkCode;
+    private String name;
+    private String country;
+    private NetworkType networkType;
 
-    private String apiKey;
-    private String secret;
-
-    public SignatureAuthMethod(String apiKey, String secret) {
-        this.apiKey = apiKey;
-        this.secret = secret;
+    @JsonProperty("network_code")
+    public String getNetworkCode() {
+        return networkCode;
     }
 
-    @Override
-    public RequestBuilder apply(RequestBuilder request) {
-        request.addParameter("api_key", apiKey);
-        RequestSigning.constructSignatureForRequestParameters(request.getParameters(), secret);
-        return request;
+    public String getName() {
+        return name;
     }
 
-    @Override
-    public int getSortKey() {
-        return SORT_KEY;
+    public String getCountry() {
+        return country;
+    }
+
+    @JsonProperty("network_type")
+    public NetworkType getNetworkType() {
+        return networkType;
+    }
+
+    public enum NetworkType {
+        MOBILE,
+        LANDLINE,
+        LANDLINE_PREMIUM,
+        LANDLINE_TOLLFREE,
+        VIRTUAL,
+        UNKNOWN,
+        PAGER;
+
+        @JsonCreator
+        public static NetworkType fromString(String name) {
+            return NetworkType.valueOf(name.toUpperCase());
+        }
     }
 }

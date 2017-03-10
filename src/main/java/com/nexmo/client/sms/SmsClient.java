@@ -79,7 +79,7 @@ public class SmsClient {
     private SendMessageEndpoint message;
 
     /**
-     * Instantiate a new SmsClient without request signing.
+     * Create a new SmsClient.
      */
     public SmsClient(HttpWrapper httpWrapper) {
         this.message = new SendMessageEndpoint(httpWrapper);

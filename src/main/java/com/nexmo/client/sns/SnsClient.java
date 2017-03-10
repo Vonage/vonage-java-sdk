@@ -19,31 +19,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.auth;
+package com.nexmo.client.sns;
 
-import org.apache.http.client.methods.RequestBuilder;
 
-// TODO: This is a stub!
-public class SignatureAuthMethod extends AbstractAuthMethod {
-    public final int SORT_KEY = 20;
+import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.sns.request.SnsPublishRequest;
+import com.nexmo.client.sns.request.SnsSubscribeRequest;
+import com.nexmo.client.sns.response.SnsPublishResponse;
+import com.nexmo.client.sns.response.SnsSubscribeResponse;
 
-    private String apiKey;
-    private String secret;
+import java.io.IOException;
 
-    public SignatureAuthMethod(String apiKey, String secret) {
-        this.apiKey = apiKey;
-        this.secret = secret;
+public class SnsClient {
+    SnsEndpoint endpoint;
+
+    public SnsClient(HttpWrapper httpWrapper) {
+        this.endpoint = new SnsEndpoint(httpWrapper);
     }
 
-    @Override
-    public RequestBuilder apply(RequestBuilder request) {
-        request.addParameter("api_key", apiKey);
-        RequestSigning.constructSignatureForRequestParameters(request.getParameters(), secret);
-        return request;
+    public SnsPublishResponse publish(SnsPublishRequest request) throws NexmoClientException, IOException {
+        return (SnsPublishResponse) this.endpoint.execute(request);
     }
 
-    @Override
-    public int getSortKey() {
-        return SORT_KEY;
+    public SnsSubscribeResponse subscribe(SnsSubscribeRequest request) throws NexmoClientException, IOException {
+        return (SnsSubscribeResponse) this.endpoint.execute(request);
     }
 }

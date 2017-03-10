@@ -19,31 +19,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.auth;
+package com.nexmo.client.insight;
 
-import org.apache.http.client.methods.RequestBuilder;
+import com.nexmo.client.insight.basic.BasicInsightRequest;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
-// TODO: This is a stub!
-public class SignatureAuthMethod extends AbstractAuthMethod {
-    public final int SORT_KEY = 20;
+public class BaseInsightRequest {
+    protected final String number;
+    protected String country;
 
-    private String apiKey;
-    private String secret;
+    public BaseInsightRequest(String number, String country) {
+        this.number = number;
+        this.country = country;
+    }
 
-    public SignatureAuthMethod(String apiKey, String secret) {
-        this.apiKey = apiKey;
-        this.secret = secret;
+    public String getNumber() {
+        return number;
+    }
+
+    public String getCountry() {
+        return country;
     }
 
     @Override
-    public RequestBuilder apply(RequestBuilder request) {
-        request.addParameter("api_key", apiKey);
-        RequestSigning.constructSignatureForRequestParameters(request.getParameters(), secret);
-        return request;
-    }
-
-    @Override
-    public int getSortKey() {
-        return SORT_KEY;
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        } else if (obj == this) {
+            return true;
+        } else if (obj.getClass() != this.getClass()) {
+            return false;
+        } else {
+            BaseInsightRequest other = (BaseInsightRequest) obj;
+            return new EqualsBuilder()
+                    .append(this.getNumber(), other.getNumber())
+                    .append(this.getCountry(), other.getCountry())
+                    .isEquals();
+        }
     }
 }

@@ -35,7 +35,7 @@ public enum MachineDetection {
     }
 
     @JsonCreator
-    public static CallDirection fromString(String name) {
-        return CallDirection.valueOf(name.toUpperCase());
+    public static MachineDetection fromString(String name) {
+        return MachineDetection.valueOf(name.toUpperCase());
     }
 }

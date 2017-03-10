@@ -19,31 +19,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.auth;
+package com.nexmo.client.insight.basic;
 
-import org.apache.http.client.methods.RequestBuilder;
+import org.junit.Test;
 
-// TODO: This is a stub!
-public class SignatureAuthMethod extends AbstractAuthMethod {
-    public final int SORT_KEY = 20;
+import static org.junit.Assert.*;
 
-    private String apiKey;
-    private String secret;
-
-    public SignatureAuthMethod(String apiKey, String secret) {
-        this.apiKey = apiKey;
-        this.secret = secret;
+public class BasicInsightRequestTest {
+    @Test
+    public void testConstructor1() throws Exception {
+        BasicInsightRequest request = new BasicInsightRequest("12345");
+        assertEquals(request.getNumber(), "12345");
+        assertNull(request.getCountry());
     }
 
-    @Override
-    public RequestBuilder apply(RequestBuilder request) {
-        request.addParameter("api_key", apiKey);
-        RequestSigning.constructSignatureForRequestParameters(request.getParameters(), secret);
-        return request;
+    @Test
+    public void testConstructor2() throws Exception {
+        BasicInsightRequest request = new BasicInsightRequest("12345", "GB");
+        assertEquals(request.getNumber(), "12345");
+        assertEquals(request.getCountry(), "GB");
     }
 
-    @Override
-    public int getSortKey() {
-        return SORT_KEY;
+    @Test
+    public void testEquals() throws Exception {
+        assertFalse(new BasicInsightRequest("1234").equals(null));
+        assertFalse(new BasicInsightRequest("1234").equals(new Object()));
+        BasicInsightRequest bir = new BasicInsightRequest("1234");
+        assertTrue(bir.equals(bir));
+        assertTrue(new BasicInsightRequest("1234").equals(new BasicInsightRequest("1234")));
+        assertFalse(new BasicInsightRequest("1234").equals(new BasicInsightRequest("1235")));
     }
 }

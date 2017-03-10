@@ -19,31 +19,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.auth;
+package com.nexmo.client.sms;
 
-import org.apache.http.client.methods.RequestBuilder;
 
-// TODO: This is a stub!
-public class SignatureAuthMethod extends AbstractAuthMethod {
-    public final int SORT_KEY = 20;
+import com.nexmo.client.sms.HexUtil;
+import org.junit.Test;
 
-    private String apiKey;
-    private String secret;
+import static org.junit.Assert.*;
 
-    public SignatureAuthMethod(String apiKey, String secret) {
-        this.apiKey = apiKey;
-        this.secret = secret;
+public class HexUtilTest {
+    @Test
+    public void testBytesToHex() {
+        String result = HexUtil.bytesToHex(new byte[] {0x00, 0x10, 0x7f, 0x70, -1});
+        assertEquals("00107F70FF", result);
     }
 
-    @Override
-    public RequestBuilder apply(RequestBuilder request) {
-        request.addParameter("api_key", apiKey);
-        RequestSigning.constructSignatureForRequestParameters(request.getParameters(), secret);
-        return request;
+    @Test
+    public void testBytesToHexWithSeparator() {
+        String result = HexUtil.bytesToHex(new byte[] {0x00, 0x10, 0x7f, 0x70, -1}, ",");
+        assertEquals(",00,10,7F,70,FF", result);
     }
 
-    @Override
-    public int getSortKey() {
-        return SORT_KEY;
+    @Test
+    public void testBytesToHexNull() {
+        assertEquals("", HexUtil.bytesToHex(null));
+    }
+
+    @Test
+    public void testHexToBytes() throws Exception {
+        assertArrayEquals(new byte[] {0x00, 0x10, 0x7f, 0x70, -1}, HexUtil.hexToBytes("00107F70FF"));
+    }
+
+    @Test
+    public void testHexToBytesNull() throws Exception {
+        assertNull(null, HexUtil.hexToBytes(null));
     }
 }

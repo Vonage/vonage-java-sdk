@@ -19,31 +19,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.auth;
+package com.nexmo.client.insight;
 
-import org.apache.http.client.methods.RequestBuilder;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-// TODO: This is a stub!
-public class SignatureAuthMethod extends AbstractAuthMethod {
-    public final int SORT_KEY = 20;
+public class RoamingDetails {
+    public enum RoamingStatus {
+        UNKNOWN,
+        ROAMING,
+        NOT_ROAMING;
 
-    private String apiKey;
-    private String secret;
-
-    public SignatureAuthMethod(String apiKey, String secret) {
-        this.apiKey = apiKey;
-        this.secret = secret;
+        @JsonCreator
+        public static RoamingStatus fromString(String name) {
+            return RoamingStatus.valueOf(name.toUpperCase());
+        }
     }
 
-    @Override
-    public RequestBuilder apply(RequestBuilder request) {
-        request.addParameter("api_key", apiKey);
-        RequestSigning.constructSignatureForRequestParameters(request.getParameters(), secret);
-        return request;
+    private RoamingStatus status;
+    private String roamingCountryCode;
+    private String roamingNetworkCode;
+    private String roamingNetworkName;
+
+    public RoamingStatus getStatus() {
+        return status;
     }
 
-    @Override
-    public int getSortKey() {
-        return SORT_KEY;
+    @JsonProperty("roaming_country_code")
+    public String getRoamingCountryCode() {
+        return roamingCountryCode;
+    }
+
+    @JsonProperty("roaming_network_code")
+    public String getRoamingNetworkCode() {
+        return roamingNetworkCode;
+    }
+
+    @JsonProperty("roaming_network_name")
+    public String getRoamingNetworkName() {
+        return roamingNetworkName;
     }
 }

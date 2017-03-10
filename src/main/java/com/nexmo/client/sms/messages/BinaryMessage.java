@@ -22,7 +22,7 @@
 package com.nexmo.client.sms.messages;
 
 
-import com.nexmo.common.util.HexUtil;
+import com.nexmo.client.sms.HexUtil;
 import org.apache.http.client.methods.RequestBuilder;
 
 /**

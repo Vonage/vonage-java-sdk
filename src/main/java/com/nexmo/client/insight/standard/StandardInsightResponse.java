@@ -19,36 +19,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-package com.nexmo.client.voice;
+package com.nexmo.client.insight.standard;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.insight.CarrierDetails;
+import com.nexmo.client.insight.basic.BasicInsightResponse;
 
 import java.io.IOException;
 
-/**
- * Response if a {@link Call} was successfully modified.
- * <p>
- * This would be returned by {@link VoiceClient#modifyCall(String, String)}
- */
-
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ModifyCallResponse {
-    private String message;
+public class StandardInsightResponse extends BasicInsightResponse {
+    private String requestPrice;
+    private String remainingBalance;
+    private CarrierDetails originalCarrier;
+    private CarrierDetails currentCarrier;
 
-    public String getMessage() {
-        return message;
-    }
-
-    public static ModifyCallResponse fromJson(String json) {
+    public static StandardInsightResponse fromJson(String json) {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, ModifyCallResponse.class);
+            return mapper.readValue(json, StandardInsightResponse.class);
         } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce ModifyCallResponse from json.", jpe);
+            throw new NexmoUnexpectedException("Failed to produce StandardInsightResponse from json.", jpe);
         }
     }
 
+    @JsonProperty("request_price")
+    public String getRequestPrice() {
+        return requestPrice;
+    }
+
+    @JsonProperty("remaining_balance")
+    public String getRemainingBalance() {
+        return remainingBalance;
+    }
+
+    @JsonProperty("original_carrier")
+    public CarrierDetails getOriginalCarrier() {
+        return originalCarrier;
+    }
+
+    @JsonProperty("current_carrier")
+    public CarrierDetails getCurrentCarrier() {
+        return currentCarrier;
+    }
 }

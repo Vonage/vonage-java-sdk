@@ -36,9 +36,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.nexmo.common.util.HexUtil;
+import com.nexmo.client.sms.HexUtil;
 import com.nexmo.client.sms.callback.messages.MO;
-import com.nexmo.security.RequestSigning;
+import com.nexmo.client.auth.RequestSigning;
 
 /**
  * An abstract Servlet that receives and parses an incoming callback request for an MO message.

@@ -19,31 +19,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.auth;
+package com.nexmo.client.sns.request;
 
-import org.apache.http.client.methods.RequestBuilder;
 
-// TODO: This is a stub!
-public class SignatureAuthMethod extends AbstractAuthMethod {
-    public final int SORT_KEY = 20;
+import java.util.Map;
 
-    private String apiKey;
-    private String secret;
 
-    public SignatureAuthMethod(String apiKey, String secret) {
-        this.apiKey = apiKey;
-        this.secret = secret;
+public class SnsPublishRequest extends SnsRequest {
+    private String from;
+    private String message;
+
+    public SnsPublishRequest(final String to,
+                             final String topicArn,
+                             final String from,
+                             final String message) throws Exception {
+        super("publish", to, topicArn);
+        this.from = from;
+        this.message = message;
     }
 
     @Override
-    public RequestBuilder apply(RequestBuilder request) {
-        request.addParameter("api_key", apiKey);
-        RequestSigning.constructSignatureForRequestParameters(request.getParameters(), secret);
-        return request;
-    }
-
-    @Override
-    public int getSortKey() {
-        return SORT_KEY;
+    public Map<String, String> getQueryParameters() {
+        Map<String, String> params = super.getQueryParameters();
+        params.put("from", from);
+        params.put("message", message);
+        return params;
     }
 }
