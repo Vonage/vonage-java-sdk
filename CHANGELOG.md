@@ -5,12 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [2.0] - In Development
+## [2.0.0] - In Development
 ### Added
 - Nexmo Voice API
 - Automated testing and code quality with Travis CI, Codecov and Codacy
 - Publishing to Maven Central
-- Move the `com.nexmo.verify.sdk` package to `com.nexmo.client.verify` and restructure
+- Complete refactoring and reorganisation of the library. All classes are now
+  under the com.nexmo.client package.
 
 ### Changed
 - Migrate to Gradle
@@ -35,7 +36,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Add support for 'signed' requests (using `NexmoSmsClientSignedRequests`)
 - Message submissions can now specify a protocol-id value where required
-- Add support for supplying a ValidityPeriod along with a Message when submitting a request
+- Add support for supplying a ValidityPeriod along with a Message when submitting a snsRequest
 - Add support for performing reachability checks if the feature is enabled on your account
 - Message submissions can now specify a message-class using the enum `com.nexmo.messaging.sdk.messages.parameters.MessageClass`
 - Add support for supplying a network code to override the Nexmo automatic network detection (Feature must be enabled on your account)
