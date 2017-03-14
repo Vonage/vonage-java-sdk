@@ -21,6 +21,8 @@
  */
 package com.nexmo.client.verify.examples;
 
+import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.verify.BaseResult;
 import com.nexmo.client.verify.CheckResult;
 import com.nexmo.client.verify.VerifyClient;
@@ -43,7 +45,7 @@ public class CheckNumber {
 
         VerifyClient client;
         try {
-            client = new VerifyClient(API_KEY, API_SECRET);
+            client = new VerifyClient(new HttpWrapper(new TokenAuthMethod(API_KEY, API_SECRET)));
         } catch (Exception e) {
             System.err.println("Failed to instantiate a Nexmo Client");
             e.printStackTrace();
