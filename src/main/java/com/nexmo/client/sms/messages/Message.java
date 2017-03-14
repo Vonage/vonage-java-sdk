@@ -76,15 +76,15 @@ public abstract class Message {
      * @param type the type of SMS message to be sent
      * @param from the 'from' address that will be seen on the handset when this message arrives, typically either a
      *             valid short-code / long code that can be replied to, or a short text description of the application
-     *             sending the message (Max 11 chars)
+     *             sending the message (Max 15 chars)
      * @param to   the phone number of the handset you wish to send the message to
      */
     protected Message(final MessageType type,
                       final String from,
                       final String to,
                       final boolean statusReportRequired) {
-        if (from.length() > 11) {
-            throw new IllegalArgumentException("The length of the 'from' argument must be 11 characters or fewer.");
+        if (from.length() > 15) {
+            throw new IllegalArgumentException("The length of the 'from' argument must be 15 characters or fewer.");
         }
 
         this.type = type;

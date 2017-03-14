@@ -22,7 +22,6 @@
 package com.nexmo.client.sms;
 
 
-import com.nexmo.client.sms.HexUtil;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -30,13 +29,13 @@ import static org.junit.Assert.*;
 public class HexUtilTest {
     @Test
     public void testBytesToHex() {
-        String result = HexUtil.bytesToHex(new byte[] {0x00, 0x10, 0x7f, 0x70, -1});
+        String result = HexUtil.bytesToHex(new byte[]{0x00, 0x10, 0x7f, 0x70, -1});
         assertEquals("00107F70FF", result);
     }
 
     @Test
     public void testBytesToHexWithSeparator() {
-        String result = HexUtil.bytesToHex(new byte[] {0x00, 0x10, 0x7f, 0x70, -1}, ",");
+        String result = HexUtil.bytesToHex(new byte[]{0x00, 0x10, 0x7f, 0x70, -1}, ",");
         assertEquals(",00,10,7F,70,FF", result);
     }
 
@@ -47,7 +46,7 @@ public class HexUtilTest {
 
     @Test
     public void testHexToBytes() throws Exception {
-        assertArrayEquals(new byte[] {0x00, 0x10, 0x7f, 0x70, -1}, HexUtil.hexToBytes("00107F70FF"));
+        assertArrayEquals(new byte[]{0x00, 0x10, 0x7f, 0x70, -1}, HexUtil.hexToBytes("00107F70FF"));
     }
 
     @Test
