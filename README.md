@@ -107,7 +107,7 @@ After the call is answered, you can get more information about it, including
 the amount it cost with:
 
 ```java
-CallRecord info = client.getVoiceClient().getCallDetails(event.getUuid());
+CallInfo info = client.getVoiceClient().getCallDetails(event.getUuid());
 System.out.println("This cost: " + info.getPrice() + " EUR");
 ```
 
