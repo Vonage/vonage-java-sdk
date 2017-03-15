@@ -36,9 +36,9 @@ public class TokenAuthMethod extends AbstractAuthMethod {
 
     @Override
     public RequestBuilder apply(RequestBuilder request) {
-        request.addParameter("api_key", this.apiKey);
-        request.addParameter("api_secret", this.apiSecret);
-        return request;
+        return request
+                .addParameter("api_key", this.apiKey)
+                .addParameter("api_secret", this.apiSecret);
     }
 
     @Override
