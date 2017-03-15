@@ -22,6 +22,9 @@
 package com.nexmo.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexmo.client.NexmoUnexpectedException;
 
 /**
  * The JSON payload that will be sent in a {@link TalkRequest}.
@@ -43,6 +46,10 @@ public class TalkPayload {
         this.loop = loop;
     }
 
+    public int getLoop() {
+        return loop;
+    }
+
     public String getText() {
         return text;
     }
@@ -52,7 +59,12 @@ public class TalkPayload {
         return voiceName;
     }
 
-    public int getLoop() {
-        return loop;
+    public String toJson(){
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(this);
+        } catch (JsonProcessingException jpe) {
+            throw new NexmoUnexpectedException("Failed to produce json from TalkPayload object.", jpe);
+        }
     }
 }

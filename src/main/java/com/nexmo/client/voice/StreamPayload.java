@@ -37,18 +37,18 @@ public class StreamPayload {
     private String[] streamUrl;
     private int loop;
 
-    @JsonProperty("stream_url")
-    public String[] getStreamUrl() {
-        return streamUrl;
+    public StreamPayload(String streamUrl, int loop) {
+        this.streamUrl = new String[]{streamUrl};
+        this.loop = loop;
     }
 
     public int getLoop() {
         return loop;
     }
 
-    public StreamPayload(String streamUrl, int loop) {
-        this.streamUrl = new String[]{streamUrl};
-        this.loop = loop;
+    @JsonProperty("stream_url")
+    public String[] getStreamUrl() {
+        return streamUrl;
     }
 
     public String toJson(){
