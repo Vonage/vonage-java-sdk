@@ -21,8 +21,10 @@
  */
 
 /**
- * The root of the new Nexmo client library. Currently only handles Voice API functionality.
+ * The root of the Nexmo client library, containing {@link com.nexmo.client.NexmoClient} class, which is probably what
+ * you want.
  * <p>
- * All behaviour is provided from the {@link com.nexmo.client.NexmoClient} class.
+ * All behaviour is accessible via the {@link com.nexmo.client.NexmoClient} class, which should be instantiated with one
+ * or more <tt>AuthMethod</tt> objects from the {@link com.nexmo.client.auth} package.
  */
 package com.nexmo.client;

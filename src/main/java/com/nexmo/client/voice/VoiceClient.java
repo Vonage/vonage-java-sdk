@@ -124,6 +124,19 @@ public class VoiceClient extends AbstractClient {
         return dtmf.put(uuid, digits);
     }
 
+    /**
+     * Hang up a call.
+     * <p>
+     * In future, further operations will be possible. At the moment, the only valid value for <tt>action</tt> is
+     * hangup.
+     *
+     * @param uuid   (required) The UUID of the call, obtained from the object returned by {@link #createCall(Call)}.
+     *               This value can be obtained with {@link CallEvent#getUuid()}
+     * @param action The word "hangup"
+     * @return A CallInfo object, representing the response from the Nexmo Voice API.
+     * @throws IOException          if a network error occurred contacting the Nexmo Voice API.
+     * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
+     */
     public ModifyCallResponse modifyCall(String uuid, String action) throws IOException, NexmoClientException {
         return calls.put(uuid, action);
     }
@@ -237,7 +250,15 @@ public class VoiceClient extends AbstractClient {
         return talk.put(new TalkRequest(uuid, text, voiceName, loop));
     }
 
-
+    /**
+     * Stop the message being spoken into a call.
+     *
+     * @param uuid The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value can
+     *             be obtained with {@link CallEvent#getUuid()}
+     * @return The data returned from the Voice API
+     * @throws IOException          if a network error occurred contacting the Nexmo Voice API.
+     * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
+     */
     public TalkResponse stopTalk(String uuid) throws IOException, NexmoClientException {
         return talk.delete(uuid);
     }
