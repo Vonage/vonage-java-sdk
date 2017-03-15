@@ -37,7 +37,7 @@ import java.io.IOException;
  * {@link NexmoClient#getSnsClient()}.
  */
 public class SnsClient {
-    SnsEndpoint endpoint;
+    private SnsEndpoint endpoint;
 
     /**
      * Constructor.

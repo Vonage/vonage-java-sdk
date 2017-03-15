@@ -138,9 +138,9 @@ public class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
             throw new NexmoResponseParseException("Xml Parser - did not find a <resultCode> node");
         }
 
-        if (command.equals("publish")) {
+        if ("publish".equals(command)) {
             return new SnsPublishResponse(resultCode, resultMessage, transactionId);
-        } else if (command.equals("subscribe")) {
+        } else if ("subscribe".equals(command)) {
             return new SnsSubscribeResponse(resultCode, resultMessage, subscriberArn);
         } else {
             throw new NexmoResponseParseException("Unknown command value: " + command);

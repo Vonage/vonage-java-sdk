@@ -21,7 +21,6 @@
  */
 package com.nexmo.client.insight;
 
-import com.nexmo.client.insight.basic.BasicInsightRequest;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 public class BaseInsightRequest {
