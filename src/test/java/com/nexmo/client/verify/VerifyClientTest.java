@@ -402,7 +402,7 @@ public class VerifyClientTest {
 
     @Test
     public void testLineType() {
-        VerifyClient.LineType all = VerifyClient.LineType.ALL;
+        VerifyRequest.LineType all = VerifyRequest.LineType.ALL;
         assertEquals("ALL", all.toString());
     }
 }

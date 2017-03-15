@@ -121,8 +121,8 @@ public class VerifyEndpoint extends AbstractMethod<VerifyRequest, VerifyResult> 
                                final String from,
                                final int length,
                                final Locale locale,
-                               final com.nexmo.client.verify.VerifyClient.LineType type) throws IOException,
-                                                                                                NexmoClientException {
+                               final VerifyRequest.LineType type) throws IOException,
+                                                                         NexmoClientException {
         return execute(new VerifyRequest(number, brand, from, length, locale, type));
     }
 

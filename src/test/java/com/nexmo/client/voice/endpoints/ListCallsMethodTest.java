@@ -171,7 +171,7 @@ public class ListCallsMethodTest {
             filter.setPageSize(30);
             RequestBuilder request = method.makeRequest(filter);
             // Anything past here only executes if our assertion is incorrect:
-            LOG.error("Request URI: " + request.getUri());
+            LOG.error("SnsRequest URI: " + request.getUri());
             fail("Making a request with a bad URI should throw a NexmoUnexpectedException");
         } catch (NexmoUnexpectedException nue) {
             // This is expected

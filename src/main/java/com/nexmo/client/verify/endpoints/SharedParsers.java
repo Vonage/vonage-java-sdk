@@ -22,7 +22,7 @@
 package com.nexmo.client.verify.endpoints;
 
 import com.nexmo.client.NexmoResponseParseException;
-import com.nexmo.common.util.XmlUtil;
+import com.nexmo.client.legacyutils.XmlUtil;
 import com.nexmo.client.verify.BaseResult;
 import com.nexmo.client.verify.VerifyResult;
 import org.apache.commons.logging.Log;

@@ -22,7 +22,6 @@
 package com.nexmo.client.legacyutils;
 
 import com.nexmo.client.NexmoResponseParseException;
-import com.nexmo.common.util.XmlUtil;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;

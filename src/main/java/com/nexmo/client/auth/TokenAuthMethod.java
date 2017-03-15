@@ -24,7 +24,8 @@ package com.nexmo.client.auth;
 import org.apache.http.client.methods.RequestBuilder;
 
 public class TokenAuthMethod extends AbstractAuthMethod {
-    public final int SORT_KEY = 20;
+    public final int SORT_KEY = 30;
+
     private String apiKey;
     private String apiSecret;
 
@@ -35,9 +36,9 @@ public class TokenAuthMethod extends AbstractAuthMethod {
 
     @Override
     public RequestBuilder apply(RequestBuilder request) {
-        request.addParameter("api_key", this.apiKey);
-        request.addParameter("api_secret", this.apiSecret);
-        return request;
+        return request
+                .addParameter("api_key", this.apiKey)
+                .addParameter("api_secret", this.apiSecret);
     }
 
     @Override

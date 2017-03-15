@@ -23,7 +23,6 @@ package com.nexmo.client.verify.endpoints;
 
 
 import com.nexmo.client.NexmoResponseParseException;
-import com.nexmo.client.verify.VerifyClient;
 import com.nexmo.client.verify.VerifyRequest;
 import com.nexmo.client.verify.VerifyResult;
 import org.apache.http.NameValuePair;
@@ -57,7 +56,7 @@ public class VerifyEndpointTest {
                 "Your friend",
                 4,
                 new Locale("en", "GB"),
-                com.nexmo.client.verify.VerifyClient.LineType.MOBILE
+                VerifyRequest.LineType.MOBILE
         );
         VerifyEndpoint endpoint = new VerifyEndpoint(null);
         RequestBuilder request = endpoint.makeRequest(verifyRequest);
@@ -99,7 +98,7 @@ public class VerifyEndpointTest {
                     "Your friend",
                     4,
                     new Locale("en", "GB"),
-                    VerifyClient.LineType.MOBILE
+                    VerifyRequest.LineType.MOBILE
             );
             fail("A null 'number' argument should throw IllegalArgumentException");
         } catch (IllegalArgumentException e) {
@@ -116,7 +115,7 @@ public class VerifyEndpointTest {
                     "Your friend",
                     4,
                     new Locale("en", "GB"),
-                    VerifyClient.LineType.MOBILE
+                    VerifyRequest.LineType.MOBILE
             );
             fail("A null 'brand' argument should throw IllegalArgumentException");
         } catch (IllegalArgumentException e) {
@@ -133,7 +132,7 @@ public class VerifyEndpointTest {
                     "Your friend",
                     3,
                     new Locale("en", "GB"),
-                    com.nexmo.client.verify.VerifyClient.LineType.MOBILE
+                    VerifyRequest.LineType.MOBILE
             );
             fail("A VerifyRequest with length 3 should raise IllegalArgumentException.");
         } catch (IllegalArgumentException e) {

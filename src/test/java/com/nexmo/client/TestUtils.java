@@ -21,9 +21,21 @@
  */
 package com.nexmo.client;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.ProtocolVersion;
+import org.apache.http.entity.BasicHttpEntity;
+import org.apache.http.message.BasicHttpResponse;
+import org.apache.http.message.BasicStatusLine;
+
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TestUtils {
     public byte[] loadKey(String path) throws IOException {
@@ -42,5 +54,25 @@ public class TestUtils {
         }
         return bos.toByteArray();
 
+    }
+
+    public static Map<String, String> makeParameterMap(List<NameValuePair> params) {
+        Map<String, String> result = new HashMap<>();
+        for (NameValuePair param : params) {
+            result.put(param.getName(), param.getValue());
+        }
+        return result;
+    }
+
+    public static HttpResponse makeJsonHttpResponse(int statusCode, String json) {
+        HttpResponse stubResponse = new BasicHttpResponse(
+                new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 200, "OK")
+        );
+        InputStream jsonStream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
+        BasicHttpEntity entity = new BasicHttpEntity();
+        entity.setContent(jsonStream);
+        stubResponse.setEntity(entity);
+
+        return stubResponse;
     }
 }

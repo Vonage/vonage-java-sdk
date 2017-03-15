@@ -31,7 +31,7 @@ public class SearchRequest {
 
     public SearchRequest(final String... requestIds) {
         if (requestIds.length == 0) {
-            throw new IllegalArgumentException("At least one Request ID must be provided in a SearchRequest");
+            throw new IllegalArgumentException("At least one SnsRequest ID must be provided in a SearchRequest");
         } else if (requestIds.length > MAX_SEARCH_REQUESTS) {
                 throw new IllegalArgumentException("too many request IDs. Max is " + MAX_SEARCH_REQUESTS);
         }

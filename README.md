@@ -164,9 +164,9 @@ System.out.println("Alright. " + stopTalkResponse.getMessage());
         * [ ] Cancel
         * [ ] Update
 * Number Insight
-    * [ ] Basic
-    * [x] Standard (Currently uses the deprecated API)
-    * [x] Advanced (Currently uses the deprecated API)
+    * [x] Basic
+    * [x] Standard
+    * [x] Advanced
     * [ ] Webhook Notification
 * Verify
     * [x] Verify
