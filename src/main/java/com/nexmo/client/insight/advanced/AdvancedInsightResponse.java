@@ -45,7 +45,7 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(json, AdvancedInsightResponse.class);
         } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce BasicInsightResponse from json.", jpe);
+            throw new NexmoUnexpectedException("Failed to produce AdvancedInsightResponse from json.", jpe);
         }
     }
 

@@ -23,7 +23,6 @@ package com.nexmo.client.auth;
 
 import org.apache.http.client.methods.RequestBuilder;
 
-// TODO: This is a stub!
 public class SignatureAuthMethod extends AbstractAuthMethod {
     public final int SORT_KEY = 20;
 

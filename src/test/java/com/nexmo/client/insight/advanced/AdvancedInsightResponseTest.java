@@ -1,4 +1,4 @@
-package com.nexmo.client.insight.advanced;/*
+/*
  * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,6 +19,7 @@ package com.nexmo.client.insight.advanced;/*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package com.nexmo.client.insight.advanced;
 
 import com.nexmo.client.NexmoUnexpectedException;
 import com.nexmo.client.insight.CarrierDetails;
