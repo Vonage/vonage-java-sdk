@@ -23,57 +23,17 @@ package com.nexmo.client.sms;
 
 
 import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoClient;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.client.sms.messages.Message;
 
 import java.io.IOException;
 
-/**
- * Client for talking to the Nexmo API.
- * <p>
- * To submit a message, instantiate a SmsClient, passing the credentials for your Nexmo account on
- * the constructor. Then instantiate the appropriate {@link com.nexmo.client.sms.messages.Message}
- * subclass depending on which type of message you are going to submit. The following subclasses are available:
- * <p>
- * <ul>
- * <li>{@link com.nexmo.client.sms.messages.TextMessage}
- * <li>{@link com.nexmo.client.sms.messages.BinaryMessage}
- * <li>{@link com.nexmo.client.sms.messages.WapPushMessage}
- * </ul>
- * <p>
- * Once you have a {@link com.nexmo.client.sms.messages.Message} object, pass it to {@link #submitMessage(Message)}
- * which will submit the message to the Nexmo API. It returns an array of
- * {@link com.nexmo.client.sms.SmsSubmissionResult}, with 1 entry for every sms message that was sent.
- * Text messages greater than 160 characters will require multiple SMS messages to be submitted.
- * Each entry in this array will contain an individual messageId as well as an individual status detailing the success or reason for failure of each message.
- * <p>
- * The list of possible status codes is listed below:
- * <ul>
- * <li>0 = success  -- the message was successfully accepted for delivery by nexmo
- * <li>1 = throttled -- You have exceeded the submission capacity allowed on this account, please back-off and re-try
- * <li>2 = missing params -- Your request is incomplete and missing some mandatory parameters
- * <li>3 = invalid params -- The value of 1 or more parameters is invalid
- * <li>4 = invalid credentials -- The api key / secret you supplied is either invalid or disabled
- * <li>5 = internal error -- An error has occurred in the nexmo platform whilst processing this message
- * <li>6 = invalid message -- The Nexmo platform was unable to process this message, for example, an un-recognized number prefix
- * <li>7 = number barred -- The number you are trying to submit to is blacklisted and may not receive messages
- * <li>8 = partner account barred -- The api key you supplied is for an account that has been barred from submitting messages
- * <li>9 = partner quota exceeded -- Your pre-pay account does not have sufficient credit to process this message
- * <li>10 = too many existing binds -- The number of simultaneous connections to the platform exceeds the capabilities of your account
- * <li>11 = account not enabled for http -- This account is not provisioned for http / rest submission, you should use SMPP instead
- * <li>12 = message too long -- The message length exceeds the maximum allowed
- * <li>13 = comms failure -- There was a network failure attempting to contact Nexmo
- * <li>14 = Invalid Signature -- The signature supplied with this request was not verified successfully
- * <li>15 = invalid sender address -- The sender address was not allowed for this message
- * <li>16 = invalid TTL -- The ttl parameter values, or combination of parameters is invalid
- * <li>17 = number unreachable -- this destination cannot be delivered to at this time (if reachable=true is specified)
- * <li>18 = too many destinations -- There are more than the maximum allowed number of destinations in this request
- * <li>19 = Facility Not Allowed - Your request makes use of a facility that is not enabled on your account
- * <li>20 = Invalid Message Class - The message class value supplied was out of range (0 - 3)
- * </ul>
- *
- * @author Paul Cook
+
+ /**
+ * A client for talking to the Nexmo Voice API. The standard way to obtain an instance of this class is to use
+ * {@link NexmoClient#getSmsClient()}.
  */
 public class SmsClient {
     private SendMessageEndpoint message;

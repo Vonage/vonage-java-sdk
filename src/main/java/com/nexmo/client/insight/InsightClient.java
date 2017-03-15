@@ -22,6 +22,7 @@
 package com.nexmo.client.insight;
 
 import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoClient;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.insight.advanced.AdvancedInsightEndpoint;
 import com.nexmo.client.insight.advanced.AdvancedInsightRequest;
@@ -35,13 +36,19 @@ import com.nexmo.client.insight.standard.StandardInsightResponse;
 
 import java.io.IOException;
 
+/**
+ * A client for talking to the Nexmo Number Insight API. The standard way to obtain an instance of this class is to use
+ * {@link NexmoClient#getInsightClient()}.
+ */
 public class InsightClient {
     protected BasicInsightEndpoint basic;
     protected StandardInsightEndpoint standard;
     protected AdvancedInsightEndpoint advanced;
 
     /**
-     * Create a new InsightClient.
+     * Constructor.
+     *
+     * @param httpWrapper (required) shared HTTP wrapper object used for making REST calls.
      */
     public InsightClient(HttpWrapper httpWrapper) {
         this.basic = new BasicInsightEndpoint(httpWrapper);
@@ -71,8 +78,8 @@ public class InsightClient {
     }
 
     public AdvancedInsightResponse getAdvancedNumberInsight(String number, String country, String ipAddress) throws
-                                                                                                      IOException,
-                                                                                                  NexmoClientException {
+                                                                                                             IOException,
+                                                                                                             NexmoClientException {
         return this.advanced.execute(new AdvancedInsightRequest(number, country, ipAddress));
     }
 }

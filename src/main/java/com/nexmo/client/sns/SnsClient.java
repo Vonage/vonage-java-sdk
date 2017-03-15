@@ -23,6 +23,7 @@ package com.nexmo.client.sns;
 
 
 import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoClient;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.sns.request.SnsPublishRequest;
 import com.nexmo.client.sns.request.SnsSubscribeRequest;
@@ -31,9 +32,18 @@ import com.nexmo.client.sns.response.SnsSubscribeResponse;
 
 import java.io.IOException;
 
+/**
+ * A client for talking to the Nexmo Voice API. The standard way to obtain an instance of this class is to use
+ * {@link NexmoClient#getSnsClient()}.
+ */
 public class SnsClient {
     SnsEndpoint endpoint;
 
+    /**
+     * Constructor.
+     *
+     * @param httpWrapper (required) shared HTTP wrapper object used for making REST calls.
+     */
     public SnsClient(HttpWrapper httpWrapper) {
         this.endpoint = new SnsEndpoint(httpWrapper);
     }
