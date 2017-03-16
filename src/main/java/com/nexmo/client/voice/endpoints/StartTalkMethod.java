@@ -55,6 +55,7 @@ public class StartTalkMethod extends AbstractMethod<TalkRequest, TalkResponse> {
     @Override
     public RequestBuilder makeRequest(TalkRequest request) throws NexmoClientException, UnsupportedEncodingException {
         String uri = this.uri + request.getUuid() + "/talk";
+        LOG.info("Talk request: " + request.toJson());
         return RequestBuilder.put(uri)
                 .setHeader("Content-Type", "application/json")
                 .setEntity(new StringEntity(request.toJson()));
