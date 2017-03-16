@@ -52,7 +52,8 @@ public class InsightClient {
      */
     public InsightClient(HttpWrapper httpWrapper) {
         this.basic = new BasicInsightEndpoint(httpWrapper);
-
+        this.standard = new StandardInsightEndpoint(httpWrapper);
+        this.advanced = new AdvancedInsightEndpoint(httpWrapper);
     }
 
     public BasicInsightResponse getBasicNumberInsight(String number) throws IOException, NexmoClientException {
