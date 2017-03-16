@@ -14,7 +14,6 @@ need a Nexmo account. Sign up [for free at nexmo.com][signup].
  * [API Coverage](#api-coverage)
  * [Contribute](#contribute)
 
-
 ## Installation
 
 To use the client library you'll need to have [created a Nexmo account][signup].
@@ -25,9 +24,7 @@ To install the Java client library using Gradle, add the following to `build.gra
 
 ```groovy
 repositories {
-    maven {
-        url 'https://oss.sonatype.org/content/repositories/snapshots/'
-    }
+    mavenCentral()
 }
 
 dependencies {
@@ -37,16 +34,7 @@ dependencies {
 
 ### Maven
 
-Add the following to the correct places in your project's POM file:
-
-```xml
-<repositories>
-    <repository>
-            <id>nexmo</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-    </repository>
-<repositories>
-```
+Add the following to the correct place in your project's POM file:
 
 ```xml
 <dependency>
