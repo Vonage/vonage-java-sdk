@@ -5,18 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [2.0.0] - In Development
+## [2.0.0] - 2017-03-16
 ### Added
 - Nexmo Voice API
 - Automated testing and code quality with Travis CI, Codecov and Codacy
 - Publishing to Maven Central
 - Complete refactoring and reorganisation of the library. All classes are now
-  under the com.nexmo.client package.
+  under the `com.nexmo.client` package.
 
 ### Changed
+- New Insight API using non-deprecated endpoints.
 - Migrate to Gradle
 - Internal refactoring for unit testing
-- Moved example code into separate source-set
+- Removed example code. See [nexmo-community/nexmo-java-quickstart](https://github.com/nexmo-community/nexmo-java-quickstart) instead.
 
 ## [1.5] - 2014-08-28
 ### Added
