@@ -29,7 +29,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -51,7 +54,7 @@ import java.util.Set;
  */
 public abstract class AbstractMethod<RequestT, ResultT> implements Method<RequestT, ResultT> {
     private static final Log LOG = LogFactory.getLog(AbstractMethod.class);
-    
+
     private final HttpWrapper httpWrapper;
     private Set<Class> acceptable;
 
@@ -70,12 +73,19 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
     // TODO: Consider wrapping IOException in a nexmo-specific transport exception.
     public ResultT execute(RequestT request) throws IOException, NexmoClientException {
         try {
-            HttpResponse response = this.httpWrapper.getHttpClient().execute(applyAuth(makeRequest(request)).build());
+            HttpUriRequest httpRequest = applyAuth(makeRequest(request)).build();
+            LOG.debug("Request: " + httpRequest);
+            if (LOG.isDebugEnabled() && httpRequest instanceof HttpEntityEnclosingRequestBase) {
+                HttpEntityEnclosingRequestBase enclosingRequest = (HttpEntityEnclosingRequestBase) httpRequest;
+                LOG.debug(EntityUtils.toString(enclosingRequest.getEntity()));
+            }
+            HttpResponse response = this.httpWrapper.getHttpClient().execute(httpRequest);
             LOG.debug("Response: " + response.getStatusLine());
             return parseResponse(response);
         } catch (UnsupportedEncodingException uee) {
             throw new NexmoUnexpectedException("UTF-8 encoding is not supported by this JVM.", uee);
         }
+
     }
 
     /**

@@ -47,7 +47,7 @@ public class ModifyCallResponse {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(json, ModifyCallResponse.class);
         } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce json from ModifyCallResponse object.", jpe);
+            throw new NexmoUnexpectedException("Failed to produce ModifyCallResponse from json.", jpe);
         }
     }
 

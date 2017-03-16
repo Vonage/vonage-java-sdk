@@ -28,7 +28,9 @@ import com.nexmo.client.voice.*;
 import java.io.IOException;
 
 /**
- * Represents Nexmo Voice API endpoints below <pre>/calls</pre>, and provides methods to read and update those endpoints.
+ * Allows actions to be taken on <tt>/calls/*</tt> endpoints.
+ * <p>
+ * <b>Note:</b> This is an internal object. All functionality is provided publicly by the {@link VoiceClient} class.
  */
 public class CallsEndpoint {
     private final CreateCallMethod createCall;
@@ -36,6 +38,11 @@ public class CallsEndpoint {
     private final ListCallsMethod listCalls;
     private final ModifyCallMethod modifyCall;
 
+    /**
+     * Constructor.
+     *
+     * @param httpWrapper (required) shared HTTP wrapper object used for making REST calls.
+     */
     public CallsEndpoint(HttpWrapper httpWrapper) {
         this.createCall = new CreateCallMethod(httpWrapper);
         this.readCall = new ReadCallMethod(httpWrapper);
@@ -58,7 +65,7 @@ public class CallsEndpoint {
     }
 
     /**
-     * List calls which have been conducted by
+     * List previous and ongoing calls which match the provided <tt>filter</tt>.
      *
      * @param filter A CallsFilter describing the calls to be searched, or {@code null} for all calls.
      * @return A CallInfoPage containing a single page of {@link CallInfo} results
@@ -70,7 +77,7 @@ public class CallsEndpoint {
     }
 
     /**
-     * List calls which have been conducted by
+     * Get details of a single call, identified by <tt>uuid</tt>.
      *
      * @param uuid The uuid of the CallInfo object to be retrieved
      * @return A CallInfo object describing the state of the call that was made or is in progress
@@ -86,9 +93,9 @@ public class CallsEndpoint {
      * Modify an ongoing call.
      * <p>
      * Currently this method only supports the "hangup" action.
-     * </p>
      *
-     * @param uuid The uuid of the CallInfo object to be modified
+     * @param uuid   The uuid of the CallInfo object to be modified
+     * @param action The word "hangup"
      * @return A ModifyCallResponse object describing the state of the call that was modified
      * @throws IOException          if an error occurs communicating with the Nexmo API
      * @throws NexmoClientException if an error occurs constructing the Nexmo API request or response

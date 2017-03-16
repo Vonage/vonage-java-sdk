@@ -21,6 +21,7 @@
  */
 package com.nexmo.client.voice.endpoints;
 
+import com.nexmo.client.TestUtils;
 import com.nexmo.client.auth.JWTAuthMethod;
 import com.nexmo.client.voice.CallInfo;
 import org.apache.http.HttpResponse;
@@ -60,11 +61,7 @@ public class ReadCallMethodTest {
 
     @Test
     public void parseResponse() throws Exception {
-        HttpResponse stubResponse = new BasicHttpResponse(
-                new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 200, "OK")
-        );
-
-        String json =
+        HttpResponse stubResponse = TestUtils.makeJsonHttpResponse(200,
                 "      {\n" +
                         "        \"uuid\": \"93137ee3-580e-45f7-a61a-e0b5716000ef\",\n" +
                         "        \"status\": \"completed\",\n" +
@@ -89,12 +86,7 @@ public class ReadCallMethodTest {
                         "            \"href\": \"/v1/calls/93137ee3-580e-45f7-a61a-e0b5716000ef\"\n" +
                         "          }\n" +
                         "        }\n" +
-                        "      }\n";
-        InputStream jsonStream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
-        BasicHttpEntity entity = new BasicHttpEntity();
-        entity.setContent(jsonStream);
-        stubResponse.setEntity(entity);
-
+                        "      }\n");
         CallInfo record = method.parseResponse(stubResponse);
         assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", record.getUuid());
     }
