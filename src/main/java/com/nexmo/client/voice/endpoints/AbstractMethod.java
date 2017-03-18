@@ -85,7 +85,6 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
         } catch (UnsupportedEncodingException uee) {
             throw new NexmoUnexpectedException("UTF-8 encoding is not supported by this JVM.", uee);
         }
-
     }
 
     /**
