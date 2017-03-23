@@ -7,3 +7,4 @@ documentation, or tests are eligible to be added to this list.
 - Chris Guzman ([@ChrisGuzman](https://github.com/ChrisGuzman))
 - Tim Lytle ([@tjlitle](https://github.com/tjlitle))
 - [@thepeachbeetle](https://github.com/thepeachbeetle)
+- Panayiotis Vlissidis ([pvliss](https://github.com/pvliss))

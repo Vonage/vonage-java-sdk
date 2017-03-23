@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+### Added
+- Added servlet implementation to handle callbacks for SMS Delivery Receipts
+  as documented in the [Web API reference](https://docs.nexmo.com/messaging/sms-api/api-reference#delivery_receipt)
+
 ## [2.0.1] - 2017-03-18
 ### Changed
 - Made servlet-api an optional dependency so it isn't bundled in war files. (This

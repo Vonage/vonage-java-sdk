@@ -27,9 +27,8 @@ import org.junit.Test;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
+import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.concurrent.Executor;
 
@@ -74,9 +73,17 @@ public class AbstractMOServletTest {
     public void testHandleEmptyRequest() throws IOException, ServletException {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
+        StringWriter dummyResponseWriter = new StringWriter();
+
+        Enumeration<String> paramNames = mock(Enumeration.class);
+        when(paramNames.hasMoreElements()).thenReturn(false);
+        when(request.getParameterNames()).thenReturn(paramNames);
+
+        when(response.getWriter()).thenReturn(new PrintWriter(dummyResponseWriter));
 
         new TestMOServlet().doPost(request, response);
-        verify(response, atLeastOnce()).sendError(400, "Missing mandatory fields");
+        verify(response, atLeastOnce()).setStatus(200);
+        assertEquals("OK", dummyResponseWriter.toString());
     }
 
     @Test
@@ -131,20 +138,13 @@ public class AbstractMOServletTest {
 
     @Test
     public void testHandleValidBinaryRequest() throws IOException, ServletException {
-        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletRequest request = dummyTextRequest();
         HttpServletResponse response = mock(HttpServletResponse.class);
         StringWriter dummyResponseWriter = new StringWriter();
 
-        when(request.getParameter("msisdn")).thenReturn("anisdn");
-        when(request.getParameter("to")).thenReturn("to");
-        when(request.getParameter("network-code")).thenReturn("networkcode");
-        when(request.getParameter("messageId")).thenReturn("messageid");
-        when(request.getParameter("sessionId")).thenReturn("asessionid");
-        when(request.getParameter("keyword")).thenReturn("akeyword");
         when(request.getParameter("type")).thenReturn("binary");
         when(request.getParameter("data")).thenReturn("00107F70FF");
         when(request.getParameter("price")).thenReturn("12.00");
-        when(request.getParameter("message-timestamp")).thenReturn("2016-10-09 08:07:06");
         when(response.getWriter()).thenReturn(new PrintWriter(dummyResponseWriter));
 
         TestMOServlet servlet = new TestMOServlet();
@@ -163,20 +163,13 @@ public class AbstractMOServletTest {
 
     @Test
     public void testHandleBinaryRequestMissingData() throws IOException, ServletException {
-        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletRequest request = dummyTextRequest();
         HttpServletResponse response = mock(HttpServletResponse.class);
         StringWriter dummyResponseWriter = new StringWriter();
 
-        when(request.getParameter("msisdn")).thenReturn("anisdn");
-        when(request.getParameter("to")).thenReturn("to");
-        when(request.getParameter("network-code")).thenReturn("networkcode");
-        when(request.getParameter("messageId")).thenReturn("messageid");
-        when(request.getParameter("sessionId")).thenReturn("asessionid");
-        when(request.getParameter("keyword")).thenReturn("akeyword");
         when(request.getParameter("type")).thenReturn("binary");
         when(request.getParameter("data")).thenReturn(null);
         when(request.getParameter("price")).thenReturn("12.00");
-        when(request.getParameter("message-timestamp")).thenReturn("2016-10-09 08:07:06");
         when(response.getWriter()).thenReturn(new PrintWriter(dummyResponseWriter));
 
         TestMOServlet servlet = new TestMOServlet();
@@ -369,6 +362,10 @@ public class AbstractMOServletTest {
         when(request.getParameter("type")).thenReturn("text");
         when(request.getParameter("text")).thenReturn("Dear John");
         when(request.getParameter("message-timestamp")).thenReturn("2016-11-07 06:05:04");
+
+        Enumeration<String> paramNames = mock(Enumeration.class);
+        when(paramNames.hasMoreElements()).thenReturn(true);
+        when(request.getParameterNames()).thenReturn(paramNames);
 
         return request;
     }
