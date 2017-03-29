@@ -47,7 +47,6 @@ public class InsightClientTest {
     public void testGetBasicNumberInsight() throws Exception {
         client.getBasicNumberInsight("12345");
         verify(client.basic).execute(eq(new BasicInsightRequest("12345")));
-
     }
 
     @Test

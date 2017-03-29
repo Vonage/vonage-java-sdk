@@ -29,7 +29,6 @@ import com.nexmo.client.NexmoUnexpectedException;
 import com.nexmo.client.insight.CallerType;
 import com.nexmo.client.insight.RoamingDetails;
 import com.nexmo.client.insight.standard.StandardInsightResponse;
-import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import java.io.IOException;
 

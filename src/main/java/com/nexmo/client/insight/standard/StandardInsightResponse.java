@@ -27,7 +27,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
 import com.nexmo.client.insight.CallerType;
 import com.nexmo.client.insight.CarrierDetails;
-import com.nexmo.client.insight.advanced.AdvancedInsightResponse;
 import com.nexmo.client.insight.basic.BasicInsightResponse;
 
 import java.io.IOException;
