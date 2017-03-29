@@ -69,18 +69,32 @@ public class InsightClient {
         return this.standard.execute(new StandardInsightRequest(number));
     }
 
-    public StandardInsightResponse getStandardNumberInsight(String number, String country) throws IOException,
-                                                                                                  NexmoClientException {
+    public StandardInsightResponse getStandardNumberInsight(
+            String number, String country) throws IOException, NexmoClientException {
         return this.standard.execute(new StandardInsightRequest(number, country));
+    }
+
+    public StandardInsightResponse getStandardNumberInsight(
+            String number, String country, boolean cnam) throws IOException, NexmoClientException {
+        return this.standard.execute(new StandardInsightRequest(number, country, cnam));
     }
 
     public AdvancedInsightResponse getAdvancedNumberInsight(String number) throws IOException, NexmoClientException {
         return this.advanced.execute(new AdvancedInsightRequest(number));
     }
 
-    public AdvancedInsightResponse getAdvancedNumberInsight(String number, String country, String ipAddress) throws
-                                                                                                             IOException,
-                                                                                                             NexmoClientException {
+    public AdvancedInsightResponse getAdvancedNumberInsight(
+            String number, String country) throws IOException, NexmoClientException {
+        return this.advanced.execute(new AdvancedInsightRequest(number, country));
+    }
+
+    public AdvancedInsightResponse getAdvancedNumberInsight(
+            String number, String country, String ipAddress) throws IOException, NexmoClientException {
         return this.advanced.execute(new AdvancedInsightRequest(number, country, ipAddress));
+    }
+
+    public AdvancedInsightResponse getAdvancedNumberInsight(
+            String number, String country, String ipAddress, boolean cnam) throws IOException, NexmoClientException {
+        return this.advanced.execute(new AdvancedInsightRequest(number, country, ipAddress, cnam));
     }
 }

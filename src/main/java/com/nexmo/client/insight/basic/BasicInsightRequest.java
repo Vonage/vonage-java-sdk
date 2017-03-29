@@ -24,13 +24,11 @@ package com.nexmo.client.insight.basic;
 import com.nexmo.client.insight.BaseInsightRequest;
 
 public class BasicInsightRequest extends BaseInsightRequest {
-
     public BasicInsightRequest(String number) {
-        super(number, null);
+        this(number, DEFAULT_COUNTRY);
     }
 
     public BasicInsightRequest(String number, String country) {
         super(number, country);
     }
-
 }

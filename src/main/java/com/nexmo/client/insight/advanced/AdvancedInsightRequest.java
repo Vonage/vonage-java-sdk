@@ -25,19 +25,32 @@ import com.nexmo.client.insight.BaseInsightRequest;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 public class AdvancedInsightRequest extends BaseInsightRequest {
-    private String ipAddress;
+    private static final Boolean DEFAULT_CNAM = null;
+    private final static String DEFAULT_IP_ADDRESS = null;
+    private final String ipAddress;
+    private final Boolean cnam;
+
 
     public AdvancedInsightRequest(String number) {
-        super(number, null);
+        this(number, DEFAULT_COUNTRY);
     }
 
     public AdvancedInsightRequest(String number, String country) {
-        super(number, country);
+        this(number, country, DEFAULT_IP_ADDRESS);
     }
 
     public AdvancedInsightRequest(String number, String country, String ipAddress) {
+        this(number, country, ipAddress, DEFAULT_CNAM);
+    }
+
+    public AdvancedInsightRequest(String number, String country, String ipAddress, Boolean cnam) {
         super(number, country);
+        this.cnam = cnam;
         this.ipAddress = ipAddress;
+    }
+
+    public Boolean getCnam() {
+        return cnam;
     }
 
     public String getIpAddress() {
@@ -56,6 +69,7 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
             AdvancedInsightRequest other = (AdvancedInsightRequest) obj;
             return new EqualsBuilder()
                     .appendSuper(super.equals(other))
+                    .append(this.getCnam(), other.getCnam())
                     .append(this.getIpAddress(), other.getIpAddress())
                     .isEquals();
         }

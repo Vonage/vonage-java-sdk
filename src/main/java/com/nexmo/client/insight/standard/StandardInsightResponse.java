@@ -25,7 +25,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.insight.CallerType;
 import com.nexmo.client.insight.CarrierDetails;
+import com.nexmo.client.insight.advanced.AdvancedInsightResponse;
 import com.nexmo.client.insight.basic.BasicInsightResponse;
 
 import java.io.IOException;
@@ -36,6 +38,10 @@ public class StandardInsightResponse extends BasicInsightResponse {
     private String remainingBalance;
     private CarrierDetails originalCarrier;
     private CarrierDetails currentCarrier;
+    private String callerName;
+    private String firstName;
+    private String lastName;
+    private CallerType callerType;
 
     public static StandardInsightResponse fromJson(String json) {
         try {
@@ -64,5 +70,25 @@ public class StandardInsightResponse extends BasicInsightResponse {
     @JsonProperty("current_carrier")
     public CarrierDetails getCurrentCarrier() {
         return currentCarrier;
+    }
+
+    @JsonProperty("caller_name")
+    public String getCallerName() {
+        return callerName;
+    }
+
+    @JsonProperty("first_name")
+    public String getFirstName() {
+        return firstName;
+    }
+
+    @JsonProperty("last_name")
+    public String getLastName() {
+        return lastName;
+    }
+
+    @JsonProperty("caller_type")
+    public CallerType getCallerType() {
+        return callerType;
     }
 }

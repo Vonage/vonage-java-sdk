@@ -22,6 +22,7 @@
 package com.nexmo.client.insight.standard;
 
 import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.insight.CallerType;
 import com.nexmo.client.insight.CarrierDetails;
 import org.junit.Test;
 
@@ -56,7 +57,11 @@ public class StandardInsightResponseTest {
                         "        \"country\": \"GB\",\n" +
                         "        \"network_type\": \"mobile\"\n" +
                         "    },\n" +
-                        "    \"ported\": \"assumed_not_ported\"\n" +
+                        "    \"ported\": \"assumed_not_ported\",\n" +
+                        "    \"first_name\": \"Bob\",\n" +
+                        "    \"last_name\": \"Atkey\",\n" +
+                        "    \"caller_name\": \"Monads, Incorporated\",\n" +
+                        "    \"caller_type\": \"business\"\n" +
                         "}");
 
         assertEquals(0, response.getStatus());
@@ -83,6 +88,11 @@ public class StandardInsightResponseTest {
 
         assertEquals("18.34408949", response.getRemainingBalance());
         assertEquals("0.00500000", response.getRequestPrice());
+
+        assertEquals("Bob", response.getFirstName());
+        assertEquals("Atkey", response.getLastName());
+        assertEquals("Monads, Incorporated", response.getCallerName());
+        assertEquals(CallerType.BUSINESS, response.getCallerType());
     }
 
     @Test

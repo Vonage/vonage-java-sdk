@@ -22,6 +22,7 @@
 package com.nexmo.client.insight.advanced;
 
 import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.insight.CallerType;
 import com.nexmo.client.insight.CarrierDetails;
 import com.nexmo.client.insight.RoamingDetails;
 import org.junit.Test;
@@ -61,7 +62,11 @@ public class AdvancedInsightResponseTest {
                 "    \"valid_number\": \"valid\",\n" +
                 "    \"reachable\": \"unknown\",\n" +
                 "    \"ported\": \"assumed_not_ported\",\n" +
-                "    \"roaming\": {\"status\": \"not_roaming\"}\n" +
+                "    \"roaming\": {\"status\": \"not_roaming\"},\n" +
+                "    \"first_name\": \"Bob\",\n" +
+                "    \"last_name\": \"Atkey\",\n" +
+                "    \"caller_name\": \"Monads, Incorporated\",\n" +
+                "    \"caller_type\": \"unknown\"\n" +
                 "}");
 
         assertEquals(0, response.getStatus());
@@ -96,6 +101,10 @@ public class AdvancedInsightResponseTest {
         assertEquals(new Integer(1), response.getLookupOutcome());
         assertEquals("Partial success - some fields populated", response.getLookupOutcomeMessage());
 
+        assertEquals("Bob", response.getFirstName());
+        assertEquals("Atkey", response.getLastName());
+        assertEquals("Monads, Incorporated", response.getCallerName());
+        assertEquals(CallerType.UNKNOWN, response.getCallerType());
     }
 
     @Test
