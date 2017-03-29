@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## In Development
+### Added
+- Number Insight now supports the `cnam` parameter for Standard and Advanced requests.
+
 ## [2.0.1] - 2017-03-18
 ### Changed
 - Made servlet-api an optional dependency so it isn't bundled in war files. (This
