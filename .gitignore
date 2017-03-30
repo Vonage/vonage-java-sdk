@@ -13,3 +13,5 @@ gradle.properties
 nexmo-sdk.jar
 publishing
 valid_application_key.pem
+.idea
+*.iml
