@@ -67,7 +67,7 @@ public abstract class AbstractDLRServlet extends AbstractNexmoServlet<DeliveryRe
         if (sender == null || destination == null || messageId == null) {
             throw new NexmoCallbackRequestValidationException("Missing mandatory fields");
         }
-        DeliveryReceiptRequest.DELIVERY_STATUS status = parseStatus(request.getParameter("status"));
+        DeliveryReceiptRequest.DeliveryStatus status = parseStatus(request.getParameter("status"));
 
         Integer errorCode = parseErrorCode(request.getParameter("err-code"));
 
@@ -81,10 +81,10 @@ public abstract class AbstractDLRServlet extends AbstractNexmoServlet<DeliveryRe
                                           timeStamp, clientRef);
     }
 
-    private static DeliveryReceiptRequest.DELIVERY_STATUS parseStatus(String str)
+    private static DeliveryReceiptRequest.DeliveryStatus parseStatus(String str)
             throws NexmoCallbackRequestValidationException {
         if (str != null) {
-            for (DeliveryReceiptRequest.DELIVERY_STATUS status : DeliveryReceiptRequest.DELIVERY_STATUS.values()) {
+            for (DeliveryReceiptRequest.DeliveryStatus status : DeliveryReceiptRequest.DeliveryStatus.values()) {
                 if (Objects.equals(status.getStatus(), str)) {
                     return status;
                 }

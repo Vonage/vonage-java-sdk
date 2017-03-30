@@ -255,7 +255,7 @@ public class AbstractDLRServletTest {
         when(request.getParameter("network-code")).thenReturn("networkcode");
         when(request.getParameter("messageId")).thenReturn("messageid");
         when(request.getParameter("msisdn")).thenReturn("anisdn");
-        when(request.getParameter("status")).thenReturn(DeliveryReceiptRequest.DELIVERY_STATUS.ACCEPTED.getStatus());
+        when(request.getParameter("status")).thenReturn(DeliveryReceiptRequest.DeliveryStatus.ACCEPTED.getStatus());
         when(request.getParameter("err-code")).thenReturn("0");
         when(request.getParameter("price")).thenReturn("0.0448");
         when(request.getParameter("scts")).thenReturn("1101181426");//2011 Jan 18th 14:26 - YYMMDDHHMM
@@ -274,7 +274,7 @@ public class AbstractDLRServletTest {
         assertEquals("anisdn", receipt.getDestination());
         assertEquals("networkcode", receipt.getNetworkCode());
         assertEquals("messageid", receipt.getMessageId());
-        assertEquals(DeliveryReceiptRequest.DELIVERY_STATUS.ACCEPTED, receipt.getStatus());
+        assertEquals(DeliveryReceiptRequest.DeliveryStatus.ACCEPTED, receipt.getStatus());
         assertEquals(DeliveryReceiptRequest.ERR_CODE_DELIVERED, receipt.getErrorCode().intValue());
         assertEquals(0, new BigDecimal("0.0448").compareTo(receipt.getPrice()));
         assertEquals(new GregorianCalendar(2011, 0, 18, 14, 26, 0).getTime(), receipt.getScts());

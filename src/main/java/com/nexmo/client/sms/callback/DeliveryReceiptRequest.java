@@ -132,7 +132,7 @@ public class DeliveryReceiptRequest implements Serializable {
     /**
      * Describes the delivery status.
      */
-    public enum DELIVERY_STATUS {
+    public enum DeliveryStatus {
 
         /**
          * This message has been delivered to the phone number.
@@ -167,7 +167,7 @@ public class DeliveryReceiptRequest implements Serializable {
 
         final String status;
 
-        DELIVERY_STATUS(final String status) {
+        DeliveryStatus(final String status) {
             this.status = status;
         }
 
@@ -187,7 +187,7 @@ public class DeliveryReceiptRequest implements Serializable {
     private final String messageId;
     private final String networkCode;
 
-    private final DELIVERY_STATUS status;
+    private final DeliveryStatus status;
     private final Integer errorCode;
 
     private final BigDecimal price;
@@ -197,7 +197,7 @@ public class DeliveryReceiptRequest implements Serializable {
 
 
     public DeliveryReceiptRequest(String sender, String destination, String messageId, String networkCode,
-                                  DELIVERY_STATUS status, Integer errorCode, BigDecimal price, Date scts, Date timeStamp,
+                                  DeliveryStatus status, Integer errorCode, BigDecimal price, Date scts, Date timeStamp,
                                   String clientRef) {
         this.sender = sender;
         this.destination = destination;
@@ -253,7 +253,7 @@ public class DeliveryReceiptRequest implements Serializable {
      *
      * @return a code that explains where the message is in the delivery process.
      */
-    public DELIVERY_STATUS getStatus() {
+    public DeliveryStatus getStatus() {
         return status;
     }
 
