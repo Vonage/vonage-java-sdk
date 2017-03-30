@@ -32,7 +32,7 @@ import java.util.Date;
  * This represents an incoming Delivery Receipt callback request. See also the
  * <a href="https://docs.nexmo.com/messaging/sms-api/api-reference#delivery_receipt">Web API reference</a>.
  */
-public class DLR implements Serializable {
+public class DeliveryReceiptRequest implements Serializable {
 
     /**
      * 0 - Delivered.
@@ -196,9 +196,9 @@ public class DLR implements Serializable {
     private final String clientRef;
 
 
-    public DLR(String sender, String destination, String messageId, String networkCode,
-               DELIVERY_STATUS status, Integer errorCode, BigDecimal price, Date scts, Date timeStamp,
-               String clientRef) {
+    public DeliveryReceiptRequest(String sender, String destination, String messageId, String networkCode,
+                                  DELIVERY_STATUS status, Integer errorCode, BigDecimal price, Date scts, Date timeStamp,
+                                  String clientRef) {
         this.sender = sender;
         this.destination = destination;
         this.messageId = messageId;

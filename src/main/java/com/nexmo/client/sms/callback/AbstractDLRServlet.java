@@ -40,7 +40,7 @@ import java.util.Objects;
  * You are responsible for persisting this object in the event of any failure whilst processing
  *
  */
-public abstract class AbstractDLRServlet extends AbstractNexmoServlet<DLR> {
+public abstract class AbstractDLRServlet extends AbstractNexmoServlet<DeliveryReceiptRequest> {
 
     private static final long serialVersionUID = -781240891967430458L;
 
@@ -60,14 +60,14 @@ public abstract class AbstractDLRServlet extends AbstractNexmoServlet<DLR> {
     }
 
     @Override
-    protected DLR parseRequest(HttpServletRequest request) throws NexmoCallbackRequestValidationException {
+    protected DeliveryReceiptRequest parseRequest(HttpServletRequest request) throws NexmoCallbackRequestValidationException {
         String sender = request.getParameter("to");
         String destination = request.getParameter("msisdn");
         String messageId = request.getParameter("messageId");
         if (sender == null || destination == null || messageId == null) {
             throw new NexmoCallbackRequestValidationException("Missing mandatory fields");
         }
-        DLR.DELIVERY_STATUS status = parseStatus(request.getParameter("status"));
+        DeliveryReceiptRequest.DELIVERY_STATUS status = parseStatus(request.getParameter("status"));
 
         Integer errorCode = parseErrorCode(request.getParameter("err-code"));
 
@@ -77,14 +77,14 @@ public abstract class AbstractDLRServlet extends AbstractNexmoServlet<DLR> {
         Date timeStamp = parseTimeStamp(request, "message-timestamp");
         String clientRef = request.getParameter("client-ref");
 
-        return new DLR(sender, destination, messageId, networkCode, status, errorCode, price, scts,
-                       timeStamp, clientRef);
+        return new DeliveryReceiptRequest(sender, destination, messageId, networkCode, status, errorCode, price, scts,
+                                          timeStamp, clientRef);
     }
 
-    private static DLR.DELIVERY_STATUS parseStatus(String str)
+    private static DeliveryReceiptRequest.DELIVERY_STATUS parseStatus(String str)
             throws NexmoCallbackRequestValidationException {
         if (str != null) {
-            for (DLR.DELIVERY_STATUS status : DLR.DELIVERY_STATUS.values()) {
+            for (DeliveryReceiptRequest.DELIVERY_STATUS status : DeliveryReceiptRequest.DELIVERY_STATUS.values()) {
                 if (Objects.equals(status.getStatus(), str)) {
                     return status;
                 }

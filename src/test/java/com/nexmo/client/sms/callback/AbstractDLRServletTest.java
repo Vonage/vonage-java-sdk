@@ -17,7 +17,7 @@ class TestDLRServlet extends AbstractDLRServlet {
 
     private static final long serialVersionUID = 8355386439151956651L;
 
-    public DLR receipt;
+    public DeliveryReceiptRequest receipt;
 
     TestDLRServlet() {
         this(false, null, false, null, null);
@@ -33,7 +33,7 @@ class TestDLRServlet extends AbstractDLRServlet {
     }
 
     @Override
-    public void consume(DLR parsedObject) {
+    public void consume(DeliveryReceiptRequest parsedObject) {
         this.receipt = parsedObject;
     }
 }
@@ -87,7 +87,7 @@ public class AbstractDLRServletTest {
         servlet.doPost(request, response);
         assertEquals("OK", dummyResponseWriter.toString());
 
-        DLR receipt = servlet.receipt;
+        DeliveryReceiptRequest receipt = servlet.receipt;
         testDummyReceipt(receipt);
     }
 
@@ -255,7 +255,7 @@ public class AbstractDLRServletTest {
         when(request.getParameter("network-code")).thenReturn("networkcode");
         when(request.getParameter("messageId")).thenReturn("messageid");
         when(request.getParameter("msisdn")).thenReturn("anisdn");
-        when(request.getParameter("status")).thenReturn(DLR.DELIVERY_STATUS.ACCEPTED.getStatus());
+        when(request.getParameter("status")).thenReturn(DeliveryReceiptRequest.DELIVERY_STATUS.ACCEPTED.getStatus());
         when(request.getParameter("err-code")).thenReturn("0");
         when(request.getParameter("price")).thenReturn("0.0448");
         when(request.getParameter("scts")).thenReturn("1101181426");//2011 Jan 18th 14:26 - YYMMDDHHMM
@@ -269,13 +269,13 @@ public class AbstractDLRServletTest {
         return request;
     }
 
-    private static void testDummyReceipt(DLR receipt) {
+    private static void testDummyReceipt(DeliveryReceiptRequest receipt) {
         assertEquals("to", receipt.getSender());
         assertEquals("anisdn", receipt.getDestination());
         assertEquals("networkcode", receipt.getNetworkCode());
         assertEquals("messageid", receipt.getMessageId());
-        assertEquals(DLR.DELIVERY_STATUS.ACCEPTED, receipt.getStatus());
-        assertEquals(DLR.ERR_CODE_DELIVERED, receipt.getErrorCode().intValue());
+        assertEquals(DeliveryReceiptRequest.DELIVERY_STATUS.ACCEPTED, receipt.getStatus());
+        assertEquals(DeliveryReceiptRequest.ERR_CODE_DELIVERED, receipt.getErrorCode().intValue());
         assertEquals(0, new BigDecimal("0.0448").compareTo(receipt.getPrice()));
         assertEquals(new GregorianCalendar(2011, 0, 18, 14, 26, 0).getTime(), receipt.getScts());
         assertEquals(new GregorianCalendar(2012, 3, 5, 9, 22, 57).getTime(), receipt.getTimeStamp());
