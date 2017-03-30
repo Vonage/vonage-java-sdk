@@ -31,8 +31,6 @@ import java.util.Date;
 /**
  * This represents an incoming Delivery Receipt callback request. See also the
  * <a href="https://docs.nexmo.com/messaging/sms-api/api-reference#delivery_receipt">Web API reference</a>.
- *
- * @author Panayiotis Vlissidis
  */
 public class DLR implements Serializable {
 
