@@ -31,8 +31,7 @@ import javax.servlet.http.*;
 import java.io.*;
 import java.math.BigDecimal;
 import java.text.*;
-import java.util.Date;
-import java.util.Enumeration;
+import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -98,15 +97,11 @@ public abstract class AbstractNexmoServlet<T extends Serializable> extends HttpS
         if (this.validateUsernamePassword) {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
-            if (this.expectedUsername != null) {
-                if (username == null || !this.expectedUsername.equals(username)) {
-                    passed = false;
-                }
+            if (this.expectedUsername != null && !Objects.equals(expectedUsername, username)) {
+                passed = false;
             }
-            if (this.expectedPassword != null) {
-                if (password == null || !this.expectedPassword.equals(password)) {
-                    passed = false;
-                }
+            if (this.expectedPassword != null && !Objects.equals(this.expectedPassword, password)) {
+                passed = false;
             }
         }
 

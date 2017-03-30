@@ -41,9 +41,6 @@ class TestDLRServlet extends AbstractDLRServlet {
 
 public class AbstractDLRServletTest {
 
-    public AbstractDLRServletTest() {
-    }
-
     @Test
     public void testHandleValidEmptyRequest() throws IOException, ServletException {
         HttpServletRequest request = mock(HttpServletRequest.class);
