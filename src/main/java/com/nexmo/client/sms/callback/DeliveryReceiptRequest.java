@@ -180,7 +180,7 @@ public class DeliveryReceiptRequest implements Serializable {
 
     }
 
-    private static final long serialVersionUID = 966400578542404933L;
+    private static final long serialVersionUID = 8772417486800666111L;
 
     private final String sender;
     private final String destination;
