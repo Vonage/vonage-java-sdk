@@ -26,7 +26,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 
 public class AdvancedInsightRequest extends BaseInsightRequest {
     private static final Boolean DEFAULT_CNAM = null;
-    private final static String DEFAULT_IP_ADDRESS = null;
+    private static final String DEFAULT_IP_ADDRESS = null;
     private final String ipAddress;
     private final Boolean cnam;
 
