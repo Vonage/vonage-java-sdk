@@ -21,20 +21,33 @@
  */
 package com.nexmo.client.sms;
 
+import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoResponseParseException;
+import com.nexmo.client.TestUtils;
+import com.nexmo.client.auth.AuthCollection;
+import com.nexmo.client.auth.AuthMethod;
+import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.sms.messages.BinaryMessage;
 import com.nexmo.client.sms.messages.Message;
 import com.nexmo.client.sms.messages.TextMessage;
 import com.nexmo.client.sms.messages.WapPushMessage;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class SendMessageEndpointTest {
     private SendMessageEndpoint endpoint;
@@ -59,7 +72,9 @@ public class SendMessageEndpointTest {
     @Test
     public void testConstructParamsUnicode() throws Exception {
         Message message = new TextMessage("TestSender", "not-a-number", "Test", true);
-        List<NameValuePair> params = endpoint.makeRequest(message).getParameters();
+
+        RequestBuilder requestBuilder = endpoint.makeRequest(message);
+        List<NameValuePair> params = requestBuilder.getParameters();
 
         assertContainsParam(params, "from", "TestSender");
         assertContainsParam(params, "to", "not-a-number");
@@ -326,6 +341,45 @@ public class SendMessageEndpointTest {
             if (pair.getName().equals(key)) {
                 fail("" + params + " should not contain " + key);
             }
+        }
+    }
+
+    @Test
+    public void testEntityEncoding() throws Exception {
+        HttpWrapper wrapper = mock(HttpWrapper.class);
+        HttpClient client = mock(HttpClient.class);
+        AuthCollection authCollection = mock(AuthCollection.class);
+        AuthMethod tokenAuth = new TokenAuthMethod("abcd", "def");
+
+        when(wrapper.getAuthCollection()).thenReturn(authCollection);
+        when(authCollection.getAcceptableAuthMethod(any(Set.class))).thenReturn(tokenAuth);
+        when(wrapper.getHttpClient()).thenReturn(client);
+        when(client.execute(any(HttpUriRequest.class))).thenReturn(
+                TestUtils.makeJsonHttpResponse(200, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
+                        "<mt-submission-response>\n" +
+                        "    <messages count='1'>\n" +
+                        "        <message>\n" +
+                        "            <status>10</status>\n" +
+                        "        </message>\n" +
+                        "    </messages>\n" +
+                        "</mt-submission-response>")
+        );
+
+        ArgumentCaptor<HttpUriRequest> argument = ArgumentCaptor.forClass(HttpUriRequest.class);
+
+        Message message = new TextMessage("TestSender", "not-a-number", "Test", true);
+        endpoint = new SendMessageEndpoint(wrapper);
+                /*assertEquals(
+                "application/x-www-form-urlencoded; charset=UTF-8",
+                request.getEntity().getContentType().getValue());*/
+        endpoint.execute(message);
+
+        verify(client).execute(argument.capture());
+        if (argument.getValue() instanceof HttpEntityEnclosingRequest) {
+            HttpEntity entity = ((HttpEntityEnclosingRequest) argument.getValue()).getEntity();
+            assertNotNull(entity);
+            assertEquals("application/x-www-form-urlencoded; charset=UTF-8",
+                    entity.getContentType().getValue());
         }
     }
 }

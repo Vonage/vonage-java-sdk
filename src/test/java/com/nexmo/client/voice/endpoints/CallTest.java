@@ -23,8 +23,8 @@ package com.nexmo.client.voice.endpoints;
 
 import com.nexmo.client.NexmoUnexpectedException;
 import com.nexmo.client.voice.Call;
-import com.nexmo.client.voice.PhoneEndpoint;
 import com.nexmo.client.voice.MachineDetection;
+import com.nexmo.client.voice.PhoneEndpoint;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
