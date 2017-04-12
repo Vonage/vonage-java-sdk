@@ -82,6 +82,11 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
 
             // If we have a URL Encoded form entity, we may need to regenerate it as UTF-8
             // due to a bug (or two!) in RequestBuilder:
+            //
+            // This fix can be removed when HttpClient is upgraded to 4.5, although 4.5 also
+            // has a bug where RequestBuilder.put(uri) and RequestBuilder.post(uri) use the
+            // wrong encoding, whereas RequestBuilder.put().setUri(uri) uses UTF-8.
+            // - MS 2017-04-12
             if (httpRequest instanceof HttpEntityEnclosingRequest) {
                 HttpEntityEnclosingRequest entityRequest =
                         (HttpEntityEnclosingRequest) httpRequest;
