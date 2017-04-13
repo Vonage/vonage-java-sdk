@@ -55,8 +55,19 @@ public class AdvancedInsightRequestTest {
         AdvancedInsightRequest bir = new AdvancedInsightRequest("1234");
         assertTrue(bir.equals(bir));
         assertTrue(new AdvancedInsightRequest("1234").equals(new AdvancedInsightRequest("1234")));
-        assertFalse(new AdvancedInsightRequest("1234").equals(new AdvancedInsightRequest("1235")));
+        assertFalse(new AdvancedInsightRequest("1234").equals(new AdvancedInsightRequest("7890")));
         assertFalse(new AdvancedInsightRequest("1234", "GB", "123.123.123.123").equals(
                 new AdvancedInsightRequest("1234", "GB", "123.123.123.124")));
+
+        {
+            AdvancedInsightRequest req1 = new AdvancedInsightRequest(
+                    "1234", "GB", "123.123.123.123", true);
+            AdvancedInsightRequest req2 = new AdvancedInsightRequest(
+                    "1234", "GB", "123.123.123.123", false);
+            assertFalse(
+                    "Differing cnam values should result in non-equals",
+                    req1.equals(req2)
+            );
+        }
     }
 }

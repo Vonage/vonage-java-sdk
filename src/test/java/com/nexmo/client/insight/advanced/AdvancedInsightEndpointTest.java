@@ -68,6 +68,20 @@ public class AdvancedInsightEndpointTest {
         assertEquals(params.get("number"), "1234");
         assertEquals(params.get("country"), "GB");
         assertEquals(params.get("ip"), "123.123.123.123");
+        assertNull(params.get("cnam"));
+    }
+
+    @Test
+    public void testMakeRequestWithCnam() throws Exception {
+        RequestBuilder builder = this.endpoint.makeRequest(new AdvancedInsightRequest("1234", "GB",
+                "123.123.123.123", true));
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://api.nexmo.com/ni/advanced/json", builder.build().getURI().toString());
+        Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
+        assertEquals(params.get("number"), "1234");
+        assertEquals(params.get("country"), "GB");
+        assertEquals(params.get("ip"), "123.123.123.123");
+        assertEquals(params.get("cnam"), "true");
     }
 
     @Test

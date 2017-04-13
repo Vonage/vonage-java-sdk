@@ -22,14 +22,44 @@
 package com.nexmo.client.insight.standard;
 
 import com.nexmo.client.insight.BaseInsightRequest;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
 public class StandardInsightRequest extends BaseInsightRequest {
+    private static final Boolean DEFAULT_CNAM = null;
+
+    private final Boolean cnam;
+
     public StandardInsightRequest(String number) {
-        super(number, null);
+        this(number, DEFAULT_COUNTRY);
     }
 
     public StandardInsightRequest(String number, String country) {
-        super(number, country);
+        this(number, country, DEFAULT_CNAM);
     }
 
+    public StandardInsightRequest(String number, String country, Boolean cnam) {
+        super(number, country);
+        this.cnam = cnam;
+    }
+
+    public Boolean getCnam() {
+        return cnam;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        } else if (obj == this) {
+            return true;
+        } else if (obj.getClass() != this.getClass()) {
+            return false;
+        } else {
+            StandardInsightRequest other = (StandardInsightRequest) obj;
+            return new EqualsBuilder()
+                    .appendSuper(super.equals(obj))
+                    .append(this.getCnam(), other.getCnam())
+                    .isEquals();
+        }
+    }
 }

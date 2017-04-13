@@ -68,6 +68,17 @@ public class StandardInsightEndpointTest {
     }
 
     @Test
+    public void testMakeRequestWithCnam() throws Exception {
+        RequestBuilder builder = this.endpoint.makeRequest(new StandardInsightRequest("1234", "GB", true));
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://api.nexmo.com/ni/standard/json", builder.build().getURI().toString());
+        Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
+        assertEquals(params.get("number"), "1234");
+        assertEquals(params.get("country"), "GB");
+        assertEquals(params.get("cnam"), "true");
+    }
+
+    @Test
     public void testParseResponse() throws Exception {
         HttpResponse stub = TestUtils.makeJsonHttpResponse(200, "{\n" +
                 "    \"status\": 0,\n" +

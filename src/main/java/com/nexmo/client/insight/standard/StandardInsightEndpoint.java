@@ -57,6 +57,9 @@ public class StandardInsightEndpoint extends AbstractMethod<StandardInsightReque
         if (request.getCountry() != null) {
             requestBuilder.addParameter("country", request.getCountry());
         }
+        if (request.getCnam() != null) {
+            requestBuilder.addParameter("cnam", request.getCnam().toString());
+        }
         return requestBuilder;
     }
 
