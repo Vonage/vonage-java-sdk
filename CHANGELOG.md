@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## In Development
 ### Added
 - Number Insight now supports the `cnam` parameter for Standard and Advanced requests.
-- The event url is properly set on a call `Call`
+- The event url is properly set on a `Call`
 
 ## [2.0.1] - 2017-03-18
 ### Changed
