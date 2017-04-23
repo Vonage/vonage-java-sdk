@@ -70,7 +70,7 @@ public class CallTest {
         assertEquals("BREW", call.getAnswerMethod());
         assertEquals("https://answer.example.com/", call.getAnswerUrl()[0]);
         assertEquals("RUN", call.getEventMethod());
-        assertEquals("https://events.example.com/", call.getEventUrl());
+        assertEquals("https://events.example.com/", call.getEventUrl()[0]);
         assertEquals(from, call.getFrom());
         assertEquals(101, call.getLengthTimer().intValue());
         assertEquals(MachineDetection.CONTINUE, call.getMachineDetection());
