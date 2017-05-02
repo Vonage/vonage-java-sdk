@@ -47,7 +47,6 @@ public class InsightClientTest {
     public void testGetBasicNumberInsight() throws Exception {
         client.getBasicNumberInsight("12345");
         verify(client.basic).execute(eq(new BasicInsightRequest("12345")));
-
     }
 
     @Test
@@ -69,6 +68,11 @@ public class InsightClientTest {
         verify(client.standard).execute(eq(new StandardInsightRequest("12345", "GB")));
     }
 
+    @Test
+    public void testGetStandardNumberInsight2() throws Exception {
+        client.getStandardNumberInsight("12345", "GB", true);
+        verify(client.standard).execute(eq(new StandardInsightRequest("12345", "GB", true)));
+    }
 
     @Test
     public void testGetAdvancedNumberInsight() throws Exception {
@@ -79,8 +83,20 @@ public class InsightClientTest {
 
     @Test
     public void testGetAdvancedNumberInsight1() throws Exception {
+        client.getAdvancedNumberInsight("12345", "GB");
+        verify(client.advanced).execute(eq(new AdvancedInsightRequest("12345", "GB")));
+    }
+
+    @Test
+    public void testGetAdvancedNumberInsight2() throws Exception {
         client.getAdvancedNumberInsight("12345", "GB", "123.123.123.123");
         verify(client.advanced).execute(eq(new AdvancedInsightRequest("12345", "GB", "123.123.123.123")));
+    }
+
+    @Test
+    public void testGetAdvancedNumberInsight3() throws Exception {
+        client.getAdvancedNumberInsight("12345", "GB", "123.123.123.123", true);
+        verify(client.advanced).execute(eq(new AdvancedInsightRequest("12345", "GB", "123.123.123.123", true)));
     }
 
 }

@@ -59,6 +59,9 @@ public class AdvancedInsightEndpoint extends AbstractMethod<AdvancedInsightReque
         if (request.getIpAddress() != null) {
             requestBuilder.addParameter("ip", request.getIpAddress());
         }
+        if (request.getCnam() != null) {
+            requestBuilder.addParameter("cnam", request.getCnam().toString());
+        }
         return requestBuilder;
     }
 

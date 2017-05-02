@@ -32,6 +32,7 @@ public class StandardInsightRequestTest {
         StandardInsightRequest request = new StandardInsightRequest("12345");
         assertEquals(request.getNumber(), "12345");
         assertNull(request.getCountry());
+        assertNull(request.getCnam());
     }
 
     @Test
@@ -39,16 +40,52 @@ public class StandardInsightRequestTest {
         StandardInsightRequest request = new StandardInsightRequest("12345", "GB");
         assertEquals(request.getNumber(), "12345");
         assertEquals(request.getCountry(), "GB");
+        assertNull(request.getCnam());
+    }
+
+    @Test
+    public void testConstructor3() throws Exception {
+        StandardInsightRequest request = new StandardInsightRequest("12345", "GB", true);
+        assertEquals(request.getNumber(), "12345");
+        assertEquals(request.getCountry(), "GB");
+        assertTrue(request.getCnam());
     }
 
     @Test
     public void testEquals() throws Exception {
         assertFalse(new StandardInsightRequest("1234").equals(null));
         assertFalse(new StandardInsightRequest("1234").equals(new Object()));
-        StandardInsightRequest bir = new StandardInsightRequest("1234");
-        assertTrue(bir.equals(bir));
-        assertTrue(new StandardInsightRequest("1234").equals(new StandardInsightRequest("1234")));
-        assertFalse(new StandardInsightRequest("1234").equals(new StandardInsightRequest("1235")));
+        StandardInsightRequest sir = new StandardInsightRequest("1234");
+        assertTrue(
+                "An object should be equal to itself",
+                sir.equals(sir));
+        {
+            StandardInsightRequest si1 = new StandardInsightRequest("1234", "GB", true);
+            StandardInsightRequest si2 = new StandardInsightRequest("1234", "GB", true);
+            assertTrue(
+                    "StandardInsightRequests created with the same values should be equal.",
+                    si1.equals(si2));
+        }
+
+        assertFalse(
+                "Different number should result in non-equals",
+                new StandardInsightRequest("1234").equals(new StandardInsightRequest("7891")));
+
+        {
+            StandardInsightRequest si1 = new StandardInsightRequest("1234", "GB");
+            StandardInsightRequest si2 = new StandardInsightRequest("1234", "US");
+            assertFalse(
+                    "Different country values should result in non-equals",
+                    si1.equals(si2));
+        }
+
+        {
+            StandardInsightRequest si1 = new StandardInsightRequest("1234", null, true);
+            StandardInsightRequest si2 = new StandardInsightRequest("1234", null, false);
+            assertFalse(
+                    "Different cnam values should result in non-equals",
+                    si1.equals(si2));
+        }
     }
 
 }

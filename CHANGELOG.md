@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## In Development
 ### Fixed
 - All URL-encoded PUT and POST requests are now UTF-8 instead of ISO-8859-1.
+### Added
+- Number Insight now supports the `cnam` parameter for Standard and Advanced requests.
 
 ## [2.0.1] - 2017-03-18
 ### Changed

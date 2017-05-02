@@ -26,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.insight.CallerType;
 import com.nexmo.client.insight.RoamingDetails;
 import com.nexmo.client.insight.standard.StandardInsightResponse;
 
@@ -39,6 +40,11 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
     private Integer lookupOutcome;
     private String lookupOutcomeMessage;
     private RoamingDetails roaming;
+    private String callerName;
+    private String firstName;
+    private String lastName;
+    private CallerType callerType;
+
 
     public static AdvancedInsightResponse fromJson(String json) {
         try {
@@ -75,6 +81,26 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
 
     public RoamingDetails getRoaming() {
         return roaming;
+    }
+
+    @JsonProperty("caller_name")
+    public String getCallerName() {
+        return callerName;
+    }
+
+    @JsonProperty("first_name")
+    public String getFirstName() {
+        return firstName;
+    }
+
+    @JsonProperty("last_name")
+    public String getLastName() {
+        return lastName;
+    }
+
+    @JsonProperty("caller_type")
+    public CallerType getCallerType() {
+        return callerType;
     }
 
     public enum PortedStatus {
@@ -115,5 +141,4 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
             return Reachability.valueOf(name.toUpperCase());
         }
     }
-
 }
