@@ -101,8 +101,11 @@ public class Call {
     }
 
     @JsonProperty("event_url")
-    public String getEventUrl() {
-        return eventUrl;
+    public String[] getEventUrl() {
+        if (eventUrl == null) {
+            return null;
+        }
+        return new String[]{eventUrl};
     }
 
     public void setEventUrl(String eventUrl) {
