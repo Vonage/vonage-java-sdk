@@ -369,9 +369,6 @@ public class SendMessageEndpointTest {
 
         Message message = new TextMessage("TestSender", "not-a-number", "Test", true);
         endpoint = new SendMessageEndpoint(wrapper);
-                /*assertEquals(
-                "application/x-www-form-urlencoded; charset=UTF-8",
-                request.getEntity().getContentType().getValue());*/
         endpoint.execute(message);
 
         verify(client).execute(argument.capture());
