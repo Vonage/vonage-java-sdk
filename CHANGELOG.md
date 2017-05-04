@@ -5,12 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## In Development
+## [2.0.2] - 2017-05-04
 ### Fixed
 - All URL-encoded PUT and POST requests are now UTF-8 instead of ISO-8859-1.
+- The event url is properly set on a `Call`
+
 ### Added
 - Number Insight now supports the `cnam` parameter for Standard and Advanced requests.
-- The event url is properly set on a `Call`
 
 ## [2.0.1] - 2017-03-18
 ### Changed
