@@ -30,7 +30,8 @@ public enum CallStatus {
     ANSWERED,
     TIMEOUT,
     MACHINE,
-    COMPLETED;
+    COMPLETED,
+    CANCELLED;
 
     @JsonValue
     @Override
