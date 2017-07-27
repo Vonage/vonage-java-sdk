@@ -28,9 +28,12 @@ public enum CallStatus {
     STARTED,
     RINGING,
     ANSWERED,
-    TIMEOUT,
     MACHINE,
     COMPLETED,
+    TIMEOUT,
+    FAILED,
+    REJECTED,
+    BUSY,
     CANCELLED;
 
     @JsonValue
