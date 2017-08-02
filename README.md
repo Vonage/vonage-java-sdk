@@ -73,9 +73,6 @@ to your project's classpath.
 Check the [Javadoc](http://nexmo.github.io/nexmo-java/) for full
 reference documentation. There are also many useful code samples in the [nexmo-community/nexmo-java-quickstart](https://github.com/nexmo-community/nexmo-java-quickstart) repository.
 
-
-### Examples
-
 ## Send an SMS
 
 Send an SMS with the Nexmo SMS API:
