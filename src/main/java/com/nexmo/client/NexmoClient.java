@@ -46,7 +46,20 @@ public class NexmoClient {
     private final VerifyClient verify;
     private final SnsClient sns;
 
+    private String baseUri;
     private HttpWrapper httpWrapper;
+
+
+    public NexmoClient(String baseUri, AuthMethod... authMethods) {
+        this.baseUri = baseUri;
+        this.httpWrapper = new HttpWrapper(authMethods);
+
+        this.insight = new InsightClient(this.httpWrapper, baseUri);
+        this.verify = new VerifyClient(this.httpWrapper, baseUri);
+        this.voice = new VoiceClient(this.httpWrapper, baseUri);
+        this.sms = new SmsClient(this.httpWrapper, baseUri);
+        this.sns = new SnsClient(this.httpWrapper, baseUri);
+    }
 
     public NexmoClient(AuthMethod... authMethods) {
         this.httpWrapper = new HttpWrapper(authMethods);
@@ -82,4 +95,11 @@ public class NexmoClient {
         return this.voice;
     }
 
+    public String getBaseUri() {
+        return baseUri;
+    }
+
+    public void setBaseUri(String baseUri) {
+        this.baseUri = baseUri;
+    }
 }

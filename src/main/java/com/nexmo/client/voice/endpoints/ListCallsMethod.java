@@ -52,6 +52,13 @@ public class ListCallsMethod extends AbstractMethod<CallsFilter, CallInfoPage> {
         super(httpWrapper);
     }
 
+    public ListCallsMethod(HttpWrapper httpWrapper, String baseUri) {
+        super(httpWrapper);
+        uri = baseUri;
+    }
+
+
+
     @Override
     protected Class[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;

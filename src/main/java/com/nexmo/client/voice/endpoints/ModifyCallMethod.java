@@ -48,6 +48,11 @@ public class ModifyCallMethod extends AbstractMethod<CallModifier, ModifyCallRes
         super(httpWrapper);
     }
 
+    public ModifyCallMethod(HttpWrapper httpWrapper, String baseUri) {
+        super(httpWrapper);
+        uri = baseUri;
+    }
+
     @Override
     protected Class[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;

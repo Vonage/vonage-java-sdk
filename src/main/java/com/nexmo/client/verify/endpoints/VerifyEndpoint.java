@@ -58,6 +58,11 @@ public class VerifyEndpoint extends AbstractMethod<VerifyRequest, VerifyResult> 
         super(httpWrapper);
     }
 
+    public VerifyEndpoint(HttpWrapper httpWrapper, String baseUri) {
+        super(httpWrapper);
+        uri = baseUri;
+    }
+
     @Override
     protected Class[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;

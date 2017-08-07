@@ -47,6 +47,11 @@ public class StartTalkMethod extends AbstractMethod<TalkRequest, TalkResponse> {
         super(httpWrapper);
     }
 
+    public StartTalkMethod(HttpWrapper httpWrapper, String baseUri) {
+        super(httpWrapper);
+        uri = baseUri;
+    }
+
     @Override
     protected Class[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
@@ -69,5 +74,9 @@ public class StartTalkMethod extends AbstractMethod<TalkRequest, TalkResponse> {
 
     public void setUri(String uri) {
         this.uri = uri;
+    }
+
+    public String getUri() {
+        return uri;
     }
 }

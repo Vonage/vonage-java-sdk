@@ -47,6 +47,11 @@ public class StartStreamMethod extends AbstractMethod<StreamRequest, StreamRespo
         super(httpWrapper);
     }
 
+    public StartStreamMethod(HttpWrapper httpWrapper, String baseUri) {
+        super(httpWrapper);
+        uri = baseUri;
+    }
+
     @Override
     protected Class[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
@@ -69,5 +74,9 @@ public class StartStreamMethod extends AbstractMethod<StreamRequest, StreamRespo
 
     public void setUri(String uri) {
         this.uri = uri;
+    }
+
+    public String getUri() {
+        return uri;
     }
 }

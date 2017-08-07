@@ -47,6 +47,11 @@ public class CreateCallMethod extends AbstractMethod<Call, CallEvent> {
         super(httpWrapper);
     }
 
+    public CreateCallMethod(HttpWrapper httpWrapper, String baseUri) {
+        super(httpWrapper);
+        uri = baseUri;
+    }
+
     @Override
     public RequestBuilder makeRequest(Call request) throws NexmoClientException, UnsupportedEncodingException {
         return RequestBuilder
@@ -69,5 +74,9 @@ public class CreateCallMethod extends AbstractMethod<Call, CallEvent> {
 
     public void setUri(String uri) {
         this.uri = uri;
+    }
+
+    public String getUri() {
+        return uri;
     }
 }

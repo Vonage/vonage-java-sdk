@@ -45,6 +45,11 @@ public class StopStreamMethod extends AbstractMethod<String, StreamResponse> {
         super(httpWrapper);
     }
 
+    public StopStreamMethod(HttpWrapper httpWrapper, String baseUri) {
+        super(httpWrapper);
+        uri = baseUri;
+    }
+
     @Override
     protected Class[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
@@ -66,5 +71,9 @@ public class StopStreamMethod extends AbstractMethod<String, StreamResponse> {
 
     public void setUri(String uri) {
         this.uri = uri;
+    }
+
+    public String getUri() {
+        return uri;
     }
 }

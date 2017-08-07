@@ -37,6 +37,11 @@ public class StreamsEndpoint {
         this.stopStream = new StopStreamMethod(wrapper);
     }
 
+    public StreamsEndpoint(HttpWrapper httpWrapper, String baseUri) {
+        this.startStream = new StartStreamMethod(httpWrapper, baseUri);
+        this.stopStream = new StopStreamMethod(httpWrapper, baseUri);
+    }
+
     public StreamResponse put(StreamRequest request) throws IOException, NexmoClientException {
         return this.startStream.execute(request);
     }

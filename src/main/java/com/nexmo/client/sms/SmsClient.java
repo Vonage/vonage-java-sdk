@@ -45,7 +45,11 @@ public class SmsClient {
         this.message = new SendMessageEndpoint(httpWrapper);
     }
 
-    /**
+     public SmsClient(HttpWrapper httpWrapper, String baseUri) {
+         this.message = new SendMessageEndpoint(httpWrapper, baseUri);
+     }
+
+     /**
      * Send an SMS message.
      * <p>
      * This uses the supplied object to construct a request and post it to the Nexmo API.<br>

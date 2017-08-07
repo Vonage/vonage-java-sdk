@@ -35,6 +35,10 @@ public class DtmfEndpoint {
         this.sendDtmf = new SendDtmfMethod(httpWrapper);
     }
 
+    public DtmfEndpoint(HttpWrapper httpWrapper, String baseUri) {
+        this.sendDtmf = new SendDtmfMethod(httpWrapper, baseUri);
+    }
+
     public DtmfResponse put(String uuid, String digits) throws IOException, NexmoClientException {
         return this.sendDtmf.execute(new DtmfRequest(uuid, digits));
     }

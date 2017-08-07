@@ -57,6 +57,11 @@ public class VerifyCheckMethod extends AbstractMethod<CheckRequest, CheckResult>
         super(httpWrapper);
     }
 
+    public VerifyCheckMethod(HttpWrapper httpWrapper, String baseUri) {
+        super(httpWrapper);
+        uri = baseUri;
+    }
+
     @Override
     protected Class[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;

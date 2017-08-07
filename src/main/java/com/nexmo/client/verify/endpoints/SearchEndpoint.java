@@ -80,6 +80,11 @@ public class SearchEndpoint extends AbstractMethod<SearchRequest, SearchResult[]
         super(httpWrapper);
     }
 
+    public SearchEndpoint(HttpWrapper httpWrapper, String baseUri) {
+        super(httpWrapper);
+        uri = baseUri;
+    }
+
     @Override
     protected Class[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;

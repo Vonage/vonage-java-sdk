@@ -50,6 +50,13 @@ public class CallsEndpoint {
         this.modifyCall = new ModifyCallMethod(httpWrapper);
     }
 
+    public CallsEndpoint(HttpWrapper httpWrapper, String baseUri) {
+        this.createCall = new CreateCallMethod(httpWrapper, baseUri);
+        this.readCall = new ReadCallMethod(httpWrapper, baseUri);
+        this.listCalls = new ListCallsMethod(httpWrapper, baseUri);
+        this.modifyCall = new ModifyCallMethod(httpWrapper, baseUri);
+    }
+
     /**
      * Start a call configured by the provided {@link Call} object.
      * <p>

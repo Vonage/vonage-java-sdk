@@ -40,6 +40,10 @@ public class CheckEndpoint {
         this.checkMethod = new VerifyCheckMethod(httpWrapper);
     }
 
+    public CheckEndpoint(HttpWrapper httpWrapper, String baseUri) {
+        this.checkMethod = new VerifyCheckMethod(httpWrapper, baseUri);
+    }
+
     public CheckResult check(final String requestId,
                              final String code) throws IOException, NexmoClientException {
         return this.checkMethod.execute(new CheckRequest(requestId, code));

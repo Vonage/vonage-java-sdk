@@ -60,6 +60,19 @@ public class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
         super(httpWrapper);
     }
 
+    public SnsEndpoint(HttpWrapper httpWrapper, String baseUri) {
+        super(httpWrapper);
+        uri = baseUri;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
     @Override
     protected Class[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;

@@ -44,6 +44,19 @@ public class StandardInsightEndpoint extends AbstractMethod<StandardInsightReque
         super(httpWrapper);
     }
 
+    public StandardInsightEndpoint(HttpWrapper httpWrapper, String baseUri) {
+        super(httpWrapper);
+        uri = baseUri;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
     @Override
     protected Class[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;

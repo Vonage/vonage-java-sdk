@@ -62,6 +62,14 @@ public class VerifyClient extends AbstractClient {
         this.verify = new VerifyEndpoint(httpWrapper);
     }
 
+    public VerifyClient(HttpWrapper httpWrapper, String baseUri) {
+        super(httpWrapper);
+
+        this.check = new CheckEndpoint(httpWrapper, baseUri);
+        this.search = new SearchEndpoint(httpWrapper, baseUri);
+        this.verify = new VerifyEndpoint(httpWrapper, baseUri);
+    }
+
     /**
      * Send a verification request to a phone number.
      *

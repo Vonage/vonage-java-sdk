@@ -57,6 +57,15 @@ public class VoiceClient extends AbstractClient {
         dtmf = new DtmfEndpoint(httpWrapper);
     }
 
+    public VoiceClient(HttpWrapper httpWrapper, String baseUri) {
+        super(httpWrapper);
+
+        calls = new CallsEndpoint(httpWrapper, baseUri);
+        streams = new StreamsEndpoint(httpWrapper, baseUri);
+        talk = new TalkEndpoint(httpWrapper, baseUri);
+        dtmf = new DtmfEndpoint(httpWrapper, baseUri);
+    }
+
     /**
      * Begin a call to a phone number.
      *

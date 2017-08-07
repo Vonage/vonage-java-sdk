@@ -37,6 +37,11 @@ public class TalkEndpoint {
         this.stopTalk = new StopTalkMethod(wrapper);
     }
 
+    public TalkEndpoint(HttpWrapper httpWrapper, String baseUri) {
+        this.startTalk = new StartTalkMethod(httpWrapper, baseUri);
+        this.stopTalk = new StopTalkMethod(httpWrapper, baseUri);
+    }
+
     public TalkResponse put(TalkRequest request) throws IOException, NexmoClientException {
         return this.startTalk.execute(request);
     }

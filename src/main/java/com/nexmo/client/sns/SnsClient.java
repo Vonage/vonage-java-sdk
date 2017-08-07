@@ -48,6 +48,11 @@ public class SnsClient {
         this.endpoint = new SnsEndpoint(httpWrapper);
     }
 
+    public SnsClient(HttpWrapper httpWrapper, String baseUri) {
+        this.endpoint = new SnsEndpoint(httpWrapper, baseUri);
+
+    }
+
     public SnsPublishResponse publish(SnsPublishRequest request) throws NexmoClientException, IOException {
         return (SnsPublishResponse) this.endpoint.execute(request);
     }
