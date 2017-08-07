@@ -73,8 +73,25 @@ to your project's classpath.
 Check the [Javadoc](http://nexmo.github.io/nexmo-java/) for full
 reference documentation. There are also many useful code samples in the [nexmo-community/nexmo-java-quickstart](https://github.com/nexmo-community/nexmo-java-quickstart) repository.
 
+## Send an SMS
 
-### Examples
+Send an SMS with the Nexmo SMS API:
+
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+System.out.println(FROM_NUMBER);
+
+SmsSubmissionResult[] responses = client.getSmsClient().submitMessage(new TextMessage(
+        FROM_NUMBER,
+        TO_NUMBER,
+        "Hello from Nexmo!"));
+for (SmsSubmissionResult response : responses) {
+    System.out.println(response);
+}
+```
+
+## Make Phone Calls
 
 The following code initiates an outbound call which then reads the user [a message](https://nexmo-community.github.io/ncco-examples/first_call_talk.json):
 
@@ -136,9 +153,28 @@ System.out.println("Success! " + startTalkResponse.getMessage());
 ```
 
 If you'd like to stop sending a synthesized speech message to an active call, you can do so with:
+
 ```java
 TalkResponse stopTalkResponse = client.getVoiceClient().stopTalk(event.getUuid());
 System.out.println("Alright. " + stopTalkResponse.getMessage());
+```
+
+## Send a 2FA Code
+
+Send a 2FA code to a phone number with:
+
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+VerifyResult ongoingVerify = client.getVerifyClient().verify(TO_NUMBER, "NEXMO");
+```
+
+## Check the 2FA Code
+
+When the user enters the code they received, you can check it like this:
+
+```java
+client.getVerifyClient().check(ongoingVerify.getRequestId(), CODE)
 ```
 
 ## API Coverage

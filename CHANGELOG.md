@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## In Development
+### Fixed
+- Added missing values for CallStatus: FAILED, REJECTED, BUSY & CANCELLED
+
 ### Added
 - Add missing setter for the Message.statusReportRequired property.
 
