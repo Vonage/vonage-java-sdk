@@ -46,7 +46,7 @@ public class ReadCallMethod extends AbstractMethod<String, CallInfo> {
 
     public ReadCallMethod(HttpWrapper httpWrapper, String baseUri) {
         super(httpWrapper);
-        uri = baseUri;
+        uri = baseUri + "/v1/calls";
     }
 
     @Override
@@ -65,10 +65,6 @@ public class ReadCallMethod extends AbstractMethod<String, CallInfo> {
         String json = EntityUtils.toString(response.getEntity());
         LOG.info("Received: " + json);
         return CallInfo.fromJson(json);
-    }
-
-    public void setUri(String uri) {
-        this.uri = uri;
     }
 
     public String getUri() {

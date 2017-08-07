@@ -103,6 +103,4 @@ public class InsightClient {
             String number, String country, String ipAddress, boolean cnam) throws IOException, NexmoClientException {
         return this.advanced.execute(new AdvancedInsightRequest(number, country, ipAddress, cnam));
     }
-
-
 }

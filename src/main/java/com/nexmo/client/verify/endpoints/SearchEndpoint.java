@@ -82,7 +82,11 @@ public class SearchEndpoint extends AbstractMethod<SearchRequest, SearchResult[]
 
     public SearchEndpoint(HttpWrapper httpWrapper, String baseUri) {
         super(httpWrapper);
-        uri = baseUri;
+        uri = baseUri + "/verify/search/xml";
+    }
+
+    public String getUri() {
+        return uri;
     }
 
     @Override

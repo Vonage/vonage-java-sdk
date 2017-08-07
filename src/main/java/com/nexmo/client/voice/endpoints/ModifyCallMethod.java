@@ -50,7 +50,7 @@ public class ModifyCallMethod extends AbstractMethod<CallModifier, ModifyCallRes
 
     public ModifyCallMethod(HttpWrapper httpWrapper, String baseUri) {
         super(httpWrapper);
-        uri = baseUri;
+        uri = baseUri + "/v1/calls/";
     }
 
     @Override
@@ -74,7 +74,7 @@ public class ModifyCallMethod extends AbstractMethod<CallModifier, ModifyCallRes
         return ModifyCallResponse.fromJson(json);
     }
 
-    public void setUri(String uri) {
-        this.uri = uri;
+    public String getUri() {
+        return uri;
     }
 }

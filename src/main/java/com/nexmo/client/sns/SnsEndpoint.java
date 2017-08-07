@@ -62,15 +62,11 @@ public class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
 
     public SnsEndpoint(HttpWrapper httpWrapper, String baseUri) {
         super(httpWrapper);
-        uri = baseUri;
+        uri = baseUri + "/sns/xml";
     }
 
     public String getUri() {
         return uri;
-    }
-
-    public void setUri(String uri) {
-        this.uri = uri;
     }
 
     @Override

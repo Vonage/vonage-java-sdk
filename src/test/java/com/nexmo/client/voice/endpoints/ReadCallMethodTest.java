@@ -52,6 +52,12 @@ public class ReadCallMethodTest {
     }
 
     @Test
+    public void testBaseUri() throws Exception {
+        ReadCallMethod methodUnderTest = new ReadCallMethod(null, "https://example.com");
+        assertEquals("https://example.com/v1/calls", methodUnderTest.getUri());
+    }
+
+    @Test
     public void parseResponse() throws Exception {
         HttpResponse stubResponse = TestUtils.makeJsonHttpResponse(200,
                 "      {\n" +
@@ -81,12 +87,6 @@ public class ReadCallMethodTest {
                         "      }\n");
         CallInfo record = method.parseResponse(stubResponse);
         assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", record.getUuid());
-    }
-
-    @Test
-    public void testBaseUri() throws Exception {
-        method.setUri("http://api.example.com/");
-        assertEquals("http://api.example.com/", method.getUri());
     }
 
 

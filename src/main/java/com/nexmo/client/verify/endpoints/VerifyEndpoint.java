@@ -60,7 +60,11 @@ public class VerifyEndpoint extends AbstractMethod<VerifyRequest, VerifyResult> 
 
     public VerifyEndpoint(HttpWrapper httpWrapper, String baseUri) {
         super(httpWrapper);
-        uri = baseUri;
+        uri = baseUri + "/verify/xml";
+    }
+
+    public String getUri() {
+        return uri;
     }
 
     @Override

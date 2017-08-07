@@ -47,7 +47,7 @@ public class StopStreamMethod extends AbstractMethod<String, StreamResponse> {
 
     public StopStreamMethod(HttpWrapper httpWrapper, String baseUri) {
         super(httpWrapper);
-        uri = baseUri;
+        uri = baseUri + "/v1/calls";
     }
 
     @Override
@@ -67,10 +67,6 @@ public class StopStreamMethod extends AbstractMethod<String, StreamResponse> {
         String json = EntityUtils.toString(response.getEntity());
         LOG.info("Received: " + json);
         return StreamResponse.fromJson(json);
-    }
-
-    public void setUri(String uri) {
-        this.uri = uri;
     }
 
     public String getUri() {

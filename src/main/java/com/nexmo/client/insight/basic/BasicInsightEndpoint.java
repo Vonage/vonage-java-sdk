@@ -47,15 +47,11 @@ public class BasicInsightEndpoint extends AbstractMethod<BasicInsightRequest, Ba
 
     public BasicInsightEndpoint(HttpWrapper httpWrapper, String baseUri) {
         super(httpWrapper);
-        uri = baseUri;
+        uri = baseUri + "/ni/basic/json";
     }
 
     public String getUri() {
         return uri;
-    }
-
-    public void setUri(String uri) {
-        this.uri = uri;
     }
 
     @Override

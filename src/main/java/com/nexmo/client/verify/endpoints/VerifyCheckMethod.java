@@ -59,7 +59,7 @@ public class VerifyCheckMethod extends AbstractMethod<CheckRequest, CheckResult>
 
     public VerifyCheckMethod(HttpWrapper httpWrapper, String baseUri) {
         super(httpWrapper);
-        uri = baseUri;
+        uri = baseUri + "/verify/check/xml";
     }
 
     @Override

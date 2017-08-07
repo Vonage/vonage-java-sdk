@@ -36,7 +36,7 @@ public class InsightClientTest {
     private InsightClient client;
 
     @Before
-    public void setUp() {
+    public void setUpWithoutBaseUri() {
         client = new InsightClient(null);
         client.basic = mock(BasicInsightEndpoint.class);
         client.standard = mock(StandardInsightEndpoint.class);

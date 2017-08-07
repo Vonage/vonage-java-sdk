@@ -68,6 +68,12 @@ public class BasicInsightEndpointTest {
     }
 
     @Test
+    public void testMakeRequestWithBaseUri() throws Exception {
+        this.endpoint = new BasicInsightEndpoint(null, "https://example.com");
+        assertEquals(endpoint.getUri(), "https://example.com/ni/basic/json");
+    }
+
+    @Test
     public void testParseResponse() throws Exception {
         HttpResponse stub = TestUtils.makeJsonHttpResponse(200, "{\n" +
                 "    \"status\": 0,\n" +

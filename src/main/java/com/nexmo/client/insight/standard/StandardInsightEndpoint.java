@@ -46,15 +46,11 @@ public class StandardInsightEndpoint extends AbstractMethod<StandardInsightReque
 
     public StandardInsightEndpoint(HttpWrapper httpWrapper, String baseUri) {
         super(httpWrapper);
-        uri = baseUri;
+        uri = baseUri + "/ni/standard/json";
     }
 
     public String getUri() {
         return uri;
-    }
-
-    public void setUri(String uri) {
-        this.uri = uri;
     }
 
     @Override

@@ -52,6 +52,13 @@ public class SearchEndpointTest {
     }
 
     @Test
+    public void testBaseUri() throws Exception {
+        assertEquals(client.getUri(), "https://api.nexmo.com/verify/search/xml");
+        client = new SearchEndpoint(null, "https://example.com");
+        assertEquals(client.getUri(), "https://example.com/verify/search/xml");
+    }
+
+    @Test
     public void testTooManyRequestIds() throws Exception {
         try {
             client.search("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11");

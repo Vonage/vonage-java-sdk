@@ -54,7 +54,7 @@ public class ListCallsMethod extends AbstractMethod<CallsFilter, CallInfoPage> {
 
     public ListCallsMethod(HttpWrapper httpWrapper, String baseUri) {
         super(httpWrapper);
-        uri = baseUri;
+        uri = baseUri + "/v1/calls/";
     }
 
 

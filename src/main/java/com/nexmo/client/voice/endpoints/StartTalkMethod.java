@@ -39,7 +39,7 @@ import java.io.UnsupportedEncodingException;
 public class StartTalkMethod extends AbstractMethod<TalkRequest, TalkResponse> {
     private static final Log LOG = LogFactory.getLog(StartTalkMethod.class);
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls/";
+    private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
     private String uri = DEFAULT_URI;
 
@@ -49,7 +49,7 @@ public class StartTalkMethod extends AbstractMethod<TalkRequest, TalkResponse> {
 
     public StartTalkMethod(HttpWrapper httpWrapper, String baseUri) {
         super(httpWrapper);
-        uri = baseUri;
+        uri = baseUri + "/v1/calls";
     }
 
     @Override
@@ -70,10 +70,6 @@ public class StartTalkMethod extends AbstractMethod<TalkRequest, TalkResponse> {
         String json = EntityUtils.toString(response.getEntity());
         LOG.info("Received: " + json);
         return TalkResponse.fromJson(json);
-    }
-
-    public void setUri(String uri) {
-        this.uri = uri;
     }
 
     public String getUri() {

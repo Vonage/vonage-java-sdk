@@ -49,7 +49,7 @@ public class StartStreamMethod extends AbstractMethod<StreamRequest, StreamRespo
 
     public StartStreamMethod(HttpWrapper httpWrapper, String baseUri) {
         super(httpWrapper);
-        uri = baseUri;
+        uri = baseUri + "/v1/calls";
     }
 
     @Override
@@ -70,10 +70,6 @@ public class StartStreamMethod extends AbstractMethod<StreamRequest, StreamRespo
         String json = EntityUtils.toString(response.getEntity());
         LOG.info("Received: " + json);
         return StreamResponse.fromJson(json);
-    }
-
-    public void setUri(String uri) {
-        this.uri = uri;
     }
 
     public String getUri() {

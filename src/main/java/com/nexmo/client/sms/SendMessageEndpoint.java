@@ -59,15 +59,11 @@ public class SendMessageEndpoint extends AbstractMethod<Message, SmsSubmissionRe
 
     public SendMessageEndpoint(HttpWrapper httpWrapper, String baseUri) {
         super(httpWrapper);
-        uri = baseUri;
+        uri = baseUri + "/sms/xml";
     }
 
     public String getUri() {
         return uri;
-    }
-
-    public void setUri(String uri) {
-        this.uri = uri;
     }
 
     @Override

@@ -49,7 +49,7 @@ public class CreateCallMethod extends AbstractMethod<Call, CallEvent> {
 
     public CreateCallMethod(HttpWrapper httpWrapper, String baseUri) {
         super(httpWrapper);
-        uri = baseUri;
+        uri = baseUri + "/v1/calls";
     }
 
     @Override
