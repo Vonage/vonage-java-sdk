@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## In Development
+### Added
+- Add missing setter for the Message.statusReportRequired property.
+
 ## [2.0.2] - 2017-05-04
 ### Fixed
 - All URL-encoded PUT and POST requests are now UTF-8 instead of ISO-8859-1.
