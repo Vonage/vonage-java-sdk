@@ -30,6 +30,8 @@ import com.nexmo.client.insight.standard.StandardInsightRequest;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.*;
 
 public class InsightClientTest {
@@ -97,6 +99,19 @@ public class InsightClientTest {
     public void testGetAdvancedNumberInsight3() throws Exception {
         client.getAdvancedNumberInsight("12345", "GB", "123.123.123.123", true);
         verify(client.advanced).execute(eq(new AdvancedInsightRequest("12345", "GB", "123.123.123.123", true)));
+    }
+
+    @Test
+    public void testSetBaseUri() throws Exception {
+        assertNull(this.client.getBaseUri());
+        this.client.setBaseUri("https://example.com");
+        assertEquals("https://example.com", this.client.getBaseUri());
+    }
+
+    @Test
+    public void testConstructBaseUri() throws Exception {
+        InsightClient insightClientWithBaseUri = new InsightClient(null, "https://example.com");
+        assertEquals("https://example.com", insightClientWithBaseUri.getBaseUri());
     }
 
 }

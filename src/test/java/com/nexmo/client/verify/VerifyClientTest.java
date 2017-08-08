@@ -38,8 +38,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -404,5 +403,18 @@ public class VerifyClientTest {
     public void testLineType() {
         VerifyRequest.LineType all = VerifyRequest.LineType.ALL;
         assertEquals("ALL", all.toString());
+    }
+
+    @Test
+    public void testSetBaseUri() throws Exception {
+        assertNull(this.client.getBaseUri());
+        this.client.setBaseUri("https://example.com");
+        assertEquals("https://example.com", this.client.getBaseUri());
+    }
+
+    @Test
+    public void testConstructBaseUri() throws Exception {
+        VerifyClient verifyClientWithBaseUri = new VerifyClient(wrapper, "https://example.com");
+        assertEquals("https://example.com", verifyClientWithBaseUri.getBaseUri());
     }
 }

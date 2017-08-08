@@ -42,6 +42,7 @@ public class VoiceClient extends AbstractClient {
     protected final StreamsEndpoint streams;
     protected final TalkEndpoint talk;
     protected final DtmfEndpoint dtmf;
+    private String baseUri;
 
     /**
      * Constructor.
@@ -59,6 +60,7 @@ public class VoiceClient extends AbstractClient {
 
     public VoiceClient(HttpWrapper httpWrapper, String baseUri) {
         super(httpWrapper);
+        this.baseUri = baseUri;
 
         calls = new CallsEndpoint(httpWrapper, baseUri);
         streams = new StreamsEndpoint(httpWrapper, baseUri);
@@ -270,5 +272,13 @@ public class VoiceClient extends AbstractClient {
      */
     public TalkResponse stopTalk(String uuid) throws IOException, NexmoClientException {
         return talk.delete(uuid);
+    }
+
+    public String getBaseUri() {
+        return baseUri;
+    }
+
+    public void setBaseUri(String baseUri) {
+        this.baseUri = baseUri;
     }
 }

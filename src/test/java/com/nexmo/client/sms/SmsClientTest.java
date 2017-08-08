@@ -38,8 +38,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -115,5 +114,16 @@ public class SmsClientTest {
         }
     }
 
+    @Test
+    public void testSetBaseUri() throws Exception {
+        assertNull(this.client.getBaseUri());
+        this.client.setBaseUri("https://example.com");
+        assertEquals("https://example.com", this.client.getBaseUri());
+    }
 
+    @Test
+    public void testConstructBaseUri() throws Exception {
+        SmsClient smsClientWithBaseUri = new SmsClient(wrapper, "https://example.com");
+        assertEquals("https://example.com", smsClientWithBaseUri.getBaseUri());
+    }
 }

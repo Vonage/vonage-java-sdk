@@ -35,6 +35,7 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -280,5 +281,27 @@ public class VoiceClientTest {
         TalkResponse response = client.stopTalk("ssf61863-4a51-ef6b-11e1-w6edebcf93bb");
         assertEquals("Talk stopped", response.getMessage());
         assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
+    }
+
+    @Test
+    public void testSetBaseUri() throws Exception {
+        VoiceClient client = new VoiceClient(stubHttpWrapper(200, "{\n" +
+                "  \"conversation_uuid\": \"63f61863-4a51-4f6b-86e1-46edebio0391\",\n" +
+                "  \"status\": \"started\",\n" +
+                "  \"direction\": \"outbound\"\n" +
+                "}"));
+        assertNull(client.getBaseUri());
+        client.setBaseUri("https://example.com");
+        assertEquals("https://example.com", client.getBaseUri());
+    }
+
+    @Test
+    public void testConstructBaseUri() throws Exception {
+        VoiceClient client = new VoiceClient(stubHttpWrapper(200, "{\n" +
+                "  \"conversation_uuid\": \"63f61863-4a51-4f6b-86e1-46edebio0391\",\n" +
+                "  \"status\": \"started\",\n" +
+                "  \"direction\": \"outbound\"\n" +
+                "}"), "https://example.com");
+        assertEquals("https://example.com", client.getBaseUri());
     }
 }

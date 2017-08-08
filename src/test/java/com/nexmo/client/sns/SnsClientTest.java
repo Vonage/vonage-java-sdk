@@ -40,6 +40,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
@@ -117,5 +118,16 @@ public class SnsClientTest {
         }
     }
 
+    @Test
+    public void testSetBaseUri() throws Exception {
+        assertNull(this.client.getBaseUri());
+        this.client.setBaseUri("https://example.com");
+        assertEquals("https://example.com", this.client.getBaseUri());
+    }
 
+    @Test
+    public void testConstructBaseUri() throws Exception {
+        SnsClient snsClientWithBaseUri = new SnsClient(httpWrapper, "https://example.com");
+        assertEquals("https://example.com", snsClientWithBaseUri.getBaseUri());
+    }
 }
