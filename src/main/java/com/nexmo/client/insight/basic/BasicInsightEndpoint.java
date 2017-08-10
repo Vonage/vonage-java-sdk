@@ -54,6 +54,11 @@ public class BasicInsightEndpoint extends AbstractMethod<BasicInsightRequest, Ba
         return uri;
     }
 
+    public void setBaseUri(String uri) {
+        this.uri = uri + "/ni/basic/json";
+        System.out.print(this.uri);
+    }
+
     @Override
     protected Class[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;

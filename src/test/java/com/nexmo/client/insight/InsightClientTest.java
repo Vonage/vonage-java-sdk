@@ -106,6 +106,10 @@ public class InsightClientTest {
         assertNull(this.client.getBaseUri());
         this.client.setBaseUri("https://example.com");
         assertEquals("https://example.com", this.client.getBaseUri());
+
+        assertEquals("https://example.com/ni/basic/json", this.client.basic.getUri());
+        assertEquals("https://example.com/ni/standard/json", this.client.standard.getUri());
+        assertEquals("https://example.com/ni/advanced/json", this.client.advanced.getUri());
     }
 
     @Test

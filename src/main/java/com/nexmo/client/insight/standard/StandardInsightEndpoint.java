@@ -53,6 +53,10 @@ public class StandardInsightEndpoint extends AbstractMethod<StandardInsightReque
         return uri;
     }
 
+    public void setBaseUri(String uri) {
+        this.uri = uri + "/ni/standard/json";
+    }
+
     @Override
     protected Class[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;

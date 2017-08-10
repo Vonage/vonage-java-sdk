@@ -120,6 +120,7 @@ public class NexmoClient {
      */
     public void setBaseUri(String baseUri) {
         this.baseUri = baseUri;
+
         this.insight.setBaseUri(this.baseUri);
         this.verify.setBaseUri(this.baseUri);
         this.voice.setBaseUri(this.baseUri);

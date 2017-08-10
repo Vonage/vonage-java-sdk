@@ -112,5 +112,9 @@ public class InsightClient {
 
     public void setBaseUri(String baseUri) {
         this.baseUri = baseUri;
+
+        this.basic.setBaseUri(baseUri);
+        this.standard.setBaseUri(baseUri);
+        this.advanced.setBaseUri(baseUri);
     }
 }

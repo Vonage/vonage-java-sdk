@@ -53,6 +53,10 @@ public class AdvancedInsightEndpoint extends AbstractMethod<AdvancedInsightReque
         return uri;
     }
 
+    public void setBaseUri(String uri) {
+        this.uri = uri + "/ni/advanced/json";
+    }
+
     @Override
     protected Class[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
