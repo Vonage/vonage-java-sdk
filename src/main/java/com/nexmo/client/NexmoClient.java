@@ -103,6 +103,13 @@ public class NexmoClient {
         return this.voice;
     }
 
+    /**
+     * The server this library calls when making requests. Will be null if no overriding value has been set.
+     * If this is null the client's {@code getBaseUri} method should be called.
+     *
+     * @return String uri the library calls when making requests or null
+     */
+
     public String getBaseUri() {
         return baseUri;
     }
@@ -113,5 +120,10 @@ public class NexmoClient {
      */
     public void setBaseUri(String baseUri) {
         this.baseUri = baseUri;
+        this.insight.setBaseUri(this.baseUri);
+        this.verify.setBaseUri(this.baseUri);
+        this.voice.setBaseUri(this.baseUri);
+        this.sms.setBaseUri(this.baseUri);
+        this.sns.setBaseUri(this.baseUri);
     }
 }

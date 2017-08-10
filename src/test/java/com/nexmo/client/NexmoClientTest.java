@@ -115,8 +115,10 @@ public class NexmoClientTest {
         assertNull(client.getBaseUri());
         client.setBaseUri("https://example.com");
         assertEquals("https://example.com", client.getBaseUri());
-
-        CallEvent evt = client.getVoiceClient().createCall(new Call("4499991111", "44111222333", "https://callback.example.com/"));
-        assertEquals(CallStatus.STARTED, evt.getStatus());
+        assertEquals("https://example.com", client.getInsightClient().getBaseUri());
+        assertEquals("https://example.com", client.getSmsClient().getBaseUri());
+        assertEquals("https://example.com", client.getSnsClient().getBaseUri());
+        assertEquals("https://example.com", client.getVerifyClient().getBaseUri());
+        assertEquals("https://example.com", client.getVoiceClient().getBaseUri());
     }
 }
