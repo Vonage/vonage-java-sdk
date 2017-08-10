@@ -38,7 +38,7 @@ public class InsightClientTest {
     private InsightClient client;
 
     @Before
-    public void setUpWithoutBaseUri() {
+    public void setUp() {
         client = new InsightClient(null);
         client.basic = mock(BasicInsightEndpoint.class);
         client.standard = mock(StandardInsightEndpoint.class);
@@ -56,7 +56,6 @@ public class InsightClientTest {
         client.getBasicNumberInsight("12345", "GB");
         verify(client.basic).execute(eq(new BasicInsightRequest("12345", "GB")));
     }
-
 
     @Test
     public void testGetStandardNumberInsight() throws Exception {
