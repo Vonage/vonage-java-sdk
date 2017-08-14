@@ -102,6 +102,10 @@ public class InsightClientTest {
 
     @Test
     public void testSetBaseUri() throws Exception {
+        client.basic = new BasicInsightEndpoint(null);
+        client.standard = new StandardInsightEndpoint(null);
+        client.advanced = new AdvancedInsightEndpoint(null);
+
         assertNull(this.client.getBaseUri());
         this.client.setBaseUri("https://example.com");
         assertEquals("https://example.com", this.client.getBaseUri());
