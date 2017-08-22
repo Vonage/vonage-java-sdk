@@ -22,6 +22,7 @@
 package com.nexmo.client;
 
 
+import com.nexmo.client.account.AccountClient;
 import com.nexmo.client.auth.AuthMethod;
 import com.nexmo.client.insight.InsightClient;
 import com.nexmo.client.sms.SmsClient;
@@ -40,6 +41,7 @@ import org.apache.http.client.HttpClient;
  * clients for all of the Nexmo APIs.
  */
 public class NexmoClient {
+    private final AccountClient account;
     private final InsightClient insight;
     private final SmsClient sms;
     private final VoiceClient voice;
@@ -51,6 +53,7 @@ public class NexmoClient {
     public NexmoClient(AuthMethod... authMethods) {
         this.httpWrapper = new HttpWrapper(authMethods);
 
+        this.account = new AccountClient(this.httpWrapper);
         this.insight = new InsightClient(this.httpWrapper);
         this.verify = new VerifyClient(this.httpWrapper);
         this.voice = new VoiceClient(this.httpWrapper);
@@ -60,6 +63,10 @@ public class NexmoClient {
 
     public void setHttpClient(HttpClient client) {
         this.httpWrapper.setHttpClient(client);
+    }
+
+    public AccountClient getAccountClient() {
+        return this.account;
     }
 
     public InsightClient getInsightClient() {
