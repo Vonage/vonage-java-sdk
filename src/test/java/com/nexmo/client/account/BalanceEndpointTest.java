@@ -21,6 +21,7 @@
  */
 package com.nexmo.client.account;
 
+import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.TestUtils;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
@@ -28,6 +29,7 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Map;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -37,7 +39,7 @@ public class BalanceEndpointTest {
     private BalanceEndpoint endpoint;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         this.endpoint = new BalanceEndpoint(null);
     }
 
@@ -66,5 +68,24 @@ public class BalanceEndpointTest {
         BalanceResponse response = this.endpoint.parseResponse(stub);
         assertEquals(3.14159, response.getValue(), 0.00001);
         assertEquals(false, response.isAutoReload());
+    }
+
+    private class StubbedBalanceEndpoint extends BalanceEndpoint {
+        public StubbedBalanceEndpoint() {
+            super(null);
+        }
+
+        @Override
+        public BalanceResponse execute(BalanceRequest request) throws IOException, NexmoClientException {
+            return new BalanceResponse(1.5, true);
+        }
+    }
+
+    @Test
+    public void testExecute() throws Exception {
+        BalanceEndpoint endpoint = new StubbedBalanceEndpoint();
+        BalanceResponse response = endpoint.execute();
+        assertEquals(response.getValue(), 1.5, 0.0001);
+        assertEquals(response.isAutoReload(), true);
     }
 }

@@ -21,39 +21,24 @@
  */
 package com.nexmo.client.account;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.NexmoUnexpectedException;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.io.IOException;
+import static org.mockito.Mockito.*;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class BalanceResponse {
-    private double value;
-    private boolean autoReload;
+public class AccountClientTest {
+    private AccountClient client;
 
-    public BalanceResponse(@JsonProperty("value") double value, @JsonProperty("autoReload") boolean autoReload) {
-        this.value = value;
-        this.autoReload = autoReload;
+    @Before
+    public void setUp() {
+        client = new AccountClient(null);
+        client.balance = mock(BalanceEndpoint.class);
     }
 
-    @JsonProperty("value")
-    public double getValue() {
-        return value;
+    @Test
+    public void testGetBalance() throws Exception {
+        client.getBalance();
+        verify(client.balance).execute();
     }
 
-    @JsonProperty("autoReload")
-    public boolean isAutoReload() {
-        return autoReload;
-    }
-
-    public static BalanceResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, BalanceResponse.class);
-        } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce BalanceResponse from json.", jpe);
-        }
-    }
 }
