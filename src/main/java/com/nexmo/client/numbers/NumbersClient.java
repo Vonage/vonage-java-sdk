@@ -32,9 +32,11 @@ import java.io.IOException;
  */
 public class NumbersClient {
     private ListNumbersEndpoint listNumbers;
+    private CancelNumberEndpoint cancelNumber;
 
     public NumbersClient(HttpWrapper httpWrapper) {
         this.listNumbers = new ListNumbersEndpoint(httpWrapper);
+        this.cancelNumber = new CancelNumberEndpoint(httpWrapper);
     }
 
     /**
@@ -57,5 +59,9 @@ public class NumbersClient {
      */
     public ListNumbersResponse listNumbers(ListNumbersFilter filter) throws IOException, NexmoClientException {
         return this.listNumbers.listNumbers(filter);
+    }
+
+    public void cancelNumber(String country, String msisdn)  throws IOException, NexmoClientException {
+        this.cancelNumber.execute(new CancelNumberRequest(country, msisdn));
     }
 }

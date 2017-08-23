@@ -120,4 +120,14 @@ public class NumbersClientTest {
         assertEquals(1, response.getCount());
     }
 
+    @Test
+    public void testCancelNumber() throws Exception {
+        NumbersClient client = new NumbersClient(stubHttpWrapper(200, "{\n" +
+                "  \"error-code\":\"200\",\n" +
+                "  \"error-code-label\":\"success\"\n" +
+                "}"));
+
+        client.cancelNumber("AA", "447700900000");
+    }
+
 }
