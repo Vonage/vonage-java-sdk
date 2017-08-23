@@ -33,9 +33,6 @@ public class OwnedNumber {
     private String voiceCallbackType;
     private String voiceCallbackValue;
 
-    public OwnedNumber() {
-    }
-
     public String getCountry() {
         return country;
     }

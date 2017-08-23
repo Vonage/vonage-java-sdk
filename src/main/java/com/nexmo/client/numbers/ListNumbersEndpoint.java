@@ -26,8 +26,6 @@ import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.voice.endpoints.AbstractMethod;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.util.EntityUtils;
@@ -36,8 +34,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 public class ListNumbersEndpoint extends AbstractMethod<ListNumbersFilter, ListNumbersResponse> {
-    private static final Log LOG = LogFactory.getLog(ListNumbersEndpoint.class);
-
     private static final String DEFAULT_URI = "https://rest.nexmo.com/account/numbers";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
     private String uri = DEFAULT_URI;

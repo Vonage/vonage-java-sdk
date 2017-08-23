@@ -22,8 +22,6 @@
 package com.nexmo.client.numbers;
 
 import com.nexmo.client.TestUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.client.methods.RequestBuilder;
@@ -41,8 +39,6 @@ import static org.junit.Assert.assertEquals;
 
 
 public class ListNumbersEndpointTest {
-    private static final Log LOG = LogFactory.getLog(ListNumbersEndpointTest.class);
-
     @Test
     public void makeRequest() throws Exception {
         ListNumbersEndpoint methodUnderTest = new ListNumbersEndpoint(null);
