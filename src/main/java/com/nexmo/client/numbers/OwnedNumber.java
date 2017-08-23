@@ -37,48 +37,59 @@ public class OwnedNumber {
     public OwnedNumber() {
     }
 
-    public OwnedNumber(
-            @JsonProperty String country,
-            @JsonProperty String msisdn,
-            @JsonProperty String moHttpUrl,
-            @JsonProperty String type,
-            @JsonProperty String[] features,
-            @JsonProperty String voiceCallbackType,
-            @JsonProperty String voiceCallbackValue) {
-        this.country = country;
-        this.msisdn = msisdn;
-        this.moHttpUrl = moHttpUrl;
-        this.type = type;
-        this.features = features;
-        this.voiceCallbackType = voiceCallbackType;
-        this.voiceCallbackValue = voiceCallbackValue;
-    }
-
     public String getCountry() {
         return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public String getMsisdn() {
         return msisdn;
     }
 
+    public void setMsisdn(String msisdn) {
+        this.msisdn = msisdn;
+    }
+
     public String getMoHttpUrl() {
         return moHttpUrl;
+    }
+
+    public void setMoHttpUrl(String moHttpUrl) {
+        this.moHttpUrl = moHttpUrl;
     }
 
     public String getType() {
         return type;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public String[] getFeatures() {
         return features;
+    }
+
+    public void setFeatures(String[] features) {
+        this.features = features;
     }
 
     public String getVoiceCallbackType() {
         return voiceCallbackType;
     }
 
+    public void setVoiceCallbackType(String voiceCallbackType) {
+        this.voiceCallbackType = voiceCallbackType;
+    }
+
     public String getVoiceCallbackValue() {
         return voiceCallbackValue;
+    }
+
+    public void setVoiceCallbackValue(String voiceCallbackValue) {
+        this.voiceCallbackValue = voiceCallbackValue;
     }
 }
