@@ -84,7 +84,7 @@ public class SearchNumbersFilter {
     public void addParams(RequestBuilder request) {
         request.addParameter("country", country);
         if (features != null && features.length > 0) {
-            request.addParameter("features", StringUtils.join(",", features));
+            request.addParameter("features", StringUtils.join(features, ","));
         }
         if (index != null) {
             request.addParameter("index", index.toString());

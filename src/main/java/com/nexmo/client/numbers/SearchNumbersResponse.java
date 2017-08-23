@@ -53,7 +53,7 @@ public class SearchNumbersResponse {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(json, SearchNumbersResponse.class);
         } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce json from ListNumbersResponse object.", jpe);
+            throw new NexmoUnexpectedException("Failed to produce json from SearchNumbersResponse object.", jpe);
         }
     }
 

@@ -65,7 +65,7 @@ public class NumbersClient {
      * Search for available Nexmo Virtual Numbers
      */
     public SearchNumbersResponse searchNumbers(String country) throws IOException, NexmoClientException {
-        return this.searchNumbers.searchNumbers(new SearchNumbersFilter(country));
+        return this.searchNumbers(new SearchNumbersFilter(country));
     }
 
     /**

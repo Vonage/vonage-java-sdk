@@ -120,4 +120,25 @@ public class NumbersClientTest {
         assertEquals(1, response.getCount());
     }
 
+    @Test
+    public void testSearchNumbers() throws Exception {
+        NumbersClient client = new NumbersClient(stubHttpWrapper(200, "{\n" +
+                "  \"count\": 4,\n" +
+                "  \"numbers\": [\n" +
+                "    {\n" +
+                "      \"country\": \"GB\",\n" +
+                "      \"msisdn\": \"447700900000\",\n" +
+                "      \"cost\": \"0.50\",\n" +
+                "      \"type\": \"mobile\",\n" +
+                "      \"features\": [\n" +
+                "        \"VOICE\",\n" +
+                "        \"SMS\"\n" +
+                "      ]\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}"));
+        SearchNumbersResponse response = client.searchNumbers("YY");
+        assertEquals(4, response.getCount());
+    }
+
 }
