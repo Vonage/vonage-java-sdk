@@ -115,7 +115,7 @@ public class NumbersClientTest {
         filter.setIndex(10);
         filter.setSize(20);
         filter.setPattern("234");
-        filter.setSearchPattern(ListNumbersFilter.SearchPattern.ENDS_WITH);
+        filter.setSearchPattern(SearchPattern.ENDS_WITH);
         ListNumbersResponse response = client.listNumbers(filter);
         assertEquals(1, response.getCount());
     }

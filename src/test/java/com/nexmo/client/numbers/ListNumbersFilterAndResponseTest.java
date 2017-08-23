@@ -69,7 +69,7 @@ public class ListNumbersFilterAndResponseTest {
 
     @Test
     public void testFilterValues() throws Exception {
-        ListNumbersFilter filter = new ListNumbersFilter(1, 50, "456", ListNumbersFilter.SearchPattern.ANYWHERE);
+        ListNumbersFilter filter = new ListNumbersFilter(1, 50, "456", SearchPattern.ANYWHERE);
         assertEquals(1, (long)filter.getIndex());
         assertEquals(50, (long)filter.getSize());
         assertEquals("456", filter.getPattern());
@@ -78,10 +78,10 @@ public class ListNumbersFilterAndResponseTest {
 
     @Test
     public void testSearchPatternValues() {
-        assertEquals(0, ListNumbersFilter.SearchPattern.STARTS_WITH.getValue());
-        assertEquals(1, ListNumbersFilter.SearchPattern.ANYWHERE.getValue());
-        assertEquals(2, ListNumbersFilter.SearchPattern.ENDS_WITH.getValue());
+        assertEquals(0, SearchPattern.STARTS_WITH.getValue());
+        assertEquals(1, SearchPattern.ANYWHERE.getValue());
+        assertEquals(2, SearchPattern.ENDS_WITH.getValue());
 
-        assertEquals(ListNumbersFilter.SearchPattern.STARTS_WITH, ListNumbersFilter.SearchPattern.valueOf("STARTS_WITH"));
+        assertEquals(SearchPattern.STARTS_WITH, SearchPattern.valueOf("STARTS_WITH"));
     }
 }

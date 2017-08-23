@@ -69,7 +69,7 @@ public class SearchNumbersFilterAndResponseTest {
         filter.setIndex(1);
         filter.setSize(50);
         filter.setPattern("456");
-        filter.setSearchPattern(ListNumbersFilter.SearchPattern.STARTS_WITH);
+        filter.setSearchPattern(SearchPattern.STARTS_WITH);
         filter.setFeatures(new String[] {"SMS"});
 
         assertEquals("GG", filter.getCountry());
@@ -82,10 +82,10 @@ public class SearchNumbersFilterAndResponseTest {
 
     @Test
     public void testSearchPatternValues() {
-        assertEquals(0, ListNumbersFilter.SearchPattern.STARTS_WITH.getValue());
-        assertEquals(1, ListNumbersFilter.SearchPattern.ANYWHERE.getValue());
-        assertEquals(2, ListNumbersFilter.SearchPattern.ENDS_WITH.getValue());
+        assertEquals(0, SearchPattern.STARTS_WITH.getValue());
+        assertEquals(1, SearchPattern.ANYWHERE.getValue());
+        assertEquals(2, SearchPattern.ENDS_WITH.getValue());
 
-        assertEquals(ListNumbersFilter.SearchPattern.STARTS_WITH, ListNumbersFilter.SearchPattern.valueOf("STARTS_WITH"));
+        assertEquals(SearchPattern.STARTS_WITH, SearchPattern.valueOf("STARTS_WITH"));
     }
 }

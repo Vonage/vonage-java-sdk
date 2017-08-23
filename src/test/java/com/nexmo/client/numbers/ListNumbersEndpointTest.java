@@ -47,7 +47,7 @@ public class ListNumbersEndpointTest {
         filter.setIndex(10);
         filter.setSize(20);
         filter.setPattern("234");
-        filter.setSearchPattern(ListNumbersFilter.SearchPattern.STARTS_WITH);
+        filter.setSearchPattern(SearchPattern.STARTS_WITH);
         RequestBuilder request = methodUnderTest.makeRequest(filter);
 
         assertEquals("GET", request.getMethod());

@@ -49,7 +49,7 @@ public class SearchNumbersEndpointTest {
         filter.setSize(20);
         filter.setPattern("234");
         filter.setFeatures(new String[] { "SMS", "VOICE" });
-        filter.setSearchPattern(ListNumbersFilter.SearchPattern.STARTS_WITH);
+        filter.setSearchPattern(SearchPattern.STARTS_WITH);
         RequestBuilder request = methodUnderTest.makeRequest(filter);
 
         assertEquals("GET", request.getMethod());

@@ -28,7 +28,7 @@ public class SearchNumbersFilter {
     private final String country;
 
     private String pattern;
-    private ListNumbersFilter.SearchPattern searchPattern;
+    private SearchPattern searchPattern;
     private String[] features;
     private Integer index;
     private Integer size;
@@ -73,11 +73,11 @@ public class SearchNumbersFilter {
         this.size = size;
     }
 
-    public ListNumbersFilter.SearchPattern getSearchPattern() {
+    public SearchPattern getSearchPattern() {
         return searchPattern;
     }
 
-    public void setSearchPattern(ListNumbersFilter.SearchPattern searchPattern) {
+    public void setSearchPattern(SearchPattern searchPattern) {
         this.searchPattern = searchPattern;
     }
 

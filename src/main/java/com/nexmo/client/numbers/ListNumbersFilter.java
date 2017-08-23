@@ -92,19 +92,4 @@ public class ListNumbersFilter {
         }
     }
 
-    public enum SearchPattern {
-        STARTS_WITH(0),
-        ANYWHERE(1),
-        ENDS_WITH(2);
-
-        private final int value;
-
-        SearchPattern(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return this.value;
-        }
-    }
 }
