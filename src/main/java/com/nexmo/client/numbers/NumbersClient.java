@@ -27,7 +27,9 @@ import com.nexmo.client.NexmoClientException;
 
 import java.io.IOException;
 
-
+/**
+ * A client for accessing the Nexmo API calls that manage phone numbers.
+ */
 public class NumbersClient {
     private ListNumbersEndpoint listNumbers;
 
@@ -35,10 +37,24 @@ public class NumbersClient {
         this.listNumbers = new ListNumbersEndpoint(httpWrapper);
     }
 
+    /**
+     * Get the first page of phone numbers assigned to the authenticated account.
+     *
+     * @return A ListNumbersResponse containing the first 10 phone numbers
+     * @throws IOException if an error occurs contacting the Nexmo API
+     * @throws NexmoClientException if an error is returned by the server.
+     */
     public ListNumbersResponse listNumbers() throws IOException, NexmoClientException {
         return this.listNumbers.listNumbers(new ListNumbersFilter());
     }
 
+    /**
+     * Get a filtered set of numbers assigned to the authenticated account.
+     * @param filter A ListNumbersFilter describing the filters to be applied to the request.
+     * @return A ListNumbersResponse containing phone numbers matching the supplied filter.
+     * @throws IOException if an error occurs contacting the Nexmo API
+     * @throws NexmoClientException if an error is returned by the server.
+     */
     public ListNumbersResponse listNumbers(ListNumbersFilter filter) throws IOException, NexmoClientException {
         return this.listNumbers.listNumbers(filter);
     }

@@ -53,7 +53,7 @@ public class ListNumbersResponse {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(json, ListNumbersResponse.class);
         } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce json from DtmfResponse object.", jpe);
+            throw new NexmoUnexpectedException("Failed to produce json from ListNumbersResponse object.", jpe);
         }
     }
 
