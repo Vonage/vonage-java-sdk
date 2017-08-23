@@ -32,9 +32,11 @@ import java.io.IOException;
  */
 public class NumbersClient {
     private ListNumbersEndpoint listNumbers;
+    private SearchNumbersEndpoint searchNumbers;
 
     public NumbersClient(HttpWrapper httpWrapper) {
         this.listNumbers = new ListNumbersEndpoint(httpWrapper);
+        this.searchNumbers = new SearchNumbersEndpoint(httpWrapper);
     }
 
     /**
@@ -57,5 +59,19 @@ public class NumbersClient {
      */
     public ListNumbersResponse listNumbers(ListNumbersFilter filter) throws IOException, NexmoClientException {
         return this.listNumbers.listNumbers(filter);
+    }
+
+    /**
+     * Search for available Nexmo Virtual Numbers
+     */
+    public SearchNumbersResponse searchNumbers(String country) throws IOException, NexmoClientException {
+        return this.searchNumbers.searchNumbers(new SearchNumbersFilter(country));
+    }
+
+    /**
+     * Search for available Nexmo Virtual Numbers
+     */
+    public SearchNumbersResponse searchNumbers(SearchNumbersFilter filter) throws IOException, NexmoClientException {
+        return this.searchNumbers.searchNumbers(filter);
     }
 }
