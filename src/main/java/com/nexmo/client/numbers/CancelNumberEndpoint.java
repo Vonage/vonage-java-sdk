@@ -26,6 +26,7 @@ import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.voice.endpoints.AbstractMethod;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.util.EntityUtils;
@@ -56,8 +57,9 @@ public class CancelNumberEndpoint extends AbstractMethod<CancelNumberRequest, Ca
     }
 
     @Override
-    public CancelNumberResponse parseResponse(HttpResponse response) throws IOException {
+    public CancelNumberResponse parseResponse(HttpResponse response) throws NexmoClientException, IOException {
         String json = EntityUtils.toString(response.getEntity());
+        LogFactory.getLog(CancelNumberEndpoint.class).debug("Response: " + json);
         return CancelNumberResponse.fromJson(json);
     }
 }

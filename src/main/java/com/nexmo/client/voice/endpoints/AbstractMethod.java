@@ -166,5 +166,5 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      * @return A ResultT type representing the result of the REST call
      * @throws IOException if a problem occurs parsing the response
      */
-    public abstract ResultT parseResponse(HttpResponse response) throws IOException;
+    public abstract ResultT parseResponse(HttpResponse response) throws IOException, NexmoClientException;
 }

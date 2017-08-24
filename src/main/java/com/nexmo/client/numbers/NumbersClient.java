@@ -24,6 +24,8 @@ package com.nexmo.client.numbers;
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.IOException;
 
@@ -62,6 +64,6 @@ public class NumbersClient {
     }
 
     public void cancelNumber(String country, String msisdn)  throws IOException, NexmoClientException {
-        this.cancelNumber.execute(new CancelNumberRequest(country, msisdn));
+        CancelNumberResponse response = this.cancelNumber.execute(new CancelNumberRequest(country, msisdn));
     }
 }

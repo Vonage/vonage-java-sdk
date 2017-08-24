@@ -21,6 +21,8 @@
  */
 package com.nexmo.client.numbers;
 
+import com.nexmo.client.NexmoBadRequestException;
+import com.nexmo.client.NexmoMethodFailedException;
 import com.nexmo.client.TestUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
@@ -36,6 +38,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 
 public class CancelNumberEndpointTest {
@@ -71,6 +74,62 @@ public class CancelNumberEndpointTest {
         CancelNumberResponse response = methodUnderTest.parseResponse(stubResponse);
         assertEquals("200", response.getErrorCode());
         assertEquals("success", response.getErrorCodeLabel());
+    }
+
+    @Test
+    public void parseBadRequestResponse() throws Exception {
+        CancelNumberEndpoint methodUnderTest = new CancelNumberEndpoint(null);
+
+        HttpResponse stubResponse = new BasicHttpResponse(
+                new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 400, "OK")
+        );
+
+        String json = "{\n" +
+                "    \"error_title\": \"Bad Request\",\n" +
+                "    \"invalid_parameters\": {\n" +
+                "        \"country\": \"Is required.\"\n" +
+                "    },\n" +
+                "    \"type\": \"BAD_REQUEST\"\n" +
+                "}";
+        InputStream jsonStream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
+        BasicHttpEntity entity = new BasicHttpEntity();
+        entity.setContent(jsonStream);
+        stubResponse.setEntity(entity);
+
+        try {
+            methodUnderTest.parseResponse(stubResponse);
+            fail("A 400 response should raise a NexmoBadRequestException");
+        } catch (NexmoBadRequestException e) {
+            // This is expected
+        }
+    }
+
+    @Test
+    public void parseBadMethodFailedResponse() throws Exception {
+        CancelNumberEndpoint methodUnderTest = new CancelNumberEndpoint(null);
+
+        HttpResponse stubResponse = new BasicHttpResponse(
+                new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 400, "OK")
+        );
+
+        String json = "{\n" +
+                "    \"error_title\": \"Bad Request\",\n" +
+                "    \"invalid_parameters\": {\n" +
+                "        \"country\": \"Is required.\"\n" +
+                "    },\n" +
+                "    \"type\": \"BAD_REQUEST\"\n" +
+                "}";
+        InputStream jsonStream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
+        BasicHttpEntity entity = new BasicHttpEntity();
+        entity.setContent(jsonStream);
+        stubResponse.setEntity(entity);
+
+        try {
+            methodUnderTest.parseResponse(stubResponse);
+            fail("A 400 response should raise a NexmoBadRequestException");
+        } catch (NexmoMethodFailedException e) {
+            // This is expected
+        }
     }
 
 }
