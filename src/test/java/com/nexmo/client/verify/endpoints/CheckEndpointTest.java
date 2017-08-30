@@ -1,3 +1,10 @@
+package com.nexmo.client.verify.endpoints;
+
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 /*
  * Copyright (c) 2011-2017 Nexmo Inc
  *
@@ -19,31 +26,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.voice.endpoints;
+public class CheckEndpointTest {
 
-import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.voice.DtmfRequest;
-import com.nexmo.client.voice.DtmfResponse;
-
-import java.io.IOException;
-
-public class DtmfEndpoint {
-    private final SendDtmfMethod sendDtmf;
-
-    public DtmfEndpoint(HttpWrapper httpWrapper) {
-        this.sendDtmf = new SendDtmfMethod(httpWrapper);
-    }
-
-    public DtmfEndpoint(HttpWrapper httpWrapper, String baseUri) {
-        this.sendDtmf = new SendDtmfMethod(httpWrapper, baseUri);
-    }
-
-    public DtmfResponse put(String uuid, String digits) throws IOException, NexmoClientException {
-        return this.sendDtmf.execute(new DtmfRequest(uuid, digits));
-    }
-
-    public void setBaseUri(String baseUri) {
-        this.sendDtmf.setUri(baseUri);
+    @Test
+    public void setBaseUri() throws Exception {
+        CheckEndpoint checkEndpoint = new CheckEndpoint(null);
+        assertNull(checkEndpoint.getBaseUri());
+        checkEndpoint.setBaseUri("https://example.com");
+        assertEquals("https://example.com", checkEndpoint.getBaseUri());
     }
 }

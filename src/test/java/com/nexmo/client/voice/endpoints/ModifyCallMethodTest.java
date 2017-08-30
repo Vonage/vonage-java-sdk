@@ -81,4 +81,18 @@ public class ModifyCallMethodTest {
         ModifyCallResponse response = methodUnderTest.parseResponse(stubResponse);
         assertEquals("Received", response.getMessage());
     }
+
+    @Test
+    public void testSetUri() throws Exception {
+        ModifyCallMethod methodUnderTest = new ModifyCallMethod(null);
+        assertEquals("https://api.nexmo.com/v1/calls", methodUnderTest.getUri());
+        methodUnderTest.setUri("https://example.com");
+        assertEquals("https://example.com/v1/calls", methodUnderTest.getUri());
+    }
+
+    @Test
+    public void testPassUriInConstructor() throws Exception {
+        ModifyCallMethod methodUnderTest = new ModifyCallMethod(null, "https://example.com");
+        assertEquals("https://example.com/v1/calls", methodUnderTest.getUri());
+    }
 }

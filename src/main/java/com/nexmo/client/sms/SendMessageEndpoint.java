@@ -49,6 +49,7 @@ public class SendMessageEndpoint extends AbstractMethod<Message, SmsSubmissionRe
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
     private static final String DEFAULT_URI = "https://rest.nexmo.com/sms/xml";
+    private static final String DEFAULT_PATH = "/sms/xml";
 
     private XmlParser xmlParser = new XmlParser();
     private String uri = DEFAULT_URI;
@@ -59,11 +60,15 @@ public class SendMessageEndpoint extends AbstractMethod<Message, SmsSubmissionRe
 
     public SendMessageEndpoint(HttpWrapper httpWrapper, String baseUri) {
         super(httpWrapper);
-        uri = baseUri + "/sms/xml";
+        uri = baseUri + DEFAULT_PATH;
     }
 
     public String getUri() {
         return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri + DEFAULT_PATH;
     }
 
     @Override

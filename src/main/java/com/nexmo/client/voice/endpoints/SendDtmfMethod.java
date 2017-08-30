@@ -39,7 +39,8 @@ import java.io.UnsupportedEncodingException;
 public class SendDtmfMethod extends AbstractMethod<DtmfRequest, DtmfResponse> {
     private static final Log LOG = LogFactory.getLog(SendDtmfMethod.class);
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls";
+    private static final String DEFAULT_URI  = "https://api.nexmo.com/v1/calls";
+    private static final String DEFAULT_PATH = "/v1/calls";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
     private String uri = DEFAULT_URI;
 
@@ -49,7 +50,7 @@ public class SendDtmfMethod extends AbstractMethod<DtmfRequest, DtmfResponse> {
 
     public SendDtmfMethod(HttpWrapper httpWrapper, String baseUri) {
         super(httpWrapper);
-        uri = baseUri + "/v1/calls";
+        uri = baseUri + DEFAULT_PATH;
     }
 
     @Override
@@ -74,5 +75,9 @@ public class SendDtmfMethod extends AbstractMethod<DtmfRequest, DtmfResponse> {
 
     public String getUri() {
         return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri + DEFAULT_PATH;
     }
 }

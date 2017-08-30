@@ -37,6 +37,7 @@ public class CallsEndpoint {
     private final ReadCallMethod readCall;
     private final ListCallsMethod listCalls;
     private final ModifyCallMethod modifyCall;
+    private String baseUri;
 
     /**
      * Constructor.
@@ -109,5 +110,14 @@ public class CallsEndpoint {
      */
     public ModifyCallResponse put(String uuid, String action) throws IOException, NexmoClientException {
         return this.modifyCall.execute(new CallModifier(uuid, action));
+    }
+
+    public void setBaseUri(String baseUri) {
+        this.baseUri = baseUri;
+
+        this.createCall.setUri(baseUri);
+        this.readCall.setUri(baseUri);
+        this.listCalls.setUri(baseUri);
+        this.modifyCall.setUri(baseUri);
     }
 }

@@ -69,5 +69,6 @@ public class SnsClient {
 
     public void setBaseUri(String baseUri) {
         this.baseUri = baseUri;
+        this.endpoint.setUri(baseUri);
     }
 }

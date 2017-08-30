@@ -62,8 +62,16 @@ public class SendDtmfMethodTest {
     }
 
     @Test
-    public void testBaseUri() throws Exception {
+    public void testPassUriInConstructor() throws Exception {
         SendDtmfMethod methodUnderTest = new SendDtmfMethod(null, "https://example.com");
+        assertEquals("https://example.com/v1/calls", methodUnderTest.getUri());
+    }
+
+    @Test
+    public void testSetUri() throws Exception {
+        SendDtmfMethod methodUnderTest = new SendDtmfMethod(null);
+        assertEquals("https://api.nexmo.com/v1/calls", methodUnderTest.getUri());
+        methodUnderTest.setUri("https://example.com");
         assertEquals("https://example.com/v1/calls", methodUnderTest.getUri());
     }
 

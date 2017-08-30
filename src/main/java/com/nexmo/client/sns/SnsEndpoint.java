@@ -51,6 +51,8 @@ public class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
     private static final String DEFAULT_BASE_URL = "https://sns.nexmo.com/sns/xml";
+    private static final String DEFAULT_PATH = "/sns/xml";
+
 
     private String uri = DEFAULT_BASE_URL;
 
@@ -62,11 +64,15 @@ public class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
 
     public SnsEndpoint(HttpWrapper httpWrapper, String baseUri) {
         super(httpWrapper);
-        uri = baseUri + "/sns/xml";
+        uri = baseUri + DEFAULT_PATH;
     }
 
     public String getUri() {
         return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri + DEFAULT_PATH;
     }
 
     @Override

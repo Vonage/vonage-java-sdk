@@ -148,6 +148,12 @@ public class VerifyEndpointTest {
     }
 
     @Test
+    public void testSetUri() throws Exception {
+        client.setUri("https://example.com");
+        assertEquals(client.getUri(), "https://example.com/verify/xml");
+    }
+
+    @Test
     public void testParseVerifyResponse() throws Exception {
         VerifyResult r = client.parseVerifyResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
                 "    <verify_response>\n" +

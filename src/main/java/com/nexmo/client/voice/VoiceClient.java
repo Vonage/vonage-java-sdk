@@ -280,5 +280,10 @@ public class VoiceClient extends AbstractClient {
 
     public void setBaseUri(String baseUri) {
         this.baseUri = baseUri;
+
+        this.calls.setBaseUri(baseUri);
+        this.streams.setBaseUri(baseUri);
+        this.talk.setBaseUri(baseUri);
+        this.dtmf.setBaseUri(baseUri);
     }
 }

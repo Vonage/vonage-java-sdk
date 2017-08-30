@@ -88,16 +88,16 @@ public class CreateCallMethodTest {
     }
 
     @Test
-    public void testCustomUri() throws Exception {
+    public void testSetUri() throws Exception {
         CreateCallMethod methodUnderTest = new CreateCallMethod(null);
-        methodUnderTest.setUri("https://api.example.com/calls");
+        methodUnderTest.setUri("https://example.com");
         RequestBuilder request = methodUnderTest.makeRequest(
                 new Call("447700900903", "447700900904", "https://example.com/answer"));
-        assertEquals("https://api.example.com/calls", request.getUri().toString());
+        assertEquals("https://example.com/v1/calls", request.getUri().toString());
     }
 
     @Test
-    public void testBaseUri() throws Exception {
+    public void testPassUriInConstructor() throws Exception {
         CreateCallMethod methodUnderTest = new CreateCallMethod(null, "https://example.com");
         assertEquals("https://example.com/v1/calls", methodUnderTest.getUri());
     }

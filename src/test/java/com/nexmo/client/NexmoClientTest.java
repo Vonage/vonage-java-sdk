@@ -99,7 +99,7 @@ public class NexmoClientTest {
 
 
     @Test
-    public void testBseUriSetterOnNexmoClient() throws Exception {
+    public void testBaseUriSetterOnNexmoClient() throws Exception {
         byte[] keyBytes = testUtils.loadKey("test/keys/application_key");
         NexmoClient client = new NexmoClient(
                 new JWTAuthMethod(

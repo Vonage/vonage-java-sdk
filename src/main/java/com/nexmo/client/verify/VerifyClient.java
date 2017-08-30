@@ -221,5 +221,8 @@ public class VerifyClient extends AbstractClient {
 
     public void setBaseUri(String baseUri) {
         this.baseUri = baseUri;
+        this.check.setBaseUri(baseUri);
+        this.verify.setUri(baseUri);
+        this.search.setUri(baseUri);
     }
 }

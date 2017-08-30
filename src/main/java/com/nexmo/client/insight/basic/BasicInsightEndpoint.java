@@ -37,7 +37,8 @@ public class BasicInsightEndpoint extends AbstractMethod<BasicInsightRequest, Ba
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/ni/basic/json";
+    private static final String DEFAULT_URI  = "https://api.nexmo.com/ni/basic/json";
+    private static final String DEFAULT_PATH = "/ni/basic/json";
 
     private String uri = DEFAULT_URI;
 
@@ -47,7 +48,7 @@ public class BasicInsightEndpoint extends AbstractMethod<BasicInsightRequest, Ba
 
     public BasicInsightEndpoint(HttpWrapper httpWrapper, String baseUri) {
         super(httpWrapper);
-        uri = baseUri + "/ni/basic/json";
+        uri = baseUri + DEFAULT_PATH;
     }
 
     public String getUri() {
@@ -55,8 +56,7 @@ public class BasicInsightEndpoint extends AbstractMethod<BasicInsightRequest, Ba
     }
 
     public void setBaseUri(String uri) {
-        this.uri = uri + "/ni/basic/json";
-        System.out.print(this.uri);
+        this.uri = uri + DEFAULT_PATH;
     }
 
     @Override

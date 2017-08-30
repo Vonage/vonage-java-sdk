@@ -1,3 +1,11 @@
+package com.nexmo.client.verify.endpoints;
+
+import com.nexmo.client.auth.TokenAuthMethod;
+import org.junit.Test;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+
 /*
  * Copyright (c) 2011-2017 Nexmo Inc
  *
@@ -19,31 +27,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.voice.endpoints;
+public class VerifyCheckMethodTest {
 
-import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.voice.DtmfRequest;
-import com.nexmo.client.voice.DtmfResponse;
-
-import java.io.IOException;
-
-public class DtmfEndpoint {
-    private final SendDtmfMethod sendDtmf;
-
-    public DtmfEndpoint(HttpWrapper httpWrapper) {
-        this.sendDtmf = new SendDtmfMethod(httpWrapper);
+    @Test
+    public void testUriInConstructor() throws Exception {
+        VerifyCheckMethod method = new VerifyCheckMethod(null, "https://example.com");
+        assertEquals("https://example.com/verify/check/xml", method.getUri());
     }
 
-    public DtmfEndpoint(HttpWrapper httpWrapper, String baseUri) {
-        this.sendDtmf = new SendDtmfMethod(httpWrapper, baseUri);
+    @Test
+    public void testSetUri() throws Exception {
+        VerifyCheckMethod method = new VerifyCheckMethod(null);
+        assertEquals("https://api.nexmo.com/verify/check/xml", method.getUri());
+        method.setUri("https://example.com");
+        assertEquals("https://example.com/verify/check/xml", method.getUri());
     }
 
-    public DtmfResponse put(String uuid, String digits) throws IOException, NexmoClientException {
-        return this.sendDtmf.execute(new DtmfRequest(uuid, digits));
+    @Test
+    public void testGetAcceptableAuthMethods() throws Exception {
+        VerifyCheckMethod method = new VerifyCheckMethod(null);
+        assertArrayEquals(new Class[]{TokenAuthMethod.class}, method.getAcceptableAuthMethods());
     }
 
-    public void setBaseUri(String baseUri) {
-        this.sendDtmf.setUri(baseUri);
-    }
 }

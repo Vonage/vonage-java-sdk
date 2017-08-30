@@ -31,6 +31,7 @@ import java.io.IOException;
 public class TalkEndpoint {
     private final StartTalkMethod startTalk;
     private final StopTalkMethod stopTalk;
+    private String baseUri;
 
     public TalkEndpoint(HttpWrapper wrapper) {
         this.startTalk = new StartTalkMethod(wrapper);
@@ -48,5 +49,12 @@ public class TalkEndpoint {
 
     public TalkResponse delete(String uuid) throws IOException, NexmoClientException {
         return this.stopTalk.execute(uuid);
+    }
+
+    public void setBaseUri(String baseUri) {
+        this.baseUri = baseUri;
+
+        this.startTalk.setUri(baseUri);
+        this.stopTalk.setUri(baseUri);
     }
 }

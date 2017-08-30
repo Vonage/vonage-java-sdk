@@ -49,6 +49,7 @@ public class VerifyCheckMethod extends AbstractMethod<CheckRequest, CheckResult>
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
     private static final String DEFAULT_URI = "https://api.nexmo.com/verify/check/xml";
+    private static final String DEFAULT_PATH = "/verify/check/xml";
 
     private XmlParser xmlParser = new XmlParser();
     private String uri = DEFAULT_URI;
@@ -59,7 +60,15 @@ public class VerifyCheckMethod extends AbstractMethod<CheckRequest, CheckResult>
 
     public VerifyCheckMethod(HttpWrapper httpWrapper, String baseUri) {
         super(httpWrapper);
-        uri = baseUri + "/verify/check/xml";
+        uri = baseUri + DEFAULT_PATH;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri + DEFAULT_PATH;
     }
 
     @Override

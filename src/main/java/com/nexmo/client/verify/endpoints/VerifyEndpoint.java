@@ -43,7 +43,8 @@ import java.util.Locale;
 public class VerifyEndpoint extends AbstractMethod<VerifyRequest, VerifyResult> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/verify/xml";
+    private static final String DEFAULT_URI  = "https://api.nexmo.com/verify/xml";
+    private static final String DEFAULT_PATH = "/verify/xml";
 
     private XmlParser xmlParser = new XmlParser();
 
@@ -60,11 +61,15 @@ public class VerifyEndpoint extends AbstractMethod<VerifyRequest, VerifyResult> 
 
     public VerifyEndpoint(HttpWrapper httpWrapper, String baseUri) {
         super(httpWrapper);
-        uri = baseUri + "/verify/xml";
+        uri = baseUri + DEFAULT_PATH;
     }
 
     public String getUri() {
         return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri + DEFAULT_PATH;
     }
 
     @Override

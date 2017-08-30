@@ -52,9 +52,16 @@ public class ReadCallMethodTest {
     }
 
     @Test
-    public void testBaseUri() throws Exception {
+    public void testPassUriInConstructor() throws Exception {
         ReadCallMethod methodUnderTest = new ReadCallMethod(null, "https://example.com");
         assertEquals("https://example.com/v1/calls", methodUnderTest.getUri());
+    }
+
+    @Test
+    public void testSetUri() throws Exception {
+        assertEquals("https://api.nexmo.com/v1/calls", method.getUri());
+        method.setUri("https://example.com");
+        assertEquals("https://example.com/v1/calls", method.getUri());
     }
 
     @Test

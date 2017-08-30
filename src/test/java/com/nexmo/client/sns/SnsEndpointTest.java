@@ -46,6 +46,14 @@ public class SnsEndpointTest {
     }
 
     @Test
+    public void testSetUri() throws Exception {
+        SnsEndpoint methodUnderTest = new SnsEndpoint(null);
+        assertEquals("https://sns.nexmo.com/sns/xml" , methodUnderTest.getUri());
+        methodUnderTest.setUri("https://example.com");
+        assertEquals("https://example.com/sns/xml", methodUnderTest.getUri());
+    }
+
+    @Test
     public void testParseSubscribeResponse() throws Exception {
         SnsResponse result = this.endpoint.parseSubmitResponse("<nexmo-sns>\n" +
                 "   <command>subscribe</command>\n" +

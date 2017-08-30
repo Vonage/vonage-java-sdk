@@ -165,7 +165,7 @@ public class ListCallsMethodTest {
     @Test
     public void testBadUriThrowsException() throws Exception {
         method.setUri(":this::///isnota_uri");
-        assertEquals(":this::///isnota_uri", method.getUri());
+        assertEquals(":this::///isnota_uri/v1/calls", method.getUri());
         try {
             CallsFilter filter = new CallsFilter();
             filter.setPageSize(30);
@@ -176,5 +176,18 @@ public class ListCallsMethodTest {
         } catch (NexmoUnexpectedException nue) {
             // This is expected
         }
+    }
+
+    @Test
+    public void testSetUri() throws Exception {
+        assertEquals("https://api.nexmo.com/v1/calls", method.getUri());
+        method.setUri("https://example.com");
+        assertEquals("https://example.com/v1/calls", method.getUri());
+    }
+
+    @Test
+    public void testPassUriInConstructor() throws Exception {
+        ListCallsMethod methodWithUri = new ListCallsMethod(null, "https://example.com");
+        assertEquals("https://example.com/v1/calls", methodWithUri.getUri());
     }
 }

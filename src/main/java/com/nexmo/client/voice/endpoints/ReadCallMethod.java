@@ -36,7 +36,8 @@ import java.io.IOException;
 public class ReadCallMethod extends AbstractMethod<String, CallInfo> {
     private static final Log LOG = LogFactory.getLog(ReadCallMethod.class);
 
-    private static final String DEFAULT_BASE_URI = "https://api.nexmo.com/v1/calls/";
+    private static final String DEFAULT_BASE_URI = "https://api.nexmo.com/v1/calls";
+    private static final String DEFAULT_PATH = "/v1/calls";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
     private String uri = DEFAULT_BASE_URI;
 
@@ -46,7 +47,7 @@ public class ReadCallMethod extends AbstractMethod<String, CallInfo> {
 
     public ReadCallMethod(HttpWrapper httpWrapper, String baseUri) {
         super(httpWrapper);
-        uri = baseUri + "/v1/calls";
+        uri = baseUri + DEFAULT_PATH;
     }
 
     @Override
@@ -56,7 +57,7 @@ public class ReadCallMethod extends AbstractMethod<String, CallInfo> {
 
     @Override
     public RequestBuilder makeRequest(String callId) {
-        String uri = this.uri + callId;
+        String uri = this.uri + "/" + callId;
         return RequestBuilder.get(uri);
     }
 
@@ -69,5 +70,9 @@ public class ReadCallMethod extends AbstractMethod<String, CallInfo> {
 
     public String getUri() {
         return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri + DEFAULT_PATH;
     }
 }

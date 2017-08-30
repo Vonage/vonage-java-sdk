@@ -31,6 +31,7 @@ import java.io.IOException;
 public class StreamsEndpoint {
     private final StartStreamMethod startStream;
     private final StopStreamMethod stopStream;
+    private String baseUri;
 
     public StreamsEndpoint(HttpWrapper wrapper) {
         this.startStream = new StartStreamMethod(wrapper);
@@ -48,5 +49,12 @@ public class StreamsEndpoint {
 
     public StreamResponse delete(String uuid) throws IOException, NexmoClientException {
         return this.stopStream.execute(uuid);
+    }
+
+    public void setBaseUri(String baseUri) {
+        this.baseUri = baseUri;
+
+        this.startStream.setUri(baseUri);
+        this.stopStream.setUri(baseUri);
     }
 }

@@ -37,7 +37,7 @@ import java.io.IOException;
  */
 public class SmsClient {
     private SendMessageEndpoint message;
-     private String baseUri;
+    private String baseUri;
 
     /**
      * Create a new SmsClient.
@@ -77,5 +77,6 @@ public class SmsClient {
 
      public void setBaseUri(String baseUri) {
          this.baseUri = baseUri;
+         this.message.setUri(baseUri);
      }
  }
