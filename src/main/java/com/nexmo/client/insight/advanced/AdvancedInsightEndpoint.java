@@ -36,12 +36,26 @@ import java.io.UnsupportedEncodingException;
 public class AdvancedInsightEndpoint extends AbstractMethod<AdvancedInsightRequest, AdvancedInsightResponse> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/ni/advanced/json";
+    private static final String DEFAULT_URI  = "https://api.nexmo.com/ni/advanced/json";
+    private static final String DEFAULT_PATH = "/ni/advanced/json";
 
     private String uri = DEFAULT_URI;
 
     public AdvancedInsightEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
+    }
+
+    public AdvancedInsightEndpoint(HttpWrapper httpWrapper, String baseUri) {
+        super(httpWrapper);
+        uri = baseUri + DEFAULT_PATH;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setBaseUri(String uri) {
+        this.uri = uri + DEFAULT_PATH;
     }
 
     @Override

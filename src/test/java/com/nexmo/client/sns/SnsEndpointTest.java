@@ -28,7 +28,8 @@ import com.nexmo.client.sns.response.SnsSubscribeResponse;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class SnsEndpointTest {
     private SnsEndpoint endpoint;
@@ -36,6 +37,20 @@ public class SnsEndpointTest {
     @Before
     public void setUp() {
         this.endpoint = new SnsEndpoint(null);
+    }
+
+    @Test
+    public void testBaseUri() throws Exception {
+        SnsEndpoint methodUnderTest = new SnsEndpoint(null, "https://example.com");
+        assertEquals("https://example.com/sns/xml", methodUnderTest.getUri());
+    }
+
+    @Test
+    public void testSetUri() throws Exception {
+        SnsEndpoint methodUnderTest = new SnsEndpoint(null);
+        assertEquals("https://sns.nexmo.com/sns/xml" , methodUnderTest.getUri());
+        methodUnderTest.setUri("https://example.com");
+        assertEquals("https://example.com/sns/xml", methodUnderTest.getUri());
     }
 
     @Test

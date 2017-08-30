@@ -30,6 +30,7 @@ import java.io.IOException;
 
 public class CheckEndpoint {
     private VerifyCheckMethod checkMethod;
+    private String baseUri;
 
     /**
      * Create a new CheckEndpoint.
@@ -38,6 +39,11 @@ public class CheckEndpoint {
      */
     public CheckEndpoint(HttpWrapper httpWrapper) {
         this.checkMethod = new VerifyCheckMethod(httpWrapper);
+    }
+
+    public CheckEndpoint(HttpWrapper httpWrapper, String baseUri) {
+        this.baseUri = baseUri;
+        this.checkMethod = new VerifyCheckMethod(httpWrapper, baseUri);
     }
 
     public CheckResult check(final String requestId,
@@ -51,4 +57,12 @@ public class CheckEndpoint {
         return this.checkMethod.execute(new CheckRequest(requestId, code, ipAddress));
     }
 
+    public String getBaseUri() {
+        return baseUri;
+    }
+
+    public void setBaseUri(String baseUri) {
+        this.baseUri = baseUri;
+        this.checkMethod.setUri(baseUri);
+    }
 }

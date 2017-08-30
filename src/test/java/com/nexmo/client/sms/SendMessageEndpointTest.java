@@ -132,6 +132,20 @@ public class SendMessageEndpointTest {
     }
 
     @Test
+    public void testConstructBaseUri() throws Exception {
+        SendMessageEndpoint methodUnderTest = new SendMessageEndpoint(null, "https://example.com");
+        assertEquals("https://example.com/sms/xml", methodUnderTest.getUri());
+    }
+
+    @Test
+    public void testSetUri() throws Exception {
+        SendMessageEndpoint methodUnderTest = new SendMessageEndpoint(null);
+        assertEquals("https://rest.nexmo.com/sms/xml", methodUnderTest.getUri());
+        methodUnderTest.setUri("https://example.com");
+        assertEquals("https://example.com/sms/xml", methodUnderTest.getUri());
+    }
+
+    @Test
     public void testParseResponse() throws NexmoResponseParseException {
         SmsSubmissionResult[] rs = endpoint.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
                 "<mt-submission-response>\n" +

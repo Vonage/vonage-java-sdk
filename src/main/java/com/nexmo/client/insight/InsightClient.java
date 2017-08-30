@@ -44,6 +44,7 @@ public class InsightClient {
     protected BasicInsightEndpoint basic;
     protected StandardInsightEndpoint standard;
     protected AdvancedInsightEndpoint advanced;
+    private String baseUri;
 
     /**
      * Constructor.
@@ -54,6 +55,13 @@ public class InsightClient {
         this.basic = new BasicInsightEndpoint(httpWrapper);
         this.standard = new StandardInsightEndpoint(httpWrapper);
         this.advanced = new AdvancedInsightEndpoint(httpWrapper);
+    }
+
+    public InsightClient(HttpWrapper httpWrapper, String baseUri) {
+        this.baseUri = baseUri;
+        this.basic = new BasicInsightEndpoint(httpWrapper, baseUri);
+        this.standard = new StandardInsightEndpoint(httpWrapper, baseUri);
+        this.advanced = new AdvancedInsightEndpoint(httpWrapper, baseUri);
     }
 
     public BasicInsightResponse getBasicNumberInsight(String number) throws IOException, NexmoClientException {
@@ -96,5 +104,17 @@ public class InsightClient {
     public AdvancedInsightResponse getAdvancedNumberInsight(
             String number, String country, String ipAddress, boolean cnam) throws IOException, NexmoClientException {
         return this.advanced.execute(new AdvancedInsightRequest(number, country, ipAddress, cnam));
+    }
+
+    public String getBaseUri() {
+        return baseUri;
+    }
+
+    public void setBaseUri(String baseUri) {
+        this.baseUri = baseUri;
+
+        this.basic.setBaseUri(baseUri);
+        this.standard.setBaseUri(baseUri);
+        this.advanced.setBaseUri(baseUri);
     }
 }

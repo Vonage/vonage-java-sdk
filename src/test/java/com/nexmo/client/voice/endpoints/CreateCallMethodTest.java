@@ -45,7 +45,6 @@ package com.nexmo.client.voice.endpoints;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.voice.Call;
 import com.nexmo.client.voice.CallDirection;
 import com.nexmo.client.voice.CallEvent;
@@ -89,12 +88,18 @@ public class CreateCallMethodTest {
     }
 
     @Test
-    public void testCustomUri() throws Exception {
+    public void testSetUri() throws Exception {
         CreateCallMethod methodUnderTest = new CreateCallMethod(null);
-        methodUnderTest.setUri("https://api.example.com/calls");
+        methodUnderTest.setUri("https://example.com");
         RequestBuilder request = methodUnderTest.makeRequest(
                 new Call("447700900903", "447700900904", "https://example.com/answer"));
-        assertEquals("https://api.example.com/calls", request.getUri().toString());
+        assertEquals("https://example.com/v1/calls", request.getUri().toString());
+    }
+
+    @Test
+    public void testPassUriInConstructor() throws Exception {
+        CreateCallMethod methodUnderTest = new CreateCallMethod(null, "https://example.com");
+        assertEquals("https://example.com/v1/calls", methodUnderTest.getUri());
     }
 
     @Test

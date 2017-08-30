@@ -1,3 +1,22 @@
+package com.nexmo.client.voice.endpoints;
+
+import com.nexmo.client.voice.TalkResponse;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpResponse;
+import org.apache.http.ProtocolVersion;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.BasicHttpEntity;
+import org.apache.http.message.BasicHttpResponse;
+import org.apache.http.message.BasicStatusLine;
+import org.junit.Test;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+
+import static org.junit.Assert.assertEquals;
+
 /*
  * Copyright (c) 2011-2017 Nexmo Inc
  *
@@ -19,57 +38,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.voice;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.voice.endpoints.SendDtmfMethod;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.http.HttpResponse;
-import org.apache.http.ProtocolVersion;
-import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.entity.BasicHttpEntity;
-import org.apache.http.message.BasicHttpResponse;
-import org.apache.http.message.BasicStatusLine;
-import org.junit.Test;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-
-import static org.junit.Assert.assertEquals;
-
-
-public class SendDtmfMethodTest {
-    private static final Log LOG = LogFactory.getLog(SendDtmfMethodTest.class);
+public class StopTalkMethodTest {
+    private static final Log LOG = LogFactory.getLog(StopTalkMethodTest.class);
 
     @Test
     public void makeRequest() throws Exception {
-        HttpWrapper httpWrapper = new HttpWrapper();
-        SendDtmfMethod methodUnderTest = new SendDtmfMethod(httpWrapper);
+        StopTalkMethod methodUnderTest = new StopTalkMethod(null);
 
-        RequestBuilder request = methodUnderTest.makeRequest(new DtmfRequest("abc-123", "867"));
+        // Execute test call:
+        RequestBuilder request = methodUnderTest.makeRequest("aaaaaaaa-bbbb-cccc-dddd-0123456789ab");
 
-        assertEquals("PUT", request.getMethod());
+        assertEquals("DELETE", request.getMethod());
         assertEquals("application/json", request.getFirstHeader("Content-Type").getValue());
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode node = objectMapper.readValue(request.getEntity().getContent(), JsonNode.class);
-        LOG.info(request.getEntity().getContent());
-        assertEquals("867", node.get("digits").asText());
     }
 
     @Test
     public void testPassUriInConstructor() throws Exception {
-        SendDtmfMethod methodUnderTest = new SendDtmfMethod(null, "https://example.com");
+        StopTalkMethod methodUnderTest = new StopTalkMethod(null, "https://example.com");
         assertEquals("https://example.com/v1/calls", methodUnderTest.getUri());
     }
 
     @Test
     public void testSetUri() throws Exception {
-        SendDtmfMethod methodUnderTest = new SendDtmfMethod(null);
+        StopTalkMethod methodUnderTest = new StopTalkMethod(null);
         assertEquals("https://api.nexmo.com/v1/calls", methodUnderTest.getUri());
         methodUnderTest.setUri("https://example.com");
         assertEquals("https://example.com/v1/calls", methodUnderTest.getUri());
@@ -77,22 +68,22 @@ public class SendDtmfMethodTest {
 
     @Test
     public void parseResponse() throws Exception {
-        HttpWrapper wrapper = new HttpWrapper();
-        SendDtmfMethod methodUnderTest = new SendDtmfMethod(wrapper);
+        StopTalkMethod methodUnderTest = new StopTalkMethod(null);
 
         HttpResponse stubResponse = new BasicHttpResponse(
                 new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 200, "OK")
         );
 
-        String json = "{\"message\": \"DTMF sent\",\"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"}";
+        String json = "{\"message\":\"Talk stopped\",\"uuid\":\"aaaaaaaa-bbbb-cccc-dddd-0123456789ab\"}";
         InputStream jsonStream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
         BasicHttpEntity entity = new BasicHttpEntity();
         entity.setContent(jsonStream);
         stubResponse.setEntity(entity);
 
-        DtmfResponse response = methodUnderTest.parseResponse(stubResponse);
-        assertEquals("DTMF sent", response.getMessage());
-        assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
+        // Execute test call:
+        TalkResponse talkResponse = methodUnderTest.parseResponse(stubResponse);
+        assertEquals("aaaaaaaa-bbbb-cccc-dddd-0123456789ab", talkResponse.getUuid());
+        assertEquals("Talk stopped", talkResponse.getMessage());
     }
 
 }

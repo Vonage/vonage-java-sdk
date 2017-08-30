@@ -38,6 +38,7 @@ import java.io.IOException;
  */
 public class SnsClient {
     private SnsEndpoint endpoint;
+    private String baseUri;
 
     /**
      * Constructor.
@@ -48,11 +49,26 @@ public class SnsClient {
         this.endpoint = new SnsEndpoint(httpWrapper);
     }
 
+    public SnsClient(HttpWrapper httpWrapper, String baseUri) {
+        this.baseUri = baseUri;
+        this.endpoint = new SnsEndpoint(httpWrapper, baseUri);
+
+    }
+
     public SnsPublishResponse publish(SnsPublishRequest request) throws NexmoClientException, IOException {
         return (SnsPublishResponse) this.endpoint.execute(request);
     }
 
     public SnsSubscribeResponse subscribe(SnsSubscribeRequest request) throws NexmoClientException, IOException {
         return (SnsSubscribeResponse) this.endpoint.execute(request);
+    }
+
+    public String getBaseUri() {
+        return baseUri;
+    }
+
+    public void setBaseUri(String baseUri) {
+        this.baseUri = baseUri;
+        this.endpoint.setUri(baseUri);
     }
 }

@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - Add missing setter for the Message.statusReportRequired property.
+- Allow baseUri to be changed for all client objects
 
 ## [2.0.2] - 2017-05-04
 ### Fixed

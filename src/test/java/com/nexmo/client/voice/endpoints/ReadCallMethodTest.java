@@ -25,17 +25,9 @@ import com.nexmo.client.TestUtils;
 import com.nexmo.client.auth.JWTAuthMethod;
 import com.nexmo.client.voice.CallInfo;
 import org.apache.http.HttpResponse;
-import org.apache.http.ProtocolVersion;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.entity.BasicHttpEntity;
-import org.apache.http.message.BasicHttpResponse;
-import org.apache.http.message.BasicStatusLine;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -57,6 +49,19 @@ public class ReadCallMethodTest {
     public void makeRequest() throws Exception {
         RequestBuilder request = method.makeRequest("abcd-efgh");
         assertEquals("https://api.nexmo.com/v1/calls/abcd-efgh", request.getUri().toString());
+    }
+
+    @Test
+    public void testPassUriInConstructor() throws Exception {
+        ReadCallMethod methodUnderTest = new ReadCallMethod(null, "https://example.com");
+        assertEquals("https://example.com/v1/calls", methodUnderTest.getUri());
+    }
+
+    @Test
+    public void testSetUri() throws Exception {
+        assertEquals("https://api.nexmo.com/v1/calls", method.getUri());
+        method.setUri("https://example.com");
+        assertEquals("https://example.com/v1/calls", method.getUri());
     }
 
     @Test
@@ -89,12 +94,6 @@ public class ReadCallMethodTest {
                         "      }\n");
         CallInfo record = method.parseResponse(stubResponse);
         assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", record.getUuid());
-    }
-
-    @Test
-    public void testBaseUri() throws Exception {
-        method.setBaseUri("http://api.example.com/");
-        assertEquals("http://api.example.com/", method.getBaseUri());
     }
 
 

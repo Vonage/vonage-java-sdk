@@ -76,4 +76,49 @@ public class NexmoClientTest {
         CallEvent evt = client.getVoiceClient().createCall(new Call("4499991111", "44111222333", "https://callback.example.com/"));
         assertEquals(CallStatus.STARTED, evt.getStatus());
     }
+
+    @Test
+    public void testConstructNexmoClientWithBaseUri() throws Exception {
+        byte[] keyBytes = testUtils.loadKey("test/keys/application_key");
+        NexmoClient client = new NexmoClient(
+                "https://example.com",
+                new JWTAuthMethod(
+                        "951614e0-eec4-4087-a6b1-3f4c2f169cb0",
+                        keyBytes
+                )
+                );
+        client.setHttpClient(stubHttpClient(200, "{\n" +
+                "  \"conversation_uuid\": \"63f61863-4a51-4f6b-86e1-46edebio0391\",\n" +
+                "  \"status\": \"started\",\n" +
+                "  \"direction\": \"outbound\"\n" +
+                "}"));
+        assertEquals("https://example.com", client.getBaseUri());
+        CallEvent evt = client.getVoiceClient().createCall(new Call("4499991111", "44111222333", "https://callback.example.com/"));
+        assertEquals(CallStatus.STARTED, evt.getStatus());
+    }
+
+
+    @Test
+    public void testBaseUriSetterOnNexmoClient() throws Exception {
+        byte[] keyBytes = testUtils.loadKey("test/keys/application_key");
+        NexmoClient client = new NexmoClient(
+                new JWTAuthMethod(
+                        "951614e0-eec4-4087-a6b1-3f4c2f169cb0",
+                        keyBytes
+                )
+        );
+        client.setHttpClient(stubHttpClient(200, "{\n" +
+                "  \"conversation_uuid\": \"63f61863-4a51-4f6b-86e1-46edebio0391\",\n" +
+                "  \"status\": \"started\",\n" +
+                "  \"direction\": \"outbound\"\n" +
+                "}"));
+        assertNull(client.getBaseUri());
+        client.setBaseUri("https://example.com");
+        assertEquals("https://example.com", client.getBaseUri());
+        assertEquals("https://example.com", client.getInsightClient().getBaseUri());
+        assertEquals("https://example.com", client.getSmsClient().getBaseUri());
+        assertEquals("https://example.com", client.getSnsClient().getBaseUri());
+        assertEquals("https://example.com", client.getVerifyClient().getBaseUri());
+        assertEquals("https://example.com", client.getVoiceClient().getBaseUri());
+    }
 }

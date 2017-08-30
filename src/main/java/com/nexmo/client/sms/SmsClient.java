@@ -37,6 +37,7 @@ import java.io.IOException;
  */
 public class SmsClient {
     private SendMessageEndpoint message;
+    private String baseUri;
 
     /**
      * Create a new SmsClient.
@@ -45,7 +46,12 @@ public class SmsClient {
         this.message = new SendMessageEndpoint(httpWrapper);
     }
 
-    /**
+     public SmsClient(HttpWrapper httpWrapper, String baseUri) {
+         this.baseUri = baseUri;
+         this.message = new SendMessageEndpoint(httpWrapper, baseUri);
+     }
+
+     /**
      * Send an SMS message.
      * <p>
      * This uses the supplied object to construct a request and post it to the Nexmo API.<br>
@@ -65,4 +71,12 @@ public class SmsClient {
         return this.message.execute(message);
     }
 
-}
+     public String getBaseUri() {
+         return baseUri;
+     }
+
+     public void setBaseUri(String baseUri) {
+         this.baseUri = baseUri;
+         this.message.setUri(baseUri);
+     }
+ }

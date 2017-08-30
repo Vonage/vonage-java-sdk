@@ -79,6 +79,19 @@ public class StandardInsightEndpointTest {
     }
 
     @Test
+    public void testMakeRequestWithBaseUri() throws Exception {
+        this.endpoint = new StandardInsightEndpoint(null, "https://example.com");
+        assertEquals(endpoint.getUri(), "https://example.com/ni/standard/json");
+    }
+
+    @Test
+    public void testSetBaseUri() throws Exception {
+        assertEquals(this.endpoint.getUri(), "https://api.nexmo.com/ni/standard/json");
+        this.endpoint.setBaseUri("https://example.com");
+        assertEquals(this.endpoint.getUri(), "https://example.com/ni/standard/json");
+    }
+
+    @Test
     public void testParseResponse() throws Exception {
         HttpResponse stub = TestUtils.makeJsonHttpResponse(200, "{\n" +
                 "    \"status\": 0,\n" +

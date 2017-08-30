@@ -48,6 +48,7 @@ public class VerifyClient extends AbstractClient {
     private CheckEndpoint check;
     private VerifyEndpoint verify;
     private SearchEndpoint search;
+    private String baseUri;
 
     /**
      * Constructor.
@@ -60,6 +61,15 @@ public class VerifyClient extends AbstractClient {
         this.check = new CheckEndpoint(httpWrapper);
         this.search = new SearchEndpoint(httpWrapper);
         this.verify = new VerifyEndpoint(httpWrapper);
+    }
+
+    public VerifyClient(HttpWrapper httpWrapper, String baseUri) {
+        super(httpWrapper);
+        this.baseUri = baseUri;
+
+        this.check = new CheckEndpoint(httpWrapper, baseUri);
+        this.search = new SearchEndpoint(httpWrapper, baseUri);
+        this.verify = new VerifyEndpoint(httpWrapper, baseUri);
     }
 
     /**
@@ -203,5 +213,16 @@ public class VerifyClient extends AbstractClient {
      */
     public SearchResult[] search(String... requestIds) throws IOException, NexmoClientException {
         return search.search(requestIds);
+    }
+
+    public String getBaseUri() {
+        return baseUri;
+    }
+
+    public void setBaseUri(String baseUri) {
+        this.baseUri = baseUri;
+        this.check.setBaseUri(baseUri);
+        this.verify.setUri(baseUri);
+        this.search.setUri(baseUri);
     }
 }

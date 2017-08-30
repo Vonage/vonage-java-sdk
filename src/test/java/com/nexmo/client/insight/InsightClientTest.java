@@ -30,6 +30,8 @@ import com.nexmo.client.insight.standard.StandardInsightRequest;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.*;
 
 public class InsightClientTest {
@@ -54,7 +56,6 @@ public class InsightClientTest {
         client.getBasicNumberInsight("12345", "GB");
         verify(client.basic).execute(eq(new BasicInsightRequest("12345", "GB")));
     }
-
 
     @Test
     public void testGetStandardNumberInsight() throws Exception {
@@ -97,6 +98,27 @@ public class InsightClientTest {
     public void testGetAdvancedNumberInsight3() throws Exception {
         client.getAdvancedNumberInsight("12345", "GB", "123.123.123.123", true);
         verify(client.advanced).execute(eq(new AdvancedInsightRequest("12345", "GB", "123.123.123.123", true)));
+    }
+
+    @Test
+    public void testSetBaseUri() throws Exception {
+        client.basic = new BasicInsightEndpoint(null);
+        client.standard = new StandardInsightEndpoint(null);
+        client.advanced = new AdvancedInsightEndpoint(null);
+
+        assertNull(this.client.getBaseUri());
+        this.client.setBaseUri("https://example.com");
+        assertEquals("https://example.com", this.client.getBaseUri());
+
+        assertEquals("https://example.com/ni/basic/json", this.client.basic.getUri());
+        assertEquals("https://example.com/ni/standard/json", this.client.standard.getUri());
+        assertEquals("https://example.com/ni/advanced/json", this.client.advanced.getUri());
+    }
+
+    @Test
+    public void testConstructBaseUri() throws Exception {
+        InsightClient insightClientWithBaseUri = new InsightClient(null, "https://example.com");
+        assertEquals("https://example.com", insightClientWithBaseUri.getBaseUri());
     }
 
 }

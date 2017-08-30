@@ -36,8 +36,6 @@ import org.apache.http.client.HttpClient;
  * Construct an instance of this object with one or more {@link AuthMethod}s (providing all the authentication methods
  * for the APIs you wish to use), and then call {@link #getVoiceClient()} to obtain a client for the Nexmo Voice API.
  * <p>
- * Currently this object only constructs and provides access to {@link VoiceClient}. In the future it will manage
- * clients for all of the Nexmo APIs.
  */
 public class NexmoClient {
     private final InsightClient insight;
@@ -46,8 +44,31 @@ public class NexmoClient {
     private final VerifyClient verify;
     private final SnsClient sns;
 
+    private String baseUri;
     private HttpWrapper httpWrapper;
 
+    /**
+     *
+     * @param baseUri Change the server this library calls when making requests. <b>Don't include a trailing slash</b>
+     * @param authMethods (required) one or more {@link AuthMethod}s (providing all the authentication methods
+     * for the APIs you wish to use)
+     */
+    public NexmoClient(String baseUri, AuthMethod... authMethods) {
+        this.baseUri = baseUri;
+        this.httpWrapper = new HttpWrapper(authMethods);
+
+        this.insight = new InsightClient(this.httpWrapper, baseUri);
+        this.verify = new VerifyClient(this.httpWrapper, baseUri);
+        this.voice = new VoiceClient(this.httpWrapper, baseUri);
+        this.sms = new SmsClient(this.httpWrapper, baseUri);
+        this.sns = new SnsClient(this.httpWrapper, baseUri);
+    }
+
+    /**
+     *
+     * @param authMethods (required) one or more {@link AuthMethod}s (providing all the authentication methods
+     * for the APIs you wish to use)
+     */
     public NexmoClient(AuthMethod... authMethods) {
         this.httpWrapper = new HttpWrapper(authMethods);
 
@@ -82,4 +103,28 @@ public class NexmoClient {
         return this.voice;
     }
 
+    /**
+     * The server this library calls when making requests. Will be null if no overriding value has been set.
+     * If this is null the client's {@code getBaseUri} method should be called.
+     *
+     * @return String uri the library calls when making requests or null
+     */
+
+    public String getBaseUri() {
+        return baseUri;
+    }
+
+    /**
+     *
+     * @param baseUri Change the server this library calls when making requests. <b>Don't include a trailing slash</b>
+     */
+    public void setBaseUri(String baseUri) {
+        this.baseUri = baseUri;
+
+        this.insight.setBaseUri(this.baseUri);
+        this.verify.setBaseUri(this.baseUri);
+        this.voice.setBaseUri(this.baseUri);
+        this.sms.setBaseUri(this.baseUri);
+        this.sns.setBaseUri(this.baseUri);
+    }
 }

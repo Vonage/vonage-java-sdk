@@ -44,13 +44,21 @@ import java.util.List;
 public class ListCallsMethod extends AbstractMethod<CallsFilter, CallInfoPage> {
     private static final Log LOG = LogFactory.getLog(CreateCallMethod.class);
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls";
+    private static final String DEFAULT_URI  = "https://api.nexmo.com/v1/calls";
+    private static final String DEFAULT_PATH = "/v1/calls";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
     private String uri = DEFAULT_URI;
 
     public ListCallsMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
+
+    public ListCallsMethod(HttpWrapper httpWrapper, String baseUri) {
+        super(httpWrapper);
+        uri = baseUri + DEFAULT_PATH;
+    }
+
+
 
     @Override
     protected Class[] getAcceptableAuthMethods() {
@@ -82,7 +90,7 @@ public class ListCallsMethod extends AbstractMethod<CallsFilter, CallInfoPage> {
     }
 
     public void setUri(String uri) {
-        this.uri = uri;
+        this.uri = uri + DEFAULT_PATH;
     }
 
     public String getUri() {
