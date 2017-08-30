@@ -70,6 +70,19 @@ public class SendMessageEndpointTest {
     }
 
     @Test
+    public void testStatusReportRequiredSetter() throws Exception {
+        Message message = new TextMessage("TestSender", "not-a-number", "Test");
+        message.setStatusReportRequired(true);
+        List<NameValuePair> params = endpoint.makeRequest(message).getParameters();
+
+        assertContainsParam(params, "from", "TestSender");
+        assertContainsParam(params, "to", "not-a-number");
+        assertContainsParam(params, "type", "text");
+        assertContainsParam(params, "status-report-req", "1");
+        assertContainsParam(params, "text", "Test");
+    }
+
+    @Test
     public void testConstructParamsUnicode() throws Exception {
         Message message = new TextMessage("TestSender", "not-a-number", "Test", true);
 

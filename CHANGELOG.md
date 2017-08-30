@@ -6,8 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## In Development
+### Fixed
+- Added missing values for CallStatus: FAILED, REJECTED, BUSY & CANCELLED
+
 ### Added
-- Allow baseUri to be changed for all client objects 
+- Add missing setter for the Message.statusReportRequired property.
+- Allow baseUri to be changed for all client objects
 
 ## [2.0.2] - 2017-05-04
 ### Fixed
