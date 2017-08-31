@@ -23,7 +23,9 @@ package com.nexmo.client.numbers;
 
 
 import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoBadRequestException;
 import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.NexmoMethodFailedException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.voice.endpoints.AbstractMethod;
 import org.apache.commons.logging.LogFactory;
@@ -58,8 +60,16 @@ public class CancelNumberEndpoint extends AbstractMethod<CancelNumberRequest, Ca
 
     @Override
     public CancelNumberResponse parseResponse(HttpResponse response) throws NexmoClientException, IOException {
+        int statusCode = response.getStatusLine().getStatusCode();
         String json = EntityUtils.toString(response.getEntity());
-        LogFactory.getLog(CancelNumberEndpoint.class).debug("Response: " + json);
+
+        if (statusCode >= 400 && statusCode < 500) {
+            throw new NexmoBadRequestException(json);
+        } else if (statusCode >= 500) {
+            LogFactory.getLog(CancelNumberEndpoint.class).warn(": " + json);
+            throw new NexmoMethodFailedException(json);
+        }
+
         return CancelNumberResponse.fromJson(json);
     }
 }

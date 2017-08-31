@@ -37,8 +37,8 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 
 public class CancelNumberEndpointTest {
@@ -105,11 +105,11 @@ public class CancelNumberEndpointTest {
     }
 
     @Test
-    public void parseBadMethodFailedResponse() throws Exception {
+    public void parseMethodFailedResponse() throws Exception {
         CancelNumberEndpoint methodUnderTest = new CancelNumberEndpoint(null);
 
         HttpResponse stubResponse = new BasicHttpResponse(
-                new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 400, "OK")
+                new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 500, "OK")
         );
 
         String json = "{\n" +
@@ -126,10 +126,9 @@ public class CancelNumberEndpointTest {
 
         try {
             methodUnderTest.parseResponse(stubResponse);
-            fail("A 400 response should raise a NexmoBadRequestException");
+            fail("A 500 response should raise a NexmoMethodFailedException");
         } catch (NexmoMethodFailedException e) {
             // This is expected
         }
     }
-
 }
