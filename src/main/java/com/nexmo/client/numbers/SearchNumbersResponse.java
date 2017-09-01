@@ -32,8 +32,8 @@ import java.io.IOException;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SearchNumbersResponse {
-    private int count;
-    private AvailableNumber[] numbers;
+    private int count = 0;
+    private AvailableNumber[] numbers = new AvailableNumber[]{};
 
     /**
      * Get the number of responses returned by the Nexmo API.

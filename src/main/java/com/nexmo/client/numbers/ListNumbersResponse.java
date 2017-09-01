@@ -37,8 +37,8 @@ import java.io.IOException;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ListNumbersResponse {
-    private int count;
-    private OwnedNumber[] numbers;
+    private int count = 0;
+    private OwnedNumber[] numbers = new OwnedNumber[]{};
 
     public int getCount() {
         return count;
