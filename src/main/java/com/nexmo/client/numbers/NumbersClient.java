@@ -34,19 +34,20 @@ public class NumbersClient {
     private ListNumbersEndpoint listNumbers;
     private SearchNumbersEndpoint searchNumbers;
     private CancelNumberEndpoint cancelNumber;
+    private BuyNumberEndpoint buyNumber;
 
     public NumbersClient(HttpWrapper httpWrapper) {
         this.listNumbers = new ListNumbersEndpoint(httpWrapper);
         this.searchNumbers = new SearchNumbersEndpoint(httpWrapper);
         this.cancelNumber = new CancelNumberEndpoint(httpWrapper);
-
+        this.buyNumber = new BuyNumberEndpoint(httpWrapper);
     }
 
     /**
      * Get the first page of phone numbers assigned to the authenticated account.
      *
      * @return A ListNumbersResponse containing the first 10 phone numbers
-     * @throws IOException if an error occurs contacting the Nexmo API
+     * @throws IOException          if an error occurs contacting the Nexmo API
      * @throws NexmoClientException if an error is returned by the server.
      */
     public ListNumbersResponse listNumbers() throws IOException, NexmoClientException {
@@ -55,9 +56,10 @@ public class NumbersClient {
 
     /**
      * Get a filtered set of numbers assigned to the authenticated account.
+     *
      * @param filter A ListNumbersFilter describing the filters to be applied to the request.
      * @return A ListNumbersResponse containing phone numbers matching the supplied filter.
-     * @throws IOException if an error occurs contacting the Nexmo API
+     * @throws IOException          if an error occurs contacting the Nexmo API
      * @throws NexmoClientException if an error is returned by the server.
      */
     public ListNumbersResponse listNumbers(ListNumbersFilter filter) throws IOException, NexmoClientException {
@@ -80,11 +82,22 @@ public class NumbersClient {
     }
 
     /**
-     * Stop renting a Nexmo Virtual Number.
+     * Start renting a Nexmo Virtual Number.
+     *
      * @param country A String containing a 2-character ISO country code.
-     * @param msisdn The phone number to be cancelled.
+     * @param msisdn  The phone number to be bought.
      */
-    public void cancelNumber(String country, String msisdn)  throws IOException, NexmoClientException {
+    public void buyNumber(String country, String msisdn) throws IOException, NexmoClientException {
+        this.buyNumber.execute(new BuyNumberRequest(country, msisdn));
+    }
+
+    /**
+     * Stop renting a Nexmo Virtual Number.
+     *
+     * @param country A String containing a 2-character ISO country code.
+     * @param msisdn  The phone number to be cancelled.
+     */
+    public void cancelNumber(String country, String msisdn) throws IOException, NexmoClientException {
         CancelNumberResponse response = this.cancelNumber.execute(new CancelNumberRequest(country, msisdn));
     }
 }

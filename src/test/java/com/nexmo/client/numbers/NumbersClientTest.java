@@ -152,4 +152,14 @@ public class NumbersClientTest {
         client.cancelNumber("AA", "447700900000");
     }
 
+    @Test
+    public void testBuyNumber() throws Exception {
+        NumbersClient client = new NumbersClient(stubHttpWrapper(200, "{\n" +
+                "  \"error-code\":\"200\",\n" +
+                "  \"error-code-label\":\"success\"\n" +
+                "}"));
+
+        client.buyNumber("AA", "447700900000");
+    }
+
 }
