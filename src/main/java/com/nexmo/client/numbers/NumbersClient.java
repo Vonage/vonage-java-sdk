@@ -24,6 +24,8 @@ package com.nexmo.client.numbers;
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.IOException;
 
@@ -33,10 +35,13 @@ import java.io.IOException;
 public class NumbersClient {
     private ListNumbersEndpoint listNumbers;
     private SearchNumbersEndpoint searchNumbers;
+    private CancelNumberEndpoint cancelNumber;
 
     public NumbersClient(HttpWrapper httpWrapper) {
         this.listNumbers = new ListNumbersEndpoint(httpWrapper);
         this.searchNumbers = new SearchNumbersEndpoint(httpWrapper);
+        this.cancelNumber = new CancelNumberEndpoint(httpWrapper);
+
     }
 
     /**
@@ -61,6 +66,7 @@ public class NumbersClient {
         return this.listNumbers.listNumbers(filter);
     }
 
+
     /**
      * Search for available Nexmo Virtual Numbers
      */
@@ -73,5 +79,9 @@ public class NumbersClient {
      */
     public SearchNumbersResponse searchNumbers(SearchNumbersFilter filter) throws IOException, NexmoClientException {
         return this.searchNumbers.searchNumbers(filter);
+    }
+
+    public void cancelNumber(String country, String msisdn)  throws IOException, NexmoClientException {
+        CancelNumberResponse response = this.cancelNumber.execute(new CancelNumberRequest(country, msisdn));
     }
 }
