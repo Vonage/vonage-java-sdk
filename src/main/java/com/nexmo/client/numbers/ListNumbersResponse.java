@@ -24,17 +24,12 @@ package com.nexmo.client.numbers;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
-import com.nexmo.client.voice.Call;
-import com.nexmo.client.voice.VoiceClient;
 
 import java.io.IOException;
 
 /**
- * Response if DTMF tones were successfully sent to an active {@link Call}.
- * <p>
- * Returned by {@link VoiceClient#sendDtmf(String, String)}
+ * Response from a request to list the numbers currently being rented buy an account.
  */
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ListNumbersResponse {
     private int count;
