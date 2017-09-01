@@ -81,6 +81,11 @@ public class NumbersClient {
         return this.searchNumbers.searchNumbers(filter);
     }
 
+    /**
+     * Stop renting a Nexmo Virtual Number.
+     * @param country A String containing a 2-character ISO country code.
+     * @param msisdn The phone number to be cancelled.
+     */
     public void cancelNumber(String country, String msisdn)  throws IOException, NexmoClientException {
         CancelNumberResponse response = this.cancelNumber.execute(new CancelNumberRequest(country, msisdn));
     }
