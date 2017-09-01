@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Add missing setter for the Message.statusReportRequired property.
 - Add `NumbersClient.listNumbers` methods.
+- Add `NumbersClient.buyNumber` method.
 
 ## [2.0.2] - 2017-05-04
 ### Fixed
