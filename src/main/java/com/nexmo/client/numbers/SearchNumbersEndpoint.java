@@ -33,6 +33,11 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+/**
+ * Internal class, representing the Nexmo API endpoint which can be used to search for available virtual numbers to buy.
+ * <p>
+ * Use {@link NumbersClient#searchNumbers} instead of this class directly.
+ */
 public class SearchNumbersEndpoint extends AbstractMethod<SearchNumbersFilter, SearchNumbersResponse> {
     private static final String DEFAULT_URI = "https://rest.nexmo.com/number/search";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};

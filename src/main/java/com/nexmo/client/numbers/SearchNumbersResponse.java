@@ -24,26 +24,27 @@ package com.nexmo.client.numbers;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
-import com.nexmo.client.voice.Call;
-import com.nexmo.client.voice.VoiceClient;
 
 import java.io.IOException;
 
 /**
- * Response if DTMF tones were successfully sent to an active {@link Call}.
- * <p>
- * Returned by {@link VoiceClient#sendDtmf(String, String)}
+ * Represents the response to a "searchNumbers" request from the Nexmo API.
  */
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SearchNumbersResponse {
     private int count;
     private AvailableNumber[] numbers;
 
+    /**
+     * Get the number of responses returned by the Nexmo API.
+     */
     public int getCount() {
         return count;
     }
 
+    /**
+     * Obtain an array of matching numbers than are available to buy.
+     */
     public AvailableNumber[] getNumbers() {
         return numbers;
     }

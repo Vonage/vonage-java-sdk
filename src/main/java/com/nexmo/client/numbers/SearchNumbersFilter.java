@@ -24,6 +24,9 @@ package com.nexmo.client.numbers;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.RequestBuilder;
 
+/**
+ * This class encapsulates a request to search for available Nexmo Virtual Numbers.
+ */
 public class SearchNumbersFilter {
     private final String country;
 
@@ -33,6 +36,11 @@ public class SearchNumbersFilter {
     private Integer index;
     private Integer size;
 
+    /**
+     * Construct a request with the only required parameter, the country code.
+     *
+     * @param country A String containing a two-character country code.
+     */
     public SearchNumbersFilter(String country) {
         this.country = country;
     }
@@ -69,6 +77,11 @@ public class SearchNumbersFilter {
         return size;
     }
 
+    /**
+     * Set the maximum number of matching results to be returned.
+     *
+     * @param size An Integer between 10 and 100 (inclusive) or null, to indicate that the default value should be used.
+     */
     public void setSize(Integer size) {
         this.size = size;
     }
@@ -77,6 +90,10 @@ public class SearchNumbersFilter {
         return searchPattern;
     }
 
+    /**
+     *
+     * @param searchPattern
+     */
     public void setSearchPattern(SearchPattern searchPattern) {
         this.searchPattern = searchPattern;
     }

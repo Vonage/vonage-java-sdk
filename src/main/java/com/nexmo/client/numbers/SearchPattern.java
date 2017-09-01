@@ -21,6 +21,9 @@
  */
 package com.nexmo.client.numbers;
 
+/**
+ * Provided to calls that match substrings, to indicate which part of the string should be considered a match.
+ */
 public enum SearchPattern {
     STARTS_WITH(0),
     ANYWHERE(1),
