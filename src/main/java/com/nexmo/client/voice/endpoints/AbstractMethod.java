@@ -23,6 +23,7 @@ package com.nexmo.client.voice.endpoints;
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.NexmoMethodFailedException;
 import com.nexmo.client.NexmoUnexpectedException;
 import com.nexmo.client.auth.AuthMethod;
 import org.apache.commons.logging.Log;
@@ -103,7 +104,6 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
                 LOG.debug(EntityUtils.toString(enclosingRequest.getEntity()));
             }
             HttpResponse response = this.httpWrapper.getHttpClient().execute(httpRequest);
-            LOG.debug("Response: " + response.getStatusLine());
             return parseResponse(response);
         } catch (UnsupportedEncodingException uee) {
             throw new NexmoUnexpectedException("UTF-8 encoding is not supported by this JVM.", uee);
@@ -166,5 +166,5 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      * @return A ResultT type representing the result of the REST call
      * @throws IOException if a problem occurs parsing the response
      */
-    public abstract ResultT parseResponse(HttpResponse response) throws IOException;
+    public abstract ResultT parseResponse(HttpResponse response) throws IOException, NexmoClientException;
 }
