@@ -19,12 +19,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.verify.endpoints;
+package com.nexmo.client.verify;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-enum VerifyControlCommand {
+public enum VerifyControlCommand {
     CANCEL,
     TRIGGER_NEXT_EVENT;
 

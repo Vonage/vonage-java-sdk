@@ -23,6 +23,10 @@ package com.nexmo.client.verify.endpoints;
 
 import com.nexmo.client.TestUtils;
 import com.nexmo.client.auth.TokenAuthMethod;
+import com.nexmo.client.verify.ControlRequest;
+import com.nexmo.client.verify.ControlResponse;
+import com.nexmo.client.verify.VerifyControlCommand;
+import com.nexmo.client.verify.VerifyException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.junit.Before;
@@ -30,6 +34,7 @@ import org.junit.Test;
 
 import java.util.Map;
 
+import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
@@ -52,8 +57,8 @@ public class ControlEndpointTest {
         RequestBuilder builder = this.endpoint.makeRequest(new ControlRequest(
                 "request-id", VerifyControlCommand.CANCEL
         ));
-        assertEquals("GET", builder.getMethod());
-        assertEquals("https://api.nexmo.com/verify/control/json?request_id=request-id&cmd=cancel", builder.build()
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://api.nexmo.com/verify/control/json", builder.build()
                 .getURI().toString());
 
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
@@ -71,4 +76,20 @@ public class ControlEndpointTest {
         assertEquals("0", response.getStatus());
         assertEquals(VerifyControlCommand.CANCEL, response.getCommand());
     }
-}
+
+    @Test
+    public void testParseErrorResponse() throws Exception {
+        HttpResponse stub = TestUtils.makeJsonHttpResponse(200, "{\n" +
+                "    \"error_text\": \"Missing username\",\n" +
+                "    \"status\": \"2\"\n" +
+                "}");
+        try {
+            ControlResponse response = this.endpoint.parseResponse(stub);
+            fail("Parsing an error response should throw an exception.");
+        } catch(VerifyException exc){
+                assertEquals("2", exc.getStatus());
+                assertEquals("Missing username", exc.getErrorText());
+            }
+
+        }
+    }

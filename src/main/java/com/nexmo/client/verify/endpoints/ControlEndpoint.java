@@ -24,6 +24,9 @@ package com.nexmo.client.verify.endpoints;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.TokenAuthMethod;
+import com.nexmo.client.verify.ControlRequest;
+import com.nexmo.client.verify.ControlResponse;
+import com.nexmo.client.verify.VerifyException;
 import com.nexmo.client.voice.endpoints.AbstractMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
@@ -52,13 +55,21 @@ public class ControlEndpoint extends AbstractMethod<ControlRequest, ControlRespo
     @Override
     public RequestBuilder makeRequest(ControlRequest request) throws NexmoClientException,
                                                                      UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder.get(uri);
+        RequestBuilder requestBuilder = RequestBuilder.post(uri);
         request.addParams(requestBuilder);
         return requestBuilder;
     }
 
     @Override
-    public ControlResponse parseResponse(HttpResponse response) throws IOException {
-        return ControlResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+    public ControlResponse parseResponse(HttpResponse response) throws IOException, NexmoClientException {
+        ControlResponse controlResponse = ControlResponse.fromJson(
+                new BasicResponseHandler().handleResponse(response));
+        if (!controlResponse.getStatus().equals("0")) {
+            throw new VerifyException(
+                    controlResponse.getStatus(),
+                    controlResponse.getErrorText());
+        }
+
+        return controlResponse;
     }
 }

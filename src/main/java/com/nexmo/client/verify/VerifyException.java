@@ -19,31 +19,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.verify.endpoints;
+package com.nexmo.client.verify;
 
-import org.apache.http.client.methods.RequestBuilder;
+import com.nexmo.client.NexmoClientException;
 
-public class ControlRequest {
-    private final String requestId;
-    private final VerifyControlCommand command;
+public class VerifyException extends NexmoClientException {
+    private final String status;
+    private final String errorText;
 
-    public ControlRequest(String requestId, VerifyControlCommand command) {
-        this.requestId = requestId;
-        this.command = command;
+    public VerifyException(String status, String errorText) {
+        super(String.format("Status %s: %s", status, errorText));
+        this.status = status;
+        this.errorText = errorText;
     }
 
-    public String getRequestId() {
-        return requestId;
+    public String getStatus() {
+        return status;
     }
 
-    public VerifyControlCommand getCommand() {
-        return command;
+    public String getErrorText() {
+        return errorText;
     }
-
-    public void addParams(RequestBuilder request) {
-        request
-                .addParameter("request_id", this.getRequestId())
-                .addParameter("cmd", this.getCommand().toString());
-    }
-
 }

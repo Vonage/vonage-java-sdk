@@ -22,13 +22,26 @@
 package com.nexmo.client.verify.endpoints;
 
 import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.verify.ControlResponse;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class ControlResponseTest {
+
     @Test
-    public void testJsonError() throws Exception {
+    public void testParseError() throws Exception {
+        ControlResponse response = ControlResponse.fromJson("{\n" +
+                "    \"error_text\": \"Missing username\",\n" +
+                "    \"status\": \"2\"\n" +
+                "}");
+        assertEquals("2", response.getStatus());
+        assertEquals("Missing username", response.getErrorText());
+    }
+
+    @Test
+    public void testBadJson() throws Exception {
         try {
             ControlResponse.fromJson("blarg");
             fail("Deserializing nonsense JSON should result in a NexmoUnexpectedException");

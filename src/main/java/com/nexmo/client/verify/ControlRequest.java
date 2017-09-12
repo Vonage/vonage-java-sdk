@@ -19,45 +19,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.verify.endpoints;
+package com.nexmo.client.verify;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.NexmoUnexpectedException;
+import org.apache.http.client.methods.RequestBuilder;
 
-import java.io.IOException;
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class ControlResponse {
-    private final String status;
+public class ControlRequest {
+    private final String requestId;
     private final VerifyControlCommand command;
 
-    @JsonCreator
-    public ControlResponse(
-            @JsonProperty("status") String status,
-            @JsonProperty("command") VerifyControlCommand command) {
-        this.status = status;
+    public ControlRequest(String requestId, VerifyControlCommand command) {
+        this.requestId = requestId;
         this.command = command;
     }
 
-    @JsonProperty
-    public String getStatus() {
-        return status;
+    public String getRequestId() {
+        return requestId;
     }
 
-    @JsonProperty
     public VerifyControlCommand getCommand() {
         return command;
     }
 
-    public static ControlResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, ControlResponse.class);
-        } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce ControlResponse from json.", jpe);
-        }
+    public void addParams(RequestBuilder request) {
+        request
+                .addParameter("request_id", this.getRequestId())
+                .addParameter("cmd", this.getCommand().toString());
     }
+
 }
