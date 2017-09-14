@@ -144,7 +144,7 @@ public class VoiceClient extends AbstractClient {
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
     public ModifyCallResponse modifyCall(String uuid, String action) throws IOException, NexmoClientException {
-        return calls.put(uuid, action);
+        return this.modifyCall(new CallModifier(uuid, action));
     }
 
     /**
@@ -173,7 +173,7 @@ public class VoiceClient extends AbstractClient {
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
     public ModifyCallResponse transferCall(String uuid, String nccoUrl) throws IOException, NexmoClientException {
-        return calls.put(CallModifier.transferCall(uuid, nccoUrl));
+        return this.modifyCall(CallModifier.transferCall(uuid, nccoUrl));
     }
 
     /**

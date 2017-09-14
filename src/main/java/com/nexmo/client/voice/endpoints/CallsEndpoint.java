@@ -88,20 +88,6 @@ public class CallsEndpoint {
         return this.readCall.execute(uuid);
     }
 
-
-    /**
-     * Modify an ongoing call with just an action.
-     *
-     * @param uuid   The uuid of the CallInfo object to be modified
-     * @param action One of: "hangup", "mute", "unmute", "earmuff", "unearmuff"
-     * @return A ModifyCallResponse object describing the state of the call that was modified
-     * @throws IOException          if an error occurs communicating with the Nexmo API
-     * @throws NexmoClientException if an error occurs constructing the Nexmo API request or response
-     */
-    public ModifyCallResponse put(String uuid, String action) throws IOException, NexmoClientException {
-        return this.put(new CallModifier(uuid, action));
-    }
-
     /**
      * Modify an ongoing call.
      * <p>
