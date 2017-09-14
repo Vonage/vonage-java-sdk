@@ -90,8 +90,6 @@ public class CallsEndpoint {
 
     /**
      * Modify an ongoing call.
-     * <p>
-     * If the CallModifier only specifies an "action", use {@link #put(String, String)} instead.
      *
      * @param modifier A CallModifier describing the modification to make to the call.
      * @return A ModifyCallResponse object describing the state of the call that was modified
