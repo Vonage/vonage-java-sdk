@@ -38,6 +38,7 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
@@ -59,7 +60,6 @@ public class ModifyCallMethodTest {
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode node = objectMapper.readValue(request.getEntity().getContent(), JsonNode.class);
-        LOG.info(request.getEntity().getContent());
         assertEquals("hangup", node.get("action").asText());
     }
 
@@ -77,7 +77,6 @@ public class ModifyCallMethodTest {
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode node = objectMapper.readValue(request.getEntity().getContent(), JsonNode.class);
-        LOG.info(request.getEntity().getContent());
         assertEquals("earmuff", node.get("action").asText());
     }
 
@@ -95,7 +94,6 @@ public class ModifyCallMethodTest {
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode node = objectMapper.readValue(request.getEntity().getContent(), JsonNode.class);
-        LOG.info(request.getEntity().getContent());
         assertEquals("unearmuff", node.get("action").asText());
     }
 
@@ -113,7 +111,6 @@ public class ModifyCallMethodTest {
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode node = objectMapper.readValue(request.getEntity().getContent(), JsonNode.class);
-        LOG.info(request.getEntity().getContent());
         assertEquals("mute", node.get("action").asText());
     }
 
@@ -131,7 +128,6 @@ public class ModifyCallMethodTest {
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode node = objectMapper.readValue(request.getEntity().getContent(), JsonNode.class);
-        LOG.info(request.getEntity().getContent());
         assertEquals("unmute", node.get("action").asText());
     }
 
@@ -152,5 +148,15 @@ public class ModifyCallMethodTest {
 
         ModifyCallResponse response = methodUnderTest.parseResponse(stubResponse);
         assertEquals("Received", response.getMessage());
+    }
+
+    @Test
+    public void testSetUri() throws Exception {
+        ModifyCallMethod methodUnderTest = new ModifyCallMethod(null);
+        methodUnderTest.setUri("https://example.com/dummy/");
+        RequestBuilder req = methodUnderTest.makeRequest(
+                new CallModifier("uuid-1234", "hangup")
+        );
+        assertEquals(new URI("https://example.com/dummy/uuid-1234"), req.getUri());
     }
 }

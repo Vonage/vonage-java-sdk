@@ -65,10 +65,7 @@ public class ModifyCallMethod extends AbstractMethod<CallModifier, ModifyCallRes
 
     @Override
     public ModifyCallResponse parseResponse(HttpResponse response) throws IOException {
-        LOG.info("Response: " + response.getStatusLine().getStatusCode() + ": " + response.getStatusLine()
-                .getReasonPhrase());
         String json = new BasicResponseHandler().handleResponse(response);
-        LOG.info("Received: " + json);
         return ModifyCallResponse.fromJson(json);
     }
 
