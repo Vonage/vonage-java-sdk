@@ -1,4 +1,4 @@
-/*
+package com.nexmo.client.voice;/*
  * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,43 +19,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.voice;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import org.junit.Test;
 
-public class ModifyCallPayload {
-    private Action action;
+import static org.junit.Assert.*;
 
-    public ModifyCallPayload(Action action) {
-        this.action = action;
+public class TransferCallPayloadTest {
+    @Test
+    public void transferJson() throws Exception {
+        String expected = "{\"action\":\"transfer\",\"destination\":{\"type\":\"ncco\",\"url\":[\"https://example" +
+                ".com/ncco\"]}}";
+        String actual = CallModifier.transferCall("not-a-uuid", "https://example.com/ncco").toJson();
+        System.out.println(actual);
+        assertEquals(expected, actual);
     }
 
-    public Action getAction() {
-        return action;
-    }
-
-    public void setAction(Action action) {
-        this.action = action;
-    }
-
-    enum Action {
-        HANGUP,
-        MUTE,
-        UNMUTE,
-        EARMUFF,
-        UNEARMUFF,
-        TRANSFER;
-
-        @JsonValue
-        @Override
-        public String toString() {
-            return name().toLowerCase();
-        }
-
-        @JsonCreator
-        public static Action fromString(String name) {
-            return Action.valueOf(name.toUpperCase());
-        }
+    @Test
+    public void testTypeValueOf() throws Exception {
+        assertEquals(TransferDestination.Type.NCCO, TransferDestination.Type.valueOf("NCCO"));
     }
 }

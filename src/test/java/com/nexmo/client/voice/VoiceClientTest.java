@@ -182,6 +182,13 @@ public class VoiceClientTest {
     }
 
     @Test
+    public void testTransferCall() throws Exception {
+        VoiceClient client = new VoiceClient(stubHttpWrapper(200, "{\"message\":\"Received\"}"));
+        ModifyCallResponse call = client.modifyCall("93137ee3-580e-45f7-a61a-e0b5716000ef", "hangup");
+        assertEquals("Received", call.getMessage());
+    }
+
+    @Test
     public void testStartStreamNonLooping() throws Exception {
         VoiceClient client = new VoiceClient(stubHttpWrapper(200,
                 "{\n" +

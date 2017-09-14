@@ -21,41 +21,37 @@
  */
 package com.nexmo.client.voice;
 
+
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public class ModifyCallPayload {
-    private Action action;
+public class TransferDestination {
+    private final Type type;
+    private final String[] urls;
 
-    public ModifyCallPayload(Action action) {
-        this.action = action;
+    public TransferDestination(Type type, String url) {
+        this.type = type;
+        this.urls = new String[]{url};
     }
 
-    public Action getAction() {
-        return action;
+    @JsonProperty("type")
+    public Type getType() {
+        return type;
     }
 
-    public void setAction(Action action) {
-        this.action = action;
+    @JsonProperty("url")
+    public String[] getUrls() {
+        return urls;
     }
 
-    enum Action {
-        HANGUP,
-        MUTE,
-        UNMUTE,
-        EARMUFF,
-        UNEARMUFF,
-        TRANSFER;
+    enum Type {
+        NCCO;
 
         @JsonValue
         @Override
         public String toString() {
             return name().toLowerCase();
-        }
-
-        @JsonCreator
-        public static Action fromString(String name) {
-            return Action.valueOf(name.toUpperCase());
         }
     }
 }

@@ -27,7 +27,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 
-
 public class CallModifierTest {
     private CallModifier callModifier;
 
@@ -47,16 +46,8 @@ public class CallModifierTest {
     }
 
     @Test
-    public void setAction() throws Exception {
-        //this is not a real action
-        callModifier.setAction("pause");
-        assertEquals("pause", callModifier.getAction());
-    }
-
-    @Test
     public void toJson() throws Exception {
         String jsonString = "{\"action\":\"hangup\"}";
         assertEquals(jsonString, callModifier.toJson());
     }
-
 }

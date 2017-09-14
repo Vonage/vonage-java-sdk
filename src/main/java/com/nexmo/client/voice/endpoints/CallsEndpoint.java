@@ -90,17 +90,29 @@ public class CallsEndpoint {
 
 
     /**
-     * Modify an ongoing call.
-     * <p>
-     * Currently this method only supports the "hangup" action.
+     * Modify an ongoing call with just an action.
      *
      * @param uuid   The uuid of the CallInfo object to be modified
-     * @param action The word "hangup"
+     * @param action One of: "hangup", "mute", "unmute", "earmuff", "unearmuff"
      * @return A ModifyCallResponse object describing the state of the call that was modified
      * @throws IOException          if an error occurs communicating with the Nexmo API
      * @throws NexmoClientException if an error occurs constructing the Nexmo API request or response
      */
     public ModifyCallResponse put(String uuid, String action) throws IOException, NexmoClientException {
-        return this.modifyCall.execute(new CallModifier(uuid, action));
+        return this.put(new CallModifier(uuid, action));
+    }
+
+    /**
+     * Modify an ongoing call.
+     * <p>
+     * If the CallModifier only specifies an "action", use {@link #put(String, String)} instead.
+     *
+     * @param modifier A CallModifier describing the modification to make to the call.
+     * @return A ModifyCallResponse object describing the state of the call that was modified
+     * @throws IOException          if an error occurs communicating with the Nexmo API
+     * @throws NexmoClientException if an error occurs constructing the Nexmo API request or response
+     */
+    public ModifyCallResponse put(CallModifier modifier) throws IOException, NexmoClientException {
+        return this.modifyCall.execute(modifier);
     }
 }
