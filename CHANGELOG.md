@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## In Development
+
+### Changed
+- `ModifyCallPayload.action` is now a value of the enum `ModifyCallPayload.Action`.
+
 ### Fixed
 - Added missing values for CallStatus: FAILED, REJECTED, BUSY & CANCELLED
 
@@ -15,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Add `NumbersClient.searchNumbers` method.
 - Add `NumbersClient.cancelNumber` method.
 - Add `NumbersClient.buyNumber` method.
+- Add the ability to mute, unmute, earmuff, unearmuff and transfer an ongoing call.
 
 ## [2.0.2] - 2017-05-04
 ### Fixed
