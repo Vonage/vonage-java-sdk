@@ -21,6 +21,7 @@
  */
 package com.nexmo.client.account;
 
+import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,17 +29,21 @@ import static org.mockito.Mockito.*;
 
 public class AccountClientTest {
     private AccountClient client;
+    private BalanceResponse sentinel;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         client = new AccountClient(null);
         client.balance = mock(BalanceEndpoint.class);
+        sentinel = new BalanceResponse(1.1, true);
+        when(client.balance.execute()).thenReturn(sentinel);
     }
 
     @Test
     public void testGetBalance() throws Exception {
-        client.getBalance();
+        BalanceResponse response = client.getBalance();
         verify(client.balance).execute();
+        Assert.assertEquals(sentinel, response);
     }
 
 }
