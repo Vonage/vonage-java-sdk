@@ -51,7 +51,7 @@ public class BalanceEndpointTest {
 
     @Test
     public void testMakeRequest() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(new BalanceRequest());
+        RequestBuilder builder = this.endpoint.makeRequest(null);
         assertEquals("GET", builder.getMethod());
         assertEquals("https://rest.nexmo.com/account/get-balance", builder.build().getURI().toString());
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
@@ -76,7 +76,7 @@ public class BalanceEndpointTest {
         }
 
         @Override
-        public BalanceResponse execute(BalanceRequest request) throws IOException, NexmoClientException {
+        public BalanceResponse execute() throws IOException, NexmoClientException {
             return new BalanceResponse(1.5, true);
         }
     }
