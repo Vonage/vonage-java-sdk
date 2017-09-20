@@ -32,7 +32,7 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class BalanceEndpoint extends AbstractMethod<BalanceRequest, BalanceResponse> {
+public class BalanceEndpoint extends AbstractMethod<Void, BalanceResponse> {
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
@@ -49,16 +49,14 @@ public class BalanceEndpoint extends AbstractMethod<BalanceRequest, BalanceRespo
         return ALLOWED_AUTH_METHODS;
     }
 
-    public BalanceResponse execute() throws NexmoClientException,
-                                           IOException {
-        return this.execute(null);
-    }
-
     @Override
-    public RequestBuilder makeRequest(BalanceRequest request) throws NexmoClientException,
-                                                                     UnsupportedEncodingException {
+    public RequestBuilder makeRequest(Void request) throws NexmoClientException, UnsupportedEncodingException {
         RequestBuilder requestBuilder = RequestBuilder.get(uri);
         return requestBuilder;
+    }
+
+    public BalanceResponse execute() throws NexmoClientException, IOException {
+        return this.execute(null);
     }
 
     @Override
