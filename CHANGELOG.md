@@ -15,11 +15,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - Add missing setter for the Message.statusReportRequired property.
+- Add `AccountClient.getBalance` method for getting an account balance.
 - Add `NumbersClient.listNumbers` method.
 - Add `NumbersClient.searchNumbers` method.
 - Add `NumbersClient.cancelNumber` method.
 - Add `NumbersClient.buyNumber` method.
 - Add the ability to mute, unmute, earmuff, unearmuff and transfer an ongoing call.
+- Add `VerifyClient.advanceVerification` and `VerifyClient.cancelVerification`
 
 ## [2.0.2] - 2017-05-04
 ### Fixed

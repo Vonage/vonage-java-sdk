@@ -27,6 +27,7 @@ import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClient;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.verify.endpoints.CheckEndpoint;
+import com.nexmo.client.verify.endpoints.ControlEndpoint;
 import com.nexmo.client.verify.endpoints.SearchEndpoint;
 import com.nexmo.client.verify.endpoints.VerifyEndpoint;
 
@@ -48,6 +49,7 @@ public class VerifyClient extends AbstractClient {
     private CheckEndpoint check;
     private VerifyEndpoint verify;
     private SearchEndpoint search;
+    private ControlEndpoint control;
 
     /**
      * Constructor.
@@ -60,6 +62,7 @@ public class VerifyClient extends AbstractClient {
         this.check = new CheckEndpoint(httpWrapper);
         this.search = new SearchEndpoint(httpWrapper);
         this.verify = new VerifyEndpoint(httpWrapper);
+        this.control = new ControlEndpoint(httpWrapper);
     }
 
     /**
@@ -185,6 +188,8 @@ public class VerifyClient extends AbstractClient {
     }
 
     /**
+     * Search for a previous verification request.
+     *
      * @param requestId The requestId of a single Verify request to be looked up.
      * @return A SearchResult containing the details of the Verify request that was looked up, or <tt>null</tt> if no
      * record was found.
@@ -196,6 +201,8 @@ public class VerifyClient extends AbstractClient {
     }
 
     /**
+     * Search for a previous verification request.
+     *
      * @param requestIds The requestIds of Verify requests to be looked up.
      * @return An array SearchResult for each record that was found.
      * @throws IOException          if a network error occurred contacting the Nexmo Verify API.
@@ -203,5 +210,27 @@ public class VerifyClient extends AbstractClient {
      */
     public SearchResult[] search(String... requestIds) throws IOException, NexmoClientException {
         return search.search(requestIds);
+    }
+
+    /**
+     * Advance a current verification request to the next stage in the process.
+     *
+     * @param requestId The requestId of the ongoing verification request.
+     * @throws IOException If an IO error occurred while making the request.
+     * @throws NexmoClientException If the request failed for some reason.
+     */
+    public void advanceVerification(String requestId) throws IOException, NexmoClientException {
+        control.execute(new ControlRequest(requestId, VerifyControlCommand.TRIGGER_NEXT_EVENT));
+    }
+
+    /**
+     * Cancel a current verification request.
+     *
+     * @param requestId The requestId of the ongoing verification request.
+     * @throws IOException If an IO error occurred while making the request.
+     * @throws NexmoClientException If the request failed for some reason.
+     */
+    public void cancelVerification(String requestId) throws IOException, NexmoClientException {
+        control.execute(new ControlRequest(requestId, VerifyControlCommand.CANCEL));
     }
 }
