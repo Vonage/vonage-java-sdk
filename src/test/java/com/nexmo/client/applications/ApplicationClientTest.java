@@ -22,7 +22,6 @@
 package com.nexmo.client.applications;
 
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.TestUtils;
 import com.nexmo.client.auth.AuthCollection;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpEntity;
@@ -30,13 +29,11 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class ApplicationClientTest {
@@ -61,12 +58,6 @@ public class ApplicationClientTest {
 
         return wrapper;
     }
-
-    @Before
-    public void setUp() throws Exception {
-        client = new ApplicationClient(null);
-    }
-
 
     @Test
     public void testCreateApplication() throws Exception {
