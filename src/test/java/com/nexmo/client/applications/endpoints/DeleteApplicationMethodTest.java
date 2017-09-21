@@ -52,7 +52,7 @@ public class DeleteApplicationMethodTest {
         RequestBuilder builder = this.endpoint.makeRequest("dummy-application-uuid");
         assertEquals("DELETE", builder.getMethod());
         assertEquals("https://api.nexmo.com/v1/applications/dummy-application-uuid", builder.build().getURI().toString());
-        
+
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
         assertEquals(0, params.size());
     }

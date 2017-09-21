@@ -35,7 +35,6 @@ import org.junit.Test;
 import java.util.Map;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertNotNull;
 
 public class UpdateApplicationMethodTest {
     private UpdateApplicationMethod endpoint;

@@ -21,7 +21,6 @@
  */
 package com.nexmo.client.applications.endpoints;
 
-import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.TestUtils;
 import com.nexmo.client.applications.ApplicationDetails;
 import com.nexmo.client.auth.TokenAuthMethod;
@@ -30,7 +29,6 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.Map;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -55,7 +53,7 @@ public class GetApplicationEndpointTest {
         RequestBuilder builder = this.endpoint.makeRequest("app-id");
         assertEquals("GET", builder.getMethod());
         assertEquals("https://api.nexmo.com/v1/applications/app-id", builder.build().getURI().toString());
-        
+
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
         // TODO: Assert params are as expected:
         assertEquals(0, params.size());

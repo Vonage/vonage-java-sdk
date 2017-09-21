@@ -23,17 +23,8 @@ package com.nexmo.client.applications;
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.TestUtils;
-import com.nexmo.client.account.AccountClient;
-import com.nexmo.client.account.BalanceEndpoint;
-import com.nexmo.client.account.BalanceResponse;
-import com.nexmo.client.applications.endpoints.ApplicationsEndpoint;
 import com.nexmo.client.auth.AuthCollection;
-import com.nexmo.client.auth.JWTAuthMethod;
 import com.nexmo.client.auth.TokenAuthMethod;
-import com.nexmo.client.voice.Call;
-import com.nexmo.client.voice.CallEvent;
-import com.nexmo.client.voice.VoiceClient;
-import junit.framework.Assert;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -78,7 +69,6 @@ public class ApplicationClientTest {
     public void setUp() throws Exception {
         client = new ApplicationClient(null);
     }
-
 
 
     @Test

@@ -52,7 +52,7 @@ public class ListApplicationsEndpointTest {
         RequestBuilder builder = this.endpoint.makeRequest(new ListApplicationsRequest());
         assertEquals("GET", builder.getMethod());
         assertEquals("https://api.nexmo.com/v1/applications", builder.build().getURI().toString());
-        
+
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
         // TODO: Assert params are as expected:
         assertEquals(0, params.size());

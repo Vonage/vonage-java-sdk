@@ -57,7 +57,7 @@ public class CreateApplicationMethodTest {
         ));
         assertEquals("POST", builder.getMethod());
         assertEquals("https://api.nexmo.com/v1/applications", builder.build().getURI().toString());
-        
+
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
         assertEquals("app name", params.get("name"));
         assertEquals("https://example.com/event", params.get("event_url"));
