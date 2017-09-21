@@ -21,19 +21,25 @@
  */
 package com.nexmo.client.voice;
 
-public class ModifyCallPayload {
-    private ModifyCallAction action;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-    public ModifyCallPayload(ModifyCallAction action) {
-        this.action = action;
+public enum ModifyCallAction {
+    HANGUP,
+    MUTE,
+    UNMUTE,
+    EARMUFF,
+    UNEARMUFF,
+    TRANSFER;
+
+    @JsonValue
+    @Override
+    public String toString() {
+        return name().toLowerCase();
     }
 
-    public ModifyCallAction getAction() {
-        return action;
+    @JsonCreator
+    public static ModifyCallAction fromString(String name) {
+        return ModifyCallAction.valueOf(name.toUpperCase());
     }
-
-    public void setAction(ModifyCallAction action) {
-        this.action = action;
-    }
-
 }

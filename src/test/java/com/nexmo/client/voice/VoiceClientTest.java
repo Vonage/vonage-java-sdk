@@ -177,7 +177,7 @@ public class VoiceClientTest {
     @Test
     public void testModifyCall() throws Exception {
         VoiceClient client = new VoiceClient(stubHttpWrapper(200, "{\"message\":\"Received\"}"));
-        ModifyCallResponse call = client.modifyCall("93137ee3-580e-45f7-a61a-e0b5716000ef", "hangup");
+        ModifyCallResponse call = client.modifyCall("93137ee3-580e-45f7-a61a-e0b5716000ef", ModifyCallAction.HANGUP);
         assertEquals("Received", call.getMessage());
     }
 
@@ -185,7 +185,7 @@ public class VoiceClientTest {
     public void testModifyCall2() throws Exception {
         VoiceClient client = new VoiceClient(stubHttpWrapper(200, "{\"message\":\"Received\"}"));
         ModifyCallResponse call = client.modifyCall(
-                new CallModifier("93137ee3-580e-45f7-a61a-e0b5716000ef", "mute"));
+                new CallModifier("93137ee3-580e-45f7-a61a-e0b5716000ef", ModifyCallAction.MUTE));
         assertEquals("Received", call.getMessage());
     }
 

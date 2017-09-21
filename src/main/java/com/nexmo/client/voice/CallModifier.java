@@ -30,14 +30,14 @@ public class CallModifier {
     private final String uuid;
     private final ModifyCallPayload modifyCallPayload;
 
-    CallModifier(String uuid, ModifyCallPayload modifyCallPayload) {
+    public CallModifier(String uuid, ModifyCallPayload modifyCallPayload) {
         this.uuid = uuid;
         this.modifyCallPayload = modifyCallPayload;
     }
 
-    public CallModifier(String uuid, String action) {
+    public CallModifier(String uuid, ModifyCallAction action) {
         this.uuid = uuid;
-        this.modifyCallPayload = new ModifyCallPayload(ModifyCallPayload.Action.fromString(action));
+        this.modifyCallPayload = new ModifyCallPayload(action);
     }
 
     public static CallModifier transferCall(String uuid, String nccoUrl) {
@@ -48,8 +48,8 @@ public class CallModifier {
         return uuid;
     }
 
-    public String getAction() {
-        return modifyCallPayload.getAction().toString();
+    public ModifyCallAction getAction() {
+        return modifyCallPayload.getAction();
     }
 
     public String toJson() {

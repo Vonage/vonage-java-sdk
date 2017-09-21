@@ -28,7 +28,7 @@ public class TransferCallPayload extends ModifyCallPayload {
     private final String nccoUrl;
 
     public TransferCallPayload(String nccoUrl) {
-        super(Action.TRANSFER);
+        super(ModifyCallAction.TRANSFER);
         this.nccoUrl = nccoUrl;
     }
 

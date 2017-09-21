@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.voice.CallModifier;
+import com.nexmo.client.voice.ModifyCallAction;
 import com.nexmo.client.voice.ModifyCallResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -52,7 +53,7 @@ public class ModifyCallMethodTest {
         ModifyCallMethod methodUnderTest = new ModifyCallMethod(httpWrapper);
 
         RequestBuilder request = methodUnderTest.makeRequest(
-                new CallModifier("abc-123", "hangup")
+                new CallModifier("abc-123", ModifyCallAction.HANGUP)
         );
 
         assertEquals("PUT", request.getMethod());
@@ -69,7 +70,7 @@ public class ModifyCallMethodTest {
         ModifyCallMethod methodUnderTest = new ModifyCallMethod(httpWrapper);
 
         RequestBuilder request = methodUnderTest.makeRequest(
-                new CallModifier("abc-123", "earmuff")
+                new CallModifier("abc-123", ModifyCallAction.EARMUFF)
         );
 
         assertEquals("PUT", request.getMethod());
@@ -86,7 +87,7 @@ public class ModifyCallMethodTest {
         ModifyCallMethod methodUnderTest = new ModifyCallMethod(httpWrapper);
 
         RequestBuilder request = methodUnderTest.makeRequest(
-                new CallModifier("abc-123", "unearmuff")
+                new CallModifier("abc-123", ModifyCallAction.UNEARMUFF)
         );
 
         assertEquals("PUT", request.getMethod());
@@ -103,7 +104,7 @@ public class ModifyCallMethodTest {
         ModifyCallMethod methodUnderTest = new ModifyCallMethod(httpWrapper);
 
         RequestBuilder request = methodUnderTest.makeRequest(
-                new CallModifier("abc-123", "mute")
+                new CallModifier("abc-123", ModifyCallAction.MUTE)
         );
 
         assertEquals("PUT", request.getMethod());
@@ -120,7 +121,7 @@ public class ModifyCallMethodTest {
         ModifyCallMethod methodUnderTest = new ModifyCallMethod(httpWrapper);
 
         RequestBuilder request = methodUnderTest.makeRequest(
-                new CallModifier("abc-123", "unmute")
+                new CallModifier("abc-123", ModifyCallAction.UNMUTE)
         );
 
         assertEquals("PUT", request.getMethod());
@@ -155,7 +156,7 @@ public class ModifyCallMethodTest {
         ModifyCallMethod methodUnderTest = new ModifyCallMethod(null);
         methodUnderTest.setUri("https://example.com/dummy/");
         RequestBuilder req = methodUnderTest.makeRequest(
-                new CallModifier("uuid-1234", "hangup")
+                new CallModifier("uuid-1234", ModifyCallAction.HANGUP)
         );
         assertEquals(new URI("https://example.com/dummy/uuid-1234"), req.getUri());
     }

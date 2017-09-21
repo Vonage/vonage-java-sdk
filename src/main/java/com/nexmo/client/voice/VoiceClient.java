@@ -143,14 +143,14 @@ public class VoiceClient extends AbstractClient {
      * @throws IOException          if a network error occurred contacting the Nexmo Voice API.
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
-    public ModifyCallResponse modifyCall(String uuid, String action) throws IOException, NexmoClientException {
+    public ModifyCallResponse modifyCall(String uuid, ModifyCallAction action) throws IOException, NexmoClientException {
         return this.modifyCall(new CallModifier(uuid, action));
     }
 
     /**
      * Modify an ongoing call using a CallModifier object.
      * <p>
-     * In most cases, you will want to use {@link #modifyCall(String, String)} or {@link #transferCall(String, String)}
+     * In most cases, you will want to use {@link #modifyCall(String, ModifyCallAction)} or {@link #transferCall(String, String)}
      * instead of this method.
      *
      * @param modifier A CallModifier describing the modification to be made.

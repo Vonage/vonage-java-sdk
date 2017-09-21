@@ -32,7 +32,7 @@ public class CallModifierTest {
 
     @Before
     public void setUp() throws Exception {
-        callModifier = new CallModifier("abc-123", "hangup");
+        callModifier = new CallModifier("abc-123", ModifyCallAction.HANGUP);
     }
 
     @Test
@@ -42,7 +42,7 @@ public class CallModifierTest {
 
     @Test
     public void getAction() throws Exception {
-        assertEquals("hangup", callModifier.getAction());
+        assertEquals(ModifyCallAction.HANGUP, callModifier.getAction());
     }
 
     @Test
