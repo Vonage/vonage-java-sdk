@@ -36,13 +36,10 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class ApplicationClientTest {
-    private ApplicationClient client;
-
-    private TestUtils testUtils = new TestUtils();
-
     private static HttpWrapper stubHttpWrapper(int statusCode, String content) throws Exception {
         HttpClient client = mock(HttpClient.class);
 

@@ -23,6 +23,8 @@ package com.nexmo.client.applications.endpoints;
 
 import com.nexmo.client.TestUtils;
 import com.nexmo.client.applications.ApplicationDetails;
+import com.nexmo.client.applications.ApplicationKeys;
+import com.nexmo.client.applications.WebHook;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
@@ -31,8 +33,7 @@ import org.junit.Test;
 
 import java.util.Map;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class GetApplicationEndpointTest {
     private GetApplicationEndpoint endpoint;
@@ -55,15 +56,59 @@ public class GetApplicationEndpointTest {
         assertEquals("https://api.nexmo.com/v1/applications/app-id", builder.build().getURI().toString());
 
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
-        // TODO: Assert params are as expected:
         assertEquals(0, params.size());
     }
 
     @Test
     public void testParseResponse() throws Exception {
-        HttpResponse stub = TestUtils.makeJsonHttpResponse(200, "{}");
+        HttpResponse stub = TestUtils.makeJsonHttpResponse(200, "{\n" +
+                "  \"id\": \"aaaaaaaa-bbbb-cccc-dddd-0123456789ab\",\n" +
+                "  \"name\": \"My Application\",\n" +
+                "  \"voice\": {\n" +
+                "    \"webhooks\": [\n" +
+                "      {\n" +
+                "        \"endpoint_type\": \"answer_url\",\n" +
+                "        \"endpoint\": \"https://example.com/answer\",\n" +
+                "        \"http_method\": \"GET\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"endpoint_type\": \"event_url\",\n" +
+                "        \"endpoint\": \"https://example.com/event\",\n" +
+                "        \"http_method\": \"POST\"\n" +
+                "      }\n" +
+                "    ]\n" +
+                "  },\n" +
+                "  \"keys\": {\n" +
+                "    \"public_key\": \"PUBLIC_KEY\",\n" +
+                "    \"private_key\": \"PRIVATE_KEY\"\n" +
+                "  },\n" +
+                "  \"_links\": {\n" +
+                "    \"self\": {\n" +
+                "      \"href\": \"/v1/applications/aaaaaaaa-bbbb-cccc-dddd-0123456789ab\"\n" +
+                "    }\n" +
+                "  }\n" +
+                "}");
         ApplicationDetails response = this.endpoint.parseResponse(stub);
-        // TODO: Assert response values are correct:
-        // assertEquals(3.14159, response.getValue(), 0.00001);
+        assertEquals("aaaaaaaa-bbbb-cccc-dddd-0123456789ab", response.getId());
+        assertEquals("My Application", response.getName());
+
+        assertNotNull(response.getVoiceApplicationDetails());
+        assertNotNull(response.getVoiceApplicationDetails().getWebHooks());
+
+        WebHook answer = response.getVoiceApplicationDetails().getWebHooks()[0];
+        assertEquals("answer_url", answer.getEndpointType());
+        assertEquals("https://example.com/answer", answer.getEndpointUrl());
+        assertEquals("GET", answer.getHttpMethod());
+
+        WebHook event = response.getVoiceApplicationDetails().getWebHooks()[1];
+        assertEquals("event_url", event.getEndpointType());
+        assertEquals("https://example.com/event", event.getEndpointUrl());
+        assertEquals("POST", event.getHttpMethod());
+
+        assertNotNull(response.getKeys());
+        ApplicationKeys keys = response.getKeys();
+
+        assertEquals("PUBLIC_KEY", keys.getPublicKey());
+        assertEquals("PRIVATE_KEY", keys.getPrivateKey());
     }
 }
