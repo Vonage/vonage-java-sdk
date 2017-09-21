@@ -46,26 +46,57 @@ public class ApplicationClient {
         this.applications = new ApplicationsEndpoint(httpWrapper);
     }
 
+    /**
+     * Create a new Application.
+     *
+     * @param request A CreateApplicationRequest describing the application to be created.
+     * @return An ApplicationDetails object describing the newly created application, including generated private and
+     * public keys.
+     */
     public ApplicationDetails createApplication(CreateApplicationRequest request)
             throws IOException, NexmoClientException {
         return this.applications.post(request);
     }
 
+    /**
+     * Update an existing application with the provided details.
+     *
+     * @param request An UpdateApplicationRequest describing the new application details.
+     * @return An ApplicationDetails object describing the newly modified application.
+     */
     public ApplicationDetails updateApplication(UpdateApplicationRequest request)
             throws IOException, NexmoClientException {
         return this.applications.put(request);
     }
 
+    /**
+     * List the applications associated with the authenticated account. By default returns the first page of
+     * application objects.
+     *
+     * @param request A ListApplicationsRequest object containing the required paging information.
+     * @return A ListApplicationsResponse, which is an Iterator of ApplicationDetails objects.
+     */
     public ListApplicationsResponse listApplications(ListApplicationsRequest request)
             throws IOException, NexmoClientException {
         return this.applications.get(request);
     }
 
+    /**
+     * Obtain the details of an existing application.
+     *
+     * @param applicationId The id of the application
+     * @return An ApplicationDetails object describing the requested application.
+     */
     public ApplicationDetails getApplication(String applicationId)
             throws IOException, NexmoClientException {
         return this.applications.get(applicationId);
     }
 
+    /**
+     * Delete an application.
+     *
+     * @param applicationId The ID of the application to be deleted.
+     */
     public void deleteApplication(String applicationId)
             throws IOException, NexmoClientException {
         this.applications.delete(applicationId);
