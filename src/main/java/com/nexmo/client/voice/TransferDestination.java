@@ -19,36 +19,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package com.nexmo.client.voice;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.NexmoUnexpectedException;
 
-import java.io.IOException;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-/**
- * Response if a {@link Call} was successfully modified.
- * <p>
- * This would be returned by {@link VoiceClient#modifyCall(String, ModifyCallAction)}
- */
+public class TransferDestination {
+    private final Type type;
+    private final String[] urls;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class ModifyCallResponse {
-    private String message;
-
-    public String getMessage() {
-        return message;
+    public TransferDestination(Type type, String url) {
+        this.type = type;
+        this.urls = new String[]{url};
     }
 
-    public static ModifyCallResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, ModifyCallResponse.class);
-        } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce ModifyCallResponse from json.", jpe);
+    @JsonProperty("type")
+    public Type getType() {
+        return type;
+    }
+
+    @JsonProperty("url")
+    public String[] getUrls() {
+        return urls;
+    }
+
+    enum Type {
+        NCCO;
+
+        @JsonValue
+        @Override
+        public String toString() {
+            return name().toLowerCase();
         }
     }
-
 }

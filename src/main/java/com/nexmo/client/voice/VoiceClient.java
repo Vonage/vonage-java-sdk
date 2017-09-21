@@ -125,20 +125,55 @@ public class VoiceClient extends AbstractClient {
     }
 
     /**
-     * Hang up a call.
+     * Modify an ongoing call.
      * <p>
-     * In future, further operations will be possible. At the moment, the only valid value for <tt>action</tt> is
-     * hangup.
+     * This method modifies an ongoing call, identified by "uuid". Modifications to the call can be one of:
+     * <ul>
+     * <li>Terminate the call (hangup)
+     * <li>Mute a call leg (mute)
+     * <li>Unmute a call leg (unmute)
+     * <li>Earmuff a call leg (earmuff)
+     * <li>Unearmuff a call leg (unearmuff)
+     * </ul>
      *
-     * @param uuid   (required) The UUID of the call, obtained from the object returned by {@link #createCall(Call)}.
+     * @param uuid   The UUID of the call, obtained from the object returned by {@link #createCall(Call)}.
      *               This value can be obtained with {@link CallEvent#getUuid()}
-     * @param action The word "hangup"
-     * @return A CallInfo object, representing the response from the Nexmo Voice API.
+     * @param action One of: "hangup", "mute", "unmute", "earmuff", "unearmuff"
+     * @return A ModifyCallResponse object, representing the response from the Nexmo Voice API.
      * @throws IOException          if a network error occurred contacting the Nexmo Voice API.
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
-    public ModifyCallResponse modifyCall(String uuid, String action) throws IOException, NexmoClientException {
-        return calls.put(uuid, action);
+    public ModifyCallResponse modifyCall(String uuid, ModifyCallAction action) throws IOException, NexmoClientException {
+        return this.modifyCall(new CallModifier(uuid, action));
+    }
+
+    /**
+     * Modify an ongoing call using a CallModifier object.
+     * <p>
+     * In most cases, you will want to use {@link #modifyCall(String, ModifyCallAction)} or {@link #transferCall(String, String)}
+     * instead of this method.
+     *
+     * @param modifier A CallModifier describing the modification to be made.
+     * @return A ModifyCallResponse object, representing the response from the Nexmo Voice API.
+     * @throws IOException          if a network error occurred contacting the Nexmo Voice API.
+     * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
+     */
+    public ModifyCallResponse modifyCall(CallModifier modifier) throws IOException, NexmoClientException {
+        return calls.put(modifier);
+    }
+
+    /**
+     * Transfer a call to a different NCCO endpoint.
+     *
+     * @param uuid    The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value can
+     *                be obtained with {@link CallEvent#getUuid()}
+     * @param nccoUrl The URL of the NCCO endpoint the call should be transferred to
+     * @return A ModifyCallResponse object, representing the response from the Nexmo Voice API.
+     * @throws IOException          if a network error occurred contacting the Nexmo Voice API.
+     * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
+     */
+    public ModifyCallResponse transferCall(String uuid, String nccoUrl) throws IOException, NexmoClientException {
+        return this.modifyCall(CallModifier.transferCall(uuid, nccoUrl));
     }
 
     /**

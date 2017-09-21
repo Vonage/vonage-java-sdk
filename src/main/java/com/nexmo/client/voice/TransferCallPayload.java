@@ -19,36 +19,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package com.nexmo.client.voice;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.NexmoUnexpectedException;
-
-import java.io.IOException;
-
 /**
- * Response if a {@link Call} was successfully modified.
- * <p>
- * This would be returned by {@link VoiceClient#modifyCall(String, ModifyCallAction)}
+ * Extension of ModifyCallPayload which adds an NCCO destination to the serialized form.
  */
+public class TransferCallPayload extends ModifyCallPayload {
+    private final String nccoUrl;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class ModifyCallResponse {
-    private String message;
-
-    public String getMessage() {
-        return message;
+    public TransferCallPayload(String nccoUrl) {
+        super(ModifyCallAction.TRANSFER);
+        this.nccoUrl = nccoUrl;
     }
 
-    public static ModifyCallResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, ModifyCallResponse.class);
-        } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce ModifyCallResponse from json.", jpe);
-        }
+    public TransferDestination getDestination() {
+        return new TransferDestination(TransferDestination.Type.NCCO, this.nccoUrl);
     }
-
 }

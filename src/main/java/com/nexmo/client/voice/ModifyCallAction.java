@@ -19,36 +19,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package com.nexmo.client.voice;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.NexmoUnexpectedException;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-import java.io.IOException;
+public enum ModifyCallAction {
+    HANGUP,
+    MUTE,
+    UNMUTE,
+    EARMUFF,
+    UNEARMUFF,
+    TRANSFER;
 
-/**
- * Response if a {@link Call} was successfully modified.
- * <p>
- * This would be returned by {@link VoiceClient#modifyCall(String, ModifyCallAction)}
- */
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class ModifyCallResponse {
-    private String message;
-
-    public String getMessage() {
-        return message;
+    @JsonValue
+    @Override
+    public String toString() {
+        return name().toLowerCase();
     }
 
-    public static ModifyCallResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, ModifyCallResponse.class);
-        } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce ModifyCallResponse from json.", jpe);
-        }
+    @JsonCreator
+    public static ModifyCallAction fromString(String name) {
+        return ModifyCallAction.valueOf(name.toUpperCase());
     }
-
 }

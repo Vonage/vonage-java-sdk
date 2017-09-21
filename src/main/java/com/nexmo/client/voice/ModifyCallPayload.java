@@ -22,17 +22,18 @@
 package com.nexmo.client.voice;
 
 public class ModifyCallPayload {
-    private String action;
+    private ModifyCallAction action;
 
-    public ModifyCallPayload(String action) {
+    public ModifyCallPayload(ModifyCallAction action) {
         this.action = action;
     }
 
-    public String getAction() {
+    public ModifyCallAction getAction() {
         return action;
     }
 
-    public void setAction(String action) {
+    public void setAction(ModifyCallAction action) {
         this.action = action;
     }
+
 }

@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.voice.CallModifier;
+import com.nexmo.client.voice.ModifyCallAction;
 import com.nexmo.client.voice.ModifyCallResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,6 +39,7 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
@@ -51,7 +53,7 @@ public class ModifyCallMethodTest {
         ModifyCallMethod methodUnderTest = new ModifyCallMethod(httpWrapper);
 
         RequestBuilder request = methodUnderTest.makeRequest(
-                new CallModifier("abc-123", "hangup")
+                new CallModifier("abc-123", ModifyCallAction.HANGUP)
         );
 
         assertEquals("PUT", request.getMethod());
@@ -59,8 +61,75 @@ public class ModifyCallMethodTest {
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode node = objectMapper.readValue(request.getEntity().getContent(), JsonNode.class);
-        LOG.info(request.getEntity().getContent());
         assertEquals("hangup", node.get("action").asText());
+    }
+
+    @Test
+    public void earmuffRequest() throws Exception {
+        HttpWrapper httpWrapper = new HttpWrapper();
+        ModifyCallMethod methodUnderTest = new ModifyCallMethod(httpWrapper);
+
+        RequestBuilder request = methodUnderTest.makeRequest(
+                new CallModifier("abc-123", ModifyCallAction.EARMUFF)
+        );
+
+        assertEquals("PUT", request.getMethod());
+        assertEquals("application/json", request.getFirstHeader("Content-Type").getValue());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode node = objectMapper.readValue(request.getEntity().getContent(), JsonNode.class);
+        assertEquals("earmuff", node.get("action").asText());
+    }
+
+    @Test
+    public void unearmuffRequest() throws Exception {
+        HttpWrapper httpWrapper = new HttpWrapper();
+        ModifyCallMethod methodUnderTest = new ModifyCallMethod(httpWrapper);
+
+        RequestBuilder request = methodUnderTest.makeRequest(
+                new CallModifier("abc-123", ModifyCallAction.UNEARMUFF)
+        );
+
+        assertEquals("PUT", request.getMethod());
+        assertEquals("application/json", request.getFirstHeader("Content-Type").getValue());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode node = objectMapper.readValue(request.getEntity().getContent(), JsonNode.class);
+        assertEquals("unearmuff", node.get("action").asText());
+    }
+
+    @Test
+    public void muteRequest() throws Exception {
+        HttpWrapper httpWrapper = new HttpWrapper();
+        ModifyCallMethod methodUnderTest = new ModifyCallMethod(httpWrapper);
+
+        RequestBuilder request = methodUnderTest.makeRequest(
+                new CallModifier("abc-123", ModifyCallAction.MUTE)
+        );
+
+        assertEquals("PUT", request.getMethod());
+        assertEquals("application/json", request.getFirstHeader("Content-Type").getValue());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode node = objectMapper.readValue(request.getEntity().getContent(), JsonNode.class);
+        assertEquals("mute", node.get("action").asText());
+    }
+
+    @Test
+    public void unmuteRequest() throws Exception {
+        HttpWrapper httpWrapper = new HttpWrapper();
+        ModifyCallMethod methodUnderTest = new ModifyCallMethod(httpWrapper);
+
+        RequestBuilder request = methodUnderTest.makeRequest(
+                new CallModifier("abc-123", ModifyCallAction.UNMUTE)
+        );
+
+        assertEquals("PUT", request.getMethod());
+        assertEquals("application/json", request.getFirstHeader("Content-Type").getValue());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode node = objectMapper.readValue(request.getEntity().getContent(), JsonNode.class);
+        assertEquals("unmute", node.get("action").asText());
     }
 
     @Test
@@ -80,5 +149,15 @@ public class ModifyCallMethodTest {
 
         ModifyCallResponse response = methodUnderTest.parseResponse(stubResponse);
         assertEquals("Received", response.getMessage());
+    }
+
+    @Test
+    public void testSetUri() throws Exception {
+        ModifyCallMethod methodUnderTest = new ModifyCallMethod(null);
+        methodUnderTest.setUri("https://example.com/dummy/");
+        RequestBuilder req = methodUnderTest.makeRequest(
+                new CallModifier("uuid-1234", ModifyCallAction.HANGUP)
+        );
+        assertEquals(new URI("https://example.com/dummy/uuid-1234"), req.getUri());
     }
 }

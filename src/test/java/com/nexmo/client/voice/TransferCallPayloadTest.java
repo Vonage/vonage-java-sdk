@@ -1,4 +1,4 @@
-/*
+package com.nexmo.client.voice;/*
  * Copyright (c) 2011-2017 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,35 +20,22 @@
  * THE SOFTWARE.
  */
 
-package com.nexmo.client.voice;
+import org.junit.Test;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.NexmoUnexpectedException;
+import static org.junit.Assert.*;
 
-import java.io.IOException;
-
-/**
- * Response if a {@link Call} was successfully modified.
- * <p>
- * This would be returned by {@link VoiceClient#modifyCall(String, ModifyCallAction)}
- */
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class ModifyCallResponse {
-    private String message;
-
-    public String getMessage() {
-        return message;
+public class TransferCallPayloadTest {
+    @Test
+    public void transferJson() throws Exception {
+        String expected = "{\"action\":\"transfer\",\"destination\":{\"type\":\"ncco\",\"url\":[\"https://example" +
+                ".com/ncco\"]}}";
+        String actual = CallModifier.transferCall("not-a-uuid", "https://example.com/ncco").toJson();
+        System.out.println(actual);
+        assertEquals(expected, actual);
     }
 
-    public static ModifyCallResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, ModifyCallResponse.class);
-        } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce ModifyCallResponse from json.", jpe);
-        }
+    @Test
+    public void testTypeValueOf() throws Exception {
+        assertEquals(TransferDestination.Type.NCCO, TransferDestination.Type.valueOf("NCCO"));
     }
-
 }
