@@ -33,8 +33,6 @@ import com.nexmo.client.verify.VerifyClient;
 import com.nexmo.client.voice.VoiceClient;
 import org.apache.http.client.HttpClient;
 
-import javax.security.auth.login.AppConfigurationEntry;
-
 /**
  * Top-level Nexmo API client object.
  * <p>
@@ -77,7 +75,9 @@ public class NexmoClient {
         return this.account;
     }
 
-    public ApplicationClient getApplicationClient() { return this.application; }
+    public ApplicationClient getApplicationClient() {
+        return this.application;
+    }
 
     public InsightClient getInsightClient() {
         return this.insight;
