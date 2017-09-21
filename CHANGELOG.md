@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - Add missing setter for the Message.statusReportRequired property.
+- Add `AccountClient.getBalance` method for getting an account balance.
 - Add `NumbersClient.listNumbers` method.
 - Add `NumbersClient.searchNumbers` method.
 - Add `NumbersClient.cancelNumber` method.
