@@ -42,6 +42,7 @@ import java.util.List;
 public class SmsClient {
     private SendMessageEndpoint message;
     private SmsSearchEndpoint search;
+    private SearchRejectedMessagesEndpoint rejected;
 
     /**
      * Create a new SmsClient.
@@ -107,5 +108,17 @@ public class SmsClient {
     public SearchSmsResponse searchMessages(Date date, String to)
             throws IOException, NexmoClientException {
         return this.searchMessages(new SmsDateSearchRequest(date, to));
+    }
+
+    /**
+     * Search for rejected SMS transactions by date and recipient MSISDN.
+     *
+     * @param date the date of the rejected SMS message to be looked up
+     * @param to   the MSISDN number of the SMS recipient
+     * @return rejection data matching the provided criteria
+     */
+    public SearchRejectedMessagesResponse searchRejectedMessages(Date date, String to)
+            throws IOException, NexmoClientException {
+        return this.rejected.execute(new SearchRejectedMessagesRequest(date, to));
     }
 }
