@@ -50,6 +50,7 @@ public class SmsClient {
     public SmsClient(HttpWrapper httpWrapper) {
         this.message = new SendMessageEndpoint(httpWrapper);
         this.search = new SmsSearchEndpoint(httpWrapper);
+        this.rejected = new SearchRejectedMessagesEndpoint(httpWrapper);
     }
 
     /**
@@ -111,6 +112,18 @@ public class SmsClient {
     }
 
     /**
+     * Search for rejected SMS transactions using a {@link SearchRejectedMessagesRequest}.
+     * <p>
+     * You should probably use {@link #searchRejectedMessages(Date, String)} instead.
+
+     * @return rejection data matching the provided criteria
+     */
+    public SearchRejectedMessagesResponse searchRejectedMessages(SearchRejectedMessagesRequest request)
+            throws IOException, NexmoClientException {
+        return this.rejected.execute(request);
+    }
+
+    /**
      * Search for rejected SMS transactions by date and recipient MSISDN.
      *
      * @param date the date of the rejected SMS message to be looked up
@@ -119,6 +132,6 @@ public class SmsClient {
      */
     public SearchRejectedMessagesResponse searchRejectedMessages(Date date, String to)
             throws IOException, NexmoClientException {
-        return this.rejected.execute(new SearchRejectedMessagesRequest(date, to));
+        return this.searchRejectedMessages(new SearchRejectedMessagesRequest(date, to));
     }
 }

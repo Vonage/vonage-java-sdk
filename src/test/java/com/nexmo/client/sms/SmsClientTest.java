@@ -201,4 +201,27 @@ public class SmsClientTest {
         );
         assertThat(response.getCount(), CoreMatchers.equalTo(2));
     }
+
+    @Test
+    public void testSearchRejected() throws Exception {
+        this.wrapper.setHttpClient(this.stubHttpClient(200, "{\n" +
+                "  \"count\": 1,\n" +
+                "  \"items\": [\n" +
+                "    {\n" +
+                "      \"account-id\": \"key\",\n" +
+                "      \"from\": \"MyApp\",\n" +
+                "      \"to\": \"123456890\",\n" +
+                "      \"date-received\": \"2012-05-02 16:03:00\",\n" +
+                "      \"error-code\": 9,\n" +
+                "      \"error-code-label\": \"partner quota exceeded -- Your pre-pay account does not have sufficient credit to process this message\"\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}\n"));
+
+        SearchRejectedMessagesResponse response = client.searchRejectedMessages(
+                new GregorianCalendar(2017, Calendar.OCTOBER, 22).getTime(),
+                "447700900983"
+        );
+        assertThat(response.getCount(), CoreMatchers.equalTo(1));
+    }
 }
