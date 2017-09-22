@@ -33,6 +33,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +61,23 @@ public class TestUtils {
         Map<String, String> result = new HashMap<>();
         for (NameValuePair param : params) {
             result.put(param.getName(), param.getValue());
+        }
+        return result;
+    }
+
+    /**
+     * Used in cases where the same url parameter is repeated, returns a map where the values are Lists of Strings,
+     * rather than just an individual String
+     */
+    public static Map<String, List<String>> makeFullParameterMap(List<NameValuePair> params) {
+        Map<String, List<String>> result = new HashMap<>();
+        for (NameValuePair param : params) {
+            List<String> values = result.get(param.getName());
+            if (values == null) {
+                values = new ArrayList<>(1);
+                result.put(param.getName(), values);
+            }
+            values.add(param.getValue());
         }
         return result;
     }

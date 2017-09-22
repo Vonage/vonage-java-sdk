@@ -31,14 +31,18 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -115,5 +119,86 @@ public class SmsClientTest {
         }
     }
 
+    @Test
+    public void testSearchMessagesId() throws Exception {
+        this.wrapper.setHttpClient(this.stubHttpClient(200, "{\n" +
+                "  \"count\": 2,\n" +
+                "  \"items\": [\n" +
+                "    {\n" +
+                "      \"message-id\": \"00A0B0C0\",\n" +
+                "      \"account-id\": \"key\",\n" +
+                "      \"network\": \"20810\",\n" +
+                "      \"from\": \"MyApp\",\n" +
+                "      \"to\": \"123456890\",\n" +
+                "      \"body\": \"hello world\",\n" +
+                "      \"price\": \"0.04500000\",\n" +
+                "      \"date-received\": \"2011-11-25 16:03:00\",\n" +
+                "      \"final-status\": \"DELIVRD\",\n" +
+                "      \"date-closed\": \"2011-11-25 16:03:00\",\n" +
+                "      \"latency\": 11151,\n" +
+                "      \"type\": \"MT\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"message-id\": \"00A0B0C1\",\n" +
+                "      \"account-id\": \"key\",\n" +
+                "      \"network\": \"20810\",\n" +
+                "      \"from\": \"MyApp\",\n" +
+                "      \"to\": \"123456891\",\n" +
+                "      \"body\": \"foo bar\",\n" +
+                "      \"price\": \"0.04500000\",\n" +
+                "      \"date-received\": \"2011-11-25 17:03:00\",\n" +
+                "      \"final-status\": \"DELIVRD\",\n" +
+                "      \"date-closed\": \"2011-11-25 18:03:00\",\n" +
+                "      \"latency\": 14151,\n" +
+                "      \"type\": \"MT\"\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}\n"));
 
+            SearchSmsResponse response = client.searchMessages("an-id");
+            assertThat(response.getCount(), CoreMatchers.equalTo(2));
+    }
+
+    @Test
+    public void testSearchMessagesDate() throws Exception {
+        this.wrapper.setHttpClient(this.stubHttpClient(200, "{\n" +
+                "  \"count\": 2,\n" +
+                "  \"items\": [\n" +
+                "    {\n" +
+                "      \"message-id\": \"00A0B0C0\",\n" +
+                "      \"account-id\": \"key\",\n" +
+                "      \"network\": \"20810\",\n" +
+                "      \"from\": \"MyApp\",\n" +
+                "      \"to\": \"123456890\",\n" +
+                "      \"body\": \"hello world\",\n" +
+                "      \"price\": \"0.04500000\",\n" +
+                "      \"date-received\": \"2011-11-25 16:03:00\",\n" +
+                "      \"final-status\": \"DELIVRD\",\n" +
+                "      \"date-closed\": \"2011-11-25 16:03:00\",\n" +
+                "      \"latency\": 11151,\n" +
+                "      \"type\": \"MT\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"message-id\": \"00A0B0C1\",\n" +
+                "      \"account-id\": \"key\",\n" +
+                "      \"network\": \"20810\",\n" +
+                "      \"from\": \"MyApp\",\n" +
+                "      \"to\": \"123456891\",\n" +
+                "      \"body\": \"foo bar\",\n" +
+                "      \"price\": \"0.04500000\",\n" +
+                "      \"date-received\": \"2011-11-25 17:03:00\",\n" +
+                "      \"final-status\": \"DELIVRD\",\n" +
+                "      \"date-closed\": \"2011-11-25 18:03:00\",\n" +
+                "      \"latency\": 14151,\n" +
+                "      \"type\": \"MT\"\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}\n"));
+
+        SearchSmsResponse response = client.searchMessages(
+                new GregorianCalendar(2017, Calendar.OCTOBER, 22).getTime(),
+                "447700900983"
+        );
+        assertThat(response.getCount(), CoreMatchers.equalTo(2));
+    }
 }

@@ -29,20 +29,26 @@ import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.client.sms.messages.Message;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 
- /**
+/**
  * A client for talking to the Nexmo Voice API. The standard way to obtain an instance of this class is to use
  * {@link NexmoClient#getSmsClient()}.
  */
 public class SmsClient {
     private SendMessageEndpoint message;
+    private SmsSearchEndpoint search;
 
     /**
      * Create a new SmsClient.
      */
     public SmsClient(HttpWrapper httpWrapper) {
         this.message = new SendMessageEndpoint(httpWrapper);
+        this.search = new SmsSearchEndpoint(httpWrapper);
     }
 
     /**
@@ -65,4 +71,41 @@ public class SmsClient {
         return this.message.execute(message);
     }
 
+    /**
+     * Search for completed SMS transactions.
+     * <p>
+     * You should probably use the helper methods {@link #searchMessages(String, String...)} or
+     * {@link #searchMessages(String, String...)} instead.
+     */
+    public SearchSmsResponse searchMessages(SearchSmsRequest request)
+            throws IOException, NexmoClientException {
+        return this.search.execute(request);
+    }
+
+    /**
+     * Search for completed SMS transactions by ID
+     *
+     * @param id  the first ID to look up
+     * @param ids optional extra IDs to look up
+     * @return SMS data matching the provided criteria
+     */
+    public SearchSmsResponse searchMessages(String id, String... ids)
+            throws IOException, NexmoClientException {
+        List<String> idList = new ArrayList<>(ids.length + 1);
+        idList.add(id);
+        idList.addAll(Arrays.asList(ids));
+        return this.searchMessages(new SmsIdSearchRequest(idList));
+    }
+
+    /**
+     * Search for completed SMS transactions by date and recipient MSISDN.
+     *
+     * @param date the date of the SMS message to be looked up
+     * @param to   the MSISDN number of the SMS recipient
+     * @return SMS data matching the provided criteria
+     */
+    public SearchSmsResponse searchMessages(Date date, String to)
+            throws IOException, NexmoClientException {
+        return this.searchMessages(new SmsDateSearchRequest(date, to));
+    }
 }
