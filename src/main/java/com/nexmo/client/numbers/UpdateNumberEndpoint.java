@@ -23,6 +23,7 @@ package com.nexmo.client.numbers;
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.NexmoMethodFailedException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.voice.endpoints.AbstractMethod;
 import org.apache.http.HttpResponse;
@@ -32,7 +33,7 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class UpdateNumberEndpoint extends AbstractMethod<UpdateNumberRequest, UpdateNumberResponse> {
+public class UpdateNumberEndpoint extends AbstractMethod<UpdateNumberRequest, Void> {
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
@@ -58,7 +59,12 @@ public class UpdateNumberEndpoint extends AbstractMethod<UpdateNumberRequest, Up
     }
 
     @Override
-    public UpdateNumberResponse parseResponse(HttpResponse response) throws IOException {
-        return UpdateNumberResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+    public Void parseResponse(HttpResponse httpResponse) throws IOException, NexmoClientException {
+        UpdateNumberResponse response = UpdateNumberResponse.fromJson(new BasicResponseHandler().handleResponse
+                (httpResponse));
+        if (!response.getErrorCode().equals("200")) {
+            throw new NexmoMethodFailedException(response.getErrorCodeLabel());
+        }
+        return null;
     }
 }

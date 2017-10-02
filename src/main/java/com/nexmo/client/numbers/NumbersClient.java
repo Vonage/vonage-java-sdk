@@ -35,12 +35,14 @@ public class NumbersClient {
     private SearchNumbersEndpoint searchNumbers;
     private CancelNumberEndpoint cancelNumber;
     private BuyNumberEndpoint buyNumber;
+    private UpdateNumberEndpoint updateNumber;
 
     public NumbersClient(HttpWrapper httpWrapper) {
         this.listNumbers = new ListNumbersEndpoint(httpWrapper);
         this.searchNumbers = new SearchNumbersEndpoint(httpWrapper);
         this.cancelNumber = new CancelNumberEndpoint(httpWrapper);
         this.buyNumber = new BuyNumberEndpoint(httpWrapper);
+        this.updateNumber = new UpdateNumberEndpoint(httpWrapper);
     }
 
     /**
@@ -68,14 +70,20 @@ public class NumbersClient {
 
 
     /**
-     * Search for available Nexmo Virtual Numbers
+     * Search for available Nexmo Virtual Numbers.
+     *
+     * @throws IOException          if an error occurs contacting the Nexmo API
+     * @throws NexmoClientException if an error is returned by the server.
      */
     public SearchNumbersResponse searchNumbers(String country) throws IOException, NexmoClientException {
         return this.searchNumbers(new SearchNumbersFilter(country));
     }
 
     /**
-     * Search for available Nexmo Virtual Numbers
+     * Search for available Nexmo Virtual Numbers.
+     *
+     * @throws IOException          if an error occurs contacting the Nexmo API
+     * @throws NexmoClientException if an error is returned by the server.
      */
     public SearchNumbersResponse searchNumbers(SearchNumbersFilter filter) throws IOException, NexmoClientException {
         return this.searchNumbers.searchNumbers(filter);
@@ -86,6 +94,8 @@ public class NumbersClient {
      *
      * @param country A String containing a 2-character ISO country code.
      * @param msisdn  The phone number to be bought.
+     * @throws IOException          if an error occurs contacting the Nexmo API
+     * @throws NexmoClientException if an error is returned by the server.
      */
     public void buyNumber(String country, String msisdn) throws IOException, NexmoClientException {
         this.buyNumber.execute(new BuyNumberRequest(country, msisdn));
@@ -96,8 +106,37 @@ public class NumbersClient {
      *
      * @param country A String containing a 2-character ISO country code.
      * @param msisdn  The phone number to be cancelled.
+     * @throws IOException          if an error occurs contacting the Nexmo API
+     * @throws NexmoClientException if an error is returned by the server.
      */
     public void cancelNumber(String country, String msisdn) throws IOException, NexmoClientException {
         CancelNumberResponse response = this.cancelNumber.execute(new CancelNumberRequest(country, msisdn));
+    }
+
+    /**
+     * Update the callbacks and/or application associations for a given Nexmo Virtual Number.
+     *
+     * @param request Details of the updates to be made to the number association.
+     * @throws IOException          if an error occurs contacting the Nexmo API
+     * @throws NexmoClientException if an error is returned by the server.
+     */
+    public void updateNumber(UpdateNumberRequest request) throws IOException, NexmoClientException {
+        this.updateNumber.execute(request);
+    }
+
+    /**
+     * Link a given Nexmo Virtual Number to a Nexmo Application with the given ID.
+     *
+     * @param msisdn  The Nexmo Virtual Number to be updated.
+     * @param country The country for the given msisdn.
+     * @param appId   The ID for the Nexmo Application to be associated with the number.
+     * @throws IOException          if an error occurs contacting the Nexmo API
+     * @throws NexmoClientException if an error is returned by the server.
+     */
+    public void linkNumber(String msisdn, String country, String appId) throws IOException, NexmoClientException {
+        UpdateNumberRequest request = new UpdateNumberRequest(msisdn, country);
+        request.setVoiceCallbackType(UpdateNumberRequest.CallbackType.APP);
+        request.setVoiceCallbackValue(appId);
+        this.updateNumber(request);
     }
 }

@@ -21,20 +21,18 @@
  */
 package com.nexmo.client.numbers;
 
-import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.TestUtils;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.junit.Before;
 import org.junit.Test;
-import org.omg.PortableServer.REQUEST_PROCESSING_POLICY_ID;
 
-import java.io.IOException;
 import java.util.Map;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class UpdateNumberEndpointTest {
     private UpdateNumberEndpoint endpoint;
@@ -53,11 +51,11 @@ public class UpdateNumberEndpointTest {
     @Test
     public void testMakeRequest() throws Exception {
         RequestBuilder builder = this.endpoint.makeRequest(new UpdateNumberRequest(
-            "447700900013", "UK"
+                "447700900013", "UK"
         ));
         assertEquals("POST", builder.getMethod());
         assertEquals("https://rest.nexmo.com/number/update", builder.build().getURI().toString());
-        
+
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
         assertEquals(2, params.size());
         assertEquals("447700900013", params.get("msisdn"));
@@ -93,9 +91,29 @@ public class UpdateNumberEndpointTest {
 
     @Test
     public void testParseResponse() throws Exception {
-        HttpResponse stub = TestUtils.makeJsonHttpResponse(200, "{}");
-        UpdateNumberResponse response = this.endpoint.parseResponse(stub);
-        // TODO: Assert response values are correct:
-        // assertEquals(3.14159, response.getValue(), 0.00001);
+        try {
+            HttpResponse stub = TestUtils.makeJsonHttpResponse(200, "{\n" +
+                    "  \"error-code\":\"200\",\n" +
+                    "  \"error-code-label\":\"success\"\n" +
+                    "}");
+            this.endpoint.parseResponse(stub);
+        } catch (Exception e) {
+            fail("Parsing a 200 response should not raise an error.");
+        }
+    }
+
+    @Test
+    public void testParseErrorResponse() throws Exception {
+        try {
+            HttpResponse stub = TestUtils.makeJsonHttpResponse(200, "{\n" +
+                    "  \"error-code\":\"500\",\n" +
+                    "  \"error-code-label\":\"There was an error\"\n" +
+                    "}");
+            this.endpoint.parseResponse(stub);
+            fail("An exception should have been thrown here.");
+        } catch (Exception e) {
+            assertEquals("There was an error", e.getMessage());
+            // This is expected.
+        }
     }
 }

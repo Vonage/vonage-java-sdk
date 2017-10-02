@@ -35,6 +35,7 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -162,4 +163,32 @@ public class NumbersClientTest {
         client.buyNumber("AA", "447700900000");
     }
 
+    @Test
+    public void testUpdateNumber() throws Exception {
+        try {
+            NumbersClient client = new NumbersClient(stubHttpWrapper(200, "{\n" +
+                    "  \"error-code\":\"200\",\n" +
+                    "  \"error-code-label\":\"success\"\n" +
+                    "}"));
+            client.updateNumber(new UpdateNumberRequest(
+                    "447700900328", "UK"
+            ));
+        } catch (Exception e) {
+            fail("Parsing a valid response should not raise an exception");
+        }
+    }
+
+    @Test
+    public void testLinkNumber() throws Exception {
+        try {
+            NumbersClient client = new NumbersClient(stubHttpWrapper(200, "{\n" +
+                    "  \"error-code\":\"200\",\n" +
+                    "  \"error-code-label\":\"success\"\n" +
+                    "}"));
+            client.linkNumber("447700900328", "UK", "my-app-id");
+        } catch (Exception e) {
+            fail("Parsing a valid response should not raise an exception");
+        }
+
+    }
 }

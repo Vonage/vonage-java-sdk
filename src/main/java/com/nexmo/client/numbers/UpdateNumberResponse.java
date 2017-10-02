@@ -30,16 +30,16 @@ import java.io.IOException;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UpdateNumberResponse {
-    private static String errorCode;
-    private static String errorCodeLabel;
+    private String errorCode;
+    private String errorCodeLabel;
 
     @JsonProperty("error-code")
-    public static String getErrorCode() {
+    public String getErrorCode() {
         return errorCode;
     }
 
     @JsonProperty("error-code-label")
-    public static String getErrorCodeLabel() {
+    public String getErrorCodeLabel() {
         return errorCodeLabel;
     }
 
