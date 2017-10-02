@@ -32,7 +32,7 @@ public class UpdateNumberRequest {
     private String voiceCallbackValue;
     private String voiceStatusCallback;
 
-    public UpdateNumberRequest(String country, String msisdn) {
+    public UpdateNumberRequest(String msisdn, String country) {
         this.country = country;
         this.msisdn = msisdn;
     }
@@ -109,7 +109,7 @@ public class UpdateNumberRequest {
         SIP, TEL, VXML, APP;
 
         public String paramValue() {
-            return this.name().toString();
+            return this.name().toString().toLowerCase();
         }
     }
 }

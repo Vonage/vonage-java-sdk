@@ -28,6 +28,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.junit.Before;
 import org.junit.Test;
+import org.omg.PortableServer.REQUEST_PROCESSING_POLICY_ID;
 
 import java.io.IOException;
 import java.util.Map;
@@ -52,15 +53,42 @@ public class UpdateNumberEndpointTest {
     @Test
     public void testMakeRequest() throws Exception {
         RequestBuilder builder = this.endpoint.makeRequest(new UpdateNumberRequest(
-
+            "447700900013", "UK"
         ));
-        // TODO: Check method and URL are correct:
         assertEquals("POST", builder.getMethod());
         assertEquals("https://rest.nexmo.com/number/update", builder.build().getURI().toString());
         
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
-        // TODO: Assert params are as expected:
-        assertEquals(0, params.size());
+        assertEquals(2, params.size());
+        assertEquals("447700900013", params.get("msisdn"));
+        assertEquals("UK", params.get("country"));
+    }
+
+    @Test
+    public void testMakeRequestWithOptionalParams() throws Exception {
+        UpdateNumberRequest request = new UpdateNumberRequest(
+                "447700900013", "UK"
+        );
+        request.setMoHttpUrl("https://api.example.com/mo");
+        request.setMoSmppSysType("inbound");
+        request.setVoiceCallbackValue("1234-5678-9123-4567");
+        request.setVoiceCallbackType(UpdateNumberRequest.CallbackType.APP);
+        request.setVoiceStatusCallback("https://api.example.com/callback");
+
+        RequestBuilder builder = this.endpoint.makeRequest(request);
+
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://rest.nexmo.com/number/update", builder.build().getURI().toString());
+
+        Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
+        assertEquals(7, params.size());
+        assertEquals("447700900013", params.get("msisdn"));
+        assertEquals("UK", params.get("country"));
+        assertEquals("https://api.example.com/mo", params.get("moHttpUrl"));
+        assertEquals("inbound", params.get("moSmppSysType"));
+        assertEquals("1234-5678-9123-4567", params.get("voiceCallbackValue"));
+        assertEquals("app", params.get("voiceCallbackType"));
+        assertEquals("https://api.example.com/callback", params.get("voiceStatusCallback"));
     }
 
     @Test
