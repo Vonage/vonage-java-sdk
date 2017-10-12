@@ -23,9 +23,7 @@ package com.nexmo.client.auth;
 
 import com.nexmo.client.NexmoClientException;
 
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Internal class, managing a collection of {@link AuthMethod}s.
@@ -57,6 +55,23 @@ public class AuthCollection {
      */
     public void add(AuthMethod auth) {
         this.authList.add(auth);
+    }
+
+    /**
+     * Obtain an AuthMethod of type T, if one is contained in this collection.
+     *
+     * @param type The type of AuthMethod to be located
+     * @param <T>  The type of AuthMethod which will be returned
+     * @return An AuthMethod subclass matching type
+     * @throws NexmoUnacceptableAuthException if no matching AuthMethod is found.
+     */
+    public <T extends AuthMethod> T getAuth(Class<T> type) throws NexmoClientException {
+        for (AuthMethod availableAuthMethod : this.authList) {
+            if (type.isInstance(availableAuthMethod)) {
+                return (T) availableAuthMethod;
+            }
+        }
+        throw new NexmoUnacceptableAuthException(this.authList, new HashSet<Class>(Arrays.asList(new Class[]{type})));
     }
 
     /**
