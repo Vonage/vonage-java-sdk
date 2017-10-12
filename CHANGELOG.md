@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - `ModifyCallPayload.action` is now a value of the enum `ModifyCallPayload.Action`.
+- All calls now throw `HttpResponseException` if an abnormal HTTP status code is returned from the Nexmo API.
 
 ### Fixed
 - Added missing values for CallStatus: FAILED, REJECTED, BUSY & CANCELLED
