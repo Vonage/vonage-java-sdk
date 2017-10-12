@@ -67,6 +67,13 @@ public class NexmoClient {
         this.sns = new SnsClient(this.httpWrapper);
     }
 
+    /**
+     * Provide an HttpClient that will be used to make requests to the Nexmo API.
+     * <p>
+     * This can be useful, for example, if you must use an HTTP proxy to make requests.
+     *
+     * @param client A custom-configured HttpClient instance.
+     */
     public void setHttpClient(HttpClient client) {
         this.httpWrapper.setHttpClient(client);
     }

@@ -177,6 +177,13 @@ When the user enters the code they received, you can check it like this:
 client.getVerifyClient().check(ongoingVerify.getRequestId(), CODE)
 ```
 
+## Custom HTTP Configuration
+
+If you need to configure the Apache HttpClient used for making requests, you can
+call `NexmoClient.setHttpClient()` to supply your custom configured object. This
+can be useful, for example, if you must use an HTTP proxy to make requests.
+
+
 ## API Coverage
 
 * Account
