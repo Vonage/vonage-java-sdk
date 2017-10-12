@@ -26,6 +26,7 @@ import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
@@ -154,7 +155,7 @@ public class VerifyClientTest {
     @Test
     public void testCheckInvalidResponse() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(
-                500,
+                200,
                 "<?xml version='1.0' encoding='UTF-8' ?>\n" +
                         "<not_valid_response />"));
 
@@ -390,7 +391,7 @@ public class VerifyClientTest {
 
     @Test
     public void testSearchHttpError() throws Exception {
-        wrapper.setHttpClient(this.stubHttpClient(500, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+        wrapper.setHttpClient(this.stubHttpClient(200, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<verify_request />"));
         try {
             client.search("a-random-request-id");

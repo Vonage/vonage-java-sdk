@@ -35,6 +35,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -79,7 +80,8 @@ public class VerifyCheckMethod extends AbstractMethod<CheckRequest, CheckResult>
 
     @Override
     public CheckResult parseResponse(HttpResponse response) throws IOException {
-        return parseCheckResponse(EntityUtils.toString(response.getEntity()));
+        String body = new BasicResponseHandler().handleResponse(response);
+        return parseCheckResponse(body);
     }
 
     private CheckResult parseCheckResponse(String response) throws NexmoResponseParseException {

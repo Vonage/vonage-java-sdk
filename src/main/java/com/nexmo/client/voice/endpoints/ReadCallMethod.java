@@ -28,6 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
@@ -57,8 +58,7 @@ public class ReadCallMethod extends AbstractMethod<String, CallInfo> {
 
     @Override
     public CallInfo parseResponse(HttpResponse response) throws IOException {
-        String json = EntityUtils.toString(response.getEntity());
-        LOG.info("Received: " + json);
+        String json = new BasicResponseHandler().handleResponse(response);
         return CallInfo.fromJson(json);
     }
 
