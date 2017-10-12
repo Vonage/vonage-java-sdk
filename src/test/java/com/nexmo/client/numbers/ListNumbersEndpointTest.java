@@ -35,6 +35,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+import static com.nexmo.client.TestUtils.test429;
 import static org.junit.Assert.assertEquals;
 
 
@@ -92,4 +93,8 @@ public class ListNumbersEndpointTest {
         assertEquals(1, response.getCount());
     }
 
+    @Test
+    public void testRequestThrottleResponse() throws Exception {
+        test429(new ListNumbersEndpoint(null));
+    }
 }

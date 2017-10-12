@@ -22,7 +22,6 @@
 package com.nexmo.client.numbers;
 
 import com.nexmo.client.NexmoBadRequestException;
-import com.nexmo.client.NexmoMethodFailedException;
 import com.nexmo.client.TestUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
@@ -37,6 +36,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+import static com.nexmo.client.TestUtils.test429;
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
 
@@ -105,30 +105,7 @@ public class BuyNumberEndpointTest {
     }
 
     @Test
-    public void parseMethodFailedResponse() throws Exception {
-        BuyNumberEndpoint methodUnderTest = new BuyNumberEndpoint(null);
-
-        HttpResponse stubResponse = new BasicHttpResponse(
-                new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 500, "OK")
-        );
-
-        String json = "{\n" +
-                "    \"error_title\": \"Bad Request\",\n" +
-                "    \"invalid_parameters\": {\n" +
-                "        \"country\": \"Is required.\"\n" +
-                "    },\n" +
-                "    \"type\": \"BAD_REQUEST\"\n" +
-                "}";
-        InputStream jsonStream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
-        BasicHttpEntity entity = new BasicHttpEntity();
-        entity.setContent(jsonStream);
-        stubResponse.setEntity(entity);
-
-        try {
-            methodUnderTest.parseResponse(stubResponse);
-            fail("A 500 response should raise a NexmoMethodFailedException");
-        } catch (NexmoMethodFailedException e) {
-            // This is expected
-        }
+    public void testRequestThrottleResponse() throws Exception {
+        test429(new BuyNumberEndpoint(null));
     }
 }

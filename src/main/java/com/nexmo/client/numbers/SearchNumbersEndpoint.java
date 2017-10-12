@@ -28,6 +28,7 @@ import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.voice.endpoints.AbstractMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
@@ -62,7 +63,7 @@ public class SearchNumbersEndpoint extends AbstractMethod<SearchNumbersFilter, S
 
     @Override
     public SearchNumbersResponse parseResponse(HttpResponse response) throws IOException {
-        String json = EntityUtils.toString(response.getEntity());
+        String json = new BasicResponseHandler().handleResponse(response);
         return SearchNumbersResponse.fromJson(json);
     }
 

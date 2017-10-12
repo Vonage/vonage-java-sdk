@@ -27,9 +27,9 @@ import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.NexmoMethodFailedException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.voice.endpoints.AbstractMethod;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
@@ -59,15 +59,14 @@ public class BuyNumberEndpoint extends AbstractMethod<BuyNumberRequest, BuyNumbe
     @Override
     public BuyNumberResponse parseResponse(HttpResponse response) throws IOException, NexmoClientException {
         int statusCode = response.getStatusLine().getStatusCode();
-        String json = EntityUtils.toString(response.getEntity());
-
-        if (statusCode >= 400 && statusCode < 500) {
-            throw new NexmoBadRequestException(json);
+        if (statusCode == 400 || statusCode == 420) {
+            throw new NexmoBadRequestException(EntityUtils.toString(response.getEntity()));
         } else if (statusCode >= 500) {
-            LogFactory.getLog(BuyNumberEndpoint.class).warn(": " + json);
-            throw new NexmoMethodFailedException(json);
+            throw new NexmoMethodFailedException(EntityUtils.toString(response.getEntity()));
         }
-
+        String json = new BasicResponseHandler().handleResponse(response);
         return BuyNumberResponse.fromJson(json);
     }
+
+
 }

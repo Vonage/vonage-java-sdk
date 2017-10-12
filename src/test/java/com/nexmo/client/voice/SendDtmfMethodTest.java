@@ -39,6 +39,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
+import static com.nexmo.client.TestUtils.test429;
 import static org.junit.Assert.assertEquals;
 
 
@@ -81,4 +82,8 @@ public class SendDtmfMethodTest {
         assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
     }
 
+    @Test
+    public void testRequestThrottleResponse() throws Exception {
+        test429(new SendDtmfMethod(null));
+    }
 }

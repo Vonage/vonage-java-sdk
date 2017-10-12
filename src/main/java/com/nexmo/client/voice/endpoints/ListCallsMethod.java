@@ -34,6 +34,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
@@ -76,8 +77,7 @@ public class ListCallsMethod extends AbstractMethod<CallsFilter, CallInfoPage> {
 
     @Override
     public CallInfoPage parseResponse(HttpResponse response) throws IOException {
-        String json = EntityUtils.toString(response.getEntity());
-        LOG.debug("Received: " + json);
+        String json = new BasicResponseHandler().handleResponse(response);
         return CallInfoPage.fromJson(json);
     }
 
