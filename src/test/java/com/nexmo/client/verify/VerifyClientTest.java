@@ -26,7 +26,6 @@ import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpException;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
