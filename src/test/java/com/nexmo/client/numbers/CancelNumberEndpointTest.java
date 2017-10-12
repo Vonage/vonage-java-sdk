@@ -24,17 +24,10 @@ package com.nexmo.client.numbers;
 import com.nexmo.client.NexmoBadRequestException;
 import com.nexmo.client.NexmoMethodFailedException;
 import com.nexmo.client.TestUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.ProtocolVersion;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.entity.BasicHttpEntity;
-import org.apache.http.message.BasicHttpResponse;
-import org.apache.http.message.BasicStatusLine;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static junit.framework.Assert.fail;
@@ -57,21 +50,12 @@ public class CancelNumberEndpointTest {
     @Test
     public void parseResponse() throws Exception {
         CancelNumberEndpoint methodUnderTest = new CancelNumberEndpoint(null);
-
-        HttpResponse stubResponse = new BasicHttpResponse(
-                new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 200, "OK")
-        );
-
         String json = "{\n" +
                 "  \"error-code\":\"200\",\n" +
                 "  \"error-code-label\":\"success\"\n" +
                 "}";
-        InputStream jsonStream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
-        BasicHttpEntity entity = new BasicHttpEntity();
-        entity.setContent(jsonStream);
-        stubResponse.setEntity(entity);
 
-        CancelNumberResponse response = methodUnderTest.parseResponse(stubResponse);
+        CancelNumberResponse response = methodUnderTest.parseResponse(TestUtils.makeJsonHttpResponse(200, json));
         assertEquals("200", response.getErrorCode());
         assertEquals("success", response.getErrorCodeLabel());
     }
@@ -80,10 +64,6 @@ public class CancelNumberEndpointTest {
     public void parseBadRequestResponse() throws Exception {
         CancelNumberEndpoint methodUnderTest = new CancelNumberEndpoint(null);
 
-        HttpResponse stubResponse = new BasicHttpResponse(
-                new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 400, "OK")
-        );
-
         String json = "{\n" +
                 "    \"error_title\": \"Bad Request\",\n" +
                 "    \"invalid_parameters\": {\n" +
@@ -91,13 +71,8 @@ public class CancelNumberEndpointTest {
                 "    },\n" +
                 "    \"type\": \"BAD_REQUEST\"\n" +
                 "}";
-        InputStream jsonStream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
-        BasicHttpEntity entity = new BasicHttpEntity();
-        entity.setContent(jsonStream);
-        stubResponse.setEntity(entity);
-
         try {
-            methodUnderTest.parseResponse(stubResponse);
+            methodUnderTest.parseResponse(TestUtils.makeJsonHttpResponse(400, json));
             fail("A 400 response should raise a NexmoBadRequestException");
         } catch (NexmoBadRequestException e) {
             // This is expected
@@ -107,11 +82,6 @@ public class CancelNumberEndpointTest {
     @Test
     public void parseMethodFailedResponse() throws Exception {
         CancelNumberEndpoint methodUnderTest = new CancelNumberEndpoint(null);
-
-        HttpResponse stubResponse = new BasicHttpResponse(
-                new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 500, "OK")
-        );
-
         String json = "{\n" +
                 "    \"error_title\": \"Bad Request\",\n" +
                 "    \"invalid_parameters\": {\n" +
@@ -119,15 +89,21 @@ public class CancelNumberEndpointTest {
                 "    },\n" +
                 "    \"type\": \"BAD_REQUEST\"\n" +
                 "}";
-        InputStream jsonStream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
-        BasicHttpEntity entity = new BasicHttpEntity();
-        entity.setContent(jsonStream);
-        stubResponse.setEntity(entity);
-
         try {
-            methodUnderTest.parseResponse(stubResponse);
+            methodUnderTest.parseResponse(TestUtils.makeJsonHttpResponse(500, json));
             fail("A 500 response should raise a NexmoMethodFailedException");
         } catch (NexmoMethodFailedException e) {
+            // This is expected
+        }
+    }
+
+    @Test
+    public void testRequestThrottleResponse() throws Exception {
+        CancelNumberEndpoint methodUnderTest = new CancelNumberEndpoint(null);
+        try {
+            methodUnderTest.parseResponse(TestUtils.makeJsonHttpResponse(429, "Don't know what this is"));
+            fail("A 429 response should raise a HttpResponseException");
+        } catch (HttpResponseException e) {
             // This is expected
         }
     }

@@ -66,7 +66,7 @@ public class TestUtils {
 
     public static HttpResponse makeJsonHttpResponse(int statusCode, String json) {
         HttpResponse stubResponse = new BasicHttpResponse(
-                new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 200, "OK")
+                new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), statusCode, "OK")
         );
         InputStream jsonStream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
         BasicHttpEntity entity = new BasicHttpEntity();
