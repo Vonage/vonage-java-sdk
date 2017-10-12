@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Add `NumbersClient.searchNumbers` method.
 - Add `NumbersClient.cancelNumber` method.
 - Add `NumbersClient.buyNumber` method.
+- Add `NumbersClient.updateNumber` and `NumbersClient.linkNumber`.
 - Add the ability to mute, unmute, earmuff, unearmuff and transfer an ongoing call.
 - Add `VerifyClient.advanceVerification` and `VerifyClient.cancelVerification`
 - Add `ApplicationClient` end methods for creating, updating, deleting, listing and getting configured applications. 
