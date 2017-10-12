@@ -22,13 +22,16 @@
 package com.nexmo.client.voice.endpoints;
 
 import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.TestUtils;
 import com.nexmo.client.auth.JWTAuthMethod;
+import com.nexmo.client.numbers.CancelNumberEndpoint;
 import com.nexmo.client.voice.CallInfoPage;
 import com.nexmo.client.voice.CallsFilter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
@@ -40,6 +43,8 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
+import static com.nexmo.client.TestUtils.test429;
+import static junit.framework.Assert.fail;
 import static org.junit.Assert.*;
 
 public class ListCallsMethodTest {
@@ -176,5 +181,10 @@ public class ListCallsMethodTest {
         } catch (NexmoUnexpectedException nue) {
             // This is expected
         }
+    }
+
+    @Test
+    public void testRequestThrottleResponse() throws Exception {
+        test429(new ListCallsMethod(null));
     }
 }

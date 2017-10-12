@@ -35,6 +35,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+import static com.nexmo.client.TestUtils.test429;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -48,7 +49,7 @@ public class SearchNumbersEndpointTest {
         filter.setIndex(10);
         filter.setSize(20);
         filter.setPattern("234");
-        filter.setFeatures(new String[] { "SMS", "VOICE" });
+        filter.setFeatures(new String[]{"SMS", "VOICE"});
         filter.setSearchPattern(SearchPattern.STARTS_WITH);
         RequestBuilder request = methodUnderTest.makeRequest(filter);
 
@@ -79,7 +80,7 @@ public class SearchNumbersEndpointTest {
         SearchNumbersEndpoint methodUnderTest = new SearchNumbersEndpoint(null);
 
         SearchNumbersFilter filter = new SearchNumbersFilter("BB");
-        filter.setFeatures(new String[] {});
+        filter.setFeatures(new String[]{});
         RequestBuilder request = methodUnderTest.makeRequest(filter);
 
         Map<String, String> params = TestUtils.makeParameterMap(request.getParameters());
@@ -88,7 +89,7 @@ public class SearchNumbersEndpointTest {
     }
 
     @Test
-    public void parseResponse() throws Exception {
+    public void testParseResponse() throws Exception {
         SearchNumbersEndpoint methodUnderTest = new SearchNumbersEndpoint(null);
 
         HttpResponse stubResponse = new BasicHttpResponse(
@@ -119,4 +120,8 @@ public class SearchNumbersEndpointTest {
         assertEquals(4, response.getCount());
     }
 
+    @Test
+    public void testRequestThrottleResponse() throws Exception {
+        test429(new SearchNumbersEndpoint(null));
+    }
 }

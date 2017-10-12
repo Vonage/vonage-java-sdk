@@ -25,7 +25,6 @@ import com.nexmo.client.NexmoBadRequestException;
 import com.nexmo.client.TestUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
-import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
@@ -37,6 +36,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+import static com.nexmo.client.TestUtils.test429;
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
 
@@ -106,12 +106,6 @@ public class BuyNumberEndpointTest {
 
     @Test
     public void testRequestThrottleResponse() throws Exception {
-        BuyNumberEndpoint methodUnderTest = new BuyNumberEndpoint(null);
-        try {
-            methodUnderTest.parseResponse(TestUtils.makeJsonHttpResponse(429, "Don't know what this is"));
-            fail("A 429 response should raise a HttpResponseException");
-        } catch (HttpResponseException e) {
-            // This is expected
-        }
+        test429(new BuyNumberEndpoint(null));
     }
 }

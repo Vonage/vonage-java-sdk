@@ -21,9 +21,11 @@
  */
 package com.nexmo.client;
 
+import com.nexmo.client.voice.endpoints.AbstractMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.ProtocolVersion;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
@@ -36,6 +38,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static junit.framework.Assert.fail;
 
 public class TestUtils {
     public byte[] loadKey(String path) throws IOException {
@@ -74,5 +78,14 @@ public class TestUtils {
         stubResponse.setEntity(entity);
 
         return stubResponse;
+    }
+
+    public static void test429(AbstractMethod methodUnderTest) throws Exception {
+        try {
+            methodUnderTest.parseResponse(TestUtils.makeJsonHttpResponse(429, "Don't know what this is"));
+            fail("A 429 response should raise a HttpResponseException");
+        } catch (HttpResponseException e) {
+            // This is expected
+        }
     }
 }

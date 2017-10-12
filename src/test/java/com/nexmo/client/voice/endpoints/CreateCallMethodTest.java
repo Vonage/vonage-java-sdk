@@ -45,7 +45,6 @@ package com.nexmo.client.voice.endpoints;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.voice.Call;
 import com.nexmo.client.voice.CallDirection;
 import com.nexmo.client.voice.CallEvent;
@@ -64,6 +63,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
+import static com.nexmo.client.TestUtils.test429;
 import static org.junit.Assert.assertEquals;
 
 public class CreateCallMethodTest {
@@ -117,5 +117,10 @@ public class CreateCallMethodTest {
         assertEquals("aa17bd11-c895-4225-840d-30dc78c31e50", callEvent.getConversationUuid());
         assertEquals(CallStatus.STARTED, callEvent.getStatus());
         assertEquals(CallDirection.OUTBOUND, callEvent.getDirection());
+    }
+
+    @Test
+    public void testRequestThrottleResponse() throws Exception {
+        test429(new CreateCallMethod(null));
     }
 }
