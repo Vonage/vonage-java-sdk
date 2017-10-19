@@ -26,16 +26,16 @@ import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.legacyutils.XmlParser;
-import com.nexmo.client.verify.BaseResult;
-import com.nexmo.client.verify.CheckResult;
-import com.nexmo.client.verify.CheckRequest;
-import com.nexmo.client.voice.endpoints.AbstractMethod;
 import com.nexmo.client.legacyutils.XmlUtil;
+import com.nexmo.client.verify.BaseResult;
+import com.nexmo.client.verify.CheckRequest;
+import com.nexmo.client.verify.CheckResult;
+import com.nexmo.client.voice.endpoints.AbstractMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.util.EntityUtils;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -79,7 +79,8 @@ public class VerifyCheckMethod extends AbstractMethod<CheckRequest, CheckResult>
 
     @Override
     public CheckResult parseResponse(HttpResponse response) throws IOException {
-        return parseCheckResponse(EntityUtils.toString(response.getEntity()));
+        String body = new BasicResponseHandler().handleResponse(response);
+        return parseCheckResponse(body);
     }
 
     private CheckResult parseCheckResponse(String response) throws NexmoResponseParseException {

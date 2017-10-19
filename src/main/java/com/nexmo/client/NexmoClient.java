@@ -22,8 +22,11 @@
 package com.nexmo.client;
 
 
+import com.nexmo.client.account.AccountClient;
+import com.nexmo.client.applications.ApplicationClient;
 import com.nexmo.client.auth.AuthMethod;
 import com.nexmo.client.insight.InsightClient;
+import com.nexmo.client.numbers.NumbersClient;
 import com.nexmo.client.sms.SmsClient;
 import com.nexmo.client.sns.SnsClient;
 import com.nexmo.client.verify.VerifyClient;
@@ -40,7 +43,10 @@ import org.apache.http.client.HttpClient;
  * clients for all of the Nexmo APIs.
  */
 public class NexmoClient {
+    private final AccountClient account;
+    private final ApplicationClient application;
     private final InsightClient insight;
+    private final NumbersClient numbers;
     private final SmsClient sms;
     private final VoiceClient voice;
     private final VerifyClient verify;
@@ -51,19 +57,41 @@ public class NexmoClient {
     public NexmoClient(AuthMethod... authMethods) {
         this.httpWrapper = new HttpWrapper(authMethods);
 
+        this.account = new AccountClient(this.httpWrapper);
+        this.application = new ApplicationClient(this.httpWrapper);
         this.insight = new InsightClient(this.httpWrapper);
+        this.numbers = new NumbersClient(this.httpWrapper);
         this.verify = new VerifyClient(this.httpWrapper);
         this.voice = new VoiceClient(this.httpWrapper);
         this.sms = new SmsClient(this.httpWrapper);
         this.sns = new SnsClient(this.httpWrapper);
     }
 
+    /**
+     * Provide an HttpClient that will be used to make requests to the Nexmo API.
+     * <p>
+     * This can be useful, for example, if you must use an HTTP proxy to make requests.
+     *
+     * @param client A custom-configured HttpClient instance.
+     */
     public void setHttpClient(HttpClient client) {
         this.httpWrapper.setHttpClient(client);
     }
 
+    public AccountClient getAccountClient() {
+        return this.account;
+    }
+
+    public ApplicationClient getApplicationClient() {
+        return this.application;
+    }
+
     public InsightClient getInsightClient() {
         return this.insight;
+    }
+
+    public NumbersClient getNumbersClient() {
+        return this.numbers;
     }
 
     public SmsClient getSmsClient() {

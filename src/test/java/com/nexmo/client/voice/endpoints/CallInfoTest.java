@@ -35,6 +35,32 @@ import java.util.TimeZone;
 import static org.junit.Assert.assertEquals;
 
 public class CallInfoTest {
+    String jsonWithPlaceholder = "{\n" +
+            "  \"uuid\": \"93137ee3-580e-45f7-a61a-e0b5716000ef\",\n" +
+            "  \"status\": \"PLACEHOLDER\",\n" +
+            "  \"direction\": \"outbound\",\n" +
+            "  \"rate\": \"0.02400000\",\n" +
+            "  \"price\": \"0.00280000\",\n" +
+            "  \"duration\": \"7\",\n" +
+            "  \"network\": \"23410\",\n" +
+            "  \"conversation_uuid\": \"aa17bd11-c895-4225-840d-30dc38c31e50\",\n" +
+            "  \"start_time\": \"2017-01-13T13:55:02.000Z\",\n" +
+            "  \"end_time\": \"2017-01-13T13:55:09.000Z\",\n" +
+            "  \"to\": {\n" +
+            "    \"type\": \"phone\",\n" +
+            "    \"number\": \"447700900104\"\n" +
+            "  },\n" +
+            "  \"from\": {\n" +
+            "    \"type\": \"phone\",\n" +
+            "    \"number\": \"447700900105\"\n" +
+            "  },\n" +
+            "  \"_links\": {\n" +
+            "    \"self\": {\n" +
+            "      \"href\": \"/v1/calls/93137ee3-580e-45f7-a61a-e0b5716000ef\"\n" +
+            "    }\n" +
+            "  }\n" +
+            "}\n";
+
     @Test
     public void testJson() throws Exception {
         String json = "{\n" +
@@ -87,8 +113,63 @@ public class CallInfoTest {
                 record.getEndTime());
         assertEquals(new PhoneEndpoint("447700900104"), record.getTo());
         assertEquals(new PhoneEndpoint("447700900105"), record.getFrom());
+    }
 
 
+    @Test
+    public void testStatusStarted() throws Exception {
+        testStatus("started", CallStatus.STARTED);
+    }
+
+    @Test
+    public void testStatusRinging() throws Exception {
+        testStatus("ringing", CallStatus.RINGING);
+    }
+
+    @Test
+    public void testStatusAnswered() throws Exception {
+        testStatus("answered", CallStatus.ANSWERED);
+    }
+
+    @Test
+    public void testStatusMachine() throws Exception {
+        testStatus("machine", CallStatus.MACHINE);
+    }
+
+    @Test
+    public void testStatusCompleted() throws Exception {
+        testStatus("completed", CallStatus.COMPLETED);
+    }
+
+    @Test
+    public void testStatusTimeout() throws Exception {
+        testStatus("timeout", CallStatus.TIMEOUT);
+    }
+
+    @Test
+    public void testStatusFailed() throws Exception {
+        testStatus("failed", CallStatus.FAILED);
+    }
+
+    @Test
+    public void testStatusRejected() throws Exception {
+        testStatus("rejected", CallStatus.REJECTED);
+    }
+
+    @Test
+    public void testStatusBusy() throws Exception {
+        testStatus("busy", CallStatus.BUSY);
+    }
+
+    @Test
+    public void testStatusCancelled() throws Exception {
+        testStatus("cancelled", CallStatus.CANCELLED);
+    }
+
+    public void testStatus(String value, CallStatus expectedValue) throws Exception {
+        CallInfo record = new ObjectMapper().readValue(jsonWithPlaceholder.replaceFirst("PLACEHOLDER", value),
+                CallInfo.class);
+        assertEquals(record.getStatus(), expectedValue);
     }
 
     @Test

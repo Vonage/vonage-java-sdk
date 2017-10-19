@@ -40,7 +40,10 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.Assert.*;
+import static com.nexmo.client.TestUtils.test429;
+import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 public class ListCallsMethodTest {
     private static final Log LOG = LogFactory.getLog(ListCallsMethodTest.class);
@@ -176,5 +179,10 @@ public class ListCallsMethodTest {
         } catch (NexmoUnexpectedException nue) {
             // This is expected
         }
+    }
+
+    @Test
+    public void testRequestThrottleResponse() throws Exception {
+        test429(new ListCallsMethod(null));
     }
 }
