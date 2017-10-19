@@ -31,7 +31,7 @@ import java.io.IOException;
 /**
  * Response if a {@link Call} was successfully modified.
  * <p>
- * This would be returned by {@link VoiceClient#modifyCall(String, String)}
+ * This would be returned by {@link VoiceClient#modifyCall(String, ModifyCallAction)}
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)

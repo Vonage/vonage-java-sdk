@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.0.0] - 2017-10-19
+
+### Changed
+- `ModifyCallPayload.action` is now a value of the enum `ModifyCallPayload.Action`.
+- All calls now throw `HttpResponseException` if an abnormal HTTP status code is returned from the Nexmo API.
+
+### Fixed
+- Added missing values for CallStatus: FAILED, REJECTED, BUSY & CANCELLED
+
+### Added
+- Add missing setter for the Message.statusReportRequired property.
+- Add `AccountClient.getBalance` method for getting an account balance.
+- Add `NumbersClient.listNumbers` method.
+- Add `NumbersClient.searchNumbers` method.
+- Add `NumbersClient.cancelNumber` method.
+- Add `NumbersClient.buyNumber` method.
+- Add `NumbersClient.updateNumber` and `NumbersClient.linkNumber`.
+- Add the ability to mute, unmute, earmuff, unearmuff and transfer an ongoing call.
+- Add `VerifyClient.advanceVerification` and `VerifyClient.cancelVerification`
+- Add `ApplicationClient` end methods for creating, updating, deleting, listing and getting configured applications. 
+- Add extra endpoints for searching SMS messages.
+
 ## [2.0.2] - 2017-05-04
 ### Fixed
 - All URL-encoded PUT and POST requests are now UTF-8 instead of ISO-8859-1.

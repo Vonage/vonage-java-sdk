@@ -29,7 +29,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.nexmo:client:2.0.2'
+    compile 'com.nexmo:client:3.0.0'
 }
 ```
 
@@ -41,7 +41,7 @@ Add the following to the correct place in your project's POM file:
 <dependency>
       <groupId>com.nexmo</groupId>
       <artifactId>client</artifactId>
-      <version>2.0.2</version>
+      <version>3.0.0</version>
 </dependency>
 ```
 
@@ -176,6 +176,13 @@ When the user enters the code they received, you can check it like this:
 ```java
 client.getVerifyClient().check(ongoingVerify.getRequestId(), CODE)
 ```
+
+## Custom HTTP Configuration
+
+If you need to configure the Apache HttpClient used for making requests, you can
+call `NexmoClient.setHttpClient()` to supply your custom configured object. This
+can be useful, for example, if you must use an HTTP proxy to make requests.
+
 
 ## API Coverage
 

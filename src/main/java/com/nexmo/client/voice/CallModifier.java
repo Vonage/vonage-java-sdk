@@ -26,26 +26,30 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
 
 
-
 public class CallModifier {
-    private String uuid;
-    private ModifyCallPayload modifyCallPayload;
+    private final String uuid;
+    private final ModifyCallPayload modifyCallPayload;
 
-    public CallModifier(String uuid, String action) {
+    public CallModifier(String uuid, ModifyCallPayload modifyCallPayload) {
+        this.uuid = uuid;
+        this.modifyCallPayload = modifyCallPayload;
+    }
+
+    public CallModifier(String uuid, ModifyCallAction action) {
         this.uuid = uuid;
         this.modifyCallPayload = new ModifyCallPayload(action);
+    }
+
+    public static CallModifier transferCall(String uuid, String nccoUrl) {
+        return new CallModifier(uuid, new TransferCallPayload(nccoUrl));
     }
 
     public String getUuid() {
         return uuid;
     }
 
-    public String getAction() {
+    public ModifyCallAction getAction() {
         return modifyCallPayload.getAction();
-    }
-
-    public void setAction(String action) {
-        this.modifyCallPayload.setAction(action);
     }
 
     public String toJson() {

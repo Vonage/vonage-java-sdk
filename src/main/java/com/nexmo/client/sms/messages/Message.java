@@ -158,12 +158,23 @@ public abstract class Message {
     }
 
     /**
-     * @return boolean if set to true, then a delivery notification will be requested for this message delivery attempt.
-     * upon receiving notification of delivery or failure from the network, the nexmo platform will submit a notification to the url configured in your
-     * nexmo rest account that represents the outcome of this message.
+     * Get the value of the 'status-report-req' parameter.
      */
     public boolean getStatusReportRequired() {
         return this.statusReportRequired;
+    }
+
+    /**
+     * Set the value of the 'status-report-req' parameter.
+     *
+     * If set to 'true', Nexmo will call 'callbackUrl' with status updates about the delivery of this message. If this
+     * value is set to 'true', then 'callbackUrl' should also be set to a URL that is configured to receive these
+     * status updates.
+     *
+     * @param statusReportRequired 'true' if status reports are desired, 'false' otherwise.
+     */
+    public void setStatusReportRequired(boolean statusReportRequired) {
+        this.statusReportRequired = statusReportRequired;
     }
 
     public void addParams(RequestBuilder request) {

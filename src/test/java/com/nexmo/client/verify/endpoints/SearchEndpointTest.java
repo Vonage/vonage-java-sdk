@@ -30,7 +30,10 @@ import org.junit.Test;
 import javax.xml.parsers.ParserConfigurationException;
 import java.util.GregorianCalendar;
 
-import static org.junit.Assert.*;
+import static com.nexmo.client.TestUtils.test429;
+import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class SearchEndpointTest {
 
@@ -156,7 +159,7 @@ public class SearchEndpointTest {
                     "  <currency>EUR</currency>\n" +
                     "  <status>FAILED</status>\n" +
                     "</verify_request>");
-                    fail("Invalid status value should throw NexmoResponseParseException");
+            fail("Invalid status value should throw NexmoResponseParseException");
 
         } catch (NexmoResponseParseException e) {
             // this is expected
@@ -167,27 +170,27 @@ public class SearchEndpointTest {
     public void testBadDateInCheck() throws Exception {
         SearchResult[] rs = client.parseSearchResponse(
                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "<verify_request>\n" +
-                "  <request_id>a-random-request-id</request_id>\n" +
-                "  <account_id>account-id</account_id>\n" +
-                "  <number>not-a-number</number>\n" +
-                "  <sender_id>verify</sender_id>\n" +
-                "  <date_submitted>2016-10-19 11:18:56</date_submitted>\n" +
-                "  <date_finalized>2016-10-19 11:20:00</date_finalized>\n" +
-                "  <checks>\n" +
-                "    <check>\n" +
-                "      <date_received>THIS IS NOT A DATE</date_received>\n" +
-                "      <code>1234</code>\n" +
-                "      <status>INVALID</status>\n" +
-                "      <ip_address />\n" +
-                "    </check>\n" +
-                "  </checks>\n" +
-                "  <first_event_date>2016-10-19 11:18:56</first_event_date>\n" +
-                "  <last_event_date>2016-10-19 11:18:56</last_event_date>\n" +
-                "  <price>0</price>\n" +
-                "  <currency>EUR</currency>\n" +
-                "  <status>FAILED</status>\n" +
-                "</verify_request>");
+                        "<verify_request>\n" +
+                        "  <request_id>a-random-request-id</request_id>\n" +
+                        "  <account_id>account-id</account_id>\n" +
+                        "  <number>not-a-number</number>\n" +
+                        "  <sender_id>verify</sender_id>\n" +
+                        "  <date_submitted>2016-10-19 11:18:56</date_submitted>\n" +
+                        "  <date_finalized>2016-10-19 11:20:00</date_finalized>\n" +
+                        "  <checks>\n" +
+                        "    <check>\n" +
+                        "      <date_received>THIS IS NOT A DATE</date_received>\n" +
+                        "      <code>1234</code>\n" +
+                        "      <status>INVALID</status>\n" +
+                        "      <ip_address />\n" +
+                        "    </check>\n" +
+                        "  </checks>\n" +
+                        "  <first_event_date>2016-10-19 11:18:56</first_event_date>\n" +
+                        "  <last_event_date>2016-10-19 11:18:56</last_event_date>\n" +
+                        "  <price>0</price>\n" +
+                        "  <currency>EUR</currency>\n" +
+                        "  <status>FAILED</status>\n" +
+                        "</verify_request>");
         assertNull(rs[0].getChecks().get(0).getDate());
     }
 
@@ -278,5 +281,10 @@ public class SearchEndpointTest {
                         "  <status>FAILED</status>\n" +
                         "</verify_request>");
         assertEquals(new GregorianCalendar(2016, 9, 19, 11, 20, 0).getTime(), rs[0].getChecks().get(0).getDate());
+    }
+
+    @Test
+    public void testRequestThrottleResponse() throws Exception {
+        test429(new SearchEndpoint(null));
     }
 }

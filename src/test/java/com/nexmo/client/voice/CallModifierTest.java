@@ -27,13 +27,12 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 
-
 public class CallModifierTest {
     private CallModifier callModifier;
 
     @Before
     public void setUp() throws Exception {
-        callModifier = new CallModifier("abc-123", "hangup");
+        callModifier = new CallModifier("abc-123", ModifyCallAction.HANGUP);
     }
 
     @Test
@@ -43,14 +42,7 @@ public class CallModifierTest {
 
     @Test
     public void getAction() throws Exception {
-        assertEquals("hangup", callModifier.getAction());
-    }
-
-    @Test
-    public void setAction() throws Exception {
-        //this is not a real action
-        callModifier.setAction("pause");
-        assertEquals("pause", callModifier.getAction());
+        assertEquals(ModifyCallAction.HANGUP, callModifier.getAction());
     }
 
     @Test
@@ -58,5 +50,4 @@ public class CallModifierTest {
         String jsonString = "{\"action\":\"hangup\"}";
         assertEquals(jsonString, callModifier.toJson());
     }
-
 }
