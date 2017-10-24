@@ -26,10 +26,7 @@ import com.nexmo.client.AbstractClient;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClient;
 import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.voice.endpoints.CallsEndpoint;
-import com.nexmo.client.voice.endpoints.DtmfEndpoint;
-import com.nexmo.client.voice.endpoints.StreamsEndpoint;
-import com.nexmo.client.voice.endpoints.TalkEndpoint;
+import com.nexmo.client.voice.endpoints.*;
 
 import java.io.IOException;
 
@@ -42,6 +39,7 @@ public class VoiceClient extends AbstractClient {
     protected final StreamsEndpoint streams;
     protected final TalkEndpoint talk;
     protected final DtmfEndpoint dtmf;
+    protected final DownloadRecordingEndpoint downloadRecording;
 
     /**
      * Constructor.
@@ -55,6 +53,7 @@ public class VoiceClient extends AbstractClient {
         streams = new StreamsEndpoint(httpWrapper);
         talk = new TalkEndpoint(httpWrapper);
         dtmf = new DtmfEndpoint(httpWrapper);
+        downloadRecording = new DownloadRecordingEndpoint(httpWrapper);
     }
 
     /**
@@ -296,5 +295,19 @@ public class VoiceClient extends AbstractClient {
      */
     public TalkResponse stopTalk(String uuid) throws IOException, NexmoClientException {
         return talk.delete(uuid);
+    }
+
+    /**
+     * Download a recording, given the recordingUrl provided from the webhook callback.
+     * <p>
+     * This returns a {@link Recording} object which can provide an InputStream of the byte data, or can be used to
+     * save directly to file.
+     *
+     * @param recordingUrl The recordingUrl provided by the webhook callback
+     * @return A Recording object, providing access to the recording's bytes
+     * @throws IOException If an error occurred while downloading the data
+     */
+    public Recording downloadRecording(String recordingUrl) throws IOException, NexmoClientException {
+        return this.downloadRecording.execute(recordingUrl);
     }
 }
