@@ -73,7 +73,7 @@ public class JWTAuthMethod extends AbstractAuthMethod {
         this(applicationId, Files.readAllBytes(path));
     }
 
-    protected static String constructJTI() {
+    public static String constructJTI() {
         return UUID.randomUUID().toString();
     }
 
@@ -102,7 +102,7 @@ public class JWTAuthMethod extends AbstractAuthMethod {
         return request;
     }
 
-    protected String constructToken(long iat, String jti) {
+    public String constructToken(long iat, String jti) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("iat", iat);
         claims.put("application_id", this.applicationId);

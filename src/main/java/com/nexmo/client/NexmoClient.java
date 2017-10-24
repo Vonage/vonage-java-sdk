@@ -25,6 +25,8 @@ package com.nexmo.client;
 import com.nexmo.client.account.AccountClient;
 import com.nexmo.client.applications.ApplicationClient;
 import com.nexmo.client.auth.AuthMethod;
+import com.nexmo.client.auth.JWTAuthMethod;
+import com.nexmo.client.auth.NexmoUnacceptableAuthException;
 import com.nexmo.client.insight.InsightClient;
 import com.nexmo.client.numbers.NumbersClient;
 import com.nexmo.client.sms.SmsClient;
@@ -110,4 +112,14 @@ public class NexmoClient {
         return this.voice;
     }
 
+    /**
+     * Generate a JWT for the application the client has been configured with.
+     *
+     * @return A String containing the token data.
+     * @throws NexmoUnacceptableAuthException if no {@link JWTAuthMethod} is available
+     */
+    public String generateJwt() throws NexmoUnacceptableAuthException {
+        JWTAuthMethod authMethod = this.httpWrapper.getAuthCollection().getAuth(JWTAuthMethod.class);
+        return authMethod.constructToken(System.currentTimeMillis() / 1000L, JWTAuthMethod.constructJTI());
+    }
 }
