@@ -21,6 +21,7 @@
  */
 package com.nexmo.client;
 
+import com.auth0.jwt.JWTVerifier;
 import com.nexmo.client.auth.JWTAuthMethod;
 import com.nexmo.client.voice.Call;
 import com.nexmo.client.voice.CallEvent;
@@ -33,8 +34,12 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -75,5 +80,24 @@ public class NexmoClientTest {
 
         CallEvent evt = client.getVoiceClient().createCall(new Call("4499991111", "44111222333", "https://callback.example.com/"));
         assertEquals(CallStatus.STARTED, evt.getStatus());
+    }
+
+    @Test
+    public void testGenerateJwt() throws Exception {
+        byte[] privateKeyBytes = testUtils.loadKey("test/keys/application_key");
+        NexmoClient client = new NexmoClient(new JWTAuthMethod("application-id", privateKeyBytes));
+
+        String constructedToken = client.generateJwt();
+
+        byte[] publicKeyBytes = testUtils.loadKey("test/keys/application_public_key.der");
+        X509EncodedKeySpec spec = new X509EncodedKeySpec(publicKeyBytes);
+        KeyFactory kf = KeyFactory.getInstance("RSA");
+        PublicKey key = kf.generatePublic(spec);
+
+        final JWTVerifier verifier = new JWTVerifier(key);
+        final Map<String, Object> claims = verifier.verify(constructedToken);
+
+        // TODO: This test should ensure that the token is valid, not just that it contains the supplied application_id.
+        assertEquals("application-id", claims.get("application_id"));
     }
 }
