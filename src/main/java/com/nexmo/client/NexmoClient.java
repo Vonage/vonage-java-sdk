@@ -25,6 +25,7 @@ package com.nexmo.client;
 import com.nexmo.client.account.AccountClient;
 import com.nexmo.client.applications.ApplicationClient;
 import com.nexmo.client.auth.AuthMethod;
+import com.nexmo.client.auth.JWTAuthMethod;
 import com.nexmo.client.insight.InsightClient;
 import com.nexmo.client.numbers.NumbersClient;
 import com.nexmo.client.sms.SmsClient;
@@ -108,6 +109,11 @@ public class NexmoClient {
 
     public VoiceClient getVoiceClient() {
         return this.voice;
+    }
+
+    public String generateToken() throws NexmoClientException {
+        JWTAuthMethod authMethod = this.httpWrapper.getAuthCollection().getAuth(JWTAuthMethod.class);
+        return authMethod.constructToken(System.currentTimeMillis() / 1000L, JWTAuthMethod.constructJTI());
     }
 
 }
