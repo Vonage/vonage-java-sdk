@@ -6,7 +6,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [In Development]
+
+### Added
 - Add `NexmoClient.generateJwt`
+- Add `VoiceClient.downloadRecording`
+
+### Changed
+
+- Made exceptions from `AuthCollection`'s `getAuth` and `getAcceptableAuthMethod` more specific. (Backwards compatible change)
+
 
 ## [3.0.0] - 2017-10-19
 
