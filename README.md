@@ -1,6 +1,6 @@
 # Nexmo Client Library for Java
 
-[![Maven Release](https://maven-badges.herokuapp.com/maven-central/com.nexmo/client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.nexmo/client)
+<!-- [![Maven Release](https://maven-badges.herokuapp.com/maven-central/com.nexmo/client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.nexmo/client) -->
 [![Build Status](https://travis-ci.org/Nexmo/nexmo-java.svg?branch=version-2)](https://travis-ci.org/Nexmo/nexmo-java)
 [![codecov](https://codecov.io/gh/Nexmo/nexmo-java/branch/version-2/graph/badge.svg)](https://codecov.io/gh/Nexmo/nexmo-java)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/9888a9f2ec0d4599a11762e5d946da17)](https://www.codacy.com/app/mark-smith/nexmo-java?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Nexmo/nexmo-java&amp;utm_campaign=Badge_Grade)
@@ -29,7 +29,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.nexmo:client:2.0.2'
+    compile 'com.nexmo:client:3.0.0'
 }
 ```
 
@@ -41,7 +41,7 @@ Add the following to the correct place in your project's POM file:
 <dependency>
       <groupId>com.nexmo</groupId>
       <artifactId>client</artifactId>
-      <version>2.0.2</version>
+      <version>3.0.0</version>
 </dependency>
 ```
 
