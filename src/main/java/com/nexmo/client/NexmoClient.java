@@ -111,7 +111,7 @@ public class NexmoClient {
         return this.voice;
     }
 
-    public String generateToken() throws NexmoClientException {
+    public String generateJwt() throws NexmoClientException {
         JWTAuthMethod authMethod = this.httpWrapper.getAuthCollection().getAuth(JWTAuthMethod.class);
         return authMethod.constructToken(System.currentTimeMillis() / 1000L, JWTAuthMethod.constructJTI());
     }
