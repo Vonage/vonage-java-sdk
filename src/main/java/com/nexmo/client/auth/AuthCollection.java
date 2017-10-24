@@ -65,7 +65,7 @@ public class AuthCollection {
      * @return An AuthMethod subclass matching type
      * @throws NexmoUnacceptableAuthException if no matching AuthMethod is found.
      */
-    public <T extends AuthMethod> T getAuth(Class<T> type) throws NexmoClientException {
+    public <T extends AuthMethod> T getAuth(Class<T> type) throws NexmoUnacceptableAuthException {
         for (AuthMethod availableAuthMethod : this.authList) {
             if (type.isInstance(availableAuthMethod)) {
                 return (T) availableAuthMethod;
@@ -81,7 +81,7 @@ public class AuthCollection {
      * @return the preferred AuthMethod from the provided set of acceptable AuthMethod classes
      * @throws NexmoUnacceptableAuthException if no appropriate AuthMethod is held by this AuthCollection
      */
-    public AuthMethod getAcceptableAuthMethod(Set<Class> acceptableAuthMethodClasses) throws NexmoClientException {
+    public AuthMethod getAcceptableAuthMethod(Set<Class> acceptableAuthMethodClasses) throws NexmoUnacceptableAuthException {
         for (AuthMethod availableAuthMethod : this.authList) {
             if (acceptableAuthMethodClasses.contains(availableAuthMethod.getClass())) {
                 return availableAuthMethod;
