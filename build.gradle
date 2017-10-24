@@ -26,6 +26,10 @@ repositories {
     mavenCentral()
 }
 
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-Xlint:unchecked"
+}
+
 dependencies {
     compile 'commons-codec:commons-codec:1.9'
     compile 'commons-logging:commons-logging:1.2'
