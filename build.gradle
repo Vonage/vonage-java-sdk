@@ -18,7 +18,7 @@ apply plugin: 'eclipse'
 
 group = "com.nexmo"
 archivesBaseName = "client"
-version = "3.1.0"
+version = "3.2.0"
 sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
 
@@ -36,11 +36,11 @@ dependencies {
     compile 'org.apache.httpcomponents:httpclient:4.5'
     compile 'commons-io:commons-io:2.5'
     compile 'org.apache.commons:commons-lang3:3.5'
-    compileOnly 'javax.servlet:javax.servlet-api:3.1.0'
+    compileOnly 'javax.servlet:javax.servlet-api:3.2.0'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.8.4'
     compile 'com.auth0:java-jwt:2.2.1'
 
-    testCompile "javax.servlet:javax.servlet-api:3.1.0"
+    testCompile "javax.servlet:javax.servlet-api:3.2.0"
     testCompile 'junit:junit:4.4'
     testCompile "org.mockito:mockito-core:2.7.1"
     testCompile 'org.hamcrest:hamcrest-all:1.3'
