@@ -1,6 +1,6 @@
 # Nexmo Client Library for Java
 
-<!-- [![Maven Release](https://maven-badges.herokuapp.com/maven-central/com.nexmo/client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.nexmo/client) -->
+[![Maven Release](https://maven-badges.herokuapp.com/maven-central/com.nexmo/client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.nexmo/client)
 [![Build Status](https://travis-ci.org/Nexmo/nexmo-java.svg?branch=version-2)](https://travis-ci.org/Nexmo/nexmo-java)
 [![codecov](https://codecov.io/gh/Nexmo/nexmo-java/branch/version-2/graph/badge.svg)](https://codecov.io/gh/Nexmo/nexmo-java)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/9888a9f2ec0d4599a11762e5d946da17)](https://www.codacy.com/app/mark-smith/nexmo-java?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Nexmo/nexmo-java&amp;utm_campaign=Badge_Grade)
@@ -11,9 +11,8 @@ need a Nexmo account. Sign up [for free at nexmo.com][signup].
 
  * [Installation](#installation)
  * [Usage](#usage)
- * [Examples](#examples)
- * [API Coverage](#api-coverage)
- * [Contribute](#contribute)
+ * [Tips And Tricks](#tips-and-tricks)
+ * [Contribute!](#contribute)
 
 ## Installation
 
@@ -70,10 +69,11 @@ to your project's classpath.
 
 ## Usage
 
-Check the [Javadoc](http://nexmo.github.io/nexmo-java/) for full
-reference documentation. There are also many useful code samples in the [nexmo-community/nexmo-java-quickstart](https://github.com/nexmo-community/nexmo-java-quickstart) repository.
+* For help understanding our APIs, check out our awesome [developer portal](https://developer.nexmo.com/)
+* Check the [Javadoc](http://nexmo.github.io/nexmo-java/) for full reference documentation.
+* There are also **many useful code samples** in our [nexmo-community/nexmo-java-quickstart](https://github.com/nexmo-community/nexmo-java-quickstart) repository.
 
-## Send an SMS
+### Send an SMS
 
 Send an SMS with the Nexmo SMS API:
 
@@ -91,7 +91,7 @@ for (SmsSubmissionResult response : responses) {
 }
 ```
 
-## Make Phone Calls
+### Make Phone Calls
 
 The following code initiates an outbound call which then reads the user [a message](https://nexmo-community.github.io/ncco-examples/first_call_talk.json):
 
@@ -159,7 +159,19 @@ TalkResponse stopTalkResponse = client.getVoiceClient().stopTalk(event.getUuid()
 System.out.println("Alright. " + stopTalkResponse.getMessage());
 ```
 
-## Send a 2FA Code
+### Generating NCCO Responses
+
+Our library contains a `com.nexmo.client.voice.ncco` package, providing JSON-serializable objects for your NCCO webhook endpoints. You can use it like this:
+
+```java
+TalkNcco message = new TalkNcco("Thank you for calling!");
+Ncco[] nccos = new Ncco[]{message};
+
+res.type("application/json");
+return nccoMapper.writer().writeValueAsString(nccos);
+```
+
+### Send a 2FA Code
 
 Send a 2FA code to a phone number with:
 
@@ -169,7 +181,7 @@ NexmoClient client = new NexmoClient(auth);
 VerifyResult ongoingVerify = client.getVerifyClient().verify(TO_NUMBER, "NEXMO");
 ```
 
-## Check the 2FA Code
+### Check the 2FA Code
 
 When the user enters the code they received, you can check it like this:
 
@@ -177,60 +189,17 @@ When the user enters the code they received, you can check it like this:
 client.getVerifyClient().check(ongoingVerify.getRequestId(), CODE)
 ```
 
-## Custom HTTP Configuration
+### Custom HTTP Configuration
 
 If you need to configure the Apache HttpClient used for making requests, you can
 call `NexmoClient.setHttpClient()` to supply your custom configured object. This
 can be useful, for example, if you must use an HTTP proxy to make requests.
 
+## Tips And Tricks
 
-## API Coverage
-
-* Account
-    * [x] Balance
-    * [ ] Pricing
-    * [ ] Settings
-    * [ ] Top Up
-    * [ ] Numbers
-        * [ ] Search
-        * [ ] Buy
-        * [ ] Cancel
-        * [ ] Update
-* Number Insight
-    * [x] Basic
-    * [x] Standard
-    * [x] Advanced
-    * [ ] Webhook Notification
-* Verify
-    * [x] Verify
-    * [x] Check
-    * [x] Search
-    * [ ] Control
-* Messaging
-    * [x] Send
-    * [x] Delivery Receipt (Callback can only be set in the Dashboard)
-    * [ ] Inbound Messages
-    * [ ] Search
-        * [ ] Message
-        * [ ] Messages
-        * [ ] Rejections
-    * [ ] US Short Codes
-        * [ ] Two-Factor Authentication
-        * [ ] Event Based Alerts
-            * [ ] Sending Alerts
-            * [ ] Campaign Subscription Management
-* Voice
-    * [x] Create call
-    * [x] List calls
-    * [x] Get call info
-    * [x] Modify existing call
-    * [x] Stream audio to an existing call
-    * [x] Stop streaming audio to an existing call
-    * [x] Send speech to an existing call
-    * [x] Stop speech in an existing call
-    * [x] Send DTMF to an existing call
-    * [ ] eventUrl webhook support
-    * [x] answerUrl webhook support
+### Phone Calls And WebSockets
+Our [Voice API](https://developer.nexmo.com/voice/voice-api/overview) can connect a voice call to a websocket! An example using `javax.websocket` for accepting websocket connections can be found on the [Oracle website](http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/HomeWebsocket/WebsocketHome.html#section4).
+[Another  example](http://sparkjava.com/documentation#embedded-web-server) using the Spark framework
 
 
 ## License
