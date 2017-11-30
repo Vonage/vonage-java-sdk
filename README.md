@@ -28,7 +28,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.nexmo:client:3.1.0'
+    compile 'com.nexmo:client:3.2.0'
 }
 ```
 
@@ -40,7 +40,7 @@ Add the following to the correct place in your project's POM file:
 <dependency>
       <groupId>com.nexmo</groupId>
       <artifactId>client</artifactId>
-      <version>3.1.0</version>
+      <version>3.2.0</version>
 </dependency>
 ```
 
