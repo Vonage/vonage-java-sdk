@@ -79,7 +79,9 @@ public class AbstractMethodTest {
         mockAuthMethods = mock(AuthCollection.class);
         mockAuthMethod = mock(AuthMethod.class);
         mockHttpClient = mock(HttpClient.class);
-        when(mockAuthMethods.getAcceptableAuthMethod(any(Set.class))).thenReturn(mockAuthMethod);
+        @SuppressWarnings("unchecked")
+        Set<Class> anySet = any(Set.class);
+        when(mockAuthMethods.getAcceptableAuthMethod(anySet)).thenReturn(mockAuthMethod);
 
         when(mockWrapper.getHttpClient()).thenReturn(mockHttpClient);
         when(mockHttpClient.execute(any(HttpUriRequest.class))).thenReturn(new BasicHttpResponse(

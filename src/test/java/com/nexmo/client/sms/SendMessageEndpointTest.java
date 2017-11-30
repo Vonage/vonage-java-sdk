@@ -365,7 +365,9 @@ public class SendMessageEndpointTest {
         AuthMethod tokenAuth = new TokenAuthMethod("abcd", "def");
 
         when(wrapper.getAuthCollection()).thenReturn(authCollection);
-        when(authCollection.getAcceptableAuthMethod(any(Set.class))).thenReturn(tokenAuth);
+        @SuppressWarnings("unchecked")
+        Set<Class> anySet = any(Set.class);
+        when(authCollection.getAcceptableAuthMethod(anySet)).thenReturn(tokenAuth);
         when(wrapper.getHttpClient()).thenReturn(client);
         when(client.execute(any(HttpUriRequest.class))).thenReturn(
                 TestUtils.makeJsonHttpResponse(200, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
