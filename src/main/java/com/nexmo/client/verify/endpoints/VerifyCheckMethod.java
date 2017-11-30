@@ -24,6 +24,7 @@ package com.nexmo.client.verify.endpoints;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.NexmoResponseParseException;
+import com.nexmo.client.auth.SignatureAuthMethod;
 import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.legacyutils.XmlParser;
 import com.nexmo.client.legacyutils.XmlUtil;
@@ -46,7 +47,7 @@ import java.io.UnsupportedEncodingException;
 
 public class VerifyCheckMethod extends AbstractMethod<CheckRequest, CheckResult> {
     private static final Log log = LogFactory.getLog(VerifyCheckMethod.class);
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
+    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
     private static final String DEFAULT_URI = "https://api.nexmo.com/verify/check/xml";
 

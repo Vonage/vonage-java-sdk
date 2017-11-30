@@ -52,7 +52,7 @@ public class UpdateNumberEndpoint extends AbstractMethod<UpdateNumberRequest, Vo
 
     @Override
     public RequestBuilder makeRequest(UpdateNumberRequest request) throws NexmoClientException,
-                                                                     UnsupportedEncodingException {
+                                                                          UnsupportedEncodingException {
         RequestBuilder requestBuilder = RequestBuilder.post(uri);
         request.addParams(requestBuilder);
         return requestBuilder;

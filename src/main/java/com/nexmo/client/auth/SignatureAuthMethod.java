@@ -21,7 +21,10 @@
  */
 package com.nexmo.client.auth;
 
+import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.RequestBuilder;
+
+import java.util.List;
 
 public class SignatureAuthMethod extends AbstractAuthMethod {
     public final int SORT_KEY = 20;
@@ -37,7 +40,13 @@ public class SignatureAuthMethod extends AbstractAuthMethod {
     @Override
     public RequestBuilder apply(RequestBuilder request) {
         request.addParameter("api_key", apiKey);
-        RequestSigning.constructSignatureForRequestParameters(request.getParameters(), secret);
+        List<NameValuePair> params = request.getParameters();
+        RequestSigning.constructSignatureForRequestParameters(params, secret);
+
+        // TODO: This is ugly:
+        request.addParameter(params.get(params.size()-1));
+        request.addParameter(params.get(params.size()-2));
+
         return request;
     }
 

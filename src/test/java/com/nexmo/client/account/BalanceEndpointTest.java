@@ -49,6 +49,7 @@ public class BalanceEndpointTest {
         assertArrayEquals(new Class[]{TokenAuthMethod.class}, auths);
     }
 
+
     @Test
     public void testMakeRequest() throws Exception {
         RequestBuilder builder = this.endpoint.makeRequest(null);

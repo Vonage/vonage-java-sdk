@@ -52,7 +52,7 @@ public class CancelNumberEndpoint extends AbstractMethod<CancelNumberRequest, Ca
 
     @Override
     public RequestBuilder makeRequest(CancelNumberRequest request) throws NexmoClientException,
-                                                                        UnsupportedEncodingException {
+                                                                          UnsupportedEncodingException {
         RequestBuilder requestBuilder = RequestBuilder.post().setUri(uri);
         request.addParams(requestBuilder);
         return requestBuilder;

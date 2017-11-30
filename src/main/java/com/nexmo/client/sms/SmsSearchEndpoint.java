@@ -51,7 +51,7 @@ public class SmsSearchEndpoint extends AbstractMethod<SearchSmsRequest, SearchSm
 
     @Override
     public RequestBuilder makeRequest(SearchSmsRequest request) throws NexmoClientException,
-                                                                         UnsupportedEncodingException {
+                                                                       UnsupportedEncodingException {
         RequestBuilder requestBuilder = RequestBuilder.get(uri);
         request.addParams(requestBuilder);
         return requestBuilder;
