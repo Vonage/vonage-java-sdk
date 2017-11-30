@@ -24,20 +24,20 @@ package com.nexmo.client.verify.endpoints;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.NexmoResponseParseException;
+import com.nexmo.client.auth.SignatureAuthMethod;
 import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.legacyutils.XmlParser;
+import com.nexmo.client.legacyutils.XmlUtil;
 import com.nexmo.client.verify.BaseResult;
 import com.nexmo.client.verify.SearchRequest;
 import com.nexmo.client.verify.SearchResult;
 import com.nexmo.client.verify.VerifyResult;
 import com.nexmo.client.voice.endpoints.AbstractMethod;
-import com.nexmo.client.legacyutils.XmlUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -54,10 +54,10 @@ import java.util.List;
 public class SearchEndpoint extends AbstractMethod<SearchRequest, SearchResult[]> {
     private static final Log log = LogFactory.getLog(SearchEndpoint.class);
 
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
+    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
     private static final String DEFAULT_URI = "https://api.nexmo.com/verify/search/xml";
-
+    
     private XmlParser xmlParser = new XmlParser();
 
     private String uri = DEFAULT_URI;

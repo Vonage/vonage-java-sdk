@@ -22,6 +22,7 @@
 package com.nexmo.client.verify.endpoints;
 
 import com.nexmo.client.TestUtils;
+import com.nexmo.client.auth.SignatureAuthMethod;
 import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.verify.ControlRequest;
 import com.nexmo.client.verify.ControlResponse;
@@ -49,7 +50,7 @@ public class ControlEndpointTest {
     @Test
     public void testGetAcceptableAuthMethods() throws Exception {
         Class[] auths = this.endpoint.getAcceptableAuthMethods();
-        assertArrayEquals(new Class[]{TokenAuthMethod.class}, auths);
+        assertArrayEquals(new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class}, auths);
     }
 
     @Test

@@ -51,7 +51,7 @@ public class SearchRejectedMessagesEndpoint extends AbstractMethod<SearchRejecte
 
     @Override
     public RequestBuilder makeRequest(SearchRejectedMessagesRequest request) throws NexmoClientException,
-                                                                     UnsupportedEncodingException {
+                                                                                    UnsupportedEncodingException {
         RequestBuilder requestBuilder = RequestBuilder.get(uri);
         request.addParams(requestBuilder);
         return requestBuilder;

@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Development]
+
+### Modified
+
+- Add signature authentication support to the API endpoints which support it.
+
 ## [3.1.0] - 2017-10-24
 
 ### Added
