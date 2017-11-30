@@ -8,13 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Development]
 
-- VerifyRequest now supports all supported parameters.
-
-## [3.2.0] - 2017-11-30
-
 ### Modified
 
 - Modify call now works with the API again, returning `null` (because the API now returns 204 No Content)
+- VerifyRequest now supports all supported parameters.
 
 ## [3.2.0] - 2017-11-30
 
