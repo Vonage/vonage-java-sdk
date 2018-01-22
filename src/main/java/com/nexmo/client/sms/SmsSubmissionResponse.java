@@ -23,7 +23,9 @@ package com.nexmo.client.sms;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.client.NexmoUnexpectedException;
 
 import java.io.IOException;
@@ -41,6 +43,8 @@ public class SmsSubmissionResponse {
         try {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(json, SmsSubmissionResponse.class);
+        } catch (JsonMappingException jme) {
+            throw new NexmoResponseParseException("Failed to produce SmsSubmissionResponse from json.", jme);
         } catch (IOException jpe) {
             throw new NexmoUnexpectedException("Failed to produce SmsSubmissionResponse from json.", jpe);
         }
