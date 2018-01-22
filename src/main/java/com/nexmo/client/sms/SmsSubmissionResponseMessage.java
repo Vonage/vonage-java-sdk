@@ -57,11 +57,16 @@ public class SmsSubmissionResponseMessage {
         // Again, this is just to emulate how the XML response was working
         try {
             this.remainingBalance = (remainingBalance != null) ? new BigDecimal(remainingBalance) : null;
-            this.messagePrice = (messagePrice != null) ? new BigDecimal(messagePrice) : null;
         } catch (NumberFormatException nfe) {
             this.remainingBalance = null;
+        }
+
+        try {
+            this.messagePrice = (messagePrice != null) ? new BigDecimal(messagePrice) : null;
+        } catch (NumberFormatException nfe) {
             this.messagePrice = null;
         }
+
         this.network = (StringUtils.isNotBlank(network)) ? network : null;;
         this.clientRef = (StringUtils.isNotBlank(clientRef)) ? clientRef : null;;
         this.errorText = (StringUtils.isNotBlank(errorText)) ? errorText : null;;
