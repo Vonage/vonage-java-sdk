@@ -59,19 +59,20 @@ public class SmsClient {
      * Send an SMS message.
      * <p>
      * This uses the supplied object to construct a request and post it to the Nexmo API.<br>
-     * This method will respond with an array of SmsSubmissionResult objects. Depending on the nature and length of the submitted message, Nexmo may automatically
+     * This method will respond with an SmsSubmissionResponse object. Depending on the nature and length of the submitted message, Nexmo may automatically
      * split the message into multiple sms messages in order to deliver to the handset. For example, a long text sms of greater than 160 chars will need to be split
      * into multiple 'concatenated' sms messages. The Nexmo service will handle this automatically for you.<br>
-     * The array of SmsSubmissionResult objects will contain a SmsSubmissionResult object for every actual sms that was required to submit the message.
-     * each message can potentially have a different status result, and each message will have a different message id.
-     * Delivery notifications will be generated for each sms message within this set and will be posted to your application containing the appropriate message id.
+     * The messages are stored as a Collection of SmsSubmissionResponseMessage objects on the SmsSubmissionResponse object.
+     * Each message can potentially have a different status result, and each message will have a different message id.
+     * Delivery notifications will be generated for each sms message within this set and will be posted to your application containing
+     * the appropriate message id.
      *
      * @param message The message request object that describes the type of message and the contents to be submitted.
-     * @return SmsSubmissionResult[] an array of results, 1 object for each sms message that was required to submit this message in its entirety
+     * @return SmsSubmissionResponse an object containing a collection of SmsSubmissionResponseMessage objects for each actual sms that was required to submit the message.
      * @throws NexmoResponseParseException if the HTTP response could not be parsed.
      * @throws IOException                 There has been an error attempting to communicate with the Nexmo service (e.g. Network failure).
      */
-    public SmsSubmissionResult[] submitMessage(Message message) throws IOException, NexmoClientException {
+    public SmsSubmissionResponse submitMessage(Message message) throws IOException, NexmoClientException {
         return this.message.execute(message);
     }
 
