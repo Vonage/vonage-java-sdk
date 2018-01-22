@@ -51,7 +51,7 @@ public class SmsSubmissionResponseMessage {
 
         // Kind of hacky, but the XML response used null instead of empty strings.
         this.to = (StringUtils.isNotBlank(to)) ? to : null;
-        this.id = (StringUtils.isNotBlank(id)) ? id : null;;
+        this.id = (StringUtils.isNotBlank(id)) ? id : null;
         this.status = status;
 
         // Again, this is just to emulate how the XML response was working
@@ -67,9 +67,9 @@ public class SmsSubmissionResponseMessage {
             this.messagePrice = null;
         }
 
-        this.network = (StringUtils.isNotBlank(network)) ? network : null;;
-        this.clientRef = (StringUtils.isNotBlank(clientRef)) ? clientRef : null;;
-        this.errorText = (StringUtils.isNotBlank(errorText)) ? errorText : null;;
+        this.network = (StringUtils.isNotBlank(network)) ? network : null;
+        this.clientRef = (StringUtils.isNotBlank(clientRef)) ? clientRef : null;
+        this.errorText = (StringUtils.isNotBlank(errorText)) ? errorText : null;
     }
 
     public String getTo() {
