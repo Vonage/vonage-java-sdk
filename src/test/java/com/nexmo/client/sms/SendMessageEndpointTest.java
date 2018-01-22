@@ -43,6 +43,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
@@ -272,7 +273,7 @@ public class SendMessageEndpointTest {
     }
 
     @Test
-    public void testParseResponseInvalidNumbers() throws Exception {
+    public void testParseResponseInvalidRemainingBalance() throws Exception {
         SmsSubmissionResponse rs = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200,"{\n" +
                 "  \"message-count\":1,\n" +
                 "  \"messages\":[\n" +
@@ -281,7 +282,7 @@ public class SendMessageEndpointTest {
                 "      \"message-id\":\"\",\n" +
                 "      \"status\":\"0\",\n" +
                 "      \"remaining-balance\":\"not-a-number\",\n" +
-                "      \"message-price\":\"also-not-a-number\",\n" +
+                "      \"message-price\":\"0.0330000\",\n" +
                 "      \"network\":\"12345\"\n" +
                 "    }\n" +
                 "  ]\n" +
@@ -289,6 +290,27 @@ public class SendMessageEndpointTest {
 
         SmsSubmissionResponseMessage r = rs.getMessages().iterator().next();
         assertNull(r.getRemainingBalance());
+        assertEquals(new BigDecimal("0.0330000"), r.getMessagePrice());
+    }
+
+    @Test
+    public void testParseResponseInvalidMessagePriceBalance() throws Exception {
+        SmsSubmissionResponse rs = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200,"{\n" +
+                "  \"message-count\":1,\n" +
+                "  \"messages\":[\n" +
+                "    {\n" +
+                "      \"to\":\"not-a-number\",\n" +
+                "      \"message-id\":\"\",\n" +
+                "      \"status\":\"0\",\n" +
+                "      \"remaining-balance\":\"26.43133450\",\n" +
+                "      \"message-price\":\"not-a-number\",\n" +
+                "      \"network\":\"12345\"\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}"));
+
+        SmsSubmissionResponseMessage r = rs.getMessages().iterator().next();
+        assertEquals(new BigDecimal("26.43133450"), r.getRemainingBalance());
         assertNull(r.getMessagePrice());
     }
 
