@@ -82,11 +82,11 @@ AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
 NexmoClient client = new NexmoClient(auth);
 System.out.println(FROM_NUMBER);
 
-SmsSubmissionResult[] responses = client.getSmsClient().submitMessage(new TextMessage(
+SmsSubmissionResponse responses = client.getSmsClient().submitMessage(new TextMessage(
         FROM_NUMBER,
         TO_NUMBER,
         "Hello from Nexmo!"));
-for (SmsSubmissionResult response : responses) {
+for (SmsSubmissionResponseMessage response : responses.getMessages()) {
     System.out.println(response);
 }
 ```
