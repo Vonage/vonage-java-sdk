@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.math.BigDecimal;
 
@@ -108,5 +109,10 @@ public class SmsSubmissionResponseMessage {
         return this.status == MessageStatus.STATUS_INTERNAL_ERROR
                 || this.status == MessageStatus.STATUS_TOO_MANY_BINDS
                 || this.status == MessageStatus.STATUS_THROTTLED;
+    }
+
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.reflectionToString(this);
     }
 }
