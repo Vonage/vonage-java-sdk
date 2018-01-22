@@ -21,9 +21,13 @@
  */
 package com.nexmo.client.sms;
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@JsonDeserialize(using = MessageStatusDeserializer.class)
 public enum MessageStatus {
     STATUS_OK(0),
     STATUS_THROTTLED(1),
@@ -71,9 +75,6 @@ public enum MessageStatus {
         this.messageStatus = messageStatus;
     }
 
-    /**
-     * @return int The message status code for the specified message status.
-     */
     public int getMessageStatus() {
         return this.messageStatus;
     }
