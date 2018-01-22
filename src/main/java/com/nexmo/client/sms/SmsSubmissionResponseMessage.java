@@ -21,36 +21,51 @@
  */
 package com.nexmo.client.sms;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SmsSubmissionResponseMessage {
-    @JsonProperty("to")
     private String to;
-
-    @JsonProperty("message-id")
     private String id;
-
-    @JsonProperty("status")
     private MessageStatus status;
-
-    @JsonProperty("error-text")
+    private BigDecimal remainingBalance;
+    private BigDecimal messagePrice;
+    private String network;
     private String errorText;
-
-    @JsonProperty("client-ref")
     private String clientRef;
 
-    @JsonProperty("remaining-balance")
-    private BigDecimal remainingBalance;
+    @JsonCreator
+    SmsSubmissionResponseMessage(@JsonProperty("to") String to,
+                                 @JsonProperty("message-id") String id,
+                                 @JsonProperty(value = "status", required = true) MessageStatus status,
+                                 @JsonProperty("remaining-balance") String remainingBalance,
+                                 @JsonProperty("message-price") String messagePrice,
+                                 @JsonProperty("network") String network,
+                                 @JsonProperty("error-text") String errorText,
+                                 @JsonProperty("client-ref") String clientRef) {
 
-    @JsonProperty("message-price")
-    private BigDecimal messagePrice;
+        // Kind of hacky, but the XML response used null instead of empty strings.
+        this.to = (StringUtils.isNotBlank(to)) ? to : null;
+        this.id = (StringUtils.isNotBlank(id)) ? id : null;;
+        this.status = status;
 
-    @JsonProperty("network")
-    private String network;
+        // Again, this is just to emulate how the XML response was working
+        try {
+            this.remainingBalance = (remainingBalance != null) ? new BigDecimal(remainingBalance) : null;
+            this.messagePrice = (messagePrice != null) ? new BigDecimal(messagePrice) : null;
+        } catch (NumberFormatException nfe) {
+            this.remainingBalance = null;
+            this.messagePrice = null;
+        }
+        this.network = (StringUtils.isNotBlank(network)) ? network : null;;
+        this.clientRef = (StringUtils.isNotBlank(clientRef)) ? clientRef : null;;
+        this.errorText = (StringUtils.isNotBlank(errorText)) ? errorText : null;;
+    }
 
     public String getTo() {
         return this.to;
@@ -82,5 +97,11 @@ public class SmsSubmissionResponseMessage {
 
     public String getNetwork() {
         return this.network;
+    }
+
+    public boolean getTemporaryError() {
+        return this.status == MessageStatus.STATUS_INTERNAL_ERROR
+                || this.status == MessageStatus.STATUS_TOO_MANY_BINDS
+                || this.status == MessageStatus.STATUS_THROTTLED;
     }
 }
