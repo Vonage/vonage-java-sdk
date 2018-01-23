@@ -21,7 +21,6 @@
  */
 package com.nexmo.client.sms;
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.HashMap;
