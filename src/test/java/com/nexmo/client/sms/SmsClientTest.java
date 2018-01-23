@@ -113,7 +113,7 @@ public class SmsClientTest {
 
         Message message = new TextMessage("TestSender", "not-a-number", "Test");
         try {
-            SmsSubmissionResponse r = client.submitMessage(message);
+            client.submitMessage(message);
             fail("An IOException should be thrown if an HTTP 500 response is received.");
         } catch (IOException ioe) {
             // This is expected
