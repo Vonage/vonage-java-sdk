@@ -25,11 +25,8 @@ import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.SignatureAuthMethod;
 import com.nexmo.client.auth.TokenAuthMethod;
-import com.nexmo.client.legacyutils.XmlParser;
 import com.nexmo.client.sms.messages.Message;
 import com.nexmo.client.voice.endpoints.AbstractMethod;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
@@ -38,13 +35,11 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 public class SendMessageEndpoint extends AbstractMethod<Message, SmsSubmissionResponse> {
-    private static final Log log = LogFactory.getLog(SmsClient.class);
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
     private static final String DEFAULT_URI = "https://rest.nexmo.com/sms/json";
 
-    private XmlParser xmlParser = new XmlParser();
     private String uri = DEFAULT_URI;
 
     public SendMessageEndpoint(HttpWrapper httpWrapper) {
