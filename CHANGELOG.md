@@ -7,9 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Development]
 
-### Modified
-
+### Added
+- Added enum `com.nexmo.client.sms.MessageStatus` which can be used to track the status of an `SmsSubmissionResponseMessage`
 - Add signature authentication support to the API endpoints which support it.
+
+### Changed
+- Modified `SendMessageEndpoint` to use JSON instead of the XML endpoint.
+
+### Removed
+- Removed `SmsSubmissionResult` bean as it has been replaced with `SmsSubmissionResponseMessage`.
 
 ## [3.1.0] - 2017-10-24
 
