@@ -105,7 +105,7 @@ public class SmsSubmissionResponseMessage {
         return this.network;
     }
 
-    public boolean getTemporaryError() {
+    public boolean isTemporaryError() {
         return this.status == MessageStatus.STATUS_INTERNAL_ERROR
                 || this.status == MessageStatus.STATUS_TOO_MANY_BINDS
                 || this.status == MessageStatus.STATUS_THROTTLED;

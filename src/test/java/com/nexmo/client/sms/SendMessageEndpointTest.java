@@ -326,7 +326,7 @@ public class SendMessageEndpointTest {
                 "}"));
         SmsSubmissionResponseMessage r = rs.getMessages().iterator().next();
         assertEquals(MessageStatus.STATUS_THROTTLED, r.getStatus());
-        assertTrue(r.getTemporaryError());
+        assertTrue(r.isTemporaryError());
     }
 
     @Test
@@ -341,7 +341,7 @@ public class SendMessageEndpointTest {
                 "}"));
         SmsSubmissionResponseMessage r = rs.getMessages().iterator().next();
         assertEquals(MessageStatus.STATUS_INTERNAL_ERROR, r.getStatus());
-        assertTrue(r.getTemporaryError());
+        assertTrue(r.isTemporaryError());
     }
 
     @Test
@@ -356,7 +356,7 @@ public class SendMessageEndpointTest {
                 "}"));
         SmsSubmissionResponseMessage r = rs.getMessages().iterator().next();
         assertEquals(MessageStatus.STATUS_TOO_MANY_BINDS, r.getStatus());
-        assertTrue(r.getTemporaryError());
+        assertTrue(r.isTemporaryError());
     }
 
     private static void assertContainsParam(List<NameValuePair> params, String key, String value) {
