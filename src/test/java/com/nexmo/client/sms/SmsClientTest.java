@@ -78,32 +78,33 @@ public class SmsClientTest {
     public void testSubmitMessage() throws Exception {
         this.wrapper.setHttpClient(this.stubHttpClient(
                 200,
-                "<?xml version='1.0' encoding='UTF-8' ?>\n" +
-                        "<mt-submission-response>\n" +
-                        "    <messages count='2'>\n" +
-                        "        <message>\n" +
-                        "            <to>not-a-number</to>\n" +
-                        "            <messageId>message-id-1</messageId>\n" +
-                        "            <status>0</status>\n" +
-                        "            <remainingBalance>26.43133450</remainingBalance>\n" +
-                        "            <messagePrice>0.03330000</messagePrice>\n" +
-                        "            <network>12345</network>\n" +
-                        "        </message>\n" +
-                        "        <message>\n" +
-                        "            <to>not-a-number</to>\n" +
-                        "            <messageId>message-id-2</messageId>\n" +
-                        "            <status>0</status>\n" +
-                        "            <remainingBalance>26.39803450</remainingBalance>\n" +
-                        "            <messagePrice>0.03330000</messagePrice>\n" +
-                        "            <network>12345</network>\n" +
-                        "        </message>\n" +
-                        "    </messages>\n" +
-                        "</mt-submission-response>"));
+                "{\n" +
+                        "  \"message-count\":2,\n" +
+                        "  \"messages\":[\n" +
+                        "    {\n" +
+                        "      \"to\":\"not-a-number\",\n" +
+                        "      \"message-id\":\"message-id-1\",\n" +
+                        "      \"status\":\"0\",\n" +
+                        "      \"remaining-balance\":\"26.43133450\",\n" +
+                        "      \"message-price\":\"0.03330000\",\n" +
+                        "      \"network\":\"12345\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"to\":\"not-a-number\",\n" +
+                        "      \"message-id\":\"message-id-2\",\n" +
+                        "      \"status\":\"0\",\n" +
+                        "      \"remaining-balance\":\"26.43133450\",\n" +
+                        "      \"message-price\":\"0.03330000\",\n" +
+                        "      \"network\":\"12345\"\n" +
+                        "    }\n" +
+                        "  ]\n" +
+                        "}"));
 
         Message message = new TextMessage("TestSender", "not-a-number", "Test");
 
-        SmsSubmissionResult[] r = client.submitMessage(message);
-        assertEquals(r.length, 2);
+        SmsSubmissionResponse r = client.submitMessage(message);
+        assertEquals(r.getMessageCount(), 2);
+        assertEquals(r.getMessages().size(), 2);
     }
 
     @Test
@@ -112,7 +113,7 @@ public class SmsClientTest {
 
         Message message = new TextMessage("TestSender", "not-a-number", "Test");
         try {
-            SmsSubmissionResult[] r = client.submitMessage(message);
+            client.submitMessage(message);
             fail("An IOException should be thrown if an HTTP 500 response is received.");
         } catch (IOException ioe) {
             // This is expected
