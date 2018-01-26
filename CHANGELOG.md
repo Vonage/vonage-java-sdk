@@ -5,7 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+
 ## [Development]
+
+Entries go here.
+
+## [3.2.0] - 2017-11-30
 
 ### Modified
 
