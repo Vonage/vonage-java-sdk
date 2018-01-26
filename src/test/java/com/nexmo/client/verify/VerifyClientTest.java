@@ -87,6 +87,21 @@ public class VerifyClientTest {
     }
 
     @Test
+    public void testVerifyWithRequestObject() throws Exception {
+        wrapper.setHttpClient(this.stubHttpClient(200, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
+                "    <verify_response>\n" +
+                "        <request_id>not-really-a-request-id</request_id>\n" +
+                "        <status>0</status>\n" +
+                "        <error_text>error</error_text>\n" +
+                "    </verify_response>"));
+        VerifyResult r = client.verify(new VerifyRequest(
+                "447700900999",
+                "TestBrand",
+                "15555215554", 6, Locale.US));
+        assertEquals(VerifyResult.STATUS_OK, r.getStatus());
+    }
+
+    @Test
     public void testVerifyHttpError() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(500, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
                 "    <verify_response>\n" +

@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.3.0] - 2018-01-26
+
+### Modified
+
+- Modify call now works with the API again, returning `null` (because the API now returns 204 No Content)
+- VerifyRequest now supports all supported parameters.
+
 ## [3.2.0] - 2017-11-30
 
 ### Modified
