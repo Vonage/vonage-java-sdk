@@ -83,10 +83,36 @@ public class VerifyEndpointTest {
         VerifyEndpoint endpoint = new VerifyEndpoint(null);
         RequestBuilder request = endpoint.makeRequest(verifyRequest);
         List<NameValuePair> params = request.getParameters();
+        assertContainsParam(params, "number", "4477990090090");
+        assertContainsParam(params, "brand", "Brand.com");
         assertParamMissing(params, "code_length");
         assertParamMissing(params, "lg");
-        assertParamMissing(params, "from");
+        assertParamMissing(params, "sender_id");
         assertParamMissing(params, "require_type");
+        assertParamMissing(params, "country");
+        assertParamMissing(params, "pin_expiry");
+        assertParamMissing(params, "next_event_wait");
+    }
+
+    @Test
+    public void testConstructVerifyParamsWithOptionalValues() throws Exception {
+        VerifyRequest verifyRequest = new VerifyRequest(
+                "4477990090090",
+                "Brand.com"
+        );
+        verifyRequest.setCountry("ZZ");
+        verifyRequest.setPinExpiry(60);
+        verifyRequest.setNextEventWait(90);
+
+        VerifyEndpoint endpoint = new VerifyEndpoint(null);
+        RequestBuilder request = endpoint.makeRequest(verifyRequest);
+        List<NameValuePair> params = request.getParameters();
+        assertContainsParam(params, "number", "4477990090090");
+        assertContainsParam(params, "brand", "Brand.com");
+        assertContainsParam(params, "country", "ZZ");
+        assertContainsParam(params, "pin_expiry", "60");
+        assertContainsParam(params, "next_event_wait", "90");
+
     }
 
     @Test
