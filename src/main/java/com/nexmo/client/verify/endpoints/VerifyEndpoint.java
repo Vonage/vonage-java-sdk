@@ -87,6 +87,18 @@ public class VerifyEndpoint extends AbstractMethod<VerifyRequest, VerifyResult> 
             result.addParameter("require_type", request.getType().toString());
         }
 
+        if (request.getCountry() != null) {
+            result.addParameter("country", request.getCountry());
+        }
+
+        if (request.getPinExpiry() != null) {
+            result.addParameter("pin_expiry", request.getPinExpiry().toString());
+        }
+
+        if (request.getNextEventWait() != null) {
+            result.addParameter("next_event_wait", request.getNextEventWait().toString());
+        }
+
         return result;
     }
 
@@ -125,6 +137,10 @@ public class VerifyEndpoint extends AbstractMethod<VerifyRequest, VerifyResult> 
                                final VerifyRequest.LineType type) throws IOException,
                                                                          NexmoClientException {
         return execute(new VerifyRequest(number, brand, from, length, locale, type));
+    }
+
+    public VerifyResult verify(VerifyRequest request) throws IOException, NexmoClientException {
+        return execute(request);
     }
 
     protected VerifyResult parseVerifyResponse(String response) throws NexmoResponseParseException {

@@ -158,6 +158,13 @@ public class VerifyClient extends AbstractClient {
     }
 
     /**
+     * Send a verification request to a phone number.
+     */
+    public VerifyResult verify(VerifyRequest request) throws IOException, NexmoClientException {
+        return verify.verify(request);
+    }
+
+    /**
      * Validate a code provided by a user in response to a call from {@link #verify}.
      *
      * @param requestId (required) The requestId returned by the <tt>verify</tt> call.
