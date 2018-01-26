@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Development]
 
-Entries go here.
+- VerifyRequest now supports all supported parameters.
 
 ## [3.2.0] - 2017-11-30
 
