@@ -8,7 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Development]
 
-Entries go here.
+### Modified
+
+- Modify call now works with the API again, returning `null` (because the API now returns 204 No Content)
 
 ## [3.2.0] - 2017-11-30
 
