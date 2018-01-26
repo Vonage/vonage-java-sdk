@@ -43,6 +43,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class ModifyCallMethodTest {
     private static final Log LOG = LogFactory.getLog(ModifyCallMethodTest.class);
@@ -149,6 +150,19 @@ public class ModifyCallMethodTest {
 
         ModifyCallResponse response = methodUnderTest.parseResponse(stubResponse);
         assertEquals("Received", response.getMessage());
+    }
+
+    @Test
+    public void parseNullResponse() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper();
+        ModifyCallMethod methodUnderTest = new ModifyCallMethod(wrapper);
+
+        HttpResponse stubResponse = new BasicHttpResponse(
+                new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 204, "OK")
+        );
+
+        ModifyCallResponse response = methodUnderTest.parseResponse(stubResponse);
+        assertNull(response);
     }
 
     @Test

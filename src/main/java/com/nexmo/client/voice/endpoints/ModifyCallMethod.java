@@ -66,7 +66,11 @@ public class ModifyCallMethod extends AbstractMethod<CallModifier, ModifyCallRes
     @Override
     public ModifyCallResponse parseResponse(HttpResponse response) throws IOException {
         String json = new BasicResponseHandler().handleResponse(response);
-        return ModifyCallResponse.fromJson(json);
+        if (response.getStatusLine().getStatusCode() == 200) {
+            return ModifyCallResponse.fromJson(json);
+        } else {
+            return null;
+        }
     }
 
     public void setUri(String uri) {
