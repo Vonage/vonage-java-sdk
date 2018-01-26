@@ -100,6 +100,10 @@ public class VerifyEndpointTest {
                 "4477990090090",
                 "Brand.com"
         );
+        verifyRequest.setFrom("VERIFICATION");
+        verifyRequest.setLength(6);
+        verifyRequest.setLocale(new Locale("en", "gb"));
+        verifyRequest.setType(VerifyRequest.LineType.LANDLINE);
         verifyRequest.setCountry("ZZ");
         verifyRequest.setPinExpiry(60);
         verifyRequest.setNextEventWait(90);
@@ -109,6 +113,11 @@ public class VerifyEndpointTest {
         List<NameValuePair> params = request.getParameters();
         assertContainsParam(params, "number", "4477990090090");
         assertContainsParam(params, "brand", "Brand.com");
+
+        assertContainsParam(params, "code_length", "6");
+        assertContainsParam(params, "sender_id", "VERIFICATION");
+        assertContainsParam(params, "lg", "en-gb");
+        assertContainsParam(params, "require_type", "LANDLINE");
         assertContainsParam(params, "country", "ZZ");
         assertContainsParam(params, "pin_expiry", "60");
         assertContainsParam(params, "next_event_wait", "90");
