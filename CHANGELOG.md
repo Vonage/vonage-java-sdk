@@ -14,6 +14,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Modified
 
+- Modify call now works with the API again, returning `null` (because the API now returns 204 No Content)
+
+## [3.2.0] - 2017-11-30
+
+### Modified
+
 - Add signature authentication support to the API endpoints which support it.
 
 ## [3.1.0] - 2017-10-24
