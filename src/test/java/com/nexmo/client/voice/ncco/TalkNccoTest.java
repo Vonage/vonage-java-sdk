@@ -36,6 +36,14 @@ public class TalkNccoTest {
     }
 
     @Test
+    public void testJsonHasChangedTalkWhenChanged() {
+        String json = "{\"text\":\"Still talk to me\",\"action\":\"talk\"}";
+        TalkNcco ncco = new TalkNcco("Talk to me");
+        ncco.setText("Still talk to me");
+        assertEquals(json, ncco.toJson());
+    }
+
+    @Test
     public void testJsonHasBargeInWhenProvidedAndIsTrue() {
         String json = "{\"text\":\"Talk to me\",\"bargeIn\":true,\"action\":\"talk\"}";
         TalkNcco ncco = new TalkNcco("Talk to me");
