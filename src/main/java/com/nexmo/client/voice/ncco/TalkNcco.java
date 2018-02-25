@@ -25,6 +25,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.math.BigDecimal;
+
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TalkNcco implements Ncco {
@@ -33,6 +35,7 @@ public class TalkNcco implements Ncco {
     private String text;
     private Boolean bargeIn = null;
     private Integer loop = null;
+    private BigDecimal level = null;
     private String voiceName = null;
 
     public TalkNcco(@JsonProperty("text") String text) {
@@ -61,6 +64,14 @@ public class TalkNcco implements Ncco {
 
     public void setLoop(Integer loop) {
         this.loop = loop;
+    }
+
+    public void setLevel(BigDecimal level) {
+        this.level = level;
+    }
+
+    public BigDecimal getLevel() {
+        return level;
     }
 
     public String getVoiceName() {
