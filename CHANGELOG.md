@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Modify call now works with the API again, returning `null` (because the API now returns 204 No Content)
 - VerifyRequest now supports all supported parameters.
 
+### Added
+- Add `level` attribute to the `TalkNcco` object.
+
 ## [3.2.0] - 2017-11-30
 
 ### Modified
