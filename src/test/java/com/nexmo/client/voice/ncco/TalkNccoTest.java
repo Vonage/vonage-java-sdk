@@ -21,35 +21,57 @@
  */
 package com.nexmo.client.voice.ncco;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
+
+import java.math.BigDecimal;
 
 import static org.junit.Assert.assertEquals;
 
 public class TalkNccoTest {
     @Test
-    public void testToJson() throws Exception {
-        assertEquals("{\"text\":\"Talk to me\",\"action\":\"talk\"}", new TalkNcco("Talk to me").toJson());
+    public void testJsonHasTalkAndActionWhenGivenOnlyRequiredParameters() {
+        String json = "{\"text\":\"Talk to me\",\"action\":\"talk\"}";
+        TalkNcco ncco = new TalkNcco("Talk to me");
+        assertEquals(json, ncco.toJson());
     }
 
     @Test
-    public void testJson() throws Exception {
-        String json;
-        {
-            TalkNcco ncco = new TalkNcco("Talk to me");
-            ncco.setText("Don't talk to me");
-            ncco.setBargeIn(true);
-            ncco.setLoop(3);
-            ncco.setVoiceName("Larry");
+    public void testJsonHasBargeInWhenProvidedAndIsTrue() {
+        String json = "{\"text\":\"Talk to me\",\"bargeIn\":true,\"action\":\"talk\"}";
+        TalkNcco ncco = new TalkNcco("Talk to me");
+        ncco.setBargeIn(true);
+        assertEquals(json, ncco.toJson());
+    }
 
-            json = ncco.toJson();
-        }
+    @Test
+    public void testJsonHasBargeInWhenProvidedAndIsFalse() {
+        String json = "{\"text\":\"Talk to me\",\"bargeIn\":false,\"action\":\"talk\"}";
+        TalkNcco ncco = new TalkNcco("Talk to me");
+        ncco.setBargeIn(false);
+        assertEquals(json, ncco.toJson());
+    }
 
-        TalkNcco ncco = new ObjectMapper().readValue(json, TalkNcco.class);
-        assertEquals("Don't talk to me", ncco.getText());
-        assertEquals(true, ncco.getBargeIn());
-        assertEquals(3, (int) ncco.getLoop());
-        assertEquals("Larry", ncco.getVoiceName());
+    @Test
+    public void testJsonHasLoopWhenProvided() {
+        String json = "{\"text\":\"Talk to me\",\"loop\":3,\"action\":\"talk\"}";
+        TalkNcco ncco = new TalkNcco("Talk to me");
+        ncco.setLoop(3);
+        assertEquals(json, ncco.toJson());
+    }
 
+    @Test
+    public void testJsonHasLevelWhenProvided() {
+        String json = "{\"text\":\"Talk to me\",\"level\":-0.34,\"action\":\"talk\"}";
+        TalkNcco ncco = new TalkNcco("Talk to me");
+        ncco.setLevel(new BigDecimal("-0.34"));
+        assertEquals(json, ncco.toJson());
+    }
+
+    @Test
+    public void testJsonHasVoiceNameWhenProvided() {
+        String json = "{\"text\":\"Talk to me\",\"voiceName\":\"Kimberly\",\"action\":\"talk\"}";
+        TalkNcco ncco = new TalkNcco("Talk to me");
+        ncco.setVoiceName("Kimberly");
+        assertEquals(json, ncco.toJson());
     }
 }
