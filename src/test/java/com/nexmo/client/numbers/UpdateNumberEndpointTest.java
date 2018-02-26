@@ -88,6 +88,21 @@ public class UpdateNumberEndpointTest {
     }
 
     @Test
+    public void customBaseUrl() throws Exception {
+        this.endpoint.setBaseUrl("https://rest.example.com/");
+
+        UpdateNumberRequest request = new UpdateNumberRequest(
+                "447700900013", "UK"
+        );
+
+
+        RequestBuilder builder = this.endpoint.makeRequest(request);
+
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://rest.example.com/number/update", builder.build().getURI().toString());
+    }
+
+    @Test
     public void testParseResponse() throws Exception {
         try {
             HttpResponse stub = TestUtils.makeJsonHttpResponse(200, "{\n" +

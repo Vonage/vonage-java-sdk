@@ -67,6 +67,12 @@ public class ListCallsMethodTest {
     }
 
     @Test
+    public void customBaseUrl() throws Exception {
+        method.setBaseUrl("https://api.example.com/");
+        assertEquals("https://api.example.com/v1/calls", method.makeUrl(null));
+    }
+
+    @Test
     public void makeUriWithFilter() throws Exception {
         CallsFilter callsFilter = new CallsFilter();
         callsFilter.setPageSize(3);

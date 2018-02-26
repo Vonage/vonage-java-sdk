@@ -23,7 +23,9 @@ package com.nexmo.client.verify.endpoints;
 
 
 import com.nexmo.client.NexmoResponseParseException;
+import com.nexmo.client.verify.SearchRequest;
 import com.nexmo.client.verify.SearchResult;
+import org.apache.http.client.methods.RequestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -281,6 +283,23 @@ public class SearchEndpointTest {
                         "  <status>FAILED</status>\n" +
                         "</verify_request>");
         assertEquals(new GregorianCalendar(2016, 9, 19, 11, 20, 0).getTime(), rs[0].getChecks().get(0).getDate());
+    }
+
+    @Test
+    public void makeRequest() throws Exception {
+        SearchEndpoint endpoint = new SearchEndpoint(null);
+        RequestBuilder builder = endpoint.makeRequest(new SearchRequest("a-request-id"));
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://api.nexmo.com/verify/search/xml", builder.build().getURI().toString());
+    }
+
+    @Test
+    public void customBaseUrl() throws Exception {
+        SearchEndpoint endpoint = new SearchEndpoint(null);
+        endpoint.setBaseUrl("https://api.example.com/");
+        RequestBuilder builder = endpoint.makeRequest(new SearchRequest("a-request-id"));
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://api.example.com/verify/search/xml", builder.build().getURI().toString());
     }
 
     @Test

@@ -28,6 +28,7 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -36,24 +37,32 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static com.nexmo.client.TestUtils.test429;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.core.StringStartsWith.startsWith;
+import static org.junit.Assert.*;
 
 
 public class SearchNumbersEndpointTest {
+    private SearchNumbersEndpoint endpoint;
+
+    @Before
+    public void setUp() throws Exception {
+        this.endpoint = new SearchNumbersEndpoint(null);
+    }
+
     @Test
     public void makeRequest() throws Exception {
-        SearchNumbersEndpoint methodUnderTest = new SearchNumbersEndpoint(null);
-
         SearchNumbersFilter filter = new SearchNumbersFilter("BB");
         filter.setIndex(10);
         filter.setSize(20);
         filter.setPattern("234");
         filter.setFeatures(new String[]{"SMS", "VOICE"});
         filter.setSearchPattern(SearchPattern.STARTS_WITH);
-        RequestBuilder request = methodUnderTest.makeRequest(filter);
+        RequestBuilder request = endpoint.makeRequest(filter);
 
         assertEquals("GET", request.getMethod());
+        assertThat(request.build().getURI().toString(),
+                startsWith("https://rest.nexmo.com/number/search?"));
+
         Map<String, String> params = TestUtils.makeParameterMap(request.getParameters());
         assertEquals("BB", params.get("country"));
         assertEquals("SMS,VOICE", params.get("features"));
@@ -64,11 +73,21 @@ public class SearchNumbersEndpointTest {
     }
 
     @Test
-    public void testNullFeatureParam() throws Exception {
-        SearchNumbersEndpoint methodUnderTest = new SearchNumbersEndpoint(null);
+    public void customBaseUrl() throws Exception {
+        this.endpoint.setBaseUrl("https://rest.example.com/");
 
         SearchNumbersFilter filter = new SearchNumbersFilter("BB");
-        RequestBuilder request = methodUnderTest.makeRequest(filter);
+        RequestBuilder request = endpoint.makeRequest(filter);
+
+        assertEquals("GET", request.getMethod());
+        assertThat(request.build().getURI().toString(),
+                startsWith("https://rest.example.com/number/search?"));
+    }
+
+    @Test
+    public void testNullFeatureParam() throws Exception {
+        SearchNumbersFilter filter = new SearchNumbersFilter("BB");
+        RequestBuilder request = endpoint.makeRequest(filter);
 
         Map<String, String> params = TestUtils.makeParameterMap(request.getParameters());
         assertEquals("BB", params.get("country"));
@@ -77,11 +96,9 @@ public class SearchNumbersEndpointTest {
 
     @Test
     public void testEmptyFeature() throws Exception {
-        SearchNumbersEndpoint methodUnderTest = new SearchNumbersEndpoint(null);
-
         SearchNumbersFilter filter = new SearchNumbersFilter("BB");
         filter.setFeatures(new String[]{});
-        RequestBuilder request = methodUnderTest.makeRequest(filter);
+        RequestBuilder request = endpoint.makeRequest(filter);
 
         Map<String, String> params = TestUtils.makeParameterMap(request.getParameters());
         assertEquals("BB", params.get("country"));
@@ -90,8 +107,6 @@ public class SearchNumbersEndpointTest {
 
     @Test
     public void testParseResponse() throws Exception {
-        SearchNumbersEndpoint methodUnderTest = new SearchNumbersEndpoint(null);
-
         HttpResponse stubResponse = new BasicHttpResponse(
                 new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 200, "OK")
         );
@@ -116,12 +131,12 @@ public class SearchNumbersEndpointTest {
         entity.setContent(jsonStream);
         stubResponse.setEntity(entity);
 
-        SearchNumbersResponse response = methodUnderTest.parseResponse(stubResponse);
+        SearchNumbersResponse response = endpoint.parseResponse(stubResponse);
         assertEquals(4, response.getCount());
     }
 
     @Test
     public void testRequestThrottleResponse() throws Exception {
-        test429(new SearchNumbersEndpoint(null));
+        test429(this.endpoint);
     }
 }

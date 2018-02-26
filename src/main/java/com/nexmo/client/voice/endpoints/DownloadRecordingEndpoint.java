@@ -33,6 +33,10 @@ import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+/**
+ * Endpoint for downloading a recording. Simply uses the provided URL to form a GET request.
+ * Everything else is provided by the HttpWrapper auth system.
+ */
 public class DownloadRecordingEndpoint extends AbstractMethod<String, Recording> {
     private static final Log LOG = LogFactory.getLog(DownloadRecordingEndpoint.class);
 

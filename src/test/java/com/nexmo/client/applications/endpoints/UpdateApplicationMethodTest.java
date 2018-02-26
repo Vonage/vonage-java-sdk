@@ -91,6 +91,27 @@ public class UpdateApplicationMethodTest {
     }
 
     @Test
+    public void customBaseUrll() throws Exception {
+        this.endpoint.setBaseUrl("https://api.example.com/");
+
+        UpdateApplicationRequest update = new UpdateApplicationRequest(
+                "app-id", "app name", "https://example.com/answer", "https://example.com/event"
+        );
+
+        RequestBuilder builder = this.endpoint.makeRequest(update);
+        assertEquals("PUT", builder.getMethod());
+        assertEquals("https://api.example.com/v1/applications/app-id", builder.build().getURI().toString());
+
+        Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
+        assertEquals("app name", params.get("name"));
+        assertEquals("https://example.com/event", params.get("event_url"));
+        assertEquals("https://example.com/answer", params.get("answer_url"));
+        assertNull(params.get("answer_method"));
+        assertNull(params.get("event_method"));
+        assertNull(params.get("app_id"));
+    }
+
+    @Test
     public void testParseResponse() throws Exception {
         HttpResponse stub = TestUtils.makeJsonHttpResponse(200, "{\n" +
                 "  \"id\": \"aaaaaaaa-bbbb-cccc-dddd-0123456789ab\",\n" +

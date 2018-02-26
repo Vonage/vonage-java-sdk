@@ -58,6 +58,17 @@ public class DeleteApplicationMethodTest {
     }
 
     @Test
+    public void testCustomBaseUrl() throws Exception {
+        this.endpoint.setBaseUrl("https://api.example.com/");
+        RequestBuilder builder = this.endpoint.makeRequest("dummy-application-uuid");
+        assertEquals("DELETE", builder.getMethod());
+        assertEquals("https://api.example.com/v1/applications/dummy-application-uuid", builder.build().getURI().toString());
+
+        Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
+        assertEquals(0, params.size());
+    }
+
+    @Test
     public void testParseResponse() throws Exception {
         HttpResponse stub = TestUtils.makeJsonHttpResponse(204, "");
         this.endpoint.parseResponse(stub);

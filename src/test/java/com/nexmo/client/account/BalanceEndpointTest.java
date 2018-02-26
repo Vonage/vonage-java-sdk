@@ -59,7 +59,14 @@ public class BalanceEndpointTest {
         assertEquals("https://rest.nexmo.com/account/get-balance", builder.build().getURI().toString());
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
         assertEquals(0, params.size());
+    }
 
+    @Test
+    public void testCustomBaseUrl() throws Exception {
+        this.endpoint.setBaseUrl("https://rest.example.com/");
+        RequestBuilder builder = this.endpoint.makeRequest(null);
+        assertEquals("GET", builder.getMethod());
+        assertEquals("https://rest.example.com/account/get-balance", builder.build().getURI().toString());
     }
 
     @Test
