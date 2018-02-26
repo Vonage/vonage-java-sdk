@@ -35,7 +35,6 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -45,12 +44,12 @@ import java.util.List;
 public class ListCallsMethod extends AbstractMethod<CallsFilter, CallInfoPage> {
     private static final Log LOG = LogFactory.getLog(CreateCallMethod.class);
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls";
+    private static final String DEFAULT_BASE_URI = "https://api.nexmo.com/";
+    private static final String PATH = "v1/calls";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
-    private String uri = DEFAULT_URI;
 
     public ListCallsMethod(HttpWrapper httpWrapper) {
-        super(httpWrapper);
+        super(httpWrapper, DEFAULT_BASE_URI);
     }
 
     @Override
@@ -60,11 +59,15 @@ public class ListCallsMethod extends AbstractMethod<CallsFilter, CallInfoPage> {
 
     @Override
     public RequestBuilder makeRequest(CallsFilter filter) throws NexmoClientException, UnsupportedEncodingException {
+        return RequestBuilder.get(makeUrl(filter));
+    }
+
+    protected String makeUrl(CallsFilter filter) {
         URIBuilder uriBuilder;
         try {
-            uriBuilder = new URIBuilder(this.uri);
+            uriBuilder = new URIBuilder(getBaseUrl() + PATH);
         } catch (URISyntaxException e) {
-            throw new NexmoUnexpectedException("Could not parse URI: " + this.uri);
+            throw new NexmoUnexpectedException("Could not parse URI: " + getBaseUrl());
         }
         if (filter != null) {
             List<NameValuePair> params = filter.toUrlParams();
@@ -72,20 +75,12 @@ public class ListCallsMethod extends AbstractMethod<CallsFilter, CallInfoPage> {
                 uriBuilder.setParameter(param.getName(), param.getValue());
             }
         }
-        return RequestBuilder.get().setUri(uriBuilder.toString());
+        return uriBuilder.toString();
     }
 
     @Override
     public CallInfoPage parseResponse(HttpResponse response) throws IOException {
         String json = new BasicResponseHandler().handleResponse(response);
         return CallInfoPage.fromJson(json);
-    }
-
-    public void setUri(String uri) {
-        this.uri = uri;
-    }
-
-    public String getUri() {
-        return this.uri;
     }
 }

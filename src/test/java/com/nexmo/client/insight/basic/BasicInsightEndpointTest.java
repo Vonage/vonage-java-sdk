@@ -58,6 +58,14 @@ public class BasicInsightEndpointTest {
     }
 
     @Test
+    public void customBaseUrl() throws Exception {
+        this.endpoint.setBaseUrl("https://api.example.com/");
+        RequestBuilder builder = this.endpoint.makeRequest(new BasicInsightRequest("1234"));
+
+        assertEquals("https://api.example.com/ni/basic/json", builder.build().getURI().toString());
+    }
+
+    @Test
     public void testMakeRequestWithCountry() throws Exception {
         RequestBuilder builder = this.endpoint.makeRequest(new BasicInsightRequest("1234", "GB"));
         assertEquals("POST", builder.getMethod());

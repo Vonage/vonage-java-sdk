@@ -49,13 +49,13 @@ public class SendMessageEndpoint extends AbstractMethod<Message, SmsSubmissionRe
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://rest.nexmo.com/sms/xml";
+    private static final String DEFAULT_BASE_URI = "https://rest.nexmo.com/";
+    private static final String PATH = "sms/xml";
 
     private XmlParser xmlParser = new XmlParser();
-    private String uri = DEFAULT_URI;
 
     public SendMessageEndpoint(HttpWrapper httpWrapper) {
-        super(httpWrapper);
+        super(httpWrapper, DEFAULT_BASE_URI);
     }
 
     @Override
@@ -65,9 +65,13 @@ public class SendMessageEndpoint extends AbstractMethod<Message, SmsSubmissionRe
 
     @Override
     public RequestBuilder makeRequest(Message message) throws NexmoClientException, UnsupportedEncodingException {
-        RequestBuilder request = RequestBuilder.post(uri);
+        RequestBuilder request = RequestBuilder.post(makeUrl(message));
         message.addParams(request);
         return request;
+    }
+
+    protected String makeUrl(Message request) {
+        return getBaseUrl() + PATH;
     }
 
     @Override

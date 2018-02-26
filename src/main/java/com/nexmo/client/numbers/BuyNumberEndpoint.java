@@ -36,12 +36,12 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 public class BuyNumberEndpoint extends AbstractMethod<BuyNumberRequest, BuyNumberResponse> {
-    private static final String DEFAULT_URI = "https://rest.nexmo.com/number/buy";
+    private static final String DEFAULT_BASE_URI = "https://rest.nexmo.com/";
+    private static final String PATH = "number/buy";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
-    private String uri = DEFAULT_URI;
 
     public BuyNumberEndpoint(HttpWrapper httpWrapper) {
-        super(httpWrapper);
+        super(httpWrapper, DEFAULT_BASE_URI);
     }
 
     @Override
@@ -51,9 +51,13 @@ public class BuyNumberEndpoint extends AbstractMethod<BuyNumberRequest, BuyNumbe
 
     @Override
     public RequestBuilder makeRequest(BuyNumberRequest request) throws NexmoClientException, UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder.post().setUri(uri);
+        RequestBuilder requestBuilder = RequestBuilder.post(makeUrl(request));
         request.addParams(requestBuilder);
         return requestBuilder;
+    }
+
+    protected String makeUrl(BuyNumberRequest request) {
+        return getBaseUrl() + PATH;
     }
 
     @Override

@@ -38,12 +38,11 @@ public class CreateApplicationMethod extends AbstractMethod<CreateApplicationReq
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/v1/applications";
-
-    private String uri = DEFAULT_URI;
+    private static final String DEFAULT_BASE_URI = "https://api.nexmo.com/";
+    private static final String PATH = "v1/applications";
 
     public CreateApplicationMethod(HttpWrapper httpWrapper) {
-        super(httpWrapper);
+        super(httpWrapper, DEFAULT_BASE_URI);
     }
 
     @Override
@@ -54,9 +53,13 @@ public class CreateApplicationMethod extends AbstractMethod<CreateApplicationReq
     @Override
     public RequestBuilder makeRequest(CreateApplicationRequest request) throws NexmoClientException,
                                                                                UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder.post(uri);
+        RequestBuilder requestBuilder = RequestBuilder.post(makeUrl(request));
         request.addParams(requestBuilder);
         return requestBuilder;
+    }
+
+    protected String makeUrl(CreateApplicationRequest request) {
+        return getBaseUrl() + PATH;
     }
 
     @Override

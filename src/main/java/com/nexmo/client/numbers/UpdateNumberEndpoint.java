@@ -37,12 +37,11 @@ public class UpdateNumberEndpoint extends AbstractMethod<UpdateNumberRequest, Vo
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://rest.nexmo.com/number/update";
-
-    private String uri = DEFAULT_URI;
+    private static final String DEFAULT_BASE_URI = "https://rest.nexmo.com/";
+    private static final String PATH = "number/update";
 
     public UpdateNumberEndpoint(HttpWrapper httpWrapper) {
-        super(httpWrapper);
+        super(httpWrapper, DEFAULT_BASE_URI);
     }
 
     @Override
@@ -53,9 +52,13 @@ public class UpdateNumberEndpoint extends AbstractMethod<UpdateNumberRequest, Vo
     @Override
     public RequestBuilder makeRequest(UpdateNumberRequest request) throws NexmoClientException,
                                                                           UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder.post(uri);
+        RequestBuilder requestBuilder = RequestBuilder.post(makeUrl(request));
         request.addParams(requestBuilder);
         return requestBuilder;
+    }
+
+    protected String makeUrl(UpdateNumberRequest request) {
+        return getBaseUrl() + PATH;
     }
 
     @Override

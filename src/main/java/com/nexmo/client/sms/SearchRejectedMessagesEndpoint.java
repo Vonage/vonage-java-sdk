@@ -36,12 +36,11 @@ public class SearchRejectedMessagesEndpoint extends AbstractMethod<SearchRejecte
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://rest.nexmo.com/search/rejections";
-
-    private String uri = DEFAULT_URI;
+    private static final String DEFAULT_BASE_URI = "https://rest.nexmo.com/";
+    private static final String PATH = "search/rejections";
 
     public SearchRejectedMessagesEndpoint(HttpWrapper httpWrapper) {
-        super(httpWrapper);
+        super(httpWrapper, DEFAULT_BASE_URI);
     }
 
     @Override
@@ -51,10 +50,14 @@ public class SearchRejectedMessagesEndpoint extends AbstractMethod<SearchRejecte
 
     @Override
     public RequestBuilder makeRequest(SearchRejectedMessagesRequest request) throws NexmoClientException,
-                                                                                    UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder.get(uri);
+            UnsupportedEncodingException {
+        RequestBuilder requestBuilder = RequestBuilder.get(makeUrl(request));
         request.addParams(requestBuilder);
         return requestBuilder;
+    }
+
+    protected String makeUrl(SearchRejectedMessagesRequest request) {
+        return getBaseUrl() + PATH;
     }
 
     @Override

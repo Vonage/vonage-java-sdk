@@ -58,6 +58,24 @@ public class SendMessageEndpointTest {
     }
 
     @Test
+    public void testMakeRequest() throws Exception {
+        Message message = new TextMessage("TestSender", "not-a-number", "Test");
+        RequestBuilder requestBuilder = endpoint.makeRequest(message);
+        assertEquals("POST", requestBuilder.build().getMethod());
+        assertEquals("https://rest.nexmo.com/sms/xml", requestBuilder.build().getURI().toString());
+        // Params are checked in other tests.
+    }
+
+    @Test
+    public void testCustomBaseUrl() throws Exception {
+        endpoint.setBaseUrl("https://rest.example.com/");
+        Message message = new TextMessage("TestSender", "not-a-number", "Test");
+        RequestBuilder requestBuilder = endpoint.makeRequest(message);
+        assertEquals("POST", requestBuilder.build().getMethod());
+        assertEquals("https://rest.example.com/sms/xml", requestBuilder.build().getURI().toString());
+    }
+
+    @Test
     public void testConstructParamsText() throws Exception {
         Message message = new TextMessage("TestSender", "not-a-number", "Test");
         List<NameValuePair> params = endpoint.makeRequest(message).getParameters();

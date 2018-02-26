@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,45 +19,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package com.nexmo.client.voice.endpoints;
 
-import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.TestUtils;
 import com.nexmo.client.auth.JWTAuthMethod;
-import com.nexmo.client.voice.Recording;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
-public class DownloadRecordingEndpoint extends AbstractMethod<String, Recording> {
-    private static final Log LOG = LogFactory.getLog(DownloadRecordingEndpoint.class);
+import static org.junit.Assert.*;
 
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
+public class StopTalkMethodTest {
+    private StopTalkMethod endpoint;
 
-    public DownloadRecordingEndpoint(HttpWrapper httpWrapper) {
-        super(httpWrapper, null);
+    @Before
+    public void setUp() {
+        this.endpoint = new StopTalkMethod(null);
     }
 
-    @Override
-    public RequestBuilder makeRequest(String uri) throws NexmoClientException, UnsupportedEncodingException {
-        return RequestBuilder.get(makeUrl(uri));
+    @Test
+    public void testGetAcceptableAuthMethods() throws Exception {
+        Class[] auths = this.endpoint.getAcceptableAuthMethods();
+        assertArrayEquals(new Class[]{JWTAuthMethod.class}, auths);
     }
 
-    protected String makeUrl(String uri) {
-        return uri;
+    @Test
+    public void testMakeRequest() throws Exception {
+        RequestBuilder builder = this.endpoint.makeRequest("stop-talk-uuid");
+        assertEquals("DELETE", builder.getMethod());
+        assertEquals("https://api.nexmo.com/v1/calls/stop-talk-uuid/talk", builder.build().getURI().toString());
     }
 
-    @Override
-    protected Class[] getAcceptableAuthMethods() {
-        return ALLOWED_AUTH_METHODS;
-    }
-
-    @Override
-    public Recording parseResponse(HttpResponse response) throws IOException {
-        return new Recording(response);
+    @Test
+    public void testCustomBaseUrl() throws Exception {
+        this.endpoint.setBaseUrl("https://api.example.com/");
+        RequestBuilder builder = this.endpoint.makeRequest("stop-talk-uuid");
+        assertEquals("DELETE", builder.getMethod());
+        assertEquals("https://api.example.com/v1/calls/stop-talk-uuid/talk", builder.build().getURI().toString());
     }
 }

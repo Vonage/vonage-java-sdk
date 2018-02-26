@@ -58,6 +58,18 @@ public class ListApplicationsEndpointTest {
     }
 
     @Test
+    public void testCustomBaseUrl() throws Exception {
+        this.endpoint.setBaseUrl("https://api.example.com/");
+
+        ListApplicationsRequest request = new ListApplicationsRequest();
+        request.setPageIndex(32);
+
+        RequestBuilder builder = this.endpoint.makeRequest(request);
+        assertEquals("GET", builder.getMethod());
+        assertEquals("https://api.example.com/v1/applications?page_index=32", builder.build().getURI().toString());
+    }
+
+    @Test
     public void testMakeRequestWithParams() throws Exception {
         ListApplicationsRequest request = new ListApplicationsRequest();
         request.setPageIndex(32);

@@ -62,10 +62,21 @@ public class ListCallsMethodTest {
     }
 
     @Test
+    public void makeUriWithNoFilter() throws Exception {
+        assertEquals("https://api.nexmo.com/v1/calls", method.makeUrl(null));
+    }
+
+    @Test
+    public void makeUriWithFilter() throws Exception {
+        CallsFilter callsFilter = new CallsFilter();
+        callsFilter.setPageSize(3);
+        String url = method.makeUrl(callsFilter);
+        assertEquals("https://api.nexmo.com/v1/calls?page_size=3", url);
+    }
+
+    @Test
     public void makeRequestWithNoFilter() throws Exception {
-        RequestBuilder request = method.makeRequest(null);
-        assertEquals("GET", request.getMethod());
-        assertEquals("https://api.nexmo.com/v1/calls", request.getUri().toString());
+        assertEquals("GET", method.makeRequest(null).getMethod());
     }
 
     @Test
@@ -74,7 +85,6 @@ public class ListCallsMethodTest {
         callsFilter.setPageSize(3);
         RequestBuilder request = method.makeRequest(callsFilter);
         assertEquals("GET", request.getMethod());
-        assertEquals("https://api.nexmo.com/v1/calls?page_size=3", request.getUri().toString());
     }
 
     @Test
@@ -167,14 +177,13 @@ public class ListCallsMethodTest {
 
     @Test
     public void testBadUriThrowsException() throws Exception {
-        method.setUri(":this::///isnota_uri");
-        assertEquals(":this::///isnota_uri", method.getUri());
+        method.setBaseUrl(":this::///isnota_uri");
         try {
             CallsFilter filter = new CallsFilter();
             filter.setPageSize(30);
-            RequestBuilder request = method.makeRequest(filter);
+            String url = method.makeUrl(filter);
             // Anything past here only executes if our assertion is incorrect:
-            LOG.error("SnsRequest URI: " + request.getUri());
+            LOG.error("SnsRequest URI: " + url);
             fail("Making a request with a bad URI should throw a NexmoUnexpectedException");
         } catch (NexmoUnexpectedException nue) {
             // This is expected

@@ -49,7 +49,7 @@ import static org.mockito.Mockito.*;
 public class AbstractMethodTest {
     private static class ConcreteMethod extends AbstractMethod<String, String> {
         public ConcreteMethod(HttpWrapper httpWrapper) {
-            super(httpWrapper);
+            super(httpWrapper, "https://api.nexmo.com/");
         }
 
         @Override
@@ -60,6 +60,10 @@ public class AbstractMethodTest {
         @Override
         public RequestBuilder makeRequest(String request) throws NexmoClientException, UnsupportedEncodingException {
             return RequestBuilder.get(request);
+        }
+
+        protected String makeUrl(String request) {
+            return getBaseUrl() + request;
         }
 
         @Override

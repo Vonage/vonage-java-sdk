@@ -28,6 +28,7 @@ import org.apache.http.ProtocolVersion;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.message.BasicStatusLine;
 
 import java.io.ByteArrayInputStream;
@@ -35,12 +36,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class TestUtils {
     public byte[] loadKey(String path) throws IOException {
@@ -105,5 +105,24 @@ public class TestUtils {
         } catch (HttpResponseException e) {
             // This is expected
         }
+    }
+
+    public static void assertContainsParam(List<NameValuePair> params, String key, String value) {
+        NameValuePair item = new BasicNameValuePair(key, value);
+        assertTrue(
+                "" + params + " should contain " + item,
+                params.contains(item)
+        );
+    }
+
+    public static void assertParamMissing(List<NameValuePair> params, String key) {
+        Set<String> keys = new HashSet<>();
+        for (NameValuePair pair : params) {
+            keys.add(pair.getName());
+        }
+        assertFalse(
+                "" + params + " should not contain " + key,
+                keys.contains(key)
+        );
     }
 }

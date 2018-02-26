@@ -56,11 +56,10 @@ public class SearchEndpoint extends AbstractMethod<SearchRequest, SearchResult[]
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/verify/search/xml";
-    
-    private XmlParser xmlParser = new XmlParser();
+    private static final String DEFAULT_BASE_URI = "https://api.nexmo.com/";
+    private static final String PATH = "verify/search/xml";
 
-    private String uri = DEFAULT_URI;
+    private XmlParser xmlParser = new XmlParser();
 
     private static final ThreadLocal<SimpleDateFormat> sDateTimePattern = new ThreadLocal<SimpleDateFormat>() {
         @Override
@@ -75,10 +74,10 @@ public class SearchEndpoint extends AbstractMethod<SearchRequest, SearchResult[]
     /**
      * Create a new SearchEndpoint.
      * <p>
-     * This client is used for calling the verify API's search endpoint.
+     * This Endpoint is used for calling the verify API's search endpoint.
      */
     public SearchEndpoint(HttpWrapper httpWrapper) {
-        super(httpWrapper);
+        super(httpWrapper, DEFAULT_BASE_URI);
     }
 
     @Override
@@ -88,7 +87,7 @@ public class SearchEndpoint extends AbstractMethod<SearchRequest, SearchResult[]
 
     @Override
     public RequestBuilder makeRequest(SearchRequest request) throws NexmoClientException, UnsupportedEncodingException {
-        RequestBuilder result = RequestBuilder.post(this.uri);
+        RequestBuilder result = RequestBuilder.post(makeUrl(request));
         if (request.getRequestIds().length == 1) {
             result.addParameter("request_id", request.getRequestIds()[0]);
         } else {
@@ -96,6 +95,10 @@ public class SearchEndpoint extends AbstractMethod<SearchRequest, SearchResult[]
                 result.addParameter("request_ids", requestId);
         }
         return result;
+    }
+
+    protected String makeUrl(SearchRequest request) {
+        return getBaseUrl() + PATH;
     }
 
     @Override

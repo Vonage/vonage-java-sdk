@@ -60,6 +60,17 @@ public class GetApplicationEndpointTest {
     }
 
     @Test
+    public void testCustomBaseUrl() throws Exception {
+        this.endpoint.setBaseUrl("https://api.example.com/");
+        RequestBuilder builder = this.endpoint.makeRequest("app-id");
+        assertEquals("GET", builder.getMethod());
+        assertEquals("https://api.example.com/v1/applications/app-id", builder.build().getURI().toString());
+
+        Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
+        assertEquals(0, params.size());
+    }
+
+    @Test
     public void testParseResponse() throws Exception {
         HttpResponse stub = TestUtils.makeJsonHttpResponse(200, "{\n" +
                 "  \"id\": \"aaaaaaaa-bbbb-cccc-dddd-0123456789ab\",\n" +

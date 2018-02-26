@@ -40,12 +40,11 @@ public class ControlEndpoint extends AbstractMethod<ControlRequest, ControlRespo
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/verify/control/json";
-
-    private String uri = DEFAULT_URI;
+    private static final String DEFAULT_BASE_URI = "https://api.nexmo.com/";
+    private static final String PATH = "verify/control/json";
 
     public ControlEndpoint(HttpWrapper httpWrapper) {
-        super(httpWrapper);
+        super(httpWrapper, DEFAULT_BASE_URI);
     }
 
     @Override
@@ -56,9 +55,13 @@ public class ControlEndpoint extends AbstractMethod<ControlRequest, ControlRespo
     @Override
     public RequestBuilder makeRequest(ControlRequest request) throws NexmoClientException,
                                                                      UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder.post(uri);
+        RequestBuilder requestBuilder = RequestBuilder.post(makeUrl(request));
         request.addParams(requestBuilder);
         return requestBuilder;
+    }
+
+    protected String makeUrl(ControlRequest request) {
+        return getBaseUrl() + PATH;
     }
 
     @Override

@@ -23,7 +23,6 @@ package com.nexmo.client.voice.endpoints;
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.NexmoMethodFailedException;
 import com.nexmo.client.NexmoUnexpectedException;
 import com.nexmo.client.auth.AuthMethod;
 import org.apache.commons.logging.Log;
@@ -62,9 +61,11 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
 
     private final HttpWrapper httpWrapper;
     private Set<Class> acceptable;
+    private String baseUrl;
 
-    public AbstractMethod(HttpWrapper httpWrapper) {
+    public AbstractMethod(HttpWrapper httpWrapper, String baseUri) {
         this.httpWrapper = httpWrapper;
+        setBaseUrl(baseUri);
     }
 
     /**
@@ -108,6 +109,14 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
         } catch (UnsupportedEncodingException uee) {
             throw new NexmoUnexpectedException("UTF-8 encoding is not supported by this JVM.", uee);
         }
+    }
+
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
     }
 
     /**

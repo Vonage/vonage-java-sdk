@@ -36,7 +36,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static com.nexmo.client.TestUtils.test429;
+import static org.hamcrest.core.StringStartsWith.startsWith;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 
 public class ListNumbersEndpointTest {
@@ -52,11 +54,24 @@ public class ListNumbersEndpointTest {
         RequestBuilder request = methodUnderTest.makeRequest(filter);
 
         assertEquals("GET", request.getMethod());
+        assertEquals(request.getUri().toString(), "https://rest.nexmo.com/account/numbers");
         Map<String, String> params = TestUtils.makeParameterMap(request.getParameters());
         assertEquals("234", params.get("pattern"));
         assertEquals("0", params.get("search_pattern"));
         assertEquals("10", params.get("index"));
         assertEquals("20", params.get("size"));
+    }
+
+    @Test
+    public void customBaseUrl() throws Exception {
+        ListNumbersEndpoint methodUnderTest = new ListNumbersEndpoint(null);
+        methodUnderTest.setBaseUrl("https://rest.example.com/");
+
+        ListNumbersFilter filter = new ListNumbersFilter();
+        RequestBuilder request = methodUnderTest.makeRequest(filter);
+
+        assertEquals("GET", request.getMethod());
+        assertThat(request.getUri().toString(), startsWith("https://rest.example.com/account/numbers"));
     }
 
     @Test

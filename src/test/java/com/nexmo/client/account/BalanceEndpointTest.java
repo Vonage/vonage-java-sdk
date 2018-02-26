@@ -24,12 +24,14 @@ package com.nexmo.client.account;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.TestUtils;
 import com.nexmo.client.auth.TokenAuthMethod;
+import com.nexmo.client.test.HttpWrapperStub;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Map;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -77,16 +79,35 @@ public class BalanceEndpointTest {
         }
 
         @Override
-        public BalanceResponse execute() throws IOException, NexmoClientException {
+        public BalanceResponse execute(Void v) throws IOException, NexmoClientException {
             return new BalanceResponse(1.5, true);
         }
     }
 
+    /**
+     * This test ensures <code>execute()</code> calls
+     * <code>execute(null)</code> and returns the correct response.
+     */
     @Test
     public void testExecute() throws Exception {
         BalanceEndpoint endpoint = new StubbedBalanceEndpoint();
         BalanceResponse response = endpoint.execute();
         assertEquals(response.getValue(), 1.5, 0.0001);
         assertEquals(response.isAutoReload(), true);
+    }
+
+    @Test
+    public void testDefaultRequestUrl() throws Exception {
+        HttpWrapperStub stub = new HttpWrapperStub();
+        stub.setPresetResponse(TestUtils.makeJsonHttpResponse(200, "{\n" +
+                "  \"value\": 3.14159,\n" +
+                "  \"autoReload\": false\n" +
+                "}}"));
+        BalanceEndpoint endpoint = new BalanceEndpoint(stub);
+        endpoint.execute();
+        assertEquals(
+                new URI("https://rest.nexmo.com/account/get-balance"),
+                stub.getUriRequest().getURI()
+        );
     }
 }

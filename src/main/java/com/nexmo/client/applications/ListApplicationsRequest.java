@@ -47,7 +47,7 @@ public class ListApplicationsRequest {
         if (this.pageSize != null) {
             request.addParameter("page_size", this.pageSize.toString());
         }
-        if (this.pageSize != null) {
+        if (this.pageIndex != null) {
             request.addParameter("page_index", this.pageIndex.toString());
         }
     }

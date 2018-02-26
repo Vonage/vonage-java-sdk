@@ -44,11 +44,10 @@ import java.util.Locale;
 public class VerifyEndpoint extends AbstractMethod<VerifyRequest, VerifyResult> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/verify/xml";
+    private static final String DEFAULT_BASE_URI = "https://api.nexmo.com/";
+    private static final String PATH = "verify/xml";
 
     private XmlParser xmlParser = new XmlParser();
-
-    private String uri = DEFAULT_URI;
 
     /**
      * Create a new VerifyEndpoint.
@@ -56,7 +55,7 @@ public class VerifyEndpoint extends AbstractMethod<VerifyRequest, VerifyResult> 
      * This client is used for calling the verify API's verify endpoint.
      */
     public VerifyEndpoint(HttpWrapper httpWrapper) {
-        super(httpWrapper);
+        super(httpWrapper, DEFAULT_BASE_URI);
     }
 
     @Override
@@ -66,7 +65,7 @@ public class VerifyEndpoint extends AbstractMethod<VerifyRequest, VerifyResult> 
 
     @Override
     public RequestBuilder makeRequest(VerifyRequest request) throws NexmoClientException, UnsupportedEncodingException {
-        RequestBuilder result = RequestBuilder.post(this.uri)
+        RequestBuilder result = RequestBuilder.post(makeUrl(request))
                 .addParameter("number", request.getNumber())
                 .addParameter("brand", request.getBrand());
 
@@ -100,6 +99,10 @@ public class VerifyEndpoint extends AbstractMethod<VerifyRequest, VerifyResult> 
         }
 
         return result;
+    }
+
+    protected String makeUrl(VerifyRequest request) {
+        return getBaseUrl() + PATH;
     }
 
     @Override

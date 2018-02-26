@@ -48,8 +48,15 @@ public class ReadCallMethodTest {
 
     @Test
     public void makeRequest() throws Exception {
-        RequestBuilder request = method.makeRequest("abcd-efgh");
-        assertEquals("https://api.nexmo.com/v1/calls/abcd-efgh", request.getUri().toString());
+        String url = method.makeUrl("abcd-efgh");
+        assertEquals("https://api.nexmo.com/v1/calls/abcd-efgh", url);
+    }
+
+    @Test
+    public void customBaseUrl() throws Exception {
+        method.setBaseUrl("https://api.example.com/");
+        String url = method.makeUrl("abcd-efgh");
+        assertEquals("https://api.example.com/v1/calls/abcd-efgh", url);
     }
 
     @Test
@@ -82,12 +89,6 @@ public class ReadCallMethodTest {
                         "      }\n");
         CallInfo record = method.parseResponse(stubResponse);
         assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", record.getUuid());
-    }
-
-    @Test
-    public void testBaseUri() throws Exception {
-        method.setBaseUri("http://api.example.com/");
-        assertEquals("http://api.example.com/", method.getBaseUri());
     }
 
 

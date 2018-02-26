@@ -27,16 +27,15 @@ import com.nexmo.client.verify.VerifyRequest;
 import com.nexmo.client.verify.VerifyResult;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.message.BasicNameValuePair;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.xml.parsers.ParserConfigurationException;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
+import static com.nexmo.client.TestUtils.assertContainsParam;
+import static com.nexmo.client.TestUtils.assertParamMissing;
 import static org.junit.Assert.*;
 
 public class VerifyEndpointTest {
@@ -60,6 +59,9 @@ public class VerifyEndpointTest {
         );
         VerifyEndpoint endpoint = new VerifyEndpoint(null);
         RequestBuilder request = endpoint.makeRequest(verifyRequest);
+
+        assertEquals("POST", request.build().getMethod());
+        assertEquals("https://api.nexmo.com/verify/xml", request.build().getURI().toString());
         List<NameValuePair> params = request.getParameters();
 
         assertContainsParam(params, "number", "4477990090090");
@@ -68,6 +70,24 @@ public class VerifyEndpointTest {
         assertContainsParam(params, "code_length", "4");
         assertContainsParam(params, "lg", "en-gb");
         assertContainsParam(params, "require_type", "MOBILE");
+    }
+
+    @Test
+    public void testCustomBaseUrl() throws Exception {
+        VerifyRequest verifyRequest = new VerifyRequest(
+                "4477990090090",
+                "Brand.com",
+                "Your friend",
+                4,
+                new Locale("en", "GB"),
+                VerifyRequest.LineType.MOBILE
+        );
+        VerifyEndpoint endpoint = new VerifyEndpoint(null);
+        endpoint.setBaseUrl("https://api.example.com/");
+        RequestBuilder request = endpoint.makeRequest(verifyRequest);
+
+        assertEquals("POST", request.build().getMethod());
+        assertEquals("https://api.example.com/verify/xml", request.build().getURI().toString());
     }
 
     @Test
@@ -288,24 +308,5 @@ public class VerifyEndpointTest {
         } catch (NexmoResponseParseException e) {
             // this is expected
         }
-    }
-
-    private static void assertContainsParam(List<NameValuePair> params, String key, String value) {
-        NameValuePair item = new BasicNameValuePair(key, value);
-        assertTrue(
-                "" + params + " should contain " + item,
-                params.contains(item)
-        );
-    }
-
-    private static void assertParamMissing(List<NameValuePair> params, String key) {
-        Set<String> keys = new HashSet<>();
-        for (NameValuePair pair : params) {
-            keys.add(pair.getName());
-        }
-        assertFalse(
-                "" + params + " should not contain " + key,
-                keys.contains(key)
-        );
     }
 }
