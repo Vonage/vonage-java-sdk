@@ -21,9 +21,8 @@
  */
 package com.nexmo.client.voice.ncco;
 
+import com.nexmo.client.voice.VoiceName;
 import org.junit.Test;
-
-import java.math.BigDecimal;
 
 import static org.junit.Assert.assertEquals;
 
@@ -71,7 +70,7 @@ public class TalkNccoTest {
     public void testJsonHasLevelWhenProvided() {
         String json = "{\"text\":\"Talk to me\",\"level\":-0.34,\"action\":\"talk\"}";
         TalkNcco ncco = new TalkNcco("Talk to me");
-        ncco.setLevel(new BigDecimal("-0.34"));
+        ncco.setLevel(-0.34f);
         assertEquals(json, ncco.toJson());
     }
 
