@@ -22,6 +22,7 @@
 package com.nexmo.client.voice.ncco;
 
 import com.nexmo.client.voice.VoiceName;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -78,7 +79,7 @@ public class TalkNccoTest {
     public void testJsonHasVoiceNameWhenProvided() {
         String json = "{\"text\":\"Talk to me\",\"voiceName\":\"Kimberly\",\"action\":\"talk\"}";
         TalkNcco ncco = new TalkNcco("Talk to me");
-        ncco.setVoiceName("Kimberly");
+        ncco.setVoiceName(VoiceName.KIMBERLY.toString());
         assertEquals(json, ncco.toJson());
     }
 }
