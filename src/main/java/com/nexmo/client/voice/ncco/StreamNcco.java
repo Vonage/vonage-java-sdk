@@ -21,30 +21,44 @@
  */
 package com.nexmo.client.voice.ncco;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StreamNcco implements Ncco {
     private static final String ACTION = "stream";
 
-    private String streamUrl;
+    private String[] streamUrl = new String[1];
     private Float level = null;
     private Boolean bargeIn = null;
     private Integer loop = null;
 
-    public StreamNcco(@JsonProperty("streamUrl") String streamUrl) {
+    public StreamNcco() {
+    }
+
+    public StreamNcco(String streamUrl) {
+        setStreamUrl(streamUrl);
+    }
+
+    @JsonSetter("streamUrl")
+    private void setStreamUrlArray(String[] streamUrl) {
         this.streamUrl = streamUrl;
     }
 
-    public String getStreamUrl() {
+    @JsonGetter("streamUrl")
+    private String[] getStreamUrlArray() {
         return streamUrl;
     }
 
+
+    @JsonIgnore
+    public String getStreamUrl() {
+        return streamUrl[0];
+    }
+
+    @JsonIgnore
     public void setStreamUrl(String streamUrl) {
-        this.streamUrl = streamUrl;
+        this.streamUrl = new String[] { streamUrl };
     }
 
     public Float getLevel() {
