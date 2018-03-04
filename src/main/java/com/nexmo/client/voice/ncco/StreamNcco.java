@@ -41,12 +41,12 @@ public class StreamNcco implements Ncco {
     }
 
     @JsonSetter("streamUrl")
-    void setStreamUrlArray(String[] streamUrl) {
+    private void setStreamUrlArray(String[] streamUrl) {
         this.streamUrl = streamUrl;
     }
 
     @JsonGetter("streamUrl")
-    String[] getStreamUrlArray() {
+    private String[] getStreamUrlArray() {
         return streamUrl;
     }
 
