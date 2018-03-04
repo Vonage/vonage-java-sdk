@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 - Modify call now works with the API again, returning `null` (because the API now returns 204 No Content)
 - VerifyRequest now supports all supported parameters.
+- `StreamNcco` serializes/deserializes `streamUrl` field correctly as per documentation
 
 ## [3.2.0] - 2017-11-30
 
