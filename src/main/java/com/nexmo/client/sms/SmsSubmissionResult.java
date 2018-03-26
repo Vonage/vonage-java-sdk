@@ -261,7 +261,7 @@ public class SmsSubmissionResult implements java.io.Serializable {
         if (this.smsSubmissionReachabilityStatus != null)
             sb.append(" REACHABLE?:").append(this.smsSubmissionReachabilityStatus);
         if (this.network != null)
-            sb.append("NETWORK:").append(this.network);
+            sb.append(" NETWORK:").append(this.network);
 
         return sb.toString();
     }
