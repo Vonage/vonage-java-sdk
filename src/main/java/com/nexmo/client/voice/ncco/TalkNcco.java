@@ -33,6 +33,7 @@ public class TalkNcco implements Ncco {
     private String text;
     private Boolean bargeIn = null;
     private Integer loop = null;
+    private Float level = null;
     private String voiceName = null;
 
     public TalkNcco(@JsonProperty("text") String text) {
@@ -61,6 +62,14 @@ public class TalkNcco implements Ncco {
 
     public void setLoop(Integer loop) {
         this.loop = loop;
+    }
+
+    public void setLevel(Float level) {
+        this.level = level;
+    }
+
+    public Float getLevel() {
+        return level;
     }
 
     public String getVoiceName() {
