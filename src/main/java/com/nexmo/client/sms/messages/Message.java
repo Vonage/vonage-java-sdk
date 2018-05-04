@@ -83,10 +83,6 @@ public abstract class Message {
                       final String from,
                       final String to,
                       final boolean statusReportRequired) {
-        if (from.length() > 15) {
-            throw new IllegalArgumentException("The length of the 'from' argument must be 15 characters or fewer.");
-        }
-
         this.type = type;
         this.from = from;
         this.to = to;
