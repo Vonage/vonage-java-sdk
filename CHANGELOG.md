@@ -1,14 +1,12 @@
 # Change Log
-
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Development]
+## [3.4.0] - 2018-05-08
 
-### Modified
-
+### Changed
 - Modify call now works with the API again, returning `null` (because the API now returns 204 No Content)
 - VerifyRequest now supports all supported parameters.
 - Client-side validation for the `from` parameter's length on the `Message` class has been removed.
@@ -18,8 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [3.2.0] - 2017-11-30
 
-### Modified
-
+### Changed
 - Add signature authentication support to the API endpoints which support it.
 
 ## [3.1.0] - 2017-10-24
@@ -29,7 +26,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Add `VoiceClient.downloadRecording`
 
 ### Changed
-
 - Made exceptions from `AuthCollection`'s `getAuth` and `getAcceptableAuthMethod` more specific. (Backwards compatible change)
 
 
