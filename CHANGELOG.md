@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.4.1] - 2018-05-11
+
+### Changed
+- Updated Jackson Databind dependency to newer version.
+
 ## [3.4.0] - 2018-05-08
 
 ### Changed
