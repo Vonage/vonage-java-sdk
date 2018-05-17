@@ -73,12 +73,11 @@ public class VerifyClientTest {
 
     @Test
     public void testVerify() throws Exception {
-        wrapper.setHttpClient(this.stubHttpClient(200, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
-                "    <verify_response>\n" +
-                "        <request_id>not-really-a-request-id</request_id>\n" +
-                "        <status>0</status>\n" +
-                "        <error_text>error</error_text>\n" +
-                "    </verify_response>"));
+        wrapper.setHttpClient(this.stubHttpClient(200, "{\n" +
+                "  \"request_id\": \"not-really-a-request-id\",\n" +
+                "  \"status\": 0,\n" +
+                "  \"error_text\": \"error\"\n" +
+                "}"));
         VerifyResult r = client.verify(
                 "447700900999",
                 "TestBrand",
@@ -88,12 +87,11 @@ public class VerifyClientTest {
 
     @Test
     public void testVerifyWithRequestObject() throws Exception {
-        wrapper.setHttpClient(this.stubHttpClient(200, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
-                "    <verify_response>\n" +
-                "        <request_id>not-really-a-request-id</request_id>\n" +
-                "        <status>0</status>\n" +
-                "        <error_text>error</error_text>\n" +
-                "    </verify_response>"));
+        wrapper.setHttpClient(this.stubHttpClient(200, "{\n" +
+                "  \"request_id\": \"not-really-a-request-id\",\n" +
+                "  \"status\": 0,\n" +
+                "  \"error_text\": \"error\"\n" +
+                "}"));
         VerifyResult r = client.verify(new VerifyRequest(
                 "447700900999",
                 "TestBrand",
@@ -103,12 +101,11 @@ public class VerifyClientTest {
 
     @Test
     public void testVerifyHttpError() throws Exception {
-        wrapper.setHttpClient(this.stubHttpClient(500, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
-                "    <verify_response>\n" +
-                "        <request_id>not-really-a-request-id</request_id>\n" +
-                "        <status>0</status>\n" +
-                "        <error_text>error</error_text>\n" +
-                "    </verify_response>"));
+        wrapper.setHttpClient(this.stubHttpClient(500, "{\n" +
+                "  \"request_id\": \"not-really-a-request-id\",\n" +
+                "  \"status\": 0,\n" +
+                "  \"error_text\": \"error\"\n" +
+                "}"));
         try {
             client.verify(
                     "447700900999",
@@ -118,6 +115,20 @@ public class VerifyClientTest {
         } catch (IOException ioe) {
             // This is expected
         }
+    }
+
+    @Test
+    public void testVerifyWithNonNumericStatus() throws Exception {
+        wrapper.setHttpClient(this.stubHttpClient(200, "{\n" +
+                "  \"request_id\": \"not-really-a-request-id\",\n" +
+                "  \"status\": \"test\",\n" +
+                "  \"error_text\": \"error\"\n" +
+                "}"));
+        VerifyResult r = client.verify(new VerifyRequest(
+                "447700900999",
+                "TestBrand",
+                "15555215554", 6, Locale.US));
+        assertEquals(VerifyResult.STATUS_INTERNAL_ERROR, r.getStatus());
     }
 
     @Test

@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Development]
+### Changed
+- Updated `VerifyClient` to use the JSON endpoints instead of XML.
+- Deprecated XML version of `VerifyEndpoint`
+
+### Added
+- Added `VerifyStatus` enumeration to use for statuses coming back from the verify endpoint.
 
 ## [3.4.1] - 2018-05-11
 

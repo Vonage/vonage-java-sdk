@@ -21,7 +21,6 @@
  */
 package com.nexmo.client.verify;
 
-
 import com.nexmo.client.AbstractClient;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClient;
@@ -29,7 +28,6 @@ import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.verify.endpoints.CheckEndpoint;
 import com.nexmo.client.verify.endpoints.ControlEndpoint;
 import com.nexmo.client.verify.endpoints.SearchEndpoint;
-import com.nexmo.client.verify.endpoints.VerifyEndpoint;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -78,8 +76,8 @@ public class VerifyClient extends AbstractClient {
      */
     public VerifyResult verify(final String number,
                                final String brand) throws IOException,
-                                                          NexmoClientException {
-        return verify.verify(number, brand);
+            NexmoClientException {
+        return this.verify(new VerifyRequest(number, brand));
     }
 
     /**
@@ -98,8 +96,8 @@ public class VerifyClient extends AbstractClient {
     public VerifyResult verify(final String number,
                                final String brand,
                                final String from) throws IOException,
-                                                         NexmoClientException {
-        return verify.verify(number, brand, from);
+            NexmoClientException {
+        return this.verify(new VerifyRequest(number, brand, from));
     }
 
     /**
@@ -124,8 +122,8 @@ public class VerifyClient extends AbstractClient {
                                final String from,
                                final int length,
                                final Locale locale) throws IOException,
-                                                           NexmoClientException {
-        return verify.verify(number, brand, from, length, locale);
+            NexmoClientException {
+        return this.verify(new VerifyRequest(number, brand, from, length, locale));
     }
 
     /**
@@ -153,15 +151,21 @@ public class VerifyClient extends AbstractClient {
                                final int length,
                                final Locale locale,
                                final VerifyRequest.LineType type) throws IOException,
-                                                                         NexmoClientException {
-        return verify.verify(number, brand, from, length, locale, type);
+            NexmoClientException {
+        return this.verify(new VerifyRequest(number, brand, from, length, locale, type));
     }
 
     /**
      * Send a verification request to a phone number.
      */
     public VerifyResult verify(VerifyRequest request) throws IOException, NexmoClientException {
-        return verify.verify(request);
+        // TODO: Remove conversion when v4.0 ships.
+        VerifyResponse response = verify.execute(request);
+        return new VerifyResult(
+                response.getStatus().getVerifyStatus(),
+                response.getRequestId(),
+                response.getErrorText(),
+                response.getStatus().isTemporaryError());
     }
 
     /**
@@ -223,7 +227,7 @@ public class VerifyClient extends AbstractClient {
      * Advance a current verification request to the next stage in the process.
      *
      * @param requestId The requestId of the ongoing verification request.
-     * @throws IOException If an IO error occurred while making the request.
+     * @throws IOException          If an IO error occurred while making the request.
      * @throws NexmoClientException If the request failed for some reason.
      */
     public void advanceVerification(String requestId) throws IOException, NexmoClientException {
@@ -234,7 +238,7 @@ public class VerifyClient extends AbstractClient {
      * Cancel a current verification request.
      *
      * @param requestId The requestId of the ongoing verification request.
-     * @throws IOException If an IO error occurred while making the request.
+     * @throws IOException          If an IO error occurred while making the request.
      * @throws NexmoClientException If the request failed for some reason.
      */
     public void cancelVerification(String requestId) throws IOException, NexmoClientException {
