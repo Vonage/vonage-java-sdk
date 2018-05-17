@@ -35,13 +35,13 @@ import java.util.Set;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class VerifyEndpointTest {
+public class VerifyMethodTest {
 
-    private VerifyEndpoint client;
+    private VerifyMethod client;
 
     @Before
     public void setUp() {
-        client = new VerifyEndpoint(null);
+        client = new VerifyMethod(null);
     }
 
     @Test

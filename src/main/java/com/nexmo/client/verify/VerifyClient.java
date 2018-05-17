@@ -74,10 +74,8 @@ public class VerifyClient extends AbstractClient {
      * @throws IOException          if a network error occurred contacting the Nexmo Verify API.
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
-    public VerifyResult verify(final String number,
-                               final String brand) throws IOException,
-            NexmoClientException {
-        return this.verify(new VerifyRequest(number, brand));
+    public VerifyResult verify(final String number, final String brand) throws IOException, NexmoClientException {
+        return this.verify.verify(number, brand);
     }
 
     /**
@@ -95,9 +93,8 @@ public class VerifyClient extends AbstractClient {
      */
     public VerifyResult verify(final String number,
                                final String brand,
-                               final String from) throws IOException,
-            NexmoClientException {
-        return this.verify(new VerifyRequest(number, brand, from));
+                               final String from) throws IOException, NexmoClientException {
+        return this.verify.verify(number, brand, from);
     }
 
     /**
@@ -121,9 +118,8 @@ public class VerifyClient extends AbstractClient {
                                final String brand,
                                final String from,
                                final int length,
-                               final Locale locale) throws IOException,
-            NexmoClientException {
-        return this.verify(new VerifyRequest(number, brand, from, length, locale));
+                               final Locale locale) throws IOException, NexmoClientException {
+        return this.verify.verify(number, brand, from, length, locale);
     }
 
     /**
@@ -150,22 +146,15 @@ public class VerifyClient extends AbstractClient {
                                final String from,
                                final int length,
                                final Locale locale,
-                               final VerifyRequest.LineType type) throws IOException,
-            NexmoClientException {
-        return this.verify(new VerifyRequest(number, brand, from, length, locale, type));
+                               final VerifyRequest.LineType type) throws IOException, NexmoClientException {
+        return this.verify.verify(number, brand, from, length, locale, type);
     }
 
     /**
      * Send a verification request to a phone number.
      */
     public VerifyResult verify(VerifyRequest request) throws IOException, NexmoClientException {
-        // TODO: Remove conversion when v4.0 ships.
-        VerifyResponse response = verify.execute(request);
-        return new VerifyResult(
-                response.getStatus().getVerifyStatus(),
-                response.getRequestId(),
-                response.getErrorText(),
-                response.getStatus().isTemporaryError());
+        return this.verify.verify(request);
     }
 
     /**
@@ -177,8 +166,7 @@ public class VerifyClient extends AbstractClient {
      * @throws IOException          if a network error occurred contacting the Nexmo Verify API.
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
-    public CheckResult check(final String requestId,
-                             final String code) throws IOException, NexmoClientException {
+    public CheckResult check(final String requestId, final String code) throws IOException, NexmoClientException {
         return check.check(requestId, code, null);
     }
 

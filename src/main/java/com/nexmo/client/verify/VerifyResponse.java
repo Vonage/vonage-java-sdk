@@ -36,11 +36,9 @@ public class VerifyResponse {
     private String errorText;
 
     @JsonCreator
-    public VerifyResponse(
-            @JsonProperty("request_id") String requestId,
-            @JsonProperty(value = "status", required = true) VerifyStatus status,
-            @JsonProperty("error_text") String errorText
-    ) {
+    public VerifyResponse(@JsonProperty("request_id") String requestId,
+                          @JsonProperty(value = "status", required = true) VerifyStatus status,
+                          @JsonProperty("error_text") String errorText) {
         this.requestId = requestId;
         this.status = status;
         this.errorText = errorText;
