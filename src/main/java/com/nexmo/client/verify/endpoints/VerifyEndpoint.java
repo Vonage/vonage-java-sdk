@@ -41,6 +41,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
+/**
+ * @deprecated Relies on XML Endpoint, use {@link com.nexmo.client.verify.VerifyEndpoint}
+ */
+@Deprecated
 public class VerifyEndpoint extends AbstractMethod<VerifyRequest, VerifyResult> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
