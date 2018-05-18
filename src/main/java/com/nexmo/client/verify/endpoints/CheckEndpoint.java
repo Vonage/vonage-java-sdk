@@ -28,6 +28,10 @@ import com.nexmo.client.verify.CheckResult;
 
 import java.io.IOException;
 
+/**
+ * @deprecated Relies on XML Endpoint, use {@link com.nexmo.client.verify.CheckEndpoint}
+ */
+@Deprecated
 public class CheckEndpoint {
     private VerifyCheckMethod checkMethod;
 
@@ -40,8 +44,7 @@ public class CheckEndpoint {
         this.checkMethod = new VerifyCheckMethod(httpWrapper);
     }
 
-    public CheckResult check(final String requestId,
-                             final String code) throws IOException, NexmoClientException {
+    public CheckResult check(final String requestId, final String code) throws IOException, NexmoClientException {
         return this.checkMethod.execute(new CheckRequest(requestId, code));
     }
 
