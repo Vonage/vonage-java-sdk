@@ -23,17 +23,16 @@ package com.nexmo.client.verify;
 
 
 /**
- * Verification request result.
- * 
- * @author Daniele Ricci
+ * @deprecated Relies on XML Endpoint, use {@link VerifyResponse}
  */
+@Deprecated
 public class VerifyResult extends BaseResult {
     private final String requestId;
 
     public VerifyResult(final int status,
-            final String requestId,
-            final String errorText,
-            final boolean temporaryError) {
+                        final String requestId,
+                        final String errorText,
+                        final boolean temporaryError) {
         super(status, errorText, temporaryError);
         this.requestId = requestId;
     }

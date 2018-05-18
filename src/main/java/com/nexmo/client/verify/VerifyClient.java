@@ -25,7 +25,7 @@ import com.nexmo.client.AbstractClient;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClient;
 import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.verify.endpoints.CheckEndpoint;
+import com.nexmo.client.verify.CheckEndpoint;
 import com.nexmo.client.verify.endpoints.ControlEndpoint;
 import com.nexmo.client.verify.endpoints.SearchEndpoint;
 
@@ -167,7 +167,7 @@ public class VerifyClient extends AbstractClient {
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
     public CheckResult check(final String requestId, final String code) throws IOException, NexmoClientException {
-        return check.check(requestId, code, null);
+        return this.check.check(requestId, code, null);
     }
 
     /**
@@ -183,7 +183,7 @@ public class VerifyClient extends AbstractClient {
     public CheckResult check(final String requestId,
                              final String code,
                              final String ipAddress) throws IOException, NexmoClientException {
-        return check.check(requestId, code, ipAddress);
+        return this.check.check(requestId, code, ipAddress);
     }
 
     /**
