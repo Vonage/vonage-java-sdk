@@ -23,39 +23,29 @@ package com.nexmo.client.verify;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.message.BasicNameValuePair;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-public class VerifyMethodTest {
-
-    private VerifyMethod client;
+public class VerifyMethodTest extends MethodTest<VerifyMethod> {
 
     @Before
     public void setUp() {
-        client = new VerifyMethod(null);
+        method = new VerifyMethod(null);
     }
 
     @Test
     public void testConstructVerifyParams() throws Exception {
-        VerifyRequest verifyRequest = new VerifyRequest(
-                "4477990090090",
+        VerifyRequest verifyRequest = new VerifyRequest("4477990090090",
                 "Brand.com",
                 "Your friend",
                 4,
                 new Locale("en", "GB"),
-                VerifyRequest.LineType.MOBILE
-        );
+                VerifyRequest.LineType.MOBILE);
 
-        RequestBuilder request = client.makeRequest(verifyRequest);
+        RequestBuilder request = method.makeRequest(verifyRequest);
         List<NameValuePair> params = request.getParameters();
 
         assertContainsParam(params, "number", "4477990090090");
@@ -68,16 +58,9 @@ public class VerifyMethodTest {
 
     @Test
     public void testConstructVerifyParamsMissingValues() throws Exception {
-        VerifyRequest verifyRequest = new VerifyRequest(
-                "4477990090090",
-                "Brand.com",
-                null,
-                0,
-                null,
-                null
-        );
+        VerifyRequest verifyRequest = new VerifyRequest("4477990090090", "Brand.com", null, 0, null, null);
 
-        RequestBuilder request = client.makeRequest(verifyRequest);
+        RequestBuilder request = method.makeRequest(verifyRequest);
         List<NameValuePair> params = request.getParameters();
         assertContainsParam(params, "number", "4477990090090");
         assertContainsParam(params, "brand", "Brand.com");
@@ -92,10 +75,7 @@ public class VerifyMethodTest {
 
     @Test
     public void testConstructVerifyParamsWithOptionalValues() throws Exception {
-        VerifyRequest verifyRequest = new VerifyRequest(
-                "4477990090090",
-                "Brand.com"
-        );
+        VerifyRequest verifyRequest = new VerifyRequest("4477990090090", "Brand.com");
         verifyRequest.setFrom("VERIFICATION");
         verifyRequest.setLength(6);
         verifyRequest.setLocale(new Locale("en", "gb"));
@@ -104,7 +84,7 @@ public class VerifyMethodTest {
         verifyRequest.setPinExpiry(60);
         verifyRequest.setNextEventWait(90);
 
-        RequestBuilder request = client.makeRequest(verifyRequest);
+        RequestBuilder request = method.makeRequest(verifyRequest);
         List<NameValuePair> params = request.getParameters();
         assertContainsParam(params, "number", "4477990090090");
         assertContainsParam(params, "brand", "Brand.com");
@@ -117,24 +97,5 @@ public class VerifyMethodTest {
         assertContainsParam(params, "pin_expiry", "60");
         assertContainsParam(params, "next_event_wait", "90");
 
-    }
-
-    private static void assertContainsParam(List<NameValuePair> params, String key, String value) {
-        NameValuePair item = new BasicNameValuePair(key, value);
-        assertTrue(
-                "" + params + " should contain " + item,
-                params.contains(item)
-        );
-    }
-
-    private static void assertParamMissing(List<NameValuePair> params, String key) {
-        Set<String> keys = new HashSet<>();
-        for (NameValuePair pair : params) {
-            keys.add(pair.getName());
-        }
-        assertFalse(
-                "" + params + " should not contain " + key,
-                keys.contains(key)
-        );
     }
 }
