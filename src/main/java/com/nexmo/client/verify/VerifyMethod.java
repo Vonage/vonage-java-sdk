@@ -41,7 +41,7 @@ public class VerifyMethod extends AbstractMethod<VerifyRequest, VerifyResponse> 
 
     private String uri = DEFAULT_URI;
 
-    public VerifyMethod(HttpWrapper httpWrapper) {
+    VerifyMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -91,5 +91,9 @@ public class VerifyMethod extends AbstractMethod<VerifyRequest, VerifyResponse> 
     @Override
     public VerifyResponse parseResponse(HttpResponse response) throws IOException {
         return VerifyResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 }

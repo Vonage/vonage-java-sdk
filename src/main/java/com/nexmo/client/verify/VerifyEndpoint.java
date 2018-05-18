@@ -27,39 +27,39 @@ import com.nexmo.client.NexmoClientException;
 import java.io.IOException;
 import java.util.Locale;
 
-public class VerifyEndpoint {
+class VerifyEndpoint {
     private VerifyMethod verifyMethod;
 
-    public VerifyEndpoint(HttpWrapper httpWrapper) {
+    VerifyEndpoint(HttpWrapper httpWrapper) {
         this.verifyMethod = new VerifyMethod(httpWrapper);
     }
 
-    public VerifyResult verify(String number,
-                               String brand,
-                               String from,
-                               int length,
-                               Locale locale,
-                               VerifyRequest.LineType type) throws IOException, NexmoClientException {
+    VerifyResult verify(String number,
+                        String brand,
+                        String from,
+                        int length,
+                        Locale locale,
+                        VerifyRequest.LineType type) throws IOException, NexmoClientException {
         return verify(new VerifyRequest(number, brand, from, length, locale, type));
     }
 
-    public VerifyResult verify(String number,
-                               String brand,
-                               String from,
-                               int length,
-                               Locale locale) throws IOException, NexmoClientException {
+    VerifyResult verify(String number,
+                        String brand,
+                        String from,
+                        int length,
+                        Locale locale) throws IOException, NexmoClientException {
         return verify(new VerifyRequest(number, brand, from, length, locale));
     }
 
-    public VerifyResult verify(String number, String brand, String from) throws IOException, NexmoClientException {
+    VerifyResult verify(String number, String brand, String from) throws IOException, NexmoClientException {
         return verify(new VerifyRequest(number, brand, from));
     }
 
-    public VerifyResult verify(String number, String brand) throws IOException, NexmoClientException {
+    VerifyResult verify(String number, String brand) throws IOException, NexmoClientException {
         return verify(new VerifyRequest(number, brand));
     }
 
-    public VerifyResult verify(VerifyRequest request) throws IOException, NexmoClientException {
+    VerifyResult verify(VerifyRequest request) throws IOException, NexmoClientException {
         // TODO: Remove translation when releasing 4.0
         return translateFromVerifyResponse(this.verifyMethod.execute(request));
     }
