@@ -27,7 +27,6 @@ import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.client.auth.SignatureAuthMethod;
 import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.legacyutils.XmlParser;
-import com.nexmo.client.verify.VerifyMethod;
 import com.nexmo.client.verify.VerifyRequest;
 import com.nexmo.client.verify.VerifyResult;
 import com.nexmo.client.voice.endpoints.AbstractMethod;
@@ -43,7 +42,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
 /**
- * @deprecated Relies on XML Endpoint, use {@link VerifyMethod}
+ * @deprecated Relies on XML Endpoint, use {@link com.nexmo.client.verify.VerifyClient#verify} instead.
  */
 @Deprecated
 public class VerifyEndpoint extends AbstractMethod<VerifyRequest, VerifyResult> {

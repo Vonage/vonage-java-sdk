@@ -29,7 +29,7 @@ import com.nexmo.client.verify.CheckResult;
 import java.io.IOException;
 
 /**
- * @deprecated Relies on XML Endpoint, use {@link com.nexmo.client.verify.CheckEndpoint}
+ * @deprecated Relies on XML Endpoint.  Use {@link com.nexmo.client.verify.VerifyClient#check}.
  */
 @Deprecated
 public class CheckEndpoint {

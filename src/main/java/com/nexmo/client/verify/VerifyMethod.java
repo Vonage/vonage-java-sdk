@@ -34,7 +34,7 @@ import org.apache.http.message.BasicNameValuePair;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class VerifyMethod extends AbstractMethod<VerifyRequest, VerifyResponse> {
+class VerifyMethod extends AbstractMethod<VerifyRequest, VerifyResponse> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
     private static final String DEFAULT_URI = "https://api.nexmo.com/verify/json";
