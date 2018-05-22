@@ -26,23 +26,22 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Verification search result.
- *
- * @author Daniele Ricci
+ * @deprecated Relies on XML Endpoint, use {@link SearchVerifyResponse}
  */
+@Deprecated
 public class SearchResult extends BaseResult {
-    private final String requestId;
-    private final String accountId;
-    private final VerificationStatus verificationStatus;
-    private final String number;
-    private final float price;
-    private final String currency;
-    private final String senderId;
-    private final Date dateSubmitted;
-    private final Date dateFinalized;
-    private final Date firstEventDate;
-    private final Date lastEventDate;
-    private final List<VerifyCheck> checks;
+    private String requestId;
+    private String accountId;
+    private VerificationStatus verificationStatus;
+    private String number;
+    private float price;
+    private String currency;
+    private String senderId;
+    private Date dateSubmitted;
+    private Date dateFinalized;
+    private Date firstEventDate;
+    private Date lastEventDate;
+    private List<VerifyCheck> checks;
 
     /** Used to define a verify check attempt. */
     public static class VerifyCheck implements java.io.Serializable {
@@ -148,6 +147,10 @@ public class SearchResult extends BaseResult {
         this.firstEventDate = firstEventDate;
         this.lastEventDate = lastEventDate;
         this.checks = checks;
+    }
+
+    SearchResult(int status, String errorText, boolean temporaryError) {
+        super(status, errorText, temporaryError);
     }
 
     public String getRequestId() {
