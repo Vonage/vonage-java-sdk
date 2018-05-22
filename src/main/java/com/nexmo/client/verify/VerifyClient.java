@@ -26,7 +26,6 @@ import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClient;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.verify.endpoints.ControlEndpoint;
-import com.nexmo.client.verify.endpoints.SearchEndpoint;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -195,7 +194,7 @@ public class VerifyClient extends AbstractClient {
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
     public SearchResult search(String requestId) throws IOException, NexmoClientException {
-        return search.search(requestId);
+        return this.search.search(requestId)[0];
     }
 
     /**
@@ -207,7 +206,7 @@ public class VerifyClient extends AbstractClient {
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
     public SearchResult[] search(String... requestIds) throws IOException, NexmoClientException {
-        return search.search(requestIds);
+        return this.search.search(requestIds);
     }
 
     /**
