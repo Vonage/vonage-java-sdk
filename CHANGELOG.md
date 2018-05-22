@@ -6,10 +6,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Development]
 ### Changed
 - Updated `VerifyClient` to use the JSON endpoints instead of XML.
-- Deprecated XML version of `VerifyEndpoint`
+- Updated endpoints which are used by `VerifyClient` from public to package scope in order to encourage usage through `VerifyClient`.
+- Deprecated XML version of the following endpoints:
+    - `VerifyEndpoint`
+    - `CheckEndpoint`
+    - `SearchEndpoint`
+   
+- Deprecated the following XML results:
+    - `VerifyResult` should use `VerifyResponse`
+    - `CheckResult` should use `CheckResponse`
+    - `SearchResult` should use `SearchVerifyResponse`
+    
+- Deprecated the following XML methods:
+    - `VerifyCheckMethod`
 
 ### Added
 - Added `VerifyStatus` enumeration to use for statuses coming back from the verify endpoint.
+- Added `VerifyResponse`, `CheckResponse`, and `SearchVerifyResponse` for JSON responses to match other JSON using endpoints.
+- Added `VerifyMethod`, `CheckMethod`, and `SearchMethod` for better segregation between endpoint and method classes.
 
 ## [3.4.1] - 2018-05-11
 
