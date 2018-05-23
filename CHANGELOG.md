@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Development]
 
+### Fixed
+- Updated `ConversationNcco`'s `musicOnHoldUrl` to serialize into an array for use in the Voice API.
+
 ## [3.4.1] - 2018-05-11
 
 ### Changed
