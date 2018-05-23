@@ -33,18 +33,26 @@ import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+/**
+ * Endpoint for downloading a recording. Simply uses the provided URL to form a GET request.
+ * Everything else is provided by the HttpWrapper auth system.
+ */
 public class DownloadRecordingEndpoint extends AbstractMethod<String, Recording> {
     private static final Log LOG = LogFactory.getLog(DownloadRecordingEndpoint.class);
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
 
     public DownloadRecordingEndpoint(HttpWrapper httpWrapper) {
-        super(httpWrapper);
+        super(httpWrapper, null);
     }
 
     @Override
     public RequestBuilder makeRequest(String uri) throws NexmoClientException, UnsupportedEncodingException {
-        return RequestBuilder.get().setUri(uri);
+        return RequestBuilder.get(makeUrl(uri));
+    }
+
+    protected String makeUrl(String uri) {
+        return uri;
     }
 
     @Override

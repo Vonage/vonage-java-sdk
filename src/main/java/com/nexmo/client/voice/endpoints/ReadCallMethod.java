@@ -29,20 +29,18 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 
-// TODO: Create a package for these endpoint methods
 public class ReadCallMethod extends AbstractMethod<String, CallInfo> {
     private static final Log LOG = LogFactory.getLog(ReadCallMethod.class);
 
-    private static final String DEFAULT_BASE_URI = "https://api.nexmo.com/v1/calls/";
+    private static final String DEFAULT_BASE_URI = "https://api.nexmo.com/";
+    private static final String BASE_PATH = "v1/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
-    private String baseUri = DEFAULT_BASE_URI;
 
     public ReadCallMethod(HttpWrapper httpWrapper) {
-        super(httpWrapper);
+        super(httpWrapper, DEFAULT_BASE_URI);
     }
 
     @Override
@@ -52,21 +50,16 @@ public class ReadCallMethod extends AbstractMethod<String, CallInfo> {
 
     @Override
     public RequestBuilder makeRequest(String callId) {
-        String uri = this.baseUri + callId;
-        return RequestBuilder.get(uri);
+        return RequestBuilder.get(makeUrl(callId));
+    }
+
+    protected String makeUrl(String callId) {
+        return getBaseUrl() + BASE_PATH + callId;
     }
 
     @Override
     public CallInfo parseResponse(HttpResponse response) throws IOException {
         String json = new BasicResponseHandler().handleResponse(response);
         return CallInfo.fromJson(json);
-    }
-
-    public void setBaseUri(String baseUri) {
-        this.baseUri = baseUri;
-    }
-
-    public String getBaseUri() {
-        return baseUri;
     }
 }

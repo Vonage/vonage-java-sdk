@@ -166,12 +166,12 @@ public class ModifyCallMethodTest {
     }
 
     @Test
-    public void testSetUri() throws Exception {
+    public void testSetBaseUrl() throws Exception {
         ModifyCallMethod methodUnderTest = new ModifyCallMethod(null);
-        methodUnderTest.setUri("https://example.com/dummy/");
-        RequestBuilder req = methodUnderTest.makeRequest(
+        methodUnderTest.setBaseUrl("https://example.com/");
+        String url = methodUnderTest.makeUrl(
                 new CallModifier("uuid-1234", ModifyCallAction.HANGUP)
         );
-        assertEquals(new URI("https://example.com/dummy/uuid-1234"), req.getUri());
+        assertEquals("https://example.com/v1/calls/uuid-1234", url);
     }
 }

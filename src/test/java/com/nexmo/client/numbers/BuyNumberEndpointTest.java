@@ -49,6 +49,21 @@ public class BuyNumberEndpointTest {
         RequestBuilder request = methodUnderTest.makeRequest(new BuyNumberRequest("AA", "447700900000"));
 
         assertEquals("POST", request.getMethod());
+        assertEquals(request.getUri().toString(), "https://rest.nexmo.com/number/buy");
+        Map<String, String> params = TestUtils.makeParameterMap(request.getParameters());
+        assertEquals("AA", params.get("country"));
+        assertEquals("447700900000", params.get("msisdn"));
+    }
+
+    @Test
+    public void customBaseUrl() throws Exception {
+        BuyNumberEndpoint methodUnderTest = new BuyNumberEndpoint(null);
+        methodUnderTest.setBaseUrl("https://rest.example.com/");
+
+        RequestBuilder request = methodUnderTest.makeRequest(new BuyNumberRequest("AA", "447700900000"));
+
+        assertEquals("POST", request.getMethod());
+        assertEquals(request.getUri().toString(), "https://rest.example.com/number/buy");
         Map<String, String> params = TestUtils.makeParameterMap(request.getParameters());
         assertEquals("AA", params.get("country"));
         assertEquals("447700900000", params.get("msisdn"));

@@ -55,9 +55,24 @@ public class SearchRejectedMessagesEndpointTest {
                 new GregorianCalendar(2017, Calendar.OCTOBER, 22).getTime(),
                 "447700900737"
         ));
-        // TODO: Check method and URL are correct:
         assertEquals("GET", builder.getMethod());
         assertThat(builder.build().getURI().toString(), startsWith("https://rest.nexmo.com/search/rejections?"));
+
+        Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
+        assertEquals(2, params.size());
+        assertEquals("2017-10-22", params.get("date"));
+        assertEquals("447700900737", params.get("to"));
+    }
+
+    @Test
+    public void customBaseUrl() throws Exception {
+        this.endpoint.setBaseUrl("https://rest.example.com/");
+        RequestBuilder builder = this.endpoint.makeRequest(new SearchRejectedMessagesRequest(
+                new GregorianCalendar(2017, Calendar.OCTOBER, 22).getTime(),
+                "447700900737"
+        ));
+        assertEquals("GET", builder.getMethod());
+        assertThat(builder.build().getURI().toString(), startsWith("https://rest.example.com/search/rejections?"));
 
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
         assertEquals(2, params.size());

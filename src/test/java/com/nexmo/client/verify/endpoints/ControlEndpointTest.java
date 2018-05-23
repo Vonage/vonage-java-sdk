@@ -59,12 +59,34 @@ public class ControlEndpointTest {
                 "request-id", VerifyControlCommand.CANCEL
         ));
         assertEquals("POST", builder.getMethod());
-        assertEquals("https://api.nexmo.com/verify/control/json", builder.build()
-                .getURI().toString());
+        assertEquals("https://api.nexmo.com/verify/control/json", builder.build().getURI().toString());
+
 
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
         assertEquals("request-id", params.get("request_id"));
         assertEquals("cancel", params.get("cmd"));
+    }
+
+    @Test
+    public void testCustomBaseUrl() throws Exception {
+        this.endpoint.setBaseUrl("https://api.example.com/");
+        RequestBuilder builder = this.endpoint.makeRequest(new ControlRequest(
+                "request-id", VerifyControlCommand.CANCEL
+        ));
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://api.example.com/verify/control/json", builder.build().getURI().toString());
+
+
+        Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
+        assertEquals("request-id", params.get("request_id"));
+        assertEquals("cancel", params.get("cmd"));
+    }
+
+    @Test
+    public void testMakeUrl() throws Exception {
+        assertEquals("https://api.nexmo.com/verify/control/json", this.endpoint.makeUrl(new ControlRequest(
+                "request-id", VerifyControlCommand.CANCEL
+        )));
     }
 
     @Test

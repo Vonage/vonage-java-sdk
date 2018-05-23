@@ -51,14 +51,13 @@ public class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
-    private static final String DEFAULT_BASE_URL = "https://sns.nexmo.com/sns/xml";
-
-    private String uri = DEFAULT_BASE_URL;
+    private static final String DEFAULT_BASE_URL = "https://sns.nexmo.com/";
+    private static final String PATH = "sns/xml";
 
     private XmlParser xmlParser = new XmlParser();
 
     public SnsEndpoint(HttpWrapper httpWrapper) {
-        super(httpWrapper);
+        super(httpWrapper, DEFAULT_BASE_URL);
     }
 
     @Override
@@ -69,12 +68,16 @@ public class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
     @Override
     public RequestBuilder makeRequest(SnsRequest snsRequest) throws NexmoClientException, UnsupportedEncodingException {
         RequestBuilder requestBuilder = RequestBuilder
-                .post(this.uri)
+                .post(makeUrl(snsRequest))
                 .addParameter("cmd", snsRequest.getCommand());
         for (Map.Entry<String, String> entry : snsRequest.getQueryParameters().entrySet()) {
             requestBuilder.addParameter(entry.getKey(), entry.getValue());
         }
         return requestBuilder;
+    }
+
+    protected String makeUrl(SnsRequest request) {
+        return getBaseUrl() + PATH;
     }
 
     @Override

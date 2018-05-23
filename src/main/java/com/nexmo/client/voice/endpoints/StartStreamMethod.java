@@ -40,12 +40,12 @@ import java.io.UnsupportedEncodingException;
 public class StartStreamMethod extends AbstractMethod<StreamRequest, StreamResponse> {
     private static final Log LOG = LogFactory.getLog(StartStreamMethod.class);
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls/";
+    private static final String DEFAULT_BASE_URI = "https://api.nexmo.com/";
+    private static final String BASE_PATH = "v1/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
-    private String uri = DEFAULT_URI;
 
     public StartStreamMethod(HttpWrapper httpWrapper) {
-        super(httpWrapper);
+        super(httpWrapper, DEFAULT_BASE_URI);
     }
 
     @Override
@@ -55,19 +55,18 @@ public class StartStreamMethod extends AbstractMethod<StreamRequest, StreamRespo
 
     @Override
     public RequestBuilder makeRequest(StreamRequest request) throws NexmoClientException, UnsupportedEncodingException {
-        String uri = this.uri + request.getUuid() + "/stream";
-        return RequestBuilder.put(uri)
+        return RequestBuilder.put(makeUrl(request))
                 .setHeader("Content-Type", "application/json")
                 .setEntity(new StringEntity(request.toJson()));
+    }
+
+    protected String makeUrl(StreamRequest request) {
+        return getBaseUrl() + BASE_PATH + request.getUuid() + "/stream";
     }
 
     @Override
     public StreamResponse parseResponse(HttpResponse response) throws IOException {
         String json = new BasicResponseHandler().handleResponse(response);
         return StreamResponse.fromJson(json);
-    }
-
-    public void setUri(String uri) {
-        this.uri = uri;
     }
 }

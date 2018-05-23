@@ -67,6 +67,16 @@ public class CreateApplicationMethodTest {
     }
 
     @Test
+    public void testCustomBaseUrl() throws Exception {
+        this.endpoint.setBaseUrl("https://api.example.com/");
+        RequestBuilder builder = this.endpoint.makeRequest(new CreateApplicationRequest(
+                "app name", "https://example.com/answer", "https://example.com/event"
+        ));
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://api.example.com/v1/applications", builder.build().getURI().toString());
+    }
+
+    @Test
     public void testMakeRequestWithOptionalParams() throws Exception {
         CreateApplicationRequest create = new CreateApplicationRequest(
                 "app name", "https://example.com/answer", "https://example.com/event"

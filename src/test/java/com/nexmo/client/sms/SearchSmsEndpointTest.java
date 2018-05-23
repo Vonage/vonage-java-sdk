@@ -23,7 +23,9 @@ package com.nexmo.client.sms;
 
 import com.nexmo.client.TestUtils;
 import com.nexmo.client.auth.TokenAuthMethod;
+import com.nexmo.client.test.HttpWrapperStub;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,11 +40,13 @@ import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.*;
 
 public class SearchSmsEndpointTest {
+    private HttpWrapperStub stub;
     private SmsSearchEndpoint endpoint;
 
     @Before
     public void setUp() throws Exception {
-        this.endpoint = new SmsSearchEndpoint(null);
+        this.stub = new HttpWrapperStub();
+        this.endpoint = new SmsSearchEndpoint(stub);
     }
 
     @Test
@@ -63,6 +67,48 @@ public class SearchSmsEndpointTest {
         assertNotNull(ids);
         assertEquals(1, ids.size());
         assertEquals("one-id", ids.get(0));
+    }
+
+    @Test
+    public void testExecuteWithSingleId() throws Exception {
+        this.stub.setPresetResponse(TestUtils.makeJsonHttpResponse(200, "{\n" +
+                "  \"count\": 2,\n" +
+                "  \"items\": [\n" +
+                "    {\n" +
+                "      \"message-id\": \"00A0B0C0\",\n" +
+                "      \"account-id\": \"key\",\n" +
+                "      \"network\": \"20810\",\n" +
+                "      \"from\": \"MyApp\",\n" +
+                "      \"to\": \"123456890\",\n" +
+                "      \"body\": \"hello world\",\n" +
+                "      \"price\": \"0.04500000\",\n" +
+                "      \"date-received\": \"2011-11-25 16:03:00\",\n" +
+                "      \"final-status\": \"DELIVRD\",\n" +
+                "      \"date-closed\": \"2011-11-25 16:03:00\",\n" +
+                "      \"latency\": 11151,\n" +
+                "      \"type\": \"MT\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"message-id\": \"00A0B0C1\",\n" +
+                "      \"account-id\": \"key\",\n" +
+                "      \"network\": \"20810\",\n" +
+                "      \"from\": \"MyApp\",\n" +
+                "      \"to\": \"123456891\",\n" +
+                "      \"body\": \"foo bar\",\n" +
+                "      \"price\": \"0.04500000\",\n" +
+                "      \"date-received\": \"2011-11-25 17:03:00\",\n" +
+                "      \"final-status\": \"DELIVRD\",\n" +
+                "      \"date-closed\": \"2011-11-25 18:03:00\",\n" +
+                "      \"latency\": 14151,\n" +
+                "      \"type\": \"MT\"\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}\n"));
+
+        this.endpoint.execute(new SmsIdSearchRequest("one-id"));
+        HttpUriRequest request = this.stub.getUriRequest();
+        assertEquals("GET", request.getMethod());
+        assertThat(request.getURI().toString(), startsWith("https://rest.nexmo.com/search/messages?"));
     }
 
     @Test

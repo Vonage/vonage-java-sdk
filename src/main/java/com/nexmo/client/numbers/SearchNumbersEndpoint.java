@@ -39,12 +39,12 @@ import java.io.UnsupportedEncodingException;
  * Use {@link NumbersClient#searchNumbers} instead of this class directly.
  */
 public class SearchNumbersEndpoint extends AbstractMethod<SearchNumbersFilter, SearchNumbersResponse> {
-    private static final String DEFAULT_URI = "https://rest.nexmo.com/number/search";
+    private static final String DEFAULT_BASE_URI = "https://rest.nexmo.com/";
+    private static final String PATH = "number/search";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
-    private String uri = DEFAULT_URI;
 
     public SearchNumbersEndpoint(HttpWrapper httpWrapper) {
-        super(httpWrapper);
+        super(httpWrapper, DEFAULT_BASE_URI);
     }
 
     @Override
@@ -55,9 +55,13 @@ public class SearchNumbersEndpoint extends AbstractMethod<SearchNumbersFilter, S
     @Override
     public RequestBuilder makeRequest(SearchNumbersFilter request) throws NexmoClientException,
                                                                           UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder.get().setUri(uri);
+        RequestBuilder requestBuilder = RequestBuilder.get(makeUrl(request));
         request.addParams(requestBuilder);
         return requestBuilder;
+    }
+
+    protected String makeUrl(SearchNumbersFilter request) {
+        return getBaseUrl() + PATH;
     }
 
     @Override

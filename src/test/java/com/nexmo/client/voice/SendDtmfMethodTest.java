@@ -54,12 +54,26 @@ public class SendDtmfMethodTest {
         RequestBuilder request = methodUnderTest.makeRequest(new DtmfRequest("abc-123", "867"));
 
         assertEquals("PUT", request.getMethod());
+        assertEquals("https://api.nexmo.com/v1/calls/abc-123/dtmf", request.build().getURI().toString());
         assertEquals("application/json", request.getFirstHeader("Content-Type").getValue());
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode node = objectMapper.readValue(request.getEntity().getContent(), JsonNode.class);
         LOG.info(request.getEntity().getContent());
         assertEquals("867", node.get("digits").asText());
+    }
+
+    @Test
+    public void customBaseUrl() throws Exception {
+
+        HttpWrapper httpWrapper = new HttpWrapper();
+        SendDtmfMethod methodUnderTest = new SendDtmfMethod(httpWrapper);
+        methodUnderTest.setBaseUrl("https://api.example.com/");
+
+        RequestBuilder request = methodUnderTest.makeRequest(new DtmfRequest("abc-123", "867"));
+
+        assertEquals("PUT", request.getMethod());
+        assertEquals("https://api.example.com/v1/calls/abc-123/dtmf", request.build().getURI().toString());
     }
 
     @Test

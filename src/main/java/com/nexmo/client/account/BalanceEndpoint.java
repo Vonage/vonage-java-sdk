@@ -36,12 +36,11 @@ public class BalanceEndpoint extends AbstractMethod<Void, BalanceResponse> {
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://rest.nexmo.com/account/get-balance";
-
-    private String uri = DEFAULT_URI;
+    private static final String DEFAULT_BASE_URI = "https://rest.nexmo.com/";
+    private static final String PATH = "account/get-balance";
 
     public BalanceEndpoint(HttpWrapper httpWrapper) {
-        super(httpWrapper);
+        super(httpWrapper, DEFAULT_BASE_URI);
     }
 
     @Override
@@ -51,12 +50,16 @@ public class BalanceEndpoint extends AbstractMethod<Void, BalanceResponse> {
 
     @Override
     public RequestBuilder makeRequest(Void request) throws NexmoClientException, UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder.get(uri);
+        RequestBuilder requestBuilder = RequestBuilder.get(makeUrl(request));
         return requestBuilder;
     }
 
     public BalanceResponse execute() throws NexmoClientException, IOException {
         return this.execute(null);
+    }
+
+    protected String makeUrl(Void request) {
+        return getBaseUrl() + PATH;
     }
 
     @Override

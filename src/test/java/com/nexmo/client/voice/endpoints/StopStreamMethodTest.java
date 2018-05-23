@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,37 +19,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.applications;
+
+package com.nexmo.client.voice.endpoints;
 
 import org.apache.http.client.methods.RequestBuilder;
+import org.junit.Before;
+import org.junit.Test;
 
-public class ListApplicationsRequest {
-    private Integer pageSize;
-    private Integer pageIndex;
+import static org.junit.Assert.*;
 
-    public Integer getPageSize() {
-        return pageSize;
+public class StopStreamMethodTest {
+    StopStreamMethod endpoint;
+
+    @Before
+    public void setUp() throws Exception {
+        this.endpoint = new StopStreamMethod(null);
     }
 
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
+    @Test
+    public void makeRequest() throws Exception {
+        RequestBuilder builder = this.endpoint.makeRequest("a-uuid");
+        assertEquals("DELETE", builder.getMethod());
+        assertEquals("https://api.nexmo.com/v1/calls/a-uuid/stream", builder.build().getURI().toString());
     }
 
-    public Integer getPageIndex() {
-        return pageIndex;
+    @Test
+    public void customBaseUrl() throws Exception {
+        this.endpoint.setBaseUrl("https://api.example.com/");
+        RequestBuilder builder = this.endpoint.makeRequest("a-uuid");
+        assertEquals("DELETE", builder.getMethod());
+        assertEquals("https://api.example.com/v1/calls/a-uuid/stream", builder.build().getURI().toString());
     }
-
-    public void setPageIndex(Integer pageIndex) {
-        this.pageIndex = pageIndex;
-    }
-
-    public void addParams(RequestBuilder request) {
-        if (this.pageSize != null) {
-            request.addParameter("page_size", this.pageSize.toString());
-        }
-        if (this.pageIndex != null) {
-            request.addParameter("page_index", this.pageIndex.toString());
-        }
-    }
-
 }

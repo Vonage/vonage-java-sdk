@@ -56,7 +56,14 @@ public class AdvancedInsightEndpointTest {
         assertEquals(params.get("number"), "1234");
         assertNull(params.get("country"));
         assertNull(params.get("ip"));
+    }
 
+    @Test
+    public void testCustomBaseUrl() throws Exception {
+        this.endpoint.setBaseUrl("https://api.example.com/");
+        RequestBuilder builder = this.endpoint.makeRequest(new AdvancedInsightRequest("1234"));
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://api.example.com/ni/advanced/json", builder.build().getURI().toString());
     }
 
     @Test

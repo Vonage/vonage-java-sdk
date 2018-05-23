@@ -49,13 +49,13 @@ public class VerifyCheckMethod extends AbstractMethod<CheckRequest, CheckResult>
     private static final Log log = LogFactory.getLog(VerifyCheckMethod.class);
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/verify/check/xml";
+    private static final String DEFAULT_BASE_URI = "https://api.nexmo.com/";
+    private static final String PATH = "verify/check/xml";
 
     private XmlParser xmlParser = new XmlParser();
-    private String uri = DEFAULT_URI;
 
     public VerifyCheckMethod(HttpWrapper httpWrapper) {
-        super(httpWrapper);
+        super(httpWrapper, DEFAULT_BASE_URI);
     }
 
     @Override
@@ -65,17 +65,22 @@ public class VerifyCheckMethod extends AbstractMethod<CheckRequest, CheckResult>
 
     @Override
     public RequestBuilder makeRequest(CheckRequest request) throws NexmoClientException, UnsupportedEncodingException {
-        if (request.getRequestId() == null || request.getCode() == null)
+        if (request.getRequestId() == null || request.getCode() == null) {
             throw new IllegalArgumentException("request ID and code parameters are mandatory.");
+        }
 
-        RequestBuilder result = RequestBuilder.post(this.uri)
+        RequestBuilder result = RequestBuilder.post(makeUrl(request))
                 .addParameter("request_id", request.getRequestId())
-
                 .addParameter("code", request.getCode());
-        if (request.getIpAddress() != null)
+        if (request.getIpAddress() != null) {
             result.addParameter("ip_address", request.getIpAddress());
+        }
 
         return result;
+    }
+
+    protected String makeUrl(CheckRequest request) {
+        return getBaseUrl() + PATH;
     }
 
     @Override

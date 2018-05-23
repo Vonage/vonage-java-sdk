@@ -36,12 +36,11 @@ import java.io.UnsupportedEncodingException;
 public class AdvancedInsightEndpoint extends AbstractMethod<AdvancedInsightRequest, AdvancedInsightResponse> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/ni/advanced/json";
-
-    private String uri = DEFAULT_URI;
+    private static final String DEFAULT_BASE_URI = "https://api.nexmo.com/";
+    private static final String PATH = "ni/advanced/json";
 
     public AdvancedInsightEndpoint(HttpWrapper httpWrapper) {
-        super(httpWrapper);
+        super(httpWrapper, DEFAULT_BASE_URI);
     }
 
     @Override
@@ -51,7 +50,7 @@ public class AdvancedInsightEndpoint extends AbstractMethod<AdvancedInsightReque
 
     @Override
     public RequestBuilder makeRequest(AdvancedInsightRequest request) throws NexmoClientException, UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder.post(uri)
+        RequestBuilder requestBuilder = RequestBuilder.post(makeUrl(request))
                 .addParameter("number", request.getNumber());
         if (request.getCountry() != null) {
             requestBuilder.addParameter("country", request.getCountry());
@@ -63,6 +62,10 @@ public class AdvancedInsightEndpoint extends AbstractMethod<AdvancedInsightReque
             requestBuilder.addParameter("cnam", request.getCnam().toString());
         }
         return requestBuilder;
+    }
+
+    protected String makeUrl(AdvancedInsightRequest request) {
+        return getBaseUrl() + PATH;
     }
 
     @Override

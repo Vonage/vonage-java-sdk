@@ -40,12 +40,12 @@ import java.io.UnsupportedEncodingException;
 public class StartTalkMethod extends AbstractMethod<TalkRequest, TalkResponse> {
     private static final Log LOG = LogFactory.getLog(StartTalkMethod.class);
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls/";
+    private static final String DEFAULT_BASE_URI = "https://api.nexmo.com/";
+    private static final String BASE_PATH = "v1/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
-    private String uri = DEFAULT_URI;
 
     public StartTalkMethod(HttpWrapper httpWrapper) {
-        super(httpWrapper);
+        super(httpWrapper, DEFAULT_BASE_URI);
     }
 
     @Override
@@ -55,19 +55,18 @@ public class StartTalkMethod extends AbstractMethod<TalkRequest, TalkResponse> {
 
     @Override
     public RequestBuilder makeRequest(TalkRequest request) throws NexmoClientException, UnsupportedEncodingException {
-        String uri = this.uri + request.getUuid() + "/talk";
-        return RequestBuilder.put(uri)
+        return RequestBuilder.put(makeUrl(request))
                 .setHeader("Content-Type", "application/json")
                 .setEntity(new StringEntity(request.toJson()));
+    }
+
+    protected String makeUrl(TalkRequest request) {
+        return getBaseUrl() + BASE_PATH + request.getUuid() + "/talk";
     }
 
     @Override
     public TalkResponse parseResponse(HttpResponse response) throws IOException {
         String json = new BasicResponseHandler().handleResponse(response);
         return TalkResponse.fromJson(json);
-    }
-
-    public void setUri(String uri) {
-        this.uri = uri;
     }
 }

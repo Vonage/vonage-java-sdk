@@ -91,10 +91,10 @@ public class CreateCallMethodTest {
     @Test
     public void testCustomUri() throws Exception {
         CreateCallMethod methodUnderTest = new CreateCallMethod(null);
-        methodUnderTest.setUri("https://api.example.com/calls");
-        RequestBuilder request = methodUnderTest.makeRequest(
+        methodUnderTest.setBaseUrl("https://api.example.com/");
+        String url = methodUnderTest.makeUrl(
                 new Call("447700900903", "447700900904", "https://example.com/answer"));
-        assertEquals("https://api.example.com/calls", request.getUri().toString());
+        assertEquals("https://api.example.com/v1/calls", url);
     }
 
     @Test

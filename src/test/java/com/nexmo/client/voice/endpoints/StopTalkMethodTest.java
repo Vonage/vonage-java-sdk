@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,58 +19,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.applications.endpoints;
+
+package com.nexmo.client.voice.endpoints;
 
 import com.nexmo.client.TestUtils;
-import com.nexmo.client.auth.TokenAuthMethod;
-import org.apache.http.HttpResponse;
+import com.nexmo.client.auth.JWTAuthMethod;
 import org.apache.http.client.methods.RequestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Map;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
-public class DeleteApplicationMethodTest {
-    private DeleteApplicationMethod endpoint;
+public class StopTalkMethodTest {
+    private StopTalkMethod endpoint;
 
     @Before
-    public void setUp() throws Exception {
-        this.endpoint = new DeleteApplicationMethod(null);
+    public void setUp() {
+        this.endpoint = new StopTalkMethod(null);
     }
 
     @Test
     public void testGetAcceptableAuthMethods() throws Exception {
         Class[] auths = this.endpoint.getAcceptableAuthMethods();
-        assertArrayEquals(new Class[]{TokenAuthMethod.class}, auths);
+        assertArrayEquals(new Class[]{JWTAuthMethod.class}, auths);
     }
 
     @Test
     public void testMakeRequest() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest("dummy-application-uuid");
+        RequestBuilder builder = this.endpoint.makeRequest("stop-talk-uuid");
         assertEquals("DELETE", builder.getMethod());
-        assertEquals("https://api.nexmo.com/v1/applications/dummy-application-uuid", builder.build().getURI().toString());
-
-        Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
-        assertEquals(0, params.size());
+        assertEquals("https://api.nexmo.com/v1/calls/stop-talk-uuid/talk", builder.build().getURI().toString());
     }
 
     @Test
     public void testCustomBaseUrl() throws Exception {
         this.endpoint.setBaseUrl("https://api.example.com/");
-        RequestBuilder builder = this.endpoint.makeRequest("dummy-application-uuid");
+        RequestBuilder builder = this.endpoint.makeRequest("stop-talk-uuid");
         assertEquals("DELETE", builder.getMethod());
-        assertEquals("https://api.example.com/v1/applications/dummy-application-uuid", builder.build().getURI().toString());
-
-        Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
-        assertEquals(0, params.size());
-    }
-
-    @Test
-    public void testParseResponse() throws Exception {
-        HttpResponse stub = TestUtils.makeJsonHttpResponse(204, "");
-        this.endpoint.parseResponse(stub);
+        assertEquals("https://api.example.com/v1/calls/stop-talk-uuid/talk", builder.build().getURI().toString());
     }
 }
