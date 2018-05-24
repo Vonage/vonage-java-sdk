@@ -54,8 +54,7 @@ public class SearchVerifyResponseDeserializer extends JsonDeserializer<SearchVer
         // If the result has error_text, we can assume that the only fields that matter are status and the error.
         if (node.has("error_text")) {
             return new SearchVerifyResponse(VerifyStatus.fromInt(node.get("status").asInt()),
-                    null,
-                    node.get("error_text").asText());
+                                            node.get("error_text").asText());
         }
         // Otherwise we need to map the single result and then put it on the list as is.
         VerifyDetails details = p.getCodec().treeToValue(node, VerifyDetails.class);

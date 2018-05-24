@@ -21,7 +21,6 @@
  */
 package com.nexmo.client.verify;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -40,41 +39,73 @@ public class VerifyDetails {
     private Date dateFinalized;
     private Date firstEventDate;
     private Date lastEventDate;
-    private Status verificationStatus;
+    private Status status;
     private BigDecimal price;
     private String currency;
-    private List<VerifyCheck> checks;
+    private List<VerifyCheck> checks = new ArrayList<>();
 
-    @JsonCreator
-    public VerifyDetails(@JsonProperty("request_id") String requestId,
-                         @JsonProperty("account_id") String accountId,
-                         @JsonProperty("number") String number,
-                         @JsonProperty("sender_id") String senderId,
-                         @JsonProperty("date_submitted") Date dateSubmitted,
-                         @JsonProperty("date_finalized") Date dateFinalized,
-                         @JsonProperty("first_event_date") Date firstEventDate,
-                         @JsonProperty("last_event_date") Date lastEventDate,
-                         @JsonProperty("status") Status verificationStatus,
-                         @JsonProperty("price") BigDecimal price,
-                         @JsonProperty("currency") String currency,
-                         @JsonProperty(value = "checks", defaultValue = "[]") List<VerifyCheck> checks) {
-        this.requestId = requestId;
-        this.accountId = accountId;
-        this.number = number;
-        this.senderId = senderId;
-        this.dateSubmitted = dateSubmitted;
-        this.dateFinalized = dateFinalized;
-        this.firstEventDate = firstEventDate;
-        this.lastEventDate = lastEventDate;
-        this.verificationStatus = verificationStatus;
-        this.price = price;
-        this.currency = currency;
-        this.checks = checks != null ? checks : new ArrayList<VerifyCheck>();
+    @JsonProperty("request_id")
+    public String getRequestId() {
+        return this.requestId;
+    }
+
+    @JsonProperty("account_id")
+    public String getAccountId() {
+        return this.accountId;
+    }
+
+    public String getNumber() {
+        return this.number;
+    }
+
+    @JsonProperty("sender_id")
+    public String getSenderId() {
+        return this.senderId;
+    }
+
+    @JsonProperty("date_submitted")
+    public Date getDateSubmitted() {
+        return this.dateSubmitted;
+    }
+
+    @JsonProperty("date_finalized")
+    public Date getDateFinalized() {
+        return this.dateFinalized;
+    }
+
+    @JsonProperty("first_event_date")
+    public Date getFirstEventDate() {
+        return this.firstEventDate;
+    }
+
+    @JsonProperty("last_event_date")
+    public Date getLastEventDate() {
+        return this.lastEventDate;
+    }
+
+    public Status getStatus() {
+        return this.status;
+    }
+
+    public BigDecimal getPrice() {
+        return this.price;
+    }
+
+    public String getCurrency() {
+        return this.currency;
+    }
+
+    public List<VerifyCheck> getChecks() {
+        return this.checks;
     }
 
     public enum Status {
-        IN_PROGRESS("IN PROGRESS"), SUCCESS("SUCCESS"), FAILED("FAILED"), EXPIRED("EXPIRED"), CANCELLED("CANCELLED"), INVALID(
-                "101");
+        IN_PROGRESS("IN PROGRESS"),
+        SUCCESS("SUCCESS"),
+        FAILED("FAILED"),
+        EXPIRED("EXPIRED"),
+        CANCELLED("CANCELLED"),
+        INVALID("101");
 
         private String status;
 
@@ -89,7 +120,7 @@ public class VerifyDetails {
         /**
          * Look up the {@link Status} based on the string value.
          *
-         * @param status the verificationStatus value to lookup.
+         * @param status the status value to lookup.
          * @return VerifyStatus based on the int value given.
          */
         public static Status fromString(String status) {
@@ -104,53 +135,5 @@ public class VerifyDetails {
         public String getStatus() {
             return this.status;
         }
-    }
-
-    public String getRequestId() {
-        return this.requestId;
-    }
-
-    public String getAccountId() {
-        return this.accountId;
-    }
-
-    public String getNumber() {
-        return this.number;
-    }
-
-    public String getSenderId() {
-        return this.senderId;
-    }
-
-    public Date getDateSubmitted() {
-        return this.dateSubmitted;
-    }
-
-    public Date getDateFinalized() {
-        return this.dateFinalized;
-    }
-
-    public Date getFirstEventDate() {
-        return this.firstEventDate;
-    }
-
-    public Date getLastEventDate() {
-        return this.lastEventDate;
-    }
-
-    public Status getVerificationStatus() {
-        return this.verificationStatus;
-    }
-
-    public BigDecimal getPrice() {
-        return this.price;
-    }
-
-    public String getCurrency() {
-        return this.currency;
-    }
-
-    public List<VerifyCheck> getChecks() {
-        return this.checks;
     }
 }

@@ -52,7 +52,7 @@ public class SearchEndpoint {
                 resultList.add(new SearchResult(response.getStatus().getVerifyStatus(),
                         details.getRequestId(),
                         details.getAccountId(),
-                        translateFromVerifyDetailsStatus(details.getVerificationStatus()),
+                        translateFromVerifyDetailsStatus(details.getStatus()),
                         details.getNumber(),
                         details.getPrice() != null ? details.getPrice().floatValue() : 0,
                         details.getCurrency(),
