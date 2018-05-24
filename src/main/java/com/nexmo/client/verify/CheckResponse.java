@@ -42,35 +42,16 @@ public class CheckResponse {
     private String errorText;
 
     @JsonCreator
-    public CheckResponse(@JsonProperty("request_id") String requestId,
-                         @JsonProperty("event_id") String eventId,
-                         @JsonProperty(value = "status", required = true) VerifyStatus status,
-                         @JsonProperty("price") BigDecimal price,
-                         @JsonProperty("currency") String currency,
-                         @JsonProperty("error_text") String errorText) {
-        this.requestId = requestId;
-        this.eventId = eventId;
+    public CheckResponse(@JsonProperty(value = "status", required = true) VerifyStatus status) {
         this.status = status;
-        this.price = price;
-        this.currency = currency;
-        this.errorText = errorText;
     }
 
-    public static CheckResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, CheckResponse.class);
-        } catch (JsonMappingException jme) {
-            throw new NexmoResponseParseException("Failed to produce CheckResponse from json.", jme);
-        } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce CheckResponse from json.", jpe);
-        }
-    }
-
+    @JsonProperty("request_id")
     public String getRequestId() {
         return this.requestId;
     }
 
+    @JsonProperty("event_id")
     public String getEventId() {
         return this.eventId;
     }
@@ -87,7 +68,19 @@ public class CheckResponse {
         return this.currency;
     }
 
+    @JsonProperty("error_text")
     public String getErrorText() {
         return this.errorText;
+    }
+
+    public static CheckResponse fromJson(String json) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(json, CheckResponse.class);
+        } catch (JsonMappingException jme) {
+            throw new NexmoResponseParseException("Failed to produce CheckResponse from json.", jme);
+        } catch (IOException jpe) {
+            throw new NexmoUnexpectedException("Failed to produce CheckResponse from json.", jpe);
+        }
     }
 }

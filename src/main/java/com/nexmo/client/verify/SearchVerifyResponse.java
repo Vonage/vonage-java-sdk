@@ -38,16 +38,12 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SearchVerifyResponse {
     private VerifyStatus status;
-    private List<VerifyDetails> verificationRequests;
+    private List<VerifyDetails> verificationRequests = new ArrayList<>();
     private String errorText;
 
     @JsonCreator
-    SearchVerifyResponse(@JsonProperty("status") VerifyStatus status,
-                         @JsonProperty("verification_requests") List<VerifyDetails> verificationRequests,
-                         @JsonProperty("error_text") String errorText) {
-        this.status = status != null ? status : VerifyStatus.OK;
-        this.verificationRequests = verificationRequests != null ? verificationRequests : new ArrayList<VerifyDetails>();
-        this.errorText = errorText;
+    SearchVerifyResponse() {
+        this.status = VerifyStatus.OK;
     }
 
     SearchVerifyResponse(List<VerifyDetails> verificationRequests) {
@@ -55,14 +51,21 @@ public class SearchVerifyResponse {
         this.verificationRequests = verificationRequests;
     }
 
+    SearchVerifyResponse(VerifyStatus status, String errorText) {
+        this.status = status;
+        this.errorText = errorText;
+    }
+
     public VerifyStatus getStatus() {
         return this.status;
     }
 
+    @JsonProperty("verification_requests")
     public List<VerifyDetails> getVerificationRequests() {
         return this.verificationRequests;
     }
 
+    @JsonProperty("error_text")
     public String getErrorText() {
         return this.errorText;
     }

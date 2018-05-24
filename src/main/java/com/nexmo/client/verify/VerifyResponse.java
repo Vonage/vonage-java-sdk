@@ -36,12 +36,8 @@ public class VerifyResponse {
     private String errorText;
 
     @JsonCreator
-    public VerifyResponse(@JsonProperty("request_id") String requestId,
-                          @JsonProperty(value = "status", required = true) VerifyStatus status,
-                          @JsonProperty("error_text") String errorText) {
-        this.requestId = requestId;
+    public VerifyResponse(@JsonProperty(value = "status", required = true) VerifyStatus status) {
         this.status = status;
-        this.errorText = errorText;
     }
 
     public static VerifyResponse fromJson(String json) {
@@ -55,6 +51,7 @@ public class VerifyResponse {
         }
     }
 
+    @JsonProperty("request_id")
     public String getRequestId() {
         return this.requestId;
     }
@@ -63,6 +60,7 @@ public class VerifyResponse {
         return this.status;
     }
 
+    @JsonProperty("error_text")
     public String getErrorText() {
         return this.errorText;
     }
