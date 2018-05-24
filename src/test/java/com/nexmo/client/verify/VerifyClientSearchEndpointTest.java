@@ -31,7 +31,7 @@ import static org.junit.Assert.assertEquals;
 
 public class VerifyClientSearchEndpointTest extends ClientTest<VerifyClient> {
     @Before
-    public void setup() {
+    public void setUp() {
         client = new VerifyClient(wrapper);
     }
 

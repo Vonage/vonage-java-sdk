@@ -31,7 +31,7 @@ import java.math.BigDecimal;
 public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
 
     @Before
-    public void setup() {
+    public void setUp() {
         client = new VerifyClient(wrapper);
     }
 

@@ -33,7 +33,7 @@ import static org.junit.Assert.fail;
 public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
 
     @Before
-    public void setup() {
+    public void setUp() {
         client = new VerifyClient(wrapper);
     }
 
