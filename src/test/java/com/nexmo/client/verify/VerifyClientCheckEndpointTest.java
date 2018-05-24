@@ -70,7 +70,7 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
     public void testCheckWithoutStatusThrowsException() throws Exception {
         String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"event_id\": \"an-event-id\",\n" + "  \"price\": \"0.10000000\",\n" + "  \"currency\": \"EUR\"\n" + "}\n";
         wrapper.setHttpClient(stubHttpClient(200, json));
-        CheckResult result = client.check("a-request-id", "1234", "127.0.0.1");
+        client.check("a-request-id", "1234", "127.0.0.1");
     }
 
     @Test
@@ -103,7 +103,7 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
     public void testCheckWithNonNumericPrice() throws Exception {
         String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"status\": \"0\",\n" + "  \"event_id\": \"an-event-id\",\n" + "  \"price\": \"test\",\n" + "  \"currency\": \"EUR\"\n" + "}\n";
         wrapper.setHttpClient(stubHttpClient(200, json));
-        CheckResult result = client.check("a-request-id", "1234");
+        client.check("a-request-id", "1234");
     }
 
     @Test

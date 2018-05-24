@@ -145,6 +145,6 @@ public class VerifyClientSearchEndpointTest extends ClientTest<VerifyClient> {
         String json = "    { \n" + "      \"request_id\": \"a-random-request-id\",\n" + "      \"account_id\": \"account-id\",\n" + "      \"number\": \"not-a-number\",\n" + "      \"sender_id\": \"verify\",\n" + "      \"date_submitted\": \"aaa\",\n" + "      \"date_finalized\": \"ddd\",\n" + "      \"checks\": [],\n" + "      \"first_event_date\": \"bbb\",\n" + "      \"last_event_date\": \"ccc\",\n" + "      \"price\": \"0.10000000\",\n" + "      \"currency\": \"EUR\",\n" + "      \"status\": \"SUCCESS\"\n" + "    }";
 
         wrapper.setHttpClient(this.stubHttpClient(200, json));
-        SearchResult c = client.search("a-random-request-id");
+        client.search("a-random-request-id");
     }
 }
