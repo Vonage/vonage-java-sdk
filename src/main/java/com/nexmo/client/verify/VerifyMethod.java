@@ -92,8 +92,4 @@ class VerifyMethod extends AbstractMethod<VerifyRequest, VerifyResponse> {
     public VerifyResponse parseResponse(HttpResponse response) throws IOException {
         return VerifyResponse.fromJson(new BasicResponseHandler().handleResponse(response));
     }
-
-    public void setUri(String uri) {
-        this.uri = uri;
-    }
 }

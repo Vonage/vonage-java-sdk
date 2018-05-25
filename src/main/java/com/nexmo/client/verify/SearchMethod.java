@@ -65,8 +65,4 @@ public class SearchMethod extends AbstractMethod<SearchRequest, SearchVerifyResp
     public SearchVerifyResponse parseResponse(HttpResponse response) throws IOException {
         return SearchVerifyResponse.fromJson(new BasicResponseHandler().handleResponse(response));
     }
-
-    public void setUri(String uri) {
-        this.uri = uri;
-    }
 }
