@@ -35,7 +35,7 @@ public class SearchEndpoint {
         this.searchMethod = new SearchMethod(httpWrapper);
     }
 
-    public SearchResult[] search(String... requestIds) throws IOException, NexmoClientException {
+    SearchResult[] search(String... requestIds) throws IOException, NexmoClientException {
         return translateFromSearchVerifyResponse(this.searchMethod.execute(new SearchRequest(requestIds)));
     }
 
