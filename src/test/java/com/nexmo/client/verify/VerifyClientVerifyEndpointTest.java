@@ -38,10 +38,34 @@ public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
     }
 
     @Test
-    public void testVerify() throws Exception {
+    public void testVerifyWithNumberBrandFromLengthLocaleLineType() throws Exception {
+        wrapper.setHttpClient(this.stubHttpClient(200,
+                                                  "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": 0,\n" + "  \"error_text\": \"error\"\n" + "}"));
+        VerifyResult r = client.verify("447700900999", "TestBrand", "15555215554", 6, Locale.US, VerifyRequest.LineType.MOBILE);
+        assertEquals(VerifyResult.STATUS_OK, r.getStatus());
+    }
+
+    @Test
+    public void testVerifyWithNumberBrandFromLengthLocale() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(200,
                 "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": 0,\n" + "  \"error_text\": \"error\"\n" + "}"));
         VerifyResult r = client.verify("447700900999", "TestBrand", "15555215554", 6, Locale.US);
+        assertEquals(VerifyResult.STATUS_OK, r.getStatus());
+    }
+
+    @Test
+    public void testVerifyWithNumberBrandFrom() throws Exception {
+        wrapper.setHttpClient(this.stubHttpClient(200,
+                                                  "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": 0,\n" + "  \"error_text\": \"error\"\n" + "}"));
+        VerifyResult r = client.verify("447700900999", "TestBrand", "15555215554");
+        assertEquals(VerifyResult.STATUS_OK, r.getStatus());
+    }
+
+    @Test
+    public void testVerifyWithNumberBrand() throws Exception {
+        wrapper.setHttpClient(this.stubHttpClient(200,
+                                                  "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": 0,\n" + "  \"error_text\": \"error\"\n" + "}"));
+        VerifyResult r = client.verify("447700900999", "TestBrand");
         assertEquals(VerifyResult.STATUS_OK, r.getStatus());
     }
 
