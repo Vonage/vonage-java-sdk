@@ -165,7 +165,7 @@ public class VerifyClient extends AbstractClient {
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
     public CheckResult check(final String requestId, final String code) throws IOException, NexmoClientException {
-        return this.check.check(requestId, code, null);
+        return this.check.check(requestId, code);
     }
 
     /**
@@ -213,21 +213,23 @@ public class VerifyClient extends AbstractClient {
      * Advance a current verification request to the next stage in the process.
      *
      * @param requestId The requestId of the ongoing verification request.
+     * @return A {@link ControlResponse} representing the response from the API.
      * @throws IOException          If an IO error occurred while making the request.
      * @throws NexmoClientException If the request failed for some reason.
      */
-    public void advanceVerification(String requestId) throws IOException, NexmoClientException {
-        control.execute(new ControlRequest(requestId, VerifyControlCommand.TRIGGER_NEXT_EVENT));
+    public ControlResponse advanceVerification(String requestId) throws IOException, NexmoClientException {
+        return this.control.execute(new ControlRequest(requestId, VerifyControlCommand.TRIGGER_NEXT_EVENT));
     }
 
     /**
      * Cancel a current verification request.
      *
      * @param requestId The requestId of the ongoing verification request.
+     * @return A {@link ControlResponse} representing the response from the API.
      * @throws IOException          If an IO error occurred while making the request.
      * @throws NexmoClientException If the request failed for some reason.
      */
-    public void cancelVerification(String requestId) throws IOException, NexmoClientException {
-        control.execute(new ControlRequest(requestId, VerifyControlCommand.CANCEL));
+    public ControlResponse cancelVerification(String requestId) throws IOException, NexmoClientException {
+        return this.control.execute(new ControlRequest(requestId, VerifyControlCommand.CANCEL));
     }
 }
