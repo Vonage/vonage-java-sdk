@@ -24,7 +24,8 @@ package com.nexmo.client.voice.ncco;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 public class RecordNccoTest {
     @Test
@@ -44,7 +45,7 @@ public class RecordNccoTest {
             ncco.setEndOnSilence(3);
             ncco.setFormat(RecordingFormat.MP3);
             ncco.setTimeout(20);
-
+            ncco.setSplit(SplitRecording.CONVERSATION);
             json = ncco.toJson();
         }
 
@@ -52,9 +53,65 @@ public class RecordNccoTest {
         assertArrayEquals(new String[]{"https://api.example.com/event"}, ncco.getEventUrl());
         assertEquals("GET", ncco.getEventMethod());
         assertEquals(true, ncco.getBeepStart());
-        assertEquals('#', (char)ncco.getEndOnKey());
-        assertEquals(3, (int)ncco.getEndOnSilence());
+        assertEquals('#', (char) ncco.getEndOnKey());
+        assertEquals(3, (int) ncco.getEndOnSilence());
         assertEquals(RecordingFormat.MP3, ncco.getFormat());
-        assertEquals(20, (int)ncco.getTimeout());
+        assertEquals(20, (int) ncco.getTimeout());
+        assertEquals(SplitRecording.CONVERSATION, ncco.getSplit());
+    }
+
+    @Test
+    public void testDefault() {
+        RecordNcco ncco = new RecordNcco();
+        assertEquals("{\"action\":\"record\"}", ncco.toJson());
+    }
+
+    @Test
+    public void testEventUrl() {
+        RecordNcco ncco = new RecordNcco();
+        ncco.setEventUrl("https://example.com");
+        assertEquals("{\"action\":\"record\",\"eventUrl\":[\"https://example.com\"]}", ncco.toJson());
+    }
+
+    @Test
+    public void testEventMethod() {
+        RecordNcco ncco = new RecordNcco();
+        ncco.setEventMethod("GET");
+        assertEquals("{\"eventMethod\":\"GET\",\"action\":\"record\"}", ncco.toJson());
+    }
+
+    @Test
+    public void testEndOnKey() {
+        RecordNcco ncco = new RecordNcco();
+        ncco.setEndOnKey('#');
+        assertEquals("{\"endOnKey\":\"#\",\"action\":\"record\"}", ncco.toJson());
+    }
+
+    @Test
+    public void testEndOnSilence() {
+        RecordNcco ncco = new RecordNcco();
+        ncco.setEndOnSilence(3);
+        assertEquals("{\"endOnSilence\":3,\"action\":\"record\"}", ncco.toJson());
+    }
+
+    @Test
+    public void testFormat() {
+        RecordNcco ncco = new RecordNcco();
+        ncco.setFormat(RecordingFormat.WAV);
+        assertEquals("{\"format\":\"wav\",\"action\":\"record\"}", ncco.toJson());
+    }
+
+    @Test
+    public void testTimeout() {
+        RecordNcco ncco = new RecordNcco();
+        ncco.setTimeout(5);
+        assertEquals("{\"timeout\":5,\"action\":\"record\"}", ncco.toJson());
+    }
+
+    @Test
+    public void testSplit() {
+        RecordNcco ncco = new RecordNcco();
+        ncco.setSplit(SplitRecording.CONVERSATION);
+        assertEquals("{\"split\":\"conversation\",\"action\":\"record\"}", ncco.toJson());
     }
 }
