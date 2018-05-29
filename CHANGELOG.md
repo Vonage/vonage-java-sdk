@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - Updated `ConversationNcco`'s `musicOnHoldUrl` to serialize into an array for use in the Voice API.
 
+### Added
+- Add `split` attribute to the `RecordNcco` object.
+
 ## [3.4.1] - 2018-05-11
 
 ### Changed
