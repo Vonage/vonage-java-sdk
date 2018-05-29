@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,24 +21,22 @@
  */
 package com.nexmo.client.verify;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 
-/**
- * @deprecated Relies on XML Endpoint, use {@link VerifyResponse}
- */
-@Deprecated
-public class VerifyResult extends BaseResult {
-    private final String requestId;
+import java.io.IOException;
 
-    public VerifyResult(final int status,
-                        final String requestId,
-                        final String errorText,
-                        final boolean temporaryError) {
-        super(status, errorText, temporaryError);
-        this.requestId = requestId;
+public class VerifyStatusDeserializer extends JsonDeserializer<VerifyStatus> {
+    @Override
+    public VerifyStatus deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+        // Perform the conversion using parseInt so that potential number format exceptions can be converted into a default
+        // VerifyStatus.INTERNAL_ERROR
+        // Jackson's getValueAsInt defaults results to 0 and throws no exceptions.
+        try {
+            return VerifyStatus.fromInt(Integer.parseInt(p.getText()));
+        } catch (NumberFormatException nfe) {
+            return VerifyStatus.INTERNAL_ERROR;
+        }
     }
-
-    public String getRequestId() {
-        return this.requestId;
-    }
-
 }

@@ -19,47 +19,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.verify.endpoints;
+package com.nexmo.client.verify;
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.client.auth.SignatureAuthMethod;
 import com.nexmo.client.auth.TokenAuthMethod;
-import com.nexmo.client.legacyutils.XmlParser;
-import com.nexmo.client.verify.VerifyRequest;
-import com.nexmo.client.verify.VerifyResult;
 import com.nexmo.client.voice.endpoints.AbstractMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.message.BasicNameValuePair;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.Locale;
 
-/**
- * @deprecated Relies on XML Endpoint, use {@link com.nexmo.client.verify.VerifyClient#verify} instead.
- */
-@Deprecated
-public class VerifyEndpoint extends AbstractMethod<VerifyRequest, VerifyResult> {
+class VerifyMethod extends AbstractMethod<VerifyRequest, VerifyResponse> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/verify/xml";
-
-    private XmlParser xmlParser = new XmlParser();
+    private static final String DEFAULT_URI = "https://api.nexmo.com/verify/json";
 
     private String uri = DEFAULT_URI;
 
-    /**
-     * Create a new VerifyMethod.
-     * <p>
-     * This client is used for calling the verify API's verify endpoint.
-     */
-    public VerifyEndpoint(HttpWrapper httpWrapper) {
+    VerifyMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -107,48 +89,7 @@ public class VerifyEndpoint extends AbstractMethod<VerifyRequest, VerifyResult> 
     }
 
     @Override
-    public VerifyResult parseResponse(HttpResponse response) throws IOException {
-        return parseVerifyResponse(new BasicResponseHandler().handleResponse(response));
-    }
-
-    public VerifyResult verify(final String number, final String brand) throws IOException, NexmoClientException {
-        return execute(new VerifyRequest(number, brand));
-    }
-
-    public VerifyResult verify(final String number,
-                               final String brand,
-                               final String from) throws IOException, NexmoClientException {
-        return execute(new VerifyRequest(number, brand, from));
-    }
-
-    public VerifyResult verify(final String number,
-                               final String brand,
-                               final String from,
-                               final int length,
-                               final Locale locale) throws IOException, NexmoClientException {
-        return execute(new VerifyRequest(number, brand, from, length, locale));
-    }
-
-    public VerifyResult verify(final String number,
-                               final String brand,
-                               final String from,
-                               final int length,
-                               final Locale locale,
-                               final VerifyRequest.LineType type) throws IOException, NexmoClientException {
-        return execute(new VerifyRequest(number, brand, from, length, locale, type));
-    }
-
-    public VerifyResult verify(VerifyRequest request) throws IOException, NexmoClientException {
-        return execute(request);
-    }
-
-    protected VerifyResult parseVerifyResponse(String response) throws NexmoResponseParseException {
-        Document doc = xmlParser.parseXml(response);
-
-        Element root = doc.getDocumentElement();
-        if (!"verify_response".equals(root.getNodeName()))
-            throw new NexmoResponseParseException("No valid response found [ " + response + "] ");
-
-        return SharedParsers.parseVerifyResponseXmlNode(root);
+    public VerifyResponse parseResponse(HttpResponse response) throws IOException {
+        return VerifyResponse.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 }

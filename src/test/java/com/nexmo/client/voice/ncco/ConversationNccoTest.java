@@ -30,9 +30,7 @@ public class ConversationNccoTest {
     @Test
     public void testJson() throws Exception {
         ConversationNcco ncco = new ConversationNcco("conversation-name");
-        assertEquals(
-                "{\"name\":\"conversation-name\",\"action\":\"conversation\"}",
-                ncco.toJson());
+        assertEquals("{\"name\":\"conversation-name\",\"action\":\"conversation\"}", ncco.toJson());
     }
 
     @Test
@@ -56,4 +54,67 @@ public class ConversationNccoTest {
         assertEquals(false, ncco2.getStartOnEnter());
     }
 
+    @Test
+    public void testWithOnlyNameParameter() throws Exception {
+        ConversationNcco ncco = new ConversationNcco("Test");
+
+        String expectedJson = "{\"name\":\"Test\",\"action\":\"conversation\"}";
+        assertEquals(expectedJson, ncco.toJson());
+    }
+
+    @Test
+    public void testMusicOnHoldUrl() throws Exception {
+        ConversationNcco ncco = new ConversationNcco("Test");
+        ncco.setMusicOnHoldUrl("https://example.org");
+
+        String expectedJson = "{\"name\":\"Test\",\"musicOnHoldUrl\":[\"https://example.org\"],\"action\":\"conversation\"}";
+        assertEquals(expectedJson, ncco.toJson());
+
+        ncco = new ConversationNcco("Test");
+    }
+
+    @Test
+    public void testStartOnEnter() throws Exception {
+        ConversationNcco ncco = new ConversationNcco("Test");
+        ncco.setStartOnEnter(true);
+
+        String expectedJson = "{\"name\":\"Test\",\"startOnEnter\":true,\"action\":\"conversation\"}";
+        assertEquals(expectedJson, ncco.toJson());
+    }
+
+    @Test
+    public void testEndOnExit() throws Exception {
+        ConversationNcco ncco = new ConversationNcco("Test");
+        ncco.setEndOnExit(true);
+
+        String expectedJson = "{\"name\":\"Test\",\"endOnExit\":true,\"action\":\"conversation\"}";
+        assertEquals(expectedJson, ncco.toJson());
+    }
+
+    @Test
+    public void testRecord() throws Exception {
+        ConversationNcco ncco = new ConversationNcco("Test");
+        ncco.setRecord(true);
+
+        String expectedJson = "{\"name\":\"Test\",\"record\":true,\"action\":\"conversation\"}";
+        assertEquals(expectedJson, ncco.toJson());
+    }
+
+    @Test
+    public void testEventUrl() throws Exception {
+        ConversationNcco ncco = new ConversationNcco("Test");
+        ncco.setEventUrl("https://exmaple.org");
+
+        String expectedJson = "{\"name\":\"Test\",\"action\":\"conversation\",\"eventUrl\":[\"https://exmaple.org\"]}";
+        assertEquals(expectedJson, ncco.toJson());
+    }
+
+    @Test
+    public void testEventMethod() throws Exception {
+        ConversationNcco ncco = new ConversationNcco("Test");
+        ncco.setEventMethod("Test");
+
+        String expectedJson = "{\"name\":\"Test\",\"eventMethod\":\"Test\",\"action\":\"conversation\"}";
+        assertEquals(expectedJson, ncco.toJson());
+    }
 }

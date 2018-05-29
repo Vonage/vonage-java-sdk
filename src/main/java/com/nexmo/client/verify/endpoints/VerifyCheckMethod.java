@@ -45,6 +45,10 @@ import org.w3c.dom.NodeList;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+/**
+ * @deprecated Relies on XML Endpoint, use {@link com.nexmo.client.verify.CheckMethod}
+ */
+@Deprecated
 public class VerifyCheckMethod extends AbstractMethod<CheckRequest, CheckResult> {
     private static final Log log = LogFactory.getLog(VerifyCheckMethod.class);
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
@@ -68,12 +72,10 @@ public class VerifyCheckMethod extends AbstractMethod<CheckRequest, CheckResult>
         if (request.getRequestId() == null || request.getCode() == null)
             throw new IllegalArgumentException("request ID and code parameters are mandatory.");
 
-        RequestBuilder result = RequestBuilder.post(this.uri)
-                .addParameter("request_id", request.getRequestId())
+        RequestBuilder result = RequestBuilder.post(this.uri).addParameter("request_id", request.getRequestId())
 
                 .addParameter("code", request.getCode());
-        if (request.getIpAddress() != null)
-            result.addParameter("ip_address", request.getIpAddress());
+        if (request.getIpAddress() != null) result.addParameter("ip_address", request.getIpAddress());
 
         return result;
     }
@@ -100,8 +102,7 @@ public class VerifyCheckMethod extends AbstractMethod<CheckRequest, CheckResult>
         NodeList fields = root.getChildNodes();
         for (int i = 0; i < fields.getLength(); i++) {
             Node node = fields.item(i);
-            if (node.getNodeType() != Node.ELEMENT_NODE)
-                continue;
+            if (node.getNodeType() != Node.ELEMENT_NODE) continue;
 
             String name = node.getNodeName();
             if ("event_id".equals(name)) {
@@ -109,8 +110,7 @@ public class VerifyCheckMethod extends AbstractMethod<CheckRequest, CheckResult>
             } else if ("status".equals(name)) {
                 String str = XmlUtil.stringValue(node);
                 try {
-                    if (str != null)
-                        status = Integer.parseInt(str);
+                    if (str != null) status = Integer.parseInt(str);
                 } catch (NumberFormatException e) {
                     log.error("xml parser .. invalid value in <status> node [ " + str + " ] ");
                     status = BaseResult.STATUS_INTERNAL_ERROR;
@@ -118,8 +118,7 @@ public class VerifyCheckMethod extends AbstractMethod<CheckRequest, CheckResult>
             } else if ("price".equals(name)) {
                 String str = XmlUtil.stringValue(node);
                 try {
-                    if (str != null)
-                        price = Float.parseFloat(str);
+                    if (str != null) price = Float.parseFloat(str);
                 } catch (NumberFormatException e) {
                     log.error("xml parser .. invalid value in <price> node [ " + str + " ] ");
                 }
@@ -130,8 +129,7 @@ public class VerifyCheckMethod extends AbstractMethod<CheckRequest, CheckResult>
             }
         }
 
-        if (status == -1)
-            throw new NexmoResponseParseException("Xml Parser - did not find a <status> node");
+        if (status == -1) throw new NexmoResponseParseException("Xml Parser - did not find a <status> node");
 
         // Is this a temporary error ?
         boolean temporaryError = (status == BaseResult.STATUS_THROTTLED || status == BaseResult.STATUS_INTERNAL_ERROR);

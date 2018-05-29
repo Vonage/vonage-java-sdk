@@ -1,0 +1,73 @@
+/*
+ * Copyright (c) 2011-2018 Nexmo Inc
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.nexmo.client.verify;
+
+import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoClientException;
+
+import java.io.IOException;
+import java.util.Locale;
+
+class VerifyEndpoint {
+    private VerifyMethod verifyMethod;
+
+    VerifyEndpoint(HttpWrapper httpWrapper) {
+        this.verifyMethod = new VerifyMethod(httpWrapper);
+    }
+
+    VerifyResult verify(String number,
+                        String brand,
+                        String from,
+                        int length,
+                        Locale locale,
+                        VerifyRequest.LineType type) throws IOException, NexmoClientException {
+        return verify(new VerifyRequest(number, brand, from, length, locale, type));
+    }
+
+    VerifyResult verify(String number,
+                        String brand,
+                        String from,
+                        int length,
+                        Locale locale) throws IOException, NexmoClientException {
+        return verify(new VerifyRequest(number, brand, from, length, locale));
+    }
+
+    VerifyResult verify(String number, String brand, String from) throws IOException, NexmoClientException {
+        return verify(new VerifyRequest(number, brand, from));
+    }
+
+    VerifyResult verify(String number, String brand) throws IOException, NexmoClientException {
+        return verify(new VerifyRequest(number, brand));
+    }
+
+    VerifyResult verify(VerifyRequest request) throws IOException, NexmoClientException {
+        // TODO: Remove translation when releasing 4.0
+        return translateFromVerifyResponse(this.verifyMethod.execute(request));
+    }
+
+    private VerifyResult translateFromVerifyResponse(VerifyResponse response) {
+        return new VerifyResult(response.getStatus().getVerifyStatus(),
+                response.getRequestId(),
+                response.getErrorText(),
+                response.getStatus().isTemporaryError());
+    }
+}

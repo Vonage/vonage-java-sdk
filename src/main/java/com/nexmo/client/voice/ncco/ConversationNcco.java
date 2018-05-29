@@ -55,8 +55,16 @@ public class ConversationNcco implements Ncco {
         return musicOnHoldUrl;
     }
 
-    public void setMusicOnHoldUrl(String musicOnHoldUrl) {
-        this.musicOnHoldUrl = musicOnHoldUrl;
+    @JsonProperty("musicOnHoldUrl")
+    public String[] getMusicOnHoldUrlAsArray() {
+        // TODO: Rework in 4.0.
+        // This property is expected to be serialized as an array, however we want to also insure it remains null
+        // if null.
+        return this.musicOnHoldUrl != null ? new String[]{this.musicOnHoldUrl} : null;
+    }
+
+    public void setMusicOnHoldUrl(String... musicOnHoldUrl) {
+        this.musicOnHoldUrl = musicOnHoldUrl[0];
     }
 
     public Boolean getStartOnEnter() {
@@ -87,12 +95,8 @@ public class ConversationNcco implements Ncco {
         return eventUrl;
     }
 
-    public void setEventUrl(String eventUrl) {
-        setEventUrl(new String[]{eventUrl});
-    }
-
     @JsonProperty("eventUrl")
-    public void setEventUrl(String[] eventUrl) {
+    public void setEventUrl(String... eventUrl) {
         this.eventUrl = eventUrl;
     }
 

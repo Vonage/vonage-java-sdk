@@ -50,7 +50,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+/**
+ * @deprecated Relies on XML Endpoint, use {@link com.nexmo.client.verify.VerifyClient#search} instead.
+ */
+@Deprecated
 public class SearchEndpoint extends AbstractMethod<SearchRequest, SearchResult[]> {
     private static final Log log = LogFactory.getLog(SearchEndpoint.class);
 
