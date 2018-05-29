@@ -3,7 +3,8 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
-## [Development]
+
+## [3.5.0] - 2018-05-29
 ### Changed
 - Updated `VerifyClient` to use the JSON endpoints instead of XML.
 - Updated endpoints which are used by `VerifyClient` from public to package scope in order to encourage usage through `VerifyClient`.
@@ -24,12 +25,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added `VerifyStatus` enumeration to use for statuses coming back from the verify endpoint.
 - Added `VerifyResponse`, `CheckResponse`, and `SearchVerifyResponse` for JSON responses to match other JSON using endpoints.
 - Added `VerifyMethod`, `CheckMethod`, and `SearchMethod` for better segregation between endpoint and method classes.
+- Add `split` attribute to the `RecordNcco` object.
 
 ### Fixed
 - Updated `ConversationNcco`'s `musicOnHoldUrl` to serialize into an array for use in the Voice API.
-
-### Added
-- Add `split` attribute to the `RecordNcco` object.
 
 ## [3.4.1] - 2018-05-11
 
