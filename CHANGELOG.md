@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Development]
 
+### Added
+- Add `split` attribute to the `RecordNcco` object.
+
 ## [3.4.1] - 2018-05-11
 
 ### Changed

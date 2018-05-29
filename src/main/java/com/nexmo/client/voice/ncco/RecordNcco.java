@@ -37,6 +37,7 @@ public class RecordNcco implements Ncco {
     private Boolean beepStart = null;
     private String[] eventUrl = null;
     private String eventMethod = null;
+    private SplitRecording split = null;
 
     public RecordingFormat getFormat() {
         return format;
@@ -102,6 +103,14 @@ public class RecordNcco implements Ncco {
     @Override
     public String getAction() {
         return ACTION;
+    }
+
+    public SplitRecording getSplit() {
+        return split;
+    }
+
+    public void setSplit(SplitRecording split) {
+        this.split = split;
     }
 
     @Override
