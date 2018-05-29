@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,24 +21,43 @@
  */
 package com.nexmo.client.verify;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * @deprecated Relies on XML Endpoint, use {@link VerifyResponse}
- */
-@Deprecated
-public class VerifyResult extends BaseResult {
-    private final String requestId;
+import java.util.Date;
 
-    public VerifyResult(final int status,
-                        final String requestId,
-                        final String errorText,
-                        final boolean temporaryError) {
-        super(status, errorText, temporaryError);
-        this.requestId = requestId;
+public class VerifyCheck {
+    private final Date date;
+    private final String code;
+    private final Status status;
+    private final String ipAddress;
+
+    public VerifyCheck(@JsonProperty("date_received") Date date,
+                       @JsonProperty("code") String code,
+                       @JsonProperty("status") Status status,
+                       @JsonProperty("ip_address") String ipAddress) {
+        this.date = date;
+        this.code = code;
+        this.status = status;
+        this.ipAddress = ipAddress;
     }
 
-    public String getRequestId() {
-        return this.requestId;
+    public enum Status {
+        VALID, INVALID,
     }
 
+    public Date getDate() {
+        return this.date;
+    }
+
+    public String getCode() {
+        return this.code;
+    }
+
+    public Status getStatus() {
+        return this.status;
+    }
+
+    public String getIpAddress() {
+        return this.ipAddress;
+    }
 }

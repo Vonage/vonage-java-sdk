@@ -23,17 +23,22 @@ package com.nexmo.client.verify.endpoints;
 
 
 import com.nexmo.client.NexmoResponseParseException;
+import com.nexmo.client.TestUtils;
+import com.nexmo.client.verify.SearchRequest;
 import com.nexmo.client.verify.SearchResult;
+import org.apache.http.client.methods.RequestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Map;
 
 import static com.nexmo.client.TestUtils.test429;
 import static junit.framework.Assert.fail;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.*;
 
 public class SearchEndpointTest {
 
@@ -281,6 +286,31 @@ public class SearchEndpointTest {
                         "  <status>FAILED</status>\n" +
                         "</verify_request>");
         assertEquals(new GregorianCalendar(2016, 9, 19, 11, 20, 0).getTime(), rs[0].getChecks().get(0).getDate());
+    }
+
+    @Test
+    public void testMakeRequestWithOneId() throws Exception {
+        RequestBuilder builder = client.makeRequest(new SearchRequest("1"));
+        assertEquals("POST", builder.getMethod());
+        Map<String, List<String>> params = TestUtils.makeFullParameterMap(builder.getParameters());
+        assertThat(params.size(), equalTo(1));
+        List<String> ids = params.get("request_id");
+        assertNotNull(ids);
+        assertEquals(1, ids.size());
+        assertEquals("1", ids.get(0));
+    }
+
+    @Test
+    public void testMakeRequestWithMultipleIds() throws Exception {
+        RequestBuilder builder = client.makeRequest(new SearchRequest("1", "2"));
+        assertEquals("POST", builder.getMethod());
+        Map<String, List<String>> params = TestUtils.makeFullParameterMap(builder.getParameters());
+        assertThat(params.size(), equalTo(1));
+        List<String> ids = params.get("request_ids");
+        assertNotNull(ids);
+        assertEquals(2, ids.size());
+        assertEquals("1", ids.get(0));
+        assertEquals("2", ids.get(1));
     }
 
     @Test

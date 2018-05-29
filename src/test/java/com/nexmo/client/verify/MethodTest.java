@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,24 +21,31 @@
  */
 package com.nexmo.client.verify;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
-/**
- * @deprecated Relies on XML Endpoint, use {@link VerifyResponse}
- */
-@Deprecated
-public class VerifyResult extends BaseResult {
-    private final String requestId;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-    public VerifyResult(final int status,
-                        final String requestId,
-                        final String errorText,
-                        final boolean temporaryError) {
-        super(status, errorText, temporaryError);
-        this.requestId = requestId;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+public abstract class MethodTest<T> {
+    protected T method;
+
+    protected void assertContainsParam(List<NameValuePair> params, String key, String value) {
+        NameValuePair item = new BasicNameValuePair(key, value);
+        assertTrue("" + params + " should contain " + item, params.contains(item));
     }
 
-    public String getRequestId() {
-        return this.requestId;
+    protected void assertParamMissing(List<NameValuePair> params, String key) {
+        Set<String> keys = new HashSet<>();
+        for (NameValuePair pair : params) {
+            keys.add(pair.getName());
+        }
+        assertFalse("" + params + " should not contain " + key, keys.contains(key));
     }
+
 
 }

@@ -21,24 +21,37 @@
  */
 package com.nexmo.client.verify;
 
-
 /**
- * Verification check result.
- *
- * @author Daniele Ricci
+ * @deprecated Relies on XML Endpoint, use {@link CheckResponse}
  */
+@Deprecated
 public class CheckResult extends BaseResult {
-    private final String eventId;
-    private final float price;
-    private final String currency;
+    private String requestId;
+    private String eventId;
+    private float price;
+    private String currency;
 
-    public CheckResult(final int status,
-                          final String eventId,
-                          final float price,
-                          final String currency,
-                          final String errorText,
-                          final boolean temporaryError) {
+    public CheckResult(int status,
+                       String eventId,
+                       float price,
+                       String currency,
+                       String errorText,
+                       boolean temporaryError) {
         super(status, errorText, temporaryError);
+        this.eventId = eventId;
+        this.price = price;
+        this.currency = currency;
+    }
+
+    public CheckResult(int status,
+                       String requestId,
+                       String eventId,
+                       float price,
+                       String currency,
+                       String errorText,
+                       boolean temporaryError) {
+        super(status, errorText, temporaryError);
+        this.requestId = requestId;
         this.eventId = eventId;
         this.price = price;
         this.currency = currency;
@@ -54,6 +67,10 @@ public class CheckResult extends BaseResult {
 
     public String getCurrency() {
         return this.currency;
+    }
+
+    public String getRequestId() {
+        return this.requestId;
     }
 
 }

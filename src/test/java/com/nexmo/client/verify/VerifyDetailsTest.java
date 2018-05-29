@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,24 +21,13 @@
  */
 package com.nexmo.client.verify;
 
+import org.junit.Assert;
+import org.junit.Test;
 
-/**
- * @deprecated Relies on XML Endpoint, use {@link VerifyResponse}
- */
-@Deprecated
-public class VerifyResult extends BaseResult {
-    private final String requestId;
+public class VerifyDetailsTest {
+    @Test
+    public void testVerifyDetailsStatusFromString() {
+        Assert.assertEquals(VerifyDetails.Status.INVALID, VerifyDetails.Status.fromString("101"));
 
-    public VerifyResult(final int status,
-                        final String requestId,
-                        final String errorText,
-                        final boolean temporaryError) {
-        super(status, errorText, temporaryError);
-        this.requestId = requestId;
     }
-
-    public String getRequestId() {
-        return this.requestId;
-    }
-
 }
