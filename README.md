@@ -233,6 +233,15 @@ PricingResponse response = client.getAccountClient().getPrefixPrice(ServiceType.
 System.out.println(response.getDefaultPrice());
 ```
 
+### Top-up Account
+
+Top-up your account that has auto-reload enabled with:
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+Boolean successful = client.getAccountClient().topUp("TRANSACTION_NUMBER");
+System.out.println("Success: " + successful);
+```
 ### Custom HTTP Configuration
 
 If you need to configure the Apache HttpClient used for making requests, you can

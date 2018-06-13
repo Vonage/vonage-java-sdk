@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added `getSmsPrice` to `AccountClient` for getting SMS pricing for a country.
 - Added `getVoicePrice` to `AccountClient` for getting voice pricing for a country.
 - Added `getPrefixPrice` to `AccountClient` for getting SMS and voice pricing for a prefix.
+- Added `topUp` to `AccountClient` for topping up your account which has auto-reload enabled.
 
 ## [3.5.0] - 2018-05-29
 ### Changed

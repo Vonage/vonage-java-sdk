@@ -36,6 +36,7 @@ public class AccountClient extends AbstractClient {
     protected BalanceEndpoint balance;
     protected PricingEndpoint pricing;
     protected PrefixPricingEndpoint prefixPricing;
+    protected TopUpEndpoint topUp;
 
     /**
      * Constructor.
@@ -48,6 +49,7 @@ public class AccountClient extends AbstractClient {
         this.balance = new BalanceEndpoint(httpWrapper);
         this.pricing = new PricingEndpoint(httpWrapper);
         this.prefixPricing = new PrefixPricingEndpoint(httpWrapper);
+        this.topUp = new TopUpEndpoint(httpWrapper);
     }
 
     public BalanceResponse getBalance() throws IOException, NexmoClientException {
@@ -102,5 +104,22 @@ public class AccountClient extends AbstractClient {
 
     private PrefixPricingResponse getPrefixPrice(PrefixPricingRequest prefixPricingRequest) throws IOException, NexmoClientException {
         return this.prefixPricing.getPrice(prefixPricingRequest);
+    }
+
+    /**
+     * Top-up your account when you have enabled auto-reload in the dashboard. Amount added is based on your initial
+     * reload-enabled payment.
+     *
+     * @param transaction The ID associated with your original auto-reload transaction
+     * @return Boolean true if successful.
+     * @throws IOException          if a network error occurred contacting the Nexmo Account API.
+     * @throws NexmoClientException if there was a problem with the Nexmo request or response object.
+     */
+    public Boolean topUp(String transaction) throws IOException, NexmoClientException {
+        return topUp(new TopUpRequest(transaction));
+    }
+
+    private Boolean topUp(TopUpRequest request) throws IOException, NexmoClientException {
+        return this.topUp.topUp(request);
     }
 }
