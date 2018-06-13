@@ -91,7 +91,7 @@ public class AccountClient extends AbstractClient {
      *
      * @param type   The type of service to retrieve pricing for.
      * @param prefix The prefix to retrieve the pricing for.
-     * @return PricingResponse object which contains the results from the API.
+     * @return PrefixPricingResponse object which contains the results from the API.
      * @throws IOException          if a network error occurred contacting the Nexmo Account API.
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
