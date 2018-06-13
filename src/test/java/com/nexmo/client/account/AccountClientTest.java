@@ -23,6 +23,7 @@ package com.nexmo.client.account;
 
 import com.nexmo.client.ClientTest;
 import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -191,5 +192,25 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         Assert.assertEquals("United States Minor Outlying Islands", secondResponse.getCountry().getDisplayName());
         Assert.assertEquals("UM", secondResponse.getCountry().getCode());
         Assert.assertEquals("United States Minor Outlying Islands", secondResponse.getCountry().getName());
+    }
+
+    @Test
+    public void testTopUpSuccessful() throws Exception {
+        wrapper.setHttpClient(this.stubHttpClient(200, ""));
+        Assert.assertTrue(client.topUp("ABC123"));
+    }
+
+    @Test(expected = NexmoClientException.class)
+    public void testTopUpFailedAuth() throws Exception {
+        String json = "{\"error-code\":\"401\",\"error-code-label\":\"authentication failed\"}";
+        wrapper.setHttpClient(this.stubHttpClient(401, json));
+        client.topUp("ABC123");
+    }
+
+    @Test(expected = NexmoClientException.class)
+    public void testTopUpFailed() throws Exception {
+        String json = "{\"error-code\":\"420\",\"error-code-label\":\"topup failed\"}";
+        wrapper.setHttpClient(this.stubHttpClient(401, json));
+        client.topUp("ABC123");
     }
 }

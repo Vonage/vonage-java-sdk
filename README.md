@@ -218,8 +218,8 @@ Get a list of SMS prices for a country with:
 ```java
 AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
 NexmoClient client = new NexmoClient(auth);
-PricingResponse response = client.getAccountClient().getPrefixPrice(ServiceType.SMS, "1");
-System.out.println(response.getDefaultPrice());
+PrefixPricingResponse response = client.getAccountClient().getPrefixPrice(ServiceType.SMS, "1");
+System.out.println(response.getCountries().get(0).getDefaultPrice());
 ```
 
 ### Get a List of Voice Prices for a Prefix
@@ -229,10 +229,19 @@ Get a list of voice prices for a country with:
 ```java
 AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
 NexmoClient client = new NexmoClient(auth);
-PricingResponse response = client.getAccountClient().getPrefixPrice(ServiceType.VOICE, "1");
-System.out.println(response.getDefaultPrice());
+PrefixPricingResponse response = client.getAccountClient().getPrefixPrice(ServiceType.VOICE, "1");
+System.out.println(response.getCountries().get(0).getDefaultPrice());
 ```
 
+### Top-up Account
+
+Top-up your account that has auto-reload enabled with:
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+Boolean successful = client.getAccountClient().topUp("TRANSACTION_NUMBER");
+System.out.println("Success: " + successful);
+```
 ### Custom HTTP Configuration
 
 If you need to configure the Apache HttpClient used for making requests, you can
