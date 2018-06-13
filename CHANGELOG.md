@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Development]
+### Added
+- Added `getSmsPrice` to `AccountClient` for getting SMS pricing for a country.
+- Added `getVoicePrice` to `AccountClient` for getting voice pricing for a country.
+- Added `getPrefixPrice` to `AccountClient` for getting SMS and voice pricing for a prefix.
 
 ## [3.5.0] - 2018-05-29
 ### Changed

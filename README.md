@@ -189,6 +189,50 @@ When the user enters the code they received, you can check it like this:
 client.getVerifyClient().check(ongoingVerify.getRequestId(), CODE)
 ```
 
+### Get a List of SMS Prices for a Country
+
+Get a list of SMS prices for a country with:
+
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+PricingResponse response = client.getAccountClient().getSmsPrice("GB");
+System.out.println(response.getDefaultPrice());
+```
+
+### Get a List of Voice Prices for a Country
+
+Get a list of voice prices for a country with:
+
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+PricingResponse response = client.getAccountClient().getVoicePrice("US");
+System.out.println(response.getDefaultPrice());
+```
+
+### Get a List of SMS Prices for a Prefix
+
+Get a list of SMS prices for a country with:
+
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+PricingResponse response = client.getAccountClient().getPrefixPrice(ServiceType.SMS, "1");
+System.out.println(response.getDefaultPrice());
+```
+
+### Get a List of Voice Prices for a Prefix
+
+Get a list of voice prices for a country with:
+
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+PricingResponse response = client.getAccountClient().getPrefixPrice(ServiceType.VOICE, "1");
+System.out.println(response.getDefaultPrice());
+```
+
 ### Custom HTTP Configuration
 
 If you need to configure the Apache HttpClient used for making requests, you can

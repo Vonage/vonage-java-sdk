@@ -19,10 +19,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.verify;
+package com.nexmo.client;
 
-import com.nexmo.client.AbstractClient;
-import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;

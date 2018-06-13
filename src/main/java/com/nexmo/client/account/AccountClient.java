@@ -21,6 +21,7 @@
  */
 package com.nexmo.client.account;
 
+import com.nexmo.client.AbstractClient;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClient;
 import com.nexmo.client.NexmoClientException;
@@ -31,8 +32,10 @@ import java.io.IOException;
  * A client for talking to the Nexmo Number Insight API. The standard way to obtain an instance of this class is to use
  * {@link NexmoClient#getInsightClient()}.
  */
-public class AccountClient {
+public class AccountClient extends AbstractClient {
     protected BalanceEndpoint balance;
+    protected PricingEndpoint pricing;
+    protected PrefixPricingEndpoint prefixPricing;
 
     /**
      * Constructor.
@@ -40,10 +43,64 @@ public class AccountClient {
      * @param httpWrapper (required) shared HTTP wrapper object used for making REST calls.
      */
     public AccountClient(HttpWrapper httpWrapper) {
+        super(httpWrapper);
+
         this.balance = new BalanceEndpoint(httpWrapper);
+        this.pricing = new PricingEndpoint(httpWrapper);
+        this.prefixPricing = new PrefixPricingEndpoint(httpWrapper);
     }
 
     public BalanceResponse getBalance() throws IOException, NexmoClientException {
         return this.balance.execute();
+    }
+
+    /**
+     * Retrieve the voice pricing for a specified country.
+     *
+     * @param country The two-character country code for which you would like to retrieve pricing.
+     * @return PricingResponse object which contains the results from the API.
+     * @throws IOException          if a network error occurred contacting the Nexmo Account API.
+     * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
+     */
+    public PricingResponse getVoicePrice(String country) throws IOException, NexmoClientException {
+        return getVoicePrice(new PricingRequest(country));
+    }
+
+    private PricingResponse getVoicePrice(PricingRequest pricingRequest) throws IOException, NexmoClientException {
+        return this.pricing.getPrice(ServiceType.VOICE, pricingRequest);
+    }
+
+    /**
+     * Retrieve the SMS pricing for a specified country.
+     *
+     * @param country The two-character country code for which you would like to retrieve pricing.
+     * @return PricingResponse object which contains the results from the API.
+     * @throws IOException          if a network error occurred contacting the Nexmo Account API.
+     * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
+     */
+    public PricingResponse getSmsPrice(String country) throws IOException, NexmoClientException {
+        return getSmsPrice(new PricingRequest(country));
+    }
+
+    private PricingResponse getSmsPrice(PricingRequest pricingRequest) throws IOException, NexmoClientException {
+        return this.pricing.getPrice(ServiceType.SMS, pricingRequest);
+    }
+
+    /**
+     * Retrieve the pricing for a specified prefix.
+     *
+     * @param type   The type of service to retrieve pricing for.
+     * @param prefix The prefix to retrieve the pricing for.
+     * @return PrefixPricingResponse object which contains the results from the API.
+     * @throws IOException          if a network error occurred contacting the Nexmo Account API.
+     * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
+     */
+    public PrefixPricingResponse getPrefixPrice(ServiceType type,
+                                                String prefix) throws IOException, NexmoClientException {
+        return getPrefixPrice(new PrefixPricingRequest(type, prefix));
+    }
+
+    private PrefixPricingResponse getPrefixPrice(PrefixPricingRequest prefixPricingRequest) throws IOException, NexmoClientException {
+        return this.prefixPricing.getPrice(prefixPricingRequest);
     }
 }
