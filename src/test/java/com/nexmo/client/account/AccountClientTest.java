@@ -197,7 +197,8 @@ public class AccountClientTest extends ClientTest<AccountClient> {
     @Test
     public void testTopUpSuccessful() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(200, ""));
-        Assert.assertTrue(client.topUp("ABC123"));
+        // No assertions as an exception will be thrown if failure occurs.
+        client.topUp("ABC123");
     }
 
     @Test(expected = NexmoClientException.class)

@@ -111,15 +111,15 @@ public class AccountClient extends AbstractClient {
      * reload-enabled payment.
      *
      * @param transaction The ID associated with your original auto-reload transaction
-     * @return Boolean true if successful.
      * @throws IOException          if a network error occurred contacting the Nexmo Account API.
-     * @throws NexmoClientException if there was a problem with the Nexmo request or response object.
+     * @throws NexmoClientException if there was a problem with the Nexmo request or response object indicating that
+     *                              the request was unsuccessful.
      */
-    public Boolean topUp(String transaction) throws IOException, NexmoClientException {
-        return topUp(new TopUpRequest(transaction));
+    public void topUp(String transaction) throws IOException, NexmoClientException {
+        topUp(new TopUpRequest(transaction));
     }
 
-    private Boolean topUp(TopUpRequest request) throws IOException, NexmoClientException {
-        return this.topUp.topUp(request);
+    private void topUp(TopUpRequest request) throws IOException, NexmoClientException {
+        this.topUp.topUp(request);
     }
 }

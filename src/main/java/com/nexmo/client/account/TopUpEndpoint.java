@@ -33,7 +33,7 @@ public class TopUpEndpoint {
         this.topUpMethod = new TopUpMethod(httpWrapper);
     }
 
-    Boolean topUp(TopUpRequest request) throws IOException, NexmoClientException {
-        return this.topUpMethod.execute(request);
+    void topUp(TopUpRequest request) throws IOException, NexmoClientException {
+        this.topUpMethod.execute(request);
     }
 }

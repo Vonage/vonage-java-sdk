@@ -239,8 +239,7 @@ Top-up your account that has auto-reload enabled with:
 ```java
 AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
 NexmoClient client = new NexmoClient(auth);
-Boolean successful = client.getAccountClient().topUp("TRANSACTION_NUMBER");
-System.out.println("Success: " + successful);
+client.getAccountClient().topUp("TRANSACTION_NUMBER");
 ```
 ### Custom HTTP Configuration
 

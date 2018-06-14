@@ -33,7 +33,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class TopUpMethod extends AbstractMethod<TopUpRequest, Boolean> {
+public class TopUpMethod extends AbstractMethod<TopUpRequest, Void> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
     private static final String DEFAULT_URI = "https://rest.nexmo.com/account/top-up";
@@ -55,10 +55,11 @@ public class TopUpMethod extends AbstractMethod<TopUpRequest, Boolean> {
     }
 
     @Override
-    public Boolean parseResponse(HttpResponse response) throws IOException, NexmoClientException {
+    public Void parseResponse(HttpResponse response) throws IOException, NexmoClientException {
         if (response.getStatusLine().getStatusCode() != 200) {
             throw new NexmoBadRequestException(EntityUtils.toString(response.getEntity()));
         }
-        return true;
+
+        return null;
     }
 }
