@@ -21,11 +21,6 @@
  */
 package com.nexmo.client.verify;
 
-
-/**
- * @deprecated Relies on XML Endpoint, use {@link VerifyResponse}
- */
-@Deprecated
 public class VerifyResult extends BaseResult {
     private final String requestId;
 
