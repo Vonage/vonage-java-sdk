@@ -1,3 +1,5 @@
+import org.gradle.internal.jvm.Jvm
+
 buildscript {
     repositories {
         jcenter()
@@ -24,7 +26,12 @@ sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
 
 repositories {
-    mavenCentral()
+    if (Jvm.current().javaVersion.toString() == "1.7") {
+        // Fall back to HTTP because the public Oracle and OpenJDK 1.7 versions don't support TLSv1.2
+        maven { url "http://repo.maven.apache.org/maven2/" }
+    } else {
+        mavenCentral()
+    }
 }
 
 tasks.withType(JavaCompile) {
