@@ -28,6 +28,8 @@ import org.junit.Test;
 
 import java.text.SimpleDateFormat;
 
+import static org.junit.Assert.fail;
+
 public class ConversionClientTest extends ClientTest<ConversionClient> {
     @Before
     public void setUp() {
@@ -35,12 +37,16 @@ public class ConversionClientTest extends ClientTest<ConversionClient> {
     }
 
     @Test
-    public void testSuccessfulResponse() throws Exception {
-        wrapper.setHttpClient(this.stubHttpClient(200, ""));
-        this.client.submitConversion(ConversionRequest.Type.VOICE,
-                                     "MESSAGE-ID",
-                                     true,
-                                     new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
+    public void testSuccessfulResponse() {
+        try {
+            wrapper.setHttpClient(this.stubHttpClient(200, ""));
+            this.client.submitConversion(ConversionRequest.Type.VOICE,
+                                         "MESSAGE-ID",
+                                         true,
+                                         new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
+        } catch (Exception e) {
+            fail("No exceptions should be thrown.");
+        }
     }
 
     @Test(expected = NexmoBadRequestException.class)
