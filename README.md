@@ -241,6 +241,19 @@ AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
 NexmoClient client = new NexmoClient(auth);
 client.getAccountClient().topUp("TRANSACTION_NUMBER");
 ```
+
+### Submit Conversion
+
+Submit a request to the Conversion API when it has been enabled on your account with:
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+this.client.submitConversion(ConversionRequest.Type.VOICE,
+                                     "MESSAGE-ID",
+                                     true,
+                                     new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
+```
+
 ### Custom HTTP Configuration
 
 If you need to configure the Apache HttpClient used for making requests, you can
