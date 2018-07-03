@@ -21,14 +21,9 @@
  */
 package com.nexmo.client.verify;
 
-
 import java.util.Date;
 import java.util.List;
 
-/**
- * @deprecated Relies on XML Endpoint, use {@link SearchVerifyResponse}
- */
-@Deprecated
 public class SearchResult extends BaseResult {
     private String requestId;
     private String accountId;
@@ -43,14 +38,15 @@ public class SearchResult extends BaseResult {
     private Date lastEventDate;
     private List<VerifyCheck> checks;
 
-    /** Used to define a verify check attempt. */
+    /**
+     * Used to define a verify check attempt.
+     */
     public static class VerifyCheck implements java.io.Serializable {
-        
+
         private static final long serialVersionUID = -5933303841261513099L;
 
         public enum Status {
-            VALID,
-            INVALID,
+            VALID, INVALID,
         }
 
         private final Date date;
@@ -58,10 +54,7 @@ public class SearchResult extends BaseResult {
         private final Status status;
         private final String ipAddress;
 
-        public VerifyCheck(Date date,
-                           String code,
-                           Status status,
-                           String ipAddress) {
+        public VerifyCheck(Date date, String code, Status status, String ipAddress) {
             this.date = date;
             this.code = code;
             this.status = status;
@@ -88,15 +81,12 @@ public class SearchResult extends BaseResult {
         public String toString() {
             return "VerifyCheck [status=" + this.status + ", code=" + this.code + ", date=" + this.date + "]";
         }
-        
+
     }
 
     public enum VerificationStatus {
-        
-        IN_PROGRESS("IN PROGRESS"),
-        SUCCESS,
-        FAILED,
-        EXPIRED;
+
+        IN_PROGRESS("IN PROGRESS"), SUCCESS, FAILED, EXPIRED;
 
         private final String name;
 
@@ -116,24 +106,24 @@ public class SearchResult extends BaseResult {
         public String toString() {
             return getName();
         }
-        
+
     }
 
     public SearchResult(final int status,
-                           final String requestId,
-                           final String accountId,
-                           final VerificationStatus verificationStatus,
-                           final String number,
-                           final float price,
-                           final String currency,
-                           final String senderId,
-                           final Date dateSubmitted,
-                           final Date dateFinalized,
-                           final Date firstEventDate,
-                           final Date lastEventDate,
-                           final List<VerifyCheck> checks,
-                           final String errorText,
-                           final boolean temporaryError) {
+                        final String requestId,
+                        final String accountId,
+                        final VerificationStatus verificationStatus,
+                        final String number,
+                        final float price,
+                        final String currency,
+                        final String senderId,
+                        final Date dateSubmitted,
+                        final Date dateFinalized,
+                        final Date firstEventDate,
+                        final Date lastEventDate,
+                        final List<VerifyCheck> checks,
+                        final String errorText,
+                        final boolean temporaryError) {
         super(status, errorText, temporaryError);
         this.requestId = requestId;
         this.accountId = accountId;
@@ -205,5 +195,5 @@ public class SearchResult extends BaseResult {
     public String toString() {
         return "SearchResult [status=" + getStatus() + ", requestId=" + this.requestId + ", verificationStatus=" + this.verificationStatus + "]";
     }
-    
+
 }
