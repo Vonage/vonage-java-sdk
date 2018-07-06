@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,21 +19,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.verify;
+package com.nexmo.client.account;
 
-public class VerifyResult extends BaseResult {
-    private final String requestId;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    public VerifyResult(final int status,
-                        final String requestId,
-                        final String errorText,
-                        final boolean temporaryError) {
-        super(status, errorText, temporaryError);
-        this.requestId = requestId;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Country {
+    private String code;
+    private String displayName;
+    private String name;
+
+    @JsonProperty("countryCode")
+    public String getCode() {
+        return code;
     }
 
-    public String getRequestId() {
-        return this.requestId;
+    @JsonProperty("countryDisplayName")
+    public String getDisplayName() {
+        return displayName;
     }
 
+    @JsonProperty("countryName")
+    public String getName() {
+        return name;
+    }
 }

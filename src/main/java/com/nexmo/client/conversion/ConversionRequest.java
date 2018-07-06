@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,21 +19,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.verify;
+package com.nexmo.client.conversion;
 
-public class VerifyResult extends BaseResult {
-    private final String requestId;
+import java.util.Date;
 
-    public VerifyResult(final int status,
-                        final String requestId,
-                        final String errorText,
-                        final boolean temporaryError) {
-        super(status, errorText, temporaryError);
-        this.requestId = requestId;
+public class ConversionRequest {
+    private Type type;
+    private String messageId;
+    private boolean delivered;
+    private Date timestamp;
+
+    public ConversionRequest(Type type, String messageId, boolean delivered, Date timestamp) {
+        this.type = type;
+        this.messageId = messageId;
+        this.delivered = delivered;
+        this.timestamp = timestamp;
     }
 
-    public String getRequestId() {
-        return this.requestId;
+    public Type getType() {
+        return type;
     }
 
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public boolean isDelivered() {
+        return delivered;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public enum Type {
+        SMS, VOICE
+    }
 }

@@ -27,6 +27,7 @@ import com.nexmo.client.applications.ApplicationClient;
 import com.nexmo.client.auth.AuthMethod;
 import com.nexmo.client.auth.JWTAuthMethod;
 import com.nexmo.client.auth.NexmoUnacceptableAuthException;
+import com.nexmo.client.conversion.ConversionClient;
 import com.nexmo.client.insight.InsightClient;
 import com.nexmo.client.numbers.NumbersClient;
 import com.nexmo.client.sms.SmsClient;
@@ -53,6 +54,7 @@ public class NexmoClient {
     private final VoiceClient voice;
     private final VerifyClient verify;
     private final SnsClient sns;
+    private final ConversionClient conversion;
 
     private HttpWrapper httpWrapper;
 
@@ -67,6 +69,7 @@ public class NexmoClient {
         this.voice = new VoiceClient(this.httpWrapper);
         this.sms = new SmsClient(this.httpWrapper);
         this.sns = new SnsClient(this.httpWrapper);
+        this.conversion = new ConversionClient(this.httpWrapper);
     }
 
     /**
@@ -110,6 +113,10 @@ public class NexmoClient {
 
     public VoiceClient getVoiceClient() {
         return this.voice;
+    }
+
+    public ConversionClient getConversionClient() {
+        return this.conversion;
     }
 
     /**

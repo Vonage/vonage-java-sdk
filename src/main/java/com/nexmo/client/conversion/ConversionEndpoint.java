@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,21 +19,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.verify;
+package com.nexmo.client.conversion;
 
-public class VerifyResult extends BaseResult {
-    private final String requestId;
+import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoClientException;
 
-    public VerifyResult(final int status,
-                        final String requestId,
-                        final String errorText,
-                        final boolean temporaryError) {
-        super(status, errorText, temporaryError);
-        this.requestId = requestId;
+import java.io.IOException;
+
+class ConversionEndpoint {
+    private ConversionMethod conversionMethod;
+
+    ConversionEndpoint(HttpWrapper httpWrapper) {
+        this.conversionMethod = new ConversionMethod(httpWrapper);
     }
 
-    public String getRequestId() {
-        return this.requestId;
+    void submitConversion(ConversionRequest request) throws IOException, NexmoClientException {
+        this.conversionMethod.execute(request);
     }
-
 }

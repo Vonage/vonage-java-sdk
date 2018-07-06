@@ -21,6 +21,7 @@
  */
 package com.nexmo.client.verify;
 
+import com.nexmo.client.ClientTest;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

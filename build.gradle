@@ -1,6 +1,13 @@
+import org.gradle.internal.jvm.Jvm
+
 buildscript {
     repositories {
-        jcenter()
+        if (Jvm.current().javaVersion.toString() == "1.7") {
+            // Fall back to HTTP because the public Oracle and OpenJDK 1.7 versions don't support TLSv1.2
+            maven { url "http://jcenter.bintray.com/" }
+        } else {
+            jcenter()
+        }
     }
     dependencies {
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
@@ -18,13 +25,18 @@ apply plugin: 'eclipse'
 
 group = "com.nexmo"
 archivesBaseName = "client"
-version = "3.5.0"
+version = "3.6.0"
 
 sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
 
 repositories {
-    mavenCentral()
+    if (Jvm.current().javaVersion.toString() == "1.7") {
+        // Fall back to HTTP because the public Oracle and OpenJDK 1.7 versions don't support TLSv1.2
+        maven { url "http://repo.maven.apache.org/maven2/" }
+    } else {
+        mavenCentral()
+    }
 }
 
 tasks.withType(JavaCompile) {

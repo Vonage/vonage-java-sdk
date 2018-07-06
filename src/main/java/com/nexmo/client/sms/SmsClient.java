@@ -43,6 +43,7 @@ public class SmsClient {
     private SendMessageEndpoint message;
     private SmsSearchEndpoint search;
     private SearchRejectedMessagesEndpoint rejected;
+    private SmsSingleSearchEndpoint singleSearch;
 
     /**
      * Create a new SmsClient.
@@ -51,6 +52,7 @@ public class SmsClient {
         this.message = new SendMessageEndpoint(httpWrapper);
         this.search = new SmsSearchEndpoint(httpWrapper);
         this.rejected = new SearchRejectedMessagesEndpoint(httpWrapper);
+        this.singleSearch = new SmsSingleSearchEndpoint(httpWrapper);
     }
 
     /**
@@ -79,8 +81,7 @@ public class SmsClient {
      * You should probably use the helper methods {@link #searchMessages(String, String...)} or
      * {@link #searchMessages(String, String...)} instead.
      */
-    public SearchSmsResponse searchMessages(SearchSmsRequest request)
-            throws IOException, NexmoClientException {
+    public SearchSmsResponse searchMessages(SearchSmsRequest request) throws IOException, NexmoClientException {
         return this.search.execute(request);
     }
 
@@ -91,8 +92,7 @@ public class SmsClient {
      * @param ids optional extra IDs to look up
      * @return SMS data matching the provided criteria
      */
-    public SearchSmsResponse searchMessages(String id, String... ids)
-            throws IOException, NexmoClientException {
+    public SearchSmsResponse searchMessages(String id, String... ids) throws IOException, NexmoClientException {
         List<String> idList = new ArrayList<>(ids.length + 1);
         idList.add(id);
         idList.addAll(Arrays.asList(ids));
@@ -106,8 +106,7 @@ public class SmsClient {
      * @param to   the MSISDN number of the SMS recipient
      * @return SMS data matching the provided criteria
      */
-    public SearchSmsResponse searchMessages(Date date, String to)
-            throws IOException, NexmoClientException {
+    public SearchSmsResponse searchMessages(Date date, String to) throws IOException, NexmoClientException {
         return this.searchMessages(new SmsDateSearchRequest(date, to));
     }
 
@@ -115,11 +114,10 @@ public class SmsClient {
      * Search for rejected SMS transactions using a {@link SearchRejectedMessagesRequest}.
      * <p>
      * You should probably use {@link #searchRejectedMessages(Date, String)} instead.
-
+     *
      * @return rejection data matching the provided criteria
      */
-    public SearchRejectedMessagesResponse searchRejectedMessages(SearchRejectedMessagesRequest request)
-            throws IOException, NexmoClientException {
+    public SearchRejectedMessagesResponse searchRejectedMessages(SearchRejectedMessagesRequest request) throws IOException, NexmoClientException {
         return this.rejected.execute(request);
     }
 
@@ -130,8 +128,20 @@ public class SmsClient {
      * @param to   the MSISDN number of the SMS recipient
      * @return rejection data matching the provided criteria
      */
-    public SearchRejectedMessagesResponse searchRejectedMessages(Date date, String to)
-            throws IOException, NexmoClientException {
+    public SearchRejectedMessagesResponse searchRejectedMessages(Date date,
+                                                                 String to) throws IOException, NexmoClientException {
         return this.searchRejectedMessages(new SearchRejectedMessagesRequest(date, to));
+    }
+
+    /**
+     * Search for a single SMS by id.
+     *
+     * @param id The message id to search for.
+     * @return SmsSingleSearchResponse object containing the details of the SMS.
+     * @throws NexmoResponseParseException if the HTTP response could not be parsed.
+     * @throws IOException                 There has been an error attempting to communicate with the Nexmo service (e.g. Network failure).
+     */
+    public SmsSingleSearchResponse getSms(String id) throws IOException, NexmoClientException {
+        return this.singleSearch.execute(id);
     }
 }

@@ -38,12 +38,11 @@ import org.junit.Test;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -223,5 +222,37 @@ public class SmsClientTest {
                 "447700900983"
         );
         assertThat(response.getCount(), CoreMatchers.equalTo(1));
+    }
+
+    @Test
+    public void testSearchSingleMessagesId() throws Exception {
+        this.wrapper.setHttpClient(this.stubHttpClient(200, "{\n" +
+                "      \"message-id\": \"00A0B0C0\",\n" +
+                "      \"account-id\": \"key\",\n" +
+                "      \"network\": \"20810\",\n" +
+                "      \"from\": \"MyApp\",\n" +
+                "      \"to\": \"123456890\",\n" +
+                "      \"body\": \"hello world\",\n" +
+                "      \"price\": \"0.04500000\",\n" +
+                "      \"date-received\": \"2011-11-25 16:03:00\",\n" +
+                "      \"final-status\": \"DELIVRD\",\n" +
+                "      \"date-closed\": \"2011-11-25 16:03:00\",\n" +
+                "      \"latency\": 11151,\n" +
+                "      \"type\": \"MT\"\n" +
+                "    }"));
+
+        SmsSingleSearchResponse response = client.getSms("an-id");
+        assertEquals("00A0B0C0", response.getMessageId());
+        assertEquals("key", response.getAccountId());
+        assertEquals("20810", response.getNetwork());
+        assertEquals("MyApp", response.getFrom());
+        assertEquals("123456890", response.getTo());
+        assertEquals("hello world", response.getBody());
+        assertEquals("0.04500000", response.getPrice());
+        assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2011-11-25 16:03:00"), response.getDateReceived());
+        assertEquals("DELIVRD", response.getFinalStatus());
+        assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2011-11-25 16:03:00"), response.getDateClosed());
+        assertEquals(new Integer(11151), response.getLatency());
+        assertEquals("MT", response.getType());
     }
 }

@@ -3,7 +3,7 @@
 [![Maven Release](https://maven-badges.herokuapp.com/maven-central/com.nexmo/client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.nexmo/client)
 [![Build Status](https://travis-ci.org/Nexmo/nexmo-java.svg?branch=version-2)](https://travis-ci.org/Nexmo/nexmo-java)
 [![codecov](https://codecov.io/gh/Nexmo/nexmo-java/branch/version-2/graph/badge.svg)](https://codecov.io/gh/Nexmo/nexmo-java)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/9888a9f2ec0d4599a11762e5d946da17)](https://www.codacy.com/app/mark-smith/nexmo-java?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Nexmo/nexmo-java&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0049e762c00b4ce999f45492795ba50a)](https://www.codacy.com/app/cr0wst/nexmo-java?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Nexmo/nexmo-java&amp;utm_campaign=Badge_Grade)
 
 
 You can use this Java client library to add [Nexmo's API](#api-coverage) to your application. To use this, you'll
@@ -28,7 +28,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.nexmo:client:3.5.0'
+    compile 'com.nexmo:client:3.6.0'
 }
 ```
 
@@ -40,7 +40,7 @@ Add the following to the correct place in your project's POM file:
 <dependency>
       <groupId>com.nexmo</groupId>
       <artifactId>client</artifactId>
-      <version>3.5.0</version>
+      <version>3.6.0</version>
 </dependency>
 ```
 
@@ -187,6 +187,71 @@ When the user enters the code they received, you can check it like this:
 
 ```java
 client.getVerifyClient().check(ongoingVerify.getRequestId(), CODE)
+```
+
+### Get a List of SMS Prices for a Country
+
+Get a list of SMS prices for a country with:
+
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+PricingResponse response = client.getAccountClient().getSmsPrice("GB");
+System.out.println(response.getDefaultPrice());
+```
+
+### Get a List of Voice Prices for a Country
+
+Get a list of voice prices for a country with:
+
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+PricingResponse response = client.getAccountClient().getVoicePrice("US");
+System.out.println(response.getDefaultPrice());
+```
+
+### Get a List of SMS Prices for a Prefix
+
+Get a list of SMS prices for a country with:
+
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+PrefixPricingResponse response = client.getAccountClient().getPrefixPrice(ServiceType.SMS, "1");
+System.out.println(response.getCountries().get(0).getDefaultPrice());
+```
+
+### Get a List of Voice Prices for a Prefix
+
+Get a list of voice prices for a country with:
+
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+PrefixPricingResponse response = client.getAccountClient().getPrefixPrice(ServiceType.VOICE, "1");
+System.out.println(response.getCountries().get(0).getDefaultPrice());
+```
+
+### Top-up Account
+
+Top-up your account that has auto-reload enabled with:
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+client.getAccountClient().topUp("TRANSACTION_NUMBER");
+```
+
+### Submit Conversion
+
+Submit a request to the Conversion API when it has been enabled on your account with:
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+this.client.submitConversion(ConversionRequest.Type.VOICE,
+                                     "MESSAGE-ID",
+                                     true,
+                                     new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
 ```
 
 ### Custom HTTP Configuration
