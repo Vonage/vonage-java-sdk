@@ -85,7 +85,7 @@ public class HttpWrapper {
 
         return HttpClientBuilder.create()
                 .setConnectionManager(connectionManager)
-                .setUserAgent("nexmo-java/3.5.0")
+                .setUserAgent("nexmo-java/3.6.0")
                 .setDefaultRequestConfig(requestConfig)
                 .build();
     }
