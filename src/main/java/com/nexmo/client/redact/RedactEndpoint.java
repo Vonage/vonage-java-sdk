@@ -22,10 +22,18 @@
 package com.nexmo.client.redact;
 
 import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoClientException;
 
-public class RedactEndpoint {
+import java.io.IOException;
+
+class RedactEndpoint {
     private RedactMethod redactMethod;
-    public RedactEndpoint(HttpWrapper httpWrapper) {
 
+    RedactEndpoint(HttpWrapper httpWrapper) {
+        this.redactMethod = new RedactMethod(httpWrapper);
+    }
+
+    void transaction(RedactRequest redactRequest) throws IOException, NexmoClientException {
+        this.redactMethod.execute(redactRequest);
     }
 }

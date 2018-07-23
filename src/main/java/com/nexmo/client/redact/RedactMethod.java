@@ -22,12 +22,16 @@
 package com.nexmo.client.redact;
 
 import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoBadRequestException;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.SignatureAuthMethod;
 import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.voice.endpoints.AbstractMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -35,11 +39,11 @@ import java.io.UnsupportedEncodingException;
 public class RedactMethod extends AbstractMethod<RedactRequest, RedactResponse> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/verify/json";
+    private static final String DEFAULT_URI = "https://api.nexmo.com/v1/redact/transaction";
 
     private String uri = DEFAULT_URI;
 
-    public RedactMethod(HttpWrapper httpWrapper) {
+    RedactMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -49,12 +53,30 @@ public class RedactMethod extends AbstractMethod<RedactRequest, RedactResponse> 
     }
 
     @Override
-    public RequestBuilder makeRequest(RedactRequest request) throws NexmoClientException, UnsupportedEncodingException {
-        return null;
+    public RequestBuilder makeRequest(RedactRequest redactRequest) throws NexmoClientException, UnsupportedEncodingException {
+        if (redactRequest.getId() == null || redactRequest.getProduct() == null) {
+            throw new IllegalArgumentException("Redact transaction id and product are required.");
+        }
+
+        if (redactRequest.getProduct() == RedactRequest.Product.SMS && redactRequest.getType() == null) {
+            throw new IllegalArgumentException("Redacting SMS requires a type.");
+        }
+
+        return RequestBuilder.post(this.uri)
+                .setEntity(new StringEntity(redactRequest.toJson(), ContentType.APPLICATION_JSON));
     }
 
     @Override
     public RedactResponse parseResponse(HttpResponse response) throws IOException, NexmoClientException {
+        if (response.getStatusLine().getStatusCode() != 204) {
+            throw new NexmoBadRequestException(EntityUtils.toString(response.getEntity()));
+        }
+
         return null;
+    }
+
+    @Override
+    protected boolean isUseBasicAuth() {
+        return true;
     }
 }

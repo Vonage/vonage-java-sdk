@@ -23,7 +23,6 @@ package com.nexmo.client.voice.endpoints;
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.NexmoMethodFailedException;
 import com.nexmo.client.NexmoUnexpectedException;
 import com.nexmo.client.auth.AuthMethod;
 import org.apache.commons.logging.Log;
@@ -71,7 +70,9 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      * Execute the REST call represented by this method object.
      *
      * @param request A RequestT representing input to the REST call to be made
+     *
      * @return A ResultT representing the response from the executed REST call
+     *
      * @throws IOException          if an exception occurs making the REST call
      * @throws NexmoClientException if there is a problem parsing the HTTP response
      */
@@ -89,13 +90,12 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
             // wrong encoding, whereas RequestBuilder.put().setUri(uri) uses UTF-8.
             // - MS 2017-04-12
             if (httpRequest instanceof HttpEntityEnclosingRequest) {
-                HttpEntityEnclosingRequest entityRequest =
-                        (HttpEntityEnclosingRequest) httpRequest;
+                HttpEntityEnclosingRequest entityRequest = (HttpEntityEnclosingRequest) httpRequest;
                 HttpEntity entity = entityRequest.getEntity();
                 if (entity != null && entity instanceof UrlEncodedFormEntity) {
-                    entityRequest.setEntity(new UrlEncodedFormEntity(
-                            requestBuilder.getParameters(),
-                            Charset.forName("UTF-8")));
+                    entityRequest.setEntity(new UrlEncodedFormEntity(requestBuilder.getParameters(),
+                            Charset.forName("UTF-8")
+                    ));
                 }
             }
             LOG.debug("Request: " + httpRequest);
@@ -115,12 +115,18 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      * {@link RequestBuilder}, and return the result.
      *
      * @param request A RequestBuilder which has not yet had authentication information applied
+     *
      * @return A RequestBuilder with appropriate authentication information applied (may or not be the same instance as
-     * <pre>request</pre>)
+     *         <pre>request</pre>)
+     *
      * @throws NexmoClientException If no appropriate {@link AuthMethod} is available
      */
     protected RequestBuilder applyAuth(RequestBuilder request) throws NexmoClientException {
-        return getAuthMethod(getAcceptableAuthMethods()).apply(request);
+        AuthMethod authMethod = getAuthMethod(getAcceptableAuthMethods());
+        if (isUseBasicAuth()) {
+            return authMethod.applyAsBasicAuth(request);
+        }
+        return authMethod.apply(request);
     }
 
     /**
@@ -128,7 +134,9 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      *
      * @param acceptableAuthMethods an array of classes, representing authentication methods that are acceptable for
      *                              this endpoint
+     *
      * @return An AuthMethod created from one of the provided acceptableAuthMethods.
+     *
      * @throws NexmoClientException If no AuthMethod is available from the provided array of acceptableAuthMethods.
      */
     protected AuthMethod getAuthMethod(Class[] acceptableAuthMethods) throws NexmoClientException {
@@ -152,19 +160,30 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      * Construct and return a RequestBuilder instance from the provided request.
      *
      * @param request A RequestT representing input to the REST call to be made
+     *
      * @return A ResultT representing the response from the executed REST call
+     *
      * @throws NexmoClientException         if a problem is encountered constructing the request or response.
      * @throws UnsupportedEncodingException if UTF-8 encoding is not supported by the JVM
      */
-    public abstract RequestBuilder makeRequest(RequestT request)
-            throws NexmoClientException, UnsupportedEncodingException;
+    public abstract RequestBuilder makeRequest(RequestT request) throws NexmoClientException, UnsupportedEncodingException;
 
     /**
      * Construct a ResultT representing the contents of the HTTP response returned from the Nexmo Voice API.
      *
      * @param response An HttpResponse returned from the Nexmo Voice API
+     *
      * @return A ResultT type representing the result of the REST call
+     *
      * @throws IOException if a problem occurs parsing the response
      */
     public abstract ResultT parseResponse(HttpResponse response) throws IOException, NexmoClientException;
+
+    /**
+     * Indicates whether or not basic authentication should be used.
+     * Workaround for implementation of AbstractMethod where parameter authentication is not supported.
+     */
+    protected boolean isUseBasicAuth() {
+        return false;
+    }
 }

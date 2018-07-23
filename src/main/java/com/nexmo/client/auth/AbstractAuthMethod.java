@@ -21,6 +21,7 @@
  */
 package com.nexmo.client.auth;
 
+import org.apache.http.client.methods.RequestBuilder;
 
 public abstract class AbstractAuthMethod implements AuthMethod {
     @Override
@@ -29,4 +30,10 @@ public abstract class AbstractAuthMethod implements AuthMethod {
     }
 
     public abstract int getSortKey();
+
+    @Override
+    public RequestBuilder applyAsBasicAuth(RequestBuilder request) {
+        throw new UnsupportedOperationException(
+                "applyAsBasicAuth not implemented for " + this.getClass().getCanonicalName());
+    }
 }

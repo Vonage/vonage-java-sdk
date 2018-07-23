@@ -23,7 +23,15 @@ package com.nexmo.client.redact;
 
 import com.nexmo.client.AbstractClient;
 import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoClient;
+import com.nexmo.client.NexmoClientException;
 
+import java.io.IOException;
+
+/**
+ * A client for talking to the Nexmo Redact API. The standard way to obtain an instance of this class is to use
+ * {@link NexmoClient#getRedactClient()}.
+ */
 public class RedactClient extends AbstractClient {
     private RedactEndpoint redactEndpoint;
 
@@ -31,5 +39,47 @@ public class RedactClient extends AbstractClient {
         super(httpWrapper);
 
         this.redactEndpoint = new RedactEndpoint(httpWrapper);
+    }
+
+    /**
+     * Submit a request to the Redact API to redact a transaction.
+     *
+     * @param id      The transaction id to redact.
+     * @param product The {@link com.nexmo.client.redact.RedactRequest.Product} which corresponds to the transaction.
+     *
+     * @throws IOException          if a network error occurred contacting the Nexmo Redact API.
+     * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
+     */
+    public void transaction(String id, RedactRequest.Product product) throws IOException, NexmoClientException {
+        this.transaction(new RedactRequest(id, product));
+    }
+
+    /**
+     * Submit a request to the Redact API to redact a transaction.
+     *
+     * @param id      The transaction id to redact.
+     * @param product The {@link com.nexmo.client.redact.RedactRequest.Product} which corresponds to the transaction.
+     * @param type    The {@link com.nexmo.client.redact.RedactRequest.Type} which is required if redacting SMS data.
+     *
+     * @throws IOException          if a network error occurred contacting the Nexmo Redact API.
+     * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
+     */
+    public void transaction(String id, RedactRequest.Product product, RedactRequest.Type type) throws IOException, NexmoClientException {
+        RedactRequest request = new RedactRequest(id, product);
+        request.setType(type);
+
+        this.transaction(request);
+    }
+
+    /**
+     * Submit a request to the Redact API to redact a transaction.
+     *
+     * @param redactRequest a {@link RedactRequest} object which contains the request parameters.
+     *
+     * @throws IOException          if a network error occurred contacting the Nexmo Redact API.
+     * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
+     */
+    public void transaction(RedactRequest redactRequest) throws IOException, NexmoClientException {
+        this.redactEndpoint.transaction(redactRequest);
     }
 }

@@ -27,5 +27,14 @@ import org.apache.http.client.methods.RequestBuilder;
 public interface AuthMethod extends Comparable<AuthMethod> {
     public RequestBuilder apply(RequestBuilder request);
 
+    /**
+     * Apply the authentication to the header as basic authentication.
+     *
+     * @param requestBuilder The request being built
+     *
+     * @return RequestBuilder for more building of the request.
+     */
+    public RequestBuilder applyAsBasicAuth(RequestBuilder requestBuilder);
+
     public int getSortKey();
 }
