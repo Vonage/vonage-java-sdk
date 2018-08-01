@@ -21,7 +21,7 @@
  */
 package com.nexmo.client.auth;
 
-import com.sun.org.apache.xml.internal.security.utils.Base64;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.message.BasicHeader;
@@ -44,7 +44,7 @@ public class TokenAuthMethod extends AbstractAuthMethod {
 
     @Override
     public RequestBuilder applyAsBasicAuth(RequestBuilder request) {
-        String headerValue = Base64.encode((this.apiKey + ":" + this.apiSecret).getBytes());
+        String headerValue = Base64.encodeBase64String((this.apiKey + ":" + this.apiSecret).getBytes());
         Header authHeader = new BasicHeader("Authorization", "Basic " + headerValue);
         return request.addHeader(authHeader);
     }
