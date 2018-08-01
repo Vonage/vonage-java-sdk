@@ -42,7 +42,6 @@ public class RedactClientTest extends ClientTest<RedactClient> {
             redactRequest.setType(RedactRequest.Type.INBOUND);
 
             this.client.transaction(redactRequest);
-            this.client.transaction(redactRequest.getId(), redactRequest.getProduct());
             this.client.transaction(redactRequest.getId(), redactRequest.getProduct(), redactRequest.getType());
         } catch (Exception e) {
             fail("No exceptions should be thrown.");
@@ -52,7 +51,7 @@ public class RedactClientTest extends ClientTest<RedactClient> {
     @Test(expected = NexmoBadRequestException.class)
     public void testWrongCredentials() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(401, ""));
-        RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.SMS);
+        RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
         this.client.transaction(redactRequest);
         this.client.transaction(redactRequest.getId(), redactRequest.getProduct());
     }
@@ -60,7 +59,7 @@ public class RedactClientTest extends ClientTest<RedactClient> {
     @Test(expected = NexmoBadRequestException.class)
     public void testPrematureRedactionOrUnauthorized() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(403, ""));
-        RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.SMS);
+        RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
         this.client.transaction(redactRequest);
         this.client.transaction(redactRequest.getId(), redactRequest.getProduct());
     }
@@ -68,7 +67,7 @@ public class RedactClientTest extends ClientTest<RedactClient> {
     @Test(expected = NexmoBadRequestException.class)
     public void testInvalidId() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(404, ""));
-        RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.SMS);
+        RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
         this.client.transaction(redactRequest);
         this.client.transaction(redactRequest.getId(), redactRequest.getProduct());
     }
@@ -76,7 +75,7 @@ public class RedactClientTest extends ClientTest<RedactClient> {
     @Test(expected = NexmoBadRequestException.class)
     public void testInvalidJsonInvalidProduct() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(422, ""));
-        RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.SMS);
+        RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
         this.client.transaction(redactRequest);
         this.client.transaction(redactRequest.getId(), redactRequest.getProduct());
     }
@@ -84,7 +83,7 @@ public class RedactClientTest extends ClientTest<RedactClient> {
     @Test(expected = NexmoBadRequestException.class)
     public void testRateLimit() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(429, ""));
-        RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.SMS);
+        RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
         this.client.transaction(redactRequest);
         this.client.transaction(redactRequest.getId(), redactRequest.getProduct());
     }
