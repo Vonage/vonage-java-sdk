@@ -33,7 +33,7 @@ class RedactEndpoint {
         this.redactMethod = new RedactMethod(httpWrapper);
     }
 
-    void transaction(RedactRequest redactRequest) throws IOException, NexmoClientException {
+    void redactTransaction(RedactRequest redactRequest) throws IOException, NexmoClientException {
         this.redactMethod.execute(redactRequest);
     }
 }

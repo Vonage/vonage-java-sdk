@@ -50,8 +50,8 @@ public class RedactClient extends AbstractClient {
      * @throws IOException          if a network error occurred contacting the Nexmo Redact API.
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
-    public void transaction(String id, RedactRequest.Product product) throws IOException, NexmoClientException {
-        this.transaction(new RedactRequest(id, product));
+    public void redactTransaction(String id, RedactRequest.Product product) throws IOException, NexmoClientException {
+        this.redactTransaction(new RedactRequest(id, product));
     }
 
     /**
@@ -64,11 +64,11 @@ public class RedactClient extends AbstractClient {
      * @throws IOException          if a network error occurred contacting the Nexmo Redact API.
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
-    public void transaction(String id, RedactRequest.Product product, RedactRequest.Type type) throws IOException, NexmoClientException {
+    public void redactTransaction(String id, RedactRequest.Product product, RedactRequest.Type type) throws IOException, NexmoClientException {
         RedactRequest request = new RedactRequest(id, product);
         request.setType(type);
 
-        this.transaction(request);
+        this.redactTransaction(request);
     }
 
     /**
@@ -79,7 +79,7 @@ public class RedactClient extends AbstractClient {
      * @throws IOException          if a network error occurred contacting the Nexmo Redact API.
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
-    public void transaction(RedactRequest redactRequest) throws IOException, NexmoClientException {
-        this.redactEndpoint.transaction(redactRequest);
+    public void redactTransaction(RedactRequest redactRequest) throws IOException, NexmoClientException {
+        this.redactEndpoint.redactTransaction(redactRequest);
     }
 }

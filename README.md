@@ -260,7 +260,7 @@ Submit a request to the Redact API when it has been enabled on your account with
 ```java
 AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
 NexmoClient client = new NexmoClient(auth);
-client.getRedactClient().transaction(SMS_ID, RedactRequest.Product.SMS, RedactRequest.Type.INBOUND);
+client.getRedactClient().redactTransaction(SMS_ID, RedactRequest.Product.SMS, RedactRequest.Type.INBOUND);
 ```
 
 ### Redact Voice
@@ -269,7 +269,7 @@ Submit a request to the Redact API when it has been enabled on your account with
 ```java
 AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
 NexmoClient client = new NexmoClient(auth);
-client.getRedactClient().transaction(VOICE_ID, RedactRequest.Product.VOICE);
+client.getRedactClient().redactTransaction(VOICE_ID, RedactRequest.Product.VOICE);
 ```
 
 ### Custom HTTP Configuration
