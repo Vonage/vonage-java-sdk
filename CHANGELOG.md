@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Added `RedactClient` and the ability to interact with the Nexmo Redact API.
 
+### Changed
+- Updated `ConnectNcco` to use the `Endpoint` interface and no longer be coupled to just `PhoneEndpoint`.
+
 ## [3.6.0] - 2018-07-06
 ### Added
 - Added `getSmsPrice` to `AccountClient` for getting SMS pricing for a country.
