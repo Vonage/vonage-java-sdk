@@ -40,6 +40,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -92,7 +93,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
             if (httpRequest instanceof HttpEntityEnclosingRequest) {
                 HttpEntityEnclosingRequest entityRequest = (HttpEntityEnclosingRequest) httpRequest;
                 HttpEntity entity = entityRequest.getEntity();
-                if (entity != null && entity instanceof UrlEncodedFormEntity) {
+                if (entity instanceof UrlEncodedFormEntity) {
                     entityRequest.setEntity(new UrlEncodedFormEntity(requestBuilder.getParameters(),
                             Charset.forName("UTF-8")
                     ));
@@ -138,9 +139,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
     protected AuthMethod getAuthMethod(Class[] acceptableAuthMethods) throws NexmoClientException {
         if (acceptable == null) {
             this.acceptable = new HashSet<>();
-            for (Class c : acceptableAuthMethods) {
-                acceptable.add(c);
-            }
+            Collections.addAll(acceptable, acceptableAuthMethods);
         }
 
         return this.httpWrapper.getAuthCollection().getAcceptableAuthMethod(acceptable);
