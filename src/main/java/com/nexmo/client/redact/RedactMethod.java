@@ -76,7 +76,7 @@ public class RedactMethod extends AbstractMethod<RedactRequest, RedactResponse> 
     }
 
     @Override
-    protected boolean isUseBasicAuth() {
-        return true;
+    protected RequestBuilder applyAuth(RequestBuilder request) throws NexmoClientException {
+        return getAuthMethod(getAcceptableAuthMethods()).applyAsBasicAuth(request);
     }
 }

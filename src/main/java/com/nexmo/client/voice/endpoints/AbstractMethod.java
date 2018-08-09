@@ -122,11 +122,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      * @throws NexmoClientException If no appropriate {@link AuthMethod} is available
      */
     protected RequestBuilder applyAuth(RequestBuilder request) throws NexmoClientException {
-        AuthMethod authMethod = getAuthMethod(getAcceptableAuthMethods());
-        if (isUseBasicAuth()) {
-            return authMethod.applyAsBasicAuth(request);
-        }
-        return authMethod.apply(request);
+        return getAuthMethod(getAcceptableAuthMethods()).apply(request);
     }
 
     /**
@@ -178,12 +174,4 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      * @throws IOException if a problem occurs parsing the response
      */
     public abstract ResultT parseResponse(HttpResponse response) throws IOException, NexmoClientException;
-
-    /**
-     * Indicates whether or not basic authentication should be used.
-     * Workaround for implementation of AbstractMethod where parameter authentication is not supported.
-     */
-    protected boolean isUseBasicAuth() {
-        return false;
-    }
 }
