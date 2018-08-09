@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,22 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.auth;
+package com.nexmo.client.redact;
 
-import org.apache.http.client.methods.RequestBuilder;
-
-
-public interface AuthMethod extends Comparable<AuthMethod> {
-    public RequestBuilder apply(RequestBuilder request);
-
-    /**
-     * Apply the authentication to the header as basic authentication.
-     *
-     * @param requestBuilder The request being built
-     *
-     * @return RequestBuilder for more building of the request.
-     */
-    public RequestBuilder applyAsBasicAuth(RequestBuilder requestBuilder);
-
-    public int getSortKey();
+public class RedactResponse {
 }

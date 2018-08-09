@@ -30,6 +30,7 @@ import com.nexmo.client.auth.NexmoUnacceptableAuthException;
 import com.nexmo.client.conversion.ConversionClient;
 import com.nexmo.client.insight.InsightClient;
 import com.nexmo.client.numbers.NumbersClient;
+import com.nexmo.client.redact.RedactClient;
 import com.nexmo.client.sms.SmsClient;
 import com.nexmo.client.sns.SnsClient;
 import com.nexmo.client.verify.VerifyClient;
@@ -55,6 +56,7 @@ public class NexmoClient {
     private final VerifyClient verify;
     private final SnsClient sns;
     private final ConversionClient conversion;
+    private final RedactClient redact;
 
     private HttpWrapper httpWrapper;
 
@@ -70,6 +72,7 @@ public class NexmoClient {
         this.sms = new SmsClient(this.httpWrapper);
         this.sns = new SnsClient(this.httpWrapper);
         this.conversion = new ConversionClient(this.httpWrapper);
+        this.redact = new RedactClient(this.httpWrapper);
     }
 
     /**
@@ -119,10 +122,15 @@ public class NexmoClient {
         return this.conversion;
     }
 
+    public RedactClient getRedactClient() {
+        return this.redact;
+    }
+
     /**
      * Generate a JWT for the application the client has been configured with.
      *
      * @return A String containing the token data.
+     *
      * @throws NexmoUnacceptableAuthException if no {@link JWTAuthMethod} is available
      */
     public String generateJwt() throws NexmoUnacceptableAuthException {

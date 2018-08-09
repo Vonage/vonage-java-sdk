@@ -254,6 +254,24 @@ this.client.submitConversion(ConversionRequest.Type.VOICE,
                                      new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
 ```
 
+### Redact Inbound SMS
+
+Submit a request to the Redact API when it has been enabled on your account with:
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+client.getRedactClient().redactTransaction(SMS_ID, RedactRequest.Product.SMS, RedactRequest.Type.INBOUND);
+```
+
+### Redact Voice
+
+Submit a request to the Redact API when it has been enabled on your account with:
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+client.getRedactClient().redactTransaction(VOICE_ID, RedactRequest.Product.VOICE);
+```
+
 ### Custom HTTP Configuration
 
 If you need to configure the Apache HttpClient used for making requests, you can
