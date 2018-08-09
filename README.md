@@ -248,7 +248,7 @@ Submit a request to the Conversion API when it has been enabled on your account 
 ```java
 AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
 NexmoClient client = new NexmoClient(auth);
-this.client.submitConversion(ConversionRequest.Type.VOICE,
+client.getConversionClient().submitConversion(ConversionRequest.Type.VOICE,
                                      "MESSAGE-ID",
                                      true,
                                      new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
