@@ -28,7 +28,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.nexmo:client:3.6.0'
+    compile 'com.nexmo:client:3.7.0'
 }
 ```
 
@@ -40,7 +40,7 @@ Add the following to the correct place in your project's POM file:
 <dependency>
       <groupId>com.nexmo</groupId>
       <artifactId>client</artifactId>
-      <version>3.6.0</version>
+      <version>3.7.0</version>
 </dependency>
 ```
 
@@ -248,10 +248,28 @@ Submit a request to the Conversion API when it has been enabled on your account 
 ```java
 AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
 NexmoClient client = new NexmoClient(auth);
-this.client.submitConversion(ConversionRequest.Type.VOICE,
+client.getConversionClient().submitConversion(ConversionRequest.Type.VOICE,
                                      "MESSAGE-ID",
                                      true,
                                      new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
+```
+
+### Redact Inbound SMS
+
+Submit a request to the Redact API when it has been enabled on your account with:
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+client.getRedactClient().redactTransaction(SMS_ID, RedactRequest.Product.SMS, RedactRequest.Type.INBOUND);
+```
+
+### Redact Voice
+
+Submit a request to the Redact API when it has been enabled on your account with:
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+client.getRedactClient().redactTransaction(VOICE_ID, RedactRequest.Product.VOICE);
 ```
 
 ### Custom HTTP Configuration

@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.7.0] - 2018-08-10
+### Added
+- Added `RedactClient` and the ability to interact with the Nexmo Redact API.
+
+### Changed
+- `TalkNcco` now uses `VoiceName` internally instead of `String` for the `voiceName` property.
+
 ## [3.6.0] - 2018-07-06
 ### Added
 - Added `getSmsPrice` to `AccountClient` for getting SMS pricing for a country.

@@ -21,10 +21,13 @@
  */
 package com.nexmo.client.auth;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.http.Header;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.message.BasicHeader;
 
 public class TokenAuthMethod extends AbstractAuthMethod {
-    public final int SORT_KEY = 30;
+    private final int SORT_KEY = 30;
 
     private String apiKey;
     private String apiSecret;
@@ -36,9 +39,14 @@ public class TokenAuthMethod extends AbstractAuthMethod {
 
     @Override
     public RequestBuilder apply(RequestBuilder request) {
-        return request
-                .addParameter("api_key", this.apiKey)
-                .addParameter("api_secret", this.apiSecret);
+        return request.addParameter("api_key", this.apiKey).addParameter("api_secret", this.apiSecret);
+    }
+
+    @Override
+    public RequestBuilder applyAsBasicAuth(RequestBuilder request) {
+        String headerValue = Base64.encodeBase64String((this.apiKey + ":" + this.apiSecret).getBytes());
+        Header authHeader = new BasicHeader("Authorization", "Basic " + headerValue);
+        return request.addHeader(authHeader);
     }
 
     @Override
