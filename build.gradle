@@ -53,6 +53,11 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.9.5'
     compile 'com.auth0:java-jwt:2.2.1'
 
+    if (Jvm.current().javaVersion.isJava9Compatible()) {
+        // JAXB API was removed as a default module in JDK9+ this is needed for building/testing in this specific JDK.
+        compile 'javax.xml.bind:jaxb-api:2.3.0'
+    }
+
     testCompile "javax.servlet:javax.servlet-api:3.1.0"
     testCompile 'junit:junit:4.4'
     testCompile "org.mockito:mockito-core:2.7.1"
