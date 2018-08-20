@@ -21,27 +21,36 @@
  */
 package com.nexmo.client.voice.ncco;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.NexmoUnexpectedException;
 import org.junit.Test;
-import static org.mockito.Mockito.*;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-public class NccoSerializerTest {
+public class StreamActionTest {
     @Test
-    public void serializeNccoException() throws Exception {
-        ObjectMapper mapper = mock(ObjectMapper.class);
-        when(mapper.writeValueAsString(any())).thenThrow(JsonProcessingException.class);
-
-        NccoSerializer serializer = new NccoSerializer(mapper);
-        try {
-            serializer.serializeNcco(new ConnectNcco("447700900637"));
-            fail("This test should have raised a NexmoUnexpectedException (wrapping a forced JsonProcessingException)");
-        } catch (NexmoUnexpectedException nue) {
-            // This is expected
-        }
+    public void testToJson() throws Exception {
+        assertEquals(
+                "{\"streamUrl\":\"https://api.example.com/stream\",\"action\":\"stream\"}",
+                new StreamAction("https://api.example.com/stream").toJson());
     }
 
+    @Test
+    public void testJson() throws Exception {
+        String json;
+        {
+            StreamAction ncco = new StreamAction("https://api.example.com/stream");
+            ncco.setStreamUrl("https://api.example.com/stream2");
+            ncco.setLevel(0.5f);
+            ncco.setBargeIn(true);
+            ncco.setLoop(3);
+
+            json = ncco.toJson();
+        }
+
+        StreamAction ncco = new ObjectMapper().readValue(json, StreamAction.class);
+        assertEquals("https://api.example.com/stream2", ncco.getStreamUrl());
+        assertEquals(0.5f, (float)ncco.getLevel(), 0.001f);
+        assertEquals(true, ncco.getBargeIn());
+        assertEquals(3, (int)ncco.getLoop());
+    }
 }

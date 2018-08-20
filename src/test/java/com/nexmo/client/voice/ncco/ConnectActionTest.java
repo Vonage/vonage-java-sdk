@@ -22,17 +22,18 @@
 package com.nexmo.client.voice.ncco;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.voice.PhoneEndpoint;
 import com.nexmo.client.voice.MachineDetection;
+import com.nexmo.client.voice.PhoneEndpoint;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
-public class ConnectNccoTest {
+public class ConnectActionTest {
 
     @Test
     public void getAction() throws Exception {
-        ConnectNcco ncco = new ConnectNcco(new PhoneEndpoint("447700900637"));
+        ConnectAction ncco = new ConnectAction(new PhoneEndpoint("447700900637"));
         assertEquals("connect", ncco.getAction());
     }
 
@@ -40,14 +41,14 @@ public class ConnectNccoTest {
     public void testToJson() throws Exception {
         assertEquals(
                 "{\"endpoint\":[{\"type\":\"phone\",\"number\":\"447700900637\"}],\"action\":\"connect\"}",
-                new ConnectNcco(new PhoneEndpoint("447700900637")).toJson());
+                new ConnectAction(new PhoneEndpoint("447700900637")).toJson());
     }
 
     @Test
     public void testJson() throws Exception {
         String json;
         {
-            ConnectNcco ncco = new ConnectNcco("447700900637");
+            ConnectAction ncco = new ConnectAction("447700900637");
             ncco.setEndpoint(new PhoneEndpoint("447700900642"));
             ncco.setMachineDetection(MachineDetection.HANGUP);
             ncco.setEventMethod("GET");
@@ -59,7 +60,7 @@ public class ConnectNccoTest {
             json = ncco.toJson();
         }
 
-        ConnectNcco ncco2 = new ObjectMapper().readValue(json, ConnectNcco.class);
+        ConnectAction ncco2 = new ObjectMapper().readValue(json, ConnectAction.class);
         assertArrayEquals(new PhoneEndpoint[]{new PhoneEndpoint("447700900642")}, ncco2.getEndpoint());
         assertEquals(MachineDetection.HANGUP, ncco2.getMachineDetection());
         assertEquals("GET", ncco2.getEventMethod());

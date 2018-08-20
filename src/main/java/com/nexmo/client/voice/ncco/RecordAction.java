@@ -27,76 +27,68 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ConversationNcco implements Ncco {
-    private static final String ACTION = "conversation";
+public class RecordAction implements Action {
+    private static final String ACTION = "record";
 
-    private String name;
-    private String musicOnHoldUrl = null;
-    private Boolean startOnEnter = null;
-    private Boolean endOnExit = null;
-    private Boolean record = null;
+    private RecordingFormat format = null;
+    private Integer endOnSilence = null;
+    private Character endOnKey = null;
+    private Integer timeout = null;
+    private Boolean beepStart = null;
     private String[] eventUrl = null;
     private String eventMethod = null;
+    private SplitRecording split = null;
 
-
-    public ConversationNcco(@JsonProperty("name") String name) {
-        this.name = name;
+    public RecordingFormat getFormat() {
+        return format;
     }
 
-    public String getName() {
-        return name;
+    public void setFormat(RecordingFormat format) {
+        this.format = format;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Integer getEndOnSilence() {
+        return endOnSilence;
     }
 
-    public String getMusicOnHoldUrl() {
-        return musicOnHoldUrl;
+    public void setEndOnSilence(Integer endOnSilence) {
+        this.endOnSilence = endOnSilence;
     }
 
-    @JsonProperty("musicOnHoldUrl")
-    public String[] getMusicOnHoldUrlAsArray() {
-        // TODO: Rework in 4.0.
-        // This property is expected to be serialized as an array, however we want to also insure it remains null
-        // if null.
-        return this.musicOnHoldUrl != null ? new String[]{this.musicOnHoldUrl} : null;
+    public Character getEndOnKey() {
+        return endOnKey;
     }
 
-    public void setMusicOnHoldUrl(String... musicOnHoldUrl) {
-        this.musicOnHoldUrl = musicOnHoldUrl[0];
+    public void setEndOnKey(Character endOnKey) {
+        this.endOnKey = endOnKey;
     }
 
-    public Boolean getStartOnEnter() {
-        return startOnEnter;
+    public Integer getTimeout() {
+        return timeout;
     }
 
-    public void setStartOnEnter(Boolean startOnEnter) {
-        this.startOnEnter = startOnEnter;
+    public void setTimeout(Integer timeout) {
+        this.timeout = timeout;
     }
 
-    public Boolean getEndOnExit() {
-        return endOnExit;
+    public Boolean getBeepStart() {
+        return beepStart;
     }
 
-    public void setEndOnExit(Boolean endOnExit) {
-        this.endOnExit = endOnExit;
-    }
-
-    public Boolean getRecord() {
-        return record;
-    }
-
-    public void setRecord(Boolean record) {
-        this.record = record;
+    public void setBeepStart(Boolean beepStart) {
+        this.beepStart = beepStart;
     }
 
     public String[] getEventUrl() {
         return eventUrl;
     }
 
+    public void setEventUrl(String eventUrl) {
+        setEventUrl(new String[]{eventUrl});
+    }
+
     @JsonProperty("eventUrl")
-    public void setEventUrl(String... eventUrl) {
+    public void setEventUrl(String[] eventUrl) {
         this.eventUrl = eventUrl;
     }
 
@@ -111,6 +103,14 @@ public class ConversationNcco implements Ncco {
     @Override
     public String getAction() {
         return ACTION;
+    }
+
+    public SplitRecording getSplit() {
+        return split;
+    }
+
+    public void setSplit(SplitRecording split) {
+        this.split = split;
     }
 
     @Override

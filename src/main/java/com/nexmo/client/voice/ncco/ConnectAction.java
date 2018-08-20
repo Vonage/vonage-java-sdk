@@ -24,12 +24,12 @@ package com.nexmo.client.voice.ncco;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.nexmo.client.voice.PhoneEndpoint;
 import com.nexmo.client.voice.MachineDetection;
+import com.nexmo.client.voice.PhoneEndpoint;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ConnectNcco implements Ncco {
+public class ConnectAction implements Action {
     private static final String ACTION = "connect";
 
     private PhoneEndpoint[] endpoint;
@@ -40,15 +40,15 @@ public class ConnectNcco implements Ncco {
     private String[] eventUrl = null;
     private String eventMethod = null;
 
-    public ConnectNcco(@JsonProperty("endpoint") PhoneEndpoint[] endpoint) {
+    public ConnectAction(@JsonProperty("endpoint") PhoneEndpoint[] endpoint) {
         this.endpoint = endpoint;
     }
 
-    public ConnectNcco(PhoneEndpoint endpoint) {
+    public ConnectAction(PhoneEndpoint endpoint) {
         this(new PhoneEndpoint[]{endpoint});
     }
 
-    public ConnectNcco(String number) {
+    public ConnectAction(String number) {
         this(new PhoneEndpoint(number));
     }
 

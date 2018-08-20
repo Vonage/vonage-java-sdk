@@ -27,17 +27,17 @@ import org.junit.Test;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-public class RecordNccoTest {
+public class RecordActionTest {
     @Test
     public void testToJson() throws Exception {
-        assertEquals("{\"action\":\"record\"}", new RecordNcco().toJson());
+        assertEquals("{\"action\":\"record\"}", new RecordAction().toJson());
     }
 
     @Test
     public void testJson() throws Exception {
         String json;
         {
-            RecordNcco ncco = new RecordNcco();
+            RecordAction ncco = new RecordAction();
             ncco.setEventUrl("https://api.example.com/event");
             ncco.setEventMethod("GET");
             ncco.setBeepStart(true);
@@ -49,7 +49,7 @@ public class RecordNccoTest {
             json = ncco.toJson();
         }
 
-        RecordNcco ncco = new ObjectMapper().readValue(json, RecordNcco.class);
+        RecordAction ncco = new ObjectMapper().readValue(json, RecordAction.class);
         assertArrayEquals(new String[]{"https://api.example.com/event"}, ncco.getEventUrl());
         assertEquals("GET", ncco.getEventMethod());
         assertEquals(true, ncco.getBeepStart());
@@ -62,55 +62,55 @@ public class RecordNccoTest {
 
     @Test
     public void testDefault() {
-        RecordNcco ncco = new RecordNcco();
+        RecordAction ncco = new RecordAction();
         assertEquals("{\"action\":\"record\"}", ncco.toJson());
     }
 
     @Test
     public void testEventUrl() {
-        RecordNcco ncco = new RecordNcco();
+        RecordAction ncco = new RecordAction();
         ncco.setEventUrl("https://example.com");
         assertEquals("{\"action\":\"record\",\"eventUrl\":[\"https://example.com\"]}", ncco.toJson());
     }
 
     @Test
     public void testEventMethod() {
-        RecordNcco ncco = new RecordNcco();
+        RecordAction ncco = new RecordAction();
         ncco.setEventMethod("GET");
         assertEquals("{\"eventMethod\":\"GET\",\"action\":\"record\"}", ncco.toJson());
     }
 
     @Test
     public void testEndOnKey() {
-        RecordNcco ncco = new RecordNcco();
+        RecordAction ncco = new RecordAction();
         ncco.setEndOnKey('#');
         assertEquals("{\"endOnKey\":\"#\",\"action\":\"record\"}", ncco.toJson());
     }
 
     @Test
     public void testEndOnSilence() {
-        RecordNcco ncco = new RecordNcco();
+        RecordAction ncco = new RecordAction();
         ncco.setEndOnSilence(3);
         assertEquals("{\"endOnSilence\":3,\"action\":\"record\"}", ncco.toJson());
     }
 
     @Test
     public void testFormat() {
-        RecordNcco ncco = new RecordNcco();
+        RecordAction ncco = new RecordAction();
         ncco.setFormat(RecordingFormat.WAV);
         assertEquals("{\"format\":\"wav\",\"action\":\"record\"}", ncco.toJson());
     }
 
     @Test
     public void testTimeout() {
-        RecordNcco ncco = new RecordNcco();
+        RecordAction ncco = new RecordAction();
         ncco.setTimeout(5);
         assertEquals("{\"timeout\":5,\"action\":\"record\"}", ncco.toJson());
     }
 
     @Test
     public void testSplit() {
-        RecordNcco ncco = new RecordNcco();
+        RecordAction ncco = new RecordAction();
         ncco.setSplit(SplitRecording.CONVERSATION);
         assertEquals("{\"split\":\"conversation\",\"action\":\"record\"}", ncco.toJson());
     }

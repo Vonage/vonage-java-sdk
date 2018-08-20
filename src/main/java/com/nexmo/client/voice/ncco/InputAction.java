@@ -27,56 +27,58 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class StreamNcco implements Ncco {
-    private static final String ACTION = "stream";
+public class InputAction implements Action {
+    private static final String ACTION = "input";
 
-    private String streamUrl;
-    private Float level = null;
-    private Boolean bargeIn = null;
-    private Integer loop = null;
+    private Integer timeOut = null;
+    private Integer maxDigits = null;
+    private Boolean submitOnHash = null;
+    private String[] eventUrl = null;
+    private String eventMethod = null;
 
-    public StreamNcco(@JsonProperty("streamUrl") String... streamUrl) {
-        this.streamUrl = streamUrl[0];
+    public Integer getTimeOut() {
+        return timeOut;
     }
 
-    public String getStreamUrl() {
-        return streamUrl;
+    public void setTimeOut(Integer timeOut) {
+        this.timeOut = timeOut;
     }
 
-    @JsonProperty("streamUrl")
-    public String[] getStreamUrlAsArray() {
-        // TODO: Rework in 4.0.
-        // This property is expected to be serialized as an array, however we want to also insure it remains null
-        // if null.
-        return this.streamUrl != null ? new String[]{this.streamUrl} : null;
+    public Integer getMaxDigits() {
+        return maxDigits;
     }
 
-    public void setStreamUrl(String... streamUrl) {
-        this.streamUrl = streamUrl[0];
+    public void setMaxDigits(Integer maxDigits) {
+        this.maxDigits = maxDigits;
     }
 
-    public Float getLevel() {
-        return level;
+    public Boolean getSubmitOnHash() {
+        return submitOnHash;
     }
 
-    public void setLevel(Float level) {
-        this.level = level;
+    public void setSubmitOnHash(Boolean submitOnHash) {
+        this.submitOnHash = submitOnHash;
     }
 
-    public Boolean getBargeIn() {
-        return bargeIn;
+    public String[] getEventUrl() {
+        return eventUrl;
     }
 
-    public void setBargeIn(Boolean bargeIn) {
-        this.bargeIn = bargeIn;
+    public void setEventUrl(String eventUrl) {
+        setEventUrl(new String[]{eventUrl});
     }
 
-    public Integer getLoop() {
-        return loop;
+    @JsonProperty("eventUrl")
+    public void setEventUrl(String[] eventUrl) {
+        this.eventUrl = eventUrl;
     }
 
-    public void setLoop(Integer loop) {
-        this.loop = loop;
+    public String getEventMethod() {
+        return eventMethod;
+    }
+
+    public void setEventMethod(String eventMethod) {
+        this.eventMethod = eventMethod;
     }
 
     @Override

@@ -24,61 +24,63 @@ package com.nexmo.client.voice.ncco;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.nexmo.client.voice.VoiceName;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class InputNcco implements Ncco {
-    private static final String ACTION = "input";
+public class TalkAction implements Action {
+    private static final String ACTION = "talk";
 
-    private Integer timeOut = null;
-    private Integer maxDigits = null;
-    private Boolean submitOnHash = null;
-    private String[] eventUrl = null;
-    private String eventMethod = null;
+    private String text;
+    private Boolean bargeIn = null;
+    private Integer loop = null;
+    private Float level = null;
+    private VoiceName voiceName = null;
 
-    public Integer getTimeOut() {
-        return timeOut;
+    public TalkAction(@JsonProperty("text") String text) {
+        this.text = text;
     }
 
-    public void setTimeOut(Integer timeOut) {
-        this.timeOut = timeOut;
+    public String getText() {
+        return text;
     }
 
-    public Integer getMaxDigits() {
-        return maxDigits;
+    public void setText(String text) {
+        this.text = text;
     }
 
-    public void setMaxDigits(Integer maxDigits) {
-        this.maxDigits = maxDigits;
+    public Boolean getBargeIn() {
+        return bargeIn;
     }
 
-    public Boolean getSubmitOnHash() {
-        return submitOnHash;
+    public void setBargeIn(Boolean bargeIn) {
+        this.bargeIn = bargeIn;
     }
 
-    public void setSubmitOnHash(Boolean submitOnHash) {
-        this.submitOnHash = submitOnHash;
+    public Integer getLoop() {
+        return loop;
     }
 
-    public String[] getEventUrl() {
-        return eventUrl;
+    public void setLoop(Integer loop) {
+        this.loop = loop;
     }
 
-    public void setEventUrl(String eventUrl) {
-        setEventUrl(new String[]{eventUrl});
+    public void setLevel(Float level) {
+        this.level = level;
     }
 
-    @JsonProperty("eventUrl")
-    public void setEventUrl(String[] eventUrl) {
-        this.eventUrl = eventUrl;
+    public Float getLevel() {
+        return level;
     }
 
-    public String getEventMethod() {
-        return eventMethod;
+    // TODO: Change to return VoiceName on next major version
+    public String getVoiceName() {
+        return (voiceName == null) ? null : voiceName.toString();
     }
 
-    public void setEventMethod(String eventMethod) {
-        this.eventMethod = eventMethod;
+    // TODO: Change to accept VoiceName on next major version
+    public void setVoiceName(String voiceName) {
+        this.voiceName = VoiceName.fromString(voiceName);
     }
 
     @Override

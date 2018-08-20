@@ -45,9 +45,9 @@ public class NccoSerializer {
         return instance;
     }
 
-    public String serializeNcco(Ncco ncco) {
+    public String serializeNcco(Action action) {
         try {
-            return this.mapper.writeValueAsString(ncco);
+            return this.mapper.writeValueAsString(action);
         } catch (JsonProcessingException jpe) {
             throw new NexmoUnexpectedException("Failed to produce json from Ncco object.", jpe);
         }

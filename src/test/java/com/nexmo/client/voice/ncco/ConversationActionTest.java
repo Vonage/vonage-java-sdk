@@ -24,18 +24,19 @@ package com.nexmo.client.voice.ncco;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
-public class ConversationNccoTest {
+public class ConversationActionTest {
     @Test
     public void testJson() throws Exception {
-        ConversationNcco ncco = new ConversationNcco("conversation-name");
+        ConversationAction ncco = new ConversationAction("conversation-name");
         assertEquals("{\"name\":\"conversation-name\",\"action\":\"conversation\"}", ncco.toJson());
     }
 
     @Test
     public void testToJson() throws Exception {
-        ConversationNcco ncco = new ConversationNcco("chat-with-matt");
+        ConversationAction ncco = new ConversationAction("chat-with-matt");
         ncco.setName("overwrite-name");
         ncco.setEventMethod("GET");
         ncco.setEventUrl("https://api.example.com/event");
@@ -44,7 +45,7 @@ public class ConversationNccoTest {
         ncco.setRecord(true);
         ncco.setStartOnEnter(false);
 
-        ConversationNcco ncco2 = new ObjectMapper().readValue(ncco.toJson(), ConversationNcco.class);
+        ConversationAction ncco2 = new ObjectMapper().readValue(ncco.toJson(), ConversationAction.class);
         assertEquals("overwrite-name", ncco.getName());
         assertEquals("GET", ncco2.getEventMethod());
         assertArrayEquals(new String[]{"https://api.example.com/event"}, ncco2.getEventUrl());
@@ -56,7 +57,7 @@ public class ConversationNccoTest {
 
     @Test
     public void testWithOnlyNameParameter() throws Exception {
-        ConversationNcco ncco = new ConversationNcco("Test");
+        ConversationAction ncco = new ConversationAction("Test");
 
         String expectedJson = "{\"name\":\"Test\",\"action\":\"conversation\"}";
         assertEquals(expectedJson, ncco.toJson());
@@ -64,18 +65,18 @@ public class ConversationNccoTest {
 
     @Test
     public void testMusicOnHoldUrl() throws Exception {
-        ConversationNcco ncco = new ConversationNcco("Test");
+        ConversationAction ncco = new ConversationAction("Test");
         ncco.setMusicOnHoldUrl("https://example.org");
 
         String expectedJson = "{\"name\":\"Test\",\"musicOnHoldUrl\":[\"https://example.org\"],\"action\":\"conversation\"}";
         assertEquals(expectedJson, ncco.toJson());
 
-        ncco = new ConversationNcco("Test");
+        ncco = new ConversationAction("Test");
     }
 
     @Test
     public void testStartOnEnter() throws Exception {
-        ConversationNcco ncco = new ConversationNcco("Test");
+        ConversationAction ncco = new ConversationAction("Test");
         ncco.setStartOnEnter(true);
 
         String expectedJson = "{\"name\":\"Test\",\"startOnEnter\":true,\"action\":\"conversation\"}";
@@ -84,7 +85,7 @@ public class ConversationNccoTest {
 
     @Test
     public void testEndOnExit() throws Exception {
-        ConversationNcco ncco = new ConversationNcco("Test");
+        ConversationAction ncco = new ConversationAction("Test");
         ncco.setEndOnExit(true);
 
         String expectedJson = "{\"name\":\"Test\",\"endOnExit\":true,\"action\":\"conversation\"}";
@@ -93,7 +94,7 @@ public class ConversationNccoTest {
 
     @Test
     public void testRecord() throws Exception {
-        ConversationNcco ncco = new ConversationNcco("Test");
+        ConversationAction ncco = new ConversationAction("Test");
         ncco.setRecord(true);
 
         String expectedJson = "{\"name\":\"Test\",\"record\":true,\"action\":\"conversation\"}";
@@ -102,7 +103,7 @@ public class ConversationNccoTest {
 
     @Test
     public void testEventUrl() throws Exception {
-        ConversationNcco ncco = new ConversationNcco("Test");
+        ConversationAction ncco = new ConversationAction("Test");
         ncco.setEventUrl("https://exmaple.org");
 
         String expectedJson = "{\"name\":\"Test\",\"action\":\"conversation\",\"eventUrl\":[\"https://exmaple.org\"]}";
@@ -111,7 +112,7 @@ public class ConversationNccoTest {
 
     @Test
     public void testEventMethod() throws Exception {
-        ConversationNcco ncco = new ConversationNcco("Test");
+        ConversationAction ncco = new ConversationAction("Test");
         ncco.setEventMethod("Test");
 
         String expectedJson = "{\"name\":\"Test\",\"eventMethod\":\"Test\",\"action\":\"conversation\"}";

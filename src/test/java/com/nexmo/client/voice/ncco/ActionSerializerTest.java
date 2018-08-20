@@ -21,7 +21,27 @@
  */
 package com.nexmo.client.voice.ncco;
 
-public interface Ncco {
-    public String getAction();
-    public String toJson();
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexmo.client.NexmoUnexpectedException;
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.*;
+
+public class ActionSerializerTest {
+    @Test
+    public void serializeNccoException() throws Exception {
+        ObjectMapper mapper = mock(ObjectMapper.class);
+        when(mapper.writeValueAsString(any())).thenThrow(JsonProcessingException.class);
+
+        NccoSerializer serializer = new NccoSerializer(mapper);
+        try {
+            serializer.serializeNcco(new ConnectAction("447700900637"));
+            fail("This test should have raised a NexmoUnexpectedException (wrapping a forced JsonProcessingException)");
+        } catch (NexmoUnexpectedException nue) {
+            // This is expected
+        }
+    }
+
 }

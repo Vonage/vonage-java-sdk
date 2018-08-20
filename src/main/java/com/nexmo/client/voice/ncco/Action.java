@@ -21,36 +21,7 @@
  */
 package com.nexmo.client.voice.ncco;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-
-public class InputNccoTest {
-    @Test
-    public void testToJSON() throws Exception {
-        assertEquals("{\"action\":\"input\"}", new InputNcco().toJson());
-    }
-
-    @Test
-    public void testJSON() throws Exception {
-        String json;
-        {
-            InputNcco ncco = new InputNcco();
-            ncco.setEventUrl("https://api.example.com/event");
-            ncco.setEventMethod("GET");
-            ncco.setMaxDigits(4);
-            ncco.setSubmitOnHash(true);
-            ncco.setTimeOut(5);
-
-            json = ncco.toJson();
-        }
-
-        InputNcco ncco = new ObjectMapper().readValue(json, InputNcco.class);
-        assertArrayEquals(new String[]{"https://api.example.com/event"}, ncco.getEventUrl());
-        assertEquals("GET", ncco.getEventMethod());
-        assertEquals(4, (int)ncco.getMaxDigits());
-        assertEquals(true, ncco.getSubmitOnHash());
-        assertEquals(5, (int)ncco.getTimeOut());
-    }
+public interface Action {
+    public String getAction();
+    public String toJson();
 }

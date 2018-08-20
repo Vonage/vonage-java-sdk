@@ -21,7 +21,7 @@
  */
 package com.nexmo.client.voice.servlet;
 
-import com.nexmo.client.voice.ncco.TalkNcco;
+import com.nexmo.client.voice.ncco.TalkAction;
 import org.junit.Test;
 
 import javax.servlet.ServletOutputStream;
@@ -39,7 +39,7 @@ public class AbstractAnswerServletTest {
     private AbstractAnswerServlet servlet = new AbstractAnswerServlet() {
         @Override
         protected NccoResponse handleRequest(HttpServletRequest request) {
-            return new NccoResponseBuilder().appendNcco(new TalkNcco("Hello")).getValue();
+            return new NccoResponseBuilder().appendNcco(new TalkAction("Hello")).getValue();
         }
     };
 

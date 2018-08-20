@@ -24,33 +24,34 @@ package com.nexmo.client.voice.ncco;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
-public class StreamNccoTest {
+public class InputActionTest {
     @Test
-    public void testToJson() throws Exception {
-        assertEquals(
-                "{\"streamUrl\":[\"https://api.example.com/stream\"],\"action\":\"stream\"}",
-                new StreamNcco("https://api.example.com/stream").toJson());
+    public void testToJSON() throws Exception {
+        assertEquals("{\"action\":\"input\"}", new InputAction().toJson());
     }
 
     @Test
-    public void testJson() throws Exception {
+    public void testJSON() throws Exception {
         String json;
         {
-            StreamNcco ncco = new StreamNcco("https://api.example.com/stream");
-            ncco.setStreamUrl("https://api.example.com/stream2");
-            ncco.setLevel(0.5f);
-            ncco.setBargeIn(true);
-            ncco.setLoop(3);
+            InputAction ncco = new InputAction();
+            ncco.setEventUrl("https://api.example.com/event");
+            ncco.setEventMethod("GET");
+            ncco.setMaxDigits(4);
+            ncco.setSubmitOnHash(true);
+            ncco.setTimeOut(5);
 
             json = ncco.toJson();
         }
 
-        StreamNcco ncco = new ObjectMapper().readValue(json, StreamNcco.class);
-        assertEquals("https://api.example.com/stream2", ncco.getStreamUrl());
-        assertEquals(0.5f, (float)ncco.getLevel(), 0.001f);
-        assertEquals(true, ncco.getBargeIn());
-        assertEquals(3, (int)ncco.getLoop());
+        InputAction ncco = new ObjectMapper().readValue(json, InputAction.class);
+        assertArrayEquals(new String[]{"https://api.example.com/event"}, ncco.getEventUrl());
+        assertEquals("GET", ncco.getEventMethod());
+        assertEquals(4, (int)ncco.getMaxDigits());
+        assertEquals(true, ncco.getSubmitOnHash());
+        assertEquals(5, (int)ncco.getTimeOut());
     }
 }
