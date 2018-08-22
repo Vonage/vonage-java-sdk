@@ -25,97 +25,36 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nexmo.client.voice.MachineDetection;
-import com.nexmo.client.voice.PhoneEndpoint;
 
+import java.util.Arrays;
+import java.util.Collection;
+
+/**
+ * An NCCO connect action that allows for the establishment of a connection to various {@link Endpoint}.
+ */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ConnectAction implements Action {
     private static final String ACTION = "connect";
 
-    private PhoneEndpoint[] endpoint;
-    private String from = null;
-    private Integer timeout = null;
-    private Integer limit = null;
-    private MachineDetection machineDetection = null;
-    private String[] eventUrl = null;
-    private String eventMethod = null;
+    private Collection<Endpoint> endpoint;
+    private String from;
+    private EventType eventType;
+    private Integer timeOut;
+    private Integer limit;
+    private MachineDetection machineDetection;
+    private Collection<String> eventUrl;
+    private EventMethod eventMethod;
 
-    public ConnectAction(@JsonProperty("endpoint") PhoneEndpoint[] endpoint) {
-        this.endpoint = endpoint;
-    }
-
-    public ConnectAction(PhoneEndpoint endpoint) {
-        this(new PhoneEndpoint[]{endpoint});
-    }
-
-    public ConnectAction(String number) {
-        this(new PhoneEndpoint(number));
-    }
-
-    public PhoneEndpoint[] getEndpoint() {
-        return endpoint;
-    }
-
-    public void setEndpoint(PhoneEndpoint endpoint) {
-        setEndpoint(new PhoneEndpoint[]{endpoint});
-    }
-
-    @JsonProperty("endpoint")
-    public void setEndpoint(PhoneEndpoint[] endpoint) {
-        this.endpoint = endpoint;
-    }
-
-    public String getFrom() {
-        return from;
-    }
-
-    public void setFrom(String from) {
-        this.from = from;
-    }
-
-    public Integer getTimeout() {
-        return timeout;
-    }
-
-    public void setTimeout(Integer timeout) {
-        this.timeout = timeout;
-    }
-
-    public Integer getLimit() {
-        return limit;
-    }
-
-    public void setLimit(Integer limit) {
-        this.limit = limit;
-    }
-
-    public MachineDetection getMachineDetection() {
-        return machineDetection;
-    }
-
-    public void setMachineDetection(MachineDetection machineDetection) {
-        this.machineDetection = machineDetection;
-    }
-
-    public String[] getEventUrl() {
-        return eventUrl;
-    }
-
-    public void setEventUrl(String eventUrl) {
-        setEventUrl(new String[]{eventUrl});
-    }
-
-    @JsonProperty("eventUrl")
-    public void setEventUrl(String[] eventUrl) {
-        this.eventUrl = eventUrl;
-    }
-
-    public String getEventMethod() {
-        return eventMethod;
-    }
-
-    public void setEventMethod(String eventMethod) {
-        this.eventMethod = eventMethod;
+    private ConnectAction(Builder builder) {
+        this.endpoint = builder.endpoint;
+        this.from = builder.from;
+        this.eventType = builder.eventType;
+        this.timeOut = builder.timeOut;
+        this.limit = builder.limit;
+        this.machineDetection = builder.machineDetection;
+        this.eventUrl = builder.eventUrl;
+        this.eventMethod = builder.eventMethod;
     }
 
     @Override
@@ -123,8 +62,107 @@ public class ConnectAction implements Action {
         return ACTION;
     }
 
-    @Override
-    public String toJson() {
-        return NccoSerializer.getInstance().serializeNcco(this);
+    public Collection<Endpoint> getEndpoint() {
+        return endpoint;
+    }
+
+    public String getFrom() {
+        return from;
+    }
+
+    public EventType getEventType() {
+        return eventType;
+    }
+
+    @JsonProperty("timeout")
+    public Integer getTimeOut() {
+        return timeOut;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public MachineDetection getMachineDetection() {
+        return machineDetection;
+    }
+
+    public Collection<String> getEventUrl() {
+        return eventUrl;
+    }
+
+    public EventMethod getEventMethod() {
+        return eventMethod;
+    }
+
+    public static class Builder {
+        private Collection<Endpoint> endpoint;
+        private String from = null;
+        private EventType eventType = null;
+        private Integer timeOut = null;
+        private Integer limit = null;
+        private MachineDetection machineDetection = null;
+        private Collection<String> eventUrl = null;
+        private EventMethod eventMethod = null;
+
+        public Builder(Collection<Endpoint> endpoint) {
+            this.endpoint = endpoint;
+        }
+
+        public Builder(Endpoint... endpoint) {
+            this(Arrays.asList(endpoint));
+        }
+
+        public Builder endpoint(Collection<Endpoint> endpoint) {
+            this.endpoint = endpoint;
+            return this;
+        }
+
+        public Builder endpoint(Endpoint... endpoint) {
+            return endpoint(Arrays.asList(endpoint));
+        }
+
+        public Builder from(String from) {
+            this.from = from;
+            return this;
+        }
+
+        public Builder eventType(EventType eventType) {
+            this.eventType = eventType;
+            return this;
+        }
+
+        public Builder timeOut(Integer timeOut) {
+            this.timeOut = timeOut;
+            return this;
+        }
+
+        public Builder limit(Integer limit) {
+            this.limit = limit;
+            return this;
+        }
+
+        public Builder machineDetection(MachineDetection machineDetection) {
+            this.machineDetection = machineDetection;
+            return this;
+        }
+
+        public Builder eventUrl(Collection<String> eventUrl) {
+            this.eventUrl = eventUrl;
+            return this;
+        }
+
+        public Builder eventUrl(String... eventUrl) {
+            return eventUrl(Arrays.asList(eventUrl));
+        }
+
+        public Builder eventMethod(EventMethod eventMethod) {
+            this.eventMethod = eventMethod;
+            return this;
+        }
+
+        public ConnectAction build() {
+            return new ConnectAction(this);
+        }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,35 +21,9 @@
  */
 package com.nexmo.client.voice.ncco;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.NexmoUnexpectedException;
-
-public class NccoSerializer {
-    private static NccoSerializer instance;
-
-    private ObjectMapper mapper;
-
-    public NccoSerializer() {
-        this.mapper = new ObjectMapper();
-    }
-
-    public NccoSerializer(ObjectMapper mapper) {
-        this.mapper = mapper;
-    }
-
-    public static NccoSerializer getInstance() {
-        if (instance == null) {
-            instance = new NccoSerializer();
-        }
-        return instance;
-    }
-
-    public String serializeNcco(Action action) {
-        try {
-            return this.mapper.writeValueAsString(action);
-        } catch (JsonProcessingException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce json from Ncco object.", jpe);
-        }
-    }
+/**
+ * An endpoint for a {@link ConnectAction} to connect to.
+ */
+public interface Endpoint {
+    String getType();
 }

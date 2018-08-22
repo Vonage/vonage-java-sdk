@@ -23,81 +23,36 @@ package com.nexmo.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Arrays;
+import java.util.Collection;
+
+/**
+ * An NCCO record action which allows for the call to be recorded.
+ */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RecordAction implements Action {
     private static final String ACTION = "record";
 
-    private RecordingFormat format = null;
-    private Integer endOnSilence = null;
-    private Character endOnKey = null;
-    private Integer timeout = null;
-    private Boolean beepStart = null;
-    private String[] eventUrl = null;
-    private String eventMethod = null;
-    private SplitRecording split = null;
+    private RecordingFormat format;
+    private Integer endOnSilence;
+    private Character endOnKey;
+    private Integer timeOut;
+    private Boolean beepStart;
+    private Collection<String> eventUrl;
+    private EventMethod eventMethod;
+    private SplitRecording split;
 
-    public RecordingFormat getFormat() {
-        return format;
-    }
-
-    public void setFormat(RecordingFormat format) {
-        this.format = format;
-    }
-
-    public Integer getEndOnSilence() {
-        return endOnSilence;
-    }
-
-    public void setEndOnSilence(Integer endOnSilence) {
-        this.endOnSilence = endOnSilence;
-    }
-
-    public Character getEndOnKey() {
-        return endOnKey;
-    }
-
-    public void setEndOnKey(Character endOnKey) {
-        this.endOnKey = endOnKey;
-    }
-
-    public Integer getTimeout() {
-        return timeout;
-    }
-
-    public void setTimeout(Integer timeout) {
-        this.timeout = timeout;
-    }
-
-    public Boolean getBeepStart() {
-        return beepStart;
-    }
-
-    public void setBeepStart(Boolean beepStart) {
-        this.beepStart = beepStart;
-    }
-
-    public String[] getEventUrl() {
-        return eventUrl;
-    }
-
-    public void setEventUrl(String eventUrl) {
-        setEventUrl(new String[]{eventUrl});
-    }
-
-    @JsonProperty("eventUrl")
-    public void setEventUrl(String[] eventUrl) {
-        this.eventUrl = eventUrl;
-    }
-
-    public String getEventMethod() {
-        return eventMethod;
-    }
-
-    public void setEventMethod(String eventMethod) {
-        this.eventMethod = eventMethod;
+    public RecordAction(Builder builder) {
+        this.format = builder.format;
+        this.endOnSilence = builder.endOnSilence;
+        this.endOnKey = builder.endOnKey;
+        this.timeOut = builder.timeOut;
+        this.beepStart = builder.beepStart;
+        this.eventUrl = builder.eventUrl;
+        this.eventMethod = builder.eventMethod;
+        this.split = builder.split;
     }
 
     @Override
@@ -105,16 +60,94 @@ public class RecordAction implements Action {
         return ACTION;
     }
 
+    public RecordingFormat getFormat() {
+        return format;
+    }
+
+    public Integer getEndOnSilence() {
+        return endOnSilence;
+    }
+
+    public Character getEndOnKey() {
+        return endOnKey;
+    }
+
+    public Integer getTimeOut() {
+        return timeOut;
+    }
+
+    public Boolean getBeepStart() {
+        return beepStart;
+    }
+
+    public Collection<String> getEventUrl() {
+        return eventUrl;
+    }
+
+    public EventMethod getEventMethod() {
+        return eventMethod;
+    }
+
     public SplitRecording getSplit() {
         return split;
     }
 
-    public void setSplit(SplitRecording split) {
-        this.split = split;
-    }
+    public static class Builder {
+        private RecordingFormat format = null;
+        private Integer endOnSilence = null;
+        private Character endOnKey = null;
+        private Integer timeOut = null;
+        private Boolean beepStart = null;
+        private Collection<String> eventUrl = null;
+        private EventMethod eventMethod = null;
+        private SplitRecording split = null;
 
-    @Override
-    public String toJson() {
-        return NccoSerializer.getInstance().serializeNcco(this);
+        public Builder format(RecordingFormat format) {
+            this.format = format;
+            return this;
+        }
+
+        public Builder endOnSilence(Integer endOnSilence) {
+            this.endOnSilence = endOnSilence;
+            return this;
+        }
+
+        public Builder endOnKey(Character endOnKey) {
+            this.endOnKey = endOnKey;
+            return this;
+        }
+
+        public Builder timeOut(Integer timeOut) {
+            this.timeOut = timeOut;
+            return this;
+        }
+
+        public Builder beepStart(Boolean beepStart) {
+            this.beepStart = beepStart;
+            return this;
+        }
+
+        public Builder eventUrl(Collection<String> eventUrl) {
+            this.eventUrl = eventUrl;
+            return this;
+        }
+
+        public Builder eventUrl(String... eventUrl) {
+            return eventUrl(Arrays.asList(eventUrl));
+        }
+
+        public Builder eventMethod(EventMethod eventMethod) {
+            this.eventMethod = eventMethod;
+            return this;
+        }
+
+        public Builder split(SplitRecording split) {
+            this.split = split;
+            return this;
+        }
+
+        public RecordAction build() {
+            return new RecordAction(this);
+        }
     }
 }

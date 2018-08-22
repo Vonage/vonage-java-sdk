@@ -25,60 +25,72 @@ import com.nexmo.client.voice.VoiceName;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 
 public class TalkActionTest {
     @Test
-    public void testJsonHasTalkAndActionWhenGivenOnlyRequiredParameters() {
-        String json = "{\"text\":\"Talk to me\",\"action\":\"talk\"}";
-        TalkAction ncco = new TalkAction("Talk to me");
-        assertEquals(json, ncco.toJson());
+    public void testBuilderMultipleInstances() {
+        TalkAction.Builder builder = new TalkAction.Builder("Test message.");
+        assertNotSame(builder.build(), builder.build());
     }
 
     @Test
-    public void testJsonHasChangedTalkWhenChanged() {
-        String json = "{\"text\":\"Still talk to me\",\"action\":\"talk\"}";
-        TalkAction ncco = new TalkAction("Talk to me");
-        ncco.setText("Still talk to me");
-        assertEquals(json, ncco.toJson());
+    public void testAllFields() {
+        TalkAction talk = new TalkAction.Builder("Test message")
+                .text("New Text Message")
+                .bargeIn(true)
+                .loop(3)
+                .level(0.3333f)
+                .voiceName(VoiceName.KIMBERLY)
+                .build();
+
+        String expectedJson = "[{\"text\":\"New Text Message\",\"bargeIn\":true,\"loop\":3,\"level\":0.3333,\"voiceName\":\"Kimberly\",\"action\":\"talk\"}]";
+        assertEquals(expectedJson, new Ncco(talk).toJson());
     }
 
     @Test
-    public void testJsonHasBargeInWhenProvidedAndIsTrue() {
-        String json = "{\"text\":\"Talk to me\",\"bargeIn\":true,\"action\":\"talk\"}";
-        TalkAction ncco = new TalkAction("Talk to me");
-        ncco.setBargeIn(true);
-        assertEquals(json, ncco.toJson());
+    public void testGetAction() {
+        TalkAction talk = new TalkAction.Builder("Test message").build();
+        assertEquals("talk", talk.getAction());
     }
 
     @Test
-    public void testJsonHasBargeInWhenProvidedAndIsFalse() {
-        String json = "{\"text\":\"Talk to me\",\"bargeIn\":false,\"action\":\"talk\"}";
-        TalkAction ncco = new TalkAction("Talk to me");
-        ncco.setBargeIn(false);
-        assertEquals(json, ncco.toJson());
+    public void testTalkField() {
+        TalkAction talk = new TalkAction.Builder("Talk to me").text("Still talk to me").build();
+
+        String expectedJson = "[{\"text\":\"Still talk to me\",\"action\":\"talk\"}]";
+        assertEquals(expectedJson, new Ncco(talk).toJson());
     }
 
     @Test
-    public void testJsonHasLoopWhenProvided() {
-        String json = "{\"text\":\"Talk to me\",\"loop\":3,\"action\":\"talk\"}";
-        TalkAction ncco = new TalkAction("Talk to me");
-        ncco.setLoop(3);
-        assertEquals(json, ncco.toJson());
+    public void testBargeInField() {
+        TalkAction talk = new TalkAction.Builder("Talk to me").bargeIn(true).build();
+
+        String expectedJson = "[{\"text\":\"Talk to me\",\"bargeIn\":true,\"action\":\"talk\"}]";
+        assertEquals(expectedJson, new Ncco(talk).toJson());
     }
 
     @Test
-    public void testJsonHasLevelWhenProvided() {
-        String json = "{\"text\":\"Talk to me\",\"level\":-0.34,\"action\":\"talk\"}";
-        TalkAction ncco = new TalkAction("Talk to me");
-        ncco.setLevel(-0.34f);
-        assertEquals(json, ncco.toJson());
+    public void testLoopField() {
+        TalkAction talk = new TalkAction.Builder("Talk to me").loop(3).build();
+
+        String expectedJson = "[{\"text\":\"Talk to me\",\"loop\":3,\"action\":\"talk\"}]";
+        assertEquals(expectedJson, new Ncco(talk).toJson());
     }
 
     @Test
-    public void testJsonHasVoiceNameWhenProvided() {
-        String json = "{\"text\":\"Talk to me\",\"voiceName\":\"Kimberly\",\"action\":\"talk\"}";
-        TalkAction ncco = new TalkAction("Talk to me");
-        ncco.setVoiceName(VoiceName.KIMBERLY.toString());
-        assertEquals(json, ncco.toJson());
+    public void testLevelField() {
+        TalkAction talk = new TalkAction.Builder("Talk to me").level(-0.34f).build();
+
+        String expectedJson = "[{\"text\":\"Talk to me\",\"level\":-0.34,\"action\":\"talk\"}]";
+        assertEquals(expectedJson, new Ncco(talk).toJson());
+    }
+
+    @Test
+    public void testVoiceNameField() {
+        TalkAction talk = new TalkAction.Builder("Talk to me").voiceName(VoiceName.JENNIFER).build();
+
+        String expectedJson = "[{\"text\":\"Talk to me\",\"voiceName\":\"Jennifer\",\"action\":\"talk\"}]";
+        assertEquals(expectedJson, new Ncco(talk).toJson());
     }
 }

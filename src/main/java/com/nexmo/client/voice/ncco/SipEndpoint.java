@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,9 +21,44 @@
  */
 package com.nexmo.client.voice.ncco;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
- * An NCCO action.
+ * Represents a SIP endpoint used in a {@link ConnectAction}
  */
-public interface Action {
-    String getAction();
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+public class SipEndpoint implements Endpoint {
+    private static final String TYPE = "sip";
+
+    private String uri;
+
+    private SipEndpoint(Builder builder) {
+        this.uri = builder.uri;
+    }
+
+    @Override
+    public String getType() {
+        return TYPE;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public static class Builder {
+        private String uri;
+
+        public Builder(String uri) {
+            this.uri = uri;
+        }
+
+        public Builder uri(String uri) {
+            this.uri = uri;
+            return this;
+        }
+
+        public SipEndpoint build() {
+            return new SipEndpoint(this);
+        }
+    }
 }

@@ -23,52 +23,28 @@ package com.nexmo.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Arrays;
+import java.util.Collection;
+
+/**
+ * An NCCO stream action which allows for media to be streamed to a call.
+ */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StreamAction implements Action {
     private static final String ACTION = "stream";
 
-    private String streamUrl;
-    private Float level = null;
-    private Boolean bargeIn = null;
-    private Integer loop = null;
+    private Collection<String> streamUrl;
+    private Float level;
+    private Boolean bargeIn;
+    private Integer loop;
 
-    public StreamAction(@JsonProperty("streamUrl") String streamUrl) {
-        this.streamUrl = streamUrl;
-    }
-
-    public String getStreamUrl() {
-        return streamUrl;
-    }
-
-    public void setStreamUrl(String streamUrl) {
-        this.streamUrl = streamUrl;
-    }
-
-    public Float getLevel() {
-        return level;
-    }
-
-    public void setLevel(Float level) {
-        this.level = level;
-    }
-
-    public Boolean getBargeIn() {
-        return bargeIn;
-    }
-
-    public void setBargeIn(Boolean bargeIn) {
-        this.bargeIn = bargeIn;
-    }
-
-    public Integer getLoop() {
-        return loop;
-    }
-
-    public void setLoop(Integer loop) {
-        this.loop = loop;
+    private StreamAction(Builder builder) {
+        this.streamUrl = builder.streamUrl;
+        this.level = builder.level;
+        this.bargeIn = builder.bargeIn;
+        this.loop = builder.loop;
     }
 
     @Override
@@ -76,8 +52,62 @@ public class StreamAction implements Action {
         return ACTION;
     }
 
-    @Override
-    public String toJson() {
-        return NccoSerializer.getInstance().serializeNcco(this);
+    public Collection<String> getStreamUrl() {
+        return streamUrl;
+    }
+
+    public Float getLevel() {
+        return level;
+    }
+
+    public Boolean getBargeIn() {
+        return bargeIn;
+    }
+
+    public Integer getLoop() {
+        return loop;
+    }
+
+    public static class Builder {
+        private Collection<String> streamUrl;
+        private Float level = null;
+        private Boolean bargeIn = null;
+        private Integer loop = null;
+
+        public Builder(Collection<String> streamUrl) {
+            this.streamUrl = streamUrl;
+        }
+
+        public Builder(String... streamUrl) {
+            this(Arrays.asList(streamUrl));
+        }
+
+        public Builder streamUrl(Collection<String> streamUrl) {
+            this.streamUrl = streamUrl;
+            return this;
+        }
+
+        public Builder streamUrl(String... streamUrl) {
+            return streamUrl(Arrays.asList(streamUrl));
+        }
+
+        public Builder level(Float level) {
+            this.level = level;
+            return this;
+        }
+
+        public Builder bargeIn(Boolean bargeIn) {
+            this.bargeIn = bargeIn;
+            return this;
+        }
+
+        public Builder loop(Integer loop) {
+            this.loop = loop;
+            return this;
+        }
+
+        public StreamAction build() {
+            return new StreamAction(this);
+        }
     }
 }

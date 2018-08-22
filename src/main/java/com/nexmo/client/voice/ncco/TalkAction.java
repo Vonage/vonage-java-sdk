@@ -23,64 +23,28 @@ package com.nexmo.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nexmo.client.voice.VoiceName;
 
+/**
+ * An NCCO talk action which allows for synthesized speach to be sent to a call.
+ */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TalkAction implements Action {
     private static final String ACTION = "talk";
 
     private String text;
-    private Boolean bargeIn = null;
-    private Integer loop = null;
-    private Float level = null;
-    private VoiceName voiceName = null;
+    private Boolean bargeIn;
+    private Integer loop;
+    private Float level;
+    private VoiceName voiceName;
 
-    public TalkAction(@JsonProperty("text") String text) {
-        this.text = text;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public Boolean getBargeIn() {
-        return bargeIn;
-    }
-
-    public void setBargeIn(Boolean bargeIn) {
-        this.bargeIn = bargeIn;
-    }
-
-    public Integer getLoop() {
-        return loop;
-    }
-
-    public void setLoop(Integer loop) {
-        this.loop = loop;
-    }
-
-    public void setLevel(Float level) {
-        this.level = level;
-    }
-
-    public Float getLevel() {
-        return level;
-    }
-
-    // TODO: Change to return VoiceName on next major version
-    public String getVoiceName() {
-        return (voiceName == null) ? null : voiceName.toString();
-    }
-
-    // TODO: Change to accept VoiceName on next major version
-    public void setVoiceName(String voiceName) {
-        this.voiceName = VoiceName.fromString(voiceName);
+    private TalkAction(Builder builder) {
+        this.text = builder.text;
+        this.bargeIn = builder.bargeIn;
+        this.loop = builder.loop;
+        this.level = builder.level;
+        this.voiceName = builder.voiceName;
     }
 
     @Override
@@ -88,8 +52,64 @@ public class TalkAction implements Action {
         return ACTION;
     }
 
-    @Override
-    public String toJson() {
-        return NccoSerializer.getInstance().serializeNcco(this);
+    public String getText() {
+        return text;
+    }
+
+    public Boolean getBargeIn() {
+        return bargeIn;
+    }
+
+    public Integer getLoop() {
+        return loop;
+    }
+
+    public Float getLevel() {
+        return level;
+    }
+
+    public VoiceName getVoiceName() {
+        return voiceName;
+    }
+
+    public static class Builder {
+        private String text;
+        private Boolean bargeIn = null;
+        private Integer loop = null;
+        private Float level = null;
+        private VoiceName voiceName = null;
+
+        public Builder(String text) {
+            this.text = text;
+        }
+
+        public Builder text(String text) {
+            this.text = text;
+            return this;
+        }
+
+        public Builder bargeIn(Boolean bargeIn) {
+            this.bargeIn = bargeIn;
+            return this;
+        }
+
+        public Builder loop(Integer loop) {
+            this.loop = loop;
+            return this;
+        }
+
+        public Builder level(Float level) {
+            this.level = level;
+            return this;
+        }
+
+        public Builder voiceName(VoiceName voiceName) {
+            this.voiceName = voiceName;
+            return this;
+        }
+
+        public TalkAction build() {
+            return new TalkAction(this);
+        }
     }
 }

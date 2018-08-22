@@ -21,97 +21,100 @@
  */
 package com.nexmo.client.voice.ncco;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 
 public class RecordActionTest {
     @Test
-    public void testToJson() throws Exception {
-        assertEquals("{\"action\":\"record\"}", new RecordAction().toJson());
+    public void testBuilderMultipleInstances() {
+        RecordAction.Builder builder = new RecordAction.Builder();
+        assertNotSame(builder.build(), builder.build());
     }
 
     @Test
-    public void testJson() throws Exception {
-        String json;
-        {
-            RecordAction ncco = new RecordAction();
-            ncco.setEventUrl("https://api.example.com/event");
-            ncco.setEventMethod("GET");
-            ncco.setBeepStart(true);
-            ncco.setEndOnKey('#');
-            ncco.setEndOnSilence(3);
-            ncco.setFormat(RecordingFormat.MP3);
-            ncco.setTimeout(20);
-            ncco.setSplit(SplitRecording.CONVERSATION);
-            json = ncco.toJson();
-        }
+    public void testAllFields() {
+        RecordAction record = new RecordAction.Builder()
+                .format(RecordingFormat.MP3)
+                .split(SplitRecording.CONVERSATION)
+                .endOnSilence(3)
+                .endOnKey('#')
+                .timeOut(5)
+                .beepStart(true)
+                .eventMethod(EventMethod.POST)
+                .eventUrl("https://example.com")
+                .build();
 
-        RecordAction ncco = new ObjectMapper().readValue(json, RecordAction.class);
-        assertArrayEquals(new String[]{"https://api.example.com/event"}, ncco.getEventUrl());
-        assertEquals("GET", ncco.getEventMethod());
-        assertEquals(true, ncco.getBeepStart());
-        assertEquals('#', (char) ncco.getEndOnKey());
-        assertEquals(3, (int) ncco.getEndOnSilence());
-        assertEquals(RecordingFormat.MP3, ncco.getFormat());
-        assertEquals(20, (int) ncco.getTimeout());
-        assertEquals(SplitRecording.CONVERSATION, ncco.getSplit());
+        assertEquals(
+                "[{\"format\":\"mp3\",\"endOnSilence\":3,\"endOnKey\":\"#\",\"timeOut\":5,\"beepStart\":true,\"eventUrl\":[\"https://example.com\"],\"eventMethod\":\"POST\",\"split\":\"conversation\",\"action\":\"record\"}]",
+                new Ncco(record).toJson()
+        );
+    }
+
+    @Test
+    public void testGetAction() {
+        RecordAction record = new RecordAction.Builder().build();
+        assertEquals("record", record.getAction());
     }
 
     @Test
     public void testDefault() {
-        RecordAction ncco = new RecordAction();
-        assertEquals("{\"action\":\"record\"}", ncco.toJson());
+        RecordAction record = new RecordAction.Builder().build();
+        assertEquals("[{\"action\":\"record\"}]", new Ncco(record).toJson());
     }
 
     @Test
-    public void testEventUrl() {
-        RecordAction ncco = new RecordAction();
-        ncco.setEventUrl("https://example.com");
-        assertEquals("{\"action\":\"record\",\"eventUrl\":[\"https://example.com\"]}", ncco.toJson());
-    }
+    public void testFormatField() {
+        RecordAction.Builder builder = new RecordAction.Builder();
+        RecordAction recordMp3 = builder.format(RecordingFormat.MP3).build();
+        RecordAction recordWav = builder.format(RecordingFormat.WAV).build();
 
-    @Test
-    public void testEventMethod() {
-        RecordAction ncco = new RecordAction();
-        ncco.setEventMethod("GET");
-        assertEquals("{\"eventMethod\":\"GET\",\"action\":\"record\"}", ncco.toJson());
-    }
-
-    @Test
-    public void testEndOnKey() {
-        RecordAction ncco = new RecordAction();
-        ncco.setEndOnKey('#');
-        assertEquals("{\"endOnKey\":\"#\",\"action\":\"record\"}", ncco.toJson());
-    }
-
-    @Test
-    public void testEndOnSilence() {
-        RecordAction ncco = new RecordAction();
-        ncco.setEndOnSilence(3);
-        assertEquals("{\"endOnSilence\":3,\"action\":\"record\"}", ncco.toJson());
-    }
-
-    @Test
-    public void testFormat() {
-        RecordAction ncco = new RecordAction();
-        ncco.setFormat(RecordingFormat.WAV);
-        assertEquals("{\"format\":\"wav\",\"action\":\"record\"}", ncco.toJson());
-    }
-
-    @Test
-    public void testTimeout() {
-        RecordAction ncco = new RecordAction();
-        ncco.setTimeout(5);
-        assertEquals("{\"timeout\":5,\"action\":\"record\"}", ncco.toJson());
+        assertEquals("[{\"format\":\"mp3\",\"action\":\"record\"}]", new Ncco(recordMp3).toJson());
+        assertEquals("[{\"format\":\"wav\",\"action\":\"record\"}]", new Ncco(recordWav).toJson());
     }
 
     @Test
     public void testSplit() {
-        RecordAction ncco = new RecordAction();
-        ncco.setSplit(SplitRecording.CONVERSATION);
-        assertEquals("{\"split\":\"conversation\",\"action\":\"record\"}", ncco.toJson());
+        RecordAction record = new RecordAction.Builder().split(SplitRecording.CONVERSATION).build();
+        assertEquals("[{\"split\":\"conversation\",\"action\":\"record\"}]", new Ncco(record).toJson());
+    }
+
+    @Test
+    public void testEndOnSilence() {
+        RecordAction record = new RecordAction.Builder().endOnSilence(3).build();
+        assertEquals("[{\"endOnSilence\":3,\"action\":\"record\"}]", new Ncco(record).toJson());
+    }
+
+    @Test
+    public void testEndOnKey() {
+        RecordAction record = new RecordAction.Builder().endOnKey('#').build();
+        assertEquals("[{\"endOnKey\":\"#\",\"action\":\"record\"}]", new Ncco(record).toJson());
+    }
+
+    @Test
+    public void testTimeout() {
+        RecordAction record = new RecordAction.Builder().timeOut(5).build();
+        assertEquals("[{\"timeOut\":5,\"action\":\"record\"}]", new Ncco(record).toJson());
+    }
+
+    @Test
+    public void testBeepStart() {
+        RecordAction record = new RecordAction.Builder().beepStart(true).build();
+        assertEquals("[{\"beepStart\":true,\"action\":\"record\"}]", new Ncco(record).toJson());
+    }
+
+    @Test
+    public void testEventMethod() {
+        RecordAction recordGet = new RecordAction.Builder().eventMethod(EventMethod.GET).build();
+        RecordAction recordPost = new RecordAction.Builder().eventMethod(EventMethod.POST).build();
+        assertEquals("[{\"eventMethod\":\"GET\",\"action\":\"record\"}]", new Ncco(recordGet).toJson());
+        assertEquals("[{\"eventMethod\":\"POST\",\"action\":\"record\"}]", new Ncco(recordPost).toJson());
+    }
+
+    @Test
+    public void testEventUrl() {
+        RecordAction record = new RecordAction.Builder().eventUrl("https://example.com").build();
+        assertEquals("[{\"eventUrl\":[\"https://example.com\"],\"action\":\"record\"}]", new Ncco(record).toJson());
     }
 }

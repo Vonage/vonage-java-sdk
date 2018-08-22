@@ -21,101 +21,104 @@
  */
 package com.nexmo.client.voice.ncco;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 
 public class ConversationActionTest {
+
     @Test
-    public void testJson() throws Exception {
-        ConversationAction ncco = new ConversationAction("conversation-name");
-        assertEquals("{\"name\":\"conversation-name\",\"action\":\"conversation\"}", ncco.toJson());
+    public void testBuilderMultipleInstances() {
+        ConversationAction.Builder builder = new ConversationAction.Builder("test-conversation");
+        assertNotSame(builder.build(), builder.build());
     }
 
     @Test
-    public void testToJson() throws Exception {
-        ConversationAction ncco = new ConversationAction("chat-with-matt");
-        ncco.setName("overwrite-name");
-        ncco.setEventMethod("GET");
-        ncco.setEventUrl("https://api.example.com/event");
-        ncco.setEndOnExit(true);
-        ncco.setMusicOnHoldUrl("https://api.example.com/on-hold-music");
-        ncco.setRecord(true);
-        ncco.setStartOnEnter(false);
+    public void testAllFields() {
+        ConversationAction action = new ConversationAction.Builder("test-conversation")
+                .name("different-name")
+                .musicOnHoldUrl("http://example.com/music")
+                .startOnEnter(true)
+                .endOnExit(true)
+                .record(true)
+                .eventUrl("https://example.com/event")
+                .eventMethod(EventMethod.GET)
+                .build();
 
-        ConversationAction ncco2 = new ObjectMapper().readValue(ncco.toJson(), ConversationAction.class);
-        assertEquals("overwrite-name", ncco.getName());
-        assertEquals("GET", ncco2.getEventMethod());
-        assertArrayEquals(new String[]{"https://api.example.com/event"}, ncco2.getEventUrl());
-        assertEquals(true, ncco2.getEndOnExit());
-        assertEquals("https://api.example.com/on-hold-music", ncco2.getMusicOnHoldUrl());
-        assertEquals(true, ncco2.getRecord());
-        assertEquals(false, ncco2.getStartOnEnter());
+        String expectedJson = "[{\"name\":\"different-name\",\"musicOnHoldUrl\":[\"http://example.com/music\"],\"startOnEnter\":true,\"endOnExit\":true,\"record\":true,\"eventUrl\":[\"https://example.com/event\"],\"eventMethod\":\"GET\",\"action\":\"conversation\"}]";
+        assertEquals(expectedJson, new Ncco(action).toJson());
     }
 
     @Test
-    public void testWithOnlyNameParameter() throws Exception {
-        ConversationAction ncco = new ConversationAction("Test");
-
-        String expectedJson = "{\"name\":\"Test\",\"action\":\"conversation\"}";
-        assertEquals(expectedJson, ncco.toJson());
+    public void testGetAction() {
+        ConversationAction conversation = new ConversationAction.Builder("test").build();
+        assertEquals("conversation", conversation.getAction());
     }
 
     @Test
-    public void testMusicOnHoldUrl() throws Exception {
-        ConversationAction ncco = new ConversationAction("Test");
-        ncco.setMusicOnHoldUrl("https://example.org");
+    public void testDefault() {
+        ConversationAction conversationAction = new ConversationAction.Builder("test-name").build();
 
-        String expectedJson = "{\"name\":\"Test\",\"musicOnHoldUrl\":[\"https://example.org\"],\"action\":\"conversation\"}";
-        assertEquals(expectedJson, ncco.toJson());
+        assertEquals("[{\"name\":\"test-name\",\"action\":\"conversation\"}]", new Ncco(conversationAction).toJson());
+    }
 
-        ncco = new ConversationAction("Test");
+    @Test
+    public void testName() {
+        ConversationAction conversationAction = new ConversationAction.Builder("test-name").name("rename").build();
+
+        assertEquals("[{\"name\":\"rename\",\"action\":\"conversation\"}]", new Ncco(conversationAction).toJson());
+    }
+
+    @Test
+    public void testMusicOnHoldUrl() {
+        ConversationAction conversation = new ConversationAction.Builder("Test")
+                .musicOnHoldUrl("https://example.org")
+                .build();
+
+        String expectedJson = "[{\"name\":\"Test\",\"musicOnHoldUrl\":[\"https://example.org\"],\"action\":\"conversation\"}]";
+        assertEquals(expectedJson, new Ncco(conversation).toJson());
     }
 
     @Test
     public void testStartOnEnter() throws Exception {
-        ConversationAction ncco = new ConversationAction("Test");
-        ncco.setStartOnEnter(true);
+        ConversationAction conversation = new ConversationAction.Builder("Test").startOnEnter(true).build();
 
-        String expectedJson = "{\"name\":\"Test\",\"startOnEnter\":true,\"action\":\"conversation\"}";
-        assertEquals(expectedJson, ncco.toJson());
+        String expectedJson = "[{\"name\":\"Test\",\"startOnEnter\":true,\"action\":\"conversation\"}]";
+        assertEquals(expectedJson, new Ncco(conversation).toJson());
     }
 
     @Test
     public void testEndOnExit() throws Exception {
-        ConversationAction ncco = new ConversationAction("Test");
-        ncco.setEndOnExit(true);
+        ConversationAction conversation = new ConversationAction.Builder("Test").endOnExit(true).build();
 
-        String expectedJson = "{\"name\":\"Test\",\"endOnExit\":true,\"action\":\"conversation\"}";
-        assertEquals(expectedJson, ncco.toJson());
+        String expectedJson = "[{\"name\":\"Test\",\"endOnExit\":true,\"action\":\"conversation\"}]";
+        assertEquals(expectedJson, new Ncco(conversation).toJson());
     }
 
     @Test
     public void testRecord() throws Exception {
-        ConversationAction ncco = new ConversationAction("Test");
-        ncco.setRecord(true);
+        ConversationAction conversation = new ConversationAction.Builder("Test").record(true).build();
 
-        String expectedJson = "{\"name\":\"Test\",\"record\":true,\"action\":\"conversation\"}";
-        assertEquals(expectedJson, ncco.toJson());
+        String expectedJson = "[{\"name\":\"Test\",\"record\":true,\"action\":\"conversation\"}]";
+        assertEquals(expectedJson, new Ncco(conversation).toJson());
     }
 
     @Test
     public void testEventUrl() throws Exception {
-        ConversationAction ncco = new ConversationAction("Test");
-        ncco.setEventUrl("https://exmaple.org");
+        ConversationAction conversation = new ConversationAction.Builder("Test")
+                .eventUrl("https://example.org")
+                .build();
 
-        String expectedJson = "{\"name\":\"Test\",\"action\":\"conversation\",\"eventUrl\":[\"https://exmaple.org\"]}";
-        assertEquals(expectedJson, ncco.toJson());
+        String expectedJson = "[{\"name\":\"Test\",\"eventUrl\":[\"https://example.org\"],\"action\":\"conversation\"}]";
+        assertEquals(expectedJson, new Ncco(conversation).toJson());
     }
 
     @Test
     public void testEventMethod() throws Exception {
-        ConversationAction ncco = new ConversationAction("Test");
-        ncco.setEventMethod("Test");
+        ConversationAction conversation = new ConversationAction.Builder("Test").eventMethod(EventMethod.POST).build();
 
-        String expectedJson = "{\"name\":\"Test\",\"eventMethod\":\"Test\",\"action\":\"conversation\"}";
-        assertEquals(expectedJson, ncco.toJson());
+        String expectedJson = "[{\"name\":\"Test\",\"eventMethod\":\"POST\",\"action\":\"conversation\"}]";
+        assertEquals(expectedJson, new Ncco(conversation).toJson());
     }
 }

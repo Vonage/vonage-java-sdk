@@ -39,7 +39,7 @@ public class AbstractAnswerServletTest {
     private AbstractAnswerServlet servlet = new AbstractAnswerServlet() {
         @Override
         protected NccoResponse handleRequest(HttpServletRequest request) {
-            return new NccoResponseBuilder().appendNcco(new TalkAction("Hello")).getValue();
+            return new NccoResponseBuilder().appendNcco(new TalkAction.Builder("Hello").build()).getValue();
         }
     };
 

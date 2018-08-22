@@ -23,89 +23,34 @@ package com.nexmo.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Arrays;
+import java.util.Collection;
+
+/**
+ * An NCCO conversation action which enables the ability to host conference calls.
+ */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ConversationAction implements Action {
     private static final String ACTION = "conversation";
 
     private String name;
-    private String musicOnHoldUrl = null;
-    private Boolean startOnEnter = null;
-    private Boolean endOnExit = null;
-    private Boolean record = null;
-    private String[] eventUrl = null;
-    private String eventMethod = null;
+    private Collection<String> musicOnHoldUrl;
+    private Boolean startOnEnter;
+    private Boolean endOnExit;
+    private Boolean record;
+    private Collection<String> eventUrl;
+    private EventMethod eventMethod;
 
-
-    public ConversationAction(@JsonProperty("name") String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getMusicOnHoldUrl() {
-        return musicOnHoldUrl;
-    }
-
-    @JsonProperty("musicOnHoldUrl")
-    public String[] getMusicOnHoldUrlAsArray() {
-        // TODO: Rework in 4.0.
-        // This property is expected to be serialized as an array, however we want to also insure it remains null
-        // if null.
-        return this.musicOnHoldUrl != null ? new String[]{this.musicOnHoldUrl} : null;
-    }
-
-    public void setMusicOnHoldUrl(String... musicOnHoldUrl) {
-        this.musicOnHoldUrl = musicOnHoldUrl[0];
-    }
-
-    public Boolean getStartOnEnter() {
-        return startOnEnter;
-    }
-
-    public void setStartOnEnter(Boolean startOnEnter) {
-        this.startOnEnter = startOnEnter;
-    }
-
-    public Boolean getEndOnExit() {
-        return endOnExit;
-    }
-
-    public void setEndOnExit(Boolean endOnExit) {
-        this.endOnExit = endOnExit;
-    }
-
-    public Boolean getRecord() {
-        return record;
-    }
-
-    public void setRecord(Boolean record) {
-        this.record = record;
-    }
-
-    public String[] getEventUrl() {
-        return eventUrl;
-    }
-
-    @JsonProperty("eventUrl")
-    public void setEventUrl(String... eventUrl) {
-        this.eventUrl = eventUrl;
-    }
-
-    public String getEventMethod() {
-        return eventMethod;
-    }
-
-    public void setEventMethod(String eventMethod) {
-        this.eventMethod = eventMethod;
+    private ConversationAction(Builder builder) {
+        this.name = builder.name;
+        this.musicOnHoldUrl = builder.musicOnHoldUrl;
+        this.startOnEnter = builder.startOnEnter;
+        this.endOnExit = builder.endOnExit;
+        this.record = builder.record;
+        this.eventUrl = builder.eventUrl;
+        this.eventMethod = builder.eventMethod;
     }
 
     @Override
@@ -113,8 +58,92 @@ public class ConversationAction implements Action {
         return ACTION;
     }
 
-    @Override
-    public String toJson() {
-        return NccoSerializer.getInstance().serializeNcco(this);
+    public String getName() {
+        return name;
+    }
+
+    public Collection<String> getMusicOnHoldUrl() {
+        return musicOnHoldUrl;
+    }
+
+    public Boolean getStartOnEnter() {
+        return startOnEnter;
+    }
+
+    public Boolean getEndOnExit() {
+        return endOnExit;
+    }
+
+    public Boolean getRecord() {
+        return record;
+    }
+
+    public Collection<String> getEventUrl() {
+        return eventUrl;
+    }
+
+    public EventMethod getEventMethod() {
+        return eventMethod;
+    }
+
+    public static class Builder {
+        private String name;
+        private Collection<String> musicOnHoldUrl = null;
+        private Boolean startOnEnter = null;
+        private Boolean endOnExit = null;
+        private Boolean record = null;
+        private Collection<String> eventUrl = null;
+        private EventMethod eventMethod = null;
+
+        public Builder(String name) {
+            this.name = name;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder musicOnHoldUrl(Collection<String> musicOnHoldUrl) {
+            this.musicOnHoldUrl = musicOnHoldUrl;
+            return this;
+        }
+
+        public Builder musicOnHoldUrl(String... musicOnHoldUrl) {
+            return musicOnHoldUrl(Arrays.asList(musicOnHoldUrl));
+        }
+
+        public Builder startOnEnter(Boolean startOnEnter) {
+            this.startOnEnter = startOnEnter;
+            return this;
+        }
+
+        public Builder endOnExit(Boolean endOnExit) {
+            this.endOnExit = endOnExit;
+            return this;
+        }
+
+        public Builder record(Boolean record) {
+            this.record = record;
+            return this;
+        }
+
+        public Builder eventUrl(Collection<String> eventUrl) {
+            this.eventUrl = eventUrl;
+            return this;
+        }
+
+        public Builder eventUrl(String... eventUrl) {
+            return eventUrl(Arrays.asList(eventUrl));
+        }
+
+        public Builder eventMethod(EventMethod eventMethod) {
+            this.eventMethod = eventMethod;
+            return this;
+        }
+
+        public ConversationAction build() {
+            return new ConversationAction(this);
+        }
     }
 }

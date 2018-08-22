@@ -23,62 +23,30 @@ package com.nexmo.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Arrays;
+import java.util.Collection;
+
+/**
+ * An NCCO input action which allows for the collection of digits from a person.
+ */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InputAction implements Action {
     private static final String ACTION = "input";
 
-    private Integer timeOut = null;
-    private Integer maxDigits = null;
-    private Boolean submitOnHash = null;
-    private String[] eventUrl = null;
-    private String eventMethod = null;
+    private Integer timeOut;
+    private Integer maxDigits;
+    private Boolean submitOnHash;
+    private Collection<String> eventUrl;
+    private EventMethod eventMethod;
 
-    public Integer getTimeOut() {
-        return timeOut;
-    }
-
-    public void setTimeOut(Integer timeOut) {
-        this.timeOut = timeOut;
-    }
-
-    public Integer getMaxDigits() {
-        return maxDigits;
-    }
-
-    public void setMaxDigits(Integer maxDigits) {
-        this.maxDigits = maxDigits;
-    }
-
-    public Boolean getSubmitOnHash() {
-        return submitOnHash;
-    }
-
-    public void setSubmitOnHash(Boolean submitOnHash) {
-        this.submitOnHash = submitOnHash;
-    }
-
-    public String[] getEventUrl() {
-        return eventUrl;
-    }
-
-    public void setEventUrl(String eventUrl) {
-        setEventUrl(new String[]{eventUrl});
-    }
-
-    @JsonProperty("eventUrl")
-    public void setEventUrl(String[] eventUrl) {
-        this.eventUrl = eventUrl;
-    }
-
-    public String getEventMethod() {
-        return eventMethod;
-    }
-
-    public void setEventMethod(String eventMethod) {
-        this.eventMethod = eventMethod;
+    public InputAction(Builder builder) {
+        this.timeOut = builder.timeOut;
+        this.maxDigits = builder.maxDigits;
+        this.submitOnHash = builder.submitOnHash;
+        this.eventUrl = builder.eventUrl;
+        this.eventMethod = builder.eventMethod;
     }
 
     @Override
@@ -86,8 +54,64 @@ public class InputAction implements Action {
         return ACTION;
     }
 
-    @Override
-    public String toJson() {
-        return NccoSerializer.getInstance().serializeNcco(this);
+    public Integer getTimeOut() {
+        return timeOut;
+    }
+
+    public Integer getMaxDigits() {
+        return maxDigits;
+    }
+
+    public Boolean getSubmitOnHash() {
+        return submitOnHash;
+    }
+
+    public Collection<String> getEventUrl() {
+        return eventUrl;
+    }
+
+    public EventMethod getEventMethod() {
+        return eventMethod;
+    }
+
+    public static class Builder {
+        private Integer timeOut = null;
+        private Integer maxDigits = null;
+        private Boolean submitOnHash = null;
+        private Collection<String> eventUrl = null;
+        private EventMethod eventMethod = null;
+
+        public Builder timeOut(Integer timeOut) {
+            this.timeOut = timeOut;
+            return this;
+        }
+
+        public Builder maxDigits(Integer maxDigits) {
+            this.maxDigits = maxDigits;
+            return this;
+        }
+
+        public Builder submitOnHash(Boolean submitOnHash) {
+            this.submitOnHash = submitOnHash;
+            return this;
+        }
+
+        public Builder eventUrl(Collection<String> eventUrl) {
+            this.eventUrl = eventUrl;
+            return this;
+        }
+
+        public Builder eventUrl(String... eventUrl) {
+            return eventUrl(Arrays.asList(eventUrl));
+        }
+
+        public Builder eventMethod(EventMethod eventMethod) {
+            this.eventMethod = eventMethod;
+            return this;
+        }
+
+        public InputAction build() {
+            return new InputAction(this);
+        }
     }
 }

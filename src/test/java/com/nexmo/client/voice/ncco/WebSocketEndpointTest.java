@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,9 +21,21 @@
  */
 package com.nexmo.client.voice.ncco;
 
-/**
- * An NCCO action.
- */
-public interface Action {
-    String getAction();
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+
+public class WebSocketEndpointTest {
+    @Test
+    public void testAllFields() {
+        WebSocketEndpoint endpoint = new WebSocketEndpoint.Builder("wss://example.com", "some-content")
+                .uri("wss://example.net")
+                .contentType("some-content-type")
+                .headers("keyOne", "valueOne", "keyTwo", "valueTwo")
+                .build();
+        ConnectAction connect = new ConnectAction.Builder(endpoint).build();
+
+        String expectedJson = "[{\"endpoint\":[{\"uri\":\"wss://example.net\",\"headers\":{\"keyTwo\":\"valueTwo\",\"keyOne\":\"valueOne\"},\"type\":\"websocket\",\"content-type\":\"some-content-type\"}],\"action\":\"connect\"}]";
+        assertEquals(expectedJson, new Ncco(connect).toJson());
+    }
 }

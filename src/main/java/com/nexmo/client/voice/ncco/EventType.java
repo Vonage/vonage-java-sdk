@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,27 +21,17 @@
  */
 package com.nexmo.client.voice.ncco;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.NexmoUnexpectedException;
-import org.junit.Test;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.*;
+/**
+ * The type of event to use.
+ */
+public enum EventType {
+    SYNCHRONOUS;
 
-public class ActionSerializerTest {
-    @Test
-    public void serializeNccoException() throws Exception {
-        ObjectMapper mapper = mock(ObjectMapper.class);
-        when(mapper.writeValueAsString(any())).thenThrow(JsonProcessingException.class);
-
-        NccoSerializer serializer = new NccoSerializer(mapper);
-        try {
-            serializer.serializeNcco(new ConnectAction("447700900637"));
-            fail("This test should have raised a NexmoUnexpectedException (wrapping a forced JsonProcessingException)");
-        } catch (NexmoUnexpectedException nue) {
-            // This is expected
-        }
+    @JsonValue
+    @Override
+    public String toString() {
+        return name().toLowerCase();
     }
-
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,8 @@
 package com.nexmo.client.voice.ncco;
 
 /**
- * An NCCO action.
+ * The type of request to use when connecting to an event url.
  */
-public interface Action {
-    String getAction();
+public enum EventMethod {
+    POST, GET
 }
