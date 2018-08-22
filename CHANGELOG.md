@@ -4,6 +4,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Develop]
+
+### Added
+- Added `Ncco` class to wrap `Collection<Action>` and handle the serialization of NCCO json through `toJson`.
+- Added the following `Builder` classes:
+    - `ConnectAction.Builder`
+    - `ConversationAction.Builder`
+    - `InputAction.Builder`
+    - `RecordAction.Builder`
+    - `StreamAction.Builder`
+    - `TalkAction.Builder`
+- Added `PhoneEndpoint` to `com.nexmo.voice.ncco` package for use with `ConnectAction`.
+- Added `WebSocketEndpoint` to `com.nexmo.voice.ncco` package for use with `ConnectAction`.
+- Added `SipEndpoint` to `com.nexmo.voice.ncco` package for use with `ConnectAction`.
+- Added `EventMethod` enumeration to replace the usage of strings.
+- Added `EventType` enumeration and the ability to specify the `eventType` property of `ConnectAction`.
+
+### Changed
+- Renamed all `Ncco` classes to `Action` classes:
+    - Renamed `Ncco` interface to `Action`
+    - Renamed `ConnectNcco` to `ConnectAction`
+    - Renamed `ConversationNcco` to `ConversationAction`
+    - Renamed `InputNcco` to `InputAction`
+    - Renamed `RecordNcco` to `RecordAction`
+    - Renamed `StreamNcco` to `StreamAction`
+    - Renamed `TalkNcco` to `TalkAction`
+- All `Action` classes now must be constructed through the provided `Builder` class.
+- All `Action` classes are now immutable. 
+- The `eventUrl` property of `ConnectAction`, `ConversationAction`, `InputAction`, and `RecordAction` is now a `Collection<String>` instead of an array.
+- The `eventMethod` property of `ConnectAction`, `ConversationAction`, `InputAction`, and `RecordAction` is now an `EventMethod` enum instead of a String.
+
 ## [3.8.0] - 2018-09-19
 ### Added
 - Added `com.nexmo.client.incoming.MessageEvent` to assist with the deserialization of the JSON payload used for incoming messages.

@@ -161,14 +161,23 @@ System.out.println("Alright. " + stopTalkResponse.getMessage());
 
 ### Generating NCCO Responses
 
-Our library contains a `com.nexmo.client.voice.ncco` package, providing JSON-serializable objects for your NCCO webhook endpoints. You can use it like this:
+Our library contains a `com.nexmo.client.voice.ncco` package, providing JSON-serializable objects for your NCCO webhook endpoints. 
+
+Each of the `Action` items contain a `Builder` class that can be used for constructing various actions. These actions are then added to an `Ncco` object for serialization into JSON:
 
 ```java
-TalkNcco message = new TalkNcco("Thank you for calling!");
-Ncco[] nccos = new Ncco[]{message};
+TalkAction.Builder builder = new TalkAction.Builder("").voiceName(VoiceName.KIMBERLY);
+TalkAction intro = builder.text("At the tone, record your response and press #.").build();
+TalkAction outro = builder.text("Thanks, goodbye!").build();
+
+RecordAction record = new RecordAction.Builder()
+                        .beepStart(true)
+                        .endOnKey('#')
+                        .build()
+                        
 
 res.type("application/json");
-return nccoMapper.writer().writeValueAsString(nccos);
+return new Ncco(intro, record, outro).toJson();
 ```
 
 ### Send a 2FA Code
