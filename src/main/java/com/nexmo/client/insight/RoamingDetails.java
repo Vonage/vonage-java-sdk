@@ -24,15 +24,25 @@ package com.nexmo.client.insight;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class RoamingDetails {
     public enum RoamingStatus {
-        UNKNOWN,
-        ROAMING,
-        NOT_ROAMING;
+        UNKNOWN, ROAMING, NOT_ROAMING;
+
+        private static final Map<String, RoamingStatus> roamingStatusIndex = new HashMap<>();
+
+        static {
+            for (RoamingStatus roamingStatus : RoamingStatus.values()) {
+                roamingStatusIndex.put(roamingStatus.name(), roamingStatus);
+            }
+        }
 
         @JsonCreator
         public static RoamingStatus fromString(String name) {
-            return RoamingStatus.valueOf(name.toUpperCase());
+            RoamingStatus foundRoamingStatus = roamingStatusIndex.get(name.toUpperCase());
+            return (foundRoamingStatus != null) ? foundRoamingStatus : UNKNOWN;
         }
     }
 
