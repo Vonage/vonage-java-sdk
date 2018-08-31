@@ -24,6 +24,9 @@ package com.nexmo.client.voice;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum CallStatus {
     STARTED,
     RINGING,
@@ -34,7 +37,16 @@ public enum CallStatus {
     FAILED,
     REJECTED,
     BUSY,
-    CANCELLED;
+    CANCELLED,
+    UNKNOWN;
+
+    private static final Map<String, CallStatus> callStatusIndex = new HashMap<>();
+
+    static {
+        for (CallStatus callStatus : CallStatus.values()) {
+            callStatusIndex.put(callStatus.name(), callStatus);
+        }
+    }
 
     @JsonValue
     @Override
@@ -44,6 +56,7 @@ public enum CallStatus {
 
     @JsonCreator
     public static CallStatus fromString(String name) {
-        return CallStatus.valueOf(name.toUpperCase());
+        CallStatus foundCallStatus = callStatusIndex.get(name.toUpperCase());
+        return (foundCallStatus != null) ? foundCallStatus : UNKNOWN;
     }
 }

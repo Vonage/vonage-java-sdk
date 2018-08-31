@@ -24,9 +24,21 @@ package com.nexmo.client.voice;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum CallDirection {
     OUTBOUND,
-    INBOUND;
+    INBOUND,
+    UNKNOWN;
+
+    private static final Map<String, CallDirection> callDirectionIndex = new HashMap<>();
+
+    static {
+        for (CallDirection callDirection : CallDirection.values()) {
+            callDirectionIndex.put(callDirection.name(), callDirection);
+        }
+    }
 
     @JsonValue
     @Override
@@ -36,6 +48,7 @@ public enum CallDirection {
 
     @JsonCreator
     public static CallDirection fromString(String name) {
-        return CallDirection.valueOf(name.toUpperCase());
+        CallDirection foundCallDirection = callDirectionIndex.get(name.toUpperCase());
+        return (foundCallDirection != null) ? foundCallDirection : UNKNOWN;
     }
 }
