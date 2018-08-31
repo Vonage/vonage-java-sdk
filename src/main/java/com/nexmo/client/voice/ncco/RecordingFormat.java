@@ -24,9 +24,19 @@ package com.nexmo.client.voice.ncco;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum RecordingFormat {
-    MP3,
-    WAV;
+    MP3, WAV, UNKNOWN;
+
+    private static final Map<String, RecordingFormat> recordingFormatIndex = new HashMap<>();
+
+    static {
+        for (RecordingFormat recordingFormat : RecordingFormat.values()) {
+            recordingFormatIndex.put(recordingFormat.name(), recordingFormat);
+        }
+    }
 
     @JsonValue
     @Override
@@ -36,6 +46,7 @@ public enum RecordingFormat {
 
     @JsonCreator
     public static RecordingFormat fromString(String name) {
-        return RecordingFormat.valueOf(name.toUpperCase());
+        RecordingFormat foundRecordingFormat = recordingFormatIndex.get(name.toUpperCase());
+        return (foundRecordingFormat != null) ? foundRecordingFormat : UNKNOWN;
     }
 }

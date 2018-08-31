@@ -23,13 +23,14 @@ package com.nexmo.client.voice.ncco;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class RecordingFormatTest {
     @Test
     public void testFromString() throws Exception {
         assertEquals(RecordingFormat.MP3, RecordingFormat.fromString("mp3"));
         assertEquals(RecordingFormat.WAV, RecordingFormat.fromString("wav"));
+        assertEquals(RecordingFormat.UNKNOWN, RecordingFormat.fromString("test unknown"));
     }
 
     @Test
