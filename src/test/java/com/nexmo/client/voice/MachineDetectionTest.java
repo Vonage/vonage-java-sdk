@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,32 +21,18 @@
  */
 package com.nexmo.client.voice;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
+import static org.junit.Assert.assertEquals;
 
-public enum MachineDetection {
-    CONTINUE, HANGUP, UNKNOWN;
-
-    private static final Map<String, MachineDetection> machineDetectionIndex = new HashMap<>();
-
-    static {
-        for (MachineDetection machineDetection : MachineDetection.values()) {
-            machineDetectionIndex.put(machineDetection.name(), machineDetection);
-        }
+public class MachineDetectionTest {
+    @Test
+    public void testMachineDetectionFromString() {
+        assertEquals(MachineDetection.HANGUP, MachineDetection.fromString("hangup"));
     }
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return name().toLowerCase();
-    }
-
-    @JsonCreator
-    public static MachineDetection fromString(String name) {
-        MachineDetection foundMachineDetection = machineDetectionIndex.get(name.toUpperCase());
-        return (foundMachineDetection != null) ? foundMachineDetection : UNKNOWN;
+    @Test
+    public void testDeserializeUnknownEnumsFallbackToUnknown() {
+        assertEquals(MachineDetection.UNKNOWN, MachineDetection.fromString("test unknown machine detection"));
     }
 }
