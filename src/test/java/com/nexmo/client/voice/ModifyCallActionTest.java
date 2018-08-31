@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,32 +21,14 @@
  */
 package com.nexmo.client.voice;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
+import static org.junit.Assert.assertEquals;
 
-public enum ModifyCallAction {
-    HANGUP, MUTE, UNMUTE, EARMUFF, UNEARMUFF, TRANSFER, UNKNOWN;
-
-    private static final Map<String, ModifyCallAction> modifyCallActionIndex = new HashMap<>();
-
-    static {
-        for (ModifyCallAction modifyCallAction : ModifyCallAction.values()) {
-            modifyCallActionIndex.put(modifyCallAction.name(), modifyCallAction);
-        }
+public class ModifyCallActionTest {
+    @Test
+    public void testDeserializeUnknownEnumsFallbackToUnknown() {
+        assertEquals(ModifyCallAction.UNKNOWN, ModifyCallAction.fromString("test unknwon action"));
     }
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return name().toLowerCase();
-    }
-
-    @JsonCreator
-    public static ModifyCallAction fromString(String name) {
-        ModifyCallAction foundModifyCallAction = modifyCallActionIndex.get(name.toUpperCase());
-        return (foundModifyCallAction != null) ? foundModifyCallAction : UNKNOWN;
-    }
 }
