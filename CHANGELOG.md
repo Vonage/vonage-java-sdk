@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - User Agent String now includes the Java version in addition to the client version.
+- `enum` classes that are used to deserialize JSON have been updated to return an `UNKNOWN` value instead of throwing an `IllegalArgumentException` when the value cannot be deserialized. These `enum`s are:
+    - `RecordingFormat`
+    - `MachineDetection`
+    - `ModifyCallAction`
+    - `CallDirection`
+    - `CallStatus`
+    - `RoamingDetails.RoamingStatus`
+    - `AdvancedInsightResponse.PortedStatus`
+    - `AdvancedInsightResponse.Validity`
+    - `AdvancedInsightResponse.Reachability`
 
 ### Fixed
 - Updated `StreamNcco`'s `streamUrl` to serialize into an array for use in the Voice API.
