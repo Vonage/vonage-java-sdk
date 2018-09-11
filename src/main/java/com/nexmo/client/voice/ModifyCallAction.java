@@ -30,11 +30,11 @@ import java.util.Map;
 public enum ModifyCallAction {
     HANGUP, MUTE, UNMUTE, EARMUFF, UNEARMUFF, TRANSFER, UNKNOWN;
 
-    private static final Map<String, ModifyCallAction> modifyCallActionIndex = new HashMap<>();
+    private static final Map<String, ModifyCallAction> MODIFY_CALL_ACTION_INDEX = new HashMap<>();
 
     static {
         for (ModifyCallAction modifyCallAction : ModifyCallAction.values()) {
-            modifyCallActionIndex.put(modifyCallAction.name(), modifyCallAction);
+            MODIFY_CALL_ACTION_INDEX.put(modifyCallAction.name(), modifyCallAction);
         }
     }
 
@@ -46,7 +46,7 @@ public enum ModifyCallAction {
 
     @JsonCreator
     public static ModifyCallAction fromString(String name) {
-        ModifyCallAction foundModifyCallAction = modifyCallActionIndex.get(name.toUpperCase());
+        ModifyCallAction foundModifyCallAction = MODIFY_CALL_ACTION_INDEX.get(name.toUpperCase());
         return (foundModifyCallAction != null) ? foundModifyCallAction : UNKNOWN;
     }
 }

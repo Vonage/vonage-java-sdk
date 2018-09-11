@@ -31,17 +31,17 @@ public class RoamingDetails {
     public enum RoamingStatus {
         UNKNOWN, ROAMING, NOT_ROAMING;
 
-        private static final Map<String, RoamingStatus> roamingStatusIndex = new HashMap<>();
+        private static final Map<String, RoamingStatus> ROAMING_STATUS_INDEX = new HashMap<>();
 
         static {
             for (RoamingStatus roamingStatus : RoamingStatus.values()) {
-                roamingStatusIndex.put(roamingStatus.name(), roamingStatus);
+                ROAMING_STATUS_INDEX.put(roamingStatus.name(), roamingStatus);
             }
         }
 
         @JsonCreator
         public static RoamingStatus fromString(String name) {
-            RoamingStatus foundRoamingStatus = roamingStatusIndex.get(name.toUpperCase());
+            RoamingStatus foundRoamingStatus = ROAMING_STATUS_INDEX.get(name.toUpperCase());
             return (foundRoamingStatus != null) ? foundRoamingStatus : UNKNOWN;
         }
     }

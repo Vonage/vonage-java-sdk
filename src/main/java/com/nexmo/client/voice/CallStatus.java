@@ -40,11 +40,11 @@ public enum CallStatus {
     CANCELLED,
     UNKNOWN;
 
-    private static final Map<String, CallStatus> callStatusIndex = new HashMap<>();
+    private static final Map<String, CallStatus> CALL_STATUS_INDEX = new HashMap<>();
 
     static {
         for (CallStatus callStatus : CallStatus.values()) {
-            callStatusIndex.put(callStatus.name(), callStatus);
+            CALL_STATUS_INDEX.put(callStatus.name(), callStatus);
         }
     }
 
@@ -56,7 +56,7 @@ public enum CallStatus {
 
     @JsonCreator
     public static CallStatus fromString(String name) {
-        CallStatus foundCallStatus = callStatusIndex.get(name.toUpperCase());
+        CallStatus foundCallStatus = CALL_STATUS_INDEX.get(name.toUpperCase());
         return (foundCallStatus != null) ? foundCallStatus : UNKNOWN;
     }
 }

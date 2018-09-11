@@ -32,11 +32,11 @@ public enum CallDirection {
     INBOUND,
     UNKNOWN;
 
-    private static final Map<String, CallDirection> callDirectionIndex = new HashMap<>();
+    private static final Map<String, CallDirection> CALL_DIRECTION_INDEX = new HashMap<>();
 
     static {
         for (CallDirection callDirection : CallDirection.values()) {
-            callDirectionIndex.put(callDirection.name(), callDirection);
+            CALL_DIRECTION_INDEX.put(callDirection.name(), callDirection);
         }
     }
 
@@ -48,7 +48,7 @@ public enum CallDirection {
 
     @JsonCreator
     public static CallDirection fromString(String name) {
-        CallDirection foundCallDirection = callDirectionIndex.get(name.toUpperCase());
+        CallDirection foundCallDirection = CALL_DIRECTION_INDEX.get(name.toUpperCase());
         return (foundCallDirection != null) ? foundCallDirection : UNKNOWN;
     }
 }

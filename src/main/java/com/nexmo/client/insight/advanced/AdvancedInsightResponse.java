@@ -108,17 +108,17 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
     public enum PortedStatus {
         UNKNOWN, PORTED, NOT_PORTED, ASSUMED_NOT_PORTED, ASSUMED_PORTED;
 
-        private static final Map<String, PortedStatus> portedStatusIndex = new HashMap<>();
+        private static final Map<String, PortedStatus> PORTED_STATUS_INDEX = new HashMap<>();
 
         static {
             for (PortedStatus portedStatus : PortedStatus.values()) {
-                portedStatusIndex.put(portedStatus.name(), portedStatus);
+                PORTED_STATUS_INDEX.put(portedStatus.name(), portedStatus);
             }
         }
 
         @JsonCreator
         public static PortedStatus fromString(String name) {
-            PortedStatus foundPortedStatus = portedStatusIndex.get(name.toUpperCase());
+            PortedStatus foundPortedStatus = PORTED_STATUS_INDEX.get(name.toUpperCase());
             return (foundPortedStatus != null) ? foundPortedStatus : UNKNOWN;
         }
 
@@ -127,17 +127,17 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
     public enum Validity {
         UNKNOWN, VALID, NOT_VALID;
 
-        private static final Map<String, Validity> validityIndex = new HashMap<>();
+        private static final Map<String, Validity> VALIDITY_INDEX = new HashMap<>();
 
         static {
             for (Validity validity : Validity.values()) {
-                validityIndex.put(validity.name(), validity);
+                VALIDITY_INDEX.put(validity.name(), validity);
             }
         }
 
         @JsonCreator
         public static Validity fromString(String name) {
-            Validity foundValidity = validityIndex.get(name.toUpperCase());
+            Validity foundValidity = VALIDITY_INDEX.get(name.toUpperCase());
             return (foundValidity != null) ? foundValidity : Validity.UNKNOWN;
         }
     }
@@ -145,17 +145,17 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
     public enum Reachability {
         UNKNOWN, REACHABLE, UNDELIVERABLE, ABSENT, BAD_NUMBER, BLACKLISTED;
 
-        private static final Map<String, Reachability> reachabilityIndex = new HashMap<>();
+        private static final Map<String, Reachability> REACHABILITY_INDEX = new HashMap<>();
 
         static {
             for (Reachability reachability : Reachability.values()) {
-                reachabilityIndex.put(reachability.name(), reachability);
+                REACHABILITY_INDEX.put(reachability.name(), reachability);
             }
         }
 
         @JsonCreator
         public static Reachability fromString(String name) {
-            Reachability foundReachability = reachabilityIndex.get(name.toUpperCase());
+            Reachability foundReachability = REACHABILITY_INDEX.get(name.toUpperCase());
             return (foundReachability != null) ? foundReachability : UNKNOWN;
         }
     }

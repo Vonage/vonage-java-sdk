@@ -30,11 +30,11 @@ import java.util.Map;
 public enum RecordingFormat {
     MP3, WAV, UNKNOWN;
 
-    private static final Map<String, RecordingFormat> recordingFormatIndex = new HashMap<>();
+    private static final Map<String, RecordingFormat> RECORDING_FORMAT_INDEX = new HashMap<>();
 
     static {
         for (RecordingFormat recordingFormat : RecordingFormat.values()) {
-            recordingFormatIndex.put(recordingFormat.name(), recordingFormat);
+            RECORDING_FORMAT_INDEX.put(recordingFormat.name(), recordingFormat);
         }
     }
 
@@ -46,7 +46,7 @@ public enum RecordingFormat {
 
     @JsonCreator
     public static RecordingFormat fromString(String name) {
-        RecordingFormat foundRecordingFormat = recordingFormatIndex.get(name.toUpperCase());
+        RecordingFormat foundRecordingFormat = RECORDING_FORMAT_INDEX.get(name.toUpperCase());
         return (foundRecordingFormat != null) ? foundRecordingFormat : UNKNOWN;
     }
 }

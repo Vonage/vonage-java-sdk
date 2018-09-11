@@ -30,11 +30,11 @@ import java.util.Map;
 public enum MachineDetection {
     CONTINUE, HANGUP, UNKNOWN;
 
-    private static final Map<String, MachineDetection> machineDetectionIndex = new HashMap<>();
+    private static final Map<String, MachineDetection> MACHINE_DETECTION_INDEX = new HashMap<>();
 
     static {
         for (MachineDetection machineDetection : MachineDetection.values()) {
-            machineDetectionIndex.put(machineDetection.name(), machineDetection);
+            MACHINE_DETECTION_INDEX.put(machineDetection.name(), machineDetection);
         }
     }
 
@@ -46,7 +46,7 @@ public enum MachineDetection {
 
     @JsonCreator
     public static MachineDetection fromString(String name) {
-        MachineDetection foundMachineDetection = machineDetectionIndex.get(name.toUpperCase());
+        MachineDetection foundMachineDetection = MACHINE_DETECTION_INDEX.get(name.toUpperCase());
         return (foundMachineDetection != null) ? foundMachineDetection : UNKNOWN;
     }
 }
