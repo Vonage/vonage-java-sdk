@@ -29,8 +29,8 @@ import com.nexmo.client.NexmoClientException;
 import java.io.IOException;
 
 /**
- * A client for talking to the Nexmo Number Insight API. The standard way to obtain an instance of this class is to use
- * {@link NexmoClient#getInsightClient()}.
+ * A client for talking to the Nexmo Account API. The standard way to obtain an instance of this class is to use
+ * {@link NexmoClient#getAccountClient()} ()}.
  */
 public class AccountClient extends AbstractClient {
     protected BalanceEndpoint balance;
