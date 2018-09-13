@@ -272,6 +272,48 @@ NexmoClient client = new NexmoClient(auth);
 client.getRedactClient().redactTransaction(VOICE_ID, RedactRequest.Product.VOICE);
 ```
 
+### Create Secret
+
+Create a secret associated to your account id:
+
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+SecretResponse response = client.getAccountClient().createSecret(API_KEY, "Foo84RSecret");
+```
+
+### List Secrets
+
+List the secret id (but not content) associated to your account id:
+
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+ListSecretsResponse response = client.getAccountClient().listSecrets(API_KEY);
+
+Collection<SecretResponse> secrets = response.getSecrets();
+```
+
+### Revoke Secret
+
+Revoke a secret associated to your account id:
+
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+client.getAccountClient().revokeSecret(API_KEY, SECRET_ID);
+```
+
+### Retrieve Secret
+
+Get information about a specific secret associated to your account id:
+
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+SecretResponse response = client.getAccountClient().getSecret(API_KEY, SECRET_ID);
+```
+
 ### Custom HTTP Configuration
 
 If you need to configure the Apache HttpClient used for making requests, you can
