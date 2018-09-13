@@ -36,6 +36,10 @@ import java.nio.charset.Charset;
  * Internal class that holds available authentication methods and a shared HttpClient.
  */
 public class HttpWrapper {
+    private static final String CLIENT_NAME = "nexmo-java";
+    private static final String CLIENT_VERSION = "3.7.0";
+    private static final String JAVA_VERSION = System.getProperty("java.version");
+
     private AuthCollection authCollection;
     private HttpClient httpClient = null;
 
@@ -74,8 +78,10 @@ public class HttpWrapper {
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
         connectionManager.setDefaultMaxPerRoute(200);
         connectionManager.setMaxTotal(200);
-        connectionManager.setDefaultConnectionConfig(
-                ConnectionConfig.custom().setCharset(Charset.forName("UTF-8")).build());
+        connectionManager.setDefaultConnectionConfig(ConnectionConfig
+                .custom()
+                .setCharset(Charset.forName("UTF-8"))
+                .build());
         connectionManager.setDefaultSocketConfig(SocketConfig.custom().setTcpNoDelay(true).build());
 
         // Need to work out a good value for the following:
@@ -83,9 +89,10 @@ public class HttpWrapper {
 
         RequestConfig requestConfig = RequestConfig.custom().build();
 
-        return HttpClientBuilder.create()
+        return HttpClientBuilder
+                .create()
                 .setConnectionManager(connectionManager)
-                .setUserAgent("nexmo-java/3.7.0")
+                .setUserAgent(String.format("%s/%s java/%s", CLIENT_NAME, CLIENT_VERSION, JAVA_VERSION))
                 .setDefaultRequestConfig(requestConfig)
                 .build();
     }
