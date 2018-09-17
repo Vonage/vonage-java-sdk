@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added `com.nexmo.client.incoming.MessageEvent` to assist with the deserialization of the JSON payload used for incoming messages.
 - Added `com.nexmo.client.incoming.CallEvent` to assist with the deserialization of the JSON payload used for call events.
 - Added `com.nexmo.client.incoming.InputEvent` to assist with the deserialization of the JSON payload used for input events.
+- Added `com.nexmo.client.incoming.RecordEvent` to assist with the deserialization of the JSON payload used for record events.
 
 ### Changed
 - User Agent String now includes the Java version in addition to the client version.
