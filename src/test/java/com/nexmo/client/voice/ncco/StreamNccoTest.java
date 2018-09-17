@@ -30,7 +30,7 @@ public class StreamNccoTest {
     @Test
     public void testToJson() throws Exception {
         assertEquals(
-                "{\"streamUrl\":\"https://api.example.com/stream\",\"action\":\"stream\"}",
+                "{\"streamUrl\":[\"https://api.example.com/stream\"],\"action\":\"stream\"}",
                 new StreamNcco("https://api.example.com/stream").toJson());
     }
 

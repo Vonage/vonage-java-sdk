@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - User Agent String now includes the Java version in addition to the client version.
 
+### Fixed
+- Updated `StreamNcco`'s `streamUrl` to serialize into an array for use in the Voice API.
+
 ## [3.7.0] - 2018-08-10
 ### Added
 - Added `RedactClient` and the ability to interact with the Nexmo Redact API.
