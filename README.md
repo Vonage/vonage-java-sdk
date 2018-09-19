@@ -166,16 +166,19 @@ Our library contains a `com.nexmo.client.voice.ncco` package, providing JSON-ser
 Each of the `Action` items contain a `Builder` class that can be used for constructing various actions. These actions are then added to an `Ncco` object for serialization into JSON:
 
 ```java
-TalkAction.Builder builder = new TalkAction.Builder("").voiceName(VoiceName.KIMBERLY);
-TalkAction intro = builder.text("At the tone, record your response and press #.").build();
-TalkAction outro = builder.text("Thanks, goodbye!").build();
+TalkAction intro = new TalkAction.Builder("At the tone, record your response and press #.")
+                        .voiceName(VoiceName.KIMBERLY)
+                        .build();
+
+TalkAction outro = new TalkAction.Builder("Thanks, goodbye!")
+                        .voiceName(VoiceName.KIMBERLY)
+                        .build();
 
 RecordAction record = new RecordAction.Builder()
                         .beepStart(true)
                         .endOnKey('#')
                         .build()
                         
-
 res.type("application/json");
 return new Ncco(intro, record, outro).toJson();
 ```
