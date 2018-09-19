@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,34 +19,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.voice;
+package com.nexmo.client.account;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexmo.client.NexmoUnexpectedException;
 
-import java.util.HashMap;
-import java.util.Map;
+public class CreateSecretRequest {
+    @JsonIgnore
+    private String apiKey;
+    private String secret;
 
-public enum MachineDetection {
-    CONTINUE, HANGUP, UNKNOWN;
+    public CreateSecretRequest(String apiKey, String secret) {
+        this.apiKey = apiKey;
+        this.secret = secret;
+    }
 
-    private static final Map<String, MachineDetection> MACHINE_DETECTION_INDEX = new HashMap<>();
+    public String getApiKey() {
+        return apiKey;
+    }
 
-    static {
-        for (MachineDetection machineDetection : MachineDetection.values()) {
-            MACHINE_DETECTION_INDEX.put(machineDetection.name(), machineDetection);
+    public String getSecret() {
+        return secret;
+    }
+
+    public String toJson() {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(this);
+        } catch (JsonProcessingException jpe) {
+            throw new NexmoUnexpectedException("Failed to produce json from CreateSecretRequest object.", jpe);
         }
-    }
-
-    @JsonValue
-    @Override
-    public String toString() {
-        return name().toLowerCase();
-    }
-
-    @JsonCreator
-    public static MachineDetection fromString(String name) {
-        MachineDetection foundMachineDetection = MACHINE_DETECTION_INDEX.get(name.toUpperCase());
-        return (foundMachineDetection != null) ? foundMachineDetection : UNKNOWN;
     }
 }

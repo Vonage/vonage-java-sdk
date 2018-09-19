@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.8.0] - 2018-09-19
+### Added
+- Added `com.nexmo.client.incoming.MessageEvent` to assist with the deserialization of the JSON payload used for incoming messages.
+- Added `com.nexmo.client.incoming.CallEvent` to assist with the deserialization of the JSON payload used for call events.
+- Added `com.nexmo.client.incoming.InputEvent` to assist with the deserialization of the JSON payload used for input events.
+- Added `com.nexmo.client.incoming.RecordEvent` to assist with the deserialization of the JSON payload used for record events.
+- Added secret management methods to `AccountClient` in the form of the following methods:
+    - `listSecrets` for listing all secrets.
+    - `getSecret` for getting information on a specific secret.
+    - `revokeSecret` for revoking a secret.
+    - `createSecret` for creating a new secret.
+
+### Changed
+- User Agent String now includes the Java version in addition to the client version.
+- `enum` classes that are used to deserialize JSON have been updated to return an `UNKNOWN` value instead of throwing an `IllegalArgumentException` when the value cannot be deserialized. These `enum`s are:
+    - `RecordingFormat`
+    - `MachineDetection`
+    - `ModifyCallAction`
+    - `CallDirection`
+    - `CallStatus`
+    - `RoamingDetails.RoamingStatus`
+    - `AdvancedInsightResponse.PortedStatus`
+    - `AdvancedInsightResponse.Validity`
+    - `AdvancedInsightResponse.Reachability`
+
+### Fixed
+- Updated `StreamNcco`'s `streamUrl` to serialize into an array for use in the Voice API.
+
 ## [3.7.0] - 2018-08-10
 ### Added
 - Added `RedactClient` and the ability to interact with the Nexmo Redact API.

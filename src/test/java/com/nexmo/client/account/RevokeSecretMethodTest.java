@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,34 +19,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.voice;
+package com.nexmo.client.account;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
+public class RevokeSecretMethodTest {
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructParamsWithMissingApiKey() throws Exception {
+        RevokeSecretMethod method = new RevokeSecretMethod(null);
+        SecretRequest request = new SecretRequest(null, "secret-id");
 
-public enum MachineDetection {
-    CONTINUE, HANGUP, UNKNOWN;
-
-    private static final Map<String, MachineDetection> MACHINE_DETECTION_INDEX = new HashMap<>();
-
-    static {
-        for (MachineDetection machineDetection : MachineDetection.values()) {
-            MACHINE_DETECTION_INDEX.put(machineDetection.name(), machineDetection);
-        }
+        method.makeRequest(request);
     }
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return name().toLowerCase();
-    }
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructParamsWithMissingSecretId() throws Exception {
+        RevokeSecretMethod method = new RevokeSecretMethod(null);
+        SecretRequest request = new SecretRequest("account-id", null);
 
-    @JsonCreator
-    public static MachineDetection fromString(String name) {
-        MachineDetection foundMachineDetection = MACHINE_DETECTION_INDEX.get(name.toUpperCase());
-        return (foundMachineDetection != null) ? foundMachineDetection : UNKNOWN;
+        method.makeRequest(request);
     }
 }

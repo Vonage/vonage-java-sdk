@@ -28,7 +28,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.nexmo:client:3.7.0'
+    compile 'com.nexmo:client:3.8.0'
 }
 ```
 
@@ -40,7 +40,7 @@ Add the following to the correct place in your project's POM file:
 <dependency>
       <groupId>com.nexmo</groupId>
       <artifactId>client</artifactId>
-      <version>3.7.0</version>
+      <version>3.8.0</version>
 </dependency>
 ```
 
@@ -270,6 +270,48 @@ Submit a request to the Redact API when it has been enabled on your account with
 AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
 NexmoClient client = new NexmoClient(auth);
 client.getRedactClient().redactTransaction(VOICE_ID, RedactRequest.Product.VOICE);
+```
+
+### Create Secret
+
+Create a secret associated to your account id:
+
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+SecretResponse response = client.getAccountClient().createSecret(API_KEY, "Foo84RSecret");
+```
+
+### List Secrets
+
+List the secret id (but not content) associated to your account id:
+
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+ListSecretsResponse response = client.getAccountClient().listSecrets(API_KEY);
+
+Collection<SecretResponse> secrets = response.getSecrets();
+```
+
+### Revoke Secret
+
+Revoke a secret associated to your account id:
+
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+client.getAccountClient().revokeSecret(API_KEY, SECRET_ID);
+```
+
+### Retrieve Secret
+
+Get information about a specific secret associated to your account id:
+
+```java
+AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
+NexmoClient client = new NexmoClient(auth);
+SecretResponse response = client.getAccountClient().getSecret(API_KEY, SECRET_ID);
 ```
 
 ### Custom HTTP Configuration

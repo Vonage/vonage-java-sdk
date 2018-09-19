@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,34 +19,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.voice;
+package com.nexmo.client.account;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+public class SecretRequest {
+    private String apiKey;
+    private String secretId;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public enum MachineDetection {
-    CONTINUE, HANGUP, UNKNOWN;
-
-    private static final Map<String, MachineDetection> MACHINE_DETECTION_INDEX = new HashMap<>();
-
-    static {
-        for (MachineDetection machineDetection : MachineDetection.values()) {
-            MACHINE_DETECTION_INDEX.put(machineDetection.name(), machineDetection);
-        }
+    public SecretRequest(String apiKey, String secretId) {
+        this.apiKey = apiKey;
+        this.secretId = secretId;
     }
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return name().toLowerCase();
+    public String getApiKey() {
+        return apiKey;
     }
 
-    @JsonCreator
-    public static MachineDetection fromString(String name) {
-        MachineDetection foundMachineDetection = MACHINE_DETECTION_INDEX.get(name.toUpperCase());
-        return (foundMachineDetection != null) ? foundMachineDetection : UNKNOWN;
+    public String getSecretId() {
+        return secretId;
     }
 }

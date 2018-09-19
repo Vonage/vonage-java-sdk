@@ -25,7 +25,7 @@ apply plugin: 'eclipse'
 
 group = "com.nexmo"
 archivesBaseName = "client"
-version = "3.7.0"
+version = "3.8.0"
 
 sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
@@ -52,6 +52,7 @@ dependencies {
     compileOnly 'javax.servlet:javax.servlet-api:3.1.0'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.9.5'
     compile 'com.auth0:java-jwt:2.2.1'
+    compile 'io.openapitools.jackson.dataformat:jackson-dataformat-hal:1.0.4'
 
     if (Jvm.current().javaVersion.isJava9Compatible()) {
         // JAXB API was removed as a default module in JDK9+ this is needed for building/testing in this specific JDK.

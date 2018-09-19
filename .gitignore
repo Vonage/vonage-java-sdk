@@ -15,3 +15,4 @@ publishing
 valid_application_key.pem
 /.idea
 *.iml
+out/

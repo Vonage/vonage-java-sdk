@@ -24,13 +24,19 @@ package com.nexmo.client.voice;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum ModifyCallAction {
-    HANGUP,
-    MUTE,
-    UNMUTE,
-    EARMUFF,
-    UNEARMUFF,
-    TRANSFER;
+    HANGUP, MUTE, UNMUTE, EARMUFF, UNEARMUFF, TRANSFER, UNKNOWN;
+
+    private static final Map<String, ModifyCallAction> MODIFY_CALL_ACTION_INDEX = new HashMap<>();
+
+    static {
+        for (ModifyCallAction modifyCallAction : ModifyCallAction.values()) {
+            MODIFY_CALL_ACTION_INDEX.put(modifyCallAction.name(), modifyCallAction);
+        }
+    }
 
     @JsonValue
     @Override
@@ -40,6 +46,7 @@ public enum ModifyCallAction {
 
     @JsonCreator
     public static ModifyCallAction fromString(String name) {
-        return ModifyCallAction.valueOf(name.toUpperCase());
+        ModifyCallAction foundModifyCallAction = MODIFY_CALL_ACTION_INDEX.get(name.toUpperCase());
+        return (foundModifyCallAction != null) ? foundModifyCallAction : UNKNOWN;
     }
 }

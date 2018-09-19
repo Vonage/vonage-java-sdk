@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,34 +19,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.voice;
+package com.nexmo.client.account;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.nexmo.client.NexmoUnexpectedException;
+import io.openapitools.jackson.dataformat.hal.HALLink;
+import io.openapitools.jackson.dataformat.hal.HALMapper;
+import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
+import io.openapitools.jackson.dataformat.hal.annotation.Link;
+import io.openapitools.jackson.dataformat.hal.annotation.Resource;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.util.Collection;
 
-public enum MachineDetection {
-    CONTINUE, HANGUP, UNKNOWN;
+@Resource
+public class ListSecretsResponse {
+    @Link
+    private HALLink self;
 
-    private static final Map<String, MachineDetection> MACHINE_DETECTION_INDEX = new HashMap<>();
+    @EmbeddedResource
+    private Collection<SecretResponse> secrets;
 
-    static {
-        for (MachineDetection machineDetection : MachineDetection.values()) {
-            MACHINE_DETECTION_INDEX.put(machineDetection.name(), machineDetection);
+    public HALLink getSelf() {
+        return self;
+    }
+
+    public Collection<SecretResponse> getSecrets() {
+        return secrets;
+    }
+
+    public static ListSecretsResponse fromJson(String json) {
+        try {
+            return new HALMapper().readValue(json, ListSecretsResponse.class);
+        } catch (IOException e) {
+            throw new NexmoUnexpectedException("Failed to produce ListSecretsResponse from json.", e);
         }
-    }
-
-    @JsonValue
-    @Override
-    public String toString() {
-        return name().toLowerCase();
-    }
-
-    @JsonCreator
-    public static MachineDetection fromString(String name) {
-        MachineDetection foundMachineDetection = MACHINE_DETECTION_INDEX.get(name.toUpperCase());
-        return (foundMachineDetection != null) ? foundMachineDetection : UNKNOWN;
     }
 }

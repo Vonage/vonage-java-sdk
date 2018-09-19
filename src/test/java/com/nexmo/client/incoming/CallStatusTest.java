@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,34 +19,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.voice;
+package com.nexmo.client.incoming;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
+import static org.junit.Assert.assertEquals;
 
-public enum MachineDetection {
-    CONTINUE, HANGUP, UNKNOWN;
-
-    private static final Map<String, MachineDetection> MACHINE_DETECTION_INDEX = new HashMap<>();
-
-    static {
-        for (MachineDetection machineDetection : MachineDetection.values()) {
-            MACHINE_DETECTION_INDEX.put(machineDetection.name(), machineDetection);
-        }
+public class CallStatusTest {
+    @Test
+    public void testCallDirectionFromString() {
+        assertEquals(CallStatus.FAILED, CallStatus.fromString("failed"));
     }
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return name().toLowerCase();
-    }
-
-    @JsonCreator
-    public static MachineDetection fromString(String name) {
-        MachineDetection foundMachineDetection = MACHINE_DETECTION_INDEX.get(name.toUpperCase());
-        return (foundMachineDetection != null) ? foundMachineDetection : UNKNOWN;
+    @Test
+    public void testDeserializeUnknownEnumsFallbackToUnknown() {
+        assertEquals(CallStatus.UNKNOWN, CallStatus.fromString("test"));
     }
 }
