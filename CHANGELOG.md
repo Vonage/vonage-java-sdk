@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Development]
+
+### Changed
+- User Agent String now includes the Java version in addition to the client version.
+
 ## [3.7.0] - 2018-08-10
 ### Added
 - Added `RedactClient` and the ability to interact with the Nexmo Redact API.
