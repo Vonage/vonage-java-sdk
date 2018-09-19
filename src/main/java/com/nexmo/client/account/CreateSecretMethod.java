@@ -55,15 +55,15 @@ public class CreateSecretMethod extends AbstractMethod<CreateSecretRequest, Secr
 
     @Override
     public RequestBuilder makeRequest(CreateSecretRequest createSecretRequest) throws NexmoClientException, UnsupportedEncodingException {
-        if (createSecretRequest.getAccountId() == null) {
-            throw new IllegalArgumentException("Account id is required.");
+        if (createSecretRequest.getApiKey() == null) {
+            throw new IllegalArgumentException("API key is required.");
         }
 
         if (createSecretRequest.getSecret() == null) {
             throw new IllegalArgumentException("Secret is required.");
         }
 
-        String uri = String.format(this.uri, createSecretRequest.getAccountId());
+        String uri = String.format(this.uri, createSecretRequest.getApiKey());
         return RequestBuilder
                 .post(uri)
                 .setEntity(new StringEntity(createSecretRequest.toJson(), ContentType.APPLICATION_JSON));

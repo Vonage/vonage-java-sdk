@@ -22,16 +22,16 @@
 package com.nexmo.client.account;
 
 public class SecretRequest {
-    private String accountId;
+    private String apiKey;
     private String secretId;
 
-    public SecretRequest(String accountId, String secretId) {
-        this.accountId = accountId;
+    public SecretRequest(String apiKey, String secretId) {
+        this.apiKey = apiKey;
         this.secretId = secretId;
     }
 
-    public String getAccountId() {
-        return accountId;
+    public String getApiKey() {
+        return apiKey;
     }
 
     public String getSecretId() {

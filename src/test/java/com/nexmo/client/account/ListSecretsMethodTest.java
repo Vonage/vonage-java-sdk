@@ -25,7 +25,7 @@ import org.junit.Test;
 
 public class ListSecretsMethodTest {
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructParamsWithMissingAccountId() throws Exception {
+    public void testConstructParamsWithMissingApiKey() throws Exception {
         ListSecretsMethod method = new ListSecretsMethod(null);
         method.makeRequest(null);
     }

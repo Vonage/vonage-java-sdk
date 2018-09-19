@@ -132,32 +132,32 @@ public class AccountClient extends AbstractClient {
     }
 
     /**
-     * List the ID of each secret associated to the given account id.
+     * List the ID of each secret associated to the given API key.
      *
-     * @param accountId The id to look up secrets for.
+     * @param apiKey The API key to look up secrets for.
      *
      * @return ListSecretsResponse object which contains the results from the API.
      *
      * @throws IOException          if a network error occurred contacting the Nexmo Account API
      * @throws NexmoClientException if there was a problem wit hthe Nexmo request or response object indicating that the request was unsuccessful.
      */
-    public ListSecretsResponse listSecrets(String accountId) throws IOException, NexmoClientException {
-        return this.secret.listSecrets(accountId);
+    public ListSecretsResponse listSecrets(String apiKey) throws IOException, NexmoClientException {
+        return this.secret.listSecrets(apiKey);
     }
 
     /**
-     * Get information for a specific secret id associated to a given account id.
+     * Get information for a specific secret id associated to a given API key.
      *
-     * @param accountId The account id that the secret is associated to.
-     * @param secretId  The id of the secret to get information on.
+     * @param apiKey   The API key that the secret is associated to.
+     * @param secretId The id of the secret to get information on.
      *
      * @return SecretResponse object which contains the results from the API.
      *
      * @throws IOException          if a network error occurred contacting the Nexmo Account API
      * @throws NexmoClientException if there was a problem wit hthe Nexmo request or response object indicating that the request was unsuccessful.
      */
-    public SecretResponse getSecret(String accountId, String secretId) throws IOException, NexmoClientException {
-        return getSecret(new SecretRequest(accountId, secretId));
+    public SecretResponse getSecret(String apiKey, String secretId) throws IOException, NexmoClientException {
+        return getSecret(new SecretRequest(apiKey, secretId));
     }
 
     private SecretResponse getSecret(SecretRequest secretRequest) throws IOException, NexmoClientException {
@@ -165,18 +165,18 @@ public class AccountClient extends AbstractClient {
     }
 
     /**
-     * Create a secret to be used with a specific account id.
+     * Create a secret to be used with a specific API key.
      *
-     * @param accountId The account id that the secret is to be used with.
-     * @param secret    The contents of the secret.
+     * @param apiKey The API key that the secret is to be used with.
+     * @param secret The contents of the secret.
      *
      * @return SecretResponse object which contains the created secret from the API.
      *
      * @throws IOException          if a network error occurred contacting the Nexmo Account API
      * @throws NexmoClientException if there was a problem wit hthe Nexmo request or response object indicating that the request was unsuccessful.
      */
-    public SecretResponse createSecret(String accountId, String secret) throws IOException, NexmoClientException {
-        return createSecret(new CreateSecretRequest(accountId, secret));
+    public SecretResponse createSecret(String apiKey, String secret) throws IOException, NexmoClientException {
+        return createSecret(new CreateSecretRequest(apiKey, secret));
     }
 
     private SecretResponse createSecret(CreateSecretRequest createSecretRequest) throws IOException, NexmoClientException {
@@ -184,16 +184,16 @@ public class AccountClient extends AbstractClient {
     }
 
     /**
-     * Revoke a secret associated with a specific account id.
+     * Revoke a secret associated with a specific API key.
      *
-     * @param accountId The account id that the secret is associated to.
-     * @param secretId  The id of the secret to revoke.
+     * @param apiKey   The API key that the secret is associated to.
+     * @param secretId The id of the secret to revoke.
      *
      * @throws IOException          if a network error occurred contacting the Nexmo Account API
      * @throws NexmoClientException if there was a problem wit hthe Nexmo request or response object indicating that the request was unsuccessful.
      */
-    public void revokeSecret(String accountId, String secretId) throws IOException, NexmoClientException {
-        revokeSecret(new SecretRequest(accountId, secretId));
+    public void revokeSecret(String apiKey, String secretId) throws IOException, NexmoClientException {
+        revokeSecret(new SecretRequest(apiKey, secretId));
     }
 
     private void revokeSecret(SecretRequest secretRequest) throws IOException, NexmoClientException {

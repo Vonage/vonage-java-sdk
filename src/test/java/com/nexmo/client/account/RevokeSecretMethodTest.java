@@ -25,7 +25,7 @@ import org.junit.Test;
 
 public class RevokeSecretMethodTest {
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructParamsWithMissingAccountId() throws Exception {
+    public void testConstructParamsWithMissingApiKey() throws Exception {
         RevokeSecretMethod method = new RevokeSecretMethod(null);
         SecretRequest request = new SecretRequest(null, "secret-id");
 

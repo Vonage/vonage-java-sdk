@@ -331,7 +331,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"id\": \"secret-id-one\",\n" + "  \"created_at\": \"2017-03-02T16:34:49Z\"\n" + "}";
         wrapper.setHttpClient(this.stubHttpClient(201, json));
 
-        SecretResponse response = client.createSecret("accountId", "secret");
+        SecretResponse response = client.createSecret("apiKey", "secret");
 
         Calendar calendar = new GregorianCalendar(2017, Calendar.MARCH, 2, 16, 34, 49);
         calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -391,7 +391,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"id\": \"secret-id-one\",\n" + "  \"created_at\": \"2017-03-02T16:34:49Z\"\n" + "}";
         wrapper.setHttpClient(this.stubHttpClient(200, json));
 
-        SecretResponse response = client.getSecret("accountId", "secret-id-one");
+        SecretResponse response = client.getSecret("apiKey", "secret-id-one");
 
         Calendar calendar = new GregorianCalendar(2017, Calendar.MARCH, 2, 16, 34, 49);
         calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -407,7 +407,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"detail\": \"You did not provide correct credentials.\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
         wrapper.setHttpClient(this.stubHttpClient(401, json));
-        client.getSecret("accountId", "secret-id-one");
+        client.getSecret("apiKey", "secret-id-one");
     }
 
     @Test(expected = NexmoClientException.class)
@@ -417,14 +417,14 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"detail\": \"API key 'ABC123' does not exist, or you do not have access\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
         wrapper.setHttpClient(this.stubHttpClient(404, json));
-        client.getSecret("accountId", "secret-id-one");
+        client.getSecret("apiKey", "secret-id-one");
     }
 
     @Test
     public void testRevokeSecretSuccessful() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(204, ""));
         // No assertions as an exception will be thrown if failure occurs.
-        client.revokeSecret("accountId", "secretId");
+        client.revokeSecret("apiKey", "secretId");
     }
 
     @Test(expected = NexmoClientException.class)
@@ -434,7 +434,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"detail\": \"You did not provide correct credentials.\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
         wrapper.setHttpClient(this.stubHttpClient(401, json));
-        client.revokeSecret("accountId", "secret-id-one");
+        client.revokeSecret("apiKey", "secret-id-one");
     }
 
     @Test(expected = NexmoClientException.class)
@@ -445,6 +445,6 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"detail\": \"Can not delete the last secret. The account must always have at least 1 secret active at any time\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
         wrapper.setHttpClient(this.stubHttpClient(403, json));
-        client.revokeSecret("accountId", "secret-id-one");
+        client.revokeSecret("apiKey", "secret-id-one");
     }
 }

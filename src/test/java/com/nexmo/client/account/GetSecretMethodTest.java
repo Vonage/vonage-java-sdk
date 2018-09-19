@@ -25,7 +25,7 @@ import org.junit.Test;
 
 public class GetSecretMethodTest {
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructParamsWithMissingAccountId() throws Exception {
+    public void testConstructParamsWithMissingApiKey() throws Exception {
         GetSecretMethod method = new GetSecretMethod(null);
         SecretRequest request = new SecretRequest(null, "secret-id");
 
@@ -35,7 +35,7 @@ public class GetSecretMethodTest {
     @Test(expected = IllegalArgumentException.class)
     public void testConstructParamsWithMissingSecretId() throws Exception {
         GetSecretMethod method = new GetSecretMethod(null);
-        SecretRequest request = new SecretRequest("account-id", null);
+        SecretRequest request = new SecretRequest("api-key", null);
 
         method.makeRequest(request);
     }

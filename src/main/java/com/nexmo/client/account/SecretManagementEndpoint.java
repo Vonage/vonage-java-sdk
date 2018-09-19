@@ -40,8 +40,8 @@ class SecretManagementEndpoint {
 
     }
 
-    ListSecretsResponse listSecrets(String accountId) throws IOException, NexmoClientException {
-        return this.listSecretsMethod.execute(accountId);
+    ListSecretsResponse listSecrets(String apiKey) throws IOException, NexmoClientException {
+        return this.listSecretsMethod.execute(apiKey);
     }
 
     SecretResponse getSecret(SecretRequest secretRequest) throws IOException, NexmoClientException {

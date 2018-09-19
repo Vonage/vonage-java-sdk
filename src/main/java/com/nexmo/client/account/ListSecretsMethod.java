@@ -52,12 +52,12 @@ public class ListSecretsMethod extends AbstractMethod<String, ListSecretsRespons
     }
 
     @Override
-    public RequestBuilder makeRequest(String accountId) throws NexmoClientException, UnsupportedEncodingException {
-        if (accountId == null) {
-            throw new IllegalArgumentException("Account id is required.");
+    public RequestBuilder makeRequest(String apiKey) throws NexmoClientException, UnsupportedEncodingException {
+        if (apiKey == null) {
+            throw new IllegalArgumentException("API key is required.");
         }
 
-        String uri = String.format(this.uri, accountId);
+        String uri = String.format(this.uri, apiKey);
         return RequestBuilder.get(uri);
     }
 

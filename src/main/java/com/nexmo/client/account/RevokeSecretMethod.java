@@ -52,15 +52,15 @@ public class RevokeSecretMethod extends AbstractMethod<SecretRequest, Void> {
 
     @Override
     public RequestBuilder makeRequest(SecretRequest secretRequest) throws NexmoClientException, UnsupportedEncodingException {
-        if (secretRequest.getAccountId() == null) {
-            throw new IllegalArgumentException("Account id is required.");
+        if (secretRequest.getApiKey() == null) {
+            throw new IllegalArgumentException("API key is required.");
         }
 
         if (secretRequest.getSecretId() == null) {
             throw new IllegalArgumentException("Secret id is required.");
         }
 
-        String uri = String.format(this.uri, secretRequest.getAccountId(), secretRequest.getSecretId());
+        String uri = String.format(this.uri, secretRequest.getApiKey(), secretRequest.getSecretId());
         return RequestBuilder.delete(uri);
     }
 

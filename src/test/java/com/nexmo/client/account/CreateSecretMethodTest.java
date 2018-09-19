@@ -43,7 +43,7 @@ public class CreateSecretMethodTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructParamsWithMissingAccountId() throws Exception {
+    public void testConstructParamsWithMissingApiKey() throws Exception {
         CreateSecretMethod method = new CreateSecretMethod(null);
         CreateSecretRequest request = new CreateSecretRequest(null, "secret");
 

@@ -28,16 +28,16 @@ import com.nexmo.client.NexmoUnexpectedException;
 
 public class CreateSecretRequest {
     @JsonIgnore
-    private String accountId;
+    private String apiKey;
     private String secret;
 
-    public CreateSecretRequest(String accountId, String secret) {
-        this.accountId = accountId;
+    public CreateSecretRequest(String apiKey, String secret) {
+        this.apiKey = apiKey;
         this.secret = secret;
     }
 
-    public String getAccountId() {
-        return accountId;
+    public String getApiKey() {
+        return apiKey;
     }
 
     public String getSecret() {
