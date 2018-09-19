@@ -35,16 +35,24 @@ public class StreamNcco implements Ncco {
     private Boolean bargeIn = null;
     private Integer loop = null;
 
-    public StreamNcco(@JsonProperty("streamUrl") String streamUrl) {
-        this.streamUrl = streamUrl;
+    public StreamNcco(@JsonProperty("streamUrl") String... streamUrl) {
+        this.streamUrl = streamUrl[0];
     }
 
     public String getStreamUrl() {
         return streamUrl;
     }
 
-    public void setStreamUrl(String streamUrl) {
-        this.streamUrl = streamUrl;
+    @JsonProperty("streamUrl")
+    public String[] getStreamUrlAsArray() {
+        // TODO: Rework in 4.0.
+        // This property is expected to be serialized as an array, however we want to also insure it remains null
+        // if null.
+        return this.streamUrl != null ? new String[]{this.streamUrl} : null;
+    }
+
+    public void setStreamUrl(String... streamUrl) {
+        this.streamUrl = streamUrl[0];
     }
 
     public Float getLevel() {
