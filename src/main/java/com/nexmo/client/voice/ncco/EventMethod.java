@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,32 +21,9 @@
  */
 package com.nexmo.client.voice.ncco;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-
-import java.util.HashMap;
-import java.util.Map;
-
-public enum RecordingFormat {
-    MP3, WAV, OGG, UNKNOWN;
-
-    private static final Map<String, RecordingFormat> RECORDING_FORMAT_INDEX = new HashMap<>();
-
-    static {
-        for (RecordingFormat recordingFormat : RecordingFormat.values()) {
-            RECORDING_FORMAT_INDEX.put(recordingFormat.name(), recordingFormat);
-        }
-    }
-
-    @JsonValue
-    @Override
-    public String toString() {
-        return name().toLowerCase();
-    }
-
-    @JsonCreator
-    public static RecordingFormat fromString(String name) {
-        RecordingFormat foundRecordingFormat = RECORDING_FORMAT_INDEX.get(name.toUpperCase());
-        return (foundRecordingFormat != null) ? foundRecordingFormat : UNKNOWN;
-    }
+/**
+ * The type of request to use when connecting to an event url.
+ */
+public enum EventMethod {
+    POST, GET
 }

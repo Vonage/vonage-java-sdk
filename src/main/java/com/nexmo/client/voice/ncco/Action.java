@@ -21,36 +21,9 @@
  */
 package com.nexmo.client.voice.ncco;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-
-public class StreamNccoTest {
-    @Test
-    public void testToJson() throws Exception {
-        assertEquals(
-                "{\"streamUrl\":[\"https://api.example.com/stream\"],\"action\":\"stream\"}",
-                new StreamNcco("https://api.example.com/stream").toJson());
-    }
-
-    @Test
-    public void testJson() throws Exception {
-        String json;
-        {
-            StreamNcco ncco = new StreamNcco("https://api.example.com/stream");
-            ncco.setStreamUrl("https://api.example.com/stream2");
-            ncco.setLevel(0.5f);
-            ncco.setBargeIn(true);
-            ncco.setLoop(3);
-
-            json = ncco.toJson();
-        }
-
-        StreamNcco ncco = new ObjectMapper().readValue(json, StreamNcco.class);
-        assertEquals("https://api.example.com/stream2", ncco.getStreamUrl());
-        assertEquals(0.5f, (float)ncco.getLevel(), 0.001f);
-        assertEquals(true, ncco.getBargeIn());
-        assertEquals(3, (int)ncco.getLoop());
-    }
+/**
+ * An NCCO action.
+ */
+public interface Action {
+    String getAction();
 }

@@ -24,7 +24,7 @@ package com.nexmo.client.voice.servlet;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
-import com.nexmo.client.voice.ncco.Ncco;
+import com.nexmo.client.voice.ncco.Action;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -43,19 +43,19 @@ public class NccoResponse {
     // we don't want users to become dependent on it being a simple list of
     // Ncco objects.
 
-    private List<Ncco> nccoList;
+    private List<Action> actionList;
 
     public NccoResponse() {
         nccoList = new ArrayList<>();
     }
 
-    public void appendNcco(Ncco ncco) {
-        this.nccoList.add(ncco);
+    public void appendNcco(Action action) {
+        this.actionList.add(action);
     }
 
     public String toJson() {
         try {
-            return new ObjectMapper().writeValueAsString(nccoList);
+            return new ObjectMapper().writeValueAsString(actionList);
         } catch (JsonProcessingException e) {
             throw new NexmoUnexpectedException("Failed to serialize NccoResponse object.", e);
         }

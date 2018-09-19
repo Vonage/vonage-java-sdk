@@ -24,24 +24,24 @@ package com.nexmo.client.voice.ncco;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Represents a web socket endpoint used in a {@link ConnectAction}
+ */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class WebSocketEndpoint {
+public class WebSocketEndpoint implements Endpoint {
     private static final String TYPE = "websocket";
 
     private String uri;
     private String contentType;
     private Map<String, String> headers;
 
-    public WebSocketEndpoint(String uri, String contentType) {
-        this.uri = uri;
-        this.contentType = contentType;
-    }
-
-    public WebSocketEndpoint(String uri, String contentType, Map<String, String> headers) {
-        this(uri, contentType);
-        this.headers = headers;
+    private WebSocketEndpoint(Builder builder) {
+        this.uri = builder.uri;
+        this.contentType = builder.contentType;
+        this.headers = builder.headers;
     }
 
     public String getUri() {
@@ -57,11 +57,52 @@ public class WebSocketEndpoint {
         return headers;
     }
 
+    @Override
     public String getType() {
         return TYPE;
     }
 
-    public String toLog() {
-        return "uri=" + uri + " content-type=" + contentType;
+    public static class Builder {
+        private String uri;
+        private String contentType;
+        private Map<String, String> headers;
+
+        public Builder(String uri, String contentType) {
+            this.uri = uri;
+            this.contentType = contentType;
+        }
+
+        public Builder uri(String uri) {
+            this.uri = uri;
+            return this;
+        }
+
+        public Builder contentType(String contentType) {
+            this.contentType = contentType;
+            return this;
+        }
+
+        public Builder headers(Map<String, String> headers) {
+            this.headers = headers;
+            return this;
+        }
+
+        public Builder headers(String... entries) {
+            // TODO: Replace with Map.of when we target Java 9
+            if (entries.length % 2 != 0) {
+                throw new IllegalArgumentException("Entries must be key, value and every key must have a value.");
+            }
+
+            Map<String, String> headers = new HashMap<>();
+            for (int i = 0; i < entries.length - 1; i += 2) {
+                headers.put(entries[i], entries[i + 1]);
+            }
+
+            return headers(headers);
+        }
+
+        public WebSocketEndpoint build() {
+            return new WebSocketEndpoint(this);
+        }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,32 +21,44 @@
  */
 package com.nexmo.client.voice.ncco;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.util.HashMap;
-import java.util.Map;
+/**
+ * Represents a SIP endpoint used in a {@link ConnectAction}
+ */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+public class SipEndpoint implements Endpoint {
+    private static final String TYPE = "sip";
 
-public enum RecordingFormat {
-    MP3, WAV, OGG, UNKNOWN;
+    private String uri;
 
-    private static final Map<String, RecordingFormat> RECORDING_FORMAT_INDEX = new HashMap<>();
-
-    static {
-        for (RecordingFormat recordingFormat : RecordingFormat.values()) {
-            RECORDING_FORMAT_INDEX.put(recordingFormat.name(), recordingFormat);
-        }
+    private SipEndpoint(Builder builder) {
+        this.uri = builder.uri;
     }
 
-    @JsonValue
     @Override
-    public String toString() {
-        return name().toLowerCase();
+    public String getType() {
+        return TYPE;
     }
 
-    @JsonCreator
-    public static RecordingFormat fromString(String name) {
-        RecordingFormat foundRecordingFormat = RECORDING_FORMAT_INDEX.get(name.toUpperCase());
-        return (foundRecordingFormat != null) ? foundRecordingFormat : UNKNOWN;
+    public String getUri() {
+        return uri;
+    }
+
+    public static class Builder {
+        private String uri;
+
+        public Builder(String uri) {
+            this.uri = uri;
+        }
+
+        public Builder uri(String uri) {
+            this.uri = uri;
+            return this;
+        }
+
+        public SipEndpoint build() {
+            return new SipEndpoint(this);
+        }
     }
 }

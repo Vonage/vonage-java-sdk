@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,56 @@
  */
 package com.nexmo.client.voice.ncco;
 
-public interface Ncco {
-    String getAction();
-    String toJson();
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.nexmo.client.NexmoUnexpectedException;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+
+/**
+ * Nexmo Call Control Object for controlling the flow of a Voice API call.
+ */
+public class Ncco {
+    private Collection<Action> actions;
+    private ObjectWriter writer;
+
+    public Ncco() {
+        this(new ObjectMapper().writer(), Collections.<Action>emptyList());
+    }
+
+    public Ncco(Collection<Action> actions) {
+        this(new ObjectMapper().writer(), actions);
+    }
+
+    public Ncco(ObjectWriter writer) {
+        this(writer, Collections.<Action>emptyList());
+    }
+
+    public Ncco(ObjectWriter writer, Collection<Action> actions) {
+        this.writer = writer;
+        this.actions = actions;
+    }
+
+    public Ncco(ObjectWriter writer, Action... action) {
+        this(writer, Arrays.asList(action));
+    }
+
+    public Ncco(Action... action) {
+        this(Arrays.asList(action));
+    }
+
+    public Collection<Action> getActions() {
+        return this.actions;
+    }
+
+    public String toJson() {
+        try {
+            return this.writer.writeValueAsString(this.actions);
+        } catch (JsonProcessingException e) {
+            throw new NexmoUnexpectedException("Unable to convert NCCO Object to JSON.");
+        }
+    }
 }

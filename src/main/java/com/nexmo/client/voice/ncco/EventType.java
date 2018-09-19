@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,36 +21,17 @@
  */
 package com.nexmo.client.voice.ncco;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Test;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-import static org.junit.Assert.*;
+/**
+ * The type of event to use.
+ */
+public enum EventType {
+    SYNCHRONOUS;
 
-public class InputNccoTest {
-    @Test
-    public void testToJSON() throws Exception {
-        assertEquals("{\"action\":\"input\"}", new InputNcco().toJson());
-    }
-
-    @Test
-    public void testJSON() throws Exception {
-        String json;
-        {
-            InputNcco ncco = new InputNcco();
-            ncco.setEventUrl("https://api.example.com/event");
-            ncco.setEventMethod("GET");
-            ncco.setMaxDigits(4);
-            ncco.setSubmitOnHash(true);
-            ncco.setTimeOut(5);
-
-            json = ncco.toJson();
-        }
-
-        InputNcco ncco = new ObjectMapper().readValue(json, InputNcco.class);
-        assertArrayEquals(new String[]{"https://api.example.com/event"}, ncco.getEventUrl());
-        assertEquals("GET", ncco.getEventMethod());
-        assertEquals(4, (int)ncco.getMaxDigits());
-        assertEquals(true, ncco.getSubmitOnHash());
-        assertEquals(5, (int)ncco.getTimeOut());
+    @JsonValue
+    @Override
+    public String toString() {
+        return name().toLowerCase();
     }
 }
