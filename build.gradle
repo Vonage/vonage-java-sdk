@@ -177,6 +177,10 @@ signing {
     sign configurations.archives
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.1'
+}
+
 task zip(type: Zip) {
     from configurations.runtime.allArtifacts.files
     from configurations.runtime
