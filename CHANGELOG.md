@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Development]
+## [3.8.0] - 2018-09-19
 ### Added
 - Added `com.nexmo.client.incoming.MessageEvent` to assist with the deserialization of the JSON payload used for incoming messages.
 - Added `com.nexmo.client.incoming.CallEvent` to assist with the deserialization of the JSON payload used for call events.
