@@ -156,7 +156,7 @@ public class ConnectAction implements Action {
          *                  <li>Make the connect action synchronous.
          *                  <li>Enable eventUrl to return an NCCO that overrides the current NCCO when a call moves to
          *                  specific states.
-         *                  <ul>
+         *                  </ul>
          *                  <p>
          *                  See the <a href="https://developer.nexmo.com/voice/voice-api/ncco-reference#connect-with-fallback-ncco">Connect with fallback NCCO example.</a>
          *
