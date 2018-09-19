@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added `com.nexmo.client.incoming.CallEvent` to assist with the deserialization of the JSON payload used for call events.
 - Added `com.nexmo.client.incoming.InputEvent` to assist with the deserialization of the JSON payload used for input events.
 - Added `com.nexmo.client.incoming.RecordEvent` to assist with the deserialization of the JSON payload used for record events.
+- Added secret management methods to `AccountClient` in the form of the following methods:
+    - `listSecrets` for listing all secrets.
+    - `getSecret` for getting information on a specific secret.
+    - `revokeSecret` for revoking a secret.
+    - `createSecret` for creating a new secret.
 
 ### Changed
 - User Agent String now includes the Java version in addition to the client version.
