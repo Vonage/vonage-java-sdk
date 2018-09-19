@@ -25,6 +25,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Voice used to deliver text to a {@link Call} in a {@link TalkRequest}.
  */
@@ -78,7 +81,16 @@ public enum VoiceName {
     MAXIM,
     TATYANA,
     ASTRID,
-    FILIZ;
+    FILIZ,
+    UNKNOWN;
+
+    private static final Map<String, VoiceName> voiceNameIndex = new HashMap<>();
+
+    static {
+        for (VoiceName voiceName : VoiceName.values()) {
+            voiceNameIndex.put(voiceName.name(), voiceName);
+        }
+    }
 
     @JsonValue
     @Override
@@ -89,7 +101,8 @@ public enum VoiceName {
 
     @JsonCreator
     public static VoiceName fromString(String name) {
-        return VoiceName.valueOf(name.toUpperCase());
+        VoiceName foundVoiceName = voiceNameIndex.get(name.toUpperCase());
+        return (foundVoiceName != null) ? foundVoiceName : UNKNOWN;
     }
 
 }

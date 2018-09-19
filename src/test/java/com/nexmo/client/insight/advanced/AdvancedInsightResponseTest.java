@@ -108,6 +108,26 @@ public class AdvancedInsightResponseTest {
     }
 
     @Test
+    public void testDeserializeUnknownEnumsFallbackToUnknown() throws Exception {
+        AdvancedInsightResponse response = AdvancedInsightResponse.fromJson("{\n" +
+                "    \"valid_number\": \"failed_validity\",\n" +
+                "    \"reachable\": \"failed_reachibility\",\n" +
+                "    \"ported\": \"failure_ported_status\",\n" +
+                "  \"roaming\": {\n" +
+                "    \"status\": \"failure_roaming_status\",\n" +
+                "    \"roaming_country_code\": \"GB\",\n" +
+                "    \"roaming_network_code\": \"gong\",\n" +
+                "    \"roaming_network_name\": \"Gong Telecommunications\"\n" +
+                "  }\n" +
+                "}");
+
+        assertEquals(AdvancedInsightResponse.Validity.UNKNOWN, response.getValidNumber());
+        assertEquals(AdvancedInsightResponse.Reachability.UNKNOWN, response.getReachability());
+        assertEquals(AdvancedInsightResponse.PortedStatus.UNKNOWN, response.getPorted());
+        assertEquals(RoamingDetails.RoamingStatus.UNKNOWN, response.getRoaming().getStatus());
+    }
+
+    @Test
     public void testRoamingDeserialization() throws Exception {
         AdvancedInsightResponse response = AdvancedInsightResponse.fromJson("{\n" +
                 "  \"status\": 0,\n" +
