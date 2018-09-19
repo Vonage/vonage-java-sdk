@@ -95,53 +95,122 @@ public class ConversationAction implements Action {
         private Collection<String> eventUrl = null;
         private EventMethod eventMethod = null;
 
+        /**
+         * @param name The name of the Conversation room.
+         */
         public Builder(String name) {
             this.name = name;
         }
 
+        /**
+         * @param name The name of the Conversation room.
+         *
+         * @return The {@link Builder} to keep building.
+         */
         public Builder name(String name) {
             this.name = name;
             return this;
         }
 
+        /**
+         * @param musicOnHoldUrl A URL to the mp3 file to stream to participants until the conversation starts.
+         *                       By default the conversation starts when the first person calls the virtual number
+         *                       associated with your Voice app. To stream this mp3 before the moderator joins the
+         *                       conversation, set startOnEnter to false for all users other than the moderator.
+         *
+         * @return The {@link Builder} to keep building.
+         */
         public Builder musicOnHoldUrl(Collection<String> musicOnHoldUrl) {
             this.musicOnHoldUrl = musicOnHoldUrl;
             return this;
         }
 
+        /**
+         * @param musicOnHoldUrl A URL to the mp3 file to stream to participants until the conversation starts.
+         *                       By default the conversation starts when the first person calls the virtual number
+         *                       associated with your Voice app. To stream this mp3 before the moderator joins the
+         *                       conversation, set startOnEnter to false for all users other than the moderator.
+         *
+         * @return The {@link Builder} to keep building.
+         */
         public Builder musicOnHoldUrl(String... musicOnHoldUrl) {
             return musicOnHoldUrl(Arrays.asList(musicOnHoldUrl));
         }
 
+        /**
+         * @param startOnEnter The default value of true ensures that the conversation starts when this caller joins
+         *                     conversation name. Set to false for attendees in a moderated conversation.
+         *
+         * @return The {@link Builder} to keep building.
+         */
         public Builder startOnEnter(Boolean startOnEnter) {
             this.startOnEnter = startOnEnter;
             return this;
         }
 
+        /**
+         * @param endOnExit For moderated conversations, set to true in the moderator NCCO so the conversation is
+         *                  ended when the moderator hangs up. The default value of false means the conversation
+         *                  is not terminated when a caller hangs up; the conversation ends when the last caller
+         *                  hangs up.
+         *
+         * @return The {@link Builder} to keep building.
+         */
         public Builder endOnExit(Boolean endOnExit) {
             this.endOnExit = endOnExit;
             return this;
         }
 
+        /**
+         * @param record Set to true to record this conversation. For standard conversations, recordings start when one
+         *               or more attendees connects to the conversation. For moderated conversations, recordings start
+         *               when the moderator joins. That is, when an NCCO is executed for the named conversation where
+         *               startOnEnter is set to true. When the recording is terminated, the URL you download the
+         *               recording from is sent to the event URL.
+         *               <p>
+         *               By default audio is recorded in MP3 format. See the <a href="https://developer.nexmo.com/voice/voice-api/guides/recordingfile-formats">recording guide</a> for more details
+         *
+         * @return The {@link Builder} to keep building.
+         */
         public Builder record(Boolean record) {
             this.record = record;
             return this;
         }
 
+        /**
+         * @param eventUrl Set the URL to the webhook endpoint Nexmo calls asynchronously on each of the
+         *                 <a href="https://developer.nexmo.com/voice/voice-api/guides/call-flowcall-states">Call States</a>.
+         *
+         * @return The {@link Builder} to keep building.
+         */
         public Builder eventUrl(Collection<String> eventUrl) {
             this.eventUrl = eventUrl;
             return this;
         }
 
+        /**
+         * @param eventUrl Set the URL to the webhook endpoint Nexmo calls asynchronously on each of the
+         *                 <a href="https://developer.nexmo.com/voice/voice-api/guides/call-flowcall-states">Call States</a>.
+         *
+         * @return The {@link Builder} to keep building.
+         */
         public Builder eventUrl(String... eventUrl) {
             return eventUrl(Arrays.asList(eventUrl));
         }
 
+        /**
+         * @param eventMethod Set the HTTP method used to make the request to eventUrl. The default value is POST.
+         *
+         * @return The {@link Builder} to keep building.
+         */
         public Builder eventMethod(EventMethod eventMethod) {
             this.eventMethod = eventMethod;
             return this;
         }
 
+        /**
+         * @return A new {@link ConversationAction} object from the stored builder options.
+         */
         public ConversationAction build() {
             return new ConversationAction(this);
         }

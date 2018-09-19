@@ -74,38 +74,83 @@ public class StreamAction implements Action {
         private Boolean bargeIn = null;
         private Integer loop = null;
 
+        /**
+         * @param streamUrl An array containing a single URL to an mp3 or wav (16-bit) audio file to stream to the
+         *                  Call or Conversation.
+         */
         public Builder(Collection<String> streamUrl) {
             this.streamUrl = streamUrl;
         }
 
+        /**
+         * @param streamUrl An array containing a single URL to an mp3 or wav (16-bit) audio file to stream to the
+         *                  Call or Conversation.
+         */
         public Builder(String... streamUrl) {
             this(Arrays.asList(streamUrl));
         }
 
+        /**
+         * @param streamUrl An array containing a single URL to an mp3 or wav (16-bit) audio file to stream to the
+         *                  Call or Conversation.
+         *
+         * @return The {@link Builder} to keep building.
+         */
         public Builder streamUrl(Collection<String> streamUrl) {
             this.streamUrl = streamUrl;
             return this;
         }
 
+        /**
+         * @param streamUrl An array containing a single URL to an mp3 or wav (16-bit) audio file to stream to the
+         *                  Call or Conversation.
+         *
+         * @return The {@link Builder} to keep building.
+         */
         public Builder streamUrl(String... streamUrl) {
             return streamUrl(Arrays.asList(streamUrl));
         }
 
+        /**
+         * @param level Set the audio level of the stream in the range between -1 and 1 inclusively with a precision
+         *              of 0.1. The default value is 0.
+         *
+         * @return The {@link Builder} to keep building.
+         */
         public Builder level(Float level) {
             this.level = level;
             return this;
         }
 
+        /**
+         * @param bargeIn Set to true so this action is terminated when the user presses a button on the keypad.
+         *                Use this feature to enable users to choose an option without having to listen to the whole
+         *                message in your Interactive Voice Response (IVR ). If you set bargeIn to true on one more
+         *                Stream actions then the next action in the NCCO stack must be an input action.
+         *                <p>
+         *                The default value is false.
+         *
+         * @return The {@link Builder} to keep building.
+         */
         public Builder bargeIn(Boolean bargeIn) {
             this.bargeIn = bargeIn;
             return this;
         }
 
+        /**
+         * @param loop The number of times audio is repeated before the Call is closed.
+         *             The default value is 1. Set to 0 to loop infinitely.
+         *
+         * @return The {@link Builder} to keep building.
+         */
         public Builder loop(Integer loop) {
             this.loop = loop;
             return this;
         }
 
+        /**
+         * @return A new {@link StreamAction} object from the stored builder options.
+         */
         public StreamAction build() {
             return new StreamAction(this);
         }

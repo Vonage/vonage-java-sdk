@@ -102,50 +102,107 @@ public class RecordAction implements Action {
         private EventMethod eventMethod = null;
         private SplitRecording split = null;
 
+        /**
+         * @param format Record the Call in a specific {@link RecordingFormat}.
+         *               <p>
+         *               The default value is {@link RecordingFormat#MP3}, or {@link RecordingFormat#WAV} when recording more than 2 channels.
+         *
+         * @return The {@link Builder} to keep building.
+         */
         public Builder format(RecordingFormat format) {
             this.format = format;
             return this;
         }
 
+        /**
+         * @param endOnSilence Stop recording after n seconds of silence. Once the recording is stopped the recording
+         *                     data is sent to event_url. The range of possible values is between 3 and 10 inclusively.
+         *
+         * @return The {@link Builder} to keep building.
+         */
         public Builder endOnSilence(Integer endOnSilence) {
             this.endOnSilence = endOnSilence;
             return this;
         }
 
+        /**
+         * @param endOnKey Stop recording when a digit is pressed on the handset. Possible values are: *, # or any single digit e.g. 9
+         *
+         * @return The {@link Builder} to keep building.
+         */
         public Builder endOnKey(Character endOnKey) {
             this.endOnKey = endOnKey;
             return this;
         }
 
+        /**
+         * @param timeOut The maximum length of a recording in seconds. One the recording is stopped the recording
+         *                data is sent to event_url. The range of possible values is between 3 seconds and 7200 seconds (2 hours)
+         *
+         * @return The {@link Builder} to keep building.
+         */
         public Builder timeOut(Integer timeOut) {
             this.timeOut = timeOut;
             return this;
         }
 
+        /**
+         * @param beepStart Set to true to play a beep when a recording starts
+         *
+         * @return The {@link Builder} to keep building.
+         */
         public Builder beepStart(Boolean beepStart) {
             this.beepStart = beepStart;
             return this;
         }
 
+        /**
+         * @param eventUrl The URL to the webhook endpoint that is called asynchronously when a recording is finished.
+         *                 If the message recording is hosted by Nexmo, this webhook contains the URL you need to
+         *                 download the recording and other meta data.
+         *
+         * @return The {@link Builder} to keep building.
+         */
         public Builder eventUrl(Collection<String> eventUrl) {
             this.eventUrl = eventUrl;
             return this;
         }
 
+        /**
+         * @param eventUrl The URL to the webhook endpoint that is called asynchronously when a recording is finished.
+         *                 If the message recording is hosted by Nexmo, this webhook contains the URL you need to
+         *                 download the recording and other meta data.
+         *
+         * @return The {@link Builder} to keep building.
+         */
         public Builder eventUrl(String... eventUrl) {
             return eventUrl(Arrays.asList(eventUrl));
         }
 
+        /**
+         * @param eventMethod The HTTP method used to make the request to eventUrl. The default value is POST.
+         *
+         * @return The {@link Builder} to keep building.
+         */
         public Builder eventMethod(EventMethod eventMethod) {
             this.eventMethod = eventMethod;
             return this;
         }
 
+        /**
+         * @param split Record the sent and received audio in separate channels of a stereo recording—set to
+         *              {@link SplitRecording#CONVERSATION} to enable this.
+         *
+         * @return The {@link Builder} to keep building.
+         */
         public Builder split(SplitRecording split) {
             this.split = split;
             return this;
         }
 
+        /**
+         * @return A new {@link RecordAction} object from the stored builder options.
+         */
         public RecordAction build() {
             return new RecordAction(this);
         }
