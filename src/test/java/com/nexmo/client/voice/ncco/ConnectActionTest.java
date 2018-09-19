@@ -33,25 +33,6 @@ public class ConnectActionTest {
         ConnectAction.Builder builder = new ConnectAction.Builder(new PhoneEndpoint.Builder("15554441234").build());
         assertNotSame(builder.build(), builder.build());
     }
-//
-//    @Test
-//    public void testBuilderMultipleEndpoints() {
-//        PhoneEndpoint.Builder builder = new PhoneEndpoint.Builder("15554441234");
-//        PhoneEndpoint endpointOne = builder.build();
-//        PhoneEndpoint endpointTwo = builder.number("15553339876").build();
-//
-//        ConnectAction connectWithArrayConstructor = new ConnectAction.Builder(endpointOne, endpointTwo).build();
-//        ConnectAction connectWithCollectionConstructor = new ConnectAction.Builder(Arrays.<Endpoint>asList(endpointOne,
-//                endpointTwo
-//        )).build();
-//
-//        ConnectAction connectWithArrayEndpointMethod = new ConnectAction.Builder(endpointOne)
-//                .endpoint(endpointOne, endpointTwo)
-//                .build();
-//        ConnectAction connectWithCollectionEndpointMethod = new ConnectAction.Builder(endpointOne)
-//                .endpoint(Arrays.<Endpoint>asList(endpointOne, endpointTwo))
-//                .build();
-//    }
 
     @Test
     public void testAllFieldsWithPhoneEndpoint() {
