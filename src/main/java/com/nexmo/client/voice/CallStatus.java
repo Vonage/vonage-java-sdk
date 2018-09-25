@@ -38,6 +38,7 @@ public enum CallStatus {
     REJECTED,
     BUSY,
     CANCELLED,
+    HUMAN,
     UNKNOWN;
 
     private static final Map<String, CallStatus> CALL_STATUS_INDEX = new HashMap<>();
