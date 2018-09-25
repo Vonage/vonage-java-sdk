@@ -199,6 +199,11 @@ public class CallInfoTest {
         testStatus("cancelled", CallStatus.CANCELLED);
     }
 
+    @Test
+    public void testStatusHuman() throws Exception {
+        testStatus("human", CallStatus.HUMAN);
+    }
+
     public void testStatus(String value, CallStatus expectedValue) throws Exception {
         CallInfo record = new ObjectMapper().readValue(jsonWithPlaceholder.replaceFirst("PLACEHOLDER", value),
                 CallInfo.class);
