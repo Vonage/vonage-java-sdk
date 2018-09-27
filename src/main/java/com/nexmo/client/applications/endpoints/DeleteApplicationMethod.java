@@ -36,9 +36,7 @@ public class DeleteApplicationMethod extends AbstractMethod<String, Void> {
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/v1/applications";
-
-    private String uri = DEFAULT_URI;
+    private static final String PATH = "/v1/applications";
 
     public DeleteApplicationMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -50,9 +48,9 @@ public class DeleteApplicationMethod extends AbstractMethod<String, Void> {
     }
 
     @Override
-    public RequestBuilder makeRequest(String applicationId) throws NexmoClientException,
-                                                                   UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder.delete(uri + "/" + applicationId);
+    public RequestBuilder makeRequest(String applicationId) throws NexmoClientException, UnsupportedEncodingException {
+        RequestBuilder requestBuilder = RequestBuilder.delete(
+                httpWrapper.getHttpConfig().getApiBaseUri() + PATH + "/" + applicationId);
         return requestBuilder;
     }
 

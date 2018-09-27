@@ -21,6 +21,8 @@
  */
 package com.nexmo.client.applications.endpoints;
 
+import com.nexmo.client.HttpConfig;
+import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.TestUtils;
 import com.nexmo.client.applications.ApplicationDetails;
 import com.nexmo.client.applications.ApplicationKeys;
@@ -40,7 +42,7 @@ public class GetApplicationEndpointTest {
 
     @Before
     public void setUp() throws Exception {
-        this.endpoint = new GetApplicationEndpoint(null);
+        this.endpoint = new GetApplicationEndpoint(new HttpWrapper());
     }
 
     @Test
@@ -61,33 +63,20 @@ public class GetApplicationEndpointTest {
 
     @Test
     public void testParseResponse() throws Exception {
-        HttpResponse stub = TestUtils.makeJsonHttpResponse(200, "{\n" +
-                "  \"id\": \"aaaaaaaa-bbbb-cccc-dddd-0123456789ab\",\n" +
-                "  \"name\": \"My Application\",\n" +
-                "  \"voice\": {\n" +
-                "    \"webhooks\": [\n" +
-                "      {\n" +
-                "        \"endpoint_type\": \"answer_url\",\n" +
-                "        \"endpoint\": \"https://example.com/answer\",\n" +
-                "        \"http_method\": \"GET\"\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"endpoint_type\": \"event_url\",\n" +
-                "        \"endpoint\": \"https://example.com/event\",\n" +
-                "        \"http_method\": \"POST\"\n" +
-                "      }\n" +
-                "    ]\n" +
-                "  },\n" +
-                "  \"keys\": {\n" +
-                "    \"public_key\": \"PUBLIC_KEY\",\n" +
-                "    \"private_key\": \"PRIVATE_KEY\"\n" +
-                "  },\n" +
-                "  \"_links\": {\n" +
-                "    \"self\": {\n" +
-                "      \"href\": \"/v1/applications/aaaaaaaa-bbbb-cccc-dddd-0123456789ab\"\n" +
-                "    }\n" +
-                "  }\n" +
-                "}");
+        HttpResponse stub = TestUtils.makeJsonHttpResponse(200,
+                "{\n" + "  \"id\": \"aaaaaaaa-bbbb-cccc-dddd-0123456789ab\",\n" + "  \"name\": \"My Application\",\n"
+                        + "  \"voice\": {\n" + "    \"webhooks\": [\n" + "      {\n"
+                        + "        \"endpoint_type\": \"answer_url\",\n"
+                        + "        \"endpoint\": \"https://example.com/answer\",\n"
+                        + "        \"http_method\": \"GET\"\n" + "      },\n" + "      {\n"
+                        + "        \"endpoint_type\": \"event_url\",\n"
+                        + "        \"endpoint\": \"https://example.com/event\",\n"
+                        + "        \"http_method\": \"POST\"\n" + "      }\n" + "    ]\n" + "  },\n" + "  \"keys\": {\n"
+                        + "    \"public_key\": \"PUBLIC_KEY\",\n" + "    \"private_key\": \"PRIVATE_KEY\"\n" + "  },\n"
+                        + "  \"_links\": {\n" + "    \"self\": {\n"
+                        + "      \"href\": \"/v1/applications/aaaaaaaa-bbbb-cccc-dddd-0123456789ab\"\n" + "    }\n"
+                        + "  }\n" + "}"
+        );
         ApplicationDetails response = this.endpoint.parseResponse(stub);
         assertEquals("aaaaaaaa-bbbb-cccc-dddd-0123456789ab", response.getId());
         assertEquals("My Application", response.getName());
@@ -110,5 +99,22 @@ public class GetApplicationEndpointTest {
 
         assertEquals("PUBLIC_KEY", keys.getPublicKey());
         assertEquals("PRIVATE_KEY", keys.getPrivateKey());
+    }
+
+    @Test
+    public void testDefaultUri() throws Exception {
+        RequestBuilder builder = endpoint.makeRequest("application-id");
+        assertEquals("GET", builder.getMethod());
+        assertEquals("https://api.nexmo.com/v1/applications/application-id", builder.build().getURI().toString());
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        GetApplicationEndpoint endpoint = new GetApplicationEndpoint(wrapper);
+
+        RequestBuilder builder = endpoint.makeRequest("application-id");
+        assertEquals("GET", builder.getMethod());
+        assertEquals("https://example.com/v1/applications/application-id", builder.build().getURI().toString());
     }
 }
