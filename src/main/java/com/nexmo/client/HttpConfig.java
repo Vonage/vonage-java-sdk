@@ -24,13 +24,16 @@ package com.nexmo.client;
 public class HttpConfig {
     private static final String DEFAULT_API_BASE_URI = "https://api.nexmo.com";
     private static final String DEFAULT_REST_BASE_URI = "https://rest.nexmo.com";
+    private static final String DEFAULT_SNS_BASE_URI = "https://sns.nexmo.com";
 
     private String apiBaseUri;
     private String restBaseUri;
+    private String snsBaseUri;
 
     private HttpConfig(Builder builder) {
         this.apiBaseUri = builder.apiBaseUri;
         this.restBaseUri = builder.restBaseUri;
+        this.snsBaseUri = builder.snsBaseUri;
     }
 
     public String getApiBaseUri() {
@@ -39,6 +42,10 @@ public class HttpConfig {
 
     public String getRestBaseUri() {
         return restBaseUri;
+    }
+
+    public String getSnsBaseUri() {
+        return snsBaseUri;
     }
 
     /**
@@ -51,10 +58,12 @@ public class HttpConfig {
     public static class Builder {
         private String apiBaseUri;
         private String restBaseUri;
+        private String snsBaseUri;
 
         public Builder() {
             this.apiBaseUri = DEFAULT_API_BASE_URI;
             this.restBaseUri = DEFAULT_REST_BASE_URI;
+            this.snsBaseUri = DEFAULT_SNS_BASE_URI;
         }
 
         /**
@@ -78,13 +87,24 @@ public class HttpConfig {
         }
 
         /**
-         * @param baseUri The base uri to use in place of {@link HttpConfig#DEFAULT_REST_BASE_URI} and {@link HttpConfig#DEFAULT_API_BASE_URI}
+         * @param baseUri The base uri to use in place of {@link HttpConfig#DEFAULT_REST_BASE_URI}, {@link HttpConfig#DEFAULT_API_BASE_URI}, and {@link HttpConfig#DEFAULT_SNS_BASE_URI}
          *
          * @return The {@link Builder} to keep building.
          */
         public Builder baseUri(String baseUri) {
             this.apiBaseUri = baseUri;
             this.restBaseUri = baseUri;
+            this.snsBaseUri = baseUri;
+            return this;
+        }
+
+        /**
+         * @param snsBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_SNS_BASE_URI}
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder snsBaseUri(String snsBaseUri) {
+            this.snsBaseUri = snsBaseUri;
             return this;
         }
 
