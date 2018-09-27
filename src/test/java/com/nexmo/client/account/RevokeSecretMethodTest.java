@@ -21,9 +21,22 @@
  */
 package com.nexmo.client.account;
 
+import com.nexmo.client.HttpConfig;
+import com.nexmo.client.HttpWrapper;
+import org.apache.http.client.methods.RequestBuilder;
+import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+
 public class RevokeSecretMethodTest {
+    private RevokeSecretMethod method;
+
+    @Before
+    public void setUp() {
+        this.method = new RevokeSecretMethod(new HttpWrapper());
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void testConstructParamsWithMissingApiKey() throws Exception {
         RevokeSecretMethod method = new RevokeSecretMethod(null);
@@ -38,5 +51,27 @@ public class RevokeSecretMethodTest {
         SecretRequest request = new SecretRequest("account-id", null);
 
         method.makeRequest(request);
+    }
+
+    @Test
+    public void testDefaultUri() throws Exception {
+        SecretRequest request = new SecretRequest("account-id", "secret-id");
+
+        RequestBuilder builder = method.makeRequest(request);
+        assertEquals("DELETE", builder.getMethod());
+        assertEquals("https://api.nexmo.com/accounts/account-id/secrets/secret-id",
+                builder.build().getURI().toString()
+        );
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        RevokeSecretMethod method = new RevokeSecretMethod(wrapper);
+        SecretRequest request = new SecretRequest("account-id", "secret-id");
+
+        RequestBuilder builder = method.makeRequest(request);
+        assertEquals("DELETE", builder.getMethod());
+        assertEquals("https://example.com/accounts/account-id/secrets/secret-id", builder.build().getURI().toString());
     }
 }

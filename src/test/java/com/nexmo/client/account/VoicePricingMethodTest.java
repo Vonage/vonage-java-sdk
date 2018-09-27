@@ -29,33 +29,36 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class ListSecretsMethodTest {
-    ListSecretsMethod method;
+public class VoicePricingMethodTest {
+    private VoicePricingMethod method;
 
     @Before
     public void setUp() throws Exception {
-        this.method = new ListSecretsMethod(new HttpWrapper());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testConstructParamsWithMissingApiKey() throws Exception {
-        method.makeRequest(null);
+        this.method = new VoicePricingMethod(new HttpWrapper());
     }
 
     @Test
     public void testDefaultUri() throws Exception {
-        RequestBuilder builder = method.makeRequest("api-key");
+        PricingRequest request = new PricingRequest("country");
+
+        RequestBuilder builder = method.makeRequest(request);
         assertEquals("GET", builder.getMethod());
-        assertEquals("https://api.nexmo.com/accounts/api-key/secrets", builder.build().getURI().toString());
+        assertEquals("https://rest.nexmo.com/account/get-pricing/outbound/voice?country=country",
+                builder.build().getURI().toString()
+        );
     }
 
     @Test
     public void testCustomUri() throws Exception {
         HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
-        ListSecretsMethod method = new ListSecretsMethod(wrapper);
+        VoicePricingMethod method = new VoicePricingMethod(wrapper);
+        PricingRequest request = new PricingRequest("country");
 
-        RequestBuilder builder = method.makeRequest("api-key");
+        RequestBuilder builder = method.makeRequest(request);
         assertEquals("GET", builder.getMethod());
-        assertEquals("https://example.com/accounts/api-key/secrets", builder.build().getURI().toString());
+        assertEquals(
+                "https://example.com/account/get-pricing/outbound/voice?country=country",
+                builder.build().getURI().toString()
+        );
     }
 }
