@@ -42,17 +42,28 @@ public class HttpWrapper {
 
     private AuthCollection authCollection;
     private HttpClient httpClient = null;
+    private BaseUriConfig baseUriConfig;
 
     public HttpWrapper(AuthCollection authCollection) {
+        this(new BaseUriConfig.Builder().build(), authCollection);
+    }
+
+    public HttpWrapper(BaseUriConfig baseUriConfig, AuthCollection authCollection) {
         this.authCollection = authCollection;
+        this.baseUriConfig = baseUriConfig;
     }
 
     public HttpWrapper(AuthMethod... authMethods) {
+        this(new BaseUriConfig.Builder().build(), authMethods);
+    }
+
+    public HttpWrapper(BaseUriConfig baseUriConfig, AuthMethod... authMethods) {
         this(new AuthCollection());
         for (AuthMethod authMethod : authMethods) {
             authCollection.add(authMethod);
         }
 
+        this.baseUriConfig = baseUriConfig;
     }
 
     public HttpClient getHttpClient() {
@@ -95,5 +106,9 @@ public class HttpWrapper {
                 .setUserAgent(String.format("%s/%s java/%s", CLIENT_NAME, CLIENT_VERSION, JAVA_VERSION))
                 .setDefaultRequestConfig(requestConfig)
                 .build();
+    }
+
+    public BaseUriConfig getBaseUriConfig() {
+        return baseUriConfig;
     }
 }
