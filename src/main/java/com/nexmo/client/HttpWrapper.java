@@ -42,28 +42,28 @@ public class HttpWrapper {
 
     private AuthCollection authCollection;
     private HttpClient httpClient = null;
-    private BaseUriConfig baseUriConfig;
+    private HttpConfig httpConfig;
 
     public HttpWrapper(AuthCollection authCollection) {
-        this(new BaseUriConfig.Builder().build(), authCollection);
+        this(new HttpConfig.Builder().build(), authCollection);
     }
 
-    public HttpWrapper(BaseUriConfig baseUriConfig, AuthCollection authCollection) {
+    public HttpWrapper(HttpConfig httpConfig, AuthCollection authCollection) {
         this.authCollection = authCollection;
-        this.baseUriConfig = baseUriConfig;
+        this.httpConfig = httpConfig;
     }
 
     public HttpWrapper(AuthMethod... authMethods) {
-        this(new BaseUriConfig.Builder().build(), authMethods);
+        this(new HttpConfig.Builder().build(), authMethods);
     }
 
-    public HttpWrapper(BaseUriConfig baseUriConfig, AuthMethod... authMethods) {
+    public HttpWrapper(HttpConfig httpConfig, AuthMethod... authMethods) {
         this(new AuthCollection());
         for (AuthMethod authMethod : authMethods) {
             authCollection.add(authMethod);
         }
 
-        this.baseUriConfig = baseUriConfig;
+        this.httpConfig = httpConfig;
     }
 
     public HttpClient getHttpClient() {
@@ -108,7 +108,7 @@ public class HttpWrapper {
                 .build();
     }
 
-    public BaseUriConfig getBaseUriConfig() {
-        return baseUriConfig;
+    public HttpConfig getHttpConfig() {
+        return httpConfig;
     }
 }

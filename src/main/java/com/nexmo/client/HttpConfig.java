@@ -21,14 +21,14 @@
  */
 package com.nexmo.client;
 
-public class BaseUriConfig {
+public class HttpConfig {
     private static final String DEFAULT_API_BASE_URI = "https://api.nexmo.com";
     private static final String DEFAULT_REST_BASE_URI = "https://rest.nexmo.com";
 
     private String apiBaseUri;
     private String restBaseUri;
 
-    private BaseUriConfig(Builder builder) {
+    private HttpConfig(Builder builder) {
         this.apiBaseUri = builder.apiBaseUri;
         this.restBaseUri = builder.restBaseUri;
     }
@@ -41,6 +41,13 @@ public class BaseUriConfig {
         return restBaseUri;
     }
 
+    /**
+     * @return an HttpConfig object with sensible defaults.
+     */
+    public static HttpConfig defaultConfig() {
+        return new Builder().build();
+    }
+
     public static class Builder {
         private String apiBaseUri;
         private String restBaseUri;
@@ -50,24 +57,42 @@ public class BaseUriConfig {
             this.restBaseUri = DEFAULT_REST_BASE_URI;
         }
 
+        /**
+         * @param apiBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_API_BASE_URI}
+         *
+         * @return The {@link Builder} to keep building.
+         */
         public Builder apiBaseUri(String apiBaseUri) {
             this.apiBaseUri = apiBaseUri;
             return this;
         }
 
+        /**
+         * @param restBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_REST_BASE_URI}
+         *
+         * @return The {@link Builder} to keep building.
+         */
         public Builder restBaseUri(String restBaseUri) {
             this.restBaseUri = restBaseUri;
             return this;
         }
 
-        public Builder bothUris(String bothUris) {
-            this.apiBaseUri = bothUris;
-            this.restBaseUri = bothUris;
+        /**
+         * @param baseUri The base uri to use in place of {@link HttpConfig#DEFAULT_REST_BASE_URI} and {@link HttpConfig#DEFAULT_API_BASE_URI}
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder baseUri(String baseUri) {
+            this.apiBaseUri = baseUri;
+            this.restBaseUri = baseUri;
             return this;
         }
 
-        public BaseUriConfig build() {
-            return new BaseUriConfig(this);
+        /**
+         * @return A new {@link HttpConfig} object from the stored builder options.
+         */
+        public HttpConfig build() {
+            return new HttpConfig(this);
         }
     }
 }
