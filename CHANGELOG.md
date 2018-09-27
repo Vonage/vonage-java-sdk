@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Development]
 ### Added
 - Updated `VoiceName` enum with missing voices.
+- Added configuration object to be used with `HttpWrapper` to allow for customization.
+- Added the ability to customize the base URI used for the various endpoints.
 
 ## [3.8.0] - 2018-09-19
 ### Added
