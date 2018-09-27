@@ -23,59 +23,37 @@ package com.nexmo.client.verify;
 
 import com.nexmo.client.HttpConfig;
 import com.nexmo.client.HttpWrapper;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.RequestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 
-public class CheckMethodTest extends MethodTest<CheckMethod> {
+public class SearchMethodTest {
+    private SearchMethod method;
+
     @Before
-    public void setUp() {
-        method = new CheckMethod(new HttpWrapper());
-    }
-
-    @Test
-    public void testConstructVerifyParamsWithoutIp() throws Exception {
-        CheckRequest checkRequest = new CheckRequest("request-id", "code");
-        RequestBuilder request = method.makeRequest(checkRequest);
-        List<NameValuePair> params = request.getParameters();
-
-        assertContainsParam(params, "request_id", "request-id");
-        assertContainsParam(params, "code", "code");
-        assertParamMissing(params, "ip_address");
-    }
-
-    @Test
-    public void testConstructVerifyParamsWithIp() throws Exception {
-        CheckRequest checkRequest = new CheckRequest("request-id", "code", "ip-address");
-        RequestBuilder request = method.makeRequest(checkRequest);
-        List<NameValuePair> params = request.getParameters();
-
-        assertContainsParam(params, "request_id", "request-id");
-        assertContainsParam(params, "code", "code");
-        assertContainsParam(params, "ip_address", "ip-address");
+    public void setUp() throws Exception {
+        this.method = new SearchMethod(new HttpWrapper());
     }
 
     @Test
     public void testDefaultUri() throws Exception {
-        CheckRequest request = new CheckRequest("request-id", "code");
+        SearchRequest request = new SearchRequest("request-id");
+
         RequestBuilder builder = method.makeRequest(request);
         assertEquals("POST", builder.getMethod());
-        assertEquals("https://api.nexmo.com/verify/check/json", builder.build().getURI().toString());
+        assertEquals("https://api.nexmo.com/verify/search/json", builder.build().getURI().toString());
     }
 
     @Test
     public void testCustomUri() throws Exception {
         HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
-        CheckMethod method = new CheckMethod(wrapper);
-        CheckRequest request = new CheckRequest("request-id", "code");
+        SearchMethod method = new SearchMethod(wrapper);
+        SearchRequest request = new SearchRequest("request-id");
 
         RequestBuilder builder = method.makeRequest(request);
         assertEquals("POST", builder.getMethod());
-        assertEquals("https://example.com/verify/check/json", builder.build().getURI().toString());
+        assertEquals("https://example.com/verify/search/json", builder.build().getURI().toString());
     }
 }

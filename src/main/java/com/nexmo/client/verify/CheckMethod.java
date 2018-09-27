@@ -36,9 +36,7 @@ import java.io.UnsupportedEncodingException;
 public class CheckMethod extends AbstractMethod<CheckRequest, CheckResponse> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/verify/check/json";
-
-    private String uri = DEFAULT_URI;
+    private static final String PATH = "/verify/check/json";
 
     CheckMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -54,7 +52,7 @@ public class CheckMethod extends AbstractMethod<CheckRequest, CheckResponse> {
         if (request.getRequestId() == null || request.getCode() == null)
             throw new IllegalArgumentException("request ID and code parameters are mandatory.");
 
-        RequestBuilder result = RequestBuilder.post(this.uri).addParameter("request_id", request.getRequestId())
+        RequestBuilder result = RequestBuilder.post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH).addParameter("request_id", request.getRequestId())
 
                 .addParameter("code", request.getCode());
         if (request.getIpAddress() != null) result.addParameter("ip_address", request.getIpAddress());
