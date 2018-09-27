@@ -45,6 +45,8 @@ package com.nexmo.client.voice.endpoints;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexmo.client.HttpConfig;
+import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.voice.Call;
 import com.nexmo.client.voice.CallDirection;
 import com.nexmo.client.voice.CallEvent;
@@ -57,6 +59,7 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -68,14 +71,19 @@ import static org.junit.Assert.assertEquals;
 
 public class CreateCallMethodTest {
     private static final Log LOG = LogFactory.getLog(CreateCallMethodTest.class);
+    private CreateCallMethod method;
+
+    @Before
+    public void setUp() throws Exception {
+        this.method = new CreateCallMethod(new HttpWrapper());
+    }
 
     @Test
     public void testMakeRequest() throws Exception {
-        CreateCallMethod methodUnderTest = new CreateCallMethod(null);
-
-        // Execute test call:
-        RequestBuilder request = methodUnderTest.makeRequest(
-                new Call("447700900903", "447700900904", "https://example.com/answer"));
+        RequestBuilder request = method.makeRequest(new Call("447700900903",
+                "447700900904",
+                "https://example.com/answer"
+        ));
 
         assertEquals("POST", request.getMethod());
         assertEquals("application/json", request.getFirstHeader("Content-Type").getValue());
@@ -89,21 +97,22 @@ public class CreateCallMethodTest {
     }
 
     @Test
-    public void testCustomUri() throws Exception {
-        CreateCallMethod methodUnderTest = new CreateCallMethod(null);
-        methodUnderTest.setUri("https://api.example.com/calls");
-        RequestBuilder request = methodUnderTest.makeRequest(
-                new Call("447700900903", "447700900904", "https://example.com/answer"));
+    public void testLegacyCustomUri() throws Exception {
+        method.setUri("https://api.example.com/calls");
+        RequestBuilder request = method.makeRequest(new Call("447700900903",
+                "447700900904",
+                "https://example.com/answer"
+        ));
         assertEquals("https://api.example.com/calls", request.getUri().toString());
     }
 
     @Test
     public void testParseResponse() throws Exception {
-        CreateCallMethod methodUnderTest = new CreateCallMethod(null);
 
-        HttpResponse stubResponse = new BasicHttpResponse(
-                new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 200, "OK")
-        );
+        HttpResponse stubResponse = new BasicHttpResponse(new BasicStatusLine(new ProtocolVersion("1.1", 1, 1),
+                200,
+                "OK"
+        ));
 
         String json = " {\"uuid\":\"93137ee3-580e-45f7-a61a-e0b5716000ea\",\"status\":\"started\",\"direction\":\"outbound\",\"conversation_uuid\":\"aa17bd11-c895-4225-840d-30dc78c31e50\"}";
         InputStream jsonStream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
@@ -112,7 +121,7 @@ public class CreateCallMethodTest {
         stubResponse.setEntity(entity);
 
         // Execute test call:
-        CallEvent callEvent = methodUnderTest.parseResponse(stubResponse);
+        CallEvent callEvent = method.parseResponse(stubResponse);
         assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ea", callEvent.getUuid());
         assertEquals("aa17bd11-c895-4225-840d-30dc78c31e50", callEvent.getConversationUuid());
         assertEquals(CallStatus.STARTED, callEvent.getStatus());
@@ -122,5 +131,27 @@ public class CreateCallMethodTest {
     @Test
     public void testRequestThrottleResponse() throws Exception {
         test429(new CreateCallMethod(null));
+    }
+
+    @Test
+    public void testDefaultUri() throws Exception {
+        Call request = new Call("447700900903", "447700900904", "https://example.com/answer");
+
+        RequestBuilder builder = method.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://api.nexmo.com/v1/calls",
+                builder.build().getURI().toString()
+        );
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        CreateCallMethod method = new CreateCallMethod(wrapper);
+        Call request = new Call("447700900903", "447700900904", "https://example.com/answer");
+
+        RequestBuilder builder = method.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://example.com/v1/calls", builder.build().getURI().toString());
     }
 }

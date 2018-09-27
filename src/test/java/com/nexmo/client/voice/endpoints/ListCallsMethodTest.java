@@ -21,6 +21,8 @@
  */
 package com.nexmo.client.voice.endpoints;
 
+import com.nexmo.client.HttpConfig;
+import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoUnexpectedException;
 import com.nexmo.client.auth.JWTAuthMethod;
 import com.nexmo.client.voice.CallInfoPage;
@@ -51,14 +53,12 @@ public class ListCallsMethodTest {
 
     @Before
     public void setUp() throws Exception {
-        method = new ListCallsMethod(null);
+        method = new ListCallsMethod(new HttpWrapper());
     }
 
     @Test
     public void getAcceptableAuthMethods() throws Exception {
-        assertArrayEquals(
-                new Class[]{JWTAuthMethod.class},
-                method.getAcceptableAuthMethods());
+        assertArrayEquals(new Class[]{JWTAuthMethod.class}, method.getAcceptableAuthMethods());
     }
 
     @Test
@@ -79,80 +79,42 @@ public class ListCallsMethodTest {
 
     @Test
     public void parseResponse() throws Exception {
-        HttpResponse stubResponse = new BasicHttpResponse(
-                new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 200, "OK")
-        );
+        HttpResponse stubResponse = new BasicHttpResponse(new BasicStatusLine(new ProtocolVersion("1.1", 1, 1),
+                200,
+                "OK"
+        ));
 
-        String json = "{\n" +
-                "  \"page_size\": 10,\n" +
-                "  \"record_index\": 0,\n" +
-                "  \"count\": 2,\n" +
-                "  \"_embedded\": {\n" +
-                "    \"calls\": [\n" +
-                "      {\n" +
-                "        \"uuid\": \"93137ee3-580e-45f7-a61a-e0b5716000ef\",\n" +
-                "        \"status\": \"completed\",\n" +
-                "        \"direction\": \"outbound\",\n" +
-                "        \"rate\": \"0.02400000\",\n" +
-                "        \"price\": \"0.00280000\",\n" +
-                "        \"duration\": \"7\",\n" +
-                "        \"network\": \"23410\",\n" +
-                "        \"conversation_uuid\": \"aa17bd11-c895-4225-840d-30dc38c31e50\",\n" +
-                "        \"start_time\": \"2017-01-13T13:55:02.000Z\",\n" +
-                "        \"end_time\": \"2017-01-13T13:55:09.000Z\",\n" +
-                "        \"to\": {\n" +
-                "          \"type\": \"phone\",\n" +
-                "          \"number\": \"447700900104\"\n" +
-                "        },\n" +
-                "        \"from\": {\n" +
-                "          \"type\": \"phone\",\n" +
-                "          \"number\": \"447700900105\"\n" +
-                "        },\n" +
-                "        \"_links\": {\n" +
-                "          \"self\": {\n" +
-                "            \"href\": \"/v1/calls/93137ee3-580e-45f7-a61a-e0b5716000ef\"\n" +
-                "          }\n" +
-                "        }\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"uuid\": \"105e02df-940a-466c-b28b-51ae015a9166\",\n" +
-                "        \"status\": \"completed\",\n" +
-                "        \"direction\": \"outbound\",\n" +
-                "        \"rate\": \"0.02400000\",\n" +
-                "        \"price\": \"0.00280000\",\n" +
-                "        \"duration\": \"7\",\n" +
-                "        \"network\": \"23410\",\n" +
-                "        \"conversation_uuid\": \"1467b438-f5a8-4937-9a65-e1f946a2f664\",\n" +
-                "        \"start_time\": \"2017-01-11T15:03:46.000Z\",\n" +
-                "        \"end_time\": \"2017-01-11T15:03:53.000Z\",\n" +
-                "        \"to\": {\n" +
-                "          \"type\": \"phone\",\n" +
-                "          \"number\": \"447700900104\"\n" +
-                "        },\n" +
-                "        \"from\": {\n" +
-                "          \"type\": \"phone\",\n" +
-                "          \"number\": \"447700900105\"\n" +
-                "        },\n" +
-                "        \"_links\": {\n" +
-                "          \"self\": {\n" +
-                "            \"href\": \"/v1/calls/105e02df-940a-466c-b28b-51ae015a9166\"\n" +
-                "          }\n" +
-                "        }\n" +
-                "      }\n" +
-                "    ]\n" +
-                "  },\n" +
-                "  \"_links\": {\n" +
-                "    \"self\": {\n" +
-                "      \"href\": \"/v1/calls?page_size=10&record_index=0\"\n" +
-                "    },\n" +
-                "    \"first\": {\n" +
-                "      \"href\": \"/v1/calls?page_size=10\"\n" +
-                "    },\n" +
-                "    \"last\": {\n" +
-                "      \"href\": \"/v1/calls?page_size=10\"\n" +
-                "    }\n" +
-                "  }\n" +
-                "}\n";
+        String json = "{\n" + "  \"page_size\": 10,\n" + "  \"record_index\": 0,\n" + "  \"count\": 2,\n"
+                + "  \"_embedded\": {\n" + "    \"calls\": [\n" + "      {\n"
+                + "        \"uuid\": \"93137ee3-580e-45f7-a61a-e0b5716000ef\",\n"
+                + "        \"status\": \"completed\",\n" + "        \"direction\": \"outbound\",\n"
+                + "        \"rate\": \"0.02400000\",\n" + "        \"price\": \"0.00280000\",\n"
+                + "        \"duration\": \"7\",\n" + "        \"network\": \"23410\",\n"
+                + "        \"conversation_uuid\": \"aa17bd11-c895-4225-840d-30dc38c31e50\",\n"
+                + "        \"start_time\": \"2017-01-13T13:55:02.000Z\",\n"
+                + "        \"end_time\": \"2017-01-13T13:55:09.000Z\",\n" + "        \"to\": {\n"
+                + "          \"type\": \"phone\",\n" + "          \"number\": \"447700900104\"\n" + "        },\n"
+                + "        \"from\": {\n" + "          \"type\": \"phone\",\n"
+                + "          \"number\": \"447700900105\"\n" + "        },\n" + "        \"_links\": {\n"
+                + "          \"self\": {\n"
+                + "            \"href\": \"/v1/calls/93137ee3-580e-45f7-a61a-e0b5716000ef\"\n" + "          }\n"
+                + "        }\n" + "      },\n" + "      {\n"
+                + "        \"uuid\": \"105e02df-940a-466c-b28b-51ae015a9166\",\n"
+                + "        \"status\": \"completed\",\n" + "        \"direction\": \"outbound\",\n"
+                + "        \"rate\": \"0.02400000\",\n" + "        \"price\": \"0.00280000\",\n"
+                + "        \"duration\": \"7\",\n" + "        \"network\": \"23410\",\n"
+                + "        \"conversation_uuid\": \"1467b438-f5a8-4937-9a65-e1f946a2f664\",\n"
+                + "        \"start_time\": \"2017-01-11T15:03:46.000Z\",\n"
+                + "        \"end_time\": \"2017-01-11T15:03:53.000Z\",\n" + "        \"to\": {\n"
+                + "          \"type\": \"phone\",\n" + "          \"number\": \"447700900104\"\n" + "        },\n"
+                + "        \"from\": {\n" + "          \"type\": \"phone\",\n"
+                + "          \"number\": \"447700900105\"\n" + "        },\n" + "        \"_links\": {\n"
+                + "          \"self\": {\n"
+                + "            \"href\": \"/v1/calls/105e02df-940a-466c-b28b-51ae015a9166\"\n" + "          }\n"
+                + "        }\n" + "      }\n" + "    ]\n" + "  },\n" + "  \"_links\": {\n" + "    \"self\": {\n"
+                + "      \"href\": \"/v1/calls?page_size=10&record_index=0\"\n" + "    },\n" + "    \"first\": {\n"
+                + "      \"href\": \"/v1/calls?page_size=10\"\n" + "    },\n" + "    \"last\": {\n"
+                + "      \"href\": \"/v1/calls?page_size=10\"\n" + "    }\n" + "  }\n" + "}\n";
         InputStream jsonStream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
         BasicHttpEntity entity = new BasicHttpEntity();
         entity.setContent(jsonStream);
@@ -184,5 +146,27 @@ public class ListCallsMethodTest {
     @Test
     public void testRequestThrottleResponse() throws Exception {
         test429(new ListCallsMethod(null));
+    }
+
+    @Test
+    public void testDefaultUri() throws Exception {
+        CallsFilter filter = new CallsFilter();
+        filter.setPageSize(3);
+
+        RequestBuilder builder = method.makeRequest(filter);
+        assertEquals("GET", builder.getMethod());
+        assertEquals("https://api.nexmo.com/v1/calls?page_size=3", builder.build().getURI().toString());
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        ListCallsMethod method = new ListCallsMethod(wrapper);
+        CallsFilter filter = new CallsFilter();
+        filter.setPageSize(3);
+
+        RequestBuilder builder = method.makeRequest(filter);
+        assertEquals("GET", builder.getMethod());
+        assertEquals("https://example.com/v1/calls?page_size=3", builder.build().getURI().toString());
     }
 }
