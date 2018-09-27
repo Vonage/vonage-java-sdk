@@ -105,6 +105,6 @@ public class BasicInsightEndpointTest {
 
         RequestBuilder builder = endpoint.makeRequest(request);
         assertEquals("POST", builder.getMethod());
-        assertEquals("https://api.nexmo.com/ni/basic/json", builder.build().getURI().toString());
+        assertEquals("https://example.com/ni/basic/json", builder.build().getURI().toString());
     }
 }
