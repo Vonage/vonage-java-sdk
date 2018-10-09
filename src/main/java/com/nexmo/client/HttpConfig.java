@@ -48,6 +48,34 @@ public class HttpConfig {
         return snsBaseUri;
     }
 
+    public boolean isDefaultApiBaseUri() {
+        return DEFAULT_API_BASE_URI.equals(apiBaseUri);
+    }
+
+    public boolean isDefaultRestBaseUri() {
+        return DEFAULT_REST_BASE_URI.equals(restBaseUri);
+    }
+
+    public boolean isDefaultSnsBaseUri() {
+        return DEFAULT_SNS_BASE_URI.equals(snsBaseUri);
+    }
+
+    public String getVersionedApiBaseUri(String version) {
+        return (isDefaultApiBaseUri()) ? appendVersionToUri(apiBaseUri, version) : apiBaseUri;
+    }
+
+    public String getVersionedRestBaseUri(String version) {
+        return (isDefaultRestBaseUri()) ? appendVersionToUri(restBaseUri, version) : restBaseUri;
+    }
+
+    public String getVersionedSnsBaseUri(String version) {
+        return (isDefaultSnsBaseUri()) ? appendVersionToUri(snsBaseUri, version) : snsBaseUri;
+    }
+
+    private String appendVersionToUri(String uri, String version) {
+        return uri + "/" + version;
+    }
+
     /**
      * @return an HttpConfig object with sensible defaults.
      */
@@ -72,7 +100,7 @@ public class HttpConfig {
          * @return The {@link Builder} to keep building.
          */
         public Builder apiBaseUri(String apiBaseUri) {
-            this.apiBaseUri = apiBaseUri;
+            this.apiBaseUri = sanitizeUri(apiBaseUri);
             return this;
         }
 
@@ -82,19 +110,7 @@ public class HttpConfig {
          * @return The {@link Builder} to keep building.
          */
         public Builder restBaseUri(String restBaseUri) {
-            this.restBaseUri = restBaseUri;
-            return this;
-        }
-
-        /**
-         * @param baseUri The base uri to use in place of {@link HttpConfig#DEFAULT_REST_BASE_URI}, {@link HttpConfig#DEFAULT_API_BASE_URI}, and {@link HttpConfig#DEFAULT_SNS_BASE_URI}
-         *
-         * @return The {@link Builder} to keep building.
-         */
-        public Builder baseUri(String baseUri) {
-            this.apiBaseUri = baseUri;
-            this.restBaseUri = baseUri;
-            this.snsBaseUri = baseUri;
+            this.restBaseUri = sanitizeUri(restBaseUri);
             return this;
         }
 
@@ -104,7 +120,20 @@ public class HttpConfig {
          * @return The {@link Builder} to keep building.
          */
         public Builder snsBaseUri(String snsBaseUri) {
-            this.snsBaseUri = snsBaseUri;
+            this.snsBaseUri = sanitizeUri(snsBaseUri);
+            return this;
+        }
+
+        /**
+         * @param baseUri The base uri to use in place of {@link HttpConfig#DEFAULT_REST_BASE_URI}, {@link HttpConfig#DEFAULT_API_BASE_URI}, and {@link HttpConfig#DEFAULT_SNS_BASE_URI}
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder baseUri(String baseUri) {
+            String sanitizedUri = sanitizeUri(baseUri);
+            this.apiBaseUri = sanitizedUri;
+            this.restBaseUri = sanitizedUri;
+            this.snsBaseUri = sanitizedUri;
             return this;
         }
 
@@ -113,6 +142,14 @@ public class HttpConfig {
          */
         public HttpConfig build() {
             return new HttpConfig(this);
+        }
+
+        private String sanitizeUri(String uri) {
+            if (uri != null && uri.endsWith("/")) {
+                return uri.substring(0, uri.length() - 1);
+            }
+
+            return uri;
         }
     }
 }
