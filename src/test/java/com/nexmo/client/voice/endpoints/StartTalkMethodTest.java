@@ -63,6 +63,6 @@ public class StartTalkMethodTest {
 
         RequestBuilder builder = method.makeRequest(request);
         assertEquals("PUT", builder.getMethod());
-        assertEquals("https://example.com/v1/calls/uuid/talk", builder.build().getURI().toString());
+        assertEquals("https://example.com/calls/uuid/talk", builder.build().getURI().toString());
     }
 }

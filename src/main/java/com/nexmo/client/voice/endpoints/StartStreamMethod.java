@@ -39,7 +39,7 @@ import java.io.UnsupportedEncodingException;
 public class StartStreamMethod extends AbstractMethod<StreamRequest, StreamResponse> {
     private static final Log LOG = LogFactory.getLog(StartStreamMethod.class);
 
-    private static final String PATH = "/v1/calls/";
+    private static final String PATH = "/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
     private String uri;
 
@@ -55,7 +55,9 @@ public class StartStreamMethod extends AbstractMethod<StreamRequest, StreamRespo
     @Override
     public RequestBuilder makeRequest(StreamRequest request) throws NexmoClientException, UnsupportedEncodingException {
         // TODO: Remove in 4.0.0 along with setUri method
-        String baseUri = (this.uri != null) ? this.uri : httpWrapper.getHttpConfig().getApiBaseUri() + PATH;
+        String baseUri = (this.uri != null)
+                ? this.uri
+                : httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH;
         return RequestBuilder
                 .put(baseUri + request.getUuid() + "/stream")
                 .setHeader("Content-Type", "application/json")

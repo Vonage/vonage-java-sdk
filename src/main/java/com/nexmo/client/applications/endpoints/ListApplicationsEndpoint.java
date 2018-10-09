@@ -38,7 +38,7 @@ public class ListApplicationsEndpoint extends AbstractMethod<ListApplicationsReq
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
-    private static final String PATH = "/v1/applications";
+    private static final String PATH = "/applications";
 
     public ListApplicationsEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -51,7 +51,8 @@ public class ListApplicationsEndpoint extends AbstractMethod<ListApplicationsReq
 
     @Override
     public RequestBuilder makeRequest(ListApplicationsRequest request) throws NexmoClientException, UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder.get(httpWrapper.getHttpConfig().getApiBaseUri() + PATH);
+        RequestBuilder requestBuilder = RequestBuilder.get(
+                httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH);
         request.addParams(requestBuilder);
         return requestBuilder;
     }

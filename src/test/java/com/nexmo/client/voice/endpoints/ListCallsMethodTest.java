@@ -167,6 +167,6 @@ public class ListCallsMethodTest {
 
         RequestBuilder builder = method.makeRequest(filter);
         assertEquals("GET", builder.getMethod());
-        assertEquals("https://example.com/v1/calls?page_size=3", builder.build().getURI().toString());
+        assertEquals("https://example.com/calls?page_size=3", builder.build().getURI().toString());
     }
 }

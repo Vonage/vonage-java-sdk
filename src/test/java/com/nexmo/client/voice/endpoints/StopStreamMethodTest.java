@@ -59,6 +59,6 @@ public class StopStreamMethodTest {
 
         RequestBuilder builder = method.makeRequest("uuid");
         assertEquals("DELETE", builder.getMethod());
-        assertEquals("https://example.com/v1/calls/uuid/stream", builder.build().getURI().toString());
+        assertEquals("https://example.com/calls/uuid/stream", builder.build().getURI().toString());
     }
 }

@@ -156,7 +156,7 @@ public class ListApplicationsEndpointTest {
         RequestBuilder builder = endpoint.makeRequest(request);
         assertEquals("GET", builder.getMethod());
         assertEquals(
-                "https://example.com/v1/applications",
+                "https://example.com/applications",
                 builder.build().getURI().toString()
         );
     }
@@ -185,7 +185,7 @@ public class ListApplicationsEndpointTest {
         RequestBuilder builder = endpoint.makeRequest(request);
         assertEquals("GET", builder.getMethod());
         assertEquals(
-                "https://example.com/v1/applications?page_size=40&page_index=32",
+                "https://example.com/applications?page_size=40&page_index=32",
                 builder.build().getURI().toString()
         );
     }

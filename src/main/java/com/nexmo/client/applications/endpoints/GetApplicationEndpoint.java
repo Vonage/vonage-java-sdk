@@ -37,7 +37,7 @@ public class GetApplicationEndpoint extends AbstractMethod<String, ApplicationDe
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
-    private static final String PATH = "/v1/applications";
+    private static final String PATH = "/applications/";
 
     public GetApplicationEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -51,7 +51,7 @@ public class GetApplicationEndpoint extends AbstractMethod<String, ApplicationDe
     @Override
     public RequestBuilder makeRequest(String applicationId) throws NexmoClientException, UnsupportedEncodingException {
         RequestBuilder requestBuilder = RequestBuilder.get(
-                httpWrapper.getHttpConfig().getApiBaseUri() + PATH + "/" + applicationId);
+                httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + applicationId);
         return requestBuilder;
     }
 

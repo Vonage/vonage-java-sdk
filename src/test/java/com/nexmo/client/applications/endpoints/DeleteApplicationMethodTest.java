@@ -81,6 +81,6 @@ public class DeleteApplicationMethodTest {
 
         RequestBuilder builder = method.makeRequest("application-id");
         assertEquals("DELETE", builder.getMethod());
-        assertEquals("https://example.com/v1/applications/application-id", builder.build().getURI().toString());
+        assertEquals("https://example.com/applications/application-id", builder.build().getURI().toString());
     }
 }

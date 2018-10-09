@@ -152,6 +152,6 @@ public class CreateCallMethodTest {
 
         RequestBuilder builder = method.makeRequest(request);
         assertEquals("POST", builder.getMethod());
-        assertEquals("https://example.com/v1/calls", builder.build().getURI().toString());
+        assertEquals("https://example.com/calls", builder.build().getURI().toString());
     }
 }

@@ -36,7 +36,7 @@ import java.io.IOException;
 public class ReadCallMethod extends AbstractMethod<String, CallInfo> {
     private static final Log LOG = LogFactory.getLog(ReadCallMethod.class);
 
-    private static final String PATH = "/v1/calls/";
+    private static final String PATH = "/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
     private String baseUri = null;
 
@@ -52,7 +52,9 @@ public class ReadCallMethod extends AbstractMethod<String, CallInfo> {
     @Override
     public RequestBuilder makeRequest(String callId) {
         // TODO: Remove in 4.0.0 along with setBaseUri and getBaseUri method
-        String baseUri = (this.baseUri != null) ? this.baseUri : httpWrapper.getHttpConfig().getApiBaseUri() + PATH;
+        String baseUri = (this.baseUri != null)
+                ? this.baseUri
+                : httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH;
         return RequestBuilder.get(baseUri + callId);
     }
 

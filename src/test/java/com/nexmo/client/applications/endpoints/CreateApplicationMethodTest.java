@@ -159,6 +159,6 @@ public class CreateApplicationMethodTest {
 
         RequestBuilder builder = method.makeRequest(request);
         assertEquals("POST", builder.getMethod());
-        assertEquals("https://example.com/v1/applications", builder.build().getURI().toString());
+        assertEquals("https://example.com/applications", builder.build().getURI().toString());
     }
 }

@@ -38,7 +38,7 @@ public class UpdateApplicationMethod extends AbstractMethod<UpdateApplicationReq
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
-    private static final String PATH = "/v1/applications";
+    private static final String PATH = "/applications/";
 
     public UpdateApplicationMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -52,7 +52,7 @@ public class UpdateApplicationMethod extends AbstractMethod<UpdateApplicationReq
     @Override
     public RequestBuilder makeRequest(UpdateApplicationRequest request) throws NexmoClientException, UnsupportedEncodingException {
         RequestBuilder requestBuilder = RequestBuilder.put(
-                httpWrapper.getHttpConfig().getApiBaseUri() + PATH + "/" + request.getApplicationId());
+                httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getApplicationId());
         request.addParams(requestBuilder);
         return requestBuilder;
     }

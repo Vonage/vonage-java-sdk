@@ -39,7 +39,7 @@ import java.io.UnsupportedEncodingException;
 public class RedactMethod extends AbstractMethod<RedactRequest, RedactResponse> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
-    private static final String PATH = "/v1/redact/transaction";
+    private static final String PATH = "/redact/transaction";
 
     RedactMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -61,7 +61,7 @@ public class RedactMethod extends AbstractMethod<RedactRequest, RedactResponse> 
         }
 
         return RequestBuilder
-                .post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH)
+                .post(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH)
                 .setEntity(new StringEntity(redactRequest.toJson(), ContentType.APPLICATION_JSON));
     }
 

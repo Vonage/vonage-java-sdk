@@ -44,7 +44,7 @@ import java.util.List;
 public class ListCallsMethod extends AbstractMethod<CallsFilter, CallInfoPage> {
     private static final Log LOG = LogFactory.getLog(CreateCallMethod.class);
 
-    private static final String PATH = "/v1/calls";
+    private static final String PATH = "/calls";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
     private String uri;
 
@@ -61,7 +61,8 @@ public class ListCallsMethod extends AbstractMethod<CallsFilter, CallInfoPage> {
     public RequestBuilder makeRequest(CallsFilter filter) throws NexmoClientException, UnsupportedEncodingException {
         URIBuilder uriBuilder;
         // TODO: Remove in 4.0.0 along with setUri and getUri method
-        String uri = (this.uri != null) ? this.uri : httpWrapper.getHttpConfig().getApiBaseUri() + PATH;
+        String uri = (this.uri != null) ? this.uri : httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH;
+
         try {
             uriBuilder = new URIBuilder(uri);
         } catch (URISyntaxException e) {

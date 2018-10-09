@@ -36,7 +36,7 @@ public class DeleteApplicationMethod extends AbstractMethod<String, Void> {
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
-    private static final String PATH = "/v1/applications";
+    private static final String PATH = "/applications/";
 
     public DeleteApplicationMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -50,7 +50,7 @@ public class DeleteApplicationMethod extends AbstractMethod<String, Void> {
     @Override
     public RequestBuilder makeRequest(String applicationId) throws NexmoClientException, UnsupportedEncodingException {
         RequestBuilder requestBuilder = RequestBuilder.delete(
-                httpWrapper.getHttpConfig().getApiBaseUri() + PATH + "/" + applicationId);
+                httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + applicationId);
         return requestBuilder;
     }
 

@@ -101,6 +101,6 @@ public class ReadCallMethodTest {
 
         RequestBuilder builder = method.makeRequest("call-id");
         assertEquals("GET", builder.getMethod());
-        assertEquals("https://example.com/v1/calls/call-id", builder.build().getURI().toString());
+        assertEquals("https://example.com/calls/call-id", builder.build().getURI().toString());
     }
 }

@@ -115,6 +115,6 @@ public class GetApplicationEndpointTest {
 
         RequestBuilder builder = endpoint.makeRequest("application-id");
         assertEquals("GET", builder.getMethod());
-        assertEquals("https://example.com/v1/applications/application-id", builder.build().getURI().toString());
+        assertEquals("https://example.com/applications/application-id", builder.build().getURI().toString());
     }
 }
