@@ -21,6 +21,7 @@
  */
 package com.nexmo.client.voice.ncco;
 
+import com.nexmo.client.voice.MachineDetection;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -69,6 +70,25 @@ public class ConnectWebSocketNccoTest {
         assertEquals(
                 "{\"endpoint\":[{\"uri\":\"wss://example.com\",\"headers\":{\"key2\":\"value2\",\"key\":\"value\"},\"type\":\"websocket\",\"content-type\":\"content-type\"}],\"action\":\"connect\"}",
                 new ConnectWebSocketNcco("wss://example.com", "content-type", headers).toJson()
+        );
+    }
+
+    @Test
+    public void testToJsonSettingDifferentWebSocketEndpoint() {
+        ConnectWebSocketNcco ncco = new ConnectWebSocketNcco("wss://example.com", "content-type");
+        WebSocketEndpoint newEndpoint = new WebSocketEndpoint("wss://two.example.net", "content-type-two");
+
+        ncco.setEndpoint(newEndpoint);
+        ncco.setFrom("test from");
+        ncco.setEventMethod("GET");
+        ncco.setEventUrl("test event url");
+        ncco.setLimit(100);
+        ncco.setMachineDetection(MachineDetection.CONTINUE);
+        ncco.setTimeout(10);
+
+        assertEquals(
+                "{\"endpoint\":[{\"uri\":\"wss://two.example.net\",\"type\":\"websocket\",\"content-type\":\"content-type-two\"}],\"from\":\"test from\",\"timeout\":10,\"limit\":100,\"machineDetection\":\"continue\",\"eventMethod\":\"GET\",\"action\":\"connect\",\"eventUrl\":[\"test event url\"]}",
+                ncco.toJson()
         );
     }
 }
