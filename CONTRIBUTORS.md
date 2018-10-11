@@ -8,4 +8,4 @@ documentation, or tests are eligible to be added to this list.
 - Tim Lytle ([@tjlitle](https://github.com/tjlitle))
 - [@thepeachbeetle](https://github.com/thepeachbeetle)
 - Steve Crow ([@cr0wst](https://github.com/cr0wst))
-- Guy Khmelnitsky ([@cr0wst](https://github.com/GuyKh))
+- Guy Khmelnitsky ([@guykh](https://github.com/GuyKh))
