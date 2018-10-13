@@ -4,7 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [3.9.0] - 2018-XX-XX
+## [Development]
+### Added
+- Updated `VoiceName` enum with missing voices.
+- Added `ConnectWebSocketNcco` to handle connecting to WebSocket endpoints similar to `ConnectNcco` to maintain backwards compatibility.
+- Added `getDisplayName` method to `VoiceName` to represent the name that is used in serialization.
+
 ### Changed
 - TalkNcco to use VoiceName object instead of String
 
