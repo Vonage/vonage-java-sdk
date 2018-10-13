@@ -87,10 +87,10 @@ public class ControlEndpointTest {
         try {
             ControlResponse response = this.endpoint.parseResponse(stub);
             fail("Parsing an error response should throw an exception.");
-        } catch(VerifyException exc){
-                assertEquals("2", exc.getStatus());
-                assertEquals("Missing username", exc.getErrorText());
-            }
-
+        } catch (VerifyException exc) {
+            assertEquals("2", exc.getStatus());
+            assertEquals("Missing username", exc.getErrorText());
         }
+
     }
+}

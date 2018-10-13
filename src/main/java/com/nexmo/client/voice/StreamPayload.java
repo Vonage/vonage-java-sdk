@@ -51,7 +51,7 @@ public class StreamPayload {
         return streamUrl;
     }
 
-    public String toJson(){
+    public String toJson() {
         try {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.writeValueAsString(this);

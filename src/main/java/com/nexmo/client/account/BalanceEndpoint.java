@@ -51,8 +51,7 @@ public class BalanceEndpoint extends AbstractMethod<Void, BalanceResponse> {
 
     @Override
     public RequestBuilder makeRequest(Void request) throws NexmoClientException, UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder.get(uri);
-        return requestBuilder;
+        return RequestBuilder.get(uri);
     }
 
     public BalanceResponse execute() throws NexmoClientException, IOException {

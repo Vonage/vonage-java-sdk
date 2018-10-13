@@ -25,6 +25,7 @@ package com.nexmo.client.auth;
 import com.nexmo.client.TestUtils;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -109,10 +110,8 @@ public class AuthCollectionTest {
     }
 
     public Set<Class> acceptableClassSet(Class... classes) {
-        Set<Class> result = new HashSet<Class>();
-        for (Class c : classes) {
-            result.add(c);
-        }
+        Set<Class> result = new HashSet<>();
+        Collections.addAll(result, classes);
         return result;
     }
 }

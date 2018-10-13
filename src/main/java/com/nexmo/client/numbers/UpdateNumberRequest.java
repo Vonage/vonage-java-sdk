@@ -109,7 +109,7 @@ public class UpdateNumberRequest {
         SIP, TEL, VXML, APP;
 
         public String paramValue() {
-            return this.name().toString().toLowerCase();
+            return this.name().toLowerCase();
         }
     }
 }

@@ -46,7 +46,7 @@ public class NccoResponse {
     private List<Ncco> nccoList;
 
     public NccoResponse() {
-        nccoList = new ArrayList<Ncco>();
+        nccoList = new ArrayList<>();
     }
 
     public void appendNcco(Ncco ncco) {
