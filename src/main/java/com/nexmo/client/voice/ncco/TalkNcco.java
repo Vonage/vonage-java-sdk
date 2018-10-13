@@ -78,6 +78,10 @@ public class TalkNcco implements Ncco {
         return (voiceName == null) ? null : voiceName.toString();
     }
 
+    public void setVoiceName(String voiceName) {
+        this.setVoiceName(VoiceName.fromString(voiceName));
+    }
+
     public void setVoiceName(VoiceName voiceName) {
         this.voiceName = voiceName;
     }

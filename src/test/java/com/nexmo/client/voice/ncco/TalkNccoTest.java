@@ -82,4 +82,12 @@ public class TalkNccoTest {
         ncco.setVoiceName(VoiceName.KIMBERLY);
         assertEquals(json, ncco.toJson());
     }
+
+    @Test
+    public void testJsonHasVoiceNameStringWhenProvided() {
+        String json = "{\"text\":\"Talk to me\",\"voiceName\":\"Kimberly\",\"action\":\"talk\"}";
+        TalkNcco ncco = new TalkNcco("Talk to me");
+        ncco.setVoiceName(VoiceName.KIMBERLY.toString());
+        assertEquals(json, ncco.toJson());
+    }
 }
