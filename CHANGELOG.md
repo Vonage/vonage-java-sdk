@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added `ConnectWebSocketNcco` to handle connecting to WebSocket endpoints similar to `ConnectNcco` to maintain backwards compatibility.
 - Added `getDisplayName` method to `VoiceName` to represent the name that is used in serialization.
 
+### Changed
+- TalkNcco to use VoiceName object instead of String
+
 ## [3.8.0] - 2018-09-19
 ### Added
 - Added `com.nexmo.client.incoming.MessageEvent` to assist with the deserialization of the JSON payload used for incoming messages.
