@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package com.nexmo.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -28,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum CallDirection {
+    
     OUTBOUND,
     INBOUND,
     UNKNOWN;
