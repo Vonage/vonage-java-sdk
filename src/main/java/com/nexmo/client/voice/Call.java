@@ -19,8 +19,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.voice;
 
+package com.nexmo.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -34,8 +34,10 @@ import java.io.IOException;
 /**
  * Call encapsulates the information required to create a call using {@link VoiceClient#createCall(Call)}
  */
+
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({ "_links"})
+
 public class Call {
     private Endpoint[] to;
     private Endpoint from;
