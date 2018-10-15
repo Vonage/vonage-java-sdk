@@ -21,6 +21,8 @@
  */
 package com.nexmo.client.applications.endpoints;
 
+import com.nexmo.client.HttpConfig;
+import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.TestUtils;
 import com.nexmo.client.applications.ApplicationDetails;
 import com.nexmo.client.applications.ApplicationKeys;
@@ -41,7 +43,7 @@ public class UpdateApplicationMethodTest {
 
     @Before
     public void setUp() throws Exception {
-        this.endpoint = new UpdateApplicationMethod(null);
+        this.endpoint = new UpdateApplicationMethod(new HttpWrapper());
     }
 
     @Test
@@ -53,7 +55,10 @@ public class UpdateApplicationMethodTest {
     @Test
     public void testMakeRequestWithOptionalParams() throws Exception {
         UpdateApplicationRequest update = new UpdateApplicationRequest(
-                "app-id", "app name", "https://example.com/answer", "https://example.com/event"
+                "app-id",
+                "app name",
+                "https://example.com/answer",
+                "https://example.com/event"
         );
         update.setAnswerMethod("PUT");
         update.setEventMethod("DELETE");
@@ -74,7 +79,10 @@ public class UpdateApplicationMethodTest {
     @Test
     public void testMakeRequest() throws Exception {
         UpdateApplicationRequest update = new UpdateApplicationRequest(
-                "app-id", "app name", "https://example.com/answer", "https://example.com/event"
+                "app-id",
+                "app name",
+                "https://example.com/answer",
+                "https://example.com/event"
         );
 
         RequestBuilder builder = this.endpoint.makeRequest(update);
@@ -92,32 +100,20 @@ public class UpdateApplicationMethodTest {
 
     @Test
     public void testParseResponse() throws Exception {
-        HttpResponse stub = TestUtils.makeJsonHttpResponse(200, "{\n" +
-                "  \"id\": \"aaaaaaaa-bbbb-cccc-dddd-0123456789ab\",\n" +
-                "  \"name\": \"My Application\",\n" +
-                "  \"voice\": {\n" +
-                "    \"webhooks\": [\n" +
-                "      {\n" +
-                "        \"endpoint_type\": \"answer_url\",\n" +
-                "        \"endpoint\": \"https://example.com/answer\",\n" +
-                "        \"http_method\": \"GET\"\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"endpoint_type\": \"event_url\",\n" +
-                "        \"endpoint\": \"https://example.com/event\",\n" +
-                "        \"http_method\": \"POST\"\n" +
-                "      }\n" +
-                "    ]\n" +
-                "  },\n" +
-                "  \"keys\": {\n" +
-                "    \"public_key\": \"PUBLIC_KEY\"\n" +
-                "  },\n" +
-                "  \"_links\": {\n" +
-                "    \"self\": {\n" +
-                "      \"href\": \"/v1/applications/aaaaaaaa-bbbb-cccc-dddd-0123456789ab\"\n" +
-                "    }\n" +
-                "  }\n" +
-                "}");
+        HttpResponse stub = TestUtils.makeJsonHttpResponse(
+                200,
+                "{\n" + "  \"id\": \"aaaaaaaa-bbbb-cccc-dddd-0123456789ab\",\n" + "  \"name\": \"My Application\",\n"
+                        + "  \"voice\": {\n" + "    \"webhooks\": [\n" + "      {\n"
+                        + "        \"endpoint_type\": \"answer_url\",\n"
+                        + "        \"endpoint\": \"https://example.com/answer\",\n"
+                        + "        \"http_method\": \"GET\"\n" + "      },\n" + "      {\n"
+                        + "        \"endpoint_type\": \"event_url\",\n"
+                        + "        \"endpoint\": \"https://example.com/event\",\n"
+                        + "        \"http_method\": \"POST\"\n" + "      }\n" + "    ]\n" + "  },\n" + "  \"keys\": {\n"
+                        + "    \"public_key\": \"PUBLIC_KEY\"\n" + "  },\n" + "  \"_links\": {\n" + "    \"self\": {\n"
+                        + "      \"href\": \"/v1/applications/aaaaaaaa-bbbb-cccc-dddd-0123456789ab\"\n" + "    }\n"
+                        + "  }\n" + "}"
+        );
         ApplicationDetails response = this.endpoint.parseResponse(stub);
         assertEquals("aaaaaaaa-bbbb-cccc-dddd-0123456789ab", response.getId());
         assertEquals("My Application", response.getName());
@@ -140,5 +136,37 @@ public class UpdateApplicationMethodTest {
 
         assertEquals("PUBLIC_KEY", keys.getPublicKey());
         assertNull(keys.getPrivateKey());
+    }
+
+    @Test
+    public void testDefaultUri() throws Exception {
+        UpdateApplicationRequest request = new UpdateApplicationRequest(
+                "app-id",
+                "app name",
+                "https://example.com/answer",
+                "https://example.com/event"
+        );
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("PUT", builder.getMethod());
+        assertEquals("https://api.nexmo.com/v1/applications/app-id",
+                builder.build().getURI().toString()
+        );
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        UpdateApplicationMethod method = new UpdateApplicationMethod(wrapper);
+        UpdateApplicationRequest request = new UpdateApplicationRequest(
+                "app-id",
+                "app name",
+                "https://example.com/answer",
+                "https://example.com/event"
+        );
+
+        RequestBuilder builder = method.makeRequest(request);
+        assertEquals("PUT", builder.getMethod());
+        assertEquals("https://example.com/applications/app-id", builder.build().getURI().toString());
     }
 }

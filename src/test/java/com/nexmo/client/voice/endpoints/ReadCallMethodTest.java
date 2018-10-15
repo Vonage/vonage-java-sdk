@@ -21,6 +21,8 @@
  */
 package com.nexmo.client.voice.endpoints;
 
+import com.nexmo.client.HttpConfig;
+import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.TestUtils;
 import com.nexmo.client.auth.JWTAuthMethod;
 import com.nexmo.client.voice.CallInfo;
@@ -38,7 +40,7 @@ public class ReadCallMethodTest {
 
     @Before
     public void setUp() throws Exception {
-        this.method = new ReadCallMethod(null);
+        this.method = new ReadCallMethod(new HttpWrapper());
     }
 
     @Test
@@ -55,31 +57,20 @@ public class ReadCallMethodTest {
     @Test
     public void parseResponse() throws Exception {
         HttpResponse stubResponse = TestUtils.makeJsonHttpResponse(200,
-                "      {\n" +
-                        "        \"uuid\": \"93137ee3-580e-45f7-a61a-e0b5716000ef\",\n" +
-                        "        \"status\": \"completed\",\n" +
-                        "        \"direction\": \"outbound\",\n" +
-                        "        \"rate\": \"0.02400000\",\n" +
-                        "        \"price\": \"0.00280000\",\n" +
-                        "        \"duration\": \"7\",\n" +
-                        "        \"network\": \"23410\",\n" +
-                        "        \"conversation_uuid\": \"aa17bd11-c895-4225-840d-30dc38c31e50\",\n" +
-                        "        \"start_time\": \"2017-01-13T13:55:02.000Z\",\n" +
-                        "        \"end_time\": \"2017-01-13T13:55:09.000Z\",\n" +
-                        "        \"to\": {\n" +
-                        "          \"type\": \"phone\",\n" +
-                        "          \"number\": \"447700900104\"\n" +
-                        "        },\n" +
-                        "        \"from\": {\n" +
-                        "          \"type\": \"phone\",\n" +
-                        "          \"number\": \"447700900105\"\n" +
-                        "        },\n" +
-                        "        \"_links\": {\n" +
-                        "          \"self\": {\n" +
-                        "            \"href\": \"/v1/calls/93137ee3-580e-45f7-a61a-e0b5716000ef\"\n" +
-                        "          }\n" +
-                        "        }\n" +
-                        "      }\n");
+                "      {\n" + "        \"uuid\": \"93137ee3-580e-45f7-a61a-e0b5716000ef\",\n"
+                        + "        \"status\": \"completed\",\n" + "        \"direction\": \"outbound\",\n"
+                        + "        \"rate\": \"0.02400000\",\n" + "        \"price\": \"0.00280000\",\n"
+                        + "        \"duration\": \"7\",\n" + "        \"network\": \"23410\",\n"
+                        + "        \"conversation_uuid\": \"aa17bd11-c895-4225-840d-30dc38c31e50\",\n"
+                        + "        \"start_time\": \"2017-01-13T13:55:02.000Z\",\n"
+                        + "        \"end_time\": \"2017-01-13T13:55:09.000Z\",\n" + "        \"to\": {\n"
+                        + "          \"type\": \"phone\",\n" + "          \"number\": \"447700900104\"\n"
+                        + "        },\n" + "        \"from\": {\n" + "          \"type\": \"phone\",\n"
+                        + "          \"number\": \"447700900105\"\n" + "        },\n" + "        \"_links\": {\n"
+                        + "          \"self\": {\n"
+                        + "            \"href\": \"/v1/calls/93137ee3-580e-45f7-a61a-e0b5716000ef\"\n" + "          }\n"
+                        + "        }\n" + "      }\n"
+        );
         CallInfo record = method.parseResponse(stubResponse);
         assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", record.getUuid());
     }
@@ -94,5 +85,22 @@ public class ReadCallMethodTest {
     @Test
     public void testRequestThrottleResponse() throws Exception {
         test429(new ReadCallMethod(null));
+    }
+
+    @Test
+    public void testDefaultUri() throws Exception {
+        RequestBuilder builder = method.makeRequest("call-id");
+        assertEquals("GET", builder.getMethod());
+        assertEquals("https://api.nexmo.com/v1/calls/call-id", builder.build().getURI().toString());
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        ReadCallMethod method = new ReadCallMethod(wrapper);
+
+        RequestBuilder builder = method.makeRequest("call-id");
+        assertEquals("GET", builder.getMethod());
+        assertEquals("https://example.com/calls/call-id", builder.build().getURI().toString());
     }
 }

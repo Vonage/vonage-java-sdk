@@ -34,9 +34,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 public class ListNumbersEndpoint extends AbstractMethod<ListNumbersFilter, ListNumbersResponse> {
-    private static final String DEFAULT_URI = "https://rest.nexmo.com/account/numbers";
+    private static final String PATH = "/account/numbers";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
-    private String uri = DEFAULT_URI;
 
     public ListNumbersEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -48,9 +47,10 @@ public class ListNumbersEndpoint extends AbstractMethod<ListNumbersFilter, ListN
     }
 
     @Override
-    public RequestBuilder makeRequest(ListNumbersFilter request) throws NexmoClientException,
-                                                                        UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder.get().setUri(uri);
+    public RequestBuilder makeRequest(ListNumbersFilter request) throws NexmoClientException, UnsupportedEncodingException {
+        RequestBuilder requestBuilder = RequestBuilder
+                .get()
+                .setUri(httpWrapper.getHttpConfig().getRestBaseUri() + PATH);
         request.addParams(requestBuilder);
         return requestBuilder;
     }

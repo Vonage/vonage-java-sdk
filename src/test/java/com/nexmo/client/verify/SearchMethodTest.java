@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.account;
+package com.nexmo.client.verify;
 
 import com.nexmo.client.HttpConfig;
 import com.nexmo.client.HttpWrapper;
@@ -29,33 +29,31 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class ListSecretsMethodTest {
-    ListSecretsMethod method;
+public class SearchMethodTest {
+    private SearchMethod method;
 
     @Before
     public void setUp() throws Exception {
-        this.method = new ListSecretsMethod(new HttpWrapper());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testConstructParamsWithMissingApiKey() throws Exception {
-        method.makeRequest(null);
+        this.method = new SearchMethod(new HttpWrapper());
     }
 
     @Test
     public void testDefaultUri() throws Exception {
-        RequestBuilder builder = method.makeRequest("api-key");
-        assertEquals("GET", builder.getMethod());
-        assertEquals("https://api.nexmo.com/accounts/api-key/secrets", builder.build().getURI().toString());
+        SearchRequest request = new SearchRequest("request-id");
+
+        RequestBuilder builder = method.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://api.nexmo.com/verify/search/json", builder.build().getURI().toString());
     }
 
     @Test
     public void testCustomUri() throws Exception {
         HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
-        ListSecretsMethod method = new ListSecretsMethod(wrapper);
+        SearchMethod method = new SearchMethod(wrapper);
+        SearchRequest request = new SearchRequest("request-id");
 
-        RequestBuilder builder = method.makeRequest("api-key");
-        assertEquals("GET", builder.getMethod());
-        assertEquals("https://example.com/accounts/api-key/secrets", builder.build().getURI().toString());
+        RequestBuilder builder = method.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://example.com/verify/search/json", builder.build().getURI().toString());
     }
 }

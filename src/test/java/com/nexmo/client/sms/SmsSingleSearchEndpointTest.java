@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.account;
+package com.nexmo.client.sms;
 
 import com.nexmo.client.HttpConfig;
 import com.nexmo.client.HttpWrapper;
@@ -29,33 +29,30 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class ListSecretsMethodTest {
-    ListSecretsMethod method;
+public class SmsSingleSearchEndpointTest {
+    private SmsSingleSearchEndpoint endpoint;
 
     @Before
     public void setUp() throws Exception {
-        this.method = new ListSecretsMethod(new HttpWrapper());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testConstructParamsWithMissingApiKey() throws Exception {
-        method.makeRequest(null);
+        this.endpoint = new SmsSingleSearchEndpoint(new HttpWrapper());
     }
 
     @Test
     public void testDefaultUri() throws Exception {
-        RequestBuilder builder = method.makeRequest("api-key");
+        RequestBuilder builder = endpoint.makeRequest("id");
         assertEquals("GET", builder.getMethod());
-        assertEquals("https://api.nexmo.com/accounts/api-key/secrets", builder.build().getURI().toString());
+        assertEquals("https://rest.nexmo.com/search/message?id=id",
+                builder.build().getURI().toString()
+        );
     }
 
     @Test
     public void testCustomUri() throws Exception {
         HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
-        ListSecretsMethod method = new ListSecretsMethod(wrapper);
+        SmsSingleSearchEndpoint endpoint = new SmsSingleSearchEndpoint(wrapper);
 
-        RequestBuilder builder = method.makeRequest("api-key");
+        RequestBuilder builder = endpoint.makeRequest("id");
         assertEquals("GET", builder.getMethod());
-        assertEquals("https://example.com/accounts/api-key/secrets", builder.build().getURI().toString());
+        assertEquals("https://example.com/search/message?id=id", builder.build().getURI().toString());
     }
 }

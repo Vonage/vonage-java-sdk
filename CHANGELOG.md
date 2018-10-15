@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Development]
 ### Added
 - Updated `VoiceName` enum with missing voices.
+- Added configuration object to be used with `HttpWrapper` to allow for customization.
+- Added the ability to customize the base URI used for the various endpoints.
 - Added `ConnectWebSocketNcco` to handle connecting to WebSocket endpoints similar to `ConnectNcco` to maintain backwards compatibility.
 - Added `getDisplayName` method to `VoiceName` to represent the name that is used in serialization.
 

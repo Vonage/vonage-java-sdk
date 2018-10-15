@@ -49,10 +49,9 @@ public class SendMessageEndpoint extends AbstractMethod<Message, SmsSubmissionRe
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://rest.nexmo.com/sms/xml";
+    private static final String PATH = "/sms/xml";
 
     private XmlParser xmlParser = new XmlParser();
-    private String uri = DEFAULT_URI;
 
     public SendMessageEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -65,7 +64,7 @@ public class SendMessageEndpoint extends AbstractMethod<Message, SmsSubmissionRe
 
     @Override
     public RequestBuilder makeRequest(Message message) throws NexmoClientException, UnsupportedEncodingException {
-        RequestBuilder request = RequestBuilder.post(uri);
+        RequestBuilder request = RequestBuilder.post(httpWrapper.getHttpConfig().getRestBaseUri() + PATH);
         message.addParams(request);
         return request;
     }
@@ -109,8 +108,7 @@ public class SendMessageEndpoint extends AbstractMethod<Message, SmsSubmissionRe
             NodeList messageLists = reply.getChildNodes();
             for (int i2 = 0; i2 < messageLists.getLength(); i2++) {
                 Node messagesNode = messageLists.item(i2);
-                if (messagesNode.getNodeType() != Node.ELEMENT_NODE)
-                    continue;
+                if (messagesNode.getNodeType() != Node.ELEMENT_NODE) continue;
                 if (messagesNode.getNodeName().equals("messages")) {
                     NodeList messages = messagesNode.getChildNodes();
                     for (int i3 = 0; i3 < messages.getLength(); i3++) {
@@ -126,10 +124,8 @@ public class SendMessageEndpoint extends AbstractMethod<Message, SmsSubmissionRe
         return results.toArray(new SmsSubmissionResult[results.size()]);
     }
 
-    private SmsSubmissionResult parseMessageXmlNode(Node messageNode)
-            throws NexmoResponseParseException {
-        if (messageNode.getNodeType() != Node.ELEMENT_NODE)
-            return null;
+    private SmsSubmissionResult parseMessageXmlNode(Node messageNode) throws NexmoResponseParseException {
+        if (messageNode.getNodeType() != Node.ELEMENT_NODE) return null;
 
         int status = -1;
         String messageId = null;
@@ -144,8 +140,7 @@ public class SendMessageEndpoint extends AbstractMethod<Message, SmsSubmissionRe
         NodeList nodes = messageNode.getChildNodes();
         for (int i4 = 0; i4 < nodes.getLength(); i4++) {
             Node node = nodes.item(i4);
-            if (node.getNodeType() != Node.ELEMENT_NODE)
-                continue;
+            if (node.getNodeType() != Node.ELEMENT_NODE) continue;
             if (node.getNodeName().equals("messageId")) {
                 messageId = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
             } else if (node.getNodeName().equals("to")) {
@@ -165,35 +160,35 @@ public class SendMessageEndpoint extends AbstractMethod<Message, SmsSubmissionRe
             } else if (node.getNodeName().equals("remainingBalance")) {
                 String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
                 try {
-                    if (str != null)
-                        remainingBalance = new BigDecimal(str);
+                    if (str != null) remainingBalance = new BigDecimal(str);
                 } catch (NumberFormatException e) {
                     log.error("xml parser .. invalid value in <remainingBalance> node [ " + str + " ] ");
                 }
             } else if (node.getNodeName().equals("messagePrice")) {
                 String str = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
                 try {
-                    if (str != null)
-                        messagePrice = new BigDecimal(str);
+                    if (str != null) messagePrice = new BigDecimal(str);
                 } catch (NumberFormatException e) {
                     log.error("xml parser .. invalid value in <messagePrice> node [ " + str + " ] ");
                 }
             } else if (node.getNodeName().equals("network")) {
                 network = node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
             } else {
-                log.error("xml parser .. unknown node found in status-return, expected [ messageId, to, status, errorText, clientRef, messagePrice, remainingBalance, reachability, network ] -- found [ " + node.getNodeName() + " ] ");
+                log.error(
+                        "xml parser .. unknown node found in status-return, expected [ messageId, to, status, errorText, clientRef, messagePrice, remainingBalance, reachability, network ] -- found [ "
+                                + node.getNodeName() + " ] ");
             }
         }
 
-        if (status == -1)
-            throw new NexmoResponseParseException("Xml Parser - did not find a <status> node");
+        if (status == -1) throw new NexmoResponseParseException("Xml Parser - did not find a <status> node");
 
         // Is this a temporary error ?
-        boolean temporaryError = (status == SmsSubmissionResult.STATUS_THROTTLED ||
-                status == SmsSubmissionResult.STATUS_INTERNAL_ERROR ||
-                status == SmsSubmissionResult.STATUS_TOO_MANY_BINDS);
+        boolean temporaryError = (status == SmsSubmissionResult.STATUS_THROTTLED
+                || status == SmsSubmissionResult.STATUS_INTERNAL_ERROR
+                || status == SmsSubmissionResult.STATUS_TOO_MANY_BINDS);
 
-        return new SmsSubmissionResult(status,
+        return new SmsSubmissionResult(
+                status,
                 destination,
                 messageId,
                 errorText,
@@ -202,6 +197,7 @@ public class SendMessageEndpoint extends AbstractMethod<Message, SmsSubmissionRe
                 messagePrice,
                 temporaryError,
                 smsSubmissionReachabilityStatus,
-                network);
+                network
+        );
     }
 }

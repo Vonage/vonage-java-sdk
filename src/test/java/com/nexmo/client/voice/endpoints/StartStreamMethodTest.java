@@ -19,43 +19,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.account;
+package com.nexmo.client.voice.endpoints;
 
 import com.nexmo.client.HttpConfig;
 import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.voice.StreamRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class ListSecretsMethodTest {
-    ListSecretsMethod method;
+public class StartStreamMethodTest {
+    private StartStreamMethod method;
 
     @Before
     public void setUp() throws Exception {
-        this.method = new ListSecretsMethod(new HttpWrapper());
+        this.method = new StartStreamMethod(new HttpWrapper());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testConstructParamsWithMissingApiKey() throws Exception {
-        method.makeRequest(null);
+    @Test
+    public void testLegacyCustomUri() throws Exception {
+        StreamRequest request = new StreamRequest("uuid", "stream-url", 0);
+        method.setUri("https://api.example.org/");
+        RequestBuilder builder = method.makeRequest(request);
+        assertEquals("PUT", builder.getMethod());
+        assertEquals("https://api.example.org/uuid/stream", builder.build().getURI().toString());
     }
 
     @Test
     public void testDefaultUri() throws Exception {
-        RequestBuilder builder = method.makeRequest("api-key");
-        assertEquals("GET", builder.getMethod());
-        assertEquals("https://api.nexmo.com/accounts/api-key/secrets", builder.build().getURI().toString());
+        StreamRequest request = new StreamRequest("uuid", "stream-url", 0);
+        RequestBuilder builder = method.makeRequest(request);
+        assertEquals("PUT", builder.getMethod());
+        assertEquals("https://api.nexmo.com/v1/calls/uuid/stream", builder.build().getURI().toString());
     }
 
     @Test
     public void testCustomUri() throws Exception {
         HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
-        ListSecretsMethod method = new ListSecretsMethod(wrapper);
+        StartStreamMethod method = new StartStreamMethod(wrapper);
+        StreamRequest request = new StreamRequest("uuid", "stream-url", 0);
 
-        RequestBuilder builder = method.makeRequest("api-key");
-        assertEquals("GET", builder.getMethod());
-        assertEquals("https://example.com/accounts/api-key/secrets", builder.build().getURI().toString());
+        RequestBuilder builder = method.makeRequest(request);
+        assertEquals("PUT", builder.getMethod());
+        assertEquals("https://example.com/calls/uuid/stream", builder.build().getURI().toString());
     }
 }

@@ -29,33 +29,33 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class ListSecretsMethodTest {
-    ListSecretsMethod method;
+public class TopUpMethodTest {
+    private TopUpMethod method;
 
     @Before
     public void setUp() throws Exception {
-        this.method = new ListSecretsMethod(new HttpWrapper());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testConstructParamsWithMissingApiKey() throws Exception {
-        method.makeRequest(null);
+        this.method = new TopUpMethod(new HttpWrapper());
     }
 
     @Test
     public void testDefaultUri() throws Exception {
-        RequestBuilder builder = method.makeRequest("api-key");
+        TopUpRequest request = new TopUpRequest("trx");
+
+        RequestBuilder builder = method.makeRequest(request);
         assertEquals("GET", builder.getMethod());
-        assertEquals("https://api.nexmo.com/accounts/api-key/secrets", builder.build().getURI().toString());
+        assertEquals("https://rest.nexmo.com/account/top-up?trx=trx",
+                builder.build().getURI().toString()
+        );
     }
 
     @Test
     public void testCustomUri() throws Exception {
         HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
-        ListSecretsMethod method = new ListSecretsMethod(wrapper);
+        TopUpMethod method = new TopUpMethod(wrapper);
+        TopUpRequest request = new TopUpRequest("trx");
 
-        RequestBuilder builder = method.makeRequest("api-key");
+        RequestBuilder builder = method.makeRequest(request);
         assertEquals("GET", builder.getMethod());
-        assertEquals("https://example.com/accounts/api-key/secrets", builder.build().getURI().toString());
+        assertEquals("https://example.com/account/top-up?trx=trx", builder.build().getURI().toString());
     }
 }

@@ -33,9 +33,7 @@ import java.io.IOException;
 public class PrefixPricingMethod extends AbstractMethod<PrefixPricingRequest, PrefixPricingResponse> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
-    private static final String DEFAULT_BASE_URI = "https://rest.nexmo.com/account/get-prefix-pricing/outbound/";
-
-    private String baseUri = DEFAULT_BASE_URI;
+    private static final String PATH = "/get-prefix-pricing/outbound/";
 
     PrefixPricingMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -48,7 +46,10 @@ public class PrefixPricingMethod extends AbstractMethod<PrefixPricingRequest, Pr
 
     @Override
     public RequestBuilder makeRequest(PrefixPricingRequest prefixPricingRequest) {
-        String uri = this.baseUri + prefixPricingRequest.getServiceType().name().toLowerCase();
+        String uri = httpWrapper.getHttpConfig().getRestBaseUri() + PATH + prefixPricingRequest
+                .getServiceType()
+                .name()
+                .toLowerCase();
         return RequestBuilder.get(uri).addParameter("prefix", prefixPricingRequest.getPrefix());
     }
 

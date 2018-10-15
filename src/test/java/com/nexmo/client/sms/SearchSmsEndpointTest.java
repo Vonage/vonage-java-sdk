@@ -21,6 +21,8 @@
  */
 package com.nexmo.client.sms;
 
+import com.nexmo.client.HttpConfig;
+import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.TestUtils;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
@@ -42,7 +44,7 @@ public class SearchSmsEndpointTest {
 
     @Before
     public void setUp() throws Exception {
-        this.endpoint = new SmsSearchEndpoint(null);
+        this.endpoint = new SmsSearchEndpoint(new HttpWrapper());
     }
 
     @Test
@@ -84,10 +86,11 @@ public class SearchSmsEndpointTest {
 
     @Test
     public void testMakeDateRequest() throws Exception {
-        SmsDateSearchRequest request = new SmsDateSearchRequest(
-                new GregorianCalendar(2017, GregorianCalendar.SEPTEMBER, 22).getTime(),
-                "447700900510"
-        );
+        SmsDateSearchRequest request = new SmsDateSearchRequest(new GregorianCalendar(
+                2017,
+                GregorianCalendar.SEPTEMBER,
+                22
+        ).getTime(), "447700900510");
         RequestBuilder builder = this.endpoint.makeRequest(request);
         assertEquals("GET", builder.getMethod());
         assertThat(builder.build().getURI().toString(), startsWith("https://rest.nexmo.com/search/messages?"));
@@ -100,39 +103,22 @@ public class SearchSmsEndpointTest {
 
     @Test
     public void testParseResponse() throws Exception {
-        HttpResponse stub = TestUtils.makeJsonHttpResponse(200, "{\n" +
-                "  \"count\": 2,\n" +
-                "  \"items\": [\n" +
-                "    {\n" +
-                "      \"message-id\": \"00A0B0C0\",\n" +
-                "      \"account-id\": \"key\",\n" +
-                "      \"network\": \"20810\",\n" +
-                "      \"from\": \"MyApp\",\n" +
-                "      \"to\": \"123456890\",\n" +
-                "      \"body\": \"hello world\",\n" +
-                "      \"price\": \"0.04500000\",\n" +
-                "      \"date-received\": \"2011-11-25 16:03:00\",\n" +
-                "      \"final-status\": \"DELIVRD\",\n" +
-                "      \"date-closed\": \"2011-11-25 16:03:00\",\n" +
-                "      \"latency\": 11151,\n" +
-                "      \"type\": \"MT\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"message-id\": \"00A0B0C1\",\n" +
-                "      \"account-id\": \"key\",\n" +
-                "      \"network\": \"20810\",\n" +
-                "      \"from\": \"MyApp\",\n" +
-                "      \"to\": \"123456891\",\n" +
-                "      \"body\": \"foo bar\",\n" +
-                "      \"price\": \"0.04500000\",\n" +
-                "      \"date-received\": \"2011-11-25 17:03:00\",\n" +
-                "      \"final-status\": \"DELIVRD\",\n" +
-                "      \"date-closed\": \"2011-11-25 18:03:00\",\n" +
-                "      \"latency\": 14151,\n" +
-                "      \"type\": \"MT\"\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}\n");
+        HttpResponse stub = TestUtils.makeJsonHttpResponse(
+                200,
+                "{\n" + "  \"count\": 2,\n" + "  \"items\": [\n" + "    {\n" + "      \"message-id\": \"00A0B0C0\",\n"
+                        + "      \"account-id\": \"key\",\n" + "      \"network\": \"20810\",\n"
+                        + "      \"from\": \"MyApp\",\n" + "      \"to\": \"123456890\",\n"
+                        + "      \"body\": \"hello world\",\n" + "      \"price\": \"0.04500000\",\n"
+                        + "      \"date-received\": \"2011-11-25 16:03:00\",\n"
+                        + "      \"final-status\": \"DELIVRD\",\n" + "      \"date-closed\": \"2011-11-25 16:03:00\",\n"
+                        + "      \"latency\": 11151,\n" + "      \"type\": \"MT\"\n" + "    },\n" + "    {\n"
+                        + "      \"message-id\": \"00A0B0C1\",\n" + "      \"account-id\": \"key\",\n"
+                        + "      \"network\": \"20810\",\n" + "      \"from\": \"MyApp\",\n"
+                        + "      \"to\": \"123456891\",\n" + "      \"body\": \"foo bar\",\n"
+                        + "      \"price\": \"0.04500000\",\n" + "      \"date-received\": \"2011-11-25 17:03:00\",\n"
+                        + "      \"final-status\": \"DELIVRD\",\n" + "      \"date-closed\": \"2011-11-25 18:03:00\",\n"
+                        + "      \"latency\": 14151,\n" + "      \"type\": \"MT\"\n" + "    }\n" + "  ]\n" + "}\n"
+        );
         SearchSmsResponse response = this.endpoint.parseResponse(stub);
 
         assertThat(response.getCount(), equalTo(2));
@@ -145,16 +131,32 @@ public class SearchSmsEndpointTest {
         assertEquals("123456890", details.getTo());
         assertEquals("hello world", details.getBody());
         assertEquals("0.04500000", details.getPrice());
-        assertEquals(
-                new GregorianCalendar(2011, Calendar.NOVEMBER, 25, 16, 03, 00).getTime(),
-                details.getDateReceived());
+        assertEquals(new GregorianCalendar(2011, Calendar.NOVEMBER, 25, 16, 03, 00).getTime(),
+                details.getDateReceived()
+        );
         assertEquals("DELIVRD", details.getFinalStatus());
-        assertEquals(
-                new GregorianCalendar(2011, Calendar.NOVEMBER, 25, 16, 03, 00).getTime(),
-                details.getDateClosed());
+        assertEquals(new GregorianCalendar(2011, Calendar.NOVEMBER, 25, 16, 03, 00).getTime(), details.getDateClosed());
         assertEquals(11151, details.getLatency().longValue());
         assertEquals("MT", details.getType());
+    }
 
+    @Test
+    public void testDefaultUri() throws Exception {
+        SmsIdSearchRequest request = new SmsIdSearchRequest("one-id");
 
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("GET", builder.getMethod());
+        assertEquals("https://rest.nexmo.com/search/messages?ids=one-id", builder.build().getURI().toString());
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        SmsSearchEndpoint endpoint = new SmsSearchEndpoint(wrapper);
+        SmsIdSearchRequest request = new SmsIdSearchRequest("one-id");
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("GET", builder.getMethod());
+        assertEquals("https://example.com/search/messages?ids=one-id", builder.build().getURI().toString());
     }
 }

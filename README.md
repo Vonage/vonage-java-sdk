@@ -73,6 +73,43 @@ to your project's classpath.
 * Check the [Javadoc](http://nexmo.github.io/nexmo-java/) for full reference documentation.
 * There are also **many useful code samples** in our [nexmo-community/nexmo-java-quickstart](https://github.com/nexmo-community/nexmo-java-quickstart) repository.
 
+### Customize the Base URI
+By default, the client will use https://api.nexmo.com, https://rest.nexmo.com, and https://sns.nexmo.com as base URIs for the various endpoints. To customize these you can instantiate `NexmoClient` with an `HttpConfig` object.
+
+`HttpConfig.Builder` has been created to assist in building this object. Usage is as follows:
+
+```java
+HttpConfig httpConfig = new HttpConfig.Builder()
+        .apiBaseUri("https://api.example.com")
+        .restBaseUri("https://rest.example.com")
+        .snsBaseUri("https://sns.example.com")
+        .build();
+
+NexmoClient client = new NexmoClient(httpConfig, new TokenAuthMethod(API_KEY, API_SECRET));
+```
+
+If you do not specify a property, it will take on whatever the default value is. You can also set all three with a single method:
+
+```java
+HttpConfig httpConfig = new HttpConfig.Builder().baseUri("http://example.com").build();
+
+NexmoClient client = new NexmoClient(httpConfig, new TokenAuthMethod(API_KEY, API_SECRET));
+```
+
+To keep the default values, you can use `HttpConfig.defaultConfig()`:
+
+```java
+HttpConfig httpConfig = HttpConfig.defaultConfig();
+
+NexmoClient client = new NexmoClient(httpConfig, new TokenAuthMethod(API_KEY, API_SECRET));
+```
+
+You can also instantiate without the parameter:
+
+```java
+NexmoClient client = new NexmoClient(new TokenAuthMethod(API_KEY, API_SECRET));
+```
+
 ### Send an SMS
 
 Send an SMS with the Nexmo SMS API:

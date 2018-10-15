@@ -37,9 +37,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 public class CancelNumberEndpoint extends AbstractMethod<CancelNumberRequest, CancelNumberResponse> {
-    private static final String DEFAULT_URI = "https://rest.nexmo.com/number/cancel";
+    private static final String PATH = "/number/cancel";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
-    private String uri = DEFAULT_URI;
 
     public CancelNumberEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -51,9 +50,10 @@ public class CancelNumberEndpoint extends AbstractMethod<CancelNumberRequest, Ca
     }
 
     @Override
-    public RequestBuilder makeRequest(CancelNumberRequest request) throws NexmoClientException,
-                                                                          UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder.post().setUri(uri);
+    public RequestBuilder makeRequest(CancelNumberRequest request) throws NexmoClientException, UnsupportedEncodingException {
+        RequestBuilder requestBuilder = RequestBuilder
+                .post()
+                .setUri(httpWrapper.getHttpConfig().getRestBaseUri() + PATH);
         request.addParams(requestBuilder);
         return requestBuilder;
     }
