@@ -21,6 +21,8 @@
  */
 package com.nexmo.client.applications.endpoints;
 
+import com.nexmo.client.HttpConfig;
+import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.TestUtils;
 import com.nexmo.client.applications.*;
 import com.nexmo.client.auth.TokenAuthMethod;
@@ -38,7 +40,7 @@ public class ListApplicationsEndpointTest {
 
     @Before
     public void setUp() throws Exception {
-        this.endpoint = new ListApplicationsEndpoint(null);
+        this.endpoint = new ListApplicationsEndpoint(new HttpWrapper());
     }
 
     @Test
@@ -65,7 +67,10 @@ public class ListApplicationsEndpointTest {
 
         RequestBuilder builder = this.endpoint.makeRequest(request);
         assertEquals("GET", builder.getMethod());
-        assertEquals("https://api.nexmo.com/v1/applications?page_size=40&page_index=32", builder.build().getURI().toString());
+        assertEquals(
+                "https://api.nexmo.com/v1/applications?page_size=40&page_index=32",
+                builder.build().getURI().toString()
+        );
 
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
         assertEquals("32", params.get("page_index"));
@@ -74,55 +79,30 @@ public class ListApplicationsEndpointTest {
 
     @Test
     public void testParseResponse() throws Exception {
-        HttpResponse stub = TestUtils.makeJsonHttpResponse(200, "{\n" +
-                "  \"count\": 1,\n" +
-                "  \"page_size\": 10,\n" +
-                "  \"page_index\": 3,\n" +
-                "  \"_embedded\": {\n" +
-                "    \"applications\": [\n" +
-                "      {\n" +
-                "        \"id\": \"aaaaaaaa-bbbb-cccc-dddd-0123456789ab\",\n" +
-                "        \"name\": \"My Application\",\n" +
-                "        \"voice\": {\n" +
-                "          \"webhooks\": [\n" +
-                "            {\n" +
-                "              \"endpoint_type\": \"event_url\",\n" +
-                "              \"endpoint\": \"https://example.com/event\",\n" +
-                "              \"http_method\": \"POST\"\n" +
-                "            },\n" +
-                "            {\n" +
-                "              \"endpoint_type\": \"answer_url\",\n" +
-                "              \"endpoint\": \"https://example.com/answer\",\n" +
-                "              \"http_method\": \"GET\"\n" +
-                "            }\n" +
-                "          ]\n" +
-                "        },\n" +
-                "        \"keys\": {\n" +
-                "          \"public_key\": \"PUBLIC_KEY\"\n" +
-                "        },\n" +
-                "        \"_links\": {\n" +
-                "          \"self\": {\n" +
-                "            \"href\": \"/v1/applications/aaaaaaaa-bbbb-cccc-dddd-0123456789ab\"\n" +
-                "          }\n" +
-                "        }\n" +
-                "      }\n" +
-                "    ]\n" +
-                "  },\n" +
-                "  \"_links\": {\n" +
-                "    \"self\": {\n" +
-                "      \"href\": \"/v1/applications?page_size=10&page_index=1\"\n" +
-                "    },\n" +
-                "    \"first\": {\n" +
-                "      \"href\": \"/v1/applications?page_size=10\"\n" +
-                "    },\n" +
-                "    \"last\": {\n" +
-                "      \"href\": \"/v1/applications?page_size=10&page_index=5\"\n" +
-                "    },\n" +
-                "    \"next\": {\n" +
-                "      \"href\": \"/v1/applications?page_size=10&page_index=2\"\n" +
-                "    }\n" +
-                "  }\n" +
-                "}");
+        HttpResponse stub = TestUtils.makeJsonHttpResponse(
+                200,
+                "{\n" + "  \"count\": 1,\n" + "  \"page_size\": 10,\n" + "  \"page_index\": 3,\n"
+                        + "  \"_embedded\": {\n" + "    \"applications\": [\n" + "      {\n"
+                        + "        \"id\": \"aaaaaaaa-bbbb-cccc-dddd-0123456789ab\",\n"
+                        + "        \"name\": \"My Application\",\n" + "        \"voice\": {\n"
+                        + "          \"webhooks\": [\n" + "            {\n"
+                        + "              \"endpoint_type\": \"event_url\",\n"
+                        + "              \"endpoint\": \"https://example.com/event\",\n"
+                        + "              \"http_method\": \"POST\"\n" + "            },\n" + "            {\n"
+                        + "              \"endpoint_type\": \"answer_url\",\n"
+                        + "              \"endpoint\": \"https://example.com/answer\",\n"
+                        + "              \"http_method\": \"GET\"\n" + "            }\n" + "          ]\n"
+                        + "        },\n" + "        \"keys\": {\n" + "          \"public_key\": \"PUBLIC_KEY\"\n"
+                        + "        },\n" + "        \"_links\": {\n" + "          \"self\": {\n"
+                        + "            \"href\": \"/v1/applications/aaaaaaaa-bbbb-cccc-dddd-0123456789ab\"\n"
+                        + "          }\n" + "        }\n" + "      }\n" + "    ]\n" + "  },\n" + "  \"_links\": {\n"
+                        + "    \"self\": {\n" + "      \"href\": \"/v1/applications?page_size=10&page_index=1\"\n"
+                        + "    },\n" + "    \"first\": {\n" + "      \"href\": \"/v1/applications?page_size=10\"\n"
+                        + "    },\n" + "    \"last\": {\n"
+                        + "      \"href\": \"/v1/applications?page_size=10&page_index=5\"\n" + "    },\n"
+                        + "    \"next\": {\n" + "      \"href\": \"/v1/applications?page_size=10&page_index=2\"\n"
+                        + "    }\n" + "  }\n" + "}"
+        );
         ListApplicationsResponse response = this.endpoint.parseResponse(stub);
         assertEquals(1, response.getCount());
         assertEquals(10, response.getPageSize());
@@ -154,5 +134,59 @@ public class ListApplicationsEndpointTest {
         assertNull(keys.getPrivateKey());
 
         assertEquals(response.getEmbedded().getApplicationDetails()[0], app);
+    }
+
+    @Test
+    public void testDefaultUri() throws Exception {
+        ListApplicationsRequest request = new ListApplicationsRequest();
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("GET", builder.getMethod());
+        assertEquals("https://api.nexmo.com/v1/applications",
+                builder.build().getURI().toString()
+        );
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        ListApplicationsEndpoint endpoint = new ListApplicationsEndpoint(wrapper);
+        ListApplicationsRequest request = new ListApplicationsRequest();
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("GET", builder.getMethod());
+        assertEquals(
+                "https://example.com/applications",
+                builder.build().getURI().toString()
+        );
+    }
+
+    @Test
+    public void testDefaultUriWithPage() throws Exception {
+        ListApplicationsRequest request = new ListApplicationsRequest();
+        request.setPageIndex(32);
+        request.setPageSize(40);
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("GET", builder.getMethod());
+        assertEquals("https://api.nexmo.com/v1/applications?page_size=40&page_index=32",
+                builder.build().getURI().toString()
+        );
+    }
+
+    @Test
+    public void testCustomUriWithPage() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        ListApplicationsEndpoint endpoint = new ListApplicationsEndpoint(wrapper);
+        ListApplicationsRequest request = new ListApplicationsRequest();
+        request.setPageIndex(32);
+        request.setPageSize(40);
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("GET", builder.getMethod());
+        assertEquals(
+                "https://example.com/applications?page_size=40&page_index=32",
+                builder.build().getURI().toString()
+        );
     }
 }

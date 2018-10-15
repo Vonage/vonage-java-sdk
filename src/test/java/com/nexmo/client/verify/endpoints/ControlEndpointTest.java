@@ -21,6 +21,8 @@
  */
 package com.nexmo.client.verify.endpoints;
 
+import com.nexmo.client.HttpConfig;
+import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.TestUtils;
 import com.nexmo.client.auth.SignatureAuthMethod;
 import com.nexmo.client.auth.TokenAuthMethod;
@@ -44,7 +46,7 @@ public class ControlEndpointTest {
 
     @Before
     public void setUp() throws Exception {
-        this.endpoint = new ControlEndpoint(null);
+        this.endpoint = new ControlEndpoint(new HttpWrapper());
     }
 
     @Test
@@ -55,12 +57,11 @@ public class ControlEndpointTest {
 
     @Test
     public void testMakeRequest() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(new ControlRequest(
-                "request-id", VerifyControlCommand.CANCEL
+        RequestBuilder builder = this.endpoint.makeRequest(new ControlRequest("request-id",
+                VerifyControlCommand.CANCEL
         ));
         assertEquals("POST", builder.getMethod());
-        assertEquals("https://api.nexmo.com/verify/control/json", builder.build()
-                .getURI().toString());
+        assertEquals("https://api.nexmo.com/verify/control/json", builder.build().getURI().toString());
 
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
         assertEquals("request-id", params.get("request_id"));
@@ -69,10 +70,9 @@ public class ControlEndpointTest {
 
     @Test
     public void testParseResponse() throws Exception {
-        HttpResponse stub = TestUtils.makeJsonHttpResponse(200, "{\n" +
-                "  \"status\":\"0\",\n" +
-                "  \"command\":\"cancel\"\n" +
-                "}");
+        HttpResponse stub = TestUtils.makeJsonHttpResponse(200,
+                "{\n" + "  \"status\":\"0\",\n" + "  \"command\":\"cancel\"\n" + "}"
+        );
         ControlResponse response = this.endpoint.parseResponse(stub);
         assertEquals("0", response.getStatus());
         assertEquals(VerifyControlCommand.CANCEL, response.getCommand());
@@ -80,10 +80,9 @@ public class ControlEndpointTest {
 
     @Test
     public void testParseErrorResponse() throws Exception {
-        HttpResponse stub = TestUtils.makeJsonHttpResponse(200, "{\n" +
-                "    \"error_text\": \"Missing username\",\n" +
-                "    \"status\": \"2\"\n" +
-                "}");
+        HttpResponse stub = TestUtils.makeJsonHttpResponse(200,
+                "{\n" + "    \"error_text\": \"Missing username\",\n" + "    \"status\": \"2\"\n" + "}"
+        );
         try {
             ControlResponse response = this.endpoint.parseResponse(stub);
             fail("Parsing an error response should throw an exception.");
@@ -92,5 +91,25 @@ public class ControlEndpointTest {
             assertEquals("Missing username", exc.getErrorText());
         }
 
+    }
+
+    @Test
+    public void testDefaultUri() throws Exception {
+        ControlRequest request = new ControlRequest("request-id", VerifyControlCommand.CANCEL);
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://api.nexmo.com/verify/control/json", builder.build().getURI().toString());
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        ControlEndpoint endpoint = new ControlEndpoint(wrapper);
+        ControlRequest request = new ControlRequest("request-id", VerifyControlCommand.CANCEL);
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://example.com/verify/control/json", builder.build().getURI().toString());
     }
 }

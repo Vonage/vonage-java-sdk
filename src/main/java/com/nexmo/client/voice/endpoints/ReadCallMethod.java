@@ -36,9 +36,9 @@ import java.io.IOException;
 public class ReadCallMethod extends AbstractMethod<String, CallInfo> {
     private static final Log LOG = LogFactory.getLog(ReadCallMethod.class);
 
-    private static final String DEFAULT_BASE_URI = "https://api.nexmo.com/v1/calls/";
+    private static final String PATH = "/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
-    private String baseUri = DEFAULT_BASE_URI;
+    private String baseUri = null;
 
     public ReadCallMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -51,8 +51,11 @@ public class ReadCallMethod extends AbstractMethod<String, CallInfo> {
 
     @Override
     public RequestBuilder makeRequest(String callId) {
-        String uri = this.baseUri + callId;
-        return RequestBuilder.get(uri);
+        // TODO: Remove in 4.0.0 along with setBaseUri and getBaseUri method
+        String baseUri = (this.baseUri != null)
+                ? this.baseUri
+                : httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH;
+        return RequestBuilder.get(baseUri + callId);
     }
 
     @Override
@@ -61,11 +64,15 @@ public class ReadCallMethod extends AbstractMethod<String, CallInfo> {
         return CallInfo.fromJson(json);
     }
 
+    /**
+     * @deprecated Use {@link com.nexmo.client.HttpConfig.Builder} to create an {@link com.nexmo.client.HttpConfig} object and pass into {@link com.nexmo.client.NexmoClient}
+     */
+    @Deprecated
     public void setBaseUri(String baseUri) {
         this.baseUri = baseUri;
     }
 
     public String getBaseUri() {
-        return baseUri;
+        return (this.baseUri != null) ? this.baseUri : httpWrapper.getHttpConfig().getApiBaseUri() + PATH;
     }
 }

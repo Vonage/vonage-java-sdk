@@ -61,7 +61,11 @@ public class NexmoClient {
     private HttpWrapper httpWrapper;
 
     public NexmoClient(AuthMethod... authMethods) {
-        this.httpWrapper = new HttpWrapper(authMethods);
+        this(new HttpConfig.Builder().build(), authMethods);
+    }
+
+    public NexmoClient(HttpConfig httpConfig, AuthMethod... authMethods) {
+        this.httpWrapper = new HttpWrapper(httpConfig, authMethods);
 
         this.account = new AccountClient(this.httpWrapper);
         this.application = new ApplicationClient(this.httpWrapper);

@@ -21,10 +21,9 @@
  */
 package com.nexmo.client.numbers;
 
-import com.nexmo.client.NexmoBadRequestException;
-import com.nexmo.client.NexmoMethodFailedException;
-import com.nexmo.client.TestUtils;
+import com.nexmo.client.*;
 import org.apache.http.client.methods.RequestBuilder;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Map;
@@ -35,11 +34,16 @@ import static org.junit.Assert.assertEquals;
 
 
 public class CancelNumberEndpointTest {
+    CancelNumberEndpoint endpoint;
+
+    @Before
+    public void setUp() throws Exception {
+        this.endpoint = new CancelNumberEndpoint(new HttpWrapper());
+    }
+
     @Test
     public void makeRequest() throws Exception {
-        CancelNumberEndpoint methodUnderTest = new CancelNumberEndpoint(null);
-
-        RequestBuilder request = methodUnderTest.makeRequest(new CancelNumberRequest("AA", "447700900000"));
+        RequestBuilder request = endpoint.makeRequest(new CancelNumberRequest("AA", "447700900000"));
 
         assertEquals("POST", request.getMethod());
         Map<String, String> params = TestUtils.makeParameterMap(request.getParameters());
@@ -49,30 +53,19 @@ public class CancelNumberEndpointTest {
 
     @Test
     public void parseResponse() throws Exception {
-        CancelNumberEndpoint methodUnderTest = new CancelNumberEndpoint(null);
-        String json = "{\n" +
-                "  \"error-code\":\"200\",\n" +
-                "  \"error-code-label\":\"success\"\n" +
-                "}";
+        String json = "{\n" + "  \"error-code\":\"200\",\n" + "  \"error-code-label\":\"success\"\n" + "}";
 
-        CancelNumberResponse response = methodUnderTest.parseResponse(TestUtils.makeJsonHttpResponse(200, json));
+        CancelNumberResponse response = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, json));
         assertEquals("200", response.getErrorCode());
         assertEquals("success", response.getErrorCodeLabel());
     }
 
     @Test
     public void parseBadRequestResponse() throws Exception {
-        CancelNumberEndpoint methodUnderTest = new CancelNumberEndpoint(null);
-
-        String json = "{\n" +
-                "    \"error_title\": \"Bad Request\",\n" +
-                "    \"invalid_parameters\": {\n" +
-                "        \"country\": \"Is required.\"\n" +
-                "    },\n" +
-                "    \"type\": \"BAD_REQUEST\"\n" +
-                "}";
+        String json = "{\n" + "    \"error_title\": \"Bad Request\",\n" + "    \"invalid_parameters\": {\n"
+                + "        \"country\": \"Is required.\"\n" + "    },\n" + "    \"type\": \"BAD_REQUEST\"\n" + "}";
         try {
-            methodUnderTest.parseResponse(TestUtils.makeJsonHttpResponse(400, json));
+            endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, json));
             fail("A 400 response should raise a NexmoBadRequestException");
         } catch (NexmoBadRequestException e) {
             // This is expected
@@ -81,16 +74,10 @@ public class CancelNumberEndpointTest {
 
     @Test
     public void parseMethodFailedResponse() throws Exception {
-        CancelNumberEndpoint methodUnderTest = new CancelNumberEndpoint(null);
-        String json = "{\n" +
-                "    \"error_title\": \"Bad Request\",\n" +
-                "    \"invalid_parameters\": {\n" +
-                "        \"country\": \"Is required.\"\n" +
-                "    },\n" +
-                "    \"type\": \"BAD_REQUEST\"\n" +
-                "}";
+        String json = "{\n" + "    \"error_title\": \"Bad Request\",\n" + "    \"invalid_parameters\": {\n"
+                + "        \"country\": \"Is required.\"\n" + "    },\n" + "    \"type\": \"BAD_REQUEST\"\n" + "}";
         try {
-            methodUnderTest.parseResponse(TestUtils.makeJsonHttpResponse(500, json));
+            endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, json));
             fail("A 500 response should raise a NexmoMethodFailedException");
         } catch (NexmoMethodFailedException e) {
             // This is expected
@@ -100,5 +87,25 @@ public class CancelNumberEndpointTest {
     @Test
     public void testRequestThrottleResponse() throws Exception {
         test429(new CancelNumberEndpoint(null));
+    }
+
+    @Test
+    public void testDefaultUri() throws Exception {
+        CancelNumberRequest request = new CancelNumberRequest("AA", "447700900000");
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://rest.nexmo.com/number/cancel", builder.build().getURI().toString());
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        CancelNumberEndpoint endpoint = new CancelNumberEndpoint(wrapper);
+        CancelNumberRequest request = new CancelNumberRequest("AA", "447700900000");
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://example.com/number/cancel", builder.build().getURI().toString());
     }
 }

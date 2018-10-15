@@ -21,6 +21,8 @@
  */
 package com.nexmo.client.applications.endpoints;
 
+import com.nexmo.client.HttpConfig;
+import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.TestUtils;
 import com.nexmo.client.applications.ApplicationDetails;
 import com.nexmo.client.applications.ApplicationKeys;
@@ -41,7 +43,7 @@ public class CreateApplicationMethodTest {
 
     @Before
     public void setUp() throws Exception {
-        this.endpoint = new CreateApplicationMethod(null);
+        this.endpoint = new CreateApplicationMethod(new HttpWrapper());
     }
 
     @Test
@@ -136,5 +138,27 @@ public class CreateApplicationMethodTest {
 
         assertEquals("PUBLIC_KEY", keys.getPublicKey());
         assertEquals("PRIVATE_KEY", keys.getPrivateKey());
+    }
+
+    @Test
+    public void testDefaultUri() throws Exception {
+        CreateApplicationRequest request = new CreateApplicationRequest("name", "answer-url", "event-url");
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://api.nexmo.com/v1/applications",
+                builder.build().getURI().toString()
+        );
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        CreateApplicationMethod method = new CreateApplicationMethod(wrapper);
+        CreateApplicationRequest request = new CreateApplicationRequest("name", "answer-url", "event-url");
+
+        RequestBuilder builder = method.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://example.com/applications", builder.build().getURI().toString());
     }
 }

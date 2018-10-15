@@ -21,6 +21,8 @@
  */
 package com.nexmo.client.numbers;
 
+import com.nexmo.client.HttpConfig;
+import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoBadRequestException;
 import com.nexmo.client.TestUtils;
 import org.apache.http.HttpResponse;
@@ -29,6 +31,7 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -42,11 +45,16 @@ import static org.junit.Assert.assertEquals;
 
 
 public class BuyNumberEndpointTest {
+    private BuyNumberEndpoint endpoint;
+
+    @Before
+    public void setUp() throws Exception {
+        this.endpoint = new BuyNumberEndpoint(new HttpWrapper());
+    }
+
     @Test
     public void makeRequest() throws Exception {
-        BuyNumberEndpoint methodUnderTest = new BuyNumberEndpoint(null);
-
-        RequestBuilder request = methodUnderTest.makeRequest(new BuyNumberRequest("AA", "447700900000"));
+        RequestBuilder request = endpoint.makeRequest(new BuyNumberRequest("AA", "447700900000"));
 
         assertEquals("POST", request.getMethod());
         Map<String, String> params = TestUtils.makeParameterMap(request.getParameters());
@@ -56,48 +64,38 @@ public class BuyNumberEndpointTest {
 
     @Test
     public void parseResponse() throws Exception {
-        BuyNumberEndpoint methodUnderTest = new BuyNumberEndpoint(null);
+        HttpResponse stubResponse = new BasicHttpResponse(new BasicStatusLine(new ProtocolVersion("1.1", 1, 1),
+                200,
+                "OK"
+        ));
 
-        HttpResponse stubResponse = new BasicHttpResponse(
-                new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 200, "OK")
-        );
-
-        String json = "{\n" +
-                "  \"error-code\":\"200\",\n" +
-                "  \"error-code-label\":\"success\"\n" +
-                "}";
+        String json = "{\n" + "  \"error-code\":\"200\",\n" + "  \"error-code-label\":\"success\"\n" + "}";
         InputStream jsonStream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
         BasicHttpEntity entity = new BasicHttpEntity();
         entity.setContent(jsonStream);
         stubResponse.setEntity(entity);
 
-        BuyNumberResponse response = methodUnderTest.parseResponse(stubResponse);
+        BuyNumberResponse response = endpoint.parseResponse(stubResponse);
         assertEquals("200", response.getErrorCode());
         assertEquals("success", response.getErrorCodeLabel());
     }
 
     @Test
     public void parseBadRequestResponse() throws Exception {
-        BuyNumberEndpoint methodUnderTest = new BuyNumberEndpoint(null);
+        HttpResponse stubResponse = new BasicHttpResponse(new BasicStatusLine(new ProtocolVersion("1.1", 1, 1),
+                400,
+                "OK"
+        ));
 
-        HttpResponse stubResponse = new BasicHttpResponse(
-                new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 400, "OK")
-        );
-
-        String json = "{\n" +
-                "    \"error_title\": \"Bad Request\",\n" +
-                "    \"invalid_parameters\": {\n" +
-                "        \"country\": \"Is required.\"\n" +
-                "    },\n" +
-                "    \"type\": \"BAD_REQUEST\"\n" +
-                "}";
+        String json = "{\n" + "    \"error_title\": \"Bad Request\",\n" + "    \"invalid_parameters\": {\n"
+                + "        \"country\": \"Is required.\"\n" + "    },\n" + "    \"type\": \"BAD_REQUEST\"\n" + "}";
         InputStream jsonStream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
         BasicHttpEntity entity = new BasicHttpEntity();
         entity.setContent(jsonStream);
         stubResponse.setEntity(entity);
 
         try {
-            methodUnderTest.parseResponse(stubResponse);
+            endpoint.parseResponse(stubResponse);
             fail("A 400 response should raise a NexmoBadRequestException");
         } catch (NexmoBadRequestException e) {
             // This is expected
@@ -107,5 +105,27 @@ public class BuyNumberEndpointTest {
     @Test
     public void testRequestThrottleResponse() throws Exception {
         test429(new BuyNumberEndpoint(null));
+    }
+
+    @Test
+    public void testDefaultUri() throws Exception {
+        BuyNumberRequest request = new BuyNumberRequest("AA", "447700900000");
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://rest.nexmo.com/number/buy",
+                builder.build().getURI().toString()
+        );
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        BuyNumberEndpoint endpoint = new BuyNumberEndpoint(wrapper);
+        BuyNumberRequest request = new BuyNumberRequest("AA", "447700900000");
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://example.com/number/buy", builder.build().getURI().toString());
     }
 }
