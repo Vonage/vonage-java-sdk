@@ -21,6 +21,8 @@
  */
 package com.nexmo.client.insight.standard;
 
+import com.nexmo.client.HttpConfig;
+import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.TestUtils;
 import com.nexmo.client.auth.SignatureAuthMethod;
 import com.nexmo.client.auth.TokenAuthMethod;
@@ -38,7 +40,7 @@ public class StandardInsightEndpointTest {
 
     @Before
     public void setUp() {
-        this.endpoint = new StandardInsightEndpoint(null);
+        this.endpoint = new StandardInsightEndpoint(new HttpWrapper());
     }
 
     @Test
@@ -80,33 +82,46 @@ public class StandardInsightEndpointTest {
 
     @Test
     public void testParseResponse() throws Exception {
-        HttpResponse stub = TestUtils.makeJsonHttpResponse(200, "{\n" +
-                "    \"status\": 0,\n" +
-                "    \"status_message\": \"Success\",\n" +
-                "    \"request_id\": \"34564b7d-df8b-47fd-aa07-b722602dd974\",\n" +
-                "    \"international_format_number\": \"441632960960\",\n" +
-                "    \"national_format_number\": \"01632 960960\",\n" +
-                "    \"country_code\": \"GB\",\n" +
-                "    \"country_code_iso3\": \"GBR\",\n" +
-                "    \"country_name\": \"United Kingdom\",\n" +
-                "    \"country_prefix\": \"44\",\n" +
-                "    \"request_price\": \"0.00500000\",\n" +
-                "    \"remaining_balance\": \"18.34408949\",\n" +
-                "    \"current_carrier\": {\n" +
-                "        \"network_code\": \"GB-FIXED-RESERVED\",\n" +
-                "        \"name\": \"United Kingdom Landline Reserved\",\n" +
-                "        \"country\": \"GB\",\n" +
-                "        \"network_type\": \"landline\"\n" +
-                "    },\n" +
-                "    \"original_carrier\": {\n" +
-                "        \"network_code\": \"GB-HAPPY-RESERVED\",\n" +
-                "        \"name\": \"United Kingdom Mobile Reserved\",\n" +
-                "        \"country\": \"GB\",\n" +
-                "        \"network_type\": \"mobile\"\n" +
-                "    },\n" +
-                "    \"ported\": \"assumed_not_ported\"\n" +
-                "}");
+        HttpResponse stub = TestUtils.makeJsonHttpResponse(
+                200,
+                "{\n" + "    \"status\": 0,\n" + "    \"status_message\": \"Success\",\n"
+                        + "    \"request_id\": \"34564b7d-df8b-47fd-aa07-b722602dd974\",\n"
+                        + "    \"international_format_number\": \"441632960960\",\n"
+                        + "    \"national_format_number\": \"01632 960960\",\n" + "    \"country_code\": \"GB\",\n"
+                        + "    \"country_code_iso3\": \"GBR\",\n" + "    \"country_name\": \"United Kingdom\",\n"
+                        + "    \"country_prefix\": \"44\",\n" + "    \"request_price\": \"0.00500000\",\n"
+                        + "    \"remaining_balance\": \"18.34408949\",\n" + "    \"current_carrier\": {\n"
+                        + "        \"network_code\": \"GB-FIXED-RESERVED\",\n"
+                        + "        \"name\": \"United Kingdom Landline Reserved\",\n" + "        \"country\": \"GB\",\n"
+                        + "        \"network_type\": \"landline\"\n" + "    },\n" + "    \"original_carrier\": {\n"
+                        + "        \"network_code\": \"GB-HAPPY-RESERVED\",\n"
+                        + "        \"name\": \"United Kingdom Mobile Reserved\",\n" + "        \"country\": \"GB\",\n"
+                        + "        \"network_type\": \"mobile\"\n" + "    },\n"
+                        + "    \"ported\": \"assumed_not_ported\"\n" + "}"
+        );
         StandardInsightResponse response = this.endpoint.parseResponse(stub);
         assertEquals("34564b7d-df8b-47fd-aa07-b722602dd974", response.getRequestId());
+    }
+
+    @Test
+    public void testDefaultUri() throws Exception {
+        StandardInsightRequest request = new StandardInsightRequest("1234");
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://api.nexmo.com/ni/standard/json",
+                builder.build().getURI().toString()
+        );
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        StandardInsightEndpoint endpoint = new StandardInsightEndpoint(wrapper);
+        StandardInsightRequest request = new StandardInsightRequest("1234");
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://example.com/ni/standard/json", builder.build().getURI().toString());
     }
 }

@@ -36,9 +36,7 @@ import java.io.UnsupportedEncodingException;
 public class TopUpMethod extends AbstractMethod<TopUpRequest, Void> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://rest.nexmo.com/account/top-up";
-
-    private String uri = DEFAULT_URI;
+    private static final String PATH = "/account/top-up";
 
     public TopUpMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -51,7 +49,9 @@ public class TopUpMethod extends AbstractMethod<TopUpRequest, Void> {
 
     @Override
     public RequestBuilder makeRequest(TopUpRequest request) throws NexmoClientException, UnsupportedEncodingException {
-        return RequestBuilder.get(this.uri).addParameter("trx", request.getTrx());
+        return RequestBuilder
+                .get(httpWrapper.getHttpConfig().getRestBaseUri() + PATH)
+                .addParameter("trx", request.getTrx());
     }
 
     @Override

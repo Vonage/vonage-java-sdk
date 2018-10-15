@@ -21,18 +21,27 @@
  */
 package com.nexmo.client.redact;
 
+import com.nexmo.client.HttpConfig;
+import com.nexmo.client.HttpWrapper;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class RedactMethodTest {
+    private RedactMethod method;
+
+    @Before
+    public void setUp() throws Exception {
+        this.method = new RedactMethod(new HttpWrapper());
+    }
+
     @Test
     public void testConstructParamsWithoutType() throws Exception {
-        RedactMethod method = new RedactMethod(null);
         RedactRequest request = new RedactRequest("test-id", RedactRequest.Product.VOICE);
 
         RequestBuilder builder = method.makeRequest(request);
@@ -44,7 +53,6 @@ public class RedactMethodTest {
 
     @Test
     public void testConstructParamsWithType() throws Exception {
-        RedactMethod method = new RedactMethod(null);
         RedactRequest request = new RedactRequest("test-id", RedactRequest.Product.SMS);
         request.setType(RedactRequest.Type.INBOUND);
 
@@ -57,7 +65,6 @@ public class RedactMethodTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testConstructParamsWithMissingId() throws Exception {
-        RedactMethod method = new RedactMethod(null);
         RedactRequest request = new RedactRequest(null, RedactRequest.Product.SMS);
 
         method.makeRequest(request);
@@ -66,7 +73,6 @@ public class RedactMethodTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testConstructParamsWithMissingProduct() throws Exception {
-        RedactMethod method = new RedactMethod(null);
         RedactRequest request = new RedactRequest("test-id", null);
 
         method.makeRequest(request);
@@ -74,9 +80,28 @@ public class RedactMethodTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testConstructParamsWithMissingTypeAndSmsProduct() throws Exception {
-        RedactMethod method = new RedactMethod(null);
         RedactRequest request = new RedactRequest("test-id", RedactRequest.Product.SMS);
 
         method.makeRequest(request);
+    }
+
+    @Test
+    public void testDefaultUri() throws Exception {
+        RedactRequest request = new RedactRequest("test-id", RedactRequest.Product.VOICE);
+
+        RequestBuilder builder = method.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://api.nexmo.com/v1/redact/transaction", builder.build().getURI().toString());
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        RedactMethod method = new RedactMethod(wrapper);
+        RedactRequest request = new RedactRequest("test-id", RedactRequest.Product.VOICE);
+
+        RequestBuilder builder = method.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://example.com/redact/transaction", builder.build().getURI().toString());
     }
 }

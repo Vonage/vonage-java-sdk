@@ -27,12 +27,12 @@ import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.client.auth.SignatureAuthMethod;
 import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.legacyutils.XmlParser;
+import com.nexmo.client.legacyutils.XmlUtil;
 import com.nexmo.client.sns.request.SnsRequest;
 import com.nexmo.client.sns.response.SnsPublishResponse;
 import com.nexmo.client.sns.response.SnsResponse;
 import com.nexmo.client.sns.response.SnsSubscribeResponse;
 import com.nexmo.client.voice.endpoints.AbstractMethod;
-import com.nexmo.client.legacyutils.XmlUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -51,9 +51,7 @@ public class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
-    private static final String DEFAULT_BASE_URL = "https://sns.nexmo.com/sns/xml";
-
-    private String uri = DEFAULT_BASE_URL;
+    private static final String PATH = "/sns/xml";
 
     private XmlParser xmlParser = new XmlParser();
 
@@ -69,7 +67,7 @@ public class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
     @Override
     public RequestBuilder makeRequest(SnsRequest snsRequest) throws NexmoClientException, UnsupportedEncodingException {
         RequestBuilder requestBuilder = RequestBuilder
-                .post(this.uri)
+                .post(httpWrapper.getHttpConfig().getSnsBaseUri() + PATH)
                 .addParameter("cmd", snsRequest.getCommand());
         for (Map.Entry<String, String> entry : snsRequest.getQueryParameters().entrySet()) {
             requestBuilder.addParameter(entry.getKey(), entry.getValue());
@@ -120,8 +118,8 @@ public class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
                     try {
                         resultCode = XmlUtil.intValue(node);
                     } catch (Exception e) {
-                        log.error("xml parser .. invalid value in <resultCode> node [ " + XmlUtil.stringValue(node) +
-                                " ] ");
+                        log.error("xml parser .. invalid value in <resultCode> node [ " + XmlUtil.stringValue(node)
+                                + " ] ");
                         resultCode = SnsResponse.STATUS_INTERNAL_ERROR;
                     }
                 } else if (node.getNodeName().equals("resultMessage")) {
@@ -130,8 +128,7 @@ public class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
                     transactionId = XmlUtil.stringValue(node);
                 } else if (node.getNodeName().equals("subscriberArn")) {
                     subscriberArn = XmlUtil.stringValue(node);
-                } else
-                    log.error("xml parser .. unknown node found in nexmo-sns [ " + node.getNodeName() + " ] ");
+                } else log.error("xml parser .. unknown node found in nexmo-sns [ " + node.getNodeName() + " ] ");
             }
         }
 

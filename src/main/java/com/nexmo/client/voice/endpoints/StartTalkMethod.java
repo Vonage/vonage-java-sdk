@@ -32,7 +32,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -40,9 +39,9 @@ import java.io.UnsupportedEncodingException;
 public class StartTalkMethod extends AbstractMethod<TalkRequest, TalkResponse> {
     private static final Log LOG = LogFactory.getLog(StartTalkMethod.class);
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls/";
+    private static final String PATH = "/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
-    private String uri = DEFAULT_URI;
+    private String uri;
 
     public StartTalkMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -55,8 +54,12 @@ public class StartTalkMethod extends AbstractMethod<TalkRequest, TalkResponse> {
 
     @Override
     public RequestBuilder makeRequest(TalkRequest request) throws NexmoClientException, UnsupportedEncodingException {
-        String uri = this.uri + request.getUuid() + "/talk";
-        return RequestBuilder.put(uri)
+        // TODO: Remove in 4.0.0 along with setUri method
+        String baseUri = (this.uri != null)
+                ? this.uri
+                : httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH;
+        return RequestBuilder
+                .put(baseUri + request.getUuid() + "/talk")
                 .setHeader("Content-Type", "application/json")
                 .setEntity(new StringEntity(request.toJson()));
     }
@@ -67,6 +70,10 @@ public class StartTalkMethod extends AbstractMethod<TalkRequest, TalkResponse> {
         return TalkResponse.fromJson(json);
     }
 
+    /**
+     * @deprecated Use {@link com.nexmo.client.HttpConfig.Builder} to create an {@link com.nexmo.client.HttpConfig} object and pass into {@link com.nexmo.client.NexmoClient}
+     */
+    @Deprecated
     public void setUri(String uri) {
         this.uri = uri;
     }

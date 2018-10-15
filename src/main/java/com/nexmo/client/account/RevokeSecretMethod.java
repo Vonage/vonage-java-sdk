@@ -37,9 +37,7 @@ import java.io.UnsupportedEncodingException;
 public class RevokeSecretMethod extends AbstractMethod<SecretRequest, Void> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/accounts/%s/secrets/%s";
-
-    private String uri = DEFAULT_URI;
+    private static final String PATH = "/accounts/%s/secrets/%s";
 
     RevokeSecretMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -60,7 +58,11 @@ public class RevokeSecretMethod extends AbstractMethod<SecretRequest, Void> {
             throw new IllegalArgumentException("Secret id is required.");
         }
 
-        String uri = String.format(this.uri, secretRequest.getApiKey(), secretRequest.getSecretId());
+        String uri = String.format(
+                httpWrapper.getHttpConfig().getApiBaseUri() + PATH,
+                secretRequest.getApiKey(),
+                secretRequest.getSecretId()
+        );
         return RequestBuilder.delete(uri);
     }
 

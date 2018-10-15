@@ -38,9 +38,7 @@ public class ListApplicationsEndpoint extends AbstractMethod<ListApplicationsReq
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/v1/applications";
-
-    private String uri = DEFAULT_URI;
+    private static final String PATH = "/applications";
 
     public ListApplicationsEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -52,9 +50,9 @@ public class ListApplicationsEndpoint extends AbstractMethod<ListApplicationsReq
     }
 
     @Override
-    public RequestBuilder makeRequest(ListApplicationsRequest request) throws NexmoClientException,
-                                                                              UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder.get(uri);
+    public RequestBuilder makeRequest(ListApplicationsRequest request) throws NexmoClientException, UnsupportedEncodingException {
+        RequestBuilder requestBuilder = RequestBuilder.get(
+                httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH);
         request.addParams(requestBuilder);
         return requestBuilder;
     }

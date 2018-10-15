@@ -21,6 +21,8 @@
  */
 package com.nexmo.client.applications.endpoints;
 
+import com.nexmo.client.HttpConfig;
+import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.TestUtils;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
@@ -38,7 +40,7 @@ public class DeleteApplicationMethodTest {
 
     @Before
     public void setUp() throws Exception {
-        this.endpoint = new DeleteApplicationMethod(null);
+        this.endpoint = new DeleteApplicationMethod(new HttpWrapper());
     }
 
     @Test
@@ -61,5 +63,24 @@ public class DeleteApplicationMethodTest {
     public void testParseResponse() throws Exception {
         HttpResponse stub = TestUtils.makeJsonHttpResponse(204, "");
         this.endpoint.parseResponse(stub);
+    }
+
+    @Test
+    public void testDefaultUri() throws Exception {
+        RequestBuilder builder = endpoint.makeRequest("application-id");
+        assertEquals("DELETE", builder.getMethod());
+        assertEquals("https://api.nexmo.com/v1/applications/application-id",
+                builder.build().getURI().toString()
+        );
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        DeleteApplicationMethod method = new DeleteApplicationMethod(wrapper);
+
+        RequestBuilder builder = method.makeRequest("application-id");
+        assertEquals("DELETE", builder.getMethod());
+        assertEquals("https://example.com/applications/application-id", builder.build().getURI().toString());
     }
 }

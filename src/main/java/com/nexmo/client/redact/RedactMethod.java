@@ -39,9 +39,7 @@ import java.io.UnsupportedEncodingException;
 public class RedactMethod extends AbstractMethod<RedactRequest, RedactResponse> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/v1/redact/transaction";
-
-    private String uri = DEFAULT_URI;
+    private static final String PATH = "/redact/transaction";
 
     RedactMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -62,7 +60,8 @@ public class RedactMethod extends AbstractMethod<RedactRequest, RedactResponse> 
             throw new IllegalArgumentException("Redacting SMS requires a type.");
         }
 
-        return RequestBuilder.post(this.uri)
+        return RequestBuilder
+                .post(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH)
                 .setEntity(new StringEntity(redactRequest.toJson(), ContentType.APPLICATION_JSON));
     }
 
