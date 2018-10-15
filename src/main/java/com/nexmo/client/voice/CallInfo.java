@@ -19,6 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package com.nexmo.client.voice;
 
 
@@ -35,6 +36,7 @@ import java.util.Date;
 /**
  * CallInfo holds the information related to a call. It is obtained using {@link VoiceClient#listCalls}
  */
+
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(value = { "_links" }, ignoreUnknown = true)
 public class CallInfo {
@@ -178,8 +180,11 @@ public class CallInfo {
             ObjectMapper mapper = new ObjectMapper();
             mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
             return mapper.readValue(json, CallInfo.class);
-        } catch (IOException jpe) {
+        } 
+        
+        catch (IOException jpe) {
             throw new NexmoUnexpectedException("Failed to produce json from CallInfo object.", jpe);
         }
+        
     }
 }
