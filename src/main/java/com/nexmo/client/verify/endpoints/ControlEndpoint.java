@@ -40,9 +40,7 @@ public class ControlEndpoint extends AbstractMethod<ControlRequest, ControlRespo
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/verify/control/json";
-
-    private String uri = DEFAULT_URI;
+    private static final String PATH = "/verify/control/json";
 
     public ControlEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -54,21 +52,17 @@ public class ControlEndpoint extends AbstractMethod<ControlRequest, ControlRespo
     }
 
     @Override
-    public RequestBuilder makeRequest(ControlRequest request) throws NexmoClientException,
-                                                                     UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder.post(uri);
+    public RequestBuilder makeRequest(ControlRequest request) throws NexmoClientException, UnsupportedEncodingException {
+        RequestBuilder requestBuilder = RequestBuilder.post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH);
         request.addParams(requestBuilder);
         return requestBuilder;
     }
 
     @Override
     public ControlResponse parseResponse(HttpResponse response) throws IOException, NexmoClientException {
-        ControlResponse controlResponse = ControlResponse.fromJson(
-                new BasicResponseHandler().handleResponse(response));
+        ControlResponse controlResponse = ControlResponse.fromJson(new BasicResponseHandler().handleResponse(response));
         if (!controlResponse.getStatus().equals("0")) {
-            throw new VerifyException(
-                    controlResponse.getStatus(),
-                    controlResponse.getErrorText());
+            throw new VerifyException(controlResponse.getStatus(), controlResponse.getErrorText());
         }
 
         return controlResponse;

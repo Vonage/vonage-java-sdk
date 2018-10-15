@@ -24,9 +24,7 @@ package com.nexmo.client.account;
 import com.nexmo.client.HttpWrapper;
 
 public class SmsPricingMethod extends PricingMethod {
-    private static final String DEFAULT_URI = "https://rest.nexmo.com/account/get-pricing/outbound/sms";
-
-    private String uri = DEFAULT_URI;
+    private static final String PATH = "/account/get-pricing/outbound/sms";
 
     SmsPricingMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -34,6 +32,6 @@ public class SmsPricingMethod extends PricingMethod {
 
     @Override
     String getUri() {
-        return this.uri;
+        return httpWrapper.getHttpConfig().getRestBaseUri() + PATH;
     }
 }

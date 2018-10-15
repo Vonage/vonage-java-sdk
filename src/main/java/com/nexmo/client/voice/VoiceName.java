@@ -23,7 +23,6 @@ package com.nexmo.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,56 +32,92 @@ import java.util.Map;
  */
 
 public enum VoiceName {
-    SALLI,
-    JOEY,
-    NAJA,
-    MADS,
-    MARLENE,
-    HANS,
-    NICOLE,
-    RUSSELL,
-    AMY,
-    BRIAN,
-    EMMA,
-    GWYNETH,
-    GERAINT,
-    RAVEENA,
-    CHIPMUNK,
-    ERIC,
-    IVY,
-    JENNIFER,
-    JUSTIN,
-    KENDRA,
-    KIMBERLY,
-    CONCHITA,
-    ENRIQUE,
-    PENELOPE,
-    MIGUEL,
-    CHANTAL,
-    CELINE,
-    MATHIEU,
-    DORA,
-    KARL,
-    CARLA,
-    GIORGIO,
-    LIV,
-    LOTTE,
-    RUBEN,
-    AGNIESZKA,
-    JACEK,
-    EWA,
-    JAN,
-    MAJA,
-    VITORIA,
-    RICARDO,
-    CRISTIANO,
-    INES,
-    CARMEN,
-    MAXIM,
-    TATYANA,
-    ASTRID,
-    FILIZ,
-    UNKNOWN;
+    SALLI("Salli"),
+    JOEY("Joey"),
+    NAJA("Naja"),
+    MADS("Mads"),
+    MARLENE("Marlene"),
+    HANS("Hans"),
+    NICOLE("Nicole"),
+    RUSSELL("Russell"),
+    AMY("Amy"),
+    BRIAN("Brian"),
+    EMMA("Emma"),
+    GWYNETH("Gwyneth"),
+    GERAINT("Geraint"),
+    RAVEENA("Raveena"),
+    CHIPMUNK("Chipmunk"),
+    ERIC("Eric"),
+    IVY("Ivy"),
+    JENNIFER("Jennifer"),
+    JUSTIN("Justin"),
+    KENDRA("Kendra"),
+    KIMBERLY("Kimberly"),
+    CONCHITA("Conchita"),
+    ENRIQUE("Enrique"),
+    PENELOPE("Penelope"),
+    MIGUEL("Miguel"),
+    CHANTAL("Chantal"),
+    CELINE("Celine"),
+    MATHIEU("Mathieu"),
+    DORA("Dora"),
+    KARL("Karl"),
+    CARLA("Carla"),
+    GIORGIO("Giorgio"),
+    LIV("Liv"),
+    LOTTE("Lotte"),
+    RUBEN("Ruben"),
+    AGNIESZKA("Agnieszka"),
+    JACEK("Jacek"),
+    EWA("Ewa"),
+    JAN("Jan"),
+    MAJA("Maja"),
+    VITORIA("Vitoria"),
+    RICARDO("Ricardo"),
+    CRISTIANO("Cristiano"),
+    INES("Ines"),
+    CARMEN("Carmen"),
+    MAXIM("Maxim"),
+    TATYANA("Tatyana"),
+    ASTRID("Astrid"),
+    FILIZ("Filiz"),
+    MIZUKI("Mizuki"),
+    SEOYEON("Seoyeon"),
+    LAILA("Laila"),
+    MAGED("Maged"),
+    TARIK("Tarik"),
+    DAMAYANTI("Damayanti"),
+    MIREN("Miren"),
+    SIN_JI("Sin-Ji"),
+    JORDI("Jordi"),
+    MONTSERRAT("Montserrat"),
+    IVETA("Iveta"),
+    ZUZANA("Zuzana"),
+    TESSA("Tessa"),
+    SATU("Satu"),
+    MELINA("Melina"),
+    NIKOS("Nikos"),
+    CARMIT("Carmit"),
+    LEKHA("Lekha"),
+    MARISKA("Mariska"),
+    SORA("Sora"),
+    TIAN_TIAN("Tian-Tian"),
+    MEI_JIA("Mei-Jia"),
+    NORA("Nora"),
+    HENRIK("Henrik"),
+    LUCIANA("Luciana"),
+    FELIPE("Felipe"),
+    CATARINA("Catarina"),
+    JOANA("Joana"),
+    IOANA("Ioana"),
+    LAURA("Laura"),
+    ALVA("Alva"),
+    OSKAR("Oskar"),
+    KANYA("Kanya"),
+    CEM("Cem"),
+    YELDA("Yelda"),
+    EMPAR("Empar"),
+    UNKNOWN("Unknown");
 
     private static final Map<String, VoiceName> voiceNameIndex = new HashMap<>();
 
@@ -92,11 +127,15 @@ public enum VoiceName {
         }
     }
 
-    @JsonValue
+    private String displayName;
+
+    VoiceName(String displayName) {
+        this.displayName = displayName;
+    }
+
     @Override
     public String toString() {
-        //API requires voice_name to be sent with first character upper cased
-        return StringUtils.capitalize(name().toLowerCase());
+        return displayName;
     }
 
     @JsonCreator
@@ -105,4 +144,8 @@ public enum VoiceName {
         return (foundVoiceName != null) ? foundVoiceName : UNKNOWN;
     }
 
+    @JsonValue
+    public String getDisplayName() {
+        return displayName;
+    }
 }

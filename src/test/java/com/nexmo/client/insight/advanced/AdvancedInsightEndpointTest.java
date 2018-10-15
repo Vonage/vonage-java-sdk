@@ -21,6 +21,8 @@
  */
 package com.nexmo.client.insight.advanced;
 
+import com.nexmo.client.HttpConfig;
+import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.TestUtils;
 import com.nexmo.client.auth.SignatureAuthMethod;
 import com.nexmo.client.auth.TokenAuthMethod;
@@ -38,7 +40,7 @@ public class AdvancedInsightEndpointTest {
 
     @Before
     public void setUp() {
-        this.endpoint = new AdvancedInsightEndpoint(null);
+        this.endpoint = new AdvancedInsightEndpoint(new HttpWrapper());
     }
 
     @Test
@@ -73,8 +75,11 @@ public class AdvancedInsightEndpointTest {
 
     @Test
     public void testMakeRequestWithCnam() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(new AdvancedInsightRequest("1234", "GB",
-                "123.123.123.123", true));
+        RequestBuilder builder = this.endpoint.makeRequest(new AdvancedInsightRequest("1234",
+                "GB",
+                "123.123.123.123",
+                true
+        ));
         assertEquals("POST", builder.getMethod());
         assertEquals("https://api.nexmo.com/ni/advanced/json", builder.build().getURI().toString());
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
@@ -86,39 +91,46 @@ public class AdvancedInsightEndpointTest {
 
     @Test
     public void testParseResponse() throws Exception {
-        HttpResponse stub = TestUtils.makeJsonHttpResponse(200, "{\n" +
-                "    \"status\": 0,\n" +
-                "    \"status_message\": \"Success\",\n" +
-                "    \"lookup_outcome\": 1,\n" +
-                "    \"lookup_outcome_message\": \"Partial success - some fields populated\",\n" +
-                "    \"request_id\": \"0c082a69-85df-4bbc-aae6-ee998e17e5a4\",\n" +
-                "    \"international_format_number\": \"441632960960\",\n" +
-                "    \"national_format_number\": \"01632 960960\",\n" +
-                "    \"country_code\": \"GB\",\n" +
-                "    \"country_code_iso3\": \"GBR\",\n" +
-                "    \"country_name\": \"United Kingdom\",\n" +
-                "    \"country_prefix\": \"44\",\n" +
-                "    \"request_price\": \"0.03000000\",\n" +
-                "    \"remaining_balance\": \"18.30908949\",\n" +
-                "    \"current_carrier\": {\n" +
-                "        \"network_code\": \"GB-FIXED-RESERVED\",\n" +
-                "        \"name\": \"United Kingdom Landline Reserved\",\n" +
-                "        \"country\": \"GB\",\n" +
-                "        \"network_type\": \"landline\"\n" +
-                "    },\n" +
-                "    \"original_carrier\": {\n" +
-                "        \"network_code\": \"GB-HAPPY-RESERVED\",\n" +
-                "        \"name\": \"United Kingdom Mobile Reserved\",\n" +
-                "        \"country\": \"GB\",\n" +
-                "        \"network_type\": \"mobile\"\n" +
-                "    },\n" +
-                "    \"valid_number\": \"valid\",\n" +
-                "    \"reachable\": \"unknown\",\n" +
-                "    \"ported\": \"assumed_not_ported\",\n" +
-                "    \"roaming\": {\"status\": \"not_roaming\"}\n" +
-                "}");
+        HttpResponse stub = TestUtils.makeJsonHttpResponse(200,
+                "{\n" + "    \"status\": 0,\n" + "    \"status_message\": \"Success\",\n"
+                        + "    \"lookup_outcome\": 1,\n"
+                        + "    \"lookup_outcome_message\": \"Partial success - some fields populated\",\n"
+                        + "    \"request_id\": \"0c082a69-85df-4bbc-aae6-ee998e17e5a4\",\n"
+                        + "    \"international_format_number\": \"441632960960\",\n"
+                        + "    \"national_format_number\": \"01632 960960\",\n" + "    \"country_code\": \"GB\",\n"
+                        + "    \"country_code_iso3\": \"GBR\",\n" + "    \"country_name\": \"United Kingdom\",\n"
+                        + "    \"country_prefix\": \"44\",\n" + "    \"request_price\": \"0.03000000\",\n"
+                        + "    \"remaining_balance\": \"18.30908949\",\n" + "    \"current_carrier\": {\n"
+                        + "        \"network_code\": \"GB-FIXED-RESERVED\",\n"
+                        + "        \"name\": \"United Kingdom Landline Reserved\",\n" + "        \"country\": \"GB\",\n"
+                        + "        \"network_type\": \"landline\"\n" + "    },\n" + "    \"original_carrier\": {\n"
+                        + "        \"network_code\": \"GB-HAPPY-RESERVED\",\n"
+                        + "        \"name\": \"United Kingdom Mobile Reserved\",\n" + "        \"country\": \"GB\",\n"
+                        + "        \"network_type\": \"mobile\"\n" + "    },\n" + "    \"valid_number\": \"valid\",\n"
+                        + "    \"reachable\": \"unknown\",\n" + "    \"ported\": \"assumed_not_ported\",\n"
+                        + "    \"roaming\": {\"status\": \"not_roaming\"}\n" + "}"
+        );
         AdvancedInsightResponse response = this.endpoint.parseResponse(stub);
         assertEquals("0c082a69-85df-4bbc-aae6-ee998e17e5a4", response.getRequestId());
+    }
 
+    @Test
+    public void testDefaultUri() throws Exception {
+        AdvancedInsightRequest request = new AdvancedInsightRequest("1234");
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://api.nexmo.com/ni/advanced/json", builder.build().getURI().toString());
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        AdvancedInsightEndpoint endpoint = new AdvancedInsightEndpoint(wrapper);
+        AdvancedInsightRequest request = new AdvancedInsightRequest("1234");
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://example.com/ni/advanced/json", builder.build().getURI().toString());
     }
 }

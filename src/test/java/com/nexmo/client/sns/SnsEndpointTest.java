@@ -21,63 +21,63 @@
  */
 package com.nexmo.client.sns;
 
+import com.nexmo.client.HttpConfig;
+import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoResponseParseException;
+import com.nexmo.client.sns.request.SnsPublishRequest;
+import com.nexmo.client.sns.request.SnsRequest;
 import com.nexmo.client.sns.response.SnsPublishResponse;
 import com.nexmo.client.sns.response.SnsResponse;
 import com.nexmo.client.sns.response.SnsSubscribeResponse;
+import org.apache.http.client.methods.RequestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class SnsEndpointTest {
     private SnsEndpoint endpoint;
 
     @Before
     public void setUp() {
-        this.endpoint = new SnsEndpoint(null);
+        this.endpoint = new SnsEndpoint(new HttpWrapper());
     }
 
     @Test
     public void testParseSubscribeResponse() throws Exception {
-        SnsResponse result = this.endpoint.parseSubmitResponse("<nexmo-sns>\n" +
-                "   <command>subscribe</command>\n" +
-                "   <resultCode>0</resultCode>\n" +
-                "   <resultMessage>a result message</resultMessage>\n" +
-                "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n" +
-                "</nexmo-sns>");
+        SnsResponse result = this.endpoint.parseSubmitResponse(
+                "<nexmo-sns>\n" + "   <command>subscribe</command>\n" + "   <resultCode>0</resultCode>\n"
+                        + "   <resultMessage>a result message</resultMessage>\n"
+                        + "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n" + "</nexmo-sns>");
         assertEquals(0, result.getResultCode());
         assertEquals("subscribe", result.getCommand());
         assertEquals("a result message", result.getResultMessage());
         assertEquals(SnsSubscribeResponse.class, result.getClass());
-        SnsSubscribeResponse subscribeResponse = (SnsSubscribeResponse)result;
+        SnsSubscribeResponse subscribeResponse = (SnsSubscribeResponse) result;
         assertEquals("arn:aws:sns:region:num:id", subscribeResponse.getSubscriberArn());
     }
 
     @Test
     public void testParsePublishResponse() throws Exception {
-        SnsResponse result = this.endpoint.parseSubmitResponse("<nexmo-sns>\n" +
-                "   <command>publish</command>\n" +
-                "   <resultCode>0</resultCode>\n" +
-                "   <resultMessage>a result message</resultMessage>\n" +
-                "   <transactionId>1234</transactionId>\n" +
-                "</nexmo-sns>");
+        SnsResponse result = this.endpoint.parseSubmitResponse(
+                "<nexmo-sns>\n" + "   <command>publish</command>\n" + "   <resultCode>0</resultCode>\n"
+                        + "   <resultMessage>a result message</resultMessage>\n"
+                        + "   <transactionId>1234</transactionId>\n" + "</nexmo-sns>");
         assertEquals(0, result.getResultCode());
         assertEquals("publish", result.getCommand());
         assertEquals("a result message", result.getResultMessage());
         assertEquals(SnsPublishResponse.class, result.getClass());
-        SnsPublishResponse publishResponse = (SnsPublishResponse)result;
+        SnsPublishResponse publishResponse = (SnsPublishResponse) result;
         assertEquals("1234", publishResponse.getTransactionId());
     }
 
     @Test
     public void testParseResponseInvalidResultCode() throws Exception {
-        SnsResponse result = this.endpoint.parseSubmitResponse("<nexmo-sns>\n" +
-                "   <command>subscribe</command>\n" +
-                "   <resultCode>non-numeric</resultCode>\n" +
-                "   <resultMessage>a result message</resultMessage>\n" +
-                "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n" +
-                "</nexmo-sns>");
+        SnsResponse result = this.endpoint.parseSubmitResponse(
+                "<nexmo-sns>\n" + "   <command>subscribe</command>\n" + "   <resultCode>non-numeric</resultCode>\n"
+                        + "   <resultMessage>a result message</resultMessage>\n"
+                        + "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n" + "</nexmo-sns>");
         assertEquals(SnsResponse.STATUS_INTERNAL_ERROR, result.getResultCode());
         assertEquals("subscribe", result.getCommand());
         assertEquals("a result message", result.getResultMessage());
@@ -85,13 +85,11 @@ public class SnsEndpointTest {
 
     @Test
     public void testParseResponseNullResultCode() throws Exception {
-        SnsResponse result = this.endpoint.parseSubmitResponse("<nexmo-sns>\n" +
-                "   <command>subscribe</command>\n" +
-                "   <resultCode/>\n" +
-                "   <resultMessage>a result message</resultMessage>\n" +
-                "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n" +
-                "   <transactionId>1234</transactionId>\n" +
-                "</nexmo-sns>");
+        SnsResponse result = this.endpoint.parseSubmitResponse(
+                "<nexmo-sns>\n" + "   <command>subscribe</command>\n" + "   <resultCode/>\n"
+                        + "   <resultMessage>a result message</resultMessage>\n"
+                        + "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n"
+                        + "   <transactionId>1234</transactionId>\n" + "</nexmo-sns>");
         assertEquals(SnsResponse.STATUS_INTERNAL_ERROR, result.getResultCode());
         assertEquals("subscribe", result.getCommand());
         assertEquals("a result message", result.getResultMessage());
@@ -100,12 +98,10 @@ public class SnsEndpointTest {
     @Test
     public void testParseResponseMissingResultCode() throws Exception {
         try {
-            this.endpoint.parseSubmitResponse("<nexmo-sns>\n" +
-                    "   <command>subscribe</command>\n" +
-                    "   <resultMessage>a result message</resultMessage>\n" +
-                    "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n" +
-                    "   <transactionId>1234</transactionId>\n" +
-                    "</nexmo-sns>");
+            this.endpoint.parseSubmitResponse("<nexmo-sns>\n" + "   <command>subscribe</command>\n"
+                    + "   <resultMessage>a result message</resultMessage>\n"
+                    + "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n"
+                    + "   <transactionId>1234</transactionId>\n" + "</nexmo-sns>");
             fail("A missing <resultCode> tag should raise NexmoResponseParseException");
         } catch (NexmoResponseParseException e) {
             // this is expected
@@ -114,14 +110,11 @@ public class SnsEndpointTest {
 
     @Test
     public void testParseResponseInvalidTagIsIgnored() throws Exception {
-        SnsResponse result = this.endpoint.parseSubmitResponse("<nexmo-sns>\n" +
-                "   <command>subscribe</command>\n" +
-                "   <resultCode>0</resultCode>\n" +
-                "   <resultMessage>a result message</resultMessage>\n" +
-                "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n" +
-                "   <transactionId>1234</transactionId>\n" +
-                "   <whatOnEarthIsThis/>\n" +
-                "</nexmo-sns>");
+        SnsResponse result = this.endpoint.parseSubmitResponse(
+                "<nexmo-sns>\n" + "   <command>subscribe</command>\n" + "   <resultCode>0</resultCode>\n"
+                        + "   <resultMessage>a result message</resultMessage>\n"
+                        + "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n"
+                        + "   <transactionId>1234</transactionId>\n" + "   <whatOnEarthIsThis/>\n" + "</nexmo-sns>");
         assertEquals(0, result.getResultCode());
         assertEquals("subscribe", result.getCommand());
         assertEquals("a result message", result.getResultMessage());
@@ -140,17 +133,37 @@ public class SnsEndpointTest {
     @Test
     public void testParseDummyCommand() throws Exception {
         try {
-            this.endpoint.parseSubmitResponse("<nexmo-sns>\n" +
-                    "   <command>dummy command</command>\n" +
-                    "   <resultCode>0</resultCode>\n" +
-                    "   <resultMessage>a result message</resultMessage>\n" +
-                    "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n" +
-                    "   <transactionId>1234</transactionId>\n" +
-                    "   <whatOnEarthIsThis/>\n" +
-                    "</nexmo-sns>");
+            this.endpoint.parseSubmitResponse(
+                    "<nexmo-sns>\n" + "   <command>dummy command</command>\n" + "   <resultCode>0</resultCode>\n"
+                            + "   <resultMessage>a result message</resultMessage>\n"
+                            + "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n"
+                            + "   <transactionId>1234</transactionId>\n" + "   <whatOnEarthIsThis/>\n"
+                            + "</nexmo-sns>");
             fail("An invalid command should throw NexmoResponseParseException");
         } catch (NexmoResponseParseException e) {
             // this is expected
         }
+    }
+
+    @Test
+    public void testDefaultUri() throws Exception {
+        SnsRequest request = new SnsPublishRequest("to", "arn", "from", "message");
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://sns.nexmo.com/sns/xml",
+                builder.build().getURI().toString()
+        );
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        SnsEndpoint endpoint = new SnsEndpoint(wrapper);
+        SnsRequest request = new SnsPublishRequest("to", "arn", "from", "message");
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://example.com/sns/xml", builder.build().getURI().toString());
     }
 }

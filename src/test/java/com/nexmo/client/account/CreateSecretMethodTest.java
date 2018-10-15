@@ -21,18 +21,27 @@
  */
 package com.nexmo.client.account;
 
+import com.nexmo.client.HttpConfig;
+import com.nexmo.client.HttpWrapper;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class CreateSecretMethodTest {
+    private CreateSecretMethod method;
+
+    @Before
+    public void setUp() {
+        this.method = new CreateSecretMethod(new HttpWrapper());
+    }
+
     @Test
     public void testConstructParams() throws Exception {
-        CreateSecretMethod method = new CreateSecretMethod(null);
         CreateSecretRequest request = new CreateSecretRequest("account-id", "secret");
 
         RequestBuilder builder = method.makeRequest(request);
@@ -44,7 +53,6 @@ public class CreateSecretMethodTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testConstructParamsWithMissingApiKey() throws Exception {
-        CreateSecretMethod method = new CreateSecretMethod(null);
         CreateSecretRequest request = new CreateSecretRequest(null, "secret");
 
         method.makeRequest(request);
@@ -52,9 +60,28 @@ public class CreateSecretMethodTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testConstructParamsWithMissingSecret() throws Exception {
-        CreateSecretMethod method = new CreateSecretMethod(null);
         CreateSecretRequest request = new CreateSecretRequest("account-id", null);
 
         method.makeRequest(request);
+    }
+
+    @Test
+    public void testDefaultUri() throws Exception {
+        CreateSecretRequest request = new CreateSecretRequest("account-id", "secret");
+
+        RequestBuilder builder = method.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://api.nexmo.com/accounts/account-id/secrets", builder.build().getURI().toString());
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        CreateSecretMethod method = new CreateSecretMethod(wrapper);
+        CreateSecretRequest request = new CreateSecretRequest("account-id", "secret");
+
+        RequestBuilder builder = method.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://example.com/accounts/account-id/secrets", builder.build().getURI().toString());
     }
 }

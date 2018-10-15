@@ -21,6 +21,8 @@
  */
 package com.nexmo.client.numbers;
 
+import com.nexmo.client.HttpConfig;
+import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.TestUtils;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
@@ -37,7 +39,7 @@ public class UpdateNumberEndpointTest {
 
     @Before
     public void setUp() throws Exception {
-        this.endpoint = new UpdateNumberEndpoint(null);
+        this.endpoint = new UpdateNumberEndpoint(new HttpWrapper());
     }
 
     @Test
@@ -48,9 +50,7 @@ public class UpdateNumberEndpointTest {
 
     @Test
     public void testMakeRequest() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(new UpdateNumberRequest(
-                "447700900013", "UK"
-        ));
+        RequestBuilder builder = this.endpoint.makeRequest(new UpdateNumberRequest("447700900013", "UK"));
         assertEquals("POST", builder.getMethod());
         assertEquals("https://rest.nexmo.com/number/update", builder.build().getURI().toString());
 
@@ -62,9 +62,7 @@ public class UpdateNumberEndpointTest {
 
     @Test
     public void testMakeRequestWithOptionalParams() throws Exception {
-        UpdateNumberRequest request = new UpdateNumberRequest(
-                "447700900013", "UK"
-        );
+        UpdateNumberRequest request = new UpdateNumberRequest("447700900013", "UK");
         request.setMoHttpUrl("https://api.example.com/mo");
         request.setMoSmppSysType("inbound");
         request.setVoiceCallbackValue("1234-5678-9123-4567");
@@ -90,10 +88,9 @@ public class UpdateNumberEndpointTest {
     @Test
     public void testParseResponse() throws Exception {
         try {
-            HttpResponse stub = TestUtils.makeJsonHttpResponse(200, "{\n" +
-                    "  \"error-code\":\"200\",\n" +
-                    "  \"error-code-label\":\"success\"\n" +
-                    "}");
+            HttpResponse stub = TestUtils.makeJsonHttpResponse(200,
+                    "{\n" + "  \"error-code\":\"200\",\n" + "  \"error-code-label\":\"success\"\n" + "}"
+            );
             this.endpoint.parseResponse(stub);
         } catch (Exception e) {
             fail("Parsing a 200 response should not raise an error.");
@@ -103,15 +100,34 @@ public class UpdateNumberEndpointTest {
     @Test
     public void testParseErrorResponse() throws Exception {
         try {
-            HttpResponse stub = TestUtils.makeJsonHttpResponse(200, "{\n" +
-                    "  \"error-code\":\"500\",\n" +
-                    "  \"error-code-label\":\"There was an error\"\n" +
-                    "}");
+            HttpResponse stub = TestUtils.makeJsonHttpResponse(200,
+                    "{\n" + "  \"error-code\":\"500\",\n" + "  \"error-code-label\":\"There was an error\"\n" + "}"
+            );
             this.endpoint.parseResponse(stub);
             fail("An exception should have been thrown here.");
         } catch (Exception e) {
             assertEquals("There was an error", e.getMessage());
             // This is expected.
         }
+    }
+
+    @Test
+    public void testDefaultUri() throws Exception {
+        UpdateNumberRequest request = new UpdateNumberRequest("447700900013", "UK");
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://rest.nexmo.com/number/update", builder.build().getURI().toString());
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        UpdateNumberEndpoint endpoint = new UpdateNumberEndpoint(wrapper);
+        UpdateNumberRequest request = new UpdateNumberRequest("447700900013", "UK");
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://example.com/number/update", builder.build().getURI().toString());
     }
 }

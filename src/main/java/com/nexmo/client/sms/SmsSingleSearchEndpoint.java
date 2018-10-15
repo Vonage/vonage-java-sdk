@@ -36,9 +36,7 @@ public class SmsSingleSearchEndpoint extends AbstractMethod<String, SmsSingleSea
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://rest.nexmo.com/search/message";
-
-    private String uri = DEFAULT_URI;
+    private static final String PATH = "/search/message";
 
     public SmsSingleSearchEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -51,7 +49,7 @@ public class SmsSingleSearchEndpoint extends AbstractMethod<String, SmsSingleSea
 
     @Override
     public RequestBuilder makeRequest(String id) throws NexmoClientException, UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder.get(uri);
+        RequestBuilder requestBuilder = RequestBuilder.get(httpWrapper.getHttpConfig().getRestBaseUri() + PATH);
         requestBuilder.addParameter("id", id);
         return requestBuilder;
     }

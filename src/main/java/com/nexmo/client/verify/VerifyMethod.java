@@ -37,9 +37,7 @@ import java.io.UnsupportedEncodingException;
 class VerifyMethod extends AbstractMethod<VerifyRequest, VerifyResponse> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/verify/json";
-
-    private String uri = DEFAULT_URI;
+    private static final String PATH = "/verify/json";
 
     VerifyMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -52,7 +50,8 @@ class VerifyMethod extends AbstractMethod<VerifyRequest, VerifyResponse> {
 
     @Override
     public RequestBuilder makeRequest(VerifyRequest request) throws NexmoClientException, UnsupportedEncodingException {
-        RequestBuilder result = RequestBuilder.post(this.uri)
+        RequestBuilder result = RequestBuilder
+                .post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH)
                 .addParameter("number", request.getNumber())
                 .addParameter("brand", request.getBrand());
 
@@ -66,7 +65,8 @@ class VerifyMethod extends AbstractMethod<VerifyRequest, VerifyResponse> {
 
         if (request.getLocale() != null) {
             result.addParameter(new BasicNameValuePair("lg",
-                    (request.getLocale().getLanguage() + "-" + request.getLocale().getCountry()).toLowerCase()));
+                    (request.getLocale().getLanguage() + "-" + request.getLocale().getCountry()).toLowerCase()
+            ));
         }
 
         if (request.getType() != null) {
