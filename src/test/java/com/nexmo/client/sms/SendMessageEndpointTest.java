@@ -21,6 +21,7 @@
  */
 package com.nexmo.client.sms;
 
+import com.nexmo.client.HttpConfig;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.client.TestUtils;
@@ -54,7 +55,7 @@ public class SendMessageEndpointTest {
 
     @Before
     public void setUp() throws ParserConfigurationException {
-        endpoint = new SendMessageEndpoint(null);
+        endpoint = new SendMessageEndpoint(new HttpWrapper());
     }
 
     @Test
@@ -133,27 +134,19 @@ public class SendMessageEndpointTest {
 
     @Test
     public void testParseResponse() throws NexmoResponseParseException {
-        SmsSubmissionResult[] rs = endpoint.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
-                "<mt-submission-response>\n" +
-                "    <messages count='2'>\n" +
-                "        <message>\n" +
-                "            <to>not-a-number</to>\n" +
-                "            <messageId>message-id-1</messageId>\n" +
-                "            <status>0</status>\n" +
-                "            <remainingBalance>26.43133450</remainingBalance>\n" +
-                "            <messagePrice>0.03330000</messagePrice>\n" +
-                "            <network>12345</network>\n" +
-                "        </message>\n" +
-                "        <message>\n" +
-                "            <to>not-a-number</to>\n" +
-                "            <messageId>message-id-2</messageId>\n" +
-                "            <status>0</status>\n" +
-                "            <remainingBalance>26.39803450</remainingBalance>\n" +
-                "            <messagePrice>0.03330000</messagePrice>\n" +
-                "            <network>12345</network>\n" +
-                "        </message>\n" +
-                "    </messages>\n" +
-                "</mt-submission-response>");
+        SmsSubmissionResult[] rs = endpoint.parseResponse(
+                "<?xml version='1.0' encoding='UTF-8' ?>\n" + "<mt-submission-response>\n"
+                        + "    <messages count='2'>\n" + "        <message>\n" + "            <to>not-a-number</to>\n"
+                        + "            <messageId>message-id-1</messageId>\n" + "            <status>0</status>\n"
+                        + "            <remainingBalance>26.43133450</remainingBalance>\n"
+                        + "            <messagePrice>0.03330000</messagePrice>\n"
+                        + "            <network>12345</network>\n" + "        </message>\n" + "        <message>\n"
+                        + "            <to>not-a-number</to>\n" + "            <messageId>message-id-2</messageId>\n"
+                        + "            <status>0</status>\n"
+                        + "            <remainingBalance>26.39803450</remainingBalance>\n"
+                        + "            <messagePrice>0.03330000</messagePrice>\n"
+                        + "            <network>12345</network>\n" + "        </message>\n" + "    </messages>\n"
+                        + "</mt-submission-response>");
         assertEquals(rs.length, 2);
 
         SmsSubmissionResult r = rs[1];
@@ -162,46 +155,32 @@ public class SendMessageEndpointTest {
 
     @Test
     public void testParseResponseInvalidStatus() throws Exception {
-        SmsSubmissionResult[] rs = endpoint.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
-                "<mt-submission-response>\n" +
-                "    <messages count='2'>\n" +
-                "        <message>\n" +
-                "            <to>not-a-number</to>\n" +
-                "            <messageId>message-id-1</messageId>\n" +
-                "            <status>this-should-be-a-number</status>\n" +
-                "            <remainingBalance>26.43133450</remainingBalance>\n" +
-                "            <messagePrice>0.03330000</messagePrice>\n" +
-                "            <network>12345</network>\n" +
-                "            <clientRef>abcde</clientRef>\n" +
-                "        </message>\n" +
-                "        <message>\n" +
-                "            <to>not-a-number</to>\n" +
-                "            <messageId>message-id-2</messageId>\n" +
-                "            <status>0</status>\n" +
-                "            <remainingBalance>26.39803450</remainingBalance>\n" +
-                "            <messagePrice>0.03330000</messagePrice>\n" +
-                "            <network>12345</network>\n" +
-                "        </message>\n" +
-                "    </messages>\n" +
-                "</mt-submission-response>");
+        SmsSubmissionResult[] rs = endpoint.parseResponse(
+                "<?xml version='1.0' encoding='UTF-8' ?>\n" + "<mt-submission-response>\n"
+                        + "    <messages count='2'>\n" + "        <message>\n" + "            <to>not-a-number</to>\n"
+                        + "            <messageId>message-id-1</messageId>\n"
+                        + "            <status>this-should-be-a-number</status>\n"
+                        + "            <remainingBalance>26.43133450</remainingBalance>\n"
+                        + "            <messagePrice>0.03330000</messagePrice>\n"
+                        + "            <network>12345</network>\n" + "            <clientRef>abcde</clientRef>\n"
+                        + "        </message>\n" + "        <message>\n" + "            <to>not-a-number</to>\n"
+                        + "            <messageId>message-id-2</messageId>\n" + "            <status>0</status>\n"
+                        + "            <remainingBalance>26.39803450</remainingBalance>\n"
+                        + "            <messagePrice>0.03330000</messagePrice>\n"
+                        + "            <network>12345</network>\n" + "        </message>\n" + "    </messages>\n"
+                        + "</mt-submission-response>");
         assertEquals(SmsSubmissionResult.STATUS_INTERNAL_ERROR, rs[0].getStatus());
     }
 
     @Test
     public void testParseResponseStatusMissing() throws Exception {
         try {
-            endpoint.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
-                    "<mt-submission-response>\n" +
-                    "    <messages count='1'>\n" +
-                    "        <message>\n" +
-                    "            <to>not-a-number</to>\n" +
-                    "            <messageId>message-id-1</messageId>\n" +
-                    "            <remainingBalance>26.43133450</remainingBalance>\n" +
-                    "            <messagePrice>0.03330000</messagePrice>\n" +
-                    "            <network>12345</network>\n" +
-                    "        </message>\n" +
-                    "    </messages>\n" +
-                    "</mt-submission-response>");
+            endpoint.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" + "<mt-submission-response>\n"
+                    + "    <messages count='1'>\n" + "        <message>\n" + "            <to>not-a-number</to>\n"
+                    + "            <messageId>message-id-1</messageId>\n"
+                    + "            <remainingBalance>26.43133450</remainingBalance>\n"
+                    + "            <messagePrice>0.03330000</messagePrice>\n" + "            <network>12345</network>\n"
+                    + "        </message>\n" + "    </messages>\n" + "</mt-submission-response>");
             fail("A missing <status> should result in a NexmoResponseParseException being thrown");
         } catch (NexmoResponseParseException e) {
             // this is expected
@@ -210,23 +189,16 @@ public class SendMessageEndpointTest {
 
     @Test
     public void testParseResponseMissingValues() throws Exception {
-        SmsSubmissionResult[] rs = endpoint.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
-                "<mt-submission-response>\n" +
-                "    <messages count='1'>\n" +
-                "        <message>\n" +
-                "            <to></to>\n" +
-                "            <messageId></messageId>\n" +
-                "            <status></status>\n" +
-                "            <remainingBalance></remainingBalance>\n" +
-                "            <messagePrice></messagePrice>\n" +
-                "            <network></network>\n" +
-                "            <errorText></errorText>\n" +
-                "            <clientRef></clientRef>\n" +
-                "            <errorText></errorText>\n" +
-                "        </message>\n" +
-                "    </messages>\n" +
+        SmsSubmissionResult[] rs = endpoint.parseResponse(
+                "<?xml version='1.0' encoding='UTF-8' ?>\n" + "<mt-submission-response>\n"
+                        + "    <messages count='1'>\n" + "        <message>\n" + "            <to></to>\n"
+                        + "            <messageId></messageId>\n" + "            <status></status>\n"
+                        + "            <remainingBalance></remainingBalance>\n"
+                        + "            <messagePrice></messagePrice>\n" + "            <network></network>\n"
+                        + "            <errorText></errorText>\n" + "            <clientRef></clientRef>\n"
+                        + "            <errorText></errorText>\n" + "        </message>\n" + "    </messages>\n" +
 
-                "</mt-submission-response>");
+                        "</mt-submission-response>");
         assertNull(rs[0].getMessageId());
         assertNull(rs[0].getDestination());
         assertEquals(SmsSubmissionResult.STATUS_INTERNAL_ERROR, rs[0].getStatus());
@@ -239,94 +211,67 @@ public class SendMessageEndpointTest {
 
     @Test
     public void testParseResponseError() throws Exception {
-        SmsSubmissionResult[] rs = endpoint.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
-                "<mt-submission-response>\n" +
-                "    <messages count='1'>\n" +
-                "        <message>\n" +
-                "            <status>6</status>\n" +
-                "            <errorText>The message was invalid</errorText>\n" +
-                "        </message>\n" +
-                "    </messages>\n" +
-                "</mt-submission-response>");
+        SmsSubmissionResult[] rs = endpoint.parseResponse(
+                "<?xml version='1.0' encoding='UTF-8' ?>\n" + "<mt-submission-response>\n"
+                        + "    <messages count='1'>\n" + "        <message>\n" + "            <status>6</status>\n"
+                        + "            <errorText>The message was invalid</errorText>\n" + "        </message>\n"
+                        + "    </messages>\n" + "</mt-submission-response>");
         assertEquals(SmsSubmissionResult.STATUS_INVALID_MESSAGE, rs[0].getStatus());
     }
 
     @Test
     public void testParseResponseUnexpectedNode() throws Exception {
-        SmsSubmissionResult[] rs = endpoint.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
-                "<mt-submission-response>\n" +
-                "    <messages count='1'>\n" +
-                "        <message>\n" +
-                "            <status>0</status>\n" +
-                "            <to>not-a-number</to>\n" +
-                "            <messageId>message-id-1</messageId>\n" +
-                "            <remainingBalance>26.43133450</remainingBalance>\n" +
-                "            <messagePrice>0.03330000</messagePrice>\n" +
-                "            <network>12345</network>\n" +
-                "            <WHATISTHIS></WHATISTHIS>\n" +
-                "        </message>\n" +
-                "    </messages>\n" +
-                "</mt-submission-response>");
+        SmsSubmissionResult[] rs = endpoint.parseResponse(
+                "<?xml version='1.0' encoding='UTF-8' ?>\n" + "<mt-submission-response>\n"
+                        + "    <messages count='1'>\n" + "        <message>\n" + "            <status>0</status>\n"
+                        + "            <to>not-a-number</to>\n" + "            <messageId>message-id-1</messageId>\n"
+                        + "            <remainingBalance>26.43133450</remainingBalance>\n"
+                        + "            <messagePrice>0.03330000</messagePrice>\n"
+                        + "            <network>12345</network>\n" + "            <WHATISTHIS></WHATISTHIS>\n"
+                        + "        </message>\n" + "    </messages>\n" + "</mt-submission-response>");
         assertEquals(SmsSubmissionResult.STATUS_OK, rs[0].getStatus());
     }
 
     @Test
     public void testParseResponseInvalidNumbers() throws Exception {
-        SmsSubmissionResult[] rs = endpoint.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
-                "<mt-submission-response>\n" +
-                "    <messages count='1'>\n" +
-                "        <message>\n" +
-                "            <status>0</status>\n" +
-                "            <to>not-a-number</to>\n" +
-                "            <messageId>message-id-1</messageId>\n" +
-                "            <remainingBalance>NOTANUMBER</remainingBalance>\n" +
-                "            <messagePrice>ALSONOTANUMBER</messagePrice>\n" +
-                "            <network>12345</network>\n" +
-                "        </message>\n" +
-                "    </messages>\n" +
-                "</mt-submission-response>");
+        SmsSubmissionResult[] rs = endpoint.parseResponse(
+                "<?xml version='1.0' encoding='UTF-8' ?>\n" + "<mt-submission-response>\n"
+                        + "    <messages count='1'>\n" + "        <message>\n" + "            <status>0</status>\n"
+                        + "            <to>not-a-number</to>\n" + "            <messageId>message-id-1</messageId>\n"
+                        + "            <remainingBalance>NOTANUMBER</remainingBalance>\n"
+                        + "            <messagePrice>ALSONOTANUMBER</messagePrice>\n"
+                        + "            <network>12345</network>\n" + "        </message>\n" + "    </messages>\n"
+                        + "</mt-submission-response>");
         assertNull(rs[0].getRemainingBalance());
         assertNull(rs[0].getMessagePrice());
     }
 
     @Test
     public void testParseResponseStatusThrottled() throws Exception {
-        SmsSubmissionResult[] rs = endpoint.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
-                "<mt-submission-response>\n" +
-                "    <messages count='1'>\n" +
-                "        <message>\n" +
-                "            <status>1</status>\n" +
-                "        </message>\n" +
-                "    </messages>\n" +
-                "</mt-submission-response>");
+        SmsSubmissionResult[] rs = endpoint.parseResponse(
+                "<?xml version='1.0' encoding='UTF-8' ?>\n" + "<mt-submission-response>\n"
+                        + "    <messages count='1'>\n" + "        <message>\n" + "            <status>1</status>\n"
+                        + "        </message>\n" + "    </messages>\n" + "</mt-submission-response>");
         assertEquals(SmsSubmissionResult.STATUS_THROTTLED, rs[0].getStatus());
         assertTrue(rs[0].getTemporaryError());
     }
 
     @Test
     public void testParseResponseStatusInternalError() throws Exception {
-        SmsSubmissionResult[] rs = endpoint.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
-                "<mt-submission-response>\n" +
-                "    <messages count='1'>\n" +
-                "        <message>\n" +
-                "            <status>5</status>\n" +
-                "        </message>\n" +
-                "    </messages>\n" +
-                "</mt-submission-response>");
+        SmsSubmissionResult[] rs = endpoint.parseResponse(
+                "<?xml version='1.0' encoding='UTF-8' ?>\n" + "<mt-submission-response>\n"
+                        + "    <messages count='1'>\n" + "        <message>\n" + "            <status>5</status>\n"
+                        + "        </message>\n" + "    </messages>\n" + "</mt-submission-response>");
         assertEquals(SmsSubmissionResult.STATUS_INTERNAL_ERROR, rs[0].getStatus());
         assertTrue(rs[0].getTemporaryError());
     }
 
     @Test
     public void testParseResponseStatusTooManyBinds() throws Exception {
-        SmsSubmissionResult[] rs = endpoint.parseResponse("<?xml version='1.0' encoding='UTF-8' ?>\n" +
-                "<mt-submission-response>\n" +
-                "    <messages count='1'>\n" +
-                "        <message>\n" +
-                "            <status>10</status>\n" +
-                "        </message>\n" +
-                "    </messages>\n" +
-                "</mt-submission-response>");
+        SmsSubmissionResult[] rs = endpoint.parseResponse(
+                "<?xml version='1.0' encoding='UTF-8' ?>\n" + "<mt-submission-response>\n"
+                        + "    <messages count='1'>\n" + "        <message>\n" + "            <status>10</status>\n"
+                        + "        </message>\n" + "    </messages>\n" + "</mt-submission-response>");
         assertEquals(SmsSubmissionResult.STATUS_TOO_MANY_BINDS, rs[0].getStatus());
         assertTrue(rs[0].getTemporaryError());
     }
@@ -343,10 +288,7 @@ public class SendMessageEndpointTest {
 
     private static void assertContainsParam(List<NameValuePair> params, String key, String value) {
         NameValuePair item = new BasicNameValuePair(key, value);
-        assertTrue(
-                "" + params + " should contain " + item,
-                params.contains(item)
-        );
+        assertTrue("" + params + " should contain " + item, params.contains(item));
     }
 
     private static void assertMissingParam(List<NameValuePair> params, String key) {
@@ -365,20 +307,15 @@ public class SendMessageEndpointTest {
         AuthMethod tokenAuth = new TokenAuthMethod("abcd", "def");
 
         when(wrapper.getAuthCollection()).thenReturn(authCollection);
-        @SuppressWarnings("unchecked")
-        Set<Class> anySet = any(Set.class);
+        when(wrapper.getHttpConfig()).thenReturn(HttpConfig.defaultConfig());
+        @SuppressWarnings("unchecked") Set<Class> anySet = any(Set.class);
         when(authCollection.getAcceptableAuthMethod(anySet)).thenReturn(tokenAuth);
         when(wrapper.getHttpClient()).thenReturn(client);
-        when(client.execute(any(HttpUriRequest.class))).thenReturn(
-                TestUtils.makeJsonHttpResponse(200, "<?xml version='1.0' encoding='UTF-8' ?>\n" +
-                        "<mt-submission-response>\n" +
-                        "    <messages count='1'>\n" +
-                        "        <message>\n" +
-                        "            <status>10</status>\n" +
-                        "        </message>\n" +
-                        "    </messages>\n" +
-                        "</mt-submission-response>")
-        );
+        when(client.execute(any(HttpUriRequest.class))).thenReturn(TestUtils.makeJsonHttpResponse(200,
+                "<?xml version='1.0' encoding='UTF-8' ?>\n" + "<mt-submission-response>\n"
+                        + "    <messages count='1'>\n" + "        <message>\n" + "            <status>10</status>\n"
+                        + "        </message>\n" + "    </messages>\n" + "</mt-submission-response>"
+        ));
 
         ArgumentCaptor<HttpUriRequest> argument = ArgumentCaptor.forClass(HttpUriRequest.class);
 
@@ -390,8 +327,29 @@ public class SendMessageEndpointTest {
         if (argument.getValue() instanceof HttpEntityEnclosingRequest) {
             HttpEntity entity = ((HttpEntityEnclosingRequest) argument.getValue()).getEntity();
             assertNotNull(entity);
-            assertEquals("application/x-www-form-urlencoded; charset=UTF-8",
-                    entity.getContentType().getValue());
+            assertEquals("application/x-www-form-urlencoded; charset=UTF-8", entity.getContentType().getValue());
         }
+    }
+
+    @Test
+    public void testDefaultUri() throws Exception {
+        Message message = new TextMessage("TestSender", "not-a-number", "Test", true);
+
+        RequestBuilder builder = endpoint.makeRequest(message);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://rest.nexmo.com/sms/xml",
+                builder.build().getURI().toString()
+        );
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        SendMessageEndpoint endpoint = new SendMessageEndpoint(wrapper);
+        Message message = new TextMessage("TestSender", "not-a-number", "Test", true);
+
+        RequestBuilder builder = endpoint.makeRequest(message);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://example.com/sms/xml", builder.build().getURI().toString());
     }
 }

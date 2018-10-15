@@ -21,6 +21,8 @@
  */
 package com.nexmo.client.sms;
 
+import com.nexmo.client.HttpConfig;
+import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.TestUtils;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
@@ -40,7 +42,7 @@ public class SearchRejectedMessagesEndpointTest {
 
     @Before
     public void setUp() throws Exception {
-        this.endpoint = new SearchRejectedMessagesEndpoint(null);
+        this.endpoint = new SearchRejectedMessagesEndpoint(new HttpWrapper());
     }
 
     @Test
@@ -51,10 +53,10 @@ public class SearchRejectedMessagesEndpointTest {
 
     @Test
     public void testMakeRequest() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(new SearchRejectedMessagesRequest(
-                new GregorianCalendar(2017, Calendar.OCTOBER, 22).getTime(),
-                "447700900737"
-        ));
+        RequestBuilder builder = this.endpoint.makeRequest(new SearchRejectedMessagesRequest(new GregorianCalendar(2017,
+                Calendar.OCTOBER,
+                22
+        ).getTime(), "447700900737"));
         // TODO: Check method and URL are correct:
         assertEquals("GET", builder.getMethod());
         assertThat(builder.build().getURI().toString(), startsWith("https://rest.nexmo.com/search/rejections?"));
@@ -67,19 +69,13 @@ public class SearchRejectedMessagesEndpointTest {
 
     @Test
     public void testParseResponse() throws Exception {
-        HttpResponse stub = TestUtils.makeJsonHttpResponse(200, "{\n" +
-                "  \"count\": 1,\n" +
-                "  \"items\": [\n" +
-                "    {\n" +
-                "      \"account-id\": \"key\",\n" +
-                "      \"from\": \"MyApp\",\n" +
-                "      \"to\": \"123456890\",\n" +
-                "      \"date-received\": \"2012-05-02 16:03:00\",\n" +
-                "      \"error-code\": 9,\n" +
-                "      \"error-code-label\": \"partner quota exceeded -- Your pre-pay account does not have sufficient credit to process this message\"\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}\n");
+        HttpResponse stub = TestUtils.makeJsonHttpResponse(200,
+                "{\n" + "  \"count\": 1,\n" + "  \"items\": [\n" + "    {\n" + "      \"account-id\": \"key\",\n"
+                        + "      \"from\": \"MyApp\",\n" + "      \"to\": \"123456890\",\n"
+                        + "      \"date-received\": \"2012-05-02 16:03:00\",\n" + "      \"error-code\": 9,\n"
+                        + "      \"error-code-label\": \"partner quota exceeded -- Your pre-pay account does not have sufficient credit to process this message\"\n"
+                        + "    }\n" + "  ]\n" + "}\n"
+        );
         SearchRejectedMessagesResponse response = this.endpoint.parseResponse(stub);
         assertEquals(1, response.getCount());
         assertNotNull(response.getItems());
@@ -88,10 +84,39 @@ public class SearchRejectedMessagesEndpointTest {
         assertEquals("key", m.getAccountId());
         assertEquals("MyApp", m.getFrom());
         assertEquals("123456890", m.getTo());
-        assertEquals(
-                new GregorianCalendar(2012, Calendar.MAY, 2, 16, 3, 0).getTime(),
-                m.getDateReceived());
+        assertEquals(new GregorianCalendar(2012, Calendar.MAY, 2, 16, 3, 0).getTime(), m.getDateReceived());
         assertEquals(9, m.getErrorCode().longValue());
-        assertEquals("partner quota exceeded -- Your pre-pay account does not have sufficient credit to process this message", m.getErrorCodeLabel());
+        assertEquals(
+                "partner quota exceeded -- Your pre-pay account does not have sufficient credit to process this message",
+                m.getErrorCodeLabel()
+        );
+    }
+
+    @Test
+    public void testDefaultUri() throws Exception {
+        SearchRejectedMessagesRequest request = new SearchRejectedMessagesRequest(new GregorianCalendar(2017,
+                Calendar.OCTOBER,
+                22
+        ).getTime(), "447700900737");
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("GET", builder.getMethod());
+        assertEquals("https://rest.nexmo.com/search/rejections?date=2017-10-22&to=447700900737",
+                builder.build().getURI().toString()
+        );
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        SearchRejectedMessagesEndpoint endpoint = new SearchRejectedMessagesEndpoint(wrapper);
+        SearchRejectedMessagesRequest request = new SearchRejectedMessagesRequest(new GregorianCalendar(2017,
+                Calendar.OCTOBER,
+                22
+        ).getTime(), "447700900737");
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("GET", builder.getMethod());
+        assertEquals("https://example.com/search/rejections?date=2017-10-22&to=447700900737", builder.build().getURI().toString());
     }
 }

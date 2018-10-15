@@ -69,8 +69,6 @@ public class ConversationNccoTest {
 
         String expectedJson = "{\"name\":\"Test\",\"musicOnHoldUrl\":[\"https://example.org\"],\"action\":\"conversation\"}";
         assertEquals(expectedJson, ncco.toJson());
-
-        ncco = new ConversationNcco("Test");
     }
 
     @Test

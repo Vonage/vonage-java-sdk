@@ -21,9 +21,12 @@
  */
 package com.nexmo.client.conversion;
 
+import com.nexmo.client.HttpConfig;
+import com.nexmo.client.HttpWrapper;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.message.BasicNameValuePair;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
@@ -33,14 +36,20 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ConversionMethodTest {
+    private ConversionMethod method;
+
+    @Before
+    public void setUp() throws Exception {
+        this.method = new ConversionMethod(new HttpWrapper());
+    }
+
     @Test
     public void testConstructParametersWithSms() throws Exception {
-        ConversionMethod method = new ConversionMethod(null);
         ConversionRequest request = new ConversionRequest(ConversionRequest.Type.SMS,
-                                                          "MESSAGE-ID",
-                                                          true,
-                                                          new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(
-                                                                  "2014-03-04 10:11:12"));
+                "MESSAGE-ID",
+                true,
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12")
+        );
         RequestBuilder requestBuilder = method.makeRequest(request);
         List<NameValuePair> params = requestBuilder.getParameters();
 
@@ -48,17 +57,17 @@ public class ConversionMethodTest {
         assertContainsParam(params, "delivered", "true");
         assertContainsParam(params, "timestamp", "2014-03-04 10:11:12");
         assertEquals(method.getBaseUri() + ConversionRequest.Type.SMS.name().toLowerCase(),
-                     requestBuilder.getUri().toString());
+                requestBuilder.getUri().toString()
+        );
     }
 
     @Test
     public void testConstructParametersWithVoice() throws Exception {
-        ConversionMethod method = new ConversionMethod(null);
         ConversionRequest request = new ConversionRequest(ConversionRequest.Type.VOICE,
-                                                          "MESSAGE-ID",
-                                                          true,
-                                                          new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(
-                                                                  "2014-03-04 10:11:12"));
+                "MESSAGE-ID",
+                true,
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12")
+        );
         RequestBuilder requestBuilder = method.makeRequest(request);
         List<NameValuePair> params = requestBuilder.getParameters();
 
@@ -66,11 +75,42 @@ public class ConversionMethodTest {
         assertContainsParam(params, "delivered", "true");
         assertContainsParam(params, "timestamp", "2014-03-04 10:11:12");
         assertEquals(method.getBaseUri() + ConversionRequest.Type.VOICE.name().toLowerCase(),
-                     requestBuilder.getUri().toString());
+                requestBuilder.getUri().toString()
+        );
     }
 
     private void assertContainsParam(List<NameValuePair> params, String key, String value) {
         NameValuePair item = new BasicNameValuePair(key, value);
         assertTrue("" + params + " should contain " + item, params.contains(item));
+    }
+
+    @Test
+    public void testDefaultUri() throws Exception {
+        ConversionRequest request = new ConversionRequest(ConversionRequest.Type.VOICE,
+                "MESSAGE-ID",
+                true,
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12")
+        );
+
+        RequestBuilder builder = method.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://api.nexmo.com/conversions/voice",
+                builder.build().getURI().toString()
+        );
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        ConversionMethod method = new ConversionMethod(wrapper);
+        ConversionRequest request = new ConversionRequest(ConversionRequest.Type.VOICE,
+                "MESSAGE-ID",
+                true,
+                new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12")
+        );
+
+        RequestBuilder builder = method.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://example.com/conversions/voice", builder.build().getURI().toString());
     }
 }

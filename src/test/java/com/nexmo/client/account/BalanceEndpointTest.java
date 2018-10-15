@@ -21,6 +21,8 @@
  */
 package com.nexmo.client.account;
 
+import com.nexmo.client.HttpConfig;
+import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.TestUtils;
 import com.nexmo.client.auth.TokenAuthMethod;
@@ -40,7 +42,7 @@ public class BalanceEndpointTest {
 
     @Before
     public void setUp() throws Exception {
-        this.endpoint = new BalanceEndpoint(null);
+        this.endpoint = new BalanceEndpoint(new HttpWrapper());
     }
 
     @Test
@@ -58,6 +60,16 @@ public class BalanceEndpointTest {
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
         assertEquals(0, params.size());
 
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        BalanceEndpoint endpoint = new BalanceEndpoint(wrapper);
+
+        RequestBuilder builder = endpoint.makeRequest(null);
+        assertEquals("GET", builder.getMethod());
+        assertEquals("https://example.com/account/get-balance", builder.build().getURI().toString());
     }
 
     @Test

@@ -24,5 +24,5 @@ package com.nexmo.client.sms;
 import org.apache.http.client.methods.RequestBuilder;
 
 public interface SearchSmsRequest {
-    public void addParams(RequestBuilder request);
+    void addParams(RequestBuilder request);
 }

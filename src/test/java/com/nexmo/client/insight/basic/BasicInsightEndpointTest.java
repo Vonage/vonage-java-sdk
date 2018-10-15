@@ -21,6 +21,8 @@
  */
 package com.nexmo.client.insight.basic;
 
+import com.nexmo.client.HttpConfig;
+import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.TestUtils;
 import com.nexmo.client.auth.SignatureAuthMethod;
 import com.nexmo.client.auth.TokenAuthMethod;
@@ -38,7 +40,7 @@ public class BasicInsightEndpointTest {
 
     @Before
     public void setUp() {
-        this.endpoint = new BasicInsightEndpoint(null);
+        this.endpoint = new BasicInsightEndpoint(new HttpWrapper());
     }
 
     @Test
@@ -84,4 +86,25 @@ public class BasicInsightEndpointTest {
         assertEquals("d79c3d82-e2ee-46ff-972a-97b76be419cb", response.getRequestId());
     }
 
+    @Test
+    public void testDefaultUri() throws Exception {
+        BasicInsightRequest request = new BasicInsightRequest("1234");
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://api.nexmo.com/ni/basic/json",
+                builder.build().getURI().toString()
+        );
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        BasicInsightEndpoint endpoint = new BasicInsightEndpoint(wrapper);
+        BasicInsightRequest request = new BasicInsightRequest("1234");
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://example.com/ni/basic/json", builder.build().getURI().toString());
+    }
 }

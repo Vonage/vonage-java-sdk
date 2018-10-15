@@ -39,9 +39,7 @@ class ConversionMethod extends AbstractMethod<ConversionRequest, Void> {
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
-    private static final String DEFAULT_BASE_URI = "https://api.nexmo.com/conversions/";
-
-    private String baseUri = DEFAULT_BASE_URI;
+    private static final String PATH = "/conversions/";
 
     ConversionMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -54,12 +52,16 @@ class ConversionMethod extends AbstractMethod<ConversionRequest, Void> {
 
     @Override
     public RequestBuilder makeRequest(ConversionRequest conversionRequest) throws NexmoClientException, UnsupportedEncodingException {
-        String uri = this.baseUri + conversionRequest.getType().name().toLowerCase();
-        return RequestBuilder.post(uri)
+        String uri =
+                httpWrapper.getHttpConfig().getApiBaseUri() + PATH + conversionRequest.getType().name().toLowerCase();
+        return RequestBuilder
+                .post(uri)
                 .addParameter("message-id", conversionRequest.getMessageId())
                 .addParameter("delivered", String.valueOf(conversionRequest.isDelivered()))
-                .addParameter("timestamp",
-                              new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(conversionRequest.getTimestamp()));
+                .addParameter(
+                        "timestamp",
+                        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(conversionRequest.getTimestamp())
+                );
     }
 
     @Override
@@ -72,6 +74,6 @@ class ConversionMethod extends AbstractMethod<ConversionRequest, Void> {
     }
 
     public String getBaseUri() {
-        return this.baseUri;
+        return httpWrapper.getHttpConfig().getApiBaseUri() + PATH;
     }
 }

@@ -97,7 +97,7 @@ public class CallsFilter {
     }
 
     public List<NameValuePair> toUrlParams() {
-        List<NameValuePair> result = new ArrayList<NameValuePair>(10);
+        List<NameValuePair> result = new ArrayList<>(10);
         conditionalAdd(result, "status", this.status);
         conditionalAdd(result, "date_start", this.dateStart);
         conditionalAdd(result, "date_end", this.dateEnd);

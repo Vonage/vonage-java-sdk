@@ -21,12 +21,41 @@
  */
 package com.nexmo.client.account;
 
+import com.nexmo.client.HttpConfig;
+import com.nexmo.client.HttpWrapper;
+import org.apache.http.client.methods.RequestBuilder;
+import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+
 public class ListSecretsMethodTest {
+    ListSecretsMethod method;
+
+    @Before
+    public void setUp() throws Exception {
+        this.method = new ListSecretsMethod(new HttpWrapper());
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void testConstructParamsWithMissingApiKey() throws Exception {
-        ListSecretsMethod method = new ListSecretsMethod(null);
         method.makeRequest(null);
+    }
+
+    @Test
+    public void testDefaultUri() throws Exception {
+        RequestBuilder builder = method.makeRequest("api-key");
+        assertEquals("GET", builder.getMethod());
+        assertEquals("https://api.nexmo.com/accounts/api-key/secrets", builder.build().getURI().toString());
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        ListSecretsMethod method = new ListSecretsMethod(wrapper);
+
+        RequestBuilder builder = method.makeRequest("api-key");
+        assertEquals("GET", builder.getMethod());
+        assertEquals("https://example.com/accounts/api-key/secrets", builder.build().getURI().toString());
     }
 }

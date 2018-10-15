@@ -40,7 +40,7 @@ import static org.mockito.Mockito.when;
 public class RequestSigningTest {
     @Test
     public void testConstructSignatureForRequestParameters() {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("a", "alphabet"));
         params.add(new BasicNameValuePair("b", "bananas"));
 
@@ -52,7 +52,7 @@ public class RequestSigningTest {
 
     @Test
     public void testConstructSignatureForRequestParametersSkipsSignature() {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("a", "alphabet"));
         params.add(new BasicNameValuePair("b", "bananas"));
         params.add(new BasicNameValuePair("sig", "7d43241108912b32cc315b48ce681acf"));
@@ -66,7 +66,7 @@ public class RequestSigningTest {
 
     @Test
     public void testConstructSignatureForRequestParametersSkipsNullValues() {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("a", "alphabet"));
         params.add(new BasicNameValuePair("b", null));
 

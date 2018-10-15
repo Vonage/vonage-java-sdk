@@ -30,7 +30,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -38,9 +37,9 @@ import java.io.UnsupportedEncodingException;
 public class StopStreamMethod extends AbstractMethod<String, StreamResponse> {
     private static final Log LOG = LogFactory.getLog(StopStreamMethod.class);
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls/";
+    private static final String PATH = "/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
-    private String uri = DEFAULT_URI;
+    private String uri;
 
     public StopStreamMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -53,9 +52,11 @@ public class StopStreamMethod extends AbstractMethod<String, StreamResponse> {
 
     @Override
     public RequestBuilder makeRequest(String uuid) throws NexmoClientException, UnsupportedEncodingException {
-        String uri = this.uri + uuid + "/stream";
-        return RequestBuilder.delete(uri)
-                .setHeader("Content-Type", "application/json");
+        // TODO: Remove in 4.0.0 along with setUri method
+        String baseUri = (this.uri != null)
+                ? this.uri
+                : httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH;
+        return RequestBuilder.delete(baseUri + uuid + "/stream").setHeader("Content-Type", "application/json");
     }
 
     @Override
@@ -64,6 +65,10 @@ public class StopStreamMethod extends AbstractMethod<String, StreamResponse> {
         return StreamResponse.fromJson(json);
     }
 
+    /**
+     * @deprecated Use {@link com.nexmo.client.HttpConfig.Builder} to create an {@link com.nexmo.client.HttpConfig} object and pass into {@link com.nexmo.client.NexmoClient}
+     */
+    @Deprecated
     public void setUri(String uri) {
         this.uri = uri;
     }

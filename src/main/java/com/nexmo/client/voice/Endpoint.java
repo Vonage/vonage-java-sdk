@@ -35,6 +35,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = WebSocketEndpoint.class, name = "websocket")
 })
 public interface Endpoint {
-    public String getType();
-    public String toLog();
+    String getType();
+    String toLog();
 }

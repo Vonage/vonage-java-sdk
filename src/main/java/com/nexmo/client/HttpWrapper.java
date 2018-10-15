@@ -42,17 +42,28 @@ public class HttpWrapper {
 
     private AuthCollection authCollection;
     private HttpClient httpClient = null;
+    private HttpConfig httpConfig;
 
     public HttpWrapper(AuthCollection authCollection) {
+        this(new HttpConfig.Builder().build(), authCollection);
+    }
+
+    public HttpWrapper(HttpConfig httpConfig, AuthCollection authCollection) {
         this.authCollection = authCollection;
+        this.httpConfig = httpConfig;
     }
 
     public HttpWrapper(AuthMethod... authMethods) {
+        this(new HttpConfig.Builder().build(), authMethods);
+    }
+
+    public HttpWrapper(HttpConfig httpConfig, AuthMethod... authMethods) {
         this(new AuthCollection());
         for (AuthMethod authMethod : authMethods) {
             authCollection.add(authMethod);
         }
 
+        this.httpConfig = httpConfig;
     }
 
     public HttpClient getHttpClient() {
@@ -96,5 +107,9 @@ public class HttpWrapper {
                 .setDefaultRequestConfig(requestConfig)
                 .useSystemProperties()
                 .build();
+    }
+
+    public HttpConfig getHttpConfig() {
+        return httpConfig;
     }
 }

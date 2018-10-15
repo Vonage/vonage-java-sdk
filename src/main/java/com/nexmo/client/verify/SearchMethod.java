@@ -36,9 +36,7 @@ import java.io.UnsupportedEncodingException;
 public class SearchMethod extends AbstractMethod<SearchRequest, SearchVerifyResponse> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/verify/search/json";
-
-    private String uri = DEFAULT_URI;
+    private static final String PATH = "/verify/search/json";
 
     SearchMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -51,7 +49,7 @@ public class SearchMethod extends AbstractMethod<SearchRequest, SearchVerifyResp
 
     @Override
     public RequestBuilder makeRequest(SearchRequest request) throws NexmoClientException, UnsupportedEncodingException {
-        RequestBuilder result = RequestBuilder.post(this.uri);
+        RequestBuilder result = RequestBuilder.post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH);
         if (request.getRequestIds().length == 1) {
             result.addParameter("request_id", request.getRequestIds()[0]);
         } else {

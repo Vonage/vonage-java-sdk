@@ -32,7 +32,7 @@ import org.apache.http.client.methods.RequestBuilder;
 public class TextMessage extends Message {
     private final String messageBody;
 
-    private boolean unicode = false;
+    private boolean unicode;
 
     /**
      * Instantiate a new text-message request.<br>

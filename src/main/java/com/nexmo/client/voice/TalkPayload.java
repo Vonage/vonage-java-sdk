@@ -59,7 +59,7 @@ public class TalkPayload {
         return voiceName;
     }
 
-    public String toJson(){
+    public String toJson() {
         try {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.writeValueAsString(this);

@@ -38,9 +38,7 @@ import java.io.UnsupportedEncodingException;
 public class ListSecretsMethod extends AbstractMethod<String, ListSecretsResponse> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/accounts/%s/secrets";
-
-    private String uri = DEFAULT_URI;
+    private static final String PATH = "/accounts/%s/secrets";
 
     ListSecretsMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -57,7 +55,7 @@ public class ListSecretsMethod extends AbstractMethod<String, ListSecretsRespons
             throw new IllegalArgumentException("API key is required.");
         }
 
-        String uri = String.format(this.uri, apiKey);
+        String uri = String.format(httpWrapper.getHttpConfig().getApiBaseUri() + PATH, apiKey);
         return RequestBuilder.get(uri);
     }
 

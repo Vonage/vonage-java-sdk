@@ -30,7 +30,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class HttpWrapperTest {
+    private static final String EXPECTED_DEFAULT_API_BASE_URI = "https://api.nexmo.com";
+    private static final String EXPECTED_DEFAULT_REST_BASE_URI = "https://rest.nexmo.com";
+    private static final String EXPECTED_DEFAULT_SNS_BASE_URI = "https://sns.nexmo.com";
+
     private HttpWrapper hw;
+
     @Before
     public void setUp() {
         this.hw = new HttpWrapper(new AuthCollection());
@@ -46,5 +51,20 @@ public class HttpWrapperTest {
         AuthCollection auths = new AuthCollection();
         this.hw.setAuthCollection(auths);
         assertEquals(auths, this.hw.getAuthCollection());
+    }
+
+    @Test
+    public void testHttpConfigAccessor() {
+        assertNotNull(this.hw.getHttpConfig());
+    }
+
+    @Test
+    public void testDefaultConstructorSetsDefaultConfigValues() {
+        HttpWrapper wrapper = new HttpWrapper();
+
+        HttpConfig config = wrapper.getHttpConfig();
+        assertEquals(EXPECTED_DEFAULT_API_BASE_URI, config.getApiBaseUri());
+        assertEquals(EXPECTED_DEFAULT_REST_BASE_URI, config.getRestBaseUri());
+        assertEquals(EXPECTED_DEFAULT_SNS_BASE_URI, config.getSnsBaseUri());
     }
 }
