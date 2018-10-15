@@ -21,8 +21,6 @@
  */
 package com.nexmo.client.auth;
 
-import com.nexmo.client.NexmoClientException;
-
 import java.util.*;
 
 /**
