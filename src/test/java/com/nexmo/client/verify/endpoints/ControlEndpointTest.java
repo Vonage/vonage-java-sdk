@@ -90,6 +90,7 @@ public class ControlEndpointTest {
             assertEquals("2", exc.getStatus());
             assertEquals("Missing username", exc.getErrorText());
         }
+
     }
 
     @Test

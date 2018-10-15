@@ -69,7 +69,7 @@ public class AuthCollection {
                 return (T) availableAuthMethod;
             }
         }
-        throw new NexmoUnacceptableAuthException(this.authList, new HashSet<Class>(Arrays.asList(new Class[]{type})));
+        throw new NexmoUnacceptableAuthException(this.authList, new HashSet<>(Arrays.asList(new Class[]{type})));
     }
 
     /**

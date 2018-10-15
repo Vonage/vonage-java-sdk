@@ -27,5 +27,5 @@ import com.nexmo.client.NexmoClientException;
 import java.io.IOException;
 
 public interface Method<RequestT, ResultT> {
-    public ResultT execute(RequestT request) throws IOException, NexmoClientException;
+    ResultT execute(RequestT request) throws IOException, NexmoClientException;
 }

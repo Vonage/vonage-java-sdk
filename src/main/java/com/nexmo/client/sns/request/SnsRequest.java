@@ -44,7 +44,7 @@ public abstract class SnsRequest {
     }
 
     public Map<String, String> getQueryParameters() {
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put("cmd", getCommand());
         params.put("to", this.to);
         params.put("topic", this.topicArn);

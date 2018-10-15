@@ -110,7 +110,8 @@ public class VerifyCheckMethod extends AbstractMethod<CheckRequest, CheckResult>
             } else if ("status".equals(name)) {
                 String str = XmlUtil.stringValue(node);
                 try {
-                    if (str != null) status = Integer.parseInt(str);
+                    if (str != null)
+                        status = Integer.parseInt(str);
                 } catch (NumberFormatException e) {
                     log.error("xml parser .. invalid value in <status> node [ " + str + " ] ");
                     status = BaseResult.STATUS_INTERNAL_ERROR;
@@ -118,7 +119,8 @@ public class VerifyCheckMethod extends AbstractMethod<CheckRequest, CheckResult>
             } else if ("price".equals(name)) {
                 String str = XmlUtil.stringValue(node);
                 try {
-                    if (str != null) price = Float.parseFloat(str);
+                    if (str != null)
+                        price = Float.parseFloat(str);
                 } catch (NumberFormatException e) {
                     log.error("xml parser .. invalid value in <price> node [ " + str + " ] ");
                 }

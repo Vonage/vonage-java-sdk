@@ -80,9 +80,9 @@ public class JWTAuthMethod extends AbstractAuthMethod {
     protected byte[] decodePrivateKey(byte[] data) throws InvalidKeyException {
         try {
             String s = new String(data, "UTF-8");
-            Matcher extracter = pemPattern.matcher(s);
-            if (extracter.matches()) {
-                String pemBody = extracter.group(1);
+            Matcher extractor = pemPattern.matcher(s);
+            if (extractor.matches()) {
+                String pemBody = extractor.group(1);
                 return DatatypeConverter.parseBase64Binary(pemBody);
             } else {
                 throw new InvalidKeyException("Private key should be provided in PEM format!");
@@ -110,9 +110,8 @@ public class JWTAuthMethod extends AbstractAuthMethod {
 
         JWTSigner.Options options = new JWTSigner.Options()
                 .setAlgorithm(Algorithm.RS256);
-        String signed = this.signer.sign(claims, options);
 
-        return signed;
+        return this.signer.sign(claims, options);
     }
 
     @Override

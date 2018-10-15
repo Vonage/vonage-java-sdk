@@ -103,10 +103,10 @@ public abstract class AbstractMOServlet extends HttpServlet {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
             if (this.expectedUsername != null)
-                if (username == null || !this.expectedUsername.equals(username))
+                if (!this.expectedUsername.equals(username))
                     passed = false;
             if (this.expectedPassword != null)
-                if (password == null || !this.expectedPassword.equals(password))
+                if (!this.expectedPassword.equals(password))
                     passed = false;
         }
 

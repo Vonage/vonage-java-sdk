@@ -47,11 +47,8 @@ public class Recording {
     }
 
     public void save(Path path) throws IOException {
-        OutputStream out = new FileOutputStream(path.toFile());
-        try {
+        try (OutputStream out = new FileOutputStream(path.toFile())) {
             IOUtils.copy(this.response.getEntity().getContent(), out);
-        } finally {
-            out.close();
         }
     }
 }

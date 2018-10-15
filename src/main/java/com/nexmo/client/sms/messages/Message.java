@@ -56,7 +56,7 @@ public abstract class Message {
     private final String to;
 
     private String clientReference;
-    private boolean statusReportRequired = false;
+    private boolean statusReportRequired;
     private MessageClass messageClass = null;
     private Long timeToLive = null;
     private String callbackUrl = null;
@@ -199,7 +199,7 @@ public abstract class Message {
      *
      * @author  Paul Cook
      */
-    public static enum MessageClass {
+    public enum MessageClass {
 
         /**
          * Message Class 0
@@ -223,7 +223,7 @@ public abstract class Message {
 
         private final int messageClass;
 
-        private MessageClass(int messageClass) {
+        MessageClass(int messageClass) {
             this.messageClass = messageClass;
         }
 

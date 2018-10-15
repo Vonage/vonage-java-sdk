@@ -22,6 +22,6 @@
 package com.nexmo.client.voice.ncco;
 
 public interface Ncco {
-    public String getAction();
-    public String toJson();
+    String getAction();
+    String toJson();
 }
