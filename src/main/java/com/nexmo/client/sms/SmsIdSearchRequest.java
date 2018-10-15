@@ -22,7 +22,6 @@
 package com.nexmo.client.sms;
 
 import org.apache.http.client.methods.RequestBuilder;
-
 import java.util.ArrayList;
 import java.util.List;
 
