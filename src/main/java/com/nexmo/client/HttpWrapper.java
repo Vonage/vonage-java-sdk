@@ -105,6 +105,7 @@ public class HttpWrapper {
                 .setConnectionManager(connectionManager)
                 .setUserAgent(String.format("%s/%s java/%s", CLIENT_NAME, CLIENT_VERSION, JAVA_VERSION))
                 .setDefaultRequestConfig(requestConfig)
+                .useSystemProperties()
                 .build();
     }
 

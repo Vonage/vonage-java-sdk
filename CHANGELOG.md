@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - TalkNcco to use VoiceName object instead of String
+- HttpWrapper now uses system properties by default
 
 ## [3.8.0] - 2018-09-19
 ### Added

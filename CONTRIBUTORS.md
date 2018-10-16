@@ -8,6 +8,7 @@ documentation, or tests are eligible to be added to this list.
 - Tim Lytle ([@tjlitle](https://github.com/tjlitle))
 - [@thepeachbeetle](https://github.com/thepeachbeetle)
 - Steve Crow ([@cr0wst](https://github.com/cr0wst))
+- Michael Berry ([@berry120](https://github.com/berry120))
 - Arpit Pandey ([@arpitpandey0209](https://github.com/arpitpandey0209))
 - GwanYeong Kim ([@gy741](https://github.com/gy741))
 - Guy Khmelnitsky ([@guykh](https://github.com/GuyKh))
