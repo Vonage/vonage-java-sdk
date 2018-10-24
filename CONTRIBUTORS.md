@@ -12,3 +12,4 @@ documentation, or tests are eligible to be added to this list.
 - Arpit Pandey ([@arpitpandey0209](https://github.com/arpitpandey0209))
 - GwanYeong Kim ([@gy741](https://github.com/gy741))
 - Guy Khmelnitsky ([@guykh](https://github.com/GuyKh))
+- Soundarya Goski ([@Soundug](https://github.com/Soundug))
