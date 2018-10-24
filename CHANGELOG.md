@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.9.0] - 2018-10-24
+### Fixed
+- Updated package of 'AbstractMethod.java' and 'AbstractMethodTest.java' to 'com.nexmo.client'.
+
 ## [3.9.0] - 2018-10-18
 ### Added
 - Added missing voices to `VoiceName` enum.
