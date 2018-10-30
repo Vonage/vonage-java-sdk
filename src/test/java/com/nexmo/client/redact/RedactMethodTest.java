@@ -102,6 +102,6 @@ public class RedactMethodTest {
 
         RequestBuilder builder = method.makeRequest(request);
         assertEquals("POST", builder.getMethod());
-        assertEquals("https://example.com/redact/transaction", builder.build().getURI().toString());
+        assertEquals("https://example.com/v1/redact/transaction", builder.build().getURI().toString());
     }
 }

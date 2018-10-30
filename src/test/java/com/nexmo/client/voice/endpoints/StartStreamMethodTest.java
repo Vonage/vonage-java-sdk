@@ -63,6 +63,6 @@ public class StartStreamMethodTest {
 
         RequestBuilder builder = method.makeRequest(request);
         assertEquals("PUT", builder.getMethod());
-        assertEquals("https://example.com/calls/uuid/stream", builder.build().getURI().toString());
+        assertEquals("https://example.com/v1/calls/uuid/stream", builder.build().getURI().toString());
     }
 }

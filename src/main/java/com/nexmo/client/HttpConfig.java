@@ -61,15 +61,15 @@ public class HttpConfig {
     }
 
     public String getVersionedApiBaseUri(String version) {
-        return (isDefaultApiBaseUri()) ? appendVersionToUri(apiBaseUri, version) : apiBaseUri;
+        return appendVersionToUri(apiBaseUri, version);
     }
 
     public String getVersionedRestBaseUri(String version) {
-        return (isDefaultRestBaseUri()) ? appendVersionToUri(restBaseUri, version) : restBaseUri;
+        return appendVersionToUri(restBaseUri, version);
     }
 
     public String getVersionedSnsBaseUri(String version) {
-        return (isDefaultSnsBaseUri()) ? appendVersionToUri(snsBaseUri, version) : snsBaseUri;
+        return appendVersionToUri(snsBaseUri, version);
     }
 
     private String appendVersionToUri(String uri, String version) {
