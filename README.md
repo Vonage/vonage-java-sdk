@@ -26,7 +26,19 @@ To install the Java client library using Gradle, add the following to `build.gra
 repositories {
     mavenCentral()
 }
+```
 
+For Gradle 3.4 or Higher:
+
+```groovy
+dependencies {
+    implementation 'com.nexmo:client:3.9.0'
+}
+```
+
+For older versions:
+
+```groovy
 dependencies {
     compile 'com.nexmo:client:3.9.0'
 }
