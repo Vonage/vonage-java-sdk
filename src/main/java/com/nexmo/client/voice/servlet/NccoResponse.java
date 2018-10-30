@@ -46,7 +46,7 @@ public class NccoResponse {
     private List<Action> actionList;
 
     public NccoResponse() {
-        nccoList = new ArrayList<>();
+        actionList = new ArrayList<>();
     }
 
     public void appendNcco(Action action) {

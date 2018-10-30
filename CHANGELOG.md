@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - All `Action` classes are now immutable. 
 - The `eventUrl` property of `ConnectAction`, `ConversationAction`, `InputAction`, and `RecordAction` is now a `Collection<String>` instead of an array.
 - The `eventMethod` property of `ConnectAction`, `ConversationAction`, `InputAction`, and `RecordAction` is now an `EventMethod` enum instead of a String.
+- Removed `ConnectWebSocketNcco` as it is built into `ConnectAction`.
 
 ## [3.10.0] - 2018-11-02
 
