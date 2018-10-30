@@ -28,7 +28,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.nexmo:client:3.9.0'
+    implementation 'com.nexmo:client:3.9.0'
 }
 ```
 
