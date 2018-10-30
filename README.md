@@ -323,7 +323,7 @@ client.getRedactClient().redactTransaction(VOICE_ID, RedactRequest.Product.VOICE
 
 ### Create Secret
 
-Create a secret associated to your account id:
+Create a secret associated with your account id:
 
 ```java
 AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
@@ -333,7 +333,7 @@ SecretResponse response = client.getAccountClient().createSecret(API_KEY, "Foo84
 
 ### List Secrets
 
-List the secret id (but not content) associated to your account id:
+List the secret id (but not content) associated with your account id:
 
 ```java
 AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
@@ -345,7 +345,7 @@ Collection<SecretResponse> secrets = response.getSecrets();
 
 ### Revoke Secret
 
-Revoke a secret associated to your account id:
+Revoke a secret associated with your account id:
 
 ```java
 AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
@@ -355,7 +355,7 @@ client.getAccountClient().revokeSecret(API_KEY, SECRET_ID);
 
 ### Retrieve Secret
 
-Get information about a specific secret associated to your account id:
+Get information about a specific secret associated with your account id:
 
 ```java
 AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
@@ -389,7 +389,7 @@ It is a good idea to [talk to us](https://nexmo-community-invite.herokuapp.com/)
 first if you plan to add any new functionality.
 Otherwise, [bug reports](https://github.com/Nexmo/nexmo-java/issues),
 [bug fixes](https://github.com/Nexmo/nexmo-java/pulls) and feedback on the
-library is always appreciated.
+library are always appreciated.
 
 
 [create_account]: https://docs.nexmo.com/tools/dashboard#setting-up-your-nexmo-account
