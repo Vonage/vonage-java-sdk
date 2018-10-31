@@ -60,7 +60,7 @@ public class SearchEndpoint extends AbstractMethod<SearchRequest, SearchResult[]
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
     private static final String DEFAULT_URI = "https://api.nexmo.com/verify/search/xml";
-    
+
     private XmlParser xmlParser = new XmlParser();
 
     private String uri = DEFAULT_URI;
