@@ -167,6 +167,6 @@ public class UpdateApplicationMethodTest {
 
         RequestBuilder builder = method.makeRequest(request);
         assertEquals("PUT", builder.getMethod());
-        assertEquals("https://example.com/applications/app-id", builder.build().getURI().toString());
+        assertEquals("https://example.com/v1/applications/app-id", builder.build().getURI().toString());
     }
 }

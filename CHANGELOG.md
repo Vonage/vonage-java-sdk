@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Development]
+
+### Changed
+- Update base uri to always have the version string appended to it.
+
 ## [3.9.0] - 2018-10-18
 ### Added
 - Added missing voices to `VoiceName` enum.
