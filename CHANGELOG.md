@@ -73,12 +73,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
     - `VerifyEndpoint`
     - `CheckEndpoint`
     - `SearchEndpoint`
-   
+
 - Deprecated the following XML results:
     - `VerifyResult` should use `VerifyResponse`
     - `CheckResult` should use `CheckResponse`
     - `SearchResult` should use `SearchVerifyResponse`
-    
+
 - Deprecated the following XML methods:
     - `VerifyCheckMethod`
 
@@ -140,7 +140,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Add `NumbersClient.updateNumber` and `NumbersClient.linkNumber`.
 - Add the ability to mute, unmute, earmuff, unearmuff and transfer an ongoing call.
 - Add `VerifyClient.advanceVerification` and `VerifyClient.cancelVerification`
-- Add `ApplicationClient` end methods for creating, updating, deleting, listing and getting configured applications. 
+- Add `ApplicationClient` end methods for creating, updating, deleting, listing and getting configured applications.
 - Add extra endpoints for searching SMS messages.
 
 ## [2.0.2] - 2017-05-04

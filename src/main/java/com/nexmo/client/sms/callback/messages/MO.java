@@ -53,7 +53,7 @@ public class MO implements java.io.Serializable {
     private String concatReferenceNumber;
     private int concatTotalParts;
     private int concatPartNumber;
-    
+
     /**
      * Describes the type of payload this message carries
      */
@@ -133,7 +133,7 @@ public class MO implements java.io.Serializable {
         this.binaryMessageBody = binaryMessageBody;
         this.userDataHeader = userDataHeader;
     }
-    
+
     public void setConcatenationData(String concatReferenceNumber, int concatTotalParts, int concatPartNumber) {
         concat = true;
         this.concatReferenceNumber = concatReferenceNumber;
