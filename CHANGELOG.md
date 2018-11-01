@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Development]
 
+### Added
+- Added the ability to specify the number of channels to record in `RecordNcco`
+
 ### Changed
 - Update base uri to always have the version string appended to it.
 
