@@ -38,6 +38,7 @@ public class RecordNcco implements Ncco {
     private String[] eventUrl = null;
     private String eventMethod = null;
     private SplitRecording split = null;
+    private Integer channels = null;
 
     public RecordingFormat getFormat() {
         return format;
@@ -111,6 +112,14 @@ public class RecordNcco implements Ncco {
 
     public void setSplit(SplitRecording split) {
         this.split = split;
+    }
+
+    public Integer getChannels() {
+        return channels;
+    }
+
+    public void setChannels(Integer channels) {
+        this.channels = channels;
     }
 
     @Override

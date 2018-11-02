@@ -114,4 +114,11 @@ public class RecordNccoTest {
         ncco.setSplit(SplitRecording.CONVERSATION);
         assertEquals("{\"split\":\"conversation\",\"action\":\"record\"}", ncco.toJson());
     }
+
+    @Test
+    public void testChannels() {
+        RecordNcco ncco = new RecordNcco();
+        ncco.setChannels(10);
+        assertEquals("{\"channels\":10,\"action\":\"record\"}", ncco.toJson());
+    }
 }
