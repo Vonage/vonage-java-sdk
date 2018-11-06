@@ -253,7 +253,7 @@ NexmoClient client = new NexmoClient.Builder()
         .apiKey(API_KEY)
         .apiSecret(API_SECRET)
         .build();
-VerifyResult ongoingVerify = client.getVerifyClient().verify(TO_NUMBER, "NEXMO");
+VerifyResponse ongoingVerify = client.getVerifyClient().verify(TO_NUMBER, "NEXMO");
 ```
 
 ### Check the 2FA Code
