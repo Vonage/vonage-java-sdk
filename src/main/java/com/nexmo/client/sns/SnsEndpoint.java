@@ -46,7 +46,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
-public class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
+class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
     private static final Log log = LogFactory.getLog(SnsClient.class);
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
@@ -55,7 +55,7 @@ public class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
 
     private XmlParser xmlParser = new XmlParser();
 
-    public SnsEndpoint(HttpWrapper httpWrapper) {
+    SnsEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
