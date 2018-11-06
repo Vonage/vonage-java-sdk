@@ -74,7 +74,6 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      * @throws IOException          if an exception occurs making the REST call
      * @throws NexmoClientException if there is a problem parsing the HTTP response
      */
-    // TODO: Consider wrapping IOException in a nexmo-specific transport exception.
     public ResultT execute(RequestT request) throws IOException, NexmoClientException {
         try {
             RequestBuilder requestBuilder = applyAuth(makeRequest(request));
