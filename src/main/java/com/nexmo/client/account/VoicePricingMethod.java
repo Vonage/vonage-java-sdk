@@ -23,7 +23,7 @@ package com.nexmo.client.account;
 
 import com.nexmo.client.HttpWrapper;
 
-public class VoicePricingMethod extends PricingMethod {
+class VoicePricingMethod extends PricingMethod {
     private static final String PATH = "/account/get-pricing/outbound/voice";
 
     VoicePricingMethod(HttpWrapper httpWrapper) {

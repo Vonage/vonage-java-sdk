@@ -33,12 +33,12 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class TopUpMethod extends AbstractMethod<TopUpRequest, Void> {
+class TopUpMethod extends AbstractMethod<TopUpRequest, Void> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
     private static final String PATH = "/account/top-up";
 
-    public TopUpMethod(HttpWrapper httpWrapper) {
+    TopUpMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 

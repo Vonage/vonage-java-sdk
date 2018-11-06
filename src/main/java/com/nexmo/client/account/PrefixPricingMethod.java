@@ -30,7 +30,7 @@ import org.apache.http.impl.client.BasicResponseHandler;
 
 import java.io.IOException;
 
-public class PrefixPricingMethod extends AbstractMethod<PrefixPricingRequest, PrefixPricingResponse> {
+class PrefixPricingMethod extends AbstractMethod<PrefixPricingRequest, PrefixPricingResponse> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
     private static final String PATH = "/get-prefix-pricing/outbound/";

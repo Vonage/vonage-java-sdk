@@ -34,7 +34,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class RevokeSecretMethod extends AbstractMethod<SecretRequest, Void> {
+class RevokeSecretMethod extends AbstractMethod<SecretRequest, Void> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
     private static final String PATH = "/accounts/%s/secrets/%s";

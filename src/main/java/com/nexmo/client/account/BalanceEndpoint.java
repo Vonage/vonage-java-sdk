@@ -32,13 +32,13 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class BalanceEndpoint extends AbstractMethod<Void, BalanceResponse> {
+class BalanceEndpoint extends AbstractMethod<Void, BalanceResponse> {
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
     private static final String PATH = "/account/get-balance";
 
-    public BalanceEndpoint(HttpWrapper httpWrapper) {
+    BalanceEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
