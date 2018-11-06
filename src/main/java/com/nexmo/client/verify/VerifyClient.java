@@ -25,7 +25,6 @@ import com.nexmo.client.AbstractClient;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClient;
 import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.verify.endpoints.ControlEndpoint;
 
 import java.io.IOException;
 import java.util.Locale;

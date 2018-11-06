@@ -19,17 +19,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.verify.endpoints;
+package com.nexmo.client.verify;
 
 import com.nexmo.client.HttpConfig;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.TestUtils;
 import com.nexmo.client.auth.SignatureAuthMethod;
 import com.nexmo.client.auth.TokenAuthMethod;
-import com.nexmo.client.verify.ControlRequest;
-import com.nexmo.client.verify.ControlResponse;
-import com.nexmo.client.verify.VerifyControlCommand;
-import com.nexmo.client.verify.VerifyException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.junit.Before;
