@@ -59,7 +59,7 @@ class ListCallsMethod extends AbstractMethod<CallsFilter, CallInfoPage> {
     @Override
     public RequestBuilder makeRequest(CallsFilter filter) throws NexmoClientException, UnsupportedEncodingException {
         URIBuilder uriBuilder;
-        String uri = httpWrapper.getHttpConfig().getApiBaseUri() + PATH;
+        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH;
 
         try {
             uriBuilder = new URIBuilder(uri);
