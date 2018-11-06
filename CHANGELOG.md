@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added `SipEndpoint` to `com.nexmo.voice.ncco` package for use with `ConnectAction`.
 - Added `EventMethod` enumeration to replace the usage of strings.
 - Added `EventType` enumeration and the ability to specify the `eventType` property of `ConnectAction`.
+- Added `NexmoClient.Builder` to allow for fluent creation of `NexmoClient`.
 
 ### Changed
 - Renamed all `Ncco` classes to `Action` classes:

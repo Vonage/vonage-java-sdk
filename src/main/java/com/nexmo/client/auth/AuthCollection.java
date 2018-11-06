@@ -46,6 +46,10 @@ public class AuthCollection {
         }
     }
 
+    public AuthCollection(SortedSet<AuthMethod> authMethods) {
+        this.authList = authMethods;
+    }
+
     /**
      * Add a new {@link AuthMethod} to the set managed by this AuthCollection
      *
@@ -60,7 +64,9 @@ public class AuthCollection {
      *
      * @param type The type of AuthMethod to be located
      * @param <T>  The type of AuthMethod which will be returned
+     *
      * @return An AuthMethod subclass matching type
+     *
      * @throws NexmoUnacceptableAuthException if no matching AuthMethod is found.
      */
     public <T extends AuthMethod> T getAuth(Class<T> type) throws NexmoUnacceptableAuthException {
@@ -76,7 +82,9 @@ public class AuthCollection {
      * Obtain an {@link AuthMethod} instance for a set of acceptable AuthMethod classes.
      *
      * @param acceptableAuthMethodClasses A Set of AuthMethod classes which are suitable for the target REST endpoint.
+     *
      * @return the preferred AuthMethod from the provided set of acceptable AuthMethod classes
+     *
      * @throws NexmoUnacceptableAuthException if no appropriate AuthMethod is held by this AuthCollection
      */
     public AuthMethod getAcceptableAuthMethod(Set<Class> acceptableAuthMethodClasses) throws NexmoUnacceptableAuthException {
