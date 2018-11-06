@@ -19,10 +19,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.applications.endpoints;
+package com.nexmo.client.applications;
 
 import com.nexmo.client.NexmoUnexpectedException;
-import com.nexmo.client.applications.ApplicationDetails;
 import org.junit.Test;
 
 import static org.junit.Assert.fail;

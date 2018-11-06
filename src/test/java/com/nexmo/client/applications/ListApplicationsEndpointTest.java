@@ -19,12 +19,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.applications.endpoints;
+package com.nexmo.client.applications;
 
 import com.nexmo.client.HttpConfig;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.TestUtils;
-import com.nexmo.client.applications.*;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;

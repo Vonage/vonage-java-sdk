@@ -19,11 +19,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.applications.endpoints;
+package com.nexmo.client.applications;
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.applications.ApplicationDetails;
 import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.voice.endpoints.AbstractMethod;
 import org.apache.http.HttpResponse;
@@ -33,13 +32,13 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class GetApplicationEndpoint extends AbstractMethod<String, ApplicationDetails> {
+public class UpdateApplicationMethod extends AbstractMethod<UpdateApplicationRequest, ApplicationDetails> {
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
     private static final String PATH = "/applications/";
 
-    public GetApplicationEndpoint(HttpWrapper httpWrapper) {
+    public UpdateApplicationMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -49,9 +48,10 @@ public class GetApplicationEndpoint extends AbstractMethod<String, ApplicationDe
     }
 
     @Override
-    public RequestBuilder makeRequest(String applicationId) throws NexmoClientException, UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder.get(
-                httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + applicationId);
+    public RequestBuilder makeRequest(UpdateApplicationRequest request) throws NexmoClientException, UnsupportedEncodingException {
+        RequestBuilder requestBuilder = RequestBuilder.put(
+                httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getApplicationId());
+        request.addParams(requestBuilder);
         return requestBuilder;
     }
 

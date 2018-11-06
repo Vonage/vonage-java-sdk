@@ -19,18 +19,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.applications.endpoints;
+package com.nexmo.client.applications;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.nexmo.client.applications.ApplicationDetails;
+import com.nexmo.client.NexmoUnexpectedException;
+import org.junit.Test;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class EmbeddedApplicationDetails {
-    private ApplicationDetails[] applicationDetails;
+import static org.junit.Assert.fail;
 
-    @JsonProperty("applications")
-    public ApplicationDetails[] getApplicationDetails() {
-        return applicationDetails;
+public class ListApplicationsResponseTest {
+    @Test
+    public void testJsonError() throws Exception {
+        try {
+            ListApplicationsResponse.fromJson("blarg");
+            fail("Deserializing nonsense JSON should result in a NexmoUnexpectedException");
+        } catch (NexmoUnexpectedException nue) {
+            // This is expected
+        }
     }
 }

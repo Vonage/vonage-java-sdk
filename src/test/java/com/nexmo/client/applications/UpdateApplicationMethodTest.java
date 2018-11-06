@@ -19,14 +19,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.applications.endpoints;
+package com.nexmo.client.applications;
 
 import com.nexmo.client.HttpConfig;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.TestUtils;
-import com.nexmo.client.applications.ApplicationDetails;
-import com.nexmo.client.applications.ApplicationKeys;
-import com.nexmo.client.applications.WebHook;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
@@ -37,12 +34,12 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
-public class GetApplicationEndpointTest {
-    private GetApplicationEndpoint endpoint;
+public class UpdateApplicationMethodTest {
+    private UpdateApplicationMethod endpoint;
 
     @Before
     public void setUp() throws Exception {
-        this.endpoint = new GetApplicationEndpoint(new HttpWrapper());
+        this.endpoint = new UpdateApplicationMethod(new HttpWrapper());
     }
 
     @Test
@@ -52,18 +49,55 @@ public class GetApplicationEndpointTest {
     }
 
     @Test
-    public void testMakeRequest() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest("app-id");
-        assertEquals("GET", builder.getMethod());
+    public void testMakeRequestWithOptionalParams() throws Exception {
+        UpdateApplicationRequest update = new UpdateApplicationRequest(
+                "app-id",
+                "app name",
+                "https://example.com/answer",
+                "https://example.com/event"
+        );
+        update.setAnswerMethod("PUT");
+        update.setEventMethod("DELETE");
+
+        RequestBuilder builder = this.endpoint.makeRequest(update);
+        assertEquals("PUT", builder.getMethod());
         assertEquals("https://api.nexmo.com/v1/applications/app-id", builder.build().getURI().toString());
 
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
-        assertEquals(0, params.size());
+        assertEquals("app name", params.get("name"));
+        assertEquals("https://example.com/event", params.get("event_url"));
+        assertEquals("https://example.com/answer", params.get("answer_url"));
+        assertEquals("PUT", params.get("answer_method"));
+        assertEquals("DELETE", params.get("event_method"));
+        assertNull(params.get("app_id"));
+    }
+
+    @Test
+    public void testMakeRequest() throws Exception {
+        UpdateApplicationRequest update = new UpdateApplicationRequest(
+                "app-id",
+                "app name",
+                "https://example.com/answer",
+                "https://example.com/event"
+        );
+
+        RequestBuilder builder = this.endpoint.makeRequest(update);
+        assertEquals("PUT", builder.getMethod());
+        assertEquals("https://api.nexmo.com/v1/applications/app-id", builder.build().getURI().toString());
+
+        Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
+        assertEquals("app name", params.get("name"));
+        assertEquals("https://example.com/event", params.get("event_url"));
+        assertEquals("https://example.com/answer", params.get("answer_url"));
+        assertNull(params.get("answer_method"));
+        assertNull(params.get("event_method"));
+        assertNull(params.get("app_id"));
     }
 
     @Test
     public void testParseResponse() throws Exception {
-        HttpResponse stub = TestUtils.makeJsonHttpResponse(200,
+        HttpResponse stub = TestUtils.makeJsonHttpResponse(
+                200,
                 "{\n" + "  \"id\": \"aaaaaaaa-bbbb-cccc-dddd-0123456789ab\",\n" + "  \"name\": \"My Application\",\n"
                         + "  \"voice\": {\n" + "    \"webhooks\": [\n" + "      {\n"
                         + "        \"endpoint_type\": \"answer_url\",\n"
@@ -72,8 +106,7 @@ public class GetApplicationEndpointTest {
                         + "        \"endpoint_type\": \"event_url\",\n"
                         + "        \"endpoint\": \"https://example.com/event\",\n"
                         + "        \"http_method\": \"POST\"\n" + "      }\n" + "    ]\n" + "  },\n" + "  \"keys\": {\n"
-                        + "    \"public_key\": \"PUBLIC_KEY\",\n" + "    \"private_key\": \"PRIVATE_KEY\"\n" + "  },\n"
-                        + "  \"_links\": {\n" + "    \"self\": {\n"
+                        + "    \"public_key\": \"PUBLIC_KEY\"\n" + "  },\n" + "  \"_links\": {\n" + "    \"self\": {\n"
                         + "      \"href\": \"/v1/applications/aaaaaaaa-bbbb-cccc-dddd-0123456789ab\"\n" + "    }\n"
                         + "  }\n" + "}"
         );
@@ -98,23 +131,38 @@ public class GetApplicationEndpointTest {
         ApplicationKeys keys = response.getKeys();
 
         assertEquals("PUBLIC_KEY", keys.getPublicKey());
-        assertEquals("PRIVATE_KEY", keys.getPrivateKey());
+        assertNull(keys.getPrivateKey());
     }
 
     @Test
     public void testDefaultUri() throws Exception {
-        RequestBuilder builder = endpoint.makeRequest("application-id");
-        assertEquals("GET", builder.getMethod());
-        assertEquals("https://api.nexmo.com/v1/applications/application-id", builder.build().getURI().toString());
+        UpdateApplicationRequest request = new UpdateApplicationRequest(
+                "app-id",
+                "app name",
+                "https://example.com/answer",
+                "https://example.com/event"
+        );
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("PUT", builder.getMethod());
+        assertEquals("https://api.nexmo.com/v1/applications/app-id",
+                builder.build().getURI().toString()
+        );
     }
 
     @Test
     public void testCustomUri() throws Exception {
         HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
-        GetApplicationEndpoint endpoint = new GetApplicationEndpoint(wrapper);
+        UpdateApplicationMethod method = new UpdateApplicationMethod(wrapper);
+        UpdateApplicationRequest request = new UpdateApplicationRequest(
+                "app-id",
+                "app name",
+                "https://example.com/answer",
+                "https://example.com/event"
+        );
 
-        RequestBuilder builder = endpoint.makeRequest("application-id");
-        assertEquals("GET", builder.getMethod());
-        assertEquals("https://example.com/v1/applications/application-id", builder.build().getURI().toString());
+        RequestBuilder builder = method.makeRequest(request);
+        assertEquals("PUT", builder.getMethod());
+        assertEquals("https://example.com/v1/applications/app-id", builder.build().getURI().toString());
     }
 }

@@ -24,7 +24,6 @@ package com.nexmo.client.applications;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClient;
 import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.applications.endpoints.ApplicationsEndpoint;
 
 import java.io.IOException;
 
