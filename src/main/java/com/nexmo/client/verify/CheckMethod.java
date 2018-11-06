@@ -33,7 +33,7 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class CheckMethod extends AbstractMethod<CheckRequest, CheckResponse> {
+class CheckMethod extends AbstractMethod<CheckRequest, CheckResponse> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
     private static final String PATH = "/verify/check/json";

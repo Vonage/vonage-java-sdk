@@ -33,13 +33,13 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class ControlEndpoint extends AbstractMethod<ControlRequest, ControlResponse> {
+class ControlEndpoint extends AbstractMethod<ControlRequest, ControlResponse> {
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
     private static final String PATH = "/verify/control/json";
 
-    public ControlEndpoint(HttpWrapper httpWrapper) {
+    ControlEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 

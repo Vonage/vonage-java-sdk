@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchEndpoint {
+class SearchEndpoint {
     private SearchMethod searchMethod;
 
     SearchEndpoint(HttpWrapper httpWrapper) {
