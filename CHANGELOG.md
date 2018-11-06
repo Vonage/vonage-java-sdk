@@ -36,6 +36,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - The `eventUrl` property of `ConnectAction`, `ConversationAction`, `InputAction`, and `RecordAction` is now a `Collection<String>` instead of an array.
 - The `eventMethod` property of `ConnectAction`, `ConversationAction`, `InputAction`, and `RecordAction` is now an `EventMethod` enum instead of a String.
 - Removed `ConnectWebSocketNcco` as it is built into `ConnectAction`.
+- `VerifyClient` will now return `*Response` instead of `*Result` objects.
+- Refactored `com.nexmo.client.voice.endpoints` to be part of the `com.nexmo.client.voice` package.
+- Made all `*Endpoint` and `*Method` classes package scoped. Users should always go through the appropriate `Client` classes.
+- Moved `AbstractMethod` to the root package.
+- Removed legacy `setUri` methods from the various `VoiceClient` endpoints. This should be done through `HttpConfig`.
 
 ## [3.10.0] - 2018-11-02
 
