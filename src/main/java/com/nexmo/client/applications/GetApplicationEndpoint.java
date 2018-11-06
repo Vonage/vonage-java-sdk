@@ -32,13 +32,13 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class GetApplicationEndpoint extends AbstractMethod<String, ApplicationDetails> {
+class GetApplicationEndpoint extends AbstractMethod<String, ApplicationDetails> {
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
     private static final String PATH = "/applications/";
 
-    public GetApplicationEndpoint(HttpWrapper httpWrapper) {
+    GetApplicationEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -49,9 +49,7 @@ public class GetApplicationEndpoint extends AbstractMethod<String, ApplicationDe
 
     @Override
     public RequestBuilder makeRequest(String applicationId) throws NexmoClientException, UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder.get(
-                httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + applicationId);
-        return requestBuilder;
+        return RequestBuilder.get(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + applicationId);
     }
 
     @Override

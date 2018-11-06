@@ -26,14 +26,14 @@ import com.nexmo.client.NexmoClientException;
 
 import java.io.IOException;
 
-public class ApplicationsEndpoint {
+class ApplicationsEndpoint {
     private CreateApplicationMethod create;
     private UpdateApplicationMethod update;
     private GetApplicationEndpoint get;
     private ListApplicationsEndpoint list;
     private DeleteApplicationMethod delete;
 
-    public ApplicationsEndpoint(HttpWrapper httpWrapper) {
+    ApplicationsEndpoint(HttpWrapper httpWrapper) {
         this.create = new CreateApplicationMethod(httpWrapper);
         this.update = new UpdateApplicationMethod(httpWrapper);
         this.get = new GetApplicationEndpoint(httpWrapper);
@@ -41,27 +41,27 @@ public class ApplicationsEndpoint {
         this.delete = new DeleteApplicationMethod(httpWrapper);
     }
 
-    public ApplicationDetails post(CreateApplicationRequest request)
+    ApplicationDetails post(CreateApplicationRequest request)
             throws IOException, NexmoClientException {
         return this.create.execute(request);
     }
 
-    public ApplicationDetails put(UpdateApplicationRequest request)
+    ApplicationDetails put(UpdateApplicationRequest request)
             throws IOException, NexmoClientException {
         return this.update.execute(request);
     }
 
-    public ApplicationDetails get(String applicationId)
+    ApplicationDetails get(String applicationId)
             throws IOException, NexmoClientException {
         return this.get.execute(applicationId);
     }
 
-    public ListApplicationsResponse get(ListApplicationsRequest request)
+    ListApplicationsResponse get(ListApplicationsRequest request)
             throws IOException, NexmoClientException {
         return this.list.execute(request);
     }
 
-    public void delete(String applicationId)
+    void delete(String applicationId)
             throws IOException, NexmoClientException {
         this.delete.execute(applicationId);
     }

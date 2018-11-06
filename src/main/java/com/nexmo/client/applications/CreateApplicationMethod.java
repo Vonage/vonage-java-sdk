@@ -32,13 +32,13 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class CreateApplicationMethod extends AbstractMethod<CreateApplicationRequest, ApplicationDetails> {
+class CreateApplicationMethod extends AbstractMethod<CreateApplicationRequest, ApplicationDetails> {
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
     private static final String PATH = "/applications";
 
-    public CreateApplicationMethod(HttpWrapper httpWrapper) {
+    CreateApplicationMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 

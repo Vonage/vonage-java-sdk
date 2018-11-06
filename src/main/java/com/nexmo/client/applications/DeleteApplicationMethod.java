@@ -32,13 +32,13 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class DeleteApplicationMethod extends AbstractMethod<String, Void> {
+class DeleteApplicationMethod extends AbstractMethod<String, Void> {
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
     private static final String PATH = "/applications/";
 
-    public DeleteApplicationMethod(HttpWrapper httpWrapper) {
+    DeleteApplicationMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -49,9 +49,7 @@ public class DeleteApplicationMethod extends AbstractMethod<String, Void> {
 
     @Override
     public RequestBuilder makeRequest(String applicationId) throws NexmoClientException, UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder.delete(
-                httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + applicationId);
-        return requestBuilder;
+        return RequestBuilder.delete(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + applicationId);
     }
 
     @Override
