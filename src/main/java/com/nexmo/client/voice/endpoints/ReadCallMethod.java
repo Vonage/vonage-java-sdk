@@ -21,6 +21,7 @@
  */
 package com.nexmo.client.voice.endpoints;
 
+import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.auth.JWTAuthMethod;
 import com.nexmo.client.voice.CallInfo;

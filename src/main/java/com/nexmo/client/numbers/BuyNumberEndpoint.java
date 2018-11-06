@@ -21,12 +21,8 @@
  */
 package com.nexmo.client.numbers;
 
-import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoBadRequestException;
-import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.NexmoMethodFailedException;
+import com.nexmo.client.*;
 import com.nexmo.client.auth.TokenAuthMethod;
-import com.nexmo.client.voice.endpoints.AbstractMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;

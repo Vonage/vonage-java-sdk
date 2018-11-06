@@ -21,6 +21,7 @@
  */
 package com.nexmo.client.sms;
 
+import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.NexmoResponseParseException;
@@ -28,7 +29,6 @@ import com.nexmo.client.auth.SignatureAuthMethod;
 import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.legacyutils.XmlParser;
 import com.nexmo.client.sms.messages.Message;
-import com.nexmo.client.voice.endpoints.AbstractMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;

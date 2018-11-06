@@ -19,11 +19,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.voice.endpoints;
+package com.nexmo.client;
 
 
-import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.AuthCollection;
 import com.nexmo.client.auth.AuthMethod;
 import com.nexmo.client.auth.JWTAuthMethod;
