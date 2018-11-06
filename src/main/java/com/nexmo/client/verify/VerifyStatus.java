@@ -43,16 +43,15 @@ public enum VerifyStatus {
     INVALID_CODE(16),
     WRONG_CODE_THROTTLED(17),
     TOO_MANY_DESTINATIONS(18),
-    NO_RESPONSE(101),
-    COMMS_FAILURE(-1);
+    NO_RESPONSE(101), COMMS_FAILURE(-1), UNKNOWN(Integer.MAX_VALUE);
 
     private int verifyStatus;
 
-    private static Map<Integer, VerifyStatus> integerStatusValues = new HashMap<>();
+    private static final Map<Integer, VerifyStatus> VERIFY_STATUS_INDEX = new HashMap<>();
 
     static {
         for (VerifyStatus verifyStatus : VerifyStatus.values()) {
-            integerStatusValues.put(verifyStatus.verifyStatus, verifyStatus);
+            VERIFY_STATUS_INDEX.put(verifyStatus.verifyStatus, verifyStatus);
         }
     }
 
@@ -60,10 +59,12 @@ public enum VerifyStatus {
      * Look up the {@link VerifyStatus} based on the int value.
      *
      * @param verifyStatus the int value of the verify status.
+     *
      * @return VerifyStatus based on the int value given.
      */
     public static VerifyStatus fromInt(int verifyStatus) {
-        return integerStatusValues.get(verifyStatus);
+        VerifyStatus foundVerifyStatus = VERIFY_STATUS_INDEX.get(verifyStatus);
+        return (foundVerifyStatus != null) ? foundVerifyStatus : UNKNOWN;
     }
 
     VerifyStatus(int verifyStatus) {

@@ -34,40 +34,23 @@ class VerifyEndpoint {
         this.verifyMethod = new VerifyMethod(httpWrapper);
     }
 
-    VerifyResult verify(String number,
-                        String brand,
-                        String from,
-                        int length,
-                        Locale locale,
-                        VerifyRequest.LineType type) throws IOException, NexmoClientException {
+    VerifyResponse verify(String number, String brand, String from, int length, Locale locale, VerifyRequest.LineType type) throws IOException, NexmoClientException {
         return verify(new VerifyRequest(number, brand, from, length, locale, type));
     }
 
-    VerifyResult verify(String number,
-                        String brand,
-                        String from,
-                        int length,
-                        Locale locale) throws IOException, NexmoClientException {
+    VerifyResponse verify(String number, String brand, String from, int length, Locale locale) throws IOException, NexmoClientException {
         return verify(new VerifyRequest(number, brand, from, length, locale));
     }
 
-    VerifyResult verify(String number, String brand, String from) throws IOException, NexmoClientException {
+    VerifyResponse verify(String number, String brand, String from) throws IOException, NexmoClientException {
         return verify(new VerifyRequest(number, brand, from));
     }
 
-    VerifyResult verify(String number, String brand) throws IOException, NexmoClientException {
+    VerifyResponse verify(String number, String brand) throws IOException, NexmoClientException {
         return verify(new VerifyRequest(number, brand));
     }
 
-    VerifyResult verify(VerifyRequest request) throws IOException, NexmoClientException {
-        // TODO: Remove translation when releasing 4.0
-        return translateFromVerifyResponse(this.verifyMethod.execute(request));
-    }
-
-    private VerifyResult translateFromVerifyResponse(VerifyResponse response) {
-        return new VerifyResult(response.getStatus().getVerifyStatus(),
-                response.getRequestId(),
-                response.getErrorText(),
-                response.getStatus().isTemporaryError());
+    VerifyResponse verify(VerifyRequest request) throws IOException, NexmoClientException {
+        return this.verifyMethod.execute(request);
     }
 }
