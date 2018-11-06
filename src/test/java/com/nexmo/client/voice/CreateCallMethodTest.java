@@ -93,16 +93,6 @@ public class CreateCallMethodTest {
     }
 
     @Test
-    public void testLegacyCustomUri() throws Exception {
-        method.setUri("https://api.example.com/calls");
-        RequestBuilder request = method.makeRequest(new Call("447700900903",
-                "447700900904",
-                "https://example.com/answer"
-        ));
-        assertEquals("https://api.example.com/calls", request.getUri().toString());
-    }
-
-    @Test
     public void testParseResponse() throws Exception {
 
         HttpResponse stubResponse = new BasicHttpResponse(new BasicStatusLine(new ProtocolVersion("1.1", 1, 1),

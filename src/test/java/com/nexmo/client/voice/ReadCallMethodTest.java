@@ -75,13 +75,6 @@ public class ReadCallMethodTest {
     }
 
     @Test
-    public void testBaseUri() throws Exception {
-        method.setBaseUri("http://api.example.com/");
-        assertEquals("http://api.example.com/", method.getBaseUri());
-    }
-
-
-    @Test
     public void testRequestThrottleResponse() throws Exception {
         test429(new ReadCallMethod(null));
     }

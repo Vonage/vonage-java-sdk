@@ -38,14 +38,6 @@ public class StopStreamMethodTest {
     }
 
     @Test
-    public void testLegacyCustomUri() throws Exception {
-        method.setUri("https://api.example.org/");
-        RequestBuilder builder = method.makeRequest("uuid");
-        assertEquals("DELETE", builder.getMethod());
-        assertEquals("https://api.example.org/uuid/stream", builder.build().getURI().toString());
-    }
-
-    @Test
     public void testDefaultUri() throws Exception {
         RequestBuilder builder = method.makeRequest("uuid");
         assertEquals("DELETE", builder.getMethod());

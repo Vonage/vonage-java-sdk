@@ -127,8 +127,10 @@ public class ListCallsMethodTest {
 
     @Test
     public void testBadUriThrowsException() throws Exception {
-        method.setUri(":this::///isnota_uri");
-        assertEquals(":this::///isnota_uri", method.getUri());
+        ListCallsMethod method = new ListCallsMethod(new HttpWrapper(new HttpConfig.Builder()
+                .baseUri(":this::///isnota_uri")
+                .build()));
+
         try {
             CallsFilter filter = new CallsFilter();
             filter.setPageSize(30);

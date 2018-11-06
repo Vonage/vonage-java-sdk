@@ -38,15 +38,6 @@ public class StartTalkMethodTest {
     }
 
     @Test
-    public void testLegacyCustomUri() throws Exception {
-        TalkRequest request = new TalkRequest("uuid", "text", 0);
-        method.setUri("https://api.example.org/");
-        RequestBuilder builder = method.makeRequest(request);
-        assertEquals("PUT", builder.getMethod());
-        assertEquals("https://api.example.org/uuid/talk", builder.build().getURI().toString());
-    }
-
-    @Test
     public void testDefaultUri() throws Exception {
         TalkRequest request = new TalkRequest("uuid", "text", 0);
         RequestBuilder builder = method.makeRequest(request);

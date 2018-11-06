@@ -38,15 +38,6 @@ public class StartStreamMethodTest {
     }
 
     @Test
-    public void testLegacyCustomUri() throws Exception {
-        StreamRequest request = new StreamRequest("uuid", "stream-url", 0);
-        method.setUri("https://api.example.org/");
-        RequestBuilder builder = method.makeRequest(request);
-        assertEquals("PUT", builder.getMethod());
-        assertEquals("https://api.example.org/uuid/stream", builder.build().getURI().toString());
-    }
-
-    @Test
     public void testDefaultUri() throws Exception {
         StreamRequest request = new StreamRequest("uuid", "stream-url", 0);
         RequestBuilder builder = method.makeRequest(request);
