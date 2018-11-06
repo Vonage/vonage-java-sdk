@@ -36,7 +36,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class RedactMethod extends AbstractMethod<RedactRequest, RedactResponse> {
+class RedactMethod extends AbstractMethod<RedactRequest, RedactResponse> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
     private static final String PATH = "/redact/transaction";
