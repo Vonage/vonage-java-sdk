@@ -21,7 +21,6 @@
  */
 package com.nexmo.client;
 
-import com.nexmo.client.voice.endpoints.AbstractMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.ProtocolVersion;

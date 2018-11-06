@@ -22,10 +22,10 @@
 package com.nexmo.client.numbers;
 
 
+import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.TokenAuthMethod;
-import com.nexmo.client.voice.endpoints.AbstractMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
@@ -33,11 +33,11 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class ListNumbersEndpoint extends AbstractMethod<ListNumbersFilter, ListNumbersResponse> {
+class ListNumbersEndpoint extends AbstractMethod<ListNumbersFilter, ListNumbersResponse> {
     private static final String PATH = "/account/numbers";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
-    public ListNumbersEndpoint(HttpWrapper httpWrapper) {
+    ListNumbersEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -61,7 +61,7 @@ public class ListNumbersEndpoint extends AbstractMethod<ListNumbersFilter, ListN
         return ListNumbersResponse.fromJson(json);
     }
 
-    public ListNumbersResponse listNumbers(ListNumbersFilter request) throws IOException, NexmoClientException {
+    ListNumbersResponse listNumbers(ListNumbersFilter request) throws IOException, NexmoClientException {
         return this.execute(request);
     }
 }

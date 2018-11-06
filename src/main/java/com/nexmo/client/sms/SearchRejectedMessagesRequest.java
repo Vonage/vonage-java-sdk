@@ -28,7 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class SearchRejectedMessagesRequest {
-    private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     private final Date date;
     private final String recipient;
 
@@ -39,7 +39,6 @@ public class SearchRejectedMessagesRequest {
     }
 
     public void addParams(RequestBuilder request) {
-        request.addParameter("date", this.dateFormat.format(this.date))
-                .addParameter("to", this.recipient);
+        request.addParameter("date", DATE_FORMAT.format(this.date)).addParameter("to", this.recipient);
     }
 }

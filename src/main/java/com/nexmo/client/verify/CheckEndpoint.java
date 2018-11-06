@@ -33,30 +33,15 @@ class CheckEndpoint {
         this.checkMethod = new CheckMethod(httpWrapper);
     }
 
-    CheckResult check(final String requestId,
-                      final String code,
-                      final String ipAddress) throws IOException, NexmoClientException {
+    CheckResponse check(final String requestId, final String code, final String ipAddress) throws IOException, NexmoClientException {
         return check(new CheckRequest(requestId, code, ipAddress));
     }
 
-    CheckResult check(final String requestId, final String code) throws IOException, NexmoClientException {
+    CheckResponse check(final String requestId, final String code) throws IOException, NexmoClientException {
         return check(new CheckRequest(requestId, code));
     }
 
-    private CheckResult check(CheckRequest request) throws IOException, NexmoClientException {
-        // TODO: Remove translation when releasing 4.0
-        return translateFromCheckResponse(this.checkMethod.execute(request));
-    }
-
-    private CheckResult translateFromCheckResponse(CheckResponse response) {
-        return new CheckResult(
-                // TODO: In 4.0 this will be permitted to be null.
-                response.getStatus() != null ? response.getStatus().getVerifyStatus() : Integer.MAX_VALUE,
-                response.getRequestId(),
-                response.getEventId(),
-                response.getPrice() != null ? response.getPrice().floatValue() : 0,
-                response.getCurrency(),
-                response.getErrorText(),
-                response.getStatus() != null && response.getStatus().isTemporaryError());
+    private CheckResponse check(CheckRequest request) throws IOException, NexmoClientException {
+        return this.checkMethod.execute(request);
     }
 }

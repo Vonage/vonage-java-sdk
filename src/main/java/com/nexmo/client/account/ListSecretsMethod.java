@@ -21,12 +21,12 @@
  */
 package com.nexmo.client.account;
 
+import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoBadRequestException;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.SignatureAuthMethod;
 import com.nexmo.client.auth.TokenAuthMethod;
-import com.nexmo.client.voice.endpoints.AbstractMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
@@ -35,7 +35,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class ListSecretsMethod extends AbstractMethod<String, ListSecretsResponse> {
+class ListSecretsMethod extends AbstractMethod<String, ListSecretsResponse> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
     private static final String PATH = "/accounts/%s/secrets";

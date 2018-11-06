@@ -30,7 +30,7 @@ public class SmsIdSearchRequest implements SearchSmsRequest {
     private final List<String> ids;
 
     public SmsIdSearchRequest(String id) {
-        this(new ArrayList<String>(10));
+        this(new ArrayList<>(10));
         ids.add(id);
     }
 

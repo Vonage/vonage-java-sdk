@@ -21,11 +21,11 @@
  */
 package com.nexmo.client.verify;
 
+import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.SignatureAuthMethod;
 import com.nexmo.client.auth.TokenAuthMethod;
-import com.nexmo.client.voice.endpoints.AbstractMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
@@ -33,7 +33,7 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class CheckMethod extends AbstractMethod<CheckRequest, CheckResponse> {
+class CheckMethod extends AbstractMethod<CheckRequest, CheckResponse> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
     private static final String PATH = "/verify/check/json";

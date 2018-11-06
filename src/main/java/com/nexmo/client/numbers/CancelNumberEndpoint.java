@@ -22,25 +22,23 @@
 package com.nexmo.client.numbers;
 
 
+import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoBadRequestException;
 import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.NexmoMethodFailedException;
 import com.nexmo.client.auth.TokenAuthMethod;
-import com.nexmo.client.voice.endpoints.AbstractMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class CancelNumberEndpoint extends AbstractMethod<CancelNumberRequest, CancelNumberResponse> {
+class CancelNumberEndpoint extends AbstractMethod<CancelNumberRequest, Void> {
     private static final String PATH = "/number/cancel";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
-    public CancelNumberEndpoint(HttpWrapper httpWrapper) {
+    CancelNumberEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -59,15 +57,11 @@ public class CancelNumberEndpoint extends AbstractMethod<CancelNumberRequest, Ca
     }
 
     @Override
-    public CancelNumberResponse parseResponse(HttpResponse response) throws NexmoClientException, IOException {
-        int statusCode = response.getStatusLine().getStatusCode();
-        if (statusCode == 400 || statusCode == 420) {
+    public Void parseResponse(HttpResponse response) throws NexmoClientException, IOException {
+        if (response.getStatusLine().getStatusCode() != 200) {
             throw new NexmoBadRequestException(EntityUtils.toString(response.getEntity()));
-        } else if (statusCode >= 500) {
-            throw new NexmoMethodFailedException(EntityUtils.toString(response.getEntity()));
         }
 
-        String json = new BasicResponseHandler().handleResponse(response);
-        return CancelNumberResponse.fromJson(json);
+        return null;
     }
 }

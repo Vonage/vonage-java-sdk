@@ -108,7 +108,6 @@ public class NexmoClientTest {
         final JWTVerifier verifier = new JWTVerifier(key);
         final Map<String, Object> claims = verifier.verify(constructedToken);
 
-        // TODO: This test should ensure that the token is valid, not just that it contains the supplied application_id.
         assertEquals("application-id", claims.get("application_id"));
     }
 

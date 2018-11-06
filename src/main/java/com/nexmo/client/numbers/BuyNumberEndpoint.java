@@ -21,25 +21,23 @@
  */
 package com.nexmo.client.numbers;
 
+import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoBadRequestException;
 import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.NexmoMethodFailedException;
 import com.nexmo.client.auth.TokenAuthMethod;
-import com.nexmo.client.voice.endpoints.AbstractMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class BuyNumberEndpoint extends AbstractMethod<BuyNumberRequest, BuyNumberResponse> {
+class BuyNumberEndpoint extends AbstractMethod<BuyNumberRequest, Void> {
     private static final String PATH = "/number/buy";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
-    public BuyNumberEndpoint(HttpWrapper httpWrapper) {
+    BuyNumberEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -58,16 +56,11 @@ public class BuyNumberEndpoint extends AbstractMethod<BuyNumberRequest, BuyNumbe
     }
 
     @Override
-    public BuyNumberResponse parseResponse(HttpResponse response) throws IOException, NexmoClientException {
-        int statusCode = response.getStatusLine().getStatusCode();
-        if (statusCode == 400 || statusCode == 420) {
+    public Void parseResponse(HttpResponse response) throws IOException, NexmoClientException {
+        if (response.getStatusLine().getStatusCode() != 200) {
             throw new NexmoBadRequestException(EntityUtils.toString(response.getEntity()));
-        } else if (statusCode >= 500) {
-            throw new NexmoMethodFailedException(EntityUtils.toString(response.getEntity()));
         }
-        String json = new BasicResponseHandler().handleResponse(response);
-        return BuyNumberResponse.fromJson(json);
+
+        return null;
     }
-
-
 }

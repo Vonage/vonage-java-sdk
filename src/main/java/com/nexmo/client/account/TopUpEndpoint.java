@@ -26,7 +26,7 @@ import com.nexmo.client.NexmoClientException;
 
 import java.io.IOException;
 
-public class TopUpEndpoint {
+class TopUpEndpoint {
     private TopUpMethod topUpMethod;
 
     TopUpEndpoint(HttpWrapper httpWrapper) {

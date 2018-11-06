@@ -21,6 +21,7 @@
  */
 package com.nexmo.client.sns;
 
+import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.NexmoResponseParseException;
@@ -32,7 +33,6 @@ import com.nexmo.client.sns.request.SnsRequest;
 import com.nexmo.client.sns.response.SnsPublishResponse;
 import com.nexmo.client.sns.response.SnsResponse;
 import com.nexmo.client.sns.response.SnsSubscribeResponse;
-import com.nexmo.client.voice.endpoints.AbstractMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -46,7 +46,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
-public class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
+class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
     private static final Log log = LogFactory.getLog(SnsClient.class);
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
@@ -55,7 +55,7 @@ public class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
 
     private XmlParser xmlParser = new XmlParser();
 
-    public SnsEndpoint(HttpWrapper httpWrapper) {
+    SnsEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 

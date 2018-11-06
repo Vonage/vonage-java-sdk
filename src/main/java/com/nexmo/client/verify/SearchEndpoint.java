@@ -25,72 +25,15 @@ import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-public class SearchEndpoint {
+class SearchEndpoint {
     private SearchMethod searchMethod;
 
     SearchEndpoint(HttpWrapper httpWrapper) {
         this.searchMethod = new SearchMethod(httpWrapper);
     }
 
-    SearchResult[] search(String... requestIds) throws IOException, NexmoClientException {
-        return translateFromSearchVerifyResponse(this.searchMethod.execute(new SearchRequest(requestIds)));
-    }
-
-    private SearchResult[] translateFromSearchVerifyResponse(SearchVerifyResponse response) {
-        // TODO: Remove in 4.0
-        List<SearchResult> resultList = new ArrayList<>();
-
-        if (response.getStatus() != VerifyStatus.OK) {
-            resultList.add(new SearchResult(response.getStatus().getVerifyStatus(),
-                    response.getErrorText(),
-                    response.getStatus().isTemporaryError()));
-        } else {
-            for (VerifyDetails details : response.getVerificationRequests()) {
-                resultList.add(new SearchResult(response.getStatus().getVerifyStatus(),
-                        details.getRequestId(),
-                        details.getAccountId(),
-                        translateFromVerifyDetailsStatus(details.getStatus()),
-                        details.getNumber(),
-                        details.getPrice() != null ? details.getPrice().floatValue() : 0,
-                        details.getCurrency(),
-                        details.getSenderId(),
-                        details.getDateSubmitted(),
-                        details.getDateFinalized(),
-                        details.getFirstEventDate(),
-                        details.getLastEventDate(),
-                        translateFromVerifyCheck(details.getChecks()),
-                        response.getErrorText(),
-                        false));
-            }
-        }
-
-        return resultList.toArray(new SearchResult[0]);
-    }
-
-    private SearchResult.VerificationStatus translateFromVerifyDetailsStatus(VerifyDetails.Status status) {
-        // TODO: Remove in 4.0
-        // This operates in the same way the XML endpoint does without logging the error.
-        try {
-            return status != null ? SearchResult.VerificationStatus.valueOf(status.name()) : null;
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
-    }
-
-    private List<SearchResult.VerifyCheck> translateFromVerifyCheck(List<VerifyCheck> checks) {
-        // TODO: Remove in 4.0
-        List<SearchResult.VerifyCheck> resultChecks = new ArrayList<>();
-
-        for (VerifyCheck check : checks) {
-            resultChecks.add(new SearchResult.VerifyCheck(check.getDate(),
-                    check.getCode(),
-                    SearchResult.VerifyCheck.Status.valueOf(check.getStatus().name()),
-                    check.getIpAddress()));
-        }
-
-        return resultChecks;
+    SearchVerifyResponse search(String... requestIds) throws IOException, NexmoClientException {
+        return this.searchMethod.execute(new SearchRequest(requestIds));
     }
 }

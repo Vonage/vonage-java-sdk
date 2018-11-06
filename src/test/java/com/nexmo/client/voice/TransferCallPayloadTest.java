@@ -22,15 +22,14 @@ package com.nexmo.client.voice;/*
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class TransferCallPayloadTest {
     @Test
     public void transferJson() throws Exception {
-        String expected = "{\"action\":\"transfer\",\"destination\":{\"type\":\"ncco\",\"url\":[\"https://example" +
-                ".com/ncco\"]}}";
+        String expected = "{\"action\":\"transfer\",\"destination\":{\"type\":\"ncco\",\"url\":[\"https://example"
+                + ".com/ncco\"]}}";
         String actual = CallModifier.transferCall("not-a-uuid", "https://example.com/ncco").toJson();
-        System.out.println(actual);
         assertEquals(expected, actual);
     }
 

@@ -22,10 +22,10 @@
 package com.nexmo.client.numbers;
 
 
+import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.TokenAuthMethod;
-import com.nexmo.client.voice.endpoints.AbstractMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
@@ -38,11 +38,11 @@ import java.io.UnsupportedEncodingException;
  * <p>
  * Use {@link NumbersClient#searchNumbers} instead of this class directly.
  */
-public class SearchNumbersEndpoint extends AbstractMethod<SearchNumbersFilter, SearchNumbersResponse> {
+class SearchNumbersEndpoint extends AbstractMethod<SearchNumbersFilter, SearchNumbersResponse> {
     private static final String PATH = "/number/search";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
-    public SearchNumbersEndpoint(HttpWrapper httpWrapper) {
+    SearchNumbersEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -66,7 +66,7 @@ public class SearchNumbersEndpoint extends AbstractMethod<SearchNumbersFilter, S
         return SearchNumbersResponse.fromJson(json);
     }
 
-    public SearchNumbersResponse searchNumbers(SearchNumbersFilter request) throws IOException, NexmoClientException {
+    SearchNumbersResponse searchNumbers(SearchNumbersFilter request) throws IOException, NexmoClientException {
         return this.execute(request);
     }
 }

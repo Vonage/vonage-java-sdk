@@ -38,7 +38,7 @@ public class Ncco {
     private ObjectWriter writer;
 
     public Ncco() {
-        this(new ObjectMapper().writer(), Collections.<Action>emptyList());
+        this(new ObjectMapper().writer(), Collections.emptyList());
     }
 
     public Ncco(Collection<Action> actions) {
@@ -46,7 +46,7 @@ public class Ncco {
     }
 
     public Ncco(ObjectWriter writer) {
-        this(writer, Collections.<Action>emptyList());
+        this(writer, Collections.emptyList());
     }
 
     public Ncco(ObjectWriter writer, Collection<Action> actions) {

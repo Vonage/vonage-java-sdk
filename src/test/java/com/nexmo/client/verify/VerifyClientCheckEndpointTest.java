@@ -38,100 +38,113 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
 
     @Test
     public void testCheckWithValidResponseAndIp() throws Exception {
-        String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"status\": \"0\",\n" + "  \"event_id\": \"an-event-id\",\n" + "  \"price\": \"0.10000000\",\n" + "  \"currency\": \"EUR\"\n" + "}\n";
+        String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"status\": \"0\",\n"
+                + "  \"event_id\": \"an-event-id\",\n" + "  \"price\": \"0.10000000\",\n" + "  \"currency\": \"EUR\"\n"
+                + "}\n";
         // For proper coverage we will check both with and without IP.  However, the logic remains the same.
         // Note: We have to stub the client each time because it won't allow for sequential requests.
-        CheckResult[] results = new CheckResult[2];
-        wrapper.setHttpClient(stubHttpClient(200, json));
-        results[0] = client.check("a-request-id", "1234", "127.0.0.1");
+
+        CheckResponse[] responses = new CheckResponse[2];
 
         wrapper.setHttpClient(stubHttpClient(200, json));
-        results[1] = client.check("a-request-id", "1234");
+        responses[0] = client.check("a-request-id", "1234", "127.0.0.1");
 
-        for (CheckResult result : results) {
-            Assert.assertEquals("a-request-id", result.getRequestId());
-            Assert.assertEquals(0, result.getStatus());
-            Assert.assertEquals("an-event-id", result.getEventId());
-            Assert.assertEquals(new BigDecimal("0.10000000").floatValue(), result.getPrice(), 0.0f);
-            Assert.assertEquals("EUR", result.getCurrency());
-            Assert.assertNull(result.getErrorText());
+        wrapper.setHttpClient(stubHttpClient(200, json));
+        responses[1] = client.check("a-request-id", "1234");
+
+        for (CheckResponse response : responses) {
+            Assert.assertEquals("a-request-id", response.getRequestId());
+            Assert.assertEquals(VerifyStatus.OK, response.getStatus());
+            Assert.assertEquals("an-event-id", response.getEventId());
+            Assert.assertEquals(new BigDecimal("0.10000000"), response.getPrice());
+            Assert.assertEquals("EUR", response.getCurrency());
+            Assert.assertNull(response.getErrorText());
         }
     }
 
     @Test
     public void testCheckWithoutRequestId() throws Exception {
-        String json = "{\n" + "  \"status\": \"0\",\n" + "  \"event_id\": \"an-event-id\",\n" + "  \"price\": \"0.10000000\",\n" + "  \"currency\": \"EUR\"\n" + "}\n";
+        String json = "{\n" + "  \"status\": \"0\",\n" + "  \"event_id\": \"an-event-id\",\n"
+                + "  \"price\": \"0.10000000\",\n" + "  \"currency\": \"EUR\"\n" + "}\n";
         wrapper.setHttpClient(stubHttpClient(200, json));
-        CheckResult result = client.check("a-request-id", "1234", "127.0.0.1");
+        CheckResponse response = client.check("a-request-id", "1234", "127.0.0.1");
 
-        Assert.assertNull(result.getRequestId());
+        Assert.assertNull(response.getRequestId());
     }
 
     @Test(expected = NexmoResponseParseException.class)
     public void testCheckWithoutStatusThrowsException() throws Exception {
-        String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"event_id\": \"an-event-id\",\n" + "  \"price\": \"0.10000000\",\n" + "  \"currency\": \"EUR\"\n" + "}\n";
+        String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"event_id\": \"an-event-id\",\n"
+                + "  \"price\": \"0.10000000\",\n" + "  \"currency\": \"EUR\"\n" + "}\n";
         wrapper.setHttpClient(stubHttpClient(200, json));
         client.check("a-request-id", "1234", "127.0.0.1");
     }
 
     @Test
     public void testCheckWithNonNumericStatus() throws Exception {
-        String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"status\": \"test\",\n" + "  \"event_id\": \"an-event-id\",\n" + "  \"price\": \"0.10000000\",\n" + "  \"currency\": \"EUR\"\n" + "}\n";
+        String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"status\": \"test\",\n"
+                + "  \"event_id\": \"an-event-id\",\n" + "  \"price\": \"0.10000000\",\n" + "  \"currency\": \"EUR\"\n"
+                + "}\n";
         wrapper.setHttpClient(stubHttpClient(200, json));
-        CheckResult result = client.check("a-request-id", "1234");
-        Assert.assertEquals(VerifyStatus.INTERNAL_ERROR.getVerifyStatus(), result.getStatus());
+        CheckResponse response = client.check("a-request-id", "1234");
+        Assert.assertEquals(VerifyStatus.INTERNAL_ERROR, response.getStatus());
     }
 
     @Test
     public void testCheckWithoutEventId() throws Exception {
-        String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"status\": \"0\",\n" + "  \"price\": \"0.10000000\",\n" + "  \"currency\": \"EUR\"\n" + "}\n";
+        String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"status\": \"0\",\n"
+                + "  \"price\": \"0.10000000\",\n" + "  \"currency\": \"EUR\"\n" + "}\n";
         wrapper.setHttpClient(stubHttpClient(200, json));
-        CheckResult result = client.check("a-request-id", "1234", "127.0.0.1");
+        CheckResponse response = client.check("a-request-id", "1234", "127.0.0.1");
 
-        Assert.assertNull(result.getEventId());
+        Assert.assertNull(response.getEventId());
     }
 
     @Test
     public void testCheckWithoutPrice() throws Exception {
-        String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"status\": \"0\",\n" + "  \"event_id\": \"an-event-id\",\n" + "  \"currency\": \"EUR\"\n" + "}\n";
+        String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"status\": \"0\",\n"
+                + "  \"event_id\": \"an-event-id\",\n" + "  \"currency\": \"EUR\"\n" + "}\n";
         wrapper.setHttpClient(stubHttpClient(200, json));
-        CheckResult result = client.check("a-request-id", "1234", "127.0.0.1");
+        CheckResponse response = client.check("a-request-id", "1234", "127.0.0.1");
 
-        Assert.assertEquals(0, result.getPrice(), 0.0f);
+        Assert.assertNull(response.getPrice());
     }
 
     @Test(expected = NexmoResponseParseException.class)
     public void testCheckWithNonNumericPrice() throws Exception {
-        String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"status\": \"0\",\n" + "  \"event_id\": \"an-event-id\",\n" + "  \"price\": \"test\",\n" + "  \"currency\": \"EUR\"\n" + "}\n";
+        String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"status\": \"0\",\n"
+                + "  \"event_id\": \"an-event-id\",\n" + "  \"price\": \"test\",\n" + "  \"currency\": \"EUR\"\n"
+                + "}\n";
         wrapper.setHttpClient(stubHttpClient(200, json));
         client.check("a-request-id", "1234");
     }
 
     @Test
     public void testCheckWithoutCurrency() throws Exception {
-        String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"status\": \"0\",\n" + "  \"event_id\": \"an-event-id\",\n" + "  \"price\": \"0.10000000\"\n" + "}\n";
+        String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"status\": \"0\",\n"
+                + "  \"event_id\": \"an-event-id\",\n" + "  \"price\": \"0.10000000\"\n" + "}\n";
         wrapper.setHttpClient(stubHttpClient(200, json));
-        CheckResult result = client.check("a-request-id", "1234", "127.0.0.1");
+        CheckResponse response = client.check("a-request-id", "1234", "127.0.0.1");
 
-        Assert.assertNull(result.getCurrency());
+        Assert.assertNull(response.getCurrency());
     }
 
     @Test
     public void testCheckWithError() throws Exception {
         String json = "{\n" + "  \"status\": \"2\",\n" + "  \"error_text\": \"There was an error.\"\n" + "}";
         wrapper.setHttpClient(stubHttpClient(200, json));
-        CheckResult result = client.check("a-request-id", "1234", "127.0.0.1");
+        CheckResponse response = client.check("a-request-id", "1234", "127.0.0.1");
 
-        Assert.assertEquals(2, result.getStatus());
-        Assert.assertEquals("There was an error.", result.getErrorText());
+        Assert.assertEquals(VerifyStatus.MISSING_PARAMS, response.getStatus());
+        Assert.assertEquals("There was an error.", response.getErrorText());
     }
 
     @Test
     public void testWithInvalidNumericStatus() throws Exception {
         String json = "{\n" + "  \"status\": \"5958\"\n" + "}";
         wrapper.setHttpClient(stubHttpClient(200, json));
-        CheckResult result = client.check("a-request-id", "1234", "127.0.0.1");
+        CheckResponse response = client.check("a-request-id", "1234", "127.0.0.1");
 
-        Assert.assertEquals(Integer.MAX_VALUE, result.getStatus());
+        Assert.assertEquals(VerifyStatus.UNKNOWN, response.getStatus());
     }
 }
