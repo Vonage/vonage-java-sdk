@@ -35,7 +35,6 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-// TODO: Create a package for these endpoint methods
 class ModifyCallMethod extends AbstractMethod<CallModifier, ModifyCallResponse> {
     private static final Log LOG = LogFactory.getLog(ModifyCallMethod.class);
 

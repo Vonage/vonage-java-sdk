@@ -50,28 +50,12 @@ class ReadCallMethod extends AbstractMethod<String, CallInfo> {
 
     @Override
     public RequestBuilder makeRequest(String callId) {
-        // TODO: Remove in 4.0.0 along with setBaseUri and getBaseUri method
-        String baseUri = (this.baseUri != null)
-                ? this.baseUri
-                : httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH;
-        return RequestBuilder.get(baseUri + callId);
+        return RequestBuilder.get(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + callId);
     }
 
     @Override
     public CallInfo parseResponse(HttpResponse response) throws IOException {
         String json = new BasicResponseHandler().handleResponse(response);
         return CallInfo.fromJson(json);
-    }
-
-    /**
-     * @deprecated Use {@link com.nexmo.client.HttpConfig.Builder} to create an {@link com.nexmo.client.HttpConfig} object and pass into {@link com.nexmo.client.NexmoClient}
-     */
-    @Deprecated
-    public void setBaseUri(String baseUri) {
-        this.baseUri = baseUri;
-    }
-
-    public String getBaseUri() {
-        return (this.baseUri != null) ? this.baseUri : httpWrapper.getHttpConfig().getApiBaseUri() + PATH;
     }
 }

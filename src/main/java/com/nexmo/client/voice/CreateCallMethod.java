@@ -48,11 +48,7 @@ class CreateCallMethod extends AbstractMethod<Call, CallEvent> {
 
     @Override
     public RequestBuilder makeRequest(Call request) throws NexmoClientException, UnsupportedEncodingException {
-        // TODO: Remove in 4.0.0 along with setUri method
-        String uri = (this.uri != null) ? this.uri : httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH;
-
-        return RequestBuilder
-                .post(uri)
+        return RequestBuilder.post(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH)
                 .setHeader("Content-Type", "application/json")
                 .setEntity(new StringEntity(request.toJson()));
     }
@@ -66,13 +62,5 @@ class CreateCallMethod extends AbstractMethod<Call, CallEvent> {
     public CallEvent parseResponse(HttpResponse response) throws IOException {
         String json = new BasicResponseHandler().handleResponse(response);
         return CallEvent.fromJson(json);
-    }
-
-    /**
-     * @deprecated Use {@link com.nexmo.client.HttpConfig.Builder} to create an {@link com.nexmo.client.HttpConfig} object and pass into {@link com.nexmo.client.NexmoClient}
-     */
-    @Deprecated
-    public void setUri(String uri) {
-        this.uri = uri;
     }
 }

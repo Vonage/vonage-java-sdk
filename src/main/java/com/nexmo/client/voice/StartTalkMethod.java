@@ -53,12 +53,8 @@ class StartTalkMethod extends AbstractMethod<TalkRequest, TalkResponse> {
 
     @Override
     public RequestBuilder makeRequest(TalkRequest request) throws NexmoClientException, UnsupportedEncodingException {
-        // TODO: Remove in 4.0.0 along with setUri method
-        String baseUri = (this.uri != null)
-                ? this.uri
-                : httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH;
         return RequestBuilder
-                .put(baseUri + request.getUuid() + "/talk")
+                .put(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid() + "/talk")
                 .setHeader("Content-Type", "application/json")
                 .setEntity(new StringEntity(request.toJson()));
     }
@@ -67,13 +63,5 @@ class StartTalkMethod extends AbstractMethod<TalkRequest, TalkResponse> {
     public TalkResponse parseResponse(HttpResponse response) throws IOException {
         String json = new BasicResponseHandler().handleResponse(response);
         return TalkResponse.fromJson(json);
-    }
-
-    /**
-     * @deprecated Use {@link com.nexmo.client.HttpConfig.Builder} to create an {@link com.nexmo.client.HttpConfig} object and pass into {@link com.nexmo.client.NexmoClient}
-     */
-    @Deprecated
-    public void setUri(String uri) {
-        this.uri = uri;
     }
 }

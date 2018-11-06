@@ -59,8 +59,7 @@ class ListCallsMethod extends AbstractMethod<CallsFilter, CallInfoPage> {
     @Override
     public RequestBuilder makeRequest(CallsFilter filter) throws NexmoClientException, UnsupportedEncodingException {
         URIBuilder uriBuilder;
-        // TODO: Remove in 4.0.0 along with setUri and getUri method
-        String uri = (this.uri != null) ? this.uri : httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH;
+        String uri = httpWrapper.getHttpConfig().getApiBaseUri() + PATH;
 
         try {
             uriBuilder = new URIBuilder(uri);
@@ -80,17 +79,5 @@ class ListCallsMethod extends AbstractMethod<CallsFilter, CallInfoPage> {
     public CallInfoPage parseResponse(HttpResponse response) throws IOException {
         String json = new BasicResponseHandler().handleResponse(response);
         return CallInfoPage.fromJson(json);
-    }
-
-    /**
-     * @deprecated Use {@link com.nexmo.client.HttpConfig.Builder} to create an {@link com.nexmo.client.HttpConfig} object and pass into {@link com.nexmo.client.NexmoClient}
-     */
-    @Deprecated
-    public void setUri(String uri) {
-        this.uri = uri;
-    }
-
-    public String getUri() {
-        return (this.uri != null) ? this.uri : httpWrapper.getHttpConfig().getApiBaseUri() + PATH;
     }
 }
