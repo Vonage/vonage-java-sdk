@@ -33,13 +33,13 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class UpdateNumberEndpoint extends AbstractMethod<UpdateNumberRequest, Void> {
+class UpdateNumberEndpoint extends AbstractMethod<UpdateNumberRequest, Void> {
 
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
     private static final String PATH = "/number/update";
 
-    public UpdateNumberEndpoint(HttpWrapper httpWrapper) {
+    UpdateNumberEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 

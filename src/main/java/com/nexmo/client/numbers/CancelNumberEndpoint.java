@@ -36,11 +36,11 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class CancelNumberEndpoint extends AbstractMethod<CancelNumberRequest, CancelNumberResponse> {
+class CancelNumberEndpoint extends AbstractMethod<CancelNumberRequest, CancelNumberResponse> {
     private static final String PATH = "/number/cancel";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
-    public CancelNumberEndpoint(HttpWrapper httpWrapper) {
+    CancelNumberEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 

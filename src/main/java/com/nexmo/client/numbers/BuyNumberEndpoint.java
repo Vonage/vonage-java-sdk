@@ -35,11 +35,11 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class BuyNumberEndpoint extends AbstractMethod<BuyNumberRequest, BuyNumberResponse> {
+class BuyNumberEndpoint extends AbstractMethod<BuyNumberRequest, BuyNumberResponse> {
     private static final String PATH = "/number/buy";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
-    public BuyNumberEndpoint(HttpWrapper httpWrapper) {
+    BuyNumberEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 

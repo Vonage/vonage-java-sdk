@@ -110,7 +110,7 @@ public class NumbersClient {
      * @throws NexmoClientException if an error is returned by the server.
      */
     public void cancelNumber(String country, String msisdn) throws IOException, NexmoClientException {
-        CancelNumberResponse response = this.cancelNumber.execute(new CancelNumberRequest(country, msisdn));
+        this.cancelNumber.execute(new CancelNumberRequest(country, msisdn));
     }
 
     /**
