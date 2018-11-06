@@ -21,36 +21,15 @@
  */
 package com.nexmo.client.numbers;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.NexmoUnexpectedException;
+import org.junit.Test;
 
-import java.io.IOException;
+import static org.junit.Assert.assertEquals;
 
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class CancelNumberResponse {
-    private String errorCode;
-    private String errorCodeLabel;
-
-    @JsonProperty("error-code")
-    public String getErrorCode() {
-        return errorCode;
+public class CancelNumberRequestTest {
+    @Test
+    public void testFilterValues() throws Exception {
+        CancelNumberRequest request = new CancelNumberRequest("YY", "447700900000");
+        assertEquals("YY", request.getCountry());
+        assertEquals("447700900000", request.getMsisdn());
     }
-
-    @JsonProperty("error-code-label")
-    public String getErrorCodeLabel() {
-        return errorCodeLabel;
-    }
-
-    public static CancelNumberResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, CancelNumberResponse.class);
-        } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce json from CancelNumberResponse object.", jpe);
-        }
-    }
-
 }

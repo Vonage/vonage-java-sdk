@@ -21,33 +21,11 @@
  */
 package com.nexmo.client.numbers;
 
-import com.nexmo.client.NexmoUnexpectedException;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
-public class BuyNumberRequestAndResponseTest {
-    @Test
-    public void testDeserialization() {
-        BuyNumberResponse response = BuyNumberResponse.fromJson("{\n" +
-                "  \"error-code\":\"200\",\n" +
-                "  \"error-code-label\":\"success\"\n" +
-                "}");
-        assertEquals("200", response.getErrorCode());
-        assertEquals("success", response.getErrorCodeLabel());
-    }
-
-    @Test
-    public void testBadJson() throws Exception {
-        try {
-            BuyNumberResponse.fromJson("this-is-nonsense");
-            fail("NexmoUnexpectedException should be raised for bad JSON data.");
-        } catch (NexmoUnexpectedException nue) {
-            // Expected
-        }
-    }
-
+public class BuyNumberRequestTest {
     @Test
     public void testFilterValues() throws Exception {
         BuyNumberRequest request = new BuyNumberRequest("YY", "447700900000");

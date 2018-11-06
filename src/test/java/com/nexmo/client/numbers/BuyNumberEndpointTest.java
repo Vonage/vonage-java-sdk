@@ -39,7 +39,6 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-import static com.nexmo.client.TestUtils.test429;
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
 
@@ -75,9 +74,7 @@ public class BuyNumberEndpointTest {
         entity.setContent(jsonStream);
         stubResponse.setEntity(entity);
 
-        BuyNumberResponse response = endpoint.parseResponse(stubResponse);
-        assertEquals("200", response.getErrorCode());
-        assertEquals("success", response.getErrorCodeLabel());
+        endpoint.parseResponse(stubResponse);
     }
 
     @Test
@@ -100,11 +97,6 @@ public class BuyNumberEndpointTest {
         } catch (NexmoBadRequestException e) {
             // This is expected
         }
-    }
-
-    @Test
-    public void testRequestThrottleResponse() throws Exception {
-        test429(new BuyNumberEndpoint(null));
     }
 
     @Test
