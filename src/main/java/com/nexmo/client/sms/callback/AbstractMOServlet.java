@@ -22,6 +22,14 @@
 package com.nexmo.client.sms.callback;
 
 
+import com.nexmo.client.auth.RequestSigning;
+import com.nexmo.client.sms.HexUtil;
+import com.nexmo.client.sms.callback.messages.MO;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
@@ -31,26 +39,17 @@ import java.util.Date;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.nexmo.client.sms.HexUtil;
-import com.nexmo.client.sms.callback.messages.MO;
-import com.nexmo.client.auth.RequestSigning;
-
 /**
  * An abstract Servlet that receives and parses an incoming callback request for an MO message.
  * This class parses and validates the request, optionally checks any provided signature or credentials,
  * and constructs an MO object for your subclass to consume.
- *
+ * <p>
  * Note: This servlet will immediately ack the callback as soon as it is validated. Your subclass will
  * consume the callback object asynchronously. This is because it is important to keep latency of
  * the acknowledgement to a minimum in order to maintain throughput when operating at any sort of volume.
  * You are responsible for persisting this object in the event of any failure whilst processing
  *
- * @author  Paul Cook
+ * @author Paul Cook
  */
 public abstract class AbstractMOServlet extends HttpServlet {
 
@@ -58,12 +57,8 @@ public abstract class AbstractMOServlet extends HttpServlet {
 
     private static final int MAX_CONSUMER_THREADS = 10;
 
-    private static final ThreadLocal<SimpleDateFormat> TIMESTAMP_DATE_FORMAT = new ThreadLocal<SimpleDateFormat>() {
-        @Override
-        protected SimpleDateFormat initialValue() {
-            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        }
-    };
+    private static final ThreadLocal<SimpleDateFormat> TIMESTAMP_DATE_FORMAT = ThreadLocal.withInitial(() -> new SimpleDateFormat(
+            "yyyy-MM-dd HH:mm:ss"));
 
     private final boolean validateSignature;
     private final String signatureSharedSecret;
@@ -73,11 +68,7 @@ public abstract class AbstractMOServlet extends HttpServlet {
 
     protected Executor consumer;
 
-    public AbstractMOServlet(final boolean validateSignature,
-                             final String signatureSharedSecret,
-                             final boolean validateUsernamePassword,
-                             final String expectedUsername,
-                             final String expectedPassword) {
+    public AbstractMOServlet(final boolean validateSignature, final String signatureSharedSecret, final boolean validateUsernamePassword, final String expectedUsername, final String expectedPassword) {
         this.validateSignature = validateSignature;
         this.signatureSharedSecret = signatureSharedSecret;
         this.validateUsernamePassword = validateUsernamePassword;
@@ -102,12 +93,8 @@ public abstract class AbstractMOServlet extends HttpServlet {
         if (this.validateUsernamePassword) {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
-            if (this.expectedUsername != null)
-                if (!this.expectedUsername.equals(username))
-                    passed = false;
-            if (this.expectedPassword != null)
-                if (!this.expectedPassword.equals(password))
-                    passed = false;
+            if (this.expectedUsername != null) if (!this.expectedUsername.equals(username)) passed = false;
+            if (this.expectedPassword != null) if (!this.expectedPassword.equals(password)) passed = false;
         }
 
         if (!passed) {
@@ -130,9 +117,7 @@ public abstract class AbstractMOServlet extends HttpServlet {
             String messageId = request.getParameter("messageId");
             String sender = request.getParameter("msisdn");
             String destination = request.getParameter("to");
-            if (sender == null ||
-                    destination == null ||
-                    messageId == null) {
+            if (sender == null || destination == null || messageId == null) {
                 throw new NexmoCallbackRequestValidationException("Missing mandatory fields");
             }
 
@@ -193,11 +178,9 @@ public abstract class AbstractMOServlet extends HttpServlet {
     }
 
     private static MO.MESSAGE_TYPE parseMessageType(String str) throws NexmoCallbackRequestValidationException {
-        if (str != null)
-            for (MO.MESSAGE_TYPE type : MO.MESSAGE_TYPE.values())
-                if (type.getType().equals(str))
-                    return type;
-            throw new NexmoCallbackRequestValidationException("Unrecognized message type: " + str);
+        if (str != null) for (MO.MESSAGE_TYPE type : MO.MESSAGE_TYPE.values())
+            if (type.getType().equals(str)) return type;
+        throw new NexmoCallbackRequestValidationException("Unrecognized message type: " + str);
     }
 
     private static Date parseTimeStamp(String str) throws NexmoCallbackRequestValidationException {
@@ -223,8 +206,7 @@ public abstract class AbstractMOServlet extends HttpServlet {
     }
 
     private static byte[] parseBinaryData(String str) {
-        if (str != null)
-            return HexUtil.hexToBytes(str);
+        if (str != null) return HexUtil.hexToBytes(str);
         return null;
     }
 
@@ -239,8 +221,7 @@ public abstract class AbstractMOServlet extends HttpServlet {
         private final AbstractMOServlet parent;
         private final MO mo;
 
-        public ConsumeTask(final AbstractMOServlet parent,
-                           final MO mo) {
+        public ConsumeTask(final AbstractMOServlet parent, final MO mo) {
             this.parent = parent;
             this.mo = mo;
         }
