@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.voice.endpoints;
+package com.nexmo.client.voice;
 
 import com.nexmo.client.HttpConfig;
 import com.nexmo.client.HttpWrapper;
@@ -29,36 +29,39 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class StopStreamMethodTest {
-    private StopStreamMethod method;
+public class StartStreamMethodTest {
+    private StartStreamMethod method;
 
     @Before
     public void setUp() throws Exception {
-        this.method = new StopStreamMethod(new HttpWrapper());
+        this.method = new StartStreamMethod(new HttpWrapper());
     }
 
     @Test
     public void testLegacyCustomUri() throws Exception {
+        StreamRequest request = new StreamRequest("uuid", "stream-url", 0);
         method.setUri("https://api.example.org/");
-        RequestBuilder builder = method.makeRequest("uuid");
-        assertEquals("DELETE", builder.getMethod());
+        RequestBuilder builder = method.makeRequest(request);
+        assertEquals("PUT", builder.getMethod());
         assertEquals("https://api.example.org/uuid/stream", builder.build().getURI().toString());
     }
 
     @Test
     public void testDefaultUri() throws Exception {
-        RequestBuilder builder = method.makeRequest("uuid");
-        assertEquals("DELETE", builder.getMethod());
+        StreamRequest request = new StreamRequest("uuid", "stream-url", 0);
+        RequestBuilder builder = method.makeRequest(request);
+        assertEquals("PUT", builder.getMethod());
         assertEquals("https://api.nexmo.com/v1/calls/uuid/stream", builder.build().getURI().toString());
     }
 
     @Test
     public void testCustomUri() throws Exception {
         HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
-        StopStreamMethod method = new StopStreamMethod(wrapper);
+        StartStreamMethod method = new StartStreamMethod(wrapper);
+        StreamRequest request = new StreamRequest("uuid", "stream-url", 0);
 
-        RequestBuilder builder = method.makeRequest("uuid");
-        assertEquals("DELETE", builder.getMethod());
+        RequestBuilder builder = method.makeRequest(request);
+        assertEquals("PUT", builder.getMethod());
         assertEquals("https://example.com/v1/calls/uuid/stream", builder.build().getURI().toString());
     }
 }

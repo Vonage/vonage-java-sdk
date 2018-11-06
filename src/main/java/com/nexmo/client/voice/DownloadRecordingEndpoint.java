@@ -19,23 +19,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.voice.endpoints;
+package com.nexmo.client.voice;
 
+import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.voice.DtmfRequest;
-import com.nexmo.client.voice.DtmfResponse;
+import com.nexmo.client.auth.JWTAuthMethod;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.RequestBuilder;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
-public class DtmfEndpoint {
-    private final SendDtmfMethod sendDtmf;
+class DownloadRecordingEndpoint extends AbstractMethod<String, Recording> {
+    private static final Log LOG = LogFactory.getLog(DownloadRecordingEndpoint.class);
 
-    public DtmfEndpoint(HttpWrapper httpWrapper) {
-        this.sendDtmf = new SendDtmfMethod(httpWrapper);
+    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
+
+    DownloadRecordingEndpoint(HttpWrapper httpWrapper) {
+        super(httpWrapper);
     }
 
-    public DtmfResponse put(String uuid, String digits) throws IOException, NexmoClientException {
-        return this.sendDtmf.execute(new DtmfRequest(uuid, digits));
+    @Override
+    public RequestBuilder makeRequest(String uri) throws NexmoClientException, UnsupportedEncodingException {
+        return RequestBuilder.get().setUri(uri);
+    }
+
+    @Override
+    protected Class[] getAcceptableAuthMethods() {
+        return ALLOWED_AUTH_METHODS;
+    }
+
+    @Override
+    public Recording parseResponse(HttpResponse response) throws IOException {
+        return new Recording(response);
     }
 }

@@ -19,32 +19,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.voice.endpoints;
+package com.nexmo.client.voice;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.JWTAuthMethod;
-import com.nexmo.client.voice.DtmfRequest;
-import com.nexmo.client.voice.DtmfResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
-public class SendDtmfMethod extends AbstractMethod<DtmfRequest, DtmfResponse> {
-    private static final Log LOG = LogFactory.getLog(SendDtmfMethod.class);
+class ReadCallMethod extends AbstractMethod<String, CallInfo> {
+    private static final Log LOG = LogFactory.getLog(ReadCallMethod.class);
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls/";
+    private static final String PATH = "/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
-    private String uri = DEFAULT_URI;
+    private String baseUri = null;
 
-    public SendDtmfMethod(HttpWrapper httpWrapper) {
+    ReadCallMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -54,20 +49,29 @@ public class SendDtmfMethod extends AbstractMethod<DtmfRequest, DtmfResponse> {
     }
 
     @Override
-    public RequestBuilder makeRequest(DtmfRequest request) throws NexmoClientException, UnsupportedEncodingException {
-        String uri = this.uri + request.getUuid() + "/dtmf";
-        return RequestBuilder.put(uri)
-                .setHeader("Content-Type", "application/json")
-                .setEntity(new StringEntity(request.toJson()));
+    public RequestBuilder makeRequest(String callId) {
+        // TODO: Remove in 4.0.0 along with setBaseUri and getBaseUri method
+        String baseUri = (this.baseUri != null)
+                ? this.baseUri
+                : httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH;
+        return RequestBuilder.get(baseUri + callId);
     }
 
     @Override
-    public DtmfResponse parseResponse(HttpResponse response) throws IOException {
+    public CallInfo parseResponse(HttpResponse response) throws IOException {
         String json = new BasicResponseHandler().handleResponse(response);
-        return DtmfResponse.fromJson(json);
+        return CallInfo.fromJson(json);
     }
 
-    public void setUri(String uri) {
-        this.uri = uri;
+    /**
+     * @deprecated Use {@link com.nexmo.client.HttpConfig.Builder} to create an {@link com.nexmo.client.HttpConfig} object and pass into {@link com.nexmo.client.NexmoClient}
+     */
+    @Deprecated
+    public void setBaseUri(String baseUri) {
+        this.baseUri = baseUri;
+    }
+
+    public String getBaseUri() {
+        return (this.baseUri != null) ? this.baseUri : httpWrapper.getHttpConfig().getApiBaseUri() + PATH;
     }
 }

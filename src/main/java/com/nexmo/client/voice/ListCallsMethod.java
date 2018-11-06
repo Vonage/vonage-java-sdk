@@ -19,32 +19,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.voice.endpoints;
+package com.nexmo.client.voice;
+
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.NexmoUnexpectedException;
 import com.nexmo.client.auth.JWTAuthMethod;
-import com.nexmo.client.voice.StreamRequest;
-import com.nexmo.client.voice.StreamResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.entity.StringEntity;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.util.List;
 
-public class StartStreamMethod extends AbstractMethod<StreamRequest, StreamResponse> {
-    private static final Log LOG = LogFactory.getLog(StartStreamMethod.class);
+class ListCallsMethod extends AbstractMethod<CallsFilter, CallInfoPage> {
+    private static final Log LOG = LogFactory.getLog(CreateCallMethod.class);
 
-    private static final String PATH = "/calls/";
+    private static final String PATH = "/calls";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
     private String uri;
 
-    public StartStreamMethod(HttpWrapper httpWrapper) {
+    ListCallsMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -54,21 +57,29 @@ public class StartStreamMethod extends AbstractMethod<StreamRequest, StreamRespo
     }
 
     @Override
-    public RequestBuilder makeRequest(StreamRequest request) throws NexmoClientException, UnsupportedEncodingException {
-        // TODO: Remove in 4.0.0 along with setUri method
-        String baseUri = (this.uri != null)
-                ? this.uri
-                : httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH;
-        return RequestBuilder
-                .put(baseUri + request.getUuid() + "/stream")
-                .setHeader("Content-Type", "application/json")
-                .setEntity(new StringEntity(request.toJson()));
+    public RequestBuilder makeRequest(CallsFilter filter) throws NexmoClientException, UnsupportedEncodingException {
+        URIBuilder uriBuilder;
+        // TODO: Remove in 4.0.0 along with setUri and getUri method
+        String uri = (this.uri != null) ? this.uri : httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH;
+
+        try {
+            uriBuilder = new URIBuilder(uri);
+        } catch (URISyntaxException e) {
+            throw new NexmoUnexpectedException("Could not parse URI: " + uri);
+        }
+        if (filter != null) {
+            List<NameValuePair> params = filter.toUrlParams();
+            for (NameValuePair param : params) {
+                uriBuilder.setParameter(param.getName(), param.getValue());
+            }
+        }
+        return RequestBuilder.get().setUri(uriBuilder.toString());
     }
 
     @Override
-    public StreamResponse parseResponse(HttpResponse response) throws IOException {
+    public CallInfoPage parseResponse(HttpResponse response) throws IOException {
         String json = new BasicResponseHandler().handleResponse(response);
-        return StreamResponse.fromJson(json);
+        return CallInfoPage.fromJson(json);
     }
 
     /**
@@ -77,5 +88,9 @@ public class StartStreamMethod extends AbstractMethod<StreamRequest, StreamRespo
     @Deprecated
     public void setUri(String uri) {
         this.uri = uri;
+    }
+
+    public String getUri() {
+        return (this.uri != null) ? this.uri : httpWrapper.getHttpConfig().getApiBaseUri() + PATH;
     }
 }

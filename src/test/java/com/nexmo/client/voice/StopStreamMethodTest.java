@@ -19,50 +19,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.voice.endpoints;
+package com.nexmo.client.voice;
 
 import com.nexmo.client.HttpConfig;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.voice.TalkRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class StartTalkMethodTest {
-    private StartTalkMethod method;
+public class StopStreamMethodTest {
+    private StopStreamMethod method;
 
     @Before
     public void setUp() throws Exception {
-        this.method = new StartTalkMethod(new HttpWrapper());
+        this.method = new StopStreamMethod(new HttpWrapper());
     }
 
     @Test
     public void testLegacyCustomUri() throws Exception {
-        TalkRequest request = new TalkRequest("uuid", "text", 0);
         method.setUri("https://api.example.org/");
-        RequestBuilder builder = method.makeRequest(request);
-        assertEquals("PUT", builder.getMethod());
-        assertEquals("https://api.example.org/uuid/talk", builder.build().getURI().toString());
+        RequestBuilder builder = method.makeRequest("uuid");
+        assertEquals("DELETE", builder.getMethod());
+        assertEquals("https://api.example.org/uuid/stream", builder.build().getURI().toString());
     }
 
     @Test
     public void testDefaultUri() throws Exception {
-        TalkRequest request = new TalkRequest("uuid", "text", 0);
-        RequestBuilder builder = method.makeRequest(request);
-        assertEquals("PUT", builder.getMethod());
-        assertEquals("https://api.nexmo.com/v1/calls/uuid/talk", builder.build().getURI().toString());
+        RequestBuilder builder = method.makeRequest("uuid");
+        assertEquals("DELETE", builder.getMethod());
+        assertEquals("https://api.nexmo.com/v1/calls/uuid/stream", builder.build().getURI().toString());
     }
 
     @Test
     public void testCustomUri() throws Exception {
         HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
-        StartTalkMethod method = new StartTalkMethod(wrapper);
-        TalkRequest request = new TalkRequest("uuid", "text", 0);
+        StopStreamMethod method = new StopStreamMethod(wrapper);
 
-        RequestBuilder builder = method.makeRequest(request);
-        assertEquals("PUT", builder.getMethod());
-        assertEquals("https://example.com/v1/calls/uuid/talk", builder.build().getURI().toString());
+        RequestBuilder builder = method.makeRequest("uuid");
+        assertEquals("DELETE", builder.getMethod());
+        assertEquals("https://example.com/v1/calls/uuid/stream", builder.build().getURI().toString());
     }
 }

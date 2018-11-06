@@ -19,30 +19,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.voice.endpoints;
+package com.nexmo.client.voice;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.JWTAuthMethod;
-import com.nexmo.client.voice.TalkResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class StopTalkMethod extends AbstractMethod<String, TalkResponse> {
-    private static final Log LOG = LogFactory.getLog(StopTalkMethod.class);
+// TODO: Create a package for these endpoint methods
+class ModifyCallMethod extends AbstractMethod<CallModifier, ModifyCallResponse> {
+    private static final Log LOG = LogFactory.getLog(ModifyCallMethod.class);
 
     private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
     private String uri = DEFAULT_URI;
 
-    public StopTalkMethod(HttpWrapper httpWrapper) {
+    ModifyCallMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -52,16 +53,22 @@ public class StopTalkMethod extends AbstractMethod<String, TalkResponse> {
     }
 
     @Override
-    public RequestBuilder makeRequest(String uuid) throws NexmoClientException, UnsupportedEncodingException {
-        String uri = this.uri + uuid + "/talk";
-        return RequestBuilder.delete(uri)
-                .setHeader("Content-Type", "application/json");
+    public RequestBuilder makeRequest(CallModifier request) throws NexmoClientException, UnsupportedEncodingException {
+        String uri = this.uri + request.getUuid();
+        return RequestBuilder
+                .put(uri)
+                .setHeader("Content-Type", "application/json")
+                .setEntity(new StringEntity(request.toJson()));
     }
 
     @Override
-    public TalkResponse parseResponse(HttpResponse response) throws IOException {
+    public ModifyCallResponse parseResponse(HttpResponse response) throws IOException {
         String json = new BasicResponseHandler().handleResponse(response);
-        return TalkResponse.fromJson(json);
+        if (response.getStatusLine().getStatusCode() == 200) {
+            return ModifyCallResponse.fromJson(json);
+        } else {
+            return null;
+        }
     }
 
     public void setUri(String uri) {

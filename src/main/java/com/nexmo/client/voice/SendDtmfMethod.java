@@ -19,14 +19,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.voice.endpoints;
+package com.nexmo.client.voice;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.JWTAuthMethod;
-import com.nexmo.client.voice.CallModifier;
-import com.nexmo.client.voice.ModifyCallResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -37,15 +35,14 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-// TODO: Create a package for these endpoint methods
-public class ModifyCallMethod extends AbstractMethod<CallModifier, ModifyCallResponse> {
-    private static final Log LOG = LogFactory.getLog(ModifyCallMethod.class);
+class SendDtmfMethod extends AbstractMethod<DtmfRequest, DtmfResponse> {
+    private static final Log LOG = LogFactory.getLog(SendDtmfMethod.class);
 
     private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
     private String uri = DEFAULT_URI;
 
-    public ModifyCallMethod(HttpWrapper httpWrapper) {
+    SendDtmfMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -55,22 +52,17 @@ public class ModifyCallMethod extends AbstractMethod<CallModifier, ModifyCallRes
     }
 
     @Override
-    public RequestBuilder makeRequest(CallModifier request) throws NexmoClientException, UnsupportedEncodingException {
-        String uri = this.uri + request.getUuid();
-        return RequestBuilder
-                .put(uri)
+    public RequestBuilder makeRequest(DtmfRequest request) throws NexmoClientException, UnsupportedEncodingException {
+        String uri = this.uri + request.getUuid() + "/dtmf";
+        return RequestBuilder.put(uri)
                 .setHeader("Content-Type", "application/json")
                 .setEntity(new StringEntity(request.toJson()));
     }
 
     @Override
-    public ModifyCallResponse parseResponse(HttpResponse response) throws IOException {
+    public DtmfResponse parseResponse(HttpResponse response) throws IOException {
         String json = new BasicResponseHandler().handleResponse(response);
-        if (response.getStatusLine().getStatusCode() == 200) {
-            return ModifyCallResponse.fromJson(json);
-        } else {
-            return null;
-        }
+        return DtmfResponse.fromJson(json);
     }
 
     public void setUri(String uri) {

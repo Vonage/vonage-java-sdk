@@ -19,12 +19,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.voice.endpoints;
+package com.nexmo.client.voice;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.JWTAuthMethod;
-import com.nexmo.client.voice.CallInfo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -32,16 +32,16 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
-// TODO: Create a package for these endpoint methods
-public class ReadCallMethod extends AbstractMethod<String, CallInfo> {
-    private static final Log LOG = LogFactory.getLog(ReadCallMethod.class);
+class StopStreamMethod extends AbstractMethod<String, StreamResponse> {
+    private static final Log LOG = LogFactory.getLog(StopStreamMethod.class);
 
     private static final String PATH = "/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
-    private String baseUri = null;
+    private String uri;
 
-    public ReadCallMethod(HttpWrapper httpWrapper) {
+    StopStreamMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -51,29 +51,25 @@ public class ReadCallMethod extends AbstractMethod<String, CallInfo> {
     }
 
     @Override
-    public RequestBuilder makeRequest(String callId) {
-        // TODO: Remove in 4.0.0 along with setBaseUri and getBaseUri method
-        String baseUri = (this.baseUri != null)
-                ? this.baseUri
+    public RequestBuilder makeRequest(String uuid) throws NexmoClientException, UnsupportedEncodingException {
+        // TODO: Remove in 4.0.0 along with setUri method
+        String baseUri = (this.uri != null)
+                ? this.uri
                 : httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH;
-        return RequestBuilder.get(baseUri + callId);
+        return RequestBuilder.delete(baseUri + uuid + "/stream").setHeader("Content-Type", "application/json");
     }
 
     @Override
-    public CallInfo parseResponse(HttpResponse response) throws IOException {
+    public StreamResponse parseResponse(HttpResponse response) throws IOException {
         String json = new BasicResponseHandler().handleResponse(response);
-        return CallInfo.fromJson(json);
+        return StreamResponse.fromJson(json);
     }
 
     /**
      * @deprecated Use {@link com.nexmo.client.HttpConfig.Builder} to create an {@link com.nexmo.client.HttpConfig} object and pass into {@link com.nexmo.client.NexmoClient}
      */
     @Deprecated
-    public void setBaseUri(String baseUri) {
-        this.baseUri = baseUri;
-    }
-
-    public String getBaseUri() {
-        return (this.baseUri != null) ? this.baseUri : httpWrapper.getHttpConfig().getApiBaseUri() + PATH;
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 }

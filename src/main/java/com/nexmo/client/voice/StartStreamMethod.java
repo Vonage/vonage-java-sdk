@@ -19,30 +19,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.voice.endpoints;
+package com.nexmo.client.voice;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.JWTAuthMethod;
-import com.nexmo.client.voice.StreamResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class StopStreamMethod extends AbstractMethod<String, StreamResponse> {
-    private static final Log LOG = LogFactory.getLog(StopStreamMethod.class);
+class StartStreamMethod extends AbstractMethod<StreamRequest, StreamResponse> {
+    private static final Log LOG = LogFactory.getLog(StartStreamMethod.class);
 
     private static final String PATH = "/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
     private String uri;
 
-    public StopStreamMethod(HttpWrapper httpWrapper) {
+    StartStreamMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -52,12 +52,15 @@ public class StopStreamMethod extends AbstractMethod<String, StreamResponse> {
     }
 
     @Override
-    public RequestBuilder makeRequest(String uuid) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(StreamRequest request) throws NexmoClientException, UnsupportedEncodingException {
         // TODO: Remove in 4.0.0 along with setUri method
         String baseUri = (this.uri != null)
                 ? this.uri
                 : httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH;
-        return RequestBuilder.delete(baseUri + uuid + "/stream").setHeader("Content-Type", "application/json");
+        return RequestBuilder
+                .put(baseUri + request.getUuid() + "/stream")
+                .setHeader("Content-Type", "application/json")
+                .setEntity(new StringEntity(request.toJson()));
     }
 
     @Override

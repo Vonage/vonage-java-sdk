@@ -26,7 +26,6 @@ import com.nexmo.client.AbstractClient;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClient;
 import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.voice.endpoints.*;
 
 import java.io.IOException;
 
@@ -60,8 +59,10 @@ public class VoiceClient extends AbstractClient {
      * Begin a call to a phone number.
      *
      * @param callRequest Describing the call to be made.
+     *
      * @return A CallEvent describing the initial state of the call, containing the <tt>uuid</tt> required to
-     * interact with the ongoing phone call.
+     *         interact with the ongoing phone call.
+     *
      * @throws IOException          if a network error occurred contacting the Nexmo Voice API.
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
@@ -74,6 +75,7 @@ public class VoiceClient extends AbstractClient {
      * {@link #createCall(Call)}.
      *
      * @return A CallInfoPage representing the response from the Nexmo Voice API.
+     *
      * @throws IOException          if a network error occurred contacting the Nexmo Voice API.
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
@@ -86,7 +88,9 @@ public class VoiceClient extends AbstractClient {
      * recent calls initiated by {@link #createCall(Call)}.
      *
      * @param filter (optional) A filter describing which calls to be listed.
+     *
      * @return A CallInfoPage representing the response from the Nexmo Voice API.
+     *
      * @throws IOException          if a network error occurred contacting the Nexmo Voice API.
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
@@ -99,7 +103,9 @@ public class VoiceClient extends AbstractClient {
      *
      * @param uuid (required) The UUID of the call, obtained from the object returned by {@link #createCall(Call)}.
      *             This value can be obtained with {@link CallEvent#getUuid()}
+     *
      * @return A CallInfo object, representing the response from the Nexmo Voice API.
+     *
      * @throws IOException          if a network error occurred contacting the Nexmo Voice API.
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
@@ -115,7 +121,9 @@ public class VoiceClient extends AbstractClient {
      * @param digits (required) A string specifying the digits to be sent to the call. Valid characters are the digits
      *               <tt>1-9</tt>, <tt>#</tt>, <tt>*</tt>, with the special character <tt>p</tt> indicating a short
      *               pause between tones.
+     *
      * @return A CallInfo object, representing the response from the Nexmo Voice API.
+     *
      * @throws IOException          if a network error occurred contacting the Nexmo Voice API.
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
@@ -138,7 +146,9 @@ public class VoiceClient extends AbstractClient {
      * @param uuid   The UUID of the call, obtained from the object returned by {@link #createCall(Call)}.
      *               This value can be obtained with {@link CallEvent#getUuid()}
      * @param action One of: "hangup", "mute", "unmute", "earmuff", "unearmuff"
+     *
      * @return A ModifyCallResponse object, representing the response from the Nexmo Voice API.
+     *
      * @throws IOException          if a network error occurred contacting the Nexmo Voice API.
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
@@ -153,7 +163,9 @@ public class VoiceClient extends AbstractClient {
      * instead of this method.
      *
      * @param modifier A CallModifier describing the modification to be made.
+     *
      * @return A ModifyCallResponse object, representing the response from the Nexmo Voice API.
+     *
      * @throws IOException          if a network error occurred contacting the Nexmo Voice API.
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
@@ -167,7 +179,9 @@ public class VoiceClient extends AbstractClient {
      * @param uuid    The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value can
      *                be obtained with {@link CallEvent#getUuid()}
      * @param nccoUrl The URL of the NCCO endpoint the call should be transferred to
+     *
      * @return A ModifyCallResponse object, representing the response from the Nexmo Voice API.
+     *
      * @throws IOException          if a network error occurred contacting the Nexmo Voice API.
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
@@ -183,7 +197,9 @@ public class VoiceClient extends AbstractClient {
      * @param streamUrl A URL of an audio file in MP3 or 16-bit WAV format, to be streamed to the call.
      * @param loop      The number of times to repeat the audio. The default value is <tt>1</tt>, or you can use
      *                  <tt>0</tt> to indicate that the audio should be repeated indefinitely.
+     *
      * @return The data returned from the Voice API
+     *
      * @throws IOException          if a network error occurred contacting the Nexmo Voice API.
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
@@ -197,7 +213,9 @@ public class VoiceClient extends AbstractClient {
      * @param uuid      The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value can
      *                  be obtained with {@link CallEvent#getUuid()}
      * @param streamUrl A URL of an audio file in MP3 or 16-bit WAV format, to be streamed to the call.
+     *
      * @return The data returned from the Voice API.
+     *
      * @throws IOException          if a network error occurred contacting the Nexmo Voice API.
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
@@ -210,7 +228,9 @@ public class VoiceClient extends AbstractClient {
      *
      * @param uuid The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value can
      *             be obtained with {@link CallEvent#getUuid()}
+     *
      * @return The data returned from the Voice API
+     *
      * @throws IOException          if a network error occurred contacting the Nexmo Voice API.
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
@@ -226,7 +246,9 @@ public class VoiceClient extends AbstractClient {
      * @param uuid The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value can
      *             be obtained with {@link CallEvent#getUuid()}
      * @param text The message to be spoken to the call participants.
+     *
      * @return The data returned from the Voice API.
+     *
      * @throws IOException          if a network error occurred contacting the Nexmo Voice API.
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
@@ -241,7 +263,9 @@ public class VoiceClient extends AbstractClient {
      *                  be obtained with {@link CallEvent#getUuid()}
      * @param text      The message to be spoken to the call participants.
      * @param voiceName The voice to be used to speak the message.
+     *
      * @return The data returned from the Voice API.
+     *
      * @throws IOException          if a network error occurred contacting the Nexmo Voice API.
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
@@ -259,7 +283,9 @@ public class VoiceClient extends AbstractClient {
      * @param text The message to be spoken to the call participants.
      * @param loop The number of times to repeat the message. The default value is <tt>1</tt>, or you can use
      *             <tt>0</tt> to indicate that the message should be repeated indefinitely.
+     *
      * @return The data returned from the Voice API.
+     *
      * @throws IOException          if a network error occurred contacting the Nexmo Voice API.
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
@@ -276,7 +302,9 @@ public class VoiceClient extends AbstractClient {
      * @param voiceName The voice to be used to speak the message.
      * @param loop      The number of times to repeat the message. The default value is <tt>1</tt>, or you can use
      *                  <tt>0</tt> to indicate that the message should be repeated indefinitely.
+     *
      * @return The data returned from the Voice API.
+     *
      * @throws IOException          if a network error occurred contacting the Nexmo Voice API.
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
@@ -289,7 +317,9 @@ public class VoiceClient extends AbstractClient {
      *
      * @param uuid The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value can
      *             be obtained with {@link CallEvent#getUuid()}
+     *
      * @return The data returned from the Voice API
+     *
      * @throws IOException          if a network error occurred contacting the Nexmo Voice API.
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
      */
@@ -304,7 +334,9 @@ public class VoiceClient extends AbstractClient {
      * save directly to file.
      *
      * @param recordingUrl The recordingUrl provided by the webhook callback
+     *
      * @return A Recording object, providing access to the recording's bytes
+     *
      * @throws IOException If an error occurred while downloading the data
      */
     public Recording downloadRecording(String recordingUrl) throws IOException, NexmoClientException {

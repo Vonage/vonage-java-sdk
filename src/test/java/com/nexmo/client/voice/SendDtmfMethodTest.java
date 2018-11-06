@@ -24,7 +24,6 @@ package com.nexmo.client.voice;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.voice.endpoints.SendDtmfMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -67,9 +66,10 @@ public class SendDtmfMethodTest {
         HttpWrapper wrapper = new HttpWrapper();
         SendDtmfMethod methodUnderTest = new SendDtmfMethod(wrapper);
 
-        HttpResponse stubResponse = new BasicHttpResponse(
-                new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 200, "OK")
-        );
+        HttpResponse stubResponse = new BasicHttpResponse(new BasicStatusLine(new ProtocolVersion("1.1", 1, 1),
+                200,
+                "OK"
+        ));
 
         String json = "{\"message\": \"DTMF sent\",\"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"}";
         InputStream jsonStream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));

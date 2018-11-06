@@ -19,50 +19,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.voice.endpoints;
+package com.nexmo.client.voice;
 
 import com.nexmo.client.HttpConfig;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.voice.StreamRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class StartStreamMethodTest {
-    private StartStreamMethod method;
+public class StartTalkMethodTest {
+    private StartTalkMethod method;
 
     @Before
     public void setUp() throws Exception {
-        this.method = new StartStreamMethod(new HttpWrapper());
+        this.method = new StartTalkMethod(new HttpWrapper());
     }
 
     @Test
     public void testLegacyCustomUri() throws Exception {
-        StreamRequest request = new StreamRequest("uuid", "stream-url", 0);
+        TalkRequest request = new TalkRequest("uuid", "text", 0);
         method.setUri("https://api.example.org/");
         RequestBuilder builder = method.makeRequest(request);
         assertEquals("PUT", builder.getMethod());
-        assertEquals("https://api.example.org/uuid/stream", builder.build().getURI().toString());
+        assertEquals("https://api.example.org/uuid/talk", builder.build().getURI().toString());
     }
 
     @Test
     public void testDefaultUri() throws Exception {
-        StreamRequest request = new StreamRequest("uuid", "stream-url", 0);
+        TalkRequest request = new TalkRequest("uuid", "text", 0);
         RequestBuilder builder = method.makeRequest(request);
         assertEquals("PUT", builder.getMethod());
-        assertEquals("https://api.nexmo.com/v1/calls/uuid/stream", builder.build().getURI().toString());
+        assertEquals("https://api.nexmo.com/v1/calls/uuid/talk", builder.build().getURI().toString());
     }
 
     @Test
     public void testCustomUri() throws Exception {
         HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
-        StartStreamMethod method = new StartStreamMethod(wrapper);
-        StreamRequest request = new StreamRequest("uuid", "stream-url", 0);
+        StartTalkMethod method = new StartTalkMethod(wrapper);
+        TalkRequest request = new TalkRequest("uuid", "text", 0);
 
         RequestBuilder builder = method.makeRequest(request);
         assertEquals("PUT", builder.getMethod());
-        assertEquals("https://example.com/v1/calls/uuid/stream", builder.build().getURI().toString());
+        assertEquals("https://example.com/v1/calls/uuid/talk", builder.build().getURI().toString());
     }
 }

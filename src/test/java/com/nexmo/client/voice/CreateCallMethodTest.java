@@ -40,17 +40,13 @@
  * THE SOFTWARE.
  */
 
-package com.nexmo.client.voice.endpoints;
+package com.nexmo.client.voice;
 
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.HttpConfig;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.voice.Call;
-import com.nexmo.client.voice.CallDirection;
-import com.nexmo.client.voice.CallEvent;
-import com.nexmo.client.voice.CallStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;

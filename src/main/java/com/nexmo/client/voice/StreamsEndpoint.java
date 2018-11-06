@@ -19,29 +19,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.voice.endpoints;
+package com.nexmo.client.voice;
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.voice.TalkRequest;
-import com.nexmo.client.voice.TalkResponse;
 
 import java.io.IOException;
 
-public class TalkEndpoint {
-    private final StartTalkMethod startTalk;
-    private final StopTalkMethod stopTalk;
+class StreamsEndpoint {
+    private final StartStreamMethod startStream;
+    private final StopStreamMethod stopStream;
 
-    public TalkEndpoint(HttpWrapper wrapper) {
-        this.startTalk = new StartTalkMethod(wrapper);
-        this.stopTalk = new StopTalkMethod(wrapper);
+    StreamsEndpoint(HttpWrapper wrapper) {
+        this.startStream = new StartStreamMethod(wrapper);
+        this.stopStream = new StopStreamMethod(wrapper);
     }
 
-    public TalkResponse put(TalkRequest request) throws IOException, NexmoClientException {
-        return this.startTalk.execute(request);
+    public StreamResponse put(StreamRequest request) throws IOException, NexmoClientException {
+        return this.startStream.execute(request);
     }
 
-    public TalkResponse delete(String uuid) throws IOException, NexmoClientException {
-        return this.stopTalk.execute(uuid);
+    public StreamResponse delete(String uuid) throws IOException, NexmoClientException {
+        return this.stopStream.execute(uuid);
     }
 }

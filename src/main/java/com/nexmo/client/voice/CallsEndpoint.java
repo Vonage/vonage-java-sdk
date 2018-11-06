@@ -19,11 +19,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.voice.endpoints;
+package com.nexmo.client.voice;
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.voice.*;
 
 import java.io.IOException;
 
@@ -32,7 +31,7 @@ import java.io.IOException;
  * <p>
  * <b>Note:</b> This is an internal object. All functionality is provided publicly by the {@link VoiceClient} class.
  */
-public class CallsEndpoint {
+class CallsEndpoint {
     private final CreateCallMethod createCall;
     private final ReadCallMethod readCall;
     private final ListCallsMethod listCalls;
@@ -43,7 +42,7 @@ public class CallsEndpoint {
      *
      * @param httpWrapper (required) shared HTTP wrapper object used for making REST calls.
      */
-    public CallsEndpoint(HttpWrapper httpWrapper) {
+    CallsEndpoint(HttpWrapper httpWrapper) {
         this.createCall = new CreateCallMethod(httpWrapper);
         this.readCall = new ReadCallMethod(httpWrapper);
         this.listCalls = new ListCallsMethod(httpWrapper);
@@ -56,11 +55,13 @@ public class CallsEndpoint {
      * Requires a {@link com.nexmo.client.auth.JWTAuthMethod} to be provided to the NexmoClient which constructs
      *
      * @param callRequest A Call object configuring the call to be created
+     *
      * @return A CallEvent describing the call that was initiated.
+     *
      * @throws IOException          if an error occurs communicating with the Nexmo API
      * @throws NexmoClientException if an error occurs constructing the Nexmo API request or response
      */
-    public CallEvent post(Call callRequest) throws IOException, NexmoClientException {
+    CallEvent post(Call callRequest) throws IOException, NexmoClientException {
         return this.createCall.execute(callRequest);
     }
 
@@ -68,11 +69,13 @@ public class CallsEndpoint {
      * List previous and ongoing calls which match the provided <tt>filter</tt>.
      *
      * @param filter A CallsFilter describing the calls to be searched, or {@code null} for all calls.
+     *
      * @return A CallInfoPage containing a single page of {@link CallInfo} results
+     *
      * @throws IOException          if an error occurs communicating with the Nexmo API
      * @throws NexmoClientException if an error occurs constructing the Nexmo API request or response
      */
-    public CallInfoPage get(CallsFilter filter) throws IOException, NexmoClientException {
+    CallInfoPage get(CallsFilter filter) throws IOException, NexmoClientException {
         return this.listCalls.execute(filter);
     }
 
@@ -80,11 +83,13 @@ public class CallsEndpoint {
      * Get details of a single call, identified by <tt>uuid</tt>.
      *
      * @param uuid The uuid of the CallInfo object to be retrieved
+     *
      * @return A CallInfo object describing the state of the call that was made or is in progress
+     *
      * @throws IOException          if an error occurs communicating with the Nexmo API
      * @throws NexmoClientException if an error occurs constructing the Nexmo API request or response
      */
-    public CallInfo get(String uuid) throws IOException, NexmoClientException {
+    CallInfo get(String uuid) throws IOException, NexmoClientException {
         return this.readCall.execute(uuid);
     }
 
@@ -92,11 +97,13 @@ public class CallsEndpoint {
      * Modify an ongoing call.
      *
      * @param modifier A CallModifier describing the modification to make to the call.
+     *
      * @return A ModifyCallResponse object describing the state of the call that was modified
+     *
      * @throws IOException          if an error occurs communicating with the Nexmo API
      * @throws NexmoClientException if an error occurs constructing the Nexmo API request or response
      */
-    public ModifyCallResponse put(CallModifier modifier) throws IOException, NexmoClientException {
+    ModifyCallResponse put(CallModifier modifier) throws IOException, NexmoClientException {
         return this.modifyCall.execute(modifier);
     }
 }
