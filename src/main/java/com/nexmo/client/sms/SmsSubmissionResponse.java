@@ -29,7 +29,7 @@ import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.client.NexmoUnexpectedException;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SmsSubmissionResponse {
@@ -37,7 +37,7 @@ public class SmsSubmissionResponse {
     private int messageCount;
 
     @JsonProperty("messages")
-    private Collection<SmsSubmissionResponseMessage> messages;
+    private List<SmsSubmissionResponseMessage> messages;
 
     public static SmsSubmissionResponse fromJson(String json) {
         try {
@@ -54,7 +54,7 @@ public class SmsSubmissionResponse {
         return this.messageCount;
     }
 
-    public Collection<SmsSubmissionResponseMessage> getMessages() {
+    public List<SmsSubmissionResponseMessage> getMessages() {
         return this.messages;
     }
 }
