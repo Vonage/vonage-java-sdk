@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.insight.basic;
+package com.nexmo.client.insight;
 
 import com.nexmo.client.HttpConfig;
 import com.nexmo.client.HttpWrapper;
@@ -51,57 +51,55 @@ public class BasicInsightEndpointTest {
 
     @Test
     public void testMakeRequest() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(new BasicInsightRequest("1234"));
+        RequestBuilder builder = this.endpoint.makeRequest(new BasicInsightRequest.Builder("1234").build());
         assertEquals("POST", builder.getMethod());
         assertEquals("https://api.nexmo.com/ni/basic/json", builder.build().getURI().toString());
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
-        assertEquals(params.get("number"), "1234");
+        assertEquals("1234", params.get("number"));
         assertNull(params.get("country"));
     }
 
     @Test
     public void testMakeRequestWithCountry() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(new BasicInsightRequest("1234", "GB"));
+        RequestBuilder builder = this.endpoint.makeRequest(new BasicInsightRequest.Builder("1234")
+                .country("GB")
+                .build());
         assertEquals("POST", builder.getMethod());
         assertEquals("https://api.nexmo.com/ni/basic/json", builder.build().getURI().toString());
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
-        assertEquals(params.get("number"), "1234");
-        assertEquals(params.get("country"), "GB");
+        assertEquals("1234", params.get("number"));
+        assertEquals("GB", params.get("country"));
     }
 
     @Test
     public void testParseResponse() throws Exception {
-        HttpResponse stub = TestUtils.makeJsonHttpResponse(200, "{\n" +
-                "    \"status\": 0,\n" +
-                "    \"status_message\": \"Success\",\n" +
-                "    \"request_id\": \"d79c3d82-e2ee-46ff-972a-97b76be419cb\",\n" +
-                "    \"international_format_number\": \"441632960960\",\n" +
-                "    \"national_format_number\": \"01632 960960\",\n" +
-                "    \"country_code\": \"GB\",\n" +
-                "    \"country_code_iso3\": \"GBR\",\n" +
-                "    \"country_name\": \"United Kingdom\",\n" +
-                "    \"country_prefix\": \"44\"\n" +
-                "}");
+        HttpResponse stub = TestUtils.makeJsonHttpResponse(
+                200,
+                "{\n" + "    \"status\": 0,\n" + "    \"status_message\": \"Success\",\n"
+                        + "    \"request_id\": \"d79c3d82-e2ee-46ff-972a-97b76be419cb\",\n"
+                        + "    \"international_format_number\": \"441632960960\",\n"
+                        + "    \"national_format_number\": \"01632 960960\",\n" + "    \"country_code\": \"GB\",\n"
+                        + "    \"country_code_iso3\": \"GBR\",\n" + "    \"country_name\": \"United Kingdom\",\n"
+                        + "    \"country_prefix\": \"44\"\n" + "}"
+        );
         BasicInsightResponse response = this.endpoint.parseResponse(stub);
         assertEquals("d79c3d82-e2ee-46ff-972a-97b76be419cb", response.getRequestId());
     }
 
     @Test
     public void testDefaultUri() throws Exception {
-        BasicInsightRequest request = new BasicInsightRequest("1234");
+        BasicInsightRequest request = BasicInsightRequest.withNumber("1234");
 
         RequestBuilder builder = endpoint.makeRequest(request);
         assertEquals("POST", builder.getMethod());
-        assertEquals("https://api.nexmo.com/ni/basic/json",
-                builder.build().getURI().toString()
-        );
+        assertEquals("https://api.nexmo.com/ni/basic/json", builder.build().getURI().toString());
     }
 
     @Test
     public void testCustomUri() throws Exception {
         HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
         BasicInsightEndpoint endpoint = new BasicInsightEndpoint(wrapper);
-        BasicInsightRequest request = new BasicInsightRequest("1234");
+        BasicInsightRequest request = BasicInsightRequest.withNumber("1234");
 
         RequestBuilder builder = endpoint.makeRequest(request);
         assertEquals("POST", builder.getMethod());

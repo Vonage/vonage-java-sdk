@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added `EventMethod` enumeration to replace the usage of strings.
 - Added `EventType` enumeration and the ability to specify the `eventType` property of `ConnectAction`.
 - Added `NexmoClient.Builder` to allow for fluent creation of `NexmoClient`.
+- Added `getBasicNumberInsight`, `getStandardNumberInsight`, and `getAdvancedNumberInsight` to `InsightClient` which takes a respective `*InsightRequest`.
+- Added `CallerIdentity` data object to be used in number insight.
 
 ### Changed
 - Renamed all `Ncco` classes to `Action` classes:
@@ -41,6 +43,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Made all `*Endpoint` and `*Method` classes package scoped. Users should always go through the appropriate `Client` classes.
 - Moved `AbstractMethod` to the root package.
 - Removed legacy `setUri` methods from the various `VoiceClient` endpoints. This should be done through `HttpConfig`.
+- Changed `BasicInsightRequest`, `StandardInsightRequest`, and `AdvancedInsightRequest` to use builders as constructor 
+telescoping is clunky. Added some static factory methods to these classes to allow shortcutting through the builder for "simple" requests.
+- Updated `BasicInsightEndpoint`, `StandardInsightEndpoint`, and `AdvancedInsightEndpoint` to a more restrictive scope and moved them to the `com.nexmo.client.insight` package.
+- Changed `status` property of `BasicInsightResponse` to an `InsightStatus` enumeration.
 
 ## [3.10.0] - 2018-11-02
 

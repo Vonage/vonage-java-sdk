@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.insight.standard;
+package com.nexmo.client.insight;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
@@ -33,12 +33,12 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class StandardInsightEndpoint extends AbstractMethod<StandardInsightRequest, StandardInsightResponse> {
+class StandardInsightEndpoint extends AbstractMethod<StandardInsightRequest, StandardInsightResponse> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
     private static final String PATH = "/ni/standard/json";
 
-    public StandardInsightEndpoint(HttpWrapper httpWrapper) {
+    StandardInsightEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 

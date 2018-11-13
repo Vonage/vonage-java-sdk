@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.insight.standard;
+package com.nexmo.client.insight;
 
 import com.nexmo.client.HttpConfig;
 import com.nexmo.client.HttpWrapper;
@@ -51,33 +51,39 @@ public class StandardInsightEndpointTest {
 
     @Test
     public void testMakeRequest() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(new StandardInsightRequest("1234"));
+        RequestBuilder builder = this.endpoint.makeRequest(new StandardInsightRequest.Builder("1234").build());
         assertEquals("POST", builder.getMethod());
         assertEquals("https://api.nexmo.com/ni/standard/json", builder.build().getURI().toString());
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
-        assertEquals(params.get("number"), "1234");
+        assertEquals("1234", params.get("number"));
         assertNull(params.get("country"));
+        assertNull(params.get("cnam"));
     }
 
     @Test
     public void testMakeRequestWithCountry() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(new StandardInsightRequest("1234", "GB"));
+        RequestBuilder builder = this.endpoint.makeRequest(new StandardInsightRequest.Builder("1234")
+                .country("GB")
+                .build());
         assertEquals("POST", builder.getMethod());
         assertEquals("https://api.nexmo.com/ni/standard/json", builder.build().getURI().toString());
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
-        assertEquals(params.get("number"), "1234");
-        assertEquals(params.get("country"), "GB");
+        assertEquals("1234", params.get("number"));
+        assertEquals("GB", params.get("country"));
+        assertNull(params.get("cnam"));
     }
 
     @Test
     public void testMakeRequestWithCnam() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(new StandardInsightRequest("1234", "GB", true));
+        RequestBuilder builder = this.endpoint.makeRequest(new StandardInsightRequest.Builder("1234")
+                .cnam(true)
+                .build());
         assertEquals("POST", builder.getMethod());
         assertEquals("https://api.nexmo.com/ni/standard/json", builder.build().getURI().toString());
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
-        assertEquals(params.get("number"), "1234");
-        assertEquals(params.get("country"), "GB");
-        assertEquals(params.get("cnam"), "true");
+        assertEquals("1234", params.get("number"));
+        assertNull(params.get("country"));
+        assertEquals("true", params.get("cnam"));
     }
 
     @Test
@@ -105,20 +111,18 @@ public class StandardInsightEndpointTest {
 
     @Test
     public void testDefaultUri() throws Exception {
-        StandardInsightRequest request = new StandardInsightRequest("1234");
+        StandardInsightRequest request = StandardInsightRequest.withNumber("1234");
 
         RequestBuilder builder = endpoint.makeRequest(request);
         assertEquals("POST", builder.getMethod());
-        assertEquals("https://api.nexmo.com/ni/standard/json",
-                builder.build().getURI().toString()
-        );
+        assertEquals("https://api.nexmo.com/ni/standard/json", builder.build().getURI().toString());
     }
 
     @Test
     public void testCustomUri() throws Exception {
         HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
         StandardInsightEndpoint endpoint = new StandardInsightEndpoint(wrapper);
-        StandardInsightRequest request = new StandardInsightRequest("1234");
+        StandardInsightRequest request = StandardInsightRequest.withNumber("1234");
 
         RequestBuilder builder = endpoint.makeRequest(request);
         assertEquals("POST", builder.getMethod());

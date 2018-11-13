@@ -19,13 +19,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.insight.advanced;
+package com.nexmo.client.insight;
 
 import com.nexmo.client.NexmoUnexpectedException;
-import com.nexmo.client.insight.CallerType;
-import com.nexmo.client.insight.CarrierDetails;
-import com.nexmo.client.insight.RoamingDetails;
 import org.junit.Test;
+
+import java.math.BigDecimal;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -69,7 +68,7 @@ public class AdvancedInsightResponseTest {
                 "    \"caller_type\": \"unknown\"\n" +
                 "}");
 
-        assertEquals(0, response.getStatus());
+        assertEquals(InsightStatus.SUCCESS, response.getStatus());
         assertEquals("Success", response.getStatusMessage());
         assertEquals("0c082a69-85df-4bbc-aae6-ee998e17e5a4", response.getRequestId());
         assertEquals("441632960960", response.getInternationalFormatNumber());
@@ -91,8 +90,8 @@ public class AdvancedInsightResponseTest {
         assertEquals("GB", response.getOriginalCarrier().getCountry());
         assertEquals(CarrierDetails.NetworkType.MOBILE, response.getOriginalCarrier().getNetworkType());
 
-        assertEquals("18.30908949", response.getRemainingBalance());
-        assertEquals("0.03000000", response.getRequestPrice());
+        assertEquals(new BigDecimal("18.30908949"), response.getRemainingBalance());
+        assertEquals(new BigDecimal("0.03000000"), response.getRequestPrice());
 
         assertEquals(AdvancedInsightResponse.Validity.VALID, response.getValidNumber());
         assertEquals(AdvancedInsightResponse.Reachability.UNKNOWN, response.getReachability());
@@ -182,7 +181,7 @@ public class AdvancedInsightResponseTest {
                         "}"
         );
 
-        assertEquals(1, response.getStatus());
+        assertEquals(InsightStatus.THROTTLED, response.getStatus());
         assertEquals("Back off", response.getStatusMessage());
         assertEquals("d79c3d82-e2ee-46ff-972a-97b76be419cb", response.getRequestId());
     }
@@ -197,7 +196,7 @@ public class AdvancedInsightResponseTest {
                         "}"
         );
 
-        assertEquals(3, response.getStatus());
+        assertEquals(InsightStatus.INVALID_PARAMS, response.getStatus());
         assertEquals("I'm not sure what you mean", response.getErrorText());
         assertEquals("d79c3d82-e2ee-46ff-972a-97b76be419cb", response.getRequestId());
     }

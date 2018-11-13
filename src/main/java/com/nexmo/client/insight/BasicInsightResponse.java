@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.insight.basic;
+package com.nexmo.client.insight;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,7 +30,7 @@ import java.io.IOException;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BasicInsightResponse {
-    private int status;
+    private InsightStatus status;
     private String statusMessage;
     private String errorText;
 
@@ -51,7 +51,7 @@ public class BasicInsightResponse {
         }
     }
 
-    public int getStatus() {
+    public InsightStatus getStatus() {
         return status;
     }
 

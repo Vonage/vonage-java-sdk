@@ -19,34 +19,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.insight.basic;
+
+package com.nexmo.client.insight;
 
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class BasicInsightRequestTest {
+public class StandardInsightRequestTest {
     @Test
-    public void testConstructor1() throws Exception {
-        BasicInsightRequest request = new BasicInsightRequest("12345");
+    public void testWithNumber() {
+        StandardInsightRequest request = StandardInsightRequest.withNumber("12345");
         assertEquals(request.getNumber(), "12345");
         assertNull(request.getCountry());
     }
 
     @Test
-    public void testConstructor2() throws Exception {
-        BasicInsightRequest request = new BasicInsightRequest("12345", "GB");
+    public void testWithNumberAndCountry() {
+        StandardInsightRequest request = StandardInsightRequest.withNumberAndCountry("12345", "GB");
         assertEquals(request.getNumber(), "12345");
         assertEquals(request.getCountry(), "GB");
     }
 
     @Test
-    public void testEquals() throws Exception {
-        assertFalse(new BasicInsightRequest("1234").equals(null));
-        assertFalse(new BasicInsightRequest("1234").equals(new Object()));
-        BasicInsightRequest bir = new BasicInsightRequest("1234");
-        assertTrue(bir.equals(bir));
-        assertTrue(new BasicInsightRequest("1234").equals(new BasicInsightRequest("1234")));
-        assertFalse(new BasicInsightRequest("1234").equals(new BasicInsightRequest("1235")));
+    public void testBuildWithAllFields() {
+        StandardInsightRequest request = new StandardInsightRequest.Builder("12345").country("GB").cnam(true).build();
+        assertEquals(request.getNumber(), "12345");
+        assertEquals(request.getCountry(), "GB");
+        assertTrue(request.getCnam());
+
+        request = new StandardInsightRequest.Builder("12345").number("98765").country("GB").cnam(true).build();
+        assertEquals(request.getNumber(), "98765");
+        assertEquals(request.getCountry(), "GB");
+        assertTrue(request.getCnam());
     }
 }

@@ -21,17 +21,34 @@
  */
 package com.nexmo.client.insight;
 
-public abstract class BaseInsightRequest {
-    protected String number;
-    protected String country;
-    protected Boolean cnam;
-    protected String ipAddress;
+import org.junit.Test;
 
-    public String getNumber() {
-        return number;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
+public class BasicInsightRequestTest {
+    @Test
+    public void testWithNumber() throws Exception {
+        BasicInsightRequest request = BasicInsightRequest.withNumber("12345");
+        assertEquals(request.getNumber(), "12345");
+        assertNull(request.getCountry());
     }
 
-    public String getCountry() {
-        return country;
+    @Test
+    public void testWithNumberAndCountry() throws Exception {
+        BasicInsightRequest request = BasicInsightRequest.withNumberAndCountry("12345", "GB");
+        assertEquals(request.getNumber(), "12345");
+        assertEquals(request.getCountry(), "GB");
+    }
+
+    @Test
+    public void testBuildWithAllFields() throws Exception {
+        BasicInsightRequest request = new BasicInsightRequest.Builder("12345").country("GB").build();
+        assertEquals(request.getNumber(), "12345");
+        assertEquals(request.getCountry(), "GB");
+
+        request = new BasicInsightRequest.Builder("12345").number("98765").country("GB").build();
+        assertEquals(request.getNumber(), "98765");
+        assertEquals(request.getCountry(), "GB");
     }
 }

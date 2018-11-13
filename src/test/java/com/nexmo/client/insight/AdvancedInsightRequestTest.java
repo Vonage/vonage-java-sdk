@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.insight.advanced;
+package com.nexmo.client.insight;
 
 import org.junit.Test;
 
@@ -27,47 +27,40 @@ import static org.junit.Assert.*;
 
 public class AdvancedInsightRequestTest {
     @Test
-    public void testConstructor1() throws Exception {
-        AdvancedInsightRequest request = new AdvancedInsightRequest("12345");
+    public void testWithNumber() {
+        AdvancedInsightRequest request = AdvancedInsightRequest.withNumber("12345");
         assertEquals(request.getNumber(), "12345");
         assertNull(request.getCountry());
     }
 
     @Test
-    public void testConstructor2() throws Exception {
-        AdvancedInsightRequest request = new AdvancedInsightRequest("12345", "GB");
+    public void testWithNumberAndCountry() {
+        AdvancedInsightRequest request = AdvancedInsightRequest.withNumberAndCountry("12345", "GB");
         assertEquals(request.getNumber(), "12345");
         assertEquals(request.getCountry(), "GB");
     }
 
     @Test
-    public void testConstructor3() throws Exception {
-        AdvancedInsightRequest request = new AdvancedInsightRequest("12345", "GB", "123.123.123.123");
+    public void testBuildWithAllFields() throws Exception {
+        AdvancedInsightRequest request = new AdvancedInsightRequest.Builder("12345")
+                .country("GB")
+                .ipAddress("123.123.123.123")
+                .cnam(true)
+                .build();
         assertEquals(request.getNumber(), "12345");
         assertEquals(request.getCountry(), "GB");
         assertEquals(request.getIpAddress(), "123.123.123.123");
-    }
+        assertTrue(request.getCnam());
 
-    @Test
-    public void testEquals() throws Exception {
-        assertFalse(new AdvancedInsightRequest("1234").equals(null));
-        assertFalse(new AdvancedInsightRequest("1234").equals(new Object()));
-        AdvancedInsightRequest bir = new AdvancedInsightRequest("1234");
-        assertTrue(bir.equals(bir));
-        assertTrue(new AdvancedInsightRequest("1234").equals(new AdvancedInsightRequest("1234")));
-        assertFalse(new AdvancedInsightRequest("1234").equals(new AdvancedInsightRequest("7890")));
-        assertFalse(new AdvancedInsightRequest("1234", "GB", "123.123.123.123").equals(
-                new AdvancedInsightRequest("1234", "GB", "123.123.123.124")));
-
-        {
-            AdvancedInsightRequest req1 = new AdvancedInsightRequest(
-                    "1234", "GB", "123.123.123.123", true);
-            AdvancedInsightRequest req2 = new AdvancedInsightRequest(
-                    "1234", "GB", "123.123.123.123", false);
-            assertFalse(
-                    "Differing cnam values should result in non-equals",
-                    req1.equals(req2)
-            );
-        }
+        request = new AdvancedInsightRequest.Builder("12345")
+                .number("98765")
+                .country("GB")
+                .ipAddress("123.123.123.123")
+                .cnam(true)
+                .build();
+        assertEquals(request.getNumber(), "98765");
+        assertEquals(request.getCountry(), "GB");
+        assertEquals(request.getIpAddress(), "123.123.123.123");
+        assertTrue(request.getCnam());
     }
 }
