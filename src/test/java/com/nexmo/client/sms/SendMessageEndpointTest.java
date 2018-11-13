@@ -21,8 +21,8 @@
  */
 package com.nexmo.client.sms;
 
+import com.nexmo.client.HttpConfig;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.client.TestUtils;
 import com.nexmo.client.auth.AuthCollection;
 import com.nexmo.client.auth.AuthMethod;
@@ -55,7 +55,7 @@ public class SendMessageEndpointTest {
 
     @Before
     public void setUp() throws ParserConfigurationException {
-        endpoint = new SendMessageEndpoint(null);
+        endpoint = new SendMessageEndpoint(new HttpWrapper());
     }
 
     @Test
@@ -134,237 +134,120 @@ public class SendMessageEndpointTest {
 
     @Test
     public void testParseResponse() throws Exception {
-        SmsSubmissionResponse rs = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, "{\n" +
-                "  \"message-count\":2,\n" +
-                "  \"messages\":[\n" +
-                "    {\n" +
-                "      \"to\":\"not-a-number\",\n" +
-                "      \"message-id\":\"message-id-1\",\n" +
-                "      \"status\":\"0\",\n" +
-                "      \"remaining-balance\":\"26.43133450\",\n" +
-                "      \"message-price\":\"0.03330000\",\n" +
-                "      \"network\":\"12345\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"to\":\"not-a-number\",\n" +
-                "      \"message-id\":\"message-id-2\",\n" +
-                "      \"status\":\"0\",\n" +
-                "      \"remaining-balance\":\"26.43133450\",\n" +
-                "      \"message-price\":\"0.03330000\",\n" +
-                "      \"network\":\"12345\"\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}"));
+        SmsSubmissionResponse rs = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(
+                200,
+                "{\n" + "  \"message-count\":2,\n" + "  \"messages\":[\n" + "    {\n"
+                        + "      \"to\":\"not-a-number\",\n" + "      \"message-id\":\"message-id-1\",\n"
+                        + "      \"status\":\"0\",\n" + "      \"remaining-balance\":\"26.43133450\",\n"
+                        + "      \"message-price\":\"0.03330000\",\n" + "      \"network\":\"12345\",\n"
+                        + "      \"client-ref\": \"first ref\"\n" + "    },\n" + "    {\n"
+                        + "      \"to\":\"not-a-number-2\",\n" + "      \"message-id\":\"message-id-2\",\n"
+                        + "      \"status\":\"0\",\n" + "      \"remaining-balance\":\"27.43133450\",\n"
+                        + "      \"message-price\":\"0.03430000\",\n" + "      \"network\":\"98765\",\n"
+                        + "      \"client-ref\": \"second ref\"\n" + "    }\n" + "  ]\n" + "}"
+        ));
         assertEquals(rs.getMessageCount(), 2);
         assertEquals(rs.getMessages().size(), 2);
 
-        SmsSubmissionResponseMessage r = rs.getMessages().iterator().next();
-        assertEquals(r.getTo(), "not-a-number");
+        SmsSubmissionResponseMessage firstMessage = rs.getMessages().get(0);
+        SmsSubmissionResponseMessage secondMessage = rs.getMessages().get(1);
+
+        assertEquals("not-a-number", firstMessage.getTo());
+        assertEquals("message-id-1", firstMessage.getId());
+        assertEquals(MessageStatus.OK, firstMessage.getStatus());
+        assertEquals(new BigDecimal("26.43133450"), firstMessage.getRemainingBalance());
+        assertEquals(new BigDecimal("0.03330000"), firstMessage.getMessagePrice());
+        assertEquals("12345", firstMessage.getNetwork());
+        assertEquals("first ref", firstMessage.getClientRef());
+
+        assertEquals("not-a-number-2", secondMessage.getTo());
+        assertEquals("message-id-2", secondMessage.getId());
+        assertEquals(MessageStatus.OK, secondMessage.getStatus());
+        assertEquals(new BigDecimal("27.43133450"), secondMessage.getRemainingBalance());
+        assertEquals(new BigDecimal("0.03430000"), secondMessage.getMessagePrice());
+        assertEquals("98765", secondMessage.getNetwork());
+        assertEquals("second ref", secondMessage.getClientRef());
     }
 
     @Test
     public void testParseResponseInvalidStatus() throws Exception {
-        SmsSubmissionResponse rs = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200,"{\n" +
-                "  \"message-count\":2,\n" +
-                "  \"messages\":[\n" +
-                "    {\n" +
-                "      \"to\":\"not-a-number\",\n" +
-                "      \"message-id\":\"message-id-1\",\n" +
-                "      \"status\":\"this-should-be-a-number\",\n" +
-                "      \"remaining-balance\":\"26.43133450\",\n" +
-                "      \"message-price\":\"0.03330000\",\n" +
-                "      \"network\":\"12345\",\n" +
-                "      \"client-ref\":\"abcde\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"to\":\"not-a-number\",\n" +
-                "      \"message-id\":\"message-id-2\",\n" +
-                "      \"status\":\"0\",\n" +
-                "      \"remaining-balance\":\"26.43133450\",\n" +
-                "      \"message-price\":\"0.03330000\",\n" +
-                "      \"network\":\"12345\"\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}"));
-        assertEquals(MessageStatus.STATUS_INTERNAL_ERROR, rs.getMessages().iterator().next().getStatus());
-    }
-
-    @Test
-    public void testParseResponseStatusMissing() throws Exception {
-        try {
-            endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200,"{\n" +
-                    "  \"message-count\":1,\n" +
-                    "  \"messages\":[\n" +
-                    "    {\n" +
-                    "      \"to\":\"not-a-number\",\n" +
-                    "      \"message-id\":\"message-id-1\",\n" +
-                    "      \"remaining-balance\":\"26.43133450\",\n" +
-                    "      \"message-price\":\"0.03330000\",\n" +
-                    "      \"network\":\"12345\"\n" +
-                    "    }\n" +
-                    "  ]\n" +
-                    "}"));
-            fail("A missing status should result in a NexmoResponseParseException being thrown");
-        } catch (NexmoResponseParseException e) {
-            // this is expected
-        }
-    }
-
-    @Test
-    public void testParseResponseMissingValues() throws Exception {
-        SmsSubmissionResponse rs = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200,"{\n" +
-                "  \"message-count\":1,\n" +
-                "  \"messages\":[\n" +
-                "    {\n" +
-                "      \"to\":\"\",\n" +
-                "      \"message-id\":\"\",\n" +
-                "      \"status\":\"\",\n" +
-                "      \"remaining-balance\":\"\",\n" +
-                "      \"message-price\":\"\",\n" +
-                "      \"network\":\"\",\n" +
-                "      \"error-text\": \"\",\n" +
-                "      \"client-ref\": \"\"\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}"));
-
-        SmsSubmissionResponseMessage r = rs.getMessages().iterator().next();
-        assertNull(r.getId());
-        assertNull(r.getTo());
-        assertEquals(MessageStatus.STATUS_INTERNAL_ERROR, r.getStatus());
-        assertNull(r.getErrorText());
-        assertNull(r.getClientRef());
-        assertNull(r.getRemainingBalance());
-        assertNull(r.getMessagePrice());
-        assertNull(r.getNetwork());
+        SmsSubmissionResponse rs = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(
+                200,
+                "{\n" + "  \"message-count\":2,\n" + "  \"messages\":[\n" + "    {\n"
+                        + "      \"to\":\"not-a-number\",\n" + "      \"message-id\":\"message-id-1\",\n"
+                        + "      \"status\":\"12345\",\n" + "      \"remaining-balance\":\"26.43133450\",\n"
+                        + "      \"message-price\":\"0.03330000\",\n" + "      \"network\":\"12345\",\n"
+                        + "      \"client-ref\":\"abcde\"\n" + "    },\n" + "    {\n"
+                        + "      \"to\":\"not-a-number\",\n" + "      \"message-id\":\"message-id-2\",\n"
+                        + "      \"status\":\"0\",\n" + "      \"remaining-balance\":\"26.43133450\",\n"
+                        + "      \"message-price\":\"0.03330000\",\n" + "      \"network\":\"12345\"\n" + "    }\n"
+                        + "  ]\n" + "}"
+        ));
+        assertEquals(MessageStatus.UNKNOWN, rs.getMessages().get(0).getStatus());
     }
 
     @Test
     public void testParseResponseError() throws Exception {
-        SmsSubmissionResponse rs = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200,"{\n" +
-                "  \"message-count\":1,\n" +
-                "  \"messages\":[\n" +
-                "    {\n" +
-                "    \"status\":\"6\",\n" +
-                "    \"error-text\": \"The message was invalid\"\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}"));
-        assertEquals(MessageStatus.STATUS_INVALID_MESSAGE, rs.getMessages().iterator().next().getStatus());
+        SmsSubmissionResponse rs = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(
+                200,
+                "{\n" + "  \"message-count\":1,\n" + "  \"messages\":[\n" + "    {\n" + "    \"status\":\"6\",\n"
+                        + "    \"error-text\": \"The message was invalid\"\n" + "    }\n" + "  ]\n" + "}"
+        ));
+        assertEquals(MessageStatus.INVALID_MESSAGE, rs.getMessages().get(0).getStatus());
     }
 
     @Test
     public void testParseResponseUnexpectedNode() throws Exception {
-        SmsSubmissionResponse rs = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200,"{\n" +
-                "  \"message-count\":1,\n" +
-                "  \"messages\":[\n" +
-                "    {\n" +
-                "      \"to\":\"not-a-number\",\n" +
-                "      \"message-id\":\"\",\n" +
-                "      \"status\":\"0\",\n" +
-                "      \"remaining-balance\":\"26.43133450\",\n" +
-                "      \"message-price\":\"0.0330000\",\n" +
-                "      \"network\":\"12345\",\n" +
-                "      \"WHAT-IS-THIS\":\"\"\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}"));
-        assertEquals(MessageStatus.STATUS_OK, rs.getMessages().iterator().next().getStatus());
-    }
-
-    @Test
-    public void testParseResponseInvalidRemainingBalance() throws Exception {
-        SmsSubmissionResponse rs = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200,"{\n" +
-                "  \"message-count\":1,\n" +
-                "  \"messages\":[\n" +
-                "    {\n" +
-                "      \"to\":\"not-a-number\",\n" +
-                "      \"message-id\":\"\",\n" +
-                "      \"status\":\"0\",\n" +
-                "      \"remaining-balance\":\"not-a-number\",\n" +
-                "      \"message-price\":\"0.0330000\",\n" +
-                "      \"network\":\"12345\"\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}"));
-
-        SmsSubmissionResponseMessage r = rs.getMessages().iterator().next();
-        assertNull(r.getRemainingBalance());
-        assertEquals(new BigDecimal("0.0330000"), r.getMessagePrice());
-    }
-
-    @Test
-    public void testParseResponseInvalidMessagePriceBalance() throws Exception {
-        SmsSubmissionResponse rs = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200,"{\n" +
-                "  \"message-count\":1,\n" +
-                "  \"messages\":[\n" +
-                "    {\n" +
-                "      \"to\":\"not-a-number\",\n" +
-                "      \"message-id\":\"\",\n" +
-                "      \"status\":\"0\",\n" +
-                "      \"remaining-balance\":\"26.43133450\",\n" +
-                "      \"message-price\":\"not-a-number\",\n" +
-                "      \"network\":\"12345\"\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}"));
-
-        SmsSubmissionResponseMessage r = rs.getMessages().iterator().next();
-        assertEquals(new BigDecimal("26.43133450"), r.getRemainingBalance());
-        assertNull(r.getMessagePrice());
+        SmsSubmissionResponse rs = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(
+                200,
+                "{\n" + "  \"message-count\":1,\n" + "  \"messages\":[\n" + "    {\n"
+                        + "      \"to\":\"not-a-number\",\n" + "      \"message-id\":\"\",\n"
+                        + "      \"status\":\"0\",\n" + "      \"remaining-balance\":\"26.43133450\",\n"
+                        + "      \"message-price\":\"0.0330000\",\n" + "      \"network\":\"12345\",\n"
+                        + "      \"WHAT-IS-THIS\":\"\"\n" + "    }\n" + "  ]\n" + "}"
+        ));
+        assertEquals(MessageStatus.OK, rs.getMessages().get(0).getStatus());
     }
 
     @Test
     public void testParseResponseStatusThrottled() throws Exception {
-        SmsSubmissionResponse rs = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200,"{\n" +
-                "  \"message-count\":1,\n" +
-                "  \"messages\":[\n" +
-                "    {\n" +
-                "      \"status\":\"1\"\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}"));
-        SmsSubmissionResponseMessage r = rs.getMessages().iterator().next();
-        assertEquals(MessageStatus.STATUS_THROTTLED, r.getStatus());
+        SmsSubmissionResponse rs = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(
+                200,
+                "{\n" + "  \"message-count\":1,\n" + "  \"messages\":[\n" + "    {\n" + "      \"status\":\"1\"\n"
+                        + "    }\n" + "  ]\n" + "}"
+        ));
+        SmsSubmissionResponseMessage r = rs.getMessages().get(0);
+        assertEquals(MessageStatus.THROTTLED, r.getStatus());
         assertTrue(r.isTemporaryError());
     }
 
     @Test
     public void testParseResponseStatusInternalError() throws Exception {
-        SmsSubmissionResponse rs = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, "{\n" +
-                "  \"message-count\":1,\n" +
-                "  \"messages\":[\n" +
-                "    {\n" +
-                "      \"status\":\"5\"\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}"));
-        SmsSubmissionResponseMessage r = rs.getMessages().iterator().next();
-        assertEquals(MessageStatus.STATUS_INTERNAL_ERROR, r.getStatus());
+        SmsSubmissionResponse rs = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(
+                200,
+                "{\n" + "  \"message-count\":1,\n" + "  \"messages\":[\n" + "    {\n" + "      \"status\":\"5\"\n"
+                        + "    }\n" + "  ]\n" + "}"
+        ));
+        SmsSubmissionResponseMessage r = rs.getMessages().get(0);
+        assertEquals(MessageStatus.INTERNAL_ERROR, r.getStatus());
         assertTrue(r.isTemporaryError());
     }
 
     @Test
     public void testParseResponseStatusTooManyBinds() throws Exception {
-        SmsSubmissionResponse rs = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, "{\n" +
-                "  \"message-count\":1,\n" +
-                "  \"messages\":[\n" +
-                "    {\n" +
-                "      \"status\":\"10\"\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}"));
-        SmsSubmissionResponseMessage r = rs.getMessages().iterator().next();
-        assertEquals(MessageStatus.STATUS_TOO_MANY_BINDS, r.getStatus());
+        SmsSubmissionResponse rs = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(
+                200,
+                "{\n" + "  \"message-count\":1,\n" + "  \"messages\":[\n" + "    {\n" + "      \"status\":\"10\"\n"
+                        + "    }\n" + "  ]\n" + "}"
+        ));
+        SmsSubmissionResponseMessage r = rs.getMessages().get(0);
+        assertEquals(MessageStatus.TOO_MANY_BINDS, r.getStatus());
         assertTrue(r.isTemporaryError());
     }
 
     private static void assertContainsParam(List<NameValuePair> params, String key, String value) {
         NameValuePair item = new BasicNameValuePair(key, value);
-        assertTrue(
-                "" + params + " should contain " + item,
-                params.contains(item)
-        );
+        assertTrue("" + params + " should contain " + item, params.contains(item));
     }
 
     private static void assertMissingParam(List<NameValuePair> params, String key) {
@@ -377,26 +260,22 @@ public class SendMessageEndpointTest {
 
     @Test
     public void testEntityEncoding() throws Exception {
+        HttpConfig httpConfig = HttpConfig.defaultConfig();
         HttpWrapper wrapper = mock(HttpWrapper.class);
         HttpClient client = mock(HttpClient.class);
         AuthCollection authCollection = mock(AuthCollection.class);
         AuthMethod tokenAuth = new TokenAuthMethod("abcd", "def");
 
         when(wrapper.getAuthCollection()).thenReturn(authCollection);
-        @SuppressWarnings("unchecked")
-        Set<Class> anySet = any(Set.class);
+        @SuppressWarnings("unchecked") Set<Class> anySet = any(Set.class);
         when(authCollection.getAcceptableAuthMethod(anySet)).thenReturn(tokenAuth);
         when(wrapper.getHttpClient()).thenReturn(client);
-        when(client.execute(any(HttpUriRequest.class))).thenReturn(
-                TestUtils.makeJsonHttpResponse(200, "{\n" +
-                        "  \"message-count\":1,\n" +
-                        "  \"messages\":[\n" +
-                        "    {\n" +
-                        "      \"status\":\"10\"\n" +
-                        "    }\n" +
-                        "  ]\n" +
-                        "}")
-        );
+        when(wrapper.getHttpConfig()).thenReturn(httpConfig);
+        when(client.execute(any(HttpUriRequest.class))).thenReturn(TestUtils.makeJsonHttpResponse(
+                200,
+                "{\n" + "  \"message-count\":1,\n" + "  \"messages\":[\n" + "    {\n" + "      \"status\":\"10\"\n"
+                        + "    }\n" + "  ]\n" + "}"
+        ));
 
         ArgumentCaptor<HttpUriRequest> argument = ArgumentCaptor.forClass(HttpUriRequest.class);
 
@@ -408,8 +287,7 @@ public class SendMessageEndpointTest {
         if (argument.getValue() instanceof HttpEntityEnclosingRequest) {
             HttpEntity entity = ((HttpEntityEnclosingRequest) argument.getValue()).getEntity();
             assertNotNull(entity);
-            assertEquals("application/x-www-form-urlencoded; charset=UTF-8",
-                    entity.getContentType().getValue());
+            assertEquals("application/x-www-form-urlencoded; charset=UTF-8", entity.getContentType().getValue());
         }
     }
 }
