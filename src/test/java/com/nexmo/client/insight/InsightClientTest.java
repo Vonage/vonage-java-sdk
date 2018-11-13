@@ -202,14 +202,9 @@ public class InsightClientTest extends ClientTest<InsightClient> {
         assertEquals(CarrierDetails.NetworkType.MOBILE, response.getOriginalCarrier().getNetworkType());
 
         assertEquals(CallerType.CONSUMER, response.getCallerIdentity().getType());
-        assertEquals("John Smith", response.getCallerIdentity().getCallerName());
+        assertEquals("John Smith", response.getCallerIdentity().getName());
         assertEquals("John", response.getCallerIdentity().getFirstName());
         assertEquals("Smith", response.getCallerIdentity().getLastName());
-
-        assertEquals(CallerType.CONSUMER, response.getCallerType());
-        assertEquals("John Smith", response.getCallerName());
-        assertEquals("John", response.getFirstName());
-        assertEquals("Smith", response.getLastName());
     }
 
     private void assertAdvancedInsightResponse(AdvancedInsightResponse response) {
