@@ -47,6 +47,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 telescoping is clunky. Added some static factory methods to these classes to allow shortcutting through the builder for "simple" requests.
 - Updated `BasicInsightEndpoint`, `StandardInsightEndpoint`, and `AdvancedInsightEndpoint` to a more restrictive scope and moved them to the `com.nexmo.client.insight` package.
 - Changed `status` property of `BasicInsightResponse` to an `InsightStatus` enumeration.
+- Changed `SendMessageEndpoint` from XML to JSON. It now returns a `SmsSubmissionResponse` instead of an array result.
 
 ## [3.10.0] - 2018-11-02
 

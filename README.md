@@ -147,11 +147,11 @@ NexmoClient client = new NexmoClient.Builder()
         .apiSecret(API_SECRET)
         .build();
 
-SmsSubmissionResult[] responses = client.getSmsClient().submitMessage(new TextMessage(
+SmsSubmissionResponse responses = client.getSmsClient().submitMessage(new TextMessage(
         FROM_NUMBER,
         TO_NUMBER,
         "Hello from Nexmo!"));
-for (SmsSubmissionResult response : responses) {
+for (SmsSubmissionResponseMessage response : responses.getMessages()) {
     System.out.println(response);
 }
 ```
