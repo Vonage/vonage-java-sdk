@@ -21,12 +21,11 @@
  */
 package com.nexmo.client.sms;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.annotation.JsonCreator;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@JsonDeserialize(using = MessageStatusDeserializer.class)
 public enum MessageStatus {
     OK(0),
     THROTTLED(1),
@@ -47,16 +46,15 @@ public enum MessageStatus {
     INVALID_TTL(16),
     NUMBER_UNREACHABLE(17),
     TOO_MANY_DESTINATIONS(18),
-    FACILITY_NOT_ALLOWED(19),
-    INVALID_MESSAGE_CLASS(20);
+    FACILITY_NOT_ALLOWED(19), INVALID_MESSAGE_CLASS(20), UNKNOWN(Integer.MAX_VALUE);
 
     private int messageStatus;
 
-    private static Map<Integer, MessageStatus> integerStatusValues = new HashMap<>();
+    private static final Map<Integer, MessageStatus> MESSAGE_STATUS_INDEX = new HashMap<>();
 
     static {
-        for(MessageStatus messageStatus : MessageStatus.values()) {
-            integerStatusValues.put(messageStatus.messageStatus, messageStatus);
+        for (MessageStatus messageStatus : MessageStatus.values()) {
+            MESSAGE_STATUS_INDEX.put(messageStatus.messageStatus, messageStatus);
         }
     }
 
@@ -64,10 +62,13 @@ public enum MessageStatus {
      * Look up the {@link MessageStatus} based on the int value.
      *
      * @param messageStatus the int value of the message status.
+     *
      * @return MessageStatus based on the int value given.
      */
+    @JsonCreator
     public static MessageStatus fromInt(int messageStatus) {
-        return integerStatusValues.get(messageStatus);
+        MessageStatus foundStatus = MESSAGE_STATUS_INDEX.get(messageStatus);
+        return (foundStatus != null) ? foundStatus : UNKNOWN;
     }
 
     MessageStatus(int messageStatus) {
