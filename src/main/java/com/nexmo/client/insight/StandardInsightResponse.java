@@ -19,24 +19,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.insight.standard;
+package com.nexmo.client.insight;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
-import com.nexmo.client.insight.CallerType;
-import com.nexmo.client.insight.CarrierDetails;
-import com.nexmo.client.insight.basic.BasicInsightResponse;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StandardInsightResponse extends BasicInsightResponse {
-    private String requestPrice;
-    private String remainingBalance;
+    private BigDecimal requestPrice;
+    private BigDecimal remainingBalance;
+    private BigDecimal refundPrice;
     private CarrierDetails originalCarrier;
     private CarrierDetails currentCarrier;
+    private CallerIdentity callerIdentity;
     private String callerName;
     private String firstName;
     private String lastName;
@@ -52,12 +52,12 @@ public class StandardInsightResponse extends BasicInsightResponse {
     }
 
     @JsonProperty("request_price")
-    public String getRequestPrice() {
+    public BigDecimal getRequestPrice() {
         return requestPrice;
     }
 
     @JsonProperty("remaining_balance")
-    public String getRemainingBalance() {
+    public BigDecimal getRemainingBalance() {
         return remainingBalance;
     }
 
@@ -89,5 +89,15 @@ public class StandardInsightResponse extends BasicInsightResponse {
     @JsonProperty("caller_type")
     public CallerType getCallerType() {
         return callerType;
+    }
+
+    @JsonProperty("caller_identity")
+    public CallerIdentity getCallerIdentity() {
+        return callerIdentity;
+    }
+
+    @JsonProperty("refund_price")
+    public BigDecimal getRefundPrice() {
+        return refundPrice;
     }
 }

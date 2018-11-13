@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2018 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,16 +19,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.insight.basic;
+package com.nexmo.client.insight;
 
-import com.nexmo.client.insight.BaseInsightRequest;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class BasicInsightRequest extends BaseInsightRequest {
-    public BasicInsightRequest(String number) {
-        this(number, DEFAULT_COUNTRY);
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class CallerIdentity {
+    private CallerType type;
+    private String callerName;
+    private String firstName;
+    private String lastName;
+
+    @JsonProperty("caller_type")
+    public CallerType getType() {
+        return type;
     }
 
-    public BasicInsightRequest(String number, String country) {
-        super(number, country);
+    @JsonProperty("caller_name")
+    public String getCallerName() {
+        return callerName;
+    }
+
+    @JsonProperty("first_name")
+    public String getFirstName() {
+        return firstName;
+    }
+
+    @JsonProperty("last_name")
+    public String getLastName() {
+        return lastName;
     }
 }

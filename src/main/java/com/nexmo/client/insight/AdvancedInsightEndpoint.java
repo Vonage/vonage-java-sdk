@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.insight.basic;
+package com.nexmo.client.insight;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
@@ -33,13 +33,12 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class BasicInsightEndpoint extends AbstractMethod<BasicInsightRequest, BasicInsightResponse> {
-
+class AdvancedInsightEndpoint extends AbstractMethod<AdvancedInsightRequest, AdvancedInsightResponse> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
-    private static final String PATH = "/ni/basic/json";
+    private static final String PATH = "/ni/advanced/json";
 
-    public BasicInsightEndpoint(HttpWrapper httpWrapper) {
+    AdvancedInsightEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -49,18 +48,24 @@ public class BasicInsightEndpoint extends AbstractMethod<BasicInsightRequest, Ba
     }
 
     @Override
-    public RequestBuilder makeRequest(BasicInsightRequest request) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(AdvancedInsightRequest request) throws NexmoClientException, UnsupportedEncodingException {
         RequestBuilder requestBuilder = RequestBuilder
                 .post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH)
                 .addParameter("number", request.getNumber());
         if (request.getCountry() != null) {
             requestBuilder.addParameter("country", request.getCountry());
         }
+        if (request.getIpAddress() != null) {
+            requestBuilder.addParameter("ip", request.getIpAddress());
+        }
+        if (request.getCnam() != null) {
+            requestBuilder.addParameter("cnam", request.getCnam().toString());
+        }
         return requestBuilder;
     }
 
     @Override
-    public BasicInsightResponse parseResponse(HttpResponse response) throws IOException {
-        return BasicInsightResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+    public AdvancedInsightResponse parseResponse(HttpResponse response) throws IOException {
+        return AdvancedInsightResponse.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 }

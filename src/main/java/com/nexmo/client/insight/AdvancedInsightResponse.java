@@ -19,16 +19,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.insight.advanced;
+package com.nexmo.client.insight;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
-import com.nexmo.client.insight.CallerType;
-import com.nexmo.client.insight.RoamingDetails;
-import com.nexmo.client.insight.standard.StandardInsightResponse;
 
 import java.io.IOException;
 import java.util.HashMap;

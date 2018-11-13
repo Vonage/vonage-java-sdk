@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.insight.basic;
+package com.nexmo.client.insight;
 
 import com.nexmo.client.NexmoUnexpectedException;
 import org.junit.Test;
@@ -42,7 +42,7 @@ public class BasicInsightResponseTest {
                 "    \"country_prefix\": \"44\"\n" +
                 "}");
 
-        assertEquals(0, response.getStatus());
+        assertEquals(InsightStatus.SUCCESS, response.getStatus());
         assertEquals("Success", response.getStatusMessage());
         assertEquals("d79c3d82-e2ee-46ff-972a-97b76be419cb", response.getRequestId());
         assertEquals("441632960960", response.getInternationalFormatNumber());
@@ -63,7 +63,7 @@ public class BasicInsightResponseTest {
                         "}"
         );
 
-        assertEquals(1, response.getStatus());
+        assertEquals(InsightStatus.THROTTLED, response.getStatus());
         assertEquals("Back off", response.getStatusMessage());
         assertEquals("d79c3d82-e2ee-46ff-972a-97b76be419cb", response.getRequestId());
     }
@@ -78,7 +78,7 @@ public class BasicInsightResponseTest {
                         "}"
         );
 
-        assertEquals(3, response.getStatus());
+        assertEquals(InsightStatus.INVALID_PARAMS, response.getStatus());
         assertEquals("I'm not sure what you mean", response.getErrorText());
         assertEquals("d79c3d82-e2ee-46ff-972a-97b76be419cb", response.getRequestId());
     }
