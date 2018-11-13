@@ -27,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CallerIdentity {
     private CallerType type;
-    private String callerName;
+    private String name;
     private String firstName;
     private String lastName;
 
@@ -37,8 +37,8 @@ public class CallerIdentity {
     }
 
     @JsonProperty("caller_name")
-    public String getCallerName() {
-        return callerName;
+    public String getName() {
+        return name;
     }
 
     @JsonProperty("first_name")
