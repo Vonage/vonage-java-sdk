@@ -68,7 +68,9 @@ public class SmsClient {
      * the appropriate message id.
      *
      * @param message The message request object that describes the type of message and the contents to be submitted.
+     *
      * @return SmsSubmissionResponse an object containing a collection of SmsSubmissionResponseMessage objects for each actual sms that was required to submit the message.
+     *
      * @throws NexmoResponseParseException if the HTTP response could not be parsed.
      * @throws IOException                 There has been an error attempting to communicate with the Nexmo service (e.g. Network failure).
      */
@@ -91,6 +93,7 @@ public class SmsClient {
      *
      * @param id  the first ID to look up
      * @param ids optional extra IDs to look up
+     *
      * @return SMS data matching the provided criteria
      */
     public SearchSmsResponse searchMessages(String id, String... ids) throws IOException, NexmoClientException {
@@ -105,6 +108,7 @@ public class SmsClient {
      *
      * @param date the date of the SMS message to be looked up
      * @param to   the MSISDN number of the SMS recipient
+     *
      * @return SMS data matching the provided criteria
      */
     public SearchSmsResponse searchMessages(Date date, String to) throws IOException, NexmoClientException {
@@ -127,10 +131,10 @@ public class SmsClient {
      *
      * @param date the date of the rejected SMS message to be looked up
      * @param to   the MSISDN number of the SMS recipient
+     *
      * @return rejection data matching the provided criteria
      */
-    public SearchRejectedMessagesResponse searchRejectedMessages(Date date,
-                                                                 String to) throws IOException, NexmoClientException {
+    public SearchRejectedMessagesResponse searchRejectedMessages(Date date, String to) throws IOException, NexmoClientException {
         return this.searchRejectedMessages(new SearchRejectedMessagesRequest(date, to));
     }
 
@@ -138,7 +142,9 @@ public class SmsClient {
      * Search for a single SMS by id.
      *
      * @param id The message id to search for.
+     *
      * @return SmsSingleSearchResponse object containing the details of the SMS.
+     *
      * @throws NexmoResponseParseException if the HTTP response could not be parsed.
      * @throws IOException                 There has been an error attempting to communicate with the Nexmo service (e.g. Network failure).
      */
