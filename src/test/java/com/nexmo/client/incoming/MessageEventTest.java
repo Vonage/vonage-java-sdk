@@ -25,6 +25,7 @@ import org.junit.Test;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import static org.junit.Assert.assertEquals;
 
@@ -55,6 +56,7 @@ public class MessageEventTest {
         assertEquals("abc123", messageEvent.getUdh());
 
         Calendar calendar = new GregorianCalendar(2020, Calendar.JANUARY, 1, 12, 0, 0);
+        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         assertEquals(calendar.getTime(), messageEvent.getMessageTimestamp());
     }
