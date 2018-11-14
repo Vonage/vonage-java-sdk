@@ -23,12 +23,10 @@ package com.nexmo.client.sms;
 
 import org.apache.http.client.methods.RequestBuilder;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class SmsDateSearchRequest implements SearchSmsRequest {
-    private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final Date date;
     private final String recipient;
 
@@ -39,7 +37,7 @@ public class SmsDateSearchRequest implements SearchSmsRequest {
     }
 
     public void addParams(RequestBuilder request) {
-        request.addParameter("date", SmsDateSearchRequest.dateFormat.format(this.date))
+        request.addParameter("date", new SimpleDateFormat("yyyy-MM-dd").format(this.date))
                 .addParameter("to", this.recipient);
     }
 }

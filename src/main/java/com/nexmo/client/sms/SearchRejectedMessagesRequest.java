@@ -23,12 +23,10 @@ package com.nexmo.client.sms;
 
 import org.apache.http.client.methods.RequestBuilder;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class SearchRejectedMessagesRequest {
-    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     private final Date date;
     private final String recipient;
 
@@ -39,6 +37,8 @@ public class SearchRejectedMessagesRequest {
     }
 
     public void addParams(RequestBuilder request) {
-        request.addParameter("date", DATE_FORMAT.format(this.date)).addParameter("to", this.recipient);
+        request
+                .addParameter("date", new SimpleDateFormat("yyyy-MM-dd").format(this.date))
+                .addParameter("to", this.recipient);
     }
 }
