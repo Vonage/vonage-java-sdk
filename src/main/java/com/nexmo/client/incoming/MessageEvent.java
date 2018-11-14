@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -114,6 +115,7 @@ public class MessageEvent {
     public static MessageEvent fromJson(String json) {
         try {
             ObjectMapper mapper = new ObjectMapper();
+            mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
             return mapper.readValue(json, MessageEvent.class);
         } catch (IOException jpe) {
             throw new NexmoUnexpectedException("Failed to produce MessageEvent from json.", jpe);
