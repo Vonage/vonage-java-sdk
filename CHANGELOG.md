@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added `NexmoClient.Builder` to allow for fluent creation of `NexmoClient`.
 - Added `getBasicNumberInsight`, `getStandardNumberInsight`, and `getAdvancedNumberInsight` to `InsightClient` which takes a respective `*InsightRequest`.
 - Added `CallerIdentity` data object to be used in number insight.
+- Added `Builder` to `CallsFilter` class to make filtering search results more intuative.
 
 ### Changed
 - Renamed all `Ncco` classes to `Action` classes:
