@@ -23,7 +23,7 @@ package com.nexmo.client.account;
 
 import com.nexmo.client.HttpWrapper;
 
-public class SmsPricingMethod extends PricingMethod {
+class SmsPricingMethod extends PricingMethod {
     private static final String PATH = "/account/get-pricing/outbound/sms";
 
     SmsPricingMethod(HttpWrapper httpWrapper) {

@@ -21,14 +21,16 @@
  */
 package com.nexmo.client.numbers;
 
-import com.nexmo.client.*;
+import com.nexmo.client.HttpConfig;
+import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoBadRequestException;
+import com.nexmo.client.TestUtils;
 import org.apache.http.client.methods.RequestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Map;
 
-import static com.nexmo.client.TestUtils.test429;
 import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
 
@@ -55,9 +57,7 @@ public class CancelNumberEndpointTest {
     public void parseResponse() throws Exception {
         String json = "{\n" + "  \"error-code\":\"200\",\n" + "  \"error-code-label\":\"success\"\n" + "}";
 
-        CancelNumberResponse response = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, json));
-        assertEquals("200", response.getErrorCode());
-        assertEquals("success", response.getErrorCodeLabel());
+        endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, json));
     }
 
     @Test
@@ -78,15 +78,10 @@ public class CancelNumberEndpointTest {
                 + "        \"country\": \"Is required.\"\n" + "    },\n" + "    \"type\": \"BAD_REQUEST\"\n" + "}";
         try {
             endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, json));
-            fail("A 500 response should raise a NexmoMethodFailedException");
-        } catch (NexmoMethodFailedException e) {
+            fail("A 500 response should raise a NexmoBadRequestException");
+        } catch (NexmoBadRequestException e) {
             // This is expected
         }
-    }
-
-    @Test
-    public void testRequestThrottleResponse() throws Exception {
-        test429(new CancelNumberEndpoint(null));
     }
 
     @Test

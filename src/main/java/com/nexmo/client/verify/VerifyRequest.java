@@ -25,7 +25,7 @@ import java.util.Locale;
 
 /**
  * Describes a Verify request when passed to
- * {@link com.nexmo.client.verify.endpoints.VerifyEndpoint#execute(Object)})}.
+ * {@link com.nexmo.client.verify.VerifyEndpoint})}.
  */
 public class VerifyRequest {
     // Compulsory attrs:
@@ -51,12 +51,7 @@ public class VerifyRequest {
      *               characters.
      */
     public VerifyRequest(final String number, final String brand) {
-        this(number,
-                brand,
-                null,
-                -1,
-                null,
-                null);
+        this(number, brand, null, -1, null, null);
     }
 
     /**
@@ -85,8 +80,7 @@ public class VerifyRequest {
      * @param locale (optional) Override the default locale used for verification. By default the locale is determined
      *               from the country code included in <tt>number</tt>
      */
-    public VerifyRequest(final String number, final String brand, final String from, final int length,
-                         final Locale locale) {
+    public VerifyRequest(final String number, final String brand, final String from, final int length, final Locale locale) {
         this(number, brand, from, length, locale, null);
     }
 
@@ -106,12 +100,10 @@ public class VerifyRequest {
      * @param type   (optional) If provided, restrict the verification to the specified network type. Contact
      *               support@nexmo.com to enable this feature.
      */
-    public VerifyRequest(final String number, final String brand, final String from, final int length,
-                         final Locale locale, final LineType type) {
+    public VerifyRequest(final String number, final String brand, final String from, final int length, final Locale locale, final LineType type) {
         if (number == null || brand == null)
             throw new IllegalArgumentException("Number and brand parameters cannot be null.");
-        if (length > 0 && length != 4 && length != 6)
-            throw new IllegalArgumentException("Code length must be 4 or 6.");
+        if (length > 0 && length != 4 && length != 6) throw new IllegalArgumentException("Code length must be 4 or 6.");
 
         this.number = number;
         this.brand = brand;
@@ -123,7 +115,7 @@ public class VerifyRequest {
 
     /**
      * @return the recipient's phone number provided in the constructor, in
-     * <a href="https://en.wikipedia.org/wiki/E.164">E.164</a> format.
+     *         <a href="https://en.wikipedia.org/wiki/E.164">E.164</a> format.
      */
     public String getNumber() {
         return number;
@@ -138,9 +130,9 @@ public class VerifyRequest {
 
     /**
      * @return the short alphanumeric string to specify the SenderID for SMS sent by Verify, or <tt>null</tt> if one was
-     * not provided. This value is specified in some {@link VerifyRequest} constructors.
-     * <p>
-     * If this value is <tt>null</tt>, the sender_id used will be <tt>VERIFY</tt>.
+     *         not provided. This value is specified in some {@link VerifyRequest} constructors.
+     *         <p>
+     *         If this value is <tt>null</tt>, the sender_id used will be <tt>VERIFY</tt>.
      */
     public String getFrom() {
         return from;
@@ -152,7 +144,7 @@ public class VerifyRequest {
 
     /**
      * @return the length of the verification code to be sent to the user, specified in some {@link VerifyRequest}
-     * constructors. <tt>-1</tt> indicates the default length will be used.
+     *         constructors. <tt>-1</tt> indicates the default length will be used.
      */
     public int getLength() {
         return length;
@@ -164,7 +156,7 @@ public class VerifyRequest {
 
     /**
      * @return the default locale used for verification. If this value is <tt>null</tt>, the locale will be determined
-     * from the country code included in <tt>number</tt>
+     *         from the country code included in <tt>number</tt>
      */
     public Locale getLocale() {
         return locale;
@@ -177,7 +169,7 @@ public class VerifyRequest {
 
     /**
      * @return the type of network the verification will be restricted to. This value has no effect unless it has been
-     * enabled by contacting <tt>support@nexmo.com</tt>.
+     *         enabled by contacting <tt>support@nexmo.com</tt>.
      */
     public LineType getType() {
         return type;
@@ -245,8 +237,6 @@ public class VerifyRequest {
      * Types of phone line to be specified for {@link VerifyRequest#type}.
      */
     public enum LineType {
-        ALL,
-        MOBILE,
-        LANDLINE,
+        ALL, MOBILE, LANDLINE,
     }
 }

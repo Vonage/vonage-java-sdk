@@ -22,7 +22,6 @@
 package com.nexmo.client.voice;
 
 
-
 import com.fasterxml.jackson.databind.util.ISO8601Utils;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -37,73 +36,55 @@ public class CallsFilter {
     private Date dateEnd;
     private Integer pageSize;
     private Integer recordIndex;
-    private String order;
+    private CallOrder order;
     private String conversationUuid;
+
+    private CallsFilter(Builder builder) {
+        this.status = builder.status;
+        this.dateStart = builder.dateStart;
+        this.dateEnd = builder.dateEnd;
+        this.pageSize = builder.pageSize;
+        this.recordIndex = builder.recordIndex;
+        this.order = builder.order;
+        this.conversationUuid = builder.conversationUuid;
+    }
 
     public CallStatus getStatus() {
         return status;
-    }
-
-    public void setStatus(CallStatus status) {
-        this.status = status;
     }
 
     public Date getDateStart() {
         return dateStart;
     }
 
-    public void setDateStart(Date dateStart) {
-        this.dateStart = dateStart;
-    }
-
     public Date getDateEnd() {
         return dateEnd;
-    }
-
-    public void setDateEnd(Date dateEnd) {
-        this.dateEnd = dateEnd;
     }
 
     public Integer getPageSize() {
         return pageSize;
     }
 
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
-
     public Integer getRecordIndex() {
         return recordIndex;
     }
 
-    public void setRecordIndex(Integer recordIndex) {
-        this.recordIndex = recordIndex;
-    }
-
-    public String getOrder() {
+    public CallOrder getOrder() {
         return order;
-    }
-
-    public void setOrder(String order) {
-        this.order = order;
     }
 
     public String getConversationUuid() {
         return conversationUuid;
     }
 
-    public void setConversationUuid(String conversationUuid) {
-        this.conversationUuid = conversationUuid;
-    }
-
-    public List<NameValuePair> toUrlParams() {
+    List<NameValuePair> toUrlParams() {
         List<NameValuePair> result = new ArrayList<>(10);
         conditionalAdd(result, "status", this.status);
         conditionalAdd(result, "date_start", this.dateStart);
         conditionalAdd(result, "date_end", this.dateEnd);
         conditionalAdd(result, "page_size", this.pageSize);
         conditionalAdd(result, "record_index", this.recordIndex);
-        conditionalAdd(result, "order", this.order);
+        conditionalAdd(result, "order", (this.order != null) ? this.order.getCallOrder() : null);
         conditionalAdd(result, "conversation_uuid", this.conversationUuid);
 
         return result;
@@ -124,6 +105,93 @@ public class CallsFilter {
     private void conditionalAdd(List<NameValuePair> params, String name, Object value) {
         if (value != null) {
             params.add(new BasicNameValuePair(name, value.toString()));
+        }
+    }
+
+    public static class Builder {
+        private CallStatus status;
+        private Date dateStart;
+        private Date dateEnd;
+        private Integer pageSize;
+        private Integer recordIndex;
+        private CallOrder order;
+        private String conversationUuid;
+
+        /**
+         * @param status The status of the calls to lookup.
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder status(CallStatus status) {
+            this.status = status;
+            return this;
+        }
+
+        /**
+         * @param dateStart The minimum in the date range of the calls to lookup.
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder dateStart(Date dateStart) {
+            this.dateStart = dateStart;
+            return this;
+        }
+
+        /**
+         * @param dateEnd The maximum in the date range of calls to lookup.
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder dateEnd(Date dateEnd) {
+            this.dateEnd = dateEnd;
+            return this;
+        }
+
+        /**
+         * @param pageSize The number of calls in the response.
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder pageSize(Integer pageSize) {
+            this.pageSize = pageSize;
+            return this;
+        }
+
+        /**
+         * @param recordIndex The starting index.
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder recordIndex(Integer recordIndex) {
+            this.recordIndex = recordIndex;
+            return this;
+        }
+
+        /**
+         * @param order The order of the calls.
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder order(CallOrder order) {
+            this.order = order;
+            return this;
+        }
+
+        /**
+         * @param conversationUuid The specific conversation to return calls for.
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder conversationUuid(String conversationUuid) {
+            this.conversationUuid = conversationUuid;
+            return this;
+        }
+
+        /**
+         * @return A new {@link CallsFilter} object with the stored builder options.
+         */
+        public CallsFilter build() {
+            return new CallsFilter(this);
         }
     }
 }

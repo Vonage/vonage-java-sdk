@@ -100,13 +100,13 @@ public class UpdateNumberEndpointTest {
     @Test
     public void testParseErrorResponse() throws Exception {
         try {
-            HttpResponse stub = TestUtils.makeJsonHttpResponse(200,
+            HttpResponse stub = TestUtils.makeJsonHttpResponse(
+                    500,
                     "{\n" + "  \"error-code\":\"500\",\n" + "  \"error-code-label\":\"There was an error\"\n" + "}"
             );
             this.endpoint.parseResponse(stub);
             fail("An exception should have been thrown here.");
         } catch (Exception e) {
-            assertEquals("There was an error", e.getMessage());
             // This is expected.
         }
     }

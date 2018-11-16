@@ -26,7 +26,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.ArrayIterator;
 import com.nexmo.client.NexmoUnexpectedException;
-import com.nexmo.client.applications.endpoints.EmbeddedApplicationDetails;
 
 import java.io.IOException;
 import java.util.Iterator;

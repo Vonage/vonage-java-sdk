@@ -45,20 +45,21 @@ public class CallsFilterTest {
         endCalendar.set(Calendar.MILLISECOND, 0);
         Date endDate = endCalendar.getTime();
 
-        CallsFilter filter = new CallsFilter();
-        filter.setStatus(CallStatus.COMPLETED);
-        filter.setDateStart(startDate);
-        filter.setDateEnd(endDate);
-        filter.setRecordIndex(12);
-        filter.setOrder("asc");
-        filter.setPageSize(10);
-        filter.setConversationUuid("this-is-not-a-uuid");
+        CallsFilter filter = new CallsFilter.Builder()
+                .status(CallStatus.COMPLETED)
+                .dateStart(startDate)
+                .dateEnd(endDate)
+                .recordIndex(12)
+                .order(CallOrder.ASCENDING)
+                .pageSize(10)
+                .conversationUuid("this-is-not-a-uuid")
+                .build();
 
         assertEquals(CallStatus.COMPLETED, filter.getStatus());
         assertEquals(startDate, filter.getDateStart());
         assertEquals(endDate, filter.getDateEnd());
         assertEquals(12, (int) filter.getRecordIndex());
-        assertEquals("asc", filter.getOrder());
+        assertEquals(CallOrder.ASCENDING, filter.getOrder());
         assertEquals(10, (int) filter.getPageSize());
         assertEquals("this-is-not-a-uuid", filter.getConversationUuid());
 
@@ -80,7 +81,7 @@ public class CallsFilterTest {
 
     @Test
     public void testNoParams() throws Exception {
-        CallsFilter filter = new CallsFilter();
+        CallsFilter filter = new CallsFilter.Builder().build();
         List<NameValuePair> params = filter.toUrlParams();
         assertEquals(0, params.size());
     }

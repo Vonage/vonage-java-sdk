@@ -24,9 +24,7 @@ package com.nexmo.client;
 
 import com.nexmo.client.account.AccountClient;
 import com.nexmo.client.applications.ApplicationClient;
-import com.nexmo.client.auth.AuthMethod;
-import com.nexmo.client.auth.JWTAuthMethod;
-import com.nexmo.client.auth.NexmoUnacceptableAuthException;
+import com.nexmo.client.auth.*;
 import com.nexmo.client.conversion.ConversionClient;
 import com.nexmo.client.insight.InsightClient;
 import com.nexmo.client.numbers.NumbersClient;
@@ -36,6 +34,14 @@ import com.nexmo.client.sns.SnsClient;
 import com.nexmo.client.verify.VerifyClient;
 import com.nexmo.client.voice.VoiceClient;
 import org.apache.http.client.HttpClient;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 /**
  * Top-level Nexmo API client object.
@@ -47,25 +53,21 @@ import org.apache.http.client.HttpClient;
  * clients for all of the Nexmo APIs.
  */
 public class NexmoClient {
-    private final AccountClient account;
-    private final ApplicationClient application;
-    private final InsightClient insight;
-    private final NumbersClient numbers;
-    private final SmsClient sms;
-    private final VoiceClient voice;
-    private final VerifyClient verify;
-    private final SnsClient sns;
-    private final ConversionClient conversion;
-    private final RedactClient redact;
-
+    private AccountClient account;
+    private ApplicationClient application;
+    private InsightClient insight;
+    private NumbersClient numbers;
+    private SmsClient sms;
+    private VoiceClient voice;
+    private VerifyClient verify;
+    private SnsClient sns;
+    private ConversionClient conversion;
+    private RedactClient redact;
     private HttpWrapper httpWrapper;
 
-    public NexmoClient(AuthMethod... authMethods) {
-        this(new HttpConfig.Builder().build(), authMethods);
-    }
-
-    public NexmoClient(HttpConfig httpConfig, AuthMethod... authMethods) {
-        this.httpWrapper = new HttpWrapper(httpConfig, authMethods);
+    private NexmoClient(Builder builder) {
+        this.httpWrapper = new HttpWrapper(builder.httpConfig, builder.authCollection);
+        this.httpWrapper.setHttpClient(builder.httpClient);
 
         this.account = new AccountClient(this.httpWrapper);
         this.application = new ApplicationClient(this.httpWrapper);
@@ -77,17 +79,6 @@ public class NexmoClient {
         this.sns = new SnsClient(this.httpWrapper);
         this.conversion = new ConversionClient(this.httpWrapper);
         this.redact = new RedactClient(this.httpWrapper);
-    }
-
-    /**
-     * Provide an HttpClient that will be used to make requests to the Nexmo API.
-     * <p>
-     * This can be useful, for example, if you must use an HTTP proxy to make requests.
-     *
-     * @param client A custom-configured HttpClient instance.
-     */
-    public void setHttpClient(HttpClient client) {
-        this.httpWrapper.setHttpClient(client);
     }
 
     public AccountClient getAccountClient() {
@@ -140,5 +131,203 @@ public class NexmoClient {
     public String generateJwt() throws NexmoUnacceptableAuthException {
         JWTAuthMethod authMethod = this.httpWrapper.getAuthCollection().getAuth(JWTAuthMethod.class);
         return authMethod.constructToken(System.currentTimeMillis() / 1000L, JWTAuthMethod.constructJTI());
+    }
+
+    /**
+     * @return The {@link HttpWrapper}
+     */
+    HttpWrapper getHttpWrapper() {
+        return httpWrapper;
+    }
+
+    public static class Builder {
+        private AuthCollection authCollection;
+        private HttpConfig httpConfig = HttpConfig.defaultConfig();
+        private HttpClient httpClient;
+        private String applicationId;
+        private String apiKey;
+        private String apiSecret;
+        private String signatureSecret;
+        private byte[] privateKeyContents;
+
+        /**
+         * @param httpConfig Configuration options for the {@link HttpWrapper}
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder httpConfig(HttpConfig httpConfig) {
+            this.httpConfig = httpConfig;
+            return this;
+        }
+
+        /**
+         * @param httpClient Custom implementation of {@link HttpClient}.
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder httpClient(HttpClient httpClient) {
+            this.httpClient = httpClient;
+            return this;
+        }
+
+        /**
+         * When setting an applicationId, it is also expected that the {@link #privateKeyContents} will also be set.
+         *
+         * @param applicationId Used to identify each application.
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder applicationId(String applicationId) {
+            this.applicationId = applicationId;
+            return this;
+        }
+
+        /**
+         * When setting an apiKey, it is also expected that {@link #apiSecret(String)} and/or {@link #signatureSecret(String)} will also be set.
+         *
+         * @param apiKey The API Key found in the dashboard for your account.
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder apiKey(String apiKey) {
+            this.apiKey = apiKey;
+            return this;
+        }
+
+        /**
+         * When setting an apiSecret, it is also expected that {@link #apiKey(String)} will also be set.
+         *
+         * @param apiSecret The API Secret found in the dashboard for your account.
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder apiSecret(String apiSecret) {
+            this.apiSecret = apiSecret;
+            return this;
+        }
+
+        /**
+         * When setting a signatureSecret, it is also expected that {@link #apiKey(String)} will also be set.
+         *
+         * @param signatureSecret The Signature Secret found in the dashboard for your account.
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder signatureSecret(String signatureSecret) {
+            this.signatureSecret = signatureSecret;
+            return this;
+        }
+
+        /**
+         * When setting the contents of your private key, it is also expected that {@link #applicationId(String)} will also be set.
+         *
+         * @param privateKeyContents The contents of your private key used for JWT generation.
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder privateKeyContents(byte[] privateKeyContents) {
+            this.privateKeyContents = privateKeyContents;
+            return this;
+        }
+
+        /**
+         * When setting the contents of your private key, it is also expected that {@link #applicationId(String)} will also be set.
+         *
+         * @param privateKeyContents The contents of your private key used for JWT generation.
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder privateKeyContents(String privateKeyContents) {
+            return privateKeyContents(privateKeyContents.getBytes());
+        }
+
+        /**
+         * When setting the path of your private key, it is also expected that {@link #applicationId(String)} will also be set.
+         *
+         * @param privateKeyPath The path to your private key used for JWT generation.
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder privateKeyPath(Path privateKeyPath) throws IOException {
+            return privateKeyContents(Files.readAllBytes(privateKeyPath));
+        }
+
+        /**
+         * When setting the path of your private key, it is also expected that {@link #applicationId(String)} will also be set.
+         *
+         * @param privateKeyPath The path to your private key used for JWT generation.
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder privateKeyPath(String privateKeyPath) throws IOException {
+            return privateKeyPath(Paths.get(privateKeyPath));
+        }
+
+        /**
+         * @return a new {@link NexmoClient} from the stored builder options.
+         *
+         * @throws NexmoClientCreationException if credentials aren't provided in a valid pairing or there were issues
+         *                                      generating an {@link JWTAuthMethod} with the provided credentials.
+         */
+        public NexmoClient build() {
+            this.authCollection = generateAuthCollection(this.applicationId,
+                    this.apiKey,
+                    this.apiSecret,
+                    this.signatureSecret,
+                    this.privateKeyContents
+            );
+            return new NexmoClient(this);
+        }
+
+        private AuthCollection generateAuthCollection(String applicationId, String key, String secret, String signature, byte[] privateKeyContents) {
+            AuthCollection authMethods = new AuthCollection();
+
+            try {
+                validateAuthParameters(applicationId, key, secret, signature, privateKeyContents);
+            } catch (IllegalStateException e) {
+                throw new NexmoClientCreationException("Failed to generate authentication methods.", e);
+            }
+
+            if (key != null && secret != null) {
+                authMethods.add(new TokenAuthMethod(key, secret));
+            }
+
+            if (key != null && signature != null) {
+                authMethods.add(new SignatureAuthMethod(key, signature));
+            }
+
+            if (applicationId != null && privateKeyContents != null) {
+                try {
+                    authMethods.add(new JWTAuthMethod(applicationId, privateKeyContents));
+                } catch (NoSuchAlgorithmException | InvalidKeyException | InvalidKeySpecException e) {
+                    throw new NexmoClientCreationException("Failed to generate JWT Authentication method.", e);
+                }
+            }
+
+            return authMethods;
+        }
+
+        private void validateAuthParameters(String applicationId, String key, String secret, String signature, byte[] privateKeyContents) {
+            if (key != null && secret == null && signature == null) {
+                throw new IllegalStateException(
+                        "You must provide an API secret or signature secret in addition to your API key.");
+            }
+
+            if (secret != null && key == null) {
+                throw new IllegalStateException("You must provide an API key in addition to your API secret.");
+            }
+
+            if (signature != null && key == null) {
+                throw new IllegalStateException("You must provide an API key in addition to your signature secret.");
+            }
+
+            if (applicationId == null && privateKeyContents != null) {
+                throw new IllegalStateException("You must provide an application ID in addition to your private key.");
+            }
+
+            if (applicationId != null && privateKeyContents == null) {
+                throw new IllegalStateException("You must provide a private key in addition to your application id.");
+            }
+        }
     }
 }

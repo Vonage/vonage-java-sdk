@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum RecordingFormat {
-    MP3, WAV, UNKNOWN;
+    MP3, WAV, OGG, UNKNOWN;
 
     private static final Map<String, RecordingFormat> RECORDING_FORMAT_INDEX = new HashMap<>();
 

@@ -97,7 +97,11 @@ HttpConfig httpConfig = new HttpConfig.Builder()
         .snsBaseUri("https://sns.example.com")
         .build();
 
-NexmoClient client = new NexmoClient(httpConfig, new TokenAuthMethod(API_KEY, API_SECRET));
+NexmoClient client = new NexmoClient.Builder()
+        .apiKey(API_KEY)
+        .apiSecret(API_SECRET)
+        .httpConfig(httpConfig)
+        .build();
 ```
 
 If you do not specify a property, it will take on whatever the default value is. You can also set all three with a single method:
@@ -105,7 +109,11 @@ If you do not specify a property, it will take on whatever the default value is.
 ```java
 HttpConfig httpConfig = new HttpConfig.Builder().baseUri("http://example.com").build();
 
-NexmoClient client = new NexmoClient(httpConfig, new TokenAuthMethod(API_KEY, API_SECRET));
+NexmoClient client = new NexmoClient.Builder()
+        .apiKey(API_KEY)
+        .apiSecret(API_SECRET)
+        .httpConfig(httpConfig)
+        .build();
 ```
 
 To keep the default values, you can use `HttpConfig.defaultConfig()`:
@@ -113,13 +121,20 @@ To keep the default values, you can use `HttpConfig.defaultConfig()`:
 ```java
 HttpConfig httpConfig = HttpConfig.defaultConfig();
 
-NexmoClient client = new NexmoClient(httpConfig, new TokenAuthMethod(API_KEY, API_SECRET));
+NexmoClient client = new NexmoClient.Builder()
+        .apiKey(API_KEY)
+        .apiSecret(API_SECRET)
+        .httpConfig(httpConfig)
+        .build();;
 ```
 
 You can also instantiate without the parameter:
 
 ```java
-NexmoClient client = new NexmoClient(new TokenAuthMethod(API_KEY, API_SECRET));
+NexmoClient client = new NexmoClient.Builder()
+        .apiKey(API_KEY)
+        .apiSecret(API_SECRET)
+        .build();
 ```
 
 ### Send an SMS
@@ -127,15 +142,16 @@ NexmoClient client = new NexmoClient(new TokenAuthMethod(API_KEY, API_SECRET));
 Send an SMS with the Nexmo SMS API:
 
 ```java
-AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
-NexmoClient client = new NexmoClient(auth);
-System.out.println(FROM_NUMBER);
+NexmoClient client = new NexmoClient.Builder()
+        .apiKey(API_KEY)
+        .apiSecret(API_SECRET)
+        .build();
 
-SmsSubmissionResult[] responses = client.getSmsClient().submitMessage(new TextMessage(
+SmsSubmissionResponse responses = client.getSmsClient().submitMessage(new TextMessage(
         FROM_NUMBER,
         TO_NUMBER,
         "Hello from Nexmo!"));
-for (SmsSubmissionResult response : responses) {
+for (SmsSubmissionResponseMessage response : responses.getMessages()) {
     System.out.println(response);
 }
 ```
@@ -145,15 +161,11 @@ for (SmsSubmissionResult response : responses) {
 The following code initiates an outbound call which then reads the user [a message](https://nexmo-community.github.io/ncco-examples/first_call_talk.json):
 
 ```java
-import java.nio.file.Paths;
+NexmoClient client = new NexmoClient.Builder()
+        .applicationId(APP_ID)
+        .privateKeyPath("application_key.pem")
+        .build();
 
-import com.nexmo.client.NexmoClient;
-import com.nexmo.client.auth.JWTAuthMethod;
-import com.nexmo.client.voice.Call;
-import com.nexmo.client.voice.CallEvent;
-
-JWTAuthMethod auth = new JWTAuthMethod(application_id, Paths.get("application_key.pem"));
-NexmoClient client = new NexmoClient(auth);
 Call call = new Call(to, from,
                      "https://nexmo-community.github.io/ncco-examples/first_call_talk.json");
 CallEvent event = client.getVoiceClient().createCall(call);
@@ -210,14 +222,26 @@ System.out.println("Alright. " + stopTalkResponse.getMessage());
 
 ### Generating NCCO Responses
 
-Our library contains a `com.nexmo.client.voice.ncco` package, providing JSON-serializable objects for your NCCO webhook endpoints. You can use it like this:
+Our library contains a `com.nexmo.client.voice.ncco` package, providing JSON-serializable objects for your NCCO webhook endpoints. 
+
+Each of the `Action` items contain a `Builder` class that can be used for constructing various actions. These actions are then added to an `Ncco` object for serialization into JSON:
 
 ```java
-TalkNcco message = new TalkNcco("Thank you for calling!");
-Ncco[] nccos = new Ncco[]{message};
+TalkAction intro = new TalkAction.Builder("At the tone, record your response and press #.")
+                        .voiceName(VoiceName.KIMBERLY)
+                        .build();
 
+TalkAction outro = new TalkAction.Builder("Thanks, goodbye!")
+                        .voiceName(VoiceName.KIMBERLY)
+                        .build();
+
+RecordAction record = new RecordAction.Builder()
+                        .beepStart(true)
+                        .endOnKey('#')
+                        .build()
+                        
 res.type("application/json");
-return nccoMapper.writer().writeValueAsString(nccos);
+return new Ncco(intro, record, outro).toJson();
 ```
 
 ### Send a 2FA Code
@@ -225,9 +249,11 @@ return nccoMapper.writer().writeValueAsString(nccos);
 Send a 2FA code to a phone number with:
 
 ```java
-AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
-NexmoClient client = new NexmoClient(auth);
-VerifyResult ongoingVerify = client.getVerifyClient().verify(TO_NUMBER, "NEXMO");
+NexmoClient client = new NexmoClient.Builder()
+        .apiKey(API_KEY)
+        .apiSecret(API_SECRET)
+        .build();
+VerifyResponse ongoingVerify = client.getVerifyClient().verify(TO_NUMBER, "NEXMO");
 ```
 
 ### Check the 2FA Code
@@ -243,8 +269,10 @@ client.getVerifyClient().check(ongoingVerify.getRequestId(), CODE)
 Get a list of SMS prices for a country with:
 
 ```java
-AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
-NexmoClient client = new NexmoClient(auth);
+NexmoClient client = new NexmoClient.Builder()
+        .apiKey(API_KEY)
+        .apiSecret(API_SECRET)
+        .build();
 PricingResponse response = client.getAccountClient().getSmsPrice("GB");
 System.out.println(response.getDefaultPrice());
 ```
@@ -254,8 +282,10 @@ System.out.println(response.getDefaultPrice());
 Get a list of voice prices for a country with:
 
 ```java
-AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
-NexmoClient client = new NexmoClient(auth);
+NexmoClient client = new NexmoClient.Builder()
+        .apiKey(API_KEY)
+        .apiSecret(API_SECRET)
+        .build();
 PricingResponse response = client.getAccountClient().getVoicePrice("US");
 System.out.println(response.getDefaultPrice());
 ```
@@ -265,8 +295,10 @@ System.out.println(response.getDefaultPrice());
 Get a list of SMS prices for a country with:
 
 ```java
-AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
-NexmoClient client = new NexmoClient(auth);
+NexmoClient client = new NexmoClient.Builder()
+        .apiKey(API_KEY)
+        .apiSecret(API_SECRET)
+        .build();
 PrefixPricingResponse response = client.getAccountClient().getPrefixPrice(ServiceType.SMS, "1");
 System.out.println(response.getCountries().get(0).getDefaultPrice());
 ```
@@ -276,8 +308,10 @@ System.out.println(response.getCountries().get(0).getDefaultPrice());
 Get a list of voice prices for a country with:
 
 ```java
-AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
-NexmoClient client = new NexmoClient(auth);
+NexmoClient client = new NexmoClient.Builder()
+        .apiKey(API_KEY)
+        .apiSecret(API_SECRET)
+        .build();
 PrefixPricingResponse response = client.getAccountClient().getPrefixPrice(ServiceType.VOICE, "1");
 System.out.println(response.getCountries().get(0).getDefaultPrice());
 ```
@@ -286,8 +320,10 @@ System.out.println(response.getCountries().get(0).getDefaultPrice());
 
 Top-up your account that has auto-reload enabled with:
 ```java
-AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
-NexmoClient client = new NexmoClient(auth);
+NexmoClient client = new NexmoClient.Builder()
+        .apiKey(API_KEY)
+        .apiSecret(API_SECRET)
+        .build();
 client.getAccountClient().topUp("TRANSACTION_NUMBER");
 ```
 
@@ -295,8 +331,10 @@ client.getAccountClient().topUp("TRANSACTION_NUMBER");
 
 Submit a request to the Conversion API when it has been enabled on your account with:
 ```java
-AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
-NexmoClient client = new NexmoClient(auth);
+NexmoClient client = new NexmoClient.Builder()
+        .apiKey(API_KEY)
+        .apiSecret(API_SECRET)
+        .build();
 client.getConversionClient().submitConversion(ConversionRequest.Type.VOICE,
                                      "MESSAGE-ID",
                                      true,
@@ -307,8 +345,10 @@ client.getConversionClient().submitConversion(ConversionRequest.Type.VOICE,
 
 Submit a request to the Redact API when it has been enabled on your account with:
 ```java
-AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
-NexmoClient client = new NexmoClient(auth);
+NexmoClient client = new NexmoClient.Builder()
+        .apiKey(API_KEY)
+        .apiSecret(API_SECRET)
+        .build();
 client.getRedactClient().redactTransaction(SMS_ID, RedactRequest.Product.SMS, RedactRequest.Type.INBOUND);
 ```
 
@@ -316,8 +356,10 @@ client.getRedactClient().redactTransaction(SMS_ID, RedactRequest.Product.SMS, Re
 
 Submit a request to the Redact API when it has been enabled on your account with:
 ```java
-AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
-NexmoClient client = new NexmoClient(auth);
+NexmoClient client = new NexmoClient.Builder()
+        .apiKey(API_KEY)
+        .apiSecret(API_SECRET)
+        .build();
 client.getRedactClient().redactTransaction(VOICE_ID, RedactRequest.Product.VOICE);
 ```
 
@@ -326,8 +368,10 @@ client.getRedactClient().redactTransaction(VOICE_ID, RedactRequest.Product.VOICE
 Create a secret associated with your account id:
 
 ```java
-AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
-NexmoClient client = new NexmoClient(auth);
+NexmoClient client = new NexmoClient.Builder()
+        .apiKey(API_KEY)
+        .apiSecret(API_SECRET)
+        .build();
 SecretResponse response = client.getAccountClient().createSecret(API_KEY, "Foo84RSecret");
 ```
 
@@ -336,8 +380,10 @@ SecretResponse response = client.getAccountClient().createSecret(API_KEY, "Foo84
 List the secret id (but not content) associated with your account id:
 
 ```java
-AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
-NexmoClient client = new NexmoClient(auth);
+NexmoClient client = new NexmoClient.Builder()
+        .apiKey(API_KEY)
+        .apiSecret(API_SECRET)
+        .build();
 ListSecretsResponse response = client.getAccountClient().listSecrets(API_KEY);
 
 Collection<SecretResponse> secrets = response.getSecrets();
@@ -348,8 +394,10 @@ Collection<SecretResponse> secrets = response.getSecrets();
 Revoke a secret associated with your account id:
 
 ```java
-AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
-NexmoClient client = new NexmoClient(auth);
+NexmoClient client = new NexmoClient.Builder()
+        .apiKey(API_KEY)
+        .apiSecret(API_SECRET)
+        .build();
 client.getAccountClient().revokeSecret(API_KEY, SECRET_ID);
 ```
 
@@ -358,15 +406,17 @@ client.getAccountClient().revokeSecret(API_KEY, SECRET_ID);
 Get information about a specific secret associated with your account id:
 
 ```java
-AuthMethod auth = new TokenAuthMethod(API_KEY, API_SECRET);
-NexmoClient client = new NexmoClient(auth);
+NexmoClient client = new NexmoClient.Builder()
+        .apiKey(API_KEY)
+        .apiSecret(API_SECRET)
+        .build();
 SecretResponse response = client.getAccountClient().getSecret(API_KEY, SECRET_ID);
 ```
 
 ### Custom HTTP Configuration
 
 If you need to configure the Apache HttpClient used for making requests, you can
-call `NexmoClient.setHttpClient()` to supply your custom configured object. This
+call `NexmoClient.Builder.httpClient()` to supply your custom configured object. This
 can be useful, for example, if you must use an HTTP proxy to make requests.
 
 ## Tips And Tricks

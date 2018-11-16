@@ -21,11 +21,11 @@
  */
 package com.nexmo.client.account;
 
+import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoBadRequestException;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.TokenAuthMethod;
-import com.nexmo.client.voice.endpoints.AbstractMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.util.EntityUtils;
@@ -33,12 +33,12 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-public class TopUpMethod extends AbstractMethod<TopUpRequest, Void> {
+class TopUpMethod extends AbstractMethod<TopUpRequest, Void> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
     private static final String PATH = "/account/top-up";
 
-    public TopUpMethod(HttpWrapper httpWrapper) {
+    TopUpMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 

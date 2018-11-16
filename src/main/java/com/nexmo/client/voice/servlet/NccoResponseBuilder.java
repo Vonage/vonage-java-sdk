@@ -21,7 +21,7 @@
  */
 package com.nexmo.client.voice.servlet;
 
-import com.nexmo.client.voice.ncco.Ncco;
+import com.nexmo.client.voice.ncco.Action;
 
 /**
  * Provides a fluent interface for constructing instances of {@link NccoResponse}.
@@ -36,8 +36,8 @@ public class NccoResponseBuilder {
         this.value = new NccoResponse();
     }
 
-    public NccoResponseBuilder appendNcco(Ncco ncco) {
-        this.value.appendNcco(ncco);
+    public NccoResponseBuilder appendNcco(Action action) {
+        this.value.appendNcco(action);
         return this;
     }
 

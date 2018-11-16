@@ -27,7 +27,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MessageEvent {
@@ -113,7 +116,11 @@ public class MessageEvent {
 
     public static MessageEvent fromJson(String json) {
         try {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+
             ObjectMapper mapper = new ObjectMapper();
+            mapper.setDateFormat(dateFormat);
             return mapper.readValue(json, MessageEvent.class);
         } catch (IOException jpe) {
             throw new NexmoUnexpectedException("Failed to produce MessageEvent from json.", jpe);

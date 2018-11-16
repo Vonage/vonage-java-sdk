@@ -41,47 +41,90 @@ public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
     @Test
     public void testVerifyWithNumberBrandFromLengthLocaleLineType() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(200,
-                                                  "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": 0,\n" + "  \"error_text\": \"error\"\n" + "}"));
-        VerifyResult r = client.verify("447700900999", "TestBrand", "15555215554", 6, Locale.US, VerifyRequest.LineType.MOBILE);
-        assertEquals(VerifyResult.STATUS_OK, r.getStatus());
+                "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": 0,\n"
+                        + "  \"error_text\": \"error\"\n" + "}"
+        ));
+
+        VerifyResponse response = client.verify("447700900999",
+                "TestBrand",
+                "15555215554",
+                6,
+                Locale.US,
+                VerifyRequest.LineType.MOBILE
+        );
+
+        assertEquals(VerifyStatus.OK, response.getStatus());
+        assertEquals("error", response.getErrorText());
+        assertEquals("not-really-a-request-id", response.getRequestId());
     }
 
     @Test
     public void testVerifyWithNumberBrandFromLengthLocale() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(200,
-                "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": 0,\n" + "  \"error_text\": \"error\"\n" + "}"));
-        VerifyResult r = client.verify("447700900999", "TestBrand", "15555215554", 6, Locale.US);
-        assertEquals(VerifyResult.STATUS_OK, r.getStatus());
+                "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": 0,\n"
+                        + "  \"error_text\": \"error\"\n" + "}"
+        ));
+
+        VerifyResponse response = client.verify("447700900999", "TestBrand", "15555215554", 6, Locale.US);
+
+        assertEquals(VerifyStatus.OK, response.getStatus());
+        assertEquals("error", response.getErrorText());
+        assertEquals("not-really-a-request-id", response.getRequestId());
     }
 
     @Test
     public void testVerifyWithNumberBrandFrom() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(200,
-                                                  "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": 0,\n" + "  \"error_text\": \"error\"\n" + "}"));
-        VerifyResult r = client.verify("447700900999", "TestBrand", "15555215554");
-        assertEquals(VerifyResult.STATUS_OK, r.getStatus());
+                "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": 0,\n"
+                        + "  \"error_text\": \"error\"\n" + "}"
+        ));
+
+        VerifyResponse response = client.verify("447700900999", "TestBrand", "15555215554");
+
+        assertEquals(VerifyStatus.OK, response.getStatus());
+        assertEquals("error", response.getErrorText());
+        assertEquals("not-really-a-request-id", response.getRequestId());
     }
 
     @Test
     public void testVerifyWithNumberBrand() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(200,
-                                                  "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": 0,\n" + "  \"error_text\": \"error\"\n" + "}"));
-        VerifyResult r = client.verify("447700900999", "TestBrand");
-        assertEquals(VerifyResult.STATUS_OK, r.getStatus());
+                "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": 0,\n"
+                        + "  \"error_text\": \"error\"\n" + "}"
+        ));
+
+        VerifyResponse response = client.verify("447700900999", "TestBrand");
+
+        assertEquals(VerifyStatus.OK, response.getStatus());
+        assertEquals("error", response.getErrorText());
+        assertEquals("not-really-a-request-id", response.getRequestId());
     }
 
     @Test
     public void testVerifyWithRequestObject() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(200,
-                "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": 0,\n" + "  \"error_text\": \"error\"\n" + "}"));
-        VerifyResult r = client.verify(new VerifyRequest("447700900999", "TestBrand", "15555215554", 6, Locale.US));
-        assertEquals(VerifyResult.STATUS_OK, r.getStatus());
+                "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": 0,\n"
+                        + "  \"error_text\": \"error\"\n" + "}"
+        ));
+
+        VerifyResponse response = client.verify(new VerifyRequest("447700900999",
+                "TestBrand",
+                "15555215554",
+                6,
+                Locale.US
+        ));
+
+        assertEquals(VerifyStatus.OK, response.getStatus());
+        assertEquals("error", response.getErrorText());
+        assertEquals("not-really-a-request-id", response.getRequestId());
     }
 
     @Test
     public void testVerifyHttpError() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(500,
-                "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": 0,\n" + "  \"error_text\": \"error\"\n" + "}"));
+                "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": 0,\n"
+                        + "  \"error_text\": \"error\"\n" + "}"
+        ));
         try {
             client.verify("447700900999", "TestBrand", "15555215554", 6, Locale.US);
             fail("An IOException should be thrown if an HTTP 500 response is received.");
@@ -93,8 +136,19 @@ public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
     @Test
     public void testVerifyWithNonNumericStatus() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(200,
-                "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": \"test\",\n" + "  \"error_text\": \"error\"\n" + "}"));
-        VerifyResult r = client.verify(new VerifyRequest("447700900999", "TestBrand", "15555215554", 6, Locale.US));
-        assertEquals(VerifyResult.STATUS_INTERNAL_ERROR, r.getStatus());
+                "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": \"test\",\n"
+                        + "  \"error_text\": \"error\"\n" + "}"
+        ));
+
+        VerifyResponse response = client.verify(new VerifyRequest("447700900999",
+                "TestBrand",
+                "15555215554",
+                6,
+                Locale.US
+        ));
+
+        assertEquals(VerifyStatus.INTERNAL_ERROR, response.getStatus());
+        assertEquals("error", response.getErrorText());
+        assertEquals("not-really-a-request-id", response.getRequestId());
     }
 }

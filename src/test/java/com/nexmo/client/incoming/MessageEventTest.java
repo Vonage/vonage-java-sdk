@@ -35,7 +35,7 @@ public class MessageEventTest {
         String json = "{\n" + "  \"msisdn\": \"447700900001\",\n" + "  \"to\": \"447700900000\",\n"
                 + "  \"messageId\": \"0A0000000123ABCD1\",\n" + "  \"text\": \"Hello world\",\n"
                 + "  \"type\": \"text\",\n" + "  \"keyword\": \"Hello\",\n"
-                + "  \"message-timestamp\": \"2020-01-01T12:00:00.000+00:00\",\n" + "  \"timestamp\": \"1578787200\",\n"
+                + "  \"message-timestamp\": \"2020-01-01 12:00:00\",\n" + "  \"timestamp\": \"1578787200\",\n"
                 + "  \"nonce\": \"aaaaaaaa-bbbb-cccc-dddd-0123456789ab\",\n" + "  \"concat\": \"true\",\n"
                 + "  \"concat-ref\": \"1\",\n" + "  \"concat-total\": \"3\",\n" + "  \"concat-part\": \"2\",\n"
                 + "  \"data\": \"abc123\",\n" + "  \"udh\": \"abc123\"\n" + "}";

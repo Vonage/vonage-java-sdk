@@ -4,6 +4,52 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.0] - In Development
+
+### Added
+- Added `Ncco` class to wrap `Collection<Action>` and handle the serialization of NCCO json through `toJson`.
+- Added the following `Builder` classes:
+    - `ConnectAction.Builder`
+    - `ConversationAction.Builder`
+    - `InputAction.Builder`
+    - `RecordAction.Builder`
+    - `StreamAction.Builder`
+    - `TalkAction.Builder`
+- Added `PhoneEndpoint` to `com.nexmo.voice.ncco` package for use with `ConnectAction`.
+- Added `WebSocketEndpoint` to `com.nexmo.voice.ncco` package for use with `ConnectAction`.
+- Added `SipEndpoint` to `com.nexmo.voice.ncco` package for use with `ConnectAction`.
+- Added `EventMethod` enumeration to replace the usage of strings.
+- Added `EventType` enumeration and the ability to specify the `eventType` property of `ConnectAction`.
+- Added `NexmoClient.Builder` to allow for fluent creation of `NexmoClient`.
+- Added `getBasicNumberInsight`, `getStandardNumberInsight`, and `getAdvancedNumberInsight` to `InsightClient` which takes a respective `*InsightRequest`.
+- Added `CallerIdentity` data object to be used in number insight.
+- Added `Builder` to `CallsFilter` class to make filtering search results more intuative.
+
+### Changed
+- Renamed all `Ncco` classes to `Action` classes:
+    - Renamed `Ncco` interface to `Action`
+    - Renamed `ConnectNcco` to `ConnectAction`
+    - Renamed `ConversationNcco` to `ConversationAction`
+    - Renamed `InputNcco` to `InputAction`
+    - Renamed `RecordNcco` to `RecordAction`
+    - Renamed `StreamNcco` to `StreamAction`
+    - Renamed `TalkNcco` to `TalkAction`
+- All `Action` classes now must be constructed through the provided `Builder` class.
+- All `Action` classes are now immutable. 
+- The `eventUrl` property of `ConnectAction`, `ConversationAction`, `InputAction`, and `RecordAction` is now a `Collection<String>` instead of an array.
+- The `eventMethod` property of `ConnectAction`, `ConversationAction`, `InputAction`, and `RecordAction` is now an `EventMethod` enum instead of a String.
+- Removed `ConnectWebSocketNcco` as it is built into `ConnectAction`.
+- `VerifyClient` will now return `*Response` instead of `*Result` objects.
+- Refactored `com.nexmo.client.voice.endpoints` to be part of the `com.nexmo.client.voice` package.
+- Made all `*Endpoint` and `*Method` classes package scoped. Users should always go through the appropriate `Client` classes.
+- Moved `AbstractMethod` to the root package.
+- Removed legacy `setUri` methods from the various `VoiceClient` endpoints. This should be done through `HttpConfig`.
+- Changed `BasicInsightRequest`, `StandardInsightRequest`, and `AdvancedInsightRequest` to use builders as constructor 
+telescoping is clunky. Added some static factory methods to these classes to allow shortcutting through the builder for "simple" requests.
+- Updated `BasicInsightEndpoint`, `StandardInsightEndpoint`, and `AdvancedInsightEndpoint` to a more restrictive scope and moved them to the `com.nexmo.client.insight` package.
+- Changed `status` property of `BasicInsightResponse` to an `InsightStatus` enumeration.
+- Changed `SendMessageEndpoint` from XML to JSON. It now returns a `SmsSubmissionResponse` instead of an array result.
+
 ## [3.10.0] - 2018-11-02
 
 ### Added

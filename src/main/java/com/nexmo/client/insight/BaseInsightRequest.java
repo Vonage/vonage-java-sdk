@@ -21,18 +21,11 @@
  */
 package com.nexmo.client.insight;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-
-public class BaseInsightRequest {
-    protected static final String DEFAULT_COUNTRY = null;
-
-    protected final String number;
-    protected final String country;
-
-    public BaseInsightRequest(String number, String country) {
-        this.number = number;
-        this.country = country;
-    }
+public abstract class BaseInsightRequest {
+    protected String number;
+    protected String country;
+    protected Boolean cnam;
+    protected String ipAddress;
 
     public String getNumber() {
         return number;
@@ -40,22 +33,5 @@ public class BaseInsightRequest {
 
     public String getCountry() {
         return country;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        } else if (obj == this) {
-            return true;
-        } else if (obj.getClass() != this.getClass()) {
-            return false;
-        } else {
-            BaseInsightRequest other = (BaseInsightRequest) obj;
-            return new EqualsBuilder()
-                    .append(this.getNumber(), other.getNumber())
-                    .append(this.getCountry(), other.getCountry())
-                    .isEquals();
-        }
     }
 }
