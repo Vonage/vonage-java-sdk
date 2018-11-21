@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.1] - 2018-11-21
+
+### Added
+- `channels` property to `RecordAction` as it was unintentionally removed during the version 4 release.
+
 ## [4.0.0] - 2018-11-16
 
 ### Added

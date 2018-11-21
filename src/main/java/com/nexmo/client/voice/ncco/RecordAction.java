@@ -43,6 +43,7 @@ public class RecordAction implements Action {
     private Collection<String> eventUrl;
     private EventMethod eventMethod;
     private SplitRecording split;
+    private Integer channels;
 
     public RecordAction(Builder builder) {
         this.format = builder.format;
@@ -52,7 +53,12 @@ public class RecordAction implements Action {
         this.beepStart = builder.beepStart;
         this.eventUrl = builder.eventUrl;
         this.eventMethod = builder.eventMethod;
-        this.split = builder.split;
+
+        // Split conversation must be enabled for multiple channels. Checked during construction to avoid
+        // method-chaining state confusion.
+        this.split = (builder.channels != null && builder.channels > 1) ? SplitRecording.CONVERSATION : builder.split;
+
+        this.channels = builder.channels;
     }
 
     @Override
@@ -92,6 +98,10 @@ public class RecordAction implements Action {
         return split;
     }
 
+    public Integer getChannels() {
+        return channels;
+    }
+
     public static class Builder {
         private RecordingFormat format = null;
         private Integer endOnSilence = null;
@@ -101,6 +111,7 @@ public class RecordAction implements Action {
         private Collection<String> eventUrl = null;
         private EventMethod eventMethod = null;
         private SplitRecording split = null;
+        private Integer channels = null;
 
         /**
          * @param format Record the Call in a specific {@link RecordingFormat}.
@@ -197,6 +208,19 @@ public class RecordAction implements Action {
          */
         public Builder split(SplitRecording split) {
             this.split = split;
+            return this;
+        }
+
+        /**
+         * @param channels The number of channels to record (maximum 32). If the number of participants exceeds
+         *                 channels any additional participants will be added to the last channel in file.
+         *                 {@link #split} will be set to {@link SplitRecording#CONVERSATION} during the build process
+         *                 if channels is greater than 1.
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder channels(Integer channels) {
+            this.channels = channels;
             return this;
         }
 

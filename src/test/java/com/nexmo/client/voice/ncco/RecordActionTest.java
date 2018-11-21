@@ -43,11 +43,11 @@ public class RecordActionTest {
                 .timeOut(5)
                 .beepStart(true)
                 .eventMethod(EventMethod.POST)
-                .eventUrl("https://example.com")
+                .eventUrl("https://example.com").channels(10)
                 .build();
 
         assertEquals(
-                "[{\"format\":\"mp3\",\"endOnSilence\":3,\"endOnKey\":\"#\",\"timeOut\":5,\"beepStart\":true,\"eventUrl\":[\"https://example.com\"],\"eventMethod\":\"POST\",\"split\":\"conversation\",\"action\":\"record\"}]",
+                "[{\"format\":\"mp3\",\"endOnSilence\":3,\"endOnKey\":\"#\",\"timeOut\":5,\"beepStart\":true,\"eventUrl\":[\"https://example.com\"],\"eventMethod\":\"POST\",\"split\":\"conversation\",\"channels\":10,\"action\":\"record\"}]",
                 new Ncco(record).toJson()
         );
     }
@@ -78,6 +78,18 @@ public class RecordActionTest {
     public void testSplit() {
         RecordAction record = new RecordAction.Builder().split(SplitRecording.CONVERSATION).build();
         assertEquals("[{\"split\":\"conversation\",\"action\":\"record\"}]", new Ncco(record).toJson());
+    }
+
+    @Test
+    public void testSplitIsSetWhenChannelsGreaterThanOne() {
+        RecordAction record = new RecordAction.Builder().channels(2).build();
+        assertEquals("[{\"split\":\"conversation\",\"channels\":2,\"action\":\"record\"}]", new Ncco(record).toJson());
+    }
+
+    @Test
+    public void testSplitIsNotSetWhenChannelsIsOne() {
+        RecordAction record = new RecordAction.Builder().channels(1).build();
+        assertEquals("[{\"channels\":1,\"action\":\"record\"}]", new Ncco(record).toJson());
     }
 
     @Test
@@ -116,5 +128,21 @@ public class RecordActionTest {
     public void testEventUrl() {
         RecordAction record = new RecordAction.Builder().eventUrl("https://example.com").build();
         assertEquals("[{\"eventUrl\":[\"https://example.com\"],\"action\":\"record\"}]", new Ncco(record).toJson());
+    }
+
+    @Test
+    public void testChannels() {
+        RecordAction record = new RecordAction.Builder().channels(32).build();
+        assertEquals("[{\"split\":\"conversation\",\"channels\":32,\"action\":\"record\"}]", new Ncco(record).toJson());
+    }
+
+    @Test
+    public void testMultipleBuilderCallWithDifferentChannelsSetsAndUnsetsSplitCorrectly() {
+        RecordAction.Builder recordBuilder = new RecordAction.Builder();
+        assertEquals(
+                "[{\"split\":\"conversation\",\"channels\":2,\"action\":\"record\"}]",
+                new Ncco(recordBuilder.channels(2).build()).toJson()
+        );
+        assertEquals("[{\"channels\":1,\"action\":\"record\"}]", new Ncco(recordBuilder.channels(1).build()).toJson());
     }
 }
