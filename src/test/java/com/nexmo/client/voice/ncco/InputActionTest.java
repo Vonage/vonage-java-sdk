@@ -29,13 +29,13 @@ import static org.junit.Assert.assertNotSame;
 public class InputActionTest {
     @Test
     public void testBuilderMultipleInstances() {
-        InputAction.Builder builder = new InputAction.Builder();
+        InputAction.Builder builder = InputAction.builder();
         assertNotSame(builder.build(), builder.build());
     }
 
     @Test
     public void testAllFields() {
-        InputAction input = new InputAction.Builder()
+        InputAction input = InputAction.builder()
                 .timeOut(10)
                 .maxDigits(4)
                 .submitOnHash(true)
@@ -49,13 +49,13 @@ public class InputActionTest {
 
     @Test
     public void testGetAction() {
-        InputAction input = new InputAction.Builder().build();
+        InputAction input = InputAction.builder().build();
         assertEquals("input", input.getAction());
     }
 
     @Test
     public void testDefault() {
-        InputAction input = new InputAction.Builder().build();
+        InputAction input = InputAction.builder().build();
 
         String expectedJson = "[{\"action\":\"input\"}]";
         assertEquals(expectedJson, new Ncco(input).toJson());
@@ -63,7 +63,7 @@ public class InputActionTest {
 
     @Test
     public void testTimeOutField() {
-        InputAction input = new InputAction.Builder().timeOut(5).build();
+        InputAction input = InputAction.builder().timeOut(5).build();
 
         String expectedJson = "[{\"timeOut\":5,\"action\":\"input\"}]";
         assertEquals(expectedJson, new Ncco(input).toJson());
@@ -71,7 +71,7 @@ public class InputActionTest {
 
     @Test
     public void testMaxDigitsField() {
-        InputAction input = new InputAction.Builder().maxDigits(4).build();
+        InputAction input = InputAction.builder().maxDigits(4).build();
 
         String expectedJson = "[{\"maxDigits\":4,\"action\":\"input\"}]";
         assertEquals(expectedJson, new Ncco(input).toJson());
@@ -79,7 +79,7 @@ public class InputActionTest {
 
     @Test
     public void testSubmitOnHashField() {
-        InputAction input = new InputAction.Builder().submitOnHash(true).build();
+        InputAction input = InputAction.builder().submitOnHash(true).build();
 
         String expectedJson = "[{\"submitOnHash\":true,\"action\":\"input\"}]";
         assertEquals(expectedJson, new Ncco(input).toJson());
@@ -87,7 +87,7 @@ public class InputActionTest {
 
     @Test
     public void testEventUrlField() {
-        InputAction input = new InputAction.Builder().eventUrl("http://example.com").build();
+        InputAction input = InputAction.builder().eventUrl("http://example.com").build();
 
         String expectedJson = "[{\"eventUrl\":[\"http://example.com\"],\"action\":\"input\"}]";
         assertEquals(expectedJson, new Ncco(input).toJson());
@@ -95,7 +95,7 @@ public class InputActionTest {
 
     @Test
     public void testEventMethodField() {
-        InputAction input = new InputAction.Builder().eventMethod(EventMethod.POST).build();
+        InputAction input = InputAction.builder().eventMethod(EventMethod.POST).build();
 
         String expectedJson = "[{\"eventMethod\":\"POST\",\"action\":\"input\"}]";
         assertEquals(expectedJson, new Ncco(input).toJson());

@@ -108,6 +108,10 @@ public class CallsFilter {
         }
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class Builder {
         private CallStatus status;
         private Date dateStart;

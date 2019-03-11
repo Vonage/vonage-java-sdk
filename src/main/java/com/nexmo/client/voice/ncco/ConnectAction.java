@@ -95,6 +95,14 @@ public class ConnectAction implements Action {
         return eventMethod;
     }
 
+    public static Builder builder(Collection<Endpoint> endpoint) {
+        return new Builder(endpoint);
+    }
+
+    public static Builder builder(Endpoint... endpoint) {
+        return new Builder(endpoint);
+    }
+
     public static class Builder {
         private Collection<Endpoint> endpoint;
         private String from = null;

@@ -62,6 +62,10 @@ public class WebSocketEndpoint implements Endpoint {
         return TYPE;
     }
 
+    public static Builder builder(String uri, String contentType) {
+        return new Builder(uri, contentType);
+    }
+
     public static class Builder {
         private String uri;
         private String contentType;

@@ -30,14 +30,14 @@ import static org.junit.Assert.assertNotSame;
 public class ConnectActionTest {
     @Test
     public void testBuilderMultipleInstances() {
-        ConnectAction.Builder builder = new ConnectAction.Builder(new PhoneEndpoint.Builder("15554441234").build());
+        ConnectAction.Builder builder = ConnectAction.builder(PhoneEndpoint.builder("15554441234").build());
         assertNotSame(builder.build(), builder.build());
     }
 
     @Test
     public void testAllFieldsWithPhoneEndpoint() {
-        PhoneEndpoint endpoint = new PhoneEndpoint.Builder("15554441234").build();
-        ConnectAction connect = new ConnectAction.Builder(endpoint)
+        PhoneEndpoint endpoint = PhoneEndpoint.builder("15554441234").build();
+        ConnectAction connect = ConnectAction.builder(endpoint)
                 .from("15554449876")
                 .eventType(EventType.SYNCHRONOUS)
                 .timeOut(3)
@@ -53,8 +53,8 @@ public class ConnectActionTest {
 
     @Test
     public void testAllFieldsWithWebSocketEndpoint() {
-        WebSocketEndpoint endpoint = new WebSocketEndpoint.Builder("wss://example.com", "content-type").build();
-        ConnectAction connect = new ConnectAction.Builder(endpoint)
+        WebSocketEndpoint endpoint = WebSocketEndpoint.builder("wss://example.com", "content-type").build();
+        ConnectAction connect = ConnectAction.builder(endpoint)
                 .from("15554449876")
                 .eventType(EventType.SYNCHRONOUS)
                 .timeOut(3)
@@ -70,8 +70,8 @@ public class ConnectActionTest {
 
     @Test
     public void testAllFieldsWithSipEndpoint() {
-        SipEndpoint endpoint = new SipEndpoint.Builder("sip:test@sip.example.com").build();
-        ConnectAction connect = new ConnectAction.Builder(endpoint)
+        SipEndpoint endpoint = SipEndpoint.builder("sip:test@sip.example.com").build();
+        ConnectAction connect = ConnectAction.builder(endpoint)
                 .from("15554449876")
                 .eventType(EventType.SYNCHRONOUS)
                 .timeOut(3)
@@ -87,14 +87,14 @@ public class ConnectActionTest {
 
     @Test
     public void testGetAction() {
-        ConnectAction connect = new ConnectAction.Builder(new PhoneEndpoint.Builder("15554441234").build()).build();
+        ConnectAction connect = ConnectAction.builder(PhoneEndpoint.builder("15554441234").build()).build();
         assertEquals("connect", connect.getAction());
     }
 
     @Test
     public void testDefaultWithPhone() {
-        PhoneEndpoint endpoint = new PhoneEndpoint.Builder("15554441234").build();
-        ConnectAction connect = new ConnectAction.Builder(endpoint).build();
+        PhoneEndpoint endpoint = PhoneEndpoint.builder("15554441234").build();
+        ConnectAction connect = ConnectAction.builder(endpoint).build();
 
         String expectedJson = "[{\"endpoint\":[{\"number\":\"15554441234\",\"type\":\"phone\"}],\"action\":\"connect\"}]";
         assertEquals(expectedJson, new Ncco(connect).toJson());
@@ -102,8 +102,8 @@ public class ConnectActionTest {
 
     @Test
     public void testDefaultWithWebSocket() {
-        WebSocketEndpoint endpoint = new WebSocketEndpoint.Builder("wss://example.com", "content-type").build();
-        ConnectAction connect = new ConnectAction.Builder(endpoint).build();
+        WebSocketEndpoint endpoint = WebSocketEndpoint.builder("wss://example.com", "content-type").build();
+        ConnectAction connect = ConnectAction.builder(endpoint).build();
 
         String expectedJson = "[{\"endpoint\":[{\"uri\":\"wss://example.com\",\"type\":\"websocket\",\"content-type\":\"content-type\"}],\"action\":\"connect\"}]";
         assertEquals(expectedJson, new Ncco(connect).toJson());
@@ -111,8 +111,8 @@ public class ConnectActionTest {
 
     @Test
     public void testDefaultWithWebSip() {
-        SipEndpoint endpoint = new SipEndpoint.Builder("sip:test@sip.example.com").build();
-        ConnectAction connect = new ConnectAction.Builder(endpoint).build();
+        SipEndpoint endpoint = SipEndpoint.builder("sip:test@sip.example.com").build();
+        ConnectAction connect = ConnectAction.builder(endpoint).build();
 
         String expectedJson = "[{\"endpoint\":[{\"uri\":\"sip:test@sip.example.com\",\"type\":\"sip\"}],\"action\":\"connect\"}]";
         assertEquals(expectedJson, new Ncco(connect).toJson());
@@ -120,10 +120,10 @@ public class ConnectActionTest {
 
     @Test
     public void testEndpointField() {
-        SipEndpoint initialEndpoint = new SipEndpoint.Builder("sip:test@sip.example.com").build();
-        PhoneEndpoint newEndpoint = new PhoneEndpoint.Builder("15554441234").build();
+        SipEndpoint initialEndpoint = SipEndpoint.builder("sip:test@sip.example.com").build();
+        PhoneEndpoint newEndpoint = PhoneEndpoint.builder("15554441234").build();
 
-        ConnectAction connect = new ConnectAction.Builder(initialEndpoint).endpoint(newEndpoint).build();
+        ConnectAction connect = ConnectAction.builder(initialEndpoint).endpoint(newEndpoint).build();
 
         String expectedJson = "[{\"endpoint\":[{\"number\":\"15554441234\",\"type\":\"phone\"}],\"action\":\"connect\"}]";
         assertEquals(expectedJson, new Ncco(connect).toJson());
@@ -131,7 +131,7 @@ public class ConnectActionTest {
 
     @Test
     public void testFrom() {
-        ConnectAction connect = new ConnectAction.Builder(new PhoneEndpoint.Builder("15554441234").build())
+        ConnectAction connect = ConnectAction.builder(PhoneEndpoint.builder("15554441234").build())
                 .from("15554449876")
                 .build();
 
@@ -141,7 +141,7 @@ public class ConnectActionTest {
 
     @Test
     public void testEventType() {
-        ConnectAction connect = new ConnectAction.Builder(new PhoneEndpoint.Builder("15554441234").build())
+        ConnectAction connect = ConnectAction.builder(PhoneEndpoint.builder("15554441234").build())
                 .eventType(EventType.SYNCHRONOUS)
                 .build();
 
@@ -151,9 +151,7 @@ public class ConnectActionTest {
 
     @Test
     public void testTimeOut() {
-        ConnectAction connect = new ConnectAction.Builder(new PhoneEndpoint.Builder("15554441234").build())
-                .timeOut(5)
-                .build();
+        ConnectAction connect = ConnectAction.builder(PhoneEndpoint.builder("15554441234").build()).timeOut(5).build();
 
         String expectedJson = "[{\"endpoint\":[{\"number\":\"15554441234\",\"type\":\"phone\"}],\"action\":\"connect\",\"timeout\":5}]";
         assertEquals(expectedJson, new Ncco(connect).toJson());
@@ -161,9 +159,7 @@ public class ConnectActionTest {
 
     @Test
     public void testLimit() {
-        ConnectAction connect = new ConnectAction.Builder(new PhoneEndpoint.Builder("15554441234").build())
-                .limit(5)
-                .build();
+        ConnectAction connect = ConnectAction.builder(PhoneEndpoint.builder("15554441234").build()).limit(5).build();
 
         String expectedJson = "[{\"endpoint\":[{\"number\":\"15554441234\",\"type\":\"phone\"}],\"limit\":5,\"action\":\"connect\"}]";
         assertEquals(expectedJson, new Ncco(connect).toJson());
@@ -171,7 +167,7 @@ public class ConnectActionTest {
 
     @Test
     public void testMachineDetection() {
-        ConnectAction.Builder builder = new ConnectAction.Builder(new PhoneEndpoint.Builder("15554441234").build());
+        ConnectAction.Builder builder = ConnectAction.builder(PhoneEndpoint.builder("15554441234").build());
         ConnectAction connectContinue = builder.machineDetection(MachineDetection.CONTINUE).build();
         ConnectAction connectHangup = builder.machineDetection(MachineDetection.CONTINUE).build();
 
@@ -181,7 +177,7 @@ public class ConnectActionTest {
 
     @Test
     public void testEventUrl() {
-        ConnectAction connect = new ConnectAction.Builder(new PhoneEndpoint.Builder("15554441234").build())
+        ConnectAction connect = ConnectAction.builder(PhoneEndpoint.builder("15554441234").build())
                 .eventUrl("https://example.org")
                 .build();
 
@@ -191,7 +187,7 @@ public class ConnectActionTest {
 
     @Test
     public void testEventMethod() {
-        ConnectAction connect = new ConnectAction.Builder(new PhoneEndpoint.Builder("15554441234").build())
+        ConnectAction connect = ConnectAction.builder(PhoneEndpoint.builder("15554441234").build())
                 .eventMethod(EventMethod.POST)
                 .build();
 

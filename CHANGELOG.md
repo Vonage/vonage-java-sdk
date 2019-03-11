@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## Development
+
+### Added
+- Added static `builder` methods to `Action` classes to reduce some of the verbosity around using them. You can now do `TalkAction action = TalkAction.builder("Hello World!").build();` instead of just `TalkAction action = new TalkAction.Builder("Hello World).build();`.
+
 ## [4.0.1] - 2018-11-21
 
 ### Added
