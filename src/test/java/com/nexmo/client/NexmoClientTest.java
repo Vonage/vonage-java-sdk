@@ -74,7 +74,7 @@ public class NexmoClientTest {
     @Test
     public void testConstructNexmoClient() throws Exception {
         byte[] keyBytes = testUtils.loadKey("test/keys/application_key");
-        NexmoClient client = new NexmoClient.Builder()
+        NexmoClient client = NexmoClient.builder()
                 .applicationId("951614e0-eec4-4087-a6b1-3f4c2f169cb0")
                 .privateKeyContents(keyBytes)
                 .httpClient(stubHttpClient(
@@ -93,7 +93,7 @@ public class NexmoClientTest {
     @Test
     public void testGenerateJwt() throws Exception {
         byte[] privateKeyBytes = testUtils.loadKey("test/keys/application_key");
-        NexmoClient client = new NexmoClient.Builder()
+        NexmoClient client = NexmoClient.builder()
                 .applicationId("application-id")
                 .privateKeyContents(privateKeyBytes)
                 .build();
@@ -113,32 +113,32 @@ public class NexmoClientTest {
 
     @Test(expected = NexmoClientCreationException.class)
     public void testSoloApiKeyThrowsException() {
-        new NexmoClient.Builder().apiKey("api-key").build();
+        NexmoClient.builder().apiKey("api-key").build();
     }
 
     @Test(expected = NexmoClientCreationException.class)
     public void testSoloApiSecret() {
-        new NexmoClient.Builder().apiSecret("api-secret").build();
+        NexmoClient.builder().apiSecret("api-secret").build();
     }
 
     @Test(expected = NexmoClientCreationException.class)
     public void testSoloSignatureSecret() {
-        new NexmoClient.Builder().signatureSecret("api-secret").build();
+        NexmoClient.builder().signatureSecret("api-secret").build();
     }
 
     @Test(expected = NexmoClientCreationException.class)
     public void testSoloApplicationId() {
-        new NexmoClient.Builder().applicationId("app-id").build();
+        NexmoClient.builder().applicationId("app-id").build();
     }
 
     @Test(expected = NexmoClientCreationException.class)
     public void testSoloPrivateKeyContents() {
-        new NexmoClient.Builder().privateKeyContents("").build();
+        NexmoClient.builder().privateKeyContents("").build();
     }
 
     @Test
     public void testApiKeyWithSecret() throws NexmoUnacceptableAuthException {
-        NexmoClient nexmoClient = new NexmoClient.Builder().apiKey("api-key").apiSecret("api-secret").build();
+        NexmoClient nexmoClient = NexmoClient.builder().apiKey("api-key").apiSecret("api-secret").build();
         AuthCollection authCollection = nexmoClient.getHttpWrapper().getAuthCollection();
 
         RequestBuilder requestBuilder = RequestBuilder.get();
@@ -151,7 +151,7 @@ public class NexmoClientTest {
 
     @Test
     public void testApiKeyWithSignatureSecret() throws NexmoUnacceptableAuthException, NoSuchAlgorithmException {
-        NexmoClient nexmoClient = new NexmoClient.Builder().apiKey("api-key").signatureSecret("api-secret").build();
+        NexmoClient nexmoClient = NexmoClient.builder().apiKey("api-key").signatureSecret("api-secret").build();
         AuthCollection authCollection = nexmoClient.getHttpWrapper().getAuthCollection();
 
         RequestBuilder requestBuilder = RequestBuilder.get();
@@ -179,7 +179,7 @@ public class NexmoClientTest {
         TestUtils testUtils = new TestUtils();
         byte[] keyBytes = testUtils.loadKey("test/keys/application_key");
 
-        NexmoClient nexmoClient = new NexmoClient.Builder()
+        NexmoClient nexmoClient = NexmoClient.builder()
                 .applicationId("app-id")
                 .privateKeyContents(keyBytes)
                 .build();
@@ -197,7 +197,7 @@ public class NexmoClientTest {
         TestUtils testUtils = new TestUtils();
         String key = Strings.fromByteArray(testUtils.loadKey("test/keys/application_key"));
 
-        NexmoClient nexmoClient = new NexmoClient.Builder().applicationId("app-id").privateKeyContents(key).build();
+        NexmoClient nexmoClient = NexmoClient.builder().applicationId("app-id").privateKeyContents(key).build();
         AuthCollection authCollection = nexmoClient.getHttpWrapper().getAuthCollection();
 
         RequestBuilder requestBuilder = RequestBuilder.get();
@@ -209,7 +209,7 @@ public class NexmoClientTest {
 
     @Test
     public void testApplicationIdWithCertPath() throws Exception {
-        NexmoClient nexmoClient = new NexmoClient.Builder()
+        NexmoClient nexmoClient = NexmoClient.builder()
                 .applicationId("app-id")
                 .privateKeyPath(Paths.get(this.getClass().getResource("test/keys/application_key").getPath()))
                 .build();
@@ -224,7 +224,7 @@ public class NexmoClientTest {
 
     @Test
     public void testApplicationIdWithCertPathAsString() throws Exception {
-        NexmoClient nexmoClient = new NexmoClient.Builder()
+        NexmoClient nexmoClient = NexmoClient.builder()
                 .applicationId("app-id")
                 .privateKeyPath(this.getClass().getResource("test/keys/application_key").getPath())
                 .build();
@@ -239,14 +239,14 @@ public class NexmoClientTest {
 
     @Test(expected = NexmoClientCreationException.class)
     public void testApplicationIdWithInvalidCert() throws Exception {
-        new NexmoClient.Builder().applicationId("app-id").privateKeyContents("invalid").build();
+        NexmoClient.builder().applicationId("app-id").privateKeyContents("invalid").build();
 
     }
 
     @Test
     public void testDefaultHttpConfig() {
         HttpConfig config = HttpConfig.defaultConfig();
-        NexmoClient nexmoClient = new NexmoClient.Builder().build();
+        NexmoClient nexmoClient = NexmoClient.builder().build();
 
         assertEquals(config.getApiBaseUri(), nexmoClient.getHttpWrapper().getHttpConfig().getApiBaseUri());
         assertEquals(config.getRestBaseUri(), nexmoClient.getHttpWrapper().getHttpConfig().getRestBaseUri());
@@ -256,7 +256,7 @@ public class NexmoClientTest {
     @Test
     public void testHttpConfig() {
         HttpConfig config = new HttpConfig.Builder().apiBaseUri("https://example.org").build();
-        NexmoClient nexmoClient = new NexmoClient.Builder().httpConfig(config).build();
+        NexmoClient nexmoClient = NexmoClient.builder().httpConfig(config).build();
 
         assertEquals(config, nexmoClient.getHttpWrapper().getHttpConfig());
     }

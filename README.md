@@ -97,7 +97,7 @@ HttpConfig httpConfig = new HttpConfig.Builder()
         .snsBaseUri("https://sns.example.com")
         .build();
 
-NexmoClient client = new NexmoClient.Builder()
+NexmoClient client = NexmoClient.builder()
         .apiKey(API_KEY)
         .apiSecret(API_SECRET)
         .httpConfig(httpConfig)
@@ -109,7 +109,7 @@ If you do not specify a property, it will take on whatever the default value is.
 ```java
 HttpConfig httpConfig = new HttpConfig.Builder().baseUri("http://example.com").build();
 
-NexmoClient client = new NexmoClient.Builder()
+NexmoClient client = NexmoClient.builder()
         .apiKey(API_KEY)
         .apiSecret(API_SECRET)
         .httpConfig(httpConfig)
@@ -121,7 +121,7 @@ To keep the default values, you can use `HttpConfig.defaultConfig()`:
 ```java
 HttpConfig httpConfig = HttpConfig.defaultConfig();
 
-NexmoClient client = new NexmoClient.Builder()
+NexmoClient client = NexmoClient.builder()
         .apiKey(API_KEY)
         .apiSecret(API_SECRET)
         .httpConfig(httpConfig)
@@ -131,7 +131,7 @@ NexmoClient client = new NexmoClient.Builder()
 You can also instantiate without the parameter:
 
 ```java
-NexmoClient client = new NexmoClient.Builder()
+NexmoClient client = NexmoClient.builder()
         .apiKey(API_KEY)
         .apiSecret(API_SECRET)
         .build();
@@ -142,7 +142,7 @@ NexmoClient client = new NexmoClient.Builder()
 Send an SMS with the Nexmo SMS API:
 
 ```java
-NexmoClient client = new NexmoClient.Builder()
+NexmoClient client = NexmoClient.builder()
         .apiKey(API_KEY)
         .apiSecret(API_SECRET)
         .build();
@@ -161,7 +161,7 @@ for (SmsSubmissionResponseMessage response : responses.getMessages()) {
 The following code initiates an outbound call which then reads the user [a message](https://nexmo-community.github.io/ncco-examples/first_call_talk.json):
 
 ```java
-NexmoClient client = new NexmoClient.Builder()
+NexmoClient client = NexmoClient.builder()
         .applicationId(APP_ID)
         .privateKeyPath("application_key.pem")
         .build();
@@ -249,7 +249,7 @@ return new Ncco(intro, record, outro).toJson();
 Send a 2FA code to a phone number with:
 
 ```java
-NexmoClient client = new NexmoClient.Builder()
+NexmoClient client = NexmoClient.builder()
         .apiKey(API_KEY)
         .apiSecret(API_SECRET)
         .build();
@@ -269,7 +269,7 @@ client.getVerifyClient().check(ongoingVerify.getRequestId(), CODE)
 Get a list of SMS prices for a country with:
 
 ```java
-NexmoClient client = new NexmoClient.Builder()
+NexmoClient client = NexmoClient.builder()
         .apiKey(API_KEY)
         .apiSecret(API_SECRET)
         .build();
@@ -282,7 +282,7 @@ System.out.println(response.getDefaultPrice());
 Get a list of voice prices for a country with:
 
 ```java
-NexmoClient client = new NexmoClient.Builder()
+NexmoClient client = NexmoClient.builder()
         .apiKey(API_KEY)
         .apiSecret(API_SECRET)
         .build();
@@ -295,7 +295,7 @@ System.out.println(response.getDefaultPrice());
 Get a list of SMS prices for a country with:
 
 ```java
-NexmoClient client = new NexmoClient.Builder()
+NexmoClient client = NexmoClient.builder()
         .apiKey(API_KEY)
         .apiSecret(API_SECRET)
         .build();
@@ -308,7 +308,7 @@ System.out.println(response.getCountries().get(0).getDefaultPrice());
 Get a list of voice prices for a country with:
 
 ```java
-NexmoClient client = new NexmoClient.Builder()
+NexmoClient client = NexmoClient.builder()
         .apiKey(API_KEY)
         .apiSecret(API_SECRET)
         .build();
@@ -320,7 +320,7 @@ System.out.println(response.getCountries().get(0).getDefaultPrice());
 
 Top-up your account that has auto-reload enabled with:
 ```java
-NexmoClient client = new NexmoClient.Builder()
+NexmoClient client = NexmoClient.builder()
         .apiKey(API_KEY)
         .apiSecret(API_SECRET)
         .build();
@@ -331,7 +331,7 @@ client.getAccountClient().topUp("TRANSACTION_NUMBER");
 
 Submit a request to the Conversion API when it has been enabled on your account with:
 ```java
-NexmoClient client = new NexmoClient.Builder()
+NexmoClient client = NexmoClient.builder()
         .apiKey(API_KEY)
         .apiSecret(API_SECRET)
         .build();
@@ -345,7 +345,7 @@ client.getConversionClient().submitConversion(ConversionRequest.Type.VOICE,
 
 Submit a request to the Redact API when it has been enabled on your account with:
 ```java
-NexmoClient client = new NexmoClient.Builder()
+NexmoClient client = NexmoClient.builder()
         .apiKey(API_KEY)
         .apiSecret(API_SECRET)
         .build();
@@ -356,7 +356,7 @@ client.getRedactClient().redactTransaction(SMS_ID, RedactRequest.Product.SMS, Re
 
 Submit a request to the Redact API when it has been enabled on your account with:
 ```java
-NexmoClient client = new NexmoClient.Builder()
+NexmoClient client = NexmoClient.builder()
         .apiKey(API_KEY)
         .apiSecret(API_SECRET)
         .build();
@@ -368,7 +368,7 @@ client.getRedactClient().redactTransaction(VOICE_ID, RedactRequest.Product.VOICE
 Create a secret associated with your account id:
 
 ```java
-NexmoClient client = new NexmoClient.Builder()
+NexmoClient client = NexmoClient.builder()
         .apiKey(API_KEY)
         .apiSecret(API_SECRET)
         .build();
@@ -380,7 +380,7 @@ SecretResponse response = client.getAccountClient().createSecret(API_KEY, "Foo84
 List the secret id (but not content) associated with your account id:
 
 ```java
-NexmoClient client = new NexmoClient.Builder()
+NexmoClient client = NexmoClient.builder()
         .apiKey(API_KEY)
         .apiSecret(API_SECRET)
         .build();
@@ -394,7 +394,7 @@ Collection<SecretResponse> secrets = response.getSecrets();
 Revoke a secret associated with your account id:
 
 ```java
-NexmoClient client = new NexmoClient.Builder()
+NexmoClient client = NexmoClient.builder()
         .apiKey(API_KEY)
         .apiSecret(API_SECRET)
         .build();
@@ -406,7 +406,7 @@ client.getAccountClient().revokeSecret(API_KEY, SECRET_ID);
 Get information about a specific secret associated with your account id:
 
 ```java
-NexmoClient client = new NexmoClient.Builder()
+NexmoClient client = NexmoClient.builder()
         .apiKey(API_KEY)
         .apiSecret(API_SECRET)
         .build();
