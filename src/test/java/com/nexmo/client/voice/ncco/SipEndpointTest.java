@@ -28,9 +28,9 @@ import static org.junit.Assert.assertEquals;
 public class SipEndpointTest {
     @Test
     public void testAllFields() {
-        SipEndpoint endpoint = new SipEndpoint.Builder("test-sip-uri").uri("sip:test@example.com").build();
+        SipEndpoint endpoint = SipEndpoint.builder("test-sip-uri").uri("sip:test@example.com").build();
 
-        ConnectAction connect = new ConnectAction.Builder(endpoint).build();
+        ConnectAction connect = ConnectAction.builder(endpoint).build();
 
         String expectedJson = "[{\"endpoint\":[{\"uri\":\"sip:test@example.com\",\"type\":\"sip\"}],\"action\":\"connect\"}]";
         assertEquals(expectedJson, new Ncco(connect).toJson());

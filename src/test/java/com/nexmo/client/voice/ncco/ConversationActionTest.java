@@ -30,13 +30,13 @@ public class ConversationActionTest {
 
     @Test
     public void testBuilderMultipleInstances() {
-        ConversationAction.Builder builder = new ConversationAction.Builder("test-conversation");
+        ConversationAction.Builder builder = ConversationAction.builder("test-conversation");
         assertNotSame(builder.build(), builder.build());
     }
 
     @Test
     public void testAllFields() {
-        ConversationAction action = new ConversationAction.Builder("test-conversation")
+        ConversationAction action = ConversationAction.builder("test-conversation")
                 .name("different-name")
                 .musicOnHoldUrl("http://example.com/music")
                 .startOnEnter(true)
@@ -52,27 +52,27 @@ public class ConversationActionTest {
 
     @Test
     public void testGetAction() {
-        ConversationAction conversation = new ConversationAction.Builder("test").build();
+        ConversationAction conversation = ConversationAction.builder("test").build();
         assertEquals("conversation", conversation.getAction());
     }
 
     @Test
     public void testDefault() {
-        ConversationAction conversationAction = new ConversationAction.Builder("test-name").build();
+        ConversationAction conversationAction = ConversationAction.builder("test-name").build();
 
         assertEquals("[{\"name\":\"test-name\",\"action\":\"conversation\"}]", new Ncco(conversationAction).toJson());
     }
 
     @Test
     public void testName() {
-        ConversationAction conversationAction = new ConversationAction.Builder("test-name").name("rename").build();
+        ConversationAction conversationAction = ConversationAction.builder("test-name").name("rename").build();
 
         assertEquals("[{\"name\":\"rename\",\"action\":\"conversation\"}]", new Ncco(conversationAction).toJson());
     }
 
     @Test
     public void testMusicOnHoldUrl() {
-        ConversationAction conversation = new ConversationAction.Builder("Test")
+        ConversationAction conversation = ConversationAction.builder("Test")
                 .musicOnHoldUrl("https://example.org")
                 .build();
 
@@ -81,32 +81,32 @@ public class ConversationActionTest {
     }
 
     @Test
-    public void testStartOnEnter() throws Exception {
-        ConversationAction conversation = new ConversationAction.Builder("Test").startOnEnter(true).build();
+    public void testStartOnEnter() {
+        ConversationAction conversation = ConversationAction.builder("Test").startOnEnter(true).build();
 
         String expectedJson = "[{\"name\":\"Test\",\"startOnEnter\":true,\"action\":\"conversation\"}]";
         assertEquals(expectedJson, new Ncco(conversation).toJson());
     }
 
     @Test
-    public void testEndOnExit() throws Exception {
-        ConversationAction conversation = new ConversationAction.Builder("Test").endOnExit(true).build();
+    public void testEndOnExit() {
+        ConversationAction conversation = ConversationAction.builder("Test").endOnExit(true).build();
 
         String expectedJson = "[{\"name\":\"Test\",\"endOnExit\":true,\"action\":\"conversation\"}]";
         assertEquals(expectedJson, new Ncco(conversation).toJson());
     }
 
     @Test
-    public void testRecord() throws Exception {
-        ConversationAction conversation = new ConversationAction.Builder("Test").record(true).build();
+    public void testRecord() {
+        ConversationAction conversation = ConversationAction.builder("Test").record(true).build();
 
         String expectedJson = "[{\"name\":\"Test\",\"record\":true,\"action\":\"conversation\"}]";
         assertEquals(expectedJson, new Ncco(conversation).toJson());
     }
 
     @Test
-    public void testEventUrl() throws Exception {
-        ConversationAction conversation = new ConversationAction.Builder("Test")
+    public void testEventUrl() {
+        ConversationAction conversation = ConversationAction.builder("Test")
                 .eventUrl("https://example.org")
                 .build();
 
@@ -115,8 +115,8 @@ public class ConversationActionTest {
     }
 
     @Test
-    public void testEventMethod() throws Exception {
-        ConversationAction conversation = new ConversationAction.Builder("Test").eventMethod(EventMethod.POST).build();
+    public void testEventMethod() {
+        ConversationAction conversation = ConversationAction.builder("Test").eventMethod(EventMethod.POST).build();
 
         String expectedJson = "[{\"name\":\"Test\",\"eventMethod\":\"POST\",\"action\":\"conversation\"}]";
         assertEquals(expectedJson, new Ncco(conversation).toJson());

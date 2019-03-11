@@ -28,12 +28,12 @@ import static org.junit.Assert.assertEquals;
 public class PhoneEndpointTest {
     @Test
     public void testAllFields() {
-        PhoneEndpoint endpoint = new PhoneEndpoint.Builder("15554441234")
+        PhoneEndpoint endpoint = PhoneEndpoint.builder("15554441234")
                 .number("15554441235")
                 .dtmfAnswer("1234")
                 .onAnswer("http://example.com")
                 .build();
-        ConnectAction connect = new ConnectAction.Builder(endpoint).build();
+        ConnectAction connect = ConnectAction.builder(endpoint).build();
 
         String expectedJson = "[{\"endpoint\":[{\"number\":\"15554441235\",\"dtmfAnswer\":\"1234\",\"onAnswer\":{\"url\":\"http://example.com\"},\"type\":\"phone\"}],\"action\":\"connect\"}]";
         assertEquals(expectedJson, new Ncco(connect).toJson());

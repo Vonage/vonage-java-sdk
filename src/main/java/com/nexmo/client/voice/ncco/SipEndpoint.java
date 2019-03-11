@@ -45,6 +45,10 @@ public class SipEndpoint implements Endpoint {
         return uri;
     }
 
+    public static Builder builder(String uri) {
+        return new Builder(uri);
+    }
+
     public static class Builder {
         private String uri;
 

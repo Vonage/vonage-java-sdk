@@ -102,6 +102,10 @@ public class RecordAction implements Action {
         return channels;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class Builder {
         private RecordingFormat format = null;
         private Integer endOnSilence = null;

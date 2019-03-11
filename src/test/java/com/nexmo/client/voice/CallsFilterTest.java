@@ -27,15 +27,11 @@ import org.junit.Test;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 
 public class CallsFilterTest {
     @Test
     public void testAllParams() {
-        /*
-    private Integer recordIndex;
-    private String order;
-         */
-
         Calendar startCalendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
         startCalendar.set(2016, Calendar.JANUARY, 1, 7, 8, 20);
         startCalendar.set(Calendar.MILLISECOND, 0);
@@ -84,5 +80,10 @@ public class CallsFilterTest {
         CallsFilter filter = new CallsFilter.Builder().build();
         List<NameValuePair> params = filter.toUrlParams();
         assertEquals(0, params.size());
+    }
+
+    @Test
+    public void testStaticBuilderProducesNewBuilder() {
+        assertNotSame(CallsFilter.builder(), CallsFilter.builder());
     }
 }

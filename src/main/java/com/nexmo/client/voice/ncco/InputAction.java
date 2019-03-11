@@ -74,6 +74,10 @@ public class InputAction implements Action {
         return eventMethod;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class Builder {
         private Integer timeOut = null;
         private Integer maxDigits = null;

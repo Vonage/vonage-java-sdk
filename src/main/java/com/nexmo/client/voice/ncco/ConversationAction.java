@@ -86,6 +86,10 @@ public class ConversationAction implements Action {
         return eventMethod;
     }
 
+    public static Builder builder(String name) {
+        return new Builder(name);
+    }
+
     public static class Builder {
         private String name;
         private Collection<String> musicOnHoldUrl = null;

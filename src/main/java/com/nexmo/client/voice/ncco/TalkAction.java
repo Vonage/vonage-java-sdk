@@ -72,6 +72,10 @@ public class TalkAction implements Action {
         return voiceName;
     }
 
+    public static Builder builder(String text) {
+        return new Builder(text);
+    }
+
     public static class Builder {
         private String text;
         private Boolean bargeIn = null;

@@ -28,12 +28,12 @@ import static org.junit.Assert.assertEquals;
 public class WebSocketEndpointTest {
     @Test
     public void testAllFields() {
-        WebSocketEndpoint endpoint = new WebSocketEndpoint.Builder("wss://example.com", "some-content")
+        WebSocketEndpoint endpoint = WebSocketEndpoint.builder("wss://example.com", "some-content")
                 .uri("wss://example.net")
                 .contentType("some-content-type")
                 .headers("keyOne", "valueOne", "keyTwo", "valueTwo")
                 .build();
-        ConnectAction connect = new ConnectAction.Builder(endpoint).build();
+        ConnectAction connect = ConnectAction.builder(endpoint).build();
 
         String expectedJson = "[{\"endpoint\":[{\"uri\":\"wss://example.net\",\"headers\":{\"keyTwo\":\"valueTwo\",\"keyOne\":\"valueOne\"},\"type\":\"websocket\",\"content-type\":\"some-content-type\"}],\"action\":\"connect\"}]";
         assertEquals(expectedJson, new Ncco(connect).toJson());
