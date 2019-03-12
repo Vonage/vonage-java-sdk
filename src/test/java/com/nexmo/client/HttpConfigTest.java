@@ -41,7 +41,7 @@ public class HttpConfigTest {
 
     @Test
     public void testApiBaseUriOnly() {
-        HttpConfig config = new HttpConfig.Builder().apiBaseUri("https://example.com").build();
+        HttpConfig config = HttpConfig.builder().apiBaseUri("https://example.com").build();
 
         assertEquals("https://example.com", config.getApiBaseUri());
         assertEquals(EXPECTED_DEFAULT_REST_BASE_URI, config.getRestBaseUri());
@@ -50,7 +50,7 @@ public class HttpConfigTest {
 
     @Test
     public void testApiRestUriOnly() {
-        HttpConfig config = new HttpConfig.Builder().restBaseUri("https://example.com").build();
+        HttpConfig config = HttpConfig.builder().restBaseUri("https://example.com").build();
 
         assertEquals(EXPECTED_DEFAULT_API_BASE_URI, config.getApiBaseUri());
         assertEquals("https://example.com", config.getRestBaseUri());
@@ -59,7 +59,7 @@ public class HttpConfigTest {
 
     @Test
     public void testSnsBaseUriOnly() {
-        HttpConfig config = new HttpConfig.Builder().snsBaseUri("https://example.com").build();
+        HttpConfig config = HttpConfig.builder().snsBaseUri("https://example.com").build();
 
         assertEquals(EXPECTED_DEFAULT_API_BASE_URI, config.getApiBaseUri());
         assertEquals(EXPECTED_DEFAULT_REST_BASE_URI, config.getRestBaseUri());
@@ -68,7 +68,7 @@ public class HttpConfigTest {
 
     @Test
     public void testAllBaseUri() {
-        HttpConfig config = new HttpConfig.Builder().baseUri("https://example.com").build();
+        HttpConfig config = HttpConfig.builder().baseUri("https://example.com").build();
 
         assertEquals("https://example.com", config.getApiBaseUri());
         assertEquals("https://example.com", config.getRestBaseUri());

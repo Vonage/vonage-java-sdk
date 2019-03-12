@@ -83,6 +83,10 @@ public class HttpConfig {
         return new Builder().build();
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class Builder {
         private String apiBaseUri;
         private String restBaseUri;

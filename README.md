@@ -91,7 +91,7 @@ By default, the client will use https://api.nexmo.com, https://rest.nexmo.com, a
 `HttpConfig.Builder` has been created to assist in building this object. Usage is as follows:
 
 ```java
-HttpConfig httpConfig = new HttpConfig.Builder()
+HttpConfig httpConfig = HttpConfig.builder()
         .apiBaseUri("https://api.example.com")
         .restBaseUri("https://rest.example.com")
         .snsBaseUri("https://sns.example.com")
@@ -107,7 +107,7 @@ NexmoClient client = NexmoClient.builder()
 If you do not specify a property, it will take on whatever the default value is. You can also set all three with a single method:
 
 ```java
-HttpConfig httpConfig = new HttpConfig.Builder().baseUri("http://example.com").build();
+HttpConfig httpConfig = HttpConfig.builder().baseUri("http://example.com").build();
 
 NexmoClient client = NexmoClient.builder()
         .apiKey(API_KEY)
@@ -227,15 +227,15 @@ Our library contains a `com.nexmo.client.voice.ncco` package, providing JSON-ser
 Each of the `Action` items contain a `Builder` class that can be used for constructing various actions. These actions are then added to an `Ncco` object for serialization into JSON:
 
 ```java
-TalkAction intro = new TalkAction.Builder("At the tone, record your response and press #.")
+TalkAction intro = TalkAction.builder("At the tone, record your response and press #.")
                         .voiceName(VoiceName.KIMBERLY)
                         .build();
 
-TalkAction outro = new TalkAction.Builder("Thanks, goodbye!")
+TalkAction outro = TalkAction.builder("Thanks, goodbye!")
                         .voiceName(VoiceName.KIMBERLY)
                         .build();
 
-RecordAction record = new RecordAction.Builder()
+RecordAction record = RecordAction.builder()
                         .beepStart(true)
                         .endOnKey('#')
                         .build()
