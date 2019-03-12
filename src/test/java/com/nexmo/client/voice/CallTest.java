@@ -19,12 +19,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.voice.endpoints;
+package com.nexmo.client.voice;
 
 import com.nexmo.client.NexmoUnexpectedException;
-import com.nexmo.client.voice.Call;
-import com.nexmo.client.voice.MachineDetection;
-import com.nexmo.client.voice.PhoneEndpoint;
 import com.nexmo.client.voice.ncco.InputAction;
 import com.nexmo.client.voice.ncco.Ncco;
 import com.nexmo.client.voice.ncco.RecordAction;
