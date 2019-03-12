@@ -58,9 +58,7 @@ public class Call {
     }
 
     public Call(Endpoint to, Endpoint from, String answerUrl) {
-        this.to = new Endpoint[]{to};
-        this.from = from;
-        this.answerUrl = answerUrl;
+        this(new Endpoint[]{to}, from, answerUrl);
     }
 
     public Call(Endpoint[] to, Endpoint from, String answerUrl) {
@@ -74,9 +72,7 @@ public class Call {
     }
 
     public Call(Endpoint to, Endpoint from, Ncco ncco) {
-        this.to = new Endpoint[]{to};
-        this.from = from;
-        this.ncco = ncco;
+        this(new Endpoint[]{to}, from, ncco);
     }
 
     public Call(Endpoint[] to, Endpoint from, Ncco ncco) {
@@ -103,7 +99,7 @@ public class Call {
 
     @JsonProperty("answer_url")
     public String[] getAnswerUrl() {
-        return (answerUrl == null) ? null : new String[]{answerUrl};
+        return (answerUrl != null) ? new String[]{answerUrl} : null;
     }
 
     public void setAnswerUrl(String answerUrl) {
