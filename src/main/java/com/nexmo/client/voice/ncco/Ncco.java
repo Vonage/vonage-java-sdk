@@ -21,6 +21,7 @@
  */
 package com.nexmo.client.voice.ncco;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -34,6 +35,7 @@ import java.util.Collections;
  * Nexmo Call Control Object for controlling the flow of a Voice API call.
  */
 public class Ncco {
+    @JsonValue
     private Collection<Action> actions;
     private ObjectWriter writer;
 
