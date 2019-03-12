@@ -244,6 +244,29 @@ res.type("application/json");
 return new Ncco(intro, record, outro).toJson();
 ```
 
+### Make a Phone Call with an NCCO
+
+You can combine the above examples to send an NCCO to the Voice API:
+
+```java
+The following code initiates an outbound call which then reads the user [a message](https://nexmo-community.github.io/ncco-examples/first_call_talk.json):
+
+```java
+NexmoClient client = NexmoClient.builder()
+        .applicationId(APP_ID)
+        .privateKeyPath("application_key.pem")
+        .build();
+
+Ncco ncco = new Ncco(
+    TalkAction.builder("Hi, this is Russell. You are listening to a text-to-speech Call made with Nexmo's Voice API")
+        .voiceName(VoiceName.RUSSELL)
+        .build()
+);
+
+Call call = new Call(to, from, ncco);
+CallEvent event = client.getVoiceClient().createCall(call);
+```
+
 ### Send a 2FA Code
 
 Send a 2FA code to a phone number with:

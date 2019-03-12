@@ -25,20 +25,24 @@ import com.nexmo.client.NexmoUnexpectedException;
 import com.nexmo.client.voice.Call;
 import com.nexmo.client.voice.MachineDetection;
 import com.nexmo.client.voice.PhoneEndpoint;
+import com.nexmo.client.voice.ncco.InputAction;
+import com.nexmo.client.voice.ncco.Ncco;
+import com.nexmo.client.voice.ncco.RecordAction;
+import com.nexmo.client.voice.ncco.TalkAction;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class CallTest {
     @Test
     public void testToJson() throws Exception {
         Call call = new Call("4477999000", "44111222333", "https://callback.example.com/");
         assertEquals(
-                "{\"to\":[{\"type\":\"phone\",\"number\":\"4477999000\"}],\"from\":{\"type\":\"phone\"," +
-                        "\"number\":\"44111222333\"" +
-                        "},\"answer_url\":[\"https://callback.example.com/\"],\"answer_method\":\"GET\"}",
-                call.toJson());
+                "{\"to\":[{\"type\":\"phone\",\"number\":\"4477999000\"}],\"from\":{\"type\":\"phone\","
+                        + "\"number\":\"44111222333\""
+                        + "},\"answer_url\":[\"https://callback.example.com/\"],\"answer_method\":\"GET\"}",
+                call.toJson()
+        );
     }
 
     @Test
@@ -46,10 +50,11 @@ public class CallTest {
         Call call = new Call("4477999000", "44111222333", "https://callback.example.com/");
         call.setMachineDetection(MachineDetection.CONTINUE);
         assertEquals(
-                "{\"to\":[{\"type\":\"phone\",\"number\":\"4477999000\"}],\"from\":{\"type\":\"phone\"," +
-                        "\"number\":\"44111222333\"" +
-                        "},\"answer_url\":[\"https://callback.example.com/\"],\"answer_method\":\"GET\",\"machine_detection\":\"continue\"}",
-                call.toJson());
+                "{\"to\":[{\"type\":\"phone\",\"number\":\"4477999000\"}],\"from\":{\"type\":\"phone\","
+                        + "\"number\":\"44111222333\""
+                        + "},\"answer_url\":[\"https://callback.example.com/\"],\"answer_method\":\"GET\",\"machine_detection\":\"continue\"}",
+                call.toJson()
+        );
     }
 
     @Test
@@ -80,10 +85,9 @@ public class CallTest {
 
     @Test
     public void testFromJson() {
-        String jsonString = "{\"to\":" +
-                "[{\"type\":\"phone\",\"number\":\"441632960960\"}]," +
-                "\"from\":{\"type\":\"phone\",\"number\":\"441632960961\"}," +
-                "\"answer_url\":\"http://example.com/answer\"}";
+        String jsonString = "{\"to\":" + "[{\"type\":\"phone\",\"number\":\"441632960960\"}],"
+                + "\"from\":{\"type\":\"phone\",\"number\":\"441632960961\"},"
+                + "\"answer_url\":\"http://example.com/answer\"}";
 
         Call newCall = new Call("441632960960", "441632960961", "http://example.com/answer");
         Call fromJson = Call.fromJson(jsonString);
@@ -93,13 +97,55 @@ public class CallTest {
     @Test
     public void testMalformedJson() throws Exception {
         try {
-            Call.fromJson("{\n" +
-                    "    \"unknownProperty\": \"unknown\"\n" +
-                    "}");
+            Call.fromJson("{\n" + "    \"unknownProperty\": \"unknown\"\n" + "}");
             fail("Expected a NexmoUnexpectedException to be thrown");
         } catch (NexmoUnexpectedException e) {
             assertEquals("Failed to produce json from Call object.", e.getMessage());
         }
+    }
+
+    @Test
+    public void testNullAnswerMethodIfNoAnswerUrlDefined() {
+        Call call = new Call();
+        assertNull(call.getAnswerMethod());
+    }
+
+    @Test
+    public void testGetAnswerUrlReturnsNullIfNotDefined() {
+        Call call = new Call();
+        assertNull(call.getAnswerUrl());
+    }
+
+    @Test
+    public void testNccoParameterWithEmptyNcco() {
+        Call call = new Call("15551234567", "25551234567", new Ncco());
+        assertEquals(
+                "{\"to\":[{\"type\":\"phone\",\"number\":\"15551234567\"}],\"from\":{\"type\":\"phone\",\"number\":\"25551234567\"},\"ncco\":[]}",
+                call.toJson()
+        );
+    }
+
+    @Test
+    public void testNccoParameterWithSingleActionNcco() {
+        Call call = new Call("15551234567", "25551234567", new Ncco(TalkAction.builder("Hello World").build()));
+        assertEquals(
+                "{\"to\":[{\"type\":\"phone\",\"number\":\"15551234567\"}],\"from\":{\"type\":\"phone\",\"number\":\"25551234567\"},\"ncco\":[{\"text\":\"Hello World\",\"action\":\"talk\"}]}",
+                call.toJson()
+        );
+    }
+
+    @Test
+    public void testNccoParameterWithMultiActionNcco() {
+        Call call = new Call("15551234567", "25551234567", new Ncco(
+                TalkAction.builder("Hello World").build(),
+                RecordAction.builder().build(),
+                InputAction.builder().build(),
+                TalkAction.builder("Goodbye").build()
+        ));
+        assertEquals(
+                "{\"to\":[{\"type\":\"phone\",\"number\":\"15551234567\"}],\"from\":{\"type\":\"phone\",\"number\":\"25551234567\"},\"ncco\":[{\"text\":\"Hello World\",\"action\":\"talk\"},{\"action\":\"record\"},{\"action\":\"input\"},{\"text\":\"Goodbye\",\"action\":\"talk\"}]}",
+                call.toJson()
+        );
     }
 
 }
