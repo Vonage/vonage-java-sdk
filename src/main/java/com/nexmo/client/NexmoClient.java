@@ -140,6 +140,10 @@ public class NexmoClient {
         return httpWrapper;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class Builder {
         private AuthCollection authCollection;
         private HttpConfig httpConfig = HttpConfig.defaultConfig();
