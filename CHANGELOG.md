@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Added static `builder` methods to `Action` classes to reduce some of the verbosity around using them. You can now do `TalkAction action = TalkAction.builder("Hello World!").build();` instead of just `TalkAction action = new TalkAction.Builder("Hello World).build();`.
 - Added static `builder` methods to `NexmoClient` to reduce some of the verbosity around instantiating the client.
-
+- Added `ncco` property to the `Call` object for use in the `VoiceClient.createCall` method. You can now send an `Ncco` directly to the API instead of defining an `answer_url`.
 ## [4.0.1] - 2018-11-21
 
 ### Added

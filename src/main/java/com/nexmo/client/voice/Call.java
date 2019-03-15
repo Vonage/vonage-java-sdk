@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.voice.ncco.Ncco;
 
 import java.io.IOException;
 
@@ -35,7 +36,7 @@ import java.io.IOException;
  * Call encapsulates the information required to create a call using {@link VoiceClient#createCall(Call)}
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties({ "_links"})
+@JsonIgnoreProperties({"_links"})
 public class Call {
     private Endpoint[] to;
     private Endpoint from;
@@ -47,23 +48,37 @@ public class Call {
     private MachineDetection machineDetection = null;
     private Integer lengthTimer = null;
     private Integer ringingTimer = null;
+    private Ncco ncco;
 
-    public Call() {}
+    public Call() {
+    }
 
     public Call(String to, String from, String answerUrl) {
         this(new PhoneEndpoint(to), new PhoneEndpoint(from), answerUrl);
     }
 
     public Call(Endpoint to, Endpoint from, String answerUrl) {
-        this.to = new Endpoint[]{to};
-        this.from = from;
-        this.answerUrl = answerUrl;
+        this(new Endpoint[]{to}, from, answerUrl);
     }
 
     public Call(Endpoint[] to, Endpoint from, String answerUrl) {
         this.to = to;
         this.from = from;
         this.answerUrl = answerUrl;
+    }
+
+    public Call(String to, String from, Ncco ncco) {
+        this(new PhoneEndpoint(to), new PhoneEndpoint(from), ncco);
+    }
+
+    public Call(Endpoint to, Endpoint from, Ncco ncco) {
+        this(new Endpoint[]{to}, from, ncco);
+    }
+
+    public Call(Endpoint[] to, Endpoint from, Ncco ncco) {
+        this.to = to;
+        this.from = from;
+        this.ncco = ncco;
     }
 
     public Endpoint[] getTo() {
@@ -84,7 +99,7 @@ public class Call {
 
     @JsonProperty("answer_url")
     public String[] getAnswerUrl() {
-        return new String[]{answerUrl};
+        return (answerUrl != null) ? new String[]{answerUrl} : null;
     }
 
     public void setAnswerUrl(String answerUrl) {
@@ -93,7 +108,8 @@ public class Call {
 
     @JsonProperty("answer_method")
     public String getAnswerMethod() {
-        return answerMethod;
+        // Hide the answer method if the answer url isn't defined
+        return (answerUrl != null) ? answerMethod : null;
     }
 
     public void setAnswerMethod(String answerMethod) {
@@ -146,6 +162,11 @@ public class Call {
 
     public void setRingingTimer(Integer ringingTimer) {
         this.ringingTimer = ringingTimer;
+    }
+
+    @JsonProperty("ncco")
+    public Ncco getNcco() {
+        return ncco;
     }
 
     public String toJson() {
