@@ -25,6 +25,6 @@
  * you want.
  * <p>
  * All behaviour is accessible via the {@link com.nexmo.client.NexmoClient} class, which should be instantiated with one
- * or more <tt>AuthMethod</tt> objects from the {@link com.nexmo.client.auth} package.
+ * or more {@code AuthMethod} objects from the {@link com.nexmo.client.auth} package.
  */
 package com.nexmo.client;

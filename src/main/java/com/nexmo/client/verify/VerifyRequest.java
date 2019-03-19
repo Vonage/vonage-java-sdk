@@ -78,7 +78,7 @@ public class VerifyRequest {
      * @param length (optional) The length of the verification code to be sent to the user. Must be either 4 or 6. Use
      *               -1 to use the default value.
      * @param locale (optional) Override the default locale used for verification. By default the locale is determined
-     *               from the country code included in <tt>number</tt>
+     *               from the country code included in {@code number}
      */
     public VerifyRequest(final String number, final String brand, final String from, final int length, final Locale locale) {
         this(number, brand, from, length, locale, null);
@@ -92,11 +92,11 @@ public class VerifyRequest {
      *               characters.
      * @param from   (optional A short alphanumeric string to specify the SenderID for SMS sent by Verify.
      *               Depending on the destination of the phone number you are applying, restrictions may apply.
-     *               By default, sender_id is <tt>VERIFY</tt>. Must be 11 characters or fewer.
+     *               By default, sender_id is {@code VERIFY}. Must be 11 characters or fewer.
      * @param length (optional) The length of the verification code to be sent to the user. Must be either 4 or 6. Use
      *               -1 to use the default value.
      * @param locale (optional) Override the default locale used for verification. By default the locale is determined
-     *               from the country code included in <tt>number</tt>
+     *               from the country code included in {@code number}
      * @param type   (optional) If provided, restrict the verification to the specified network type. Contact
      *               support@nexmo.com to enable this feature.
      */
@@ -129,10 +129,10 @@ public class VerifyRequest {
     }
 
     /**
-     * @return the short alphanumeric string to specify the SenderID for SMS sent by Verify, or <tt>null</tt> if one was
+     * @return the short alphanumeric string to specify the SenderID for SMS sent by Verify, or {@code null} if one was
      *         not provided. This value is specified in some {@link VerifyRequest} constructors.
      *         <p>
-     *         If this value is <tt>null</tt>, the sender_id used will be <tt>VERIFY</tt>.
+     *         If this value is {@code null</tt>, the sender_id used will be <tt>VERIFY}.
      */
     public String getFrom() {
         return from;
@@ -144,7 +144,7 @@ public class VerifyRequest {
 
     /**
      * @return the length of the verification code to be sent to the user, specified in some {@link VerifyRequest}
-     *         constructors. <tt>-1</tt> indicates the default length will be used.
+     *         constructors. {@code -1} indicates the default length will be used.
      */
     public int getLength() {
         return length;
@@ -155,8 +155,8 @@ public class VerifyRequest {
     }
 
     /**
-     * @return the default locale used for verification. If this value is <tt>null</tt>, the locale will be determined
-     *         from the country code included in <tt>number</tt>
+     * @return the default locale used for verification. If this value is {@code null}, the locale will be determined
+     *         from the country code included in {@code number}
      */
     public Locale getLocale() {
         return locale;
@@ -169,7 +169,7 @@ public class VerifyRequest {
 
     /**
      * @return the type of network the verification will be restricted to. This value has no effect unless it has been
-     *         enabled by contacting <tt>support@nexmo.com</tt>.
+     *         enabled by contacting {@code support@nexmo.com}.
      */
     public LineType getType() {
         return type;
