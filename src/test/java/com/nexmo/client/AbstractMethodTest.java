@@ -25,19 +25,25 @@ package com.nexmo.client;
 import com.nexmo.client.auth.AuthCollection;
 import com.nexmo.client.auth.AuthMethod;
 import com.nexmo.client.auth.JWTAuthMethod;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -77,14 +83,14 @@ public class AbstractMethodTest {
         mockAuthMethods = mock(AuthCollection.class);
         mockAuthMethod = mock(AuthMethod.class);
         mockHttpClient = mock(HttpClient.class);
-        @SuppressWarnings("unchecked")
-        Set<Class> anySet = any(Set.class);
+        @SuppressWarnings("unchecked") Set<Class> anySet = any(Set.class);
         when(mockAuthMethods.getAcceptableAuthMethod(anySet)).thenReturn(mockAuthMethod);
 
         when(mockWrapper.getHttpClient()).thenReturn(mockHttpClient);
-        when(mockHttpClient.execute(any(HttpUriRequest.class))).thenReturn(new BasicHttpResponse(
-                new BasicStatusLine(
-                        new ProtocolVersion("1.1", 1, 1), 200, "OK")));
+        when(mockHttpClient.execute(any(HttpUriRequest.class))).thenReturn(new BasicHttpResponse(new BasicStatusLine(new ProtocolVersion("1.1",
+                1,
+                1
+        ), 200, "OK")));
         when(mockWrapper.getAuthCollection()).thenReturn(mockAuthMethods);
     }
 
@@ -112,5 +118,28 @@ public class AbstractMethodTest {
         RequestBuilder request = RequestBuilder.get("url");
         method.applyAuth(request);
         verify(mockAuthMethod).apply(request);
+    }
+
+    @Test
+    public void testUsingUtf8Encoding() throws Exception {
+        String json = "{\"text\":\"Questo è un test di chiamata\",\"loop\":0,\"voice_name\":\"Kimberly\"}";
+        RequestBuilder builder = RequestBuilder
+                .put("")
+                .setHeader("Content-Type", "application/json")
+                .setEntity(new StringEntity(json));
+
+        ConcreteMethod method = spy(new ConcreteMethod(mockWrapper));
+        when(method.makeRequest(any(String.class))).thenReturn(builder);
+        when(mockAuthMethod.apply(any(RequestBuilder.class))).thenReturn(builder);
+
+        method.execute("");
+
+        ArgumentCaptor<HttpUriRequest> captor = ArgumentCaptor.forClass(HttpUriRequest.class);
+        verify(mockHttpClient).execute(captor.capture());
+
+        HttpEntity entity = ((HttpEntityEnclosingRequest) captor.getValue()).getEntity();
+
+        String entityContents = IOUtils.toString(entity.getContent(), Charset.forName("UTF-8"));
+        assertEquals(json, entityContents);
     }
 }

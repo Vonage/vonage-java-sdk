@@ -32,6 +32,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
@@ -93,6 +94,9 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
                     entityRequest.setEntity(new UrlEncodedFormEntity(requestBuilder.getParameters(),
                             Charset.forName("UTF-8")
                     ));
+                } else if (entity instanceof StringEntity) {
+                    // By default StringEntity is set to ISO-8859-1 but Nexmo expects UTF-8
+                    entityRequest.setEntity(new StringEntity(EntityUtils.toString(entity), Charset.forName("UTF-8")));
                 }
             }
             LOG.debug("Request: " + httpRequest);
