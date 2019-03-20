@@ -64,7 +64,7 @@ public class BalanceEndpointTest {
 
     @Test
     public void testCustomUri() throws Exception {
-        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri("https://example.com").build());
         BalanceEndpoint endpoint = new BalanceEndpoint(wrapper);
 
         RequestBuilder builder = endpoint.makeRequest(null);

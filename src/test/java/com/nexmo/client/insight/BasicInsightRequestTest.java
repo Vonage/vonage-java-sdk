@@ -43,11 +43,11 @@ public class BasicInsightRequestTest {
 
     @Test
     public void testBuildWithAllFields() throws Exception {
-        BasicInsightRequest request = new BasicInsightRequest.Builder("12345").country("GB").build();
+        BasicInsightRequest request = BasicInsightRequest.builder("12345").country("GB").build();
         assertEquals(request.getNumber(), "12345");
         assertEquals(request.getCountry(), "GB");
 
-        request = new BasicInsightRequest.Builder("12345").number("98765").country("GB").build();
+        request = BasicInsightRequest.builder("12345").number("98765").country("GB").build();
         assertEquals(request.getNumber(), "98765");
         assertEquals(request.getCountry(), "GB");
     }

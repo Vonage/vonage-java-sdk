@@ -111,7 +111,7 @@ public class ListNumbersEndpointTest {
 
     @Test
     public void testCustomUri() throws Exception {
-        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri("https://example.com").build());
         ListNumbersEndpoint endpoint = new ListNumbersEndpoint(wrapper);
         ListNumbersFilter filter = new ListNumbersFilter();
         filter.setIndex(10);

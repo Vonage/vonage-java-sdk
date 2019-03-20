@@ -50,6 +50,10 @@ public class BasicInsightRequest extends BaseInsightRequest {
         return new Builder(number).country(country).build();
     }
 
+    public static Builder builder(String number) {
+        return new Builder(number);
+    }
+
     public static class Builder {
         protected String number;
         protected String country;

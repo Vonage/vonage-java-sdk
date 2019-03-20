@@ -41,7 +41,7 @@ public class CallsFilterTest {
         endCalendar.set(Calendar.MILLISECOND, 0);
         Date endDate = endCalendar.getTime();
 
-        CallsFilter filter = new CallsFilter.Builder()
+        CallsFilter filter = CallsFilter.builder()
                 .status(CallStatus.COMPLETED)
                 .dateStart(startDate)
                 .dateEnd(endDate)
@@ -77,7 +77,7 @@ public class CallsFilterTest {
 
     @Test
     public void testNoParams() throws Exception {
-        CallsFilter filter = new CallsFilter.Builder().build();
+        CallsFilter filter = CallsFilter.builder().build();
         List<NameValuePair> params = filter.toUrlParams();
         assertEquals(0, params.size());
     }

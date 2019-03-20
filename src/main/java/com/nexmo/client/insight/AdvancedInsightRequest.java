@@ -29,6 +29,10 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
         this.ipAddress = builder.ipAddress;
     }
 
+    public static Builder builder(String number) {
+        return new Builder(number);
+    }
+
     public Boolean getCnam() {
         return cnam;
     }

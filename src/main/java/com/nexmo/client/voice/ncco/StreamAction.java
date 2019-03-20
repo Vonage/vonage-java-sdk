@@ -68,6 +68,14 @@ public class StreamAction implements Action {
         return loop;
     }
 
+    public static Builder builder(Collection<String> streamUrl) {
+        return new Builder(streamUrl);
+    }
+
+    public static Builder builder(String... streamUrl) {
+        return new Builder(streamUrl);
+    }
+
     public static class Builder {
         private Collection<String> streamUrl;
         private Float level = null;

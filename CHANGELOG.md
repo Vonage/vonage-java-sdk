@@ -6,8 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Development
 
+## Added
+- Missing builders for `StreamAction`, `AdvancedInsightRequest`, `StandardInsightRequest`, and `BasicInsightRequest`.
+
 ## Fixed
 - `AbstractMethod` will force UTF-8 charset for requests using `StringEntity`.
+- Tests will now run using static builder methods for each of the classes that use builders for construction.
 
 ## [4.1.0] - 2019-03-15
 

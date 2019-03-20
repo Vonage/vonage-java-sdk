@@ -132,7 +132,7 @@ public class CreateCallMethodTest {
 
     @Test
     public void testCustomUri() throws Exception {
-        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri("https://example.com").build());
         CreateCallMethod method = new CreateCallMethod(wrapper);
         Call request = new Call("447700900903", "447700900904", "https://example.com/answer");
 
