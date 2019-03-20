@@ -2,12 +2,7 @@ import org.gradle.internal.jvm.Jvm
 
 buildscript {
     repositories {
-        if (Jvm.current().javaVersion.toString() == "1.7") {
-            // Fall back to HTTP because the public Oracle and OpenJDK 1.7 versions don't support TLSv1.2
-            maven { url "http://jcenter.bintray.com/" }
-        } else {
-            jcenter()
-        }
+        jcenter()
     }
     dependencies {
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
@@ -31,12 +26,7 @@ sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
 repositories {
-    if (Jvm.current().javaVersion.toString() == "1.7") {
-        // Fall back to HTTP because the public Oracle and OpenJDK 1.7 versions don't support TLSv1.2
-        maven { url "http://repo.maven.apache.org/maven2/" }
-    } else {
-        mavenCentral()
-    }
+    mavenCentral()
 }
 
 tasks.withType(JavaCompile) {
@@ -53,15 +43,11 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.9.5'
     compile 'com.auth0:java-jwt:2.2.1'
     compile 'io.openapitools.jackson.dataformat:jackson-dataformat-hal:1.0.4'
-
-    if (Jvm.current().javaVersion.isJava9Compatible()) {
-        // JAXB API was removed as a default module in JDK9+ this is needed for building/testing in this specific JDK.
-        compile 'javax.xml.bind:jaxb-api:2.3.0'
-    }
+    compile 'javax.xml.bind:jaxb-api:2.3.0'
 
     testCompile "javax.servlet:javax.servlet-api:3.1.0"
     testCompile 'junit:junit:4.4'
-    testCompile "org.mockito:mockito-core:2.7.1"
+    testCompile "org.mockito:mockito-core:2.25.1"
     testCompile 'org.hamcrest:hamcrest-all:1.3'
 }
 
@@ -103,6 +89,10 @@ assemble.dependsOn javadocJar
 task sourcesJar(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.allSource
+}
+
+jacoco {
+    toolVersion = "0.8.2"
 }
 
 jacocoTestReport {
@@ -187,7 +177,7 @@ task zip(type: Zip) {
     into(project.name + '-' + project.version)
 }
 
-task depJar(type: Jar, dependsOn:configurations.runtime) {
+task depJar(type: Jar, dependsOn: configurations.runtime) {
     baseName = archivesBaseName + '-with-dependencies'
     from { configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar

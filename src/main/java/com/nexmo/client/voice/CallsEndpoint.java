@@ -27,7 +27,7 @@ import com.nexmo.client.NexmoClientException;
 import java.io.IOException;
 
 /**
- * Allows actions to be taken on <tt>/calls/*</tt> endpoints.
+ * Allows actions to be taken on {@code /calls/*} endpoints.
  * <p>
  * <b>Note:</b> This is an internal object. All functionality is provided publicly by the {@link VoiceClient} class.
  */
@@ -66,7 +66,7 @@ class CallsEndpoint {
     }
 
     /**
-     * List previous and ongoing calls which match the provided <tt>filter</tt>.
+     * List previous and ongoing calls which match the provided {@code filter}.
      *
      * @param filter A CallsFilter describing the calls to be searched, or {@code null} for all calls.
      *
@@ -80,7 +80,7 @@ class CallsEndpoint {
     }
 
     /**
-     * Get details of a single call, identified by <tt>uuid</tt>.
+     * Get details of a single call, identified by {@code uuid}.
      *
      * @param uuid The uuid of the CallInfo object to be retrieved
      *

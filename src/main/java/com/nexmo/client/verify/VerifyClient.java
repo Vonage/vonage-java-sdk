@@ -106,7 +106,7 @@ public class VerifyClient extends AbstractClient {
      * @param length (optional) The length of the verification code to be sent to the user. Must be either 4 or 6. Use
      *               -1 to use the default value.
      * @param locale (optional) Override the default locale used for verification. By default the locale is determined
-     *               from the country code included in <tt>number</tt>
+     *               from the country code included in {@code number}
      * @return a VerifyResponse representing the response received from the Verify API call.
      * @throws IOException          if a network error occurred contacting the Nexmo Verify API.
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
@@ -131,7 +131,7 @@ public class VerifyClient extends AbstractClient {
      * @param length (optional) The length of the verification code to be sent to the user. Must be either 4 or 6. Use
      *               -1 to use the default value.
      * @param locale (optional) Override the default locale used for verification. By default the locale is determined
-     *               from the country code included in <tt>number</tt>
+     *               from the country code included in {@code number}
      * @param type   (optional) If provided, restrict the verification to the specified network type. Contact
      *               support@nexmo.com to enable this feature.
      * @return a VerifyResponse representing the response received from the Verify API call.
@@ -157,7 +157,7 @@ public class VerifyClient extends AbstractClient {
     /**
      * Validate a code provided by a user in response to a call from {@link #verify}.
      *
-     * @param requestId (required) The requestId returned by the <tt>verify</tt> call.
+     * @param requestId (required) The requestId returned by the {@code verify} call.
      * @param code      (required) The code entered by the user.
      * @return a CheckResponse representing the response received from the API call.
      * @throws IOException          if a network error occurred contacting the Nexmo Verify API.
@@ -170,7 +170,7 @@ public class VerifyClient extends AbstractClient {
     /**
      * Validate a code provided by a user in response to a call from {@link #verify}.
      *
-     * @param requestId (required) The requestId returned by the <tt>verify</tt> call.
+     * @param requestId (required) The requestId returned by the {@code verify} call.
      * @param code      (required) The code entered by the user.
      * @param ipAddress (optional) The IP address obtained from the HTTP request made when the user entered their code.
      * @return a CheckResponse representing the response received from the API call.
@@ -187,7 +187,7 @@ public class VerifyClient extends AbstractClient {
      * Search for a previous verification request.
      *
      * @param requestId The requestId of a single Verify request to be looked up.
-     * @return A SearchVerifyResponse containing the details of the Verify request that was looked up, or <tt>null</tt> if no
+     * @return A SearchVerifyResponse containing the details of the Verify request that was looked up, or {@code null} if no
      * record was found.
      * @throws IOException          if a network error occurred contacting the Nexmo Verify API.
      * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.

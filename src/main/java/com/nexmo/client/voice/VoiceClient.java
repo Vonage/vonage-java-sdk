@@ -60,7 +60,7 @@ public class VoiceClient extends AbstractClient {
      *
      * @param callRequest Describing the call to be made.
      *
-     * @return A CallEvent describing the initial state of the call, containing the <tt>uuid</tt> required to
+     * @return A CallEvent describing the initial state of the call, containing the {@code uuid} required to
      *         interact with the ongoing phone call.
      *
      * @throws IOException          if a network error occurred contacting the Nexmo Voice API.
@@ -84,7 +84,7 @@ public class VoiceClient extends AbstractClient {
     }
 
     /**
-     * Obtain the first page of CallInfo objects matching the query described by <tt>filter</tt>, representing the most
+     * Obtain the first page of CallInfo objects matching the query described by {@code filter}, representing the most
      * recent calls initiated by {@link #createCall(Call)}.
      *
      * @param filter (optional) A filter describing which calls to be listed.
@@ -119,7 +119,7 @@ public class VoiceClient extends AbstractClient {
      * @param uuid   (required) The UUID of the call, obtained from the object returned by {@link #createCall(Call)}.
      *               This value can be obtained with {@link CallEvent#getUuid()}
      * @param digits (required) A string specifying the digits to be sent to the call. Valid characters are the digits
-     *               <tt>1-9</tt>, <tt>#</tt>, <tt>*</tt>, with the special character <tt>p</tt> indicating a short
+     *               {@code 1-9</tt>, <tt>#</tt>, <tt>*</tt>, with the special character <tt>p} indicating a short
      *               pause between tones.
      *
      * @return A CallInfo object, representing the response from the Nexmo Voice API.
@@ -195,8 +195,8 @@ public class VoiceClient extends AbstractClient {
      * @param uuid      The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value can
      *                  be obtained with {@link CallEvent#getUuid()}
      * @param streamUrl A URL of an audio file in MP3 or 16-bit WAV format, to be streamed to the call.
-     * @param loop      The number of times to repeat the audio. The default value is <tt>1</tt>, or you can use
-     *                  <tt>0</tt> to indicate that the audio should be repeated indefinitely.
+     * @param loop      The number of times to repeat the audio. The default value is {@code 1}, or you can use
+     *                  {@code 0} to indicate that the audio should be repeated indefinitely.
      *
      * @return The data returned from the Voice API
      *
@@ -281,8 +281,8 @@ public class VoiceClient extends AbstractClient {
      * @param uuid The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value can
      *             be obtained with {@link CallEvent#getUuid()}
      * @param text The message to be spoken to the call participants.
-     * @param loop The number of times to repeat the message. The default value is <tt>1</tt>, or you can use
-     *             <tt>0</tt> to indicate that the message should be repeated indefinitely.
+     * @param loop The number of times to repeat the message. The default value is {@code 1}, or you can use
+     *             {@code 0} to indicate that the message should be repeated indefinitely.
      *
      * @return The data returned from the Voice API.
      *
@@ -300,8 +300,8 @@ public class VoiceClient extends AbstractClient {
      *                  be obtained with {@link CallEvent#getUuid()}
      * @param text      The message to be spoken to the call participants.
      * @param voiceName The voice to be used to speak the message.
-     * @param loop      The number of times to repeat the message. The default value is <tt>1</tt>, or you can use
-     *                  <tt>0</tt> to indicate that the message should be repeated indefinitely.
+     * @param loop      The number of times to repeat the message. The default value is {@code 1}, or you can use
+     *                  {@code 0} to indicate that the message should be repeated indefinitely.
      *
      * @return The data returned from the Voice API.
      *
