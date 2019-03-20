@@ -45,7 +45,7 @@ public class HttpWrapper {
     private HttpConfig httpConfig;
 
     public HttpWrapper(AuthCollection authCollection) {
-        this(new HttpConfig.Builder().build(), authCollection);
+        this(HttpConfig.builder().build(), authCollection);
     }
 
     public HttpWrapper(HttpConfig httpConfig, AuthCollection authCollection) {
@@ -54,7 +54,7 @@ public class HttpWrapper {
     }
 
     public HttpWrapper(AuthMethod... authMethods) {
-        this(new HttpConfig.Builder().build(), authMethods);
+        this(HttpConfig.builder().build(), authMethods);
     }
 
     public HttpWrapper(HttpConfig httpConfig, AuthMethod... authMethods) {

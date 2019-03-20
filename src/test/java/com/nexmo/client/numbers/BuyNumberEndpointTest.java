@@ -112,7 +112,7 @@ public class BuyNumberEndpointTest {
 
     @Test
     public void testCustomUri() throws Exception {
-        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri("https://example.com").build());
         BuyNumberEndpoint endpoint = new BuyNumberEndpoint(wrapper);
         BuyNumberRequest request = new BuyNumberRequest("AA", "447700900000");
 

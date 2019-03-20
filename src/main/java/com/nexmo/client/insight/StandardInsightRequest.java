@@ -28,6 +28,10 @@ public class StandardInsightRequest extends BaseInsightRequest {
         this.cnam = builder.cnam;
     }
 
+    public static Builder builder(String number) {
+        return new Builder(number);
+    }
+
     public Boolean getCnam() {
         return cnam;
     }

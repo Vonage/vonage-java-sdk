@@ -50,12 +50,12 @@ public class NccoTest {
     @Test(expected = UnsupportedOperationException.class)
     public void testItemListImmutableWhenEmpty() {
         Ncco ncco = new Ncco();
-        ncco.getActions().add(new TalkAction.Builder("Test Message").build());
+        ncco.getActions().add(TalkAction.builder("Test Message").build());
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void testItemListImmutableWhenNotEmpty() {
-        TalkAction.Builder builder = new TalkAction.Builder("Hello!");
+        TalkAction.Builder builder = TalkAction.builder("Hello!");
         TalkAction intro = builder.build();
         TalkAction outro = builder.text("Thanks for calling!").build();
 
@@ -65,7 +65,7 @@ public class NccoTest {
 
     @Test
     public void testGetActions() {
-        TalkAction.Builder builder = new TalkAction.Builder("Test Message");
+        TalkAction.Builder builder = TalkAction.builder("Test Message");
 
         TalkAction actionOne = builder.build();
         TalkAction actionTwo = builder.text("Another message").build();
@@ -79,10 +79,10 @@ public class NccoTest {
 
     @Test
     public void testSerializeMultipleActions() {
-        TalkAction talk = new TalkAction.Builder("Test message").voiceName(VoiceName.JOEY).build();
-        InputAction input = new InputAction.Builder().maxDigits(5).build();
-        RecordAction record = new RecordAction.Builder().beepStart(true).build();
-        ConnectAction connect = new ConnectAction.Builder(new PhoneEndpoint.Builder("15554441234").build()).build();
+        TalkAction talk = TalkAction.builder("Test message").voiceName(VoiceName.JOEY).build();
+        InputAction input = InputAction.builder().maxDigits(5).build();
+        RecordAction record = RecordAction.builder().beepStart(true).build();
+        ConnectAction connect = ConnectAction.builder(PhoneEndpoint.builder("15554441234").build()).build();
 
         String expectedJson = "[{\"text\":\"Test message\",\"voiceName\":\"Joey\",\"action\":\"talk\"},{\"maxDigits\":5,\"action\":\"input\"},{\"beepStart\":true,\"action\":\"record\"},{\"endpoint\":[{\"number\":\"15554441234\",\"type\":\"phone\"}],\"action\":\"connect\"}]";
         assertEquals(expectedJson, new Ncco(talk, input, record, connect).toJson());
@@ -94,7 +94,7 @@ public class NccoTest {
     @Test
     public void testObjectWriterAndActionConstruction() {
         ObjectWriter writer = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        TalkAction talk = new TalkAction.Builder("Test message").build();
+        TalkAction talk = TalkAction.builder("Test message").build();
 
         Ncco ncco = new Ncco(writer, talk);
 

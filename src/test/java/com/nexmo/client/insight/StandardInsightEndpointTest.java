@@ -51,7 +51,7 @@ public class StandardInsightEndpointTest {
 
     @Test
     public void testMakeRequest() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(new StandardInsightRequest.Builder("1234").build());
+        RequestBuilder builder = this.endpoint.makeRequest(StandardInsightRequest.builder("1234").build());
         assertEquals("POST", builder.getMethod());
         assertEquals("https://api.nexmo.com/ni/standard/json", builder.build().getURI().toString());
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
@@ -62,7 +62,7 @@ public class StandardInsightEndpointTest {
 
     @Test
     public void testMakeRequestWithCountry() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(new StandardInsightRequest.Builder("1234")
+        RequestBuilder builder = this.endpoint.makeRequest(StandardInsightRequest.builder("1234")
                 .country("GB")
                 .build());
         assertEquals("POST", builder.getMethod());
@@ -75,7 +75,7 @@ public class StandardInsightEndpointTest {
 
     @Test
     public void testMakeRequestWithCnam() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(new StandardInsightRequest.Builder("1234")
+        RequestBuilder builder = this.endpoint.makeRequest(StandardInsightRequest.builder("1234")
                 .cnam(true)
                 .build());
         assertEquals("POST", builder.getMethod());
@@ -120,7 +120,7 @@ public class StandardInsightEndpointTest {
 
     @Test
     public void testCustomUri() throws Exception {
-        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri("https://example.com").build());
         StandardInsightEndpoint endpoint = new StandardInsightEndpoint(wrapper);
         StandardInsightRequest request = StandardInsightRequest.withNumber("1234");
 

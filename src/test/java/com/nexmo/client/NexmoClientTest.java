@@ -255,7 +255,7 @@ public class NexmoClientTest {
 
     @Test
     public void testHttpConfig() {
-        HttpConfig config = new HttpConfig.Builder().apiBaseUri("https://example.org").build();
+        HttpConfig config = HttpConfig.builder().apiBaseUri("https://example.org").build();
         NexmoClient nexmoClient = NexmoClient.builder().httpConfig(config).build();
 
         assertEquals(config, nexmoClient.getHttpWrapper().getHttpConfig());

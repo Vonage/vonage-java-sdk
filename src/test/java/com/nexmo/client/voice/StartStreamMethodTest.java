@@ -47,7 +47,7 @@ public class StartStreamMethodTest {
 
     @Test
     public void testCustomUri() throws Exception {
-        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri("https://example.com").build());
         StartStreamMethod method = new StartStreamMethod(wrapper);
         StreamRequest request = new StreamRequest("uuid", "stream-url", 0);
 

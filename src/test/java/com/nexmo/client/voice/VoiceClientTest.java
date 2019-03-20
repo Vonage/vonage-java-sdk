@@ -99,7 +99,7 @@ public class VoiceClientTest {
                         + "    },\n" + "    \"last\": {\n" + "      \"href\": \"/v1/calls?page_size=10\"\n" + "    }\n"
                         + "  }\n" + "}\n"
         ));
-        CallInfoPage page = client.listCalls(new CallsFilter.Builder().build());
+        CallInfoPage page = client.listCalls(CallsFilter.builder().build());
         assertEquals(0, page.getCount());
     }
 

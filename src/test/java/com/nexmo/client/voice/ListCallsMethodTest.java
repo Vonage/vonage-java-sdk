@@ -68,7 +68,7 @@ public class ListCallsMethodTest {
 
     @Test
     public void makeRequestWithFilter() throws Exception {
-        CallsFilter callsFilter = new CallsFilter.Builder().pageSize(3).build();
+        CallsFilter callsFilter = CallsFilter.builder().pageSize(3).build();
         RequestBuilder request = method.makeRequest(callsFilter);
         assertEquals("GET", request.getMethod());
         assertEquals("https://api.nexmo.com/v1/calls?page_size=3", request.getUri().toString());
@@ -126,12 +126,12 @@ public class ListCallsMethodTest {
 
     @Test
     public void testBadUriThrowsException() throws Exception {
-        ListCallsMethod method = new ListCallsMethod(new HttpWrapper(new HttpConfig.Builder()
+        ListCallsMethod method = new ListCallsMethod(new HttpWrapper(HttpConfig.builder()
                 .baseUri(":this::///isnota_uri")
                 .build()));
 
         try {
-            CallsFilter filter = new CallsFilter.Builder().pageSize(30).build();
+            CallsFilter filter = CallsFilter.builder().pageSize(30).build();
             RequestBuilder request = method.makeRequest(filter);
             // Anything past here only executes if our assertion is incorrect:
             LOG.error("SnsRequest URI: " + request.getUri());
@@ -148,7 +148,7 @@ public class ListCallsMethodTest {
 
     @Test
     public void testDefaultUri() throws Exception {
-        CallsFilter filter = new CallsFilter.Builder().pageSize(3).build();
+        CallsFilter filter = CallsFilter.builder().pageSize(3).build();
 
         RequestBuilder builder = method.makeRequest(filter);
         assertEquals("GET", builder.getMethod());
@@ -157,9 +157,9 @@ public class ListCallsMethodTest {
 
     @Test
     public void testCustomUri() throws Exception {
-        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri("https://example.com").build());
         ListCallsMethod method = new ListCallsMethod(wrapper);
-        CallsFilter filter = new CallsFilter.Builder().pageSize(3).build();
+        CallsFilter filter = CallsFilter.builder().pageSize(3).build();
 
         RequestBuilder builder = method.makeRequest(filter);
         assertEquals("GET", builder.getMethod());

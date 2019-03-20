@@ -29,13 +29,13 @@ import static org.junit.Assert.assertNotSame;
 public class StreamActionTest {
     @Test
     public void testBuilderMultipleInstances() {
-        StreamAction.Builder builder = new StreamAction.Builder("http://example.com");
+        StreamAction.Builder builder = StreamAction.builder("http://example.com");
         assertNotSame(builder.build(), builder.build());
     }
 
     @Test
     public void testAllFields() {
-        StreamAction stream = new StreamAction.Builder("http://example.com")
+        StreamAction stream = StreamAction.builder("http://example.com")
                 .streamUrl("http://example.org")
                 .level(0.33f)
                 .bargeIn(true)
@@ -48,13 +48,13 @@ public class StreamActionTest {
 
     @Test
     public void testGetAction() {
-        StreamAction stream = new StreamAction.Builder("http://example.com").build();
+        StreamAction stream = StreamAction.builder("http://example.com").build();
         assertEquals("stream", stream.getAction());
     }
 
     @Test
     public void testStreamUrlField() {
-        StreamAction stream = new StreamAction.Builder("http://example.com").streamUrl("http://example.org").build();
+        StreamAction stream = StreamAction.builder("http://example.com").streamUrl("http://example.org").build();
 
         String expectedJson = "[{\"streamUrl\":[\"http://example.org\"],\"action\":\"stream\"}]";
         assertEquals(expectedJson, new Ncco(stream).toJson());
@@ -62,7 +62,7 @@ public class StreamActionTest {
 
     @Test
     public void testLevelField() {
-        StreamAction stream = new StreamAction.Builder("http://example.com").level(-0.35f).build();
+        StreamAction stream = StreamAction.builder("http://example.com").level(-0.35f).build();
 
         String expectedJson = "[{\"streamUrl\":[\"http://example.com\"],\"level\":-0.35,\"action\":\"stream\"}]";
         assertEquals(expectedJson, new Ncco(stream).toJson());
@@ -70,7 +70,7 @@ public class StreamActionTest {
 
     @Test
     public void testBargeInField() {
-        StreamAction stream = new StreamAction.Builder("http://example.com").bargeIn(true).build();
+        StreamAction stream = StreamAction.builder("http://example.com").bargeIn(true).build();
 
         String expectedJson = "[{\"streamUrl\":[\"http://example.com\"],\"bargeIn\":true,\"action\":\"stream\"}]";
         assertEquals(expectedJson, new Ncco(stream).toJson());
@@ -78,7 +78,7 @@ public class StreamActionTest {
 
     @Test
     public void testLoopField() {
-        StreamAction stream = new StreamAction.Builder("http://example.com").loop(3).build();
+        StreamAction stream = StreamAction.builder("http://example.com").loop(3).build();
 
         String expectedJson = "[{\"streamUrl\":[\"http://example.com\"],\"loop\":3,\"action\":\"stream\"}]";
         assertEquals(expectedJson, new Ncco(stream).toJson());

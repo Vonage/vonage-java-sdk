@@ -43,12 +43,12 @@ public class StandardInsightRequestTest {
 
     @Test
     public void testBuildWithAllFields() {
-        StandardInsightRequest request = new StandardInsightRequest.Builder("12345").country("GB").cnam(true).build();
+        StandardInsightRequest request = StandardInsightRequest.builder("12345").country("GB").cnam(true).build();
         assertEquals(request.getNumber(), "12345");
         assertEquals(request.getCountry(), "GB");
         assertTrue(request.getCnam());
 
-        request = new StandardInsightRequest.Builder("12345").number("98765").country("GB").cnam(true).build();
+        request = StandardInsightRequest.builder("12345").number("98765").country("GB").cnam(true).build();
         assertEquals(request.getNumber(), "98765");
         assertEquals(request.getCountry(), "GB");
         assertTrue(request.getCnam());

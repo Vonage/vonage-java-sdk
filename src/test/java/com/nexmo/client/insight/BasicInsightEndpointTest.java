@@ -51,7 +51,7 @@ public class BasicInsightEndpointTest {
 
     @Test
     public void testMakeRequest() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(new BasicInsightRequest.Builder("1234").build());
+        RequestBuilder builder = this.endpoint.makeRequest(BasicInsightRequest.builder("1234").build());
         assertEquals("POST", builder.getMethod());
         assertEquals("https://api.nexmo.com/ni/basic/json", builder.build().getURI().toString());
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
@@ -61,7 +61,7 @@ public class BasicInsightEndpointTest {
 
     @Test
     public void testMakeRequestWithCountry() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(new BasicInsightRequest.Builder("1234")
+        RequestBuilder builder = this.endpoint.makeRequest(BasicInsightRequest.builder("1234")
                 .country("GB")
                 .build());
         assertEquals("POST", builder.getMethod());
@@ -97,7 +97,7 @@ public class BasicInsightEndpointTest {
 
     @Test
     public void testCustomUri() throws Exception {
-        HttpWrapper wrapper = new HttpWrapper(new HttpConfig.Builder().baseUri("https://example.com").build());
+        HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri("https://example.com").build());
         BasicInsightEndpoint endpoint = new BasicInsightEndpoint(wrapper);
         BasicInsightRequest request = BasicInsightRequest.withNumber("1234");
 

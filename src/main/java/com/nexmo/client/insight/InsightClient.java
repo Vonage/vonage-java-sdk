@@ -139,7 +139,7 @@ public class InsightClient extends AbstractClient {
      */
     @Deprecated
     public StandardInsightResponse getStandardNumberInsight(String number, String country, boolean cnam) throws IOException, NexmoClientException {
-        return getStandardNumberInsight(new StandardInsightRequest.Builder(number).country(country).cnam(cnam).build());
+        return getStandardNumberInsight(StandardInsightRequest.builder(number).country(country).cnam(cnam).build());
     }
 
     /**
@@ -201,7 +201,7 @@ public class InsightClient extends AbstractClient {
      */
     @Deprecated
     public AdvancedInsightResponse getAdvancedNumberInsight(String number, String country, String ipAddress) throws IOException, NexmoClientException {
-        return getAdvancedNumberInsight(new AdvancedInsightRequest.Builder(number)
+        return getAdvancedNumberInsight(AdvancedInsightRequest.builder(number)
                 .country(country)
                 .ipAddress(ipAddress)
                 .build());
@@ -226,7 +226,7 @@ public class InsightClient extends AbstractClient {
      */
     @Deprecated
     public AdvancedInsightResponse getAdvancedNumberInsight(String number, String country, String ipAddress, boolean cnam) throws IOException, NexmoClientException {
-        return getAdvancedNumberInsight(new AdvancedInsightRequest.Builder(number)
+        return getAdvancedNumberInsight(AdvancedInsightRequest.builder(number)
                 .country(country)
                 .ipAddress(ipAddress)
                 .cnam(cnam)

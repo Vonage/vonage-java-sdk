@@ -42,7 +42,7 @@ public class AdvancedInsightRequestTest {
 
     @Test
     public void testBuildWithAllFields() throws Exception {
-        AdvancedInsightRequest request = new AdvancedInsightRequest.Builder("12345")
+        AdvancedInsightRequest request = AdvancedInsightRequest.builder("12345")
                 .country("GB")
                 .ipAddress("123.123.123.123")
                 .cnam(true)
@@ -52,7 +52,7 @@ public class AdvancedInsightRequestTest {
         assertEquals(request.getIpAddress(), "123.123.123.123");
         assertTrue(request.getCnam());
 
-        request = new AdvancedInsightRequest.Builder("12345")
+        request = AdvancedInsightRequest.builder("12345")
                 .number("98765")
                 .country("GB")
                 .ipAddress("123.123.123.123")
