@@ -13,3 +13,4 @@ documentation, or tests are eligible to be added to this list.
 - GwanYeong Kim ([@gy741](https://github.com/gy741))
 - Guy Khmelnitsky ([@guykh](https://github.com/GuyKh))
 - I Wayan Dharmana ([@wdharmana](https://github.com/wdharmana))
+- Sharif Malik ([@sharif-malik])(https://github.com/sharif-malik))
