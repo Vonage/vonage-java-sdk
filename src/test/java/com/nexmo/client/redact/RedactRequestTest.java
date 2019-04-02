@@ -78,7 +78,7 @@ public class RedactRequestTest {
     @Test
     public void testProductMessage() {
         String json = "{\"id\":\"testId\",\"product\":\"message\"}";
-        assertEquals(new RedactRequest("testId", RedactRequest.Product.MESSAGE).toJson(), json);
+        assertEquals(new RedactRequest("testId", RedactRequest.Product.MESSAGES).toJson(), json);
     }
 
     @Test
