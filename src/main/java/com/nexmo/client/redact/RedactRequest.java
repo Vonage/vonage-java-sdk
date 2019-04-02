@@ -87,6 +87,10 @@ public class RedactRequest {
         NUMBER_INSIGHTS("number-insight"),
         VERIFY("verify"),
         VERIFY_SDK("verify-sdk"),
+        /**
+         * @deprecated Use {@link Product#MESSAGES}
+         **/
+        @Deprecated MESSAGE("messages"),
         MESSAGES("messages"),
         WORKFLOW("workflow");
 
