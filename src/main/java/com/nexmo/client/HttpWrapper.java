@@ -37,7 +37,7 @@ import java.nio.charset.Charset;
  */
 public class HttpWrapper {
     private static final String CLIENT_NAME = "nexmo-java";
-    private static final String CLIENT_VERSION = "4.2.0";
+    private static final String CLIENT_VERSION = "4.2.1";
     private static final String JAVA_VERSION = System.getProperty("java.version");
 
     private AuthCollection authCollection;
