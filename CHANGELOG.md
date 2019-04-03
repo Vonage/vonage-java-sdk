@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.2.2] - 2019-04-03
+
+## Fixed
+- Fixed the deprecated product name in Redact API for `message`.
+
 ## [4.2.1] - 2019-04-02
 
 ## Fixed
