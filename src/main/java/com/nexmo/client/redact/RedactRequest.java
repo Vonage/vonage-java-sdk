@@ -90,7 +90,7 @@ public class RedactRequest {
         /**
          * @deprecated Use {@link Product#MESSAGES}
          **/
-        @Deprecated MESSAGE("messages"),
+        @Deprecated MESSAGE("message"),
         MESSAGES("messages"),
         WORKFLOW("workflow");
 
