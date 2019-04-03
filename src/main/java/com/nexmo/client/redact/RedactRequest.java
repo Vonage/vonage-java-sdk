@@ -87,11 +87,11 @@ public class RedactRequest {
         NUMBER_INSIGHTS("number-insight"),
         VERIFY("verify"),
         VERIFY_SDK("verify-sdk"),
+        MESSAGES("messages"),
         /**
          * @deprecated Use {@link Product#MESSAGES}
          **/
         @Deprecated MESSAGE("message"),
-        MESSAGES("messages"),
         WORKFLOW("workflow");
 
         private String value;
