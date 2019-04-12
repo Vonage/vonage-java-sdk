@@ -20,7 +20,7 @@ apply plugin: 'eclipse'
 
 group = "com.nexmo"
 archivesBaseName = "client"
-version = "4.2.2"
+version = "4.2.1"
 
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
