@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2019 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,28 +22,22 @@
 package com.nexmo.client.auth;
 
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.util.EntityUtils;
+import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 
-public interface AuthMethod extends Comparable<AuthMethod> {
-    RequestBuilder apply(RequestBuilder request);
+public class TokenAuthMethodTest {
+    @Test
+    public void testAddingApiKeyAndSecretToJson() throws Exception {
+        AuthMethod auth = new TokenAuthMethod("apikey", "secret");
+        String before = "{\"name\":\"app name\",\"type\":\"voice\",\"answer_url\":\"https://example.com/answer\",\"event_url\":\"https://example.com/event\"}";
+        RequestBuilder requestBuilder = RequestBuilder.get().setEntity(new StringEntity(before));
 
-    /**
-     * Apply the authentication to the header as basic authentication.
-     *
-     * @param requestBuilder The request being built
-     *
-     * @return RequestBuilder for more building of the request.
-     */
-    RequestBuilder applyAsBasicAuth(RequestBuilder requestBuilder);
+        RequestBuilder requestBuilderWithAuthentication = auth.applyAsJsonProperties(requestBuilder);
 
-    /**
-     * Apply the authentication by adding it to the entity payload.
-     *
-     * @param requestBuilder The request being built
-     *
-     * @return RequestBuilder for more building of the request.
-     */
-    RequestBuilder applyAsJsonProperties(RequestBuilder requestBuilder);
-
-    int getSortKey();
+        String after = "{\"name\":\"app name\",\"type\":\"voice\",\"answer_url\":\"https://example.com/answer\",\"event_url\":\"https://example.com/event\",\"api_key\":\"apikey\",\"api_secret\":\"secret\"}";
+        assertEquals(after, EntityUtils.toString(requestBuilderWithAuthentication.getEntity()));
+    }
 }

@@ -21,10 +21,18 @@
  */
 package com.nexmo.client.auth;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.nexmo.client.NexmoUnexpectedException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
+import org.apache.http.util.EntityUtils;
+
+import java.io.IOException;
 
 public class TokenAuthMethod extends AbstractAuthMethod {
     private final int SORT_KEY = 30;
@@ -47,6 +55,20 @@ public class TokenAuthMethod extends AbstractAuthMethod {
         String headerValue = Base64.encodeBase64String((this.apiKey + ":" + this.apiSecret).getBytes());
         Header authHeader = new BasicHeader("Authorization", "Basic " + headerValue);
         return request.addHeader(authHeader);
+    }
+
+    @Override
+    public RequestBuilder applyAsJsonProperties(RequestBuilder request) {
+        HttpEntity entity = request.getEntity();
+        try {
+            ObjectNode json = (ObjectNode) new ObjectMapper().readTree(EntityUtils.toString(entity));
+            json.put("api_key", this.apiKey);
+            json.put("api_secret", this.apiSecret);
+
+            return request.setEntity(new StringEntity(json.toString()));
+        } catch (IOException e) {
+            throw new NexmoUnexpectedException("Failed to attach api key and secret to json.", e);
+        }
     }
 
     @Override

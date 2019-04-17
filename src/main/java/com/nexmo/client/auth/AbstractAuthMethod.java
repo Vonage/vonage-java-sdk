@@ -36,4 +36,10 @@ public abstract class AbstractAuthMethod implements AuthMethod {
         throw new UnsupportedOperationException(
                 "applyAsBasicAuth not implemented for " + this.getClass().getCanonicalName());
     }
+
+    @Override
+    public RequestBuilder applyAsJsonProperties(RequestBuilder request) {
+        throw new UnsupportedOperationException(
+                "applyAsJsonProperties not implemented for " + this.getClass().getCanonicalName());
+    }
 }
