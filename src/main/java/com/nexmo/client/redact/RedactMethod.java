@@ -62,6 +62,7 @@ class RedactMethod extends AbstractMethod<RedactRequest, RedactResponse> {
 
         return RequestBuilder
                 .post(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH)
+                .setHeader("Content-Type", "application/json")
                 .setEntity(new StringEntity(redactRequest.toJson(), ContentType.APPLICATION_JSON));
     }
 

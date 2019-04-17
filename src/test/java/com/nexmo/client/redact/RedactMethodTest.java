@@ -33,6 +33,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class RedactMethodTest {
+
     private RedactMethod method;
 
     @Before
@@ -48,6 +49,7 @@ public class RedactMethodTest {
         HttpEntity entity = builder.getEntity();
 
         assertEquals(entity.getContentType().getValue(), ContentType.APPLICATION_JSON.toString());
+        assertEquals("application/json", builder.getFirstHeader("Content-Type").getValue());
         assertNotNull(entity.getContent());
     }
 
@@ -69,7 +71,6 @@ public class RedactMethodTest {
 
         method.makeRequest(request);
     }
-
 
     @Test(expected = IllegalArgumentException.class)
     public void testConstructParamsWithMissingProduct() throws Exception {
