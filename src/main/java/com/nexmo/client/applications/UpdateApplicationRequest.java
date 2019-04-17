@@ -21,8 +21,15 @@
  */
 package com.nexmo.client.applications;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexmo.client.NexmoUnexpectedException;
 import org.apache.http.client.methods.RequestBuilder;
 
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class UpdateApplicationRequest {
     private final String applicationId;
     private final String name;
@@ -50,6 +57,7 @@ public class UpdateApplicationRequest {
         this.eventMethod = eventMethod;
     }
 
+    @JsonIgnore
     public String getApplicationId() {
         return applicationId;
     }
@@ -62,14 +70,17 @@ public class UpdateApplicationRequest {
         return type;
     }
 
+    @JsonProperty("answer_url")
     public String getAnswerUrl() {
         return answerUrl;
     }
 
+    @JsonProperty("event_url")
     public String getEventUrl() {
         return eventUrl;
     }
 
+    @JsonProperty("answer_method")
     public String getAnswerMethod() {
         return answerMethod;
     }
@@ -78,12 +89,22 @@ public class UpdateApplicationRequest {
         this.answerMethod = answerMethod;
     }
 
+    @JsonProperty("event_method")
     public String getEventMethod() {
         return eventMethod;
     }
 
     public void setEventMethod(String eventMethod) {
         this.eventMethod = eventMethod;
+    }
+
+    public String toJson() {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(this);
+        } catch (JsonProcessingException jpe) {
+            throw new NexmoUnexpectedException("Failed to produce json from UpdateApplicationRequest object.", jpe);
+        }
     }
 
     public void addParams(RequestBuilder request) {

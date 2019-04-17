@@ -21,10 +21,12 @@
  */
 package com.nexmo.client.applications;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum ApplicationType {
     VOICE;
 
-
+    @JsonValue
     @Override
     public String toString() {
         return this.name().toLowerCase();

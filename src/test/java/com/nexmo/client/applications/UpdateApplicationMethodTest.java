@@ -27,10 +27,9 @@ import com.nexmo.client.TestUtils;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.util.EntityUtils;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -62,14 +61,7 @@ public class UpdateApplicationMethodTest {
         RequestBuilder builder = this.endpoint.makeRequest(update);
         assertEquals("PUT", builder.getMethod());
         assertEquals("https://api.nexmo.com/v1/applications/app-id", builder.build().getURI().toString());
-
-        Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
-        assertEquals("app name", params.get("name"));
-        assertEquals("https://example.com/event", params.get("event_url"));
-        assertEquals("https://example.com/answer", params.get("answer_url"));
-        assertEquals("PUT", params.get("answer_method"));
-        assertEquals("DELETE", params.get("event_method"));
-        assertNull(params.get("app_id"));
+        assertEquals("{\"name\":\"app name\",\"type\":\"voice\",\"answer_url\":\"https://example.com/answer\",\"event_url\":\"https://example.com/event\",\"answer_method\":\"PUT\",\"event_method\":\"DELETE\"}", EntityUtils.toString(builder.getEntity()));
     }
 
     @Test
@@ -83,15 +75,10 @@ public class UpdateApplicationMethodTest {
 
         RequestBuilder builder = this.endpoint.makeRequest(update);
         assertEquals("PUT", builder.getMethod());
-        assertEquals("https://api.nexmo.com/v1/applications/app-id", builder.build().getURI().toString());
 
-        Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
-        assertEquals("app name", params.get("name"));
-        assertEquals("https://example.com/event", params.get("event_url"));
-        assertEquals("https://example.com/answer", params.get("answer_url"));
-        assertNull(params.get("answer_method"));
-        assertNull(params.get("event_method"));
-        assertNull(params.get("app_id"));
+        assertEquals("application/json", builder.getFirstHeader("Content-Type").getValue());
+        assertEquals("https://api.nexmo.com/v1/applications/app-id", builder.build().getURI().toString());
+        assertEquals("{\"name\":\"app name\",\"type\":\"voice\",\"answer_url\":\"https://example.com/answer\",\"event_url\":\"https://example.com/event\"}", EntityUtils.toString(builder.getEntity()));
     }
 
     @Test
