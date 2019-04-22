@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Fixed
 - Added header (application/json) for Redact client.
+- Fixed Application Update to send json body as it is what the API now expects.
 
 ## [4.2.1] - 2019-04-02
 

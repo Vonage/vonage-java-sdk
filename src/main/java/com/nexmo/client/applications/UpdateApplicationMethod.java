@@ -27,6 +27,7 @@ import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 
 import java.io.IOException;
@@ -49,14 +50,19 @@ class UpdateApplicationMethod extends AbstractMethod<UpdateApplicationRequest, A
 
     @Override
     public RequestBuilder makeRequest(UpdateApplicationRequest request) throws NexmoClientException, UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder.put(
-                httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getApplicationId());
-        request.addParams(requestBuilder);
-        return requestBuilder;
+        return RequestBuilder.put(
+                httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getApplicationId())
+                .setHeader("Content-Type", "application/json")
+                .setEntity(new StringEntity(request.toJson()));
     }
 
     @Override
     public ApplicationDetails parseResponse(HttpResponse response) throws IOException {
         return ApplicationDetails.fromJson(new BasicResponseHandler().handleResponse(response));
+    }
+
+    @Override
+    protected RequestBuilder applyAuth(RequestBuilder request) throws NexmoClientException {
+        return getAuthMethod(getAcceptableAuthMethods()).applyAsJsonProperties(request);
     }
 }
