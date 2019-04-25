@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Development] 
 
+## Added
+- Added `NotifyAction` for use in `NCCO`.
+
 ## Fixed
 - Added header (application/json) for Redact client.
 - Fixed Application Update to send json body as it is what the API now expects.
