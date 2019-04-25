@@ -41,6 +41,10 @@ public class InputAction implements Action {
     private Collection<String> eventUrl;
     private EventMethod eventMethod;
 
+    /**
+     * @deprecated Use {@link Builder}
+     */
+    @Deprecated
     public InputAction(Builder builder) {
         this.timeOut = builder.timeOut;
         this.maxDigits = builder.maxDigits;
@@ -120,8 +124,8 @@ public class InputAction implements Action {
         }
 
         /**
-         * @param eventUrl Nexmo sends the digits pressed by the callee to this URL after timeOut pause in activity
-         *                 or when # is pressed.
+         * @param eventUrl Nexmo sends the digits pressed by the callee to this URL after timeOut pause in activity or
+         *                 when # is pressed.
          *
          * @return The {@link Builder} to keep building.
          */
@@ -131,8 +135,8 @@ public class InputAction implements Action {
         }
 
         /**
-         * @param eventUrl Nexmo sends the digits pressed by the callee to this URL after timeOut pause in activity
-         *                 or when # is pressed.
+         * @param eventUrl Nexmo sends the digits pressed by the callee to this URL after timeOut pause in activity or
+         *                 when # is pressed.
          *
          * @return The {@link Builder} to keep building.
          */

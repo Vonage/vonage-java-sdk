@@ -45,6 +45,10 @@ public class RecordAction implements Action {
     private SplitRecording split;
     private Integer channels;
 
+    /**
+     * @deprecated Use {@link Builder}
+     */
+    @Deprecated
     public RecordAction(Builder builder) {
         this.format = builder.format;
         this.endOnSilence = builder.endOnSilence;
@@ -120,7 +124,8 @@ public class RecordAction implements Action {
         /**
          * @param format Record the Call in a specific {@link RecordingFormat}.
          *               <p>
-         *               The default value is {@link RecordingFormat#MP3}, or {@link RecordingFormat#WAV} when recording more than 2 channels.
+         *               The default value is {@link RecordingFormat#MP3}, or {@link RecordingFormat#WAV} when recording
+         *               more than 2 channels.
          *
          * @return The {@link Builder} to keep building.
          */
@@ -141,7 +146,8 @@ public class RecordAction implements Action {
         }
 
         /**
-         * @param endOnKey Stop recording when a digit is pressed on the handset. Possible values are: *, # or any single digit e.g. 9
+         * @param endOnKey Stop recording when a digit is pressed on the handset. Possible values are: *, # or any
+         *                 single digit e.g. 9
          *
          * @return The {@link Builder} to keep building.
          */
@@ -151,8 +157,9 @@ public class RecordAction implements Action {
         }
 
         /**
-         * @param timeOut The maximum length of a recording in seconds. One the recording is stopped the recording
-         *                data is sent to event_url. The range of possible values is between 3 seconds and 7200 seconds (2 hours)
+         * @param timeOut The maximum length of a recording in seconds. One the recording is stopped the recording data
+         *                is sent to event_url. The range of possible values is between 3 seconds and 7200 seconds (2
+         *                hours)
          *
          * @return The {@link Builder} to keep building.
          */
@@ -205,8 +212,8 @@ public class RecordAction implements Action {
         }
 
         /**
-         * @param split Record the sent and received audio in separate channels of a stereo recording—set to
-         *              {@link SplitRecording#CONVERSATION} to enable this.
+         * @param split Record the sent and received audio in separate channels of a stereo recording—set to {@link
+         *              SplitRecording#CONVERSATION} to enable this.
          *
          * @return The {@link Builder} to keep building.
          */
@@ -216,10 +223,10 @@ public class RecordAction implements Action {
         }
 
         /**
-         * @param channels The number of channels to record (maximum 32). If the number of participants exceeds
-         *                 channels any additional participants will be added to the last channel in file.
-         *                 {@link #split} will be set to {@link SplitRecording#CONVERSATION} during the build process
-         *                 if channels is greater than 1.
+         * @param channels The number of channels to record (maximum 32). If the number of participants exceeds channels
+         *                 any additional participants will be added to the last channel in file. {@link #split} will be
+         *                 set to {@link SplitRecording#CONVERSATION} during the build process if channels is greater
+         *                 than 1.
          *
          * @return The {@link Builder} to keep building.
          */
