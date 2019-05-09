@@ -33,6 +33,7 @@ import org.apache.http.ProtocolVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
@@ -126,7 +127,7 @@ public class AbstractMethodTest {
         RequestBuilder builder = RequestBuilder
                 .put("")
                 .setHeader("Content-Type", "application/json")
-                .setEntity(new StringEntity(json));
+                .setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
 
         ConcreteMethod method = spy(new ConcreteMethod(mockWrapper));
         when(method.makeRequest(any(String.class))).thenReturn(builder);
@@ -140,6 +141,30 @@ public class AbstractMethodTest {
         HttpEntity entity = ((HttpEntityEnclosingRequest) captor.getValue()).getEntity();
 
         String entityContents = IOUtils.toString(entity.getContent(), Charset.forName("UTF-8"));
+        assertEquals(json, entityContents);
+    }
+
+    @Test
+    public void testUsingUtf8EncodingChinese() throws Exception {
+        String json = "{\"text\":\"您的纳控猫设备异常，请登录查看。\",\"loop\":0,\"voice_name\":\"Kimberly\"}";
+        RequestBuilder builder = RequestBuilder
+                .put("")
+                .setCharset(Charset.forName("UTF-8"))
+                .setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
+
+        ConcreteMethod method = spy(new ConcreteMethod(mockWrapper));
+        when(method.makeRequest(any(String.class))).thenReturn(builder);
+        when(mockAuthMethod.apply(any(RequestBuilder.class))).thenReturn(builder);
+
+        method.execute("");
+
+        ArgumentCaptor<HttpUriRequest> captor = ArgumentCaptor.forClass(HttpUriRequest.class);
+        verify(mockHttpClient).execute(captor.capture());
+
+        HttpEntity entity = ((HttpEntityEnclosingRequest) captor.getValue()).getEntity();
+
+        String entityContents = IOUtils.toString(entity.getContent(), Charset.forName("UTF-8"));
+
         assertEquals(json, entityContents);
     }
 }

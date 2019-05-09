@@ -29,6 +29,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 
@@ -56,7 +57,7 @@ class SendDtmfMethod extends AbstractMethod<DtmfRequest, DtmfResponse> {
         String uri = this.uri + request.getUuid() + "/dtmf";
         return RequestBuilder.put(uri)
                 .setHeader("Content-Type", "application/json")
-                .setEntity(new StringEntity(request.toJson()));
+                .setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
     }
 
     @Override

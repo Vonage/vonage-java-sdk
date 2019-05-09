@@ -27,6 +27,7 @@ import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 
@@ -53,7 +54,7 @@ class UpdateApplicationMethod extends AbstractMethod<UpdateApplicationRequest, A
         return RequestBuilder.put(
                 httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getApplicationId())
                 .setHeader("Content-Type", "application/json")
-                .setEntity(new StringEntity(request.toJson()));
+                .setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
     }
 
     @Override

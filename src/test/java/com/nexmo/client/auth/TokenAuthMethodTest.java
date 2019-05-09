@@ -22,6 +22,7 @@
 package com.nexmo.client.auth;
 
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 import org.junit.Test;
@@ -33,7 +34,7 @@ public class TokenAuthMethodTest {
     public void testAddingApiKeyAndSecretToJson() throws Exception {
         AuthMethod auth = new TokenAuthMethod("apikey", "secret");
         String before = "{\"name\":\"app name\",\"type\":\"voice\",\"answer_url\":\"https://example.com/answer\",\"event_url\":\"https://example.com/event\"}";
-        RequestBuilder requestBuilder = RequestBuilder.get().setEntity(new StringEntity(before));
+        RequestBuilder requestBuilder = RequestBuilder.get().setEntity(new StringEntity(before, ContentType.APPLICATION_JSON));
 
         RequestBuilder requestBuilderWithAuthentication = auth.applyAsJsonProperties(requestBuilder);
 
