@@ -32,7 +32,6 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
@@ -46,14 +45,14 @@ import java.util.Set;
  * Abstract class to assist in implementing a call against a REST endpoint.
  * <p>
  * Concrete implementations must implement {@link #makeRequest(Object)} to construct a {@link RequestBuilder} from the
- * provided parameterized request object, and {@link #parseResponse(HttpResponse)} to construct the parameterized
- * {@link HttpResponse} object.
+ * provided parameterized request object, and {@link #parseResponse(HttpResponse)} to construct the parameterized {@link
+ * HttpResponse} object.
  * <p>
  * The REST call is executed by calling {@link #execute(Object)}.
  *
  * @param <RequestT> The type of the method-specific request object that will be used to construct an HTTP request
- * @param <ResultT>  The type of method-specific response object which will be constructed from the returned
- *                   HTTP response
+ * @param <ResultT>  The type of method-specific response object which will be constructed from the returned HTTP
+ *                   response
  */
 public abstract class AbstractMethod<RequestT, ResultT> implements Method<RequestT, ResultT> {
     private static final Log LOG = LogFactory.getLog(AbstractMethod.class);
@@ -94,9 +93,6 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
                     entityRequest.setEntity(new UrlEncodedFormEntity(requestBuilder.getParameters(),
                             Charset.forName("UTF-8")
                     ));
-                } else if (entity instanceof StringEntity) {
-                    // By default StringEntity is set to ISO-8859-1 but Nexmo expects UTF-8
-                    entityRequest.setEntity(new StringEntity(EntityUtils.toString(entity), Charset.forName("UTF-8")));
                 }
             }
             LOG.debug("Request: " + httpRequest);
@@ -118,7 +114,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      * @param request A RequestBuilder which has not yet had authentication information applied
      *
      * @return A RequestBuilder with appropriate authentication information applied (may or not be the same instance as
-     *         <pre>request</pre>)
+     * <pre>request</pre>)
      *
      * @throws NexmoClientException If no appropriate {@link AuthMethod} is available
      */
