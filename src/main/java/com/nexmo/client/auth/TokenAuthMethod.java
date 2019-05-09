@@ -28,6 +28,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
@@ -65,7 +66,7 @@ public class TokenAuthMethod extends AbstractAuthMethod {
             json.put("api_key", this.apiKey);
             json.put("api_secret", this.apiSecret);
 
-            return request.setEntity(new StringEntity(json.toString()));
+            return request.setEntity(new StringEntity(json.toString(), ContentType.APPLICATION_JSON));
         } catch (IOException e) {
             throw new NexmoUnexpectedException("Failed to attach api key and secret to json.", e);
         }
