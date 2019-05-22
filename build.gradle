@@ -36,11 +36,11 @@ tasks.withType(JavaCompile) {
 dependencies {
     compile 'commons-codec:commons-codec:1.9'
     compile 'commons-logging:commons-logging:1.2'
-    compile 'org.apache.httpcomponents:httpclient:4.5'
+    compile 'org.apache.httpcomponents:httpclient:4.5.8'
     compile 'commons-io:commons-io:2.5'
     compile 'org.apache.commons:commons-lang3:3.5'
     compileOnly 'javax.servlet:javax.servlet-api:3.1.0'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.5'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.9'
     compile 'com.auth0:java-jwt:2.2.1'
     compile 'io.openapitools.jackson.dataformat:jackson-dataformat-hal:1.0.4'
     compile 'javax.xml.bind:jaxb-api:2.3.0'
