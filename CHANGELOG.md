@@ -4,31 +4,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Development]
+## [4.3.1] - 2019-05-24
 
-## Fixed
+### Fixed
 - Fix UTF-8 Encoding for endpoints using JSON bodies.
 
 ## [4.3.0] - 2019-04-25 
 
-## Added
+### Added
 - Added `NotifyAction` for use in `NCCO`.
 
-## Fixed
+### Fixed
 - Added header (application/json) for Redact client.
 - Fixed Application Update to send json body as it is what the API now expects.
 
 ## [4.2.1] - 2019-04-02
 
-## Fixed
+### Fixed
 - Fixed the product name in Redact API for `messages`.
 
 ## [4.2.0] - 2019-03-20
 
-## Added
+### Added
 - Missing builders for `StreamAction`, `AdvancedInsightRequest`, `StandardInsightRequest`, and `BasicInsightRequest`.
 
-## Fixed
+### Fixed
 - `AbstractMethod` will force UTF-8 charset for requests using `StringEntity`.
 - Tests will now run using static builder methods for each of the classes that use builders for construction.
 
