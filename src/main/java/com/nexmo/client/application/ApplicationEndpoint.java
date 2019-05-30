@@ -29,10 +29,12 @@ import java.io.IOException;
 class ApplicationEndpoint {
     private CreateApplicationMethod createApplicationMethod;
     private UpdateApplicationMethod updateApplicationMethod;
+    private GetApplicationMethod getApplicationMethod;
 
     ApplicationEndpoint(HttpWrapper httpWrapper) {
         this.createApplicationMethod = new CreateApplicationMethod(httpWrapper);
         this.updateApplicationMethod = new UpdateApplicationMethod(httpWrapper);
+        this.getApplicationMethod = new GetApplicationMethod(httpWrapper);
     }
 
     Application create(Application application) throws IOException, NexmoClientException {
@@ -41,5 +43,9 @@ class ApplicationEndpoint {
 
     Application update(Application application) throws IOException, NexmoClientException {
         return this.updateApplicationMethod.execute(application);
+    }
+
+    Application get(String id) throws IOException, NexmoClientException {
+        return this.getApplicationMethod.execute(id);
     }
 }

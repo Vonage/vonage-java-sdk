@@ -67,4 +67,18 @@ public class ApplicationClient extends AbstractClient {
     public Application update(Application application) throws IOException, NexmoClientException {
         return this.applicationEndpoint.update(application);
     }
+
+    /**
+     * Retrieve an application.
+     *
+     * @param id The id of the application to retrieve.
+     *
+     * @return The corresponding application.
+     *
+     * @throws IOException          if a network error occurred contacting the Nexmo Application API.
+     * @throws NexmoClientException if there was a problem with the Nexmo request.
+     */
+    public Application get(String id) throws IOException, NexmoClientException {
+        return this.applicationEndpoint.get(id);
+    }
 }
