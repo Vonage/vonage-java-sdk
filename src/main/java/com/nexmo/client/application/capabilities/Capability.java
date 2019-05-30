@@ -37,6 +37,7 @@ public abstract class Capability {
     protected Map<Webhook.Type, Webhook> webhooks;
 
     protected Capability() {
+        // Needed for Reflection
     }
 
     @JsonIgnore
