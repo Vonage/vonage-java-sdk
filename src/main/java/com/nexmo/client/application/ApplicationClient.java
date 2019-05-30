@@ -81,4 +81,16 @@ public class ApplicationClient extends AbstractClient {
     public Application get(String id) throws IOException, NexmoClientException {
         return this.applicationEndpoint.get(id);
     }
+
+    /**
+     * Delete an application.
+     *
+     * @param id The id of the application to delete.
+     *
+     * @throws IOException          if a network error occurred contacting the Nexmo Application API.
+     * @throws NexmoClientException if there was a problem with the Nexmo request.
+     */
+    public void delete(String id) throws IOException, NexmoClientException {
+        this.applicationEndpoint.delete(id);
+    }
 }

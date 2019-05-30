@@ -30,11 +30,13 @@ class ApplicationEndpoint {
     private CreateApplicationMethod createApplicationMethod;
     private UpdateApplicationMethod updateApplicationMethod;
     private GetApplicationMethod getApplicationMethod;
+    private DeleteApplicationMethod deleteApplicationMethod;
 
     ApplicationEndpoint(HttpWrapper httpWrapper) {
         this.createApplicationMethod = new CreateApplicationMethod(httpWrapper);
         this.updateApplicationMethod = new UpdateApplicationMethod(httpWrapper);
         this.getApplicationMethod = new GetApplicationMethod(httpWrapper);
+        this.deleteApplicationMethod = new DeleteApplicationMethod(httpWrapper);
     }
 
     Application create(Application application) throws IOException, NexmoClientException {
@@ -47,5 +49,9 @@ class ApplicationEndpoint {
 
     Application get(String id) throws IOException, NexmoClientException {
         return this.getApplicationMethod.execute(id);
+    }
+
+    void delete(String id) throws IOException, NexmoClientException {
+        this.deleteApplicationMethod.execute(id);
     }
 }

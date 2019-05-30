@@ -267,4 +267,11 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
         assertEquals(Capability.Type.VBC, vbc.getType());
         assertNull(vbc.getWebhooks());
     }
+
+    @Test
+    public void testDeleteApplication() throws Exception {
+        wrapper.setHttpClient(stubHttpClient(204, ""));
+
+        client.delete("78d335fa323d01149c3dd6f0d48968cf");
+    }
 }
