@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2019 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,23 +19,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.applications;
+package com.nexmo.client.application.capabilities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.nexmo.client.common.Webhook;
 
+import java.util.Map;
+
+/**
+ * Represents a capability of a Nexmo Application
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ApplicationKeys {
-    private String publicKey;
-    private String privateKey;
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public abstract class Capability {
+    protected Map<Webhook.Type, Webhook> webhooks;
 
-    @JsonProperty("public_key")
-    public String getPublicKey() {
-        return publicKey;
+    protected Capability() {
     }
 
-    @JsonProperty("private_key")
-    public String getPrivateKey() {
-        return privateKey;
+    @JsonIgnore
+    abstract public Type getType();
+
+    public Map<Webhook.Type, Webhook> getWebhooks() {
+        return webhooks;
+    }
+
+    public enum Type {
+        VOICE,
+        RTC,
+        MESSAGES,
+        VBC
     }
 }
