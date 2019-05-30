@@ -28,12 +28,18 @@ import java.io.IOException;
 
 class ApplicationEndpoint {
     private CreateApplicationMethod createApplicationMethod;
+    private UpdateApplicationMethod updateApplicationMethod;
 
     ApplicationEndpoint(HttpWrapper httpWrapper) {
         this.createApplicationMethod = new CreateApplicationMethod(httpWrapper);
+        this.updateApplicationMethod = new UpdateApplicationMethod(httpWrapper);
     }
 
     Application create(Application application) throws IOException, NexmoClientException {
         return this.createApplicationMethod.execute(application);
+    }
+
+    Application update(Application application) throws IOException, NexmoClientException {
+        return this.updateApplicationMethod.execute(application);
     }
 }
