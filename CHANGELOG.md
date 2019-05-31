@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Development]
+
+## Changed
+- Renamed the `com.nexmo.client.applications` package to `com.nexmo.client.application`
+- `ApplicationClient` now supports the [Applications v2](https://developer.nexmo.com/api/application.v2) API. This change has resulted in some backwards incompatibility.
+
 ## [4.4.0] - 2019-06-10
 
 ### Added
@@ -239,7 +245,7 @@ telescoping is clunky. Added some static factory methods to these classes to all
 ## [2.0.2] - 2017-05-04
 ### Fixed
 - All URL-encoded PUT and POST requests are now UTF-8 instead of ISO-8859-1.
-- The event url is properly set on a `Call`
+- The event webhook is properly set on a `Call`
 
 ### Added
 - Number Insight now supports the `cnam` parameter for Standard and Advanced requests.
