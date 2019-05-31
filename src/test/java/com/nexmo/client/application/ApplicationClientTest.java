@@ -83,7 +83,7 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
                 "  }\n" +
                 "}"));
 
-        Application response = client.create(Application.builder().build());
+        Application response = client.createApplication(Application.builder().build());
 
         assertEquals("78d335fa323d01149c3dd6f0d48968cf", response.getId());
         assertEquals("My Application", response.getName());
@@ -160,7 +160,7 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
                 "  }\n" +
                 "}"));
 
-        Application response = client.update(Application.builder().build());
+        Application response = client.updateApplication(Application.builder().build());
 
         assertEquals("78d335fa323d01149c3dd6f0d48968cf", response.getId());
         assertEquals("My Application", response.getName());
@@ -237,7 +237,7 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
                 "  }\n" +
                 "}"));
 
-        Application response = client.get("78d335fa323d01149c3dd6f0d48968cf");
+        Application response = client.getApplication("78d335fa323d01149c3dd6f0d48968cf");
 
         assertEquals("78d335fa323d01149c3dd6f0d48968cf", response.getId());
         assertEquals("My Application", response.getName());
@@ -272,7 +272,7 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
     public void testDeleteApplication() throws Exception {
         wrapper.setHttpClient(stubHttpClient(204, ""));
 
-        client.delete("78d335fa323d01149c3dd6f0d48968cf");
+        client.deleteApplication("78d335fa323d01149c3dd6f0d48968cf");
     }
 
     @Test
@@ -327,7 +327,7 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
                 "  }\n" +
                 "}"));
 
-        ApplicationList response = client.list();
+        ApplicationList response = client.listApplications();
 
         assertEquals(10, response.getPageSize());
         assertEquals(1, response.getPage());
@@ -386,7 +386,7 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
                 "  }\n" +
                 "}"));
 
-        ApplicationList response = client.list();
+        ApplicationList response = client.listApplications();
 
         assertEquals(10, response.getPageSize());
         assertEquals(1, response.getPage());

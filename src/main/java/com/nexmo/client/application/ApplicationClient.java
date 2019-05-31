@@ -50,7 +50,7 @@ public class ApplicationClient extends AbstractClient {
      * @throws IOException          if a network error occurred contacting the Nexmo Application API.
      * @throws NexmoClientException if there was a problem with the Nexmo request.
      */
-    public Application create(Application application) throws IOException, NexmoClientException {
+    public Application createApplication(Application application) throws IOException, NexmoClientException {
         return this.applicationEndpoint.create(application);
     }
 
@@ -64,7 +64,7 @@ public class ApplicationClient extends AbstractClient {
      * @throws IOException          if a network error occurred contacting the Nexmo Application API.
      * @throws NexmoClientException if there was a problem with the Nexmo request.
      */
-    public Application update(Application application) throws IOException, NexmoClientException {
+    public Application updateApplication(Application application) throws IOException, NexmoClientException {
         return this.applicationEndpoint.update(application);
     }
 
@@ -78,7 +78,7 @@ public class ApplicationClient extends AbstractClient {
      * @throws IOException          if a network error occurred contacting the Nexmo Application API.
      * @throws NexmoClientException if there was a problem with the Nexmo request.
      */
-    public Application get(String id) throws IOException, NexmoClientException {
+    public Application getApplication(String id) throws IOException, NexmoClientException {
         return this.applicationEndpoint.get(id);
     }
 
@@ -90,7 +90,7 @@ public class ApplicationClient extends AbstractClient {
      * @throws IOException          if a network error occurred contacting the Nexmo Application API.
      * @throws NexmoClientException if there was a problem with the Nexmo request.
      */
-    public void delete(String id) throws IOException, NexmoClientException {
+    public void deleteApplication(String id) throws IOException, NexmoClientException {
         this.applicationEndpoint.delete(id);
     }
 
@@ -102,8 +102,8 @@ public class ApplicationClient extends AbstractClient {
      * @throws IOException          if a network error occurred contacting the Nexmo Application API.
      * @throws NexmoClientException if there was a problem with the Nexmo request.
      */
-    public ApplicationList list() throws IOException, NexmoClientException {
-        return list(null);
+    public ApplicationList listApplications() throws IOException, NexmoClientException {
+        return listApplications(null);
     }
 
     /**
@@ -116,7 +116,7 @@ public class ApplicationClient extends AbstractClient {
      * @throws IOException          if a network error occurred contacting the Nexmo Application API.
      * @throws NexmoClientException if there was a problem with the Nexmo request.
      */
-    public ApplicationList list(ListApplicationRequest listApplicationRequest) throws IOException, NexmoClientException {
+    public ApplicationList listApplications(ListApplicationRequest listApplicationRequest) throws IOException, NexmoClientException {
         return this.applicationEndpoint.list(listApplicationRequest);
     }
 }
