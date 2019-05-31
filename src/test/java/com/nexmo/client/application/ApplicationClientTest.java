@@ -274,4 +274,125 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
 
         client.delete("78d335fa323d01149c3dd6f0d48968cf");
     }
+
+    @Test
+    public void testListApplicationWithOneResult() throws Exception {
+        wrapper.setHttpClient(stubHttpClient(200, "{\n" +
+                "  \"page_size\": 10,\n" +
+                "  \"page\": 1,\n" +
+                "  \"total_items\": 1,\n" +
+                "  \"total_pages\": 1,\n" +
+                "  \"_embedded\": {\n" +
+                "    \"applications\": [\n" +
+                "      {\n" +
+                "        \"id\": \"78d335fa323d01149c3dd6f0d48968cf\",\n" +
+                "        \"name\": \"My Application\",\n" +
+                "        \"capabilities\": {\n" +
+                "          \"voice\": {\n" +
+                "            \"webhooks\": {\n" +
+                "              \"answer_url\": {\n" +
+                "                \"address\": \"https://example.com/webhooks/answer\",\n" +
+                "                \"http_method\": \"POST\"\n" +
+                "              },\n" +
+                "              \"event_url\": {\n" +
+                "                \"address\": \"https://example.com/webhooks/event\",\n" +
+                "                \"http_method\": \"POST\"\n" +
+                "              }\n" +
+                "            }\n" +
+                "          },\n" +
+                "          \"messages\": {\n" +
+                "            \"webhooks\": {\n" +
+                "              \"inbound_url\": {\n" +
+                "                \"address\": \"https://example.com/webhooks/inbound\",\n" +
+                "                \"http_method\": \"POST\"\n" +
+                "              },\n" +
+                "              \"status_url\": {\n" +
+                "                \"address\": \"https://example.com/webhooks/status\",\n" +
+                "                \"http_method\": \"POST\"\n" +
+                "              }\n" +
+                "            }\n" +
+                "          },\n" +
+                "          \"rtc\": {\n" +
+                "            \"webhooks\": {\n" +
+                "              \"event_url\": {\n" +
+                "                \"address\": \"https://example.com/webhooks/event\",\n" +
+                "                \"http_method\": \"POST\"\n" +
+                "              }\n" +
+                "            }\n" +
+                "          },\n" +
+                "          \"vbc\": {}\n" +
+                "        }\n" +
+                "      }\n" +
+                "    ]\n" +
+                "  }\n" +
+                "}"));
+
+        ApplicationList response = client.list();
+
+        assertEquals(10, response.getPageSize());
+        assertEquals(1, response.getPage());
+        assertEquals(1, response.getTotalItems());
+        assertEquals(1, response.getTotalPages());
+
+        assertEquals(1, response.getApplications().size());
+    }
+
+    @Test
+    public void testListApplicationWithMultipleResults() throws Exception {
+        wrapper.setHttpClient(stubHttpClient(200, "{\n" +
+                "  \"page_size\": 10,\n" +
+                "  \"page\": 1,\n" +
+                "  \"total_items\": 2,\n" +
+                "  \"total_pages\": 1,\n" +
+                "  \"_embedded\": {\n" +
+                "    \"applications\": [\n" +
+                "      {\n" +
+                "        \"id\": \"1\",\n" +
+                "        \"name\": \"My Application\",\n" +
+                "        \"capabilities\": {\n" +
+                "          \"voice\": {\n" +
+                "            \"webhooks\": {\n" +
+                "              \"answer_url\": {\n" +
+                "                \"address\": \"https://example.com/webhooks/answer\",\n" +
+                "                \"http_method\": \"POST\"\n" +
+                "              },\n" +
+                "              \"event_url\": {\n" +
+                "                \"address\": \"https://example.com/webhooks/event\",\n" +
+                "                \"http_method\": \"POST\"\n" +
+                "              }\n" +
+                "            }\n" +
+                "          }\n" +
+                "        }\n" +
+                "      },\n" +
+                "      {\n" +
+                "        \"id\": \"2\",\n" +
+                "        \"name\": \"My Second Application\",\n" +
+                "        \"capabilities\": {\n" +
+                "          \"voice\": {\n" +
+                "            \"webhooks\": {\n" +
+                "              \"answer_url\": {\n" +
+                "                \"address\": \"https://example.com/webhooks/answer\",\n" +
+                "                \"http_method\": \"POST\"\n" +
+                "              },\n" +
+                "              \"event_url\": {\n" +
+                "                \"address\": \"https://example.com/webhooks/event\",\n" +
+                "                \"http_method\": \"POST\"\n" +
+                "              }\n" +
+                "            }\n" +
+                "          }\n" +
+                "        }\n" +
+                "      }\n" +
+                "    ]\n" +
+                "  }\n" +
+                "}"));
+
+        ApplicationList response = client.list();
+
+        assertEquals(10, response.getPageSize());
+        assertEquals(1, response.getPage());
+        assertEquals(2, response.getTotalItems());
+        assertEquals(1, response.getTotalPages());
+
+        assertEquals(2, response.getApplications().size());
+    }
 }

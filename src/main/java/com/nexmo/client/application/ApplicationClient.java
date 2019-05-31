@@ -93,4 +93,30 @@ public class ApplicationClient extends AbstractClient {
     public void delete(String id) throws IOException, NexmoClientException {
         this.applicationEndpoint.delete(id);
     }
+
+    /**
+     * List the first page of available applications.
+     *
+     * @return The list of available applications.
+     *
+     * @throws IOException          if a network error occurred contacting the Nexmo Application API.
+     * @throws NexmoClientException if there was a problem with the Nexmo request.
+     */
+    public ApplicationList list() throws IOException, NexmoClientException {
+        return list(null);
+    }
+
+    /**
+     * List the available applications.
+     *
+     * @param listApplicationRequest The page and number of applications per page to list.
+     *
+     * @return The list of available applications.
+     *
+     * @throws IOException          if a network error occurred contacting the Nexmo Application API.
+     * @throws NexmoClientException if there was a problem with the Nexmo request.
+     */
+    public ApplicationList list(ListApplicationRequest listApplicationRequest) throws IOException, NexmoClientException {
+        return this.applicationEndpoint.list(listApplicationRequest);
+    }
 }
