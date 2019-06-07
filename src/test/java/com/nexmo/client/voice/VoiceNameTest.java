@@ -41,6 +41,7 @@ public class VoiceNameTest {
         // Each voice name should have the first character capitalized.
         assertEquals(VoiceName.SALLI.getDisplayName(), "Salli");
         assertEquals(VoiceName.JOEY.getDisplayName(), "Joey");
+        assertEquals(VoiceName.MATTHEW.getDisplayName(), "Matthew");
         assertEquals(VoiceName.NAJA.getDisplayName(), "Naja");
         assertEquals(VoiceName.MADS.getDisplayName(), "Mads");
         assertEquals(VoiceName.MARLENE.getDisplayName(), "Marlene");

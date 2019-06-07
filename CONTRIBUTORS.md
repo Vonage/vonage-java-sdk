@@ -14,3 +14,4 @@ documentation, or tests are eligible to be added to this list.
 - Guy Khmelnitsky ([@guykh](https://github.com/GuyKh))
 - I Wayan Dharmana ([@wdharmana](https://github.com/wdharmana))
 - Sharif Malik ([@sharif-malik])(https://github.com/sharif-malik))
+- John Schultz ([@jwschultz](https://github.com/jwschultz))

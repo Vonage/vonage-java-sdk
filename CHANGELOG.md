@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### Added
+- Added new voice 'MATTHEW' to `VoiceName` enum.
+
 ## [4.3.1] - 2019-05-24
 
 ### Fixed
