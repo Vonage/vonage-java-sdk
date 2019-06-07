@@ -34,6 +34,7 @@ import java.util.Map;
 public enum VoiceName {
     SALLI("Salli"),
     JOEY("Joey"),
+    MATTHEW("Matthew"),
     NAJA("Naja"),
     MADS("Mads"),
     MARLENE("Marlene"),
