@@ -245,7 +245,7 @@ telescoping is clunky. Added some static factory methods to these classes to all
 ## [2.0.2] - 2017-05-04
 ### Fixed
 - All URL-encoded PUT and POST requests are now UTF-8 instead of ISO-8859-1.
-- The event webhook is properly set on a `Call`
+- The event url is properly set on a `Call`
 
 ### Added
 - Number Insight now supports the `cnam` parameter for Standard and Advanced requests.
