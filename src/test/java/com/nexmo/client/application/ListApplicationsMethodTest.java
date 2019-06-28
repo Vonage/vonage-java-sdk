@@ -29,12 +29,12 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class ListApplicationMethodTest {
-    private ListApplicationMethod method;
+public class ListApplicationsMethodTest {
+    private ListApplicationsMethod method;
 
     @Before
     public void setUp() {
-        method = new ListApplicationMethod(new HttpWrapper());
+        method = new ListApplicationsMethod(new HttpWrapper());
     }
 
     @Test
@@ -64,7 +64,7 @@ public class ListApplicationMethodTest {
     @Test
     public void testCustomUriWithNoParameters() throws Exception {
         HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri("https://example.com").build());
-        ListApplicationMethod method = new ListApplicationMethod(wrapper);
+        ListApplicationsMethod method = new ListApplicationsMethod(wrapper);
 
         RequestBuilder builder = method.makeRequest(ListApplicationRequest.builder().build());
 
@@ -83,7 +83,7 @@ public class ListApplicationMethodTest {
     @Test
     public void testCustomUriWithParameters() throws Exception {
         HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri("https://example.com").build());
-        ListApplicationMethod method = new ListApplicationMethod(wrapper);
+        ListApplicationsMethod method = new ListApplicationsMethod(wrapper);
 
         RequestBuilder builder = method.makeRequest(ListApplicationRequest.builder().page(1).pageSize(10).build());
 

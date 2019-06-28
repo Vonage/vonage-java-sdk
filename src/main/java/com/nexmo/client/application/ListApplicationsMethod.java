@@ -34,12 +34,12 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-class ListApplicationMethod extends AbstractMethod<ListApplicationRequest, ApplicationList> {
+class ListApplicationsMethod extends AbstractMethod<ListApplicationRequest, ApplicationList> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
     private static final String PATH = "/applications";
 
-    ListApplicationMethod(HttpWrapper httpWrapper) {
+    ListApplicationsMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 

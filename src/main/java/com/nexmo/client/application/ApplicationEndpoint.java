@@ -31,14 +31,14 @@ class ApplicationEndpoint {
     private UpdateApplicationMethod updateApplicationMethod;
     private GetApplicationMethod getApplicationMethod;
     private DeleteApplicationMethod deleteApplicationMethod;
-    private ListApplicationMethod listApplicationMethod;
+    private ListApplicationsMethod listApplicationsMethod;
 
     ApplicationEndpoint(HttpWrapper httpWrapper) {
         this.createApplicationMethod = new CreateApplicationMethod(httpWrapper);
         this.updateApplicationMethod = new UpdateApplicationMethod(httpWrapper);
         this.getApplicationMethod = new GetApplicationMethod(httpWrapper);
         this.deleteApplicationMethod = new DeleteApplicationMethod(httpWrapper);
-        this.listApplicationMethod = new ListApplicationMethod(httpWrapper);
+        this.listApplicationsMethod = new ListApplicationsMethod(httpWrapper);
     }
 
     Application create(Application application) throws IOException, NexmoClientException {
@@ -58,6 +58,6 @@ class ApplicationEndpoint {
     }
 
     public ApplicationList list(ListApplicationRequest request) throws IOException, NexmoClientException {
-        return this.listApplicationMethod.execute(request);
+        return this.listApplicationsMethod.execute(request);
     }
 }
