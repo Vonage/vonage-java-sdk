@@ -1,14 +1,11 @@
 ---
 sudo: false
-dist: precise
+dist: xenial
 language: java
 matrix:
   include:
-    - jdk: oraclejdk8
-      dist: trusty
-    - jdk: oraclejdk9
-      dist: trusty
-    - jdk: oraclejdk11
-      dist: trusty
+    - jdk: openjdk8
+    - jdk: openjdk9
+    - jdk: openjdk11
 after_success:
   - bash <(curl -s https://codecov.io/bash)
