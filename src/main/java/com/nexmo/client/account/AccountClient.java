@@ -29,8 +29,8 @@ import com.nexmo.client.NexmoClientException;
 import java.io.IOException;
 
 /**
- * A client for talking to the Nexmo Account API. The standard way to obtain an instance of this class is to use
- * {@link NexmoClient#getAccountClient()} ()}.
+ * A client for talking to the Nexmo Account API. The standard way to obtain an instance of this class is to use {@link
+ * NexmoClient#getAccountClient()} ()}.
  */
 public class AccountClient extends AbstractClient {
     protected BalanceEndpoint balance;
@@ -38,6 +38,7 @@ public class AccountClient extends AbstractClient {
     protected PrefixPricingEndpoint prefixPricing;
     protected TopUpEndpoint topUp;
     protected SecretManagementEndpoint secret;
+    protected SettingsEndpoint settings;
 
     /**
      * Constructor.
@@ -52,6 +53,7 @@ public class AccountClient extends AbstractClient {
         this.prefixPricing = new PrefixPricingEndpoint(httpWrapper);
         this.topUp = new TopUpEndpoint(httpWrapper);
         this.secret = new SecretManagementEndpoint(httpWrapper);
+        this.settings = new SettingsEndpoint(httpWrapper);
     }
 
     public BalanceResponse getBalance() throws IOException, NexmoClientException {
@@ -120,8 +122,8 @@ public class AccountClient extends AbstractClient {
      * @param transaction The ID associated with your original auto-reload transaction
      *
      * @throws IOException          if a network error occurred contacting the Nexmo Account API.
-     * @throws NexmoClientException if there was a problem with the Nexmo request or response object indicating that
-     *                              the request was unsuccessful.
+     * @throws NexmoClientException if there was a problem with the Nexmo request or response object indicating that the
+     *                              request was unsuccessful.
      */
     public void topUp(String transaction) throws IOException, NexmoClientException {
         topUp(new TopUpRequest(transaction));
@@ -139,7 +141,8 @@ public class AccountClient extends AbstractClient {
      * @return ListSecretsResponse object which contains the results from the API.
      *
      * @throws IOException          if a network error occurred contacting the Nexmo Account API
-     * @throws NexmoClientException if there was a problem wit hthe Nexmo request or response object indicating that the request was unsuccessful.
+     * @throws NexmoClientException if there was a problem with the Nexmo request or response object indicating that the
+     *                              request was unsuccessful.
      */
     public ListSecretsResponse listSecrets(String apiKey) throws IOException, NexmoClientException {
         return this.secret.listSecrets(apiKey);
@@ -154,7 +157,8 @@ public class AccountClient extends AbstractClient {
      * @return SecretResponse object which contains the results from the API.
      *
      * @throws IOException          if a network error occurred contacting the Nexmo Account API
-     * @throws NexmoClientException if there was a problem wit hthe Nexmo request or response object indicating that the request was unsuccessful.
+     * @throws NexmoClientException if there was a problem with the Nexmo request or response object indicating that the
+     *                              request was unsuccessful.
      */
     public SecretResponse getSecret(String apiKey, String secretId) throws IOException, NexmoClientException {
         return getSecret(new SecretRequest(apiKey, secretId));
@@ -173,7 +177,8 @@ public class AccountClient extends AbstractClient {
      * @return SecretResponse object which contains the created secret from the API.
      *
      * @throws IOException          if a network error occurred contacting the Nexmo Account API
-     * @throws NexmoClientException if there was a problem wit hthe Nexmo request or response object indicating that the request was unsuccessful.
+     * @throws NexmoClientException if there was a problem with the Nexmo request or response object indicating that the
+     *                              request was unsuccessful.
      */
     public SecretResponse createSecret(String apiKey, String secret) throws IOException, NexmoClientException {
         return createSecret(new CreateSecretRequest(apiKey, secret));
@@ -190,7 +195,8 @@ public class AccountClient extends AbstractClient {
      * @param secretId The id of the secret to revoke.
      *
      * @throws IOException          if a network error occurred contacting the Nexmo Account API
-     * @throws NexmoClientException if there was a problem wit hthe Nexmo request or response object indicating that the request was unsuccessful.
+     * @throws NexmoClientException if there was a problem with the Nexmo request or response object indicating that the
+     *                              request was unsuccessful.
      */
     public void revokeSecret(String apiKey, String secretId) throws IOException, NexmoClientException {
         revokeSecret(new SecretRequest(apiKey, secretId));
@@ -198,5 +204,44 @@ public class AccountClient extends AbstractClient {
 
     private void revokeSecret(SecretRequest secretRequest) throws IOException, NexmoClientException {
         this.secret.revokeSecret(secretRequest);
+    }
+
+    /**
+     * @param url The new incoming sms webhook url to associate to your account.
+     *
+     * @return A {@link SettingsResponse} containing the newly-updated account settings.
+     *
+     * @throws IOException          if a network error occurred contacting the Nexmo Account API
+     * @throws NexmoClientException if there was a problem with the Nexmo request or response object indicating that the
+     *                              request was unsuccessful.
+     */
+    public SettingsResponse updateSmsIncomingUrl(String url) throws IOException, NexmoClientException {
+        return this.updateSettings(SettingsRequest.withIncomingSmsUrl(url));
+    }
+
+    /**
+     * @param url The new delivery receipt webhook url to associate to your account.
+     *
+     * @return A {@link SettingsResponse} containing the newly-updated account settings.
+     *
+     * @throws IOException          if a network error occurred contacting the Nexmo Account API
+     * @throws NexmoClientException if there was a problem with the Nexmo request or response object indicating that the
+     *                              request was unsuccessful.
+     */
+    public SettingsResponse updateDeliveryReceiptUrl(String url) throws IOException, NexmoClientException {
+        return this.updateSettings(SettingsRequest.withDeliveryReceiptUrl(url));
+    }
+
+    /**
+     * @param request The {@link SettingsRequest} containing the fields to update.
+     *
+     * @return A {@link SettingsResponse} containing the newly-updated account settings.
+     *
+     * @throws IOException          if a network error occurred contacting the Nexmo Account API
+     * @throws NexmoClientException if there was a problem with the Nexmo request or response object indicating that the
+     *                              request was unsuccessful.
+     */
+    public SettingsResponse updateSettings(SettingsRequest request) throws IOException, NexmoClientException {
+        return this.settings.updateSettings(request);
     }
 }

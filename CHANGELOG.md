@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Development]
 
+### Added
+- Added support for updating account settings (delivery receipt URL and inbound SMS URL)
+
 ### Changed
 - Changed from Auth0 to the [Nexmo JWT Library](https://github.com/nexmo/nexmo-jwt-jdk).
 - Renamed the `com.nexmo.client.applications` package to `com.nexmo.client.application`
