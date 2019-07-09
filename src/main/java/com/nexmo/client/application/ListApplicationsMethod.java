@@ -49,7 +49,7 @@ class ListApplicationsMethod extends AbstractMethod<ListApplicationRequest, Appl
     }
 
     @Override
-    public RequestBuilder makeRequest(ListApplicationRequest request) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(ListApplicationRequest request) throws UnsupportedEncodingException {
         RequestBuilder builder = RequestBuilder
                 .get(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v2") + PATH)
                 .setHeader("Content-Type", "application/json");

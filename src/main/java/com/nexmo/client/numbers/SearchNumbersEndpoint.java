@@ -24,7 +24,6 @@ package com.nexmo.client.numbers;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
@@ -33,11 +32,6 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-/**
- * Internal class, representing the Nexmo API endpoint which can be used to search for available virtual numbers to buy.
- * <p>
- * Use {@link NumbersClient#searchNumbers} instead of this class directly.
- */
 class SearchNumbersEndpoint extends AbstractMethod<SearchNumbersFilter, SearchNumbersResponse> {
     private static final String PATH = "/number/search";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
@@ -52,7 +46,7 @@ class SearchNumbersEndpoint extends AbstractMethod<SearchNumbersFilter, SearchNu
     }
 
     @Override
-    public RequestBuilder makeRequest(SearchNumbersFilter request) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(SearchNumbersFilter request) throws UnsupportedEncodingException {
         RequestBuilder requestBuilder = RequestBuilder
                 .get()
                 .setUri(httpWrapper.getHttpConfig().getRestBaseUri() + PATH);
@@ -66,7 +60,7 @@ class SearchNumbersEndpoint extends AbstractMethod<SearchNumbersFilter, SearchNu
         return SearchNumbersResponse.fromJson(json);
     }
 
-    SearchNumbersResponse searchNumbers(SearchNumbersFilter request) throws IOException, NexmoClientException {
+    SearchNumbersResponse searchNumbers(SearchNumbersFilter request) {
         return this.execute(request);
     }
 }

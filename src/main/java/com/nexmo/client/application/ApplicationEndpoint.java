@@ -22,9 +22,6 @@
 package com.nexmo.client.application;
 
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
-
-import java.io.IOException;
 
 class ApplicationEndpoint {
     private CreateApplicationMethod createApplicationMethod;
@@ -41,23 +38,23 @@ class ApplicationEndpoint {
         this.listApplicationsMethod = new ListApplicationsMethod(httpWrapper);
     }
 
-    Application create(Application application) throws IOException, NexmoClientException {
+    Application create(Application application) {
         return this.createApplicationMethod.execute(application);
     }
 
-    Application update(Application application) throws IOException, NexmoClientException {
+    Application update(Application application) {
         return this.updateApplicationMethod.execute(application);
     }
 
-    Application get(String id) throws IOException, NexmoClientException {
+    Application get(String id) {
         return this.getApplicationMethod.execute(id);
     }
 
-    void delete(String id) throws IOException, NexmoClientException {
+    void delete(String id) {
         this.deleteApplicationMethod.execute(id);
     }
 
-    public ApplicationList list(ListApplicationRequest request) throws IOException, NexmoClientException {
+    ApplicationList list(ListApplicationRequest request) {
         return this.listApplicationsMethod.execute(request);
     }
 }

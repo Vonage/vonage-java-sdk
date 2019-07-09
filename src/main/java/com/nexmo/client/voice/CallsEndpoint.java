@@ -61,7 +61,7 @@ class CallsEndpoint {
      * @throws IOException          if an error occurs communicating with the Nexmo API
      * @throws NexmoClientException if an error occurs constructing the Nexmo API request or response
      */
-    CallEvent post(Call callRequest) throws IOException, NexmoClientException {
+    CallEvent post(Call callRequest) throws NexmoClientException {
         return this.createCall.execute(callRequest);
     }
 
@@ -75,7 +75,7 @@ class CallsEndpoint {
      * @throws IOException          if an error occurs communicating with the Nexmo API
      * @throws NexmoClientException if an error occurs constructing the Nexmo API request or response
      */
-    CallInfoPage get(CallsFilter filter) throws IOException, NexmoClientException {
+    CallInfoPage get(CallsFilter filter) throws NexmoClientException {
         return this.listCalls.execute(filter);
     }
 
@@ -89,7 +89,7 @@ class CallsEndpoint {
      * @throws IOException          if an error occurs communicating with the Nexmo API
      * @throws NexmoClientException if an error occurs constructing the Nexmo API request or response
      */
-    CallInfo get(String uuid) throws IOException, NexmoClientException {
+    CallInfo get(String uuid) throws NexmoClientException {
         return this.readCall.execute(uuid);
     }
 
@@ -103,7 +103,7 @@ class CallsEndpoint {
      * @throws IOException          if an error occurs communicating with the Nexmo API
      * @throws NexmoClientException if an error occurs constructing the Nexmo API request or response
      */
-    ModifyCallResponse put(CallModifier modifier) throws IOException, NexmoClientException {
+    ModifyCallResponse put(CallModifier modifier) throws NexmoClientException {
         return this.modifyCall.execute(modifier);
     }
 }

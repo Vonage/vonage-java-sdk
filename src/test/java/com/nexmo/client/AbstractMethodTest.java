@@ -42,8 +42,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.Set;
 
@@ -63,12 +61,12 @@ public class AbstractMethodTest {
         }
 
         @Override
-        public RequestBuilder makeRequest(String request) throws NexmoClientException, UnsupportedEncodingException {
+        public RequestBuilder makeRequest(String request) {
             return RequestBuilder.get(request);
         }
 
         @Override
-        public String parseResponse(HttpResponse response) throws IOException {
+        public String parseResponse(HttpResponse response) {
             return "response";
         }
     }
@@ -97,7 +95,7 @@ public class AbstractMethodTest {
 
     @Ignore
     @Test
-    public void testExecute() throws Exception {
+    public void testExecute() {
         ConcreteMethod method = new ConcreteMethod(mockWrapper);
 
         String result = method.execute("url");
@@ -105,7 +103,7 @@ public class AbstractMethodTest {
     }
 
     @Test
-    public void testGetAuthMethod() throws Exception {
+    public void testGetAuthMethod() {
         ConcreteMethod method = new ConcreteMethod(mockWrapper);
 
         AuthMethod auth = method.getAuthMethod(method.getAcceptableAuthMethods());
@@ -113,7 +111,7 @@ public class AbstractMethodTest {
     }
 
     @Test
-    public void testApplyAuth() throws Exception {
+    public void testApplyAuth() {
         ConcreteMethod method = new ConcreteMethod(mockWrapper);
 
         RequestBuilder request = RequestBuilder.get("url");

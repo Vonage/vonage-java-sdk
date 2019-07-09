@@ -22,10 +22,10 @@
 package com.nexmo.client.verify;
 
 import com.nexmo.client.ClientTest;
+import com.nexmo.client.NexmoResponseParseException;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
@@ -128,7 +128,7 @@ public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
         try {
             client.verify("447700900999", "TestBrand", "15555215554", 6, Locale.US);
             fail("An IOException should be thrown if an HTTP 500 response is received.");
-        } catch (IOException ioe) {
+        } catch (NexmoResponseParseException nrp) {
             // This is expected
         }
     }

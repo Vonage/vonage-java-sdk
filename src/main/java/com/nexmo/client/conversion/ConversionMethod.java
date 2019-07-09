@@ -51,7 +51,7 @@ class ConversionMethod extends AbstractMethod<ConversionRequest, Void> {
     }
 
     @Override
-    public RequestBuilder makeRequest(ConversionRequest conversionRequest) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(ConversionRequest conversionRequest) throws UnsupportedEncodingException {
         String uri =
                 httpWrapper.getHttpConfig().getApiBaseUri() + PATH + conversionRequest.getType().name().toLowerCase();
         return RequestBuilder

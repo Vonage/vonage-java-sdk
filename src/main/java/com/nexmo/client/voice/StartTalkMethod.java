@@ -23,7 +23,6 @@ package com.nexmo.client.voice;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.JWTAuthMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -53,7 +52,7 @@ class StartTalkMethod extends AbstractMethod<TalkRequest, TalkResponse> {
     }
 
     @Override
-    public RequestBuilder makeRequest(TalkRequest request) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(TalkRequest request) throws UnsupportedEncodingException {
         return RequestBuilder
                 .put(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid() + "/talk")
                 .setHeader("Content-Type", "application/json")

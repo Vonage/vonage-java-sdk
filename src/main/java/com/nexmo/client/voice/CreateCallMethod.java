@@ -23,7 +23,6 @@ package com.nexmo.client.voice;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.JWTAuthMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,7 +47,7 @@ class CreateCallMethod extends AbstractMethod<Call, CallEvent> {
     }
 
     @Override
-    public RequestBuilder makeRequest(Call request) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(Call request) throws UnsupportedEncodingException {
         return RequestBuilder.post(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH)
                 .setHeader("Content-Type", "application/json")
                 .setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));

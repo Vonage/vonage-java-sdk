@@ -23,7 +23,6 @@ package com.nexmo.client.verify;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.SignatureAuthMethod;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
@@ -49,7 +48,7 @@ class VerifyMethod extends AbstractMethod<VerifyRequest, VerifyResponse> {
     }
 
     @Override
-    public RequestBuilder makeRequest(VerifyRequest request) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(VerifyRequest request) throws UnsupportedEncodingException {
         RequestBuilder result = RequestBuilder
                 .post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH)
                 .addParameter("number", request.getNumber())

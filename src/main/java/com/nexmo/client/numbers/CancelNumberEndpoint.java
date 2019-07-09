@@ -25,7 +25,6 @@ package com.nexmo.client.numbers;
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoBadRequestException;
-import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
@@ -48,7 +47,7 @@ class CancelNumberEndpoint extends AbstractMethod<CancelNumberRequest, Void> {
     }
 
     @Override
-    public RequestBuilder makeRequest(CancelNumberRequest request) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(CancelNumberRequest request) throws UnsupportedEncodingException {
         RequestBuilder requestBuilder = RequestBuilder
                 .post()
                 .setUri(httpWrapper.getHttpConfig().getRestBaseUri() + PATH);
@@ -57,7 +56,7 @@ class CancelNumberEndpoint extends AbstractMethod<CancelNumberRequest, Void> {
     }
 
     @Override
-    public Void parseResponse(HttpResponse response) throws NexmoClientException, IOException {
+    public Void parseResponse(HttpResponse response) throws IOException {
         if (response.getStatusLine().getStatusCode() != 200) {
             throw new NexmoBadRequestException(EntityUtils.toString(response.getEntity()));
         }

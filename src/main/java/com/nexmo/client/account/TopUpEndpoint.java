@@ -22,9 +22,6 @@
 package com.nexmo.client.account;
 
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
-
-import java.io.IOException;
 
 class TopUpEndpoint {
     private TopUpMethod topUpMethod;
@@ -33,7 +30,7 @@ class TopUpEndpoint {
         this.topUpMethod = new TopUpMethod(httpWrapper);
     }
 
-    void topUp(TopUpRequest request) throws IOException, NexmoClientException {
+    void topUp(TopUpRequest request) {
         this.topUpMethod.execute(request);
     }
 }

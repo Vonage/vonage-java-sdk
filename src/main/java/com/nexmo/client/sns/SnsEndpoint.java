@@ -23,7 +23,6 @@ package com.nexmo.client.sns;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.client.auth.SignatureAuthMethod;
 import com.nexmo.client.auth.TokenAuthMethod;
@@ -65,7 +64,7 @@ class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
     }
 
     @Override
-    public RequestBuilder makeRequest(SnsRequest snsRequest) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(SnsRequest snsRequest) throws UnsupportedEncodingException {
         RequestBuilder requestBuilder = RequestBuilder
                 .post(httpWrapper.getHttpConfig().getSnsBaseUri() + PATH)
                 .addParameter("cmd", snsRequest.getCommand());

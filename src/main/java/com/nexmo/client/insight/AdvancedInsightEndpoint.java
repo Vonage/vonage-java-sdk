@@ -23,7 +23,6 @@ package com.nexmo.client.insight;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.SignatureAuthMethod;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
@@ -48,7 +47,7 @@ class AdvancedInsightEndpoint extends AbstractMethod<AdvancedInsightRequest, Adv
     }
 
     @Override
-    public RequestBuilder makeRequest(AdvancedInsightRequest request) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(AdvancedInsightRequest request) throws UnsupportedEncodingException {
         RequestBuilder requestBuilder = RequestBuilder
                 .post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH)
                 .addParameter("number", request.getNumber());

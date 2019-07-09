@@ -24,8 +24,6 @@ package com.nexmo.client.voice;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 
-import java.io.IOException;
-
 public class DtmfEndpoint {
     private final SendDtmfMethod sendDtmf;
 
@@ -33,7 +31,7 @@ public class DtmfEndpoint {
         this.sendDtmf = new SendDtmfMethod(httpWrapper);
     }
 
-    public DtmfResponse put(String uuid, String digits) throws IOException, NexmoClientException {
+    public DtmfResponse put(String uuid, String digits) throws NexmoClientException {
         return this.sendDtmf.execute(new DtmfRequest(uuid, digits));
     }
 }

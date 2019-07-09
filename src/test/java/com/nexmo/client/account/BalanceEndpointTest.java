@@ -31,11 +31,9 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.Map;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class BalanceEndpointTest {
     private BalanceEndpoint endpoint;
@@ -46,7 +44,7 @@ public class BalanceEndpointTest {
     }
 
     @Test
-    public void testGetAcceptableAuthMethods() throws Exception {
+    public void testGetAcceptableAuthMethods() {
         Class[] auths = this.endpoint.getAcceptableAuthMethods();
         assertArrayEquals(new Class[]{TokenAuthMethod.class}, auths);
     }
@@ -80,7 +78,7 @@ public class BalanceEndpointTest {
                 "}}");
         BalanceResponse response = this.endpoint.parseResponse(stub);
         assertEquals(3.14159, response.getValue(), 0.00001);
-        assertEquals(false, response.isAutoReload());
+        assertFalse(response.isAutoReload());
     }
 
     private class StubbedBalanceEndpoint extends BalanceEndpoint {
@@ -89,16 +87,16 @@ public class BalanceEndpointTest {
         }
 
         @Override
-        public BalanceResponse execute() throws IOException, NexmoClientException {
+        public BalanceResponse execute() throws NexmoClientException {
             return new BalanceResponse(1.5, true);
         }
     }
 
     @Test
-    public void testExecute() throws Exception {
+    public void testExecute() {
         BalanceEndpoint endpoint = new StubbedBalanceEndpoint();
         BalanceResponse response = endpoint.execute();
         assertEquals(response.getValue(), 1.5, 0.0001);
-        assertEquals(response.isAutoReload(), true);
+        assertTrue(response.isAutoReload());
     }
 }

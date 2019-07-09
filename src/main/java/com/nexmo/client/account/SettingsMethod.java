@@ -24,7 +24,6 @@ package com.nexmo.client.account;
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoBadRequestException;
-import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
@@ -49,7 +48,7 @@ class SettingsMethod extends AbstractMethod<SettingsRequest, SettingsResponse> {
     }
 
     @Override
-    public RequestBuilder makeRequest(SettingsRequest request) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(SettingsRequest request) throws UnsupportedEncodingException {
         return RequestBuilder
                 .post(httpWrapper.getHttpConfig().getRestBaseUri() + PATH)
                 .addParameter("moCallBackUrl", request.getIncomingSmsUrl())
@@ -57,7 +56,7 @@ class SettingsMethod extends AbstractMethod<SettingsRequest, SettingsResponse> {
     }
 
     @Override
-    public SettingsResponse parseResponse(HttpResponse response) throws IOException, NexmoClientException {
+    public SettingsResponse parseResponse(HttpResponse response) throws IOException {
         if (response.getStatusLine().getStatusCode() != 200) {
             throw new NexmoBadRequestException(EntityUtils.toString(response.getEntity()));
         }
