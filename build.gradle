@@ -24,9 +24,6 @@ sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
 repositories {
-    maven {
-        url 'https://oss.sonatype.org/content/repositories/snapshots/'
-    }
     mavenCentral()
 }
 
@@ -44,7 +41,7 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.9.9'
     compile 'io.openapitools.jackson.dataformat:jackson-dataformat-hal:1.0.4'
     compile 'javax.xml.bind:jaxb-api:2.3.0'
-    compile "com.nexmo:jwt:1.0.0-SNAPSHOT"
+    compile "com.nexmo:jwt:1.0.0"
 
     testCompile "javax.servlet:javax.servlet-api:3.1.0"
     testCompile 'junit:junit:4.4'
