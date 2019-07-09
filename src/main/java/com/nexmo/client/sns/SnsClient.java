@@ -25,16 +25,15 @@ package com.nexmo.client.sns;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClient;
 import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.client.sns.request.SnsPublishRequest;
 import com.nexmo.client.sns.request.SnsSubscribeRequest;
 import com.nexmo.client.sns.response.SnsPublishResponse;
 import com.nexmo.client.sns.response.SnsSubscribeResponse;
 
-import java.io.IOException;
-
 /**
- * A client for talking to the Nexmo Voice API. The standard way to obtain an instance of this class is to use
- * {@link NexmoClient#getSnsClient()}.
+ * A client for talking to the Nexmo Voice API. The standard way to obtain an instance of this class is to use {@link
+ * NexmoClient#getSnsClient()}.
  */
 public class SnsClient {
     private SnsEndpoint endpoint;
@@ -48,11 +47,11 @@ public class SnsClient {
         this.endpoint = new SnsEndpoint(httpWrapper);
     }
 
-    public SnsPublishResponse publish(SnsPublishRequest request) throws NexmoClientException, IOException {
+    public SnsPublishResponse publish(SnsPublishRequest request) throws NexmoClientException, NexmoResponseParseException {
         return (SnsPublishResponse) this.endpoint.execute(request);
     }
 
-    public SnsSubscribeResponse subscribe(SnsSubscribeRequest request) throws NexmoClientException, IOException {
+    public SnsSubscribeResponse subscribe(SnsSubscribeRequest request) throws NexmoClientException, NexmoResponseParseException {
         return (SnsSubscribeResponse) this.endpoint.execute(request);
     }
 }

@@ -24,8 +24,7 @@ package com.nexmo.client.numbers;
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
-
-import java.io.IOException;
+import com.nexmo.client.NexmoResponseParseException;
 
 /**
  * A client for accessing the Nexmo API calls that manage phone numbers.
@@ -49,10 +48,11 @@ public class NumbersClient {
      * Get the first page of phone numbers assigned to the authenticated account.
      *
      * @return A ListNumbersResponse containing the first 10 phone numbers
-     * @throws IOException          if an error occurs contacting the Nexmo API
-     * @throws NexmoClientException if an error is returned by the server.
+     *
+     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws NexmoClientException        if an error is returned by the server.
      */
-    public ListNumbersResponse listNumbers() throws IOException, NexmoClientException {
+    public ListNumbersResponse listNumbers() throws NexmoResponseParseException, NexmoClientException {
         return this.listNumbers.listNumbers(new ListNumbersFilter());
     }
 
@@ -60,11 +60,13 @@ public class NumbersClient {
      * Get a filtered set of numbers assigned to the authenticated account.
      *
      * @param filter A ListNumbersFilter describing the filters to be applied to the request.
+     *
      * @return A ListNumbersResponse containing phone numbers matching the supplied filter.
-     * @throws IOException          if an error occurs contacting the Nexmo API
-     * @throws NexmoClientException if an error is returned by the server.
+     *
+     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws NexmoClientException        if an error is returned by the server.
      */
-    public ListNumbersResponse listNumbers(ListNumbersFilter filter) throws IOException, NexmoClientException {
+    public ListNumbersResponse listNumbers(ListNumbersFilter filter) throws NexmoResponseParseException, NexmoClientException {
         return this.listNumbers.listNumbers(filter);
     }
 
@@ -72,20 +74,20 @@ public class NumbersClient {
     /**
      * Search for available Nexmo Virtual Numbers.
      *
-     * @throws IOException          if an error occurs contacting the Nexmo API
-     * @throws NexmoClientException if an error is returned by the server.
+     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws NexmoClientException        if an error is returned by the server.
      */
-    public SearchNumbersResponse searchNumbers(String country) throws IOException, NexmoClientException {
+    public SearchNumbersResponse searchNumbers(String country) throws NexmoResponseParseException, NexmoClientException {
         return this.searchNumbers(new SearchNumbersFilter(country));
     }
 
     /**
      * Search for available Nexmo Virtual Numbers.
      *
-     * @throws IOException          if an error occurs contacting the Nexmo API
-     * @throws NexmoClientException if an error is returned by the server.
+     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws NexmoClientException        if an error is returned by the server.
      */
-    public SearchNumbersResponse searchNumbers(SearchNumbersFilter filter) throws IOException, NexmoClientException {
+    public SearchNumbersResponse searchNumbers(SearchNumbersFilter filter) throws NexmoResponseParseException, NexmoClientException {
         return this.searchNumbers.searchNumbers(filter);
     }
 
@@ -94,10 +96,11 @@ public class NumbersClient {
      *
      * @param country A String containing a 2-character ISO country code.
      * @param msisdn  The phone number to be bought.
-     * @throws IOException          if an error occurs contacting the Nexmo API
-     * @throws NexmoClientException if an error is returned by the server.
+     *
+     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws NexmoClientException        if an error is returned by the server.
      */
-    public void buyNumber(String country, String msisdn) throws IOException, NexmoClientException {
+    public void buyNumber(String country, String msisdn) throws NexmoResponseParseException, NexmoClientException {
         this.buyNumber.execute(new BuyNumberRequest(country, msisdn));
     }
 
@@ -106,10 +109,11 @@ public class NumbersClient {
      *
      * @param country A String containing a 2-character ISO country code.
      * @param msisdn  The phone number to be cancelled.
-     * @throws IOException          if an error occurs contacting the Nexmo API
-     * @throws NexmoClientException if an error is returned by the server.
+     *
+     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws NexmoClientException        if an error is returned by the server.
      */
-    public void cancelNumber(String country, String msisdn) throws IOException, NexmoClientException {
+    public void cancelNumber(String country, String msisdn) throws NexmoResponseParseException, NexmoClientException {
         this.cancelNumber.execute(new CancelNumberRequest(country, msisdn));
     }
 
@@ -117,10 +121,11 @@ public class NumbersClient {
      * Update the callbacks and/or application associations for a given Nexmo Virtual Number.
      *
      * @param request Details of the updates to be made to the number association.
-     * @throws IOException          if an error occurs contacting the Nexmo API
-     * @throws NexmoClientException if an error is returned by the server.
+     *
+     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws NexmoClientException        if an error is returned by the server.
      */
-    public void updateNumber(UpdateNumberRequest request) throws IOException, NexmoClientException {
+    public void updateNumber(UpdateNumberRequest request) throws NexmoResponseParseException, NexmoClientException {
         this.updateNumber.execute(request);
     }
 
@@ -130,10 +135,11 @@ public class NumbersClient {
      * @param msisdn  The Nexmo Virtual Number to be updated.
      * @param country The country for the given msisdn.
      * @param appId   The ID for the Nexmo Application to be associated with the number.
-     * @throws IOException          if an error occurs contacting the Nexmo API
-     * @throws NexmoClientException if an error is returned by the server.
+     *
+     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws NexmoClientException        if an error is returned by the server.
      */
-    public void linkNumber(String msisdn, String country, String appId) throws IOException, NexmoClientException {
+    public void linkNumber(String msisdn, String country, String appId) throws NexmoResponseParseException, NexmoClientException {
         UpdateNumberRequest request = new UpdateNumberRequest(msisdn, country);
         request.setVoiceCallbackType(UpdateNumberRequest.CallbackType.APP);
         request.setVoiceCallbackValue(appId);

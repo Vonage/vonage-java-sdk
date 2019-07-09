@@ -21,12 +21,7 @@
  */
 package com.nexmo.client.application;
 
-import com.nexmo.client.AbstractClient;
-import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClient;
-import com.nexmo.client.NexmoClientException;
-
-import java.io.IOException;
+import com.nexmo.client.*;
 
 /**
  * A client for talking to the Nexmo Application API. The standard way to obtain an instance of this class is to use
@@ -47,10 +42,10 @@ public class ApplicationClient extends AbstractClient {
      *
      * @return The application which has been created.
      *
-     * @throws IOException          if a network error occurred contacting the Nexmo Application API.
-     * @throws NexmoClientException if there was a problem with the Nexmo request.
+     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws NexmoClientException        if there was a problem with the Nexmo request.
      */
-    public Application createApplication(Application application) throws IOException, NexmoClientException {
+    public Application createApplication(Application application) throws NexmoResponseParseException, NexmoClientException {
         return this.applicationEndpoint.create(application);
     }
 
@@ -61,10 +56,10 @@ public class ApplicationClient extends AbstractClient {
      *
      * @return The application which has been updated.
      *
-     * @throws IOException          if a network error occurred contacting the Nexmo Application API.
-     * @throws NexmoClientException if there was a problem with the Nexmo request.
+     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws NexmoClientException        if there was a problem with the Nexmo request.
      */
-    public Application updateApplication(Application application) throws IOException, NexmoClientException {
+    public Application updateApplication(Application application) throws NexmoResponseParseException, NexmoClientException {
         return this.applicationEndpoint.update(application);
     }
 
@@ -75,10 +70,10 @@ public class ApplicationClient extends AbstractClient {
      *
      * @return The corresponding application.
      *
-     * @throws IOException          if a network error occurred contacting the Nexmo Application API.
-     * @throws NexmoClientException if there was a problem with the Nexmo request.
+     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws NexmoClientException        if there was a problem with the Nexmo request.
      */
-    public Application getApplication(String id) throws IOException, NexmoClientException {
+    public Application getApplication(String id) throws NexmoResponseParseException, NexmoClientException {
         return this.applicationEndpoint.get(id);
     }
 
@@ -87,10 +82,10 @@ public class ApplicationClient extends AbstractClient {
      *
      * @param id The id of the application to delete.
      *
-     * @throws IOException          if a network error occurred contacting the Nexmo Application API.
-     * @throws NexmoClientException if there was a problem with the Nexmo request.
+     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws NexmoClientException        if there was a problem with the Nexmo request.
      */
-    public void deleteApplication(String id) throws IOException, NexmoClientException {
+    public void deleteApplication(String id) throws NexmoResponseParseException, NexmoClientException {
         this.applicationEndpoint.delete(id);
     }
 
@@ -99,10 +94,10 @@ public class ApplicationClient extends AbstractClient {
      *
      * @return The list of available applications.
      *
-     * @throws IOException          if a network error occurred contacting the Nexmo Application API.
-     * @throws NexmoClientException if there was a problem with the Nexmo request.
+     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws NexmoClientException        if there was a problem with the Nexmo request.
      */
-    public ApplicationList listApplications() throws IOException, NexmoClientException {
+    public ApplicationList listApplications() throws NexmoResponseParseException, NexmoClientException {
         return listApplications(null);
     }
 
@@ -113,10 +108,10 @@ public class ApplicationClient extends AbstractClient {
      *
      * @return The list of available applications.
      *
-     * @throws IOException          if a network error occurred contacting the Nexmo Application API.
-     * @throws NexmoClientException if there was a problem with the Nexmo request.
+     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws NexmoClientException        if there was a problem with the Nexmo request.
      */
-    public ApplicationList listApplications(ListApplicationRequest listApplicationRequest) throws IOException, NexmoClientException {
+    public ApplicationList listApplications(ListApplicationRequest listApplicationRequest) throws NexmoResponseParseException, NexmoClientException {
         return this.applicationEndpoint.list(listApplicationRequest);
     }
 }
