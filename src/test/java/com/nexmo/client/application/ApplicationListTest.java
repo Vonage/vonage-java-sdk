@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2019 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,16 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.applications;
+package com.nexmo.client.application;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-
-public enum ApplicationType {
-    VOICE;
-
-    @JsonValue
-    @Override
-    public String toString() {
-        return this.name().toLowerCase();
-    }
+public class ApplicationListTest {
 }

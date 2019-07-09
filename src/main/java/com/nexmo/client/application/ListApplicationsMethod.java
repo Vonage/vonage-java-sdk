@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2019 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,26 +19,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.applications;
+package com.nexmo.client.application;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoBadRequestException;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-class GetApplicationEndpoint extends AbstractMethod<String, ApplicationDetails> {
-
+class ListApplicationsMethod extends AbstractMethod<ListApplicationRequest, ApplicationList> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
-    private static final String PATH = "/applications/";
+    private static final String PATH = "/applications";
 
-    GetApplicationEndpoint(HttpWrapper httpWrapper) {
+    ListApplicationsMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -48,12 +49,30 @@ class GetApplicationEndpoint extends AbstractMethod<String, ApplicationDetails> 
     }
 
     @Override
-    public RequestBuilder makeRequest(String applicationId) throws NexmoClientException, UnsupportedEncodingException {
-        return RequestBuilder.get(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + applicationId);
+    public RequestBuilder makeRequest(ListApplicationRequest request) throws NexmoClientException, UnsupportedEncodingException {
+        RequestBuilder builder = RequestBuilder
+                .get(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v2") + PATH)
+                .setHeader("Content-Type", "application/json");
+
+        if (request != null) {
+            if (request.getPageSize() > 0) {
+                builder.addParameter("page_size", String.valueOf(request.getPageSize()));
+            }
+
+            if (request.getPage() > 0) {
+                builder.addParameter("page", String.valueOf(request.getPage()));
+            }
+        }
+
+        return builder;
     }
 
     @Override
-    public ApplicationDetails parseResponse(HttpResponse response) throws IOException {
-        return ApplicationDetails.fromJson(new BasicResponseHandler().handleResponse(response));
+    public ApplicationList parseResponse(HttpResponse response) throws IOException, NexmoClientException {
+        if (response.getStatusLine().getStatusCode() != 200) {
+            throw new NexmoBadRequestException(EntityUtils.toString(response.getEntity()));
+        }
+
+        return ApplicationList.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 }

@@ -23,7 +23,7 @@ package com.nexmo.client;
 
 
 import com.nexmo.client.account.AccountClient;
-import com.nexmo.client.applications.ApplicationClient;
+import com.nexmo.client.application.ApplicationClient;
 import com.nexmo.client.auth.*;
 import com.nexmo.client.conversion.ConversionClient;
 import com.nexmo.client.insight.InsightClient;

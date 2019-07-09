@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2019 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,26 +19,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.applications;
+package com.nexmo.client.application;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoBadRequestException;
 import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-class CreateApplicationMethod extends AbstractMethod<CreateApplicationRequest, ApplicationDetails> {
-
+class DeleteApplicationMethod extends AbstractMethod<String, Void> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
-    private static final String PATH = "/applications";
+    private static final String PATH = "/applications/%s";
 
-    CreateApplicationMethod(HttpWrapper httpWrapper) {
+    DeleteApplicationMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -48,15 +48,18 @@ class CreateApplicationMethod extends AbstractMethod<CreateApplicationRequest, A
     }
 
     @Override
-    public RequestBuilder makeRequest(CreateApplicationRequest request) throws NexmoClientException,
-                                                                               UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder.post(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH);
-        request.addParams(requestBuilder);
-        return requestBuilder;
+    public RequestBuilder makeRequest(String id) throws NexmoClientException, UnsupportedEncodingException {
+        return RequestBuilder
+                .delete(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v2") + String.format(PATH, id))
+                .setHeader("Content-Type", "application/json");
     }
 
     @Override
-    public ApplicationDetails parseResponse(HttpResponse response) throws IOException {
-        return ApplicationDetails.fromJson(new BasicResponseHandler().handleResponse(response));
+    public Void parseResponse(HttpResponse response) throws IOException, NexmoClientException {
+        if (response.getStatusLine().getStatusCode() != 204) {
+            throw new NexmoBadRequestException(EntityUtils.toString(response.getEntity()));
+        }
+
+        return null;
     }
 }

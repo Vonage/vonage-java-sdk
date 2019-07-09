@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2019 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,17 +19,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.applications;
+package com.nexmo.client.application;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.common.PageList;
+import io.openapitools.jackson.dataformat.hal.HALMapper;
+import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
+import io.openapitools.jackson.dataformat.hal.annotation.Resource;
 
+import java.io.IOException;
+import java.util.List;
+
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EmbeddedApplicationDetails {
-    private ApplicationDetails[] applicationDetails;
+@Resource
+public class ApplicationList extends PageList {
+    @EmbeddedResource
+    private List<Application> applications;
 
-    @JsonProperty("applications")
-    public ApplicationDetails[] getApplicationDetails() {
-        return applicationDetails;
+    public List<Application> getApplications() {
+        return applications;
+    }
+
+    public static ApplicationList fromJson(String json) {
+        try {
+            return new HALMapper().readValue(json, ApplicationList.class);
+        } catch (IOException e) {
+            throw new NexmoUnexpectedException("Failed to produce ApplicationList from json", e);
+        }
     }
 }

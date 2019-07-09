@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2019 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,48 +19,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.applications;
+package com.nexmo.client.application.capabilities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.NexmoUnexpectedException;
-
-import java.io.IOException;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ApplicationDetails {
-    private String id;
-    private String name;
-    private VoiceApplicationDetails voiceApplicationDetails;
-    private ApplicationKeys keys;
+@JsonInclude(JsonInclude.Include.NON_ABSENT)
+public class Vbc extends Capability {
+    private Vbc() {
 
-    public static ApplicationDetails fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, ApplicationDetails.class);
-        } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce ApplicationDetails from json.", jpe);
+    }
+
+    private Vbc(Builder builder) {
+
+    }
+
+    @Override
+    public Type getType() {
+        return Type.VBC;
+    }
+
+    /**
+     * @return A new Builder to start building.
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        /**
+         * @return A new VBC capability.
+         */
+        public Vbc build() {
+            return new Vbc(this);
         }
-    }
-
-    @JsonProperty("id")
-    public String getId() {
-        return id;
-    }
-
-    @JsonProperty("name")
-    public String getName() {
-        return name;
-    }
-
-    @JsonProperty("voice")
-    public VoiceApplicationDetails getVoiceApplicationDetails() {
-        return voiceApplicationDetails;
-    }
-
-    @JsonProperty("keys")
-    public ApplicationKeys getKeys() {
-        return keys;
     }
 }

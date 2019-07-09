@@ -1,5 +1,5 @@
-package com.nexmo.client.applications;/*
- * Copyright (c) 2011-2017 Nexmo Inc
+/*
+ * Copyright (c) 2011-2019 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,20 +19,38 @@ package com.nexmo.client.applications;/*
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package com.nexmo.client.application.capabilities;
 
-import org.junit.Test;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.nexmo.client.common.Webhook;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import java.util.Map;
 
-public class ApplicationTypeTest {
-    @Test
-    public void testValueOf() throws Exception {
-        assertEquals(ApplicationType.VOICE, ApplicationType.valueOf("VOICE"));
+/**
+ * Represents a capability of a Nexmo Application
+ */
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public abstract class Capability {
+    protected Map<Webhook.Type, Webhook> webhooks;
+
+    protected Capability() {
+        // Needed for Reflection
     }
 
-    @Test
-    public void testValues() throws Exception {
-        assertArrayEquals(new ApplicationType[]{ApplicationType.VOICE}, ApplicationType.values());
+    @JsonIgnore
+    abstract public Type getType();
+
+    public Map<Webhook.Type, Webhook> getWebhooks() {
+        return webhooks;
+    }
+
+    public enum Type {
+        VOICE,
+        RTC,
+        MESSAGES,
+        VBC
     }
 }

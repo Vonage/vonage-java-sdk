@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2019 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,21 +19,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.applications;
+package com.nexmo.client.application.capabilities;
 
-import com.nexmo.client.NexmoUnexpectedException;
 import org.junit.Test;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
 
-public class ApplicationDetailsTest {
+public class VbcTest {
     @Test
-    public void testJsonError() throws Exception {
-        try {
-            ApplicationDetails.fromJson("blarg");
-            fail("Deserializing nonsense JSON should result in a NexmoUnexpectedException");
-        } catch (NexmoUnexpectedException nue) {
-            // This is expected
-        }
+    public void testEmpty() {
+        Vbc vbc = Vbc.builder().build();
+
+        assertEquals(Capability.Type.VBC, vbc.getType());
     }
 }

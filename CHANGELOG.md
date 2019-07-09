@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Development]
+
+## Changed
+- Renamed the `com.nexmo.client.applications` package to `com.nexmo.client.application`
+- `ApplicationClient` now supports the [Applications v2](https://developer.nexmo.com/api/application.v2) API. This change has resulted in some backwards incompatibility.
+
 ## [4.4.0] - 2019-06-10
 
 ### Added

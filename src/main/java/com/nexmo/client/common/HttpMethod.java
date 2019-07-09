@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2019 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,17 +19,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.applications;
+package com.nexmo.client.common;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class VoiceApplicationDetails {
-    private WebHook[] webHooks;
+import java.util.HashMap;
+import java.util.Map;
 
-    @JsonProperty("webhooks")
-    public WebHook[] getWebHooks() {
-        return webHooks;
+/**
+ * Enumeration representing various HTTP Methods
+ */
+public enum HttpMethod {
+    GET,
+    POST,
+    PUT,
+    DELETE,
+    PATCH,
+    UNKNOWN;
+
+    private static final Map<String, HttpMethod> HTTP_METHOD_INDEX = new HashMap<>();
+
+    static {
+        for (HttpMethod httpMethod : HttpMethod.values()) {
+            HTTP_METHOD_INDEX.put(httpMethod.name(), httpMethod);
+        }
+    }
+
+    @JsonCreator
+    public static HttpMethod fromString(String name) {
+        HttpMethod foundHttpMethod = HTTP_METHOD_INDEX.get(name.toUpperCase());
+        return (foundHttpMethod != null) ? foundHttpMethod : UNKNOWN;
     }
 }

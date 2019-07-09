@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2019 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,54 +19,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.applications;
+package com.nexmo.client.common;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.ArrayIterator;
-import com.nexmo.client.NexmoUnexpectedException;
-
-import java.io.IOException;
-import java.util.Iterator;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ListApplicationsResponse implements Iterable<ApplicationDetails> {
-    private int count;
-    private int pageSize;
-    private int pageIndex;
-    private EmbeddedApplicationDetails embedded;
-
-    public static ListApplicationsResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, ListApplicationsResponse.class);
-        } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce ListApplicationsResponse from json.", jpe);
-        }
-    }
-
-    public int getCount() {
-        return count;
-    }
-
+public class PageList {
     @JsonProperty("page_size")
-    public int getPageSize() {
+    private long pageSize;
+    private long page;
+    @JsonProperty("total_pages")
+    private long totalPages;
+    @JsonProperty("total_items")
+    private long totalItems;
+
+    public long getPageSize() {
         return pageSize;
     }
 
-    @JsonProperty("page_index")
-    public int getPageIndex() {
-        return pageIndex;
+    public long getPage() {
+        return page;
     }
 
-    @JsonProperty("_embedded")
-    public EmbeddedApplicationDetails getEmbedded() {
-        return embedded;
+    public long getTotalPages() {
+        return totalPages;
     }
 
-    @Override
-    public Iterator<ApplicationDetails> iterator() {
-        return new ArrayIterator<>(embedded.getApplicationDetails());
+    public long getTotalItems() {
+        return totalItems;
     }
 }

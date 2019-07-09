@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2019 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,59 +19,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.applications;
+package com.nexmo.client.application;
 
 import com.nexmo.client.HttpConfig;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.TestUtils;
-import com.nexmo.client.auth.TokenAuthMethod;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Map;
-
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 public class DeleteApplicationMethodTest {
-    private DeleteApplicationMethod endpoint;
+    private DeleteApplicationMethod method;
 
     @Before
-    public void setUp() throws Exception {
-        this.endpoint = new DeleteApplicationMethod(new HttpWrapper());
-    }
-
-    @Test
-    public void testGetAcceptableAuthMethods() throws Exception {
-        Class[] auths = this.endpoint.getAcceptableAuthMethods();
-        assertArrayEquals(new Class[]{TokenAuthMethod.class}, auths);
+    public void setUp() {
+        method = new DeleteApplicationMethod(new HttpWrapper());
     }
 
     @Test
     public void testMakeRequest() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest("dummy-application-uuid");
+        RequestBuilder builder = method.makeRequest("78d335fa323d01149c3dd6f0d48968cf");
+
         assertEquals("DELETE", builder.getMethod());
-        assertEquals("https://api.nexmo.com/v1/applications/dummy-application-uuid", builder.build().getURI().toString());
-
-        Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
-        assertEquals(0, params.size());
-    }
-
-    @Test
-    public void testParseResponse() throws Exception {
-        HttpResponse stub = TestUtils.makeJsonHttpResponse(204, "");
-        this.endpoint.parseResponse(stub);
+        assertEquals("application/json", builder.getFirstHeader("Content-Type").getValue());
     }
 
     @Test
     public void testDefaultUri() throws Exception {
-        RequestBuilder builder = endpoint.makeRequest("application-id");
+        RequestBuilder builder = method.makeRequest("78d335fa323d01149c3dd6f0d48968cf");
+
         assertEquals("DELETE", builder.getMethod());
-        assertEquals("https://api.nexmo.com/v1/applications/application-id",
-                builder.build().getURI().toString()
-        );
+        assertEquals("https://api.nexmo.com/v2/applications/78d335fa323d01149c3dd6f0d48968cf", builder.build().getURI().toString());
     }
 
     @Test
@@ -79,8 +58,9 @@ public class DeleteApplicationMethodTest {
         HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri("https://example.com").build());
         DeleteApplicationMethod method = new DeleteApplicationMethod(wrapper);
 
-        RequestBuilder builder = method.makeRequest("application-id");
+        RequestBuilder builder = method.makeRequest("78d335fa323d01149c3dd6f0d48968cf");
+
         assertEquals("DELETE", builder.getMethod());
-        assertEquals("https://example.com/v1/applications/application-id", builder.build().getURI().toString());
+        assertEquals("https://example.com/v2/applications/78d335fa323d01149c3dd6f0d48968cf", builder.build().getURI().toString());
     }
 }
