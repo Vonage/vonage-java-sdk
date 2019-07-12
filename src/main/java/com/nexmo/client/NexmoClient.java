@@ -252,9 +252,15 @@ public class NexmoClient {
          * @param privateKeyPath The path to your private key used for JWT generation.
          *
          * @return The {@link Builder} to keep building.
+         *
+         * @throws NexmoUnableToReadPrivateKeyException if the private key could not be read from the file system.
          */
-        public Builder privateKeyPath(Path privateKeyPath) throws IOException {
-            return privateKeyContents(Files.readAllBytes(privateKeyPath));
+        public Builder privateKeyPath(Path privateKeyPath) throws NexmoUnableToReadPrivateKeyException {
+            try {
+                return privateKeyContents(Files.readAllBytes(privateKeyPath));
+            } catch (IOException e) {
+                throw new NexmoUnableToReadPrivateKeyException("Unable to read private key at " + privateKeyPath, e);
+            }
         }
 
         /**
@@ -264,8 +270,10 @@ public class NexmoClient {
          * @param privateKeyPath The path to your private key used for JWT generation.
          *
          * @return The {@link Builder} to keep building.
+         *
+         * @throws NexmoUnableToReadPrivateKeyException if the private key could not be read from the file system.
          */
-        public Builder privateKeyPath(String privateKeyPath) throws IOException {
+        public Builder privateKeyPath(String privateKeyPath) throws NexmoUnableToReadPrivateKeyException {
             return privateKeyPath(Paths.get(privateKeyPath));
         }
 
