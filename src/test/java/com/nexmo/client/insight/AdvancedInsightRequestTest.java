@@ -41,11 +41,39 @@ public class AdvancedInsightRequestTest {
     }
 
     @Test
+    public void testAsync() {
+        AdvancedInsightRequest request = AdvancedInsightRequest.builder("12345")
+                .async(true)
+                .callback("https://example.com")
+                .build();
+
+        assertTrue(request.isAsync());
+        assertEquals("https://example.com", request.getCallback());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testAsyncWithoutCallbackThrowsIllegalStateException() {
+        AdvancedInsightRequest request = AdvancedInsightRequest.builder("12345")
+                .async(true)
+                .build();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testAsyncWithBlankCallbackThrowsIllegalStateException() {
+        AdvancedInsightRequest request = AdvancedInsightRequest.builder("12345")
+                .async(true)
+                .callback("")
+                .build();
+    }
+
+    @Test
     public void testBuildWithAllFields() throws Exception {
         AdvancedInsightRequest request = AdvancedInsightRequest.builder("12345")
                 .country("GB")
                 .ipAddress("123.123.123.123")
                 .cnam(true)
+                .async(true)
+                .callback("https://example.com")
                 .build();
         assertEquals(request.getNumber(), "12345");
         assertEquals(request.getCountry(), "GB");
@@ -57,10 +85,14 @@ public class AdvancedInsightRequestTest {
                 .country("GB")
                 .ipAddress("123.123.123.123")
                 .cnam(true)
+                .async(true)
+                .callback("https://example.com")
                 .build();
         assertEquals(request.getNumber(), "98765");
         assertEquals(request.getCountry(), "GB");
         assertEquals(request.getIpAddress(), "123.123.123.123");
         assertTrue(request.getCnam());
+        assertTrue(request.isAsync());
+        assertEquals("https://example.com", request.getCallback());
     }
 }
