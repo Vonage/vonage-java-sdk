@@ -22,9 +22,6 @@
 package com.nexmo.client.account;
 
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
-
-import java.io.IOException;
 
 class SecretManagementEndpoint {
     private ListSecretsMethod listSecretsMethod;
@@ -40,19 +37,19 @@ class SecretManagementEndpoint {
 
     }
 
-    ListSecretsResponse listSecrets(String apiKey) throws IOException, NexmoClientException {
+    ListSecretsResponse listSecrets(String apiKey) {
         return this.listSecretsMethod.execute(apiKey);
     }
 
-    SecretResponse getSecret(SecretRequest secretRequest) throws IOException, NexmoClientException {
+    SecretResponse getSecret(SecretRequest secretRequest) {
         return this.getSecretMethod.execute(secretRequest);
     }
 
-    SecretResponse createSecret(CreateSecretRequest createSecretRequest) throws IOException, NexmoClientException {
+    SecretResponse createSecret(CreateSecretRequest createSecretRequest) {
         return this.createSecretMethod.execute(createSecretRequest);
     }
 
-    void revokeSecret(SecretRequest secretRequest) throws IOException, NexmoClientException {
+    void revokeSecret(SecretRequest secretRequest) {
         this.revokeSecretMethod.execute(secretRequest);
     }
 }

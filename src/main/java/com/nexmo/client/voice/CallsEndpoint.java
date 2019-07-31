@@ -24,8 +24,6 @@ package com.nexmo.client.voice;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 
-import java.io.IOException;
-
 /**
  * Allows actions to be taken on {@code /calls/*} endpoints.
  * <p>
@@ -58,10 +56,9 @@ class CallsEndpoint {
      *
      * @return A CallEvent describing the call that was initiated.
      *
-     * @throws IOException          if an error occurs communicating with the Nexmo API
      * @throws NexmoClientException if an error occurs constructing the Nexmo API request or response
      */
-    CallEvent post(Call callRequest) throws IOException, NexmoClientException {
+    CallEvent post(Call callRequest) throws NexmoClientException {
         return this.createCall.execute(callRequest);
     }
 
@@ -72,10 +69,9 @@ class CallsEndpoint {
      *
      * @return A CallInfoPage containing a single page of {@link CallInfo} results
      *
-     * @throws IOException          if an error occurs communicating with the Nexmo API
      * @throws NexmoClientException if an error occurs constructing the Nexmo API request or response
      */
-    CallInfoPage get(CallsFilter filter) throws IOException, NexmoClientException {
+    CallInfoPage get(CallsFilter filter) throws NexmoClientException {
         return this.listCalls.execute(filter);
     }
 
@@ -86,10 +82,9 @@ class CallsEndpoint {
      *
      * @return A CallInfo object describing the state of the call that was made or is in progress
      *
-     * @throws IOException          if an error occurs communicating with the Nexmo API
      * @throws NexmoClientException if an error occurs constructing the Nexmo API request or response
      */
-    CallInfo get(String uuid) throws IOException, NexmoClientException {
+    CallInfo get(String uuid) throws NexmoClientException {
         return this.readCall.execute(uuid);
     }
 
@@ -100,10 +95,9 @@ class CallsEndpoint {
      *
      * @return A ModifyCallResponse object describing the state of the call that was modified
      *
-     * @throws IOException          if an error occurs communicating with the Nexmo API
      * @throws NexmoClientException if an error occurs constructing the Nexmo API request or response
      */
-    ModifyCallResponse put(CallModifier modifier) throws IOException, NexmoClientException {
+    ModifyCallResponse put(CallModifier modifier) throws NexmoClientException {
         return this.modifyCall.execute(modifier);
     }
 }

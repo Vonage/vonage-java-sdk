@@ -71,10 +71,9 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      *
      * @return A ResultT representing the response from the executed REST call
      *
-     * @throws IOException          if an exception occurs making the REST call
      * @throws NexmoClientException if there is a problem parsing the HTTP response
      */
-    public ResultT execute(RequestT request) throws IOException, NexmoClientException {
+    public ResultT execute(RequestT request) throws NexmoResponseParseException, NexmoClientException {
         try {
             RequestBuilder requestBuilder = applyAuth(makeRequest(request));
             HttpUriRequest httpRequest = requestBuilder.build();
@@ -104,6 +103,8 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
             return parseResponse(response);
         } catch (UnsupportedEncodingException uee) {
             throw new NexmoUnexpectedException("UTF-8 encoding is not supported by this JVM.", uee);
+        } catch (IOException io) {
+            throw new NexmoResponseParseException("Unable to parse response.", io);
         }
     }
 
@@ -154,10 +155,9 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      *
      * @return A ResultT representing the response from the executed REST call
      *
-     * @throws NexmoClientException         if a problem is encountered constructing the request or response.
      * @throws UnsupportedEncodingException if UTF-8 encoding is not supported by the JVM
      */
-    public abstract RequestBuilder makeRequest(RequestT request) throws NexmoClientException, UnsupportedEncodingException;
+    public abstract RequestBuilder makeRequest(RequestT request) throws UnsupportedEncodingException;
 
     /**
      * Construct a ResultT representing the contents of the HTTP response returned from the Nexmo Voice API.
@@ -168,5 +168,5 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      *
      * @throws IOException if a problem occurs parsing the response
      */
-    public abstract ResultT parseResponse(HttpResponse response) throws IOException, NexmoClientException;
+    public abstract ResultT parseResponse(HttpResponse response) throws IOException;
 }

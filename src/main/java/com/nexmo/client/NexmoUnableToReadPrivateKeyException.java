@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2018 Nexmo Inc
+ * Copyright (c) 2011-2019 Nexmo Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,18 +19,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.account;
+package com.nexmo.client;
 
-import com.nexmo.client.HttpWrapper;
-
-class TopUpEndpoint {
-    private TopUpMethod topUpMethod;
-
-    TopUpEndpoint(HttpWrapper httpWrapper) {
-        this.topUpMethod = new TopUpMethod(httpWrapper);
-    }
-
-    void topUp(TopUpRequest request) {
-        this.topUpMethod.execute(request);
+public class NexmoUnableToReadPrivateKeyException extends RuntimeException {
+    public NexmoUnableToReadPrivateKeyException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

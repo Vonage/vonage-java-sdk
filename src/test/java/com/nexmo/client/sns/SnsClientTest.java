@@ -23,6 +23,7 @@ package com.nexmo.client.sns;
 
 
 import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.sns.request.SnsPublishRequest;
 import com.nexmo.client.sns.request.SnsSubscribeRequest;
@@ -37,7 +38,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -61,7 +62,7 @@ public class SnsClientTest {
         HttpEntity entity = mock(HttpEntity.class);
 
         when(result.execute(any(HttpUriRequest.class))).thenReturn(response);
-        when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes("UTF-8")));
+        when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
         when(sl.getStatusCode()).thenReturn(statusCode);
         when(response.getStatusLine()).thenReturn(sl);
         when(response.getEntity()).thenReturn(entity);
@@ -112,7 +113,7 @@ public class SnsClientTest {
                     "447777111222"
             ));
             fail("An error Http response should raise IOException");
-        } catch (IOException ioe) {
+        } catch (NexmoResponseParseException nrp) {
             // This is expected
         }
     }

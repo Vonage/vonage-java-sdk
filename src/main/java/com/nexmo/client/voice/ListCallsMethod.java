@@ -24,7 +24,6 @@ package com.nexmo.client.voice;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.NexmoUnexpectedException;
 import com.nexmo.client.auth.JWTAuthMethod;
 import org.apache.commons.logging.Log;
@@ -57,7 +56,7 @@ class ListCallsMethod extends AbstractMethod<CallsFilter, CallInfoPage> {
     }
 
     @Override
-    public RequestBuilder makeRequest(CallsFilter filter) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(CallsFilter filter) throws UnsupportedEncodingException {
         URIBuilder uriBuilder;
         String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH;
 

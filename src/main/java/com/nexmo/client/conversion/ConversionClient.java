@@ -21,12 +21,8 @@
  */
 package com.nexmo.client.conversion;
 
-import com.nexmo.client.AbstractClient;
-import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClient;
-import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.*;
 
-import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -54,13 +50,14 @@ public class ConversionClient extends AbstractClient {
      * @param messageId The id of the message that was sent.
      * @param delivered A boolean indicating whether or not it was delivered.
      * @param timestamp A timestamp of when it was known to be delivered.
-     * @throws IOException          if a network error occurred contacting the Nexmo Conversion API.
-     * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
+     *
+     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
+     * @throws NexmoResponseParseException if the response from the API could not be parsed.
      */
     public void submitConversion(ConversionRequest.Type type,
                                  String messageId,
                                  boolean delivered,
-                                 Date timestamp) throws IOException, NexmoClientException {
+                                 Date timestamp) throws NexmoResponseParseException, NexmoClientException {
         this.conversionEndpoint.submitConversion(new ConversionRequest(type, messageId, delivered, timestamp));
     }
 }

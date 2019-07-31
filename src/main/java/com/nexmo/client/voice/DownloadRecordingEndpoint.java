@@ -23,7 +23,6 @@ package com.nexmo.client.voice;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.JWTAuthMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -43,7 +42,7 @@ class DownloadRecordingEndpoint extends AbstractMethod<String, Recording> {
     }
 
     @Override
-    public RequestBuilder makeRequest(String uri) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(String uri) throws UnsupportedEncodingException {
         return RequestBuilder.get().setUri(uri);
     }
 

@@ -51,7 +51,7 @@ class RedactMethod extends AbstractMethod<RedactRequest, RedactResponse> {
     }
 
     @Override
-    public RequestBuilder makeRequest(RedactRequest redactRequest) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(RedactRequest redactRequest) throws UnsupportedEncodingException {
         if (redactRequest.getId() == null || redactRequest.getProduct() == null) {
             throw new IllegalArgumentException("Redact transaction id and product are required.");
         }

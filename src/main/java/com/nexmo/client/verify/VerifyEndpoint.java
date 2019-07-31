@@ -24,7 +24,6 @@ package com.nexmo.client.verify;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 
-import java.io.IOException;
 import java.util.Locale;
 
 class VerifyEndpoint {
@@ -34,23 +33,23 @@ class VerifyEndpoint {
         this.verifyMethod = new VerifyMethod(httpWrapper);
     }
 
-    VerifyResponse verify(String number, String brand, String from, int length, Locale locale, VerifyRequest.LineType type) throws IOException, NexmoClientException {
+    VerifyResponse verify(String number, String brand, String from, int length, Locale locale, VerifyRequest.LineType type) throws NexmoClientException {
         return verify(new VerifyRequest(number, brand, from, length, locale, type));
     }
 
-    VerifyResponse verify(String number, String brand, String from, int length, Locale locale) throws IOException, NexmoClientException {
+    VerifyResponse verify(String number, String brand, String from, int length, Locale locale) throws NexmoClientException {
         return verify(new VerifyRequest(number, brand, from, length, locale));
     }
 
-    VerifyResponse verify(String number, String brand, String from) throws IOException, NexmoClientException {
+    VerifyResponse verify(String number, String brand, String from) throws NexmoClientException {
         return verify(new VerifyRequest(number, brand, from));
     }
 
-    VerifyResponse verify(String number, String brand) throws IOException, NexmoClientException {
+    VerifyResponse verify(String number, String brand) throws NexmoClientException {
         return verify(new VerifyRequest(number, brand));
     }
 
-    VerifyResponse verify(VerifyRequest request) throws IOException, NexmoClientException {
+    VerifyResponse verify(VerifyRequest request) throws NexmoClientException {
         return this.verifyMethod.execute(request);
     }
 }

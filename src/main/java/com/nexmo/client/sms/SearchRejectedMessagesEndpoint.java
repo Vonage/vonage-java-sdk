@@ -23,7 +23,6 @@ package com.nexmo.client.sms;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
@@ -48,7 +47,7 @@ public class SearchRejectedMessagesEndpoint extends AbstractMethod<SearchRejecte
     }
 
     @Override
-    public RequestBuilder makeRequest(SearchRejectedMessagesRequest request) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(SearchRejectedMessagesRequest request) throws UnsupportedEncodingException {
         RequestBuilder requestBuilder = RequestBuilder.get(httpWrapper.getHttpConfig().getRestBaseUri() + PATH);
         request.addParams(requestBuilder);
         return requestBuilder;

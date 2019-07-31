@@ -23,7 +23,6 @@ package com.nexmo.client.sms;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.SignatureAuthMethod;
 import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.sms.messages.Message;
@@ -50,7 +49,7 @@ class SendMessageEndpoint extends AbstractMethod<Message, SmsSubmissionResponse>
     }
 
     @Override
-    public RequestBuilder makeRequest(Message message) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(Message message) throws UnsupportedEncodingException {
         RequestBuilder request = RequestBuilder.post(httpWrapper.getHttpConfig().getRestBaseUri() + PATH);
         message.addParams(request);
         return request;

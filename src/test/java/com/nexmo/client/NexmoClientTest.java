@@ -254,6 +254,11 @@ public class NexmoClientTest {
         assertEquals(config, nexmoClient.getHttpWrapper().getHttpConfig());
     }
 
+    @Test(expected = NexmoUnableToReadPrivateKeyException.class)
+    public void testIOExceptionIsWrappedWithUnableToReadPrivateKeyException() {
+        NexmoClient.builder().privateKeyPath("this/path/does/not/exist");
+    }
+
     private void assertContainsParam(List<NameValuePair> params, String key, String value) {
         NameValuePair item = new BasicNameValuePair(key, value);
         assertTrue("" + params + " should contain " + item, params.contains(item));

@@ -23,7 +23,6 @@ package com.nexmo.client.voice;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.JWTAuthMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -53,7 +52,7 @@ class ModifyCallMethod extends AbstractMethod<CallModifier, ModifyCallResponse> 
     }
 
     @Override
-    public RequestBuilder makeRequest(CallModifier request) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(CallModifier request) throws UnsupportedEncodingException {
         String uri = this.uri + request.getUuid();
         return RequestBuilder
                 .put(uri)

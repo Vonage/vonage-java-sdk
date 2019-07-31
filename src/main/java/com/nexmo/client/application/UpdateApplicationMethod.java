@@ -50,7 +50,7 @@ class UpdateApplicationMethod extends AbstractMethod<Application, Application> {
     }
 
     @Override
-    public RequestBuilder makeRequest(Application application) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(Application application) throws UnsupportedEncodingException {
         return RequestBuilder
                 .put(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v2") + String.format(PATH, application.getId()))
                 .setHeader("Content-Type", "application/json")

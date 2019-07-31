@@ -22,9 +22,6 @@
 package com.nexmo.client.account;
 
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
-
-import java.io.IOException;
 
 class SettingsEndpoint {
     private SettingsMethod method;
@@ -33,7 +30,7 @@ class SettingsEndpoint {
         this.method = new SettingsMethod(wrapper);
     }
 
-    SettingsResponse updateSettings(SettingsRequest request) throws IOException, NexmoClientException {
+    SettingsResponse updateSettings(SettingsRequest request) {
         return this.method.execute(request);
     }
 }

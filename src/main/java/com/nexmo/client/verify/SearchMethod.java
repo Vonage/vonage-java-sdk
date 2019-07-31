@@ -23,7 +23,6 @@ package com.nexmo.client.verify;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.SignatureAuthMethod;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
@@ -48,7 +47,7 @@ class SearchMethod extends AbstractMethod<SearchRequest, SearchVerifyResponse> {
     }
 
     @Override
-    public RequestBuilder makeRequest(SearchRequest request) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(SearchRequest request) throws UnsupportedEncodingException {
         RequestBuilder result = RequestBuilder.post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH);
         if (request.getRequestIds().length == 1) {
             result.addParameter("request_id", request.getRequestIds()[0]);

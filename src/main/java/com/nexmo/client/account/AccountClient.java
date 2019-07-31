@@ -21,12 +21,7 @@
  */
 package com.nexmo.client.account;
 
-import com.nexmo.client.AbstractClient;
-import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClient;
-import com.nexmo.client.NexmoClientException;
-
-import java.io.IOException;
+import com.nexmo.client.*;
 
 /**
  * A client for talking to the Nexmo Account API. The standard way to obtain an instance of this class is to use {@link
@@ -56,7 +51,7 @@ public class AccountClient extends AbstractClient {
         this.settings = new SettingsEndpoint(httpWrapper);
     }
 
-    public BalanceResponse getBalance() throws IOException, NexmoClientException {
+    public BalanceResponse getBalance() throws NexmoResponseParseException, NexmoClientException {
         return this.balance.execute();
     }
 
@@ -67,14 +62,14 @@ public class AccountClient extends AbstractClient {
      *
      * @return PricingResponse object which contains the results from the API.
      *
-     * @throws IOException          if a network error occurred contacting the Nexmo Account API.
-     * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
+     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
      */
-    public PricingResponse getVoicePrice(String country) throws IOException, NexmoClientException {
+    public PricingResponse getVoicePrice(String country) throws NexmoResponseParseException, NexmoClientException {
         return getVoicePrice(new PricingRequest(country));
     }
 
-    private PricingResponse getVoicePrice(PricingRequest pricingRequest) throws IOException, NexmoClientException {
+    private PricingResponse getVoicePrice(PricingRequest pricingRequest) throws NexmoResponseParseException, NexmoClientException {
         return this.pricing.getPrice(ServiceType.VOICE, pricingRequest);
     }
 
@@ -85,14 +80,14 @@ public class AccountClient extends AbstractClient {
      *
      * @return PricingResponse object which contains the results from the API.
      *
-     * @throws IOException          if a network error occurred contacting the Nexmo Account API.
-     * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
+     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
      */
-    public PricingResponse getSmsPrice(String country) throws IOException, NexmoClientException {
+    public PricingResponse getSmsPrice(String country) throws NexmoResponseParseException, NexmoClientException {
         return getSmsPrice(new PricingRequest(country));
     }
 
-    private PricingResponse getSmsPrice(PricingRequest pricingRequest) throws IOException, NexmoClientException {
+    private PricingResponse getSmsPrice(PricingRequest pricingRequest) throws NexmoResponseParseException, NexmoClientException {
         return this.pricing.getPrice(ServiceType.SMS, pricingRequest);
     }
 
@@ -104,14 +99,14 @@ public class AccountClient extends AbstractClient {
      *
      * @return PrefixPricingResponse object which contains the results from the API.
      *
-     * @throws IOException          if a network error occurred contacting the Nexmo Account API.
-     * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
+     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
      */
-    public PrefixPricingResponse getPrefixPrice(ServiceType type, String prefix) throws IOException, NexmoClientException {
+    public PrefixPricingResponse getPrefixPrice(ServiceType type, String prefix) throws NexmoResponseParseException, NexmoClientException {
         return getPrefixPrice(new PrefixPricingRequest(type, prefix));
     }
 
-    private PrefixPricingResponse getPrefixPrice(PrefixPricingRequest prefixPricingRequest) throws IOException, NexmoClientException {
+    private PrefixPricingResponse getPrefixPrice(PrefixPricingRequest prefixPricingRequest) throws NexmoResponseParseException, NexmoClientException {
         return this.prefixPricing.getPrice(prefixPricingRequest);
     }
 
@@ -121,15 +116,15 @@ public class AccountClient extends AbstractClient {
      *
      * @param transaction The ID associated with your original auto-reload transaction
      *
-     * @throws IOException          if a network error occurred contacting the Nexmo Account API.
-     * @throws NexmoClientException if there was a problem with the Nexmo request or response object indicating that the
-     *                              request was unsuccessful.
+     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws NexmoClientException        if there was a problem with the Nexmo request or response object indicating
+     *                                     that the request was unsuccessful.
      */
-    public void topUp(String transaction) throws IOException, NexmoClientException {
+    public void topUp(String transaction) throws NexmoResponseParseException, NexmoClientException {
         topUp(new TopUpRequest(transaction));
     }
 
-    private void topUp(TopUpRequest request) throws IOException, NexmoClientException {
+    private void topUp(TopUpRequest request) throws NexmoResponseParseException, NexmoClientException {
         this.topUp.topUp(request);
     }
 
@@ -140,11 +135,11 @@ public class AccountClient extends AbstractClient {
      *
      * @return ListSecretsResponse object which contains the results from the API.
      *
-     * @throws IOException          if a network error occurred contacting the Nexmo Account API
-     * @throws NexmoClientException if there was a problem with the Nexmo request or response object indicating that the
-     *                              request was unsuccessful.
+     * @throws NexmoResponseParseException if a network error occurred contacting the Nexmo Account API
+     * @throws NexmoClientException        if there was a problem with the Nexmo request or response object indicating
+     *                                     that the request was unsuccessful.
      */
-    public ListSecretsResponse listSecrets(String apiKey) throws IOException, NexmoClientException {
+    public ListSecretsResponse listSecrets(String apiKey) throws NexmoResponseParseException, NexmoClientException {
         return this.secret.listSecrets(apiKey);
     }
 
@@ -156,15 +151,15 @@ public class AccountClient extends AbstractClient {
      *
      * @return SecretResponse object which contains the results from the API.
      *
-     * @throws IOException          if a network error occurred contacting the Nexmo Account API
-     * @throws NexmoClientException if there was a problem with the Nexmo request or response object indicating that the
-     *                              request was unsuccessful.
+     * @throws NexmoResponseParseException if a network error occurred contacting the Nexmo Account API
+     * @throws NexmoClientException        if there was a problem with the Nexmo request or response object indicating
+     *                                     that the request was unsuccessful.
      */
-    public SecretResponse getSecret(String apiKey, String secretId) throws IOException, NexmoClientException {
+    public SecretResponse getSecret(String apiKey, String secretId) throws NexmoResponseParseException, NexmoClientException {
         return getSecret(new SecretRequest(apiKey, secretId));
     }
 
-    private SecretResponse getSecret(SecretRequest secretRequest) throws IOException, NexmoClientException {
+    private SecretResponse getSecret(SecretRequest secretRequest) throws NexmoResponseParseException, NexmoClientException {
         return this.secret.getSecret(secretRequest);
     }
 
@@ -176,15 +171,15 @@ public class AccountClient extends AbstractClient {
      *
      * @return SecretResponse object which contains the created secret from the API.
      *
-     * @throws IOException          if a network error occurred contacting the Nexmo Account API
-     * @throws NexmoClientException if there was a problem with the Nexmo request or response object indicating that the
-     *                              request was unsuccessful.
+     * @throws NexmoResponseParseException if a network error occurred contacting the Nexmo Account API
+     * @throws NexmoClientException        if there was a problem with the Nexmo request or response object indicating
+     *                                     that the request was unsuccessful.
      */
-    public SecretResponse createSecret(String apiKey, String secret) throws IOException, NexmoClientException {
+    public SecretResponse createSecret(String apiKey, String secret) throws NexmoResponseParseException, NexmoClientException {
         return createSecret(new CreateSecretRequest(apiKey, secret));
     }
 
-    private SecretResponse createSecret(CreateSecretRequest createSecretRequest) throws IOException, NexmoClientException {
+    private SecretResponse createSecret(CreateSecretRequest createSecretRequest) throws NexmoResponseParseException, NexmoClientException {
         return this.secret.createSecret(createSecretRequest);
     }
 
@@ -194,15 +189,15 @@ public class AccountClient extends AbstractClient {
      * @param apiKey   The API key that the secret is associated to.
      * @param secretId The id of the secret to revoke.
      *
-     * @throws IOException          if a network error occurred contacting the Nexmo Account API
-     * @throws NexmoClientException if there was a problem with the Nexmo request or response object indicating that the
-     *                              request was unsuccessful.
+     * @throws NexmoResponseParseException if a network error occurred contacting the Nexmo Account API
+     * @throws NexmoClientException        if there was a problem with the Nexmo request or response object indicating
+     *                                     that the request was unsuccessful.
      */
-    public void revokeSecret(String apiKey, String secretId) throws IOException, NexmoClientException {
+    public void revokeSecret(String apiKey, String secretId) throws NexmoResponseParseException, NexmoClientException {
         revokeSecret(new SecretRequest(apiKey, secretId));
     }
 
-    private void revokeSecret(SecretRequest secretRequest) throws IOException, NexmoClientException {
+    private void revokeSecret(SecretRequest secretRequest) throws NexmoResponseParseException, NexmoClientException {
         this.secret.revokeSecret(secretRequest);
     }
 
@@ -211,11 +206,11 @@ public class AccountClient extends AbstractClient {
      *
      * @return A {@link SettingsResponse} containing the newly-updated account settings.
      *
-     * @throws IOException          if a network error occurred contacting the Nexmo Account API
-     * @throws NexmoClientException if there was a problem with the Nexmo request or response object indicating that the
-     *                              request was unsuccessful.
+     * @throws NexmoResponseParseException if a network error occurred contacting the Nexmo Account API
+     * @throws NexmoClientException        if there was a problem with the Nexmo request or response object indicating
+     *                                     that the request was unsuccessful.
      */
-    public SettingsResponse updateSmsIncomingUrl(String url) throws IOException, NexmoClientException {
+    public SettingsResponse updateSmsIncomingUrl(String url) throws NexmoResponseParseException, NexmoClientException {
         return this.updateSettings(SettingsRequest.withIncomingSmsUrl(url));
     }
 
@@ -224,11 +219,11 @@ public class AccountClient extends AbstractClient {
      *
      * @return A {@link SettingsResponse} containing the newly-updated account settings.
      *
-     * @throws IOException          if a network error occurred contacting the Nexmo Account API
-     * @throws NexmoClientException if there was a problem with the Nexmo request or response object indicating that the
-     *                              request was unsuccessful.
+     * @throws NexmoResponseParseException if a network error occurred contacting the Nexmo Account API
+     * @throws NexmoClientException        if there was a problem with the Nexmo request or response object indicating
+     *                                     that the request was unsuccessful.
      */
-    public SettingsResponse updateDeliveryReceiptUrl(String url) throws IOException, NexmoClientException {
+    public SettingsResponse updateDeliveryReceiptUrl(String url) throws NexmoResponseParseException, NexmoClientException {
         return this.updateSettings(SettingsRequest.withDeliveryReceiptUrl(url));
     }
 
@@ -237,11 +232,11 @@ public class AccountClient extends AbstractClient {
      *
      * @return A {@link SettingsResponse} containing the newly-updated account settings.
      *
-     * @throws IOException          if a network error occurred contacting the Nexmo Account API
-     * @throws NexmoClientException if there was a problem with the Nexmo request or response object indicating that the
-     *                              request was unsuccessful.
+     * @throws NexmoResponseParseException if a network error occurred contacting the Nexmo Account API
+     * @throws NexmoClientException        if there was a problem with the Nexmo request or response object indicating
+     *                                     that the request was unsuccessful.
      */
-    public SettingsResponse updateSettings(SettingsRequest request) throws IOException, NexmoClientException {
+    public SettingsResponse updateSettings(SettingsRequest request) throws NexmoResponseParseException, NexmoClientException {
         return this.settings.updateSettings(request);
     }
 }

@@ -50,7 +50,7 @@ class ListSecretsMethod extends AbstractMethod<String, ListSecretsResponse> {
     }
 
     @Override
-    public RequestBuilder makeRequest(String apiKey) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(String apiKey) throws UnsupportedEncodingException {
         if (apiKey == null) {
             throw new IllegalArgumentException("API key is required.");
         }
@@ -60,7 +60,7 @@ class ListSecretsMethod extends AbstractMethod<String, ListSecretsResponse> {
     }
 
     @Override
-    public ListSecretsResponse parseResponse(HttpResponse response) throws IOException, NexmoClientException {
+    public ListSecretsResponse parseResponse(HttpResponse response) throws IOException {
         if (response.getStatusLine().getStatusCode() != 200) {
             throw new NexmoBadRequestException(EntityUtils.toString(response.getEntity()));
         }
