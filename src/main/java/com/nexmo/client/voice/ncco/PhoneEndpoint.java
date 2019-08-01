@@ -37,7 +37,7 @@ public class PhoneEndpoint implements Endpoint {
     private PhoneEndpoint(Builder builder) {
         this.number = builder.number;
         this.dtmfAnswer = builder.dtmfAnswer;
-        this.onAnswer = (builder.onAnswer != null) ? new OnAnswer(builder.onAnswer) : null;
+        this.onAnswer = (builder.onAnswerUrl != null) ? new OnAnswer(builder.onAnswerUrl, builder.onAnswerRingback) : null;
     }
 
     public String getType() {
@@ -63,7 +63,8 @@ public class PhoneEndpoint implements Endpoint {
     public static class Builder {
         private String number;
         private String dtmfAnswer = null;
-        private String onAnswer = null;
+        private String onAnswerUrl = null;
+        private String onAnswerRingback = null;
 
         public Builder(String number) {
             this.number = number;
@@ -79,8 +80,14 @@ public class PhoneEndpoint implements Endpoint {
             return this;
         }
 
-        public Builder onAnswer(String onAnswer) {
-            this.onAnswer = onAnswer;
+        public Builder onAnswer(String url) {
+            this.onAnswerUrl = url;
+            return this;
+        }
+
+        public Builder onAnswer(String url, String ringback) {
+            this.onAnswerUrl = url;
+            this.onAnswerRingback = ringback;
             return this;
         }
 
@@ -89,15 +96,26 @@ public class PhoneEndpoint implements Endpoint {
         }
     }
 
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
     private class OnAnswer {
         private String url;
+        private String ringback;
 
         private OnAnswer(String url) {
             this.url = url;
         }
 
+        private OnAnswer(String url, String ringback) {
+            this(url);
+            this.ringback = ringback;
+        }
+
         public String getUrl() {
             return this.url;
+        }
+
+        public String getRingback() {
+            return ringback;
         }
     }
 }

@@ -27,7 +27,7 @@ import static org.junit.Assert.assertEquals;
 
 public class PhoneEndpointTest {
     @Test
-    public void testAllFields() {
+    public void testOnAnswerWithUrlNoRingback() {
         PhoneEndpoint endpoint = PhoneEndpoint.builder("15554441234")
                 .number("15554441235")
                 .dtmfAnswer("1234")
@@ -36,6 +36,19 @@ public class PhoneEndpointTest {
         ConnectAction connect = ConnectAction.builder(endpoint).build();
 
         String expectedJson = "[{\"endpoint\":[{\"number\":\"15554441235\",\"dtmfAnswer\":\"1234\",\"onAnswer\":{\"url\":\"http://example.com\"},\"type\":\"phone\"}],\"action\":\"connect\"}]";
+        assertEquals(expectedJson, new Ncco(connect).toJson());
+    }
+
+    @Test
+    public void testAllFields() {
+        PhoneEndpoint endpoint = PhoneEndpoint.builder("15554441234")
+                .number("15554441235")
+                .dtmfAnswer("1234")
+                .onAnswer("http://example.com", "https://example.com/ringback.mp3")
+                .build();
+        ConnectAction connect = ConnectAction.builder(endpoint).build();
+
+        String expectedJson = "[{\"endpoint\":[{\"number\":\"15554441235\",\"dtmfAnswer\":\"1234\",\"onAnswer\":{\"url\":\"http://example.com\",\"ringback\":\"https://example.com/ringback.mp3\"},\"type\":\"phone\"}],\"action\":\"connect\"}]";
         assertEquals(expectedJson, new Ncco(connect).toJson());
     }
 }
