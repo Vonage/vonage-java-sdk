@@ -21,101 +21,39 @@
  */
 package com.nexmo.client.auth;
 
-import com.auth0.jwt.Algorithm;
-import com.auth0.jwt.JWTSigner;
-import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.jwt.Jwt;
 import org.apache.http.client.methods.RequestBuilder;
 
-import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.InvalidKeyException;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class JWTAuthMethod extends AbstractAuthMethod {
-    private static final Pattern pemPattern = Pattern.compile(
-            "-----BEGIN PRIVATE KEY-----" + // File header
-            "(.*\\n)" +                     // Key data
-            "-----END PRIVATE KEY-----" +   // File footer
-            "\\n?",                         // Optional trailing line break
-            Pattern.MULTILINE | Pattern.DOTALL);
-    public final int SORT_KEY = 10;
-    private String applicationId;
-    private JWTSigner signer;
+    private static final int SORT_KEY = 10;
+    private Jwt jwt;
 
-    public JWTAuthMethod(final String applicationId, final byte[] privateKey)
-            throws NoSuchAlgorithmException, InvalidKeyException, InvalidKeySpecException {
-        this.applicationId = applicationId;
-
-        byte[] decodedPrivateKey = privateKey;
-        if (privateKey[0] == '-') {
-            decodedPrivateKey = decodePrivateKey(privateKey);
-        }
-        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(decodedPrivateKey);
-        KeyFactory kf = KeyFactory.getInstance("RSA");
-        PrivateKey key = kf.generatePrivate(spec);
-        this.signer = new JWTSigner(key);
+    public JWTAuthMethod(final String applicationId, final byte[] privateKey) {
+        this.jwt = Jwt.builder().applicationId(applicationId).privateKeyContents(new String(privateKey)).build();
     }
 
-    public JWTAuthMethod(String applicationId, Path path)
-            throws NoSuchAlgorithmException, InvalidKeyException, InvalidKeySpecException, IOException {
+    public JWTAuthMethod(String applicationId, Path path) throws IOException {
         this(applicationId, Files.readAllBytes(path));
     }
 
-    public static String constructJTI() {
-        return UUID.randomUUID().toString();
-    }
-
-    protected byte[] decodePrivateKey(byte[] data) throws InvalidKeyException {
-        try {
-            String s = new String(data, "UTF-8");
-            Matcher extractor = pemPattern.matcher(s);
-            if (extractor.matches()) {
-                String pemBody = extractor.group(1);
-                return DatatypeConverter.parseBase64Binary(pemBody);
-            } else {
-                throw new InvalidKeyException("Private key should be provided in PEM format!");
-            }
-        } catch (UnsupportedEncodingException exc) {
-            // This should never happen.
-            throw new NexmoUnexpectedException("UTF-8 is an unsupported encoding in this JVM", exc);
-        }
+    public String generateToken() {
+        return this.jwt.generate();
     }
 
     @Override
     public RequestBuilder apply(RequestBuilder request) {
-        String token = this.constructToken(
-                System.currentTimeMillis() / 1000L,
-                constructJTI());
+        String token = this.jwt.generate();
+
         request.setHeader("Authorization", "Bearer " + token);
         return request;
     }
 
-    public String constructToken(long iat, String jti) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("iat", iat);
-        claims.put("application_id", this.applicationId);
-        claims.put("jti", jti);
-
-        JWTSigner.Options options = new JWTSigner.Options()
-                .setAlgorithm(Algorithm.RS256);
-
-        return this.signer.sign(claims, options);
-    }
-
     @Override
     public int getSortKey() {
-        return this.SORT_KEY;
+        return SORT_KEY;
     }
 }

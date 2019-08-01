@@ -23,6 +23,7 @@ package com.nexmo.client.sms;
 
 
 import com.nexmo.client.HttpWrapper;
+import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.sms.messages.Message;
 import com.nexmo.client.sms.messages.TextMessage;
@@ -37,15 +38,13 @@ import org.junit.Test;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class SmsClientTest {
     private HttpWrapper wrapper;
@@ -65,7 +64,7 @@ public class SmsClientTest {
         HttpEntity entity = mock(HttpEntity.class);
 
         when(result.execute(any(HttpUriRequest.class))).thenReturn(response);
-        when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes("UTF-8")));
+        when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
         when(sl.getStatusCode()).thenReturn(statusCode);
         when(response.getStatusLine()).thenReturn(sl);
         when(response.getEntity()).thenReturn(entity);
@@ -113,8 +112,8 @@ public class SmsClientTest {
         Message message = new TextMessage("TestSender", "not-a-number", "Test");
         try {
             client.submitMessage(message);
-            fail("An IOException should be thrown if an HTTP 500 response is received.");
-        } catch (IOException ioe) {
+            fail("A NexmoResponseParseException should be thrown if an HTTP 500 response is received.");
+        } catch (NexmoResponseParseException nrp) {
             // This is expected
         }
     }
@@ -253,7 +252,7 @@ public class SmsClientTest {
         assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2011-11-25 16:03:00"), response.getDateReceived());
         assertEquals("DELIVRD", response.getFinalStatus());
         assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2011-11-25 16:03:00"), response.getDateClosed());
-        assertEquals(new Integer(11151), response.getLatency());
+        assertEquals(Integer.valueOf(11151), response.getLatency());
         assertEquals("MT", response.getType());
     }
 }

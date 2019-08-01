@@ -49,7 +49,7 @@ class ControlEndpoint extends AbstractMethod<ControlRequest, ControlResponse> {
     }
 
     @Override
-    public RequestBuilder makeRequest(ControlRequest request) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(ControlRequest request) throws UnsupportedEncodingException {
         RequestBuilder requestBuilder = RequestBuilder.post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH);
         request.addParams(requestBuilder);
         return requestBuilder;

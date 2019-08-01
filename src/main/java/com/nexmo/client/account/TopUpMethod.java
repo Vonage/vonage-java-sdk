@@ -48,7 +48,7 @@ class TopUpMethod extends AbstractMethod<TopUpRequest, Void> {
     }
 
     @Override
-    public RequestBuilder makeRequest(TopUpRequest request) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(TopUpRequest request) throws UnsupportedEncodingException {
         return RequestBuilder
                 .get(httpWrapper.getHttpConfig().getRestBaseUri() + PATH)
                 .addParameter("trx", request.getTrx());

@@ -71,8 +71,7 @@ public class AuthCollectionTest {
             fail("No acceptable auth method should throw a NexmoClientException");
         } catch (NexmoUnacceptableAuthException ex) {
             assertEquals(
-                    "No acceptable authentication type could be found. Acceptable types are: JWTAuthMethod. Supplied " +
-                            "types were: ",
+                    "No acceptable authentication type could be found. Acceptable types are: Application ID and Private Key. Supplied types were: ",
                     ex.getMessage());
         }
     }
@@ -104,8 +103,7 @@ public class AuthCollectionTest {
             auths.getAcceptableAuthMethod(acceptableAuths);
             fail("No acceptable auth method should throw a NexmoClientException");
         } catch (NexmoUnacceptableAuthException ex) {
-            assertEquals("No acceptable authentication type could be found. Acceptable types are: JWTAuthMethod. Supplied " +
-                    "types were: TokenAuthMethod", ex.getMessage());
+            assertEquals("No acceptable authentication type could be found. Acceptable types are: Application ID and Private Key. Supplied types were: API Key and Secret", ex.getMessage());
         }
     }
 

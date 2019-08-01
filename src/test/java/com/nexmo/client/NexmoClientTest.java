@@ -21,12 +21,12 @@
  */
 package com.nexmo.client;
 
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.internal.org.bouncycastle.util.Strings;
 import com.nexmo.client.auth.*;
 import com.nexmo.client.voice.Call;
 import com.nexmo.client.voice.CallEvent;
 import com.nexmo.client.voice.CallStatus;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -38,13 +38,13 @@ import org.apache.http.message.BasicNameValuePair;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -63,7 +63,7 @@ public class NexmoClientTest {
         HttpEntity entity = mock(HttpEntity.class);
 
         when(result.execute(any(HttpUriRequest.class))).thenReturn(response);
-        when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes("UTF-8")));
+        when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
         when(sl.getStatusCode()).thenReturn(statusCode);
         when(response.getStatusLine()).thenReturn(sl);
         when(response.getEntity()).thenReturn(entity);
@@ -105,8 +105,7 @@ public class NexmoClientTest {
         KeyFactory kf = KeyFactory.getInstance("RSA");
         PublicKey key = kf.generatePublic(spec);
 
-        final JWTVerifier verifier = new JWTVerifier(key);
-        final Map<String, Object> claims = verifier.verify(constructedToken);
+        Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(constructedToken).getBody();
 
         assertEquals("application-id", claims.get("application_id"));
     }
@@ -195,7 +194,7 @@ public class NexmoClientTest {
     @Test
     public void testApplicationIdWithCertContentsAsString() throws Exception {
         TestUtils testUtils = new TestUtils();
-        String key = Strings.fromByteArray(testUtils.loadKey("test/keys/application_key"));
+        String key = new String(testUtils.loadKey("test/keys/application_key"));
 
         NexmoClient nexmoClient = NexmoClient.builder().applicationId("app-id").privateKeyContents(key).build();
         AuthCollection authCollection = nexmoClient.getHttpWrapper().getAuthCollection();
@@ -237,12 +236,6 @@ public class NexmoClientTest {
         assertEquals("Bearer ", requestBuilder.getFirstHeader("Authorization").getValue().substring(0, 7));
     }
 
-    @Test(expected = NexmoClientCreationException.class)
-    public void testApplicationIdWithInvalidCert() throws Exception {
-        NexmoClient.builder().applicationId("app-id").privateKeyContents("invalid").build();
-
-    }
-
     @Test
     public void testDefaultHttpConfig() {
         HttpConfig config = HttpConfig.defaultConfig();
@@ -259,6 +252,11 @@ public class NexmoClientTest {
         NexmoClient nexmoClient = NexmoClient.builder().httpConfig(config).build();
 
         assertEquals(config, nexmoClient.getHttpWrapper().getHttpConfig());
+    }
+
+    @Test(expected = NexmoUnableToReadPrivateKeyException.class)
+    public void testIOExceptionIsWrappedWithUnableToReadPrivateKeyException() {
+        NexmoClient.builder().privateKeyPath("this/path/does/not/exist");
     }
 
     private void assertContainsParam(List<NameValuePair> params, String key, String value) {

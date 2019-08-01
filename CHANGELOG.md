@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Development]
+
+### Added
+- Added support for updating account settings (delivery receipt URL and inbound SMS URL)
+- Added support for [Async Number Insights](https://developer.nexmo.com/api/number-insight#getNumberInsightAsync) by setting the property `async` and `callback` on the `AdvancedInsightRequest` object.
+- Add `ringback` support to the `onAnswer` part of the `PhoneEndpoint`.
+
+### Changed
+- Changed from Auth0 to the [Nexmo JWT Library](https://github.com/nexmo/nexmo-jwt-jdk).
+- Renamed the `com.nexmo.client.applications` package to `com.nexmo.client.application`
+- `ApplicationClient` now supports the [Applications v2](https://developer.nexmo.com/api/application.v2) API. This change has resulted in some backwards incompatibility.
+- `NexmoClientException` is now a `RuntimeException`. The various sub client methods will still declare that it is being thrown, but it is no longer a requirement to catch the exception. Additionally, the `IOException` that was being thrown in each method has been converted to a `NexmoResponseParseException` to more accurately reflect when it is thrown. This is also an unchecked exception and catching is no longer required.
+- The `NexmoUnacceptableAuthException` will now add which parameters are missing instead of which internal auth methods.
+
 ## [4.4.0] - 2019-06-10
 
 ### Added

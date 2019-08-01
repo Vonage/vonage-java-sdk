@@ -47,7 +47,7 @@ class BuyNumberEndpoint extends AbstractMethod<BuyNumberRequest, Void> {
     }
 
     @Override
-    public RequestBuilder makeRequest(BuyNumberRequest request) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(BuyNumberRequest request) throws UnsupportedEncodingException {
         RequestBuilder requestBuilder = RequestBuilder
                 .post()
                 .setUri(httpWrapper.getHttpConfig().getRestBaseUri() + PATH);

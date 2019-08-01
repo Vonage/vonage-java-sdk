@@ -23,7 +23,6 @@ package com.nexmo.client.verify;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.SignatureAuthMethod;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
@@ -48,7 +47,7 @@ class CheckMethod extends AbstractMethod<CheckRequest, CheckResponse> {
     }
 
     @Override
-    public RequestBuilder makeRequest(CheckRequest request) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(CheckRequest request) throws UnsupportedEncodingException {
         if (request.getRequestId() == null || request.getCode() == null)
             throw new IllegalArgumentException("request ID and code parameters are mandatory.");
 

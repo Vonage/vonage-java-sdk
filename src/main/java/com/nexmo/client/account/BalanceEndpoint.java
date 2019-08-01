@@ -23,7 +23,6 @@ package com.nexmo.client.account;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
@@ -48,11 +47,11 @@ class BalanceEndpoint extends AbstractMethod<Void, BalanceResponse> {
     }
 
     @Override
-    public RequestBuilder makeRequest(Void request) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(Void request) throws UnsupportedEncodingException {
         return RequestBuilder.get(httpWrapper.getHttpConfig().getRestBaseUri() + PATH);
     }
 
-    public BalanceResponse execute() throws NexmoClientException, IOException {
+    public BalanceResponse execute() {
         return this.execute(null);
     }
 

@@ -21,7 +21,7 @@
  */
 package com.nexmo.client;
 
-public class NexmoClientException extends Exception {
+public class NexmoClientException extends RuntimeException {
     public NexmoClientException() {
         super();
     }

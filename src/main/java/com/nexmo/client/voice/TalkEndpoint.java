@@ -24,8 +24,6 @@ package com.nexmo.client.voice;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 
-import java.io.IOException;
-
 public class TalkEndpoint {
     private final StartTalkMethod startTalk;
     private final StopTalkMethod stopTalk;
@@ -35,11 +33,11 @@ public class TalkEndpoint {
         this.stopTalk = new StopTalkMethod(wrapper);
     }
 
-    public TalkResponse put(TalkRequest request) throws IOException, NexmoClientException {
+    public TalkResponse put(TalkRequest request) throws NexmoClientException {
         return this.startTalk.execute(request);
     }
 
-    public TalkResponse delete(String uuid) throws IOException, NexmoClientException {
+    public TalkResponse delete(String uuid) throws NexmoClientException {
         return this.stopTalk.execute(uuid);
     }
 }

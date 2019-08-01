@@ -50,7 +50,7 @@ class GetSecretMethod extends AbstractMethod<SecretRequest, SecretResponse> {
     }
 
     @Override
-    public RequestBuilder makeRequest(SecretRequest secretRequest) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(SecretRequest secretRequest) throws UnsupportedEncodingException {
         if (secretRequest.getApiKey() == null) {
             throw new IllegalArgumentException("API key is required.");
         }
@@ -68,7 +68,7 @@ class GetSecretMethod extends AbstractMethod<SecretRequest, SecretResponse> {
     }
 
     @Override
-    public SecretResponse parseResponse(HttpResponse response) throws IOException, NexmoClientException {
+    public SecretResponse parseResponse(HttpResponse response) throws IOException {
         if (response.getStatusLine().getStatusCode() != 200) {
             throw new NexmoBadRequestException(EntityUtils.toString(response.getEntity()));
         }

@@ -24,8 +24,6 @@ package com.nexmo.client.conversion;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 
-import java.io.IOException;
-
 class ConversionEndpoint {
     private ConversionMethod conversionMethod;
 
@@ -33,7 +31,7 @@ class ConversionEndpoint {
         this.conversionMethod = new ConversionMethod(httpWrapper);
     }
 
-    void submitConversion(ConversionRequest request) throws IOException, NexmoClientException {
+    void submitConversion(ConversionRequest request) throws NexmoClientException {
         this.conversionMethod.execute(request);
     }
 }

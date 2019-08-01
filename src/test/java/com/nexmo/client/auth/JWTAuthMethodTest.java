@@ -22,19 +22,14 @@
 package com.nexmo.client.auth;
 
 
-import com.auth0.jwt.JWTVerifier;
 import com.nexmo.client.TestUtils;
 import org.apache.http.client.methods.RequestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.security.*;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.Map;
+import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class JWTAuthMethodTest {
     private TestUtils testUtils;
@@ -48,46 +43,9 @@ public class JWTAuthMethodTest {
         auth = new JWTAuthMethod("application-id", keyBytes);
     }
 
-    @Test public void testSavedKey() throws Exception {
-        byte[] keyBytes = testUtils.loadKey("test/keys/application_key2");
-        auth = new JWTAuthMethod("application-id", keyBytes);
-    }
-
     @Test
-    public void testConstructToken() throws Exception {
-        String constructedToken = auth.constructToken(1234, "1111111");
-
-        byte[] keyBytes = testUtils.loadKey("test/keys/application_public_key.der");
-        X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
-        KeyFactory kf = KeyFactory.getInstance("RSA");
-        PublicKey key = kf.generatePublic(spec);
-
-        final JWTVerifier verifier = new JWTVerifier(key);
-        final Map<String, Object> claims = verifier.verify(constructedToken);
-
-        assertEquals(1234, claims.get("iat"));
-        assertEquals("1111111", claims.get("jti"));
-        assertEquals("application-id", claims.get("application_id"));
-    }
-
-    @Test
-    public void testDecodePrivateKeyInvalid() throws Exception {
-        try {
-            auth = new JWTAuthMethod("application-id", new byte[]{0x00});
-            fail("Invalid bytes should result in InvalidKeySpecException");
-        } catch (InvalidKeySpecException e) {
-            // this is expected
-        }
-    }
-
-    @Test
-    public void testDecodePrivateKeyCannotDecode() throws Exception {
-        try {
-            auth = new JWTAuthMethod("application-id", new byte[]{'-'});
-            fail("Invalid key should result in InvalidKeySpecException");
-        } catch (InvalidKeyException e) {
-            // this is expected
-        }
+    public void testSavedKeyUsingPath() throws Exception {
+        auth = new JWTAuthMethod("application-id", Paths.get("src/test/resources/com/nexmo/client/test/keys/application_key2"));
     }
 
     @Test

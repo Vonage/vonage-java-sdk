@@ -47,7 +47,7 @@ class ListNumbersEndpoint extends AbstractMethod<ListNumbersFilter, ListNumbersR
     }
 
     @Override
-    public RequestBuilder makeRequest(ListNumbersFilter request) throws NexmoClientException, UnsupportedEncodingException {
+    public RequestBuilder makeRequest(ListNumbersFilter request) throws UnsupportedEncodingException {
         RequestBuilder requestBuilder = RequestBuilder
                 .get()
                 .setUri(httpWrapper.getHttpConfig().getRestBaseUri() + PATH);
@@ -61,7 +61,7 @@ class ListNumbersEndpoint extends AbstractMethod<ListNumbersFilter, ListNumbersR
         return ListNumbersResponse.fromJson(json);
     }
 
-    ListNumbersResponse listNumbers(ListNumbersFilter request) throws IOException, NexmoClientException {
+    ListNumbersResponse listNumbers(ListNumbersFilter request) throws NexmoClientException {
         return this.execute(request);
     }
 }

@@ -24,8 +24,6 @@ package com.nexmo.client.voice;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
 
-import java.io.IOException;
-
 class StreamsEndpoint {
     private final StartStreamMethod startStream;
     private final StopStreamMethod stopStream;
@@ -35,11 +33,11 @@ class StreamsEndpoint {
         this.stopStream = new StopStreamMethod(wrapper);
     }
 
-    public StreamResponse put(StreamRequest request) throws IOException, NexmoClientException {
+    public StreamResponse put(StreamRequest request) throws NexmoClientException {
         return this.startStream.execute(request);
     }
 
-    public StreamResponse delete(String uuid) throws IOException, NexmoClientException {
+    public StreamResponse delete(String uuid) throws NexmoClientException {
         return this.stopStream.execute(uuid);
     }
 }

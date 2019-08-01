@@ -23,7 +23,7 @@ package com.nexmo.client;
 
 
 import com.nexmo.client.account.AccountClient;
-import com.nexmo.client.applications.ApplicationClient;
+import com.nexmo.client.application.ApplicationClient;
 import com.nexmo.client.auth.*;
 import com.nexmo.client.conversion.ConversionClient;
 import com.nexmo.client.insight.InsightClient;
@@ -39,9 +39,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 
 /**
  * Top-level Nexmo API client object.
@@ -130,7 +127,7 @@ public class NexmoClient {
      */
     public String generateJwt() throws NexmoUnacceptableAuthException {
         JWTAuthMethod authMethod = this.httpWrapper.getAuthCollection().getAuth(JWTAuthMethod.class);
-        return authMethod.constructToken(System.currentTimeMillis() / 1000L, JWTAuthMethod.constructJTI());
+        return authMethod.generateToken();
     }
 
     /**
@@ -187,7 +184,8 @@ public class NexmoClient {
         }
 
         /**
-         * When setting an apiKey, it is also expected that {@link #apiSecret(String)} and/or {@link #signatureSecret(String)} will also be set.
+         * When setting an apiKey, it is also expected that {@link #apiSecret(String)} and/or {@link
+         * #signatureSecret(String)} will also be set.
          *
          * @param apiKey The API Key found in the dashboard for your account.
          *
@@ -223,7 +221,8 @@ public class NexmoClient {
         }
 
         /**
-         * When setting the contents of your private key, it is also expected that {@link #applicationId(String)} will also be set.
+         * When setting the contents of your private key, it is also expected that {@link #applicationId(String)} will
+         * also be set.
          *
          * @param privateKeyContents The contents of your private key used for JWT generation.
          *
@@ -235,7 +234,8 @@ public class NexmoClient {
         }
 
         /**
-         * When setting the contents of your private key, it is also expected that {@link #applicationId(String)} will also be set.
+         * When setting the contents of your private key, it is also expected that {@link #applicationId(String)} will
+         * also be set.
          *
          * @param privateKeyContents The contents of your private key used for JWT generation.
          *
@@ -246,24 +246,34 @@ public class NexmoClient {
         }
 
         /**
-         * When setting the path of your private key, it is also expected that {@link #applicationId(String)} will also be set.
+         * When setting the path of your private key, it is also expected that {@link #applicationId(String)} will also
+         * be set.
          *
          * @param privateKeyPath The path to your private key used for JWT generation.
          *
          * @return The {@link Builder} to keep building.
+         *
+         * @throws NexmoUnableToReadPrivateKeyException if the private key could not be read from the file system.
          */
-        public Builder privateKeyPath(Path privateKeyPath) throws IOException {
-            return privateKeyContents(Files.readAllBytes(privateKeyPath));
+        public Builder privateKeyPath(Path privateKeyPath) throws NexmoUnableToReadPrivateKeyException {
+            try {
+                return privateKeyContents(Files.readAllBytes(privateKeyPath));
+            } catch (IOException e) {
+                throw new NexmoUnableToReadPrivateKeyException("Unable to read private key at " + privateKeyPath, e);
+            }
         }
 
         /**
-         * When setting the path of your private key, it is also expected that {@link #applicationId(String)} will also be set.
+         * When setting the path of your private key, it is also expected that {@link #applicationId(String)} will also
+         * be set.
          *
          * @param privateKeyPath The path to your private key used for JWT generation.
          *
          * @return The {@link Builder} to keep building.
+         *
+         * @throws NexmoUnableToReadPrivateKeyException if the private key could not be read from the file system.
          */
-        public Builder privateKeyPath(String privateKeyPath) throws IOException {
+        public Builder privateKeyPath(String privateKeyPath) throws NexmoUnableToReadPrivateKeyException {
             return privateKeyPath(Paths.get(privateKeyPath));
         }
 
@@ -301,11 +311,7 @@ public class NexmoClient {
             }
 
             if (applicationId != null && privateKeyContents != null) {
-                try {
-                    authMethods.add(new JWTAuthMethod(applicationId, privateKeyContents));
-                } catch (NoSuchAlgorithmException | InvalidKeyException | InvalidKeySpecException e) {
-                    throw new NexmoClientCreationException("Failed to generate JWT Authentication method.", e);
-                }
+                authMethods.add(new JWTAuthMethod(applicationId, privateKeyContents));
             }
 
             return authMethods;

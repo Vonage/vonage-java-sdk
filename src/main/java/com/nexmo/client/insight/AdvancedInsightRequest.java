@@ -22,11 +22,16 @@
 package com.nexmo.client.insight;
 
 public class AdvancedInsightRequest extends BaseInsightRequest {
+    private boolean async;
+    private String callback;
+
     private AdvancedInsightRequest(Builder builder) {
         this.number = builder.number;
         this.country = builder.country;
         this.cnam = builder.cnam;
         this.ipAddress = builder.ipAddress;
+        this.async = builder.async;
+        this.callback = builder.callback;
     }
 
     public static Builder builder(String number) {
@@ -39,6 +44,14 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
 
     public String getIpAddress() {
         return ipAddress;
+    }
+
+    public boolean isAsync() {
+        return async;
+    }
+
+    public String getCallback() {
+        return callback;
     }
 
     /**
@@ -69,6 +82,8 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
         protected String country;
         protected Boolean cnam;
         protected String ipAddress;
+        protected boolean async;
+        protected String callback;
 
         /**
          * @param number A single phone number that you need insight about in national or international format.
@@ -88,7 +103,8 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
         }
 
         /**
-         * @param country If a number does not have a country code or it is uncertain, set the two-character country code.
+         * @param country If a number does not have a country code or it is uncertain, set the two-character country
+         *                code.
          *
          * @return The {@link Builder} to keep building.
          */
@@ -98,9 +114,9 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
         }
 
         /**
-         * @param cnam Indicates if the name of the person who owns the phone number should also be looked up and returned.
-         *             Set to true to receive phone number owner name in the response. This is only available for US numbers
-         *             and incurs an additional charge.
+         * @param cnam Indicates if the name of the person who owns the phone number should also be looked up and
+         *             returned. Set to true to receive phone number owner name in the response. This is only available
+         *             for US numbers and incurs an additional charge.
          *
          * @return The {@link Builder} to keep building.
          */
@@ -110,8 +126,8 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
         }
 
         /**
-         * @param ipAddress The IP address of the user. If supplied, we will compare this to the country the user's phone
-         *                  is located in and return an error if it does not match.
+         * @param ipAddress The IP address of the user. If supplied, we will compare this to the country the user's
+         *                  phone is located in and return an error if it does not match.
          *
          * @return The {@link Builder} to keep building.
          */
@@ -121,9 +137,33 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
         }
 
         /**
+         * @param async True if the call should be done asynchronously. When setting this value to true, the {@link
+         *              Builder#callback(String)} parameter must also be set.
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder async(boolean async) {
+            this.async = async;
+            return this;
+        }
+
+        /**
+         * @param url The URL that Nexmo will send a request to when the insight lookup is finished.
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder callback(String url) {
+            this.callback = url;
+            return this;
+        }
+
+        /**
          * @return A new {@link AdvancedInsightRequest} object from the stored builder options.
          */
         public AdvancedInsightRequest build() {
+            if (this.async && (this.callback == null || this.callback.isEmpty())) {
+                throw new IllegalStateException("You must define a callback url when using asyncronous insights.");
+            }
             return new AdvancedInsightRequest(this);
         }
     }

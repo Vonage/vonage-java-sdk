@@ -22,9 +22,7 @@
 package com.nexmo.client.account;
 
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +34,7 @@ class PricingEndpoint {
         this.methods.put(ServiceType.VOICE, new VoicePricingMethod(httpWrapper));
     }
 
-    PricingResponse getPrice(ServiceType serviceType, PricingRequest request) throws IOException, NexmoClientException {
+    PricingResponse getPrice(ServiceType serviceType, PricingRequest request) {
         if (this.methods.containsKey(serviceType)) {
             return this.methods.get(serviceType).execute(request);
         }

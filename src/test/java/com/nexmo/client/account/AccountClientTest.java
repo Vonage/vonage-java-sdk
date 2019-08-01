@@ -447,4 +447,62 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         wrapper.setHttpClient(this.stubHttpClient(403, json));
         client.revokeSecret("apiKey", "secret-id-one");
     }
+
+    @Test
+    public void testUpdateIncomingSmsUrl() throws Exception {
+        String json = "{\n" +
+                "  \"mo-callback-url\": \"https://example.com/webhooks/inbound-sms\",\n" +
+                "  \"dr-callback-url\": \"https://example.com/webhooks/delivery-receipt\",\n" +
+                "  \"max-outbound-request\": 10,\n" +
+                "  \"max-inbound-request\": 20,\n" +
+                "  \"max-calls-per-second\": 30\n" +
+                "}";
+        wrapper.setHttpClient(this.stubHttpClient(200, json));
+        SettingsResponse response = client.updateSmsIncomingUrl("https://example.com/webhooks/inbound-sms");
+
+        Assert.assertEquals("https://example.com/webhooks/inbound-sms", response.getIncomingSmsUrl());
+        Assert.assertEquals("https://example.com/webhooks/delivery-receipt", response.getDeliveryReceiptUrl());
+        Assert.assertEquals(Integer.valueOf(30), response.getMaxApiCallsPerSecond());
+        Assert.assertEquals(Integer.valueOf(20), response.getMaxInboundMessagesPerSecond());
+        Assert.assertEquals(Integer.valueOf(10), response.getMaxOutboundMessagesPerSecond());
+    }
+
+    @Test
+    public void testUpdateDeliveryReceiptUrl() throws Exception {
+        String json = "{\n" +
+                "  \"mo-callback-url\": \"https://example.com/webhooks/inbound-sms\",\n" +
+                "  \"dr-callback-url\": \"https://example.com/webhooks/delivery-receipt\",\n" +
+                "  \"max-outbound-request\": 10,\n" +
+                "  \"max-inbound-request\": 20,\n" +
+                "  \"max-calls-per-second\": 30\n" +
+                "}";
+        wrapper.setHttpClient(this.stubHttpClient(200, json));
+        SettingsResponse response = client.updateDeliveryReceiptUrl("https://example.com/webhooks/delivery-receipt");
+
+        Assert.assertEquals("https://example.com/webhooks/inbound-sms", response.getIncomingSmsUrl());
+        Assert.assertEquals("https://example.com/webhooks/delivery-receipt", response.getDeliveryReceiptUrl());
+        Assert.assertEquals(Integer.valueOf(30), response.getMaxApiCallsPerSecond());
+        Assert.assertEquals(Integer.valueOf(20), response.getMaxInboundMessagesPerSecond());
+        Assert.assertEquals(Integer.valueOf(10), response.getMaxOutboundMessagesPerSecond());
+    }
+
+    @Test
+    public void testUpdatingAccountSettings() throws Exception {
+        String json = "{\n" +
+                "  \"mo-callback-url\": \"https://example.com/webhooks/inbound-sms\",\n" +
+                "  \"dr-callback-url\": \"https://example.com/webhooks/delivery-receipt\",\n" +
+                "  \"max-outbound-request\": 10,\n" +
+                "  \"max-inbound-request\": 20,\n" +
+                "  \"max-calls-per-second\": 30\n" +
+                "}";
+
+        wrapper.setHttpClient(this.stubHttpClient(200, json));
+        SettingsResponse response = client.updateSettings(new SettingsRequest("https://example.com/webhooks/inbound-sms", "https://example.com/webhooks/delivery-receipt"));
+
+        Assert.assertEquals("https://example.com/webhooks/inbound-sms", response.getIncomingSmsUrl());
+        Assert.assertEquals("https://example.com/webhooks/delivery-receipt", response.getDeliveryReceiptUrl());
+        Assert.assertEquals(Integer.valueOf(30), response.getMaxApiCallsPerSecond());
+        Assert.assertEquals(Integer.valueOf(20), response.getMaxInboundMessagesPerSecond());
+        Assert.assertEquals(Integer.valueOf(10), response.getMaxOutboundMessagesPerSecond());
+    }
 }

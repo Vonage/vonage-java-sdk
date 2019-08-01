@@ -22,9 +22,6 @@
 package com.nexmo.client.account;
 
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
-
-import java.io.IOException;
 
 class PrefixPricingEndpoint {
     private PrefixPricingMethod prefixPricingMethod;
@@ -33,7 +30,7 @@ class PrefixPricingEndpoint {
         this.prefixPricingMethod = new PrefixPricingMethod(httpWrapper);
     }
 
-    PrefixPricingResponse getPrice(PrefixPricingRequest prefixPricingRequest) throws IOException, NexmoClientException {
+    PrefixPricingResponse getPrice(PrefixPricingRequest prefixPricingRequest) {
         return this.prefixPricingMethod.execute(prefixPricingRequest);
     }
 }
