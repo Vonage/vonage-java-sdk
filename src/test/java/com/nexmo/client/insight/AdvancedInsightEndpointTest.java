@@ -105,6 +105,21 @@ public class AdvancedInsightEndpointTest {
     }
 
     @Test
+    public void testMakeAsyncRequest() throws Exception {
+        RequestBuilder builder = this.endpoint.makeRequest(AdvancedInsightRequest.builder("1234")
+                .async(true)
+                .callback("https://example.com")
+                .build());
+
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://api.nexmo.com/ni/advanced/async/json", builder.build().getURI().toString());
+        Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
+        assertEquals(params.get("number"), "1234");
+        assertEquals(params.get("callback"), "https://example.com");
+
+    }
+
+    @Test
     public void testParseResponse() throws Exception {
         HttpResponse stub = TestUtils.makeJsonHttpResponse(
                 200,
@@ -148,5 +163,32 @@ public class AdvancedInsightEndpointTest {
         RequestBuilder builder = endpoint.makeRequest(request);
         assertEquals("POST", builder.getMethod());
         assertEquals("https://example.com/ni/advanced/json", builder.build().getURI().toString());
+    }
+
+    @Test
+    public void testDefaultUriWithAsync() throws Exception {
+        AdvancedInsightRequest request = AdvancedInsightRequest.builder("1234")
+                .async(true)
+                .callback("https://example.com")
+                .build();
+
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://api.nexmo.com/ni/advanced/async/json", builder.build().getURI().toString());
+    }
+
+    @Test
+    public void testCustomUriWithAsync() throws Exception {
+        HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri("https://example.com").build());
+        AdvancedInsightEndpoint endpoint = new AdvancedInsightEndpoint(wrapper);
+        AdvancedInsightRequest request = AdvancedInsightRequest.builder("1234")
+                .async(true)
+                .callback("https://example.com")
+                .build();
+
+        RequestBuilder builder = endpoint.makeRequest(request);
+        assertEquals("POST", builder.getMethod());
+        assertEquals("https://example.com/ni/advanced/async/json", builder.build().getURI().toString());
     }
 }

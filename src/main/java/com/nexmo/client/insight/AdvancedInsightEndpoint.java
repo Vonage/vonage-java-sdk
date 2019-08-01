@@ -36,6 +36,7 @@ class AdvancedInsightEndpoint extends AbstractMethod<AdvancedInsightRequest, Adv
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
     private static final String PATH = "/ni/advanced/json";
+    private static final String ASYNC_PATH = "/ni/advanced/async/json";
 
     AdvancedInsightEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -49,7 +50,7 @@ class AdvancedInsightEndpoint extends AbstractMethod<AdvancedInsightRequest, Adv
     @Override
     public RequestBuilder makeRequest(AdvancedInsightRequest request) throws UnsupportedEncodingException {
         RequestBuilder requestBuilder = RequestBuilder
-                .post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH)
+                .post(httpWrapper.getHttpConfig().getApiBaseUri() + ((request.isAsync()) ? ASYNC_PATH : PATH))
                 .addParameter("number", request.getNumber());
         if (request.getCountry() != null) {
             requestBuilder.addParameter("country", request.getCountry());
@@ -59,6 +60,9 @@ class AdvancedInsightEndpoint extends AbstractMethod<AdvancedInsightRequest, Adv
         }
         if (request.getCnam() != null) {
             requestBuilder.addParameter("cnam", request.getCnam().toString());
+        }
+        if (request.getCallback() != null) {
+            requestBuilder.addParameter("callback", request.getCallback());
         }
         return requestBuilder;
     }

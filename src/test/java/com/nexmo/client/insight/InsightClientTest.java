@@ -87,6 +87,14 @@ public class InsightClientTest extends ClientTest<InsightClient> {
                     + "  \"caller_name\": \"John Smith\",\n" + "  \"last_name\": \"Smith\",\n"
                     + "  \"first_name\": \"John\",\n" + "  \"caller_type\": \"consumer\"}";
 
+    private static final String ASYNC_ADVANCED_RESPONSE_JSON = "{\n" +
+            "  \"request_id\": \"aaaaaaaa-bbbb-cccc-dddd-0123456789ab\",\n" +
+            "  \"number\": \"447700900000\",\n" +
+            "  \"remaining_balance\": \"1.23456789\",\n" +
+            "  \"request_price\": \"0.01500000\",\n" +
+            "  \"status\": 0\n" +
+            "}";
+
     @Before
     public void setUp() {
         client = new InsightClient(wrapper);
@@ -171,6 +179,24 @@ public class InsightClientTest extends ClientTest<InsightClient> {
         AdvancedInsightResponse response = this.client.getAdvancedNumberInsight("1234", "GB", "127.0.0.1", true);
 
         assertAdvancedInsightResponse(response);
+    }
+
+    @Test
+    public void testAsyncAdvancedInsight() throws Exception {
+        this.wrapper.setHttpClient(stubHttpClient(200, ASYNC_ADVANCED_RESPONSE_JSON));
+
+        AdvancedInsightResponse response = this.client.getAdvancedNumberInsight(AdvancedInsightRequest.builder("1234")
+                .async(true)
+                .callback("https://example.com")
+                .build());
+
+        assertAsyncInsightResponse(response);
+    }
+
+    private void assertAsyncInsightResponse(AdvancedInsightResponse response) {
+        assertEquals(InsightStatus.SUCCESS, response.getStatus());
+        assertEquals(new BigDecimal("1.23456789"), response.getRemainingBalance());
+        assertEquals(new BigDecimal("0.01500000"), response.getRequestPrice());
     }
 
     private void assertBasicResponse(BasicInsightResponse response) {
