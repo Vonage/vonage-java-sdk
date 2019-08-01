@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Added support for updating account settings (delivery receipt URL and inbound SMS URL)
 - Added support for [Async Number Insights](https://developer.nexmo.com/api/number-insight#getNumberInsightAsync) by setting the property `async` and `callback` on the `AdvancedInsightRequest` object.
+- Add `ringback` support to the `onAnswer` part of the `PhoneEndpoint`.
 
 ### Changed
 - Changed from Auth0 to the [Nexmo JWT Library](https://github.com/nexmo/nexmo-jwt-jdk).
