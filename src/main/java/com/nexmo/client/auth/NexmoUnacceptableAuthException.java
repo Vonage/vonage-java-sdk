@@ -23,14 +23,19 @@ package com.nexmo.client.auth;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 public class NexmoUnacceptableAuthException extends NexmoAuthException {
+    private static final Map<Class, String> AUTH_DESCRIPTION_MAP = new HashMap<>();
+
     private final Iterable<AuthMethod> availableAuths;
     private final Iterable<Class> acceptableAuthClasses;
+
+    static {
+        AUTH_DESCRIPTION_MAP.put(TokenAuthMethod.class, "API Key and Secret");
+        AUTH_DESCRIPTION_MAP.put(SignatureAuthMethod.class, "API Key and Signature Secret");
+        AUTH_DESCRIPTION_MAP.put(JWTAuthMethod.class, "Application ID and Private Key");
+    }
 
     public NexmoUnacceptableAuthException(Collection<AuthMethod> availableAuths, Collection<Class>
             acceptableAuthClasses) {
@@ -46,12 +51,12 @@ public class NexmoUnacceptableAuthException extends NexmoAuthException {
     private String generateErrorMessage() {
         SortedSet<String> availableTypes = new TreeSet<>();
         for (AuthMethod auth : this.availableAuths) {
-            availableTypes.add(auth.getClass().getSimpleName());
+            availableTypes.add(AUTH_DESCRIPTION_MAP.getOrDefault(auth.getClass(), auth.getClass().getSimpleName()));
         }
 
         SortedSet<String> acceptableTypes = new TreeSet<>();
         for (Class klass : this.acceptableAuthClasses) {
-            acceptableTypes.add(klass.getSimpleName());
+            acceptableTypes.add(AUTH_DESCRIPTION_MAP.getOrDefault(klass, klass.getSimpleName()));
         }
 
         return String.format("No acceptable authentication type could be found. Acceptable types are: %s. Supplied " +
