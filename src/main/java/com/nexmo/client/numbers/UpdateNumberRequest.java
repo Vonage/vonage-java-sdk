@@ -31,6 +31,7 @@ public class UpdateNumberRequest {
     private CallbackType voiceCallbackType;
     private String voiceCallbackValue;
     private String voiceStatusCallback;
+    private String messagesCallbackValue;
 
     public UpdateNumberRequest(String msisdn, String country) {
         this.country = country;
@@ -85,6 +86,14 @@ public class UpdateNumberRequest {
         this.voiceStatusCallback = voiceStatusCallback;
     }
 
+    public String getMessagesCallbackValue() {
+        return messagesCallbackValue;
+    }
+
+    public void setMessagesCallbackValue(String messagesCallbackValue) {
+        this.messagesCallbackValue = messagesCallbackValue;
+    }
+
     public void addParams(RequestBuilder request) {
         request.addParameter("country", this.country).addParameter("msisdn", msisdn);
         if (this.moHttpUrl != null) {
@@ -102,7 +111,10 @@ public class UpdateNumberRequest {
         if (this.voiceStatusCallback != null) {
             request.addParameter("voiceStatusCallback", voiceStatusCallback);
         }
-
+        if (this.messagesCallbackValue != null) {
+            request.addParameter("messagesCallbackValue", messagesCallbackValue);
+            request.addParameter("messagesCallbackType", CallbackType.APP.paramValue());
+        }
     }
 
     public enum CallbackType {
