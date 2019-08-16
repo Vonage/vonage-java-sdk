@@ -35,6 +35,7 @@ public class SearchNumbersFilter {
     private String[] features;
     private Integer index;
     private Integer size;
+    private Type type;
 
     /**
      * Construct a request with the only required parameter, the country code.
@@ -77,10 +78,19 @@ public class SearchNumbersFilter {
         return size;
     }
 
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
     /**
      * Set the maximum number of matching results to be returned.
      *
-     * @param size An Integer between 10 and 100 (inclusive) or null, to indicate that the default value should be used.
+     * @param size An Integer between 10 and 100 (inclusive) or null, to indicate that the default value should be
+     *             used.
      */
     public void setSize(Integer size) {
         this.size = size;
@@ -91,7 +101,6 @@ public class SearchNumbersFilter {
     }
 
     /**
-     *
      * @param searchPattern
      */
     public void setSearchPattern(SearchPattern searchPattern) {
@@ -114,6 +123,9 @@ public class SearchNumbersFilter {
         }
         if (searchPattern != null) {
             request.addParameter("search_pattern", Integer.toString(searchPattern.getValue()));
+        }
+        if (type != null) {
+            request.addParameter("type", type.getType());
         }
     }
 }

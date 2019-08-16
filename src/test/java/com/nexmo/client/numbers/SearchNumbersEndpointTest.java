@@ -59,6 +59,7 @@ public class SearchNumbersEndpointTest {
         filter.setPattern("234");
         filter.setFeatures(new String[]{"SMS", "VOICE"});
         filter.setSearchPattern(SearchPattern.STARTS_WITH);
+        filter.setType(Type.LANDLINE_TOLL_FREE);
         RequestBuilder request = endpoint.makeRequest(filter);
 
         assertEquals("GET", request.getMethod());
@@ -69,6 +70,7 @@ public class SearchNumbersEndpointTest {
         assertEquals("0", params.get("search_pattern"));
         assertEquals("10", params.get("index"));
         assertEquals("20", params.get("size"));
+        assertEquals("landline-toll-free", params.get("type"));
     }
 
     @Test

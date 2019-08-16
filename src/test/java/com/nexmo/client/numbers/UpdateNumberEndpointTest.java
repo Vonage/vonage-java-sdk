@@ -68,6 +68,7 @@ public class UpdateNumberEndpointTest {
         request.setVoiceCallbackValue("1234-5678-9123-4567");
         request.setVoiceCallbackType(UpdateNumberRequest.CallbackType.APP);
         request.setVoiceStatusCallback("https://api.example.com/callback");
+        request.setMessagesCallbackValue("MESSAGES-APPLICATION-ID");
 
         RequestBuilder builder = this.endpoint.makeRequest(request);
 
@@ -75,7 +76,7 @@ public class UpdateNumberEndpointTest {
         assertEquals("https://rest.nexmo.com/number/update", builder.build().getURI().toString());
 
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
-        assertEquals(7, params.size());
+        assertEquals(9, params.size());
         assertEquals("447700900013", params.get("msisdn"));
         assertEquals("UK", params.get("country"));
         assertEquals("https://api.example.com/mo", params.get("moHttpUrl"));
@@ -83,6 +84,8 @@ public class UpdateNumberEndpointTest {
         assertEquals("1234-5678-9123-4567", params.get("voiceCallbackValue"));
         assertEquals("app", params.get("voiceCallbackType"));
         assertEquals("https://api.example.com/callback", params.get("voiceStatusCallback"));
+        assertEquals("MESSAGES-APPLICATION-ID", params.get("messagesCallbackValue"));
+        assertEquals(UpdateNumberRequest.CallbackType.APP.paramValue(), params.get("messagesCallbackType"));
     }
 
     @Test
