@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Development]
+
+### Added
+- Added support for setting an application id as a messages callback value in updating a number.
+- Added support for specifying a number type when searching for a number to purchase.
+
 ## [5.0.0] - 2019-08-01
 
 ### Added
