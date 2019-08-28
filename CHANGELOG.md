@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Development]
+### Added
+- Added support for verification workflows inside of `VerifyRequest`.
+
 ## [5.1.0] - 2019-08-18
 
 ### Added

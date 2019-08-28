@@ -84,6 +84,10 @@ class VerifyMethod extends AbstractMethod<VerifyRequest, VerifyResponse> {
             result.addParameter("next_event_wait", request.getNextEventWait().toString());
         }
 
+        if (request.getWorkflow() != null) {
+            result.addParameter("workflow_id", String.valueOf(request.getWorkflow().getId()));
+        }
+
         return result;
     }
 

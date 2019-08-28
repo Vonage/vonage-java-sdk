@@ -76,6 +76,7 @@ public class VerifyMethodTest extends MethodTest<VerifyMethod> {
         assertParamMissing(params, "country");
         assertParamMissing(params, "pin_expiry");
         assertParamMissing(params, "next_event_wait");
+        assertParamMissing(params, "workflow_id");
     }
 
     @Test
@@ -88,6 +89,7 @@ public class VerifyMethodTest extends MethodTest<VerifyMethod> {
         verifyRequest.setCountry("ZZ");
         verifyRequest.setPinExpiry(60);
         verifyRequest.setNextEventWait(90);
+        verifyRequest.setWorkflow(VerifyRequest.Workflow.TTS_TTS);
 
         RequestBuilder request = method.makeRequest(verifyRequest);
         List<NameValuePair> params = request.getParameters();
@@ -101,6 +103,7 @@ public class VerifyMethodTest extends MethodTest<VerifyMethod> {
         assertContainsParam(params, "country", "ZZ");
         assertContainsParam(params, "pin_expiry", "60");
         assertContainsParam(params, "next_event_wait", "90");
+        assertContainsParam(params, "workflow_id", "3");
     }
 
     @Test
