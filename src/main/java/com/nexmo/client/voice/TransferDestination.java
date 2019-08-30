@@ -22,16 +22,27 @@
 package com.nexmo.client.voice;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.nexmo.client.voice.ncco.Ncco;
 
+@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 public class TransferDestination {
-    private final Type type;
-    private final String[] urls;
+    private Type type;
+    private String[] urls;
+    private Ncco ncco;
 
     public TransferDestination(Type type, String url) {
         this.type = type;
-        this.urls = new String[]{url};
+        if (url != null) {
+            this.urls = new String[]{url};
+        }
+    }
+
+    public TransferDestination(Type type, String url, Ncco ncco) {
+        this(type, url);
+        this.ncco = ncco;
     }
 
     @JsonProperty("type")
@@ -42,6 +53,11 @@ public class TransferDestination {
     @JsonProperty("url")
     public String[] getUrls() {
         return urls;
+    }
+
+    @JsonProperty("ncco")
+    public Ncco getNcco() {
+        return this.ncco;
     }
 
     enum Type {

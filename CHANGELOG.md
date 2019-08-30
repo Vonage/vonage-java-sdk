@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Development]
 ### Added
 - Added support for verification workflows inside of `VerifyRequest`.
+- Added support for transfer to NCCO via `VoiceClient#transferCall`.
 
 ## [5.1.0] - 2019-08-18
 

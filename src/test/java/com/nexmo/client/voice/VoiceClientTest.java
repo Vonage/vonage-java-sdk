@@ -25,6 +25,8 @@ import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.TestUtils;
 import com.nexmo.client.auth.AuthCollection;
 import com.nexmo.client.auth.JWTAuthMethod;
+import com.nexmo.client.voice.ncco.Ncco;
+import com.nexmo.client.voice.ncco.TalkAction;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -33,6 +35,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -50,7 +53,7 @@ public class VoiceClientTest {
         HttpEntity entity = mock(HttpEntity.class);
 
         when(client.execute(any(HttpUriRequest.class))).thenReturn(response);
-        when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes("UTF-8")));
+        when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
         when(sl.getStatusCode()).thenReturn(statusCode);
         when(response.getStatusLine()).thenReturn(sl);
         when(response.getEntity()).thenReturn(entity);
@@ -157,6 +160,15 @@ public class VoiceClientTest {
         VoiceClient client = new VoiceClient(stubHttpWrapper(200, "{\"message\":\"Received\"}"));
         ModifyCallResponse call = client.transferCall("93137ee3-580e-45f7-a61a-e0b5716000ef",
                 "https://example.com/ncco2"
+        );
+        assertEquals("Received", call.getMessage());
+    }
+
+    @Test
+    public void testTransferCallInlineNcco() throws Exception {
+        VoiceClient client = new VoiceClient(stubHttpWrapper(200, "{\"message\":\"Received\"}"));
+        ModifyCallResponse call = client.transferCall("93137ee3-580e-45f7-a61a-e0b5716000ef",
+                new Ncco(TalkAction.builder("Thank you for calling!").build(), TalkAction.builder("Bye!").build())
         );
         assertEquals("Received", call.getMessage());
     }
