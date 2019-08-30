@@ -24,8 +24,7 @@ package com.nexmo.client.verify;
 import java.util.Locale;
 
 /**
- * Describes a Verify request when passed to
- * {@link com.nexmo.client.verify.VerifyEndpoint})}.
+ * Describes a Verify request when passed to {@link com.nexmo.client.verify.VerifyEndpoint})}.
  */
 public class VerifyRequest {
     // Compulsory attrs:
@@ -40,6 +39,7 @@ public class VerifyRequest {
     private String country = null;
     private Integer pinExpiry = null;
     private Integer nextEventWait = null;
+    private Workflow workflow = null;
 
 
     /**
@@ -57,7 +57,8 @@ public class VerifyRequest {
     /**
      * Constructor.
      *
-     * @param number (required) The recipient's phone number in <a href="https://en.wikipedia.org/wiki/E.164">E.164</a> format.
+     * @param number (required) The recipient's phone number in <a href="https://en.wikipedia.org/wiki/E.164">E.164</a>
+     *               format.
      * @param brand  (required) The name of the company or app you are verifying for. Must not be longer than 18
      *               characters.
      * @param from   (optional The Nexmo number to use as the sender for the verification SMS message and calls, in
@@ -70,7 +71,8 @@ public class VerifyRequest {
     /**
      * Constructor.
      *
-     * @param number (required) The recipient's phone number in <a href="https://en.wikipedia.org/wiki/E.164">E.164</a> format.
+     * @param number (required) The recipient's phone number in <a href="https://en.wikipedia.org/wiki/E.164">E.164</a>
+     *               format.
      * @param brand  (required) The name of the company or app you are verifying for. Must not be longer than 18
      *               characters.
      * @param from   (optional The Nexmo number to use as the sender for the verification SMS message and calls, in
@@ -87,12 +89,13 @@ public class VerifyRequest {
     /**
      * Constructor.
      *
-     * @param number (required) The recipient's phone number in <a href="https://en.wikipedia.org/wiki/E.164">E.164</a> format.
+     * @param number (required) The recipient's phone number in <a href="https://en.wikipedia.org/wiki/E.164">E.164</a>
+     *               format.
      * @param brand  (required) The name of the company or app you are verifying for. Must not be longer than 18
      *               characters.
-     * @param from   (optional A short alphanumeric string to specify the SenderID for SMS sent by Verify.
-     *               Depending on the destination of the phone number you are applying, restrictions may apply.
-     *               By default, sender_id is {@code VERIFY}. Must be 11 characters or fewer.
+     * @param from   (optional A short alphanumeric string to specify the SenderID for SMS sent by Verify. Depending on
+     *               the destination of the phone number you are applying, restrictions may apply. By default, sender_id
+     *               is {@code VERIFY}. Must be 11 characters or fewer.
      * @param length (optional) The length of the verification code to be sent to the user. Must be either 4 or 6. Use
      *               -1 to use the default value.
      * @param locale (optional) Override the default locale used for verification. By default the locale is determined
@@ -115,7 +118,7 @@ public class VerifyRequest {
 
     /**
      * @return the recipient's phone number provided in the constructor, in
-     *         <a href="https://en.wikipedia.org/wiki/E.164">E.164</a> format.
+     * <a href="https://en.wikipedia.org/wiki/E.164">E.164</a> format.
      */
     public String getNumber() {
         return number;
@@ -130,9 +133,9 @@ public class VerifyRequest {
 
     /**
      * @return the short alphanumeric string to specify the SenderID for SMS sent by Verify, or {@code null} if one was
-     *         not provided. This value is specified in some {@link VerifyRequest} constructors.
-     *         <p>
-     *         If this value is {@code null</tt>, the sender_id used will be <tt>VERIFY}.
+     * not provided. This value is specified in some {@link VerifyRequest} constructors.
+     * <p>
+     * If this value is {@code null</tt>, the sender_id used will be <tt>VERIFY}.
      */
     public String getFrom() {
         return from;
@@ -144,7 +147,7 @@ public class VerifyRequest {
 
     /**
      * @return the length of the verification code to be sent to the user, specified in some {@link VerifyRequest}
-     *         constructors. {@code -1} indicates the default length will be used.
+     * constructors. {@code -1} indicates the default length will be used.
      */
     public int getLength() {
         return length;
@@ -156,7 +159,7 @@ public class VerifyRequest {
 
     /**
      * @return the default locale used for verification. If this value is {@code null}, the locale will be determined
-     *         from the country code included in {@code number}
+     * from the country code included in {@code number}
      */
     public Locale getLocale() {
         return locale;
@@ -169,7 +172,7 @@ public class VerifyRequest {
 
     /**
      * @return the type of network the verification will be restricted to. This value has no effect unless it has been
-     *         enabled by contacting {@code support@nexmo.com}.
+     * enabled by contacting {@code support@nexmo.com}.
      */
     public LineType getType() {
         return type;
@@ -192,8 +195,8 @@ public class VerifyRequest {
     /**
      * The country for the destination phone number.
      * <p>
-     * If you wish to used localised number formats or you are not sure if number is correctly formatted, set this to
-     * a two-character country code. For example, GB, US. Verify will work out the international phone number for you.
+     * If you wish to used localised number formats or you are not sure if number is correctly formatted, set this to a
+     * two-character country code. For example, GB, US. Verify will work out the international phone number for you.
      *
      * @param country a String containing a 2-character country code
      */
@@ -234,9 +237,53 @@ public class VerifyRequest {
     }
 
     /**
+     * @return The predefined sequence of SMS and TTS (Text To Speech) actions to use in order to convey the PIN to your
+     * user.
+     */
+    public Workflow getWorkflow() {
+        return workflow;
+    }
+
+    /**
+     * Set the predefined sequence of SMS and TTS (Text To Speech) actions to use in order to convey the PIN to your
+     * user. See https://developer.nexmo.com/verify/guides/workflows-and-events
+     *
+     * @param workflow The workflow to use for conveying the PIN to your user.
+     */
+    public void setWorkflow(Workflow workflow) {
+        this.workflow = workflow;
+    }
+
+    /**
      * Types of phone line to be specified for {@link VerifyRequest#type}.
      */
     public enum LineType {
         ALL, MOBILE, LANDLINE,
+    }
+
+    /**
+     * Enumeration representing different verification workflows.
+     * <p>
+     * See: https://developer.nexmo.com/verify/guides/workflows-and-events for more details.
+     */
+    public enum Workflow {
+        /**
+         * The default workflow.
+         */
+        SMS_TTS_TTS(1),
+        SMS_SMS_TTS(2),
+        TTS_TTS(3),
+        SMS_SMS(4),
+        SMS_TTS(5);
+
+        private final int id;
+
+        Workflow(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
     }
 }
