@@ -21,18 +21,26 @@
  */
 package com.nexmo.client.voice;
 
+import com.nexmo.client.voice.ncco.Ncco;
+
 /**
  * Extension of ModifyCallPayload which adds an NCCO destination to the serialized form.
  */
 public class TransferCallPayload extends ModifyCallPayload {
-    private final String nccoUrl;
+    private String nccoUrl;
+    private Ncco ncco;
 
     public TransferCallPayload(String nccoUrl) {
         super(ModifyCallAction.TRANSFER);
         this.nccoUrl = nccoUrl;
     }
 
+    public TransferCallPayload(Ncco ncco) {
+        super(ModifyCallAction.TRANSFER);
+        this.ncco = ncco;
+    }
+
     public TransferDestination getDestination() {
-        return new TransferDestination(TransferDestination.Type.NCCO, this.nccoUrl);
+        return new TransferDestination(TransferDestination.Type.NCCO, this.nccoUrl, this.ncco);
     }
 }

@@ -24,6 +24,7 @@ package com.nexmo.client.voice;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.voice.ncco.Ncco;
 
 
 public class CallModifier {
@@ -42,6 +43,10 @@ public class CallModifier {
 
     public static CallModifier transferCall(String uuid, String nccoUrl) {
         return new CallModifier(uuid, new TransferCallPayload(nccoUrl));
+    }
+
+    public static CallModifier transferCall(String uuid, Ncco ncco) {
+        return new CallModifier(uuid, new TransferCallPayload(ncco));
     }
 
     public String getUuid() {

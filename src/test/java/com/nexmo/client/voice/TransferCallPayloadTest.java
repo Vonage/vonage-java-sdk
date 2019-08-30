@@ -20,6 +20,9 @@ package com.nexmo.client.voice;/*
  * THE SOFTWARE.
  */
 
+import com.nexmo.client.voice.ncco.Ncco;
+import com.nexmo.client.voice.ncco.RecordAction;
+import com.nexmo.client.voice.ncco.TalkAction;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -30,6 +33,17 @@ public class TransferCallPayloadTest {
         String expected = "{\"action\":\"transfer\",\"destination\":{\"type\":\"ncco\",\"url\":[\"https://example"
                 + ".com/ncco\"]}}";
         String actual = CallModifier.transferCall("not-a-uuid", "https://example.com/ncco").toJson();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testTransferWithInlineNcco() {
+        String expected = "{\"action\":\"transfer\",\"destination\":{\"type\":\"ncco\",\"ncco\":[{\"text\":\"Hello from Nexmo\",\"action\":\"talk\"},{\"action\":\"record\"},{\"text\":\"Thank you!\",\"action\":\"talk\"}]}}";
+        String actual = CallModifier.transferCall("not-a-uuid", new Ncco(TalkAction.builder("Hello from Nexmo").build(),
+                RecordAction.builder().build(),
+                TalkAction.builder("Thank you!").build())
+        ).toJson();
+
         assertEquals(expected, actual);
     }
 

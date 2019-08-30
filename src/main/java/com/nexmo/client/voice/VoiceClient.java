@@ -23,6 +23,7 @@ package com.nexmo.client.voice;
 
 
 import com.nexmo.client.*;
+import com.nexmo.client.voice.ncco.Ncco;
 
 /**
  * A client for talking to the Nexmo Voice API. The standard way to obtain an instance of this class is to use {@link
@@ -182,6 +183,22 @@ public class VoiceClient extends AbstractClient {
      */
     public ModifyCallResponse transferCall(String uuid, String nccoUrl) throws NexmoResponseParseException, NexmoClientException {
         return this.modifyCall(CallModifier.transferCall(uuid, nccoUrl));
+    }
+
+    /**
+     * Transfer a call to a different NCCO.
+     *
+     * @param uuid The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value can
+     *             be obtained with {@link CallEvent#getUuid()}
+     * @param ncco The new NCCO that will be used in the call.
+     *
+     * @return A ModifyCallResponse object, representing the response from the Nexmo Voice API.
+     *
+     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
+     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     */
+    public ModifyCallResponse transferCall(String uuid, Ncco ncco) throws NexmoResponseParseException, NexmoClientException {
+        return this.modifyCall(CallModifier.transferCall(uuid, ncco));
     }
 
     /**
