@@ -23,7 +23,6 @@ package com.nexmo.client.verify;
 
 import com.nexmo.client.*;
 
-import java.io.IOException;
 import java.util.Locale;
 
 /**
@@ -91,7 +90,7 @@ public class VerifyClient extends AbstractClient {
      */
     public VerifyResponse verify(final String number,
                                  final String brand,
-                                 final String from) throws IOException, NexmoClientException {
+                                 final String from) throws NexmoClientException, NexmoResponseParseException {
         return this.verify.verify(number, brand, from);
     }
 
@@ -118,7 +117,7 @@ public class VerifyClient extends AbstractClient {
                                  final String brand,
                                  final String from,
                                  final int length,
-                                 final Locale locale) throws IOException, NexmoClientException {
+                                 final Locale locale) throws NexmoClientException, NexmoResponseParseException {
         return this.verify.verify(number, brand, from, length, locale);
     }
 
@@ -148,14 +147,14 @@ public class VerifyClient extends AbstractClient {
                                  final String from,
                                  final int length,
                                  final Locale locale,
-                                 final VerifyRequest.LineType type) throws IOException, NexmoClientException {
+                                 final VerifyRequest.LineType type) throws NexmoClientException {
         return this.verify.verify(number, brand, from, length, locale, type);
     }
 
     /**
      * Send a verification request to a phone number.
      */
-    public VerifyResponse verify(VerifyRequest request) throws IOException, NexmoClientException {
+    public VerifyResponse verify(VerifyRequest request) throws NexmoClientException, NexmoResponseParseException {
         return this.verify.verify(request);
     }
 
@@ -170,7 +169,7 @@ public class VerifyClient extends AbstractClient {
      * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
      * @throws NexmoResponseParseException if the response from the API could not be parsed.
      */
-    public CheckResponse check(final String requestId, final String code) throws IOException, NexmoClientException {
+    public CheckResponse check(final String requestId, final String code) throws NexmoClientException, NexmoResponseParseException {
         return this.check.check(requestId, code);
     }
 
@@ -188,7 +187,7 @@ public class VerifyClient extends AbstractClient {
      */
     public CheckResponse check(final String requestId,
                                final String code,
-                               final String ipAddress) throws IOException, NexmoClientException {
+                               final String ipAddress) throws NexmoClientException, NexmoResponseParseException {
         return this.check.check(requestId, code, ipAddress);
     }
 
@@ -203,7 +202,7 @@ public class VerifyClient extends AbstractClient {
      * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
      * @throws NexmoResponseParseException if the response from the API could not be parsed.
      */
-    public SearchVerifyResponse search(String requestId) throws IOException, NexmoClientException {
+    public SearchVerifyResponse search(String requestId) throws NexmoClientException, NexmoResponseParseException {
         return this.search.search(requestId);
     }
 
@@ -217,7 +216,7 @@ public class VerifyClient extends AbstractClient {
      * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
      * @throws NexmoResponseParseException if the response from the API could not be parsed.
      */
-    public SearchVerifyResponse search(String... requestIds) throws IOException, NexmoClientException {
+    public SearchVerifyResponse search(String... requestIds) throws NexmoClientException, NexmoResponseParseException {
         return this.search.search(requestIds);
     }
 
@@ -231,7 +230,7 @@ public class VerifyClient extends AbstractClient {
      * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
      * @throws NexmoResponseParseException if the response from the API could not be parsed.
      */
-    public ControlResponse advanceVerification(String requestId) throws IOException, NexmoClientException {
+    public ControlResponse advanceVerification(String requestId) throws NexmoClientException, NexmoResponseParseException {
         return this.control.execute(new ControlRequest(requestId, VerifyControlCommand.TRIGGER_NEXT_EVENT));
     }
 
@@ -245,7 +244,7 @@ public class VerifyClient extends AbstractClient {
      * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
      * @throws NexmoResponseParseException if the response from the API could not be parsed.
      */
-    public ControlResponse cancelVerification(String requestId) throws IOException, NexmoClientException {
+    public ControlResponse cancelVerification(String requestId) throws NexmoClientException, NexmoResponseParseException {
         return this.control.execute(new ControlRequest(requestId, VerifyControlCommand.CANCEL));
     }
 }

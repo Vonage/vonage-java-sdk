@@ -23,8 +23,7 @@ package com.nexmo.client.verify;
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
-
-import java.io.IOException;
+import com.nexmo.client.NexmoResponseParseException;
 
 class CheckEndpoint {
     private CheckMethod checkMethod;
@@ -33,15 +32,15 @@ class CheckEndpoint {
         this.checkMethod = new CheckMethod(httpWrapper);
     }
 
-    CheckResponse check(final String requestId, final String code, final String ipAddress) throws IOException, NexmoClientException {
+    CheckResponse check(final String requestId, final String code, final String ipAddress) throws NexmoClientException, NexmoResponseParseException {
         return check(new CheckRequest(requestId, code, ipAddress));
     }
 
-    CheckResponse check(final String requestId, final String code) throws IOException, NexmoClientException {
+    CheckResponse check(final String requestId, final String code) throws NexmoClientException, NexmoResponseParseException {
         return check(new CheckRequest(requestId, code));
     }
 
-    private CheckResponse check(CheckRequest request) throws IOException, NexmoClientException {
+    private CheckResponse check(CheckRequest request) throws NexmoClientException, NexmoResponseParseException {
         return this.checkMethod.execute(request);
     }
 }

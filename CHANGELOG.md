@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added support for verification workflows inside of `VerifyRequest`.
 - Added support for transfer to NCCO via `VoiceClient#transferCall`.
 
+### Fixed
+- `VerifyClient` had methods that were still claiming to throw an `IOException`. This has been removed as it is not
+posible for it to be thrown.
+
 ## [5.1.0] - 2019-08-18
 
 ### Added

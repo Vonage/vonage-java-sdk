@@ -23,8 +23,7 @@ package com.nexmo.client.verify;
 
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoClientException;
-
-import java.io.IOException;
+import com.nexmo.client.NexmoResponseParseException;
 
 class SearchEndpoint {
     private SearchMethod searchMethod;
@@ -33,7 +32,7 @@ class SearchEndpoint {
         this.searchMethod = new SearchMethod(httpWrapper);
     }
 
-    SearchVerifyResponse search(String... requestIds) throws IOException, NexmoClientException {
+    SearchVerifyResponse search(String... requestIds) throws NexmoClientException, NexmoResponseParseException {
         return this.searchMethod.execute(new SearchRequest(requestIds));
     }
 }
