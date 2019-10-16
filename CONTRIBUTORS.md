@@ -15,3 +15,4 @@ documentation, or tests are eligible to be added to this list.
 - I Wayan Dharmana ([@wdharmana](https://github.com/wdharmana))
 - Sharif Malik ([@sharif-malik])(https://github.com/sharif-malik))
 - John Schultz ([@jwschultz](https://github.com/jwschultz))
+- Steve Lorello ([@sloello89])(https://github.com/slorello89)
