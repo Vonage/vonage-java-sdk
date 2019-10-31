@@ -25,6 +25,7 @@ package com.nexmo.client;
 import com.nexmo.client.account.AccountClient;
 import com.nexmo.client.application.ApplicationClient;
 import com.nexmo.client.auth.*;
+import com.nexmo.client.conversation.ConversationClient;
 import com.nexmo.client.conversion.ConversionClient;
 import com.nexmo.client.insight.InsightClient;
 import com.nexmo.client.numbers.NumbersClient;
@@ -60,6 +61,7 @@ public class NexmoClient {
     private SnsClient sns;
     private ConversionClient conversion;
     private RedactClient redact;
+    private ConversationClient conversations;
     private HttpWrapper httpWrapper;
 
     private NexmoClient(Builder builder) {
@@ -76,6 +78,7 @@ public class NexmoClient {
         this.sns = new SnsClient(this.httpWrapper);
         this.conversion = new ConversionClient(this.httpWrapper);
         this.redact = new RedactClient(this.httpWrapper);
+        this.conversations = new ConversationClient(this.httpWrapper);
     }
 
     public AccountClient getAccountClient() {
@@ -117,6 +120,8 @@ public class NexmoClient {
     public RedactClient getRedactClient() {
         return this.redact;
     }
+
+    public ConversationClient getConversationsClient(){return this.conversations;}
 
     /**
      * Generate a JWT for the application the client has been configured with.
