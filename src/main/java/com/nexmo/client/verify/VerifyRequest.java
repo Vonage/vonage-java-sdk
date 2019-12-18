@@ -274,7 +274,9 @@ public class VerifyRequest {
         SMS_SMS_TTS(2),
         TTS_TTS(3),
         SMS_SMS(4),
-        SMS_TTS(5);
+        SMS_TTS(5),
+        SMS(6),
+        TTS(7);
 
         private final int id;
 
