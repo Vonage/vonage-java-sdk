@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [5.2.2]
 ### Fixed
-- Weird typed exceptions being thrown when there are apparent networking issues
+- Improved error handling when there are apparent networking issues
 
 ## [5.2.1]
 ### Added
