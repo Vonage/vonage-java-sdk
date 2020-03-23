@@ -100,11 +100,17 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
                 LOG.debug(EntityUtils.toString(enclosingRequest.getEntity()));
             }
             HttpResponse response = this.httpWrapper.getHttpClient().execute(httpRequest);
-            return parseResponse(response);
+            try{
+                return parseResponse(response);
+            }
+            catch (IOException io){
+                throw new NexmoResponseParseException("Unable to parse response.", io);
+            }
         } catch (UnsupportedEncodingException uee) {
             throw new NexmoUnexpectedException("UTF-8 encoding is not supported by this JVM.", uee);
         } catch (IOException io) {
-            throw new NexmoResponseParseException("Unable to parse response.", io);
+            throw new NexmoMethodFailedException("Something went wrong while executing the HTTP request: " +
+                    io.getMessage() + ".", io);
         }
     }
 

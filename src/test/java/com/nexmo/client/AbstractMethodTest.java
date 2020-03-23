@@ -25,11 +25,9 @@ package com.nexmo.client;
 import com.nexmo.client.auth.AuthCollection;
 import com.nexmo.client.auth.AuthMethod;
 import com.nexmo.client.auth.JWTAuthMethod;
+import io.jsonwebtoken.lang.Assert;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpEntityEnclosingRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.ProtocolVersion;
+import org.apache.http.*;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
@@ -42,6 +40,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Set;
 
@@ -66,8 +65,17 @@ public class AbstractMethodTest {
         }
 
         @Override
-        public String parseResponse(HttpResponse response) {
+        public String parseResponse(HttpResponse response) throws IOException {
             return "response";
+        }
+    }
+
+    private static class ConcreteMethodFailingParse extends ConcreteMethod{
+        public ConcreteMethodFailingParse(HttpWrapper httpWrapper){super(httpWrapper);}
+
+        @Override
+        public String parseResponse(HttpResponse response) throws IOException{
+            throw new IOException("This is a test io exception from parse");
         }
     }
 
@@ -164,5 +172,46 @@ public class AbstractMethodTest {
         String entityContents = IOUtils.toString(entity.getContent(), Charset.forName("UTF-8"));
 
         assertEquals(json, entityContents);
+    }
+
+    @Test
+    public void testFailedParse() throws Exception{
+        ConcreteMethodFailingParse method = spy(new ConcreteMethodFailingParse(mockWrapper));
+        String json = "{\"text\":\"Hello World\",\"loop\":0,\"voice_name\":\"Kimberly\"}";
+        RequestBuilder builder = RequestBuilder
+                .put("")
+                .setCharset(Charset.forName("UTF-8"))
+                .setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
+        when(method.makeRequest(any(String.class))).thenReturn(builder);
+        when(mockAuthMethod.apply(any(RequestBuilder.class))).thenReturn(builder);
+        try{
+
+            method.execute("");
+            Assert.isTrue(false,"Should have gotten a Parsing exception");
+        }
+        catch (NexmoResponseParseException ex){
+            Assert.isTrue(ex.getCause() instanceof IOException, "Unknown Exception Caused Throw");
+        }
+    }
+
+    @Test
+    public void testFailedHttpExecute() throws Exception{
+        ConcreteMethodFailingParse method = spy(new ConcreteMethodFailingParse(mockWrapper));
+        String json = "{\"text\":\"Hello World\",\"loop\":0,\"voice_name\":\"Kimberly\"}";
+        RequestBuilder builder = RequestBuilder
+                .put("")
+                .setCharset(Charset.forName("UTF-8"))
+                .setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
+        when(method.makeRequest(any(String.class))).thenReturn(builder);
+        when(mockAuthMethod.apply(any(RequestBuilder.class))).thenReturn(builder);
+        IOException ex = new IOException("This is a test exception thrown from the HttpClient Execute method");
+        when(mockHttpClient.execute(any(HttpUriRequest.class))).thenThrow(ex);
+        try{
+            method.execute("");
+            Assert.isTrue(false, "There should have been a Nexmo Client exception thrown");
+        }
+        catch (NexmoMethodFailedException e){
+            Assert.isTrue(e.getCause() instanceof IOException, "The cause of the exception was not correct");
+        }
     }
 }
