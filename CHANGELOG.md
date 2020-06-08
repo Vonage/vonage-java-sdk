@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [5.2.2]
 ### Fixed
 - Improved error handling when there are apparent networking issues
+### Added
+- Added language, gender, SSML support to VoiceName enum
 
 ## [5.2.1]
 ### Added

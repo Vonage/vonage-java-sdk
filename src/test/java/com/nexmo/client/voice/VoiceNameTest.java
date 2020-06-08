@@ -24,11 +24,19 @@ package com.nexmo.client.voice;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class VoiceNameTest {
     @Test
     public void testGetVoiceNameFromString() {
-        assertEquals(VoiceName.CARLA, VoiceName.fromString("Carla"));
+        VoiceName voiceName = VoiceName.fromString("Carla");
+        assertEquals(VoiceName.CARLA, voiceName);
+        assertEquals("it-IT", voiceName.getLanguage());
+        assertEquals(Gender.FEMALE, voiceName.getGender());
+        assertTrue(voiceName.isSupportSSML());
     }
 
     @Test
@@ -127,4 +135,17 @@ public class VoiceNameTest {
         assertEquals(VoiceName.EMPAR.getDisplayName(), "Empar");
         assertEquals(VoiceName.UNKNOWN.getDisplayName(), "Unknown");
     }
+
+    @Test
+    public void testAssertFiltering() {
+        List<VoiceName> allVoiceNames = Arrays.asList(VoiceName.values());
+        assertEquals(31, allVoiceNames.stream().filter(vn -> vn.getGender() == Gender.MALE).count());
+        assertEquals(67, allVoiceNames.stream().filter(vn -> vn.getGender() == Gender.FEMALE).count());
+        assertEquals(3, allVoiceNames.stream().filter(vn -> vn.getLanguage().equals("ara-XWW")).count());
+        assertEquals(2, allVoiceNames.stream().filter(vn -> vn.getLanguage().equals("ara-XWW"))
+                .filter(vn -> vn.getGender() == Gender.MALE).count());
+        assertEquals(0, allVoiceNames.stream().filter(vn -> vn.getLanguage().equals("ara-XWW"))
+                .filter(vn -> vn.getGender() == Gender.MALE).filter(VoiceName::isSupportSSML).count());
+    }
+
 }
