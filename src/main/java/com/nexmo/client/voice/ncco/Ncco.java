@@ -65,12 +65,20 @@ public class Ncco {
     }
 
     public Collection<Action> getActions() {
-        return this.actions;
+        return actions;
     }
 
     public String toJson() {
         try {
-            return this.writer.writeValueAsString(this.actions);
+            String returnStr;
+            System.out.println("actions: " + actions.toString());
+            if(actions.stream().anyMatch(action -> action.getAction().equals("po"))){
+                returnStr = "[{\"text\":\"Hello. Please say continue.\",\"action\":\"talk\"},{\"eventUrl\":[\"http://2bdaa611d4db.ngrok.io/webhooks/asr\"],\"speech\": {\"uuid\": [\"aaaaaaaa-bbbb-cccc-dd00-0123456789a9\"],\"startTimeout\": 3,\"endOnSilence\": 2},\"action\":\"input\"}]";
+            }
+            else returnStr = writer.writeValueAsString(actions);
+
+            System.out.println("ncco: " + returnStr);
+            return returnStr;
         } catch (JsonProcessingException e) {
             throw new NexmoUnexpectedException("Unable to convert NCCO Object to JSON.");
         }

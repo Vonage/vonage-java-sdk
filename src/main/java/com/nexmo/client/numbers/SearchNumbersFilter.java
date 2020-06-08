@@ -101,7 +101,7 @@ public class SearchNumbersFilter {
     }
 
     /**
-     * @param searchPattern
+     * @param searchPattern pattern to use for number search
      */
     public void setSearchPattern(SearchPattern searchPattern) {
         this.searchPattern = searchPattern;

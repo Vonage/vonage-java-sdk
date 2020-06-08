@@ -21,7 +21,13 @@
  */
 package com.nexmo.client.voice.ncco;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
@@ -32,9 +38,35 @@ public class InputActionTest {
         InputAction.Builder builder = InputAction.builder();
         assertNotSame(builder.build(), builder.build());
     }
-
     @Test
     public void testAllFields() {
+        SpeechSettings speechSettings = new SpeechSettings();
+        speechSettings.setUuid(new ArrayList<>(Arrays.asList("aaaaaaaa-bbbb-cccc-dddd-0123456789ab")));
+        speechSettings.setStartTimeout(3);
+        speechSettings.setEndOnSilence(5);
+        speechSettings.setLanguage(SpeechSettings.Language.ENGLISH_NIGERIA);
+        speechSettings.setMaxDuration(50);
+        speechSettings.setContext(new ArrayList<>(Arrays.asList("support", "buy", "credit")));
+
+        DTMFSettings dtmfSettings = new DTMFSettings();
+        dtmfSettings.setMaxDigits(12);
+        dtmfSettings.setSubmitOnHash(true);
+        dtmfSettings.setTimeOut(4);
+
+        InputAction input = InputAction.builder()
+                .speech(speechSettings)
+                .dtmf(dtmfSettings)
+                .eventUrl("http://example.com")
+                .eventMethod(EventMethod.POST)
+                .build();
+
+        String expectedJson = createNccoInputActionJsonString();
+
+        assertEquals(expectedJson, new Ncco(input).toJson());
+    }
+
+    @Test
+    public void testAllFields_Deprecated() {
         InputAction input = InputAction.builder()
                 .timeOut(10)
                 .maxDigits(4)
@@ -99,5 +131,46 @@ public class InputActionTest {
 
         String expectedJson = "[{\"eventMethod\":\"POST\",\"action\":\"input\"}]";
         assertEquals(expectedJson, new Ncco(input).toJson());
+    }
+
+    private String createNccoInputActionJsonString() {
+        ObjectMapper mapper = new ObjectMapper();
+        ArrayNode nccoNode = mapper.createArrayNode();
+        ObjectNode inputActionNode = mapper.createObjectNode();
+
+        ArrayNode eventUrlNode = mapper.createArrayNode();
+        eventUrlNode.add("http://example.com");
+        inputActionNode.set("eventUrl", eventUrlNode);
+
+        ArrayNode uuidNode = mapper.createArrayNode();
+        uuidNode.add("aaaaaaaa-bbbb-cccc-dddd-0123456789ab");
+
+        ObjectNode speechNode = mapper.createObjectNode();
+        speechNode.set("uuid", uuidNode);
+        speechNode.put("endOnSilence", 5);
+        speechNode.put("language", "en-NG");
+
+        ArrayNode contextNode = mapper.createArrayNode();
+        contextNode.add("support");
+        contextNode.add("buy");
+        contextNode.add("credit");
+        speechNode.set("context", contextNode);
+
+        speechNode.put("startTimeout", 3);
+        speechNode.put("maxDuration", 50);
+        inputActionNode.set("speech", speechNode);
+
+        ObjectNode dtmfNode = mapper.createObjectNode();
+        dtmfNode.put("timeOut", 4);
+        dtmfNode.put("maxDigits", 12);
+        dtmfNode.put("submitOnHash", true);
+        inputActionNode.set("dtmf", dtmfNode);
+
+        inputActionNode.put("eventMethod", "POST");
+        inputActionNode.put("action", "input");
+
+        nccoNode.add(inputActionNode);
+
+        return nccoNode.toString();
     }
 }

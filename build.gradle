@@ -2,18 +2,24 @@ buildscript {
     repositories {
         jcenter()
     }
-    dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
-    }
 }
 
-apply plugin: 'com.github.johnrengelman.shadow'
+plugins {
+    id 'com.github.johnrengelman.shadow' version '4.0.0'
+    id 'java'
+    id 'jacoco'
+    id 'maven'
+    id 'signing'
+    id 'eclipse'
+}
 
-apply plugin: 'java'
-apply plugin: "jacoco"
-apply plugin: 'maven'
-apply plugin: 'signing'
-apply plugin: 'eclipse'
+//apply plugin: 'com.github.johnrengelman.shadow'
+//
+//apply plugin: 'java'
+//apply plugin: "jacoco"
+//apply plugin: 'maven'
+//apply plugin: 'signing'
+//apply plugin: 'eclipse'
 // apply plugin: 'war'
 
 group = "com.nexmo"
@@ -32,21 +38,21 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-    compile 'commons-codec:commons-codec:1.9'
-    compile 'commons-logging:commons-logging:1.2'
-    compile 'org.apache.httpcomponents:httpclient:4.5.8'
-    compile 'commons-io:commons-io:2.5'
-    compile 'org.apache.commons:commons-lang3:3.5'
+    implementation 'commons-codec:commons-codec:1.9'
+    implementation 'commons-logging:commons-logging:1.2'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.8'
+    implementation 'commons-io:commons-io:2.5'
+    implementation 'org.apache.commons:commons-lang3:3.5'
     compileOnly 'javax.servlet:javax.servlet-api:3.1.0'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.9'
-    compile 'io.openapitools.jackson.dataformat:jackson-dataformat-hal:1.0.4'
-    compile 'javax.xml.bind:jaxb-api:2.3.0'
-    compile "com.nexmo:jwt:1.0.1"
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.9'
+    implementation 'io.openapitools.jackson.dataformat:jackson-dataformat-hal:1.0.4'
+    implementation 'javax.xml.bind:jaxb-api:2.3.0'
+    implementation "com.nexmo:jwt:1.0.1"
 
-    testCompile "javax.servlet:javax.servlet-api:3.1.0"
-    testCompile 'junit:junit:4.4'
-    testCompile "org.mockito:mockito-core:2.25.1"
-    testCompile 'org.hamcrest:hamcrest-all:1.3'
+    testImplementation "javax.servlet:javax.servlet-api:3.1.0"
+    testImplementation 'junit:junit:4.4'
+    testImplementation "org.mockito:mockito-core:2.25.1"
+    testImplementation 'org.hamcrest:hamcrest-all:1.3'
 }
 
 test {
@@ -100,6 +106,8 @@ jacocoTestReport {
     }
 }
 check.dependsOn jacocoTestReport
+
+
 
 uploadArchives {
     repositories {
@@ -165,9 +173,9 @@ signing {
     sign configurations.archives
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '3.1'
-}
+//task wrapper(type: Wrapper) {
+//    gradleVersion = '3.1'
+//}
 
 task zip(type: Zip) {
     from configurations.runtime.allArtifacts.files

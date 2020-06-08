@@ -74,8 +74,13 @@ public class NumbersClient {
     /**
      * Search for available Nexmo Virtual Numbers.
      *
+     * @param country search number by country.
+     *
      * @throws NexmoResponseParseException if the response from the API could not be parsed.
      * @throws NexmoClientException        if an error is returned by the server.
+     *
+     * @return {@link SearchNumbersResponse}
+     *
      */
     public SearchNumbersResponse searchNumbers(String country) throws NexmoResponseParseException, NexmoClientException {
         return this.searchNumbers(new SearchNumbersFilter(country));
@@ -84,8 +89,12 @@ public class NumbersClient {
     /**
      * Search for available Nexmo Virtual Numbers.
      *
+     * @param filter search for numbers using a search number filter
+     *
      * @throws NexmoResponseParseException if the response from the API could not be parsed.
      * @throws NexmoClientException        if an error is returned by the server.
+     *
+     * * @return {@link SearchNumbersResponse}
      */
     public SearchNumbersResponse searchNumbers(SearchNumbersFilter filter) throws NexmoResponseParseException, NexmoClientException {
         return this.searchNumbers.searchNumbers(filter);

@@ -250,7 +250,7 @@ return new Ncco(intro, record, outro).toJson();
 
 You can combine the above examples to send an NCCO to the Voice API:
 
-```java
+
 The following code initiates an outbound call which then reads the user [a message](https://nexmo-community.github.io/ncco-examples/first_call_talk.json):
 
 ```java

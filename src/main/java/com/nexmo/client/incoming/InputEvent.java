@@ -23,6 +23,7 @@ package com.nexmo.client.incoming;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexmo.client.NexmoUnexpectedException;
 
@@ -30,12 +31,14 @@ import java.io.IOException;
 import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class InputEvent {
+public class InputEvent<T> {
     private String uuid;
     private String conversationUuid;
-    private boolean timedOut;
-    private String dtmf;
+    private Boolean timedOut;
+    private T dtmf;
     private Date timestamp;
+    private SpeechOutput speech;
+
 
     public String getUuid() {
         return uuid;
@@ -47,11 +50,11 @@ public class InputEvent {
     }
 
     @JsonProperty("timed_out")
-    public boolean isTimedOut() {
+    public Boolean isTimedOut() {
         return timedOut;
     }
 
-    public String getDtmf() {
+    public T getDtmf() {
         return dtmf;
     }
 
@@ -59,10 +62,19 @@ public class InputEvent {
         return timestamp;
     }
 
-    public static InputEvent fromJson(String json) {
+    public SpeechOutput getSpeech() {
+        return speech;
+    }
+
+    public static <T> T fromJson(String json) {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, InputEvent.class);
+            JsonNode dtmfNode = mapper.readTree(json).get("dtmf");
+
+            //determine if json string contains new dtmf object or old dtmf string.
+            if (dtmfNode != null && !dtmfNode.isTextual()){
+                return mapper.readValue(json, mapper.getTypeFactory().constructParametricType(InputEvent.class, DtmfOutput.class));
+            }else return mapper.readValue(json, mapper.getTypeFactory().constructParametricType(InputEvent.class, String.class));
         } catch (IOException jpe) {
             throw new NexmoUnexpectedException("Failed to produce InputEvent from json.", jpe);
         }

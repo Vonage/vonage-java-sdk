@@ -39,9 +39,16 @@ public class InputAction implements Action {
     private Integer maxDigits;
     private Boolean submitOnHash;
     private Collection<String> eventUrl;
+    private SpeechSettings speech;
+    private DTMFSettings dtmf;
     private EventMethod eventMethod;
 
     /**
+     * Do not use the 'new' operator to create a new InputAction. Instead use InputAction.Builder to build the InputAction
+     * object.
+     *
+     * @param builder  builder to create InputAction object
+     *
      * @deprecated Use {@link Builder}
      */
     @Deprecated
@@ -51,6 +58,8 @@ public class InputAction implements Action {
         this.submitOnHash = builder.submitOnHash;
         this.eventUrl = builder.eventUrl;
         this.eventMethod = builder.eventMethod;
+        this.speech = builder.speech;
+        this.dtmf = builder.dtmf;
     }
 
     @Override
@@ -58,14 +67,17 @@ public class InputAction implements Action {
         return ACTION;
     }
 
+    @Deprecated
     public Integer getTimeOut() {
         return timeOut;
     }
 
+    @Deprecated
     public Integer getMaxDigits() {
         return maxDigits;
     }
 
+    @Deprecated
     public Boolean getSubmitOnHash() {
         return submitOnHash;
     }
@@ -82,42 +94,58 @@ public class InputAction implements Action {
         return new Builder();
     }
 
+    public SpeechSettings getSpeech() {
+        return speech;
+    }
+
+    public void setSpeech(SpeechSettings speech) {
+        this.speech = speech;
+    }
+
+    public DTMFSettings getDtmf() {
+        return dtmf;
+    }
+
+    public void setDtmf(DTMFSettings dtmf) {
+        this.dtmf = dtmf;
+    }
+
     public static class Builder {
-        private Integer timeOut = null;
-        private Integer maxDigits = null;
-        private Boolean submitOnHash = null;
-        private Collection<String> eventUrl = null;
-        private EventMethod eventMethod = null;
+        private Integer timeOut;
+        private Integer maxDigits;
+        private Boolean submitOnHash;
+        private Collection<String> eventUrl;
+        private EventMethod eventMethod;
+        private SpeechSettings speech;
+        private DTMFSettings dtmf;
+
 
         /**
-         * @param timeOut The result of the callee's activity is sent to the eventUrl webhook endpoint timeOut seconds
-         *                after the last action. The default value is 3. Max is 10.
-         *
-         * @return The {@link Builder} to keep building.
+         * @param timeOut
+         * @deprecated use {@link DTMFSettings#setTimeOut(Integer)}
+         * @return {@link Builder}
          */
+        @Deprecated
         public Builder timeOut(Integer timeOut) {
             this.timeOut = timeOut;
             return this;
         }
 
         /**
-         * @param maxDigits The number of digits the user can press. The maximum value is 20, the default is 4 digits.
-         *
-         * @return The {@link Builder} to keep building.
+         * @deprecated use {@link DTMFSettings#setMaxDigits(Integer)}
+         * @return {@link Builder}
          */
+        @Deprecated
         public Builder maxDigits(Integer maxDigits) {
             this.maxDigits = maxDigits;
             return this;
         }
 
         /**
-         * @param submitOnHash Set to true so the callee's activity is sent to your webhook endpoint at eventUrl after
-         *                     he or she presses #. If # is not pressed the result is submitted after timeOut seconds.
-         *                     The default value is false. That is, the result is sent to your webhook endpoint after
-         *                     timeOut seconds.
-         *
-         * @return The {@link Builder} to keep building.
+         * @deprecated use {@link DTMFSettings#setSubmitOnHash(Boolean)}
+         * @return {@link Builder}
          */
+        @Deprecated
         public Builder submitOnHash(Boolean submitOnHash) {
             this.submitOnHash = submitOnHash;
             return this;
@@ -155,10 +183,43 @@ public class InputAction implements Action {
         }
 
         /**
+         *
+         * @param speech Speech recognition settings object to enable speech input. Required if dtmf is not provided.
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder speech(SpeechSettings speech){
+            this.speech = speech;
+            return this;
+        }
+
+        /**
+         *
+         * @param dtmf DTMF settings object to enable DTMF input. Required if speech is not provided.
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder dtmf(DTMFSettings dtmf){
+            this.dtmf = dtmf;
+            return this;
+        }
+
+        /**
          * @return A new {@link InputAction} object from the stored builder options.
          */
         public InputAction build() {
             return new InputAction(this);
         }
     }
+
+//    @Override
+//    public String toString() {
+//        return "InputAction{" +
+//                "timeOut=" + timeOut +
+//                ", maxDigits=" + maxDigits +
+//                ", submitOnHash=" + submitOnHash +
+//                ", eventUrl=" + eventUrl +
+//                ", speech=" + speech +
+//                ", dtmf=" + dtmf +
+//                ", eventMethod=" + eventMethod +
+//                '}';
+//    }
 }

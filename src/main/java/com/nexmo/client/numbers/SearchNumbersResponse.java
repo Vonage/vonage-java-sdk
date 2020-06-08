@@ -37,13 +37,14 @@ public class SearchNumbersResponse {
 
     /**
      * Get the number of responses returned by the Nexmo API.
+     * @return int amount of numbers returned from the search
      */
     public int getCount() {
         return count;
     }
 
     /**
-     * Obtain an array of matching numbers than are available to buy.
+     * @return {@link AvailableNumber} Obtain an array of matching numbers than are available to buy.
      */
     public AvailableNumber[] getNumbers() {
         return numbers;
