@@ -114,6 +114,7 @@ public class VoiceNameTest {
         assertEquals(VoiceName.NORA.getDisplayName(), "Nora");
         assertEquals(VoiceName.HENRIK.getDisplayName(), "Henrik");
         assertEquals(VoiceName.LUCIANA.getDisplayName(), "Luciana");
+        assertEquals(VoiceName.LUCIA.getDisplayName(), "Lucia");
         assertEquals(VoiceName.FELIPE.getDisplayName(), "Felipe");
         assertEquals(VoiceName.CATARINA.getDisplayName(), "Catarina");
         assertEquals(VoiceName.JOANA.getDisplayName(), "Joana");
@@ -125,6 +126,12 @@ public class VoiceNameTest {
         assertEquals(VoiceName.CEM.getDisplayName(), "Cem");
         assertEquals(VoiceName.YELDA.getDisplayName(), "Yelda");
         assertEquals(VoiceName.EMPAR.getDisplayName(), "Empar");
+        assertEquals(VoiceName.VICKI.getDisplayName(), "Vicki");
+        assertEquals(VoiceName.ADITI.getDisplayName(), "Aditi");
+        assertEquals(VoiceName.TAKUMI.getDisplayName(), "Takumi");
+        assertEquals(VoiceName.LEA.getDisplayName(), "Lea");
+        assertEquals(VoiceName.ZEINA.getDisplayName(), "Zeina");
+        assertEquals(VoiceName.ZHIYU.getDisplayName(), "Zhiyu");
         assertEquals(VoiceName.UNKNOWN.getDisplayName(), "Unknown");
     }
 }
