@@ -13,15 +13,6 @@ plugins {
     id 'eclipse'
 }
 
-//apply plugin: 'com.github.johnrengelman.shadow'
-//
-//apply plugin: 'java'
-//apply plugin: "jacoco"
-//apply plugin: 'maven'
-//apply plugin: 'signing'
-//apply plugin: 'eclipse'
-// apply plugin: 'war'
-
 group = "com.nexmo"
 archivesBaseName = "client"
 version = "5.2.1"
@@ -79,19 +70,19 @@ jar {
                 "Created-By": 'Nexmo',
                 'Implementation-Vendor': 'Nexmo',
                 'Implementation-Title': 'Nexmo Java SDK',
-                'Implementation-Version': version
+                'Implementation-Version': archiveVersion
         )
     }
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
+    archiveClassifier = 'javadoc'
     from javadoc
 }
 assemble.dependsOn javadocJar
 
 task sourcesJar(type: Jar) {
-    classifier = 'sources'
+    archiveClassifier = 'sources'
     from sourceSets.main.allSource
 }
 
@@ -184,7 +175,7 @@ task zip(type: Zip) {
 }
 
 task depJar(type: Jar, dependsOn: configurations.runtime) {
-    baseName = archivesBaseName + '-with-dependencies'
+    archiveBaseName = archivesBaseName + '-with-dependencies'
     from { configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
