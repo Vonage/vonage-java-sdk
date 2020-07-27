@@ -34,7 +34,7 @@ For Gradle 3.4 or Higher:
 
 ```groovy
 dependencies {
-    implementation 'com.nexmo:client:5.2.1'
+    implementation 'com.nexmo:client:5.3.0'
 }
 ```
 
@@ -42,7 +42,7 @@ For older versions:
 
 ```groovy
 dependencies {
-    compile 'com.nexmo:client:5.2.1'
+    compile 'com.nexmo:client:5.3.0'
 }
 ```
 
@@ -54,7 +54,7 @@ Add the following to the correct place in your project's POM file:
 <dependency>
       <groupId>com.nexmo</groupId>
       <artifactId>client</artifactId>
-      <version>5.2.1</version>
+      <version>5.3.0</version>
 </dependency>
 ```
 
