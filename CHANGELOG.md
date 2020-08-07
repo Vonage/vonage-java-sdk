@@ -4,12 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-
-## [5.2.3]
+## [5.3.1]
 ### Added
 - Added AppEndpoint for ConnectAction
 
-## [5.2.2]
+## [5.3.0]
+### Added
+- Added support for new voice names added to the Voice API for [Text to Speech](https://developer.nexmo.com/voice/voice-api/guides/text-to-speech)
+
 ### Fixed
 - Improved error handling when there are apparent networking issues
 
