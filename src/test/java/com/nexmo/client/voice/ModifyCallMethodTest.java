@@ -23,6 +23,7 @@ package com.nexmo.client.voice;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexmo.client.HttpConfig;
 import com.nexmo.client.HttpWrapper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,11 +33,11 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
@@ -45,12 +46,16 @@ import static org.junit.Assert.assertNull;
 public class ModifyCallMethodTest {
     private static final Log LOG = LogFactory.getLog(ModifyCallMethodTest.class);
 
+    private ModifyCallMethod method;
+
+    @Before
+    public void setUp() throws Exception {
+        method = new ModifyCallMethod(new HttpWrapper());
+    }
+
     @Test
     public void makeRequest() throws Exception {
-        HttpWrapper httpWrapper = new HttpWrapper();
-        ModifyCallMethod methodUnderTest = new ModifyCallMethod(httpWrapper);
-
-        RequestBuilder request = methodUnderTest.makeRequest(
+        RequestBuilder request = method.makeRequest(
                 new CallModifier("abc-123", ModifyCallAction.HANGUP)
         );
 
@@ -64,10 +69,7 @@ public class ModifyCallMethodTest {
 
     @Test
     public void earmuffRequest() throws Exception {
-        HttpWrapper httpWrapper = new HttpWrapper();
-        ModifyCallMethod methodUnderTest = new ModifyCallMethod(httpWrapper);
-
-        RequestBuilder request = methodUnderTest.makeRequest(
+        RequestBuilder request = method.makeRequest(
                 new CallModifier("abc-123", ModifyCallAction.EARMUFF)
         );
 
@@ -81,10 +83,7 @@ public class ModifyCallMethodTest {
 
     @Test
     public void unearmuffRequest() throws Exception {
-        HttpWrapper httpWrapper = new HttpWrapper();
-        ModifyCallMethod methodUnderTest = new ModifyCallMethod(httpWrapper);
-
-        RequestBuilder request = methodUnderTest.makeRequest(
+        RequestBuilder request = method.makeRequest(
                 new CallModifier("abc-123", ModifyCallAction.UNEARMUFF)
         );
 
@@ -98,10 +97,7 @@ public class ModifyCallMethodTest {
 
     @Test
     public void muteRequest() throws Exception {
-        HttpWrapper httpWrapper = new HttpWrapper();
-        ModifyCallMethod methodUnderTest = new ModifyCallMethod(httpWrapper);
-
-        RequestBuilder request = methodUnderTest.makeRequest(
+        RequestBuilder request = method.makeRequest(
                 new CallModifier("abc-123", ModifyCallAction.MUTE)
         );
 
@@ -115,10 +111,7 @@ public class ModifyCallMethodTest {
 
     @Test
     public void unmuteRequest() throws Exception {
-        HttpWrapper httpWrapper = new HttpWrapper();
-        ModifyCallMethod methodUnderTest = new ModifyCallMethod(httpWrapper);
-
-        RequestBuilder request = methodUnderTest.makeRequest(
+        RequestBuilder request = method.makeRequest(
                 new CallModifier("abc-123", ModifyCallAction.UNMUTE)
         );
 
@@ -132,9 +125,6 @@ public class ModifyCallMethodTest {
 
     @Test
     public void parseResponse() throws Exception {
-        HttpWrapper wrapper = new HttpWrapper();
-        ModifyCallMethod methodUnderTest = new ModifyCallMethod(wrapper);
-
         HttpResponse stubResponse = new BasicHttpResponse(
                 new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 200, "OK")
         );
@@ -145,30 +135,31 @@ public class ModifyCallMethodTest {
         entity.setContent(jsonStream);
         stubResponse.setEntity(entity);
 
-        ModifyCallResponse response = methodUnderTest.parseResponse(stubResponse);
+        ModifyCallResponse response = method.parseResponse(stubResponse);
         assertEquals("Received", response.getMessage());
     }
 
     @Test
     public void parseNullResponse() throws Exception {
-        HttpWrapper wrapper = new HttpWrapper();
-        ModifyCallMethod methodUnderTest = new ModifyCallMethod(wrapper);
-
         HttpResponse stubResponse = new BasicHttpResponse(
                 new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 204, "OK")
         );
 
-        ModifyCallResponse response = methodUnderTest.parseResponse(stubResponse);
+        ModifyCallResponse response = method.parseResponse(stubResponse);
         assertNull(response);
     }
 
     @Test
-    public void testSetUri() throws Exception {
-        ModifyCallMethod methodUnderTest = new ModifyCallMethod(null);
-        methodUnderTest.setUri("https://example.com/dummy/");
-        RequestBuilder req = methodUnderTest.makeRequest(
-                new CallModifier("uuid-1234", ModifyCallAction.HANGUP)
+    public void testCustomUri() throws Exception {
+        String expectedUri = "https://example.com/v1/calls/ssf61863-4a51-ef6b-11e1-w6edebcf93bA";
+
+        HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri("https://example.com").build());
+        method = new ModifyCallMethod(wrapper);
+
+        RequestBuilder builder = method.makeRequest(
+                new CallModifier("ssf61863-4a51-ef6b-11e1-w6edebcf93bA", ModifyCallAction.HANGUP)
         );
-        assertEquals(new URI("https://example.com/dummy/uuid-1234"), req.getUri());
+        assertEquals("PUT", builder.getMethod());
+        assertEquals(expectedUri, builder.build().getURI().toString());
     }
 }

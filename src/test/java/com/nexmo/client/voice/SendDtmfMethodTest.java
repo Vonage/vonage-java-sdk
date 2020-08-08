@@ -23,6 +23,7 @@ package com.nexmo.client.voice;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexmo.client.HttpConfig;
 import com.nexmo.client.HttpWrapper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,6 +33,7 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -44,6 +46,12 @@ import static org.junit.Assert.assertEquals;
 
 public class SendDtmfMethodTest {
     private static final Log LOG = LogFactory.getLog(SendDtmfMethodTest.class);
+
+    private SendDtmfMethod method;
+    @Before
+    public void setUp() throws Exception {
+        method = new SendDtmfMethod(new HttpWrapper());
+    }
 
     @Test
     public void makeRequest() throws Exception {
@@ -85,5 +93,17 @@ public class SendDtmfMethodTest {
     @Test
     public void testRequestThrottleResponse() throws Exception {
         test429(new SendDtmfMethod(null));
+    }
+
+    @Test
+    public void testCustomUri() throws Exception {
+        String expectedUri = "https://example.com/v1/calls/ssf61863-4a51-ef6b-11e1-w6edebcf93bb/dtmf";
+
+        HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri("https://example.com").build());
+        method = new SendDtmfMethod(wrapper);
+
+        RequestBuilder builder = method.makeRequest(new DtmfRequest("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", "1"));
+        assertEquals("PUT", builder.getMethod());
+        assertEquals(expectedUri, builder.build().getURI().toString());
     }
 }

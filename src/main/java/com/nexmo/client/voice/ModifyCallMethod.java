@@ -38,9 +38,8 @@ import java.io.UnsupportedEncodingException;
 class ModifyCallMethod extends AbstractMethod<CallModifier, ModifyCallResponse> {
     private static final Log LOG = LogFactory.getLog(ModifyCallMethod.class);
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls/";
+    private static final String PATH = "/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
-    private String uri = DEFAULT_URI;
 
     ModifyCallMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -53,9 +52,8 @@ class ModifyCallMethod extends AbstractMethod<CallModifier, ModifyCallResponse> 
 
     @Override
     public RequestBuilder makeRequest(CallModifier request) throws UnsupportedEncodingException {
-        String uri = this.uri + request.getUuid();
         return RequestBuilder
-                .put(uri)
+                .put(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid())
                 .setHeader("Content-Type", "application/json")
                 .setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
     }
@@ -68,9 +66,5 @@ class ModifyCallMethod extends AbstractMethod<CallModifier, ModifyCallResponse> 
         } else {
             return null;
         }
-    }
-
-    public void setUri(String uri) {
-        this.uri = uri;
     }
 }

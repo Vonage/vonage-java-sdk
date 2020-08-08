@@ -39,7 +39,7 @@ public class ReadCallMethodTest {
 
     @Before
     public void setUp() throws Exception {
-        this.method = new ReadCallMethod(new HttpWrapper());
+        method = new ReadCallMethod(new HttpWrapper());
     }
 
     @Test
