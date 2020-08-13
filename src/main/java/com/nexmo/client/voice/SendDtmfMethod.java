@@ -42,6 +42,7 @@ class SendDtmfMethod extends AbstractMethod<DtmfRequest, DtmfResponse> {
 
     private static final String PATH = "/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
+    public static final String DTMF_PATH = "/dtmf";
 
     SendDtmfMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -55,7 +56,7 @@ class SendDtmfMethod extends AbstractMethod<DtmfRequest, DtmfResponse> {
     @Override
     public RequestBuilder makeRequest(DtmfRequest request) throws UnsupportedEncodingException {
         return RequestBuilder
-                .put(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid() + "/dtmf")
+                .put(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid() + DTMF_PATH)
                 .setHeader("Content-Type", "application/json")
                 .setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
     }
