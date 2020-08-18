@@ -36,7 +36,7 @@ public class StopTalkMethodTest {
 
     @Test
     public void makeRequestTest()throws Exception {
-        RequestBuilder request = method.makeRequest("88cdb22a5850bc8d2d7ff048344a800f");
+        RequestBuilder request = method.makeRequest("63f61863-4a51-4f6b-86e1-46edebcf9356");
 
         assertEquals("DELETE", request.getMethod());
         assertEquals("application/json", request.getFirstHeader("Content-Type").getValue());
