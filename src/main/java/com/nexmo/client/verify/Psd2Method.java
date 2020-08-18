@@ -25,21 +25,23 @@ import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.auth.SignatureAuthMethod;
 import com.nexmo.client.auth.TokenAuthMethod;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-class VerifyMethod extends AbstractMethod<VerifyRequest, VerifyResponse> {
+public class Psd2Method extends AbstractMethod<Psd2Request, VerifyResponse> {
+    private static final Log LOG = LogFactory.getLog(Psd2Method.class);
+
+    private static final String PATH = "/verify/psd2/json";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
-    private static final String PATH = "/verify/json";
-
-    VerifyMethod(HttpWrapper httpWrapper) {
-        super(httpWrapper);
+    public Psd2Method(HttpWrapper wrapper) {
+        super(wrapper);
     }
 
     @Override
@@ -48,49 +50,37 @@ class VerifyMethod extends AbstractMethod<VerifyRequest, VerifyResponse> {
     }
 
     @Override
-    public RequestBuilder makeRequest(VerifyRequest request) throws UnsupportedEncodingException {
-        RequestBuilder result = RequestBuilder
+    public RequestBuilder makeRequest(Psd2Request request) throws UnsupportedEncodingException {
+        RequestBuilder builder =  RequestBuilder
                 .post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH)
                 .addParameter("number", request.getNumber())
-                .addParameter("brand", request.getBrand());
+                .addParameter("payee", request.getPayee())
+                .addParameter("amount", Double.toString(request.getAmount()));
 
-        if (request.getFrom() != null) {
-            result.addParameter("sender_id", request.getFrom());
+        //add additional parameters if they are present
+        if(request.getWorkflow() != null){
+            builder.addParameter("workflow_id", Integer.toString(request.getWorkflow().getId()));
         }
 
-        if (request.getLength() != null && request.getLength() > 0) {
-            result.addParameter("code_length", Integer.toString(request.getLength()));
-        }
+        optionalParams(builder, "code_length", request.getLength());
+        optionalParams(builder, "lg", request.getDashedLocale());
+        optionalParams(builder, "country", request.getCountry());
+        optionalParams(builder, "pin_expiry", request.getPinExpiry());
+        optionalParams(builder, "next_event_wait", request.getNextEventWait());
 
-        if (request.getLocale() != null) {
-            result.addParameter(new BasicNameValuePair("lg", (request.getDashedLocale())));
-        }
+        return builder;
 
-        if (request.getType() != null) {
-            result.addParameter("require_type", request.getType().toString());
-        }
-
-        if (request.getCountry() != null) {
-            result.addParameter("country", request.getCountry());
-        }
-
-        if (request.getPinExpiry() != null) {
-            result.addParameter("pin_expiry", request.getPinExpiry().toString());
-        }
-
-        if (request.getNextEventWait() != null) {
-            result.addParameter("next_event_wait", request.getNextEventWait().toString());
-        }
-
-        if (request.getWorkflow() != null) {
-            result.addParameter("workflow_id", String.valueOf(request.getWorkflow().getId()));
-        }
-
-        return result;
     }
 
     @Override
     public VerifyResponse parseResponse(HttpResponse response) throws IOException {
         return VerifyResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+    }
+
+    private RequestBuilder optionalParams(RequestBuilder builder, String paramName, Object value){
+        if (value != null) {
+            builder.addParameter(paramName, value + "");
+        }
+        return null;
     }
 }

@@ -34,19 +34,39 @@ class VerifyEndpoint {
     }
 
     VerifyResponse verify(String number, String brand, String from, int length, Locale locale, VerifyRequest.LineType type) throws NexmoClientException {
-        return verify(new VerifyRequest(number, brand, from, length, locale, type));
+        return verify(new VerifyRequest.Builder(number, brand)
+                .senderId(from)
+                .locale(locale)
+                .type(type)
+                .build()
+        );
     }
 
     VerifyResponse verify(String number, String brand, String from, int length, Locale locale) throws NexmoClientException {
-        return verify(new VerifyRequest(number, brand, from, length, locale));
+        return verify(new VerifyRequest.Builder(number, brand)
+                .senderId(from)
+                .locale(locale)
+                .build()
+        );
     }
 
     VerifyResponse verify(String number, String brand, String from) throws NexmoClientException {
-        return verify(new VerifyRequest(number, brand, from));
+        return verify(new VerifyRequest.Builder(number, brand)
+                .senderId(from)
+                .build()
+        );
     }
 
     VerifyResponse verify(String number, String brand) throws NexmoClientException {
-        return verify(new VerifyRequest(number, brand));
+        return verify(new VerifyRequest.Builder(number, brand).build());
+    }
+
+    VerifyResponse verify(String number, String brand, VerifyRequest.Workflow workflow) throws NexmoClientException {
+        return verify(
+                new VerifyRequest.Builder(number, brand)
+                .workflow(workflow)
+                .build()
+        );
     }
 
     VerifyResponse verify(VerifyRequest request) throws NexmoClientException {
