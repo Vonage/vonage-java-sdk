@@ -28,6 +28,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.client.utils.URIUtils;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
@@ -38,9 +40,9 @@ import java.io.UnsupportedEncodingException;
 class SendDtmfMethod extends AbstractMethod<DtmfRequest, DtmfResponse> {
     private static final Log LOG = LogFactory.getLog(SendDtmfMethod.class);
 
-    private static final String DEFAULT_URI = "https://api.nexmo.com/v1/calls/";
+    private static final String PATH = "/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
-    private String uri = DEFAULT_URI;
+    public static final String DTMF_PATH = "/dtmf";
 
     SendDtmfMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -53,8 +55,8 @@ class SendDtmfMethod extends AbstractMethod<DtmfRequest, DtmfResponse> {
 
     @Override
     public RequestBuilder makeRequest(DtmfRequest request) throws UnsupportedEncodingException {
-        String uri = this.uri + request.getUuid() + "/dtmf";
-        return RequestBuilder.put(uri)
+        return RequestBuilder
+                .put(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid() + DTMF_PATH)
                 .setHeader("Content-Type", "application/json")
                 .setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
     }
@@ -63,9 +65,5 @@ class SendDtmfMethod extends AbstractMethod<DtmfRequest, DtmfResponse> {
     public DtmfResponse parseResponse(HttpResponse response) throws IOException {
         String json = new BasicResponseHandler().handleResponse(response);
         return DtmfResponse.fromJson(json);
-    }
-
-    public void setUri(String uri) {
-        this.uri = uri;
     }
 }

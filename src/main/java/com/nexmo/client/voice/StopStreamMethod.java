@@ -37,8 +37,8 @@ class StopStreamMethod extends AbstractMethod<String, StreamResponse> {
     private static final Log LOG = LogFactory.getLog(StopStreamMethod.class);
 
     private static final String PATH = "/calls/";
+    public static final String STREAM_PATH = "/stream";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
-    private String uri;
 
     StopStreamMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -52,7 +52,7 @@ class StopStreamMethod extends AbstractMethod<String, StreamResponse> {
     @Override
     public RequestBuilder makeRequest(String uuid) throws UnsupportedEncodingException {
         return RequestBuilder
-                .delete(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + uuid + "/stream")
+                .delete(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + uuid + STREAM_PATH)
                 .setHeader("Content-Type", "application/json");
     }
 
