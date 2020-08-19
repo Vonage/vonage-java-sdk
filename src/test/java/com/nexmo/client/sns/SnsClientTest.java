@@ -25,6 +25,7 @@ package com.nexmo.client.sns;
 import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.NexmoResponseParseException;
 import com.nexmo.client.auth.TokenAuthMethod;
+import com.nexmo.client.logging.LoggingUtils;
 import com.nexmo.client.sns.request.SnsPublishRequest;
 import com.nexmo.client.sns.request.SnsSubscribeRequest;
 import com.nexmo.client.sns.response.SnsPublishResponse;
@@ -36,6 +37,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
@@ -43,7 +47,10 @@ import java.nio.charset.StandardCharsets;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(LoggingUtils.class)
 public class SnsClientTest {
     private HttpWrapper httpWrapper;
     private SnsClient client;
@@ -56,12 +63,14 @@ public class SnsClientTest {
 
     private HttpClient stubHttpClient(int statusCode, String content) throws Exception {
         HttpClient result = mock(HttpClient.class);
+        mockStatic(LoggingUtils.class);
 
         HttpResponse response = mock(HttpResponse.class);
         StatusLine sl = mock(StatusLine.class);
         HttpEntity entity = mock(HttpEntity.class);
 
         when(result.execute(any(HttpUriRequest.class))).thenReturn(response);
+        when(LoggingUtils.logResponse(any(HttpResponse.class))).thenReturn("response logged");
         when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
         when(sl.getStatusCode()).thenReturn(statusCode);
         when(response.getStatusLine()).thenReturn(sl);

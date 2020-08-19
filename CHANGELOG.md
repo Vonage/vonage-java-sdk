@@ -4,9 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [5.3.1]
+## [5.4.0]
 ### Added
-- Added AppEndpoint for ConnectAction
+- Added AppEndpoint support for ConnectAction.
+- Added the ability to log the API response in when logger is set to debug mode.
+- Added ability to override base url for StopStream, ModifyCall, and Sn
 
 ## [5.3.0]
 ### Added

@@ -25,12 +25,16 @@ import com.nexmo.client.HttpWrapper;
 import com.nexmo.client.TestUtils;
 import com.nexmo.client.auth.AuthCollection;
 import com.nexmo.client.auth.TokenAuthMethod;
+import com.nexmo.client.logging.LoggingUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.ByteArrayInputStream;
 
@@ -39,18 +43,23 @@ import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(LoggingUtils.class)
 public class NumbersClientTest {
     private TestUtils testUtils = new TestUtils();
 
     private HttpWrapper stubHttpWrapper(int statusCode, String content) throws Exception {
         HttpClient client = mock(HttpClient.class);
+        mockStatic(LoggingUtils.class);
 
         HttpResponse response = mock(HttpResponse.class);
         StatusLine sl = mock(StatusLine.class);
         HttpEntity entity = mock(HttpEntity.class);
 
         when(client.execute(any(HttpUriRequest.class))).thenReturn(response);
+        when(LoggingUtils.logResponse(any(HttpResponse.class))).thenReturn("response logged");
         when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes("UTF-8")));
         when(sl.getStatusCode()).thenReturn(statusCode);
         when(response.getStatusLine()).thenReturn(sl);
