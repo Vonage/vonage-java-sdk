@@ -8,8 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Added AppEndpoint support for ConnectAction.
 - Added the ability to log the API response in when logger is set to debug mode.
-- Added ability to override base url for StopStream, ModifyCall, and Sn
-
+- Added ability to override base url for:
+  - Modify Call
+  - Send DTMF
+  - Stop Talk
+  
 ## [5.3.0]
 ### Added
 - Added support for new voice names added to the Voice API for [Text to Speech](https://developer.nexmo.com/voice/voice-api/guides/text-to-speech)
