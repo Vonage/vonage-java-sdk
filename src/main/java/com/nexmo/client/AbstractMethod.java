@@ -22,6 +22,7 @@
 package com.nexmo.client;
 
 import com.nexmo.client.auth.AuthMethod;
+import com.nexmo.client.logging.LoggingUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
@@ -100,6 +101,9 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
                 LOG.debug(EntityUtils.toString(enclosingRequest.getEntity()));
             }
             HttpResponse response = this.httpWrapper.getHttpClient().execute(httpRequest);
+
+            LOG.debug("Response: " + LoggingUtils.logResponse(response));
+
             try{
                 return parseResponse(response);
             }

@@ -25,9 +25,13 @@ package com.nexmo.client;
 import com.nexmo.client.auth.AuthCollection;
 import com.nexmo.client.auth.AuthMethod;
 import com.nexmo.client.auth.JWTAuthMethod;
+import com.nexmo.client.logging.LoggingUtils;
 import io.jsonwebtoken.lang.Assert;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.*;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpEntityEnclosingRequest;
+import org.apache.http.HttpResponse;
+import org.apache.http.ProtocolVersion;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
@@ -38,7 +42,10 @@ import org.apache.http.message.BasicStatusLine;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -46,8 +53,10 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(LoggingUtils.class)
 public class AbstractMethodTest {
     private static class ConcreteMethod extends AbstractMethod<String, String> {
         public ConcreteMethod(HttpWrapper httpWrapper) {
@@ -86,6 +95,7 @@ public class AbstractMethodTest {
 
     @Before
     public void setUp() throws Exception {
+        mockStatic(LoggingUtils.class);
         mockWrapper = mock(HttpWrapper.class);
         mockAuthMethods = mock(AuthCollection.class);
         mockAuthMethod = mock(AuthMethod.class);
@@ -98,6 +108,7 @@ public class AbstractMethodTest {
                 1,
                 1
         ), 200, "OK")));
+        when(LoggingUtils.logResponse(any(HttpResponse.class))).thenReturn("response logged");
         when(mockWrapper.getAuthCollection()).thenReturn(mockAuthMethods);
     }
 
