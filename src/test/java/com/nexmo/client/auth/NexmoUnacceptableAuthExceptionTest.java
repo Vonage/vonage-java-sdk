@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2019 Nexmo Inc
+ * Copyright (c) 2011-2019 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,10 +29,10 @@ import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 
-public class NexmoUnacceptableAuthExceptionTest {
+public class VonageUnacceptableAuthExceptionTest {
     @Test
     public void testAllAuthMethodHaveAppropriateDescriptions() throws IOException {
-        NexmoUnacceptableAuthException exception = new NexmoUnacceptableAuthException(
+        VonageUnacceptableAuthException exception = new VonageUnacceptableAuthException(
                 Arrays.asList(new TokenAuthMethod(null, null),
                         new SignatureAuthMethod(null, null),
                         new JWTAuthMethod("application_id", new TestUtils().loadKey("test/keys/application_key"))),

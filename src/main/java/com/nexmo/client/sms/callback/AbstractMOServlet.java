@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -88,7 +88,7 @@ public abstract class AbstractMOServlet extends HttpServlet {
         handleRequest(request, response);
     }
 
-    private void validateRequest(HttpServletRequest request) throws NexmoCallbackRequestValidationException {
+    private void validateRequest(HttpServletRequest request) throws VonageCallbackRequestValidationException {
         boolean passed = true;
         if (this.validateUsernamePassword) {
             String username = request.getParameter("username");
@@ -98,12 +98,12 @@ public abstract class AbstractMOServlet extends HttpServlet {
         }
 
         if (!passed) {
-            throw new NexmoCallbackRequestValidationException("Bad Credentials");
+            throw new VonageCallbackRequestValidationException("Bad Credentials");
         }
 
         if (this.validateSignature) {
             if (!RequestSigning.verifyRequestSignature(request, this.signatureSharedSecret)) {
-                throw new NexmoCallbackRequestValidationException("Bad Signature");
+                throw new VonageCallbackRequestValidationException("Bad Signature");
             }
         }
     }
@@ -118,7 +118,7 @@ public abstract class AbstractMOServlet extends HttpServlet {
             String sender = request.getParameter("msisdn");
             String destination = request.getParameter("to");
             if (sender == null || destination == null || messageId == null) {
-                throw new NexmoCallbackRequestValidationException("Missing mandatory fields");
+                throw new VonageCallbackRequestValidationException("Missing mandatory fields");
             }
 
             MO.MESSAGE_TYPE messageType = parseMessageType(request.getParameter("type"));
@@ -130,13 +130,13 @@ public abstract class AbstractMOServlet extends HttpServlet {
             if (messageType == MO.MESSAGE_TYPE.TEXT || messageType == MO.MESSAGE_TYPE.UNICODE) {
                 String messageBody = request.getParameter("text");
                 if (messageBody == null) {
-                    throw new NexmoCallbackRequestValidationException("Missing text field");
+                    throw new VonageCallbackRequestValidationException("Missing text field");
                 }
                 mo.setTextData(messageBody, request.getParameter("keyword"));
             } else if (messageType == MO.MESSAGE_TYPE.BINARY) {
                 byte[] data = parseBinaryData(request.getParameter("data"));
                 if (data == null) {
-                    throw new NexmoCallbackRequestValidationException("Missing data field");
+                    throw new VonageCallbackRequestValidationException("Missing data field");
                 }
                 mo.setBinaryData(data, parseBinaryData(request.getParameter("udh")));
             }
@@ -155,13 +155,13 @@ public abstract class AbstractMOServlet extends HttpServlet {
                 out.print("OK");
                 out.flush();
             }
-        } catch (NexmoCallbackRequestValidationException exc) {
+        } catch (VonageCallbackRequestValidationException exc) {
             // TODO: Log this - it's mainly for our own use!
             response.sendError(400, exc.getMessage());
         }
     }
 
-    private static void extractConcatenationData(HttpServletRequest request, MO mo) throws NexmoCallbackRequestValidationException {
+    private static void extractConcatenationData(HttpServletRequest request, MO mo) throws VonageCallbackRequestValidationException {
         String concatString = request.getParameter("concat");
         if (concatString != null && concatString.equals("true")) {
             int totalParts;
@@ -171,35 +171,35 @@ public abstract class AbstractMOServlet extends HttpServlet {
                 totalParts = Integer.parseInt(request.getParameter("concat-total"));
                 partNumber = Integer.parseInt(request.getParameter("concat-part"));
             } catch (Exception e) {
-                throw new NexmoCallbackRequestValidationException("bad concat fields");
+                throw new VonageCallbackRequestValidationException("bad concat fields");
             }
             mo.setConcatenationData(reference, totalParts, partNumber);
         }
     }
 
-    private static MO.MESSAGE_TYPE parseMessageType(String str) throws NexmoCallbackRequestValidationException {
+    private static MO.MESSAGE_TYPE parseMessageType(String str) throws VonageCallbackRequestValidationException {
         if (str != null) for (MO.MESSAGE_TYPE type : MO.MESSAGE_TYPE.values())
             if (type.getType().equals(str)) return type;
-        throw new NexmoCallbackRequestValidationException("Unrecognized message type: " + str);
+        throw new VonageCallbackRequestValidationException("Unrecognized message type: " + str);
     }
 
-    private static Date parseTimeStamp(String str) throws NexmoCallbackRequestValidationException {
+    private static Date parseTimeStamp(String str) throws VonageCallbackRequestValidationException {
         if (str != null) {
             try {
                 return TIMESTAMP_DATE_FORMAT.get().parse(str);
             } catch (ParseException e) {
-                throw new NexmoCallbackRequestValidationException("Bad message-timestamp format", e);
+                throw new VonageCallbackRequestValidationException("Bad message-timestamp format", e);
             }
         }
         return null;
     }
 
-    private static BigDecimal parsePrice(String str) throws NexmoCallbackRequestValidationException {
+    private static BigDecimal parsePrice(String str) throws VonageCallbackRequestValidationException {
         if (str != null) {
             try {
                 return new BigDecimal(str);
             } catch (Exception e) {
-                throw new NexmoCallbackRequestValidationException("Bad price field", e);
+                throw new VonageCallbackRequestValidationException("Bad price field", e);
             }
         }
         return null;

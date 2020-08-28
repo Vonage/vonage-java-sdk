@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@ package com.nexmo.client.voice.servlet;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.VonageUnexpectedException;
 import com.nexmo.client.voice.ncco.Action;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Encapsulates a set of NCCO objects for driving the Nexmo Voice API.
+ * Encapsulates a set of NCCO objects for driving the Vonage Voice API.
  * <p>
  * This would usually be returned by {@link AbstractAnswerServlet#handleRequest(HttpServletRequest)}, which serializes
  * it correctly for the Voice API. {@link NccoResponseBuilder} provides a fluent interface for constructing instances
@@ -57,7 +57,7 @@ public class NccoResponse {
         try {
             return new ObjectMapper().writeValueAsString(actionList);
         } catch (JsonProcessingException e) {
-            throw new NexmoUnexpectedException("Failed to serialize NccoResponse object.", e);
+            throw new VonageUnexpectedException("Failed to serialize NccoResponse object.", e);
         }
     }
 }

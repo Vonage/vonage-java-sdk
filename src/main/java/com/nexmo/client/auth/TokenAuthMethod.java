@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@ package com.nexmo.client.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.VonageUnexpectedException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -68,7 +68,7 @@ public class TokenAuthMethod extends AbstractAuthMethod {
 
             return request.setEntity(new StringEntity(json.toString(), ContentType.APPLICATION_JSON));
         } catch (IOException e) {
-            throw new NexmoUnexpectedException("Failed to attach api key and secret to json.", e);
+            throw new VonageUnexpectedException("Failed to attach api key and secret to json.", e);
         }
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2019 Nexmo Inc
+ * Copyright (c) 2011-2019 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,9 +26,9 @@ public class SettingsRequest {
     private String deliveryReceiptUrl;
 
     /**
-     * @param incomingSmsUrl     The URL where Nexmo will send a webhook when an incoming SMS is received when a
+     * @param incomingSmsUrl     The URL where Vonage will send a webhook when an incoming SMS is received when a
      *                           number-specific URL is not configured. Set to an empty string to unset the value.
-     * @param deliveryReceiptUrl The URL where Nexmo will send a webhook when an incoming SMS is received when a
+     * @param deliveryReceiptUrl The URL where Vonage will send a webhook when an incoming SMS is received when a
      *                           number-specific URL is not configured. Set to an empty string to unset the value.
      */
     public SettingsRequest(String incomingSmsUrl, String deliveryReceiptUrl) {
@@ -37,7 +37,7 @@ public class SettingsRequest {
     }
 
     /**
-     * @param incomingSmsUrl The URL where Nexmo will send a webhook when an incoming SMS is received when a
+     * @param incomingSmsUrl The URL where Vonage will send a webhook when an incoming SMS is received when a
      *                       number-specific URL is not configured. Set to an empty string to unset the value.
      *
      * @return An SettingsRequest with only the incoming SMS URL set.
@@ -47,7 +47,7 @@ public class SettingsRequest {
     }
 
     /**
-     * @param deliveryReceiptUrl The URL where Nexmo will send a webhook when an incoming SMS is received when a
+     * @param deliveryReceiptUrl The URL where Vonage will send a webhook when an incoming SMS is received when a
      *                           number-specific URL is not configured. Set to an empty string to unset the value.
      *
      * @return An SettingsRequest with only the delivery receipt URL set.
@@ -57,7 +57,7 @@ public class SettingsRequest {
     }
 
     /**
-     * @return The URL where Nexmo will send a webhook when an incoming SMS is received when a number-specific URL is
+     * @return The URL where Vonage will send a webhook when an incoming SMS is received when a number-specific URL is
      * not configured.
      */
     public String getIncomingSmsUrl() {
@@ -65,7 +65,7 @@ public class SettingsRequest {
     }
 
     /**
-     * @return The URL where Nexmo will send a webhook when a delivery receipt is received when a number-specific URL is
+     * @return The URL where Vonage will send a webhook when a delivery receipt is received when a number-specific URL is
      * not configured.
      */
     public String getDeliveryReceiptUrl() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@ import com.nexmo.client.sms.HexUtil;
 import org.apache.http.client.methods.RequestBuilder;
 
 /**
- * A binary message to be submitted via the Nexmo SMS API.
+ * A binary message to be submitted via the Vonage SMS API.
  */
 public class BinaryMessage extends Message {
     private final byte[] messageBody;
@@ -40,12 +40,12 @@ public class BinaryMessage extends Message {
      *                          typically either a valid short-code / long code that can be replied to, or a short text description of the application sending the message (Max 11 chars)
      * @param to                the phone number of the handset that you wish to send the message to
      * @param messageBody The raw binary message data to be sent to a handset.
-     *                          This api, and the Nexmo sms service will send this data 'as-is' (in conjunction with the binary UDH) and will not make any corrections.
+     *                          This api, and the Vonage sms service will send this data 'as-is' (in conjunction with the binary UDH) and will not make any corrections.
      *                          so you should ensure that it is a correctly constructed message
      * @param udh  Most binary content will require a UserDataHeader portion of the message containing commands to enable the handset to interpret the binary data
      *                          (for example, a binary ringtone, a wap-push, OverTheAir configuration, etc).
      *                          Additionally, if you are sending a long text message as multiple concatenated messages and are performing this operation manually rather than
-     *                          using the automated long sms handling in the Nexmo sms service, then you will need to construct and include here an appropriate
+     *                          using the automated long sms handling in the Vonage sms service, then you will need to construct and include here an appropriate
      *                          UserDataHeader field that describes the segmentation/re-assembly fields required to successfully concatenate multiple short messages.
      */
     public BinaryMessage(final String from,
@@ -60,7 +60,7 @@ public class BinaryMessage extends Message {
 
     /**
      * @return byte[] The raw binary message data to be sent to a handset.
-     * This api, and the Nexmo sms service will send this data 'as-is' (in conjunction with the binary UDH) and will not make any corrections.
+     * This api, and the Vonage sms service will send this data 'as-is' (in conjunction with the binary UDH) and will not make any corrections.
      * so you should ensure that it is a correctly constructed message
      */
     public byte[] getMessageBody() {
@@ -71,7 +71,7 @@ public class BinaryMessage extends Message {
      * @return byte[] Most binary content will require a UserDataHeader portion of the message containing commands to enable the handset to interpret the binary data
      * (for example, a binary ringtone, a wap-push, OverTheAir configuration, etc).
      * Additionally, if you are sending a long text message as multiple concatenated messages and are performing this operation manually rather than
-     * using the automated long sms handling in the Nexmo sms service, then you will need to construct and include here an appropriate
+     * using the automated long sms handling in the Vonage sms service, then you will need to construct and include here an appropriate
      * UserDataHeader field that describes the segmentation/re-assembly fields required to successfully concatenate multiple short messages.
      */
     public byte[] getUdh() {

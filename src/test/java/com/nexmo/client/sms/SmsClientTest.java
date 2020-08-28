@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@ package com.nexmo.client.sms;
 
 
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoResponseParseException;
+import com.nexmo.client.VonageResponseParseException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.logging.LoggingUtils;
 import com.nexmo.client.sms.messages.Message;
@@ -122,8 +122,8 @@ public class SmsClientTest {
         Message message = new TextMessage("TestSender", "not-a-number", "Test");
         try {
             client.submitMessage(message);
-            fail("A NexmoResponseParseException should be thrown if an HTTP 500 response is received.");
-        } catch (NexmoResponseParseException nrp) {
+            fail("A VonageResponseParseException should be thrown if an HTTP 500 response is received.");
+        } catch (VonageResponseParseException nrp) {
             // This is expected
         }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
 
 /**
  * Provides useful NCCO classes which can be serialized using Jackson when
- * implementing webhooks to drive the Nexmo Voice API.
+ * implementing webhooks to drive the Vonage Voice API.
  * <p>
  * The simplest way to use these classes is to subclass {@link com.nexmo.client.voice.servlet.AbstractAnswerServlet}
  * and implement {@link com.nexmo.client.voice.servlet.AbstractAnswerServlet#handleRequest(javax.servlet.http.HttpServletRequest)}.

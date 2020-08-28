@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,5 +25,5 @@ package com.nexmo.client;
 import java.io.IOException;
 
 public interface Method<RequestT, ResultT> {
-    ResultT execute(RequestT request) throws IOException, NexmoClientException;
+    ResultT execute(RequestT request) throws IOException, VonageClientException;
 }

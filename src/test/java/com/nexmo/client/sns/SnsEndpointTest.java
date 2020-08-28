@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@ package com.nexmo.client.sns;
 
 import com.nexmo.client.HttpConfig;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoResponseParseException;
+import com.nexmo.client.VonageResponseParseException;
 import com.nexmo.client.sns.request.SnsPublishRequest;
 import com.nexmo.client.sns.request.SnsRequest;
 import com.nexmo.client.sns.response.SnsPublishResponse;
@@ -102,8 +102,8 @@ public class SnsEndpointTest {
                     + "   <resultMessage>a result message</resultMessage>\n"
                     + "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n"
                     + "   <transactionId>1234</transactionId>\n" + "</nexmo-sns>");
-            fail("A missing <resultCode> tag should raise NexmoResponseParseException");
-        } catch (NexmoResponseParseException e) {
+            fail("A missing <resultCode> tag should raise VonageResponseParseException");
+        } catch (VonageResponseParseException e) {
             // this is expected
         }
     }
@@ -124,8 +124,8 @@ public class SnsEndpointTest {
     public void testParseResponseUnparseable() throws Exception {
         try {
             this.endpoint.parseSubmitResponse("not-xml");
-            fail("Attempting to parse non-xml should throw NexmoResponseParseException");
-        } catch (NexmoResponseParseException e) {
+            fail("Attempting to parse non-xml should throw VonageResponseParseException");
+        } catch (VonageResponseParseException e) {
             // this is expected
         }
     }
@@ -139,8 +139,8 @@ public class SnsEndpointTest {
                             + "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n"
                             + "   <transactionId>1234</transactionId>\n" + "   <whatOnEarthIsThis/>\n"
                             + "</nexmo-sns>");
-            fail("An invalid command should throw NexmoResponseParseException");
-        } catch (NexmoResponseParseException e) {
+            fail("An invalid command should throw VonageResponseParseException");
+        } catch (VonageResponseParseException e) {
             // this is expected
         }
     }

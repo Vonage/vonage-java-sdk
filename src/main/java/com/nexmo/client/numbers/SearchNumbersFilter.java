@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.RequestBuilder;
 
 /**
- * This class encapsulates a request to search for available Nexmo Virtual Numbers.
+ * This class encapsulates a request to search for available Vonage Virtual Numbers.
  */
 public class SearchNumbersFilter {
     private final String country;

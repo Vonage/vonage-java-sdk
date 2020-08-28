@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@ package com.nexmo.client.sms.messages;
 import org.apache.http.client.methods.RequestBuilder;
 
 /**
- * Represents the details common to any message that is to be submitted to the Nexmo SMS API.
+ * Represents the details common to any message that is to be submitted to the Vonage SMS API.
  */
 public abstract class Message {
     public enum MessageType {
@@ -90,7 +90,7 @@ public abstract class Message {
     }
 
     /**
-     * @return int the type of message will influence the makeup of the request we post to the Nexmo server, and also the action taken by the Nexmo server in response to this message
+     * @return int the type of message will influence the makeup of the request we post to the Vonage server, and also the action taken by the Vonage server in response to this message
      */
     public MessageType getType() {
         return this.type;
@@ -112,7 +112,7 @@ public abstract class Message {
     }
 
     /**
-     * @return String A user definable value that will be stored in the Nexmo sms records. It will
+     * @return String A user definable value that will be stored in the Vonage sms records. It will
      * be available in detailed reporting &amp; analytics in order to help with reconciliation of messages
      */
     public String getClientReference() {
@@ -163,7 +163,7 @@ public abstract class Message {
     /**
      * Set the value of the 'status-report-req' parameter.
      *
-     * If set to 'true', Nexmo will call 'callbackUrl' with status updates about the delivery of this message. If this
+     * If set to 'true', Vonage will call 'callbackUrl' with status updates about the delivery of this message. If this
      * value is set to 'true', then 'callbackUrl' should also be set to a URL that is configured to receive these
      * status updates.
      *

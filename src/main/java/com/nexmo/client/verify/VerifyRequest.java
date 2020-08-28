@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -57,7 +57,7 @@ public class VerifyRequest extends BaseRequest {
      *               format.
      * @param brand  (required) The name of the company or app you are verifying for. Must not be longer than 18
      *               characters.
-     * @param from   (optional The Nexmo number to use as the sender for the verification SMS message and calls, in
+     * @param from   (optional The Vonage number to use as the sender for the verification SMS message and calls, in
      *               <a href="https://en.wikipedia.org/wiki/E.164">E.164</a> format.
      * @deprecated this construtor is deprecated use {@link Builder} to contruct a 2FA verify request
      */
@@ -73,7 +73,7 @@ public class VerifyRequest extends BaseRequest {
      *               format.
      * @param brand  (required) The name of the company or app you are verifying for. Must not be longer than 18
      *               characters.
-     * @param from   (optional The Nexmo number to use as the sender for the verification SMS message and calls, in
+     * @param from   (optional The Vonage number to use as the sender for the verification SMS message and calls, in
      *               <a href="https://en.wikipedia.org/wiki/E.164">E.164</a> format.
      * @param length (optional) The length of the verification code to be sent to the user. Must be either 4 or 6. Use
      *               -1 to use the default value.

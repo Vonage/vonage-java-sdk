@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +24,8 @@ package com.nexmo.client.account;
 import com.nexmo.client.*;
 
 /**
- * A client for talking to the Nexmo Account API. The standard way to obtain an instance of this class is to use {@link
- * NexmoClient#getAccountClient()} ()}.
+ * A client for talking to the Vonage Account API. The standard way to obtain an instance of this class is to use {@link
+ * VonageClient#getAccountClient()} ()}.
  */
 public class AccountClient extends AbstractClient {
     protected BalanceEndpoint balance;
@@ -51,7 +51,7 @@ public class AccountClient extends AbstractClient {
         this.settings = new SettingsEndpoint(httpWrapper);
     }
 
-    public BalanceResponse getBalance() throws NexmoResponseParseException, NexmoClientException {
+    public BalanceResponse getBalance() throws VonageResponseParseException, VonageClientException {
         return this.balance.execute();
     }
 
@@ -62,14 +62,14 @@ public class AccountClient extends AbstractClient {
      *
      * @return PricingResponse object which contains the results from the API.
      *
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      */
-    public PricingResponse getVoicePrice(String country) throws NexmoResponseParseException, NexmoClientException {
+    public PricingResponse getVoicePrice(String country) throws VonageResponseParseException, VonageClientException {
         return getVoicePrice(new PricingRequest(country));
     }
 
-    private PricingResponse getVoicePrice(PricingRequest pricingRequest) throws NexmoResponseParseException, NexmoClientException {
+    private PricingResponse getVoicePrice(PricingRequest pricingRequest) throws VonageResponseParseException, VonageClientException {
         return this.pricing.getPrice(ServiceType.VOICE, pricingRequest);
     }
 
@@ -80,14 +80,14 @@ public class AccountClient extends AbstractClient {
      *
      * @return PricingResponse object which contains the results from the API.
      *
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      */
-    public PricingResponse getSmsPrice(String country) throws NexmoResponseParseException, NexmoClientException {
+    public PricingResponse getSmsPrice(String country) throws VonageResponseParseException, VonageClientException {
         return getSmsPrice(new PricingRequest(country));
     }
 
-    private PricingResponse getSmsPrice(PricingRequest pricingRequest) throws NexmoResponseParseException, NexmoClientException {
+    private PricingResponse getSmsPrice(PricingRequest pricingRequest) throws VonageResponseParseException, VonageClientException {
         return this.pricing.getPrice(ServiceType.SMS, pricingRequest);
     }
 
@@ -99,14 +99,14 @@ public class AccountClient extends AbstractClient {
      *
      * @return PrefixPricingResponse object which contains the results from the API.
      *
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      */
-    public PrefixPricingResponse getPrefixPrice(ServiceType type, String prefix) throws NexmoResponseParseException, NexmoClientException {
+    public PrefixPricingResponse getPrefixPrice(ServiceType type, String prefix) throws VonageResponseParseException, VonageClientException {
         return getPrefixPrice(new PrefixPricingRequest(type, prefix));
     }
 
-    private PrefixPricingResponse getPrefixPrice(PrefixPricingRequest prefixPricingRequest) throws NexmoResponseParseException, NexmoClientException {
+    private PrefixPricingResponse getPrefixPrice(PrefixPricingRequest prefixPricingRequest) throws VonageResponseParseException, VonageClientException {
         return this.prefixPricing.getPrice(prefixPricingRequest);
     }
 
@@ -116,15 +116,15 @@ public class AccountClient extends AbstractClient {
      *
      * @param transaction The ID associated with your original auto-reload transaction
      *
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response object indicating
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response object indicating
      *                                     that the request was unsuccessful.
      */
-    public void topUp(String transaction) throws NexmoResponseParseException, NexmoClientException {
+    public void topUp(String transaction) throws VonageResponseParseException, VonageClientException {
         topUp(new TopUpRequest(transaction));
     }
 
-    private void topUp(TopUpRequest request) throws NexmoResponseParseException, NexmoClientException {
+    private void topUp(TopUpRequest request) throws VonageResponseParseException, VonageClientException {
         this.topUp.topUp(request);
     }
 
@@ -135,11 +135,11 @@ public class AccountClient extends AbstractClient {
      *
      * @return ListSecretsResponse object which contains the results from the API.
      *
-     * @throws NexmoResponseParseException if a network error occurred contacting the Nexmo Account API
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response object indicating
+     * @throws VonageResponseParseException if a network error occurred contacting the Vonage Account API
+     * @throws VonageClientException        if there was a problem with the Vonage request or response object indicating
      *                                     that the request was unsuccessful.
      */
-    public ListSecretsResponse listSecrets(String apiKey) throws NexmoResponseParseException, NexmoClientException {
+    public ListSecretsResponse listSecrets(String apiKey) throws VonageResponseParseException, VonageClientException {
         return this.secret.listSecrets(apiKey);
     }
 
@@ -151,15 +151,15 @@ public class AccountClient extends AbstractClient {
      *
      * @return SecretResponse object which contains the results from the API.
      *
-     * @throws NexmoResponseParseException if a network error occurred contacting the Nexmo Account API
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response object indicating
+     * @throws VonageResponseParseException if a network error occurred contacting the Vonage Account API
+     * @throws VonageClientException        if there was a problem with the Vonage request or response object indicating
      *                                     that the request was unsuccessful.
      */
-    public SecretResponse getSecret(String apiKey, String secretId) throws NexmoResponseParseException, NexmoClientException {
+    public SecretResponse getSecret(String apiKey, String secretId) throws VonageResponseParseException, VonageClientException {
         return getSecret(new SecretRequest(apiKey, secretId));
     }
 
-    private SecretResponse getSecret(SecretRequest secretRequest) throws NexmoResponseParseException, NexmoClientException {
+    private SecretResponse getSecret(SecretRequest secretRequest) throws VonageResponseParseException, VonageClientException {
         return this.secret.getSecret(secretRequest);
     }
 
@@ -171,15 +171,15 @@ public class AccountClient extends AbstractClient {
      *
      * @return SecretResponse object which contains the created secret from the API.
      *
-     * @throws NexmoResponseParseException if a network error occurred contacting the Nexmo Account API
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response object indicating
+     * @throws VonageResponseParseException if a network error occurred contacting the Vonage Account API
+     * @throws VonageClientException        if there was a problem with the Vonage request or response object indicating
      *                                     that the request was unsuccessful.
      */
-    public SecretResponse createSecret(String apiKey, String secret) throws NexmoResponseParseException, NexmoClientException {
+    public SecretResponse createSecret(String apiKey, String secret) throws VonageResponseParseException, VonageClientException {
         return createSecret(new CreateSecretRequest(apiKey, secret));
     }
 
-    private SecretResponse createSecret(CreateSecretRequest createSecretRequest) throws NexmoResponseParseException, NexmoClientException {
+    private SecretResponse createSecret(CreateSecretRequest createSecretRequest) throws VonageResponseParseException, VonageClientException {
         return this.secret.createSecret(createSecretRequest);
     }
 
@@ -189,15 +189,15 @@ public class AccountClient extends AbstractClient {
      * @param apiKey   The API key that the secret is associated to.
      * @param secretId The id of the secret to revoke.
      *
-     * @throws NexmoResponseParseException if a network error occurred contacting the Nexmo Account API
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response object indicating
+     * @throws VonageResponseParseException if a network error occurred contacting the Vonage Account API
+     * @throws VonageClientException        if there was a problem with the Vonage request or response object indicating
      *                                     that the request was unsuccessful.
      */
-    public void revokeSecret(String apiKey, String secretId) throws NexmoResponseParseException, NexmoClientException {
+    public void revokeSecret(String apiKey, String secretId) throws VonageResponseParseException, VonageClientException {
         revokeSecret(new SecretRequest(apiKey, secretId));
     }
 
-    private void revokeSecret(SecretRequest secretRequest) throws NexmoResponseParseException, NexmoClientException {
+    private void revokeSecret(SecretRequest secretRequest) throws VonageResponseParseException, VonageClientException {
         this.secret.revokeSecret(secretRequest);
     }
 
@@ -206,11 +206,11 @@ public class AccountClient extends AbstractClient {
      *
      * @return A {@link SettingsResponse} containing the newly-updated account settings.
      *
-     * @throws NexmoResponseParseException if a network error occurred contacting the Nexmo Account API
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response object indicating
+     * @throws VonageResponseParseException if a network error occurred contacting the Vonage Account API
+     * @throws VonageClientException        if there was a problem with the Vonage request or response object indicating
      *                                     that the request was unsuccessful.
      */
-    public SettingsResponse updateSmsIncomingUrl(String url) throws NexmoResponseParseException, NexmoClientException {
+    public SettingsResponse updateSmsIncomingUrl(String url) throws VonageResponseParseException, VonageClientException {
         return this.updateSettings(SettingsRequest.withIncomingSmsUrl(url));
     }
 
@@ -219,11 +219,11 @@ public class AccountClient extends AbstractClient {
      *
      * @return A {@link SettingsResponse} containing the newly-updated account settings.
      *
-     * @throws NexmoResponseParseException if a network error occurred contacting the Nexmo Account API
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response object indicating
+     * @throws VonageResponseParseException if a network error occurred contacting the Vonage Account API
+     * @throws VonageClientException        if there was a problem with the Vonage request or response object indicating
      *                                     that the request was unsuccessful.
      */
-    public SettingsResponse updateDeliveryReceiptUrl(String url) throws NexmoResponseParseException, NexmoClientException {
+    public SettingsResponse updateDeliveryReceiptUrl(String url) throws VonageResponseParseException, VonageClientException {
         return this.updateSettings(SettingsRequest.withDeliveryReceiptUrl(url));
     }
 
@@ -232,11 +232,11 @@ public class AccountClient extends AbstractClient {
      *
      * @return A {@link SettingsResponse} containing the newly-updated account settings.
      *
-     * @throws NexmoResponseParseException if a network error occurred contacting the Nexmo Account API
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response object indicating
+     * @throws VonageResponseParseException if a network error occurred contacting the Vonage Account API
+     * @throws VonageClientException        if there was a problem with the Vonage request or response object indicating
      *                                     that the request was unsuccessful.
      */
-    public SettingsResponse updateSettings(SettingsRequest request) throws NexmoResponseParseException, NexmoClientException {
+    public SettingsResponse updateSettings(SettingsRequest request) throws VonageResponseParseException, VonageClientException {
         return this.settings.updateSettings(request);
     }
 }

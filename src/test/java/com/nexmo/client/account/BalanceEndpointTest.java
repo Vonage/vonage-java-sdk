@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@ package com.nexmo.client.account;
 
 import com.nexmo.client.HttpConfig;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.VonageClientException;
 import com.nexmo.client.TestUtils;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
@@ -87,7 +87,7 @@ public class BalanceEndpointTest {
         }
 
         @Override
-        public BalanceResponse execute() throws NexmoClientException {
+        public BalanceResponse execute() throws VonageClientException {
             return new BalanceResponse(1.5, true);
         }
     }

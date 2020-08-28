@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2018 Nexmo Inc
+ * Copyright (c) 2011-2018 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,10 +22,10 @@
 package com.nexmo.client;
 
 /**
- * Indicates that there was a failure during NexmoClient creation.
+ * Indicates that there was a failure during VonageClient creation.
  */
-public class NexmoClientCreationException extends NexmoUnexpectedException {
-    public NexmoClientCreationException(String message, Throwable cause) {
+public class VonageClientCreationException extends VonageUnexpectedException {
+    public VonageClientCreationException(String message, Throwable cause) {
         super(message, cause);
     }
 }

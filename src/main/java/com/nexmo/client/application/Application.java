@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.VonageUnexpectedException;
 import com.nexmo.client.application.capabilities.*;
 
 import java.io.IOException;
@@ -70,7 +70,7 @@ public class Application {
         try {
             return new ObjectMapper().writeValueAsString(this);
         } catch (JsonProcessingException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce json from Application object.", jpe);
+            throw new VonageUnexpectedException("Failed to produce json from Application object.", jpe);
         }
     }
 
@@ -96,7 +96,7 @@ public class Application {
         try {
             return new ObjectMapper().readValue(json, Application.class);
         } catch (IOException e) {
-            throw new NexmoUnexpectedException("Failed to produce Application from json.", e);
+            throw new VonageUnexpectedException("Failed to produce Application from json.", e);
         }
     }
 

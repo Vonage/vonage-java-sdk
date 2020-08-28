@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@ package com.nexmo.client.sns;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoResponseParseException;
+import com.nexmo.client.VonageResponseParseException;
 import com.nexmo.client.auth.SignatureAuthMethod;
 import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.legacyutils.XmlParser;
@@ -132,7 +132,7 @@ class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
         }
 
         if (resultCode == -1) {
-            throw new NexmoResponseParseException("Xml Parser - did not find a <resultCode> node");
+            throw new VonageResponseParseException("Xml Parser - did not find a <resultCode> node");
         }
 
         if ("publish".equals(command)) {
@@ -140,7 +140,7 @@ class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
         } else if ("subscribe".equals(command)) {
             return new SnsSubscribeResponse(resultCode, resultMessage, subscriberArn);
         } else {
-            throw new NexmoResponseParseException("Unknown command value: " + command);
+            throw new VonageResponseParseException("Unknown command value: " + command);
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@ package com.nexmo.client.sns;
 
 
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoResponseParseException;
+import com.nexmo.client.VonageResponseParseException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import com.nexmo.client.logging.LoggingUtils;
 import com.nexmo.client.sns.request.SnsPublishRequest;
@@ -122,7 +122,7 @@ public class SnsClientTest {
                     "447777111222"
             ));
             fail("An error Http response should raise IOException");
-        } catch (NexmoResponseParseException nrp) {
+        } catch (VonageResponseParseException nrp) {
             // This is expected
         }
     }

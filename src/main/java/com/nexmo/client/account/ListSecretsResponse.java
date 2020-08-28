@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2018 Nexmo Inc
+ * Copyright (c) 2011-2018 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
  */
 package com.nexmo.client.account;
 
-import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.VonageUnexpectedException;
 import io.openapitools.jackson.dataformat.hal.HALLink;
 import io.openapitools.jackson.dataformat.hal.HALMapper;
 import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
@@ -51,7 +51,7 @@ public class ListSecretsResponse {
         try {
             return new HALMapper().readValue(json, ListSecretsResponse.class);
         } catch (IOException e) {
-            throw new NexmoUnexpectedException("Failed to produce ListSecretsResponse from json.", e);
+            throw new VonageUnexpectedException("Failed to produce ListSecretsResponse from json.", e);
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
 package com.nexmo.client.voice;
 
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.VonageClientException;
 
 /**
  * Allows actions to be taken on {@code /calls/*} endpoints.
@@ -50,15 +50,15 @@ class CallsEndpoint {
     /**
      * Start a call configured by the provided {@link Call} object.
      * <p>
-     * Requires a {@link com.nexmo.client.auth.JWTAuthMethod} to be provided to the NexmoClient which constructs
+     * Requires a {@link com.nexmo.client.auth.JWTAuthMethod} to be provided to the VonageClient which constructs
      *
      * @param callRequest A Call object configuring the call to be created
      *
      * @return A CallEvent describing the call that was initiated.
      *
-     * @throws NexmoClientException if an error occurs constructing the Nexmo API request or response
+     * @throws VonageClientException if an error occurs constructing the Vonage API request or response
      */
-    CallEvent post(Call callRequest) throws NexmoClientException {
+    CallEvent post(Call callRequest) throws VonageClientException {
         return this.createCall.execute(callRequest);
     }
 
@@ -69,9 +69,9 @@ class CallsEndpoint {
      *
      * @return A CallInfoPage containing a single page of {@link CallInfo} results
      *
-     * @throws NexmoClientException if an error occurs constructing the Nexmo API request or response
+     * @throws VonageClientException if an error occurs constructing the Vonage API request or response
      */
-    CallInfoPage get(CallsFilter filter) throws NexmoClientException {
+    CallInfoPage get(CallsFilter filter) throws VonageClientException {
         return this.listCalls.execute(filter);
     }
 
@@ -82,9 +82,9 @@ class CallsEndpoint {
      *
      * @return A CallInfo object describing the state of the call that was made or is in progress
      *
-     * @throws NexmoClientException if an error occurs constructing the Nexmo API request or response
+     * @throws VonageClientException if an error occurs constructing the Vonage API request or response
      */
-    CallInfo get(String uuid) throws NexmoClientException {
+    CallInfo get(String uuid) throws VonageClientException {
         return this.readCall.execute(uuid);
     }
 
@@ -95,9 +95,9 @@ class CallsEndpoint {
      *
      * @return A ModifyCallResponse object describing the state of the call that was modified
      *
-     * @throws NexmoClientException if an error occurs constructing the Nexmo API request or response
+     * @throws VonageClientException if an error occurs constructing the Vonage API request or response
      */
-    ModifyCallResponse put(CallModifier modifier) throws NexmoClientException {
+    ModifyCallResponse put(CallModifier modifier) throws VonageClientException {
         return this.modifyCall.execute(modifier);
     }
 }

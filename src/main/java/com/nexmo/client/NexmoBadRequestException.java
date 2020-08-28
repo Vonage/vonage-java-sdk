@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,20 +21,20 @@
  */
 package com.nexmo.client;
 
-public class NexmoBadRequestException extends NexmoClientException {
-    public NexmoBadRequestException() {
+public class VonageBadRequestException extends VonageClientException {
+    public VonageBadRequestException() {
         super();
     }
 
-    public NexmoBadRequestException(String message) {
+    public VonageBadRequestException(String message) {
         super(message);
     }
 
-    public NexmoBadRequestException(String message, Throwable cause) {
+    public VonageBadRequestException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public NexmoBadRequestException(Throwable cause) {
+    public VonageBadRequestException(Throwable cause) {
         super(cause);
     }
 }

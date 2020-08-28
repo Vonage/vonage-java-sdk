@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -67,15 +67,15 @@ public class AuthCollection {
      *
      * @return An AuthMethod subclass matching type
      *
-     * @throws NexmoUnacceptableAuthException if no matching AuthMethod is found.
+     * @throws VonageUnacceptableAuthException if no matching AuthMethod is found.
      */
-    public <T extends AuthMethod> T getAuth(Class<T> type) throws NexmoUnacceptableAuthException {
+    public <T extends AuthMethod> T getAuth(Class<T> type) throws VonageUnacceptableAuthException {
         for (AuthMethod availableAuthMethod : this.authList) {
             if (type.isInstance(availableAuthMethod)) {
                 return (T) availableAuthMethod;
             }
         }
-        throw new NexmoUnacceptableAuthException(this.authList, new HashSet<>(Arrays.asList(new Class[]{type})));
+        throw new VonageUnacceptableAuthException(this.authList, new HashSet<>(Arrays.asList(new Class[]{type})));
     }
 
     /**
@@ -85,14 +85,14 @@ public class AuthCollection {
      *
      * @return the preferred AuthMethod from the provided set of acceptable AuthMethod classes
      *
-     * @throws NexmoUnacceptableAuthException if no appropriate AuthMethod is held by this AuthCollection
+     * @throws VonageUnacceptableAuthException if no appropriate AuthMethod is held by this AuthCollection
      */
-    public AuthMethod getAcceptableAuthMethod(Set<Class> acceptableAuthMethodClasses) throws NexmoUnacceptableAuthException {
+    public AuthMethod getAcceptableAuthMethod(Set<Class> acceptableAuthMethodClasses) throws VonageUnacceptableAuthException {
         for (AuthMethod availableAuthMethod : this.authList) {
             if (acceptableAuthMethodClasses.contains(availableAuthMethod.getClass())) {
                 return availableAuthMethod;
             }
         }
-        throw new NexmoUnacceptableAuthException(this.authList, acceptableAuthMethodClasses);
+        throw new VonageUnacceptableAuthException(this.authList, acceptableAuthMethodClasses);
     }
 }

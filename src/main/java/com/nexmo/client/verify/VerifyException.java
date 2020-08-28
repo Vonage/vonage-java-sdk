@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,9 +21,9 @@
  */
 package com.nexmo.client.verify;
 
-import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.VonageClientException;
 
-public class VerifyException extends NexmoClientException {
+public class VerifyException extends VonageClientException {
     private final String status;
     private final String errorText;
 

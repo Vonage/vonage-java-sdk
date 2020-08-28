@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,7 @@ import java.nio.charset.Charset;
  * Internal class that holds available authentication methods and a shared HttpClient.
  */
 public class HttpWrapper {
-    private static final String CLIENT_NAME = "nexmo-java";
+    private static final String CLIENT_NAME = "vonage-java-sdk";
     private static final String CLIENT_VERSION = "5.5.0";
     private static final String JAVA_VERSION = System.getProperty("java.version");
 

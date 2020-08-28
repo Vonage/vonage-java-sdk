@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2018 Nexmo Inc
+ * Copyright (c) 2011-2018 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
 package com.nexmo.client.verify;
 
 import com.nexmo.client.ClientTest;
-import com.nexmo.client.NexmoResponseParseException;
+import com.nexmo.client.VonageResponseParseException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -164,7 +164,7 @@ public class VerifyClientSearchEndpointTest extends ClientTest<VerifyClient> {
     @Test
     public void testSearchWithWrongParams() throws Exception {
         String json = "{\n" + "  \"request_id\": \"\",\n" + "  \"status\": 6,\n"
-                + "  \"error_text\": \"The Nexmo platform was unable to process this message for the following reason: Wrong parameters.\"\n"
+                + "  \"error_text\": \"The Vonage platform was unable to process this message for the following reason: Wrong parameters.\"\n"
                 + "}";
         wrapper.setHttpClient(this.stubHttpClient(200, json));
 
@@ -236,7 +236,7 @@ public class VerifyClientSearchEndpointTest extends ClientTest<VerifyClient> {
         assertEquals(VerifyDetails.Status.EXPIRED, second.getStatus());
     }
 
-    @Test(expected = NexmoResponseParseException.class)
+    @Test(expected = VonageResponseParseException.class)
     public void testSearchInvalidDates() throws Exception {
         String json = "    { \n" + "      \"request_id\": \"a-random-request-id\",\n"
                 + "      \"account_id\": \"account-id\",\n" + "      \"number\": \"not-a-number\",\n"

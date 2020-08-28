@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -148,7 +148,7 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
         }
 
         /**
-         * @param url The URL that Nexmo will send a request to when the insight lookup is finished.
+         * @param url The URL that Vonage will send a request to when the insight lookup is finished.
          *
          * @return The {@link Builder} to keep building.
          */

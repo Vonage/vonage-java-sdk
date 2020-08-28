@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@ package com.nexmo.client.account;
 
 import com.nexmo.client.ClientTest;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.VonageClientException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import junit.framework.Assert;
 import org.junit.Before;
@@ -259,14 +259,14 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         client.topUp("ABC123");
     }
 
-    @Test(expected = NexmoClientException.class)
+    @Test(expected = VonageClientException.class)
     public void testTopUpFailedAuth() throws Exception {
         String json = "{\"error-code\":\"401\",\"error-code-label\":\"authentication failed\"}";
         wrapper.setHttpClient(this.stubHttpClient(401, json));
         client.topUp("ABC123");
     }
 
-    @Test(expected = NexmoClientException.class)
+    @Test(expected = VonageClientException.class)
     public void testTopUpFailed() throws Exception {
         String json = "{\"error-code\":\"420\",\"error-code-label\":\"topup failed\"}";
         wrapper.setHttpClient(this.stubHttpClient(401, json));
@@ -304,7 +304,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         assertEquals("/accounts/abcd1234/secrets/secret-id-two", responses[1].getSelf().getHref());
     }
 
-    @Test(expected = NexmoClientException.class)
+    @Test(expected = VonageClientException.class)
     public void testListSecretFailedAuth() throws Exception {
         String json = "{\n" + "  \"type\": \"https://developer.nexmo.com/api-errors#unauthorized\",\n"
                 + "  \"title\": \"Invalid credentials supplied\",\n"
@@ -314,7 +314,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         client.listSecrets("ABC123");
     }
 
-    @Test(expected = NexmoClientException.class)
+    @Test(expected = VonageClientException.class)
     public void testListSecretNotFound() throws Exception {
         String json = "{\n" + "  \"type\": \"https://developer.nexmo.com/api-errors#invalid-api-key\",\n"
                 + "  \"title\": \"Invalid API Key\",\n"
@@ -340,7 +340,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         assertEquals("/accounts/abcd1234/secrets/secret-id-one", response.getSelf().getHref());
     }
 
-    @Test(expected = NexmoClientException.class)
+    @Test(expected = VonageClientException.class)
     public void testCreateSecretBadRequest() throws Exception {
         String json =
                 "{\n" + "  \"type\": \"https://developer.nexmo.com/api-errors/account/secret-management#validation\",\n"
@@ -353,7 +353,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         client.createSecret("key", "secret");
     }
 
-    @Test(expected = NexmoClientException.class)
+    @Test(expected = VonageClientException.class)
     public void testCreateSecretFailedAuth() throws Exception {
         String json = "{\n" + "  \"type\": \"https://developer.nexmo.com/api-errors#unauthorized\",\n"
                 + "  \"title\": \"Invalid credentials supplied\",\n"
@@ -363,7 +363,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         client.createSecret("key", "secret");
     }
 
-    @Test(expected = NexmoClientException.class)
+    @Test(expected = VonageClientException.class)
     public void testCreateSecretMaxSecrets() throws Exception {
         String json = "{\n"
                 + "  \"type\": \"https://developer.nexmo.com/api-errors/account/secret-management#maximum-secrets-allowed\",\n"
@@ -374,7 +374,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         client.createSecret("key", "secret");
     }
 
-    @Test(expected = NexmoClientException.class)
+    @Test(expected = VonageClientException.class)
     public void testCreateSecretAccountNotFound() throws Exception {
         String json = "{\n" + "  \"type\": \"https://developer.nexmo.com/api-errors#invalid-api-key\",\n"
                 + "  \"title\": \"Invalid API Key\",\n"
@@ -400,7 +400,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         assertEquals("/accounts/abcd1234/secrets/secret-id-one", response.getSelf().getHref());
     }
 
-    @Test(expected = NexmoClientException.class)
+    @Test(expected = VonageClientException.class)
     public void testGetSecretFailedAuth() throws Exception {
         String json = "{\n" + "  \"type\": \"https://developer.nexmo.com/api-errors#unauthorized\",\n"
                 + "  \"title\": \"Invalid credentials supplied\",\n"
@@ -410,7 +410,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         client.getSecret("apiKey", "secret-id-one");
     }
 
-    @Test(expected = NexmoClientException.class)
+    @Test(expected = VonageClientException.class)
     public void testGetSecretNotFound() throws Exception {
         String json = "{\n" + "  \"type\": \"https://developer.nexmo.com/api-errors#invalid-api-key\",\n"
                 + "  \"title\": \"Invalid API Key\",\n"
@@ -427,7 +427,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         client.revokeSecret("apiKey", "secretId");
     }
 
-    @Test(expected = NexmoClientException.class)
+    @Test(expected = VonageClientException.class)
     public void testRevokeSecretFailedAuth() throws Exception {
         String json = "{\n" + "  \"type\": \"https://developer.nexmo.com/api-errors#unauthorized\",\n"
                 + "  \"title\": \"Invalid credentials supplied\",\n"
@@ -437,7 +437,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         client.revokeSecret("apiKey", "secret-id-one");
     }
 
-    @Test(expected = NexmoClientException.class)
+    @Test(expected = VonageClientException.class)
     public void testRevokeSecretForbidden() throws Exception {
         String json = "{\n"
                 + "  \"type\": \"https://developer.nexmo.com/api-errors/account/secret-management#delete-last-secret\",\n"

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2018 Nexmo Inc
+ * Copyright (c) 2011-2018 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ package com.nexmo.client.voice.ncco;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.VonageUnexpectedException;
 import com.nexmo.client.voice.VoiceName;
 import org.junit.Test;
 
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class NccoTest {
-    @Test(expected = NexmoUnexpectedException.class)
+    @Test(expected = VonageUnexpectedException.class)
     public void testUnableToSerializeJson() throws Exception {
         ObjectWriter writer = mock(ObjectWriter.class);
         when(writer.writeValueAsString(any())).thenThrow(JsonProcessingException.class);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@ package com.nexmo.client.numbers;
 
 import com.nexmo.client.HttpConfig;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoBadRequestException;
+import com.nexmo.client.VonageBadRequestException;
 import com.nexmo.client.TestUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
@@ -93,8 +93,8 @@ public class BuyNumberEndpointTest {
 
         try {
             endpoint.parseResponse(stubResponse);
-            fail("A 400 response should raise a NexmoBadRequestException");
-        } catch (NexmoBadRequestException e) {
+            fail("A 400 response should raise a VonageBadRequestException");
+        } catch (VonageBadRequestException e) {
             // This is expected
         }
     }

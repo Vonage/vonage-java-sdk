@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -180,7 +180,7 @@ public class RecordAction implements Action {
 
         /**
          * @param eventUrl The URL to the webhook endpoint that is called asynchronously when a recording is finished.
-         *                 If the message recording is hosted by Nexmo, this webhook contains the URL you need to
+         *                 If the message recording is hosted by Vonage, this webhook contains the URL you need to
          *                 download the recording and other meta data.
          *
          * @return The {@link Builder} to keep building.
@@ -192,7 +192,7 @@ public class RecordAction implements Action {
 
         /**
          * @param eventUrl The URL to the webhook endpoint that is called asynchronously when a recording is finished.
-         *                 If the message recording is hosted by Nexmo, this webhook contains the URL you need to
+         *                 If the message recording is hosted by Vonage, this webhook contains the URL you need to
          *                 download the recording and other meta data.
          *
          * @return The {@link Builder} to keep building.

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ package com.nexmo.client.voice;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.VonageUnexpectedException;
 
 /**
  * The JSON payload that will be sent in a {@link StreamRequest}.
@@ -56,7 +56,7 @@ public class StreamPayload {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.writeValueAsString(this);
         } catch (JsonProcessingException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce json from StreamPayload object.", jpe);
+            throw new VonageUnexpectedException("Failed to produce json from StreamPayload object.", jpe);
         }
     }
 }

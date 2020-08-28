@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -68,8 +68,8 @@ public class AuthCollectionTest {
 
         try {
             auths.getAcceptableAuthMethod(acceptableAuths);
-            fail("No acceptable auth method should throw a NexmoClientException");
-        } catch (NexmoUnacceptableAuthException ex) {
+            fail("No acceptable auth method should throw a VonageClientException");
+        } catch (VonageUnacceptableAuthException ex) {
             assertEquals(
                     "No acceptable authentication type could be found. Acceptable types are: Application ID and Private Key. Supplied types were: ",
                     ex.getMessage());
@@ -101,8 +101,8 @@ public class AuthCollectionTest {
 
         try {
             auths.getAcceptableAuthMethod(acceptableAuths);
-            fail("No acceptable auth method should throw a NexmoClientException");
-        } catch (NexmoUnacceptableAuthException ex) {
+            fail("No acceptable auth method should throw a VonageClientException");
+        } catch (VonageUnacceptableAuthException ex) {
             assertEquals("No acceptable authentication type could be found. Acceptable types are: Application ID and Private Key. Supplied types were: API Key and Secret", ex.getMessage());
         }
     }

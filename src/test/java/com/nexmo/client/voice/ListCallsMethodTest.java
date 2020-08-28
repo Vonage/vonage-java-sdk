@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@ package com.nexmo.client.voice;
 
 import com.nexmo.client.HttpConfig;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.VonageUnexpectedException;
 import com.nexmo.client.auth.JWTAuthMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -135,8 +135,8 @@ public class ListCallsMethodTest {
             RequestBuilder request = method.makeRequest(filter);
             // Anything past here only executes if our assertion is incorrect:
             LOG.error("SnsRequest URI: " + request.getUri());
-            fail("Making a request with a bad URI should throw a NexmoUnexpectedException");
-        } catch (NexmoUnexpectedException nue) {
+            fail("Making a request with a bad URI should throw a VonageUnexpectedException");
+        } catch (VonageUnexpectedException nue) {
             // This is expected
         }
     }

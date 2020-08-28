@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2018 Nexmo Inc
+ * Copyright (c) 2011-2018 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ package com.nexmo.client.incoming;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.VonageUnexpectedException;
 
 import java.io.IOException;
 import java.util.Date;
@@ -73,7 +73,7 @@ public class CallEvent {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(json, CallEvent.class);
         } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce CallEvent from json.", jpe);
+            throw new VonageUnexpectedException("Failed to produce CallEvent from json.", jpe);
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2019 Nexmo Inc
+ * Copyright (c) 2011-2019 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,8 +21,8 @@
  */
 package com.nexmo.client;
 
-public class NexmoUnableToReadPrivateKeyException extends RuntimeException {
-    public NexmoUnableToReadPrivateKeyException(String message, Throwable cause) {
+public class VonageUnableToReadPrivateKeyException extends RuntimeException {
+    public VonageUnableToReadPrivateKeyException(String message, Throwable cause) {
         super(message, cause);
     }
 }

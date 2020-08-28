@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
  */
 package com.nexmo.client.legacyutils;
 
-import com.nexmo.client.NexmoResponseParseException;
+import com.nexmo.client.VonageResponseParseException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
@@ -37,24 +37,24 @@ public class XmlUtil {
         return node.getFirstChild() == null ? null : node.getFirstChild().getNodeValue();
     }
 
-    public static int intValue(Node node) throws NexmoResponseParseException {
+    public static int intValue(Node node) throws VonageResponseParseException {
         String str = stringValue(node);
         if (str != null) {
             return Integer.parseInt(str, 10);
         } else {
-            throw new NexmoResponseParseException("Null or empty value provided for numeric value: " + node.getNodeName());
+            throw new VonageResponseParseException("Null or empty value provided for numeric value: " + node.getNodeName());
         }
     }
 
     public static Document parseXmlString(final DocumentBuilder documentBuilder,
-                                          final String response) throws NexmoResponseParseException {
+                                          final String response) throws VonageResponseParseException {
         try {
             return documentBuilder.parse(new InputSource(new StringReader(response)));
         } catch (SAXException se) {
-            throw new NexmoResponseParseException("XML parse failure", se);
+            throw new VonageResponseParseException("XML parse failure", se);
         } catch (IOException ioe) {
             // Should never happen:
-            throw new NexmoResponseParseException("IOException while parsing response XML!", ioe);
+            throw new VonageResponseParseException("IOException while parsing response XML!", ioe);
         }
     }
 }

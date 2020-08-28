@@ -16,7 +16,7 @@ apply plugin: 'signing'
 apply plugin: 'eclipse'
 
 
-group = "com.nexmo"
+group = "com.vonage"
 archivesBaseName = "client"
 version = "5.5.0"
 
@@ -60,7 +60,7 @@ test {
 
 javadoc {
     /* info for JavaDoc options http://docs.oracle.com/javase/6/docs/technotes/tools/windows/javadoc.html#overviewcomment */
-    title "Nexmo Java SDK"
+    title "Vonage Java SDK"
     // uncomment this to use a custom javadoc overview
     //options.overview = file("src/main/javadoc/overview.html")
     // uncomment this to use the custom javadoc styles
@@ -72,9 +72,9 @@ javadoc {
 jar {
     manifest {
         attributes(
-                "Created-By": 'Nexmo',
-                'Implementation-Vendor': 'Nexmo',
-                'Implementation-Title': 'Nexmo Java SDK',
+                "Created-By": 'Vonage',
+                'Implementation-Vendor': 'Vonage',
+                'Implementation-Title': 'Vonage Java SDK',
                 'Implementation-Version': version
         )
     }
@@ -122,34 +122,34 @@ uploadArchives {
                 )
             }
             pom.project {
-                name 'Nexmo Java Client Library'
+                name 'Vonage Java Client Library'
                 packaging 'jar'
                 artifactId 'client'
-                description 'Java client for Nexmo APIs'
-                url 'https://github.com/Nexmo/nexmo-java/'
+                description 'Java client for Vonage APIs'
+                url 'https://github.com/Vonage/vonage-java-sdk/'
                 scm {
-                    connection 'scm:git:git@github.com:Nexmo/nexmo-java'
-                    developerConnection 'scm:git:git@github.com:Nexmo/nexmo-java'
-                    url 'http://github.com/Nexmo/nexmo-java'
+                    connection 'scm:git:git@github.com:Vonage/vonage-java-sdk'
+                    developerConnection 'scm:git:git@github.com:Vonage/vonage-java-sdk'
+                    url 'http://github.com/Vonage/vonage-java-sdk'
                 }
                 licenses {
                     license {
                         name 'MIT'
-                        url 'https://raw.github.com/Nexmo/nexmo-java/master/LICENCE.txt'
+                        url 'https://raw.github.com/Vonage/vonage-java-sdk/master/LICENCE.txt'
                     }
                 }
                 organization {
-                    name 'Nexmo'
+                    name 'Vonage'
                     url 'https://docs.nexmo.com/tools/developer-api'
                 }
                 issueManagement {
                     system 'GitHub'
-                    url 'https://github.com/Nexmo/nexmo-java/issues'
+                    url 'https://github.com/Vonage/vonage-java-sdk/issues'
                 }
                 developers {
                     developer {
                         id 'devrel'
-                        name 'Nexmo Developer Relations Team'
+                        name 'Vonage Developer Relations Team'
                         email 'devrel@nexmo.com'
                     }
                 }

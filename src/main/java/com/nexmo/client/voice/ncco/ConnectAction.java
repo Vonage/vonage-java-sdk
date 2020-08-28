@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -149,7 +149,7 @@ public class ConnectAction implements Action {
         /**
          * @param from A number in <a href="https://en.wikipedia.org/wiki/E.164">E.164</a> format that identifies the caller.
          *             <p>
-         *             This must be one of your Nexmo virtual numbers, another value will result in the caller ID being unknown.
+         *             This must be one of your Vonage virtual numbers, another value will result in the caller ID being unknown.
          *
          * @return The {@link Builder} to keep building.
          */
@@ -176,7 +176,7 @@ public class ConnectAction implements Action {
         }
 
         /**
-         * @param timeOut If the call is unanswered, set the number in seconds before Nexmo stops ringing endpoint.
+         * @param timeOut If the call is unanswered, set the number in seconds before Vonage stops ringing endpoint.
          *                The default value is 60.
          *
          * @return The {@link Builder} to keep building.
@@ -197,11 +197,11 @@ public class ConnectAction implements Action {
         }
 
         /**
-         * @param machineDetection Configure the behavior when Nexmo detects that a destination is an answerphone.
+         * @param machineDetection Configure the behavior when Vonage detects that a destination is an answerphone.
          *                         <p>
          *                         Set to either:
          *                         <ul>
-         *                         <li> {@link MachineDetection#CONTINUE} Nexmo sends an HTTP request to event_url with the Call event machine
+         *                         <li> {@link MachineDetection#CONTINUE} Vonage sends an HTTP request to event_url with the Call event machine
          *                         <li> {@link MachineDetection#HANGUP} to end the Call
          *                         </ul>
          *
@@ -213,7 +213,7 @@ public class ConnectAction implements Action {
         }
 
         /**
-         * @param eventUrl Set the webhook endpoint that Nexmo calls asynchronously on each of the possible <a href="https://developer.nexmo.com/voice/voice-api/guides/call-flow#call-states">Call States</a>.
+         * @param eventUrl Set the webhook endpoint that Vonage calls asynchronously on each of the possible <a href="https://developer.nexmo.com/voice/voice-api/guides/call-flow#call-states">Call States</a>.
          *                 If eventType is set to synchronous the eventUrl can return an NCCO that overrides the current
          *                 NCCO when a timeout occurs.
          *
@@ -225,7 +225,7 @@ public class ConnectAction implements Action {
         }
 
         /**
-         * @param eventUrl Set the webhook endpoint that Nexmo calls asynchronously on each of the possible <a href="https://developer.nexmo.com/voice/voice-api/guides/call-flow#call-states">Call States</a>.
+         * @param eventUrl Set the webhook endpoint that Vonage calls asynchronously on each of the possible <a href="https://developer.nexmo.com/voice/voice-api/guides/call-flow#call-states">Call States</a>.
          *                 If eventType is set to synchronous the eventUrl can return an NCCO that overrides the current
          *                 NCCO when a timeout occurs.
          *
@@ -236,7 +236,7 @@ public class ConnectAction implements Action {
         }
 
         /**
-         * @param eventMethod The HTTP method Nexmo uses to make the request to eventUrl. The default value is POST.
+         * @param eventMethod The HTTP method Vonage uses to make the request to eventUrl. The default value is POST.
          *
          * @return The {@link Builder} to keep building.
          */

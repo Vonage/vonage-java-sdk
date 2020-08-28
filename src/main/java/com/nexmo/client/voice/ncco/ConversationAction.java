@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -182,7 +182,7 @@ public class ConversationAction implements Action {
         }
 
         /**
-         * @param eventUrl Set the URL to the webhook endpoint Nexmo calls asynchronously on each of the
+         * @param eventUrl Set the URL to the webhook endpoint Vonage calls asynchronously on each of the
          *                 <a href="https://developer.nexmo.com/voice/voice-api/guides/call-flowcall-states">Call States</a>.
          *
          * @return The {@link Builder} to keep building.
@@ -193,7 +193,7 @@ public class ConversationAction implements Action {
         }
 
         /**
-         * @param eventUrl Set the URL to the webhook endpoint Nexmo calls asynchronously on each of the
+         * @param eventUrl Set the URL to the webhook endpoint Vonage calls asynchronously on each of the
          *                 <a href="https://developer.nexmo.com/voice/voice-api/guides/call-flowcall-states">Call States</a>.
          *
          * @return The {@link Builder} to keep building.

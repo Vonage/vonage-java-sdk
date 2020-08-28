@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,8 +26,8 @@ import com.nexmo.client.*;
 import com.nexmo.client.voice.ncco.Ncco;
 
 /**
- * A client for talking to the Nexmo Voice API. The standard way to obtain an instance of this class is to use {@link
- * NexmoClient#getVoiceClient()}.
+ * A client for talking to the Vonage Voice API. The standard way to obtain an instance of this class is to use {@link
+ * VonageClient#getVoiceClient()}.
  */
 public class VoiceClient extends AbstractClient {
     protected final CallsEndpoint calls;
@@ -59,10 +59,10 @@ public class VoiceClient extends AbstractClient {
      * @return A CallEvent describing the initial state of the call, containing the {@code uuid} required to interact
      * with the ongoing phone call.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public CallEvent createCall(Call callRequest) throws NexmoResponseParseException, NexmoClientException {
+    public CallEvent createCall(Call callRequest) throws VonageResponseParseException, VonageClientException {
         return calls.post(callRequest);
     }
 
@@ -70,12 +70,12 @@ public class VoiceClient extends AbstractClient {
      * Obtain the first page of CallInfo objects, representing the most recent calls initiated by {@link
      * #createCall(Call)}.
      *
-     * @return A CallInfoPage representing the response from the Nexmo Voice API.
+     * @return A CallInfoPage representing the response from the Vonage Voice API.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public CallInfoPage listCalls() throws NexmoResponseParseException, NexmoClientException {
+    public CallInfoPage listCalls() throws VonageResponseParseException, VonageClientException {
         return this.listCalls(null);
     }
 
@@ -85,12 +85,12 @@ public class VoiceClient extends AbstractClient {
      *
      * @param filter (optional) A filter describing which calls to be listed.
      *
-     * @return A CallInfoPage representing the response from the Nexmo Voice API.
+     * @return A CallInfoPage representing the response from the Vonage Voice API.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public CallInfoPage listCalls(CallsFilter filter) throws NexmoResponseParseException, NexmoClientException {
+    public CallInfoPage listCalls(CallsFilter filter) throws VonageResponseParseException, VonageClientException {
         return calls.get(filter);
     }
 
@@ -100,12 +100,12 @@ public class VoiceClient extends AbstractClient {
      * @param uuid (required) The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This
      *             value can be obtained with {@link CallEvent#getUuid()}
      *
-     * @return A CallInfo object, representing the response from the Nexmo Voice API.
+     * @return A CallInfo object, representing the response from the Vonage Voice API.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public CallInfo getCallDetails(String uuid) throws NexmoResponseParseException, NexmoClientException {
+    public CallInfo getCallDetails(String uuid) throws VonageResponseParseException, VonageClientException {
         return calls.get(uuid);
     }
 
@@ -118,12 +118,12 @@ public class VoiceClient extends AbstractClient {
      *               {@code 1-9</tt>, <tt>#</tt>, <tt>*</tt>, with the special character <tt>p} indicating a short pause
      *               between tones.
      *
-     * @return A CallInfo object, representing the response from the Nexmo Voice API.
+     * @return A CallInfo object, representing the response from the Vonage Voice API.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public DtmfResponse sendDtmf(String uuid, String digits) throws NexmoResponseParseException, NexmoClientException {
+    public DtmfResponse sendDtmf(String uuid, String digits) throws VonageResponseParseException, VonageClientException {
         return dtmf.put(uuid, digits);
     }
 
@@ -143,12 +143,12 @@ public class VoiceClient extends AbstractClient {
      *               can be obtained with {@link CallEvent#getUuid()}
      * @param action One of: "hangup", "mute", "unmute", "earmuff", "unearmuff"
      *
-     * @return A ModifyCallResponse object, representing the response from the Nexmo Voice API.
+     * @return A ModifyCallResponse object, representing the response from the Vonage Voice API.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public ModifyCallResponse modifyCall(String uuid, ModifyCallAction action) throws NexmoResponseParseException, NexmoClientException {
+    public ModifyCallResponse modifyCall(String uuid, ModifyCallAction action) throws VonageResponseParseException, VonageClientException {
         return this.modifyCall(new CallModifier(uuid, action));
     }
 
@@ -160,12 +160,12 @@ public class VoiceClient extends AbstractClient {
      *
      * @param modifier A CallModifier describing the modification to be made.
      *
-     * @return A ModifyCallResponse object, representing the response from the Nexmo Voice API.
+     * @return A ModifyCallResponse object, representing the response from the Vonage Voice API.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public ModifyCallResponse modifyCall(CallModifier modifier) throws NexmoResponseParseException, NexmoClientException {
+    public ModifyCallResponse modifyCall(CallModifier modifier) throws VonageResponseParseException, VonageClientException {
         return calls.put(modifier);
     }
 
@@ -176,12 +176,12 @@ public class VoiceClient extends AbstractClient {
      *                can be obtained with {@link CallEvent#getUuid()}
      * @param nccoUrl The URL of the NCCO endpoint the call should be transferred to
      *
-     * @return A ModifyCallResponse object, representing the response from the Nexmo Voice API.
+     * @return A ModifyCallResponse object, representing the response from the Vonage Voice API.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public ModifyCallResponse transferCall(String uuid, String nccoUrl) throws NexmoResponseParseException, NexmoClientException {
+    public ModifyCallResponse transferCall(String uuid, String nccoUrl) throws VonageResponseParseException, VonageClientException {
         return this.modifyCall(CallModifier.transferCall(uuid, nccoUrl));
     }
 
@@ -192,12 +192,12 @@ public class VoiceClient extends AbstractClient {
      *             be obtained with {@link CallEvent#getUuid()}
      * @param ncco The new NCCO that will be used in the call.
      *
-     * @return A ModifyCallResponse object, representing the response from the Nexmo Voice API.
+     * @return A ModifyCallResponse object, representing the response from the Vonage Voice API.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public ModifyCallResponse transferCall(String uuid, Ncco ncco) throws NexmoResponseParseException, NexmoClientException {
+    public ModifyCallResponse transferCall(String uuid, Ncco ncco) throws VonageResponseParseException, VonageClientException {
         return this.modifyCall(CallModifier.transferCall(uuid, ncco));
     }
 
@@ -212,10 +212,10 @@ public class VoiceClient extends AbstractClient {
      *
      * @return The data returned from the Voice API
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public StreamResponse startStream(String uuid, String streamUrl, int loop) throws NexmoResponseParseException, NexmoClientException {
+    public StreamResponse startStream(String uuid, String streamUrl, int loop) throws VonageResponseParseException, VonageClientException {
         return streams.put(new StreamRequest(uuid, streamUrl, loop));
     }
 
@@ -228,10 +228,10 @@ public class VoiceClient extends AbstractClient {
      *
      * @return The data returned from the Voice API.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public StreamResponse startStream(String uuid, String streamUrl) throws NexmoResponseParseException, NexmoClientException {
+    public StreamResponse startStream(String uuid, String streamUrl) throws VonageResponseParseException, VonageClientException {
         return streams.put(new StreamRequest(uuid, streamUrl, 1));
     }
 
@@ -243,10 +243,10 @@ public class VoiceClient extends AbstractClient {
      *
      * @return The data returned from the Voice API
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public StreamResponse stopStream(String uuid) throws NexmoResponseParseException, NexmoClientException {
+    public StreamResponse stopStream(String uuid) throws VonageResponseParseException, VonageClientException {
         return streams.delete(uuid);
     }
 
@@ -261,10 +261,10 @@ public class VoiceClient extends AbstractClient {
      *
      * @return The data returned from the Voice API.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public TalkResponse startTalk(String uuid, String text) throws NexmoResponseParseException, NexmoClientException {
+    public TalkResponse startTalk(String uuid, String text) throws VonageResponseParseException, VonageClientException {
         return talk.put(new TalkRequest(uuid, text));
     }
 
@@ -278,10 +278,10 @@ public class VoiceClient extends AbstractClient {
      *
      * @return The data returned from the Voice API.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public TalkResponse startTalk(String uuid, String text, VoiceName voiceName) throws NexmoResponseParseException, NexmoClientException {
+    public TalkResponse startTalk(String uuid, String text, VoiceName voiceName) throws VonageResponseParseException, VonageClientException {
         return talk.put(new TalkRequest(uuid, text, voiceName));
     }
 
@@ -298,10 +298,10 @@ public class VoiceClient extends AbstractClient {
      *
      * @return The data returned from the Voice API.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public TalkResponse startTalk(String uuid, String text, int loop) throws NexmoResponseParseException, NexmoClientException {
+    public TalkResponse startTalk(String uuid, String text, int loop) throws VonageResponseParseException, VonageClientException {
         return talk.put(new TalkRequest(uuid, text, loop));
     }
 
@@ -317,10 +317,10 @@ public class VoiceClient extends AbstractClient {
      *
      * @return The data returned from the Voice API.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public TalkResponse startTalk(String uuid, String text, VoiceName voiceName, int loop) throws NexmoResponseParseException, NexmoClientException {
+    public TalkResponse startTalk(String uuid, String text, VoiceName voiceName, int loop) throws VonageResponseParseException, VonageClientException {
         return talk.put(new TalkRequest(uuid, text, voiceName, loop));
     }
 
@@ -332,10 +332,10 @@ public class VoiceClient extends AbstractClient {
      *
      * @return The data returned from the Voice API
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public TalkResponse stopTalk(String uuid) throws NexmoResponseParseException, NexmoClientException {
+    public TalkResponse stopTalk(String uuid) throws VonageResponseParseException, VonageClientException {
         return talk.delete(uuid);
     }
 
@@ -349,10 +349,10 @@ public class VoiceClient extends AbstractClient {
      *
      * @return A Recording object, providing access to the recording's bytes
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public Recording downloadRecording(String recordingUrl) throws NexmoResponseParseException, NexmoClientException {
+    public Recording downloadRecording(String recordingUrl) throws VonageResponseParseException, VonageClientException {
         return this.downloadRecording.execute(recordingUrl);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2018 Nexmo Inc
+ * Copyright (c) 2011-2018 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,14 +25,14 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.VonageUnexpectedException;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
 /**
- * Nexmo Call Control Object for controlling the flow of a Voice API call.
+ * Vonage Call Control Object for controlling the flow of a Voice API call.
  */
 public class Ncco {
     @JsonValue
@@ -72,7 +72,7 @@ public class Ncco {
         try {
             return this.writer.writeValueAsString(this.actions);
         } catch (JsonProcessingException e) {
-            throw new NexmoUnexpectedException("Unable to convert NCCO Object to JSON.");
+            throw new VonageUnexpectedException("Unable to convert NCCO Object to JSON.");
         }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2018 Nexmo Inc
+ * Copyright (c) 2011-2018 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
 package com.nexmo.client.redact;
 
 import com.nexmo.client.ClientTest;
-import com.nexmo.client.NexmoBadRequestException;
+import com.nexmo.client.VonageBadRequestException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -48,7 +48,7 @@ public class RedactClientTest extends ClientTest<RedactClient> {
         }
     }
 
-    @Test(expected = NexmoBadRequestException.class)
+    @Test(expected = VonageBadRequestException.class)
     public void testWrongCredentials() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(401, ""));
         RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
@@ -56,7 +56,7 @@ public class RedactClientTest extends ClientTest<RedactClient> {
         this.client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
     }
 
-    @Test(expected = NexmoBadRequestException.class)
+    @Test(expected = VonageBadRequestException.class)
     public void testPrematureRedactionOrUnauthorized() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(403, ""));
         RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
@@ -64,7 +64,7 @@ public class RedactClientTest extends ClientTest<RedactClient> {
         this.client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
     }
 
-    @Test(expected = NexmoBadRequestException.class)
+    @Test(expected = VonageBadRequestException.class)
     public void testInvalidId() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(404, ""));
         RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
@@ -72,7 +72,7 @@ public class RedactClientTest extends ClientTest<RedactClient> {
         this.client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
     }
 
-    @Test(expected = NexmoBadRequestException.class)
+    @Test(expected = VonageBadRequestException.class)
     public void testInvalidJsonInvalidProduct() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(422, ""));
         RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
@@ -80,7 +80,7 @@ public class RedactClientTest extends ClientTest<RedactClient> {
         this.client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
     }
 
-    @Test(expected = NexmoBadRequestException.class)
+    @Test(expected = VonageBadRequestException.class)
     public void testRateLimit() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(429, ""));
         RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);

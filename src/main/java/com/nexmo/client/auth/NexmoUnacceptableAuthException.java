@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
-public class NexmoUnacceptableAuthException extends NexmoAuthException {
+public class VonageUnacceptableAuthException extends VonageAuthException {
     private static final Map<Class, String> AUTH_DESCRIPTION_MAP = new HashMap<>();
 
     private final Iterable<AuthMethod> availableAuths;
@@ -37,7 +37,7 @@ public class NexmoUnacceptableAuthException extends NexmoAuthException {
         AUTH_DESCRIPTION_MAP.put(JWTAuthMethod.class, "Application ID and Private Key");
     }
 
-    public NexmoUnacceptableAuthException(Collection<AuthMethod> availableAuths, Collection<Class>
+    public VonageUnacceptableAuthException(Collection<AuthMethod> availableAuths, Collection<Class>
             acceptableAuthClasses) {
         super();
         this.availableAuths = new ArrayList<>(availableAuths);

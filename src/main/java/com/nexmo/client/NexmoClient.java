@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -41,15 +41,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * Top-level Nexmo API client object.
+ * Top-level Vonage API client object.
  * <p>
  * Construct an instance of this object with one or more {@link AuthMethod}s (providing all the authentication methods
- * for the APIs you wish to use), and then call {@link #getVoiceClient()} to obtain a client for the Nexmo Voice API.
+ * for the APIs you wish to use), and then call {@link #getVoiceClient()} to obtain a client for the Vonage Voice API.
  * <p>
  * Currently this object only constructs and provides access to {@link VoiceClient}. In the future it will manage
- * clients for all of the Nexmo APIs.
+ * clients for all of the Vonage APIs.
  */
-public class NexmoClient {
+public class VonageClient {
     private AccountClient account;
     private ApplicationClient application;
     private InsightClient insight;
@@ -62,7 +62,7 @@ public class NexmoClient {
     private RedactClient redact;
     private HttpWrapper httpWrapper;
 
-    private NexmoClient(Builder builder) {
+    private VonageClient(Builder builder) {
         this.httpWrapper = new HttpWrapper(builder.httpConfig, builder.authCollection);
         this.httpWrapper.setHttpClient(builder.httpClient);
 
@@ -123,9 +123,9 @@ public class NexmoClient {
      *
      * @return A String containing the token data.
      *
-     * @throws NexmoUnacceptableAuthException if no {@link JWTAuthMethod} is available
+     * @throws VonageUnacceptableAuthException if no {@link JWTAuthMethod} is available
      */
-    public String generateJwt() throws NexmoUnacceptableAuthException {
+    public String generateJwt() throws VonageUnacceptableAuthException {
         JWTAuthMethod authMethod = this.httpWrapper.getAuthCollection().getAuth(JWTAuthMethod.class);
         return authMethod.generateToken();
     }
@@ -253,13 +253,13 @@ public class NexmoClient {
          *
          * @return The {@link Builder} to keep building.
          *
-         * @throws NexmoUnableToReadPrivateKeyException if the private key could not be read from the file system.
+         * @throws VonageUnableToReadPrivateKeyException if the private key could not be read from the file system.
          */
-        public Builder privateKeyPath(Path privateKeyPath) throws NexmoUnableToReadPrivateKeyException {
+        public Builder privateKeyPath(Path privateKeyPath) throws VonageUnableToReadPrivateKeyException {
             try {
                 return privateKeyContents(Files.readAllBytes(privateKeyPath));
             } catch (IOException e) {
-                throw new NexmoUnableToReadPrivateKeyException("Unable to read private key at " + privateKeyPath, e);
+                throw new VonageUnableToReadPrivateKeyException("Unable to read private key at " + privateKeyPath, e);
             }
         }
 
@@ -271,26 +271,26 @@ public class NexmoClient {
          *
          * @return The {@link Builder} to keep building.
          *
-         * @throws NexmoUnableToReadPrivateKeyException if the private key could not be read from the file system.
+         * @throws VonageUnableToReadPrivateKeyException if the private key could not be read from the file system.
          */
-        public Builder privateKeyPath(String privateKeyPath) throws NexmoUnableToReadPrivateKeyException {
+        public Builder privateKeyPath(String privateKeyPath) throws VonageUnableToReadPrivateKeyException {
             return privateKeyPath(Paths.get(privateKeyPath));
         }
 
         /**
-         * @return a new {@link NexmoClient} from the stored builder options.
+         * @return a new {@link VonageClient} from the stored builder options.
          *
-         * @throws NexmoClientCreationException if credentials aren't provided in a valid pairing or there were issues
+         * @throws VonageClientCreationException if credentials aren't provided in a valid pairing or there were issues
          *                                      generating an {@link JWTAuthMethod} with the provided credentials.
          */
-        public NexmoClient build() {
+        public VonageClient build() {
             this.authCollection = generateAuthCollection(this.applicationId,
                     this.apiKey,
                     this.apiSecret,
                     this.signatureSecret,
                     this.privateKeyContents
             );
-            return new NexmoClient(this);
+            return new VonageClient(this);
         }
 
         private AuthCollection generateAuthCollection(String applicationId, String key, String secret, String signature, byte[] privateKeyContents) {
@@ -299,7 +299,7 @@ public class NexmoClient {
             try {
                 validateAuthParameters(applicationId, key, secret, signature, privateKeyContents);
             } catch (IllegalStateException e) {
-                throw new NexmoClientCreationException("Failed to generate authentication methods.", e);
+                throw new VonageClientCreationException("Failed to generate authentication methods.", e);
             }
 
             if (key != null && secret != null) {

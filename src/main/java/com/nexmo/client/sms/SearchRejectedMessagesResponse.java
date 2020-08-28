@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@ package com.nexmo.client.sms;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.VonageUnexpectedException;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -47,7 +47,7 @@ public class SearchRejectedMessagesResponse {
             mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
             return mapper.readValue(json, SearchRejectedMessagesResponse.class);
         } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce SearchRejectedMessagesResponse from json.", jpe);
+            throw new VonageUnexpectedException("Failed to produce SearchRejectedMessagesResponse from json.", jpe);
         }
     }
 }

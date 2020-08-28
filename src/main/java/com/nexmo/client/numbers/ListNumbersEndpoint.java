@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ package com.nexmo.client.numbers;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.VonageClientException;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
@@ -61,7 +61,7 @@ class ListNumbersEndpoint extends AbstractMethod<ListNumbersFilter, ListNumbersR
         return ListNumbersResponse.fromJson(json);
     }
 
-    ListNumbersResponse listNumbers(ListNumbersFilter request) throws NexmoClientException {
+    ListNumbersResponse listNumbers(ListNumbersFilter request) throws VonageClientException {
         return this.execute(request);
     }
 }

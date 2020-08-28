@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
  */
 package com.nexmo.client.legacyutils;
 
-import com.nexmo.client.NexmoResponseParseException;
+import com.nexmo.client.VonageResponseParseException;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -48,9 +48,9 @@ public class XmlParser {
      *
      * @param xml A String containing XML.
      * @return A Document generated from the parsed XML.
-     * @throws NexmoResponseParseException If there is a problem initializing the XML parser or parsing the XML.
+     * @throws VonageResponseParseException If there is a problem initializing the XML parser or parsing the XML.
      */
-    public Document parseXml(String xml) throws NexmoResponseParseException {
+    public Document parseXml(String xml) throws VonageResponseParseException {
         // TODO: Maybe an Error subclass for XML initialization errors, as these are serious and unexpected.
         Document doc;
         this.documentBuilderLock.lock();
@@ -61,7 +61,7 @@ public class XmlParser {
             }
             doc = XmlUtil.parseXmlString(this.documentBuilder, xml);
         } catch (ParserConfigurationException e) {
-            throw new NexmoResponseParseException("Exception initialing XML parser", e);
+            throw new VonageResponseParseException("Exception initialing XML parser", e);
         } finally {
             this.documentBuilderLock.unlock();
         }

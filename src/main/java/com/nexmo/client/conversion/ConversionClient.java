@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2018 Nexmo Inc
+ * Copyright (c) 2011-2018 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,12 +26,12 @@ import com.nexmo.client.*;
 import java.util.Date;
 
 /**
- * A client for talking to the Nexmo Conversion API. The standard way to obtain an instance of this class is to use
- * {@link NexmoClient#getConversionClient()}.
+ * A client for talking to the Vonage Conversion API. The standard way to obtain an instance of this class is to use
+ * {@link VonageClient#getConversionClient()}.
  * <p>
- * Allows you to tell Nexmo about the reliability of your 2FA communications.
+ * Allows you to tell Vonage about the reliability of your 2FA communications.
  * <p>
- * More information on method parameters can be found at Nexmo website:
+ * More information on method parameters can be found at Vonage website:
  * <a href="https://developer.nexmo.com/messaging/conversion-api/overview">https://developer.nexmo.com/messaging/conversion-api/overview</a>
  */
 public class ConversionClient extends AbstractClient {
@@ -51,13 +51,13 @@ public class ConversionClient extends AbstractClient {
      * @param delivered A boolean indicating whether or not it was delivered.
      * @param timestamp A timestamp of when it was known to be delivered.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public void submitConversion(ConversionRequest.Type type,
                                  String messageId,
                                  boolean delivered,
-                                 Date timestamp) throws NexmoResponseParseException, NexmoClientException {
+                                 Date timestamp) throws VonageResponseParseException, VonageClientException {
         this.conversionEndpoint.submitConversion(new ConversionRequest(type, messageId, delivered, timestamp));
     }
 }

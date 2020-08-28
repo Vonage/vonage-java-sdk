@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -184,7 +184,7 @@ public class MO implements java.io.Serializable {
 //    }
 
     /**
-     * @return String the id assigned to this message by Nexmo before delivery
+     * @return String the id assigned to this message by Vonage before delivery
      */
     public String getMessageId() {
         return this.messageId;
@@ -289,7 +289,7 @@ public class MO implements java.io.Serializable {
     }
 
     /**
-     * @return the timestamp this message was originally received by Nexmo
+     * @return the timestamp this message was originally received by Vonage
      */
     public Date getTimeStamp() {
         return this.timeStamp;

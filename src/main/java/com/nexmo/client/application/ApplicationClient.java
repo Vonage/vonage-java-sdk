@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2019 Nexmo Inc
+ * Copyright (c) 2011-2019 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +24,8 @@ package com.nexmo.client.application;
 import com.nexmo.client.*;
 
 /**
- * A client for talking to the Nexmo Application API. The standard way to obtain an instance of this class is to use
- * {@link NexmoClient#getApplicationClient()}
+ * A client for talking to the Vonage Application API. The standard way to obtain an instance of this class is to use
+ * {@link VonageClient#getApplicationClient()}
  */
 public class ApplicationClient extends AbstractClient {
     private ApplicationEndpoint applicationEndpoint;
@@ -42,10 +42,10 @@ public class ApplicationClient extends AbstractClient {
      *
      * @return The application which has been created.
      *
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
-     * @throws NexmoClientException        if there was a problem with the Nexmo request.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request.
      */
-    public Application createApplication(Application application) throws NexmoResponseParseException, NexmoClientException {
+    public Application createApplication(Application application) throws VonageResponseParseException, VonageClientException {
         return this.applicationEndpoint.create(application);
     }
 
@@ -56,10 +56,10 @@ public class ApplicationClient extends AbstractClient {
      *
      * @return The application which has been updated.
      *
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
-     * @throws NexmoClientException        if there was a problem with the Nexmo request.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request.
      */
-    public Application updateApplication(Application application) throws NexmoResponseParseException, NexmoClientException {
+    public Application updateApplication(Application application) throws VonageResponseParseException, VonageClientException {
         return this.applicationEndpoint.update(application);
     }
 
@@ -70,10 +70,10 @@ public class ApplicationClient extends AbstractClient {
      *
      * @return The corresponding application.
      *
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
-     * @throws NexmoClientException        if there was a problem with the Nexmo request.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request.
      */
-    public Application getApplication(String id) throws NexmoResponseParseException, NexmoClientException {
+    public Application getApplication(String id) throws VonageResponseParseException, VonageClientException {
         return this.applicationEndpoint.get(id);
     }
 
@@ -82,10 +82,10 @@ public class ApplicationClient extends AbstractClient {
      *
      * @param id The id of the application to delete.
      *
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
-     * @throws NexmoClientException        if there was a problem with the Nexmo request.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request.
      */
-    public void deleteApplication(String id) throws NexmoResponseParseException, NexmoClientException {
+    public void deleteApplication(String id) throws VonageResponseParseException, VonageClientException {
         this.applicationEndpoint.delete(id);
     }
 
@@ -94,10 +94,10 @@ public class ApplicationClient extends AbstractClient {
      *
      * @return The list of available applications.
      *
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
-     * @throws NexmoClientException        if there was a problem with the Nexmo request.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request.
      */
-    public ApplicationList listApplications() throws NexmoResponseParseException, NexmoClientException {
+    public ApplicationList listApplications() throws VonageResponseParseException, VonageClientException {
         return listApplications(null);
     }
 
@@ -108,10 +108,10 @@ public class ApplicationClient extends AbstractClient {
      *
      * @return The list of available applications.
      *
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
-     * @throws NexmoClientException        if there was a problem with the Nexmo request.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request.
      */
-    public ApplicationList listApplications(ListApplicationRequest listApplicationRequest) throws NexmoResponseParseException, NexmoClientException {
+    public ApplicationList listApplications(ListApplicationRequest listApplicationRequest) throws VonageResponseParseException, VonageClientException {
         return this.applicationEndpoint.list(listApplicationRequest);
     }
 }

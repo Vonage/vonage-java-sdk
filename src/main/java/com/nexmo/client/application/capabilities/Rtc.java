@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2019 Nexmo Inc
+ * Copyright (c) 2011-2019 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -55,7 +55,7 @@ public class Rtc extends Capability {
         private Map<Webhook.Type, Webhook> webhooks;
 
         /**
-         * Add a webhook for the Nexmo API to use. See https://developer.nexmo.com/concepts/guides/webhooks. Each
+         * Add a webhook for the Vonage API to use. See https://developer.nexmo.com/concepts/guides/webhooks. Each
          * Capability can only have a single webhook of each type. Any futher adding of webhooks will override an
          * already existing one of that type.
          *

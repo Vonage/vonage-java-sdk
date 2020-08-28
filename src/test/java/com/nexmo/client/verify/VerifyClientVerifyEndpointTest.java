@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2018 Nexmo Inc
+ * Copyright (c) 2011-2018 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
 package com.nexmo.client.verify;
 
 import com.nexmo.client.ClientTest;
-import com.nexmo.client.NexmoResponseParseException;
+import com.nexmo.client.VonageResponseParseException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -127,7 +127,7 @@ public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
         try {
             client.verify("447700900999", "TestBrand", "15555215554", 6, Locale.US);
             fail("An IOException should be thrown if an HTTP 500 response is received.");
-        } catch (NexmoResponseParseException nrp) {
+        } catch (VonageResponseParseException nrp) {
             // This is expected
         }
     }

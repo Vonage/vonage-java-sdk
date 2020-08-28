@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2019 Nexmo Inc
+ * Copyright (c) 2011-2019 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@ package com.nexmo.client.application;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.VonageUnexpectedException;
 import com.nexmo.client.common.PageList;
 import io.openapitools.jackson.dataformat.hal.HALMapper;
 import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
@@ -47,7 +47,7 @@ public class ApplicationList extends PageList {
         try {
             return new HALMapper().readValue(json, ApplicationList.class);
         } catch (IOException e) {
-            throw new NexmoUnexpectedException("Failed to produce ApplicationList from json", e);
+            throw new VonageUnexpectedException("Failed to produce ApplicationList from json", e);
         }
     }
 }

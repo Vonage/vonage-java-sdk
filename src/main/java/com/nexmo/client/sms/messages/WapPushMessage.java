@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@ package com.nexmo.client.sms.messages;
 import org.apache.http.client.methods.RequestBuilder;
 
 /**
- * Represents the details of a wap-push message that is to be submitted via the Nexmo REST api.
+ * Represents the details of a wap-push message that is to be submitted via the Vonage REST api.
  *
  * @author Paul Cook
  */

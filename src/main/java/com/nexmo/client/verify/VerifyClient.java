@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,13 +26,13 @@ import com.nexmo.client.*;
 import java.util.Locale;
 
 /**
- * A client for talking to the Nexmo Verify API. The standard way to obtain an instance of this class is to use {@link
- * NexmoClient#getVerifyClient()}.
+ * A client for talking to the Vonage Verify API. The standard way to obtain an instance of this class is to use {@link
+ * VonageClient#getVerifyClient()}.
  * <p>
  * Send a verification request with a call to {@link #verify}, confirm the code entered by the user with {@link #check},
  * and search in-progress or completed verification requests with {@link #search}
  * <p>
- * More information on method parameters can be found at Nexmo website:
+ * More information on method parameters can be found at Vonage website:
  * <a href="https://docs.nexmo.com/verify">https://docs.nexmo.com/verify</a>
  */
 public class VerifyClient extends AbstractClient {
@@ -68,10 +68,10 @@ public class VerifyClient extends AbstractClient {
      *
      * @return a VerifyResponse representing the response received from the Verify API call.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public VerifyResponse verify(final String number, final String brand) throws NexmoResponseParseException, NexmoClientException {
+    public VerifyResponse verify(final String number, final String brand) throws VonageResponseParseException, VonageClientException {
         return this.verify.verify(number, brand);
     }
 
@@ -105,17 +105,17 @@ public class VerifyClient extends AbstractClient {
      *               format.
      * @param brand  (required) The name of the company or app to be verified for. Must not be longer than 18
      *               characters.
-     * @param from   (optional The Nexmo number to use as the sender for the verification SMS message and calls, in
+     * @param from   (optional The Vonage number to use as the sender for the verification SMS message and calls, in
      *               <a href="https://en.wikipedia.org/wiki/E.164">E.164</a> format.
      *
      * @return a VerifyResponse representing the response received from the Verify API call.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public VerifyResponse verify(final String number,
                                  final String brand,
-                                 final String from) throws NexmoClientException, NexmoResponseParseException {
+                                 final String from) throws VonageClientException, VonageResponseParseException {
         return this.verify.verify(number, brand, from);
     }
 
@@ -126,7 +126,7 @@ public class VerifyClient extends AbstractClient {
      *               format.
      * @param brand  (required) The name of the company or app to be verified for. Must not be longer than 18
      *               characters.
-     * @param from   (optional The Nexmo number to use as the sender for the verification SMS message and calls, in
+     * @param from   (optional The Vonage number to use as the sender for the verification SMS message and calls, in
      *               <a href="https://en.wikipedia.org/wiki/E.164">E.164</a> format.
      * @param length (optional) The length of the verification code to be sent to the user. Must be either 4 or 6. Use
      *               -1 to use the default value.
@@ -135,14 +135,14 @@ public class VerifyClient extends AbstractClient {
      *
      * @return a VerifyResponse representing the response received from the Verify API call.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public VerifyResponse verify(final String number,
                                  final String brand,
                                  final String from,
                                  final int length,
-                                 final Locale locale) throws NexmoClientException, NexmoResponseParseException {
+                                 final Locale locale) throws VonageClientException, VonageResponseParseException {
         return this.verify.verify(number, brand, from, length, locale);
     }
 
@@ -153,7 +153,7 @@ public class VerifyClient extends AbstractClient {
      *               format.
      * @param brand  (required) The name of the company or app to be verified for. Must not be longer than 18
      *               characters.
-     * @param from   (optional The Nexmo number to use as the sender for the verification SMS message and calls, in
+     * @param from   (optional The Vonage number to use as the sender for the verification SMS message and calls, in
      *               <a href="https://en.wikipedia.org/wiki/E.164">E.164</a> format.
      * @param length (optional) The length of the verification code to be sent to the user. Must be either 4 or 6. Use
      *               -1 to use the default value.
@@ -164,15 +164,15 @@ public class VerifyClient extends AbstractClient {
      *
      * @return a VerifyResponse representing the response received from the Verify API call.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public VerifyResponse verify(final String number,
                                  final String brand,
                                  final String from,
                                  final int length,
                                  final Locale locale,
-                                 final VerifyRequest.LineType type) throws NexmoClientException {
+                                 final VerifyRequest.LineType type) throws VonageClientException {
         return this.verify.verify(number, brand, from, length, locale, type);
     }
 
@@ -186,7 +186,7 @@ public class VerifyClient extends AbstractClient {
      * @throws NexmoResponseParseException if the response from the API could not be parsed.
      *
      */
-    public VerifyResponse verify(VerifyRequest request) throws NexmoClientException, NexmoResponseParseException {
+    public VerifyResponse verify(VerifyRequest request) throws VonageClientException, VonageResponseParseException {
         return this.verify.verify(request);
     }
 
@@ -198,10 +198,10 @@ public class VerifyClient extends AbstractClient {
      *
      * @return a CheckResponse representing the response received from the API call.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public CheckResponse check(final String requestId, final String code) throws NexmoClientException, NexmoResponseParseException {
+    public CheckResponse check(final String requestId, final String code) throws VonageClientException, VonageResponseParseException {
         return this.check.check(requestId, code);
     }
 
@@ -214,12 +214,12 @@ public class VerifyClient extends AbstractClient {
      *
      * @return a CheckResponse representing the response received from the API call.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public CheckResponse check(final String requestId,
                                final String code,
-                               final String ipAddress) throws NexmoClientException, NexmoResponseParseException {
+                               final String ipAddress) throws VonageClientException, VonageResponseParseException {
         return this.check.check(requestId, code, ipAddress);
     }
 
@@ -231,10 +231,10 @@ public class VerifyClient extends AbstractClient {
      * @return A SearchVerifyResponse containing the details of the Verify request that was looked up, or {@code null}
      * if no record was found.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public SearchVerifyResponse search(String requestId) throws NexmoClientException, NexmoResponseParseException {
+    public SearchVerifyResponse search(String requestId) throws VonageClientException, VonageResponseParseException {
         return this.search.search(requestId);
     }
 
@@ -245,10 +245,10 @@ public class VerifyClient extends AbstractClient {
      *
      * @return An array SearchVerifyResponse for each record that was found.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public SearchVerifyResponse search(String... requestIds) throws NexmoClientException, NexmoResponseParseException {
+    public SearchVerifyResponse search(String... requestIds) throws VonageClientException, VonageResponseParseException {
         return this.search.search(requestIds);
     }
 
@@ -259,10 +259,10 @@ public class VerifyClient extends AbstractClient {
      *
      * @return A {@link ControlResponse} representing the response from the API.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public ControlResponse advanceVerification(String requestId) throws NexmoClientException, NexmoResponseParseException {
+    public ControlResponse advanceVerification(String requestId) throws VonageClientException, VonageResponseParseException {
         return this.control.execute(new ControlRequest(requestId, VerifyControlCommand.TRIGGER_NEXT_EVENT));
     }
 
@@ -273,10 +273,10 @@ public class VerifyClient extends AbstractClient {
      *
      * @return A {@link ControlResponse} representing the response from the API.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public ControlResponse cancelVerification(String requestId) throws NexmoClientException, NexmoResponseParseException {
+    public ControlResponse cancelVerification(String requestId) throws VonageClientException, VonageResponseParseException {
         return this.control.execute(new ControlRequest(requestId, VerifyControlCommand.CANCEL));
     }
 

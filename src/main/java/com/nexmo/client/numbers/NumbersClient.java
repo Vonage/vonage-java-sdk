@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,11 +23,11 @@ package com.nexmo.client.numbers;
 
 
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.NexmoResponseParseException;
+import com.nexmo.client.VonageClientException;
+import com.nexmo.client.VonageResponseParseException;
 
 /**
- * A client for accessing the Nexmo API calls that manage phone numbers.
+ * A client for accessing the Vonage API calls that manage phone numbers.
  */
 public class NumbersClient {
     private ListNumbersEndpoint listNumbers;
@@ -49,10 +49,10 @@ public class NumbersClient {
      *
      * @return A ListNumbersResponse containing the first 10 phone numbers
      *
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
-     * @throws NexmoClientException        if an error is returned by the server.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if an error is returned by the server.
      */
-    public ListNumbersResponse listNumbers() throws NexmoResponseParseException, NexmoClientException {
+    public ListNumbersResponse listNumbers() throws VonageResponseParseException, VonageClientException {
         return this.listNumbers.listNumbers(new ListNumbersFilter());
     }
 
@@ -63,83 +63,83 @@ public class NumbersClient {
      *
      * @return A ListNumbersResponse containing phone numbers matching the supplied filter.
      *
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
-     * @throws NexmoClientException        if an error is returned by the server.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if an error is returned by the server.
      */
-    public ListNumbersResponse listNumbers(ListNumbersFilter filter) throws NexmoResponseParseException, NexmoClientException {
+    public ListNumbersResponse listNumbers(ListNumbersFilter filter) throws VonageResponseParseException, VonageClientException {
         return this.listNumbers.listNumbers(filter);
     }
 
 
     /**
-     * Search for available Nexmo Virtual Numbers.
+     * Search for available Vonage Virtual Numbers.
      *
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
-     * @throws NexmoClientException        if an error is returned by the server.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if an error is returned by the server.
      */
-    public SearchNumbersResponse searchNumbers(String country) throws NexmoResponseParseException, NexmoClientException {
+    public SearchNumbersResponse searchNumbers(String country) throws VonageResponseParseException, VonageClientException {
         return this.searchNumbers(new SearchNumbersFilter(country));
     }
 
     /**
-     * Search for available Nexmo Virtual Numbers.
+     * Search for available Vonage Virtual Numbers.
      *
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
-     * @throws NexmoClientException        if an error is returned by the server.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if an error is returned by the server.
      */
-    public SearchNumbersResponse searchNumbers(SearchNumbersFilter filter) throws NexmoResponseParseException, NexmoClientException {
+    public SearchNumbersResponse searchNumbers(SearchNumbersFilter filter) throws VonageResponseParseException, VonageClientException {
         return this.searchNumbers.searchNumbers(filter);
     }
 
     /**
-     * Start renting a Nexmo Virtual Number.
+     * Start renting a Vonage Virtual Number.
      *
      * @param country A String containing a 2-character ISO country code.
      * @param msisdn  The phone number to be bought.
      *
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
-     * @throws NexmoClientException        if an error is returned by the server.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if an error is returned by the server.
      */
-    public void buyNumber(String country, String msisdn) throws NexmoResponseParseException, NexmoClientException {
+    public void buyNumber(String country, String msisdn) throws VonageResponseParseException, VonageClientException {
         this.buyNumber.execute(new BuyNumberRequest(country, msisdn));
     }
 
     /**
-     * Stop renting a Nexmo Virtual Number.
+     * Stop renting a Vonage Virtual Number.
      *
      * @param country A String containing a 2-character ISO country code.
      * @param msisdn  The phone number to be cancelled.
      *
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
-     * @throws NexmoClientException        if an error is returned by the server.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if an error is returned by the server.
      */
-    public void cancelNumber(String country, String msisdn) throws NexmoResponseParseException, NexmoClientException {
+    public void cancelNumber(String country, String msisdn) throws VonageResponseParseException, VonageClientException {
         this.cancelNumber.execute(new CancelNumberRequest(country, msisdn));
     }
 
     /**
-     * Update the callbacks and/or application associations for a given Nexmo Virtual Number.
+     * Update the callbacks and/or application associations for a given Vonage Virtual Number.
      *
      * @param request Details of the updates to be made to the number association.
      *
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
-     * @throws NexmoClientException        if an error is returned by the server.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if an error is returned by the server.
      */
-    public void updateNumber(UpdateNumberRequest request) throws NexmoResponseParseException, NexmoClientException {
+    public void updateNumber(UpdateNumberRequest request) throws VonageResponseParseException, VonageClientException {
         this.updateNumber.execute(request);
     }
 
     /**
-     * Link a given Nexmo Virtual Number to a Nexmo Application with the given ID.
+     * Link a given Vonage Virtual Number to a Vonage Application with the given ID.
      *
-     * @param msisdn  The Nexmo Virtual Number to be updated.
+     * @param msisdn  The Vonage Virtual Number to be updated.
      * @param country The country for the given msisdn.
-     * @param appId   The ID for the Nexmo Application to be associated with the number.
+     * @param appId   The ID for the Vonage Application to be associated with the number.
      *
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
-     * @throws NexmoClientException        if an error is returned by the server.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if an error is returned by the server.
      */
-    public void linkNumber(String msisdn, String country, String appId) throws NexmoResponseParseException, NexmoClientException {
+    public void linkNumber(String msisdn, String country, String appId) throws VonageResponseParseException, VonageClientException {
         UpdateNumberRequest request = new UpdateNumberRequest(msisdn, country);
         request.setVoiceCallbackType(UpdateNumberRequest.CallbackType.APP);
         request.setVoiceCallbackValue(appId);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
 package com.nexmo.client.voice;
 
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.VonageClientException;
 
 public class DtmfEndpoint {
     private final SendDtmfMethod sendDtmf;
@@ -31,7 +31,7 @@ public class DtmfEndpoint {
         this.sendDtmf = new SendDtmfMethod(httpWrapper);
     }
 
-    public DtmfResponse put(String uuid, String digits) throws NexmoClientException {
+    public DtmfResponse put(String uuid, String digits) throws VonageClientException {
         return this.sendDtmf.execute(new DtmfRequest(uuid, digits));
     }
 }

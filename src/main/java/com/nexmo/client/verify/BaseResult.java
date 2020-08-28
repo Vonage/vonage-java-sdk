@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@ package com.nexmo.client.verify;
  */
 public abstract class BaseResult {
     /**
-     * Verify was successfully submitted to the Nexmo service
+     * Verify was successfully submitted to the Vonage service
      */
     public static final int STATUS_OK = 0;
 
@@ -55,13 +55,13 @@ public abstract class BaseResult {
     public static final int STATUS_INVALID_CREDENTIALS = 4;
 
     /**
-     * Verify was rejected due to a failure within the Nexmo systems.<br>
+     * Verify was rejected due to a failure within the Vonage systems.<br>
      * Verify can be re-submitted after a short delay
      */
     public static final int STATUS_INTERNAL_ERROR = 5;
 
     /**
-     * Verify was rejected because the Nexmo service was unable to handle this request. eg, the destination was un-routable.
+     * Verify was rejected because the Vonage service was unable to handle this request. eg, the destination was un-routable.
      */
     public static final int STATUS_INVALID_REQUEST = 6;
 

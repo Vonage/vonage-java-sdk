@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2018 Nexmo Inc
+ * Copyright (c) 2011-2018 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
 package com.nexmo.client.conversion;
 
 import com.nexmo.client.ClientTest;
-import com.nexmo.client.NexmoBadRequestException;
+import com.nexmo.client.VonageBadRequestException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -49,7 +49,7 @@ public class ConversionClientTest extends ClientTest<ConversionClient> {
         }
     }
 
-    @Test(expected = NexmoBadRequestException.class)
+    @Test(expected = VonageBadRequestException.class)
     public void testWrongCredentials() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(401, ""));
         this.client.submitConversion(ConversionRequest.Type.SMS,
@@ -58,7 +58,7 @@ public class ConversionClientTest extends ClientTest<ConversionClient> {
                                      new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
     }
 
-    @Test(expected = NexmoBadRequestException.class)
+    @Test(expected = VonageBadRequestException.class)
     public void testConversionNotEnabled() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(402, ""));
         this.client.submitConversion(ConversionRequest.Type.SMS,
@@ -67,7 +67,7 @@ public class ConversionClientTest extends ClientTest<ConversionClient> {
                                      new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
     }
 
-    @Test(expected = NexmoBadRequestException.class)
+    @Test(expected = VonageBadRequestException.class)
     public void testInvalidParameters() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(423, ""));
         this.client.submitConversion(ConversionRequest.Type.SMS,
@@ -76,7 +76,7 @@ public class ConversionClientTest extends ClientTest<ConversionClient> {
                                      new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
     }
 
-    @Test(expected = NexmoBadRequestException.class)
+    @Test(expected = VonageBadRequestException.class)
     public void testInvalidParametersEnhanceCalm() throws Exception {
         wrapper.setHttpClient(this.stubHttpClient(420, ""));
         this.client.submitConversion(ConversionRequest.Type.SMS,

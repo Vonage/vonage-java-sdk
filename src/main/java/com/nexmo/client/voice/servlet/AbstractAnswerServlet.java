@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@ import java.io.IOException;
  * Useful abstract HttpServlet for implementing NCCO callbacks.
  * <p>
  *     Implement {@link #handleRequest(HttpServletRequest)} to return an {@link NccoResponse} and this servlet will
- *     ensure that the response is serialized correctly for the Nexmo Voice API.
+ *     ensure that the response is serialized correctly for the Vonage Voice API.
  * </p>
  */
 public abstract class AbstractAnswerServlet extends HttpServlet {
@@ -54,12 +54,12 @@ public abstract class AbstractAnswerServlet extends HttpServlet {
     }
 
     /**
-     * Handle a request for NCCO instructions from the Nexmo Voice API.
+     * Handle a request for NCCO instructions from the Vonage Voice API.
      * <p>
      * Implementations should return an NccoResponse object (most easily constructed using {@link NccoResponseBuilder}.
      *
-     * @param request the HttpServletRequest parsed from the request made by the Nexmo Voice API
-     * @return An NccoResponse containing Ncco instructions for the Nexmo Voice API
+     * @param request the HttpServletRequest parsed from the request made by the Vonage Voice API
+     * @return An NccoResponse containing Ncco instructions for the Vonage Voice API
      */
     protected abstract NccoResponse handleRequest(HttpServletRequest request);
 }

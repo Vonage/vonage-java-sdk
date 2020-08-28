@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2018 Nexmo Inc
+ * Copyright (c) 2011-2018 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,8 +27,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.nexmo.client.NexmoResponseParseException;
-import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.VonageResponseParseException;
+import com.nexmo.client.VonageUnexpectedException;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -80,9 +80,9 @@ public class SearchVerifyResponse {
 
             return mapper.readValue(json, SearchVerifyResponse.class);
         } catch (JsonMappingException jme) {
-            throw new NexmoResponseParseException("Failed to produce SearchVerifyResponse from json.", jme);
+            throw new VonageResponseParseException("Failed to produce SearchVerifyResponse from json.", jme);
         } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce SearchVerifyResponse from json.", jpe);
+            throw new VonageUnexpectedException("Failed to produce SearchVerifyResponse from json.", jpe);
         }
     }
 }

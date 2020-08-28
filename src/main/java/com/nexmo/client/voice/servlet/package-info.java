@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,6 +21,6 @@
  */
 
 /**
- * Provides an abstract Servlet for building NCCO webhooks for the Nexmo Voice API.
+ * Provides an abstract Servlet for building NCCO webhooks for the Vonage Voice API.
  */
 package com.nexmo.client.voice.servlet;

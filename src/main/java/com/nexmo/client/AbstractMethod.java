@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -72,9 +72,9 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      *
      * @return A ResultT representing the response from the executed REST call
      *
-     * @throws NexmoClientException if there is a problem parsing the HTTP response
+     * @throws VonageClientException if there is a problem parsing the HTTP response
      */
-    public ResultT execute(RequestT request) throws NexmoResponseParseException, NexmoClientException {
+    public ResultT execute(RequestT request) throws VonageResponseParseException, VonageClientException {
         try {
             RequestBuilder requestBuilder = applyAuth(makeRequest(request));
             HttpUriRequest httpRequest = requestBuilder.build();
@@ -108,12 +108,12 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
                 return parseResponse(response);
             }
             catch (IOException io){
-                throw new NexmoResponseParseException("Unable to parse response.", io);
+                throw new VonageResponseParseException("Unable to parse response.", io);
             }
         } catch (UnsupportedEncodingException uee) {
-            throw new NexmoUnexpectedException("UTF-8 encoding is not supported by this JVM.", uee);
+            throw new VonageUnexpectedException("UTF-8 encoding is not supported by this JVM.", uee);
         } catch (IOException io) {
-            throw new NexmoMethodFailedException("Something went wrong while executing the HTTP request: " +
+            throw new VonageMethodFailedException("Something went wrong while executing the HTTP request: " +
                     io.getMessage() + ".", io);
         }
     }
@@ -127,9 +127,9 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      * @return A RequestBuilder with appropriate authentication information applied (may or not be the same instance as
      * <pre>request</pre>)
      *
-     * @throws NexmoClientException If no appropriate {@link AuthMethod} is available
+     * @throws VonageClientException If no appropriate {@link AuthMethod} is available
      */
-    protected RequestBuilder applyAuth(RequestBuilder request) throws NexmoClientException {
+    protected RequestBuilder applyAuth(RequestBuilder request) throws VonageClientException {
         return getAuthMethod(getAcceptableAuthMethods()).apply(request);
     }
 
@@ -141,9 +141,9 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      *
      * @return An AuthMethod created from one of the provided acceptableAuthMethods.
      *
-     * @throws NexmoClientException If no AuthMethod is available from the provided array of acceptableAuthMethods.
+     * @throws VonageClientException If no AuthMethod is available from the provided array of acceptableAuthMethods.
      */
-    protected AuthMethod getAuthMethod(Class[] acceptableAuthMethods) throws NexmoClientException {
+    protected AuthMethod getAuthMethod(Class[] acceptableAuthMethods) throws VonageClientException {
         if (acceptable == null) {
             this.acceptable = new HashSet<>();
             Collections.addAll(acceptable, acceptableAuthMethods);
@@ -170,9 +170,9 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
     public abstract RequestBuilder makeRequest(RequestT request) throws UnsupportedEncodingException;
 
     /**
-     * Construct a ResultT representing the contents of the HTTP response returned from the Nexmo Voice API.
+     * Construct a ResultT representing the contents of the HTTP response returned from the Vonage Voice API.
      *
-     * @param response An HttpResponse returned from the Nexmo Voice API
+     * @param response An HttpResponse returned from the Vonage Voice API
      *
      * @return A ResultT type representing the result of the REST call
      *

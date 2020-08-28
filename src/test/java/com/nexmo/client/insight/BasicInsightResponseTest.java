@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
  */
 package com.nexmo.client.insight;
 
-import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.VonageUnexpectedException;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -87,8 +87,8 @@ public class BasicInsightResponseTest {
     public void testJsonError() throws Exception {
         try {
             BasicInsightResponse.fromJson("blarg");
-            fail("Deserializing nonsense JSON should result in a NexmoUnexpectedException");
-        } catch (NexmoUnexpectedException nue) {
+            fail("Deserializing nonsense JSON should result in a VonageUnexpectedException");
+        } catch (VonageUnexpectedException nue) {
             // This is expected
         }
     }

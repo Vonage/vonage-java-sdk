@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2018 Nexmo Inc
+ * Copyright (c) 2011-2018 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
 package com.nexmo.client.verify;
 
 import com.nexmo.client.ClientTest;
-import com.nexmo.client.NexmoResponseParseException;
+import com.nexmo.client.VonageResponseParseException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -72,7 +72,7 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
         Assert.assertNull(response.getRequestId());
     }
 
-    @Test(expected = NexmoResponseParseException.class)
+    @Test(expected = VonageResponseParseException.class)
     public void testCheckWithoutStatusThrowsException() throws Exception {
         String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"event_id\": \"an-event-id\",\n"
                 + "  \"price\": \"0.10000000\",\n" + "  \"currency\": \"EUR\"\n" + "}\n";
@@ -110,7 +110,7 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
         Assert.assertNull(response.getPrice());
     }
 
-    @Test(expected = NexmoResponseParseException.class)
+    @Test(expected = VonageResponseParseException.class)
     public void testCheckWithNonNumericPrice() throws Exception {
         String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"status\": \"0\",\n"
                 + "  \"event_id\": \"an-event-id\",\n" + "  \"price\": \"test\",\n" + "  \"currency\": \"EUR\"\n"

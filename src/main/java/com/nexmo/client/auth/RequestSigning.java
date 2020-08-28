@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,14 +30,14 @@ import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.VonageUnexpectedException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 /**
- * A helper class for generating or verifying MD5 signatures when signing REST requests for submission to Nexmo.
+ * A helper class for generating or verifying MD5 signatures when signing REST requests for submission to Vonage.
  *
  * @author  Paul Cook
  */
@@ -204,7 +204,7 @@ public class RequestSigning {
             if (!MessageDigest.isEqual(md5.getBytes("UTF-8"), suppliedSignature.getBytes("UTF-8")))
                 return false;
         } catch (UnsupportedEncodingException e) {
-            throw new NexmoUnexpectedException("Failed to decode signature as UTF-8", e);
+            throw new VonageUnexpectedException("Failed to decode signature as UTF-8", e);
         }
 
         return true;

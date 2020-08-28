@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ package com.nexmo.client.voice;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.VonageUnexpectedException;
 import com.nexmo.client.auth.JWTAuthMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -63,7 +63,7 @@ class ListCallsMethod extends AbstractMethod<CallsFilter, CallInfoPage> {
         try {
             uriBuilder = new URIBuilder(uri);
         } catch (URISyntaxException e) {
-            throw new NexmoUnexpectedException("Could not parse URI: " + uri);
+            throw new VonageUnexpectedException("Could not parse URI: " + uri);
         }
         if (filter != null) {
             List<NameValuePair> params = filter.toUrlParams();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2018 Nexmo Inc
+ * Copyright (c) 2011-2018 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +24,8 @@ package com.nexmo.client.redact;
 import com.nexmo.client.*;
 
 /**
- * A client for talking to the Nexmo Redact API. The standard way to obtain an instance of this class is to use {@link
- * NexmoClient#getRedactClient()}.
+ * A client for talking to the Vonage Redact API. The standard way to obtain an instance of this class is to use {@link
+ * VonageClient#getRedactClient()}.
  */
 public class RedactClient extends AbstractClient {
     private RedactEndpoint redactEndpoint;
@@ -42,10 +42,10 @@ public class RedactClient extends AbstractClient {
      * @param id      The transaction id to redact.
      * @param product The {@link com.nexmo.client.redact.RedactRequest.Product} which corresponds to the transaction.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public void redactTransaction(String id, RedactRequest.Product product) throws NexmoResponseParseException, NexmoClientException {
+    public void redactTransaction(String id, RedactRequest.Product product) throws VonageResponseParseException, VonageClientException {
         this.redactTransaction(new RedactRequest(id, product));
     }
 
@@ -56,10 +56,10 @@ public class RedactClient extends AbstractClient {
      * @param product The {@link com.nexmo.client.redact.RedactRequest.Product} which corresponds to the transaction.
      * @param type    The {@link com.nexmo.client.redact.RedactRequest.Type} which is required if redacting SMS data.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public void redactTransaction(String id, RedactRequest.Product product, RedactRequest.Type type) throws NexmoResponseParseException, NexmoClientException {
+    public void redactTransaction(String id, RedactRequest.Product product, RedactRequest.Type type) throws VonageResponseParseException, VonageClientException {
         RedactRequest request = new RedactRequest(id, product);
         request.setType(type);
 
@@ -71,10 +71,10 @@ public class RedactClient extends AbstractClient {
      *
      * @param redactRequest a {@link RedactRequest} object which contains the request parameters.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public void redactTransaction(RedactRequest redactRequest) throws NexmoResponseParseException, NexmoClientException {
+    public void redactTransaction(RedactRequest redactRequest) throws VonageResponseParseException, VonageClientException {
         this.redactEndpoint.redactTransaction(redactRequest);
     }
 }

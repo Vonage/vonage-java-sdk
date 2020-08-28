@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
  */
 package com.nexmo.client.numbers;
 
-import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.VonageUnexpectedException;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -61,8 +61,8 @@ public class ListNumbersFilterAndResponseTest {
     public void testBadJson() throws Exception {
         try {
             ListNumbersResponse.fromJson("this-is-nonsense");
-            fail("NexmoUnexpectedException should be raised for bad JSON data.");
-        } catch (NexmoUnexpectedException nue) {
+            fail("VonageUnexpectedException should be raised for bad JSON data.");
+        } catch (VonageUnexpectedException nue) {
             // Expected
         }
     }

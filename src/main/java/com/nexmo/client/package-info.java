@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,10 +21,10 @@
  */
 
 /**
- * The root of the Nexmo client library, containing {@link com.nexmo.client.NexmoClient} class, which is probably what
+ * The root of the Vonage client library, containing {@link com.nexmo.client.VonageClient} class, which is probably what
  * you want.
  * <p>
- * All behaviour is accessible via the {@link com.nexmo.client.NexmoClient} class, which should be instantiated with one
+ * All behaviour is accessible via the {@link com.nexmo.client.VonageClient} class, which should be instantiated with one
  * or more {@code AuthMethod} objects from the {@link com.nexmo.client.auth} package.
  */
 package com.nexmo.client;

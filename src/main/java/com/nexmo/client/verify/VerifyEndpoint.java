@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2018 Nexmo Inc
+ * Copyright (c) 2011-2018 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
 package com.nexmo.client.verify;
 
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.VonageClientException;
 
 import java.util.Locale;
 
@@ -33,43 +33,23 @@ class VerifyEndpoint {
         this.verifyMethod = new VerifyMethod(httpWrapper);
     }
 
-    VerifyResponse verify(String number, String brand, String from, int length, Locale locale, VerifyRequest.LineType type) throws NexmoClientException {
-        return verify(new VerifyRequest.Builder(number, brand)
-                .senderId(from)
-                .locale(locale)
-                .type(type)
-                .build()
-        );
+    VerifyResponse verify(String number, String brand, String from, int length, Locale locale, VerifyRequest.LineType type) throws VonageClientException {
+        return verify(new VerifyRequest(number, brand, from, length, locale, type));
     }
 
-    VerifyResponse verify(String number, String brand, String from, int length, Locale locale) throws NexmoClientException {
-        return verify(new VerifyRequest.Builder(number, brand)
-                .senderId(from)
-                .locale(locale)
-                .build()
-        );
+    VerifyResponse verify(String number, String brand, String from, int length, Locale locale) throws VonageClientException {
+        return verify(new VerifyRequest(number, brand, from, length, locale));
     }
 
-    VerifyResponse verify(String number, String brand, String from) throws NexmoClientException {
-        return verify(new VerifyRequest.Builder(number, brand)
-                .senderId(from)
-                .build()
-        );
+    VerifyResponse verify(String number, String brand, String from) throws VonageClientException {
+        return verify(new VerifyRequest(number, brand, from));
     }
 
-    VerifyResponse verify(String number, String brand) throws NexmoClientException {
-        return verify(new VerifyRequest.Builder(number, brand).build());
+    VerifyResponse verify(String number, String brand) throws VonageClientException {
+        return verify(new VerifyRequest(number, brand));
     }
 
-    VerifyResponse verify(String number, String brand, VerifyRequest.Workflow workflow) throws NexmoClientException {
-        return verify(
-                new VerifyRequest.Builder(number, brand)
-                .workflow(workflow)
-                .build()
-        );
-    }
-
-    VerifyResponse verify(VerifyRequest request) throws NexmoClientException {
+    VerifyResponse verify(VerifyRequest request) throws VonageClientException {
         return this.verifyMethod.execute(request);
     }
 }

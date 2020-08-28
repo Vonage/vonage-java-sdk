@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,12 +23,12 @@ package com.nexmo.client.numbers;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.VonageUnexpectedException;
 
 import java.io.IOException;
 
 /**
- * Represents the response to a "searchNumbers" request from the Nexmo API.
+ * Represents the response to a "searchNumbers" request from the Vonage API.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SearchNumbersResponse {
@@ -36,7 +36,7 @@ public class SearchNumbersResponse {
     private AvailableNumber[] numbers = new AvailableNumber[]{};
 
     /**
-     * Get the number of responses returned by the Nexmo API.
+     * Get the number of responses returned by the Vonage API.
      */
     public int getCount() {
         return count;
@@ -54,7 +54,7 @@ public class SearchNumbersResponse {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(json, SearchNumbersResponse.class);
         } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce json from SearchNumbersResponse object.", jpe);
+            throw new VonageUnexpectedException("Failed to produce json from SearchNumbersResponse object.", jpe);
         }
     }
 

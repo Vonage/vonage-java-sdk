@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2018 Nexmo Inc
+ * Copyright (c) 2011-2018 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,8 +23,8 @@ package com.nexmo.client.account;
 
 import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoBadRequestException;
-import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.VonageBadRequestException;
+import com.nexmo.client.VonageClientException;
 import com.nexmo.client.auth.SignatureAuthMethod;
 import com.nexmo.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
@@ -62,14 +62,14 @@ class ListSecretsMethod extends AbstractMethod<String, ListSecretsResponse> {
     @Override
     public ListSecretsResponse parseResponse(HttpResponse response) throws IOException {
         if (response.getStatusLine().getStatusCode() != 200) {
-            throw new NexmoBadRequestException(EntityUtils.toString(response.getEntity()));
+            throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
         }
 
         return ListSecretsResponse.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 
     @Override
-    protected RequestBuilder applyAuth(RequestBuilder request) throws NexmoClientException {
+    protected RequestBuilder applyAuth(RequestBuilder request) throws VonageClientException {
         return getAuthMethod(getAcceptableAuthMethods()).applyAsBasicAuth(request);
     }
 }

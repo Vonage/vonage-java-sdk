@@ -1,5 +1,5 @@
 package com.nexmo.client.voice;/*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,8 +38,8 @@ public class TransferCallPayloadTest {
 
     @Test
     public void testTransferWithInlineNcco() {
-        String expected = "{\"action\":\"transfer\",\"destination\":{\"type\":\"ncco\",\"ncco\":[{\"text\":\"Hello from Nexmo\",\"action\":\"talk\"},{\"action\":\"record\"},{\"text\":\"Thank you!\",\"action\":\"talk\"}]}}";
-        String actual = CallModifier.transferCall("not-a-uuid", new Ncco(TalkAction.builder("Hello from Nexmo").build(),
+        String expected = "{\"action\":\"transfer\",\"destination\":{\"type\":\"ncco\",\"ncco\":[{\"text\":\"Hello from Vonage\",\"action\":\"talk\"},{\"action\":\"record\"},{\"text\":\"Thank you!\",\"action\":\"talk\"}]}}";
+        String actual = CallModifier.transferCall("not-a-uuid", new Ncco(TalkAction.builder("Hello from Vonage").build(),
                 RecordAction.builder().build(),
                 TalkAction.builder("Thank you!").build())
         ).toJson();

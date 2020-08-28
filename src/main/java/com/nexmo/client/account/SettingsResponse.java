@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2019 Nexmo Inc
+ * Copyright (c) 2011-2019 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.VonageUnexpectedException;
 
 import java.io.IOException;
 
@@ -44,7 +44,7 @@ public class SettingsResponse {
     private Integer maxApiCallsPerSecond;
 
     /**
-     * @return The URL where Nexmo will send a webhook when an incoming SMS is received when a number-specific URL is
+     * @return The URL where Vonage will send a webhook when an incoming SMS is received when a number-specific URL is
      * not configured.
      */
     public String getIncomingSmsUrl() {
@@ -52,7 +52,7 @@ public class SettingsResponse {
     }
 
     /**
-     * @return The URL where Nexmo will send a webhook when a delivery receipt is received when a number-specific URL is
+     * @return The URL where Vonage will send a webhook when a delivery receipt is received when a number-specific URL is
      * not configured.
      */
     public String getDeliveryReceiptUrl() {
@@ -85,7 +85,7 @@ public class SettingsResponse {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(json, SettingsResponse.class);
         } catch (IOException e) {
-            throw new NexmoUnexpectedException("Failed to produce SettingsResponse from json.", e);
+            throw new VonageUnexpectedException("Failed to produce SettingsResponse from json.", e);
         }
     }
 }

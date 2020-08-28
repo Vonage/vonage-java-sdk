@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -124,7 +124,7 @@ public class InputAction implements Action {
         }
 
         /**
-         * @param eventUrl Nexmo sends the digits pressed by the callee to this URL after timeOut pause in activity or
+         * @param eventUrl Vonage sends the digits pressed by the callee to this URL after timeOut pause in activity or
          *                 when # is pressed.
          *
          * @return The {@link Builder} to keep building.
@@ -135,7 +135,7 @@ public class InputAction implements Action {
         }
 
         /**
-         * @param eventUrl Nexmo sends the digits pressed by the callee to this URL after timeOut pause in activity or
+         * @param eventUrl Vonage sends the digits pressed by the callee to this URL after timeOut pause in activity or
          *                 when # is pressed.
          *
          * @return The {@link Builder} to keep building.

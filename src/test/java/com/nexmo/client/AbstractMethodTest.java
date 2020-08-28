@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -200,7 +200,7 @@ public class AbstractMethodTest {
             method.execute("");
             Assert.isTrue(false,"Should have gotten a Parsing exception");
         }
-        catch (NexmoResponseParseException ex){
+        catch (VonageResponseParseException ex){
             Assert.isTrue(ex.getCause() instanceof IOException, "Unknown Exception Caused Throw");
         }
     }
@@ -219,9 +219,9 @@ public class AbstractMethodTest {
         when(mockHttpClient.execute(any(HttpUriRequest.class))).thenThrow(ex);
         try{
             method.execute("");
-            Assert.isTrue(false, "There should have been a Nexmo Client exception thrown");
+            Assert.isTrue(false, "There should have been a Vonage Client exception thrown");
         }
-        catch (NexmoMethodFailedException e){
+        catch (VonageMethodFailedException e){
             Assert.isTrue(e.getCause() instanceof IOException, "The cause of the exception was not correct");
         }
     }

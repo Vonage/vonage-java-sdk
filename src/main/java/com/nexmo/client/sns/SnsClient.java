@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,17 +23,17 @@ package com.nexmo.client.sns;
 
 
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClient;
-import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.NexmoResponseParseException;
+import com.nexmo.client.VonageClient;
+import com.nexmo.client.VonageClientException;
+import com.nexmo.client.VonageResponseParseException;
 import com.nexmo.client.sns.request.SnsPublishRequest;
 import com.nexmo.client.sns.request.SnsSubscribeRequest;
 import com.nexmo.client.sns.response.SnsPublishResponse;
 import com.nexmo.client.sns.response.SnsSubscribeResponse;
 
 /**
- * A client for talking to the Nexmo Voice API. The standard way to obtain an instance of this class is to use {@link
- * NexmoClient#getSnsClient()}.
+ * A client for talking to the Vonage Voice API. The standard way to obtain an instance of this class is to use {@link
+ * VonageClient#getSnsClient()}.
  */
 public class SnsClient {
     private SnsEndpoint endpoint;
@@ -47,11 +47,11 @@ public class SnsClient {
         this.endpoint = new SnsEndpoint(httpWrapper);
     }
 
-    public SnsPublishResponse publish(SnsPublishRequest request) throws NexmoClientException, NexmoResponseParseException {
+    public SnsPublishResponse publish(SnsPublishRequest request) throws VonageClientException, VonageResponseParseException {
         return (SnsPublishResponse) this.endpoint.execute(request);
     }
 
-    public SnsSubscribeResponse subscribe(SnsSubscribeRequest request) throws NexmoClientException, NexmoResponseParseException {
+    public SnsSubscribeResponse subscribe(SnsSubscribeRequest request) throws VonageClientException, VonageResponseParseException {
         return (SnsSubscribeResponse) this.endpoint.execute(request);
     }
 }

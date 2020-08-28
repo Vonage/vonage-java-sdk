@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,9 +23,9 @@ package com.nexmo.client.sms;
 
 
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClient;
-import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.NexmoResponseParseException;
+import com.nexmo.client.VonageClient;
+import com.nexmo.client.VonageClientException;
+import com.nexmo.client.VonageResponseParseException;
 import com.nexmo.client.sms.messages.Message;
 
 import java.util.ArrayList;
@@ -35,8 +35,8 @@ import java.util.List;
 
 
 /**
- * A client for talking to the Nexmo Voice API. The standard way to obtain an instance of this class is to use {@link
- * NexmoClient#getSmsClient()}.
+ * A client for talking to the Vonage Voice API. The standard way to obtain an instance of this class is to use {@link
+ * VonageClient#getSmsClient()}.
  */
 public class SmsClient {
     private SendMessageEndpoint message;
@@ -57,11 +57,11 @@ public class SmsClient {
     /**
      * Send an SMS message.
      * <p>
-     * This uses the supplied object to construct a request and post it to the Nexmo API.<br> This method will respond
-     * with an SmsSubmissionResponse object. Depending on the nature and length of the submitted message, Nexmo may
+     * This uses the supplied object to construct a request and post it to the Vonage API.<br> This method will respond
+     * with an SmsSubmissionResponse object. Depending on the nature and length of the submitted message, Vonage may
      * automatically split the message into multiple sms messages in order to deliver to the handset. For example, a
      * long text sms of greater than 160 chars will need to be split into multiple 'concatenated' sms messages. The
-     * Nexmo service will handle this automatically for you.<br> The messages are stored as a Collection of
+     * Vonage service will handle this automatically for you.<br> The messages are stored as a Collection of
      * SmsSubmissionResponseMessage objects on the SmsSubmissionResponse object. Each message can potentially have a
      * different status result, and each message will have a different message id. Delivery notifications will be
      * generated for each sms message within this set and will be posted to your application containing the appropriate
@@ -72,10 +72,10 @@ public class SmsClient {
      * @return SmsSubmissionResponse an object containing a collection of SmsSubmissionResponseMessage objects for each
      * actual sms that was required to submit the message.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public SmsSubmissionResponse submitMessage(Message message) throws NexmoResponseParseException, NexmoClientException {
+    public SmsSubmissionResponse submitMessage(Message message) throws VonageResponseParseException, VonageClientException {
         return this.message.execute(message);
     }
 
@@ -86,10 +86,10 @@ public class SmsClient {
      * #searchMessages(String, String...)} instead.
      * <p>
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public SearchSmsResponse searchMessages(SearchSmsRequest request) throws NexmoResponseParseException, NexmoClientException {
+    public SearchSmsResponse searchMessages(SearchSmsRequest request) throws VonageResponseParseException, VonageClientException {
         return this.search.execute(request);
     }
 
@@ -101,10 +101,10 @@ public class SmsClient {
      *
      * @return SMS data matching the provided criteria.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public SearchSmsResponse searchMessages(String id, String... ids) throws NexmoResponseParseException, NexmoClientException {
+    public SearchSmsResponse searchMessages(String id, String... ids) throws VonageResponseParseException, VonageClientException {
         List<String> idList = new ArrayList<>(ids.length + 1);
         idList.add(id);
         idList.addAll(Arrays.asList(ids));
@@ -119,10 +119,10 @@ public class SmsClient {
      *
      * @return SMS data matching the provided criteria
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public SearchSmsResponse searchMessages(Date date, String to) throws NexmoResponseParseException, NexmoClientException {
+    public SearchSmsResponse searchMessages(Date date, String to) throws VonageResponseParseException, VonageClientException {
         return this.searchMessages(new SmsDateSearchRequest(date, to));
     }
 
@@ -133,10 +133,10 @@ public class SmsClient {
      *
      * @return rejection data matching the provided criteria
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public SearchRejectedMessagesResponse searchRejectedMessages(SearchRejectedMessagesRequest request) throws NexmoResponseParseException, NexmoClientException {
+    public SearchRejectedMessagesResponse searchRejectedMessages(SearchRejectedMessagesRequest request) throws VonageResponseParseException, VonageClientException {
         return this.rejected.execute(request);
     }
 
@@ -148,10 +148,10 @@ public class SmsClient {
      *
      * @return rejection data matching the provided criteria
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public SearchRejectedMessagesResponse searchRejectedMessages(Date date, String to) throws NexmoResponseParseException, NexmoClientException {
+    public SearchRejectedMessagesResponse searchRejectedMessages(Date date, String to) throws VonageResponseParseException, VonageClientException {
         return this.searchRejectedMessages(new SearchRejectedMessagesRequest(date, to));
     }
 
@@ -162,10 +162,10 @@ public class SmsClient {
      *
      * @return SmsSingleSearchResponse object containing the details of the SMS.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public SmsSingleSearchResponse getSms(String id) throws NexmoResponseParseException, NexmoClientException {
+    public SmsSingleSearchResponse getSms(String id) throws VonageResponseParseException, VonageClientException {
         return this.singleSearch.execute(id);
     }
 }

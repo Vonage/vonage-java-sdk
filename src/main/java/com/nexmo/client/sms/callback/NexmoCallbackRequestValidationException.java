@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,19 +21,19 @@
  */
 package com.nexmo.client.sms.callback;
 
-public class NexmoCallbackRequestValidationException extends Exception {
-    public NexmoCallbackRequestValidationException() {
+public class VonageCallbackRequestValidationException extends Exception {
+    public VonageCallbackRequestValidationException() {
     }
 
-    public NexmoCallbackRequestValidationException(String message) {
+    public VonageCallbackRequestValidationException(String message) {
         super(message);
     }
 
-    public NexmoCallbackRequestValidationException(String message, Throwable cause) {
+    public VonageCallbackRequestValidationException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public NexmoCallbackRequestValidationException(Throwable cause) {
+    public VonageCallbackRequestValidationException(Throwable cause) {
         super(cause);
     }
 }

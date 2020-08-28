@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Nexmo Inc
+ * Copyright (c) 2011-2017 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
 package com.nexmo.client.voice;
 
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoClientException;
+import com.nexmo.client.VonageClientException;
 
 public class TalkEndpoint {
     private final StartTalkMethod startTalk;
@@ -33,11 +33,11 @@ public class TalkEndpoint {
         this.stopTalk = new StopTalkMethod(wrapper);
     }
 
-    public TalkResponse put(TalkRequest request) throws NexmoClientException {
+    public TalkResponse put(TalkRequest request) throws VonageClientException {
         return this.startTalk.execute(request);
     }
 
-    public TalkResponse delete(String uuid) throws NexmoClientException {
+    public TalkResponse delete(String uuid) throws VonageClientException {
         return this.stopTalk.execute(uuid);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2018 Nexmo Inc
+ * Copyright (c) 2011-2018 Vonage Inc
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@ package com.nexmo.client.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.nexmo.client.NexmoUnexpectedException;
+import com.nexmo.client.VonageUnexpectedException;
 import io.openapitools.jackson.dataformat.hal.HALLink;
 import io.openapitools.jackson.dataformat.hal.HALMapper;
 import io.openapitools.jackson.dataformat.hal.annotation.Link;
@@ -60,7 +60,7 @@ public class SecretResponse {
             mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
             return mapper.readValue(json, SecretResponse.class);
         } catch (IOException e) {
-            throw new NexmoUnexpectedException("Failed to produce SecretResponse from json.", e);
+            throw new VonageUnexpectedException("Failed to produce SecretResponse from json.", e);
         }
     }
 }
