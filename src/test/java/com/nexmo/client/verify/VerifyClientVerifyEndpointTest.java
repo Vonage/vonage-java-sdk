@@ -107,12 +107,11 @@ public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
                         + "  \"error_text\": \"error\"\n" + "}"
         ));
 
-        VerifyResponse response = client.verify(new VerifyRequest("447700900999",
-                "TestBrand",
-                "15555215554",
-                6,
-                Locale.US
-        ));
+        VerifyResponse response = client.verify(VerifyRequest.builder("447700900999","TestBrand")
+                .senderId("15555215554")
+                .length(6)
+                .locale(Locale.US)
+        .build());
 
         assertEquals(VerifyStatus.OK, response.getStatus());
         assertEquals("error", response.getErrorText());

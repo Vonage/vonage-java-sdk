@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.5.0]
+### Added
+- Added support for PSD2 verification
+
+
 ## [5.4.0]
 ### Added
 - Added AppEndpoint support for ConnectAction.

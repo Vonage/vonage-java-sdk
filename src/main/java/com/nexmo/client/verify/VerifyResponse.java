@@ -40,17 +40,6 @@ public class VerifyResponse {
         this.status = status;
     }
 
-    public static VerifyResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, VerifyResponse.class);
-        } catch (JsonMappingException jme) {
-            throw new NexmoResponseParseException("Failed to produce VerifyResponse from json.", jme);
-        } catch (IOException jpe) {
-            throw new NexmoUnexpectedException("Failed to produce VerifyResponse from json.", jpe);
-        }
-    }
-
     @JsonProperty("request_id")
     public String getRequestId() {
         return this.requestId;
@@ -63,5 +52,16 @@ public class VerifyResponse {
     @JsonProperty("error_text")
     public String getErrorText() {
         return this.errorText;
+    }
+
+    public static VerifyResponse fromJson(String json) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(json, VerifyResponse.class);
+        } catch (JsonMappingException jme) {
+            throw new NexmoResponseParseException("Failed to produce VerifyResponse from json.", jme);
+        } catch (IOException jpe) {
+            throw new NexmoUnexpectedException("Failed to produce VerifyResponse from json.", jpe);
+        }
     }
 }

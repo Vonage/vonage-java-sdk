@@ -41,6 +41,7 @@ public class VerifyClient extends AbstractClient {
     private VerifyEndpoint verify;
     private SearchEndpoint search;
     private ControlEndpoint control;
+    private Psd2Endpoint psd2;
 
     /**
      * Constructor.
@@ -54,6 +55,7 @@ public class VerifyClient extends AbstractClient {
         this.search = new SearchEndpoint(httpWrapper);
         this.verify = new VerifyEndpoint(httpWrapper);
         this.control = new ControlEndpoint(httpWrapper);
+        this.psd2 = new Psd2Endpoint(httpWrapper);
     }
 
     /**
@@ -72,6 +74,29 @@ public class VerifyClient extends AbstractClient {
     public VerifyResponse verify(final String number, final String brand) throws NexmoResponseParseException, NexmoClientException {
         return this.verify.verify(number, brand);
     }
+
+    /**
+     * Send a verification request to a phone number with a pin verification workflow
+     *
+     * @param number (required) The recipient's phone number in <a href="https://en.wikipedia.org/wiki/E.164">E.164</a>
+     *               format.
+     * @param brand  (required) The name of the company or app to be verified for. Must not be longer than 18
+     *               characters.
+     * @param workflow <a href="https://developer.nexmo.com/verify/guides/workflows-and-events">workflow</a>
+     *                 to use for sending verification pin
+     *
+     * @return a VerifyResponse representing the response received from the Verify API call.
+     *
+     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
+     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @since 5.5.0
+     */
+    public VerifyResponse verify(final String number, final String brand, VerifyRequest.Workflow workflow)
+            throws NexmoResponseParseException, NexmoClientException {
+        return this.verify.verify(number, brand, workflow);
+    }
+
+
 
     /**
      * Send a verification request to a phone number.
@@ -153,6 +178,13 @@ public class VerifyClient extends AbstractClient {
 
     /**
      * Send a verification request to a phone number.
+     *
+     * @param request validation request for the 2FA verification.
+     * @return a VerifyResponse representing the response received from the Verify API call.
+     *
+     * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
+     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     *
      */
     public VerifyResponse verify(VerifyRequest request) throws NexmoClientException, NexmoResponseParseException {
         return this.verify.verify(request);
@@ -247,4 +279,61 @@ public class VerifyClient extends AbstractClient {
     public ControlResponse cancelVerification(String requestId) throws NexmoClientException, NexmoResponseParseException {
         return this.control.execute(new ControlRequest(requestId, VerifyControlCommand.CANCEL));
     }
+
+    /**
+     * Send a PSD2 compliant payment token to a user for payment authorization
+     *
+     * @param number Telephone number to verify, in <a href="https://en.wikipedia.org/wiki/E.164">E.164</a> format
+     * @param amount payment amount
+     * @param payee name of the person the payment is for. Name will be included in the message
+     *
+     * @return A {@link VerifyResponse} representing the response from the API.
+     *
+     * @throws NexmoClientException          if there was a problem with the Nexmo request or response objects.
+     * @throws NexmoResponseParseException   if the response from the API could not be parsed.
+     *
+     * @since 5.5.0
+     */
+    public VerifyResponse psd2Verify(String number, Double amount, String payee) throws NexmoClientException, NexmoResponseParseException {
+        return this.psd2.psd2Verify(number, amount, payee);
+    }
+
+    /**
+     * Send a PSD2 compliant payment token to a user for payment authorization with a pin verification workflow
+     *
+     * @param number   telephone number to verify, in <a href="https://en.wikipedia.org/wiki/E.164">E.164</a> format
+     * @param amount   payment amount
+     * @param payee    name of the person the payment is for. Name will be included in the message
+     * @param workflow <a href="https://developer.nexmo.com/verify/guides/workflows-and-events">workflow</a>
+     *                 to use for sending verification pin
+     *
+     * @return A {@link VerifyResponse} representing the response from the API.
+     *
+     * @throws NexmoClientException          if there was a problem with the Nexmo request or response objects.
+     * @throws NexmoResponseParseException   if the response from the API could not be parsed.
+     *
+     * @since 5.5.0
+     */
+    public VerifyResponse psd2Verify(String number, Double amount, String payee, Psd2Request.Workflow workflow)
+            throws NexmoClientException, NexmoResponseParseException {
+        return this.psd2.psd2Verify(number, amount, payee, workflow);
+    }
+
+    /**
+     * Send a PSD2 verification request to a phone number with optional parameters
+     *
+     * @param psd2Request request to to send PSD2 verification to a phone.
+     *
+     * @return A VerifyResponse representing the response from the API.
+     *
+     * @throws NexmoClientException          if there was a problem with the Nexmo request or response objects.
+     * @throws NexmoResponseParseException   if the response from the API could not be parsed.
+     *
+     * @since 5.5.0
+     */
+    public VerifyResponse psd2Verify(Psd2Request psd2Request) throws NexmoClientException, NexmoResponseParseException {
+        return this.psd2.psd2Verify(psd2Request);
+    }
+
+
 }

@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * Represents an app endpoint used in a {@link ConnectAction}
+ * @since 5.4.0
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class AppEndpoint implements Endpoint {

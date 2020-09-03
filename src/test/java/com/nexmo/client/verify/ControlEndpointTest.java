@@ -48,7 +48,7 @@ public class ControlEndpointTest {
     @Test
     public void testGetAcceptableAuthMethods() throws Exception {
         Class[] auths = this.endpoint.getAcceptableAuthMethods();
-        assertArrayEquals(new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class}, auths);
+        assertArrayEquals(new Class[]{TokenAuthMethod.class}, auths);
     }
 
     @Test

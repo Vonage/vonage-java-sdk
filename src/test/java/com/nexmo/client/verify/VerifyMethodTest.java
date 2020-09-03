@@ -35,20 +35,22 @@ import static org.junit.Assert.assertEquals;
 
 public class VerifyMethodTest extends MethodTest<VerifyMethod> {
 
+    private VerifyRequest verifyRequest;
+
     @Before
     public void setUp() {
         method = new VerifyMethod(new HttpWrapper());
+        verifyRequest = VerifyRequest.builder("4477990090090",
+                "Brand.com")
+                .senderId("Your friend")
+                .length(4)
+                .locale(new Locale("en", "gb"))
+                .type(VerifyRequest.LineType.MOBILE)
+                .build();
     }
 
     @Test
     public void testConstructVerifyParams() throws Exception {
-        VerifyRequest verifyRequest = new VerifyRequest("4477990090090",
-                "Brand.com",
-                "Your friend",
-                4,
-                new Locale("en", "GB"),
-                VerifyRequest.LineType.MOBILE
-        );
 
         RequestBuilder request = method.makeRequest(verifyRequest);
         List<NameValuePair> params = request.getParameters();
@@ -63,7 +65,7 @@ public class VerifyMethodTest extends MethodTest<VerifyMethod> {
 
     @Test
     public void testConstructVerifyParamsMissingValues() throws Exception {
-        VerifyRequest verifyRequest = new VerifyRequest("4477990090090", "Brand.com", null, 0, null, null);
+        VerifyRequest verifyRequest = VerifyRequest.builder("4477990090090","Brand.com").build();
 
         RequestBuilder request = method.makeRequest(verifyRequest);
         List<NameValuePair> params = request.getParameters();
@@ -81,15 +83,17 @@ public class VerifyMethodTest extends MethodTest<VerifyMethod> {
 
     @Test
     public void testConstructVerifyParamsWithOptionalValues() throws Exception {
-        VerifyRequest verifyRequest = new VerifyRequest("4477990090090", "Brand.com");
-        verifyRequest.setFrom("VERIFICATION");
-        verifyRequest.setLength(6);
-        verifyRequest.setLocale(new Locale("en", "gb"));
-        verifyRequest.setType(VerifyRequest.LineType.LANDLINE);
-        verifyRequest.setCountry("ZZ");
-        verifyRequest.setPinExpiry(60);
-        verifyRequest.setNextEventWait(90);
-        verifyRequest.setWorkflow(VerifyRequest.Workflow.TTS_TTS);
+        VerifyRequest verifyRequest = VerifyRequest.builder("4477990090090",
+                "Brand.com")
+                .senderId("VERIFICATION")
+                .length(6)
+                .locale(new Locale("en", "gb"))
+                .type(VerifyRequest.LineType.LANDLINE)
+                .country("GB")
+                .pinExpiry(60)
+                .nextEventWait(90)
+                .workflow(VerifyRequest.Workflow.TTS_TTS)
+                .build();
 
         RequestBuilder request = method.makeRequest(verifyRequest);
         List<NameValuePair> params = request.getParameters();
@@ -100,7 +104,7 @@ public class VerifyMethodTest extends MethodTest<VerifyMethod> {
         assertContainsParam(params, "sender_id", "VERIFICATION");
         assertContainsParam(params, "lg", "en-gb");
         assertContainsParam(params, "require_type", "LANDLINE");
-        assertContainsParam(params, "country", "ZZ");
+        assertContainsParam(params, "country", "GB");
         assertContainsParam(params, "pin_expiry", "60");
         assertContainsParam(params, "next_event_wait", "90");
         assertContainsParam(params, "workflow_id", "3");
@@ -108,15 +112,8 @@ public class VerifyMethodTest extends MethodTest<VerifyMethod> {
 
     @Test
     public void testDefaultUri() throws Exception {
-        VerifyRequest request = new VerifyRequest("4477990090090",
-                "Brand.com",
-                "Your friend",
-                4,
-                new Locale("en", "GB"),
-                VerifyRequest.LineType.MOBILE
-        );
 
-        RequestBuilder builder = method.makeRequest(request);
+        RequestBuilder builder = method.makeRequest(verifyRequest);
         assertEquals("POST", builder.getMethod());
         assertEquals("https://api.nexmo.com/verify/json",
                 builder.build().getURI().toString()
@@ -127,15 +124,8 @@ public class VerifyMethodTest extends MethodTest<VerifyMethod> {
     public void testCustomUri() throws Exception {
         HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri("https://example.com").build());
         VerifyMethod method = new VerifyMethod(wrapper);
-        VerifyRequest request = new VerifyRequest("4477990090090",
-                "Brand.com",
-                "Your friend",
-                4,
-                new Locale("en", "GB"),
-                VerifyRequest.LineType.MOBILE
-        );
 
-        RequestBuilder builder = method.makeRequest(request);
+        RequestBuilder builder = method.makeRequest(verifyRequest);
         assertEquals("POST", builder.getMethod());
         assertEquals("https://example.com/verify/json", builder.build().getURI().toString());
     }
