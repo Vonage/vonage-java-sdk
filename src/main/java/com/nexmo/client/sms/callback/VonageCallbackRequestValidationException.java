@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Vonage Inc
+ * Copyright (c) 2020 Vonage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,24 +19,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client.auth;
+package com.nexmo.client.sms.callback;
 
-import com.nexmo.client.VonageClientException;
-
-public class VonageAuthException extends VonageClientException {
-    public VonageAuthException() {
-        super();
+public class VonageCallbackRequestValidationException extends Exception {
+    public VonageCallbackRequestValidationException() {
     }
 
-    public VonageAuthException(String message) {
+    public VonageCallbackRequestValidationException(String message) {
         super(message);
     }
 
-    public VonageAuthException(String message, Throwable cause) {
+    public VonageCallbackRequestValidationException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public VonageAuthException(Throwable cause) {
+    public VonageCallbackRequestValidationException(Throwable cause) {
         super(cause);
     }
 }

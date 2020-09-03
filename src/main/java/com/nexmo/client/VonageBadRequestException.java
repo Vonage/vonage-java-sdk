@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Vonage Inc
+ * Copyright (c) 2020 Vonage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,20 +21,20 @@
  */
 package com.nexmo.client;
 
-public class VonageClientException extends RuntimeException {
-    public VonageClientException() {
+public class VonageBadRequestException extends VonageClientException {
+    public VonageBadRequestException() {
         super();
     }
 
-    public VonageClientException(String message) {
+    public VonageBadRequestException(String message) {
         super(message);
     }
 
-    public VonageClientException(String message, Throwable cause) {
+    public VonageBadRequestException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public VonageClientException(Throwable cause) {
+    public VonageBadRequestException(Throwable cause) {
         super(cause);
     }
 }

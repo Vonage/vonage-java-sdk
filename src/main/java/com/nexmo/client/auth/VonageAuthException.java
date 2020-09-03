@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Vonage Inc
+ * Copyright (c) 2020 Vonage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -19,18 +19,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.nexmo.client;
+package com.nexmo.client.auth;
 
+import com.nexmo.client.VonageClientException;
 
-/**
- * An exception that indicates the contents of an HttpResponse could not be parsed.
- */
-public class VonageResponseParseException extends VonageUnexpectedException {
-    public VonageResponseParseException(String message) {
-        this(message, null);
+public class VonageAuthException extends VonageClientException {
+    public VonageAuthException() {
+        super();
     }
 
-    public VonageResponseParseException(String message, Throwable t) {
-        super(message, t);
+    public VonageAuthException(String message) {
+        super(message);
+    }
+
+    public VonageAuthException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public VonageAuthException(Throwable cause) {
+        super(cause);
     }
 }

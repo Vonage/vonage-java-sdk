@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2017 Vonage Inc
+ * Copyright (c) 2020 Vonage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,22 +23,14 @@ package com.nexmo.client;
 
 
 /**
- * VonageUnexpectedException indicates an exception that should not happen in an ideal world.
+ * An exception that indicates the contents of an HttpResponse could not be parsed.
  */
-public class VonageUnexpectedException extends RuntimeException {
-    public VonageUnexpectedException() {
-        super();
+public class VonageResponseParseException extends VonageUnexpectedException {
+    public VonageResponseParseException(String message) {
+        this(message, null);
     }
 
-    public VonageUnexpectedException(String message) {
-        super(message);
-    }
-
-    public VonageUnexpectedException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public VonageUnexpectedException(Throwable cause) {
-        super(cause);
+    public VonageResponseParseException(String message, Throwable t) {
+        super(message, t);
     }
 }

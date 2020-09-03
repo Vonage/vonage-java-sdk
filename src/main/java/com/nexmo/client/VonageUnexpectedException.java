@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2019 Vonage Inc
+ * Copyright (c) 2020 Vonage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,8 +21,24 @@
  */
 package com.nexmo.client;
 
-public class VonageUnableToReadPrivateKeyException extends RuntimeException {
-    public VonageUnableToReadPrivateKeyException(String message, Throwable cause) {
+
+/**
+ * VonageUnexpectedException indicates an exception that should not happen in an ideal world.
+ */
+public class VonageUnexpectedException extends RuntimeException {
+    public VonageUnexpectedException() {
+        super();
+    }
+
+    public VonageUnexpectedException(String message) {
+        super(message);
+    }
+
+    public VonageUnexpectedException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    public VonageUnexpectedException(Throwable cause) {
+        super(cause);
     }
 }
