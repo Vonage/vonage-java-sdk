@@ -34,7 +34,7 @@ For Gradle 3.4 or Higher:
 
 ```groovy
 dependencies {
-    implementation 'com.nexmo:client:5.4.0'
+    implementation 'com.nexmo:client:5.5.0'
 }
 ```
 
@@ -42,7 +42,7 @@ For older versions:
 
 ```groovy
 dependencies {
-    compile 'com.nexmo:client:5.4.0'
+    compile 'com.nexmo:client:5.5.0'
 }
 ```
 
@@ -54,7 +54,7 @@ Add the following to the correct place in your project's POM file:
 <dependency>
       <groupId>com.nexmo</groupId>
       <artifactId>client</artifactId>
-      <version>5.4.0</version>
+      <version>5.5.0</version>
 </dependency>
 ```
 
@@ -289,6 +289,18 @@ When the user enters the code they received, you can check it like this:
 client.getVerifyClient().check(ongoingVerify.getRequestId(), CODE)
 ```
 
+### Send a PSD2 Payment Verification Code
+
+Send a PSD2 code to a phone number with:
+
+````java
+NexmoClient client = NexmoClient.builder()
+        .apiKey(API_KEY)
+        .apiSecret(API_SECRET)
+        .build();
+VerifyResponse verifyPayment = client.getVerifyClient().psd2Verify(TO_NUMBER, 103.33, "Michelle");
+````
+
 ### Get a List of SMS Prices for a Country
 
 Get a list of SMS prices for a country with:
@@ -442,7 +454,7 @@ SecretResponse response = client.getAccountClient().getSecret(API_KEY, SECRET_ID
 
 If you need to configure the Apache HttpClient used for making requests, you can
 call `NexmoClient.Builder.httpClient()` to supply your custom configured object. This
-can be useful, for example, if you must use an HTTP proxy to make requests.
+can be useful, for example, if you must use an HTTP proxy to make requests or to configure SSL Certificates.
 
 ## Tips And Tricks
 
