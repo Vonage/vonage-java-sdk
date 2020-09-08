@@ -1,0 +1,78 @@
+/*
+ * Copyright (c) 2020 Vonage
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.vonage.client.application;
+
+import com.vonage.client.AbstractMethod;
+import com.vonage.client.HttpWrapper;
+import com.vonage.client.VonageBadRequestException;
+import com.vonage.client.VonageClientException;
+import com.vonage.client.auth.TokenAuthMethod;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.util.EntityUtils;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
+class ListApplicationsMethod extends AbstractMethod<ListApplicationRequest, ApplicationList> {
+    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
+
+    private static final String PATH = "/applications";
+
+    ListApplicationsMethod(HttpWrapper httpWrapper) {
+        super(httpWrapper);
+    }
+
+    @Override
+    protected Class[] getAcceptableAuthMethods() {
+        return ALLOWED_AUTH_METHODS;
+    }
+
+    @Override
+    public RequestBuilder makeRequest(ListApplicationRequest request) throws UnsupportedEncodingException {
+        RequestBuilder builder = RequestBuilder
+                .get(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v2") + PATH)
+                .setHeader("Content-Type", "application/json");
+
+        if (request != null) {
+            if (request.getPageSize() > 0) {
+                builder.addParameter("page_size", String.valueOf(request.getPageSize()));
+            }
+
+            if (request.getPage() > 0) {
+                builder.addParameter("page", String.valueOf(request.getPage()));
+            }
+        }
+
+        return builder;
+    }
+
+    @Override
+    public ApplicationList parseResponse(HttpResponse response) throws IOException, VonageClientException {
+        if (response.getStatusLine().getStatusCode() != 200) {
+            throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
+        }
+
+        return ApplicationList.fromJson(new BasicResponseHandler().handleResponse(response));
+    }
+}
