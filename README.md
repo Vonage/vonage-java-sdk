@@ -1,4 +1,4 @@
-# Vonage Client Library for Java
+# Vonage Server SDK for Java
 
 [![Maven Release](https://maven-badges.herokuapp.com/maven-central/com.nexmo/client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.nexmo/client)
 [![Build Status](https://travis-ci.org/Nexmo/nexmo-java.svg?branch=version-2)](https://travis-ci.org/Nexmo/nexmo-java)
@@ -8,7 +8,7 @@
 
 <img src="https://developer.nexmo.com/assets/images/Vonage_Nexmo.svg" height="48px" alt="Nexmo is now known as Vonage" />
 
-You can use this Java client library to add [Vonage's API](https://developer.nexmo.com/api) to your application. To use this, you'll
+You can use this Java server sdk to add [Vonage's API](https://developer.nexmo.com/api) to your application. To use this, you'll
 need a Vonage account. Sign up [for free at nexmo.com][signup].
 
  * [Installation](#installation)
@@ -18,11 +18,11 @@ need a Vonage account. Sign up [for free at nexmo.com][signup].
 
 ## Installation
 
-To use the client library you'll need to have [created a Vonage account][signup].
+To use the server sdk you'll need to have [created a Vonage account][signup].
 
 ### Gradle
 
-To install the Java client library using Gradle, add the following to `build.gradle`:
+To install the Java server sdk using Gradle, add the following to `build.gradle`:
 
 ```groovy
 repositories {
@@ -34,7 +34,7 @@ For Gradle 3.4 or Higher:
 
 ```groovy
 dependencies {
-    implementation 'com.nexmo:client:5.5.0'
+    implementation 'com.vonage:client:5.5.0'
 }
 ```
 
@@ -42,7 +42,7 @@ For older versions:
 
 ```groovy
 dependencies {
-    compile 'com.nexmo:client:5.5.0'
+    compile 'com.vonage:client:5.5.0'
 }
 ```
 
@@ -52,7 +52,7 @@ Add the following to the correct place in your project's POM file:
 
 ```xml
 <dependency>
-      <groupId>com.nexmo</groupId>
+      <groupId>com.vonage</groupId>
       <artifactId>client</artifactId>
       <version>5.5.0</version>
 </dependency>
@@ -73,7 +73,7 @@ gradle build
 or [Ivy]
 
 We provide a [ZIP file for each release](https://github.com/Vonage/vonage-java-sdk/releases/),
-containing the client library JAR, along with all the dependencies. Download the file, unzip it, and add the JAR files
+containing the server sdk JAR, along with all the dependencies. Download the file, unzip it, and add the JAR files
 to your project's classpath.
 
 [Gradle]: https://gradle.org/
@@ -224,7 +224,7 @@ System.out.println("Alright. " + stopTalkResponse.getMessage());
 
 ### Generating NCCO Responses
 
-Our library contains a `com.nexmo.client.voice.ncco` package, providing JSON-serializable objects for your NCCO webhook endpoints. 
+Our library contains a `com.vonage.client.voice.ncco` package, providing JSON-serializable objects for your NCCO webhook endpoints. 
 
 Each of the `Action` items contain a `Builder` class that can be used for constructing various actions. These actions are then added to an `Ncco` object for serialization into JSON:
 
@@ -465,7 +465,7 @@ Our [Voice API](https://developer.nexmo.com/voice/voice-api/overview) can connec
 
 ## License
 
-This library is released under the [MIT License][license]
+This library is released under the [Apache License][license]
 
 
 ## Contribute!
