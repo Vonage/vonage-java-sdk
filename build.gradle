@@ -60,7 +60,7 @@ test {
 
 javadoc {
     /* info for JavaDoc options http://docs.oracle.com/javase/6/docs/technotes/tools/windows/javadoc.html#overviewcomment */
-    title "Vonage Java SDK"
+    title "Vonage Java Server SDK"
     // uncomment this to use a custom javadoc overview
     //options.overview = file("src/main/javadoc/overview.html")
     // uncomment this to use the custom javadoc styles
@@ -74,7 +74,7 @@ jar {
         attributes(
                 "Created-By": 'Vonage',
                 'Implementation-Vendor': 'Vonage',
-                'Implementation-Title': 'Vonage Java SDK',
+                'Implementation-Title': 'Vonage Java Server SDK',
                 'Implementation-Version': version
         )
     }
