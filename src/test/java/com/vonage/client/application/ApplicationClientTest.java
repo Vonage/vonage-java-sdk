@@ -22,7 +22,7 @@
 package com.vonage.client.application;
 
 import com.vonage.client.ClientTest;
-import com.nexmo.client.application.capabilities.*;
+
 import com.vonage.client.application.capabilities.*;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.common.Webhook;

@@ -21,7 +21,7 @@
  */
 package com.vonage.client;
 
-import com.nexmo.client.auth.*;
+
 import com.vonage.client.auth.*;
 import com.vonage.client.logging.LoggingUtils;
 import com.vonage.client.voice.Call;

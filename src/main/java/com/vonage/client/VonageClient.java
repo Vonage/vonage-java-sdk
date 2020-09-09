@@ -24,7 +24,6 @@ package com.vonage.client;
 
 import com.vonage.client.account.AccountClient;
 import com.vonage.client.application.ApplicationClient;
-import com.nexmo.client.auth.*;
 import com.vonage.client.auth.*;
 import com.vonage.client.conversion.ConversionClient;
 import com.vonage.client.insight.InsightClient;

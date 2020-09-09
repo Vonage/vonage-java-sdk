@@ -21,7 +21,6 @@
  */
 package com.vonage.client.account;
 
-import com.nexmo.client.*;
 import com.vonage.client.*;
 
 /**
