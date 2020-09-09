@@ -38,8 +38,6 @@ import org.apache.http.message.BasicNameValuePair;
 
 /**
  * A helper class for generating or verifying MD5 signatures when signing REST requests for submission to Vonage.
- *
- * @author  Paul Cook
  */
 public class RequestSigning {
     public static final int MAX_ALLOWABLE_TIME_DELTA = 5 * 60 * 1000;
