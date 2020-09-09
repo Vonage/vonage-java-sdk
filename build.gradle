@@ -122,7 +122,7 @@ uploadArchives {
                 )
             }
             pom.project {
-                name 'Vonage Java Client Library'
+                name 'Vonage Java Server SDK'
                 packaging 'jar'
                 artifactId 'client'
                 description 'Java client for Vonage APIs'

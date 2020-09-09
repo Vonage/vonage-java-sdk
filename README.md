@@ -8,7 +8,7 @@
 
 <img src="https://developer.nexmo.com/assets/images/Vonage_Nexmo.svg" height="48px" alt="Nexmo is now known as Vonage" />
 
-You can use this Java server sdk to add [Vonage's API](https://developer.nexmo.com/api) to your application. To use this, you'll
+You can use this Java Server SDK to add [Vonage's API](https://developer.nexmo.com/api) to your application. To use this, you'll
 need a Vonage account. Sign up [for free at nexmo.com][signup].
 
  * [Installation](#installation)
@@ -18,11 +18,11 @@ need a Vonage account. Sign up [for free at nexmo.com][signup].
 
 ## Installation
 
-To use the server sdk you'll need to have [created a Vonage account][signup].
+To use the Java Server SDK you'll need to have [created a Vonage account][signup].
 
 ### Gradle
 
-To install the Java server sdk using Gradle, add the following to `build.gradle`:
+To install the Java Server SDK using Gradle, add the following to `build.gradle`:
 
 ```groovy
 repositories {
@@ -73,7 +73,7 @@ gradle build
 or [Ivy]
 
 We provide a [ZIP file for each release](https://github.com/Vonage/vonage-java-sdk/releases/),
-containing the server sdk JAR, along with all the dependencies. Download the file, unzip it, and add the JAR files
+containing the Java Server SDK JAR, along with all the dependencies. Download the file, unzip it, and add the JAR files
 to your project's classpath.
 
 [Gradle]: https://gradle.org/
