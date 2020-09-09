@@ -134,13 +134,13 @@ uploadArchives {
                 }
                 licenses {
                     license {
-                        name 'MIT'
+                        name 'Apache'
                         url 'https://raw.github.com/Vonage/vonage-java-sdk/master/LICENCE.txt'
                     }
                 }
                 organization {
                     name 'Vonage'
-                    url 'https://docs.nexmo.com/tools/developer-api'
+                    url 'https://developer.nexmo.com'
                 }
                 issueManagement {
                     system 'GitHub'
@@ -150,7 +150,7 @@ uploadArchives {
                     developer {
                         id 'devrel'
                         name 'Vonage Developer Relations Team'
-                        email 'devrel@nexmo.com'
+                        email 'devrel@vonage.com'
                     }
                 }
             }
