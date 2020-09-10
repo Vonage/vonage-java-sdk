@@ -27,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
-import com.nexmo.client.application.capabilities.*;
+import com.vonage.client.application.capabilities.*;
 import com.vonage.client.application.capabilities.*;
 
 import java.io.IOException;
