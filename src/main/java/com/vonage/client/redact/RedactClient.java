@@ -21,7 +21,7 @@
  */
 package com.vonage.client.redact;
 
-import com.nexmo.client.*;
+
 import com.vonage.client.*;
 
 /**

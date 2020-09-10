@@ -22,7 +22,7 @@
 package com.vonage.client.voice;
 
 
-import com.nexmo.client.*;
+
 import com.vonage.client.*;
 import com.vonage.client.voice.ncco.Ncco;
 

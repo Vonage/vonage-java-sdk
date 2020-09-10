@@ -21,7 +21,7 @@
  */
 package com.vonage.client.conversion;
 
-import com.nexmo.client.*;
+
 import com.vonage.client.*;
 
 import java.util.Date;

@@ -21,7 +21,7 @@
  */
 package com.vonage.client.verify;
 
-import com.nexmo.client.*;
+
 import com.vonage.client.*;
 
 import java.util.Locale;
@@ -88,12 +88,12 @@ public class VerifyClient extends AbstractClient {
      *
      * @return a VerifyResponse representing the response received from the Verify API call.
      *
-     * @throws NexmoClientException        if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      * @since 5.5.0
      */
     public VerifyResponse verify(final String number, final String brand, VerifyRequest.Workflow workflow)
-            throws NexmoResponseParseException, NexmoClientException {
+            throws VonageResponseParseException, VonageClientException {
         return this.verify.verify(number, brand, workflow);
     }
 
@@ -183,8 +183,8 @@ public class VerifyClient extends AbstractClient {
      * @param request validation request for the 2FA verification.
      * @return a VerifyResponse representing the response received from the Verify API call.
      *
-     * @throws NexmoClientException if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException if the response from the API could not be parsed.
+     * @throws VonageClientException if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
      *
      */
     public VerifyResponse verify(VerifyRequest request) throws VonageClientException, VonageResponseParseException {
@@ -290,12 +290,12 @@ public class VerifyClient extends AbstractClient {
      *
      * @return A {@link VerifyResponse} representing the response from the API.
      *
-     * @throws NexmoClientException          if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException   if the response from the API could not be parsed.
+     * @throws VonageClientException          if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException   if the response from the API could not be parsed.
      *
      * @since 5.5.0
      */
-    public VerifyResponse psd2Verify(String number, Double amount, String payee) throws NexmoClientException, NexmoResponseParseException {
+    public VerifyResponse psd2Verify(String number, Double amount, String payee) throws VonageClientException, VonageResponseParseException {
         return this.psd2.psd2Verify(number, amount, payee);
     }
 
@@ -310,13 +310,13 @@ public class VerifyClient extends AbstractClient {
      *
      * @return A {@link VerifyResponse} representing the response from the API.
      *
-     * @throws NexmoClientException          if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException   if the response from the API could not be parsed.
+     * @throws VonageClientException          if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException   if the response from the API could not be parsed.
      *
      * @since 5.5.0
      */
     public VerifyResponse psd2Verify(String number, Double amount, String payee, Psd2Request.Workflow workflow)
-            throws NexmoClientException, NexmoResponseParseException {
+            throws VonageClientException, VonageResponseParseException {
         return this.psd2.psd2Verify(number, amount, payee, workflow);
     }
 
@@ -327,12 +327,12 @@ public class VerifyClient extends AbstractClient {
      *
      * @return A VerifyResponse representing the response from the API.
      *
-     * @throws NexmoClientException          if there was a problem with the Nexmo request or response objects.
-     * @throws NexmoResponseParseException   if the response from the API could not be parsed.
+     * @throws VonageClientException          if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException   if the response from the API could not be parsed.
      *
      * @since 5.5.0
      */
-    public VerifyResponse psd2Verify(Psd2Request psd2Request) throws NexmoClientException, NexmoResponseParseException {
+    public VerifyResponse psd2Verify(Psd2Request psd2Request) throws VonageClientException, VonageResponseParseException {
         return this.psd2.psd2Verify(psd2Request);
     }
 
