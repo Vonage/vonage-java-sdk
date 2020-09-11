@@ -8,7 +8,7 @@
 
 <img src="https://developer.nexmo.com/assets/images/Vonage_Nexmo.svg" height="48px" alt="Nexmo is now known as Vonage" />
 
-You can use this Java Server SDK to add [Vonage's API](https://developer.nexmo.com/api) to your application. To use this, you'll
+You can use this Java Server SDK to add [Vonage APIs](https://developer.nexmo.com/api) to your application. To use this, you'll
 need a Vonage account. Sign up [for free at nexmo.com][signup].
 
  * [Installation](#installation)
