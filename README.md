@@ -465,14 +465,14 @@ Our [Voice API](https://developer.nexmo.com/voice/voice-api/overview) can connec
 
 ## License
 
-This library is released under the [Apache License][license]
+This library is released under the [Apache 2.0 License][license]
 
 
 ## Contribute!
 
 _We :heart: contributions to this library!_
 
-It is a good idea to [talk to us](https://nexmo-community-invite.herokuapp.com/)
+It is a good idea to [talk to us](https://developer.nexmo.com/community/slack)
 first if you plan to add any new functionality.
 Otherwise, [bug reports](https://github.com/Vonage/vonage-java-sdk/issues),
 [bug fixes](https://github.com/Vonage/vonage-java-sdk/pulls) and feedback on the
