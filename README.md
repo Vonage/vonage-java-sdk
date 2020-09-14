@@ -8,6 +8,17 @@
 
 <img src="https://developer.nexmo.com/assets/images/Vonage_Nexmo.svg" height="48px" alt="Nexmo is now known as Vonage" />
 
+<hr />
+
+## Support Notice
+This library have transitioned into a "Maintenance Only" mode. For the next twelve (12) months, this library will only receive bug or security fixes. This library will officially be End of Life as of October 1st, 2021.
+
+We recommend users begin migrating over to the [Vonage Java Server SDK](https://github.com/vonage/vonage-java-sdk). The Vonage packages fully support the `\Nexmo` namespace and should be a drop-in replacement for the Nexmo packages.
+
+If you have any questions, feel free to reach out to us at devrel@vonage.com or through our Community Slack at https://developer.nexmo.com/community/slack
+
+<hr />
+
 You can use this Java client library to add [Nexmo's API](https://developer.nexmo.com/api) to your application. To use this, you'll
 need a Nexmo account. Sign up [for free at nexmo.com][signup].
 
