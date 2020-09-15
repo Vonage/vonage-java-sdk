@@ -1,10 +1,10 @@
 # Vonage Server SDK for Java
 
-[![Maven Release](https://maven-badges.herokuapp.com/maven-central/com.nexmo/client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.nexmo/client)
-[![Build Status](https://travis-ci.org/Nexmo/nexmo-java.svg?branch=version-2)](https://travis-ci.org/Nexmo/nexmo-java)
-[![codecov](https://codecov.io/gh/Nexmo/nexmo-java/branch/version-2/graph/badge.svg)](https://codecov.io/gh/Nexmo/nexmo-java)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0049e762c00b4ce999f45492795ba50a)](https://www.codacy.com/app/cr0wst/nexmo-java?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Nexmo/nexmo-java&amp;utm_campaign=Badge_Grade)
-
+[![Maven Release](https://maven-badges.herokuapp.com/maven-central/com.vonage/client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.vonage/client)
+[![Build Status](https://github.com/vonage/vonage-java-sdk/workflows/build/badge.svg)](https://github.com/Vonage/vonage-java-sdk/actions?query=workflow%3Abuild)
+[![codecov](https://codecov.io/gh/vonage/vonage-java-sdk/branch/master/graph/badge.svg)](https://codecov.io/gh/vonage/vonage-java-sdk)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)][license]
 
 <img src="https://developer.nexmo.com/assets/images/Vonage_Nexmo.svg" height="48px" alt="Nexmo is now known as Vonage" />
 
