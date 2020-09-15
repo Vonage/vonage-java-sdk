@@ -10,7 +10,7 @@
 archive/
 binvalid_application_key.pem
 gradle.properties
-nexmo-sdk.jar
+vonage-sdk.jar
 publishing
 valid_application_key.pem
 /.idea

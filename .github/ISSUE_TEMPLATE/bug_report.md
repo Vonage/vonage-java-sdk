@@ -26,7 +26,7 @@ If applicable, add screenshots to help explain your problem.
 **Request/Response**
 If applicable, please provide the request used and the response
 
-**Nexmo SDK Version**
+**Vonage SDK Version**
  - Version:
 
 **Java SDK Version**
