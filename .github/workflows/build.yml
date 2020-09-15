@@ -1,13 +1,13 @@
-name: Release published
+name: Java Core
 on: [push, pull_request]
 
 jobs:
   build:
-    runs-on:
-      - ubuntu-latest
-      strategy:
-        matrix:
-          java: [8, 8.0.x, 9.0.x, 11.0.x, 14]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ 8, 8.0.x, 9.0.x, 11.0.x, 14 ]
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -18,4 +18,4 @@ jobs:
           java-version: ${{matrix.java}}
 
       - name: Run Codecov
-          uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v1
