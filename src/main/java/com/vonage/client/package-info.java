@@ -19,6 +19,6 @@
  * you want.
  * <p>
  * All behaviour is accessible via the {@link com.vonage.client.VonageClient} class, which should be instantiated with one
- * or more {@code AuthMethod} objects from the {@link com.nexmo.client.auth} package.
+ * or more {@code AuthMethod} objects from the {@link com.vonage.client.auth} package.
  */
 package com.vonage.client;

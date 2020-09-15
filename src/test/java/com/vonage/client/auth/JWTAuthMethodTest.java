@@ -39,7 +39,7 @@ public class JWTAuthMethodTest {
 
     @Test
     public void testSavedKeyUsingPath() throws Exception {
-        auth = new JWTAuthMethod("application-id", Paths.get("src/test/resources/com/nexmo/client/test/keys/application_key2"));
+        auth = new JWTAuthMethod("application-id", Paths.get("src/test/resources/com/vonage/client/test/keys/application_key2"));
     }
 
     @Test

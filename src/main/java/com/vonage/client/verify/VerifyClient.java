@@ -28,7 +28,7 @@ import java.util.Locale;
  * and search in-progress or completed verification requests with {@link #search}
  * <p>
  * More information on method parameters can be found at Vonage website:
- * <a href="https://docs.nexmo.com/verify">https://docs.nexmo.com/verify</a>
+ * <a href="https://developer.nexmo.com/verify/overview">https://developer.nexmo.com/verify/overview</a>
  */
 public class VerifyClient extends AbstractClient {
 

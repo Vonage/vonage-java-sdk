@@ -121,7 +121,7 @@ public abstract class Message {
     }
 
     /**
-     * @return com.nexmo.sms.verify.messages.parameters.MessageClass The message class that is to be applied to this message.
+     * @return {@link MessageClass} The message class that is to be applied to this message.
      */
     public MessageClass getMessageClass() {
         return this.messageClass;

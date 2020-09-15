@@ -230,6 +230,10 @@ public class VerifyRequest extends BaseRequest {
     }
 
     /**
+     * @param number (required) The recipient's phone number in <a href="https://en.wikipedia.org/wiki/E.164">E.164</a>
+     *        format.
+     * @param brand  (required) The name of the company or app to be verified for. Must not be longer than 18
+     *        characters.
      * @return A new Builder to start building.
      */
     public static Builder builder(String number, String brand) {
@@ -286,7 +290,7 @@ public class VerifyRequest extends BaseRequest {
 
         /**
          * Set the predefined sequence of SMS and TTS (Text To Speech) actions to use in order to convey the PIN to your
-         * user. See https://developer.nexmo.com/verify/guides/workflows-and-events
+         * user. See https://developer.vonage.com/verify/guides/workflows-and-events
          *
          * @param workflow The workflow to use for conveying the PIN to your user.
          * @return {@link Builder}

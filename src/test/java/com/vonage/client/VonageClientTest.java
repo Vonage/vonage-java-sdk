@@ -141,8 +141,8 @@ public class VonageClientTest {
 
     @Test
     public void testApiKeyWithSecret() throws VonageUnacceptableAuthException {
-        VonageClient nexmoClient = VonageClient.builder().apiKey("api-key").apiSecret("api-secret").build();
-        AuthCollection authCollection = nexmoClient.getHttpWrapper().getAuthCollection();
+        VonageClient vonageClient = VonageClient.builder().apiKey("api-key").apiSecret("api-secret").build();
+        AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
 
         RequestBuilder requestBuilder = RequestBuilder.get();
         authCollection.getAuth(TokenAuthMethod.class).apply(requestBuilder);
@@ -154,8 +154,8 @@ public class VonageClientTest {
 
     @Test
     public void testApiKeyWithSignatureSecret() throws VonageUnacceptableAuthException, NoSuchAlgorithmException {
-        VonageClient nexmoClient = VonageClient.builder().apiKey("api-key").signatureSecret("api-secret").build();
-        AuthCollection authCollection = nexmoClient.getHttpWrapper().getAuthCollection();
+        VonageClient vonageClient = VonageClient.builder().apiKey("api-key").signatureSecret("api-secret").build();
+        AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
 
         RequestBuilder requestBuilder = RequestBuilder.get();
         authCollection.getAuth(SignatureAuthMethod.class).apply(requestBuilder);
@@ -182,11 +182,11 @@ public class VonageClientTest {
         TestUtils testUtils = new TestUtils();
         byte[] keyBytes = testUtils.loadKey("test/keys/application_key");
 
-        VonageClient nexmoClient = VonageClient.builder()
+        VonageClient vonageClient = VonageClient.builder()
                 .applicationId("app-id")
                 .privateKeyContents(keyBytes)
                 .build();
-        AuthCollection authCollection = nexmoClient.getHttpWrapper().getAuthCollection();
+        AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
 
         RequestBuilder requestBuilder = RequestBuilder.get();
         authCollection.getAuth(JWTAuthMethod.class).apply(requestBuilder);
@@ -200,8 +200,8 @@ public class VonageClientTest {
         TestUtils testUtils = new TestUtils();
         String key = new String(testUtils.loadKey("test/keys/application_key"));
 
-        VonageClient nexmoClient = VonageClient.builder().applicationId("app-id").privateKeyContents(key).build();
-        AuthCollection authCollection = nexmoClient.getHttpWrapper().getAuthCollection();
+        VonageClient vonageClient = VonageClient.builder().applicationId("app-id").privateKeyContents(key).build();
+        AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
 
         RequestBuilder requestBuilder = RequestBuilder.get();
         authCollection.getAuth(JWTAuthMethod.class).apply(requestBuilder);
@@ -212,11 +212,11 @@ public class VonageClientTest {
 
     @Test
     public void testApplicationIdWithCertPath() throws Exception {
-        VonageClient nexmoClient = VonageClient.builder()
+        VonageClient vonageClient = VonageClient.builder()
                 .applicationId("app-id")
                 .privateKeyPath(Paths.get(this.getClass().getResource("test/keys/application_key").getPath()))
                 .build();
-        AuthCollection authCollection = nexmoClient.getHttpWrapper().getAuthCollection();
+        AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
 
         RequestBuilder requestBuilder = RequestBuilder.get();
         authCollection.getAuth(JWTAuthMethod.class).apply(requestBuilder);
@@ -227,11 +227,11 @@ public class VonageClientTest {
 
     @Test
     public void testApplicationIdWithCertPathAsString() throws Exception {
-        VonageClient nexmoClient = VonageClient.builder()
+        VonageClient vonageClient = VonageClient.builder()
                 .applicationId("app-id")
                 .privateKeyPath(this.getClass().getResource("test/keys/application_key").getPath())
                 .build();
-        AuthCollection authCollection = nexmoClient.getHttpWrapper().getAuthCollection();
+        AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
 
         RequestBuilder requestBuilder = RequestBuilder.get();
         authCollection.getAuth(JWTAuthMethod.class).apply(requestBuilder);
@@ -243,19 +243,19 @@ public class VonageClientTest {
     @Test
     public void testDefaultHttpConfig() {
         HttpConfig config = HttpConfig.defaultConfig();
-        VonageClient nexmoClient = VonageClient.builder().build();
+        VonageClient vonageClient = VonageClient.builder().build();
 
-        assertEquals(config.getApiBaseUri(), nexmoClient.getHttpWrapper().getHttpConfig().getApiBaseUri());
-        assertEquals(config.getRestBaseUri(), nexmoClient.getHttpWrapper().getHttpConfig().getRestBaseUri());
-        assertEquals(config.getSnsBaseUri(), nexmoClient.getHttpWrapper().getHttpConfig().getSnsBaseUri());
+        assertEquals(config.getApiBaseUri(), vonageClient.getHttpWrapper().getHttpConfig().getApiBaseUri());
+        assertEquals(config.getRestBaseUri(), vonageClient.getHttpWrapper().getHttpConfig().getRestBaseUri());
+        assertEquals(config.getSnsBaseUri(), vonageClient.getHttpWrapper().getHttpConfig().getSnsBaseUri());
     }
 
     @Test
     public void testHttpConfig() {
         HttpConfig config = HttpConfig.builder().apiBaseUri("https://example.org").build();
-        VonageClient nexmoClient = VonageClient.builder().httpConfig(config).build();
+        VonageClient vonageClient = VonageClient.builder().httpConfig(config).build();
 
-        assertEquals(config, nexmoClient.getHttpWrapper().getHttpConfig());
+        assertEquals(config, vonageClient.getHttpWrapper().getHttpConfig());
     }
 
     @Test(expected = VonageUnableToReadPrivateKeyException.class)

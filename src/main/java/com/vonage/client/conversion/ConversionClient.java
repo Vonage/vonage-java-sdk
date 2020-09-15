@@ -41,7 +41,7 @@ public class ConversionClient extends AbstractClient {
     /**
      * Submit a request to the Conversion API indicating whether or not a message was delivered.
      *
-     * @param type      The {@link ConversionRequest.Type} type of com.nexmo.client.conversion.
+     * @param type      The {@link ConversionRequest.Type} type of com.vonage.client.conversion.
      * @param messageId The id of the message that was sent.
      * @param delivered A boolean indicating whether or not it was delivered.
      * @param timestamp A timestamp of when it was known to be delivered.

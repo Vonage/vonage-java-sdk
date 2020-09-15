@@ -1,3 +1,3 @@
-src/test/resources/com/nexmo/client/test/keys/application_key
-src/test/resources/com/nexmo/client/test/keys/application_key2
-src/main/java/com/nexmo/client/auth/JWTAuthMethod.java
+src/test/resources/com/vonage/client/test/keys/application_key
+src/test/resources/com/vonage/client/test/keys/application_key2
+src/main/java/com/vonage/client/auth/JWTAuthMethod.java
