@@ -13,9 +13,7 @@
 ## Support Notice
 This library have transitioned into a "Maintenance Only" mode. For the next twelve (12) months, this library will only receive bug or security fixes. This library will officially be End of Life as of October 1st, 2021.
 
-We recommend users begin migrating over to the [Vonage Java Server SDK](https://github.com/vonage/vonage-java-sdk). The Vonage packages fully support the `\Nexmo` namespace and should be a drop-in replacement for the Nexmo packages.
-
-If you have any questions, feel free to reach out to us at devrel@vonage.com or through our Community Slack at https://developer.nexmo.com/community/slack
+We recommend users begin migrating over to the [Vonage Java Server SDK](https://github.com/vonage/vonage-java-sdk). If you have any questions, feel free to reach out to us at devrel@vonage.com or through our Community Slack at https://developer.nexmo.com/community/slack
 
 <hr />
 
@@ -491,6 +489,6 @@ library are always appreciated.
 
 
 [create_account]: https://docs.nexmo.com/tools/dashboard#setting-up-your-nexmo-account
-[signup]: https://dashboard.nexmo.com/sign-up?utm_source=DEV_REL&utm_medium=github&utm_campaign=[LANGUAGE]-client-library
-[doc_sms]: https://docs.nexmo.com/api-ref/sms-api?utm_source=DEV_REL&utm_medium=github&utm_campaign=[LANGUAGE]-client-library
+[signup]: https://dashboard.nexmo.com/sign-up?utm_source=DEV_REL&utm_medium=github&utm_campaign=java-client-library
+[doc_sms]: https://docs.nexmo.com/api-ref/sms-api?utm_source=DEV_REL&utm_medium=github&utm_campaign=java-client-library
 [license]: LICENSE.txt
