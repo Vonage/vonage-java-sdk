@@ -30,6 +30,7 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -73,6 +74,7 @@ public class SnsClientTest {
         return result;
     }
 
+    @Ignore
     @Test
     public void testSubscribe() throws Exception {
         this.httpWrapper.setHttpClient(this.stubHttpClient(200, "<nexmo-sns>\n" +
@@ -90,6 +92,7 @@ public class SnsClientTest {
     }
 
     @Test
+    @Ignore
     public void testPublish() throws Exception {
         this.httpWrapper.setHttpClient(this.stubHttpClient(200, "<nexmo-sns>\n" +
                 "   <command>publish</command>\n" +

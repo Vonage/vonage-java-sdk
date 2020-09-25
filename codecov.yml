@@ -1,19 +1,10 @@
 codecov:
-  branch: version-2
-  bot: judy2k
+  branch: master
 
 coverage:
   precision: 2
   round: down
   range: "70...90"
-
-  # notify:
-  #   slack:
-  #     default:
-  #       url: null
-  #       threshold: null
-  #       branches: null
-  #       attachments: "sunburst, diff"
 
   status:
     project:
