@@ -26,7 +26,7 @@ public class LoggingUtils {
 
     public static String logResponse(HttpResponse response) throws IOException {
         StringBuilder log = new StringBuilder();
-        String responseBody = EntityUtils.toString(response.getEntity());
+        String responseBody = response.getEntity() != null ? EntityUtils.toString(response.getEntity()) : "";
         int statusCode = response.getStatusLine().getStatusCode();
         String statusLine = response.getStatusLine().getReasonPhrase();
 
