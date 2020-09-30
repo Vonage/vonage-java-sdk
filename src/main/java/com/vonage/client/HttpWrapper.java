@@ -61,10 +61,10 @@ public class HttpWrapper {
     }
 
     public HttpClient getHttpClient() {
-        if (this.httpClient == null) {
-            this.httpClient = createHttpClient();
+        if (httpClient == null) {
+            httpClient = createHttpClient();
         }
-        return this.httpClient;
+        return httpClient;
     }
 
     public void setHttpClient(HttpClient httpClient) {
