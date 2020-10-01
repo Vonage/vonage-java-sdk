@@ -117,7 +117,7 @@ public class Application {
          * @return The {@link Builder} to keep building.
          */
         public Builder name(String name) {
-            name = name;
+            this.name = name;
             return this;
         }
 
