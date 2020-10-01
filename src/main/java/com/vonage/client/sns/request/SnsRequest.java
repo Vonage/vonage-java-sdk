@@ -34,14 +34,14 @@ public abstract class SnsRequest {
     }
 
     public String getCommand() {
-        return this.command;
+        return command;
     }
 
     public Map<String, String> getQueryParameters() {
         Map<String, String> params = new HashMap<>();
         params.put("cmd", getCommand());
-        params.put("to", this.to);
-        params.put("topic", this.topicArn);
+        params.put("to", to);
+        params.put("topic", topicArn);
         return params;
     }
 }

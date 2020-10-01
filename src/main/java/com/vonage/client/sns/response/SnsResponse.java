@@ -43,14 +43,14 @@ public class SnsResponse {
     }
 
     public String getCommand() {
-        return this.command;
+        return command;
     }
 
     public int getResultCode() {
-        return this.resultCode;
+        return resultCode;
     }
 
     public String getResultMessage() {
-        return this.resultMessage;
+        return resultMessage;
     }
 }

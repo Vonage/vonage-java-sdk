@@ -32,6 +32,6 @@ public class SnsSubscribeResponse extends SnsResponse {
     }
 
     public String getSubscriberArn() {
-        return this.subscriberArn;
+        return subscriberArn;
     }
 }

@@ -34,47 +34,47 @@ public class SmsSubmissionResponseMessage {
 
     @JsonProperty("to")
     public String getTo() {
-        return this.to;
+        return to;
     }
 
     @JsonProperty("message-id")
     public String getId() {
-        return this.id;
+        return id;
     }
 
     @JsonProperty("status")
     public MessageStatus getStatus() {
-        return this.status;
+        return status;
     }
 
     @JsonProperty("error-text")
     public String getErrorText() {
-        return this.errorText;
+        return errorText;
     }
 
     @JsonProperty("client-ref")
     public String getClientRef() {
-        return this.clientRef;
+        return clientRef;
     }
 
     @JsonProperty("remaining-balance")
     public BigDecimal getRemainingBalance() {
-        return this.remainingBalance;
+        return remainingBalance;
     }
 
     @JsonProperty("message-price")
     public BigDecimal getMessagePrice() {
-        return this.messagePrice;
+        return messagePrice;
     }
 
     @JsonProperty("network")
     public String getNetwork() {
-        return this.network;
+        return network;
     }
 
     public boolean isTemporaryError() {
-        return this.status == MessageStatus.INTERNAL_ERROR || this.status == MessageStatus.TOO_MANY_BINDS
-                || this.status == MessageStatus.THROTTLED;
+        return status == MessageStatus.INTERNAL_ERROR || status == MessageStatus.TOO_MANY_BINDS
+                || status == MessageStatus.THROTTLED;
     }
 
     @Override
