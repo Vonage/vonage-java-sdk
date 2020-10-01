@@ -55,6 +55,6 @@ class SearchNumbersEndpoint extends AbstractMethod<SearchNumbersFilter, SearchNu
     }
 
     SearchNumbersResponse searchNumbers(SearchNumbersFilter request) {
-        return this.execute(request);
+        return execute(request);
     }
 }
