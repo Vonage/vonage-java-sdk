@@ -43,22 +43,21 @@ public class WapPushMessage extends Message {
                           final String title) {
         super(MessageType.WAPPUSH, from, to);
 
-        this.url = url;
-        this.title = title;
+     
     }
 
     /**
      * @return String This is the url that will be submitted to the handset and will appear as a browsable message in the Inbox.
      */
     public String getUrl() {
-        return this.url;
+        return url;
     }
 
     /**
      * @return String This is the title that will be associated with the url being submitted to the handset
      */
     public String getTitle() {
-        return this.title;
+        return title;
     }
 
     /**
@@ -67,7 +66,7 @@ public class WapPushMessage extends Message {
      * Once this time has expired, the url will no longer be visible on the handset to be browsed (Subject to handset compatibility)
      */
     public Integer getValidity() {
-        return this.validity;
+        return validity;
     }
 
     public void setValidity(Integer validity) {
