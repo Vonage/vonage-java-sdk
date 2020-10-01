@@ -24,26 +24,26 @@ class SecretManagementEndpoint {
     private RevokeSecretMethod revokeSecretMethod;
 
     SecretManagementEndpoint(HttpWrapper httpWrapper) {
-        this.listSecretsMethod = new ListSecretsMethod(httpWrapper);
-        this.getSecretMethod = new GetSecretMethod(httpWrapper);
-        this.createSecretMethod = new CreateSecretMethod(httpWrapper);
-        this.revokeSecretMethod = new RevokeSecretMethod(httpWrapper);
+        listSecretsMethod = new ListSecretsMethod(httpWrapper);
+        getSecretMethod = new GetSecretMethod(httpWrapper);
+        createSecretMethod = new CreateSecretMethod(httpWrapper);
+        revokeSecretMethod = new RevokeSecretMethod(httpWrapper);
 
     }
 
     ListSecretsResponse listSecrets(String apiKey) {
-        return this.listSecretsMethod.execute(apiKey);
+        return listSecretsMethod.execute(apiKey);
     }
 
     SecretResponse getSecret(SecretRequest secretRequest) {
-        return this.getSecretMethod.execute(secretRequest);
+        return getSecretMethod.execute(secretRequest);
     }
 
     SecretResponse createSecret(CreateSecretRequest createSecretRequest) {
-        return this.createSecretMethod.execute(createSecretRequest);
+        return createSecretMethod.execute(createSecretRequest);
     }
 
     void revokeSecret(SecretRequest secretRequest) {
-        this.revokeSecretMethod.execute(secretRequest);
+        revokeSecretMethod.execute(secretRequest);
     }
 }
