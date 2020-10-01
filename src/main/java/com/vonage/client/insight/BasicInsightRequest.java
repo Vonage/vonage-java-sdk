@@ -17,8 +17,8 @@ package com.vonage.client.insight;
 
 public class BasicInsightRequest extends BaseInsightRequest {
     private BasicInsightRequest(Builder builder) {
-        this.number = builder.number;
-        this.country = builder.country;
+        number = builder.number;
+        country = builder.country;
     }
 
     /**
@@ -56,7 +56,7 @@ public class BasicInsightRequest extends BaseInsightRequest {
          * @param number A single phone number that you need insight about in national or international format.
          */
         public Builder(String number) {
-            this.number = number;
+            number = number;
         }
 
         /**
@@ -65,7 +65,7 @@ public class BasicInsightRequest extends BaseInsightRequest {
          * @return The {@link Builder} to keep building.
          */
         public Builder number(String number) {
-            this.number = number;
+            number = number;
             return this;
         }
 
@@ -75,7 +75,7 @@ public class BasicInsightRequest extends BaseInsightRequest {
          * @return The {@link Builder} to keep building.
          */
         public Builder country(String country) {
-            this.country = country;
+            country = country;
             return this;
         }
 
