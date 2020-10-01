@@ -52,7 +52,7 @@ public class NotifyEventTest {
 
     @Test
     public void testDeserializeFromJson_fail() {
-        String json = "{\"testKey\":\"testValue\"}";
+        String json = "test json";
         try {
             NotifyEvent.fromJson(json);
         } catch (VonageUnexpectedException e) {
