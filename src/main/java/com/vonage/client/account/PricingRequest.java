@@ -15,14 +15,13 @@
  */
 package com.vonage.client.account;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
+
+@AllArgsConstructor
+@Getter
+@ToString
 public class PricingRequest {
     private String countryCode;
-
-    public PricingRequest(String countryCode) {
-        this.countryCode = countryCode;
-    }
-
-    public String getCountryCode() {
-        return countryCode;
-    }
 }

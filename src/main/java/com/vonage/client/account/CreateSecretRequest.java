@@ -19,24 +19,17 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
 
+@Getter
+@AllArgsConstructor
+@ToString
 public class CreateSecretRequest {
     @JsonIgnore
-    private String apiKey;
-    private String secret;
-
-    public CreateSecretRequest(String apiKey, String secret) {
-        this.apiKey = apiKey;
-        this.secret = secret;
-    }
-
-    public String getApiKey() {
-        return apiKey;
-    }
-
-    public String getSecret() {
-        return secret;
-    }
+    private final String apiKey;
+    private final String secret;
 
     public String toJson() {
         try {

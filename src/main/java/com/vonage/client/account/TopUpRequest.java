@@ -15,14 +15,13 @@
  */
 package com.vonage.client.account;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
+
+@AllArgsConstructor
+@Getter
+@ToString
 public class TopUpRequest {
     private String trx;
-
-    public TopUpRequest(String trx) {
-        this.trx = trx;
-    }
-
-    public String getTrx() {
-        return trx;
-    }
 }

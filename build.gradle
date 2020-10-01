@@ -11,6 +11,7 @@ plugins {
     id 'maven'
     id 'signing'
     id 'eclipse'
+    id "io.freefair.lombok" version "5.2.1"
 }
 
 

@@ -18,22 +18,18 @@ package com.vonage.client.account;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.io.IOException;
 import java.util.List;
 
+@Getter
+@ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PrefixPricingResponse {
     private int count;
     private List<PricingResponse> countries;
-
-    public int getCount() {
-        return count;
-    }
-
-    public List<PricingResponse> getCountries() {
-        return countries;
-    }
 
     public static PrefixPricingResponse fromJson(String json) {
         try {

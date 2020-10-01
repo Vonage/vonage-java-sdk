@@ -16,23 +16,29 @@
 package com.vonage.client.account;
 
 import com.vonage.client.HttpWrapper;
+import lombok.Value;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Collections.unmodifiableMap;
+import static java.util.Optional.ofNullable;
+
+@Value
 class PricingEndpoint {
-    private Map<ServiceType, PricingMethod> methods = new HashMap<>();
+    Map<ServiceType, PricingMethod> methods;
 
     PricingEndpoint(HttpWrapper httpWrapper) {
-        this.methods.put(ServiceType.SMS, new SmsPricingMethod(httpWrapper));
-        this.methods.put(ServiceType.VOICE, new VoicePricingMethod(httpWrapper));
+        Map<ServiceType, PricingMethod> methods = new HashMap<>();
+        methods.put(ServiceType.SMS, new SmsPricingMethod(httpWrapper));
+        methods.put(ServiceType.VOICE, new VoicePricingMethod(httpWrapper));
+
+        this.methods = unmodifiableMap(methods);
     }
 
     PricingResponse getPrice(ServiceType serviceType, PricingRequest request) {
-        if (this.methods.containsKey(serviceType)) {
-            return this.methods.get(serviceType).execute(request);
-        }
-
-        throw new IllegalArgumentException("Unknown Service Type: " + serviceType);
+        return ofNullable(methods.get(serviceType))
+                .map(method -> method.execute(request))
+                .orElseThrow(() -> new IllegalArgumentException("Unknown Service Type: " + serviceType));
     }
 }

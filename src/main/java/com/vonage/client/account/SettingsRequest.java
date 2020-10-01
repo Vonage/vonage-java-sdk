@@ -15,6 +15,9 @@
  */
 package com.vonage.client.account;
 
+import lombok.ToString;
+
+@ToString
 public class SettingsRequest {
     private String incomingSmsUrl;
     private String deliveryReceiptUrl;

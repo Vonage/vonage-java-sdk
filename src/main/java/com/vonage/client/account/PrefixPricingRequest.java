@@ -15,23 +15,12 @@
  */
 package com.vonage.client.account;
 
+import lombok.NonNull;
+import lombok.Value;
+
+@Value
 public class PrefixPricingRequest {
-    private ServiceType serviceType;
-    private String prefix;
-
-    public PrefixPricingRequest(ServiceType serviceType, String prefix) {
-        if (serviceType == null) {
-            throw new IllegalArgumentException("Service type cannot be null.");
-        }
-        this.serviceType = serviceType;
-        this.prefix = prefix;
-    }
-
-    public ServiceType getServiceType() {
-        return serviceType;
-    }
-
-    public String getPrefix() {
-        return prefix;
-    }
+    @NonNull
+    ServiceType serviceType;
+    String prefix;
 }

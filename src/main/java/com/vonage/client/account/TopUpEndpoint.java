@@ -16,7 +16,9 @@
 package com.vonage.client.account;
 
 import com.vonage.client.HttpWrapper;
+import lombok.ToString;
 
+@ToString
 class TopUpEndpoint {
     private TopUpMethod topUpMethod;
 

@@ -19,11 +19,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
+@Getter
+@ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PricingResponse {
     private String dialingPrefix;
@@ -32,26 +36,6 @@ public class PricingResponse {
     @JsonUnwrapped
     private Country country;
     private List<Network> networks;
-
-    public String getDialingPrefix() {
-        return dialingPrefix;
-    }
-
-    public BigDecimal getDefaultPrice() {
-        return defaultPrice;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public Country getCountry() {
-        return country;
-    }
-
-    public List<Network> getNetworks() {
-        return networks;
-    }
 
     public static PricingResponse fromJson(String json) {
         try {
