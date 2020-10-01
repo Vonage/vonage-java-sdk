@@ -18,3 +18,4 @@ documentation, or tests are eligible to be added to this list.
 - Steve Lorello ([@sloello89])(https://github.com/slorello89)
 - Yvonne Allen ([@yallen011](https://github.com/yallen011))
 - Timothee Laurent ([@TimotheeL])(https://github.com/TimotheeL)
+- Keenal Shah([@Keenal])(https://github.com/Keenal)
