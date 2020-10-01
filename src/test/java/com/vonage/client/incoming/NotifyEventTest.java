@@ -15,6 +15,7 @@
  */
 package com.vonage.client.incoming;
 
+import com.vonage.client.VonageUnexpectedException;
 import org.junit.Test;
 
 import java.util.Calendar;
@@ -28,7 +29,7 @@ import static org.junit.Assert.assertEquals;
 public class NotifyEventTest {
 
     @Test
-    public void testDeserializeFromJson() {
+    public void testDeserializeFromJson_success() {
         String json = "{\n"
                 + "  \"payload\": {\"key2\":23,\"key1\":\"value1\"},\n"
                 + "  \"conversation_uuid\": \"bbbbbbbb-cccc-dddd-eeee-0123456789ab\",\n"
@@ -38,13 +39,33 @@ public class NotifyEventTest {
 
         assertEquals("bbbbbbbb-cccc-dddd-eeee-0123456789ab", notifyEvent.getConversationUuid());
 
-        Map<String,Object> testPayload = new HashMap<>();
-        testPayload.put("key1","value1");
-        testPayload.put("key2",23);
-        assertEquals(testPayload,notifyEvent.getPayload());
+        Map<String, Object> testPayload = new HashMap<>();
+        testPayload.put("key1", "value1");
+        testPayload.put("key2", 23);
+        assertEquals(testPayload, notifyEvent.getPayload());
 
         Calendar timestamp = new GregorianCalendar(2020, Calendar.OCTOBER, 1, 12, 0, 0);
         timestamp.setTimeZone(TimeZone.getTimeZone("UTC"));
-        assertEquals(timestamp.getTime(),notifyEvent.getTimestamp());
+        assertEquals(timestamp.getTime(), notifyEvent.getTimestamp());
+        System.out.println(notifyEvent.toString());
+    }
+
+    @Test
+    public void testDeserializeFromJson_fail() {
+        String json = "{\"testKey\":\"testValue\"}";
+        try {
+            NotifyEvent.fromJson(json);
+        } catch (VonageUnexpectedException e) {
+            assertEquals("Failed to convert NotifyEvent from json.", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testToString() {
+        String notifyEventString = "NotifyEvent{conversationUuid=\'bbbbbbbb-cccc-dddd-eeee-0123456789ab\',"
+                + " timestamp=null, payload=null}";
+        NotifyEvent notifyEvent = new NotifyEvent();
+        notifyEvent.setConversationUuid("bbbbbbbb-cccc-dddd-eeee-0123456789ab");
+        assertEquals(notifyEventString, notifyEvent.toString());
     }
 }
