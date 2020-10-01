@@ -16,6 +16,7 @@
 package com.vonage.client.incoming;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 
@@ -25,6 +26,7 @@ import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NotifyEvent {
+    @JsonProperty(value = "conversation_uuid")
     private String conversationUuid;
     private Date timestamp;
     private Map<String, Object> payload;
@@ -67,7 +69,7 @@ public class NotifyEvent {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(json, NotifyEvent.class);
         } catch (IOException e) {
-            throw new VonageUnexpectedException("Failed to produce RecordEvent from json.", e);
+            throw new VonageUnexpectedException("Failed to convert NotifyEvent from json.", e);
         }
     }
 }
