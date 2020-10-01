@@ -25,30 +25,30 @@ class ApplicationEndpoint {
     private ListApplicationsMethod listApplicationsMethod;
 
     ApplicationEndpoint(HttpWrapper httpWrapper) {
-        createApplicationMethod = new CreateApplicationMethod(httpWrapper);
-        updateApplicationMethod = new UpdateApplicationMethod(httpWrapper);
-        getApplicationMethod = new GetApplicationMethod(httpWrapper);
-        deleteApplicationMethod = new DeleteApplicationMethod(httpWrapper);
-        listApplicationsMethod = new ListApplicationsMethod(httpWrapper);
+        this.createApplicationMethod = new CreateApplicationMethod(httpWrapper);
+        this.updateApplicationMethod = new UpdateApplicationMethod(httpWrapper);
+        this.getApplicationMethod = new GetApplicationMethod(httpWrapper);
+        this.deleteApplicationMethod = new DeleteApplicationMethod(httpWrapper);
+        this.listApplicationsMethod = new ListApplicationsMethod(httpWrapper);
     }
 
     Application create(Application application) {
-        return createApplicationMethod.execute(application);
+        return this.createApplicationMethod.execute(application);
     }
 
     Application update(Application application) {
-        return updateApplicationMethod.execute(application);
+        return this.updateApplicationMethod.execute(application);
     }
 
     Application get(String id) {
-        return getApplicationMethod.execute(id);
+        return this.getApplicationMethod.execute(id);
     }
 
     void delete(String id) {
-        deleteApplicationMethod.execute(id);
+        this.deleteApplicationMethod.execute(id);
     }
 
     ApplicationList list(ListApplicationRequest request) {
-        return listApplicationsMethod.execute(request);
+        return this.listApplicationsMethod.execute(request);
     }
 }

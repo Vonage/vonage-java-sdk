@@ -31,7 +31,7 @@ public class Voice extends Capability {
     }
 
     private Voice(Builder builder) {
-        webhooks = builder.webhooks;
+        this.webhooks = builder.webhooks;
     }
 
     @Override
@@ -60,11 +60,11 @@ public class Voice extends Capability {
          * @return The {@link Builder} to keep building.
          */
         public Builder addWebhook(Webhook.Type type, Webhook webhook) {
-            if (webhooks == null) {
-                webhooks = new LinkedHashMap<>();
+            if (this.webhooks == null) {
+                this.webhooks = new LinkedHashMap<>();
             }
 
-            webhooks.put(type, webhook);
+            this.webhooks.put(type, webhook);
             return this;
         }
 
@@ -76,14 +76,14 @@ public class Voice extends Capability {
          * @return The {@link Builder} to keep building.
          */
         public Builder removeWebhook(Webhook.Type type) {
-            if (webhooks == null) {
-                webhooks = new LinkedHashMap<>();
+            if (this.webhooks == null) {
+                this.webhooks = new LinkedHashMap<>();
             }
 
-            webhooks.remove(type);
+            this.webhooks.remove(type);
 
-            if (webhooks.isEmpty()) {
-                webhooks = null;
+            if (this.webhooks.isEmpty()) {
+                this.webhooks = null;
             }
 
             return this;
