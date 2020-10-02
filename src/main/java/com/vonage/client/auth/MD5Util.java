@@ -23,7 +23,6 @@ import java.security.NoSuchAlgorithmException;
 /**
  * Contains utility methods that use MD5 hashing. The class uses STANDARD JVM MD5 algorithm.
  *
- * 
  */
 public class MD5Util {
 
