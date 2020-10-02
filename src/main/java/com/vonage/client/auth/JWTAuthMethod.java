@@ -27,7 +27,7 @@ public class JWTAuthMethod extends AbstractAuthMethod {
     private Jwt jwt;
 
     public JWTAuthMethod(final String applicationId, final byte[] privateKey) {
-        this.jwt = Jwt.builder().applicationId(applicationId).privateKeyContents(new String(privateKey)).build();
+        jwt = Jwt.builder().applicationId(applicationId).privateKeyContents(new String(privateKey)).build();
     }
 
     public JWTAuthMethod(String applicationId, Path path) throws IOException {
@@ -35,12 +35,12 @@ public class JWTAuthMethod extends AbstractAuthMethod {
     }
 
     public String generateToken() {
-        return this.jwt.generate();
+        return jwt.generate();
     }
 
     @Override
     public RequestBuilder apply(RequestBuilder request) {
-        String token = this.jwt.generate();
+        String token = jwt.generate();
 
         request.setHeader("Authorization", "Bearer " + token);
         return request;

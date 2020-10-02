@@ -22,10 +22,10 @@ class ConversionEndpoint {
     private ConversionMethod conversionMethod;
 
     ConversionEndpoint(HttpWrapper httpWrapper) {
-        this.conversionMethod = new ConversionMethod(httpWrapper);
+        conversionMethod = new ConversionMethod(httpWrapper);
     }
 
     void submitConversion(ConversionRequest request) throws VonageClientException {
-        this.conversionMethod.execute(request);
+        conversionMethod.execute(request);
     }
 }

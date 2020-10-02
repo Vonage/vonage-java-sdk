@@ -33,8 +33,8 @@ public class ConversionClientTest extends ClientTest<ConversionClient> {
     @Test
     public void testSuccessfulResponse() {
         try {
-            wrapper.setHttpClient(this.stubHttpClient(200, ""));
-            this.client.submitConversion(ConversionRequest.Type.VOICE,
+            wrapper.setHttpClient(stubHttpClient(200, ""));
+            client.submitConversion(ConversionRequest.Type.VOICE,
                                          "MESSAGE-ID",
                                          true,
                                          new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
@@ -45,8 +45,8 @@ public class ConversionClientTest extends ClientTest<ConversionClient> {
 
     @Test(expected = VonageBadRequestException.class)
     public void testWrongCredentials() throws Exception {
-        wrapper.setHttpClient(this.stubHttpClient(401, ""));
-        this.client.submitConversion(ConversionRequest.Type.SMS,
+        wrapper.setHttpClient(stubHttpClient(401, ""));
+        client.submitConversion(ConversionRequest.Type.SMS,
                                      "MESSAGE-ID",
                                      true,
                                      new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
@@ -54,8 +54,8 @@ public class ConversionClientTest extends ClientTest<ConversionClient> {
 
     @Test(expected = VonageBadRequestException.class)
     public void testConversionNotEnabled() throws Exception {
-        wrapper.setHttpClient(this.stubHttpClient(402, ""));
-        this.client.submitConversion(ConversionRequest.Type.SMS,
+        wrapper.setHttpClient(stubHttpClient(402, ""));
+        client.submitConversion(ConversionRequest.Type.SMS,
                                      "MESSAGE-ID",
                                      true,
                                      new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
@@ -63,8 +63,8 @@ public class ConversionClientTest extends ClientTest<ConversionClient> {
 
     @Test(expected = VonageBadRequestException.class)
     public void testInvalidParameters() throws Exception {
-        wrapper.setHttpClient(this.stubHttpClient(423, ""));
-        this.client.submitConversion(ConversionRequest.Type.SMS,
+        wrapper.setHttpClient(stubHttpClient(423, ""));
+        client.submitConversion(ConversionRequest.Type.SMS,
                                      "MESSAGE-ID",
                                      true,
                                      new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
@@ -72,8 +72,8 @@ public class ConversionClientTest extends ClientTest<ConversionClient> {
 
     @Test(expected = VonageBadRequestException.class)
     public void testInvalidParametersEnhanceCalm() throws Exception {
-        wrapper.setHttpClient(this.stubHttpClient(420, ""));
-        this.client.submitConversion(ConversionRequest.Type.SMS,
+        wrapper.setHttpClient(stubHttpClient(420, ""));
+        client.submitConversion(ConversionRequest.Type.SMS,
                                      "MESSAGE-ID",
                                      true,
                                      new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));

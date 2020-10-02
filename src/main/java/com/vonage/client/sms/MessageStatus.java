@@ -70,6 +70,6 @@ public enum MessageStatus {
     }
 
     public int getMessageStatus() {
-        return this.messageStatus;
+        return messageStatus;
     }
 }

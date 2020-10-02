@@ -35,7 +35,7 @@ public class ConversionClient extends AbstractClient {
     public ConversionClient(HttpWrapper httpWrapper) {
         super(httpWrapper);
 
-        this.conversionEndpoint = new ConversionEndpoint(httpWrapper);
+        conversionEndpoint = new ConversionEndpoint(httpWrapper);
     }
 
     /**
@@ -53,6 +53,6 @@ public class ConversionClient extends AbstractClient {
                                  String messageId,
                                  boolean delivered,
                                  Date timestamp) throws VonageResponseParseException, VonageClientException {
-        this.conversionEndpoint.submitConversion(new ConversionRequest(type, messageId, delivered, timestamp));
+        conversionEndpoint.submitConversion(new ConversionRequest(type, messageId, delivered, timestamp));
     }
 }
