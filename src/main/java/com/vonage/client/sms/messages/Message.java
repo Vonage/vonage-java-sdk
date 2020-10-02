@@ -191,7 +191,6 @@ public abstract class Message {
     /**
      * An enum of the valid values that may be supplied to as the message-class parameter of a rest submission.
      *
-     * 
      */
     public enum MessageClass {
 
