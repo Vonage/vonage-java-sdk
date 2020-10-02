@@ -43,7 +43,6 @@ import java.util.concurrent.Executors;
  * the acknowledgement to a minimum in order to maintain throughput when operating at any sort of volume.
  * You are responsible for persisting this object in the event of any failure whilst processing
  *
- * 
  */
 public abstract class AbstractMOServlet extends HttpServlet {
 
