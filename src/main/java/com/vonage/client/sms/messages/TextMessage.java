@@ -20,7 +20,6 @@ import org.apache.http.client.methods.RequestBuilder;
 
 /**
  * Represents the details of a plain-text message that is to be submitted via the Vonage REST api.
- *
  * 
  */
 public class TextMessage extends Message {
