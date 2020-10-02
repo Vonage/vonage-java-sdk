@@ -21,7 +21,7 @@ import org.apache.http.client.methods.RequestBuilder;
 /**
  * Represents the details of a plain-text message that is to be submitted via the Vonage REST api.
  *
- * @author Paul Cook
+ * 
  */
 public class TextMessage extends Message {
     private final String messageBody;

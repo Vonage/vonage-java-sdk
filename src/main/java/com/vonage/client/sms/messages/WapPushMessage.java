@@ -21,7 +21,7 @@ import org.apache.http.client.methods.RequestBuilder;
 /**
  * Represents the details of a wap-push message that is to be submitted via the Vonage REST api.
  *
- * @author Paul Cook
+ * 
  */
 public class WapPushMessage extends Message {
     private final String url;

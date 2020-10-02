@@ -23,7 +23,7 @@ import java.io.UnsupportedEncodingException;
 /**
  * Static helper methods for working with hex values.
  *
- * @author Paul Cook
+ * 
  */
 public class HexUtil {
 
