@@ -20,8 +20,8 @@ public class ListApplicationRequest {
     private long page;
 
     private ListApplicationRequest(Builder builder) {
-        this.pageSize = builder.pageSize;
-        this.page = builder.page;
+        pageSize = builder.pageSize;
+        page = builder.page;
     }
 
     public long getPageSize() {
