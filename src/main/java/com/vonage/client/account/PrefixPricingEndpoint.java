@@ -21,10 +21,10 @@ class PrefixPricingEndpoint {
     private PrefixPricingMethod prefixPricingMethod;
 
     PrefixPricingEndpoint(HttpWrapper httpWrapper) {
-        this.prefixPricingMethod = new PrefixPricingMethod(httpWrapper);
+        prefixPricingMethod = new PrefixPricingMethod(httpWrapper);
     }
 
     PrefixPricingResponse getPrice(PrefixPricingRequest prefixPricingRequest) {
-        return this.prefixPricingMethod.execute(prefixPricingRequest);
+        return prefixPricingMethod.execute(prefixPricingRequest);
     }
 }
