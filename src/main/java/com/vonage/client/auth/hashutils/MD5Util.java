@@ -13,7 +13,7 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.auth;
+package com.vonage.client.auth.hashutils;
 
 
 import java.io.UnsupportedEncodingException;
@@ -25,7 +25,7 @@ import java.security.NoSuchAlgorithmException;
  *
  * @author Paul Cook
  */
-public class MD5Util {
+class MD5Util extends Hasher {
 
     /**
      * Calculates MD5 hash for string. assume string is UTF-8 encoded
@@ -33,9 +33,9 @@ public class MD5Util {
      * @return  MD5 representation of the input string
      * @throws NoSuchAlgorithmException if the MD5 algorithm is not available.
      */
-    public static String calculateMd5(String input) throws NoSuchAlgorithmException {
+    @Override public String calculate(String input) throws NoSuchAlgorithmException {
         try {
-            return calculateMd5(input, "UTF-8");
+            return calculate(input, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             return null; // -- impossible --
         }
@@ -49,7 +49,7 @@ public class MD5Util {
      * @throws NoSuchAlgorithmException if the MD5 algorithm is not available.
      * @throws UnsupportedEncodingException if the specified encoding is unavailable.
      */
-    public static String calculateMd5(String input, String encoding) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    @Override public String calculate(String input, String encoding) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest md = MessageDigest.getInstance("MD5");
         md.update(input.getBytes(encoding));
         byte digest[] = md.digest();

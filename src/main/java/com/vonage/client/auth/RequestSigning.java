@@ -17,6 +17,7 @@ package com.vonage.client.auth;
 
 
 import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.auth.hashutils.HashUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
@@ -97,7 +98,7 @@ public class RequestSigning {
 
         String md5 = "no signature";
         try {
-            md5 = MD5Util.calculateMd5(str);
+            md5 = HashUtil.getInstance().calculate(str, HashUtil.HashType.MD5);
         } catch (Exception e) {
             log.error("error...", e);
         }
@@ -181,7 +182,7 @@ public class RequestSigning {
 
         String md5;
         try {
-            md5 = MD5Util.calculateMd5(str);
+            md5 = HashUtil.getInstance().calculate(str, HashUtil.HashType.MD5);
         } catch (Exception e) {
             log.error("error...", e);
             return false;

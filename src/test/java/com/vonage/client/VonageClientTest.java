@@ -17,6 +17,7 @@ package com.vonage.client;
 
 
 import com.vonage.client.auth.*;
+import com.vonage.client.auth.hashutils.HashUtil;
 import com.vonage.client.logging.LoggingUtils;
 import com.vonage.client.voice.Call;
 import com.vonage.client.voice.CallEvent;
@@ -173,7 +174,7 @@ public class VonageClientTest {
                 .orElse(new BasicNameValuePair("", ""))
                 .getValue();
 
-        String sig = MD5Util.calculateMd5("&api_key=api-key&timestamp=" + timestamp + "api-secret");
+        String sig = HashUtil.getInstance().calculate("&api_key=api-key&timestamp=" + timestamp + "api-secret", HashUtil.HashType.MD5);
         assertContainsParam(parameters, "sig", sig);
     }
 
