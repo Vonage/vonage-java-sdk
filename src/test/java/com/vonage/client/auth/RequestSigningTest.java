@@ -98,8 +98,10 @@ public class RequestSigningTest {
 
     @Test
     public void testVerifyRequestSignatureWithSha256Hash() {
-        HttpServletRequest request = constructDummyRequest();
-        assertTrue(RequestSigning.verifyRequestSignature(request, "abcde", 2100000, HashUtil.HashType.SHA256));
+        Map<String, String[]> params = constructDummyParams();
+        params.put("sig", new String[]{"f98b95f603f8e4933c98f5e721fada9e2c32b764bdd1555d75f0dc6cf5aa7ff6"});
+
+        assertTrue(RequestSigning.verifyRequestSignature(constructDummyRequest(params), "abcde", 2100000, HashUtil.HashType.SHA256));
     }
 
     @Test

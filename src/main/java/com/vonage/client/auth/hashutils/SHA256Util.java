@@ -36,6 +36,14 @@ class SHA256Util extends Hasher {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         md.update(input.getBytes(encoding));
 
-        return Base64.getEncoder().encodeToString(md.digest());
+        final StringBuilder hexString = new StringBuilder();
+        for (byte element : md.digest()) {
+            int z = 0xFF & element;
+            if (z < 16)
+                hexString.append("0");
+            hexString.append(Integer.toHexString(z));
+        }
+
+        return hexString.toString();
     }
 }
