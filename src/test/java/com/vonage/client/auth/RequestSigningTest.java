@@ -16,6 +16,7 @@
 package com.vonage.client.auth;
 
 
+import com.vonage.client.auth.hashutils.HashUtil;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.junit.Test;
@@ -41,6 +42,18 @@ public class RequestSigningTest {
         Map<String, String> paramMap = constructParamMap(params);
         // md5 -s "&a=alphabet&b=bananas&timestamp=2100abcde"
         assertEquals("7d43241108912b32cc315b48ce681acf", paramMap.get(RequestSigning.PARAM_SIGNATURE));
+    }
+
+    @Test
+    public void testConstructSignatureForRequestParametersWithSha256Hash() {
+        List<NameValuePair> params = new ArrayList<>();
+        params.add(new BasicNameValuePair("a", "alphabet"));
+        params.add(new BasicNameValuePair("b", "bananas"));
+
+        RequestSigning.constructSignatureForRequestParameters(params, "abcde", 2100, HashUtil.HashType.SHA256);
+        Map<String, String> paramMap = constructParamMap(params);
+        // md5 -s "&a=alphabet&b=bananas&timestamp=2100abcde"
+        assertEquals("f98b95f603f8e4933c98f5e721fada9e2c32b764bdd1555d75f0dc6cf5aa7ff6", paramMap.get(RequestSigning.PARAM_SIGNATURE));
     }
 
     @Test
@@ -81,6 +94,12 @@ public class RequestSigningTest {
     public void testVerifyRequestSignature() {
         HttpServletRequest request = constructDummyRequest();
         assertTrue(RequestSigning.verifyRequestSignature(request, "abcde", 2100000));
+    }
+
+    @Test
+    public void testVerifyRequestSignatureWithSha256Hash() {
+        HttpServletRequest request = constructDummyRequest();
+        assertTrue(RequestSigning.verifyRequestSignature(request, "abcde", 2100000, HashUtil.HashType.SHA256));
     }
 
     @Test
