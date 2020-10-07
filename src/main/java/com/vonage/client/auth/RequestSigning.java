@@ -46,6 +46,7 @@ public class RequestSigning {
      * <p>
      * Generates additional parameters to represent the timestamp and generated signature.
      * Uses the supplied pre-shared secret key to generate the signature.
+     * Uses the default hash strategy of MD5.
      *
      * @param params List of NameValuePair instances containing the query parameters for the request that is to be signed
      * @param secretKey the pre-shared secret key held by the client
@@ -55,8 +56,18 @@ public class RequestSigning {
         constructSignatureForRequestParameters(params, secretKey, System.currentTimeMillis() / 1000);
     }
 
+    /**
+     * Signs a set of request parameters.
+     * <p>
+     * Generates additional parameters to represent the timestamp and generated signature.
+     * Uses the supplied pre-shared secret key to generate the signature.
+     *
+     * @param params List of NameValuePair instances containing the query parameters for the request that is to be signed
+     * @param secretKey the pre-shared secret key held by the client
+     * @param hashType The type of hash that is to be used in construction
+     */
     public static void constructSignatureForRequestParameters(List<NameValuePair> params, String secretKey, HashUtil.HashType hashType) {
-
+        constructSignatureForRequestParameters(params, secretKey, System.currentTimeMillis() / 1000, hashType);
     }
 
     /**
