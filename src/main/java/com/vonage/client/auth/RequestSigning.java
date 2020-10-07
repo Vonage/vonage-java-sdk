@@ -147,6 +147,7 @@ public class RequestSigning {
 
     /**
      * Verifies the signature in an HttpServletRequest.
+     * Uses default hashing strategy of MD5.
      *
      * @param request The HttpServletRequest to be verified.
      * @param secretKey The pre-shared secret key used by the sender of the request to create the signature.
@@ -155,6 +156,18 @@ public class RequestSigning {
      */
     public static boolean verifyRequestSignature(HttpServletRequest request, String secretKey) {
         return verifyRequestSignature(request, secretKey, System.currentTimeMillis());
+    }
+
+    /**
+     * Verifies the signature in an HttpServletRequest.
+     *
+     * @param request The HttpServletRequest to be verified.
+     * @param secretKey The pre-shared secret key used by the sender of the request to create the signature.
+     *
+     * @return true if the signature is correct for this request and secret key.
+     */
+    public static boolean verifyRequestSignature(HttpServletRequest request, String secretKey, HashUtil.HashType hashType) {
+        return verifyRequestSignature(request, secretKey, System.currentTimeMillis(), hashType);
     }
 
     /**

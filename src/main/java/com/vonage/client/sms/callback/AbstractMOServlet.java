@@ -17,6 +17,7 @@ package com.vonage.client.sms.callback;
 
 
 import com.vonage.client.auth.RequestSigning;
+import com.vonage.client.auth.hashutils.HashUtil;
 import com.vonage.client.sms.HexUtil;
 import com.vonage.client.sms.callback.messages.MO;
 
@@ -59,6 +60,7 @@ public abstract class AbstractMOServlet extends HttpServlet {
     private final boolean validateUsernamePassword;
     private final String expectedUsername;
     private final String expectedPassword;
+    private final HashUtil.HashType hashType;
 
     protected Executor consumer;
 
@@ -68,6 +70,23 @@ public abstract class AbstractMOServlet extends HttpServlet {
         this.validateUsernamePassword = validateUsernamePassword;
         this.expectedUsername = expectedUsername;
         this.expectedPassword = expectedPassword;
+        this.hashType = HashUtil.HashType.MD5;
+
+        this.consumer = Executors.newFixedThreadPool(MAX_CONSUMER_THREADS);
+    }
+
+    public AbstractMOServlet(final boolean validateSignature,
+                             final String signatureSharedSecret,
+                             final boolean validateUsernamePassword,
+                             final String expectedUsername,
+                             final String expectedPassword,
+                             HashUtil.HashType hashType) {
+        this.validateSignature = validateSignature;
+        this.signatureSharedSecret = signatureSharedSecret;
+        this.validateUsernamePassword = validateUsernamePassword;
+        this.expectedUsername = expectedUsername;
+        this.expectedPassword = expectedPassword;
+        this.hashType = hashType;
 
         this.consumer = Executors.newFixedThreadPool(MAX_CONSUMER_THREADS);
     }
@@ -96,7 +115,7 @@ public abstract class AbstractMOServlet extends HttpServlet {
         }
 
         if (this.validateSignature) {
-            if (!RequestSigning.verifyRequestSignature(request, this.signatureSharedSecret)) {
+            if (!RequestSigning.verifyRequestSignature(request, this.signatureSharedSecret, this.hashType)) {
                 throw new VonageCallbackRequestValidationException("Bad Signature");
             }
         }

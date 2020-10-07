@@ -16,6 +16,7 @@
 package com.vonage.client.auth;
 
 import com.vonage.client.TestUtils;
+import com.vonage.client.auth.hashutils.HashUtil;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -28,7 +29,7 @@ public class VonageUnacceptableAuthExceptionTest {
     public void testAllAuthMethodHaveAppropriateDescriptions() throws IOException {
         VonageUnacceptableAuthException exception = new VonageUnacceptableAuthException(
                 Arrays.asList(new TokenAuthMethod(null, null),
-                        new SignatureAuthMethod(null, null),
+                        new SignatureAuthMethod(null, null, HashUtil.HashType.MD5),
                         new JWTAuthMethod("application_id", new TestUtils().loadKey("test/keys/application_key"))),
                 Arrays.asList(TokenAuthMethod.class, SignatureAuthMethod.class, JWTAuthMethod.class)
         );

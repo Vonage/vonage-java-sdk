@@ -96,6 +96,26 @@ public class VonageClientTest {
     }
 
     @Test
+    public void testConstructVonageClientWithDifferentHash() throws Exception {
+        byte[] keyBytes = testUtils.loadKey("test/keys/application_key");
+        VonageClient client = VonageClient.builder()
+                .applicationId("951614e0-eec4-4087-a6b1-3f4c2f169cb0")
+                .privateKeyContents(keyBytes)
+                .hashType(HashUtil.HashType.SHA256)
+                .httpClient(stubHttpClient(
+                        200,
+                        "{\n" + "  \"conversation_uuid\": \"63f61863-4a51-4f6b-86e1-46edebio0391\",\n"
+                                + "  \"status\": \"started\",\n" + "  \"direction\": \"outbound\"\n" + "}"
+                ))
+                .build();
+
+        CallEvent evt = client
+                .getVoiceClient()
+                .createCall(new Call("4499991111", "44111222333", "https://callback.example.com/"));
+        assertEquals(CallStatus.STARTED, evt.getStatus());
+    }
+
+    @Test
     public void testGenerateJwt() throws Exception {
         byte[] privateKeyBytes = testUtils.loadKey("test/keys/application_key");
         VonageClient client = VonageClient.builder()
@@ -175,6 +195,31 @@ public class VonageClientTest {
                 .getValue();
 
         String sig = HashUtil.getInstance().calculate("&api_key=api-key&timestamp=" + timestamp + "api-secret", HashUtil.HashType.MD5);
+        assertContainsParam(parameters, "sig", sig);
+    }
+
+    @Test
+    public void testApiKeyWithSignatureSecretAsSHA256() throws VonageUnacceptableAuthException, NoSuchAlgorithmException {
+        VonageClient vonageClient = VonageClient.builder().hashType(HashUtil.HashType.SHA256).apiKey("api-key").signatureSecret("api-secret").build();
+        AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
+
+        RequestBuilder requestBuilder = RequestBuilder.get();
+        authCollection.getAuth(SignatureAuthMethod.class).apply(requestBuilder);
+
+        List<NameValuePair> parameters = requestBuilder.getParameters();
+
+        // This is messy but trying to generate a signature auth method and then comparing with what's on the request
+        // could have a race condition depending on the returned timestamp.
+
+        // So, we're going to generate the signature after trying to determine what the timestamp is.
+        String timestamp = parameters
+                .stream()
+                .filter(pair -> "timestamp".equals(pair.getName()))
+                .findFirst()
+                .orElse(new BasicNameValuePair("", ""))
+                .getValue();
+
+        String sig = HashUtil.getInstance().calculate("&api_key=api-key&timestamp=" + timestamp + "api-secret", HashUtil.HashType.SHA256);
         assertContainsParam(parameters, "sig", sig);
     }
 

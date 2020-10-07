@@ -19,6 +19,7 @@ package com.vonage.client;
 import com.vonage.client.account.AccountClient;
 import com.vonage.client.application.ApplicationClient;
 import com.vonage.client.auth.*;
+import com.vonage.client.auth.hashutils.HashUtil;
 import com.vonage.client.conversion.ConversionClient;
 import com.vonage.client.insight.InsightClient;
 import com.vonage.client.numbers.NumbersClient;
@@ -144,6 +145,7 @@ public class VonageClient {
         private String apiSecret;
         private String signatureSecret;
         private byte[] privateKeyContents;
+        private HashUtil.HashType hashType = HashUtil.HashType.MD5;
 
         /**
          * @param httpConfig Configuration options for the {@link HttpWrapper}
@@ -215,6 +217,17 @@ public class VonageClient {
         }
 
         /**
+         *
+         * @param hashType The hashing strategy for signature keys.
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder hashType(HashUtil.HashType hashType) {
+            this.hashType = hashType;
+            return this;
+        }
+
+        /**
          * When setting the contents of your private key, it is also expected that {@link #applicationId(String)} will
          * also be set.
          *
@@ -282,12 +295,18 @@ public class VonageClient {
                     this.apiKey,
                     this.apiSecret,
                     this.signatureSecret,
-                    this.privateKeyContents
+                    this.privateKeyContents,
+                    this.hashType
             );
             return new VonageClient(this);
         }
 
-        private AuthCollection generateAuthCollection(String applicationId, String key, String secret, String signature, byte[] privateKeyContents) {
+        private AuthCollection generateAuthCollection(String applicationId,
+                                                      String key,
+                                                      String secret,
+                                                      String signature,
+                                                      byte[] privateKeyContents,
+                                                      HashUtil.HashType hashType) {
             AuthCollection authMethods = new AuthCollection();
 
             try {
@@ -301,7 +320,7 @@ public class VonageClient {
             }
 
             if (key != null && signature != null) {
-                authMethods.add(new SignatureAuthMethod(key, signature));
+                authMethods.add(new SignatureAuthMethod(key, signature, hashType));
             }
 
             if (applicationId != null && privateKeyContents != null) {
