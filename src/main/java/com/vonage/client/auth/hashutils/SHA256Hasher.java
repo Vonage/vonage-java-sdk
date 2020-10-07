@@ -3,26 +3,11 @@ package com.vonage.client.auth.hashutils;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 
 /**
  * Contains utility methods that use SHA-256 hashing. The class uses STANDARD JVM SHA-256 algorithm.
  */
-class SHA256Util extends Hasher {
-
-    /**
-     * Calculates SHA-256 hash for string. assume string is UTF-8 encoded.
-     * @param input string which is going to be encoded into SHA-256 format
-     * @return  SHA-256 representation of the input string
-     * @throws NoSuchAlgorithmException if the SHA-256 algorithm is not available.
-     */
-    @Override public String calculate(String input) throws NoSuchAlgorithmException {
-        try {
-            return calculate(input, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            return null; // -- impossible --
-        }
-    }
+class SHA256Hasher extends AbstractHasher {
 
     /**
      * Calculates SHA-256 hash for string.
@@ -36,14 +21,6 @@ class SHA256Util extends Hasher {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         md.update(input.getBytes(encoding));
 
-        final StringBuilder hexString = new StringBuilder();
-        for (byte element : md.digest()) {
-            int z = 0xFF & element;
-            if (z < 16)
-                hexString.append("0");
-            hexString.append(Integer.toHexString(z));
-        }
-
-        return hexString.toString();
+        return this.buildHexString(md.digest());
     }
 }

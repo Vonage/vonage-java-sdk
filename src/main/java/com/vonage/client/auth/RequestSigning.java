@@ -128,14 +128,11 @@ public class RequestSigning {
             sb.append("&").append(clean(name)).append("=").append(clean(value));
         }
 
-        // Now, append the secret key, and calculate an MD5 signature of the resultant string
-        sb.append(secretKey);
-
         String str = sb.toString();
 
         String hashed = "no signature";
         try {
-            hashed = HashUtil.getInstance().calculate(str, hashType);
+            hashed = HashUtil.getInstance().calculate(str, secretKey, "UTF-8", hashType);
         } catch (Exception e) {
             log.error("error...", e);
         }
@@ -243,14 +240,11 @@ public class RequestSigning {
             sb.append("&").append(clean(name)).append("=").append(clean(value));
         }
 
-        // append the secret key and calculate an md5 signature of the resultant string
-        sb.append(secretKey);
-
         String str = sb.toString();
 
         String hashed;
         try {
-            hashed = HashUtil.getInstance().calculate(str, hashType);
+            hashed = HashUtil.getInstance().calculate(str, secretKey, "UTF-8", hashType);
         } catch (Exception e) {
             log.error("error...", e);
             return false;

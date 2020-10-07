@@ -224,6 +224,31 @@ public class VonageClientTest {
     }
 
     @Test
+    public void testApiKeyWithSignatureSecretAsHmacSHA256() throws VonageUnacceptableAuthException, NoSuchAlgorithmException {
+        VonageClient vonageClient = VonageClient.builder().hashType(HashUtil.HashType.HMAC_SHA256).apiKey("api-key").signatureSecret("api-secret").build();
+        AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
+
+        RequestBuilder requestBuilder = RequestBuilder.get();
+        authCollection.getAuth(SignatureAuthMethod.class).apply(requestBuilder);
+
+        List<NameValuePair> parameters = requestBuilder.getParameters();
+
+        // This is messy but trying to generate a signature auth method and then comparing with what's on the request
+        // could have a race condition depending on the returned timestamp.
+
+        // So, we're going to generate the signature after trying to determine what the timestamp is.
+        String timestamp = parameters
+                .stream()
+                .filter(pair -> "timestamp".equals(pair.getName()))
+                .findFirst()
+                .orElse(new BasicNameValuePair("", ""))
+                .getValue();
+
+        String sig = HashUtil.getInstance().calculate("&api_key=api-key&timestamp=" + timestamp + "api-secret", HashUtil.HashType.HMAC_SHA256);
+        assertContainsParam(parameters, "sig", sig);
+    }
+
+    @Test
     public void testApplicationIdWithCertContentsAsBytes() throws Exception {
         TestUtils testUtils = new TestUtils();
         byte[] keyBytes = testUtils.loadKey("test/keys/application_key");

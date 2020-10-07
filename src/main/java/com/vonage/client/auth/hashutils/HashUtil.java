@@ -1,6 +1,7 @@
 package com.vonage.client.auth.hashutils;
 
 import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,12 +12,13 @@ import java.util.Map;
 public class HashUtil {
 
     private static final HashUtil instance = new HashUtil();
-    private Map<HashType, Hasher> hashTypes;
+    private Map<HashType, AbstractHasher> hashTypes;
 
     private HashUtil() {
         hashTypes = new HashMap<>();
-        hashTypes.put(HashType.MD5, new MD5Util());
-        hashTypes.put(HashType.SHA256, new SHA256Util());
+        hashTypes.put(HashType.MD5, new MD5Hasher());
+        hashTypes.put(HashType.SHA256, new SHA256Hasher());
+        hashTypes.put(HashType.HMAC_SHA256, new HmacSha256Hasher());
     }
 
     public static HashUtil getInstance() {
@@ -37,18 +39,20 @@ public class HashUtil {
     /**
      * Calculates hash for string.
      * @param input string which is going to be encoded into requested format
+     * @param secretKey the key to be used for encoding
      * @param encoding character encoding of the string which is going to be encoded into requested format
      * @param hashType The type of hash to be applied to the input string
      * @return representation of the input string with given hash type
      * @throws NoSuchAlgorithmException if the algorithm is not available.
      * @throws UnsupportedEncodingException if the specified encoding is unavailable.
      */
-    public String calculate(String input, String encoding, HashType hashType) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        return hashTypes.get(hashType).calculate(input, encoding);
+    public String calculate(String input, String secretKey, String encoding, HashType hashType) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
+        return hashTypes.get(hashType).calculate(input, secretKey, encoding);
     }
 
     public enum HashType {
         MD5,
-        SHA256
+        SHA256,
+        HMAC_SHA256
     }
 }

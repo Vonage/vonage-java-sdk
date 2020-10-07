@@ -25,21 +25,7 @@ import java.security.NoSuchAlgorithmException;
  *
  * @author Paul Cook
  */
-class MD5Util extends Hasher {
-
-    /**
-     * Calculates MD5 hash for string. assume string is UTF-8 encoded
-     * @param input string which is going to be encoded into MD5 format
-     * @return  MD5 representation of the input string
-     * @throws NoSuchAlgorithmException if the MD5 algorithm is not available.
-     */
-    @Override public String calculate(String input) throws NoSuchAlgorithmException {
-        try {
-            return calculate(input, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            return null; // -- impossible --
-        }
-    }
+class MD5Hasher extends AbstractHasher {
 
     /**
      * Calculates MD5 hash for string.
@@ -54,15 +40,7 @@ class MD5Util extends Hasher {
         md.update(input.getBytes(encoding));
         byte digest[] = md.digest();
 
-        final StringBuilder hexString = new StringBuilder();
-        for (byte element : digest) {
-            int z = 0xFF & element;
-            if (z < 16)
-                hexString.append("0");
-            hexString.append(Integer.toHexString(z));
-        }
-
-        return hexString.toString();
+        return this.buildHexString(digest);
     }
 
 }
