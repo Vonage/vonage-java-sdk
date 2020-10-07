@@ -117,7 +117,7 @@ public class RequestSigningTest {
     }
 
     @Test
-    public void testVerifyRequestSignatureWithHmanSha256Hash() {
+    public void testVerifyRequestSignatureWithHmacSha256Hash() {
         Map<String, String[]> params = constructDummyParams();
         params.put("sig", new String[]{"8d1b0428276b6a070578225914c3502cc0687a454dfbbbb370c76a14234cb546"});
 
