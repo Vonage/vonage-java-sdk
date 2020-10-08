@@ -19,7 +19,7 @@ package com.vonage.client.sns.response;
 /**
  * Represents the result of a publish service request to the Vonage SNS Service.
  *
- * @author Paul Cook
+ *
  */
 public class SnsSubscribeResponse extends SnsResponse {
     private final String subscriberArn;
