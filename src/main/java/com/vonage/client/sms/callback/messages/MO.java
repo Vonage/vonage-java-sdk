@@ -23,7 +23,7 @@ import java.util.Date;
 /**
  * This represents an incoming MO callback request
  *
- * @author  Paul Cook
+ *
  */
 public class MO implements java.io.Serializable {
 
