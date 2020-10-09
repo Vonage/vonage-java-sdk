@@ -19,3 +19,5 @@ documentation, or tests are eligible to be added to this list.
 - Abhinav Agarwal ([@imabhinavagarwal](https://github.com/imabhinavagarwal))
 - Yvonne Allen ([@yallen011](https://github.com/yallen011))
 - Timothee Laurent ([@TimotheeL](https://github.com/TimotheeL))
+- Keenal Shah ([@Keenal])(https://github.com/Keenal))
+- Seban V. Mathew ([@dolphincodes])(https://github.com/dolphincodes))
