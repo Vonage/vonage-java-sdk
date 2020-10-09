@@ -19,7 +19,7 @@ package com.vonage.client.verify;
 /**
  * An abstract base class for verification results.
  *
- * @author Daniele Ricci
+ *
  */
 public abstract class BaseResult {
     /**
