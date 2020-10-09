@@ -28,7 +28,7 @@ public class PrefixPricingMethodTest {
 
     @Before
     public void setUp() {
-        this.method = new PrefixPricingMethod(new HttpWrapper());
+        method = new PrefixPricingMethod(new HttpWrapper());
     }
 
     @Test
