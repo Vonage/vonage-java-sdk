@@ -37,16 +37,16 @@ public class AccountClient extends AbstractClient {
     public AccountClient(HttpWrapper httpWrapper) {
         super(httpWrapper);
 
-        this.balance = new BalanceEndpoint(httpWrapper);
-        this.pricing = new PricingEndpoint(httpWrapper);
-        this.prefixPricing = new PrefixPricingEndpoint(httpWrapper);
-        this.topUp = new TopUpEndpoint(httpWrapper);
-        this.secret = new SecretManagementEndpoint(httpWrapper);
-        this.settings = new SettingsEndpoint(httpWrapper);
+        balance = new BalanceEndpoint(httpWrapper);
+        pricing = new PricingEndpoint(httpWrapper);
+        prefixPricing = new PrefixPricingEndpoint(httpWrapper);
+        topUp = new TopUpEndpoint(httpWrapper);
+        secret = new SecretManagementEndpoint(httpWrapper);
+        settings = new SettingsEndpoint(httpWrapper);
     }
 
     public BalanceResponse getBalance() throws VonageResponseParseException, VonageClientException {
-        return this.balance.execute();
+        return balance.execute();
     }
 
     /**
@@ -64,7 +64,7 @@ public class AccountClient extends AbstractClient {
     }
 
     private PricingResponse getVoicePrice(PricingRequest pricingRequest) throws VonageResponseParseException, VonageClientException {
-        return this.pricing.getPrice(ServiceType.VOICE, pricingRequest);
+        return pricing.getPrice(ServiceType.VOICE, pricingRequest);
     }
 
     /**
@@ -82,7 +82,7 @@ public class AccountClient extends AbstractClient {
     }
 
     private PricingResponse getSmsPrice(PricingRequest pricingRequest) throws VonageResponseParseException, VonageClientException {
-        return this.pricing.getPrice(ServiceType.SMS, pricingRequest);
+        return pricing.getPrice(ServiceType.SMS, pricingRequest);
     }
 
     /**
@@ -101,7 +101,7 @@ public class AccountClient extends AbstractClient {
     }
 
     private PrefixPricingResponse getPrefixPrice(PrefixPricingRequest prefixPricingRequest) throws VonageResponseParseException, VonageClientException {
-        return this.prefixPricing.getPrice(prefixPricingRequest);
+        return prefixPricing.getPrice(prefixPricingRequest);
     }
 
     /**
@@ -119,7 +119,7 @@ public class AccountClient extends AbstractClient {
     }
 
     private void topUp(TopUpRequest request) throws VonageResponseParseException, VonageClientException {
-        this.topUp.topUp(request);
+        topUp.topUp(request);
     }
 
     /**
@@ -134,7 +134,7 @@ public class AccountClient extends AbstractClient {
      *                                     that the request was unsuccessful.
      */
     public ListSecretsResponse listSecrets(String apiKey) throws VonageResponseParseException, VonageClientException {
-        return this.secret.listSecrets(apiKey);
+        return secret.listSecrets(apiKey);
     }
 
     /**
@@ -154,7 +154,7 @@ public class AccountClient extends AbstractClient {
     }
 
     private SecretResponse getSecret(SecretRequest secretRequest) throws VonageResponseParseException, VonageClientException {
-        return this.secret.getSecret(secretRequest);
+        return secret.getSecret(secretRequest);
     }
 
     /**
@@ -174,7 +174,7 @@ public class AccountClient extends AbstractClient {
     }
 
     private SecretResponse createSecret(CreateSecretRequest createSecretRequest) throws VonageResponseParseException, VonageClientException {
-        return this.secret.createSecret(createSecretRequest);
+        return secret.createSecret(createSecretRequest);
     }
 
     /**
@@ -192,7 +192,7 @@ public class AccountClient extends AbstractClient {
     }
 
     private void revokeSecret(SecretRequest secretRequest) throws VonageResponseParseException, VonageClientException {
-        this.secret.revokeSecret(secretRequest);
+        secret.revokeSecret(secretRequest);
     }
 
     /**
@@ -205,7 +205,7 @@ public class AccountClient extends AbstractClient {
      *                                     that the request was unsuccessful.
      */
     public SettingsResponse updateSmsIncomingUrl(String url) throws VonageResponseParseException, VonageClientException {
-        return this.updateSettings(SettingsRequest.withIncomingSmsUrl(url));
+        return updateSettings(SettingsRequest.withIncomingSmsUrl(url));
     }
 
     /**
@@ -218,7 +218,7 @@ public class AccountClient extends AbstractClient {
      *                                     that the request was unsuccessful.
      */
     public SettingsResponse updateDeliveryReceiptUrl(String url) throws VonageResponseParseException, VonageClientException {
-        return this.updateSettings(SettingsRequest.withDeliveryReceiptUrl(url));
+        return updateSettings(SettingsRequest.withDeliveryReceiptUrl(url));
     }
 
     /**
@@ -231,6 +231,6 @@ public class AccountClient extends AbstractClient {
      *                                     that the request was unsuccessful.
      */
     public SettingsResponse updateSettings(SettingsRequest request) throws VonageResponseParseException, VonageClientException {
-        return this.settings.updateSettings(request);
+        return settings.updateSettings(request);
     }
 }
