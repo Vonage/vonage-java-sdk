@@ -27,3 +27,4 @@ documentation, or tests are eligible to be added to this list.
 - Thanoshan MV ([@ThanoshanMV](https://github.com/ThanoshanMV))
 - Andrew Lu ([@dinitrogen-tetroxide](https://github.com/dinitrogen-tetroxide))
 - Abhinav Agarwal ([@imabhinavagarwal](https://github.com/imabhinavagarwal))
+- Aryan Rawlani ([@aryanrawlani28](https://github.com/aryanrawlani28))
