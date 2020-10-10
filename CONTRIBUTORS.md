@@ -21,3 +21,6 @@ documentation, or tests are eligible to be added to this list.
 - Nik Gil ([@sirNikolai](https://github.com/sirNikolai))
 - Keenal Shah ([@Keenal](https://github.com/Keenal))
 - Seban V. Mathew ([@dolphincodes](https://github.com/dolphincodes))
+- Soham Malakar ([@malakar_soham](https://github.com/malakar-soham/))
+- Thanoshan MV ([@ThanoshanMV](https://github.com/ThanoshanMV))
+- Andrew Lu ([@dinitrogen-tetroxide](https://github.com/dinitrogen-tetroxide))

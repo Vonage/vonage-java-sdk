@@ -58,7 +58,7 @@ public class BinaryMessage extends Message {
      * so you should ensure that it is a correctly constructed message
      */
     public byte[] getMessageBody() {
-        return this.messageBody == null ? null : this.messageBody.clone();
+        return messageBody == null ? null : messageBody.clone();
     }
 
     /**
@@ -69,14 +69,14 @@ public class BinaryMessage extends Message {
      * UserDataHeader field that describes the segmentation/re-assembly fields required to successfully concatenate multiple short messages.
      */
     public byte[] getUdh() {
-        return this.udh == null ? null : this.udh.clone();
+        return udh == null ? null : udh.clone();
     }
 
     /**
      * @return Integer The value of the GSM Protocol ID field to be submitted with this message. Ordinarily this should be left as the default value of 0
      */
     public int getProtocolId() {
-        return this.protocolId;
+        return protocolId;
     }
 
     public void setProtocolId(int protocolId) {
