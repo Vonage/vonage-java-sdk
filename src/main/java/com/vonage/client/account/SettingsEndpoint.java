@@ -21,10 +21,10 @@ class SettingsEndpoint {
     private SettingsMethod method;
 
     SettingsEndpoint(HttpWrapper wrapper) {
-        this.method = new SettingsMethod(wrapper);
+        method = new SettingsMethod(wrapper);
     }
 
     SettingsResponse updateSettings(SettingsRequest request) {
-        return this.method.execute(request);
+        return method.execute(request);
     }
 }
