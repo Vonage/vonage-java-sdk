@@ -22,4 +22,5 @@ documentation, or tests are eligible to be added to this list.
 - Keenal Shah ([@Keenal])(https://github.com/Keenal))
 - Seban V. Mathew ([@dolphincodes])(https://github.com/dolphincodes))
 - Andrew Lu ([@dinitrogen-tetroxide](https://github.com/dinitrogen-tetroxide))
+- Thanoshan MV ([@ThanoshanMV](https://github.com/ThanoshanMV))
 - Neeraj ([@code0987](https://github.com/code0987))
