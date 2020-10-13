@@ -38,10 +38,10 @@ public class Application {
     }
 
     private Application(Builder builder) {
-        this.id = builder.id;
-        this.name = builder.name;
-        this.keys = builder.keys;
-        this.capabilities = builder.capabilities;
+        id = builder.id;
+        name = builder.name;
+        keys = builder.keys;
+        capabilities = builder.capabilities;
     }
 
     public String getId() {
@@ -105,10 +105,10 @@ public class Application {
         }
 
         public Builder(Application application) {
-            this.id = application.id;
-            this.name = application.name;
-            this.keys = application.keys;
-            this.capabilities = application.capabilities;
+            id = application.id;
+            name = application.name;
+            keys = application.keys;
+            capabilities = application.capabilities;
         }
 
         /**
@@ -127,8 +127,8 @@ public class Application {
          * @return The {@link Builder} to keep building.
          */
         public Builder publicKey(String publicKey) {
-            this.keys = new Keys();
-            this.keys.publicKey = publicKey;
+            keys = new Keys();
+            keys.publicKey = publicKey;
             return this;
         }
 
@@ -141,11 +141,11 @@ public class Application {
          * @return The {@link Builder} to keep building.
          */
         public Builder addCapability(Capability capability) {
-            if (this.capabilities == null) {
-                this.capabilities = new Capabilities();
+            if (capabilities == null) {
+                capabilities = new Capabilities();
             }
 
-            this.capabilities.setCapability(capability);
+            capabilities.setCapability(capability);
 
             return this;
         }
@@ -158,12 +158,12 @@ public class Application {
          * @return The {@link Builder} to keep building.
          */
         public Builder removeCapability(Capability.Type type) {
-            if (this.capabilities == null) {
-                this.capabilities = new Capabilities();
+            if (capabilities == null) {
+                capabilities = new Capabilities();
             }
 
-            this.capabilities.setCapability(type, null);
-            this.capabilities = shouldBeDeleted(this.capabilities) ? null : this.capabilities;
+            capabilities.setCapability(type, null);
+            capabilities = shouldBeDeleted(capabilities) ? null : capabilities;
             return this;
         }
 
@@ -226,16 +226,16 @@ public class Application {
         private void setCapability(Capability.Type type, Capability capability) {
             switch (type) {
                 case VOICE:
-                    this.voice = (Voice) capability;
+                    voice = (Voice) capability;
                     break;
                 case MESSAGES:
-                    this.messages = (Messages) capability;
+                    messages = (Messages) capability;
                     break;
                 case RTC:
-                    this.rtc = (Rtc) capability;
+                    rtc = (Rtc) capability;
                     break;
                 case VBC:
-                    this.vbc = (Vbc) capability;
+                    vbc = (Vbc) capability;
                     break;
             }
         }

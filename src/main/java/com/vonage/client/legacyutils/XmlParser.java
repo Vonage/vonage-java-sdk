@@ -47,17 +47,17 @@ public class XmlParser {
     public Document parseXml(String xml) throws VonageResponseParseException {
         // TODO: Maybe an Error subclass for XML initialization errors, as these are serious and unexpected.
         Document doc;
-        this.documentBuilderLock.lock();
+        documentBuilderLock.lock();
         try {
-            if (this.documentBuilder == null) {
+            if (documentBuilder == null) {
                 DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-                this.documentBuilder = documentBuilderFactory.newDocumentBuilder();
+                documentBuilder = documentBuilderFactory.newDocumentBuilder();
             }
-            doc = XmlUtil.parseXmlString(this.documentBuilder, xml);
+            doc = XmlUtil.parseXmlString(documentBuilder, xml);
         } catch (ParserConfigurationException e) {
             throw new VonageResponseParseException("Exception initialing XML parser", e);
         } finally {
-            this.documentBuilderLock.unlock();
+            documentBuilderLock.unlock();
         }
         return doc;
     }
