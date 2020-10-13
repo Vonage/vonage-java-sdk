@@ -17,6 +17,8 @@ documentation, or tests are eligible to be added to this list.
 - John Schultz ([@jwschultz](https://github.com/jwschultz))
 - Steve Lorello ([@sloello89](https://github.com/slorello89))
 - Yvonne Allen ([@yallen011](https://github.com/yallen011))
+- Timothee Laurent ([@TimotheeL])(https://github.com/TimotheeL)
+- Swastik Malakar ([@malakar-swastik](https://github.com/malakar-swastik))
 - Timothee Laurent ([@TimotheeL])(https://github.com/TimotheeL))
 - Wesley Brenno ([@WesleyBrenno])(https://github.com/WesleyBrenno))
 - Soham Malakar ([@malakar_soham](https://github.com/malakar-soham/))
