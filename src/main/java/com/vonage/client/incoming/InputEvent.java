@@ -23,34 +23,66 @@ import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 import java.util.Date;
 
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InputEvent {
     private String uuid;
     private String conversationUuid;
-    private boolean timedOut;
-    private String dtmf;
+    private DtmfResult dtmf;
     private Date timestamp;
+    private String to;
+    private String from;
+    private SpeechResults speech;
 
+    /**
+     * @return The unique identifier for this call
+     */
     public String getUuid() {
         return uuid;
     }
 
+    /**
+     * @return The unique identifier for this conversation
+     */
     @JsonProperty("conversation_uuid")
     public String getConversationUuid() {
         return conversationUuid;
     }
 
-    @JsonProperty("timed_out")
-    public boolean isTimedOut() {
-        return timedOut;
-    }
-
-    public String getDtmf() {
+    /**
+     * @return DTMF capturing retults.
+     */
+    public DtmfResult getDtmf() {
         return dtmf;
     }
 
+    /**
+     * @return Timestamp (ISO 8601 format)
+     */
     public Date getTimestamp() {
         return timestamp;
+    }
+
+    /**
+     * @return The number the call was made to
+     */
+    public String getTo(){
+        return to;
+    }
+
+    /**
+     * @return The number the call came from
+     */
+    public String getFrom(){
+        return from;
+    }
+
+    /**
+     * @return Speech recognition results
+     * @since 6.0.0
+     */
+    public SpeechResults getSpeech() {
+        return speech;
     }
 
     public static InputEvent fromJson(String json) {

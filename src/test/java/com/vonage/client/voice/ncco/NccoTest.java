@@ -24,6 +24,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -74,11 +75,16 @@ public class NccoTest {
     @Test
     public void testSerializeMultipleActions() {
         TalkAction talk = TalkAction.builder("Test message").voiceName(VoiceName.JOEY).build();
-        InputAction input = InputAction.builder().maxDigits(5).build();
+        DtmfSettings dtmfSettings = new DtmfSettings();
+        dtmfSettings.setMaxDigits(5);
+        InputAction input = InputAction.builder().dtmf(dtmfSettings).type(Collections.singletonList("dtmf")).build();
         RecordAction record = RecordAction.builder().beepStart(true).build();
         ConnectAction connect = ConnectAction.builder(PhoneEndpoint.builder("15554441234").build()).build();
 
-        String expectedJson = "[{\"text\":\"Test message\",\"voiceName\":\"Joey\",\"action\":\"talk\"},{\"maxDigits\":5,\"action\":\"input\"},{\"beepStart\":true,\"action\":\"record\"},{\"endpoint\":[{\"number\":\"15554441234\",\"type\":\"phone\"}],\"action\":\"connect\"}]";
+        String expectedJson = "[{\"text\":\"Test message\",\"voiceName\":\"Joey\",\"action\":\"talk\"}," +
+                "{\"type\":[\"dtmf\"],\"dtmf\":{\"maxDigits\":5},\"action\":\"input\"}," +
+                "{\"beepStart\":true,\"action\":\"record\"}," +
+                "{\"endpoint\":[{\"number\":\"15554441234\",\"type\":\"phone\"}],\"action\":\"connect\"}]";
         assertEquals(expectedJson, new Ncco(talk, input, record, connect).toJson());
 
         Ncco ncco = new Ncco(talk, input, record, connect);

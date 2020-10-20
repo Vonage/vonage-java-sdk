@@ -17,6 +17,10 @@ package com.vonage.client.voice.ncco;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 
@@ -29,15 +33,47 @@ public class InputActionTest {
 
     @Test
     public void testAllFields() {
+        SpeechSettings speechSettings = new SpeechSettings();
+        speechSettings.setUuid(Collections.singletonList("aaaaaaaa-bbbb-cccc-dddd-0123456789ab"));
+        speechSettings.setStartTimeout(3);
+        speechSettings.setEndOnSilence(5);
+        speechSettings.setLanguage(SpeechSettings.Language.ENGLISH_NIGERIA);
+        speechSettings.setMaxDuration(50);
+        speechSettings.setContext(Arrays.asList("support", "buy", "credit"));
+
+        DtmfSettings dtmfSettings = new DtmfSettings();
+        dtmfSettings.setMaxDigits(4);
+        dtmfSettings.setSubmitOnHash(true);
+        dtmfSettings.setTimeOut(10);
+
         InputAction input = InputAction.builder()
-                .timeOut(10)
-                .maxDigits(4)
-                .submitOnHash(true)
+                .type(Arrays.asList("speech", "dtmf"))
+                .dtmf(dtmfSettings)
                 .eventUrl("http://example.com")
                 .eventMethod(EventMethod.POST)
+                .speech(speechSettings)
                 .build();
 
-        String expectedJson = "[{\"timeOut\":10,\"maxDigits\":4,\"submitOnHash\":true,\"eventUrl\":[\"http://example.com\"],\"eventMethod\":\"POST\",\"action\":\"input\"}]";
+        String expectedJson = "[" +
+                "{\"type\":[\"speech\",\"dtmf\"]," +
+                "\"dtmf\":{" +
+                "\"timeOut\":10," +
+                "\"maxDigits\":4," +
+                "\"submitOnHash\":true" +
+                "}," +
+                "\"eventUrl\":[\"http://example.com\"]," +
+                "\"speech\":{" +
+                "\"uuid\":[\"aaaaaaaa-bbbb-cccc-dddd-0123456789ab\"]," +
+                "\"endOnSilence\":5," +
+                "\"language\":\"en-NG\"," +
+                "\"context\":[\"support\",\"buy\",\"credit\"]," +
+                "\"startTimeout\":3," +
+                "\"maxDuration\":50" +
+                "}," +
+                "\"eventMethod\":\"POST\"," +
+                "\"action\":\"input\"" +
+                "}]";
+        System.out.println(expectedJson);
         assertEquals(expectedJson, new Ncco(input).toJson());
     }
 
@@ -56,26 +92,23 @@ public class InputActionTest {
     }
 
     @Test
-    public void testTimeOutField() {
-        InputAction input = InputAction.builder().timeOut(5).build();
+    public void testDtmfOnly() {
+        DtmfSettings dtmfSettings = new DtmfSettings();
+        dtmfSettings.setMaxDigits(4);
 
-        String expectedJson = "[{\"timeOut\":5,\"action\":\"input\"}]";
+        InputAction input = InputAction.builder().type(Collections.singletonList("dtmf")).dtmf(dtmfSettings).build();
+        String expectedJson = "[{\"type\":[\"dtmf\"],\"dtmf\":{\"maxDigits\":4},\"action\":\"input\"}]";
         assertEquals(expectedJson, new Ncco(input).toJson());
     }
 
     @Test
-    public void testMaxDigitsField() {
-        InputAction input = InputAction.builder().maxDigits(4).build();
+    public void testSpeechOnly() {
+        SpeechSettings speechSettings = new SpeechSettings();
+        speechSettings.setStartTimeout(3);
+        speechSettings.setLanguage(SpeechSettings.Language.ENGLISH_NIGERIA);
 
-        String expectedJson = "[{\"maxDigits\":4,\"action\":\"input\"}]";
-        assertEquals(expectedJson, new Ncco(input).toJson());
-    }
-
-    @Test
-    public void testSubmitOnHashField() {
-        InputAction input = InputAction.builder().submitOnHash(true).build();
-
-        String expectedJson = "[{\"submitOnHash\":true,\"action\":\"input\"}]";
+        InputAction input = InputAction.builder().type(Collections.singletonList("speech")).speech(speechSettings).build();
+        String expectedJson = "[{\"type\":[\"speech\"],\"speech\":{\"language\":\"en-NG\",\"startTimeout\":3},\"action\":\"input\"}]";
         assertEquals(expectedJson, new Ncco(input).toJson());
     }
 

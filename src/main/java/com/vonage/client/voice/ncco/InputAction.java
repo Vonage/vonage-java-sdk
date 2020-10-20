@@ -17,34 +17,35 @@ package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Arrays;
 import java.util.Collection;
 
 /**
- * An NCCO input action which allows for the collection of digits from a person.
+ * An NCCO input action which allows for the collection of digits and automatic speech recognition from a person.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InputAction implements Action {
     private static final String ACTION = "input";
 
-    private Integer timeOut;
-    private Integer maxDigits;
-    private Boolean submitOnHash;
+    @JsonProperty(required = true)
+    private Collection<String> type;
+    private DtmfSettings dtmf;
     private Collection<String> eventUrl;
+    private SpeechSettings speech;
     private EventMethod eventMethod;
 
     /**
-     * @deprecated Use {@link Builder}
+     * @param builder  builder to create InputAction object
      */
-    @Deprecated
-    public InputAction(Builder builder) {
-        this.timeOut = builder.timeOut;
-        this.maxDigits = builder.maxDigits;
-        this.submitOnHash = builder.submitOnHash;
+    private InputAction(Builder builder) {
+        this.type = builder.type;
+        this.dtmf = builder.dtmf;
         this.eventUrl = builder.eventUrl;
         this.eventMethod = builder.eventMethod;
+        this.speech = builder.speech;
     }
 
     @Override
@@ -52,16 +53,12 @@ public class InputAction implements Action {
         return ACTION;
     }
 
-    public Integer getTimeOut() {
-        return timeOut;
+    public Collection<String> getType(){
+        return type;
     }
 
-    public Integer getMaxDigits() {
-        return maxDigits;
-    }
-
-    public Boolean getSubmitOnHash() {
-        return submitOnHash;
+    public DtmfSettings getDtmf() {
+        return dtmf;
     }
 
     public Collection<String> getEventUrl() {
@@ -72,48 +69,29 @@ public class InputAction implements Action {
         return eventMethod;
     }
 
+    public SpeechSettings getSpeech() {
+        return speech;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
 
+
     public static class Builder {
-        private Integer timeOut = null;
-        private Integer maxDigits = null;
-        private Boolean submitOnHash = null;
-        private Collection<String> eventUrl = null;
-        private EventMethod eventMethod = null;
+        private DtmfSettings dtmf;
+        private Collection<String> eventUrl;
+        private EventMethod eventMethod;
+        private SpeechSettings speech;
+        private Collection<String> type;
 
         /**
-         * @param timeOut The result of the callee's activity is sent to the eventUrl webhook endpoint timeOut seconds
-         *                after the last action. The default value is 3. Max is 10.
-         *
-         * @return The {@link Builder} to keep building.
+         * @param dtmf DTMF settings object to enable DTMF input.
+         * @return The {@link Builder} to keep building the input action.
+         * @since 6.0.0
          */
-        public Builder timeOut(Integer timeOut) {
-            this.timeOut = timeOut;
-            return this;
-        }
-
-        /**
-         * @param maxDigits The number of digits the user can press. The maximum value is 20, the default is 4 digits.
-         *
-         * @return The {@link Builder} to keep building.
-         */
-        public Builder maxDigits(Integer maxDigits) {
-            this.maxDigits = maxDigits;
-            return this;
-        }
-
-        /**
-         * @param submitOnHash Set to true so the callee's activity is sent to your webhook endpoint at eventUrl after
-         *                     he or she presses #. If # is not pressed the result is submitted after timeOut seconds.
-         *                     The default value is false. That is, the result is sent to your webhook endpoint after
-         *                     timeOut seconds.
-         *
-         * @return The {@link Builder} to keep building.
-         */
-        public Builder submitOnHash(Boolean submitOnHash) {
-            this.submitOnHash = submitOnHash;
+        public Builder dtmf(DtmfSettings dtmf) {
+            this.dtmf = dtmf;
             return this;
         }
 
@@ -121,7 +99,7 @@ public class InputAction implements Action {
          * @param eventUrl Vonage sends the digits pressed by the callee to this URL after timeOut pause in activity or
          *                 when # is pressed.
          *
-         * @return The {@link Builder} to keep building.
+         * @return The {@link Builder} to keep building the input action.
          */
         public Builder eventUrl(Collection<String> eventUrl) {
             this.eventUrl = eventUrl;
@@ -132,7 +110,7 @@ public class InputAction implements Action {
          * @param eventUrl Vonage sends the digits pressed by the callee to this URL after timeOut pause in activity or
          *                 when # is pressed.
          *
-         * @return The {@link Builder} to keep building.
+         * @return The {@link Builder} to keep building the input action.
          */
         public Builder eventUrl(String... eventUrl) {
             return eventUrl(Arrays.asList(eventUrl));
@@ -141,10 +119,30 @@ public class InputAction implements Action {
         /**
          * @param eventMethod The HTTP method used to send event information to event_url The default value is POST.
          *
-         * @return The {@link Builder} to keep building.
+         * @return The {@link Builder} to keep building the input action.
          */
         public Builder eventMethod(EventMethod eventMethod) {
             this.eventMethod = eventMethod;
+            return this;
+        }
+
+        /**
+         * @param speech Automatic speech recognition settings object to enable speech input. Required if dtmf is not provided.
+         * @return The {@link Builder} to keep building the input action.
+         * @since 6.0.0
+         */
+        public Builder speech(SpeechSettings speech){
+            this.speech = speech;
+            return this;
+        }
+
+        /**
+         * @param type Acceptable input type, can be set as [ "dtmf" ] for DTMF input only, [ "speech" ] for ASR only,
+         *            or [ "dtmf", "speech" ] for both.
+         * @return The {@link Builder} to keep building the input action.
+         */
+        public Builder type(Collection<String> type){
+            this.type = type;
             return this;
         }
 
