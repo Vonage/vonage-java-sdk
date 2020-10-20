@@ -24,13 +24,13 @@ class PricingEndpoint {
     private Map<ServiceType, PricingMethod> methods = new HashMap<>();
 
     PricingEndpoint(HttpWrapper httpWrapper) {
-        this.methods.put(ServiceType.SMS, new SmsPricingMethod(httpWrapper));
-        this.methods.put(ServiceType.VOICE, new VoicePricingMethod(httpWrapper));
+        methods.put(ServiceType.SMS, new SmsPricingMethod(httpWrapper));
+        methods.put(ServiceType.VOICE, new VoicePricingMethod(httpWrapper));
     }
 
     PricingResponse getPrice(ServiceType serviceType, PricingRequest request) {
-        if (this.methods.containsKey(serviceType)) {
-            return this.methods.get(serviceType).execute(request);
+        if (methods.containsKey(serviceType)) {
+            return methods.get(serviceType).execute(request);
         }
 
         throw new IllegalArgumentException("Unknown Service Type: " + serviceType);

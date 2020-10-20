@@ -31,7 +31,7 @@ public class Messages extends Capability {
     }
 
     private Messages(Builder builder) {
-        this.webhooks = builder.webhooks;
+        webhooks = builder.webhooks;
     }
 
     @Override
@@ -60,11 +60,11 @@ public class Messages extends Capability {
          * @return The {@link Builder} to keep building.
          */
         public Builder addWebhook(Webhook.Type type, Webhook webhook) {
-            if (this.webhooks == null) {
-                this.webhooks = new LinkedHashMap<>();
+            if (webhooks == null) {
+                webhooks = new LinkedHashMap<>();
             }
 
-            this.webhooks.put(type, webhook);
+            webhooks.put(type, webhook);
             return this;
         }
 
@@ -76,14 +76,14 @@ public class Messages extends Capability {
          * @return The {@link Builder} to keep building.
          */
         public Builder removeWebhook(Webhook.Type type) {
-            if (this.webhooks == null) {
-                this.webhooks = new LinkedHashMap<>();
+            if (webhooks == null) {
+                webhooks = new LinkedHashMap<>();
             }
 
-            this.webhooks.remove(type);
+            webhooks.remove(type);
 
-            if (this.webhooks.isEmpty()) {
-                this.webhooks = null;
+            if (webhooks.isEmpty()) {
+                webhooks = null;
             }
 
             return this;
