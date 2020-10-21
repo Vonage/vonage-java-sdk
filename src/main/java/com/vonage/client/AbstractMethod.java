@@ -94,7 +94,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
                 HttpEntityEnclosingRequestBase enclosingRequest = (HttpEntityEnclosingRequestBase) httpRequest;
                 LOG.debug(EntityUtils.toString(enclosingRequest.getEntity()));
             }
-            HttpResponse response = this.httpWrapper.getHttpClient().execute(httpRequest);
+            HttpResponse response = httpWrapper.getHttpClient().execute(httpRequest);
 
             LOG.debug("Response: " + LoggingUtils.logResponse(response));
 
@@ -139,15 +139,15 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      */
     protected AuthMethod getAuthMethod(Class[] acceptableAuthMethods) throws VonageClientException {
         if (acceptable == null) {
-            this.acceptable = new HashSet<>();
+            acceptable = new HashSet<>();
             Collections.addAll(acceptable, acceptableAuthMethods);
         }
 
-        return this.httpWrapper.getAuthCollection().getAcceptableAuthMethod(acceptable);
+        return httpWrapper.getAuthCollection().getAcceptableAuthMethod(acceptable);
     }
 
     public void setHttpClient(HttpClient client) {
-        this.httpWrapper.setHttpClient(client);
+        httpWrapper.setHttpClient(client);
     }
 
     protected abstract Class[] getAcceptableAuthMethods();
