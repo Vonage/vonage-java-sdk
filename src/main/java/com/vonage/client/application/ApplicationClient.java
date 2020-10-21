@@ -27,7 +27,7 @@ public class ApplicationClient extends AbstractClient {
 
     public ApplicationClient(HttpWrapper httpWrapper) {
         super(httpWrapper);
-        this.applicationEndpoint = new ApplicationEndpoint(httpWrapper);
+        applicationEndpoint = new ApplicationEndpoint(httpWrapper);
     }
 
     /**
@@ -41,7 +41,7 @@ public class ApplicationClient extends AbstractClient {
      * @throws VonageClientException        if there was a problem with the Vonage request.
      */
     public Application createApplication(Application application) throws VonageResponseParseException, VonageClientException {
-        return this.applicationEndpoint.create(application);
+        return applicationEndpoint.create(application);
     }
 
     /**
@@ -55,7 +55,7 @@ public class ApplicationClient extends AbstractClient {
      * @throws VonageClientException        if there was a problem with the Vonage request.
      */
     public Application updateApplication(Application application) throws VonageResponseParseException, VonageClientException {
-        return this.applicationEndpoint.update(application);
+        return applicationEndpoint.update(application);
     }
 
     /**
@@ -69,7 +69,7 @@ public class ApplicationClient extends AbstractClient {
      * @throws VonageClientException        if there was a problem with the Vonage request.
      */
     public Application getApplication(String id) throws VonageResponseParseException, VonageClientException {
-        return this.applicationEndpoint.get(id);
+        return applicationEndpoint.get(id);
     }
 
     /**
@@ -81,7 +81,7 @@ public class ApplicationClient extends AbstractClient {
      * @throws VonageClientException        if there was a problem with the Vonage request.
      */
     public void deleteApplication(String id) throws VonageResponseParseException, VonageClientException {
-        this.applicationEndpoint.delete(id);
+        applicationEndpoint.delete(id);
     }
 
     /**
@@ -107,6 +107,6 @@ public class ApplicationClient extends AbstractClient {
      * @throws VonageClientException        if there was a problem with the Vonage request.
      */
     public ApplicationList listApplications(ListApplicationRequest listApplicationRequest) throws VonageResponseParseException, VonageClientException {
-        return this.applicationEndpoint.list(listApplicationRequest);
+        return applicationEndpoint.list(listApplicationRequest);
     }
 }

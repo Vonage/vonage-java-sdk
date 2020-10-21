@@ -21,10 +21,10 @@ class TopUpEndpoint {
     private TopUpMethod topUpMethod;
 
     TopUpEndpoint(HttpWrapper httpWrapper) {
-        this.topUpMethod = new TopUpMethod(httpWrapper);
+        topUpMethod = new TopUpMethod(httpWrapper);
     }
 
     void topUp(TopUpRequest request) {
-        this.topUpMethod.execute(request);
+        topUpMethod.execute(request);
     }
 }

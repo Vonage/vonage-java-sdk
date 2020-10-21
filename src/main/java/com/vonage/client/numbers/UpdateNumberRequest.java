@@ -90,22 +90,22 @@ public class UpdateNumberRequest {
 
     public void addParams(RequestBuilder request) {
         request.addParameter("country", this.country).addParameter("msisdn", msisdn);
-        if (this.moHttpUrl != null) {
+        if (moHttpUrl != null) {
             request.addParameter("moHttpUrl", moHttpUrl);
         }
-        if (this.moSmppSysType != null) {
+        if (moSmppSysType != null) {
             request.addParameter("moSmppSysType", moSmppSysType);
         }
-        if (this.voiceCallbackType != null) {
+        if (voiceCallbackType != null) {
             request.addParameter("voiceCallbackType", voiceCallbackType.paramValue());
         }
-        if (this.voiceCallbackValue != null) {
+        if (voiceCallbackValue != null) {
             request.addParameter("voiceCallbackValue", voiceCallbackValue);
         }
-        if (this.voiceStatusCallback != null) {
+        if (voiceStatusCallback != null) {
             request.addParameter("voiceStatusCallback", voiceStatusCallback);
         }
-        if (this.messagesCallbackValue != null) {
+        if (messagesCallbackValue != null) {
             request.addParameter("messagesCallbackValue", messagesCallbackValue);
             request.addParameter("messagesCallbackType", CallbackType.APP.paramValue());
         }
@@ -115,7 +115,7 @@ public class UpdateNumberRequest {
         SIP, TEL, VXML, APP;
 
         public String paramValue() {
-            return this.name().toLowerCase();
+            return name().toLowerCase();
         }
     }
 }
