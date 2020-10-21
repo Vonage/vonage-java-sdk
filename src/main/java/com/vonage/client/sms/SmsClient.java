@@ -42,10 +42,10 @@ public class SmsClient {
      * Create a new SmsClient.
      */
     public SmsClient(HttpWrapper httpWrapper) {
-        this.message = new SendMessageEndpoint(httpWrapper);
-        this.search = new SmsSearchEndpoint(httpWrapper);
-        this.rejected = new SearchRejectedMessagesEndpoint(httpWrapper);
-        this.singleSearch = new SmsSingleSearchEndpoint(httpWrapper);
+        message = new SendMessageEndpoint(httpWrapper);
+        search = new SmsSearchEndpoint(httpWrapper);
+        rejected = new SearchRejectedMessagesEndpoint(httpWrapper);
+        singleSearch = new SmsSingleSearchEndpoint(httpWrapper);
     }
 
     /**
@@ -70,7 +70,7 @@ public class SmsClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public SmsSubmissionResponse submitMessage(Message message) throws VonageResponseParseException, VonageClientException {
-        return this.message.execute(message);
+        return message.execute(message);
     }
 
     /**
@@ -84,7 +84,7 @@ public class SmsClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public SearchSmsResponse searchMessages(SearchSmsRequest request) throws VonageResponseParseException, VonageClientException {
-        return this.search.execute(request);
+        return search.execute(request);
     }
 
     /**
@@ -102,7 +102,7 @@ public class SmsClient {
         List<String> idList = new ArrayList<>(ids.length + 1);
         idList.add(id);
         idList.addAll(Arrays.asList(ids));
-        return this.searchMessages(new SmsIdSearchRequest(idList));
+        return searchMessages(new SmsIdSearchRequest(idList));
     }
 
     /**
@@ -117,7 +117,7 @@ public class SmsClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public SearchSmsResponse searchMessages(Date date, String to) throws VonageResponseParseException, VonageClientException {
-        return this.searchMessages(new SmsDateSearchRequest(date, to));
+        return searchMessages(new SmsDateSearchRequest(date, to));
     }
 
     /**
@@ -131,7 +131,7 @@ public class SmsClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public SearchRejectedMessagesResponse searchRejectedMessages(SearchRejectedMessagesRequest request) throws VonageResponseParseException, VonageClientException {
-        return this.rejected.execute(request);
+        return rejected.execute(request);
     }
 
     /**
@@ -146,7 +146,7 @@ public class SmsClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public SearchRejectedMessagesResponse searchRejectedMessages(Date date, String to) throws VonageResponseParseException, VonageClientException {
-        return this.searchRejectedMessages(new SearchRejectedMessagesRequest(date, to));
+        return searchRejectedMessages(new SearchRejectedMessagesRequest(date, to));
     }
 
     /**
@@ -160,6 +160,6 @@ public class SmsClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public SmsSingleSearchResponse getSms(String id) throws VonageResponseParseException, VonageClientException {
-        return this.singleSearch.execute(id);
+        return singleSearch.execute(id);
     }
 }
