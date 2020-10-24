@@ -37,6 +37,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.ByteArrayInputStream;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.security.KeyFactory;
@@ -214,7 +215,7 @@ public class VonageClientTest {
     public void testApplicationIdWithCertPath() throws Exception {
         VonageClient vonageClient = VonageClient.builder()
                 .applicationId("app-id")
-                .privateKeyPath(Paths.get(this.getClass().getResource("test/keys/application_key").getPath()))
+                .privateKeyPath(Paths.get(this.getClass().getResource("test/keys/application_key").toURI()))
                 .build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
 
@@ -227,9 +228,9 @@ public class VonageClientTest {
 
     @Test
     public void testApplicationIdWithCertPathAsString() throws Exception {
-        VonageClient vonageClient = VonageClient.builder()
+      VonageClient vonageClient = VonageClient.builder()
                 .applicationId("app-id")
-                .privateKeyPath(this.getClass().getResource("test/keys/application_key").getPath())
+                .privateKeyPath(Paths.get(this.getClass().getResource("test/keys/application_key").toURI()).toString())
                 .build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
 
