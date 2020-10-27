@@ -11,19 +11,10 @@ import java.util.Map;
  */
 public class HashUtil {
 
-    private static final HashUtil instance = new HashUtil();
-    private Map<HashType, AbstractHasher> hashTypes;
-
-    private HashUtil() {
-        hashTypes = new HashMap<>();
-        hashTypes.put(HashType.MD5, new MD5Hasher());
-        hashTypes.put(HashType.SHA256, new SHA256Hasher());
-        hashTypes.put(HashType.HMAC_SHA256, new HmacSha256Hasher());
-    }
-
-    public static HashUtil getInstance() {
-        return instance;
-    }
+    private static Map<HashType, AbstractHasher> hashTypes = new HashMap<HashType, AbstractHasher>() {{
+        put(HashType.MD5, new MD5Hasher());
+        put(HashType.HMAC_SHA256, new HmacSha256Hasher());
+    }};
 
     /**
      * Calculates hash for string. assume string is UTF-8 encoded.
@@ -32,7 +23,7 @@ public class HashUtil {
      * @return representation of the input string with given hash type
      * @throws NoSuchAlgorithmException if the algorithm is not available.
      */
-    public String calculate(String input, HashType hashType) throws NoSuchAlgorithmException {
+    public static String calculate(String input, HashType hashType) throws NoSuchAlgorithmException {
         return hashTypes.get(hashType).calculate(input);
     }
 
@@ -46,13 +37,12 @@ public class HashUtil {
      * @throws NoSuchAlgorithmException if the algorithm is not available.
      * @throws UnsupportedEncodingException if the specified encoding is unavailable.
      */
-    public String calculate(String input, String secretKey, String encoding, HashType hashType) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
+    public static String calculate(String input, String secretKey, String encoding, HashType hashType) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
         return hashTypes.get(hashType).calculate(input, secretKey, encoding);
     }
 
     public enum HashType {
         MD5,
-        SHA256,
         HMAC_SHA256
     }
 }

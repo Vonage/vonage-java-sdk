@@ -28,6 +28,12 @@ public class SignatureAuthMethod extends AbstractAuthMethod {
     private String secret;
     private HashUtil.HashType hashType;
 
+    public SignatureAuthMethod(String apiKey, String secret) {
+        this.apiKey = apiKey;
+        this.secret = secret;
+        this.hashType = HashUtil.HashType.MD5;
+    }
+
     public SignatureAuthMethod(String apiKey, String secret, HashUtil.HashType hashType) {
         this.apiKey = apiKey;
         this.secret = secret;

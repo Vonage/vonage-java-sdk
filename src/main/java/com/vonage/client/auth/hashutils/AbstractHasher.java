@@ -44,7 +44,7 @@ public abstract class AbstractHasher {
      * @throws NoSuchAlgorithmException if the algorithm is not available.
      * @throws UnsupportedEncodingException if the encoding type is invalid
      */
-    public abstract String calculate(String input, String encoding) throws NoSuchAlgorithmException, UnsupportedEncodingException;
+    public abstract String calculate(String input, String encoding) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException;
 
     protected String buildHexString(byte[] digest) {
         final StringBuilder hexString = new StringBuilder();

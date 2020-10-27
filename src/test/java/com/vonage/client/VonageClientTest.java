@@ -105,7 +105,7 @@ public class VonageClientTest {
         VonageClient client = VonageClient.builder()
                 .applicationId("951614e0-eec4-4087-a6b1-3f4c2f169cb0")
                 .privateKeyContents(keyBytes)
-                .hashType(HashUtil.HashType.SHA256)
+                .hashType(HashUtil.HashType.HMAC_SHA256)
                 .httpClient(stubHttpClient(
                         200,
                         "{\n" + "  \"conversation_uuid\": \"63f61863-4a51-4f6b-86e1-46edebio0391\",\n"
@@ -198,13 +198,13 @@ public class VonageClientTest {
                 .orElse(new BasicNameValuePair("", ""))
                 .getValue();
 
-        String sig = HashUtil.getInstance().calculate("&api_key=api-key&timestamp=" + timestamp + "api-secret", HashUtil.HashType.MD5);
+        String sig = HashUtil.calculate("&api_key=api-key&timestamp=" + timestamp + "api-secret", HashUtil.HashType.MD5);
         assertContainsParam(parameters, "sig", sig);
     }
 
     @Test
     public void testApiKeyWithSignatureSecretAsSHA256() throws VonageUnacceptableAuthException, NoSuchAlgorithmException {
-        VonageClient vonageClient = VonageClient.builder().hashType(HashUtil.HashType.SHA256).apiKey("api-key").signatureSecret("api-secret").build();
+        VonageClient vonageClient = VonageClient.builder().hashType(HashUtil.HashType.HMAC_SHA256).apiKey("api-key").signatureSecret("api-secret").build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
 
         RequestBuilder requestBuilder = RequestBuilder.get();
@@ -223,7 +223,7 @@ public class VonageClientTest {
                 .orElse(new BasicNameValuePair("", ""))
                 .getValue();
 
-        String sig = HashUtil.getInstance().calculate("&api_key=api-key&timestamp=" + timestamp + "api-secret", HashUtil.HashType.SHA256);
+        String sig = HashUtil.calculate("&api_key=api-key&timestamp=" + timestamp + "api-secret", HashUtil.HashType.HMAC_SHA256);
         assertContainsParam(parameters, "sig", sig);
     }
 
@@ -248,7 +248,7 @@ public class VonageClientTest {
                 .orElse(new BasicNameValuePair("", ""))
                 .getValue();
 
-        String sig = HashUtil.getInstance().calculate("&api_key=api-key&timestamp=" + timestamp, "api-secret", "UTF-8", HashUtil.HashType.HMAC_SHA256);
+        String sig = HashUtil.calculate("&api_key=api-key&timestamp=" + timestamp, "api-secret", "UTF-8", HashUtil.HashType.HMAC_SHA256);
         assertContainsParam(parameters, "sig", sig);
     }
 

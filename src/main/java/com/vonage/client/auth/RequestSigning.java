@@ -132,7 +132,7 @@ public class RequestSigning {
 
         String hashed = "no signature";
         try {
-            hashed = HashUtil.getInstance().calculate(str, secretKey, "UTF-8", hashType);
+            hashed = HashUtil.calculate(str, secretKey, "UTF-8", hashType);
         } catch (Exception e) {
             log.error("error...", e);
         }
@@ -244,7 +244,7 @@ public class RequestSigning {
 
         String hashed;
         try {
-            hashed = HashUtil.getInstance().calculate(str, secretKey, "UTF-8", hashType);
+            hashed = HashUtil.calculate(str, secretKey, "UTF-8", hashType);
         } catch (Exception e) {
             log.error("error...", e);
             return false;

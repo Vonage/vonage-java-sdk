@@ -40,12 +40,13 @@ public class HmacSha256Hasher extends AbstractHasher {
      * @return  HMAC SHA-256 representation of the input string
      * @throws NoSuchAlgorithmException if the HMAC SHA-256 algorithm is not available.
      * @throws UnsupportedEncodingException if the specified encoding is unavailable.
+     * @throws InvalidKeyException if key is invalid
      */
-    @Override public String calculate(String input, String encoding) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    @Override public String calculate(String input, String encoding) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
         try {
             return this.calculate(input, input, encoding);
         } catch (InvalidKeyException e) {
-            return null; // should not occur
+            throw e; // should not occur
         }
     }
 }
