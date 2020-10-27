@@ -30,6 +30,18 @@ public class HashUtil {
     }
 
     /**
+     * Calculates hash for string. assume string is UTF-8 encoded.
+     * @param input string which is going to be encoded into requested format
+     * @param encoding encoding type of input
+     * @param hashType The type of hash to be applied to the input string
+     * @return representation of the input string with given hash type
+     * @throws NoSuchAlgorithmException if the algorithm is not available.
+     */
+    public static String calculate(String input, String encoding, HashType hashType) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
+        return hashTypes.get(hashType).calculate(input, encoding);
+    }
+
+    /**
      * Calculates hash for string.
      * @param input string which is going to be encoded into requested format
      * @param secretKey the key to be used for encoding
