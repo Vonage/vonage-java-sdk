@@ -16,7 +16,7 @@ public abstract class AbstractHasher {
     public String calculate(String input) throws NoSuchAlgorithmException {
         try {
             return calculate(input, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException | InvalidKeyException e) {
             return null; // -- impossible --
         }
     }

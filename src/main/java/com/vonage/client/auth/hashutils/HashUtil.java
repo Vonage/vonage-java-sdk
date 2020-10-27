@@ -12,7 +12,8 @@ import java.util.Map;
 public class HashUtil {
 
     private static Map<HashType, AbstractHasher> hashTypes = new HashMap<HashType, AbstractHasher>() {{
-        put(HashType.MD5, new MD5Hasher());
+        put(HashType.MD5, new Md5Hasher());
+        put(HashType.SHA_1, new Sha1Hasher());
         put(HashType.HMAC_SHA256, new HmacSha256Hasher());
     }};
 
@@ -43,6 +44,7 @@ public class HashUtil {
 
     public enum HashType {
         MD5,
+        SHA_1,
         HMAC_SHA256
     }
 }

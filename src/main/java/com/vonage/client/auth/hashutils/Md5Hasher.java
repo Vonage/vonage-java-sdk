@@ -23,7 +23,7 @@ import java.security.NoSuchAlgorithmException;
 /**
  * Contains utility methods that use MD5 hashing. The class uses STANDARD JVM MD5 algorithm.
  */
-class MD5Hasher extends AbstractHasher {
+class Md5Hasher extends AbstractHasher {
 
     /**
      * Calculates MD5 hash for string.

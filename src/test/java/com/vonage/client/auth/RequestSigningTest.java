@@ -45,15 +45,15 @@ public class RequestSigningTest {
     }
 
     @Test
-    public void testConstructSignatureForRequestParametersWithSha256Hash() {
+    public void testConstructSignatureForRequestParametersWithSha1Hash() {
         List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("a", "alphabet"));
         params.add(new BasicNameValuePair("b", "bananas"));
 
-        RequestSigning.constructSignatureForRequestParameters(params, "abcde", 2100, HashUtil.HashType.SHA256);
+        RequestSigning.constructSignatureForRequestParameters(params, "abcde", 2100, HashUtil.HashType.SHA_1);
         Map<String, String> paramMap = constructParamMap(params);
         // md5 -s "&a=alphabet&b=bananas&timestamp=2100abcde"
-        assertEquals("f98b95f603f8e4933c98f5e721fada9e2c32b764bdd1555d75f0dc6cf5aa7ff6", paramMap.get(RequestSigning.PARAM_SIGNATURE));
+        assertEquals("cb56499350bfe968e28df7ae3065bf77d5fe8304", paramMap.get(RequestSigning.PARAM_SIGNATURE));
     }
 
     @Test
@@ -109,11 +109,11 @@ public class RequestSigningTest {
     }
 
     @Test
-    public void testVerifyRequestSignatureWithSha256Hash() {
+    public void testVerifyRequestSignatureWithSha1Hash() {
         Map<String, String[]> params = constructDummyParams();
-        params.put("sig", new String[]{"f98b95f603f8e4933c98f5e721fada9e2c32b764bdd1555d75f0dc6cf5aa7ff6"});
+        params.put("sig", new String[]{"cb56499350bfe968e28df7ae3065bf77d5fe8304"});
 
-        assertTrue(RequestSigning.verifyRequestSignature(constructDummyRequest(params), "abcde", 2100000, HashUtil.HashType.SHA256));
+        assertTrue(RequestSigning.verifyRequestSignature(constructDummyRequest(params), "abcde", 2100000, HashUtil.HashType.SHA_1));
     }
 
     @Test
