@@ -42,12 +42,12 @@ public class TokenAuthMethod extends AbstractAuthMethod {
 
     @Override
     public RequestBuilder apply(RequestBuilder request) {
-        return request.addParameter("api_key", this.apiKey).addParameter("api_secret", this.apiSecret);
+        return request.addParameter("api_key", apiKey).addParameter("api_secret", apiSecret);
     }
 
     @Override
     public RequestBuilder applyAsBasicAuth(RequestBuilder request) {
-        String headerValue = Base64.encodeBase64String((this.apiKey + ":" + this.apiSecret).getBytes());
+        String headerValue = Base64.encodeBase64String((apiKey + ":" + apiSecret).getBytes());
         Header authHeader = new BasicHeader("Authorization", "Basic " + headerValue);
         return request.addHeader(authHeader);
     }
@@ -57,8 +57,8 @@ public class TokenAuthMethod extends AbstractAuthMethod {
         HttpEntity entity = request.getEntity();
         try {
             ObjectNode json = (ObjectNode) new ObjectMapper().readTree(EntityUtils.toString(entity));
-            json.put("api_key", this.apiKey);
-            json.put("api_secret", this.apiSecret);
+            json.put("api_key", apiKey);
+            json.put("api_secret", apiSecret);
 
             return request.setEntity(new StringEntity(json.toString(), ContentType.APPLICATION_JSON));
         } catch (IOException e) {

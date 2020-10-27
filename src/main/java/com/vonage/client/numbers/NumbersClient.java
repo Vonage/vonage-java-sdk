@@ -31,11 +31,11 @@ public class NumbersClient {
     private UpdateNumberEndpoint updateNumber;
 
     public NumbersClient(HttpWrapper httpWrapper) {
-        this.listNumbers = new ListNumbersEndpoint(httpWrapper);
-        this.searchNumbers = new SearchNumbersEndpoint(httpWrapper);
-        this.cancelNumber = new CancelNumberEndpoint(httpWrapper);
-        this.buyNumber = new BuyNumberEndpoint(httpWrapper);
-        this.updateNumber = new UpdateNumberEndpoint(httpWrapper);
+        listNumbers = new ListNumbersEndpoint(httpWrapper);
+        searchNumbers = new SearchNumbersEndpoint(httpWrapper);
+        cancelNumber = new CancelNumberEndpoint(httpWrapper);
+        buyNumber = new BuyNumberEndpoint(httpWrapper);
+        updateNumber = new UpdateNumberEndpoint(httpWrapper);
     }
 
     /**
@@ -47,7 +47,7 @@ public class NumbersClient {
      * @throws VonageClientException        if an error is returned by the server.
      */
     public ListNumbersResponse listNumbers() throws VonageResponseParseException, VonageClientException {
-        return this.listNumbers.listNumbers(new ListNumbersFilter());
+        return listNumbers.listNumbers(new ListNumbersFilter());
     }
 
     /**
@@ -61,7 +61,7 @@ public class NumbersClient {
      * @throws VonageClientException        if an error is returned by the server.
      */
     public ListNumbersResponse listNumbers(ListNumbersFilter filter) throws VonageResponseParseException, VonageClientException {
-        return this.listNumbers.listNumbers(filter);
+        return listNumbers.listNumbers(filter);
     }
 
 
@@ -72,7 +72,7 @@ public class NumbersClient {
      * @throws VonageClientException        if an error is returned by the server.
      */
     public SearchNumbersResponse searchNumbers(String country) throws VonageResponseParseException, VonageClientException {
-        return this.searchNumbers(new SearchNumbersFilter(country));
+        return searchNumbers(new SearchNumbersFilter(country));
     }
 
     /**
@@ -82,7 +82,7 @@ public class NumbersClient {
      * @throws VonageClientException        if an error is returned by the server.
      */
     public SearchNumbersResponse searchNumbers(SearchNumbersFilter filter) throws VonageResponseParseException, VonageClientException {
-        return this.searchNumbers.searchNumbers(filter);
+        return searchNumbers.searchNumbers(filter);
     }
 
     /**
@@ -95,7 +95,7 @@ public class NumbersClient {
      * @throws VonageClientException        if an error is returned by the server.
      */
     public void buyNumber(String country, String msisdn) throws VonageResponseParseException, VonageClientException {
-        this.buyNumber.execute(new BuyNumberRequest(country, msisdn));
+        buyNumber.execute(new BuyNumberRequest(country, msisdn));
     }
 
     /**
@@ -108,7 +108,7 @@ public class NumbersClient {
      * @throws VonageClientException        if an error is returned by the server.
      */
     public void cancelNumber(String country, String msisdn) throws VonageResponseParseException, VonageClientException {
-        this.cancelNumber.execute(new CancelNumberRequest(country, msisdn));
+        cancelNumber.execute(new CancelNumberRequest(country, msisdn));
     }
 
     /**
@@ -120,7 +120,7 @@ public class NumbersClient {
      * @throws VonageClientException        if an error is returned by the server.
      */
     public void updateNumber(UpdateNumberRequest request) throws VonageResponseParseException, VonageClientException {
-        this.updateNumber.execute(request);
+        updateNumber.execute(request);
     }
 
     /**
@@ -137,6 +137,6 @@ public class NumbersClient {
         UpdateNumberRequest request = new UpdateNumberRequest(msisdn, country);
         request.setVoiceCallbackType(UpdateNumberRequest.CallbackType.APP);
         request.setVoiceCallbackValue(appId);
-        this.updateNumber(request);
+        updateNumber(request);
     }
 }

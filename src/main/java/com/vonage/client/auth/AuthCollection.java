@@ -30,7 +30,7 @@ public class AuthCollection {
      * Create a new AuthCollection with an empty set of AuthMethods.
      */
     public AuthCollection() {
-        this.authList = new TreeSet<>();
+        authList = new TreeSet<>();
     }
 
     public AuthCollection(AuthMethod... authMethods) {
@@ -41,7 +41,7 @@ public class AuthCollection {
     }
 
     public AuthCollection(SortedSet<AuthMethod> authMethods) {
-        this.authList = authMethods;
+        authList = authMethods;
     }
 
     /**
@@ -50,7 +50,7 @@ public class AuthCollection {
      * @param auth AuthMethod method to be added to this collection
      */
     public void add(AuthMethod auth) {
-        this.authList.add(auth);
+        authList.add(auth);
     }
 
     /**
@@ -64,12 +64,12 @@ public class AuthCollection {
      * @throws VonageUnacceptableAuthException if no matching AuthMethod is found.
      */
     public <T extends AuthMethod> T getAuth(Class<T> type) throws VonageUnacceptableAuthException {
-        for (AuthMethod availableAuthMethod : this.authList) {
+        for (AuthMethod availableAuthMethod : authList) {
             if (type.isInstance(availableAuthMethod)) {
                 return (T) availableAuthMethod;
             }
         }
-        throw new VonageUnacceptableAuthException(this.authList, new HashSet<>(Arrays.asList(new Class[]{type})));
+        throw new VonageUnacceptableAuthException(authList, new HashSet<>(Arrays.asList(new Class[]{type})));
     }
 
     /**
@@ -82,11 +82,11 @@ public class AuthCollection {
      * @throws VonageUnacceptableAuthException if no appropriate AuthMethod is held by this AuthCollection
      */
     public AuthMethod getAcceptableAuthMethod(Set<Class> acceptableAuthMethodClasses) throws VonageUnacceptableAuthException {
-        for (AuthMethod availableAuthMethod : this.authList) {
+        for (AuthMethod availableAuthMethod : authList) {
             if (acceptableAuthMethodClasses.contains(availableAuthMethod.getClass())) {
                 return availableAuthMethod;
             }
         }
-        throw new VonageUnacceptableAuthException(this.authList, acceptableAuthMethodClasses);
+        throw new VonageUnacceptableAuthException(authList, acceptableAuthMethodClasses);
     }
 }

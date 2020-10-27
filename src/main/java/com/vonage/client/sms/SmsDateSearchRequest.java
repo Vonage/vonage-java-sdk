@@ -31,7 +31,7 @@ public class SmsDateSearchRequest implements SearchSmsRequest {
     }
 
     public void addParams(RequestBuilder request) {
-        request.addParameter("date", new SimpleDateFormat("yyyy-MM-dd").format(this.date))
-                .addParameter("to", this.recipient);
+        request.addParameter("date", new SimpleDateFormat("yyyy-MM-dd").format(date))
+                .addParameter("to", recipient);
     }
 }
