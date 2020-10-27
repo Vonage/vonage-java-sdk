@@ -29,3 +29,4 @@ documentation, or tests are eligible to be added to this list.
 - Abhinav Agarwal ([@imabhinavagarwal](https://github.com/imabhinavagarwal))
 - Neeraj ([@code0987](https://github.com/code0987))
 - Aryan Rawlani ([@aryanrawlani28](https://github.com/aryanrawlani28))
+- Joakim Waltersson ([@jwalter](https://github.com/jwalter))
