@@ -58,59 +58,59 @@ public class VonageClient {
     private HttpWrapper httpWrapper;
 
     private VonageClient(Builder builder) {
-        this.httpWrapper = new HttpWrapper(builder.httpConfig, builder.authCollection);
-        this.httpWrapper.setHttpClient(builder.httpClient);
+        httpWrapper = new HttpWrapper(builder.httpConfig, builder.authCollection);
+        httpWrapper.setHttpClient(builder.httpClient);
 
-        this.account = new AccountClient(this.httpWrapper);
-        this.application = new ApplicationClient(this.httpWrapper);
-        this.insight = new InsightClient(this.httpWrapper);
-        this.numbers = new NumbersClient(this.httpWrapper);
-        this.verify = new VerifyClient(this.httpWrapper);
-        this.voice = new VoiceClient(this.httpWrapper);
-        this.sms = new SmsClient(this.httpWrapper);
-        this.sns = new SnsClient(this.httpWrapper);
-        this.conversion = new ConversionClient(this.httpWrapper);
-        this.redact = new RedactClient(this.httpWrapper);
+        account = new AccountClient(httpWrapper);
+        application = new ApplicationClient(httpWrapper);
+        insight = new InsightClient(httpWrapper);
+        numbers = new NumbersClient(httpWrapper);
+        verify = new VerifyClient(httpWrapper);
+        voice = new VoiceClient(httpWrapper);
+        sms = new SmsClient(httpWrapper);
+        sns = new SnsClient(httpWrapper);
+        conversion = new ConversionClient(httpWrapper);
+        redact = new RedactClient(httpWrapper);
     }
 
     public AccountClient getAccountClient() {
-        return this.account;
+        return account;
     }
 
     public ApplicationClient getApplicationClient() {
-        return this.application;
+        return application;
     }
 
     public InsightClient getInsightClient() {
-        return this.insight;
+        return insight;
     }
 
     public NumbersClient getNumbersClient() {
-        return this.numbers;
+        return numbers;
     }
 
     public SmsClient getSmsClient() {
-        return this.sms;
+        return sms;
     }
 
     public SnsClient getSnsClient() {
-        return this.sns;
+        return sns;
     }
 
     public VerifyClient getVerifyClient() {
-        return this.verify;
+        return verify;
     }
 
     public VoiceClient getVoiceClient() {
-        return this.voice;
+        return voice;
     }
 
     public ConversionClient getConversionClient() {
-        return this.conversion;
+        return conversion;
     }
 
     public RedactClient getRedactClient() {
-        return this.redact;
+        return redact;
     }
 
     /**
@@ -121,7 +121,7 @@ public class VonageClient {
      * @throws VonageUnacceptableAuthException if no {@link JWTAuthMethod} is available
      */
     public String generateJwt() throws VonageUnacceptableAuthException {
-        JWTAuthMethod authMethod = this.httpWrapper.getAuthCollection().getAuth(JWTAuthMethod.class);
+        JWTAuthMethod authMethod = httpWrapper.getAuthCollection().getAuth(JWTAuthMethod.class);
         return authMethod.generateToken();
     }
 
@@ -291,13 +291,13 @@ public class VonageClient {
          *                                      generating an {@link JWTAuthMethod} with the provided credentials.
          */
         public VonageClient build() {
-            this.authCollection = generateAuthCollection(this.applicationId,
-                    this.apiKey,
-                    this.apiSecret,
-                    this.signatureSecret,
-                    this.privateKeyContents,
-                    this.hashType
-            );
+            this.authCollection = generateAuthCollection(applicationId,
+                    apiKey,
+                    apiSecret,
+                    signatureSecret,
+                    privateKeyContents,
+                    hashType);
+          
             return new VonageClient(this);
         }
 
