@@ -462,6 +462,32 @@ can be useful, for example, if you must use an HTTP proxy to make requests or to
 Our [Voice API](https://developer.nexmo.com/voice/voice-api/overview) can connect a voice call to a websocket! An example using `javax.websocket` for accepting websocket connections can be found on the [Oracle website](http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/HomeWebsocket/WebsocketHome.html#section4).
 [Another  example](http://sparkjava.com/documentation#embedded-web-server) using the Spark framework
 
+## Frequently Asked Questions
+
+### Supported APIs
+
+The following is a list of Vonage APIs and whether the Java SDK provides support for them:
+
+| API                   |  API Release Status  | Supported? |
+| --------------------- | :------------------: | :--------: |
+| Account API           | General Availability |     ✅     |
+| Alerts API            | General Availability |     ✅     |
+| Application API       | General Availability |     ✅     |
+| Audit API             |         Beta         |     ❌     |
+| Conversation API      |         Beta         |     ❌     |
+| Dispatch API          |         Beta         |     ❌     |
+| External Accounts API |         Beta         |     ❌     |
+| Media API             |         Beta         |     ❌     |
+| Messages API          |         Beta         |     ❌     |
+| Number Insight API    | General Availability |     ✅     |
+| Number Management API | General Availability |     ✅     |
+| Pricing API           | General Availability |     ✅     |
+| Redact API            | General Availability |     ✅     |
+| Reports API           |         Beta         |     ❌     |
+| SMS API               | General Availability |     ✅     |
+| Verify API            | General Availability |     ✅     |
+| Voice API             | General Availability |     ✅     |
+
 
 ## License
 
