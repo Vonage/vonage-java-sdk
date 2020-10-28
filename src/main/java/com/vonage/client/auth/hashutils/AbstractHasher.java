@@ -12,11 +12,12 @@ public abstract class AbstractHasher {
      * @param input string which is going to be encoded into requested format
      * @return  hashed representation of the input string
      * @throws NoSuchAlgorithmException if the algorithm is not available.
+     * @throws InvalidKeyException Only applicable to HMAC encoding types, when a bad key is provided.
      */
-    public String calculate(String input) throws NoSuchAlgorithmException {
+    public String calculate(String input) throws NoSuchAlgorithmException, InvalidKeyException {
         try {
             return calculate(input, "UTF-8");
-        } catch (UnsupportedEncodingException | InvalidKeyException e) {
+        } catch (UnsupportedEncodingException e) {
             return null; // -- impossible --
         }
     }
