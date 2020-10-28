@@ -93,7 +93,8 @@ public class NccoTest {
         Ncco ncco = new Ncco(writer, talk);
 
         // Json w/ pretty print
-        String expectedJson = "[ {\n" + "  \"text\" : \"Test message\",\n" + "  \"action\" : \"talk\"\n" + "} ]";
+        String expectedJson = "[ {" + System.lineSeparator() + "  \"text\" : \"Test message\"," + System.lineSeparator()
+            + "  \"action\" : \"talk\"" + System.lineSeparator() + "} ]";
         assertEquals(expectedJson, ncco.toJson());
     }
 }
