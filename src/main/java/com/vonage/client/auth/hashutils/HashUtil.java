@@ -25,8 +25,9 @@ public class HashUtil {
      * @param hashType The type of hash to be applied to the input string
      * @return representation of the input string with given hash type
      * @throws NoSuchAlgorithmException if the algorithm is not available.
+     * @throws InvalidKeyException Only applicable to HMAC encoding types, when a bad key is provided.
      */
-    public static String calculate(String input, HashType hashType) throws NoSuchAlgorithmException {
+    public static String calculate(String input, HashType hashType) throws NoSuchAlgorithmException, InvalidKeyException {
         return hashTypes.get(hashType).calculate(input);
     }
 
@@ -37,6 +38,7 @@ public class HashUtil {
      * @param hashType The type of hash to be applied to the input string
      * @return representation of the input string with given hash type
      * @throws NoSuchAlgorithmException if the algorithm is not available.
+     * @throws InvalidKeyException Only applicable to HMAC encoding types, when a bad key is provided.
      */
     public static String calculate(String input, String encoding, HashType hashType) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
         return hashTypes.get(hashType).calculate(input, encoding);
@@ -51,6 +53,7 @@ public class HashUtil {
      * @return representation of the input string with given hash type
      * @throws NoSuchAlgorithmException if the algorithm is not available.
      * @throws UnsupportedEncodingException if the specified encoding is unavailable.
+     * @throws InvalidKeyException Only applicable to HMAC encoding types, when a bad key is provided.
      */
     public static String calculate(String input, String secretKey, String encoding, HashType hashType) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
         return hashTypes.get(hashType).calculate(input, secretKey, encoding);

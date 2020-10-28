@@ -179,7 +179,7 @@ public class VonageClientTest {
     }
 
     @Test
-    public void testApiKeyWithSignatureSecret() throws VonageUnacceptableAuthException, NoSuchAlgorithmException {
+    public void testApiKeyWithSignatureSecret() throws VonageUnacceptableAuthException, NoSuchAlgorithmException, InvalidKeyException {
         VonageClient vonageClient = VonageClient.builder().apiKey("api-key").signatureSecret("api-secret").build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
 

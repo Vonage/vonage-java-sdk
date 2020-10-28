@@ -36,7 +36,11 @@ public class MD5Util {
      * @throws NoSuchAlgorithmException if the MD5 algorithm is not available.
      */
     public static String calculateMd5(String input) throws NoSuchAlgorithmException {
-        return HashUtil.calculate(input, HashUtil.HashType.MD5);
+        try {
+            return HashUtil.calculate(input, HashUtil.HashType.MD5);
+        } catch (InvalidKeyException e) {
+            return null; // Will not actually occur here
+        }
     }
 
     /**
