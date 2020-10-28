@@ -43,10 +43,6 @@ public class HmacSha256Hasher extends AbstractHasher {
      * @throws InvalidKeyException if key is invalid
      */
     @Override public String calculate(String input, String encoding) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
-        try {
-            return this.calculate(input, input, encoding);
-        } catch (InvalidKeyException e) {
-            throw e; // should not occur
-        }
+        return this.calculate(input, input, encoding);
     }
 }

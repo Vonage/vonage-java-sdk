@@ -255,7 +255,7 @@ public class RequestSigning {
         // verify that the supplied signature matches generated one
         // use MessageDigest.isEqual as an alternative to String.equals() to defend against timing based attacks
         try {
-            if (!MessageDigest.isEqual(hashed.getBytes("UTF-8"), suppliedSignature.getBytes("UTF-8")))
+            if (!MessageDigest.isEqual(hashed.toLowerCase().getBytes("UTF-8"), suppliedSignature.toLowerCase().getBytes("UTF-8")))
                 return false;
         } catch (UnsupportedEncodingException e) {
             throw new VonageUnexpectedException("Failed to decode signature as UTF-8", e);
