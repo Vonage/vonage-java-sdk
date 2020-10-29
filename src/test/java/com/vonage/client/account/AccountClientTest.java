@@ -19,7 +19,7 @@ import com.vonage.client.ClientTest;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.VonageClientException;
 import com.vonage.client.auth.TokenAuthMethod;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 

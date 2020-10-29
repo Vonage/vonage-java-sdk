@@ -25,9 +25,9 @@ public class HttpConfig {
     private String snsBaseUri;
 
     private HttpConfig(Builder builder) {
-        this.apiBaseUri = builder.apiBaseUri;
-        this.restBaseUri = builder.restBaseUri;
-        this.snsBaseUri = builder.snsBaseUri;
+        apiBaseUri = builder.apiBaseUri;
+        restBaseUri = builder.restBaseUri;
+        snsBaseUri = builder.snsBaseUri;
     }
 
     public String getApiBaseUri() {
@@ -87,9 +87,9 @@ public class HttpConfig {
         private String snsBaseUri;
 
         public Builder() {
-            this.apiBaseUri = DEFAULT_API_BASE_URI;
-            this.restBaseUri = DEFAULT_REST_BASE_URI;
-            this.snsBaseUri = DEFAULT_SNS_BASE_URI;
+            apiBaseUri = DEFAULT_API_BASE_URI;
+            restBaseUri = DEFAULT_REST_BASE_URI;
+            snsBaseUri = DEFAULT_SNS_BASE_URI;
         }
 
         /**
@@ -129,9 +129,9 @@ public class HttpConfig {
          */
         public Builder baseUri(String baseUri) {
             String sanitizedUri = sanitizeUri(baseUri);
-            this.apiBaseUri = sanitizedUri;
-            this.restBaseUri = sanitizedUri;
-            this.snsBaseUri = sanitizedUri;
+            apiBaseUri = sanitizedUri;
+            restBaseUri = sanitizedUri;
+            snsBaseUri = sanitizedUri;
             return this;
         }
 

@@ -15,6 +15,7 @@
  */
 package com.vonage.client.auth;
 
+import com.vonage.client.auth.hashutils.HashUtil;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.RequestBuilder;
 
@@ -25,17 +26,25 @@ public class SignatureAuthMethod extends AbstractAuthMethod {
 
     private String apiKey;
     private String secret;
+    private HashUtil.HashType hashType;
 
     public SignatureAuthMethod(String apiKey, String secret) {
         this.apiKey = apiKey;
         this.secret = secret;
+        this.hashType = HashUtil.HashType.MD5;
+    }
+
+    public SignatureAuthMethod(String apiKey, String secret, HashUtil.HashType hashType) {
+        this.apiKey = apiKey;
+        this.secret = secret;
+        this.hashType = hashType;
     }
 
     @Override
     public RequestBuilder apply(RequestBuilder request) {
         request.addParameter("api_key", apiKey);
         List<NameValuePair> params = request.getParameters();
-        RequestSigning.constructSignatureForRequestParameters(params, secret);
+        RequestSigning.constructSignatureForRequestParameters(params, secret, hashType);
 
         // TODO: This is ugly:
         request.addParameter(params.get(params.size()-1));

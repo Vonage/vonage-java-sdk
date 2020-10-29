@@ -45,10 +45,10 @@ public class SmsSubmissionResponse {
     }
 
     public int getMessageCount() {
-        return this.messageCount;
+        return messageCount;
     }
 
     public List<SmsSubmissionResponseMessage> getMessages() {
-        return this.messages;
+        return messages;
     }
 }

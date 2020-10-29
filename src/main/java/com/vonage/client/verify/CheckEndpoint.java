@@ -23,7 +23,7 @@ class CheckEndpoint {
     private CheckMethod checkMethod;
 
     CheckEndpoint(HttpWrapper httpWrapper) {
-        this.checkMethod = new CheckMethod(httpWrapper);
+        checkMethod = new CheckMethod(httpWrapper);
     }
 
     CheckResponse check(final String requestId, final String code, final String ipAddress) throws VonageClientException, VonageResponseParseException {
@@ -35,6 +35,6 @@ class CheckEndpoint {
     }
 
     private CheckResponse check(CheckRequest request) throws VonageClientException, VonageResponseParseException {
-        return this.checkMethod.execute(request);
+        return checkMethod.execute(request);
     }
 }

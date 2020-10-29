@@ -17,6 +17,7 @@ package com.vonage.client.auth;
 
 
 import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.auth.hashutils.HashUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
@@ -45,6 +46,7 @@ public class RequestSigning {
      * <p>
      * Generates additional parameters to represent the timestamp and generated signature.
      * Uses the supplied pre-shared secret key to generate the signature.
+     * Uses the default hash strategy of MD5.
      *
      * @param params List of NameValuePair instances containing the query parameters for the request that is to be signed
      * @param secretKey the pre-shared secret key held by the client
@@ -62,11 +64,47 @@ public class RequestSigning {
      *
      * @param params List of NameValuePair instances containing the query parameters for the request that is to be signed
      * @param secretKey the pre-shared secret key held by the client
+     * @param hashType The type of hash that is to be used in construction
+     */
+    public static void constructSignatureForRequestParameters(List<NameValuePair> params, String secretKey, HashUtil.HashType hashType) {
+        constructSignatureForRequestParameters(params, secretKey, System.currentTimeMillis() / 1000, hashType);
+    }
+
+    /**
+     * Signs a set of request parameters.
+     * <p>
+     * Generates additional parameters to represent the timestamp and generated signature.
+     * Uses the supplied pre-shared secret key to generate the signature.
+     * Hashing strategy is MD5.
+     *
+     * @param params List of NameValuePair instances containing the query parameters for the request that is to be signed
+     * @param secretKey the pre-shared secret key held by the client
      * @param currentTimeSeconds the current time in seconds since 1970-01-01
      *
      */
-     protected static void constructSignatureForRequestParameters(
-            List<NameValuePair> params, String secretKey, long currentTimeSeconds) {
+     protected static void constructSignatureForRequestParameters(List<NameValuePair> params,
+                                                                  String secretKey,
+                                                                  long currentTimeSeconds) {
+        // First, inject a 'timestamp=' parameter containing the current time in seconds since Jan 1st 1970
+        constructSignatureForRequestParameters(params, secretKey, currentTimeSeconds, HashUtil.HashType.MD5);
+    }
+
+    /**
+     * Signs a set of request parameters.
+     * <p>
+     * Generates additional parameters to represent the timestamp and generated signature.
+     * Uses the supplied pre-shared secret key to generate the signature.
+     *
+     * @param params List of NameValuePair instances containing the query parameters for the request that is to be signed.
+     * @param secretKey the pre-shared secret key held by the client.
+     * @param currentTimeSeconds the current time in seconds since 1970-01-01.
+     * @param hashType Hash type to be used to construct request parameters.
+     *
+     */
+    protected static void constructSignatureForRequestParameters(List<NameValuePair> params,
+                                                                 String secretKey,
+                                                                 long currentTimeSeconds,
+                                                                 HashUtil.HashType hashType) {
         // First, inject a 'timestamp=' parameter containing the current time in seconds since Jan 1st 1970
         params.add(new BasicNameValuePair(PARAM_TIMESTAMP, Long.toString(currentTimeSeconds)));
 
@@ -90,28 +128,26 @@ public class RequestSigning {
             sb.append("&").append(clean(name)).append("=").append(clean(value));
         }
 
-        // Now, append the secret key, and calculate an MD5 signature of the resultant string
-        sb.append(secretKey);
-
         String str = sb.toString();
 
-        String md5 = "no signature";
+        String hashed = "no signature";
         try {
-            md5 = MD5Util.calculateMd5(str);
+            hashed = HashUtil.calculate(str, secretKey, "UTF-8", hashType);
         } catch (Exception e) {
             log.error("error...", e);
         }
 
-        log.debug("SECURITY-KEY-GENERATION -- String [ " + str + " ] Signature [ " + md5 + " ] ");
+        log.debug("SECURITY-KEY-GENERATION -- String [ " + str + " ] Signature [ " + hashed + " ] ");
 
-        params.add(new BasicNameValuePair(PARAM_SIGNATURE, md5));
+        params.add(new BasicNameValuePair(PARAM_SIGNATURE, hashed));
     }
 
     /**
      * Verifies the signature in an HttpServletRequest.
+     * Uses default hashing strategy of MD5.
      *
-     * @param request The HttpServletRequest to be verified
-     * @param secretKey The pre-shared secret key used by the sender of the request to create the signature
+     * @param request The HttpServletRequest to be verified.
+     * @param secretKey The pre-shared secret key used by the sender of the request to create the signature.
      *
      * @return true if the signature is correct for this request and secret key.
      */
@@ -122,8 +158,21 @@ public class RequestSigning {
     /**
      * Verifies the signature in an HttpServletRequest.
      *
-     * @param request The HttpServletRequest to be verified
-     * @param secretKey The pre-shared secret key used by the sender of the request to create the signature
+     * @param request The HttpServletRequest to be verified.
+     * @param secretKey The pre-shared secret key used by the sender of the request to create the signature.
+     *
+     * @return true if the signature is correct for this request and secret key.
+     */
+    public static boolean verifyRequestSignature(HttpServletRequest request, String secretKey, HashUtil.HashType hashType) {
+        return verifyRequestSignature(request, secretKey, System.currentTimeMillis(), hashType);
+    }
+
+    /**
+     * Verifies the signature in an HttpServletRequest.
+     * Hashing strategy is MD5.
+     *
+     * @param request The HttpServletRequest to be verified.
+     * @param secretKey The pre-shared secret key used by the sender of the request to create the signature.
      * @param currentTimeMillis The current time, in milliseconds.
      *
      * @return true if the signature is correct for this request and secret key.
@@ -131,6 +180,23 @@ public class RequestSigning {
      protected static boolean verifyRequestSignature(HttpServletRequest request,
                                                      String secretKey,
                                                      long currentTimeMillis) {
+        return verifyRequestSignature(request, secretKey, currentTimeMillis, HashUtil.HashType.MD5);
+    }
+
+    /**
+     * Verifies the signature in an HttpServletRequest.
+     *
+     * @param request The HttpServletRequest to be verified.
+     * @param secretKey The pre-shared secret key used by the sender of the request to create the signature.
+     * @param currentTimeMillis The current time, in milliseconds.
+     * @param hashType Hash type to be used to construct request parameters.
+     *
+     * @return true if the signature is correct for this request and secret key.
+     */
+    protected static boolean verifyRequestSignature(HttpServletRequest request,
+                                                    String secretKey,
+                                                    long currentTimeMillis,
+                                                    HashUtil.HashType hashType) {
         // identify the signature supplied in the request ...
         String suppliedSignature = request.getParameter(PARAM_SIGNATURE);
         if (suppliedSignature == null)
@@ -174,25 +240,22 @@ public class RequestSigning {
             sb.append("&").append(clean(name)).append("=").append(clean(value));
         }
 
-        // append the secret key and calculate an md5 signature of the resultant string
-        sb.append(secretKey);
-
         String str = sb.toString();
 
-        String md5;
+        String hashed;
         try {
-            md5 = MD5Util.calculateMd5(str);
+            hashed = HashUtil.calculate(str, secretKey, "UTF-8", hashType);
         } catch (Exception e) {
             log.error("error...", e);
             return false;
         }
 
-        log.info("SECURITY-KEY-VERIFICATION -- String [ " + str + " ] Signature [ " + md5 + " ] SUPPLIED SIGNATURE [ " + suppliedSignature + " ] ");
+        log.info("SECURITY-KEY-VERIFICATION -- String [ " + str + " ] Signature [ " + hashed + " ] SUPPLIED SIGNATURE [ " + suppliedSignature + " ] ");
 
         // verify that the supplied signature matches generated one
         // use MessageDigest.isEqual as an alternative to String.equals() to defend against timing based attacks
         try {
-            if (!MessageDigest.isEqual(md5.getBytes("UTF-8"), suppliedSignature.getBytes("UTF-8")))
+            if (!MessageDigest.isEqual(hashed.toLowerCase().getBytes("UTF-8"), suppliedSignature.toLowerCase().getBytes("UTF-8")))
                 return false;
         } catch (UnsupportedEncodingException e) {
             throw new VonageUnexpectedException("Failed to decode signature as UTF-8", e);

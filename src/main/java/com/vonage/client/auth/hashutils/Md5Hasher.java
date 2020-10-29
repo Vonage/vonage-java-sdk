@@ -13,35 +13,17 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.auth;
+package com.vonage.client.auth.hashutils;
 
-
-import com.vonage.client.auth.hashutils.HashUtil;
 
 import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
  * Contains utility methods that use MD5 hashing. The class uses STANDARD JVM MD5 algorithm.
- *
- * @deprecated {@linkplain HashUtil} should be used instead.
  */
-public class MD5Util {
-
-    /**
-     * Calculates MD5 hash for string. assume string is UTF-8 encoded
-     * @param input string which is going to be encoded into MD5 format
-     * @return  MD5 representation of the input string
-     * @throws NoSuchAlgorithmException if the MD5 algorithm is not available.
-     */
-    public static String calculateMd5(String input) throws NoSuchAlgorithmException {
-        try {
-            return HashUtil.calculate(input, HashUtil.HashType.MD5);
-        } catch (InvalidKeyException e) {
-            return null; // Will not actually occur here
-        }
-    }
+class Md5Hasher extends AbstractHasher {
 
     /**
      * Calculates MD5 hash for string.
@@ -51,8 +33,12 @@ public class MD5Util {
      * @throws NoSuchAlgorithmException if the MD5 algorithm is not available.
      * @throws UnsupportedEncodingException if the specified encoding is unavailable.
      */
-    public static String calculateMd5(String input, String encoding) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
-        return HashUtil.calculate(input, encoding, HashUtil.HashType.MD5);
+    @Override public String calculate(String input, String encoding) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        md.update(input.getBytes(encoding));
+        byte digest[] = md.digest();
+
+        return this.buildHexString(digest);
     }
 
 }

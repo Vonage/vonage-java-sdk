@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.concurrent.Executor;
 
@@ -95,7 +96,7 @@ public class AbstractMOServletTest {
         assertEquals("text", mo.getMessageType().getType());
         assertEquals("Dear John", mo.getMessageBody());
         assertEquals(false, mo.isConcat());
-        assertEquals(new GregorianCalendar(2016, 10, 7, 6, 5, 4).getTime(), mo.getTimeStamp());
+        assertEquals(new GregorianCalendar(2016, Calendar.NOVEMBER, 7, 6, 5, 4).getTime(), mo.getTimeStamp());
     }
 
     @Test

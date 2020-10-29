@@ -17,6 +17,7 @@ package com.vonage.client;
 
 
 import com.vonage.client.auth.*;
+import com.vonage.client.auth.hashutils.HashUtil;
 import com.vonage.client.logging.LoggingUtils;
 import com.vonage.client.voice.Call;
 import com.vonage.client.voice.CallEvent;
@@ -33,12 +34,16 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
+import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
@@ -54,6 +59,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(LoggingUtils.class)
+@PowerMockIgnore("javax.crypto.*")
 public class VonageClientTest {
     private TestUtils testUtils = new TestUtils();
 
@@ -81,6 +87,26 @@ public class VonageClientTest {
         VonageClient client = VonageClient.builder()
                 .applicationId("951614e0-eec4-4087-a6b1-3f4c2f169cb0")
                 .privateKeyContents(keyBytes)
+                .httpClient(stubHttpClient(
+                        200,
+                        "{\n" + "  \"conversation_uuid\": \"63f61863-4a51-4f6b-86e1-46edebio0391\",\n"
+                                + "  \"status\": \"started\",\n" + "  \"direction\": \"outbound\"\n" + "}"
+                ))
+                .build();
+
+        CallEvent evt = client
+                .getVoiceClient()
+                .createCall(new Call("4499991111", "44111222333", "https://callback.example.com/"));
+        assertEquals(CallStatus.STARTED, evt.getStatus());
+    }
+
+    @Test
+    public void testConstructVonageClientWithDifferentHash() throws Exception {
+        byte[] keyBytes = testUtils.loadKey("test/keys/application_key");
+        VonageClient client = VonageClient.builder()
+                .applicationId("951614e0-eec4-4087-a6b1-3f4c2f169cb0")
+                .privateKeyContents(keyBytes)
+                .hashType(HashUtil.HashType.HMAC_SHA256)
                 .httpClient(stubHttpClient(
                         200,
                         "{\n" + "  \"conversation_uuid\": \"63f61863-4a51-4f6b-86e1-46edebio0391\",\n"
@@ -153,7 +179,7 @@ public class VonageClientTest {
     }
 
     @Test
-    public void testApiKeyWithSignatureSecret() throws VonageUnacceptableAuthException, NoSuchAlgorithmException {
+    public void testApiKeyWithSignatureSecret() throws VonageUnacceptableAuthException, NoSuchAlgorithmException, InvalidKeyException {
         VonageClient vonageClient = VonageClient.builder().apiKey("api-key").signatureSecret("api-secret").build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
 
@@ -173,7 +199,57 @@ public class VonageClientTest {
                 .orElse(new BasicNameValuePair("", ""))
                 .getValue();
 
-        String sig = MD5Util.calculateMd5("&api_key=api-key&timestamp=" + timestamp + "api-secret");
+        String sig = HashUtil.calculate("&api_key=api-key&timestamp=" + timestamp + "api-secret", HashUtil.HashType.MD5);
+        assertContainsParam(parameters, "sig", sig);
+    }
+
+    @Test
+    public void testApiKeyWithSignatureSecretAsHMACSHA256() throws VonageUnacceptableAuthException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
+        VonageClient vonageClient = VonageClient.builder().hashType(HashUtil.HashType.HMAC_SHA256).apiKey("api-key").signatureSecret("api-secret").build();
+        AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
+
+        RequestBuilder requestBuilder = RequestBuilder.get();
+        authCollection.getAuth(SignatureAuthMethod.class).apply(requestBuilder);
+
+        List<NameValuePair> parameters = requestBuilder.getParameters();
+
+        // This is messy but trying to generate a signature auth method and then comparing with what's on the request
+        // could have a race condition depending on the returned timestamp.
+
+        // So, we're going to generate the signature after trying to determine what the timestamp is.
+        String timestamp = parameters
+                .stream()
+                .filter(pair -> "timestamp".equals(pair.getName()))
+                .findFirst()
+                .orElse(new BasicNameValuePair("", ""))
+                .getValue();
+
+        String sig = HashUtil.calculate("&api_key=api-key&timestamp=" + timestamp, "api-secret", "UTF-8", HashUtil.HashType.HMAC_SHA256);
+        assertContainsParam(parameters, "sig", sig);
+    }
+
+    @Test
+    public void testApiKeyWithSignatureSecretAsHmacSHA256() throws VonageUnacceptableAuthException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
+        VonageClient vonageClient = VonageClient.builder().hashType(HashUtil.HashType.HMAC_SHA256).apiKey("api-key").signatureSecret("api-secret").build();
+        AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
+
+        RequestBuilder requestBuilder = RequestBuilder.get();
+        authCollection.getAuth(SignatureAuthMethod.class).apply(requestBuilder);
+
+        List<NameValuePair> parameters = requestBuilder.getParameters();
+
+        // This is messy but trying to generate a signature auth method and then comparing with what's on the request
+        // could have a race condition depending on the returned timestamp.
+
+        // So, we're going to generate the signature after trying to determine what the timestamp is.
+        String timestamp = parameters
+                .stream()
+                .filter(pair -> "timestamp".equals(pair.getName()))
+                .findFirst()
+                .orElse(new BasicNameValuePair("", ""))
+                .getValue();
+
+        String sig = HashUtil.calculate("&api_key=api-key&timestamp=" + timestamp, "api-secret", "UTF-8", HashUtil.HashType.HMAC_SHA256);
         assertContainsParam(parameters, "sig", sig);
     }
 
@@ -214,7 +290,7 @@ public class VonageClientTest {
     public void testApplicationIdWithCertPath() throws Exception {
         VonageClient vonageClient = VonageClient.builder()
                 .applicationId("app-id")
-                .privateKeyPath(Paths.get(this.getClass().getResource("test/keys/application_key").getPath()))
+                .privateKeyPath(Paths.get(this.getClass().getResource("test/keys/application_key").toURI()))
                 .build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
 
@@ -227,9 +303,9 @@ public class VonageClientTest {
 
     @Test
     public void testApplicationIdWithCertPathAsString() throws Exception {
-        VonageClient vonageClient = VonageClient.builder()
+      VonageClient vonageClient = VonageClient.builder()
                 .applicationId("app-id")
-                .privateKeyPath(this.getClass().getResource("test/keys/application_key").getPath())
+                .privateKeyPath(Paths.get(this.getClass().getResource("test/keys/application_key").toURI()).toString())
                 .build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
 

@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [5.5.0]
 ### Added
 - Added support for PSD2 verification
-
+- SHA256 hashing option
 
 ## [5.4.0]
 ### Added

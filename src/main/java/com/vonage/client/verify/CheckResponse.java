@@ -42,29 +42,29 @@ public class CheckResponse {
 
     @JsonProperty("request_id")
     public String getRequestId() {
-        return this.requestId;
+        return requestId;
     }
 
     @JsonProperty("event_id")
     public String getEventId() {
-        return this.eventId;
+        return eventId;
     }
 
     public VerifyStatus getStatus() {
-        return this.status;
+        return status;
     }
 
     public BigDecimal getPrice() {
-        return this.price;
+        return price;
     }
 
     public String getCurrency() {
-        return this.currency;
+        return currency;
     }
 
     @JsonProperty("error_text")
     public String getErrorText() {
-        return this.errorText;
+        return errorText;
     }
 
     public static CheckResponse fromJson(String json) {
