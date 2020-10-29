@@ -33,11 +33,11 @@ public class SmsIdSearchRequest implements SearchSmsRequest {
     }
 
     public void addId(String id) {
-        this.ids.add(id);
+        ids.add(id);
     }
 
     public void addParams(RequestBuilder request) {
-        for (String id : this.ids) {
+        for (String id : ids) {
             request.addParameter("ids", id);
         }
 

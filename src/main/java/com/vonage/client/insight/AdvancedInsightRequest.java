@@ -20,12 +20,12 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
     private String callback;
 
     private AdvancedInsightRequest(Builder builder) {
-        this.number = builder.number;
-        this.country = builder.country;
-        this.cnam = builder.cnam;
-        this.ipAddress = builder.ipAddress;
-        this.async = builder.async;
-        this.callback = builder.callback;
+        number = builder.number;
+        country = builder.country;
+        cnam = builder.cnam;
+        ipAddress = builder.ipAddress;
+        async = builder.async;
+        callback = builder.callback;
     }
 
     public static Builder builder(String number) {
@@ -155,7 +155,7 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
          * @return A new {@link AdvancedInsightRequest} object from the stored builder options.
          */
         public AdvancedInsightRequest build() {
-            if (this.async && (this.callback == null || this.callback.isEmpty())) {
+            if (async && (callback == null || callback.isEmpty())) {
                 throw new IllegalStateException("You must define a callback url when using asyncronous insights.");
             }
             return new AdvancedInsightRequest(this);

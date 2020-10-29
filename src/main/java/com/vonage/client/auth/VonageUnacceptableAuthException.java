@@ -44,12 +44,12 @@ public class VonageUnacceptableAuthException extends VonageAuthException {
 
     private String generateErrorMessage() {
         SortedSet<String> availableTypes = new TreeSet<>();
-        for (AuthMethod auth : this.availableAuths) {
+        for (AuthMethod auth : availableAuths) {
             availableTypes.add(AUTH_DESCRIPTION_MAP.getOrDefault(auth.getClass(), auth.getClass().getSimpleName()));
         }
 
         SortedSet<String> acceptableTypes = new TreeSet<>();
-        for (Class klass : this.acceptableAuthClasses) {
+        for (Class klass : acceptableAuthClasses) {
             acceptableTypes.add(AUTH_DESCRIPTION_MAP.getOrDefault(klass, klass.getSimpleName()));
         }
 

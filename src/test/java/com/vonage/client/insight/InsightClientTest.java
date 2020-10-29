@@ -96,7 +96,7 @@ public class InsightClientTest extends ClientTest<InsightClient> {
 
     @Test
     public void testBasicInsightWithNumber() throws Exception {
-        this.wrapper.setHttpClient(stubHttpClient(200, BASIC_RESPOSE_JSON));
+        wrapper.setHttpClient(stubHttpClient(200, BASIC_RESPOSE_JSON));
 
         BasicInsightResponse response = this.client.getBasicNumberInsight("1234");
 
@@ -105,7 +105,7 @@ public class InsightClientTest extends ClientTest<InsightClient> {
 
     @Test
     public void testBasicInsightWithNumberAndCountry() throws Exception {
-        this.wrapper.setHttpClient(stubHttpClient(200, BASIC_RESPOSE_JSON));
+        wrapper.setHttpClient(stubHttpClient(200, BASIC_RESPOSE_JSON));
 
         BasicInsightResponse response = this.client.getBasicNumberInsight("1234", "GB");
 
@@ -114,7 +114,7 @@ public class InsightClientTest extends ClientTest<InsightClient> {
 
     @Test
     public void testStandardInsightWithNumber() throws Exception {
-        this.wrapper.setHttpClient(stubHttpClient(200, STANDARD_RESPONSE_JSON));
+        wrapper.setHttpClient(stubHttpClient(200, STANDARD_RESPONSE_JSON));
 
         StandardInsightResponse response = this.client.getStandardNumberInsight("1234");
 
@@ -123,7 +123,7 @@ public class InsightClientTest extends ClientTest<InsightClient> {
 
     @Test
     public void testStandardInsightWithNumberAndCountry() throws Exception {
-        this.wrapper.setHttpClient(stubHttpClient(200, STANDARD_RESPONSE_JSON));
+        wrapper.setHttpClient(stubHttpClient(200, STANDARD_RESPONSE_JSON));
 
         StandardInsightResponse response = this.client.getStandardNumberInsight("1234", "GB");
 
@@ -132,7 +132,7 @@ public class InsightClientTest extends ClientTest<InsightClient> {
 
     @Test
     public void testStandardInsightWithNumberAndCountryAndCnam() throws Exception {
-        this.wrapper.setHttpClient(stubHttpClient(200, STANDARD_RESPONSE_JSON));
+        wrapper.setHttpClient(stubHttpClient(200, STANDARD_RESPONSE_JSON));
 
         StandardInsightResponse response = this.client.getStandardNumberInsight("1234", "GB", true);
 
@@ -141,7 +141,7 @@ public class InsightClientTest extends ClientTest<InsightClient> {
 
     @Test
     public void testAdvancedInsightWithNumber() throws Exception {
-        this.wrapper.setHttpClient(stubHttpClient(200, ADVANCED_RESPONSE_JSON));
+        wrapper.setHttpClient(stubHttpClient(200, ADVANCED_RESPONSE_JSON));
 
         AdvancedInsightResponse response = this.client.getAdvancedNumberInsight("1234");
 
@@ -150,7 +150,7 @@ public class InsightClientTest extends ClientTest<InsightClient> {
 
     @Test
     public void testAdvancedInsightWithNumberAndCountry() throws Exception {
-        this.wrapper.setHttpClient(stubHttpClient(200, ADVANCED_RESPONSE_JSON));
+        wrapper.setHttpClient(stubHttpClient(200, ADVANCED_RESPONSE_JSON));
 
         AdvancedInsightResponse response = this.client.getAdvancedNumberInsight("1234", "GB");
 
@@ -159,7 +159,7 @@ public class InsightClientTest extends ClientTest<InsightClient> {
 
     @Test
     public void testAdvancedInsightWithNumberAndCountryAndIp() throws Exception {
-        this.wrapper.setHttpClient(stubHttpClient(200, ADVANCED_RESPONSE_JSON));
+        wrapper.setHttpClient(stubHttpClient(200, ADVANCED_RESPONSE_JSON));
 
         AdvancedInsightResponse response = this.client.getAdvancedNumberInsight("1234", "GB", "127.0.0.1");
 
@@ -168,7 +168,7 @@ public class InsightClientTest extends ClientTest<InsightClient> {
 
     @Test
     public void testAdvancedInsightWithNumberAndCountryAndIpAndCnam() throws Exception {
-        this.wrapper.setHttpClient(stubHttpClient(200, ADVANCED_RESPONSE_JSON));
+        wrapper.setHttpClient(stubHttpClient(200, ADVANCED_RESPONSE_JSON));
 
         AdvancedInsightResponse response = this.client.getAdvancedNumberInsight("1234", "GB", "127.0.0.1", true);
 
@@ -177,7 +177,7 @@ public class InsightClientTest extends ClientTest<InsightClient> {
 
     @Test
     public void testAsyncAdvancedInsight() throws Exception {
-        this.wrapper.setHttpClient(stubHttpClient(200, ASYNC_ADVANCED_RESPONSE_JSON));
+        wrapper.setHttpClient(stubHttpClient(200, ASYNC_ADVANCED_RESPONSE_JSON));
 
         AdvancedInsightResponse response = this.client.getAdvancedNumberInsight(AdvancedInsightRequest.builder("1234")
                 .async(true)

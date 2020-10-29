@@ -31,7 +31,7 @@ public class JWTAuthMethodTest {
 
     @Before
     public void setUp() throws Exception {
-        this.testUtils = new TestUtils();
+        testUtils = new TestUtils();
 
         byte[] keyBytes = testUtils.loadKey("test/keys/application_key");
         auth = new JWTAuthMethod("application-id", keyBytes);

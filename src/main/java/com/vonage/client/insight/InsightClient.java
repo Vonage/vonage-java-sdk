@@ -35,9 +35,9 @@ public class InsightClient extends AbstractClient {
     public InsightClient(HttpWrapper httpWrapper) {
         super(httpWrapper);
 
-        this.basic = new BasicInsightEndpoint(httpWrapper);
-        this.standard = new StandardInsightEndpoint(httpWrapper);
-        this.advanced = new AdvancedInsightEndpoint(httpWrapper);
+        basic = new BasicInsightEndpoint(httpWrapper);
+        standard = new StandardInsightEndpoint(httpWrapper);
+        advanced = new AdvancedInsightEndpoint(httpWrapper);
     }
 
     /**
@@ -80,7 +80,7 @@ public class InsightClient extends AbstractClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      */
     public BasicInsightResponse getBasicNumberInsight(BasicInsightRequest basicInsightRequest) throws VonageResponseParseException, VonageClientException {
-        return this.basic.execute(basicInsightRequest);
+        return basic.execute(basicInsightRequest);
     }
 
     /**
@@ -143,7 +143,7 @@ public class InsightClient extends AbstractClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      */
     public StandardInsightResponse getStandardNumberInsight(StandardInsightRequest standardInsightRequest) throws VonageResponseParseException, VonageClientException {
-        return this.standard.execute(standardInsightRequest);
+        return standard.execute(standardInsightRequest);
     }
 
     /**
@@ -236,6 +236,6 @@ public class InsightClient extends AbstractClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      */
     public AdvancedInsightResponse getAdvancedNumberInsight(AdvancedInsightRequest advancedInsightRequest) throws VonageResponseParseException, VonageClientException {
-        return this.advanced.execute(advancedInsightRequest);
+        return advanced.execute(advancedInsightRequest);
     }
 }
