@@ -464,6 +464,9 @@ Our [Voice API](https://developer.nexmo.com/voice/voice-api/overview) can connec
 
 ## Frequently Asked Questions
 
+Q: Does this SDK support thread safety? 
+A: No, it currently does not. 
+
 ### Supported APIs
 
 The following is a list of Vonage APIs and whether the Java SDK provides support for them:
