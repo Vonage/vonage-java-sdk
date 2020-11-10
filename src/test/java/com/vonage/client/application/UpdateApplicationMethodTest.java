@@ -23,7 +23,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class UpdateApplicationMethodTest {
+public class UpdateApplicationMethodTest extends AppBasicAuthTest {
     private UpdateApplicationMethod method;
 
     @Before

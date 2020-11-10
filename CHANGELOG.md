@@ -4,10 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.6.0]
+### Added
+- NotifyEvent structure for Notify Actions
+- SHA256 hashing option
+
+### Changed
+- Create application request use basic auth for authentication
+
+### Fixed
+- Fixed error throw when trying to log No Content responses
+
 ## [5.5.0]
 ### Added
 - Added support for PSD2 verification
-- SHA256 hashing option
 
 ## [5.4.0]
 ### Added

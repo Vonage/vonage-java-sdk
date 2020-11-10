@@ -23,7 +23,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class DeleteApplicationMethodTest {
+public class DeleteApplicationMethodTest extends AppBasicAuthTest {
     private DeleteApplicationMethod method;
 
     @Before
@@ -57,4 +57,6 @@ public class DeleteApplicationMethodTest {
         assertEquals("DELETE", builder.getMethod());
         assertEquals("https://example.com/v2/applications/78d335fa323d01149c3dd6f0d48968cf", builder.build().getURI().toString());
     }
+    
+    
 }
