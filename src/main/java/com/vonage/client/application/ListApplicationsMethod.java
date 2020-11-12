@@ -15,7 +15,6 @@
  */
 package com.vonage.client.application;
 
-import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.VonageBadRequestException;
 import com.vonage.client.VonageClientException;
@@ -28,7 +27,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-class ListApplicationsMethod extends AbstractMethod<ListApplicationRequest, ApplicationList> {
+class ListApplicationsMethod extends ApplicationMethod<ListApplicationRequest, ApplicationList> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
     private static final String PATH = "/applications";
@@ -68,10 +67,5 @@ class ListApplicationsMethod extends AbstractMethod<ListApplicationRequest, Appl
         }
 
         return ApplicationList.fromJson(new BasicResponseHandler().handleResponse(response));
-    }
-
-    @Override
-    protected RequestBuilder applyAuth(RequestBuilder request) throws VonageClientException {
-        return getAuthMethod(getAcceptableAuthMethods()).applyAsBasicAuth(request);
     }
 }

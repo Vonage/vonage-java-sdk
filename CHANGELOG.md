@@ -8,13 +8,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## Added
 - ASR (Automatic Speech Recognition)
 
+### Changed
+- Refactored Application v2 requests to remove duplicated code
+
+
 ## [5.6.0]
 ### Added
 - NotifyEvent structure for Notify Actions
 - SHA256 hashing option
 
 ### Changed
-- Create application request use basic auth for authentication
+- Changed application requests to use basic auth in header for authentication
 
 ### Fixed
 - Fixed error throw when trying to log No Content responses
