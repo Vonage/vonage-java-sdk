@@ -22,43 +22,23 @@
 package com.nexmo.client.application;
 
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoBadRequestException;
-import com.nexmo.client.NexmoClientException;
 import com.nexmo.client.auth.TokenAuthMethod;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.util.EntityUtils;
+import org.junit.Test;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import static org.junit.Assert.assertEquals;
 
-class DeleteApplicationMethod extends ApplicationMethod<String, Void> {
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
+public class ApplicationMethodTest {
 
-    private static final String PATH = "/applications/%s";
+    @Test
+    public void testApplyAuth() throws Exception {
+        String expectedAuthStr = "Authorization: Basic NHQ4YWVhZ2I6WHlNczJKa21BMVp6OWRVaw==";
+        HttpWrapper wrapper = new HttpWrapper(new TokenAuthMethod("4t8aeagb", "XyMs2JkmA1Zz9dUk"));
+        CreateApplicationMethod method = new CreateApplicationMethod(wrapper);
+        RequestBuilder request = method.makeRequest(Application.builder().build());
+        RequestBuilder requestWithAuth = method.applyAuth(request);
 
-    DeleteApplicationMethod(HttpWrapper httpWrapper) {
-        super(httpWrapper);
-    }
+        assertEquals(expectedAuthStr, String.valueOf(requestWithAuth.getHeaders("Authorization")[0]));
 
-    @Override
-    protected Class[] getAcceptableAuthMethods() {
-        return ALLOWED_AUTH_METHODS;
-    }
-
-    @Override
-    public RequestBuilder makeRequest(String id) throws UnsupportedEncodingException {
-        return RequestBuilder
-                .delete(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v2") + String.format(PATH, id))
-                .setHeader("Content-Type", "application/json");
-    }
-
-    @Override
-    public Void parseResponse(HttpResponse response) throws IOException, NexmoClientException {
-        if (response.getStatusLine().getStatusCode() != 204) {
-            throw new NexmoBadRequestException(EntityUtils.toString(response.getEntity()));
-        }
-
-        return null;
     }
 }

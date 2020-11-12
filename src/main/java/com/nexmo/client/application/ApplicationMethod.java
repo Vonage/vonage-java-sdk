@@ -21,44 +21,20 @@
  */
 package com.nexmo.client.application;
 
+import com.nexmo.client.AbstractMethod;
 import com.nexmo.client.HttpWrapper;
-import com.nexmo.client.NexmoBadRequestException;
 import com.nexmo.client.NexmoClientException;
-import com.nexmo.client.auth.TokenAuthMethod;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.util.EntityUtils;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+public abstract class ApplicationMethod<RequestT, ResultT> extends AbstractMethod<RequestT, ResultT> {
 
-class DeleteApplicationMethod extends ApplicationMethod<String, Void> {
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
-    private static final String PATH = "/applications/%s";
-
-    DeleteApplicationMethod(HttpWrapper httpWrapper) {
+    public ApplicationMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
-        return ALLOWED_AUTH_METHODS;
-    }
-
-    @Override
-    public RequestBuilder makeRequest(String id) throws UnsupportedEncodingException {
-        return RequestBuilder
-                .delete(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v2") + String.format(PATH, id))
-                .setHeader("Content-Type", "application/json");
-    }
-
-    @Override
-    public Void parseResponse(HttpResponse response) throws IOException, NexmoClientException {
-        if (response.getStatusLine().getStatusCode() != 204) {
-            throw new NexmoBadRequestException(EntityUtils.toString(response.getEntity()));
-        }
-
-        return null;
+    protected RequestBuilder applyAuth(RequestBuilder request) throws NexmoClientException {
+        return getAuthMethod(getAcceptableAuthMethods()).applyAsBasicAuth(request);
     }
 }

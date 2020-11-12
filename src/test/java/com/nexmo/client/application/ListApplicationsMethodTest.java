@@ -29,7 +29,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class ListApplicationsMethodTest {
+public class ListApplicationsMethodTest extends ApplicationMethodTest {
     private ListApplicationsMethod method;
 
     @Before
