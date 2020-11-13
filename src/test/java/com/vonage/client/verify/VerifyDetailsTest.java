@@ -15,13 +15,13 @@
  */
 package com.vonage.client.verify;
 
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 public class VerifyDetailsTest {
     @Test
     public void testVerifyDetailsStatusFromString() {
-        Assert.assertEquals(VerifyDetails.Status.INVALID, VerifyDetails.Status.fromString("101"));
+        assertEquals(VerifyDetails.Status.INVALID, VerifyDetails.Status.fromString("101"));
 
     }
 }

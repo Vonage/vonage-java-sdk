@@ -17,11 +17,13 @@ package com.vonage.client.verify;
 
 import com.vonage.client.ClientTest;
 import com.vonage.client.VonageResponseParseException;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
 
@@ -47,12 +49,12 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
         responses[1] = client.check("a-request-id", "1234");
 
         for (CheckResponse response : responses) {
-            Assert.assertEquals("a-request-id", response.getRequestId());
-            Assert.assertEquals(VerifyStatus.OK, response.getStatus());
-            Assert.assertEquals("an-event-id", response.getEventId());
-            Assert.assertEquals(new BigDecimal("0.10000000"), response.getPrice());
-            Assert.assertEquals("EUR", response.getCurrency());
-            Assert.assertNull(response.getErrorText());
+            assertEquals("a-request-id", response.getRequestId());
+            assertEquals(VerifyStatus.OK, response.getStatus());
+            assertEquals("an-event-id", response.getEventId());
+            assertEquals(new BigDecimal("0.10000000"), response.getPrice());
+            assertEquals("EUR", response.getCurrency());
+            assertNull(response.getErrorText());
         }
     }
 
@@ -63,7 +65,7 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
         wrapper.setHttpClient(stubHttpClient(200, json));
         CheckResponse response = client.check("a-request-id", "1234", "127.0.0.1");
 
-        Assert.assertNull(response.getRequestId());
+        assertNull(response.getRequestId());
     }
 
     @Test(expected = VonageResponseParseException.class)
@@ -81,7 +83,7 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
                 + "}\n";
         wrapper.setHttpClient(stubHttpClient(200, json));
         CheckResponse response = client.check("a-request-id", "1234");
-        Assert.assertEquals(VerifyStatus.INTERNAL_ERROR, response.getStatus());
+        assertEquals(VerifyStatus.INTERNAL_ERROR, response.getStatus());
     }
 
     @Test
@@ -91,7 +93,7 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
         wrapper.setHttpClient(stubHttpClient(200, json));
         CheckResponse response = client.check("a-request-id", "1234", "127.0.0.1");
 
-        Assert.assertNull(response.getEventId());
+        assertNull(response.getEventId());
     }
 
     @Test
@@ -101,7 +103,7 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
         wrapper.setHttpClient(stubHttpClient(200, json));
         CheckResponse response = client.check("a-request-id", "1234", "127.0.0.1");
 
-        Assert.assertNull(response.getPrice());
+        assertNull(response.getPrice());
     }
 
     @Test(expected = VonageResponseParseException.class)
@@ -120,7 +122,7 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
         wrapper.setHttpClient(stubHttpClient(200, json));
         CheckResponse response = client.check("a-request-id", "1234", "127.0.0.1");
 
-        Assert.assertNull(response.getCurrency());
+        assertNull(response.getCurrency());
     }
 
     @Test
@@ -129,8 +131,8 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
         wrapper.setHttpClient(stubHttpClient(200, json));
         CheckResponse response = client.check("a-request-id", "1234", "127.0.0.1");
 
-        Assert.assertEquals(VerifyStatus.MISSING_PARAMS, response.getStatus());
-        Assert.assertEquals("There was an error.", response.getErrorText());
+        assertEquals(VerifyStatus.MISSING_PARAMS, response.getStatus());
+        assertEquals("There was an error.", response.getErrorText());
     }
 
     @Test
@@ -139,6 +141,6 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
         wrapper.setHttpClient(stubHttpClient(200, json));
         CheckResponse response = client.check("a-request-id", "1234", "127.0.0.1");
 
-        Assert.assertEquals(VerifyStatus.UNKNOWN, response.getStatus());
+        assertEquals(VerifyStatus.UNKNOWN, response.getStatus());
     }
 }

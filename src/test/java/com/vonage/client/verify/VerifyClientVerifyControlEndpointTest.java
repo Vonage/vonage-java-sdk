@@ -16,7 +16,7 @@
 package com.vonage.client.verify;
 
 import com.vonage.client.ClientTest;
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,8 +33,8 @@ public class VerifyClientVerifyControlEndpointTest extends ClientTest<VerifyClie
         wrapper.setHttpClient(stubHttpClient(200, json));
 
         ControlResponse response = client.advanceVerification("a-request-id");
-        Assert.assertEquals("0", response.getStatus());
-        Assert.assertEquals(VerifyControlCommand.TRIGGER_NEXT_EVENT, response.getCommand());
+        assertEquals("0", response.getStatus());
+        assertEquals(VerifyControlCommand.TRIGGER_NEXT_EVENT, response.getCommand());
     }
 
     @Test
@@ -43,7 +43,7 @@ public class VerifyClientVerifyControlEndpointTest extends ClientTest<VerifyClie
         wrapper.setHttpClient(stubHttpClient(200, json));
 
         ControlResponse response = client.cancelVerification("a-request-id");
-        Assert.assertEquals("0", response.getStatus());
-        Assert.assertEquals(VerifyControlCommand.CANCEL, response.getCommand());
+        assertEquals("0", response.getStatus());
+        assertEquals(VerifyControlCommand.CANCEL, response.getCommand());
     }
 }
