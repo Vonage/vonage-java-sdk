@@ -98,7 +98,7 @@ public class InsightClientTest extends ClientTest<InsightClient> {
     public void testBasicInsightWithNumber() throws Exception {
         wrapper.setHttpClient(stubHttpClient(200, BASIC_RESPOSE_JSON));
 
-        BasicInsightResponse response = this.client.getBasicNumberInsight("1234");
+        BasicInsightResponse response = client.getBasicNumberInsight("1234");
 
         assertBasicResponse(response);
     }
@@ -107,7 +107,7 @@ public class InsightClientTest extends ClientTest<InsightClient> {
     public void testBasicInsightWithNumberAndCountry() throws Exception {
         wrapper.setHttpClient(stubHttpClient(200, BASIC_RESPOSE_JSON));
 
-        BasicInsightResponse response = this.client.getBasicNumberInsight("1234", "GB");
+        BasicInsightResponse response = client.getBasicNumberInsight("1234", "GB");
 
         assertBasicResponse(response);
     }
@@ -116,7 +116,7 @@ public class InsightClientTest extends ClientTest<InsightClient> {
     public void testStandardInsightWithNumber() throws Exception {
         wrapper.setHttpClient(stubHttpClient(200, STANDARD_RESPONSE_JSON));
 
-        StandardInsightResponse response = this.client.getStandardNumberInsight("1234");
+        StandardInsightResponse response = client.getStandardNumberInsight("1234");
 
         assertBasicResponse(response);
     }
@@ -125,7 +125,7 @@ public class InsightClientTest extends ClientTest<InsightClient> {
     public void testStandardInsightWithNumberAndCountry() throws Exception {
         wrapper.setHttpClient(stubHttpClient(200, STANDARD_RESPONSE_JSON));
 
-        StandardInsightResponse response = this.client.getStandardNumberInsight("1234", "GB");
+        StandardInsightResponse response = client.getStandardNumberInsight("1234", "GB");
 
         assertStandardResponse(response);
     }
@@ -134,7 +134,7 @@ public class InsightClientTest extends ClientTest<InsightClient> {
     public void testStandardInsightWithNumberAndCountryAndCnam() throws Exception {
         wrapper.setHttpClient(stubHttpClient(200, STANDARD_RESPONSE_JSON));
 
-        StandardInsightResponse response = this.client.getStandardNumberInsight("1234", "GB", true);
+        StandardInsightResponse response = client.getStandardNumberInsight("1234", "GB", true);
 
         assertStandardResponse(response);
     }
@@ -143,7 +143,7 @@ public class InsightClientTest extends ClientTest<InsightClient> {
     public void testAdvancedInsightWithNumber() throws Exception {
         wrapper.setHttpClient(stubHttpClient(200, ADVANCED_RESPONSE_JSON));
 
-        AdvancedInsightResponse response = this.client.getAdvancedNumberInsight("1234");
+        AdvancedInsightResponse response = client.getAdvancedNumberInsight("1234");
 
         assertAdvancedInsightResponse(response);
     }
@@ -152,7 +152,7 @@ public class InsightClientTest extends ClientTest<InsightClient> {
     public void testAdvancedInsightWithNumberAndCountry() throws Exception {
         wrapper.setHttpClient(stubHttpClient(200, ADVANCED_RESPONSE_JSON));
 
-        AdvancedInsightResponse response = this.client.getAdvancedNumberInsight("1234", "GB");
+        AdvancedInsightResponse response = client.getAdvancedNumberInsight("1234", "GB");
 
         assertAdvancedInsightResponse(response);
     }
@@ -161,7 +161,7 @@ public class InsightClientTest extends ClientTest<InsightClient> {
     public void testAdvancedInsightWithNumberAndCountryAndIp() throws Exception {
         wrapper.setHttpClient(stubHttpClient(200, ADVANCED_RESPONSE_JSON));
 
-        AdvancedInsightResponse response = this.client.getAdvancedNumberInsight("1234", "GB", "127.0.0.1");
+        AdvancedInsightResponse response = client.getAdvancedNumberInsight("1234", "GB", "127.0.0.1");
 
         assertAdvancedInsightResponse(response);
     }
@@ -170,7 +170,7 @@ public class InsightClientTest extends ClientTest<InsightClient> {
     public void testAdvancedInsightWithNumberAndCountryAndIpAndCnam() throws Exception {
         wrapper.setHttpClient(stubHttpClient(200, ADVANCED_RESPONSE_JSON));
 
-        AdvancedInsightResponse response = this.client.getAdvancedNumberInsight("1234", "GB", "127.0.0.1", true);
+        AdvancedInsightResponse response = client.getAdvancedNumberInsight("1234", "GB", "127.0.0.1", true);
 
         assertAdvancedInsightResponse(response);
     }
@@ -179,7 +179,7 @@ public class InsightClientTest extends ClientTest<InsightClient> {
     public void testAsyncAdvancedInsight() throws Exception {
         wrapper.setHttpClient(stubHttpClient(200, ASYNC_ADVANCED_RESPONSE_JSON));
 
-        AdvancedInsightResponse response = this.client.getAdvancedNumberInsight(AdvancedInsightRequest.builder("1234")
+        AdvancedInsightResponse response = client.getAdvancedNumberInsight(AdvancedInsightRequest.builder("1234")
                 .async(true)
                 .callback("https://example.com")
                 .build());

@@ -28,7 +28,7 @@ public class SearchMethodTest {
 
     @Before
     public void setUp() throws Exception {
-        this.method = new SearchMethod(new HttpWrapper());
+        method = new SearchMethod(new HttpWrapper());
     }
 
     @Test

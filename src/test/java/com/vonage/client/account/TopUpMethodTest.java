@@ -28,7 +28,7 @@ public class TopUpMethodTest {
 
     @Before
     public void setUp() throws Exception {
-        this.method = new TopUpMethod(new HttpWrapper());
+        method = new TopUpMethod(new HttpWrapper());
     }
 
     @Test

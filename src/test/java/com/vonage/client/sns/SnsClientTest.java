@@ -52,8 +52,8 @@ public class SnsClientTest {
 
     @Before
     public void setUp() throws Exception {
-        this.httpWrapper = new HttpWrapper(new TokenAuthMethod("abcd", "efgh"));
-        this.client = new SnsClient(httpWrapper);
+        httpWrapper = new HttpWrapper(new TokenAuthMethod("abcd", "efgh"));
+        client = new SnsClient(httpWrapper);
     }
 
     private HttpClient stubHttpClient(int statusCode, String content) throws Exception {
@@ -77,13 +77,13 @@ public class SnsClientTest {
     @Ignore
     @Test
     public void testSubscribe() throws Exception {
-        this.httpWrapper.setHttpClient(this.stubHttpClient(200, "<nexmo-sns>\n" +
+        httpWrapper.setHttpClient(stubHttpClient(200, "<nexmo-sns>\n" +
                 "   <command>subscribe</command>\n" +
                 "   <resultCode>0</resultCode>\n" +
                 "   <resultMessage>a result message</resultMessage>\n" +
                 "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n" +
                 "</nexmo-sns>"));
-        SnsSubscribeResponse result = this.client.subscribe(new SnsSubscribeRequest(
+        SnsSubscribeResponse result = client.subscribe(new SnsSubscribeRequest(
                 "arn:aws:sns:region:num:id",
                 "447777111222"
         ));
@@ -94,13 +94,13 @@ public class SnsClientTest {
     @Test
     @Ignore
     public void testPublish() throws Exception {
-        this.httpWrapper.setHttpClient(this.stubHttpClient(200, "<nexmo-sns>\n" +
+        httpWrapper.setHttpClient(stubHttpClient(200, "<nexmo-sns>\n" +
                 "   <command>publish</command>\n" +
                 "   <resultCode>0</resultCode>\n" +
                 "   <resultMessage>a result message</resultMessage>\n" +
                 "   <transactionId>1234</transactionId>\n" +
                 "</nexmo-sns>"));
-        SnsPublishResponse result = this.client.publish(new SnsPublishRequest(
+        SnsPublishResponse result = client.publish(new SnsPublishRequest(
                 "arn:aws:sns:region:num:id",
                 "447777111222",
                 "447777111223",
@@ -113,8 +113,8 @@ public class SnsClientTest {
     @Test
     public void testSubmitWithInvalidResponse() throws Exception {
         try {
-            this.httpWrapper.setHttpClient(this.stubHttpClient(500, "<nexmo-sms/>"));
-            this.client.subscribe(new SnsSubscribeRequest(
+            httpWrapper.setHttpClient(stubHttpClient(500, "<nexmo-sms/>"));
+            client.subscribe(new SnsSubscribeRequest(
                     "arn:aws:sns:region:num:id",
                     "447777111222"
             ));

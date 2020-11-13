@@ -28,7 +28,7 @@ public class ListSecretsMethodTest {
 
     @Before
     public void setUp() throws Exception {
-        this.method = new ListSecretsMethod(new HttpWrapper());
+        method = new ListSecretsMethod(new HttpWrapper());
     }
 
     @Test(expected = IllegalArgumentException.class)

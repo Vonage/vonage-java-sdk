@@ -35,18 +35,18 @@ public class ControlEndpointTest {
 
     @Before
     public void setUp() throws Exception {
-        this.endpoint = new ControlEndpoint(new HttpWrapper());
+        endpoint = new ControlEndpoint(new HttpWrapper());
     }
 
     @Test
     public void testGetAcceptableAuthMethods() throws Exception {
-        Class[] auths = this.endpoint.getAcceptableAuthMethods();
+        Class[] auths = endpoint.getAcceptableAuthMethods();
         assertArrayEquals(new Class[]{TokenAuthMethod.class}, auths);
     }
 
     @Test
     public void testMakeRequest() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(new ControlRequest("request-id",
+        RequestBuilder builder = endpoint.makeRequest(new ControlRequest("request-id",
                 VerifyControlCommand.CANCEL
         ));
         assertEquals("POST", builder.getMethod());
@@ -62,7 +62,7 @@ public class ControlEndpointTest {
         HttpResponse stub = TestUtils.makeJsonHttpResponse(200,
                 "{\n" + "  \"status\":\"0\",\n" + "  \"command\":\"cancel\"\n" + "}"
         );
-        ControlResponse response = this.endpoint.parseResponse(stub);
+        ControlResponse response = endpoint.parseResponse(stub);
         assertEquals("0", response.getStatus());
         assertEquals(VerifyControlCommand.CANCEL, response.getCommand());
     }
@@ -73,7 +73,7 @@ public class ControlEndpointTest {
                 "{\n" + "    \"error_text\": \"Missing username\",\n" + "    \"status\": \"2\"\n" + "}"
         );
         try {
-            ControlResponse response = this.endpoint.parseResponse(stub);
+            ControlResponse response = endpoint.parseResponse(stub);
             fail("Parsing an error response should throw an exception.");
         } catch (VerifyException exc) {
             assertEquals("2", exc.getStatus());

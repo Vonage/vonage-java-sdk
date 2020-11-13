@@ -17,7 +17,7 @@ public class VerifyClientPsd2EndpointTest extends ClientTest<VerifyClient> {
 
     @Test
     public void testPsd2Verify() throws Exception {
-        wrapper.setHttpClient(this.stubHttpClient(200,
+        wrapper.setHttpClient(stubHttpClient(200,
                 "{" + "\"request_id\": \"abcdef0123456789abcdef0123456789\"," + " \"status\": 0" + "}"
         ));
 
@@ -29,7 +29,7 @@ public class VerifyClientPsd2EndpointTest extends ClientTest<VerifyClient> {
 
     @Test
     public void testPsd2VerifyWithWorkflow() throws Exception {
-        wrapper.setHttpClient(this.stubHttpClient(200,
+        wrapper.setHttpClient(stubHttpClient(200,
                 "{" + "\"request_id\": \"abcdef0123456789abcdef0123456789\"," + " \"status\": 0" + "}"
         ));
 
@@ -41,7 +41,7 @@ public class VerifyClientPsd2EndpointTest extends ClientTest<VerifyClient> {
 
     @Test
     public void testPsd2VerifyWithOptionalParameters() throws Exception {
-        wrapper.setHttpClient(this.stubHttpClient(200,
+        wrapper.setHttpClient(stubHttpClient(200,
                 "{" + "\"request_id\": \"abcdef0123456789abcdef0123456789\"," + " \"status\": 0" + "}"
         ));
 

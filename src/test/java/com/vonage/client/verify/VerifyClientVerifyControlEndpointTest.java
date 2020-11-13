@@ -30,7 +30,7 @@ public class VerifyClientVerifyControlEndpointTest extends ClientTest<VerifyClie
     @Test
     public void testAdvanceVerification() throws Exception {
         String json = "{\n" + "  \"status\":\"0\",\n" + "  \"command\":\"trigger_next_event\"\n" + "}";
-        wrapper.setHttpClient(this.stubHttpClient(200, json));
+        wrapper.setHttpClient(stubHttpClient(200, json));
 
         ControlResponse response = client.advanceVerification("a-request-id");
         Assert.assertEquals("0", response.getStatus());
@@ -40,7 +40,7 @@ public class VerifyClientVerifyControlEndpointTest extends ClientTest<VerifyClie
     @Test
     public void testCancelVerification() throws Exception {
         String json = "{\n" + "  \"status\":\"0\",\n" + "  \"command\":\"cancel\"\n" + "}";
-        wrapper.setHttpClient(this.stubHttpClient(200, json));
+        wrapper.setHttpClient(stubHttpClient(200, json));
 
         ControlResponse response = client.cancelVerification("a-request-id");
         Assert.assertEquals("0", response.getStatus());

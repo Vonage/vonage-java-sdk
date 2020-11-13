@@ -38,18 +38,18 @@ public class SearchSmsEndpointTest {
 
     @Before
     public void setUp() throws Exception {
-        this.endpoint = new SmsSearchEndpoint(new HttpWrapper());
+        endpoint = new SmsSearchEndpoint(new HttpWrapper());
     }
 
     @Test
     public void testGetAcceptableAuthMethods() throws Exception {
-        Class[] auths = this.endpoint.getAcceptableAuthMethods();
+        Class[] auths = endpoint.getAcceptableAuthMethods();
         assertArrayEquals(new Class[]{TokenAuthMethod.class}, auths);
     }
 
     @Test
     public void testMakeSingleIdRequest() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(new SmsIdSearchRequest("one-id"));
+        RequestBuilder builder = endpoint.makeRequest(new SmsIdSearchRequest("one-id"));
         assertEquals("GET", builder.getMethod());
         assertThat(builder.build().getURI().toString(), startsWith("https://rest.nexmo.com/search/messages?"));
 
@@ -65,7 +65,7 @@ public class SearchSmsEndpointTest {
     public void testMakeMultipleIdRequest() throws Exception {
         SmsIdSearchRequest request = new SmsIdSearchRequest("one-id");
         request.addId("two-id");
-        RequestBuilder builder = this.endpoint.makeRequest(request);
+        RequestBuilder builder = endpoint.makeRequest(request);
         assertEquals("GET", builder.getMethod());
         assertThat(builder.build().getURI().toString(), startsWith("https://rest.nexmo.com/search/messages?"));
 
@@ -85,7 +85,7 @@ public class SearchSmsEndpointTest {
                 GregorianCalendar.SEPTEMBER,
                 22
         ).getTime(), "447700900510");
-        RequestBuilder builder = this.endpoint.makeRequest(request);
+        RequestBuilder builder = endpoint.makeRequest(request);
         assertEquals("GET", builder.getMethod());
         assertThat(builder.build().getURI().toString(), startsWith("https://rest.nexmo.com/search/messages?"));
 
@@ -113,7 +113,7 @@ public class SearchSmsEndpointTest {
                         + "      \"final-status\": \"DELIVRD\",\n" + "      \"date-closed\": \"2011-11-25 18:03:00\",\n"
                         + "      \"latency\": 14151,\n" + "      \"type\": \"MT\"\n" + "    }\n" + "  ]\n" + "}\n"
         );
-        SearchSmsResponse response = this.endpoint.parseResponse(stub);
+        SearchSmsResponse response = endpoint.parseResponse(stub);
 
         assertThat(response.getCount(), equalTo(2));
 

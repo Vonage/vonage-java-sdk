@@ -34,7 +34,7 @@ public class CancelNumberEndpointTest {
 
     @Before
     public void setUp() throws Exception {
-        this.endpoint = new CancelNumberEndpoint(new HttpWrapper());
+        endpoint = new CancelNumberEndpoint(new HttpWrapper());
     }
 
     @Test

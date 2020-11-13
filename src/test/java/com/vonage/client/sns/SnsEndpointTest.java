@@ -35,12 +35,12 @@ public class SnsEndpointTest {
 
     @Before
     public void setUp() {
-        this.endpoint = new SnsEndpoint(new HttpWrapper());
+        endpoint = new SnsEndpoint(new HttpWrapper());
     }
 
     @Test
     public void testParseSubscribeResponse() throws Exception {
-        SnsResponse result = this.endpoint.parseSubmitResponse(
+        SnsResponse result = endpoint.parseSubmitResponse(
                 "<nexmo-sns>\n" + "   <command>subscribe</command>\n" + "   <resultCode>0</resultCode>\n"
                         + "   <resultMessage>a result message</resultMessage>\n"
                         + "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n" + "</nexmo-sns>");
@@ -54,7 +54,7 @@ public class SnsEndpointTest {
 
     @Test
     public void testParsePublishResponse() throws Exception {
-        SnsResponse result = this.endpoint.parseSubmitResponse(
+        SnsResponse result = endpoint.parseSubmitResponse(
                 "<nexmo-sns>\n" + "   <command>publish</command>\n" + "   <resultCode>0</resultCode>\n"
                         + "   <resultMessage>a result message</resultMessage>\n"
                         + "   <transactionId>1234</transactionId>\n" + "</nexmo-sns>");
@@ -68,7 +68,7 @@ public class SnsEndpointTest {
 
     @Test
     public void testParseResponseInvalidResultCode() throws Exception {
-        SnsResponse result = this.endpoint.parseSubmitResponse(
+        SnsResponse result = endpoint.parseSubmitResponse(
                 "<nexmo-sns>\n" + "   <command>subscribe</command>\n" + "   <resultCode>non-numeric</resultCode>\n"
                         + "   <resultMessage>a result message</resultMessage>\n"
                         + "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n" + "</nexmo-sns>");
@@ -79,7 +79,7 @@ public class SnsEndpointTest {
 
     @Test
     public void testParseResponseNullResultCode() throws Exception {
-        SnsResponse result = this.endpoint.parseSubmitResponse(
+        SnsResponse result = endpoint.parseSubmitResponse(
                 "<nexmo-sns>\n" + "   <command>subscribe</command>\n" + "   <resultCode/>\n"
                         + "   <resultMessage>a result message</resultMessage>\n"
                         + "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n"
@@ -92,7 +92,7 @@ public class SnsEndpointTest {
     @Test
     public void testParseResponseMissingResultCode() throws Exception {
         try {
-            this.endpoint.parseSubmitResponse("<nexmo-sns>\n" + "   <command>subscribe</command>\n"
+            endpoint.parseSubmitResponse("<nexmo-sns>\n" + "   <command>subscribe</command>\n"
                     + "   <resultMessage>a result message</resultMessage>\n"
                     + "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n"
                     + "   <transactionId>1234</transactionId>\n" + "</nexmo-sns>");
@@ -104,7 +104,7 @@ public class SnsEndpointTest {
 
     @Test
     public void testParseResponseInvalidTagIsIgnored() throws Exception {
-        SnsResponse result = this.endpoint.parseSubmitResponse(
+        SnsResponse result = endpoint.parseSubmitResponse(
                 "<nexmo-sns>\n" + "   <command>subscribe</command>\n" + "   <resultCode>0</resultCode>\n"
                         + "   <resultMessage>a result message</resultMessage>\n"
                         + "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n"
@@ -117,7 +117,7 @@ public class SnsEndpointTest {
     @Test
     public void testParseResponseUnparseable() throws Exception {
         try {
-            this.endpoint.parseSubmitResponse("not-xml");
+            endpoint.parseSubmitResponse("not-xml");
             fail("Attempting to parse non-xml should throw VonageResponseParseException");
         } catch (VonageResponseParseException e) {
             // this is expected
@@ -127,7 +127,7 @@ public class SnsEndpointTest {
     @Test
     public void testParseDummyCommand() throws Exception {
         try {
-            this.endpoint.parseSubmitResponse(
+            endpoint.parseSubmitResponse(
                     "<nexmo-sns>\n" + "   <command>dummy command</command>\n" + "   <resultCode>0</resultCode>\n"
                             + "   <resultMessage>a result message</resultMessage>\n"
                             + "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n"

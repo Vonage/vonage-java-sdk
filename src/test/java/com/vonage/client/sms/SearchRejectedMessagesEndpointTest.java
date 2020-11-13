@@ -36,18 +36,18 @@ public class SearchRejectedMessagesEndpointTest {
 
     @Before
     public void setUp() throws Exception {
-        this.endpoint = new SearchRejectedMessagesEndpoint(new HttpWrapper());
+        endpoint = new SearchRejectedMessagesEndpoint(new HttpWrapper());
     }
 
     @Test
     public void testGetAcceptableAuthMethods() throws Exception {
-        Class[] auths = this.endpoint.getAcceptableAuthMethods();
+        Class[] auths = endpoint.getAcceptableAuthMethods();
         assertArrayEquals(new Class[]{TokenAuthMethod.class}, auths);
     }
 
     @Test
     public void testMakeRequest() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(new SearchRejectedMessagesRequest(new GregorianCalendar(2017,
+        RequestBuilder builder = endpoint.makeRequest(new SearchRejectedMessagesRequest(new GregorianCalendar(2017,
                 Calendar.OCTOBER,
                 22
         ).getTime(), "447700900737"));
@@ -70,7 +70,7 @@ public class SearchRejectedMessagesEndpointTest {
                         + "      \"error-code-label\": \"partner quota exceeded -- Your pre-pay account does not have sufficient credit to process this message\"\n"
                         + "    }\n" + "  ]\n" + "}\n"
         );
-        SearchRejectedMessagesResponse response = this.endpoint.parseResponse(stub);
+        SearchRejectedMessagesResponse response = endpoint.parseResponse(stub);
         assertEquals(1, response.getCount());
         assertNotNull(response.getItems());
         assertEquals(1, response.getItems().length);

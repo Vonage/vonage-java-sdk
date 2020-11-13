@@ -17,8 +17,8 @@ package com.vonage.client.insight;
 
 public class BasicInsightRequest extends BaseInsightRequest {
     private BasicInsightRequest(Builder builder) {
-        this.number = builder.number;
-        this.country = builder.country;
+        number = builder.number;
+        country = builder.country;
     }
 
     /**

@@ -41,7 +41,7 @@ public class StopStreamMethodTest {
 
     @Before
     public void setUp() throws Exception {
-        this.method = new StopStreamMethod(new HttpWrapper());
+        method = new StopStreamMethod(new HttpWrapper());
         httpMethod = "DELETE";
     }
 

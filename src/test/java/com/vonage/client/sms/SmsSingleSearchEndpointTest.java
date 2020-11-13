@@ -28,7 +28,7 @@ public class SmsSingleSearchEndpointTest {
 
     @Before
     public void setUp() throws Exception {
-        this.endpoint = new SmsSingleSearchEndpoint(new HttpWrapper());
+        endpoint = new SmsSingleSearchEndpoint(new HttpWrapper());
     }
 
     @Test

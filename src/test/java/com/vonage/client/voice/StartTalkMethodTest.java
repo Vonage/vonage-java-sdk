@@ -28,7 +28,7 @@ public class StartTalkMethodTest {
 
     @Before
     public void setUp() throws Exception {
-        this.method = new StartTalkMethod(new HttpWrapper());
+        method = new StartTalkMethod(new HttpWrapper());
     }
 
     @Test

@@ -33,18 +33,18 @@ public class UpdateNumberEndpointTest {
 
     @Before
     public void setUp() throws Exception {
-        this.endpoint = new UpdateNumberEndpoint(new HttpWrapper());
+        endpoint = new UpdateNumberEndpoint(new HttpWrapper());
     }
 
     @Test
     public void testGetAcceptableAuthMethods() throws Exception {
-        Class[] auths = this.endpoint.getAcceptableAuthMethods();
+        Class[] auths = endpoint.getAcceptableAuthMethods();
         assertArrayEquals(new Class[]{TokenAuthMethod.class}, auths);
     }
 
     @Test
     public void testMakeRequest() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(new UpdateNumberRequest("447700900013", "UK"));
+        RequestBuilder builder = endpoint.makeRequest(new UpdateNumberRequest("447700900013", "UK"));
         assertEquals("POST", builder.getMethod());
         assertEquals("https://rest.nexmo.com/number/update", builder.build().getURI().toString());
 
@@ -64,7 +64,7 @@ public class UpdateNumberEndpointTest {
         request.setVoiceStatusCallback("https://api.example.com/callback");
         request.setMessagesCallbackValue("MESSAGES-APPLICATION-ID");
 
-        RequestBuilder builder = this.endpoint.makeRequest(request);
+        RequestBuilder builder = endpoint.makeRequest(request);
 
         assertEquals("POST", builder.getMethod());
         assertEquals("https://rest.nexmo.com/number/update", builder.build().getURI().toString());
@@ -88,7 +88,7 @@ public class UpdateNumberEndpointTest {
             HttpResponse stub = TestUtils.makeJsonHttpResponse(200,
                     "{\n" + "  \"error-code\":\"200\",\n" + "  \"error-code-label\":\"success\"\n" + "}"
             );
-            this.endpoint.parseResponse(stub);
+            endpoint.parseResponse(stub);
         } catch (Exception e) {
             fail("Parsing a 200 response should not raise an error.");
         }
@@ -101,7 +101,7 @@ public class UpdateNumberEndpointTest {
                     500,
                     "{\n" + "  \"error-code\":\"500\",\n" + "  \"error-code-label\":\"There was an error\"\n" + "}"
             );
-            this.endpoint.parseResponse(stub);
+            endpoint.parseResponse(stub);
             fail("An exception should have been thrown here.");
         } catch (Exception e) {
             // This is expected.
