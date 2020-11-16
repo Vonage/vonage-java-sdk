@@ -50,7 +50,7 @@ public class ControlResponse {
 
     @JsonProperty("error_text")
     public String getErrorText() {
-        return this.errorText;
+        return errorText;
     }
 
     public static ControlResponse fromJson(String json) {

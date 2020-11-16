@@ -37,25 +37,23 @@ public class HttpWrapperTest {
 
     @Test
     public void basicTest() {
-        assertNotNull(wapper.getHttpClient());
+        assertNotNull(wrapper.getHttpClient());
     }
 
     @Test
     public void testAuthMethodAccessors() {
         AuthCollection auths = new AuthCollection();
-        wapper.setAuthCollection(auths);
-        assertEquals(auths, wapper.getAuthCollection());
+        wrapper.setAuthCollection(auths);
+        assertEquals(auths, wrapper.getAuthCollection());
     }
 
     @Test
     public void testHttpConfigAccessor() {
-        assertNotNull(wapper.getHttpConfig());
+        assertNotNull(wrapper.getHttpConfig());
     }
 
     @Test
     public void testDefaultConstructorSetsDefaultConfigValues() {
-        HttpWrapper wrapper = new HttpWrapper();
-
         HttpConfig config = wrapper.getHttpConfig();
         assertEquals(EXPECTED_DEFAULT_API_BASE_URI, config.getApiBaseUri());
         assertEquals(EXPECTED_DEFAULT_REST_BASE_URI, config.getRestBaseUri());

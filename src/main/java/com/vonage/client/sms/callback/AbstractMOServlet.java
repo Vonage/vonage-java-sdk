@@ -65,14 +65,15 @@ public abstract class AbstractMOServlet extends HttpServlet {
     protected Executor consumer;
 
     public AbstractMOServlet(final boolean validateSignature, final String signatureSharedSecret, final boolean validateUsernamePassword, final String expectedUsername, final String expectedPassword) {
+        hashType = HashUtil.HashType.MD5;
+        consumer = Executors.newFixedThreadPool(MAX_CONSUMER_THREADS);
+
         this.validateSignature = validateSignature;
         this.signatureSharedSecret = signatureSharedSecret;
         this.validateUsernamePassword = validateUsernamePassword;
         this.expectedUsername = expectedUsername;
         this.expectedPassword = expectedPassword;
-        this.hashType = HashUtil.HashType.MD5;
 
-        this.consumer = Executors.newFixedThreadPool(MAX_CONSUMER_THREADS);
     }
 
     public AbstractMOServlet(final boolean validateSignature,
@@ -88,7 +89,7 @@ public abstract class AbstractMOServlet extends HttpServlet {
         this.expectedPassword = expectedPassword;
         this.hashType = hashType;
 
-        this.consumer = Executors.newFixedThreadPool(MAX_CONSUMER_THREADS);
+        consumer = Executors.newFixedThreadPool(MAX_CONSUMER_THREADS);
     }
 
     @Override
@@ -103,19 +104,19 @@ public abstract class AbstractMOServlet extends HttpServlet {
 
     private void validateRequest(HttpServletRequest request) throws VonageCallbackRequestValidationException {
         boolean passed = true;
-        if (this.validateUsernamePassword) {
+        if (validateUsernamePassword) {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
-            if (this.expectedUsername != null) if (!this.expectedUsername.equals(username)) passed = false;
-            if (this.expectedPassword != null) if (!this.expectedPassword.equals(password)) passed = false;
+            if (expectedUsername != null) if (!expectedUsername.equals(username)) passed = false;
+            if (expectedPassword != null) if (!expectedPassword.equals(password)) passed = false;
         }
 
         if (!passed) {
             throw new VonageCallbackRequestValidationException("Bad Credentials");
         }
 
-        if (this.validateSignature) {
-            if (!RequestSigning.verifyRequestSignature(request, this.signatureSharedSecret, this.hashType)) {
+        if (validateSignature) {
+            if (!RequestSigning.verifyRequestSignature(request, signatureSharedSecret, hashType)) {
                 throw new VonageCallbackRequestValidationException("Bad Signature");
             }
         }
@@ -161,7 +162,7 @@ public abstract class AbstractMOServlet extends HttpServlet {
 
             // Push the task to an async consumption thread
             ConsumeTask task = new ConsumeTask(this, mo);
-            this.consumer.execute(task);
+            consumer.execute(task);
 
             // immediately ack the receipt
             try (PrintWriter out = response.getWriter()) {
@@ -241,7 +242,7 @@ public abstract class AbstractMOServlet extends HttpServlet {
 
         @Override
         public void run() {
-            this.parent.consume(this.mo);
+            parent.consume(mo);
         }
     }
 

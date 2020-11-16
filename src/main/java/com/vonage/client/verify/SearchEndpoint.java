@@ -23,10 +23,10 @@ class SearchEndpoint {
     private SearchMethod searchMethod;
 
     SearchEndpoint(HttpWrapper httpWrapper) {
-        this.searchMethod = new SearchMethod(httpWrapper);
+        searchMethod = new SearchMethod(httpWrapper);
     }
 
     SearchVerifyResponse search(String... requestIds) throws VonageClientException, VonageResponseParseException {
-        return this.searchMethod.execute(new SearchRequest(requestIds));
+        return searchMethod.execute(new SearchRequest(requestIds));
     }
 }

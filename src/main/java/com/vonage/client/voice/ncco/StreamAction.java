@@ -35,10 +35,10 @@ public class StreamAction implements Action {
     private Integer loop;
 
     private StreamAction(Builder builder) {
-        this.streamUrl = builder.streamUrl;
-        this.level = builder.level;
-        this.bargeIn = builder.bargeIn;
-        this.loop = builder.loop;
+        streamUrl = builder.streamUrl;
+        level = builder.level;
+        bargeIn = builder.bargeIn;
+        loop = builder.loop;
     }
 
     @Override
@@ -72,9 +72,9 @@ public class StreamAction implements Action {
 
     public static class Builder {
         private Collection<String> streamUrl;
-        private Float level = null;
-        private Boolean bargeIn = null;
-        private Integer loop = null;
+        private Float level;
+        private Boolean bargeIn;
+        private Integer loop;
 
         /**
          * @param streamUrl An array containing a single URL to an mp3 or wav (16-bit) audio file to stream to the

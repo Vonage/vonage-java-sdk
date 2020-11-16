@@ -54,7 +54,7 @@ public class Psd2Request extends BaseRequest {
      * @return An alphanumeric string to indicate to the user the name of the recipient that they are confirming a payment to.
      */
     public String getPayee() {
-        return this.payee;
+        return payee;
     }
 
     /**

@@ -105,7 +105,7 @@ public class RedactRequest {
 
         @JsonValue
         public String getValue() {
-            return this.name().toLowerCase();
+            return name().toLowerCase();
         }
     }
 }

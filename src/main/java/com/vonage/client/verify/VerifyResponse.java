@@ -36,16 +36,16 @@ public class VerifyResponse {
 
     @JsonProperty("request_id")
     public String getRequestId() {
-        return this.requestId;
+        return requestId;
     }
 
     public VerifyStatus getStatus() {
-        return this.status;
+        return status;
     }
 
     @JsonProperty("error_text")
     public String getErrorText() {
-        return this.errorText;
+        return errorText;
     }
 
     public static VerifyResponse fromJson(String json) {

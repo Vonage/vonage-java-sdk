@@ -33,7 +33,7 @@ public abstract class AbstractHasher {
      * @throws UnsupportedEncodingException if the encoding type is invalid
      */
     public String calculate(String input, String secretKey, String encoding) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
-        return this.calculate(input + secretKey, encoding);
+        return calculate(input + secretKey, encoding);
     }
 
     /**

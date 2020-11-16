@@ -67,7 +67,7 @@ public class TextMessage extends Message {
      * @return String The text of the message to be sent to the handset
      */
     public String getMessageBody() {
-        return this.messageBody;
+        return messageBody;
     }
 
     /**
@@ -76,7 +76,7 @@ public class TextMessage extends Message {
      * would be messages to be sent in non-western scripts, such as Arabic, Kanji, Chinese, etc.
      */
     public boolean isUnicode() {
-        return this.unicode;
+        return unicode;
     }
 
     @Override

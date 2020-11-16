@@ -42,8 +42,7 @@ public class RecordAction implements Action {
     /**
      * @deprecated Use {@link Builder}
      */
-    @Deprecated
-    public RecordAction(Builder builder) {
+    private RecordAction(Builder builder) {
         this.format = builder.format;
         this.endOnSilence = builder.endOnSilence;
         this.endOnKey = builder.endOnKey;

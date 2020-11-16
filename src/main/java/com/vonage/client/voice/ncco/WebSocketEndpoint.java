@@ -33,9 +33,9 @@ public class WebSocketEndpoint implements Endpoint {
     private Map<String, String> headers;
 
     private WebSocketEndpoint(Builder builder) {
-        this.uri = builder.uri;
-        this.contentType = builder.contentType;
-        this.headers = builder.headers;
+        uri = builder.uri;
+        contentType = builder.contentType;
+        headers = builder.headers;
     }
 
     public String getUri() {

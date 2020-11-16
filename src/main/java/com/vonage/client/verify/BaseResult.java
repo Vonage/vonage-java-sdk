@@ -123,14 +123,14 @@ public abstract class BaseResult {
     }
 
     public int getStatus() {
-        return this.status;
+        return status;
     }
 
     public String getErrorText() {
-        return this.errorText;
+        return errorText;
     }
 
     public boolean isTemporaryError() {
-        return this.temporaryError;
+        return temporaryError;
     }
 }

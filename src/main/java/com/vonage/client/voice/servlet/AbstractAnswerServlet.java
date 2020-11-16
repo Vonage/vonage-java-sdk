@@ -31,12 +31,12 @@ import java.io.IOException;
 public abstract class AbstractAnswerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        serializeNccoResponse(resp, this.handleRequest(req));
+        serializeNccoResponse(resp, handleRequest(req));
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        serializeNccoResponse(resp, this.handleRequest(req));
+        serializeNccoResponse(resp, handleRequest(req));
     }
 
     private void serializeNccoResponse(HttpServletResponse httpResponse, NccoResponse nccoResponse) throws IOException {

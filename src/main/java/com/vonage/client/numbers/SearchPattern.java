@@ -30,6 +30,6 @@ public enum SearchPattern {
     }
 
     public int getValue() {
-        return this.value;
+        return value;
     }
 }

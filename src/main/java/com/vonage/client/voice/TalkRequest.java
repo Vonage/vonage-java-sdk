@@ -30,7 +30,7 @@ public class TalkRequest {
     private String uuid;
 
     public TalkRequest(String uuid, String text, VoiceName voiceName, int loop) {
-        this.talkPayload = new TalkPayload(text, voiceName, loop);
+        talkPayload = new TalkPayload(text, voiceName, loop);
         this.uuid = uuid;
     }
 
@@ -57,7 +57,7 @@ public class TalkRequest {
     public String toJson() {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(this.talkPayload);
+            return mapper.writeValueAsString(talkPayload);
         } catch (JsonProcessingException jpe) {
             throw new VonageUnexpectedException("Failed to produce json from TalkRequest object.", jpe);
         }

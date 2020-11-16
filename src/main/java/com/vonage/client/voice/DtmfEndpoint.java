@@ -22,10 +22,10 @@ public class DtmfEndpoint {
     private final SendDtmfMethod sendDtmf;
 
     public DtmfEndpoint(HttpWrapper httpWrapper) {
-        this.sendDtmf = new SendDtmfMethod(httpWrapper);
+        sendDtmf = new SendDtmfMethod(httpWrapper);
     }
 
     public DtmfResponse put(String uuid, String digits) throws VonageClientException {
-        return this.sendDtmf.execute(new DtmfRequest(uuid, digits));
+        return sendDtmf.execute(new DtmfRequest(uuid, digits));
     }
 }

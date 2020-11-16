@@ -27,6 +27,6 @@ public class SnsPublishResponse extends SnsResponse {
     }
 
     public String getTransactionId() {
-        return this.transactionId;
+        return transactionId;
     }
 }

@@ -32,16 +32,16 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SearchVerifyResponse {
     private VerifyStatus status;
-    private List<VerifyDetails> verificationRequests = new ArrayList<>();
+    private List<VerifyDetails> verificationRequests;
     private String errorText;
 
     @JsonCreator
     SearchVerifyResponse() {
-        this.status = VerifyStatus.OK;
+        status = VerifyStatus.OK;
     }
 
     SearchVerifyResponse(List<VerifyDetails> verificationRequests) {
-        this.status = VerifyStatus.OK;
+        status = VerifyStatus.OK;
         this.verificationRequests = verificationRequests;
     }
 
@@ -56,12 +56,12 @@ public class SearchVerifyResponse {
 
     @JsonProperty("verification_requests")
     public List<VerifyDetails> getVerificationRequests() {
-        return this.verificationRequests;
+        return verificationRequests;
     }
 
     @JsonProperty("error_text")
     public String getErrorText() {
-        return this.errorText;
+        return errorText;
     }
 
     public static SearchVerifyResponse fromJson(String json) {

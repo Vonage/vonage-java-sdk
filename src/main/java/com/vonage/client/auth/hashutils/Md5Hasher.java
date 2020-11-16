@@ -38,7 +38,7 @@ class Md5Hasher extends AbstractHasher {
         md.update(input.getBytes(encoding));
         byte digest[] = md.digest();
 
-        return this.buildHexString(digest);
+        return buildHexString(digest);
     }
 
 }
