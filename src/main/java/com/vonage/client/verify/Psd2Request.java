@@ -95,6 +95,11 @@ public class Psd2Request extends BaseRequest {
     }
 
     /**
+     * @param number The recipient's phone number in <a href="https://en.wikipedia.org/wiki/E.164">E.164</a>
+     *               format.
+     * @param amount The decimal amount of the payment to be confirmed, in Euros.
+     * @param payee  An alphanumeric string to indicate to the user the name of the recipient that they
+     *               are confirming a payment to.
      * @return A new Builder to start building.
      */
     public static Builder builder(String number, Double amount, String payee) {

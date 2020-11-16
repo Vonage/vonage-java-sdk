@@ -39,6 +39,7 @@ public class HashUtil {
      * @return representation of the input string with given hash type
      * @throws NoSuchAlgorithmException if the algorithm is not available.
      * @throws InvalidKeyException Only applicable to HMAC encoding types, when a bad key is provided.
+     * @throws UnsupportedEncodingException if the specified encoding is unavailable.
      */
     public static String calculate(String input, String encoding, HashType hashType) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
         return hashTypes.get(hashType).calculate(input, encoding);

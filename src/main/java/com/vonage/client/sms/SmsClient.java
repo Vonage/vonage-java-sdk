@@ -40,6 +40,7 @@ public class SmsClient {
 
     /**
      * Create a new SmsClient.
+     * @param httpWrapper Http Wrapper used to create a Sms Request
      */
     public SmsClient(HttpWrapper httpWrapper) {
         message = new SendMessageEndpoint(httpWrapper);
@@ -80,6 +81,8 @@ public class SmsClient {
      * #searchMessages(String, String...)} instead.
      * <p>
      *
+     * @param request request to search for a sms message
+     * @return sms messages that match the search criteria
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
@@ -124,6 +127,8 @@ public class SmsClient {
      * Search for rejected SMS transactions using a {@link SearchRejectedMessagesRequest}.
      * <p>
      * You should probably use {@link #searchRejectedMessages(Date, String)} instead.
+     *
+     * @param request search for rejected SMS transactions
      *
      * @return rejection data matching the provided criteria
      *
