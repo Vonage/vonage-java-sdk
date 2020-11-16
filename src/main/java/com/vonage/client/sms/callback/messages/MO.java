@@ -78,7 +78,7 @@ public class MO implements java.io.Serializable {
          * @return String A descriptive value representing this type
          */
         public String getType() {
-            return this.type;
+            return type;
         }
 
     }
@@ -119,7 +119,7 @@ public class MO implements java.io.Serializable {
 
     public void setTextData(String text,
                             String keyword) {
-        this.messageBody = text;
+        messageBody = text;
         this.keyword = keyword;
     }
 
@@ -181,112 +181,112 @@ public class MO implements java.io.Serializable {
      * @return String the id assigned to this message by Vonage before delivery
      */
     public String getMessageId() {
-        return this.messageId;
+        return messageId;
     }
 
     /**
      * @return MESSAGE_TYPE describes what type of payload this message carries, eg, 8 bit text, unicode text or raw binary
      */
     public MESSAGE_TYPE getMessageType() {
-        return this.messageType;
+        return messageType;
     }
 
     /**
      * @return String the phone number of the end user that sent this message
      */
     public String getSender() {
-        return this.sender;
+        return sender;
     }
 
     /**
      * @return String the short-code/long code number that the end user sent the message to
      */
     public String getDestination() {
-        return this.destination;
+        return destination;
     }
 
     /**
      * @return String the network code (if available) of the end user
      */
     public String getNetworkCode() {
-        return this.networkCode;
+        return networkCode;
     }
 
     /**
      * @return String return the first keyword of the message. If this is a shared short-code then this is what the message will have been routed by.
      */
     public String getKeyword() {
-        return this.keyword;
+        return keyword;
     }
 
     /**
      * @return String The message payload if this is a TEXT or UNICODE message
      */
     public String getMessageBody() {
-        return this.messageBody;
+        return messageBody;
     }
 
     /**
      * @return byte[] the raw binary payload if this is a BINARY message
      */
     public byte[] getBinaryMessageBody() {
-        return this.binaryMessageBody;
+        return binaryMessageBody;
     }
 
     /**
      * @return byte[] the raw binary user-data-header if applicable for this message
      */
     public byte[] getUserDataHeader() {
-        return this.userDataHeader;
+        return userDataHeader;
     }
 
     /**
      * @return BigDecimal if a price was charged for receiving this message, then that is available here
      */
     public BigDecimal getPrice() {
-        return this.price;
+        return price;
     }
 
     /**
      * @return String if this field is populated, then the value should be returned in any MT response
      */
     public String getSessionId() {
-        return this.sessionId;
+        return sessionId;
     }
 
     /**
      * @return boolean is this message part of a concatenated message that needs re-assembly
      */
     public boolean isConcat() {
-        return this.concat;
+        return concat;
     }
 
     /**
      * @return String if this message is part of a concatenated set, then this is the reference id that groups the parts together
      */
     public String getConcatReferenceNumber() {
-        return this.concatReferenceNumber;
+        return concatReferenceNumber;
     }
 
     /**
      * @return String if this message is part of a concatenated set, then this is the total number of parts in the set
      */
     public int getConcatTotalParts() {
-        return this.concatTotalParts;
+        return concatTotalParts;
     }
 
     /**
      * @return String if this message is part of a concatenated set, then this is the 'part number' within the set that this message carries
      */
     public int getConcatPartNumber() {
-        return this.concatPartNumber;
+        return concatPartNumber;
     }
 
     /**
      * @return the timestamp this message was originally received by Vonage
      */
     public Date getTimeStamp() {
-        return this.timeStamp;
+        return timeStamp;
     }
 
 }

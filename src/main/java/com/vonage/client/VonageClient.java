@@ -291,7 +291,7 @@ public class VonageClient {
          *                                      generating an {@link JWTAuthMethod} with the provided credentials.
          */
         public VonageClient build() {
-            this.authCollection = generateAuthCollection(applicationId,
+            authCollection = generateAuthCollection(applicationId,
                     apiKey,
                     apiSecret,
                     signatureSecret,

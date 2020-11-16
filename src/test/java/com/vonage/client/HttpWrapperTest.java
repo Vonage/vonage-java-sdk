@@ -28,34 +28,32 @@ public class HttpWrapperTest {
     private static final String EXPECTED_DEFAULT_REST_BASE_URI = "https://rest.nexmo.com";
     private static final String EXPECTED_DEFAULT_SNS_BASE_URI = "https://sns.nexmo.com";
 
-    private HttpWrapper hw;
+    private HttpWrapper wrapper;
 
     @Before
     public void setUp() {
-        this.hw = new HttpWrapper(new AuthCollection());
+        wrapper = new HttpWrapper(new AuthCollection());
     }
 
     @Test
     public void basicTest() {
-        assertNotNull(this.hw.getHttpClient());
+        assertNotNull(wrapper.getHttpClient());
     }
 
     @Test
     public void testAuthMethodAccessors() {
         AuthCollection auths = new AuthCollection();
-        this.hw.setAuthCollection(auths);
-        assertEquals(auths, this.hw.getAuthCollection());
+        wrapper.setAuthCollection(auths);
+        assertEquals(auths, wrapper.getAuthCollection());
     }
 
     @Test
     public void testHttpConfigAccessor() {
-        assertNotNull(this.hw.getHttpConfig());
+        assertNotNull(wrapper.getHttpConfig());
     }
 
     @Test
     public void testDefaultConstructorSetsDefaultConfigValues() {
-        HttpWrapper wrapper = new HttpWrapper();
-
         HttpConfig config = wrapper.getHttpConfig();
         assertEquals(EXPECTED_DEFAULT_API_BASE_URI, config.getApiBaseUri());
         assertEquals(EXPECTED_DEFAULT_REST_BASE_URI, config.getRestBaseUri());

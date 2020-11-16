@@ -28,7 +28,7 @@ public class HmacMd5Hasher extends AbstractHasher {
 
         byte[] digest = sha1HMAC.doFinal(input.getBytes(encoding));
 
-        return this.buildHexString(digest);
+        return buildHexString(digest);
     }
 
     /**
@@ -43,6 +43,6 @@ public class HmacMd5Hasher extends AbstractHasher {
      * @throws InvalidKeyException if key is invalid
      */
     @Override public String calculate(String input, String encoding) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
-        return this.calculate(input, input, encoding);
+        return calculate(input, input, encoding);
     }
 }

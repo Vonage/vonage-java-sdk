@@ -34,7 +34,7 @@ public class ConversionMethodTest {
 
     @Before
     public void setUp() throws Exception {
-        this.method = new ConversionMethod(new HttpWrapper());
+        method = new ConversionMethod(new HttpWrapper());
     }
 
     @Test

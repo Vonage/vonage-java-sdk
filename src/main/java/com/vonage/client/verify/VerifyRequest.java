@@ -29,87 +29,6 @@ public class VerifyRequest extends BaseRequest {
     private Workflow workflow;
 
 
-
-    /**
-     * Constructor.
-     *
-     * @param number (required) The recipient's phone number in <a href="https://en.wikipedia.org/wiki/E.164">E.164</a>
-     *               format.
-     * @param brand  (required) The name of the company or app to be verified for. Must not be longer than 18
-     *               characters.
-     * @deprecated this construtor is deprecated use {@link Builder} to contruct a 2FA verify request
-     */
-    @Deprecated
-    public VerifyRequest(final String number, final String brand) {
-        this(number, brand, null, -1, null, null);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param number (required) The recipient's phone number in <a href="https://en.wikipedia.org/wiki/E.164">E.164</a>
-     *               format.
-     * @param brand  (required) The name of the company or app you are verifying for. Must not be longer than 18
-     *               characters.
-     * @param from   (optional The Vonage number to use as the sender for the verification SMS message and calls, in
-     *               <a href="https://en.wikipedia.org/wiki/E.164">E.164</a> format.
-     * @deprecated this construtor is deprecated use {@link Builder} to contruct a 2FA verify request
-     */
-    @Deprecated
-    public VerifyRequest(final String number, final String brand, final String from) {
-        this(number, brand, from, -1, null, null);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param number (required) The recipient's phone number in <a href="https://en.wikipedia.org/wiki/E.164">E.164</a>
-     *               format.
-     * @param brand  (required) The name of the company or app you are verifying for. Must not be longer than 18
-     *               characters.
-     * @param from   (optional The Vonage number to use as the sender for the verification SMS message and calls, in
-     *               <a href="https://en.wikipedia.org/wiki/E.164">E.164</a> format.
-     * @param length (optional) The length of the verification code to be sent to the user. Must be either 4 or 6. Use
-     *               -1 to use the default value.
-     * @param locale (optional) Override the default locale used for verification. By default the locale is determined
-     *               from the country code included in {@code number}
-     * @deprecated this construtor is deprecated use {@link Builder} instead
-     */
-    @Deprecated
-    public VerifyRequest(final String number, final String brand, final String from, final int length, final Locale locale) {
-        this(number, brand, from, length, locale, null);
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param number (required) The recipient's phone number in <a href="https://en.wikipedia.org/wiki/E.164">E.164</a>
-     *               format.
-     * @param brand  (required) The name of the company or app you are verifying for. Must not be longer than 18
-     *               characters.
-     * @param from   (optional A short alphanumeric string to specify the SenderID for SMS sent by Verify. Depending on
-     *               the destination of the phone number you are applying, restrictions may apply. By default, sender_id
-     *               is {@code VERIFY}. Must be 11 characters or fewer.
-     * @param length (optional) The length of the verification code to be sent to the user. Must be either 4 or 6. Use
-     *               -1 to use the default value.
-     * @param locale (optional) Override the default locale used for verification. By default the locale is determined
-     *               from the country code included in {@code number}
-     * @param type   (optional) If provided, restrict the verification to the specified network type. Contact
-     *               support@nexmo.com to enable this feature.
-     */
-    @Deprecated
-    public VerifyRequest(final String number, final String brand, final String from, final int length, final Locale locale, final LineType type) {
-        super(number, length, locale);
-
-        this.type = type;
-        this.brand = brand;
-        this.from = from;
-        this.workflow = null;
-        setCountry(null);
-        setPinExpiry(null);
-        setNextEventWait(null);
-    }
-
     public VerifyRequest(Builder builder) {
         super(builder.number, builder.length, builder.locale, builder.country, builder.pinExpiry, builder.nextEventWait);
         brand = builder.brand;
@@ -135,16 +54,6 @@ public class VerifyRequest extends BaseRequest {
     }
 
 
-    /**
-     * @param type the type of network the verification will be restricted to. This value has no effect unless it has been
-     *        enabled by contacting {@code support@nexmo.com}.
-     * @deprecated since 5.5.0 use {@link VerifyRequest.Builder} to create a 2FA verification request
-     * @see Builder#type(LineType)
-     */
-    public void setType(LineType type) {
-        this.type = type;
-    }
-
 
     /**
      * @return the short alphanumeric string to specify the SenderID for SMS sent by Verify, or {@code null} if one was
@@ -156,14 +65,6 @@ public class VerifyRequest extends BaseRequest {
         return from;
     }
 
-    /**
-     * @param from the short alphanumeric string to specify the SenderID for SMS sent by Verify.
-     * @deprecated since 5.5.0 use {@link VerifyRequest.Builder} to create a 2FA verification request
-     * @see VerifyRequest.Builder#senderId(String)
-     */
-    public void setFrom(String from) {
-        this.from = from;
-    }
 
     /**
      * Types of phone line to be specified for {@link VerifyRequest#type}. This option is not generally available. It will
@@ -179,15 +80,6 @@ public class VerifyRequest extends BaseRequest {
      */
     public Workflow getWorkflow() {
         return workflow;
-    }
-
-    /**
-     * @param workflow The workflow to use for conveying the PIN to your user.
-     * @deprecated since 5.5.0 use {@link VerifyRequest.Builder} to create a 2FA verification request
-     * @see Builder#workflow(Workflow)
-     */
-    public void setWorkflow(Workflow workflow) {
-        this.workflow = workflow;
     }
 
     /**

@@ -31,12 +31,12 @@ public class RedactClientTest extends ClientTest<RedactClient> {
     @Test
     public void testSuccessfulResponse() {
         try {
-            wrapper.setHttpClient(this.stubHttpClient(204, ""));
+            wrapper.setHttpClient(stubHttpClient(204, ""));
             RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.SMS);
             redactRequest.setType(RedactRequest.Type.INBOUND);
 
-            this.client.redactTransaction(redactRequest);
-            this.client.redactTransaction(redactRequest.getId(), redactRequest.getProduct(), redactRequest.getType());
+            client.redactTransaction(redactRequest);
+            client.redactTransaction(redactRequest.getId(), redactRequest.getProduct(), redactRequest.getType());
         } catch (Exception e) {
             fail("No exceptions should be thrown.");
         }
@@ -44,42 +44,42 @@ public class RedactClientTest extends ClientTest<RedactClient> {
 
     @Test(expected = VonageBadRequestException.class)
     public void testWrongCredentials() throws Exception {
-        wrapper.setHttpClient(this.stubHttpClient(401, ""));
+        wrapper.setHttpClient(stubHttpClient(401, ""));
         RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
-        this.client.redactTransaction(redactRequest);
-        this.client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
+        client.redactTransaction(redactRequest);
+        client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
     }
 
     @Test(expected = VonageBadRequestException.class)
     public void testPrematureRedactionOrUnauthorized() throws Exception {
-        wrapper.setHttpClient(this.stubHttpClient(403, ""));
+        wrapper.setHttpClient(stubHttpClient(403, ""));
         RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
-        this.client.redactTransaction(redactRequest);
-        this.client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
+        client.redactTransaction(redactRequest);
+        client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
     }
 
     @Test(expected = VonageBadRequestException.class)
     public void testInvalidId() throws Exception {
-        wrapper.setHttpClient(this.stubHttpClient(404, ""));
+        wrapper.setHttpClient(stubHttpClient(404, ""));
         RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
-        this.client.redactTransaction(redactRequest);
-        this.client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
+        client.redactTransaction(redactRequest);
+        client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
     }
 
     @Test(expected = VonageBadRequestException.class)
     public void testInvalidJsonInvalidProduct() throws Exception {
-        wrapper.setHttpClient(this.stubHttpClient(422, ""));
+        wrapper.setHttpClient(stubHttpClient(422, ""));
         RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
-        this.client.redactTransaction(redactRequest);
-        this.client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
+        client.redactTransaction(redactRequest);
+        client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
     }
 
     @Test(expected = VonageBadRequestException.class)
     public void testRateLimit() throws Exception {
-        wrapper.setHttpClient(this.stubHttpClient(429, ""));
+        wrapper.setHttpClient(stubHttpClient(429, ""));
         RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
-        this.client.redactTransaction(redactRequest);
-        this.client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
+        client.redactTransaction(redactRequest);
+        client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
     }
 
 }

@@ -23,7 +23,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class DeleteApplicationMethodTest extends AppBasicAuthTest {
+public class DeleteApplicationMethodTest extends ApplicationMethodTest {
     private DeleteApplicationMethod method;
 
     @Before

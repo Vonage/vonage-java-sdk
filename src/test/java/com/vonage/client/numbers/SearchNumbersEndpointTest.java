@@ -42,7 +42,7 @@ public class SearchNumbersEndpointTest {
 
     @Before
     public void setUp() throws Exception {
-        this.endpoint = new SearchNumbersEndpoint(new HttpWrapper());
+        endpoint = new SearchNumbersEndpoint(new HttpWrapper());
     }
 
     @Test

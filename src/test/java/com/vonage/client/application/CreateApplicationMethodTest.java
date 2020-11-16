@@ -17,14 +17,13 @@ package com.vonage.client.application;
 
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
-import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.client.methods.RequestBuilder;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class CreateApplicationMethodTest extends AppBasicAuthTest {
+public class CreateApplicationMethodTest extends ApplicationMethodTest {
     private CreateApplicationMethod method;
 
     @Before

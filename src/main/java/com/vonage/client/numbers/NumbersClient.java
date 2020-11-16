@@ -68,6 +68,8 @@ public class NumbersClient {
     /**
      * Search for available Vonage Virtual Numbers.
      *
+     * @param country country to search available numbers from
+     * @return available Vonage Virtual Numbers
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      * @throws VonageClientException        if an error is returned by the server.
      */
@@ -78,6 +80,8 @@ public class NumbersClient {
     /**
      * Search for available Vonage Virtual Numbers.
      *
+     * @param filter search for available Vonage Virtual Number with filters
+     * @return available Vonage Virtual Numbers
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      * @throws VonageClientException        if an error is returned by the server.
      */

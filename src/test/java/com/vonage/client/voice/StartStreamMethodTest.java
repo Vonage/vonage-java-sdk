@@ -28,7 +28,7 @@ public class StartStreamMethodTest {
 
     @Before
     public void setUp() throws Exception {
-        this.method = new StartStreamMethod(new HttpWrapper());
+        method = new StartStreamMethod(new HttpWrapper());
     }
 
     @Test

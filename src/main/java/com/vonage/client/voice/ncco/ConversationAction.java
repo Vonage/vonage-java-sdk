@@ -38,13 +38,13 @@ public class ConversationAction implements Action {
     private EventMethod eventMethod;
 
     private ConversationAction(Builder builder) {
-        this.name = builder.name;
-        this.musicOnHoldUrl = builder.musicOnHoldUrl;
-        this.startOnEnter = builder.startOnEnter;
-        this.endOnExit = builder.endOnExit;
-        this.record = builder.record;
-        this.eventUrl = builder.eventUrl;
-        this.eventMethod = builder.eventMethod;
+        name = builder.name;
+        musicOnHoldUrl = builder.musicOnHoldUrl;
+        startOnEnter = builder.startOnEnter;
+        endOnExit = builder.endOnExit;
+        record = builder.record;
+        eventUrl = builder.eventUrl;
+        eventMethod = builder.eventMethod;
     }
 
     @Override
@@ -86,12 +86,12 @@ public class ConversationAction implements Action {
 
     public static class Builder {
         private String name;
-        private Collection<String> musicOnHoldUrl = null;
-        private Boolean startOnEnter = null;
-        private Boolean endOnExit = null;
-        private Boolean record = null;
-        private Collection<String> eventUrl = null;
-        private EventMethod eventMethod = null;
+        private Collection<String> musicOnHoldUrl;
+        private Boolean startOnEnter;
+        private Boolean endOnExit;
+        private Boolean record;
+        private Collection<String> eventUrl;
+        private EventMethod eventMethod;
 
         /**
          * @param name The name of the Conversation room.

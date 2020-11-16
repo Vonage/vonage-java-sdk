@@ -89,7 +89,7 @@ public class UpdateNumberRequest {
     }
 
     public void addParams(RequestBuilder request) {
-        request.addParameter("country", this.country).addParameter("msisdn", msisdn);
+        request.addParameter("country", country).addParameter("msisdn", msisdn);
         if (moHttpUrl != null) {
             request.addParameter("moHttpUrl", moHttpUrl);
         }

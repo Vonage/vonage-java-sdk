@@ -113,26 +113,6 @@ public class InsightClient extends AbstractClient {
     }
 
     /**
-     * Perform a Standard Insight Request with a number, country, and cnam.
-     *
-     * @param number  A single phone number that you need insight about in national or international format.
-     * @param country If a number does not have a country code or it is uncertain, set the two-character country code.
-     * @param cnam    Indicates if the name of the person who owns the phone number should also be looked up and
-     *                returned. Set to true to receive phone number owner name in the response. This is only available
-     *                for US numbers and incurs an additional charge.
-     *
-     * @return A {@link StandardInsightResponse} representing the response from the Vonage Number Insight API.
-     *
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
-     * @deprecated Create a {@link StandardInsightRequest} and use {@link InsightClient#getStandardNumberInsight(StandardInsightRequest)}
-     */
-    @Deprecated
-    public StandardInsightResponse getStandardNumberInsight(String number, String country, boolean cnam) throws VonageResponseParseException, VonageClientException {
-        return getStandardNumberInsight(StandardInsightRequest.builder(number).country(country).cnam(cnam).build());
-    }
-
-    /**
      * Perform a Standard Insight Request with a {@link StandardInsightRequest}.
      *
      * @param standardInsightRequest A request object containing the details of the request to make.
@@ -173,56 +153,6 @@ public class InsightClient extends AbstractClient {
      */
     public AdvancedInsightResponse getAdvancedNumberInsight(String number, String country) throws VonageResponseParseException, VonageClientException {
         return getAdvancedNumberInsight(AdvancedInsightRequest.withNumberAndCountry(number, country));
-    }
-
-    /**
-     * Perform an Advanced Insight Request with a number, country, and ipAddress.
-     *
-     * @param number    A single phone number that you need insight about in national or international format.
-     * @param country   If a number does not have a country code or it is uncertain, set the two-character country
-     *                  code.
-     * @param ipAddress The IP address of the user. If supplied, we will compare this to the country the user's phone is
-     *                  located in and return an error if it does not match.
-     *
-     * @return A {@link AdvancedInsightResponse} representing the response from the Vonage Number Insight API.
-     *
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
-     * @deprecated Create a {@link AdvancedInsightRequest} and use {@link InsightClient#getAdvancedNumberInsight(AdvancedInsightRequest)}
-     */
-    @Deprecated
-    public AdvancedInsightResponse getAdvancedNumberInsight(String number, String country, String ipAddress) throws VonageResponseParseException, VonageClientException {
-        return getAdvancedNumberInsight(AdvancedInsightRequest.builder(number)
-                .country(country)
-                .ipAddress(ipAddress)
-                .build());
-    }
-
-    /**
-     * Perform an Advanced Insight Request with a number, country, ipAddress, and cnam.
-     *
-     * @param number    A single phone number that you need insight about in national or international format.
-     * @param country   If a number does not have a country code or it is uncertain, set the two-character country
-     *                  code.
-     * @param ipAddress The IP address of the user. If supplied, we will compare this to the country the user's phone is
-     *                  located in and return an error if it does not match.
-     * @param cnam      Indicates if the name of the person who owns the phone number should also be looked up and
-     *                  returned. Set to true to receive phone number owner name in the response. This is only available
-     *                  for US numbers and incurs an additional charge.
-     *
-     * @return A {@link AdvancedInsightResponse} representing the response from the Vonage Number Insight API.
-     *
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
-     * @deprecated Create a {@link AdvancedInsightRequest} and use {@link InsightClient#getAdvancedNumberInsight(AdvancedInsightRequest)}
-     */
-    @Deprecated
-    public AdvancedInsightResponse getAdvancedNumberInsight(String number, String country, String ipAddress, boolean cnam) throws VonageResponseParseException, VonageClientException {
-        return getAdvancedNumberInsight(AdvancedInsightRequest.builder(number)
-                .country(country)
-                .ipAddress(ipAddress)
-                .cnam(cnam)
-                .build());
     }
 
     /**

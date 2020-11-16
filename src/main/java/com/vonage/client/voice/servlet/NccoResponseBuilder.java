@@ -27,15 +27,15 @@ public class NccoResponseBuilder {
     private NccoResponse value;
 
     public NccoResponseBuilder() {
-        this.value = new NccoResponse();
+        value = new NccoResponse();
     }
 
     public NccoResponseBuilder appendNcco(Action action) {
-        this.value.appendNcco(action);
+        value.appendNcco(action);
         return this;
     }
 
     public NccoResponse getValue() {
-        return this.value;
+        return value;
     }
 }

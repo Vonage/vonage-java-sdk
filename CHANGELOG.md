@@ -8,13 +8,23 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## Added
 - ASR (Automatic Speech Recognition)
 
+### Changed
+- Refactored Application v2 requests to remove duplicated code
+- Deprecated Product.MESSAGE from RedactRequest. Use Product.MESSAGES instead
+- Deprecated InsightClient#getStandardNumberInsight(number, country, cnam). Use InsightClient#getStandardNumberInsight(StandardInsightRequest) instead
+- Deprecated InsightClient.getAdvancedNumberInsight(number, country, ipAddress, cnam). Use InsightClient#getAdvancedNumberInsight(AdvancedInsightRequest) instead
+- Deprecated InsightClient.getAdvancedNumberInsight(number, country, ipAddress). Use InsightClient#getAdvancedNumberInsight(AdvancedInsightRequest) instead
+- Deprecated public constructors and setters in VerifyRequest use VerifyRequest.Builder instead
+- Deprecated MD5Util use HashUtil instead
+- Removed setters from BaseRequest. Set fields in the builders of Psd2Request or VerifyRequest instead.
+
 ## [5.6.0]
 ### Added
 - NotifyEvent structure for Notify Actions
 - SHA256 hashing option
 
 ### Changed
-- Create application request use basic auth for authentication
+- Changed application requests to use basic auth in header for authentication
 
 ### Fixed
 - Fixed error throw when trying to log No Content responses

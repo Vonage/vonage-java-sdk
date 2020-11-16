@@ -19,7 +19,6 @@ import com.vonage.client.ClientTest;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.VonageClientException;
 import com.vonage.client.auth.TokenAuthMethod;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,7 +46,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
     public void testGetBalance() throws Exception {
         BalanceResponse response = client.getBalance();
         verify(client.balance).execute();
-        Assert.assertEquals(sentinel, response);
+        assertEquals(sentinel, response);
     }
 
     @Test
@@ -62,34 +61,34 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "      \"currency\": \"EUR\",\n" + "      \"mcc\": \"123\",\n" + "      \"mnc\": \"456\",\n"
                 + "      \"networkCode\": \"networkcode\",\n" + "      \"networkName\": \"Test Landline\"\n"
                 + "    }  \n" + "  ]\n" + "}\n";
-        wrapper.setHttpClient(this.stubHttpClient(200, json));
+        wrapper.setHttpClient(stubHttpClient(200, json));
         PricingResponse response = client.getSmsPrice("US");
-        Assert.assertEquals("1", response.getDialingPrefix());
-        Assert.assertEquals(new BigDecimal("0.00570000"), response.getDefaultPrice());
-        Assert.assertEquals("EUR", response.getCurrency());
-        Assert.assertEquals("United States of America", response.getCountry().getDisplayName());
-        Assert.assertEquals("US", response.getCountry().getCode());
-        Assert.assertEquals("United States", response.getCountry().getName());
+        assertEquals("1", response.getDialingPrefix());
+        assertEquals(new BigDecimal("0.00570000"), response.getDefaultPrice());
+        assertEquals("EUR", response.getCurrency());
+        assertEquals("United States of America", response.getCountry().getDisplayName());
+        assertEquals("US", response.getCountry().getCode());
+        assertEquals("United States", response.getCountry().getName());
 
-        Assert.assertEquals(2, response.getNetworks().size());
+        assertEquals(2, response.getNetworks().size());
         Network first = response.getNetworks().get(0);
-        Assert.assertEquals(Network.Type.MOBILE, first.getType());
-        Assert.assertEquals(new BigDecimal("0.00570000"), first.getPrice());
-        Assert.assertEquals("EUR", first.getCurrency());
-        Assert.assertEquals("987", first.getMcc());
-        Assert.assertEquals("123", first.getMnc());
-        Assert.assertEquals("123456", first.getCode());
-        Assert.assertEquals("Test Mobile", first.getName());
+        assertEquals(Network.Type.MOBILE, first.getType());
+        assertEquals(new BigDecimal("0.00570000"), first.getPrice());
+        assertEquals("EUR", first.getCurrency());
+        assertEquals("987", first.getMcc());
+        assertEquals("123", first.getMnc());
+        assertEquals("123456", first.getCode());
+        assertEquals("Test Mobile", first.getName());
 
 
         Network second = response.getNetworks().get(1);
-        Assert.assertEquals(Network.Type.LANDLINE, second.getType());
-        Assert.assertEquals(new BigDecimal("0.00330000"), second.getPrice());
-        Assert.assertEquals("EUR", second.getCurrency());
-        Assert.assertEquals("123", second.getMcc());
-        Assert.assertEquals("456", second.getMnc());
-        Assert.assertEquals("networkcode", second.getCode());
-        Assert.assertEquals("Test Landline", second.getName());
+        assertEquals(Network.Type.LANDLINE, second.getType());
+        assertEquals(new BigDecimal("0.00330000"), second.getPrice());
+        assertEquals("EUR", second.getCurrency());
+        assertEquals("123", second.getMcc());
+        assertEquals("456", second.getMnc());
+        assertEquals("networkcode", second.getCode());
+        assertEquals("Test Landline", second.getName());
     }
 
     @Test
@@ -104,34 +103,34 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "      \"currency\": \"EUR\",\n" + "      \"mcc\": \"123\",\n" + "      \"mnc\": \"456\",\n"
                 + "      \"networkCode\": \"networkcode\",\n" + "      \"networkName\": \"Test Landline\"\n"
                 + "    }  \n" + "  ]\n" + "}\n";
-        wrapper.setHttpClient(this.stubHttpClient(200, json));
+        wrapper.setHttpClient(stubHttpClient(200, json));
         PricingResponse response = client.getVoicePrice("US");
-        Assert.assertEquals("1", response.getDialingPrefix());
-        Assert.assertEquals(new BigDecimal("0.00570000"), response.getDefaultPrice());
-        Assert.assertEquals("EUR", response.getCurrency());
-        Assert.assertEquals("United States of America", response.getCountry().getDisplayName());
-        Assert.assertEquals("US", response.getCountry().getCode());
-        Assert.assertEquals("United States", response.getCountry().getName());
+        assertEquals("1", response.getDialingPrefix());
+        assertEquals(new BigDecimal("0.00570000"), response.getDefaultPrice());
+        assertEquals("EUR", response.getCurrency());
+        assertEquals("United States of America", response.getCountry().getDisplayName());
+        assertEquals("US", response.getCountry().getCode());
+        assertEquals("United States", response.getCountry().getName());
 
-        Assert.assertEquals(2, response.getNetworks().size());
+        assertEquals(2, response.getNetworks().size());
         Network first = response.getNetworks().get(0);
-        Assert.assertEquals(Network.Type.MOBILE, first.getType());
-        Assert.assertEquals(new BigDecimal("0.00570000"), first.getPrice());
-        Assert.assertEquals("EUR", first.getCurrency());
-        Assert.assertEquals("987", first.getMcc());
-        Assert.assertEquals("123", first.getMnc());
-        Assert.assertEquals("123456", first.getCode());
-        Assert.assertEquals("Test Mobile", first.getName());
+        assertEquals(Network.Type.MOBILE, first.getType());
+        assertEquals(new BigDecimal("0.00570000"), first.getPrice());
+        assertEquals("EUR", first.getCurrency());
+        assertEquals("987", first.getMcc());
+        assertEquals("123", first.getMnc());
+        assertEquals("123456", first.getCode());
+        assertEquals("Test Mobile", first.getName());
 
 
         Network second = response.getNetworks().get(1);
-        Assert.assertEquals(Network.Type.LANDLINE, second.getType());
-        Assert.assertEquals(new BigDecimal("0.00330000"), second.getPrice());
-        Assert.assertEquals("EUR", second.getCurrency());
-        Assert.assertEquals("123", second.getMcc());
-        Assert.assertEquals("456", second.getMnc());
-        Assert.assertEquals("networkcode", second.getCode());
-        Assert.assertEquals("Test Landline", second.getName());
+        assertEquals(Network.Type.LANDLINE, second.getType());
+        assertEquals(new BigDecimal("0.00330000"), second.getPrice());
+        assertEquals("EUR", second.getCurrency());
+        assertEquals("123", second.getMcc());
+        assertEquals("456", second.getMnc());
+        assertEquals("networkcode", second.getCode());
+        assertEquals("Test Landline", second.getName());
     }
 
     @Test
@@ -157,43 +156,43 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "            \"countryCode\": \"UM\",\n"
                 + "            \"countryName\": \"United States Minor Outlying Islands\"\n" + "        }\n" + "    ]\n"
                 + "}";
-        wrapper.setHttpClient(this.stubHttpClient(200, json));
+        wrapper.setHttpClient(stubHttpClient(200, json));
         PrefixPricingResponse response = client.getPrefixPrice(ServiceType.VOICE, "1");
-        Assert.assertEquals(2, response.getCount());
-        Assert.assertEquals(2, response.getCountries().size());
+        assertEquals(2, response.getCount());
+        assertEquals(2, response.getCountries().size());
 
         PricingResponse firstResponse = response.getCountries().get(0);
-        Assert.assertEquals("1", firstResponse.getDialingPrefix());
-        Assert.assertEquals(new BigDecimal("0.01270000"), firstResponse.getDefaultPrice());
-        Assert.assertEquals("EUR", firstResponse.getCurrency());
-        Assert.assertEquals("Canada", firstResponse.getCountry().getDisplayName());
-        Assert.assertEquals("CA", firstResponse.getCountry().getCode());
-        Assert.assertEquals("Canada", firstResponse.getCountry().getName());
+        assertEquals("1", firstResponse.getDialingPrefix());
+        assertEquals(new BigDecimal("0.01270000"), firstResponse.getDefaultPrice());
+        assertEquals("EUR", firstResponse.getCurrency());
+        assertEquals("Canada", firstResponse.getCountry().getDisplayName());
+        assertEquals("CA", firstResponse.getCountry().getCode());
+        assertEquals("Canada", firstResponse.getCountry().getName());
 
-        Assert.assertEquals(2, firstResponse.getNetworks().size());
+        assertEquals(2, firstResponse.getNetworks().size());
         Network firstResponseFirstNetwork = firstResponse.getNetworks().get(0);
-        Assert.assertEquals(Network.Type.MOBILE, firstResponseFirstNetwork.getType());
-        Assert.assertEquals(new BigDecimal("0.01280000"), firstResponseFirstNetwork.getPrice());
-        Assert.assertEquals("EUR", firstResponseFirstNetwork.getCurrency());
-        Assert.assertEquals("302", firstResponseFirstNetwork.getMcc());
-        Assert.assertEquals("702", firstResponseFirstNetwork.getMnc());
-        Assert.assertEquals("302702", firstResponseFirstNetwork.getCode());
-        Assert.assertEquals("BELL ALIANT REGIONAL Communications LP", firstResponseFirstNetwork.getName());
+        assertEquals(Network.Type.MOBILE, firstResponseFirstNetwork.getType());
+        assertEquals(new BigDecimal("0.01280000"), firstResponseFirstNetwork.getPrice());
+        assertEquals("EUR", firstResponseFirstNetwork.getCurrency());
+        assertEquals("302", firstResponseFirstNetwork.getMcc());
+        assertEquals("702", firstResponseFirstNetwork.getMnc());
+        assertEquals("302702", firstResponseFirstNetwork.getCode());
+        assertEquals("BELL ALIANT REGIONAL Communications LP", firstResponseFirstNetwork.getName());
 
 
         Network firstResponseSecondNetwork = firstResponse.getNetworks().get(1);
-        Assert.assertEquals(Network.Type.LANDLINE, firstResponseSecondNetwork.getType());
-        Assert.assertEquals(new BigDecimal("0.01000000"), firstResponseSecondNetwork.getPrice());
-        Assert.assertEquals("EUR", firstResponseSecondNetwork.getCurrency());
-        Assert.assertEquals("CA-FIXED", firstResponseSecondNetwork.getCode());
-        Assert.assertEquals("Canada Landline", firstResponseSecondNetwork.getName());
+        assertEquals(Network.Type.LANDLINE, firstResponseSecondNetwork.getType());
+        assertEquals(new BigDecimal("0.01000000"), firstResponseSecondNetwork.getPrice());
+        assertEquals("EUR", firstResponseSecondNetwork.getCurrency());
+        assertEquals("CA-FIXED", firstResponseSecondNetwork.getCode());
+        assertEquals("Canada Landline", firstResponseSecondNetwork.getName());
 
         PricingResponse secondResponse = response.getCountries().get(1);
-        Assert.assertEquals("1", secondResponse.getDialingPrefix());
-        Assert.assertEquals("EUR", secondResponse.getCurrency());
-        Assert.assertEquals("United States Minor Outlying Islands", secondResponse.getCountry().getDisplayName());
-        Assert.assertEquals("UM", secondResponse.getCountry().getCode());
-        Assert.assertEquals("United States Minor Outlying Islands", secondResponse.getCountry().getName());
+        assertEquals("1", secondResponse.getDialingPrefix());
+        assertEquals("EUR", secondResponse.getCurrency());
+        assertEquals("United States Minor Outlying Islands", secondResponse.getCountry().getDisplayName());
+        assertEquals("UM", secondResponse.getCountry().getCode());
+        assertEquals("United States Minor Outlying Islands", secondResponse.getCountry().getName());
     }
 
     @Test
@@ -215,40 +214,40 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "            \"countryCode\": \"UM\",\n"
                 + "            \"countryName\": \"United States Minor Outlying Islands\"\n" + "        }\n" + "    ]\n"
                 + "}";
-        wrapper.setHttpClient(this.stubHttpClient(200, json));
+        wrapper.setHttpClient(stubHttpClient(200, json));
         PrefixPricingResponse response = client.getPrefixPrice(ServiceType.SMS, "1");
-        Assert.assertEquals(2, response.getCount());
-        Assert.assertEquals(2, response.getCountries().size());
+        assertEquals(2, response.getCount());
+        assertEquals(2, response.getCountries().size());
 
         PricingResponse firstResponse = response.getCountries().get(0);
-        Assert.assertEquals("1", firstResponse.getDialingPrefix());
-        Assert.assertEquals(new BigDecimal("0.00570000"), firstResponse.getDefaultPrice());
-        Assert.assertEquals("EUR", firstResponse.getCurrency());
-        Assert.assertEquals("Canada", firstResponse.getCountry().getDisplayName());
-        Assert.assertEquals("CA", firstResponse.getCountry().getCode());
-        Assert.assertEquals("Canada", firstResponse.getCountry().getName());
+        assertEquals("1", firstResponse.getDialingPrefix());
+        assertEquals(new BigDecimal("0.00570000"), firstResponse.getDefaultPrice());
+        assertEquals("EUR", firstResponse.getCurrency());
+        assertEquals("Canada", firstResponse.getCountry().getDisplayName());
+        assertEquals("CA", firstResponse.getCountry().getCode());
+        assertEquals("Canada", firstResponse.getCountry().getName());
 
-        Assert.assertEquals(1, firstResponse.getNetworks().size());
+        assertEquals(1, firstResponse.getNetworks().size());
         Network network = firstResponse.getNetworks().get(0);
-        Assert.assertEquals(Network.Type.MOBILE, network.getType());
-        Assert.assertEquals(new BigDecimal("0.00570000"), network.getPrice());
-        Assert.assertEquals("EUR", network.getCurrency());
-        Assert.assertEquals("302", network.getMcc());
-        Assert.assertEquals("655", network.getMnc());
-        Assert.assertEquals("302655", network.getCode());
-        Assert.assertEquals("MTS Communications Inc.", network.getName());
+        assertEquals(Network.Type.MOBILE, network.getType());
+        assertEquals(new BigDecimal("0.00570000"), network.getPrice());
+        assertEquals("EUR", network.getCurrency());
+        assertEquals("302", network.getMcc());
+        assertEquals("655", network.getMnc());
+        assertEquals("302655", network.getCode());
+        assertEquals("MTS Communications Inc.", network.getName());
 
         PricingResponse secondResponse = response.getCountries().get(1);
-        Assert.assertEquals("1", secondResponse.getDialingPrefix());
-        Assert.assertEquals("EUR", secondResponse.getCurrency());
-        Assert.assertEquals("United States Minor Outlying Islands", secondResponse.getCountry().getDisplayName());
-        Assert.assertEquals("UM", secondResponse.getCountry().getCode());
-        Assert.assertEquals("United States Minor Outlying Islands", secondResponse.getCountry().getName());
+        assertEquals("1", secondResponse.getDialingPrefix());
+        assertEquals("EUR", secondResponse.getCurrency());
+        assertEquals("United States Minor Outlying Islands", secondResponse.getCountry().getDisplayName());
+        assertEquals("UM", secondResponse.getCountry().getCode());
+        assertEquals("United States Minor Outlying Islands", secondResponse.getCountry().getName());
     }
 
     @Test
     public void testTopUpSuccessful() throws Exception {
-        wrapper.setHttpClient(this.stubHttpClient(200, ""));
+        wrapper.setHttpClient(stubHttpClient(200, ""));
         // No assertions as an exception will be thrown if failure occurs.
         client.topUp("ABC123");
     }
@@ -256,14 +255,14 @@ public class AccountClientTest extends ClientTest<AccountClient> {
     @Test(expected = VonageClientException.class)
     public void testTopUpFailedAuth() throws Exception {
         String json = "{\"error-code\":\"401\",\"error-code-label\":\"authentication failed\"}";
-        wrapper.setHttpClient(this.stubHttpClient(401, json));
+        wrapper.setHttpClient(stubHttpClient(401, json));
         client.topUp("ABC123");
     }
 
     @Test(expected = VonageClientException.class)
     public void testTopUpFailed() throws Exception {
         String json = "{\"error-code\":\"420\",\"error-code-label\":\"topup failed\"}";
-        wrapper.setHttpClient(this.stubHttpClient(401, json));
+        wrapper.setHttpClient(stubHttpClient(401, json));
         client.topUp("ABC123");
     }
 
@@ -281,7 +280,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "                    }\n" + "                },\n" + "                \"id\": \"secret-id-two\",\n"
                 + "                \"created_at\": \"2016-01-20T16:34:49Z\"\n" + "            }\n" + "        ]\n"
                 + "    }\n" + "}";
-        wrapper.setHttpClient(this.stubHttpClient(200, json));
+        wrapper.setHttpClient(stubHttpClient(200, json));
 
         ListSecretsResponse response = client.listSecrets("abcd1234");
         SecretResponse[] responses = response.getSecrets().toArray(new SecretResponse[0]);
@@ -304,7 +303,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"title\": \"Invalid credentials supplied\",\n"
                 + "  \"detail\": \"You did not provide correct credentials.\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        wrapper.setHttpClient(this.stubHttpClient(401, json));
+        wrapper.setHttpClient(stubHttpClient(401, json));
         client.listSecrets("ABC123");
     }
 
@@ -314,7 +313,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"title\": \"Invalid API Key\",\n"
                 + "  \"detail\": \"API key 'ABC123' does not exist, or you do not have access\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        wrapper.setHttpClient(this.stubHttpClient(404, json));
+        wrapper.setHttpClient(stubHttpClient(404, json));
         client.listSecrets("ABC123");
     }
 
@@ -323,7 +322,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         String json = "{\n" + "  \"_links\": {\n" + "    \"self\": {\n"
                 + "      \"href\": \"/accounts/abcd1234/secrets/secret-id-one\"\n" + "    }\n" + "  },\n"
                 + "  \"id\": \"secret-id-one\",\n" + "  \"created_at\": \"2017-03-02T16:34:49Z\"\n" + "}";
-        wrapper.setHttpClient(this.stubHttpClient(201, json));
+        wrapper.setHttpClient(stubHttpClient(201, json));
 
         SecretResponse response = client.createSecret("apiKey", "secret");
 
@@ -343,7 +342,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                         + "  \"invalid_parameters\": [\n" + "    {\n" + "      \"name\": \"secret\",\n"
                         + "      \"reason\": \"Does not meet complexity requirements\"\n" + "    }\n" + "  ],\n"
                         + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        wrapper.setHttpClient(this.stubHttpClient(400, json));
+        wrapper.setHttpClient(stubHttpClient(400, json));
         client.createSecret("key", "secret");
     }
 
@@ -353,7 +352,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"title\": \"Invalid credentials supplied\",\n"
                 + "  \"detail\": \"You did not provide correct credentials.\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        wrapper.setHttpClient(this.stubHttpClient(401, json));
+        wrapper.setHttpClient(stubHttpClient(401, json));
         client.createSecret("key", "secret");
     }
 
@@ -364,7 +363,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"title\": \"Maxmimum number of secrets already met\",\n"
                 + "  \"detail\": \"This account has reached maximum number of '2' allowed secrets\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        wrapper.setHttpClient(this.stubHttpClient(403, json));
+        wrapper.setHttpClient(stubHttpClient(403, json));
         client.createSecret("key", "secret");
     }
 
@@ -374,7 +373,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"title\": \"Invalid API Key\",\n"
                 + "  \"detail\": \"API key 'ABC123' does not exist, or you do not have access\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        wrapper.setHttpClient(this.stubHttpClient(404, json));
+        wrapper.setHttpClient(stubHttpClient(404, json));
         client.createSecret("key", "secret");
     }
 
@@ -383,7 +382,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         String json = "{\n" + "  \"_links\": {\n" + "    \"self\": {\n"
                 + "      \"href\": \"/accounts/abcd1234/secrets/secret-id-one\"\n" + "    }\n" + "  },\n"
                 + "  \"id\": \"secret-id-one\",\n" + "  \"created_at\": \"2017-03-02T16:34:49Z\"\n" + "}";
-        wrapper.setHttpClient(this.stubHttpClient(200, json));
+        wrapper.setHttpClient(stubHttpClient(200, json));
 
         SecretResponse response = client.getSecret("apiKey", "secret-id-one");
 
@@ -400,7 +399,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"title\": \"Invalid credentials supplied\",\n"
                 + "  \"detail\": \"You did not provide correct credentials.\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        wrapper.setHttpClient(this.stubHttpClient(401, json));
+        wrapper.setHttpClient(stubHttpClient(401, json));
         client.getSecret("apiKey", "secret-id-one");
     }
 
@@ -410,13 +409,13 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"title\": \"Invalid API Key\",\n"
                 + "  \"detail\": \"API key 'ABC123' does not exist, or you do not have access\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        wrapper.setHttpClient(this.stubHttpClient(404, json));
+        wrapper.setHttpClient(stubHttpClient(404, json));
         client.getSecret("apiKey", "secret-id-one");
     }
 
     @Test
     public void testRevokeSecretSuccessful() throws Exception {
-        wrapper.setHttpClient(this.stubHttpClient(204, ""));
+        wrapper.setHttpClient(stubHttpClient(204, ""));
         // No assertions as an exception will be thrown if failure occurs.
         client.revokeSecret("apiKey", "secretId");
     }
@@ -427,7 +426,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"title\": \"Invalid credentials supplied\",\n"
                 + "  \"detail\": \"You did not provide correct credentials.\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        wrapper.setHttpClient(this.stubHttpClient(401, json));
+        wrapper.setHttpClient(stubHttpClient(401, json));
         client.revokeSecret("apiKey", "secret-id-one");
     }
 
@@ -438,7 +437,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"title\": \"Secret Deletion Forbidden\",\n"
                 + "  \"detail\": \"Can not delete the last secret. The account must always have at least 1 secret active at any time\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        wrapper.setHttpClient(this.stubHttpClient(403, json));
+        wrapper.setHttpClient(stubHttpClient(403, json));
         client.revokeSecret("apiKey", "secret-id-one");
     }
 
@@ -451,14 +450,14 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 "  \"max-inbound-request\": 20,\n" +
                 "  \"max-calls-per-second\": 30\n" +
                 "}";
-        wrapper.setHttpClient(this.stubHttpClient(200, json));
+        wrapper.setHttpClient(stubHttpClient(200, json));
         SettingsResponse response = client.updateSmsIncomingUrl("https://example.com/webhooks/inbound-sms");
 
-        Assert.assertEquals("https://example.com/webhooks/inbound-sms", response.getIncomingSmsUrl());
-        Assert.assertEquals("https://example.com/webhooks/delivery-receipt", response.getDeliveryReceiptUrl());
-        Assert.assertEquals(Integer.valueOf(30), response.getMaxApiCallsPerSecond());
-        Assert.assertEquals(Integer.valueOf(20), response.getMaxInboundMessagesPerSecond());
-        Assert.assertEquals(Integer.valueOf(10), response.getMaxOutboundMessagesPerSecond());
+        assertEquals("https://example.com/webhooks/inbound-sms", response.getIncomingSmsUrl());
+        assertEquals("https://example.com/webhooks/delivery-receipt", response.getDeliveryReceiptUrl());
+        assertEquals(Integer.valueOf(30), response.getMaxApiCallsPerSecond());
+        assertEquals(Integer.valueOf(20), response.getMaxInboundMessagesPerSecond());
+        assertEquals(Integer.valueOf(10), response.getMaxOutboundMessagesPerSecond());
     }
 
     @Test
@@ -470,14 +469,14 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 "  \"max-inbound-request\": 20,\n" +
                 "  \"max-calls-per-second\": 30\n" +
                 "}";
-        wrapper.setHttpClient(this.stubHttpClient(200, json));
+        wrapper.setHttpClient(stubHttpClient(200, json));
         SettingsResponse response = client.updateDeliveryReceiptUrl("https://example.com/webhooks/delivery-receipt");
 
-        Assert.assertEquals("https://example.com/webhooks/inbound-sms", response.getIncomingSmsUrl());
-        Assert.assertEquals("https://example.com/webhooks/delivery-receipt", response.getDeliveryReceiptUrl());
-        Assert.assertEquals(Integer.valueOf(30), response.getMaxApiCallsPerSecond());
-        Assert.assertEquals(Integer.valueOf(20), response.getMaxInboundMessagesPerSecond());
-        Assert.assertEquals(Integer.valueOf(10), response.getMaxOutboundMessagesPerSecond());
+        assertEquals("https://example.com/webhooks/inbound-sms", response.getIncomingSmsUrl());
+        assertEquals("https://example.com/webhooks/delivery-receipt", response.getDeliveryReceiptUrl());
+        assertEquals(Integer.valueOf(30), response.getMaxApiCallsPerSecond());
+        assertEquals(Integer.valueOf(20), response.getMaxInboundMessagesPerSecond());
+        assertEquals(Integer.valueOf(10), response.getMaxOutboundMessagesPerSecond());
     }
 
     @Test
@@ -490,13 +489,13 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 "  \"max-calls-per-second\": 30\n" +
                 "}";
 
-        wrapper.setHttpClient(this.stubHttpClient(200, json));
+        wrapper.setHttpClient(stubHttpClient(200, json));
         SettingsResponse response = client.updateSettings(new SettingsRequest("https://example.com/webhooks/inbound-sms", "https://example.com/webhooks/delivery-receipt"));
 
-        Assert.assertEquals("https://example.com/webhooks/inbound-sms", response.getIncomingSmsUrl());
-        Assert.assertEquals("https://example.com/webhooks/delivery-receipt", response.getDeliveryReceiptUrl());
-        Assert.assertEquals(Integer.valueOf(30), response.getMaxApiCallsPerSecond());
-        Assert.assertEquals(Integer.valueOf(20), response.getMaxInboundMessagesPerSecond());
-        Assert.assertEquals(Integer.valueOf(10), response.getMaxOutboundMessagesPerSecond());
+        assertEquals("https://example.com/webhooks/inbound-sms", response.getIncomingSmsUrl());
+        assertEquals("https://example.com/webhooks/delivery-receipt", response.getDeliveryReceiptUrl());
+        assertEquals(Integer.valueOf(30), response.getMaxApiCallsPerSecond());
+        assertEquals(Integer.valueOf(20), response.getMaxInboundMessagesPerSecond());
+        assertEquals(Integer.valueOf(10), response.getMaxOutboundMessagesPerSecond());
     }
 }

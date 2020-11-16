@@ -32,7 +32,7 @@ public class SettingsMethodTest {
 
     @Before
     public void setUp() throws Exception {
-        this.method = new SettingsMethod(new HttpWrapper());
+        method = new SettingsMethod(new HttpWrapper());
     }
 
     @Test

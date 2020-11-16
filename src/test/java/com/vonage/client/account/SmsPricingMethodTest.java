@@ -28,7 +28,7 @@ public class SmsPricingMethodTest {
 
     @Before
     public void setUp() {
-        this.method = new SmsPricingMethod(new HttpWrapper());
+        method = new SmsPricingMethod(new HttpWrapper());
     }
 
     @Test

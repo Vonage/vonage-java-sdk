@@ -34,7 +34,7 @@ public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
 
     @Test
     public void testVerifyWithNumberBrandFromLengthLocaleLineType() throws Exception {
-        wrapper.setHttpClient(this.stubHttpClient(200,
+        wrapper.setHttpClient(stubHttpClient(200,
                 "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": 0,\n"
                         + "  \"error_text\": \"error\"\n" + "}"
         ));
@@ -54,7 +54,7 @@ public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
 
     @Test
     public void testVerifyWithNumberBrandFromLengthLocale() throws Exception {
-        wrapper.setHttpClient(this.stubHttpClient(200,
+        wrapper.setHttpClient(stubHttpClient(200,
                 "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": 0,\n"
                         + "  \"error_text\": \"error\"\n" + "}"
         ));
@@ -68,7 +68,7 @@ public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
 
     @Test
     public void testVerifyWithNumberBrandFrom() throws Exception {
-        wrapper.setHttpClient(this.stubHttpClient(200,
+        wrapper.setHttpClient(stubHttpClient(200,
                 "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": 0,\n"
                         + "  \"error_text\": \"error\"\n" + "}"
         ));
@@ -82,7 +82,7 @@ public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
 
     @Test
     public void testVerifyWithNumberBrand() throws Exception {
-        wrapper.setHttpClient(this.stubHttpClient(200,
+        wrapper.setHttpClient(stubHttpClient(200,
                 "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": 0,\n"
                         + "  \"error_text\": \"error\"\n" + "}"
         ));
@@ -96,7 +96,7 @@ public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
 
     @Test
     public void testVerifyWithRequestObject() throws Exception {
-        wrapper.setHttpClient(this.stubHttpClient(200,
+        wrapper.setHttpClient(stubHttpClient(200,
                 "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": 0,\n"
                         + "  \"error_text\": \"error\"\n" + "}"
         ));
@@ -114,7 +114,7 @@ public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
 
     @Test
     public void testVerifyHttpError() throws Exception {
-        wrapper.setHttpClient(this.stubHttpClient(500,
+        wrapper.setHttpClient(stubHttpClient(500,
                 "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": 0,\n"
                         + "  \"error_text\": \"error\"\n" + "}"
         ));
@@ -128,17 +128,16 @@ public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
 
     @Test
     public void testVerifyWithNonNumericStatus() throws Exception {
-        wrapper.setHttpClient(this.stubHttpClient(200,
+        wrapper.setHttpClient(stubHttpClient(200,
                 "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": \"test\",\n"
                         + "  \"error_text\": \"error\"\n" + "}"
         ));
 
-        VerifyResponse response = client.verify(new VerifyRequest("447700900999",
-                "TestBrand",
-                "15555215554",
-                6,
-                Locale.US
-        ));
+        VerifyResponse response = client.verify(VerifyRequest.builder("447700900999","TestBrand")
+                .senderId("15555215554")
+                .length(6)
+                .locale(Locale.US)
+                .build());
 
         assertEquals(VerifyStatus.INTERNAL_ERROR, response.getStatus());
         assertEquals("error", response.getErrorText());

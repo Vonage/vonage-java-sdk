@@ -40,12 +40,13 @@ public class SmsClient {
 
     /**
      * Create a new SmsClient.
+     * @param httpWrapper Http Wrapper used to create a Sms Request
      */
     public SmsClient(HttpWrapper httpWrapper) {
-        this.message = new SendMessageEndpoint(httpWrapper);
-        this.search = new SmsSearchEndpoint(httpWrapper);
-        this.rejected = new SearchRejectedMessagesEndpoint(httpWrapper);
-        this.singleSearch = new SmsSingleSearchEndpoint(httpWrapper);
+        message = new SendMessageEndpoint(httpWrapper);
+        search = new SmsSearchEndpoint(httpWrapper);
+        rejected = new SearchRejectedMessagesEndpoint(httpWrapper);
+        singleSearch = new SmsSingleSearchEndpoint(httpWrapper);
     }
 
     /**
@@ -80,11 +81,13 @@ public class SmsClient {
      * #searchMessages(String, String...)} instead.
      * <p>
      *
+     * @param request request to search for a sms message
+     * @return sms messages that match the search criteria
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public SearchSmsResponse searchMessages(SearchSmsRequest request) throws VonageResponseParseException, VonageClientException {
-        return this.search.execute(request);
+        return search.execute(request);
     }
 
     /**
@@ -102,7 +105,7 @@ public class SmsClient {
         List<String> idList = new ArrayList<>(ids.length + 1);
         idList.add(id);
         idList.addAll(Arrays.asList(ids));
-        return this.searchMessages(new SmsIdSearchRequest(idList));
+        return searchMessages(new SmsIdSearchRequest(idList));
     }
 
     /**
@@ -117,7 +120,7 @@ public class SmsClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public SearchSmsResponse searchMessages(Date date, String to) throws VonageResponseParseException, VonageClientException {
-        return this.searchMessages(new SmsDateSearchRequest(date, to));
+        return searchMessages(new SmsDateSearchRequest(date, to));
     }
 
     /**
@@ -125,13 +128,15 @@ public class SmsClient {
      * <p>
      * You should probably use {@link #searchRejectedMessages(Date, String)} instead.
      *
+     * @param request search for rejected SMS transactions
+     *
      * @return rejection data matching the provided criteria
      *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public SearchRejectedMessagesResponse searchRejectedMessages(SearchRejectedMessagesRequest request) throws VonageResponseParseException, VonageClientException {
-        return this.rejected.execute(request);
+        return rejected.execute(request);
     }
 
     /**
@@ -146,7 +151,7 @@ public class SmsClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public SearchRejectedMessagesResponse searchRejectedMessages(Date date, String to) throws VonageResponseParseException, VonageClientException {
-        return this.searchRejectedMessages(new SearchRejectedMessagesRequest(date, to));
+        return searchRejectedMessages(new SearchRejectedMessagesRequest(date, to));
     }
 
     /**
@@ -160,6 +165,6 @@ public class SmsClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public SmsSingleSearchResponse getSms(String id) throws VonageResponseParseException, VonageClientException {
-        return this.singleSearch.execute(id);
+        return singleSearch.execute(id);
     }
 }

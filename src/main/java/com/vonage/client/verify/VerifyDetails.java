@@ -40,57 +40,57 @@ public class VerifyDetails {
 
     @JsonProperty("request_id")
     public String getRequestId() {
-        return this.requestId;
+        return requestId;
     }
 
     @JsonProperty("account_id")
     public String getAccountId() {
-        return this.accountId;
+        return accountId;
     }
 
     public String getNumber() {
-        return this.number;
+        return number;
     }
 
     @JsonProperty("sender_id")
     public String getSenderId() {
-        return this.senderId;
+        return senderId;
     }
 
     @JsonProperty("date_submitted")
     public Date getDateSubmitted() {
-        return this.dateSubmitted;
+        return dateSubmitted;
     }
 
     @JsonProperty("date_finalized")
     public Date getDateFinalized() {
-        return this.dateFinalized;
+        return dateFinalized;
     }
 
     @JsonProperty("first_event_date")
     public Date getFirstEventDate() {
-        return this.firstEventDate;
+        return firstEventDate;
     }
 
     @JsonProperty("last_event_date")
     public Date getLastEventDate() {
-        return this.lastEventDate;
+        return lastEventDate;
     }
 
     public Status getStatus() {
-        return this.status;
+        return status;
     }
 
     public BigDecimal getPrice() {
-        return this.price;
+        return price;
     }
 
     public String getCurrency() {
-        return this.currency;
+        return currency;
     }
 
     public List<VerifyCheck> getChecks() {
-        return this.checks;
+        return checks;
     }
 
     public enum Status {
@@ -127,7 +127,7 @@ public class VerifyDetails {
 
         @JsonValue
         public String getStatus() {
-            return this.status;
+            return status;
         }
     }
 }

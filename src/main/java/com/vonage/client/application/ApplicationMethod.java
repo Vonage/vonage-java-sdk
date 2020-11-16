@@ -14,29 +14,21 @@
  * limitations under the License.
  */
 
-package com.vonage.client.incoming;
+package com.vonage.client.application;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.AbstractMethod;
+import com.vonage.client.HttpWrapper;
+import com.vonage.client.VonageClientException;
+import org.apache.http.client.methods.RequestBuilder;
 
-public class DtmfResult {
+public abstract class ApplicationMethod<RequestT, ResultT> extends AbstractMethod<RequestT, ResultT> {
 
-    private String digits;
-    private boolean timedOut;
-
-    /**
-     *
-     * @return The buttons pressed by the user
-     */
-    public String getDigits() {
-        return digits;
+    public ApplicationMethod(HttpWrapper httpWrapper) {
+        super(httpWrapper);
     }
 
-    /**
-     *
-     * @return Whether the DTMF input timed out: true if it did, false if not
-     */
-    @JsonProperty("timed_out")
-    public boolean isTimedOut() {
-        return timedOut;
+    @Override
+    protected RequestBuilder applyAuth(RequestBuilder request) throws VonageClientException {
+        return getAuthMethod(getAcceptableAuthMethods()).applyAsBasicAuth(request);
     }
 }

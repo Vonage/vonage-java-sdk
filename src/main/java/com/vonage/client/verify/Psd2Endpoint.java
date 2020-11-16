@@ -7,7 +7,7 @@ public class Psd2Endpoint {
     public Psd2Method method;
 
     public Psd2Endpoint(HttpWrapper wrapper) {
-        this.method = new Psd2Method(wrapper);
+        method = new Psd2Method(wrapper);
     }
 
     public VerifyResponse psd2Verify(String number, Double amount, String payee){

@@ -44,7 +44,7 @@ public class NccoResponse {
     }
 
     public void appendNcco(Action action) {
-        this.actionList.add(action);
+        actionList.add(action);
     }
 
     public String toJson() {

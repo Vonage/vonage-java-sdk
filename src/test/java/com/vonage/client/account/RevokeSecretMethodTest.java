@@ -28,7 +28,7 @@ public class RevokeSecretMethodTest {
 
     @Before
     public void setUp() {
-        this.method = new RevokeSecretMethod(new HttpWrapper());
+        method = new RevokeSecretMethod(new HttpWrapper());
     }
 
     @Test(expected = IllegalArgumentException.class)

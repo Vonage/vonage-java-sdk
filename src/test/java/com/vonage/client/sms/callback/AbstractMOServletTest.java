@@ -54,12 +54,12 @@ class TestMOServlet extends AbstractMOServlet {
                          final String expectedUsername,
                          final String expectedPassword) {
         super(validateSignature, signatureSharedSecret, validateUsernamePassword, expectedUsername, expectedPassword);
-        this.consumer = new SynchronousExecutor();
+        consumer = new SynchronousExecutor();
     }
 
     @Override
     public void consume(MO mo) {
-        this.result = mo;
+        result = mo;
     }
 }
 

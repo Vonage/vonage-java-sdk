@@ -23,7 +23,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public abstract class AppBasicAuthTest {
+public abstract class ApplicationMethodTest {
 
     @Test
     public void testApplyAuth() throws Exception {

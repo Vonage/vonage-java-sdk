@@ -34,19 +34,19 @@ public class BalanceEndpointTest {
 
     @Before
     public void setUp() throws Exception {
-        this.endpoint = new BalanceEndpoint(new HttpWrapper());
+        endpoint = new BalanceEndpoint(new HttpWrapper());
     }
 
     @Test
     public void testGetAcceptableAuthMethods() {
-        Class[] auths = this.endpoint.getAcceptableAuthMethods();
+        Class[] auths = endpoint.getAcceptableAuthMethods();
         assertArrayEquals(new Class[]{TokenAuthMethod.class}, auths);
     }
 
 
     @Test
     public void testMakeRequest() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(null);
+        RequestBuilder builder = endpoint.makeRequest(null);
         assertEquals("GET", builder.getMethod());
         assertEquals("https://rest.nexmo.com/account/get-balance", builder.build().getURI().toString());
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
@@ -70,7 +70,7 @@ public class BalanceEndpointTest {
                 "  \"value\": 3.14159,\n" +
                 "  \"autoReload\": false\n" +
                 "}}");
-        BalanceResponse response = this.endpoint.parseResponse(stub);
+        BalanceResponse response = endpoint.parseResponse(stub);
         assertEquals(3.14159, response.getValue(), 0.00001);
         assertFalse(response.isAutoReload());
     }

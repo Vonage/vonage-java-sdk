@@ -32,7 +32,7 @@ public class RedactMethodTest {
 
     @Before
     public void setUp() throws Exception {
-        this.method = new RedactMethod(new HttpWrapper());
+        method = new RedactMethod(new HttpWrapper());
     }
 
     @Test

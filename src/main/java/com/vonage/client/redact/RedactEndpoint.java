@@ -22,10 +22,10 @@ class RedactEndpoint {
     private RedactMethod redactMethod;
 
     RedactEndpoint(HttpWrapper httpWrapper) {
-        this.redactMethod = new RedactMethod(httpWrapper);
+        redactMethod = new RedactMethod(httpWrapper);
     }
 
     void redactTransaction(RedactRequest redactRequest) throws VonageClientException {
-        this.redactMethod.execute(redactRequest);
+        redactMethod.execute(redactRequest);
     }
 }

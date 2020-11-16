@@ -38,14 +38,14 @@ public class SnsClient {
      * @param httpWrapper (required) shared HTTP wrapper object used for making REST calls.
      */
     public SnsClient(HttpWrapper httpWrapper) {
-        this.endpoint = new SnsEndpoint(httpWrapper);
+        endpoint = new SnsEndpoint(httpWrapper);
     }
 
     public SnsPublishResponse publish(SnsPublishRequest request) throws VonageClientException, VonageResponseParseException {
-        return (SnsPublishResponse) this.endpoint.execute(request);
+        return (SnsPublishResponse) endpoint.execute(request);
     }
 
     public SnsSubscribeResponse subscribe(SnsSubscribeRequest request) throws VonageClientException, VonageResponseParseException {
-        return (SnsSubscribeResponse) this.endpoint.execute(request);
+        return (SnsSubscribeResponse) endpoint.execute(request);
     }
 }

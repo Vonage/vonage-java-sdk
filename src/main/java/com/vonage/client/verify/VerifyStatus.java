@@ -66,7 +66,7 @@ public enum VerifyStatus {
     }
 
     public int getVerifyStatus() {
-        return this.verifyStatus;
+        return verifyStatus;
     }
 
     public boolean isTemporaryError() {

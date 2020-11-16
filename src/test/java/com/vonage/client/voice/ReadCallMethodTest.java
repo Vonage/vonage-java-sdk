@@ -38,7 +38,7 @@ public class ReadCallMethodTest {
 
     @Test
     public void getAcceptableAuthMethods() throws Exception {
-        assertArrayEquals(new Class[]{JWTAuthMethod.class}, this.method.getAcceptableAuthMethods());
+        assertArrayEquals(new Class[]{JWTAuthMethod.class}, method.getAcceptableAuthMethods());
     }
 
     @Test

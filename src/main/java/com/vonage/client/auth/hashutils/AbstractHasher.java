@@ -31,9 +31,10 @@ public abstract class AbstractHasher {
      * @return  hashed representation of the input string
      * @throws NoSuchAlgorithmException if the algorithm is not available.
      * @throws UnsupportedEncodingException if the encoding type is invalid
+     * @throws InvalidKeyException Only applicable to HMAC encoding types, when a bad key is provided.
      */
     public String calculate(String input, String secretKey, String encoding) throws UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
-        return this.calculate(input + secretKey, encoding);
+        return calculate(input + secretKey, encoding);
     }
 
     /**
@@ -44,6 +45,7 @@ public abstract class AbstractHasher {
      * @return  hashed representation of the input string
      * @throws NoSuchAlgorithmException if the algorithm is not available.
      * @throws UnsupportedEncodingException if the encoding type is invalid
+     * @throws InvalidKeyException Only applicable to HMAC encoding types, when a bad key is provided.
      */
     public abstract String calculate(String input, String encoding) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException;
 

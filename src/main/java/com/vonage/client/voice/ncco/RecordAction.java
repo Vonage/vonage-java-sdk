@@ -40,10 +40,9 @@ public class RecordAction implements Action {
     private Integer channels;
 
     /**
-     * @deprecated Use {@link Builder}
+     * @param builder Builder for building the Record Action
      */
-    @Deprecated
-    public RecordAction(Builder builder) {
+    private RecordAction(Builder builder) {
         this.format = builder.format;
         this.endOnSilence = builder.endOnSilence;
         this.endOnKey = builder.endOnKey;

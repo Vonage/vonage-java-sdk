@@ -34,18 +34,18 @@ public class AdvancedInsightEndpointTest {
 
     @Before
     public void setUp() {
-        this.endpoint = new AdvancedInsightEndpoint(new HttpWrapper());
+        endpoint = new AdvancedInsightEndpoint(new HttpWrapper());
     }
 
     @Test
     public void testGetAcceptableAuthMethods() throws Exception {
-        Class[] auths = this.endpoint.getAcceptableAuthMethods();
+        Class[] auths = endpoint.getAcceptableAuthMethods();
         assertArrayEquals(new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class}, auths);
     }
 
     @Test
     public void testMakeRequest() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(AdvancedInsightRequest.builder("1234").build());
+        RequestBuilder builder = endpoint.makeRequest(AdvancedInsightRequest.builder("1234").build());
         assertEquals("POST", builder.getMethod());
         assertEquals("https://api.nexmo.com/ni/advanced/json", builder.build().getURI().toString());
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
@@ -57,7 +57,7 @@ public class AdvancedInsightEndpointTest {
 
     @Test
     public void testMakeRequestWithCountry() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(AdvancedInsightRequest.builder("1234")
+        RequestBuilder builder = endpoint.makeRequest(AdvancedInsightRequest.builder("1234")
                 .country("GB")
                 .build());
         assertEquals("POST", builder.getMethod());
@@ -71,7 +71,7 @@ public class AdvancedInsightEndpointTest {
 
     @Test
     public void testMakeRequestWithIpAddress() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(AdvancedInsightRequest.builder("1234")
+        RequestBuilder builder = endpoint.makeRequest(AdvancedInsightRequest.builder("1234")
                 .ipAddress("123.123.123.123")
                 .build());
 
@@ -86,7 +86,7 @@ public class AdvancedInsightEndpointTest {
 
     @Test
     public void testMakeRequestWithCnam() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(AdvancedInsightRequest.builder("1234")
+        RequestBuilder builder = endpoint.makeRequest(AdvancedInsightRequest.builder("1234")
                 .cnam(true)
                 .build());
         assertEquals("POST", builder.getMethod());
@@ -100,7 +100,7 @@ public class AdvancedInsightEndpointTest {
 
     @Test
     public void testMakeAsyncRequest() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(AdvancedInsightRequest.builder("1234")
+        RequestBuilder builder = endpoint.makeRequest(AdvancedInsightRequest.builder("1234")
                 .async(true)
                 .callback("https://example.com")
                 .build());
@@ -135,7 +135,7 @@ public class AdvancedInsightEndpointTest {
                         + "    \"reachable\": \"unknown\",\n" + "    \"ported\": \"assumed_not_ported\",\n"
                         + "    \"roaming\": {\"status\": \"not_roaming\"}\n" + "}"
         );
-        AdvancedInsightResponse response = this.endpoint.parseResponse(stub);
+        AdvancedInsightResponse response = endpoint.parseResponse(stub);
         assertEquals("0c082a69-85df-4bbc-aae6-ee998e17e5a4", response.getRequestId());
     }
 

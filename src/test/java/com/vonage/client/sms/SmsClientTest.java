@@ -78,7 +78,7 @@ public class SmsClientTest {
 
     @Test
     public void testSubmitMessage() throws Exception {
-        this.wrapper.setHttpClient(this.stubHttpClient(
+        wrapper.setHttpClient(stubHttpClient(
                 200,
                 "{\n" +
                         "  \"message-count\":2,\n" +
@@ -111,7 +111,7 @@ public class SmsClientTest {
 
     @Test
     public void testSubmitMessageHttpError() throws Exception {
-        this.wrapper.setHttpClient(this.stubHttpClient(500, ""));
+        wrapper.setHttpClient(stubHttpClient(500, ""));
 
         Message message = new TextMessage("TestSender", "not-a-number", "Test");
         try {
@@ -124,7 +124,7 @@ public class SmsClientTest {
 
     @Test
     public void testSearchMessagesId() throws Exception {
-        this.wrapper.setHttpClient(this.stubHttpClient(200, "{\n" +
+        wrapper.setHttpClient(stubHttpClient(200, "{\n" +
                 "  \"count\": 2,\n" +
                 "  \"items\": [\n" +
                 "    {\n" +
@@ -164,7 +164,7 @@ public class SmsClientTest {
 
     @Test
     public void testSearchMessagesDate() throws Exception {
-        this.wrapper.setHttpClient(this.stubHttpClient(200, "{\n" +
+        wrapper.setHttpClient(stubHttpClient(200, "{\n" +
                 "  \"count\": 2,\n" +
                 "  \"items\": [\n" +
                 "    {\n" +
@@ -207,7 +207,7 @@ public class SmsClientTest {
 
     @Test
     public void testSearchRejected() throws Exception {
-        this.wrapper.setHttpClient(this.stubHttpClient(200, "{\n" +
+        wrapper.setHttpClient(stubHttpClient(200, "{\n" +
                 "  \"count\": 1,\n" +
                 "  \"items\": [\n" +
                 "    {\n" +
@@ -230,7 +230,7 @@ public class SmsClientTest {
 
     @Test
     public void testSearchSingleMessagesId() throws Exception {
-        this.wrapper.setHttpClient(this.stubHttpClient(200, "{\n" +
+        wrapper.setHttpClient(stubHttpClient(200, "{\n" +
                 "      \"message-id\": \"00A0B0C0\",\n" +
                 "      \"account-id\": \"key\",\n" +
                 "      \"network\": \"20810\",\n" +

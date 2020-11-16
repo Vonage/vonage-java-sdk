@@ -56,6 +56,6 @@ class ListNumbersEndpoint extends AbstractMethod<ListNumbersFilter, ListNumbersR
     }
 
     ListNumbersResponse listNumbers(ListNumbersFilter request) throws VonageClientException {
-        return this.execute(request);
+        return execute(request);
     }
 }

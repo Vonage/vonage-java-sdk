@@ -32,7 +32,7 @@ public class CallModifier {
 
     public CallModifier(String uuid, ModifyCallAction action) {
         this.uuid = uuid;
-        this.modifyCallPayload = new ModifyCallPayload(action);
+        modifyCallPayload = new ModifyCallPayload(action);
     }
 
     public static CallModifier transferCall(String uuid, String nccoUrl) {
@@ -54,7 +54,7 @@ public class CallModifier {
     public String toJson() {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(this.modifyCallPayload);
+            return mapper.writeValueAsString(modifyCallPayload);
         } catch (JsonProcessingException jpe) {
             throw new VonageUnexpectedException("Failed to produce json from CallModifier object.", jpe);
         }

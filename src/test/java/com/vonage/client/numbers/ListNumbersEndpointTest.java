@@ -41,7 +41,7 @@ public class ListNumbersEndpointTest {
 
     @Before
     public void setUp() throws Exception {
-        this.endpoint = new ListNumbersEndpoint(new HttpWrapper());
+        endpoint = new ListNumbersEndpoint(new HttpWrapper());
     }
 
     @Test

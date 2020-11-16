@@ -72,6 +72,7 @@ public abstract class Message {
      *             valid short-code / long code that can be replied to, or a short text description of the application
      *             sending the message (Max 15 chars)
      * @param to   the phone number of the handset you wish to send the message to
+     * @param statusReportRequired flag to enable status updates about the delivery of this message
      */
     protected Message(final MessageType type,
                       final String from,
@@ -87,7 +88,7 @@ public abstract class Message {
      * @return int the type of message will influence the makeup of the request we post to the Vonage server, and also the action taken by the Vonage server in response to this message
      */
     public MessageType getType() {
-        return this.type;
+        return type;
     }
 
     /**
@@ -95,14 +96,14 @@ public abstract class Message {
      * typically either a valid short-code / long code that can be replied to, or a short text description of the application sending the message (Max 11 chars)
      */
     public String getFrom() {
-        return this.from;
+        return from;
     }
 
     /**
      * @return String the phone number of the handset that you wish to send the message to
      */
     public String getTo() {
-        return this.to;
+        return to;
     }
 
     /**
@@ -110,7 +111,7 @@ public abstract class Message {
      * be available in detailed reporting &amp; analytics in order to help with reconciliation of messages
      */
     public String getClientReference() {
-        return this.clientReference;
+        return clientReference;
     }
 
     public void setClientReference(String clientReference) {
@@ -124,11 +125,11 @@ public abstract class Message {
      * @return {@link MessageClass} The message class that is to be applied to this message.
      */
     public MessageClass getMessageClass() {
-        return this.messageClass;
+        return messageClass;
     }
 
     public void setMessageClass(MessageClass messageClass) {
-        this.messageClass = messageClass;
+        messageClass = messageClass;
     }
 
     public Long getTimeToLive() {
@@ -148,10 +149,10 @@ public abstract class Message {
     }
 
     /**
-     * Get the value of the 'status-report-req' parameter.
+     * @return get the value of the 'status-report-req' parameter.
      */
     public boolean getStatusReportRequired() {
-        return this.statusReportRequired;
+        return statusReportRequired;
     }
 
     /**
@@ -222,7 +223,7 @@ public abstract class Message {
         }
 
         public int getMessageClass() {
-            return this.messageClass;
+            return messageClass;
         }
 
     }

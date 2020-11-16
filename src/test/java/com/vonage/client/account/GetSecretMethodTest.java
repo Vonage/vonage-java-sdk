@@ -28,7 +28,7 @@ public class GetSecretMethodTest {
 
     @Before
     public void setUp() {
-        this.method = new GetSecretMethod(new HttpWrapper());
+        method = new GetSecretMethod(new HttpWrapper());
     }
 
     @Test(expected = IllegalArgumentException.class)

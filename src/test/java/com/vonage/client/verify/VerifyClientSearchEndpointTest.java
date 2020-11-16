@@ -47,7 +47,7 @@ public class VerifyClientSearchEndpointTest extends ClientTest<VerifyClient> {
                 + "  \"first_event_date\": \"2012-01-02 03:04:05\",\n"
                 + "  \"last_event_date\": \"2012-01-02 03:04:06\",\n" + "  \"price\": \"0.03000000\",\n"
                 + "  \"currency\": \"EUR\",\n" + "  \"status\": \"SUCCESS\"\n" + "}";
-        wrapper.setHttpClient(this.stubHttpClient(200, json));
+        wrapper.setHttpClient(stubHttpClient(200, json));
 
         SearchVerifyResponse response = client.search("not-a-search-request-id");
         assertEquals(VerifyStatus.OK, response.getStatus());
@@ -95,7 +95,7 @@ public class VerifyClientSearchEndpointTest extends ClientTest<VerifyClient> {
         //language=JSON
         String json = "{\n" + "  \"request_id\": \"\",\n" + "  \"status\": \"101\",\n"
                 + "  \"error_text\": \"No response found.\"\n" + "}";
-        wrapper.setHttpClient(this.stubHttpClient(200, json));
+        wrapper.setHttpClient(stubHttpClient(200, json));
 
         SearchVerifyResponse response = client.search("AAAAA");
         assertEquals(VerifyStatus.NO_RESPONSE, response.getStatus());
@@ -111,7 +111,7 @@ public class VerifyClientSearchEndpointTest extends ClientTest<VerifyClient> {
                 + "  \"first_event_date\": \"2016-10-19 11:18:56\",\n"
                 + "  \"last_event_date\": \"2016-10-19 11:18:56\",\n" + "  \"price\": \"0.03000000\",\n"
                 + "  \"currency\": \"EUR\",\n" + "  \"status\": \"FAILED\"\n" + "}";
-        wrapper.setHttpClient(this.stubHttpClient(200, json));
+        wrapper.setHttpClient(stubHttpClient(200, json));
 
         SearchVerifyResponse response = client.search("AAAAA");
         assertEquals(VerifyStatus.OK, response.getStatus());
@@ -129,7 +129,7 @@ public class VerifyClientSearchEndpointTest extends ClientTest<VerifyClient> {
                 + "  \"first_event_date\": \"2016-10-19 11:25:19\",\n"
                 + "  \"last_event_date\": \"2016-10-19 11:30:26\",\n" + "  \"price\": \"0\",\n"
                 + "  \"currency\": \"EUR\",\n" + "  \"status\": \"EXPIRED\"\n" + "}\n";
-        wrapper.setHttpClient(this.stubHttpClient(200, json));
+        wrapper.setHttpClient(stubHttpClient(200, json));
 
         SearchVerifyResponse response = client.search("AAAAA");
         assertEquals(VerifyStatus.OK, response.getStatus());
@@ -146,7 +146,7 @@ public class VerifyClientSearchEndpointTest extends ClientTest<VerifyClient> {
                 + "  \"checks\": [],\n" + "  \"first_event_date\": \"2016-10-19 11:25:19\",\n"
                 + "  \"last_event_date\": \"2016-10-19 11:30:26\",\n" + "  \"price\": \"0.10000000\",\n"
                 + "  \"currency\": \"EUR\",\n" + "  \"status\": \"IN PROGRESS\"\n" + "}\n";
-        wrapper.setHttpClient(this.stubHttpClient(200, json));
+        wrapper.setHttpClient(stubHttpClient(200, json));
 
         SearchVerifyResponse response = client.search("AAAAA");
         assertEquals(VerifyStatus.OK, response.getStatus());
@@ -160,7 +160,7 @@ public class VerifyClientSearchEndpointTest extends ClientTest<VerifyClient> {
         String json = "{\n" + "  \"request_id\": \"\",\n" + "  \"status\": 6,\n"
                 + "  \"error_text\": \"The Vonage platform was unable to process this message for the following reason: Wrong parameters.\"\n"
                 + "}";
-        wrapper.setHttpClient(this.stubHttpClient(200, json));
+        wrapper.setHttpClient(stubHttpClient(200, json));
 
         SearchVerifyResponse response = client.search("AAAAA");
         assertEquals(VerifyStatus.INVALID_REQUEST, response.getStatus());
@@ -181,7 +181,7 @@ public class VerifyClientSearchEndpointTest extends ClientTest<VerifyClient> {
                 + "      \"checks\": [],\n" + "      \"first_event_date\": \"2016-10-21 15:41:58\",\n"
                 + "      \"last_event_date\": \"2016-10-21 15:41:58\",\n" + "      \"price\": \"0.10000000\",\n"
                 + "      \"currency\": \"EUR\",\n" + "      \"status\": \"EXPIRED\"\n" + "    }\n" + "  ]\n" + "}";
-        wrapper.setHttpClient(this.stubHttpClient(200, json));
+        wrapper.setHttpClient(stubHttpClient(200, json));
 
         SearchVerifyResponse response = client.search("not-a-search-request-id");
         assertEquals(VerifyStatus.OK, response.getStatus());
@@ -240,7 +240,7 @@ public class VerifyClientSearchEndpointTest extends ClientTest<VerifyClient> {
                 + "      \"price\": \"0.10000000\",\n" + "      \"currency\": \"EUR\",\n"
                 + "      \"status\": \"SUCCESS\"\n" + "    }";
 
-        wrapper.setHttpClient(this.stubHttpClient(200, json));
+        wrapper.setHttpClient(stubHttpClient(200, json));
         client.search("a-random-request-id");
     }
 }

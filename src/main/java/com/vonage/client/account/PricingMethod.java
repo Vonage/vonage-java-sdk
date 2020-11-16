@@ -38,7 +38,7 @@ abstract class PricingMethod extends AbstractMethod<PricingRequest, PricingRespo
 
     @Override
     public RequestBuilder makeRequest(PricingRequest pricingRequest) {
-        return RequestBuilder.get(this.getUri()).addParameter("country", pricingRequest.getCountryCode());
+        return RequestBuilder.get(getUri()).addParameter("country", pricingRequest.getCountryCode());
     }
 
     @Override

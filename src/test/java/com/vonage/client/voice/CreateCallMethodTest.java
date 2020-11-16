@@ -65,7 +65,7 @@ public class CreateCallMethodTest {
 
     @Before
     public void setUp() throws Exception {
-        this.method = new CreateCallMethod(new HttpWrapper());
+        method = new CreateCallMethod(new HttpWrapper());
     }
 
     @Test

@@ -42,7 +42,7 @@ public class BuyNumberEndpointTest {
 
     @Before
     public void setUp() throws Exception {
-        this.endpoint = new BuyNumberEndpoint(new HttpWrapper());
+        endpoint = new BuyNumberEndpoint(new HttpWrapper());
     }
 
     @Test

@@ -31,7 +31,7 @@ public class CreateSecretMethodTest {
 
     @Before
     public void setUp() {
-        this.method = new CreateSecretMethod(new HttpWrapper());
+        method = new CreateSecretMethod(new HttpWrapper());
     }
 
     @Test

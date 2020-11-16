@@ -46,7 +46,7 @@ class BalanceEndpoint extends AbstractMethod<Void, BalanceResponse> {
     }
 
     public BalanceResponse execute() {
-        return this.execute(null);
+        return execute(null);
     }
 
     @Override

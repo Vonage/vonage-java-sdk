@@ -28,7 +28,7 @@ public class VoicePricingMethodTest {
 
     @Before
     public void setUp() throws Exception {
-        this.method = new VoicePricingMethod(new HttpWrapper());
+        method = new VoicePricingMethod(new HttpWrapper());
     }
 
     @Test

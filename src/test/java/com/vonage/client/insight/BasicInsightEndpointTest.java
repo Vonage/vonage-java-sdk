@@ -34,18 +34,18 @@ public class BasicInsightEndpointTest {
 
     @Before
     public void setUp() {
-        this.endpoint = new BasicInsightEndpoint(new HttpWrapper());
+        endpoint = new BasicInsightEndpoint(new HttpWrapper());
     }
 
     @Test
     public void testGetAcceptableAuthMethods() throws Exception {
-        Class[] auths = this.endpoint.getAcceptableAuthMethods();
+        Class[] auths = endpoint.getAcceptableAuthMethods();
         assertArrayEquals(new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class}, auths);
     }
 
     @Test
     public void testMakeRequest() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(BasicInsightRequest.builder("1234").build());
+        RequestBuilder builder = endpoint.makeRequest(BasicInsightRequest.builder("1234").build());
         assertEquals("POST", builder.getMethod());
         assertEquals("https://api.nexmo.com/ni/basic/json", builder.build().getURI().toString());
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
@@ -55,7 +55,7 @@ public class BasicInsightEndpointTest {
 
     @Test
     public void testMakeRequestWithCountry() throws Exception {
-        RequestBuilder builder = this.endpoint.makeRequest(BasicInsightRequest.builder("1234")
+        RequestBuilder builder = endpoint.makeRequest(BasicInsightRequest.builder("1234")
                 .country("GB")
                 .build());
         assertEquals("POST", builder.getMethod());
@@ -76,7 +76,7 @@ public class BasicInsightEndpointTest {
                         + "    \"country_code_iso3\": \"GBR\",\n" + "    \"country_name\": \"United Kingdom\",\n"
                         + "    \"country_prefix\": \"44\"\n" + "}"
         );
-        BasicInsightResponse response = this.endpoint.parseResponse(stub);
+        BasicInsightResponse response = endpoint.parseResponse(stub);
         assertEquals("d79c3d82-e2ee-46ff-972a-97b76be419cb", response.getRequestId());
     }
 

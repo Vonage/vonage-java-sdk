@@ -41,11 +41,11 @@ public class InputAction implements Action {
      * @param builder  builder to create InputAction object
      */
     private InputAction(Builder builder) {
-        this.type = builder.type;
-        this.dtmf = builder.dtmf;
-        this.eventUrl = builder.eventUrl;
-        this.eventMethod = builder.eventMethod;
-        this.speech = builder.speech;
+        type = builder.type;
+        dtmf = builder.dtmf;
+        eventUrl = builder.eventUrl;
+        eventMethod = builder.eventMethod;
+        speech = builder.speech;
     }
 
     @Override

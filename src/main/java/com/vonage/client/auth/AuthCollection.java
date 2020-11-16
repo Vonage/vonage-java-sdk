@@ -63,6 +63,7 @@ public class AuthCollection {
      *
      * @throws VonageUnacceptableAuthException if no matching AuthMethod is found.
      */
+    @SuppressWarnings("unchecked")
     public <T extends AuthMethod> T getAuth(Class<T> type) throws VonageUnacceptableAuthException {
         for (AuthMethod availableAuthMethod : authList) {
             if (type.isInstance(availableAuthMethod)) {
