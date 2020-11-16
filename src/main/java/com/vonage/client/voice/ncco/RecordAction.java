@@ -40,7 +40,7 @@ public class RecordAction implements Action {
     private Integer channels;
 
     /**
-     * @deprecated Use {@link Builder}
+     * @param builder Builder for building the Record Action
      */
     private RecordAction(Builder builder) {
         this.format = builder.format;

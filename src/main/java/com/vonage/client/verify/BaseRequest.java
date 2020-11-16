@@ -36,14 +36,6 @@ public class BaseRequest {
     private Integer pinExpiry;
     private Integer nextEventWait;
 
-    public BaseRequest(String number, Integer length, Locale locale) {
-        this.number = number;
-        this.length = length;
-        this.locale = locale;
-        country = null;
-        pinExpiry = null;
-        nextEventWait = null;
-    }
 
     protected BaseRequest(String number, Integer length, Locale locale, String country, Integer pinExpiry, Integer nextEventWait) {
         this.number = number;
@@ -70,16 +62,6 @@ public class BaseRequest {
         return length;
     }
 
-    /**
-     *
-     * @param length the length of the verification code to be sent to the user. Options are either 4 or 6.
-     * @deprecated since 5.5.0 use {@link VerifyRequest.Builder} to create a 2FA verification request or
-     *             {@link Psd2Request.Builder} to create a PSD2 verification request
-     */
-    @Deprecated
-    public void setLength(Integer length) {
-        this.length = length;
-    }
 
     /**
      * @return the default locale used for verification. If this value is {@code null}, the locale will be determined
@@ -90,16 +72,6 @@ public class BaseRequest {
     }
 
 
-    /**
-     *
-     * @param locale Override the default locale used for verification. By default the locale is determined
-     *               from the country code included in {@code number}
-     * @deprecated since 5.5.0 use {@link VerifyRequest.Builder} to create a 2FA verification request or
-     *             {@link Psd2Request.Builder} to create a PSD2 verification request
-     */
-    public void setLocale(Locale locale) {
-        this.locale = locale;
-    }
 
     /**
      * @return the default locale used for verification in snake case.
@@ -123,20 +95,6 @@ public class BaseRequest {
         return country;
     }
 
-    /**
-     * The country for the destination phone number.
-     * <p>
-     * If you wish to used localised number formats or you are not sure if number is correctly formatted, set this to a
-     * two-character country code. For example, GB, US. Verify will work out the international phone number for you.
-     * </p>
-     *
-     * @param country  a String containing a 2-character country code
-     * @deprecated     since 5.5.0 use {@link VerifyRequest.Builder} to create a 2FA verification request or
-     *                 {@link Psd2Request.Builder} to create a PSD2 verification request
-     */
-    public void setCountry(String country) {
-        this.country = country;
-    }
 
     /**
      * @return PIN expiry time in seconds
@@ -145,14 +103,6 @@ public class BaseRequest {
         return pinExpiry;
     }
 
-    /**
-     * @param pinExpiry PIN expiry time in seconds.
-     * @deprecated since 5.5.0 use {@link VerifyRequest.Builder} to create a 2FA verification request or
-     *             {@link Psd2Request.Builder} to create a PSD2 verification request
-     */
-    public void setPinExpiry(Integer pinExpiry) {
-        this.pinExpiry = pinExpiry;
-    }
 
     /**
      * @return the wait time between attempts to deliver the PIN. An Integer between 600-900, or null.
@@ -161,16 +111,6 @@ public class BaseRequest {
         return nextEventWait;
     }
 
-    /**
-     * Set the wait time between attempts to deliver the PIN.
-     *
-     * @param nextEventWait An Integer value between 60 and 900 seconds, or null to use the default duration.
-     * @deprecated since 5.5.0 use {@link VerifyRequest.Builder} to create a 2FA verification request or
-     *             {@link Psd2Request.Builder} to create a PSD2 verification request
-     */
-    public void setNextEventWait(Integer nextEventWait) {
-        this.nextEventWait = nextEventWait;
-    }
 
     @Override
     public String toString() {

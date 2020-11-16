@@ -129,15 +129,7 @@ public class InsightClientTest extends ClientTest<InsightClient> {
 
         assertStandardResponse(response);
     }
-
-    @Test
-    public void testStandardInsightWithNumberAndCountryAndCnam() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(200, STANDARD_RESPONSE_JSON));
-
-        StandardInsightResponse response = client.getStandardNumberInsight("1234", "GB", true);
-
-        assertStandardResponse(response);
-    }
+    
 
     @Test
     public void testAdvancedInsightWithNumber() throws Exception {
@@ -157,23 +149,7 @@ public class InsightClientTest extends ClientTest<InsightClient> {
         assertAdvancedInsightResponse(response);
     }
 
-    @Test
-    public void testAdvancedInsightWithNumberAndCountryAndIp() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(200, ADVANCED_RESPONSE_JSON));
-
-        AdvancedInsightResponse response = client.getAdvancedNumberInsight("1234", "GB", "127.0.0.1");
-
-        assertAdvancedInsightResponse(response);
-    }
-
-    @Test
-    public void testAdvancedInsightWithNumberAndCountryAndIpAndCnam() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(200, ADVANCED_RESPONSE_JSON));
-
-        AdvancedInsightResponse response = client.getAdvancedNumberInsight("1234", "GB", "127.0.0.1", true);
-
-        assertAdvancedInsightResponse(response);
-    }
+  
 
     @Test
     public void testAsyncAdvancedInsight() throws Exception {

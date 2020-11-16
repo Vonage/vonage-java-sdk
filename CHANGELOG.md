@@ -10,7 +10,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - Refactored Application v2 requests to remove duplicated code
-
+- Deprecated Product.MESSAGE from RedactRequest. Use Product.MESSAGES instead
+- Deprecated InsightClient#getStandardNumberInsight(number, country, cnam). Use InsightClient#getStandardNumberInsight(StandardInsightRequest) instead
+- Deprecated InsightClient.getAdvancedNumberInsight(number, country, ipAddress, cnam). Use InsightClient#getAdvancedNumberInsight(AdvancedInsightRequest) instead
+- Deprecated InsightClient.getAdvancedNumberInsight(number, country, ipAddress). Use InsightClient#getAdvancedNumberInsight(AdvancedInsightRequest) instead
+- Deprecated public constructors and setters in VerifyRequest use VerifyRequest.Builder instead
+- Deprecated MD5Util use HashUtil instead
+- Removed setters from BaseRequest. Set fields in the builders of Psd2Request or VerifyRequest instead.
 
 ## [5.6.0]
 ### Added
