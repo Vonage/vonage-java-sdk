@@ -25,12 +25,16 @@ public class DtmfResult {
 
     /**
      *
-     * @return 
+     * @return The buttons pressed by the user
      */
     public String getDigits() {
         return digits;
     }
 
+    /**
+     *
+     * @return Whether the DTMF input timed out: true if it did, false if not
+     */
     @JsonProperty("timed_out")
     public boolean isTimedOut() {
         return timedOut;

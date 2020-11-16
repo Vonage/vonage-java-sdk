@@ -72,6 +72,7 @@ public abstract class Message {
      *             valid short-code / long code that can be replied to, or a short text description of the application
      *             sending the message (Max 15 chars)
      * @param to   the phone number of the handset you wish to send the message to
+     * @param statusReportRequired flag to enable status updates about the delivery of this message
      */
     protected Message(final MessageType type,
                       final String from,
@@ -148,7 +149,7 @@ public abstract class Message {
     }
 
     /**
-     * Get the value of the 'status-report-req' parameter.
+     * @return get the value of the 'status-report-req' parameter.
      */
     public boolean getStatusReportRequired() {
         return statusReportRequired;

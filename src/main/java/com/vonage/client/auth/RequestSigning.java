@@ -160,6 +160,7 @@ public class RequestSigning {
      *
      * @param request The HttpServletRequest to be verified.
      * @param secretKey The pre-shared secret key used by the sender of the request to create the signature.
+     * @param hashType Hash type to be used to construct request parameters.
      *
      * @return true if the signature is correct for this request and secret key.
      */

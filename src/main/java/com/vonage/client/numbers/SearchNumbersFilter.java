@@ -95,7 +95,8 @@ public class SearchNumbersFilter {
     }
 
     /**
-     * @param searchPattern
+     * @param searchPattern The pattern you want to search for. Use the * wildcard to match the start or end of the number.
+     *                      For example, *123* matches all numbers that contain the pattern 123.
      */
     public void setSearchPattern(SearchPattern searchPattern) {
         this.searchPattern = searchPattern;

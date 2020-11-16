@@ -172,7 +172,6 @@ task zip(type: Zip) {
 }
 
 task depJar(type: Jar, dependsOn: configurations.runtime) {
-    archivesBaseName = archivesBaseName + '-with-dependencies'
     from { configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }

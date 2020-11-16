@@ -30,7 +30,7 @@ public class SearchNumbersResponse {
     private AvailableNumber[] numbers = new AvailableNumber[]{};
 
     /**
-     * Get the number of responses returned by the Vonage API.
+     * @return  the number of responses returned by the Vonage API.
      */
     public int getCount() {
         return count;
@@ -38,6 +38,7 @@ public class SearchNumbersResponse {
 
     /**
      * Obtain an array of matching numbers than are available to buy.
+     * @return list of available numbers
      */
     public AvailableNumber[] getNumbers() {
         return numbers;

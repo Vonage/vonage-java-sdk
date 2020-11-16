@@ -53,6 +53,7 @@ public class TextMessage extends Message {
      *                    description of the application sending the message (Max 11 chars)
      * @param to          the phone number of the handset that you wish to send the message to
      * @param messageBody The text of the message to be sent to the handset
+     * @param unicode     set this flag to true if the message needs to be submitted as a unicode message
      */
     public TextMessage(final String from,
                        final String to,
