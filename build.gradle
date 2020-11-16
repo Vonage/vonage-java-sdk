@@ -16,7 +16,7 @@ plugins {
 
 group = "com.vonage"
 archivesBaseName = "client"
-version = "5.6.0"
+version = "6.0.0"
 
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
@@ -172,7 +172,6 @@ task zip(type: Zip) {
 }
 
 task depJar(type: Jar, dependsOn: configurations.runtime) {
-    archivesBaseName = archivesBaseName + '-with-dependencies'
     from { configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
