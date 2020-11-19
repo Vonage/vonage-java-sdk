@@ -37,7 +37,8 @@ public class TextToSpeechLanguageTest {
         assertEquals("it-IT",TextToSpeechLanguage.ITALIAN.getLanguage());
         assertEquals("ja-JP",TextToSpeechLanguage.JAPANESE.getLanguage());
         assertEquals("ko-KR",TextToSpeechLanguage.KOREAN.getLanguage());
-        assertEquals("nb-NO", TextToSpeechLanguage.NORWEGIAN.getLanguage());
+        assertEquals("nb-NO",TextToSpeechLanguage.NORWEGIAN_BOKMAL.getLanguage());
+        assertEquals("no-NO", TextToSpeechLanguage.NORWEGIAN.getLanguage());
         assertEquals("nl-NL", TextToSpeechLanguage.DUTCH.getLanguage());
         assertEquals("pl-PL",TextToSpeechLanguage.POLISH.getLanguage());
         assertEquals("pt-BR",TextToSpeechLanguage.BRAZILIAN_PORTUGUESE.getLanguage());
