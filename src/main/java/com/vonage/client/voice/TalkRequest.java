@@ -29,21 +29,39 @@ public class TalkRequest {
     private TalkPayload talkPayload;
     private String uuid;
 
+    @Deprecated
     public TalkRequest(String uuid, String text, VoiceName voiceName, int loop) {
         talkPayload = new TalkPayload(text, voiceName, loop);
         this.uuid = uuid;
     }
 
+    public TalkRequest(String uuid, String text, TextToSpeechLanguage language, int style, int loop){
+        talkPayload = new TalkPayload(text, language, style, loop);
+        this.uuid = uuid;
+    }
+
+    public TalkRequest(String uuid, String text, TextToSpeechLanguage language, int style){
+        talkPayload = new TalkPayload(text, language, style, 1);
+        this.uuid = uuid;
+    }
+
+    public TalkRequest(String uuid, String text, TextToSpeechLanguage language){
+        talkPayload = new TalkPayload(text, language, 1);
+        this.uuid = uuid;
+    }
+
+    @Deprecated
     public TalkRequest(String uuid, String text, VoiceName voiceName) {
         this(uuid, text, voiceName, 1);
     }
 
+
     public TalkRequest(String uuid, String text, int loop) {
-        this(uuid, text, VoiceName.KIMBERLY, loop);
+        this(uuid, text, TextToSpeechLanguage.AMERICAN_ENGLISH, 3, loop);
     }
 
     public TalkRequest(String uuid, String text) {
-        this(uuid, text, VoiceName.KIMBERLY, 1);
+        this(uuid, text, TextToSpeechLanguage.AMERICAN_ENGLISH, 3, 1);
     }
 
     public String getUuid() {

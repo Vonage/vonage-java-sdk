@@ -15,6 +15,7 @@
  */
 package com.vonage.client.voice;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,18 +26,39 @@ import com.vonage.client.VonageUnexpectedException;
  * <p>
  * {@code text}: A string of up to 1500 characters containing the message to be synthesized
  * in the Call or Conversation. Each comma in text adds a short pause to the synthesized speech.
- * {@link VoiceName}: The name of the voice used to deliver {@code text}.
+ * {@link VoiceName}: DEPRECATED: The name of the voice used to deliver {@code text}.
  * {@code loop}: The number of times the audio file at stream_url is repeated before the stream ends. Set to 0 to loop infinitely.
+ * {@link TextToSpeechLanguage}: The Language that will be used to convert {@code text} into speech
+ * {@code style}: The Vocal Style to use (vocal Range, tessitura, timbre to use in the TTS
  */
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TalkPayload {
     private String text;
-    private VoiceName voiceName;
     private int loop;
+    private TextToSpeechLanguage language;
+    private int style;
 
+    @Deprecated
+    private VoiceName voiceName;
+
+    @Deprecated
     public TalkPayload(String text, VoiceName voiceName, int loop) {
         this.text = text;
         this.voiceName = voiceName;
+        this.loop = loop;
+    }
+
+    public TalkPayload(String text, TextToSpeechLanguage language, int style, int loop){
+        this.text = text;
+        this.language = language;
+        this.style = style;
+        this.loop = loop;
+    }
+
+    public TalkPayload(String text, TextToSpeechLanguage language, int loop){
+        this.text = text;
+        this.language = language;
         this.loop = loop;
     }
 
@@ -48,10 +70,14 @@ public class TalkPayload {
         return text;
     }
 
-    @JsonProperty("voice_name")
+    @JsonProperty(value = "voice_name",defaultValue = "")
     public VoiceName getVoiceName() {
         return voiceName;
     }
+
+    public TextToSpeechLanguage getLanguage() { return language; }
+
+    public int getStyle() { return style; }
 
     public String toJson() {
         try {

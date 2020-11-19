@@ -258,6 +258,43 @@ public class VoiceClientTest {
     }
 
     @Test
+    public void testStartTalkWithLanguageAndStyle() throws Exception {
+        VoiceClient client = new VoiceClient(stubHttpWrapper(200,
+                "{\n" + "  \"message\": \"Talk started\",\n" + "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n"
+                        + "}\n"
+        ));
+
+        TalkResponse response = client.startTalk("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", "Hello World", TextToSpeechLanguage.AMERICAN_ENGLISH, 5);
+        assertEquals("Talk started", response.getMessage());
+        assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
+    }
+
+    @Test
+    public void testStartTalkWithLanguageStyleAndLoop() throws Exception {
+        VoiceClient client = new VoiceClient(stubHttpWrapper(200,
+                "{\n" + "  \"message\": \"Talk started\",\n" + "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n"
+                        + "}\n"
+        ));
+
+        TalkResponse response = client.startTalk("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", "Hello World", TextToSpeechLanguage.AMERICAN_ENGLISH, 5,1);
+        assertEquals("Talk started", response.getMessage());
+        assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
+    }
+
+    @Test
+    public void testStartTalkWithLanguage() throws Exception {
+        VoiceClient client = new VoiceClient(stubHttpWrapper(200,
+                "{\n" + "  \"message\": \"Talk started\",\n" + "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n"
+                        + "}\n"
+        ));
+
+        TalkResponse response = client.startTalk("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", "Hello World", TextToSpeechLanguage.AMERICAN_ENGLISH);
+        assertEquals("Talk started", response.getMessage());
+        assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
+    }
+
+
+    @Test
     public void testStartTalkNonLoopingWithDefaultVoice() throws Exception {
         VoiceClient client = new VoiceClient(stubHttpWrapper(200,
                 "{\n" + "  \"message\": \"Talk started\",\n" + "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n"
