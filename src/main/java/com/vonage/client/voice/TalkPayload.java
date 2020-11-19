@@ -32,14 +32,16 @@ import com.vonage.client.VonageUnexpectedException;
  * {@code style}: The Vocal Style to use (vocal Range, tessitura, timbre to use in the TTS
  */
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TalkPayload {
     private String text;
     private int loop;
     private TextToSpeechLanguage language;
-    private int style;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Integer style = null;
 
     @Deprecated
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private VoiceName voiceName;
 
     @Deprecated
@@ -70,14 +72,17 @@ public class TalkPayload {
         return text;
     }
 
-    @JsonProperty(value = "voice_name",defaultValue = "")
+    @JsonProperty(value = "voice_name")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public VoiceName getVoiceName() {
         return voiceName;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public TextToSpeechLanguage getLanguage() { return language; }
 
-    public int getStyle() { return style; }
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public Integer getStyle() { return style; }
 
     public String toJson() {
         try {

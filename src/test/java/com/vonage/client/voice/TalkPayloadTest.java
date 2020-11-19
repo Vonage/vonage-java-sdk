@@ -31,7 +31,7 @@ public class TalkPayloadTest {
 
     @Test
     public void getStyle() throws Exception{
-        assertEquals(2,payload.getStyle());
+        assertEquals(new Integer(2),payload.getStyle());
     }
 
     @Test
