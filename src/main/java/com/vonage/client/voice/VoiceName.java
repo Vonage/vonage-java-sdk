@@ -25,6 +25,7 @@ import java.util.Map;
  * Voice used to deliver text to a {@link Call} in a {@link TalkRequest}.
  */
 
+@Deprecated
 public enum VoiceName {
     ADITI("Aditi"),
     AGNIESZKA("Agnieszka"),

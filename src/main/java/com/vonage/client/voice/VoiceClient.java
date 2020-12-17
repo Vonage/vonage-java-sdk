@@ -276,8 +276,45 @@ public class VoiceClient extends AbstractClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
+    @Deprecated
     public TalkResponse startTalk(String uuid, String text, VoiceName voiceName) throws VonageResponseParseException, VonageClientException {
         return talk.put(new TalkRequest(uuid, text, voiceName));
+    }
+
+    /**
+     * @param uuid      The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value
+     *                   can be obtained with {@link CallEvent#getUuid()}
+     * @param text       The message to be spoken to the call participants.
+     *
+     * @param language  The Language to use when converting text-to-speech
+     *
+     * @param style     The Style to use for Text-To-Speech
+     *
+     * @return The data returned from the Voice API.
+     *
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     *
+     */
+    public TalkResponse startTalk(String uuid, String text, TextToSpeechLanguage language, Integer style) throws VonageResponseParseException, VonageClientException {
+        return talk.put(new TalkRequest(uuid, text, language, style));
+    }
+
+    /**
+     * @param uuid      The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value
+     *                   can be obtained with {@link CallEvent#getUuid()}
+     * @param text       The message to be spoken to the call participants.
+     *
+     * @param language  The Language to use when converting text-to-speech
+     *
+     * @return The data returned from the Voice API.
+     *
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     *
+     */
+    public TalkResponse startTalk(String uuid, String text, TextToSpeechLanguage language) throws VonageResponseParseException, VonageClientException {
+        return talk.put(new TalkRequest(uuid, text, language));
     }
 
     /**
@@ -315,9 +352,49 @@ public class VoiceClient extends AbstractClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
+    @Deprecated
     public TalkResponse startTalk(String uuid, String text, VoiceName voiceName, int loop) throws VonageResponseParseException, VonageClientException {
         return talk.put(new TalkRequest(uuid, text, voiceName, loop));
     }
+
+    /**
+     * Send a synthesized speech message to an ongoing call.
+     *
+     * @param uuid      The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value
+     *                  can be obtained with {@link CallEvent#getUuid()}
+     * @param text      The message to be spoken to the call participants.
+     * @param language  The language to use for the text-to-speech
+     * @param style     The language style to use for the text-to-speech
+     * @param loop      The number of times to repeat the message. The default value is {@code 1}, or you can use {@code
+     *                  0} to indicate that the message should be repeated indefinitely.
+     *
+     * @return The data returned from the Voice API.
+     *
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     */
+    public TalkResponse startTalk(String uuid, String text, TextToSpeechLanguage language, int style, int loop) throws VonageResponseParseException, VonageClientException {
+        return talk.put(new TalkRequest(uuid, text, language, style, loop));
+    }
+
+    /**
+     * Send a synthesized speech message to an ongoing call.
+     *
+     * @param uuid      The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value
+     *                  can be obtained with {@link CallEvent#getUuid()}
+     * @param text      The message to be spoken to the call participants.
+     * @param language  The language to use for the text-to-speech
+     * @param style     The language style to use for the text-to-speech
+     *
+     * @return The data returned from the Voice API.
+     *
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     */
+    public TalkResponse startTalk(String uuid, String text, TextToSpeechLanguage language, int style) throws VonageResponseParseException, VonageClientException {
+        return talk.put(new TalkRequest(uuid, text, language, style));
+    }
+
 
     /**
      * Stop the message being spoken into a call.
