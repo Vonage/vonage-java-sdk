@@ -34,7 +34,7 @@ For Gradle 3.4 or Higher:
 
 ```groovy
 dependencies {
-    implementation 'com.vonage:client:6.0.0'
+    implementation 'com.vonage:client:6.1.0'
 }
 ```
 
@@ -42,7 +42,7 @@ For older versions:
 
 ```groovy
 dependencies {
-    compile 'com.vonage:client:6.0.0'
+    compile 'com.vonage:client:6.1.0'
 }
 ```
 
@@ -54,7 +54,7 @@ Add the following to the correct place in your project's POM file:
 <dependency>
       <groupId>com.vonage</groupId>
       <artifactId>client</artifactId>
-      <version>6.0.0</version>
+      <version>6.1.0</version>
 </dependency>
 ```
 
@@ -230,11 +230,9 @@ Each of the `Action` items contain a `Builder` class that can be used for constr
 
 ```java
 TalkAction intro = TalkAction.builder("At the tone, record your response and press #.")
-                        .voiceName(VoiceName.KIMBERLY)
                         .build();
 
 TalkAction outro = TalkAction.builder("Thanks, goodbye!")
-                        .voiceName(VoiceName.KIMBERLY)
                         .build();
 
 RecordAction record = RecordAction.builder()
@@ -261,7 +259,6 @@ VonageClient client = VonageClient.builder()
 
 Ncco ncco = new Ncco(
     TalkAction.builder("Hi, this is Russell. You are listening to a text-to-speech Call made with Vonage's Voice API")
-        .voiceName(VoiceName.RUSSELL)
         .build()
 );
 
