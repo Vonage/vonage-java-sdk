@@ -230,11 +230,9 @@ Each of the `Action` items contain a `Builder` class that can be used for constr
 
 ```java
 TalkAction intro = TalkAction.builder("At the tone, record your response and press #.")
-                        .voiceName(VoiceName.KIMBERLY)
                         .build();
 
 TalkAction outro = TalkAction.builder("Thanks, goodbye!")
-                        .voiceName(VoiceName.KIMBERLY)
                         .build();
 
 RecordAction record = RecordAction.builder()
@@ -261,7 +259,6 @@ VonageClient client = VonageClient.builder()
 
 Ncco ncco = new Ncco(
     TalkAction.builder("Hi, this is Russell. You are listening to a text-to-speech Call made with Vonage's Voice API")
-        .voiceName(VoiceName.RUSSELL)
         .build()
 );
 
