@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.2.0]
+- Adding ContentId and EntityId to message class for DLT
+
 ## [6.1.0]
 - Adding Language and Style to the Voice Talk Action and the Talk Request
 - Marking VoiceName as Deprecated
