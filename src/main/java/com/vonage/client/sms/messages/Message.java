@@ -54,6 +54,8 @@ public abstract class Message {
     private MessageClass messageClass = null;
     private Long timeToLive = null;
     private String callbackUrl = null;
+    private String entityId = null;
+    private String contentId = null;
 
     protected Message(final MessageType type,
                       final String from,
@@ -148,6 +150,14 @@ public abstract class Message {
         this.callbackUrl = callbackUrl;
     }
 
+    public String getEntityId() { return entityId; }
+
+    public void setEntityId(String entityId){ this.entityId = entityId; }
+
+    public String getContentId() { return contentId; }
+
+    public void setContentId(String contentId) { this.contentId = contentId; }
+
     /**
      * @return get the value of the 'status-report-req' parameter.
      */
@@ -186,6 +196,12 @@ public abstract class Message {
         }
         if (messageClass != null) {
             request.addParameter("message-class", Integer.toString(messageClass.getMessageClass()));
+        }
+        if(entityId != null){
+            request.addParameter("entity-id", entityId);
+        }
+        if(contentId != null){
+            request.addParameter("content-id", contentId);
         }
     }
 
