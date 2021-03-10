@@ -15,6 +15,7 @@
  */
 package com.vonage.client.incoming;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,6 +33,8 @@ public class CallEvent {
     private Date timestamp;
     private String to;
     private String uuid;
+    private String detail;
+    private CallStatusDetail detailEnum;
 
     @JsonProperty("conversation_uuid")
     public String getConversationUuid() {
@@ -61,6 +64,11 @@ public class CallEvent {
     public String getUuid() {
         return uuid;
     }
+
+    public String getDetail() { return detail; }
+
+    @JsonIgnore
+    public CallStatusDetail getDetailEnum() { return CallStatusDetail.fromString(detail); }
 
     public static CallEvent fromJson(String json) {
         try {
