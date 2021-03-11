@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [6.2.0]
 - Adding ContentId and EntityId to message class for DLT
+- Adding Detail enum and string for certain voice webhooks
 
 ## [6.1.0]
 - Adding Language and Style to the Voice Talk Action and the Talk Request
