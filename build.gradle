@@ -6,7 +6,7 @@ buildscript {
 
 plugins {
     id 'java'
-    id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'com.github.johnrengelman.shadow' version '6.2.0'
     id 'jacoco'
     id 'maven'
     id 'signing'
@@ -16,7 +16,7 @@ plugins {
 
 group = "com.vonage"
 archivesBaseName = "client"
-version = "6.1.0"
+version = "6.2.0"
 
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
