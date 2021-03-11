@@ -6,7 +6,7 @@ buildscript {
 
 plugins {
     id 'java'
-    id 'com.github.johnrengelman.shadow' version '6.2.0'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
     id 'jacoco'
     id 'maven'
     id 'signing'
