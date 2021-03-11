@@ -284,4 +284,34 @@ public class SendMessageEndpointTest {
             assertEquals("application/x-www-form-urlencoded; charset=UTF-8", entity.getContentType().getValue());
         }
     }
+
+    @Test
+    public void testConstructParamsContentId() throws Exception {
+        Message message = new TextMessage("TestSender", "not-a-number", "Test");
+        message.setContentId("abcd-1234");
+        List<NameValuePair> params = endpoint.makeRequest(message).getParameters();
+
+        assertContainsParam(params, "from", "TestSender");
+        assertContainsParam(params, "to", "not-a-number");
+        assertContainsParam(params, "type", "text");
+        assertMissingParam(params, "status-report-req");
+        assertContainsParam(params, "text", "Test");
+        assertContainsParam(params, "content-id","abcd-1234");
+        assertMissingParam(params,"entity-id");
+    }
+
+    @Test
+    public void testConstructParamsEntityId() throws Exception {
+        Message message = new TextMessage("TestSender", "not-a-number", "Test");
+        message.setEntityId("abcd-1234");
+        List<NameValuePair> params = endpoint.makeRequest(message).getParameters();
+
+        assertContainsParam(params, "from", "TestSender");
+        assertContainsParam(params, "to", "not-a-number");
+        assertContainsParam(params, "type", "text");
+        assertMissingParam(params, "status-report-req");
+        assertContainsParam(params, "text", "Test");
+        assertContainsParam(params, "entity-id","abcd-1234");
+        assertMissingParam(params,"content-id");
+    }
 }
