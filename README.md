@@ -2,7 +2,7 @@
 
 [![Maven Release](https://maven-badges.herokuapp.com/maven-central/com.vonage/client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.vonage/client)
 [![Build Status](https://github.com/vonage/vonage-java-sdk/workflows/build/badge.svg)](https://github.com/Vonage/vonage-java-sdk/actions?query=workflow%3A"Build+Java+CI")
-[![codecov](https://codecov.io/gh/vonage/vonage-java-sdk/branch/master/graph/badge.svg)](https://codecov.io/gh/vonage/vonage-java-sdk)
+[![codecov](https://codecov.io/gh/vonage/vonage-java-sdk/branch/6.x/graph/badge.svg)](https://codecov.io/gh/vonage/vonage-java-sdk)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)][license]
 
