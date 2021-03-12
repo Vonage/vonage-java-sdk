@@ -133,7 +133,7 @@ uploadArchives {
                 licenses {
                     license {
                         name 'Apache 2.0'
-                        url 'https://raw.github.com/Vonage/vonage-java-sdk/master/LICENCE.txt'
+                        url 'https://raw.github.com/Vonage/vonage-java-sdk/6.x/LICENCE.txt'
                     }
                 }
                 organization {
