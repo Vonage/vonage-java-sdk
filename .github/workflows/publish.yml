@@ -1,0 +1,44 @@
+name: Publish to Nexus
+on:
+  release:
+    types: [published]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.release.target_commitish }}
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install bump2version
+        run: |
+          python -m pip install --upgrade pip
+          git config --global user.email "44278943+NexmoDev@users.noreply.github.com"
+          git config --global user.name "NexmoDev"
+          git config --global github.token ${{ secrets.GITHUB_TOKEN }}
+          pip install bump2version
+      - name: Bump Version
+        run: bump2version --new-version ${{ github.event.release.tag_name }} patch && git tag ${{ github.event.release.tag_name }} -f && git push && git push --tags origin --force
+      - name: Setup Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+      - name: publish with gradle
+        env:
+          signingKey: ${{secrets.SIGNING_KEY}}
+          signingPassword: ${{secrets.SIGNING_PASSWORD}}
+          OSS_USERNAME: ${{secrets.OSS_USERNAME}}
+          OSS_PASSWORD: ${{secrets.OSS_PASSWORD}}
+        run: OSS_USERNAME=$OSS_USERNAME OSS_PASSWORD=$OSS_PASSWORD signingKey=$signingKey signingPassword=$signingPassword gradle publish --info
