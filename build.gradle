@@ -1,16 +1,17 @@
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
     }
 }
 
 plugins {
-    id 'java'
+    id 'java-library'
     id 'com.github.johnrengelman.shadow' version '6.1.0'
     id 'jacoco'
     id 'maven'
     id 'signing'
     id 'eclipse'
+    id 'maven-publish'
 }
 
 
@@ -79,13 +80,13 @@ jar {
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
+    archiveClassifier.set("javadoc")
     from javadoc
 }
 assemble.dependsOn javadocJar
 
 task sourcesJar(type: Jar) {
-    classifier = 'sources'
+    archiveClassifier.set("sources")
     from sourceSets.main.allSource
 }
 
@@ -100,58 +101,49 @@ jacocoTestReport {
     }
 }
 check.dependsOn jacocoTestReport
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment {
-                MavenDeployment deployment -> signing.signPom(deployment)
-            }
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(
-                        userName: project.properties["maven.username"] ?: "",
-                        password: project.properties["maven.password"] ?: ""
-                )
-            }
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(
-                        userName: project.properties["maven.username"] ?: "",
-                        password: project.properties["maven.password"] ?: ""
-                )
-            }
-            pom.project {
-                name 'Vonage Java Server SDK'
-                packaging 'jar'
-                artifactId 'client'
-                description 'Java client for Vonage APIs'
-                url 'https://github.com/Vonage/vonage-java-sdk/'
-                scm {
-                    connection 'scm:git:git@github.com:Vonage/vonage-java-sdk'
-                    developerConnection 'scm:git:git@github.com:Vonage/vonage-java-sdk'
-                    url 'http://github.com/Vonage/vonage-java-sdk'
-                }
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            pom {
+                name = "Vonage Java Server SDK"
+                artifactId = 'client'
+                packaging = 'jar'
+                description = "Java client for Vonage APIs"
+                url = "https://github.com/Vonage/vonage-java-sdk"
                 licenses {
                     license {
-                        name 'Apache 2.0'
-                        url 'https://raw.github.com/Vonage/vonage-java-sdk/6.x/LICENCE.txt'
+                        name = "The Apache License, Version 2.0"
+                        url = "https://raw.github.com/Vonage/vonage-java-sdk/6.x/LICENCE.txt"
                     }
-                }
-                organization {
-                    name 'Vonage'
-                    url 'https://developer.nexmo.com'
-                }
-                issueManagement {
-                    system 'GitHub'
-                    url 'https://github.com/Vonage/vonage-java-sdk/issues'
                 }
                 developers {
                     developer {
-                        id 'devrel'
-                        name 'Vonage Developer Relations Team'
-                        email 'devrel@vonage.com'
+                        id = "devrel"
+                        name = "Vonage Devrel"
+                        email = "devrel@vonage.com"
                     }
                 }
+                scm {
+                    connection = "scm:git@github.com:Vonage/vonage-java-sdk"
+                    developerConnection = "scm:git@github.com:Vonage/vonage-java-sdk"
+                    url = "http://github.com:Vonage/vonage-java-sdk"
+                }
+
+                issueManagement{
+                    system = "GitHub"
+                    url = "https://github.com/vonage/vonage-java-sdk/issues"
+                }
             }
+        }
+    }
+    repositories{
+        maven{
+            def releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+            def snapshotsRepoUrl = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+            credentials.username(System.getenv("OSS_USERNAME"))
+            credentials.password(System.getenv("OSS_PASSWORD"))
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
         }
     }
 }
@@ -161,8 +153,10 @@ artifacts {
 }
 
 signing {
-    required { gradle.taskGraph.hasTask("uploadArchives") }
-    sign configurations.archives
+    def signingKey = System.getenv("signingKey")
+    def signingPassword = System.getenv("signingPassword")
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign publishing.publications.mavenJava
 }
 
 task zip(type: Zip) {
