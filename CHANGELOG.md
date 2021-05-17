@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [6.3.0]
+- Adding extra parsing for top level Roaming Status in Advanced Number Insights
+
 ## [6.2.0]
 - Adding ContentId and EntityId to message class for DLT
 - Adding Detail enum and string for certain voice webhooks

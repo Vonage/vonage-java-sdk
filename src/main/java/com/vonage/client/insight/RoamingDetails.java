@@ -17,10 +17,12 @@ package com.vonage.client.insight;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@JsonDeserialize(using = RoamingDeseriazlizer.class)
 public class RoamingDetails {
     public enum RoamingStatus {
         UNKNOWN, ROAMING, NOT_ROAMING;
@@ -38,6 +40,13 @@ public class RoamingDetails {
             RoamingStatus foundRoamingStatus = ROAMING_STATUS_INDEX.get(name.toUpperCase());
             return (foundRoamingStatus != null) ? foundRoamingStatus : UNKNOWN;
         }
+    }
+
+    public RoamingDetails(RoamingStatus status, String roamingCountryCode, String roamingNetworkCode, String roamingNetworkName){
+        this.status = status;
+        this.roamingCountryCode = roamingCountryCode;
+        this.roamingNetworkCode = roamingNetworkCode;
+        this.roamingNetworkName = roamingNetworkName;
     }
 
     private RoamingStatus status;

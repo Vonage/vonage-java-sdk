@@ -101,6 +101,152 @@ public class AdvancedInsightResponseTest {
     }
 
     @Test
+    public void testFromJsonUnknownRoaming() throws Exception {
+        AdvancedInsightResponse response = AdvancedInsightResponse.fromJson("{\n" +
+                "    \"status\": 0,\n" +
+                "    \"status_message\": \"Success\",\n" +
+                "    \"lookup_outcome\": 1,\n" +
+                "    \"lookup_outcome_message\": \"Partial success - some fields populated\",\n" +
+                "    \"request_id\": \"0c082a69-85df-4bbc-aae6-ee998e17e5a4\",\n" +
+                "    \"international_format_number\": \"441632960960\",\n" +
+                "    \"national_format_number\": \"01632 960960\",\n" +
+                "    \"country_code\": \"GB\",\n" +
+                "    \"country_code_iso3\": \"GBR\",\n" +
+                "    \"country_name\": \"United Kingdom\",\n" +
+                "    \"country_prefix\": \"44\",\n" +
+                "    \"request_price\": \"0.03000000\",\n" +
+                "    \"remaining_balance\": \"18.30908949\",\n" +
+                "    \"current_carrier\": {\n" +
+                "        \"network_code\": \"GB-FIXED-RESERVED\",\n" +
+                "        \"name\": \"United Kingdom Landline Reserved\",\n" +
+                "        \"country\": \"GB\",\n" +
+                "        \"network_type\": \"landline\"\n" +
+                "    },\n" +
+                "    \"original_carrier\": {\n" +
+                "        \"network_code\": \"GB-HAPPY-RESERVED\",\n" +
+                "        \"name\": \"United Kingdom Mobile Reserved\",\n" +
+                "        \"country\": \"GB\",\n" +
+                "        \"network_type\": \"mobile\"\n" +
+                "    },\n" +
+                "    \"valid_number\": \"valid\",\n" +
+                "    \"reachable\": \"unknown\",\n" +
+                "    \"ported\": \"assumed_not_ported\",\n" +
+                "    \"roaming\": \"unknown\",\n" +
+                "    \"first_name\": \"Bob\",\n" +
+                "    \"last_name\": \"Atkey\",\n" +
+                "    \"caller_name\": \"Monads, Incorporated\",\n" +
+                "    \"caller_type\": \"unknown\"\n" +
+                "}");
+
+        assertEquals(InsightStatus.SUCCESS, response.getStatus());
+        assertEquals("Success", response.getStatusMessage());
+        assertEquals("0c082a69-85df-4bbc-aae6-ee998e17e5a4", response.getRequestId());
+        assertEquals("441632960960", response.getInternationalFormatNumber());
+        assertEquals("01632 960960", response.getNationalFormatNumber());
+        assertEquals("GB", response.getCountryCode());
+        assertEquals("GBR", response.getCountryCodeIso3());
+        assertEquals("United Kingdom", response.getCountryName());
+        assertEquals("44", response.getCountryPrefix());
+        assertEquals("GB-FIXED-RESERVED", response.getCurrentCarrier().getNetworkCode());
+        assertEquals("United Kingdom Landline Reserved", response.getCurrentCarrier().getName());
+        assertEquals("GB", response.getCurrentCarrier().getCountry());
+        assertEquals("GB-FIXED-RESERVED", response.getCurrentCarrier().getNetworkCode());
+        assertEquals("United Kingdom Landline Reserved", response.getCurrentCarrier().getName());
+        assertEquals("GB", response.getCurrentCarrier().getCountry());
+        assertEquals(CarrierDetails.NetworkType.LANDLINE, response.getCurrentCarrier().getNetworkType());
+
+        assertEquals("GB-HAPPY-RESERVED", response.getOriginalCarrier().getNetworkCode());
+        assertEquals("United Kingdom Mobile Reserved", response.getOriginalCarrier().getName());
+        assertEquals("GB", response.getOriginalCarrier().getCountry());
+        assertEquals(CarrierDetails.NetworkType.MOBILE, response.getOriginalCarrier().getNetworkType());
+
+        assertEquals(new BigDecimal("18.30908949"), response.getRemainingBalance());
+        assertEquals(new BigDecimal("0.03000000"), response.getRequestPrice());
+
+        assertEquals(AdvancedInsightResponse.Validity.VALID, response.getValidNumber());
+        assertEquals(AdvancedInsightResponse.Reachability.UNKNOWN, response.getReachability());
+        assertEquals(AdvancedInsightResponse.PortedStatus.ASSUMED_NOT_PORTED, response.getPorted());
+        assertEquals(RoamingDetails.RoamingStatus.UNKNOWN, response.getRoaming().getStatus());
+        assertEquals(new Integer(1), response.getLookupOutcome());
+        assertEquals("Partial success - some fields populated", response.getLookupOutcomeMessage());
+
+        assertEquals("Bob", response.getFirstName());
+        assertEquals("Atkey", response.getLastName());
+        assertEquals("Monads, Incorporated", response.getCallerName());
+        assertEquals(CallerType.UNKNOWN, response.getCallerType());
+    }
+
+    @Test
+    public void testFromJsonWithoutRoamingReachableOrPorted() throws Exception {
+        AdvancedInsightResponse response = AdvancedInsightResponse.fromJson("{\n" +
+                "    \"status\": 0,\n" +
+                "    \"status_message\": \"Success\",\n" +
+                "    \"lookup_outcome\": 1,\n" +
+                "    \"lookup_outcome_message\": \"Partial success - some fields populated\",\n" +
+                "    \"request_id\": \"0c082a69-85df-4bbc-aae6-ee998e17e5a4\",\n" +
+                "    \"international_format_number\": \"441632960960\",\n" +
+                "    \"national_format_number\": \"01632 960960\",\n" +
+                "    \"country_code\": \"GB\",\n" +
+                "    \"country_code_iso3\": \"GBR\",\n" +
+                "    \"country_name\": \"United Kingdom\",\n" +
+                "    \"country_prefix\": \"44\",\n" +
+                "    \"request_price\": \"0.03000000\",\n" +
+                "    \"remaining_balance\": \"18.30908949\",\n" +
+                "    \"current_carrier\": {\n" +
+                "        \"network_code\": \"GB-FIXED-RESERVED\",\n" +
+                "        \"name\": \"United Kingdom Landline Reserved\",\n" +
+                "        \"country\": \"GB\",\n" +
+                "        \"network_type\": \"landline\"\n" +
+                "    },\n" +
+                "    \"original_carrier\": {\n" +
+                "        \"network_code\": \"GB-HAPPY-RESERVED\",\n" +
+                "        \"name\": \"United Kingdom Mobile Reserved\",\n" +
+                "        \"country\": \"GB\",\n" +
+                "        \"network_type\": \"mobile\"\n" +
+                "    },\n" +
+                "    \"valid_number\": \"valid\",\n" +
+                "    \"first_name\": \"Bob\",\n" +
+                "    \"last_name\": \"Atkey\",\n" +
+                "    \"caller_name\": \"Monads, Incorporated\",\n" +
+                "    \"caller_type\": \"unknown\"\n" +
+                "}");
+
+        assertEquals(InsightStatus.SUCCESS, response.getStatus());
+        assertEquals("Success", response.getStatusMessage());
+        assertEquals("0c082a69-85df-4bbc-aae6-ee998e17e5a4", response.getRequestId());
+        assertEquals("441632960960", response.getInternationalFormatNumber());
+        assertEquals("01632 960960", response.getNationalFormatNumber());
+        assertEquals("GB", response.getCountryCode());
+        assertEquals("GBR", response.getCountryCodeIso3());
+        assertEquals("United Kingdom", response.getCountryName());
+        assertEquals("44", response.getCountryPrefix());
+        assertEquals("GB-FIXED-RESERVED", response.getCurrentCarrier().getNetworkCode());
+        assertEquals("United Kingdom Landline Reserved", response.getCurrentCarrier().getName());
+        assertEquals("GB", response.getCurrentCarrier().getCountry());
+        assertEquals("GB-FIXED-RESERVED", response.getCurrentCarrier().getNetworkCode());
+        assertEquals("United Kingdom Landline Reserved", response.getCurrentCarrier().getName());
+        assertEquals("GB", response.getCurrentCarrier().getCountry());
+        assertEquals(CarrierDetails.NetworkType.LANDLINE, response.getCurrentCarrier().getNetworkType());
+
+        assertEquals("GB-HAPPY-RESERVED", response.getOriginalCarrier().getNetworkCode());
+        assertEquals("United Kingdom Mobile Reserved", response.getOriginalCarrier().getName());
+        assertEquals("GB", response.getOriginalCarrier().getCountry());
+        assertEquals(CarrierDetails.NetworkType.MOBILE, response.getOriginalCarrier().getNetworkType());
+
+        assertEquals(new BigDecimal("18.30908949"), response.getRemainingBalance());
+        assertEquals(new BigDecimal("0.03000000"), response.getRequestPrice());
+
+        assertEquals(AdvancedInsightResponse.Validity.VALID, response.getValidNumber());
+        assertEquals(new Integer(1), response.getLookupOutcome());
+        assertEquals("Partial success - some fields populated", response.getLookupOutcomeMessage());
+
+        assertEquals("Bob", response.getFirstName());
+        assertEquals("Atkey", response.getLastName());
+        assertEquals("Monads, Incorporated", response.getCallerName());
+        assertEquals(CallerType.UNKNOWN, response.getCallerType());
+    }
+
+    @Test
     public void testDeserializeUnknownEnumsFallbackToUnknown() throws Exception {
         AdvancedInsightResponse response = AdvancedInsightResponse.fromJson("{\n" +
                 "    \"valid_number\": \"failed_validity\",\n" +
