@@ -174,24 +174,21 @@ public class RequestSigningTest {
 
     @Test
     public void testVerifyRequestSignatureNoSig() {
-        HttpServletRequest request = constructDummyRequest();
-        when(request.getParameter("sig")).thenReturn(null);
+        HttpServletRequest request = constructDummyRequest(constructDummyParamsNoSignature());
 
         assertFalse(RequestSigning.verifyRequestSignature(request, "abcde", 2100000));
     }
 
     @Test
     public void testVerifyRequestSignatureBadTimestamp() {
-        HttpServletRequest request = constructDummyRequest();
-        when(request.getParameter("timestamp")).thenReturn("not a date time string");
+        HttpServletRequest request = constructDummyRequest(constructDummyParamsInvalidTimestamp());
 
         assertFalse(RequestSigning.verifyRequestSignature(request, "abcde", 2100000));
     }
 
     @Test
     public void testVerifyRequestSignatureMissingTimestamp() {
-        HttpServletRequest request = constructDummyRequest();
-        when(request.getParameter("timestamp")).thenReturn(null);
+        HttpServletRequest request = constructDummyRequest(constructDummyParamsNoTimestamp());
 
         assertFalse(RequestSigning.verifyRequestSignature(request, "abcde", 2100000));
     }
@@ -207,6 +204,8 @@ public class RequestSigningTest {
         assertTrue(RequestSigning.verifyRequestSignature(request, "abcde", 2100000));
     }
 
+
+
     private HttpServletRequest constructDummyRequest() {
         return constructDummyRequest(null);
     }
@@ -221,6 +220,35 @@ public class RequestSigningTest {
         request.setContentType("application/json");
         return request;
     }
+
+    private Map<String, String[]> constructDummyParamsNoTimestamp() {
+        Map<String, String[]> params = new HashMap<>();
+        params.put("a", new String[]{"alphabet"});
+        params.put("b", new String[]{"bananas"});
+        params.put("sig", new String[]{"7d43241108912b32cc315b48ce681acf"});
+
+        return params;
+    }
+
+    private Map<String, String[]> constructDummyParamsNoSignature() {
+        Map<String, String[]> params = new HashMap<>();
+        params.put("a", new String[]{"alphabet"});
+        params.put("b", new String[]{"bananas"});
+        params.put("timestamp", new String[]{"2100"});
+
+        return params;
+    }
+
+    private Map<String, String[]> constructDummyParamsInvalidTimestamp() {
+        Map<String, String[]> params = new HashMap<>();
+        params.put("a", new String[]{"alphabet"});
+        params.put("b", new String[]{"bananas"});
+        params.put("timestamp", new String[]{"not a date time string"});
+        params.put("sig", new String[]{"7d43241108912b32cc315b48ce681acf"});
+
+        return params;
+    }
+
     private Map<String, String[]> constructDummyParams() {
         Map<String, String[]> params = new HashMap<>();
         params.put("a", new String[]{"alphabet"});
