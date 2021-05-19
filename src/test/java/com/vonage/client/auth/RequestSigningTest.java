@@ -20,8 +20,10 @@ import com.vonage.client.auth.hashutils.HashUtil;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -141,6 +143,12 @@ public class RequestSigningTest {
     }
 
     @Test
+    public void testVerifySignatureRequestJson(){
+        HttpServletRequest request = ConstructDummyRequestJson();
+        assertTrue(RequestSigning.verifyRequestSignature(request,"abcde",2100000, HashUtil.HashType.HMAC_SHA1));
+    }
+
+    @Test
     public void testVerifyRequestSignatureWithHmacSha256Hash() {
         Map<String, String[]> params = constructDummyParams();
         params.put("sig", new String[]{"8d1b0428276b6a070578225914c3502cc0687a454dfbbbb370c76a14234cb546"});
@@ -203,6 +211,16 @@ public class RequestSigningTest {
         return constructDummyRequest(null);
     }
 
+    private String ConstructDummyJsonBody(){
+        return "{\"a\":\"alphabet\",\"b\":\"bananas\",\"timestamp\":\"2100\",\"sig\":\"b7f749de27b4adcf736cc95c9a7e059a16c85127\"}";
+    }
+
+    private HttpServletRequest ConstructDummyRequestJson(){
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setContent(ConstructDummyJsonBody().getBytes());
+        request.setContentType("application/json");
+        return request;
+    }
     private Map<String, String[]> constructDummyParams() {
         Map<String, String[]> params = new HashMap<>();
         params.put("a", new String[]{"alphabet"});
