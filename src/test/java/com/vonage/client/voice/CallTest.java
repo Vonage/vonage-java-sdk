@@ -37,6 +37,19 @@ public class CallTest {
     }
 
     @Test
+    public void testToJsonRandomNumber() throws Exception{
+        Call call = new Call();
+        call.setTo(new Endpoint[]{new PhoneEndpoint("4477999000")});
+        call.setFromRandomNumber(true);
+        call.setAnswerMethod("GET");
+        call.setAnswerUrl("https://callback.example.com/");
+
+        assertEquals("{\"to\":[{\"type\":\"phone\",\"number\":\"4477999000\"}],"
+                + "\"answer_url\":[\"https://callback.example.com/\"],\"answer_method\":\"GET\",\"from_random_number\":true}",
+                call.toJson());
+    }
+
+    @Test
     public void testToJsonMachineDetection() throws Exception {
         Call call = new Call("4477999000", "44111222333", "https://callback.example.com/");
         call.setMachineDetection(MachineDetection.CONTINUE);
