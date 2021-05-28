@@ -16,18 +16,25 @@
 package com.vonage.client.auth;
 
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.auth.hashutils.HashUtil;
+import com.vonage.client.incoming.MessageEvent;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.TreeMap;
 
 /**
@@ -198,13 +205,46 @@ public class RequestSigning {
                                                     String secretKey,
                                                     long currentTimeMillis,
                                                     HashUtil.HashType hashType) {
+
+        // Construct a sorted list of the name-value pair parameters supplied in the request, excluding the signature parameter
+        Map<String, String> sortedParams = new TreeMap<>();
+        if(request.getContentType()=="application/json"){
+            ObjectMapper mapper = new ObjectMapper();
+            try{
+                Map<String,String> params = mapper.readValue(request.getInputStream(), new TypeReference<Map<String,String>>(){});
+                for (Map.Entry<String, String> entry: params.entrySet()) {
+                    String name = entry.getKey();
+                    String value = entry.getValue();
+                    log.info("" + name + " = " + value);
+                    if (value == null || value.trim().equals("")) {
+                        continue;
+                    }
+                    sortedParams.put(name, value);
+                }
+            }
+            catch (IOException ex){
+                throw new VonageUnexpectedException("Unexpected issue when parsing JSON", ex);
+            }
+        }
+        else{
+            for (Map.Entry<String, String[]> entry: request.getParameterMap().entrySet()) {
+                String name = entry.getKey();
+                String value = entry.getValue()[0];
+                log.info("" + name + " = " + value);
+                if (value == null || value.trim().equals("")) {
+                    continue;
+                }
+                sortedParams.put(name, value);
+            }
+        }
+
         // identify the signature supplied in the request ...
-        String suppliedSignature = request.getParameter(PARAM_SIGNATURE);
+        String suppliedSignature = sortedParams.get(PARAM_SIGNATURE);
         if (suppliedSignature == null)
             return false;
 
-        // Firstly, extract the timestamp parameter and verify that it is within 5 minutes of 'current time'
-        String timeString = request.getParameter(PARAM_TIMESTAMP);
+        // Extract the timestamp parameter and verify that it is within 5 minutes of 'current time'
+        String timeString = sortedParams.get(PARAM_TIMESTAMP);
         long time = -1;
         try {
             if (timeString != null)
@@ -219,23 +259,12 @@ public class RequestSigning {
             return false;
         }
 
-        // Next, construct a sorted list of the name-value pair parameters supplied in the request, excluding the signature parameter
-        Map<String, String> sortedParams = new TreeMap<>();
-        for (Map.Entry<String, String[]> entry: request.getParameterMap().entrySet()) {
-            String name = entry.getKey();
-            String value = entry.getValue()[0];
-            log.info("" + name + " = " + value);
-            if (name.equals(PARAM_SIGNATURE))
-                continue;
-            if (value == null || value.trim().equals("")) {
-                continue;
-            }
-            sortedParams.put(name, value);
-        }
 
         // walk this sorted list of parameters and construct a string
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, String> param: sortedParams.entrySet()) {
+            if (param.getKey().equals(PARAM_SIGNATURE))
+                continue;
             String name = param.getKey();
             String value = param.getValue();
             sb.append("&").append(clean(name)).append("=").append(clean(value));
