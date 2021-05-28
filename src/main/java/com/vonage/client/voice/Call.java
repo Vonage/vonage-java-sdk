@@ -42,6 +42,7 @@ public class Call {
     private MachineDetection machineDetection = null;
     private Integer lengthTimer = null;
     private Integer ringingTimer = null;
+    private Boolean fromRandomNumber = null;
     private Ncco ncco;
 
     public Call() {
@@ -157,6 +158,16 @@ public class Call {
     public void setRingingTimer(Integer ringingTimer) {
         this.ringingTimer = ringingTimer;
     }
+
+    @JsonProperty("from_random_number")
+    public Boolean getFromRandomNumber(){ return fromRandomNumber; }
+
+
+    /**
+     * Set to true to use random phone number as from. The number will be selected from the list of the numbers assigned to the current application. random_from_number: true cannot be used together with from.
+     * @param fromRandomNumber
+     */
+    public void setFromRandomNumber(Boolean fromRandomNumber){ this.fromRandomNumber = fromRandomNumber; }
 
     @JsonProperty("ncco")
     public Ncco getNcco() {
