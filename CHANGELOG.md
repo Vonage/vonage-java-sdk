@@ -4,8 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [6.3.1]
+
+## [6.4.0]
 - adjusting operator used to check json payloads
+- Adding extra parsing for top level Roaming Status in Advanced Number Insights
 
 ## [6.3.0]
 - Added parsing for JSON payloads when reading inbound SMS signtures
