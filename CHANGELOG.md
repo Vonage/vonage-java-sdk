@@ -4,8 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-
 ## [6.4.0]
+- Adding Random From Number Feature for the Voice API, if set to `true`, the from number will be randomly selected from the pool of numbers available to the application making the call. 
 - adjusting operator used to check json payloads
 - Adding extra parsing for top level Roaming Status in Advanced Number Insights
 
