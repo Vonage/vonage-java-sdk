@@ -45,6 +45,7 @@ public class RequestSigning {
 
     public static final String PARAM_SIGNATURE = "sig";
     public static final String PARAM_TIMESTAMP = "timestamp";
+    public static final String APPLICATION_JSON = "application/json";
 
     private static Log log = LogFactory.getLog(RequestSigning.class);
 
@@ -208,7 +209,7 @@ public class RequestSigning {
 
         // Construct a sorted list of the name-value pair parameters supplied in the request, excluding the signature parameter
         Map<String, String> sortedParams = new TreeMap<>();
-        if(request.getContentType()=="application/json"){
+        if(request.getContentType() != null && request.getContentType().equals(APPLICATION_JSON)){
             ObjectMapper mapper = new ObjectMapper();
             try{
                 Map<String,String> params = mapper.readValue(request.getInputStream(), new TypeReference<Map<String,String>>(){});
