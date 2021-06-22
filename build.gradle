@@ -36,7 +36,7 @@ dependencies {
     implementation 'commons-io:commons-io:2.5'
     implementation 'org.apache.commons:commons-lang3:3.5'
     compileOnly 'javax.servlet:javax.servlet-api:3.1.0'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.9'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.9.2'
     implementation 'io.openapitools.jackson.dataformat:jackson-dataformat-hal:1.0.4'
     implementation 'javax.xml.bind:jaxb-api:2.3.0'
     implementation "com.nexmo:jwt:1.0.1"
