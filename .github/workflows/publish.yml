@@ -22,7 +22,7 @@ jobs:
           git config --global github.token ${{ secrets.GITHUB_TOKEN }}
           pip install bump2version
       - name: Bump Version
-        run: bump2version --new-version ${{ github.event.release.tag_name }} patch && git tag ${{ github.event.release.tag_name }} -f && git push && git push --tags origin --force
+        run: bump2version --new-version ${{ github.event.release.tag_name }} patch && git tag ${{ github.event.release.tag_name }} -f && git push --tags origin --force
       - name: Setup Java
         uses: actions/setup-java@v1
         with:

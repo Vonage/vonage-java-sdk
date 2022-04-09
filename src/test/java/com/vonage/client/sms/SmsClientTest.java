@@ -30,9 +30,6 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
@@ -43,10 +40,7 @@ import java.util.GregorianCalendar;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(LoggingUtils.class)
 public class SmsClientTest {
     private HttpWrapper wrapper;
     private SmsClient client;
@@ -58,8 +52,6 @@ public class SmsClientTest {
     }
 
     private HttpClient stubHttpClient(int statusCode, String content) throws Exception {
-        //Log log = mock(Log.class);
-        mockStatic(LoggingUtils.class);
         HttpClient result = mock(HttpClient.class);
 
         HttpResponse response = mock(HttpResponse.class);

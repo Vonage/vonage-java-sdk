@@ -31,7 +31,7 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -84,8 +84,8 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
                 HttpEntityEnclosingRequest entityRequest = (HttpEntityEnclosingRequest) httpRequest;
                 HttpEntity entity = entityRequest.getEntity();
                 if (entity instanceof UrlEncodedFormEntity) {
-                    entityRequest.setEntity(new UrlEncodedFormEntity(requestBuilder.getParameters(),
-                            Charset.forName("UTF-8")
+                    entityRequest.setEntity(new UrlEncodedFormEntity(
+                        requestBuilder.getParameters(), StandardCharsets.UTF_8
                     ));
                 }
             }
@@ -98,7 +98,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
 
             LOG.debug("Response: " + LoggingUtils.logResponse(response));
 
-            try{
+            try {
                 return parseResponse(response);
             }
             catch (IOException io){

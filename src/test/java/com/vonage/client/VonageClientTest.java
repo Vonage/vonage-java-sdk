@@ -33,14 +33,9 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.security.InvalidKeyException;
@@ -55,17 +50,12 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(LoggingUtils.class)
-@PowerMockIgnore("javax.crypto.*")
 public class VonageClientTest {
-    private TestUtils testUtils = new TestUtils();
+    private final TestUtils testUtils = new TestUtils();
 
     private HttpClient stubHttpClient(int statusCode, String content) throws Exception {
         HttpClient result = mock(HttpClient.class);
-        mockStatic(LoggingUtils.class);
 
         HttpResponse response = mock(HttpResponse.class);
         StatusLine sl = mock(StatusLine.class);
@@ -174,8 +164,8 @@ public class VonageClientTest {
         authCollection.getAuth(TokenAuthMethod.class).apply(requestBuilder);
 
         List<NameValuePair> parameters = requestBuilder.getParameters();
-        assertContainsParam(requestBuilder.getParameters(), "api_key", "api-key");
-        assertContainsParam(requestBuilder.getParameters(), "api_secret", "api-secret");
+        assertContainsParam(parameters, "api_key", "api-key");
+        assertContainsParam(parameters, "api_secret", "api-secret");
     }
 
     @Test
@@ -305,7 +295,7 @@ public class VonageClientTest {
     public void testApplicationIdWithCertPathAsString() throws Exception {
       VonageClient vonageClient = VonageClient.builder()
                 .applicationId("app-id")
-                .privateKeyPath(Paths.get(this.getClass().getResource("test/keys/application_key").toURI()).toString())
+                .privateKeyPath(Paths.get(getClass().getResource("test/keys/application_key").toURI()).toString())
                 .build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
 

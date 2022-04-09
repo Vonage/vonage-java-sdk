@@ -15,6 +15,7 @@
  */
 package com.vonage.client;
 
+import com.vonage.client.logging.LoggingUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.ProtocolVersion;
@@ -22,6 +23,7 @@ import org.apache.http.client.HttpResponseException;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
+import org.mockito.MockedStatic;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -34,24 +36,34 @@ import java.util.List;
 import java.util.Map;
 
 import static junit.framework.Assert.fail;
+import static org.mockito.Mockito.mockStatic;
 
 public class TestUtils {
+
+    private static MockedStatic<LoggingUtils> staticMockLoggingUtils;
+
+    public static void mockStaticLoggingUtils() {
+        staticMockLoggingUtils = mockStatic(LoggingUtils.class);
+    }
+
+    public static void unmockStaticLoggingUtils() {
+        if (staticMockLoggingUtils != null) {
+            staticMockLoggingUtils.closeOnDemand();
+        }
+    }
+
     public byte[] loadKey(String path) throws IOException {
-        int len;
         int size = 1024;
         byte[] buf = new byte[size];
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream(2048);
-        InputStream is = this.getClass().getResourceAsStream(path);
-        if (is != null) {
-            while ((len = is.read(buf, 0, size)) != -1) {
-                bos.write(buf, 0, len);
+        try (InputStream is = this.getClass().getResourceAsStream(path)) {
+            if (is == null) {
+                throw new IOException("Could not find resource at: " + this.getClass().getResource(path));
             }
-        } else {
-            throw new IOException("Could not find resource at: " + this.getClass().getResource(path));
+            for (int len; (len = is.read(buf, 0, size)) != -1; bos.write(buf, 0, len));
         }
         return bos.toByteArray();
-
     }
 
     public static Map<String, String> makeParameterMap(List<NameValuePair> params) {

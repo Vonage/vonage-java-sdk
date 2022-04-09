@@ -30,11 +30,7 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
@@ -42,10 +38,7 @@ import java.nio.charset.StandardCharsets;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(LoggingUtils.class)
 public class SnsClientTest {
     private HttpWrapper httpWrapper;
     private SnsClient client;
@@ -58,7 +51,6 @@ public class SnsClientTest {
 
     private HttpClient stubHttpClient(int statusCode, String content) throws Exception {
         HttpClient result = mock(HttpClient.class);
-        mockStatic(LoggingUtils.class);
 
         HttpResponse response = mock(HttpResponse.class);
         StatusLine sl = mock(StatusLine.class);
@@ -74,7 +66,6 @@ public class SnsClientTest {
         return result;
     }
 
-    @Ignore
     @Test
     public void testSubscribe() throws Exception {
         httpWrapper.setHttpClient(stubHttpClient(200, "<nexmo-sns>\n" +
@@ -92,7 +83,6 @@ public class SnsClientTest {
     }
 
     @Test
-    @Ignore
     public void testPublish() throws Exception {
         httpWrapper.setHttpClient(stubHttpClient(200, "<nexmo-sns>\n" +
                 "   <command>publish</command>\n" +
