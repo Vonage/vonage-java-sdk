@@ -1,55 +1,48 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-}
-
 plugins {
     id 'java-library'
-    id 'com.github.johnrengelman.shadow' version '6.1.0'
     id 'jacoco'
     id 'signing'
-    id 'eclipse'
     id 'maven-publish'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
 
 group = "com.vonage"
 archivesBaseName = "client"
-version = "6.4.0"
+version = "6.4.1"
 
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
-
-repositories {
-    mavenCentral()
-}
 
 tasks.withType(JavaCompile) {
     options.compilerArgs << "-Xlint:unchecked"
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
+    compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
+
     implementation 'commons-codec:commons-codec:1.15'
     implementation 'commons-logging:commons-logging:1.2'
     implementation 'org.apache.httpcomponents:httpclient:4.5.13'
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
-    compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2.2'
     implementation 'io.openapitools.jackson.dataformat:jackson-dataformat-hal:1.0.9'
     implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
     implementation 'com.nexmo:jwt:1.0.1'
 
     testImplementation 'javax.servlet:javax.servlet-api:4.0.1'
-    testImplementation  'junit:junit:4.13.2'
-    testImplementation  'org.mockito:mockito-inline:4.4.0'
-    testImplementation  'org.hamcrest:hamcrest-all:1.3'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.mockito:mockito-inline:4.4.0'
+    testImplementation 'org.hamcrest:hamcrest-all:1.3'
     testImplementation 'org.springframework:spring-test:5.3.17'
     testImplementation 'org.springframework:spring-web:5.3.17'
 }
 
 test {
-    jvmArgs "--illegal-access=warn"
     testLogging {
         events "failed"
         exceptionFormat "full"
@@ -70,10 +63,10 @@ javadoc {
 jar {
     manifest {
         attributes(
-                'Created-By': 'Vonage',
-                'Implementation-Vendor': 'Vonage',
-                'Implementation-Title': 'Vonage Java Server SDK',
-                'Implementation-Version': archiveVersion
+            'Created-By': 'Vonage',
+            'Implementation-Vendor': 'Vonage',
+            'Implementation-Title': 'Vonage Java Server SDK',
+            'Implementation-Version': archiveVersion
         )
     }
 }
@@ -92,18 +85,19 @@ task sourcesJar(type: Jar) {
 jacoco {
     toolVersion = "0.8.8"
 }
-
 jacocoTestReport {
     reports {
-        xml.enabled = true
-        html.enabled = true
+        xml.getRequired().set(true)
+        html.getRequired().set(true)
     }
 }
 check.dependsOn jacocoTestReport
-java{
+
+java {
     withSourcesJar()
     withJavadocJar()
 }
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -132,7 +126,6 @@ publishing {
                     developerConnection = "scm:git@github.com:Vonage/vonage-java-sdk"
                     url = "http://github.com:Vonage/vonage-java-sdk"
                 }
-
                 issueManagement {
                     system = "GitHub"
                     url = "https://github.com/vonage/vonage-java-sdk/issues"
