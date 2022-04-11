@@ -6,7 +6,7 @@ documentation, or tests are eligible to be added to this list.
 - Mark Smith ([@judy2k](https://github.com/judy2k))
 - Chris Guzman ([@ChrisGuzman](https://github.com/ChrisGuzman))
 - Tim Lytle ([@tjlitle](https://github.com/tjlitle))
-- [@thepeachbeetle](https://github.com/thepeachbeetle)
+- Paul Cook [@thepeachbeetle](https://github.com/thepeachbeetle)
 - Steve Crow ([@cr0wst](https://github.com/cr0wst))
 - Michael Berry ([@berry120](https://github.com/berry120))
 - Arpit Pandey ([@arpitpandey0209](https://github.com/arpitpandey0209))
@@ -36,3 +36,4 @@ documentation, or tests are eligible to be added to this list.
 - Ilya Golovin ([@ilgo0413])(https://github.com/ilgo0413)
 - Joakim Waltersson ([@jwalter](https://github.com/jwalter))
 - Mofi Rahman ([@moficodes](https://github.com/moficodes))
+- Sina Madani ([@SMadani](https://github.com/SMadani))
