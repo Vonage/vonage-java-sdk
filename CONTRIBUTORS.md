@@ -35,4 +35,4 @@ documentation, or tests are eligible to be added to this list.
 - Aryan Rawlani ([@aryanrawlani28](https://github.com/aryanrawlani28))
 - Ilya Golovin ([@ilgo0413])(https://github.com/ilgo0413)
 - Joakim Waltersson ([@jwalter](https://github.com/jwalter))
-
+- Mofi Rahman ([@moficodes](https://github.com/moficodes))

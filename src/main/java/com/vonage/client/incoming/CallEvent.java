@@ -27,6 +27,7 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CallEvent {
     private String conversationUuid;
+    private String callUuid;
     private CallDirection direction;
     private String from;
     private CallStatus status;
@@ -40,6 +41,9 @@ public class CallEvent {
     public String getConversationUuid() {
         return conversationUuid;
     }
+
+    @JsonProperty("call_uuid")
+    public String getCallUuid() { return callUuid; }
 
     public CallDirection getDirection() {
         return direction;
