@@ -33,25 +33,20 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.*;
 import org.mockito.ArgumentCaptor;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
-
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(LoggingUtils.class)
 public class AbstractMethodTest {
+
+    static {
+        TestUtils.mockStaticLoggingUtils();
+    }
+
     private static class ConcreteMethod extends AbstractMethod<String, String> {
         public ConcreteMethod(HttpWrapper httpWrapper) {
             super(httpWrapper);
@@ -73,8 +68,10 @@ public class AbstractMethodTest {
         }
     }
 
-    private static class ConcreteMethodFailingParse extends ConcreteMethod{
-        public ConcreteMethodFailingParse(HttpWrapper httpWrapper){super(httpWrapper);}
+    private static class ConcreteMethodFailingParse extends ConcreteMethod {
+        public ConcreteMethodFailingParse(HttpWrapper httpWrapper) {
+            super(httpWrapper);
+        }
 
         @Override
         public String parseResponse(HttpResponse response) throws IOException{
@@ -89,20 +86,27 @@ public class AbstractMethodTest {
 
     @Before
     public void setUp() throws Exception {
-        mockStatic(LoggingUtils.class);
         mockWrapper = mock(HttpWrapper.class);
         mockAuthMethods = mock(AuthCollection.class);
         mockAuthMethod = mock(AuthMethod.class);
         mockHttpClient = mock(HttpClient.class);
-        @SuppressWarnings("unchecked") Set<Class> anySet = any(Set.class);
-        when(mockAuthMethods.getAcceptableAuthMethod(anySet)).thenReturn(mockAuthMethod);
-
-        when(mockWrapper.getHttpClient()).thenReturn(mockHttpClient);
-        when(mockHttpClient.execute(any(HttpUriRequest.class))).thenReturn(new BasicHttpResponse(new BasicStatusLine(new ProtocolVersion("1.1",
-                1,
-                1
-        ), 200, "OK")));
         when(LoggingUtils.logResponse(any(HttpResponse.class))).thenReturn("response logged");
+        Set<Class> anySet = any(Set.class);
+        when(mockAuthMethods.getAcceptableAuthMethod(anySet)).thenReturn(mockAuthMethod);
+        when(mockWrapper.getHttpClient()).thenReturn(mockHttpClient);
+        when(mockHttpClient.execute(any(HttpUriRequest.class))).thenReturn(
+            new BasicHttpResponse(
+                new BasicStatusLine(
+                    new ProtocolVersion(
+                    "1.1",
+                        1,
+                        1
+                    ),
+         200,
+       "OK"
+                )
+            )
+        );
         when(mockWrapper.getAuthCollection()).thenReturn(mockAuthMethods);
     }
 
@@ -151,7 +155,7 @@ public class AbstractMethodTest {
 
         HttpEntity entity = ((HttpEntityEnclosingRequest) captor.getValue()).getEntity();
 
-        String entityContents = IOUtils.toString(entity.getContent(), Charset.forName("UTF-8"));
+        String entityContents = IOUtils.toString(entity.getContent(), StandardCharsets.UTF_8);
         assertEquals(json, entityContents);
     }
 
@@ -160,7 +164,7 @@ public class AbstractMethodTest {
         String json = "{\"text\":\"您的纳控猫设备异常，请登录查看。\",\"loop\":0,\"voice_name\":\"Kimberly\"}";
         RequestBuilder builder = RequestBuilder
                 .put("")
-                .setCharset(Charset.forName("UTF-8"))
+                .setCharset(StandardCharsets.UTF_8)
                 .setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
 
         ConcreteMethod method = spy(new ConcreteMethod(mockWrapper));
@@ -174,18 +178,18 @@ public class AbstractMethodTest {
 
         HttpEntity entity = ((HttpEntityEnclosingRequest) captor.getValue()).getEntity();
 
-        String entityContents = IOUtils.toString(entity.getContent(), Charset.forName("UTF-8"));
+        String entityContents = IOUtils.toString(entity.getContent(), StandardCharsets.UTF_8);
 
         assertEquals(json, entityContents);
     }
 
     @Test
-    public void testFailedParse() throws Exception{
+    public void rse() throws Exception {
         ConcreteMethodFailingParse method = spy(new ConcreteMethodFailingParse(mockWrapper));
         String json = "{\"text\":\"Hello World\",\"loop\":0,\"voice_name\":\"Kimberly\"}";
         RequestBuilder builder = RequestBuilder
                 .put("")
-                .setCharset(Charset.forName("UTF-8"))
+                .setCharset(StandardCharsets.UTF_8)
                 .setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
         when(method.makeRequest(any(String.class))).thenReturn(builder);
         when(mockAuthMethod.apply(any(RequestBuilder.class))).thenReturn(builder);
@@ -200,22 +204,22 @@ public class AbstractMethodTest {
     }
 
     @Test
-    public void testFailedHttpExecute() throws Exception{
+    public void testFailedHttpExecute() throws Exception {
         ConcreteMethodFailingParse method = spy(new ConcreteMethodFailingParse(mockWrapper));
         String json = "{\"text\":\"Hello World\",\"loop\":0,\"voice_name\":\"Kimberly\"}";
         RequestBuilder builder = RequestBuilder
                 .put("")
-                .setCharset(Charset.forName("UTF-8"))
+                .setCharset(StandardCharsets.UTF_8)
                 .setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
         when(method.makeRequest(any(String.class))).thenReturn(builder);
         when(mockAuthMethod.apply(any(RequestBuilder.class))).thenReturn(builder);
         IOException ex = new IOException("This is a test exception thrown from the HttpClient Execute method");
         when(mockHttpClient.execute(any(HttpUriRequest.class))).thenThrow(ex);
-        try{
+        try {
             method.execute("");
             Assert.isTrue(false, "There should have been a Vonage Client exception thrown");
         }
-        catch (VonageMethodFailedException e){
+        catch (VonageMethodFailedException e) {
             Assert.isTrue(e.getCause() instanceof IOException, "The cause of the exception was not correct");
         }
     }

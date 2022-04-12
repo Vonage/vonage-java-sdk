@@ -23,19 +23,12 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.junit.Before;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.ByteArrayInputStream;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.mockito.Mockito.*;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(LoggingUtils.class)
 public abstract class ClientTest<T extends AbstractClient> {
     protected HttpWrapper wrapper;
     protected T client;
@@ -47,7 +40,6 @@ public abstract class ClientTest<T extends AbstractClient> {
 
     protected HttpClient stubHttpClient(int statusCode, String content) throws Exception {
         HttpClient result = mock(HttpClient.class);
-        mockStatic(LoggingUtils.class);
 
         HttpResponse response = mock(HttpResponse.class);
         StatusLine sl = mock(StatusLine.class);

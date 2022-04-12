@@ -1,21 +1,32 @@
 package com.vonage.client;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import com.vonage.client.logging.LoggingUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class LoggingUtilTest {
 
+  @BeforeClass
+  public static void setupBeforeClass() {
+    TestUtils.unmockStaticLoggingUtils();
+  }
+
+  @AfterClass
+  public static void cleanupAfterClass() {
+    TestUtils.mockStaticLoggingUtils();
+  }
+
   @Test
   public void testNoContentResponseMethod() {
-
     HttpResponse stubResponse = new BasicHttpResponse(
         new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 204, "NO CONTENT")
     );
@@ -23,9 +34,8 @@ public class LoggingUtilTest {
     entity.setContent(null);
     stubResponse.setEntity(null);
 
-
     try {
-      String response = LoggingUtils.logResponse(stubResponse);
+      LoggingUtils.logResponse(stubResponse);
     } catch (Exception ex) {
       fail("LoggingUtils Failed for null Response");
     }
