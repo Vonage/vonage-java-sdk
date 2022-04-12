@@ -205,7 +205,7 @@ public class RecordAction implements Action {
         }
 
         /**
-         * @param split Record the sent and received audio in separate channels of a stereo recording—set to {@link
+         * @param split Record the sent and received audio in separate channels of a stereo recording-set to {@link
          *              SplitRecording#CONVERSATION} to enable this.
          *
          * @return The {@link Builder} to keep building.
