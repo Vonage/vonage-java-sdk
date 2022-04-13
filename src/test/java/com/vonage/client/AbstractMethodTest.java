@@ -15,7 +15,6 @@
  */
 package com.vonage.client;
 
-
 import com.vonage.client.auth.AuthCollection;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.JWTAuthMethod;
@@ -33,11 +32,14 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Set;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -91,8 +93,7 @@ public class AbstractMethodTest {
         mockAuthMethod = mock(AuthMethod.class);
         mockHttpClient = mock(HttpClient.class);
         when(LoggingUtils.logResponse(any(HttpResponse.class))).thenReturn("response logged");
-        Set<Class> anySet = any(Set.class);
-        when(mockAuthMethods.getAcceptableAuthMethod(anySet)).thenReturn(mockAuthMethod);
+        when(mockAuthMethods.getAcceptableAuthMethod(any())).thenReturn(mockAuthMethod);
         when(mockWrapper.getHttpClient()).thenReturn(mockHttpClient);
         when(mockHttpClient.execute(any(HttpUriRequest.class))).thenReturn(
             new BasicHttpResponse(

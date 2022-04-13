@@ -91,7 +91,7 @@ public class AdvancedInsightResponseTest {
         assertEquals(AdvancedInsightResponse.Reachability.UNKNOWN, response.getReachability());
         assertEquals(AdvancedInsightResponse.PortedStatus.ASSUMED_NOT_PORTED, response.getPorted());
         assertEquals(RoamingDetails.RoamingStatus.NOT_ROAMING, response.getRoaming().getStatus());
-        assertEquals(new Integer(1), response.getLookupOutcome());
+        assertEquals(Integer.valueOf(1), response.getLookupOutcome());
         assertEquals("Partial success - some fields populated", response.getLookupOutcomeMessage());
 
         assertEquals("Bob", response.getFirstName());
@@ -167,7 +167,7 @@ public class AdvancedInsightResponseTest {
         assertEquals(AdvancedInsightResponse.Reachability.UNKNOWN, response.getReachability());
         assertEquals(AdvancedInsightResponse.PortedStatus.ASSUMED_NOT_PORTED, response.getPorted());
         assertEquals(RoamingDetails.RoamingStatus.UNKNOWN, response.getRoaming().getStatus());
-        assertEquals(new Integer(1), response.getLookupOutcome());
+        assertEquals(Integer.valueOf(1), response.getLookupOutcome());
         assertEquals("Partial success - some fields populated", response.getLookupOutcomeMessage());
 
         assertEquals("Bob", response.getFirstName());
@@ -237,7 +237,7 @@ public class AdvancedInsightResponseTest {
         assertEquals(new BigDecimal("0.03000000"), response.getRequestPrice());
 
         assertEquals(AdvancedInsightResponse.Validity.VALID, response.getValidNumber());
-        assertEquals(new Integer(1), response.getLookupOutcome());
+        assertEquals(Integer.valueOf(1), response.getLookupOutcome());
         assertEquals("Partial success - some fields populated", response.getLookupOutcomeMessage());
 
         assertEquals("Bob", response.getFirstName());

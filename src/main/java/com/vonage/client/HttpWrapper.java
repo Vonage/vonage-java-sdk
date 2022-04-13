@@ -24,7 +24,7 @@ import org.apache.http.config.SocketConfig;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Internal class that holds available authentication methods and a shared HttpClient.
@@ -85,7 +85,7 @@ public class HttpWrapper {
         connectionManager.setMaxTotal(200);
         connectionManager.setDefaultConnectionConfig(ConnectionConfig
                 .custom()
-                .setCharset(Charset.forName("UTF-8"))
+                .setCharset(StandardCharsets.UTF_8)
                 .build());
         connectionManager.setDefaultSocketConfig(SocketConfig.custom().setTcpNoDelay(true).build());
 
