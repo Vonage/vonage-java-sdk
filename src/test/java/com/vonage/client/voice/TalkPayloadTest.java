@@ -1,6 +1,5 @@
 package com.vonage.client.voice;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,8 +29,8 @@ public class TalkPayloadTest {
     }
 
     @Test
-    public void getStyle() throws Exception{
-        assertEquals(new Integer(2),payload.getStyle());
+    public void getStyle() throws Exception {
+        assertEquals(Integer.valueOf(2), payload.getStyle());
     }
 
     @Test
