@@ -76,10 +76,9 @@ public class Psd2Method extends AbstractMethod<Psd2Request, VerifyResponse> {
         return VerifyResponse.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 
-    private RequestBuilder optionalParams(RequestBuilder builder, String paramName, Object value){
+    private void optionalParams(RequestBuilder builder, String paramName, Object value) {
         if (value != null) {
             builder.addParameter(paramName, value + "");
         }
-        return null;
     }
 }

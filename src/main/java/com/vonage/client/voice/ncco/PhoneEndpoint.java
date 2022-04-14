@@ -91,7 +91,7 @@ public class PhoneEndpoint implements Endpoint {
     }
 
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    private class OnAnswer {
+    private static class OnAnswer {
         private String url;
         private String ringback;
 

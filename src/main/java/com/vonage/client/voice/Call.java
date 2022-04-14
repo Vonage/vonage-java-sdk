@@ -165,9 +165,9 @@ public class Call {
 
     /**
      * Set to true to use random phone number as from. The number will be selected from the list of the numbers assigned to the current application. random_from_number: true cannot be used together with from.
-     * @param fromRandomNumber
+     * @param fromRandomNumber Whether to use random number.
      */
-    public void setFromRandomNumber(Boolean fromRandomNumber){ this.fromRandomNumber = fromRandomNumber; }
+    public void setFromRandomNumber(Boolean fromRandomNumber) { this.fromRandomNumber = fromRandomNumber; }
 
     @JsonProperty("ncco")
     public Ncco getNcco() {

@@ -27,6 +27,11 @@ public class CallStatusTest {
 
     @Test
     public void testDeserializeUnknownEnumsFallbackToUnknown() {
-        assertEquals(CallStatus.UNKNOWN, CallStatus.fromString("test"));
+        assertEquals(CallStatus.UNKNOWN, CallStatus.fromString(","));
+    }
+
+    @Test
+    public void testDeserializeKnownConstant() {
+        assertEquals(CallStatus.MACHINE, CallStatus.fromString("MACHINE"));
     }
 }

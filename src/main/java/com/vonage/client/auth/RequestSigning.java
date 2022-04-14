@@ -20,7 +20,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.auth.hashutils.HashUtil;
-import com.vonage.client.incoming.MessageEvent;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
@@ -28,13 +27,10 @@ import org.apache.http.message.BasicNameValuePair;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.TreeMap;
 
 /**
@@ -47,7 +43,7 @@ public class RequestSigning {
     public static final String PARAM_TIMESTAMP = "timestamp";
     public static final String APPLICATION_JSON = "application/json";
 
-    private static Log log = LogFactory.getLog(RequestSigning.class);
+    private static final Log log = LogFactory.getLog(RequestSigning.class);
 
     /**
      * Signs a set of request parameters.
@@ -209,7 +205,7 @@ public class RequestSigning {
 
         // Construct a sorted list of the name-value pair parameters supplied in the request, excluding the signature parameter
         Map<String, String> sortedParams = new TreeMap<>();
-        if(request.getContentType() != null && request.getContentType().equals(APPLICATION_JSON)){
+        if (request.getContentType() != null && request.getContentType().equals(APPLICATION_JSON)) {
             ObjectMapper mapper = new ObjectMapper();
             try{
                 Map<String,String> params = mapper.readValue(request.getInputStream(), new TypeReference<Map<String,String>>(){});
@@ -223,11 +219,11 @@ public class RequestSigning {
                     sortedParams.put(name, value);
                 }
             }
-            catch (IOException ex){
+            catch (IOException ex) {
                 throw new VonageUnexpectedException("Unexpected issue when parsing JSON", ex);
             }
         }
-        else{
+        else {
             for (Map.Entry<String, String[]> entry: request.getParameterMap().entrySet()) {
                 String name = entry.getKey();
                 String value = entry.getValue()[0];
@@ -285,14 +281,10 @@ public class RequestSigning {
 
         // verify that the supplied signature matches generated one
         // use MessageDigest.isEqual as an alternative to String.equals() to defend against timing based attacks
-        try {
-            if (!MessageDigest.isEqual(hashed.toLowerCase().getBytes("UTF-8"), suppliedSignature.toLowerCase().getBytes("UTF-8")))
-                return false;
-        } catch (UnsupportedEncodingException e) {
-            throw new VonageUnexpectedException("Failed to decode signature as UTF-8", e);
-        }
-
-        return true;
+        return MessageDigest.isEqual(
+                hashed.toLowerCase().getBytes(StandardCharsets.UTF_8),
+                suppliedSignature.toLowerCase().getBytes(StandardCharsets.UTF_8)
+        );
     }
 
     public static String clean(String str) {

@@ -21,6 +21,7 @@ import com.vonage.client.TestUtils;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
+import org.hamcrest.MatcherAssert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -51,10 +52,10 @@ public class SearchSmsEndpointTest {
     public void testMakeSingleIdRequest() throws Exception {
         RequestBuilder builder = endpoint.makeRequest(new SmsIdSearchRequest("one-id"));
         assertEquals("GET", builder.getMethod());
-        assertThat(builder.build().getURI().toString(), startsWith("https://rest.nexmo.com/search/messages?"));
+        MatcherAssert.assertThat(builder.build().getURI().toString(), startsWith("https://rest.nexmo.com/search/messages?"));
 
         Map<String, List<String>> params = TestUtils.makeFullParameterMap(builder.getParameters());
-        assertThat(params.size(), equalTo(1));
+        MatcherAssert.assertThat(params.size(), equalTo(1));
         List<String> ids = params.get("ids");
         assertNotNull(ids);
         assertEquals(1, ids.size());
@@ -67,10 +68,10 @@ public class SearchSmsEndpointTest {
         request.addId("two-id");
         RequestBuilder builder = endpoint.makeRequest(request);
         assertEquals("GET", builder.getMethod());
-        assertThat(builder.build().getURI().toString(), startsWith("https://rest.nexmo.com/search/messages?"));
+        MatcherAssert.assertThat(builder.build().getURI().toString(), startsWith("https://rest.nexmo.com/search/messages?"));
 
         Map<String, List<String>> params = TestUtils.makeFullParameterMap(builder.getParameters());
-        assertThat(params.size(), equalTo(1));
+        MatcherAssert.assertThat(params.size(), equalTo(1));
         List<String> ids = params.get("ids");
         assertNotNull(ids);
         assertEquals(2, ids.size());
@@ -87,12 +88,12 @@ public class SearchSmsEndpointTest {
         ).getTime(), "447700900510");
         RequestBuilder builder = endpoint.makeRequest(request);
         assertEquals("GET", builder.getMethod());
-        assertThat(builder.build().getURI().toString(), startsWith("https://rest.nexmo.com/search/messages?"));
+        MatcherAssert.assertThat(builder.build().getURI().toString(), startsWith("https://rest.nexmo.com/search/messages?"));
 
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
-        assertThat(params.size(), equalTo(2));
-        assertThat(params.get("date"), equalTo("2017-09-22"));
-        assertThat(params.get("to"), equalTo("447700900510"));
+        MatcherAssert.assertThat(params.size(), equalTo(2));
+        MatcherAssert.assertThat(params.get("date"), equalTo("2017-09-22"));
+        MatcherAssert.assertThat(params.get("to"), equalTo("447700900510"));
     }
 
     @Test
@@ -115,7 +116,7 @@ public class SearchSmsEndpointTest {
         );
         SearchSmsResponse response = endpoint.parseResponse(stub);
 
-        assertThat(response.getCount(), equalTo(2));
+        MatcherAssert.assertThat(response.getCount(), equalTo(2));
 
         SmsDetails details = response.getItems()[0];
         assertEquals("00A0B0C0", details.getMessageId());
@@ -125,11 +126,11 @@ public class SearchSmsEndpointTest {
         assertEquals("123456890", details.getTo());
         assertEquals("hello world", details.getBody());
         assertEquals("0.04500000", details.getPrice());
-        assertEquals(new GregorianCalendar(2011, Calendar.NOVEMBER, 25, 16, 03, 00).getTime(),
+        assertEquals(new GregorianCalendar(2011, Calendar.NOVEMBER, 25, 16, 3, 0).getTime(),
                 details.getDateReceived()
         );
         assertEquals("DELIVRD", details.getFinalStatus());
-        assertEquals(new GregorianCalendar(2011, Calendar.NOVEMBER, 25, 16, 03, 00).getTime(), details.getDateClosed());
+        assertEquals(new GregorianCalendar(2011, Calendar.NOVEMBER, 25, 16, 3, 0).getTime(), details.getDateClosed());
         assertEquals(11151, details.getLatency().longValue());
         assertEquals("MT", details.getType());
     }

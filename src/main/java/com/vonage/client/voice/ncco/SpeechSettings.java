@@ -18,10 +18,8 @@ package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -190,7 +188,7 @@ public class SpeechSettings {
         @JsonEnumDefaultValue
         UNKNOWN("Unknown");
 
-        private String language;
+        private final String language;
 
         Language(String language) {
             this.language = language;

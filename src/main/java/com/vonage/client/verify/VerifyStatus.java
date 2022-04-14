@@ -39,7 +39,7 @@ public enum VerifyStatus {
     TOO_MANY_DESTINATIONS(18),
     NO_RESPONSE(101), COMMS_FAILURE(-1), UNKNOWN(Integer.MAX_VALUE);
 
-    private int verifyStatus;
+    private final int verifyStatus;
 
     private static final Map<Integer, VerifyStatus> VERIFY_STATUS_INDEX = new HashMap<>();
 

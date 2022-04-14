@@ -157,14 +157,12 @@ public class CallInfo {
     }
 
     public String toString() {
-        return new StringBuilder()
-                .append("<CallInfo ")
-                .append("ID: ").append(this.getUuid()).append(", ")
-                .append("From: ").append(this.getFrom().toLog()).append(", ")
-                .append("To: ").append(this.getTo().toLog()).append(", ")
-                .append("Status: ").append(this.getStatus())
-                .append(">")
-                .toString();
+        return "<CallInfo " +
+                "ID: " + this.getUuid() + ", " +
+                "From: " + this.getFrom().toLog() + ", " +
+                "To: " + this.getTo().toLog() + ", " +
+                "Status: " + this.getStatus() +
+                ">";
     }
 
     public static CallInfo fromJson(String json) {

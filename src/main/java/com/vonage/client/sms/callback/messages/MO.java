@@ -143,40 +143,6 @@ public class MO implements java.io.Serializable {
         this.sessionId = sessionId;
     }
 
-    //    public MO(final String messageId,
-//              final MESSAGE_TYPE messageType,
-//              final String sender,
-//              final String destination,
-//              final String networkCode,
-//              final String keyword,
-//              final String messageBody,
-//              final byte[] binaryMessageBody,
-//              final byte[] userDataHeader,
-//              final BigDecimal price,
-//              final String sessionId,
-//              final boolean concat,
-//              final String concatReferenceNumber,
-//              final int concatTotalParts,
-//              final int concatPartNumber,
-//              final Date timeStamp) {
-//        this.messageId = messageId;
-//        this.messageType = messageType;
-//        this.sender = sender;
-//        this.destination = destination;
-//        this.networkCode = networkCode;
-//        this.keyword = keyword;
-//        this.messageBody = messageBody;
-//        this.binaryMessageBody = binaryMessageBody;
-//        this.userDataHeader = userDataHeader;
-//        this.price = price;
-//        this.sessionId = sessionId;
-//        this.concat = concat;
-//        this.concatReferenceNumber = concatReferenceNumber;
-//        this.concatTotalParts = concatTotalParts;
-//        this.concatPartNumber = concatPartNumber;
-//        this.timeStamp = timeStamp;
-//    }
-
     /**
      * @return String the id assigned to this message by Vonage before delivery
      */

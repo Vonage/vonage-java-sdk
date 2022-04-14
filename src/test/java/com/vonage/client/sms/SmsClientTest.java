@@ -28,6 +28,7 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -151,7 +152,7 @@ public class SmsClientTest {
                 "}\n"));
 
             SearchSmsResponse response = client.searchMessages("an-id");
-            assertThat(response.getCount(), CoreMatchers.equalTo(2));
+            MatcherAssert.assertThat(response.getCount(), CoreMatchers.equalTo(2));
     }
 
     @Test
@@ -194,7 +195,7 @@ public class SmsClientTest {
                 new GregorianCalendar(2017, Calendar.OCTOBER, 22).getTime(),
                 "447700900983"
         );
-        assertThat(response.getCount(), CoreMatchers.equalTo(2));
+        MatcherAssert.assertThat(response.getCount(), CoreMatchers.equalTo(2));
     }
 
     @Test
@@ -217,7 +218,7 @@ public class SmsClientTest {
                 new GregorianCalendar(2017, Calendar.OCTOBER, 22).getTime(),
                 "447700900983"
         );
-        assertThat(response.getCount(), CoreMatchers.equalTo(1));
+        MatcherAssert.assertThat(response.getCount(), CoreMatchers.equalTo(1));
     }
 
     @Test

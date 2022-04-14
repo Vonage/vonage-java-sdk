@@ -35,7 +35,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 import static com.vonage.client.TestUtils.test429;
-import static junit.framework.Assert.fail;
+import static org.junit.Assert.fail;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 

@@ -25,8 +25,8 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.junit.Before;
 
 import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public abstract class ClientTest<T extends AbstractClient> {
@@ -47,7 +47,7 @@ public abstract class ClientTest<T extends AbstractClient> {
 
         when(result.execute(any(HttpUriRequest.class))).thenReturn(response);
         when(LoggingUtils.logResponse(any(HttpResponse.class))).thenReturn("response logged");
-        when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes("UTF-8")));
+        when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
         when(sl.getStatusCode()).thenReturn(statusCode);
         when(response.getStatusLine()).thenReturn(sl);
         when(response.getEntity()).thenReturn(entity);

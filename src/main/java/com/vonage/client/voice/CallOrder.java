@@ -18,7 +18,7 @@ package com.vonage.client.voice;
 public enum CallOrder {
     ASCENDING("asc"), DESCENDING("desc");
 
-    private String callOrder;
+    private final String callOrder;
 
     CallOrder(String callOrder) {
         this.callOrder = callOrder;

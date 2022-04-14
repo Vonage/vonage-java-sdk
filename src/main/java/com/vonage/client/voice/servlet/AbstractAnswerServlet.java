@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Useful abstract HttpServlet for implementing NCCO callbacks.
@@ -40,7 +41,7 @@ public abstract class AbstractAnswerServlet extends HttpServlet {
     }
 
     private void serializeNccoResponse(HttpServletResponse httpResponse, NccoResponse nccoResponse) throws IOException {
-        byte[] json = nccoResponse.toJson().getBytes("UTF-8");
+        byte[] json = nccoResponse.toJson().getBytes(StandardCharsets.UTF_8);
         httpResponse.setCharacterEncoding("UTF-8");
         httpResponse.setContentType("application/json");
         httpResponse.setContentLength(json.length);
