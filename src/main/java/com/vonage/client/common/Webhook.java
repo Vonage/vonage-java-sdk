@@ -20,11 +20,11 @@ import com.fasterxml.jackson.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 /**
  * Data class which can be deserialized into a webhook for the Vonage API.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Webhook {
     private String address;
     @JsonProperty("http_method")
@@ -54,7 +54,7 @@ public class Webhook {
         STATUS("status_url"),
         UNKNOWN("unknown");
 
-        private String name;
+        private final String name;
 
         private static final Map<String, Type> TYPE_INDEX = new HashMap<>();
 

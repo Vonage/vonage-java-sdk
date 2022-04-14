@@ -65,7 +65,7 @@ public class NccoTest {
         TalkAction actionOne = builder.build();
         TalkAction actionTwo = builder.text("Another message").build();
 
-        Collection<Action> actions = Arrays.<Action>asList(actionOne, actionTwo);
+        Collection<Action> actions = Arrays.asList(actionOne, actionTwo);
 
         Ncco ncco = new Ncco(actions);
 

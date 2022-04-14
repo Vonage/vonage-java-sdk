@@ -56,7 +56,7 @@ public class CallEventTest {
                 + "    \"direction\": \"inbound\",\n" + "    \"from\": \"447700900000\",\n"
                 + "    \"status\": \"started\",\n" + "    \"timestamp\": \"2018-08-14T11:07:01.284Z\",\n"
                 + "    \"to\": \"447700900001\",\n" + "    \"uuid\": \"688fd94bd0e1f59c36a4cbd36312fc28\",\n"
-                + "    \"call_uuid\": \"688fd94bd0e1f59c36a4cbd36312fc28\",\n" + "    \"detail\": \"invalid_number\"}";
+                + "    \"call_uuid\": \"9cf8abadc3cb4758ade273ec35d963a3\",\n" + "    \"detail\": \"invalid_number\"}";
 
         CallEvent callEvent = CallEvent.fromJson(json);
         assertEquals("CON-4bf66420-d6cb-46e0-9ba9-f7eede9a7301", callEvent.getConversationUuid());
@@ -65,7 +65,7 @@ public class CallEventTest {
         assertEquals(CallStatus.STARTED, callEvent.getStatus());
         assertEquals("447700900001", callEvent.getTo());
         assertEquals("688fd94bd0e1f59c36a4cbd36312fc28", callEvent.getUuid());
-        assertEquals("688fd94bd0e1f59c36a4cbd36312fc28", callEvent.getCallUuid());
+        assertEquals("9cf8abadc3cb4758ade273ec35d963a3", callEvent.getCallUuid());
         assertEquals(CallStatusDetail.INVALID_NUMBER, callEvent.getDetailEnum());
         assertEquals("invalid_number", callEvent.getDetail());
 

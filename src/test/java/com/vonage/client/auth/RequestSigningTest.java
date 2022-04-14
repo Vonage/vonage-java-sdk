@@ -23,7 +23,6 @@ import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -204,17 +203,15 @@ public class RequestSigningTest {
         assertTrue(RequestSigning.verifyRequestSignature(request, "abcde", 2100000));
     }
 
-
-
     private HttpServletRequest constructDummyRequest() {
         return constructDummyRequest(null);
     }
 
-    private String ConstructDummyJsonBody(){
+    private String ConstructDummyJsonBody() {
         return "{\"a\":\"alphabet\",\"b\":\"bananas\",\"timestamp\":\"2100\",\"sig\":\"b7f749de27b4adcf736cc95c9a7e059a16c85127\"}";
     }
 
-    private HttpServletRequest ConstructDummyRequestJson(){
+    private HttpServletRequest ConstructDummyRequestJson() {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setContent(ConstructDummyJsonBody().getBytes());
         request.setContentType("application/json");

@@ -132,7 +132,7 @@ public enum VoiceName {
         }
     }
 
-    private String displayName;
+    private final String displayName;
 
     VoiceName(String displayName) {
         this.displayName = displayName;

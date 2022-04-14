@@ -28,8 +28,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.concurrent.Executor;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 
@@ -95,7 +94,7 @@ public class AbstractMOServletTest {
         assertEquals("akeyword", mo.getKeyword());
         assertEquals("text", mo.getMessageType().getType());
         assertEquals("Dear John", mo.getMessageBody());
-        assertEquals(false, mo.isConcat());
+        assertFalse(mo.isConcat());
         assertEquals(new GregorianCalendar(2016, Calendar.NOVEMBER, 7, 6, 5, 4).getTime(), mo.getTimeStamp());
     }
 

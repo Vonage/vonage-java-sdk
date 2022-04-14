@@ -131,7 +131,7 @@ public abstract class Message {
     }
 
     public void setMessageClass(MessageClass messageClass) {
-        messageClass = messageClass;
+        this.messageClass = messageClass;
     }
 
     public Long getTimeToLive() {

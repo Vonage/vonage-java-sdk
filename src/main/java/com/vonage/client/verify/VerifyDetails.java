@@ -101,9 +101,9 @@ public class VerifyDetails {
         CANCELLED("CANCELLED"),
         INVALID("101");
 
-        private String status;
+        private final String status;
 
-        private static Map<String, Status> stringStatusValues = new HashMap<>();
+        private static final Map<String, Status> stringStatusValues = new HashMap<>();
 
         static {
             for (Status status : Status.values()) {

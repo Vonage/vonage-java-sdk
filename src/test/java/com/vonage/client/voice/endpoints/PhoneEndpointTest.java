@@ -48,24 +48,24 @@ public class PhoneEndpointTest {
 
         PhoneEndpoint e1 = new PhoneEndpoint("number");
         PhoneEndpoint e2 = new PhoneEndpoint("number");
-        assertTrue("Endpoints with the same values should be equal", e1.equals(e2));
-        assertTrue("Endpoints with the same values should have the same hash", e1.hashCode() == e2.hashCode());
+        assertEquals("Endpoints with the same values should be equal", e1, e2);
+        assertEquals("Endpoints with the same values should have the same hash", e1.hashCode(), e2.hashCode());
 
         e1 = new PhoneEndpoint("number");
         e2 = new PhoneEndpoint("number1");
-        assertFalse("Endpoints with different numbers should not be equal",  e1.equals(e2));
-        assertFalse("Endpoints with different numbers should have different hashes", e1.hashCode() == e2.hashCode());
+        assertNotEquals("Endpoints with different numbers should not be equal", e1, e2);
+        assertNotEquals("Endpoints with different numbers should have different hashes", e1.hashCode(), e2.hashCode());
 
         e1 = new PhoneEndpoint("number", "dtmf");
         e2 = new PhoneEndpoint("number", "dtmf1");
-        assertFalse("Endpoints with different dtmfAnswers should not be equal",  e1.equals(e2));
+        assertNotEquals("Endpoints with different dtmfAnswers should not be equal", e1, e2);
 
         e1 = new PhoneEndpoint("number", "dtmf");
         e2 = null;
-        assertFalse("An instance is not equal to null",  e1.equals(e2));
+        assertNotEquals("An instance is not equal to null", e1, e2);
 
         e1 = new PhoneEndpoint("number", "dtmf");
         Object o = new Object();
-        assertFalse("An instance is not equal to a different type.",  e1.equals(o));
+        assertNotEquals("An instance is not equal to a different type.", e1, o);
     }
 }

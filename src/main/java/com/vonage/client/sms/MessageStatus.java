@@ -40,9 +40,11 @@ public enum MessageStatus {
     INVALID_TTL(16),
     NUMBER_UNREACHABLE(17),
     TOO_MANY_DESTINATIONS(18),
-    FACILITY_NOT_ALLOWED(19), INVALID_MESSAGE_CLASS(20), UNKNOWN(Integer.MAX_VALUE);
+    FACILITY_NOT_ALLOWED(19),
+    INVALID_MESSAGE_CLASS(20),
+    UNKNOWN(Integer.MAX_VALUE);
 
-    private int messageStatus;
+    private final int messageStatus;
 
     private static final Map<Integer, MessageStatus> MESSAGE_STATUS_INDEX = new HashMap<>();
 

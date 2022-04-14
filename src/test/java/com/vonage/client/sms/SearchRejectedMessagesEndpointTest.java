@@ -21,6 +21,7 @@ import com.vonage.client.TestUtils;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
+import org.hamcrest.MatcherAssert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -53,7 +54,7 @@ public class SearchRejectedMessagesEndpointTest {
         ).getTime(), "447700900737"));
         // TODO: Check method and URL are correct:
         assertEquals("GET", builder.getMethod());
-        assertThat(builder.build().getURI().toString(), startsWith("https://rest.nexmo.com/search/rejections?"));
+        MatcherAssert.assertThat(builder.build().getURI().toString(), startsWith("https://rest.nexmo.com/search/rejections?"));
 
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
         assertEquals(2, params.size());

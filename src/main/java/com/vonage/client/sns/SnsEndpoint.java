@@ -105,23 +105,33 @@ class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
         for (int i2 = 0; i2 < nodes.getLength(); i2++) {
             Node node = nodes.item(i2);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
-                if (node.getNodeName().equals("command")) {
-                    command = XmlUtil.stringValue(node);
-                } else if (node.getNodeName().equals("resultCode")) {
-                    try {
-                        resultCode = XmlUtil.intValue(node);
-                    } catch (Exception e) {
-                        log.error("xml parser .. invalid value in <resultCode> node [ " + XmlUtil.stringValue(node)
-                                + " ] ");
-                        resultCode = SnsResponse.STATUS_INTERNAL_ERROR;
-                    }
-                } else if (node.getNodeName().equals("resultMessage")) {
-                    resultMessage = XmlUtil.stringValue(node);
-                } else if (node.getNodeName().equals("transactionId")) {
-                    transactionId = XmlUtil.stringValue(node);
-                } else if (node.getNodeName().equals("subscriberArn")) {
-                    subscriberArn = XmlUtil.stringValue(node);
-                } else log.error("xml parser .. unknown node found in nexmo-sns [ " + node.getNodeName() + " ] ");
+                switch (node.getNodeName()) {
+                    case "command":
+                        command = XmlUtil.stringValue(node);
+                        break;
+                    case "resultCode":
+                        try {
+                            resultCode = XmlUtil.intValue(node);
+                        }
+                        catch (Exception e) {
+                            log.error("xml parser .. invalid value in <resultCode> node [ " + XmlUtil.stringValue(node)
+                                    + " ] ");
+                            resultCode = SnsResponse.STATUS_INTERNAL_ERROR;
+                        }
+                        break;
+                    case "resultMessage":
+                        resultMessage = XmlUtil.stringValue(node);
+                        break;
+                    case "transactionId":
+                        transactionId = XmlUtil.stringValue(node);
+                        break;
+                    case "subscriberArn":
+                        subscriberArn = XmlUtil.stringValue(node);
+                        break;
+                    default:
+                        log.error("xml parser .. unknown node found in nexmo-sns [ " + node.getNodeName() + " ] ");
+                        break;
+                }
             }
         }
 

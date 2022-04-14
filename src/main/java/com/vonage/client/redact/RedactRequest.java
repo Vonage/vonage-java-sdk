@@ -84,7 +84,7 @@ public class RedactRequest {
         MESSAGES("messages"),
         WORKFLOW("workflow");
 
-        private String value;
+        private final String value;
 
         Product(String value) {
             this.value = value;

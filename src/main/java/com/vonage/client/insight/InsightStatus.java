@@ -29,7 +29,7 @@ public enum InsightStatus {
     PARTNER_QUOTA_EXCEEDED(9),
     UNKNOWN(Integer.MAX_VALUE);
 
-    private int insightStatus;
+    private final int insightStatus;
 
     private static final Map<Integer, InsightStatus> INSIGHT_STATUS_INDEX = new HashMap<>();
 

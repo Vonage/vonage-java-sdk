@@ -35,7 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static junit.framework.Assert.fail;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mockStatic;
 
 public class TestUtils {
@@ -81,11 +81,7 @@ public class TestUtils {
     public static Map<String, List<String>> makeFullParameterMap(List<NameValuePair> params) {
         Map<String, List<String>> result = new HashMap<>();
         for (NameValuePair param : params) {
-            List<String> values = result.get(param.getName());
-            if (values == null) {
-                values = new ArrayList<>(1);
-                result.put(param.getName(), values);
-            }
+            List<String> values = result.computeIfAbsent(param.getName(), k -> new ArrayList<>(1));
             values.add(param.getValue());
         }
         return result;
@@ -103,7 +99,7 @@ public class TestUtils {
         return stubResponse;
     }
 
-    public static void test429(AbstractMethod methodUnderTest) throws Exception {
+    public static void test429(AbstractMethod<?, ?> methodUnderTest) throws Exception {
         try {
             methodUnderTest.parseResponse(TestUtils.makeJsonHttpResponse(429, "Don't know what this is"));
             fail("A 429 response should raise a HttpResponseException");

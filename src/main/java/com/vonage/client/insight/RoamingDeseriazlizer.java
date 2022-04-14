@@ -16,7 +16,6 @@
 package com.vonage.client.insight;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
@@ -29,36 +28,32 @@ public class RoamingDeseriazlizer extends StdDeserializer<RoamingDetails> {
         this(null);
     }
 
+    public RoamingDeseriazlizer(Class<?> vc){
+        super(vc);
+    }
+
     @Override
-    public RoamingDetails deserialize(JsonParser p, DeserializationContext ctxt)
-            throws IOException, JsonProcessingException {
+    public RoamingDetails deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         JsonNode node = p.getCodec().readTree(p);
         RoamingDetails.RoamingStatus status = RoamingDetails.RoamingStatus.UNKNOWN;
         String roamingCountryCode = null;
         String roamingNetworkCode = null;
         String roamingNetworkName = null;
-        if (node.getNodeType() == JsonNodeType.STRING){
+        if (node.getNodeType() == JsonNodeType.STRING) {
             status = RoamingDetails.RoamingStatus.fromString(node.asText());
         }
-        else if(node.getNodeType() == JsonNodeType.OBJECT){
+        else if (node.getNodeType() == JsonNodeType.OBJECT) {
             status = RoamingDetails.RoamingStatus.fromString(node.get("status").asText());
-            if(!(node.get("roaming_country_code") == null)){
+            if (!(node.get("roaming_country_code") == null)) {
                 roamingCountryCode = node.get("roaming_country_code").asText();
             }
-            if(!(node.get("roaming_network_code") == null)){
+            if (!(node.get("roaming_network_code") == null)) {
                 roamingNetworkCode = node.get("roaming_network_code").asText();
             }
-            if(!(node.get("roaming_network_name") == null)){
+            if (!(node.get("roaming_network_name") == null)) {
                 roamingNetworkName = node.get("roaming_network_name").asText();
             }
         }
-        RoamingDetails details = new RoamingDetails(status,roamingCountryCode,roamingNetworkCode,roamingNetworkName);
-        return details;
+        return new RoamingDetails(status, roamingCountryCode, roamingNetworkCode, roamingNetworkName);
     }
-
-    public RoamingDeseriazlizer(Class<?> vc){
-        super(vc);
-    }
-
-
 }

@@ -75,7 +75,7 @@ public class BalanceEndpointTest {
         assertFalse(response.isAutoReload());
     }
 
-    private class StubbedBalanceEndpoint extends BalanceEndpoint {
+    private static class StubbedBalanceEndpoint extends BalanceEndpoint {
         public StubbedBalanceEndpoint() {
             super(null);
         }

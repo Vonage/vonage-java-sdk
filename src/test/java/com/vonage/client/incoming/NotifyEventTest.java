@@ -47,7 +47,7 @@ public class NotifyEventTest {
         Calendar timestamp = new GregorianCalendar(2020, Calendar.OCTOBER, 1, 12, 0, 0);
         timestamp.setTimeZone(TimeZone.getTimeZone("UTC"));
         assertEquals(timestamp.getTime(), notifyEvent.getTimestamp());
-        System.out.println(notifyEvent.toString());
+        System.out.println(notifyEvent);
     }
 
     @Test
@@ -62,7 +62,7 @@ public class NotifyEventTest {
 
     @Test
     public void testToString() {
-        String notifyEventString = "NotifyEvent{conversationUuid=\'bbbbbbbb-cccc-dddd-eeee-0123456789ab\',"
+        String notifyEventString = "NotifyEvent{conversationUuid='bbbbbbbb-cccc-dddd-eeee-0123456789ab',"
                 + " timestamp=null, payload=null}";
         NotifyEvent notifyEvent = new NotifyEvent();
         notifyEvent.setConversationUuid("bbbbbbbb-cccc-dddd-eeee-0123456789ab");
