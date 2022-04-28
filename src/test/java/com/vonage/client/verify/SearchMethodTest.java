@@ -18,6 +18,7 @@ package com.vonage.client.verify;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,6 +39,7 @@ public class SearchMethodTest {
         RequestBuilder builder = method.makeRequest(request);
         assertEquals("POST", builder.getMethod());
         assertEquals("https://api.nexmo.com/verify/search/json", builder.build().getURI().toString());
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
     }
 
     @Test

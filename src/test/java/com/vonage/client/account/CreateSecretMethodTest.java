@@ -43,6 +43,8 @@ public class CreateSecretMethodTest {
 
         assertEquals(entity.getContentType().getValue(), ContentType.APPLICATION_JSON.toString());
         assertNotNull(entity.getContent());
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
     }
 
     @Test(expected = IllegalArgumentException.class)

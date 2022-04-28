@@ -25,6 +25,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.BasicHttpEntity;
+import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 import org.junit.Before;
@@ -58,6 +59,7 @@ public class ListCallsMethodTest {
         RequestBuilder request = method.makeRequest(null);
         assertEquals("GET", request.getMethod());
         assertEquals("https://api.nexmo.com/v1/calls", request.getUri().toString());
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), request.getFirstHeader("Accept").getValue());
     }
 
     @Test

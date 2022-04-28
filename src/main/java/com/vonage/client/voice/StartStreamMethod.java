@@ -50,12 +50,12 @@ class StartStreamMethod extends AbstractMethod<StreamRequest, StreamResponse> {
         return RequestBuilder
                 .put(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid() + "/stream")
                 .setHeader("Content-Type", "application/json")
+                .setHeader("Accept", "application/json")
                 .setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
     }
 
     @Override
     public StreamResponse parseResponse(HttpResponse response) throws IOException {
-        String json = new BasicResponseHandler().handleResponse(response);
-        return StreamResponse.fromJson(json);
+        return StreamResponse.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 }

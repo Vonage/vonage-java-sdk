@@ -34,7 +34,6 @@ class CreateCallMethod extends AbstractMethod<Call, CallEvent> {
 
     private static final String PATH = "/calls";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
-    private String uri;
 
     CreateCallMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -44,6 +43,7 @@ class CreateCallMethod extends AbstractMethod<Call, CallEvent> {
     public RequestBuilder makeRequest(Call request) throws UnsupportedEncodingException {
         return RequestBuilder.post(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH)
                 .setHeader("Content-Type", "application/json")
+                .setHeader("Accept", "application/json")
                 .setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
     }
 

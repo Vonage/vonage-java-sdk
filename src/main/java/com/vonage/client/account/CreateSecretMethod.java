@@ -55,9 +55,10 @@ class CreateSecretMethod extends AbstractMethod<CreateSecretRequest, SecretRespo
             throw new IllegalArgumentException("Secret is required.");
         }
 
-        String uri = String.format(httpWrapper.getHttpConfig().getApiBaseUri() + PATH, createSecretRequest.getApiKey());
         return RequestBuilder
-                .post(uri)
+                .post(String.format(httpWrapper.getHttpConfig().getApiBaseUri() + PATH, createSecretRequest.getApiKey()))
+                .setHeader("Content-Type", "application/json")
+                .setHeader("Accept", "application/json")
                 .setEntity(new StringEntity(createSecretRequest.toJson(), ContentType.APPLICATION_JSON));
     }
 

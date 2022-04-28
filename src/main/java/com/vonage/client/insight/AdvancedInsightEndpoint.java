@@ -45,7 +45,9 @@ class AdvancedInsightEndpoint extends AbstractMethod<AdvancedInsightRequest, Adv
     public RequestBuilder makeRequest(AdvancedInsightRequest request) throws UnsupportedEncodingException {
         RequestBuilder requestBuilder = RequestBuilder
                 .post(httpWrapper.getHttpConfig().getApiBaseUri() + ((request.isAsync()) ? ASYNC_PATH : PATH))
+                .setHeader("Accept", "application/json")
                 .addParameter("number", request.getNumber());
+
         if (request.getCountry() != null) {
             requestBuilder.addParameter("country", request.getCountry());
         }

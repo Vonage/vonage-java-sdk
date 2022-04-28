@@ -45,6 +45,7 @@ class TopUpMethod extends AbstractMethod<TopUpRequest, Void> {
     public RequestBuilder makeRequest(TopUpRequest request) throws UnsupportedEncodingException {
         return RequestBuilder
                 .get(httpWrapper.getHttpConfig().getRestBaseUri() + PATH)
+                .setHeader("Content-Type", "application/x-www-form-urlencoded")
                 .addParameter("trx", request.getTrx());
     }
 

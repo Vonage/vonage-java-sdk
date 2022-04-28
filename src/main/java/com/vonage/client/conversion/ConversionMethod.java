@@ -46,8 +46,7 @@ class ConversionMethod extends AbstractMethod<ConversionRequest, Void> {
 
     @Override
     public RequestBuilder makeRequest(ConversionRequest conversionRequest) throws UnsupportedEncodingException {
-        String uri =
-                httpWrapper.getHttpConfig().getApiBaseUri() + PATH + conversionRequest.getType().name().toLowerCase();
+        String uri = httpWrapper.getHttpConfig().getApiBaseUri() + PATH + conversionRequest.getType().name().toLowerCase();
         return RequestBuilder
                 .post(uri)
                 .addParameter("message-id", conversionRequest.getMessageId())

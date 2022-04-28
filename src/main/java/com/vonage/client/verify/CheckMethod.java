@@ -41,13 +41,19 @@ class CheckMethod extends AbstractMethod<CheckRequest, CheckResponse> {
 
     @Override
     public RequestBuilder makeRequest(CheckRequest request) throws UnsupportedEncodingException {
-        if (request.getRequestId() == null || request.getCode() == null)
+        if (request.getRequestId() == null || request.getCode() == null) {
             throw new IllegalArgumentException("request ID and code parameters are mandatory.");
+        }
 
-        RequestBuilder result = RequestBuilder.post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH).addParameter("request_id", request.getRequestId())
-
+        RequestBuilder result = RequestBuilder.post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH)
+                .setHeader("Content-Type", "application/json")
+                .setHeader("Accept", "application/json")
+                .addParameter("request_id", request.getRequestId())
                 .addParameter("code", request.getCode());
-        if (request.getIpAddress() != null) result.addParameter("ip_address", request.getIpAddress());
+
+        if (request.getIpAddress() != null) {
+            result.addParameter("ip_address", request.getIpAddress());
+        }
 
         return result;
     }

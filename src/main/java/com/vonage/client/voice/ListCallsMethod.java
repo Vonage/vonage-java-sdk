@@ -38,7 +38,6 @@ class ListCallsMethod extends AbstractMethod<CallsFilter, CallInfoPage> {
 
     private static final String PATH = "/calls";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
-    private String uri;
 
     ListCallsMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -65,12 +64,12 @@ class ListCallsMethod extends AbstractMethod<CallsFilter, CallInfoPage> {
                 uriBuilder.setParameter(param.getName(), param.getValue());
             }
         }
-        return RequestBuilder.get().setUri(uriBuilder.toString());
+        return RequestBuilder.get(uriBuilder.toString())
+                .setHeader("Accept", "application/json");
     }
 
     @Override
     public CallInfoPage parseResponse(HttpResponse response) throws IOException {
-        String json = new BasicResponseHandler().handleResponse(response);
-        return CallInfoPage.fromJson(json);
+        return CallInfoPage.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 }

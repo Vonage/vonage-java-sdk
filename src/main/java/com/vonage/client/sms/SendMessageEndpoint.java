@@ -44,7 +44,10 @@ class SendMessageEndpoint extends AbstractMethod<Message, SmsSubmissionResponse>
 
     @Override
     public RequestBuilder makeRequest(Message message) throws UnsupportedEncodingException {
-        RequestBuilder request = RequestBuilder.post(httpWrapper.getHttpConfig().getRestBaseUri() + PATH);
+        RequestBuilder request = RequestBuilder
+            .post(httpWrapper.getHttpConfig().getRestBaseUri() + PATH)
+            .setHeader("Content-Type", "application/x-www-form-urlencoded")
+            .setHeader("Accept", "application/json");
         message.addParams(request);
         return request;
     }

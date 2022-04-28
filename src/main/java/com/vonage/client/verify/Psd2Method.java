@@ -52,12 +52,13 @@ public class Psd2Method extends AbstractMethod<Psd2Request, VerifyResponse> {
     public RequestBuilder makeRequest(Psd2Request request) throws UnsupportedEncodingException {
         RequestBuilder builder =  RequestBuilder
                 .post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH)
+                .setHeader("Accept", "application/json")
                 .addParameter("number", request.getNumber())
                 .addParameter("payee", request.getPayee())
                 .addParameter("amount", Double.toString(request.getAmount()));
 
         //add additional parameters if they are present
-        if(request.getWorkflow() != null){
+        if (request.getWorkflow() != null) {
             builder.addParameter("workflow_id", Integer.toString(request.getWorkflow().getId()));
         }
 

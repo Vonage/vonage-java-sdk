@@ -49,15 +49,16 @@ class ModifyCallMethod extends AbstractMethod<CallModifier, ModifyCallResponse> 
         return RequestBuilder
                 .put(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid())
                 .setHeader("Content-Type", "application/json")
+                .setHeader("Accept", "application/json")
                 .setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
     }
 
     @Override
     public ModifyCallResponse parseResponse(HttpResponse response) throws IOException {
-        String json = new BasicResponseHandler().handleResponse(response);
         if (response.getStatusLine().getStatusCode() == 200) {
-            return ModifyCallResponse.fromJson(json);
-        } else {
+            return ModifyCallResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+        }
+        else {
             return null;
         }
     }

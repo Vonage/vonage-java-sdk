@@ -43,8 +43,8 @@ class BuyNumberEndpoint extends AbstractMethod<BuyNumberRequest, Void> {
     @Override
     public RequestBuilder makeRequest(BuyNumberRequest request) throws UnsupportedEncodingException {
         RequestBuilder requestBuilder = RequestBuilder
-                .post()
-                .setUri(httpWrapper.getHttpConfig().getRestBaseUri() + PATH);
+                .post(httpWrapper.getHttpConfig().getRestBaseUri() + PATH)
+                .setHeader("Content-Type", "application/x-www-form-urlencoded");
         request.addParams(requestBuilder);
         return requestBuilder;
     }

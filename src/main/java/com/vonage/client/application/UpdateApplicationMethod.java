@@ -47,6 +47,7 @@ class UpdateApplicationMethod extends ApplicationMethod<Application, Application
         return RequestBuilder
                 .put(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v2") + String.format(PATH, application.getId()))
                 .setHeader("Content-Type", "application/json")
+                .setHeader("Accept", "application/json")
                 .setEntity(new StringEntity(application.toJson()));
     }
 

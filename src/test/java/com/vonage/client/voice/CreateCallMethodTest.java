@@ -47,6 +47,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.BasicHttpEntity;
+import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 import org.junit.Before;
@@ -76,7 +77,8 @@ public class CreateCallMethodTest {
         ));
 
         assertEquals("POST", request.getMethod());
-        assertEquals("application/json", request.getFirstHeader("Content-Type").getValue());
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), request.getFirstHeader("Content-Type").getValue());
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), request.getFirstHeader("Accept").getValue());
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode node = objectMapper.readValue(request.getEntity().getContent(), JsonNode.class);

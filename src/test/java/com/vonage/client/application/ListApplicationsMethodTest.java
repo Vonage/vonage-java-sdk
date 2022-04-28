@@ -18,6 +18,7 @@ package com.vonage.client.application;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,7 +37,7 @@ public class ListApplicationsMethodTest extends ApplicationMethodTest {
         RequestBuilder builder = method.makeRequest(ListApplicationRequest.builder().build());
 
         assertEquals("GET", builder.getMethod());
-        assertEquals("application/json", builder.getFirstHeader("Content-Type").getValue());
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
     }
 
     @Test
@@ -44,7 +45,7 @@ public class ListApplicationsMethodTest extends ApplicationMethodTest {
         RequestBuilder builder = method.makeRequest(ListApplicationRequest.builder().page(1).pageSize(10).build());
 
         assertEquals("GET", builder.getMethod());
-        assertEquals("application/json", builder.getFirstHeader("Content-Type").getValue());
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
     }
 
     @Test

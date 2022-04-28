@@ -21,6 +21,7 @@ import com.vonage.client.TestUtils;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -45,6 +46,7 @@ public class ReadCallMethodTest {
     public void makeRequest() throws Exception {
         RequestBuilder request = method.makeRequest("abcd-efgh");
         assertEquals("https://api.nexmo.com/v1/calls/abcd-efgh", request.getUri().toString());
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), request.getFirstHeader("Accept").getValue());
     }
 
     @Test

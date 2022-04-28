@@ -44,6 +44,8 @@ class VerifyMethod extends AbstractMethod<VerifyRequest, VerifyResponse> {
     public RequestBuilder makeRequest(VerifyRequest request) throws UnsupportedEncodingException {
         RequestBuilder result = RequestBuilder
                 .post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH)
+                .setHeader("Content-Type", "application/json")
+                .setHeader("Accept", "application/json")
                 .addParameter("number", request.getNumber())
                 .addParameter("brand", request.getBrand());
 

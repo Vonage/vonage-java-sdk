@@ -42,7 +42,9 @@ class BalanceEndpoint extends AbstractMethod<Void, BalanceResponse> {
 
     @Override
     public RequestBuilder makeRequest(Void request) throws UnsupportedEncodingException {
-        return RequestBuilder.get(httpWrapper.getHttpConfig().getRestBaseUri() + PATH);
+        return RequestBuilder
+                .get(httpWrapper.getHttpConfig().getRestBaseUri() + PATH)
+                .setHeader("Accept", "application/json");
     }
 
     public BalanceResponse execute() {

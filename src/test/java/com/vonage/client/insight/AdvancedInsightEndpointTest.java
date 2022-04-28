@@ -22,6 +22,7 @@ import com.vonage.client.auth.SignatureAuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -52,7 +53,7 @@ public class AdvancedInsightEndpointTest {
         assertEquals("1234", params.get("number"));
         assertNull(params.get("country"));
         assertNull(params.get("ip"));
-
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
     }
 
     @Test

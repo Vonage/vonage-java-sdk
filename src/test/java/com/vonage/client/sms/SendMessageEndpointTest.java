@@ -31,6 +31,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicNameValuePair;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,8 +56,11 @@ public class SendMessageEndpointTest {
     @Test
     public void testConstructParamsText() throws Exception {
         Message message = new TextMessage("TestSender", "not-a-number", "Test");
-        List<NameValuePair> params = endpoint.makeRequest(message).getParameters();
 
+        RequestBuilder builder = endpoint.makeRequest(message);
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+
+        List<NameValuePair> params = builder.getParameters();
         assertContainsParam(params, "from", "TestSender");
         assertContainsParam(params, "to", "not-a-number");
         assertContainsParam(params, "type", "text");
@@ -89,6 +93,7 @@ public class SendMessageEndpointTest {
         assertContainsParam(params, "type", "unicode");
         assertMissingParam(params, "status-report-req");
         assertContainsParam(params, "text", "Test");
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), requestBuilder.getFirstHeader("Accept").getValue());
     }
 
     @Test

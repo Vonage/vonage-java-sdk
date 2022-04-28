@@ -47,6 +47,7 @@ class CreateApplicationMethod extends ApplicationMethod<Application, Application
         return RequestBuilder
                 .post(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v2") + PATH)
                 .setHeader("Content-Type", "application/json")
+                .setHeader("Accept", "application/json")
                 .setEntity(new StringEntity(application.toJson()));
     }
 

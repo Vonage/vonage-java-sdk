@@ -143,6 +143,7 @@ public class AbstractMethodTest {
         RequestBuilder builder = RequestBuilder
                 .put("")
                 .setHeader("Content-Type", "application/json")
+                .setHeader("Accept", "application/json")
                 .setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
 
         ConcreteMethod method = spy(new ConcreteMethod(mockWrapper));

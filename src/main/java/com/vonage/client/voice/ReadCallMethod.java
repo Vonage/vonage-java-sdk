@@ -31,7 +31,6 @@ class ReadCallMethod extends AbstractMethod<String, CallInfo> {
 
     private static final String PATH = "/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
-    private String baseUri = null;
 
     ReadCallMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -44,12 +43,13 @@ class ReadCallMethod extends AbstractMethod<String, CallInfo> {
 
     @Override
     public RequestBuilder makeRequest(String callId) {
-        return RequestBuilder.get(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + callId);
+        return RequestBuilder
+                .get(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + callId)
+                .setHeader("Accept", "application/json");
     }
 
     @Override
     public CallInfo parseResponse(HttpResponse response) throws IOException {
-        String json = new BasicResponseHandler().handleResponse(response);
-        return CallInfo.fromJson(json);
+        return CallInfo.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 }

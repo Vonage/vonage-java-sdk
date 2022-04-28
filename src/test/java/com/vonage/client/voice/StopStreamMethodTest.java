@@ -21,6 +21,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.BasicHttpEntity;
+import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 import org.junit.Before;
@@ -52,6 +53,7 @@ public class StopStreamMethodTest {
         assertEquals(httpMethod, builder.getMethod());
         assertTrue(builder.getUri().toString().contains("63f61863-4a51-4f6b-86e1-46edebcf9356"));
         assertTrue(builder.getUri().toString().contains("stream"));
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
     }
 
     @Test

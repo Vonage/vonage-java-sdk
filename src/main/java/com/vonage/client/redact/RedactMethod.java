@@ -30,7 +30,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-class RedactMethod extends AbstractMethod<RedactRequest, RedactResponse> {
+class RedactMethod extends AbstractMethod<RedactRequest, Void> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
     private static final String PATH = "/redact/transaction";
@@ -61,7 +61,7 @@ class RedactMethod extends AbstractMethod<RedactRequest, RedactResponse> {
     }
 
     @Override
-    public RedactResponse parseResponse(HttpResponse response) throws IOException, VonageClientException {
+    public Void parseResponse(HttpResponse response) throws IOException, VonageClientException {
         if (response.getStatusLine().getStatusCode() != 204) {
             throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
         }

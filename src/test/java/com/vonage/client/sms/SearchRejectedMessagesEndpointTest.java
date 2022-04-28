@@ -21,6 +21,7 @@ import com.vonage.client.TestUtils;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
 import org.hamcrest.MatcherAssert;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,6 +61,7 @@ public class SearchRejectedMessagesEndpointTest {
         assertEquals(2, params.size());
         assertEquals("2017-10-22", params.get("date"));
         assertEquals("447700900737", params.get("to"));
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
     }
 
     @Test

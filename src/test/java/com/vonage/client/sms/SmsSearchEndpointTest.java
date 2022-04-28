@@ -21,6 +21,7 @@ import com.vonage.client.TestUtils;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
 import org.hamcrest.MatcherAssert;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +35,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.*;
 
-public class SearchSmsEndpointTest {
+public class SmsSearchEndpointTest {
     private SmsSearchEndpoint endpoint;
 
     @Before
@@ -142,6 +143,7 @@ public class SearchSmsEndpointTest {
         RequestBuilder builder = endpoint.makeRequest(request);
         assertEquals("GET", builder.getMethod());
         assertEquals("https://rest.nexmo.com/search/messages?ids=one-id", builder.build().getURI().toString());
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
     }
 
     @Test

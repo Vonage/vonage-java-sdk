@@ -47,12 +47,11 @@ class StopStreamMethod extends AbstractMethod<String, StreamResponse> {
     public RequestBuilder makeRequest(String uuid) throws UnsupportedEncodingException {
         return RequestBuilder
                 .delete(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + uuid + STREAM_PATH)
-                .setHeader("Content-Type", "application/json");
+                .setHeader("Accept", "application/json");
     }
 
     @Override
     public StreamResponse parseResponse(HttpResponse response) throws IOException {
-        String json = new BasicResponseHandler().handleResponse(response);
-        return StreamResponse.fromJson(json);
+        return StreamResponse.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 }

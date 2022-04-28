@@ -18,6 +18,7 @@ package com.vonage.client.voice;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,6 +38,8 @@ public class StartStreamMethodTest {
         RequestBuilder builder = method.makeRequest(request);
         assertEquals("PUT", builder.getMethod());
         assertEquals("https://api.nexmo.com/v1/calls/uuid/stream", builder.build().getURI().toString());
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
     }
 
     @Test

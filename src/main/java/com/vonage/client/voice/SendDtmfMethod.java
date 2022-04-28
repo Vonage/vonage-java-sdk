@@ -50,12 +50,12 @@ class SendDtmfMethod extends AbstractMethod<DtmfRequest, DtmfResponse> {
         return RequestBuilder
                 .put(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid() + DTMF_PATH)
                 .setHeader("Content-Type", "application/json")
+                .setHeader("Accept", "application/json")
                 .setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
     }
 
     @Override
     public DtmfResponse parseResponse(HttpResponse response) throws IOException {
-        String json = new BasicResponseHandler().handleResponse(response);
-        return DtmfResponse.fromJson(json);
+        return DtmfResponse.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 }
