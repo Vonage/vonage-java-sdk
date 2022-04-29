@@ -85,7 +85,7 @@ public class VerifyRequest extends BaseRequest {
     /**
      * Enumeration representing different verification workflows.
      * <p>
-     * See: https://developer.nexmo.com/verify/guides/workflows-and-events for more details.
+     * See: <a href="https://developer.nexmo.com/verify/guides/workflows-and-events">https://developer.nexmo.com/verify/guides/workflows-and-events</a> for more details.
      */
     public enum Workflow {
         /**
@@ -182,7 +182,7 @@ public class VerifyRequest extends BaseRequest {
 
         /**
          * Set the predefined sequence of SMS and TTS (Text To Speech) actions to use in order to convey the PIN to your
-         * user. See https://developer.vonage.com/verify/guides/workflows-and-events
+         * user. See <a href="https://developer.vonage.com/verify/guides/workflows-and-events">https://developer.vonage.com/verify/guides/workflows-and-events</a>
          *
          * @param workflow The workflow to use for conveying the PIN to your user.
          * @return {@link Builder}

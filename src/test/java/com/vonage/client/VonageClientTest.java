@@ -280,7 +280,7 @@ public class VonageClientTest {
     public void testApplicationIdWithCertPath() throws Exception {
         VonageClient vonageClient = VonageClient.builder()
                 .applicationId("app-id")
-                .privateKeyPath(Paths.get(this.getClass().getResource("test/keys/application_key").toURI()))
+                .privateKeyPath(Paths.get(getClass().getResource("test/keys/application_key").toURI()))
                 .build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
 

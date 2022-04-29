@@ -207,13 +207,11 @@ public class RequestSigningTest {
         return constructDummyRequest(null);
     }
 
-    private String ConstructDummyJsonBody() {
-        return "{\"a\":\"alphabet\",\"b\":\"bananas\",\"timestamp\":\"2100\",\"sig\":\"b7f749de27b4adcf736cc95c9a7e059a16c85127\"}";
-    }
 
     private HttpServletRequest ConstructDummyRequestJson() {
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setContent(ConstructDummyJsonBody().getBytes());
+        String dummyJson = "{\"a\":\"alphabet\",\"b\":\"bananas\",\"timestamp\":\"2100\",\"sig\":\"b7f749de27b4adcf736cc95c9a7e059a16c85127\"}";
+        request.setContent(dummyJson.getBytes());
         request.setContentType("application/json");
         return request;
     }

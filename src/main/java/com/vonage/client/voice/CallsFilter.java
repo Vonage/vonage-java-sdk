@@ -16,10 +16,9 @@
 package com.vonage.client.voice;
 
 
-import com.fasterxml.jackson.databind.util.ISO8601Utils;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -92,7 +91,7 @@ public class CallsFilter {
 
     private void conditionalAdd(List<NameValuePair> params, String name, Date value) {
         if (value != null) {
-            params.add(new BasicNameValuePair(name, ISO8601Utils.format(value)));
+            params.add(new BasicNameValuePair(name, DateTimeFormatter.ISO_INSTANT.format(value.toInstant())));
         }
     }
 
