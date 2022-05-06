@@ -43,8 +43,8 @@ class ReadCallMethod extends AbstractMethod<String, CallInfo> {
 
     @Override
     public RequestBuilder makeRequest(String callId) {
-        return RequestBuilder
-                .get(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + callId)
+        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + callId;
+        return RequestBuilder.get(uri)
                 .setHeader("Accept", "application/json");
     }
 

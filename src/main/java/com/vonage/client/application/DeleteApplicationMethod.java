@@ -42,7 +42,8 @@ class DeleteApplicationMethod extends ApplicationMethod<String, Void> {
 
     @Override
     public RequestBuilder makeRequest(String id) throws UnsupportedEncodingException {
-        return RequestBuilder.delete(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v2") + String.format(PATH, id));
+        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v2") + String.format(PATH, id);
+        return RequestBuilder.delete(uri);
     }
 
     @Override

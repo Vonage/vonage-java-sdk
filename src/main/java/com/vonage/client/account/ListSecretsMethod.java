@@ -49,8 +49,8 @@ class ListSecretsMethod extends AbstractMethod<String, ListSecretsResponse> {
             throw new IllegalArgumentException("API key is required.");
         }
 
-        return RequestBuilder
-                .get(String.format(httpWrapper.getHttpConfig().getApiBaseUri() + PATH, apiKey))
+        String uri = String.format(httpWrapper.getHttpConfig().getApiBaseUri() + PATH, apiKey);
+        return RequestBuilder.get(uri)
                 .setHeader("Accept", "application/json");
     }
 

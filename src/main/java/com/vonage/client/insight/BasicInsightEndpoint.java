@@ -43,8 +43,8 @@ class BasicInsightEndpoint extends AbstractMethod<BasicInsightRequest, BasicInsi
 
     @Override
     public RequestBuilder makeRequest(BasicInsightRequest request) throws UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder
-                .post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH)
+        String uri = httpWrapper.getHttpConfig().getApiBaseUri() + PATH;
+        RequestBuilder requestBuilder = RequestBuilder.post(uri)
                 .setHeader("Content-Type", "application/json")
                 .setHeader("Accept", "application/json")
                 .addParameter("number", request.getNumber());

@@ -58,9 +58,9 @@ class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
     }
 
     @Override
-    public RequestBuilder makeRequest(SnsRequest snsRequest) throws UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder
-                .post(httpWrapper.getHttpConfig().getSnsBaseUri() + PATH)
+    public RequestBuilder makeRequest(SnsRequest snsRequest) throws UnsupportedEncodingException {String uri = httpWrapper.getHttpConfig().getSnsBaseUri() + PATH;
+
+        RequestBuilder requestBuilder = RequestBuilder.post(uri)
                 .addParameter("cmd", snsRequest.getCommand());
         for (Map.Entry<String, String> entry : snsRequest.getQueryParameters().entrySet()) {
             requestBuilder.addParameter(entry.getKey(), entry.getValue());

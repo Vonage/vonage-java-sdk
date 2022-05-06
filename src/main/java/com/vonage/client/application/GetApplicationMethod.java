@@ -43,8 +43,8 @@ class GetApplicationMethod extends ApplicationMethod<String, Application> {
 
     @Override
     public RequestBuilder makeRequest(String id) throws UnsupportedEncodingException {
-        return RequestBuilder
-                .get(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v2") + String.format(PATH, id))
+        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v2") + String.format(PATH, id);
+        return RequestBuilder.get(uri)
                 .setHeader("Accept", "application/json");
     }
 

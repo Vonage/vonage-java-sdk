@@ -44,8 +44,8 @@ class CreateApplicationMethod extends ApplicationMethod<Application, Application
 
     @Override
     public RequestBuilder makeRequest(Application application) throws UnsupportedEncodingException {
-        return RequestBuilder
-                .post(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v2") + PATH)
+        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v2") + PATH;
+        return RequestBuilder.post(uri)
                 .setHeader("Content-Type", "application/json")
                 .setHeader("Accept", "application/json")
                 .setEntity(new StringEntity(application.toJson()));

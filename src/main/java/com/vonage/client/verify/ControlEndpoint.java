@@ -43,8 +43,8 @@ class ControlEndpoint extends AbstractMethod<ControlRequest, ControlResponse> {
 
     @Override
     public RequestBuilder makeRequest(ControlRequest request) throws UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder
-            .post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH)
+        String uri = httpWrapper.getHttpConfig().getApiBaseUri() + PATH;
+        RequestBuilder requestBuilder = RequestBuilder.post(uri)
             .setHeader("Content-Type", "application/x-www-form-urlencoded")
             .setHeader("Accept", "application/json");
         request.addParams(requestBuilder);
