@@ -17,14 +17,17 @@ package com.vonage.client.voice;
 
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.voice.ncco.InputAction;
-import com.vonage.client.voice.ncco.Ncco;
 import com.vonage.client.voice.ncco.RecordAction;
 import com.vonage.client.voice.ncco.TalkAction;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 import static org.junit.Assert.*;
 
 public class CallTest {
+
     @Test
     public void testToJson() throws Exception {
         Call call = new Call("4477999000", "44111222333", "https://callback.example.com/");
@@ -96,6 +99,44 @@ public class CallTest {
         Call newCall = new Call("441632960960", "441632960961", "http://example.com/answer");
         Call fromJson = Call.fromJson(jsonString);
         assertEquals(newCall.toJson(), fromJson.toJson());
+
+        jsonString = "{\n" +
+                "                \"to\": [\n" +
+                "                    {\n" +
+                "                        \"type\": \"phone\",\n" +
+                "                        \"number\": \"{phoneNumber}\"\n" +
+                "                    }\n" +
+                "                ],\n" +
+                "                \"from\": {\n" +
+                "                    \"type\": \"phone\",\n" +
+                "                    \"number\": \"447441442936\"\n" +
+                "                },\n" +
+                "                \"ncco\": [\n" +
+                "                    {\n" +
+                "                        \"action\": \"talk\",\n" +
+                "                        \"text\": \"There's need to verify your voice, please say Never forget tomorrow is a new day after the tone \",\n" +
+                "                        \"language\": \"en-US\",\n" +
+                "                        \"style\": 10\n" +
+                "                    },\n" +
+                "                    {\n" +
+                "                        \"action\": \"record\",\n" +
+                "                        \"eventUrl\": [\n" +
+                "                            \"http://voice1.yellowfin.npe:9087/callback/verify/{userId}\"\n" +
+                "                        ],\n" +
+                "                        \"endOnKey\": \"#\",\n" +
+                "                        \"timeOut\": 5,\n" +
+                "                        \"beepStart\": true\n" +
+                "                    },\n" +
+                "                    {\n" +
+                "                        \"action\": \"talk\",\n" +
+                "                        \"text\": \"Thank you, good bye\",\n" +
+                "                        \"language\": \"en-US\",\n" +
+                "                        \"style\": 10\n" +
+                "                    }\n" +
+                "                ]\n" +
+                "}";
+
+        fromJson = Call.fromJson(jsonString);
     }
 
     @Test
@@ -122,7 +163,7 @@ public class CallTest {
 
     @Test
     public void testNccoParameterWithEmptyNcco() {
-        Call call = new Call("15551234567", "25551234567", new Ncco());
+        Call call = new Call("15551234567", "25551234567", Collections.emptyList());
         assertEquals(
                 "{\"to\":[{\"type\":\"phone\",\"number\":\"15551234567\"}],\"from\":{\"type\":\"phone\",\"number\":\"25551234567\"},\"ncco\":[]}",
                 call.toJson()
@@ -131,7 +172,7 @@ public class CallTest {
 
     @Test
     public void testNccoParameterWithSingleActionNcco() {
-        Call call = new Call("15551234567", "25551234567", new Ncco(TalkAction.builder("Hello World").build()));
+        Call call = new Call("15551234567", "25551234567", Collections.singletonList(TalkAction.builder("Hello World").build()));
         assertEquals(
                 "{\"to\":[{\"type\":\"phone\",\"number\":\"15551234567\"}],\"from\":{\"type\":\"phone\",\"number\":\"25551234567\"},\"ncco\":[{\"text\":\"Hello World\",\"action\":\"talk\"}]}",
                 call.toJson()
@@ -140,7 +181,7 @@ public class CallTest {
 
     @Test
     public void testNccoParameterWithMultiActionNcco() {
-        Call call = new Call("15551234567", "25551234567", new Ncco(
+        Call call = new Call("15551234567", "25551234567", Arrays.asList(
                 TalkAction.builder("Hello World").build(),
                 RecordAction.builder().build(),
                 InputAction.builder().build(),

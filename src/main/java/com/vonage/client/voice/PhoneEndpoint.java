@@ -21,9 +21,8 @@ import java.util.Objects;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class PhoneEndpoint implements Endpoint {
-    private String type = "phone";
-    private String number;
-    private String dtmfAnswer;
+    private final String type = "phone";
+    private String number, dtmfAnswer;
 
     public PhoneEndpoint() {
     }

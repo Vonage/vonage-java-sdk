@@ -22,9 +22,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
-import com.vonage.client.voice.ncco.Ncco;
+import com.vonage.client.voice.ncco.Action;
 
 import java.io.IOException;
+import java.util.Collection;
 
 /**
  * Call encapsulates the information required to create a call using {@link VoiceClient#createCall(Call)}
@@ -34,16 +35,11 @@ import java.io.IOException;
 public class Call {
     private Endpoint[] to;
     private Endpoint from;
-    private String answerUrl;
-
-    private String answerMethod = "GET";
-    private String eventUrl;
-    private String eventMethod;
+    private String answerMethod = "GET", answerUrl, eventUrl, eventMethod;
     private MachineDetection machineDetection;
-    private Integer lengthTimer;
-    private Integer ringingTimer;
+    private Integer lengthTimer, ringingTimer;
     private Boolean fromRandomNumber;
-    private Ncco ncco;
+    private Collection<? extends Action> ncco;
 
     public Call() {
     }
@@ -56,21 +52,21 @@ public class Call {
         this(new Endpoint[]{to}, from, answerUrl);
     }
 
+    public Call(String to, String from, Collection<Action> ncco) {
+        this(new PhoneEndpoint(to), new PhoneEndpoint(from), ncco);
+    }
+
+    public Call(Endpoint to, Endpoint from, Collection<Action> ncco) {
+        this(new Endpoint[]{to}, from, ncco);
+    }
+
     public Call(Endpoint[] to, Endpoint from, String answerUrl) {
         this.to = to;
         this.from = from;
         this.answerUrl = answerUrl;
     }
 
-    public Call(String to, String from, Ncco ncco) {
-        this(new PhoneEndpoint(to), new PhoneEndpoint(from), ncco);
-    }
-
-    public Call(Endpoint to, Endpoint from, Ncco ncco) {
-        this(new Endpoint[]{to}, from, ncco);
-    }
-
-    public Call(Endpoint[] to, Endpoint from, Ncco ncco) {
+    public Call(Endpoint[] to, Endpoint from, Collection<? extends Action> ncco) {
         this.to = to;
         this.from = from;
         this.ncco = ncco;
@@ -170,7 +166,7 @@ public class Call {
     public void setFromRandomNumber(Boolean fromRandomNumber) { this.fromRandomNumber = fromRandomNumber; }
 
     @JsonProperty("ncco")
-    public Ncco getNcco() {
+    public Collection<? extends Action> getNcco() {
         return ncco;
     }
 

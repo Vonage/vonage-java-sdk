@@ -23,8 +23,7 @@ import org.apache.http.client.methods.RequestBuilder;
  * A binary message to be submitted via the Vonage SMS API.
  */
 public class BinaryMessage extends Message {
-    private final byte[] messageBody;
-    private final byte[] udh;
+    private final byte[] messageBody, udh;
     private int protocolId = 0;
 
     /**
@@ -86,8 +85,8 @@ public class BinaryMessage extends Message {
     @Override
     public void addParams(RequestBuilder request) {
         super.addParams(request);
-        request.addParameter("udh", HexUtil.bytesToHex(getUdh()));
-        request.addParameter("body", HexUtil.bytesToHex(getMessageBody()));
-        request.addParameter("protocol-id", Integer.toString(protocolId));
+        request.addParameter("udh", HexUtil.bytesToHex(getUdh()))
+                .addParameter("body", HexUtil.bytesToHex(getMessageBody()))
+                .addParameter("protocol-id", Integer.toString(protocolId));
     }
 }

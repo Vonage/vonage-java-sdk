@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vonage.client.voice.TextToSpeechLanguage;
 
 /**
- * An NCCO talk action which allows for synthesized speach to be sent to a call.
+ * An NCCO talk action which allows for synthesized speech to be sent to a call.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
