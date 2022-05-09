@@ -47,7 +47,6 @@ class StopTalkMethod extends AbstractMethod<String, TalkResponse> {
     public RequestBuilder makeRequest(String uuid) throws UnsupportedEncodingException {
         String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + uuid + TALK_PATH;
         return RequestBuilder.delete(uri)
-                .setHeader("Content-Type", "application/json")
                 .setHeader("Accept", "application/json");
     }
 

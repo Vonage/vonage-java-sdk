@@ -55,7 +55,6 @@ class RedactMethod extends AbstractMethod<RedactRequest, Void> {
         }
 
         String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH;
-
         return RequestBuilder.post(uri)
                 .setHeader("Content-Type", "application/json")
                 .setEntity(new StringEntity(redactRequest.toJson(), ContentType.APPLICATION_JSON));

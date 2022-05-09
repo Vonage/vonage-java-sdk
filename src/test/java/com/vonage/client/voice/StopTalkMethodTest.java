@@ -52,7 +52,6 @@ public class StopTalkMethodTest {
         RequestBuilder request = method.makeRequest("63f61863-4a51-4f6b-86e1-46edebcf9356");
 
         assertEquals("DELETE", request.getMethod());
-        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), request.getFirstHeader("Content-Type").getValue());
         assertEquals(ContentType.APPLICATION_JSON.getMimeType(), request.getFirstHeader("Accept").getValue());
 
         assertTrue(request.getUri().toString().contains("63f61863-4a51-4f6b-86e1-46edebcf9356"));
@@ -86,6 +85,5 @@ public class StopTalkMethodTest {
         RequestBuilder builder = method.makeRequest("63f61863-4a51-4f6b-86e1-46edebcf9356");
 
         assertEquals(expectedUri, builder.getUri().toString());
-
     }
 }

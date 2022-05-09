@@ -50,7 +50,6 @@ public class StandardInsightEndpointTest {
         assertEquals("POST", builder.getMethod());
         assertEquals("https://api.nexmo.com/ni/standard/json", builder.build().getURI().toString());
         assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
         assertEquals("1234", params.get("number"));
         assertNull(params.get("country"));

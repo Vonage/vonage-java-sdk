@@ -52,7 +52,6 @@ public class BasicInsightEndpointTest {
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
         assertEquals("1234", params.get("number"));
         assertNull(params.get("country"));
-        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
         assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
     }
 
