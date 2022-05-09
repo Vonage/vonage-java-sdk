@@ -101,7 +101,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
             try {
                 return parseResponse(response);
             }
-            catch (IOException io){
+            catch (IOException io) {
                 throw new VonageResponseParseException("Unable to parse response.", io);
             }
         } catch (UnsupportedEncodingException uee) {

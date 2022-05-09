@@ -56,8 +56,9 @@ class CreateSecretMethod extends AbstractMethod<CreateSecretRequest, SecretRespo
         }
 
         String uri = String.format(httpWrapper.getHttpConfig().getApiBaseUri() + PATH, createSecretRequest.getApiKey());
-        return RequestBuilder
-                .post(uri)
+        return RequestBuilder.post(uri)
+                .setHeader("Content-Type", "application/json")
+                .setHeader("Accept", "application/json")
                 .setEntity(new StringEntity(createSecretRequest.toJson(), ContentType.APPLICATION_JSON));
     }
 

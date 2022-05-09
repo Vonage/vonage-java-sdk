@@ -22,6 +22,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.BasicHttpEntity;
+import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 import org.junit.Before;
@@ -57,6 +58,8 @@ public class SearchNumbersEndpointTest {
         RequestBuilder request = endpoint.makeRequest(filter);
 
         assertEquals("GET", request.getMethod());
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), request.getFirstHeader("Accept").getValue());
+
         Map<String, String> params = TestUtils.makeParameterMap(request.getParameters());
         assertEquals("BB", params.get("country"));
         assertEquals("SMS,VOICE", params.get("features"));

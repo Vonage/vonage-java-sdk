@@ -45,7 +45,7 @@ class ListApplicationsMethod extends ApplicationMethod<ListApplicationRequest, A
     public RequestBuilder makeRequest(ListApplicationRequest request) throws UnsupportedEncodingException {
         RequestBuilder builder = RequestBuilder
                 .get(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v2") + PATH)
-                .setHeader("Content-Type", "application/json");
+                .setHeader("Accept", "application/json");
 
         if (request != null) {
             if (request.getPageSize() > 0) {

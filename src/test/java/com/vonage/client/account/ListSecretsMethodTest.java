@@ -18,6 +18,7 @@ package com.vonage.client.account;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,6 +42,7 @@ public class ListSecretsMethodTest {
         RequestBuilder builder = method.makeRequest("api-key");
         assertEquals("GET", builder.getMethod());
         assertEquals("https://api.nexmo.com/accounts/api-key/secrets", builder.build().getURI().toString());
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
     }
 
     @Test

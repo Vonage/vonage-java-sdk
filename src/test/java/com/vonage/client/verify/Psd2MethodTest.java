@@ -56,6 +56,7 @@ public class Psd2MethodTest extends MethodTest<Psd2Method> {
         assertContainsParam(parameters,"number","15555555555");
         assertContainsParam(parameters,"amount","10.31");
         assertContainsParam(parameters,"payee","Ebony");
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
     }
 
     @Test

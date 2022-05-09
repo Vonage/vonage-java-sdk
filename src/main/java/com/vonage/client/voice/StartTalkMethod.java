@@ -34,7 +34,6 @@ class StartTalkMethod extends AbstractMethod<TalkRequest, TalkResponse> {
 
     private static final String PATH = "/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
-    private String uri;
 
     StartTalkMethod(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -47,15 +46,15 @@ class StartTalkMethod extends AbstractMethod<TalkRequest, TalkResponse> {
 
     @Override
     public RequestBuilder makeRequest(TalkRequest request) throws UnsupportedEncodingException {
-        return RequestBuilder
-                .put(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid() + "/talk")
+        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid() + "/talk";
+        return RequestBuilder.put(uri)
                 .setHeader("Content-Type", "application/json")
+                .setHeader("Accept", "application/json")
                 .setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
     }
 
     @Override
     public TalkResponse parseResponse(HttpResponse response) throws IOException {
-        String json = new BasicResponseHandler().handleResponse(response);
-        return TalkResponse.fromJson(json);
+        return TalkResponse.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 }

@@ -40,11 +40,11 @@ class PrefixPricingMethod extends AbstractMethod<PrefixPricingRequest, PrefixPri
 
     @Override
     public RequestBuilder makeRequest(PrefixPricingRequest prefixPricingRequest) {
-        String uri = httpWrapper.getHttpConfig().getRestBaseUri() + PATH + prefixPricingRequest
-                .getServiceType()
-                .name()
-                .toLowerCase();
-        return RequestBuilder.get(uri).addParameter("prefix", prefixPricingRequest.getPrefix());
+        String type = prefixPricingRequest.getServiceType().name().toLowerCase();
+        String uri = httpWrapper.getHttpConfig().getRestBaseUri() + PATH + type;
+        return RequestBuilder.get(uri)
+                .setHeader("Accept", "application/json")
+                .addParameter("prefix", prefixPricingRequest.getPrefix());
     }
 
     @Override

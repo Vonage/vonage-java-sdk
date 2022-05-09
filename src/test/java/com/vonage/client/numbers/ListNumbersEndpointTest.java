@@ -22,6 +22,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.BasicHttpEntity;
+import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 import org.junit.Before;
@@ -59,6 +60,7 @@ public class ListNumbersEndpointTest {
         assertEquals("0", params.get("search_pattern"));
         assertEquals("10", params.get("index"));
         assertEquals("20", params.get("size"));
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), request.getFirstHeader("Accept").getValue());
     }
 
     @Test

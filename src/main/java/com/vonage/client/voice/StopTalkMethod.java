@@ -45,14 +45,13 @@ class StopTalkMethod extends AbstractMethod<String, TalkResponse> {
 
     @Override
     public RequestBuilder makeRequest(String uuid) throws UnsupportedEncodingException {
-        return RequestBuilder
-                .delete(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + uuid + TALK_PATH)
-                .setHeader("Content-Type", "application/json");
+        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + uuid + TALK_PATH;
+        return RequestBuilder.delete(uri)
+                .setHeader("Accept", "application/json");
     }
 
     @Override
     public TalkResponse parseResponse(HttpResponse response) throws IOException {
-        String json = new BasicResponseHandler().handleResponse(response);
-        return TalkResponse.fromJson(json);
+        return TalkResponse.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 }

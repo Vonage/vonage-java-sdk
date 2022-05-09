@@ -65,7 +65,6 @@ public class PhoneEndpointTest {
         assertNotEquals("An instance is not equal to null", e1, e2);
 
         e1 = new PhoneEndpoint("number", "dtmf");
-        Object o = new Object();
-        assertNotEquals("An instance is not equal to a different type.", e1, o);
+        assertNotEquals("An instance is not equal to a different type.", e1, new Object());
     }
 }

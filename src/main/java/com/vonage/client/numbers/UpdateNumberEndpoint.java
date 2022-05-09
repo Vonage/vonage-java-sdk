@@ -44,7 +44,11 @@ class UpdateNumberEndpoint extends AbstractMethod<UpdateNumberRequest, Void> {
 
     @Override
     public RequestBuilder makeRequest(UpdateNumberRequest request) throws UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder.post(httpWrapper.getHttpConfig().getRestBaseUri() + PATH);
+        String uri = httpWrapper.getHttpConfig().getRestBaseUri() + PATH;
+        RequestBuilder requestBuilder = RequestBuilder.post(uri)
+            .setHeader("Content-Type", "application/x-www-form-urlencoded")
+            .setHeader("Accept", "application/json");
+
         request.addParams(requestBuilder);
         return requestBuilder;
     }

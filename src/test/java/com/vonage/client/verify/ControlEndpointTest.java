@@ -21,14 +21,13 @@ import com.vonage.client.TestUtils;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Map;
 
-import static org.junit.Assert.fail;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class ControlEndpointTest {
     private ControlEndpoint endpoint;
@@ -55,6 +54,7 @@ public class ControlEndpointTest {
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
         assertEquals("request-id", params.get("request_id"));
         assertEquals("cancel", params.get("cmd"));
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
     }
 
     @Test

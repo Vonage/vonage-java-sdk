@@ -18,11 +18,11 @@ package com.vonage.client.voice;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Recording {
@@ -41,7 +41,7 @@ public class Recording {
     }
 
     public void save(Path path) throws IOException {
-        try (OutputStream out = new FileOutputStream(path.toFile())) {
+        try (OutputStream out = Files.newOutputStream(path)) {
             IOUtils.copy(this.response.getEntity().getContent(), out);
         }
     }

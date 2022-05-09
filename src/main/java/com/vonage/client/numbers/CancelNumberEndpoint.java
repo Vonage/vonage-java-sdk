@@ -42,9 +42,9 @@ class CancelNumberEndpoint extends AbstractMethod<CancelNumberRequest, Void> {
 
     @Override
     public RequestBuilder makeRequest(CancelNumberRequest request) throws UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder
-                .post()
-                .setUri(httpWrapper.getHttpConfig().getRestBaseUri() + PATH);
+        String uri = httpWrapper.getHttpConfig().getRestBaseUri() + PATH;
+        RequestBuilder requestBuilder = RequestBuilder.post(uri)
+                .setHeader("Content-Type", "application/x-www-form-urlencoded");
         request.addParams(requestBuilder);
         return requestBuilder;
     }

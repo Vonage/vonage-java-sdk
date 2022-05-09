@@ -36,7 +36,6 @@ public class DeleteApplicationMethodTest extends ApplicationMethodTest {
         RequestBuilder builder = method.makeRequest("78d335fa323d01149c3dd6f0d48968cf");
 
         assertEquals("DELETE", builder.getMethod());
-        assertEquals("application/json", builder.getFirstHeader("Content-Type").getValue());
     }
 
     @Test

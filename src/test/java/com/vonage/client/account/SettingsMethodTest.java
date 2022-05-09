@@ -19,6 +19,7 @@ import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,6 +45,7 @@ public class SettingsMethodTest {
         assertEquals("https://rest.nexmo.com/account/settings",
                 builder.build().getURI().toString()
         );
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
     }
 
     @Test

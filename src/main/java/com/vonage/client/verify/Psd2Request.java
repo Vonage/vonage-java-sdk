@@ -68,7 +68,7 @@ public class Psd2Request extends BaseRequest {
     /**
      * Enumeration representing different verification workflows.
      * <p>
-     * See: https://developer.nexmo.com/verify/guides/workflows-and-events for more details.
+     * See: <a href="https://developer.nexmo.com/verify/guides/workflows-and-events">https://developer.nexmo.com/verify/guides/workflows-and-events</a> for more details.
      */
     public enum Workflow {
         /**

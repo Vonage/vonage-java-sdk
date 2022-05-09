@@ -43,8 +43,9 @@ class SettingsMethod extends AbstractMethod<SettingsRequest, SettingsResponse> {
 
     @Override
     public RequestBuilder makeRequest(SettingsRequest request) throws UnsupportedEncodingException {
-        return RequestBuilder
-                .post(httpWrapper.getHttpConfig().getRestBaseUri() + PATH)
+        String uri = httpWrapper.getHttpConfig().getRestBaseUri() + PATH;
+        return RequestBuilder.post(uri)
+                .setHeader("Accept", "application/json")
                 .addParameter("moCallBackUrl", request.getIncomingSmsUrl())
                 .addParameter("drCallBackUrl", request.getDeliveryReceiptUrl());
     }
@@ -54,7 +55,6 @@ class SettingsMethod extends AbstractMethod<SettingsRequest, SettingsResponse> {
         if (response.getStatusLine().getStatusCode() != 200) {
             throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
         }
-
         return SettingsResponse.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 }

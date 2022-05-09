@@ -47,15 +47,15 @@ class SendDtmfMethod extends AbstractMethod<DtmfRequest, DtmfResponse> {
 
     @Override
     public RequestBuilder makeRequest(DtmfRequest request) throws UnsupportedEncodingException {
-        return RequestBuilder
-                .put(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid() + DTMF_PATH)
+        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid() + DTMF_PATH;
+        return RequestBuilder.put(uri)
                 .setHeader("Content-Type", "application/json")
+                .setHeader("Accept", "application/json")
                 .setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
     }
 
     @Override
     public DtmfResponse parseResponse(HttpResponse response) throws IOException {
-        String json = new BasicResponseHandler().handleResponse(response);
-        return DtmfResponse.fromJson(json);
+        return DtmfResponse.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 }

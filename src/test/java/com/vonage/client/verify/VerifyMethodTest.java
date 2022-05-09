@@ -19,6 +19,7 @@ import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -45,7 +46,6 @@ public class VerifyMethodTest extends MethodTest<VerifyMethod> {
 
     @Test
     public void testConstructVerifyParams() throws Exception {
-
         RequestBuilder request = method.makeRequest(verifyRequest);
         List<NameValuePair> params = request.getParameters();
 
@@ -106,9 +106,10 @@ public class VerifyMethodTest extends MethodTest<VerifyMethod> {
 
     @Test
     public void testDefaultUri() throws Exception {
-
         RequestBuilder builder = method.makeRequest(verifyRequest);
         assertEquals("POST", builder.getMethod());
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
         assertEquals("https://api.nexmo.com/verify/json",
                 builder.build().getURI().toString()
         );

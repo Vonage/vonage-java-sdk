@@ -50,7 +50,8 @@ class ListSecretsMethod extends AbstractMethod<String, ListSecretsResponse> {
         }
 
         String uri = String.format(httpWrapper.getHttpConfig().getApiBaseUri() + PATH, apiKey);
-        return RequestBuilder.get(uri);
+        return RequestBuilder.get(uri)
+                .setHeader("Accept", "application/json");
     }
 
     @Override

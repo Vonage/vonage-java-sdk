@@ -50,7 +50,7 @@ public class Rtc extends Capability {
         private Map<Webhook.Type, Webhook> webhooks;
 
         /**
-         * Add a webhook for the Vonage API to use. See https://developer.nexmo.com/concepts/guides/webhooks. Each
+         * Add a webhook for the Vonage API to use. See <a href="https://developer.nexmo.com/concepts/guides/webhooks">https://developer.nexmo.com/concepts/guides/webhooks</a>. Each
          * Capability can only have a single webhook of each type. Any futher adding of webhooks will override an
          * already existing one of that type.
          *

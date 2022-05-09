@@ -41,12 +41,17 @@ class SearchMethod extends AbstractMethod<SearchRequest, SearchVerifyResponse> {
 
     @Override
     public RequestBuilder makeRequest(SearchRequest request) throws UnsupportedEncodingException {
-        RequestBuilder result = RequestBuilder.post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH);
+        RequestBuilder result = RequestBuilder
+            .post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH)
+            .setHeader("Accept", "application/json");
+
         if (request.getRequestIds().length == 1) {
             result.addParameter("request_id", request.getRequestIds()[0]);
-        } else {
-            for (String requestId : request.getRequestIds())
+        }
+        else {
+            for (String requestId : request.getRequestIds()) {
                 result.addParameter("request_ids", requestId);
+            }
         }
         return result;
     }

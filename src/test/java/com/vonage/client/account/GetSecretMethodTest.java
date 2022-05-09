@@ -18,6 +18,7 @@ package com.vonage.client.account;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -50,10 +51,10 @@ public class GetSecretMethodTest {
     @Test
     public void testDefaultUri() throws Exception {
         SecretRequest request = new SecretRequest("account-id", "secret");
-
         RequestBuilder builder = method.makeRequest(request);
         assertEquals("GET", builder.getMethod());
         assertEquals("https://api.nexmo.com/accounts/account-id/secrets/secret", builder.build().getURI().toString());
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
     }
 
     @Test

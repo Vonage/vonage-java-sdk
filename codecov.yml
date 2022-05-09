@@ -10,8 +10,7 @@ coverage:
     project:
       default:
         target: 80
-        threshold: null
-        branches: null
+        threshold: '1.5'
 
     patch:
       default:
@@ -26,5 +25,4 @@ coverage:
 
 comment:
   layout: "header, diff, changes, sunburst, uncovered, tree"
-  branches: null
   behavior: default

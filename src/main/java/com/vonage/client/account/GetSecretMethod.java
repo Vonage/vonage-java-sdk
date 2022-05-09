@@ -58,7 +58,7 @@ class GetSecretMethod extends AbstractMethod<SecretRequest, SecretResponse> {
                 secretRequest.getApiKey(),
                 secretRequest.getSecretId()
         );
-        return RequestBuilder.get(uri);
+        return RequestBuilder.get(uri).setHeader("Accept", "application/json");
     }
 
     @Override
@@ -66,7 +66,6 @@ class GetSecretMethod extends AbstractMethod<SecretRequest, SecretResponse> {
         if (response.getStatusLine().getStatusCode() != 200) {
             throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
         }
-
         return SecretResponse.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 

@@ -22,6 +22,7 @@ import com.vonage.client.VonageClientException;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -51,7 +52,7 @@ public class BalanceEndpointTest {
         assertEquals("https://rest.nexmo.com/account/get-balance", builder.build().getURI().toString());
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
         assertEquals(0, params.size());
-
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
     }
 
     @Test

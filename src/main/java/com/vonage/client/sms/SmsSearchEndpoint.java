@@ -42,7 +42,9 @@ public class SmsSearchEndpoint extends AbstractMethod<SearchSmsRequest, SearchSm
 
     @Override
     public RequestBuilder makeRequest(SearchSmsRequest request) throws UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder.get(httpWrapper.getHttpConfig().getRestBaseUri() + PATH);
+        String uri = httpWrapper.getHttpConfig().getRestBaseUri() + PATH;
+        RequestBuilder requestBuilder = RequestBuilder.get(uri)
+                .setHeader("Accept", "application/json");
         request.addParams(requestBuilder);
         return requestBuilder;
     }

@@ -19,6 +19,7 @@ import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -60,6 +61,8 @@ public class CheckMethodTest extends MethodTest<CheckMethod> {
         RequestBuilder builder = method.makeRequest(request);
         assertEquals("POST", builder.getMethod());
         assertEquals("https://api.nexmo.com/verify/check/json", builder.build().getURI().toString());
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
+        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
     }
 
     @Test

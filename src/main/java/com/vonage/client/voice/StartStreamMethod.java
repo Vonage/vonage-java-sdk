@@ -47,15 +47,15 @@ class StartStreamMethod extends AbstractMethod<StreamRequest, StreamResponse> {
 
     @Override
     public RequestBuilder makeRequest(StreamRequest request) throws UnsupportedEncodingException {
-        return RequestBuilder
-                .put(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid() + "/stream")
+        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid() + "/stream";
+        return RequestBuilder.put(uri)
                 .setHeader("Content-Type", "application/json")
+                .setHeader("Accept", "application/json")
                 .setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
     }
 
     @Override
     public StreamResponse parseResponse(HttpResponse response) throws IOException {
-        String json = new BasicResponseHandler().handleResponse(response);
-        return StreamResponse.fromJson(json);
+        return StreamResponse.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 }

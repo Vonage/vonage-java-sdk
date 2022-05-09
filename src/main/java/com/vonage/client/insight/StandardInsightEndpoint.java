@@ -42,9 +42,11 @@ class StandardInsightEndpoint extends AbstractMethod<StandardInsightRequest, Sta
 
     @Override
     public RequestBuilder makeRequest(StandardInsightRequest request) throws UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder
-                .post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH)
+        String uri = httpWrapper.getHttpConfig().getApiBaseUri() + PATH;
+        RequestBuilder requestBuilder = RequestBuilder.post(uri)
+                .setHeader("Accept", "application/json")
                 .addParameter("number", request.getNumber());
+
         if (request.getCountry() != null) {
             requestBuilder.addParameter("country", request.getCountry());
         }

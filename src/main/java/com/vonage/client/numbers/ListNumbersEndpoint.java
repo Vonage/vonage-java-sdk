@@ -42,17 +42,16 @@ class ListNumbersEndpoint extends AbstractMethod<ListNumbersFilter, ListNumbersR
 
     @Override
     public RequestBuilder makeRequest(ListNumbersFilter request) throws UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder
-                .get()
-                .setUri(httpWrapper.getHttpConfig().getRestBaseUri() + PATH);
+        String uri = httpWrapper.getHttpConfig().getRestBaseUri() + PATH;
+        RequestBuilder requestBuilder = RequestBuilder.get(uri)
+                .setHeader("Accept", "application/json");
         request.addParams(requestBuilder);
         return requestBuilder;
     }
 
     @Override
     public ListNumbersResponse parseResponse(HttpResponse response) throws IOException {
-        String json = new BasicResponseHandler().handleResponse(response);
-        return ListNumbersResponse.fromJson(json);
+        return ListNumbersResponse.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 
     ListNumbersResponse listNumbers(ListNumbersFilter request) throws VonageClientException {

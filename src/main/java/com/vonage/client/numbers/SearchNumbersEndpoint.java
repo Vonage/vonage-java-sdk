@@ -41,17 +41,16 @@ class SearchNumbersEndpoint extends AbstractMethod<SearchNumbersFilter, SearchNu
 
     @Override
     public RequestBuilder makeRequest(SearchNumbersFilter request) throws UnsupportedEncodingException {
-        RequestBuilder requestBuilder = RequestBuilder
-                .get()
-                .setUri(httpWrapper.getHttpConfig().getRestBaseUri() + PATH);
+        String uri = httpWrapper.getHttpConfig().getRestBaseUri() + PATH;
+        RequestBuilder requestBuilder = RequestBuilder.get(uri)
+                .setHeader("Accept", "application/json");
         request.addParams(requestBuilder);
         return requestBuilder;
     }
 
     @Override
     public SearchNumbersResponse parseResponse(HttpResponse response) throws IOException {
-        String json = new BasicResponseHandler().handleResponse(response);
-        return SearchNumbersResponse.fromJson(json);
+        return SearchNumbersResponse.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 
     SearchNumbersResponse searchNumbers(SearchNumbersFilter request) {

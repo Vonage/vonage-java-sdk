@@ -37,7 +37,7 @@ class DownloadRecordingEndpoint extends AbstractMethod<String, Recording> {
 
     @Override
     public RequestBuilder makeRequest(String uri) throws UnsupportedEncodingException {
-        return RequestBuilder.get().setUri(uri);
+        return RequestBuilder.get(uri);
     }
 
     @Override

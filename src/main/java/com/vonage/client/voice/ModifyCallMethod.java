@@ -46,18 +46,19 @@ class ModifyCallMethod extends AbstractMethod<CallModifier, ModifyCallResponse> 
 
     @Override
     public RequestBuilder makeRequest(CallModifier request) throws UnsupportedEncodingException {
-        return RequestBuilder
-                .put(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid())
+        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid();
+        return RequestBuilder.put(uri)
                 .setHeader("Content-Type", "application/json")
+                .setHeader("Accept", "application/json")
                 .setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
     }
 
     @Override
     public ModifyCallResponse parseResponse(HttpResponse response) throws IOException {
-        String json = new BasicResponseHandler().handleResponse(response);
         if (response.getStatusLine().getStatusCode() == 200) {
-            return ModifyCallResponse.fromJson(json);
-        } else {
+            return ModifyCallResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+        }
+        else {
             return null;
         }
     }

@@ -30,7 +30,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-class RedactMethod extends AbstractMethod<RedactRequest, RedactResponse> {
+class RedactMethod extends AbstractMethod<RedactRequest, Void> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
     private static final String PATH = "/redact/transaction";
@@ -54,14 +54,14 @@ class RedactMethod extends AbstractMethod<RedactRequest, RedactResponse> {
             throw new IllegalArgumentException("Redacting SMS requires a type.");
         }
 
-        return RequestBuilder
-                .post(httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH)
+        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH;
+        return RequestBuilder.post(uri)
                 .setHeader("Content-Type", "application/json")
                 .setEntity(new StringEntity(redactRequest.toJson(), ContentType.APPLICATION_JSON));
     }
 
     @Override
-    public RedactResponse parseResponse(HttpResponse response) throws IOException, VonageClientException {
+    public Void parseResponse(HttpResponse response) throws IOException, VonageClientException {
         if (response.getStatusLine().getStatusCode() != 204) {
             throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
         }
