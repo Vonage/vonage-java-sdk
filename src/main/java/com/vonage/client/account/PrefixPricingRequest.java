@@ -15,15 +15,14 @@
  */
 package com.vonage.client.account;
 
+import java.util.Objects;
+
 public class PrefixPricingRequest {
     private ServiceType serviceType;
     private String prefix;
 
     public PrefixPricingRequest(ServiceType serviceType, String prefix) {
-        if (serviceType == null) {
-            throw new IllegalArgumentException("Service type cannot be null.");
-        }
-        this.serviceType = serviceType;
+        this.serviceType = Objects.requireNonNull(serviceType, "Service type cannot be null.");
         this.prefix = prefix;
     }
 

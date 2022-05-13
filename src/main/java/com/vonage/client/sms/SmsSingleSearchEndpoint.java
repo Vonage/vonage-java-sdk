@@ -43,10 +43,9 @@ public class SmsSingleSearchEndpoint extends AbstractMethod<String, SmsSingleSea
     @Override
     public RequestBuilder makeRequest(String id) throws UnsupportedEncodingException {
         String uri = httpWrapper.getHttpConfig().getRestBaseUri() + PATH;
-        RequestBuilder requestBuilder = RequestBuilder.get(uri)
-                .setHeader("Accept", "application/json");
-        requestBuilder.addParameter("id", id);
-        return requestBuilder;
+        return RequestBuilder.get(uri)
+                .setHeader("Accept", "application/json")
+                .addParameter("id", id);
     }
 
     @Override

@@ -60,11 +60,7 @@ public class AccountClient extends AbstractClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      */
     public PricingResponse getVoicePrice(String country) throws VonageResponseParseException, VonageClientException {
-        return getVoicePrice(new PricingRequest(country));
-    }
-
-    private PricingResponse getVoicePrice(PricingRequest pricingRequest) throws VonageResponseParseException, VonageClientException {
-        return pricing.getPrice(ServiceType.VOICE, pricingRequest);
+        return pricing.execute(new PricingRequest(country, ServiceType.VOICE));
     }
 
     /**
@@ -78,11 +74,7 @@ public class AccountClient extends AbstractClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      */
     public PricingResponse getSmsPrice(String country) throws VonageResponseParseException, VonageClientException {
-        return getSmsPrice(new PricingRequest(country));
-    }
-
-    private PricingResponse getSmsPrice(PricingRequest pricingRequest) throws VonageResponseParseException, VonageClientException {
-        return pricing.getPrice(ServiceType.SMS, pricingRequest);
+        return pricing.execute(new PricingRequest(country, ServiceType.SMS));
     }
 
     /**
@@ -97,11 +89,7 @@ public class AccountClient extends AbstractClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      */
     public PrefixPricingResponse getPrefixPrice(ServiceType type, String prefix) throws VonageResponseParseException, VonageClientException {
-        return getPrefixPrice(new PrefixPricingRequest(type, prefix));
-    }
-
-    private PrefixPricingResponse getPrefixPrice(PrefixPricingRequest prefixPricingRequest) throws VonageResponseParseException, VonageClientException {
-        return prefixPricing.getPrice(prefixPricingRequest);
+        return prefixPricing.execute(new PrefixPricingRequest(type, prefix));
     }
 
     /**
@@ -115,11 +103,7 @@ public class AccountClient extends AbstractClient {
      *                                     that the request was unsuccessful.
      */
     public void topUp(String transaction) throws VonageResponseParseException, VonageClientException {
-        topUp(new TopUpRequest(transaction));
-    }
-
-    private void topUp(TopUpRequest request) throws VonageResponseParseException, VonageClientException {
-        topUp.topUp(request);
+        topUp.topUp(new TopUpRequest(transaction));
     }
 
     /**
@@ -150,11 +134,7 @@ public class AccountClient extends AbstractClient {
      *                                     that the request was unsuccessful.
      */
     public SecretResponse getSecret(String apiKey, String secretId) throws VonageResponseParseException, VonageClientException {
-        return getSecret(new SecretRequest(apiKey, secretId));
-    }
-
-    private SecretResponse getSecret(SecretRequest secretRequest) throws VonageResponseParseException, VonageClientException {
-        return secret.getSecret(secretRequest);
+        return secret.getSecret(new SecretRequest(apiKey, secretId));
     }
 
     /**
@@ -170,11 +150,7 @@ public class AccountClient extends AbstractClient {
      *                                     that the request was unsuccessful.
      */
     public SecretResponse createSecret(String apiKey, String secret) throws VonageResponseParseException, VonageClientException {
-        return createSecret(new CreateSecretRequest(apiKey, secret));
-    }
-
-    private SecretResponse createSecret(CreateSecretRequest createSecretRequest) throws VonageResponseParseException, VonageClientException {
-        return secret.createSecret(createSecretRequest);
+        return this.secret.createSecret(new CreateSecretRequest(apiKey, secret));
     }
 
     /**
@@ -188,11 +164,7 @@ public class AccountClient extends AbstractClient {
      *                                     that the request was unsuccessful.
      */
     public void revokeSecret(String apiKey, String secretId) throws VonageResponseParseException, VonageClientException {
-        revokeSecret(new SecretRequest(apiKey, secretId));
-    }
-
-    private void revokeSecret(SecretRequest secretRequest) throws VonageResponseParseException, VonageClientException {
-        secret.revokeSecret(secretRequest);
+        secret.revokeSecret(new SecretRequest(apiKey, secretId));
     }
 
     /**

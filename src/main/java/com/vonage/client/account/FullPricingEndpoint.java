@@ -24,12 +24,12 @@ import org.apache.http.impl.client.BasicResponseHandler;
 
 import java.io.IOException;
 
-class PrefixPricingMethod extends AbstractMethod<PrefixPricingRequest, PrefixPricingResponse> {
+class FullPricingEndpoint extends AbstractMethod<FullPricingRequest, PricingResponse> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
-    private static final String PATH = "/get-prefix-pricing/outbound/";
+    private static final String PATH = "/account/get-full-pricing/outbound/%s";
 
-    PrefixPricingMethod(HttpWrapper httpWrapper) {
+    FullPricingEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -39,16 +39,14 @@ class PrefixPricingMethod extends AbstractMethod<PrefixPricingRequest, PrefixPri
     }
 
     @Override
-    public RequestBuilder makeRequest(PrefixPricingRequest prefixPricingRequest) {
-        String type = prefixPricingRequest.getServiceType().name().toLowerCase();
-        String uri = httpWrapper.getHttpConfig().getRestBaseUri() + PATH + type;
+    public RequestBuilder makeRequest(FullPricingRequest request) {
+        String uri = httpWrapper.getHttpConfig().getRestBaseUri() + String.format(PATH, request.getServiceType());
         return RequestBuilder.get(uri)
-                .setHeader("Accept", "application/json")
-                .addParameter("prefix", prefixPricingRequest.getPrefix());
+                .setHeader("Accept", "application/json");
     }
 
     @Override
-    public PrefixPricingResponse parseResponse(HttpResponse response) throws IOException {
-        return PrefixPricingResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+    public PricingResponse parseResponse(HttpResponse response) throws IOException {
+        return PricingResponse.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 }

@@ -15,17 +15,17 @@
  */
 package com.vonage.client.account;
 
-import com.vonage.client.HttpWrapper;
+import java.util.Objects;
 
-class SmsPricingMethod extends PricingMethod {
-    private static final String PATH = "/account/get-pricing/outbound/sms";
+public class FullPricingRequest {
 
-    SmsPricingMethod(HttpWrapper httpWrapper) {
-        super(httpWrapper);
+    private ServiceType serviceType;
+
+    public FullPricingRequest(ServiceType serviceType) {
+        this.serviceType = Objects.requireNonNull(serviceType, "Service type cannot be null.");
     }
 
-    @Override
-    String getUri() {
-        return httpWrapper.getHttpConfig().getRestBaseUri() + PATH;
+    public ServiceType getServiceType() {
+        return serviceType;
     }
 }

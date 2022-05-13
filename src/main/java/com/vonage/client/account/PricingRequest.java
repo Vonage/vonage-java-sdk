@@ -17,12 +17,18 @@ package com.vonage.client.account;
 
 public class PricingRequest {
     private String countryCode;
+    private ServiceType serviceType;
 
-    public PricingRequest(String countryCode) {
+    public PricingRequest(String countryCode, ServiceType serviceType) {
         this.countryCode = countryCode;
+        this.serviceType = serviceType;
     }
 
     public String getCountryCode() {
         return countryCode;
+    }
+
+    public String getServiceType() {
+        return serviceType.name().replace('_', '-').toLowerCase();
     }
 }

@@ -19,41 +19,46 @@ import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class SmsPricingMethodTest {
-    private SmsPricingMethod method;
-
-    @Before
-    public void setUp() {
-        method = new SmsPricingMethod(new HttpWrapper());
-    }
+public class PrefixPricingEndpointTest {
 
     @Test
-    public void testDefaultUri() throws Exception {
-        PricingRequest request = new PricingRequest("country");
+    public void testDefaultUriVoice() {
+        PrefixPricingRequest request = new PrefixPricingRequest(ServiceType.VOICE, "44");
 
-        RequestBuilder builder = method.makeRequest(request);
+        RequestBuilder builder = new PrefixPricingEndpoint(new HttpWrapper()).makeRequest(request);
         assertEquals("GET", builder.getMethod());
-        assertEquals("https://rest.nexmo.com/account/get-pricing/outbound/sms?country=country",
+        assertEquals(
+                "https://rest.nexmo.com/account/get-prefix-pricing/outbound/voice?prefix=44",
                 builder.build().getURI().toString()
         );
         assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
     }
 
     @Test
-    public void testCustomUri() throws Exception {
+    public void testCustomUriSms() {
         HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri("https://example.com").build());
-        SmsPricingMethod method = new SmsPricingMethod(wrapper);
-        PricingRequest request = new PricingRequest("country");
+        PrefixPricingRequest request = new PrefixPricingRequest(ServiceType.SMS, "1");
 
-        RequestBuilder builder = method.makeRequest(request);
+        RequestBuilder builder = new PrefixPricingEndpoint(wrapper).makeRequest(request);
         assertEquals("GET", builder.getMethod());
         assertEquals(
-                "https://example.com/account/get-pricing/outbound/sms?country=country",
+                "https://example.com/account/get-prefix-pricing/outbound/sms?prefix=1",
+                builder.build().getURI().toString()
+        );
+    }
+
+    @Test
+    public void testDefaultUriSmsTransit() {
+        PrefixPricingRequest request = new PrefixPricingRequest(ServiceType.SMS_TRANSIT, "16");
+
+        RequestBuilder builder = new PrefixPricingEndpoint(new HttpWrapper()).makeRequest(request);
+        assertEquals("GET", builder.getMethod());
+        assertEquals(
+                "https://rest.nexmo.com/account/get-prefix-pricing/outbound/sms-transit?prefix=16",
                 builder.build().getURI().toString()
         );
     }
