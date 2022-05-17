@@ -111,7 +111,7 @@ publishing {
                 licenses {
                     license {
                         name = "The Apache License, Version 2.0"
-                        url = "https://raw.github.com/Vonage/vonage-java-sdk/6.x/LICENCE.txt"
+                        url = "https://raw.github.com/Vonage/vonage-java-sdk/main/LICENCE.txt"
                     }
                 }
                 developers {
