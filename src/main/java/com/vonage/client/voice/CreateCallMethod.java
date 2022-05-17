@@ -55,7 +55,6 @@ class CreateCallMethod extends AbstractMethod<Call, CallEvent> {
 
     @Override
     public CallEvent parseResponse(HttpResponse response) throws IOException {
-        String json = new BasicResponseHandler().handleResponse(response);
-        return CallEvent.fromJson(json);
+        return CallEvent.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 }

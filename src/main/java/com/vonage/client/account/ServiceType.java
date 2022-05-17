@@ -16,5 +16,10 @@
 package com.vonage.client.account;
 
 public enum ServiceType {
-    SMS, VOICE
+    SMS, VOICE, SMS_TRANSIT;
+
+    @Override
+    public String toString() {
+        return name().replace('_', '-').toLowerCase();
+    }
 }

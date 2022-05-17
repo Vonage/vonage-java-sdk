@@ -15,24 +15,39 @@
  */
 package com.vonage.client.account;
 
+import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
+import com.vonage.client.auth.TokenAuthMethod;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.impl.client.BasicResponseHandler;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
 
-class PricingEndpoint {
-    private Map<ServiceType, PricingMethod> methods = new HashMap<>();
+class PricingEndpoint extends AbstractMethod<PricingRequest, PricingResponse> {
+    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
+
+    private static final String PATH = "/account/get-pricing/outbound/%s";
 
     PricingEndpoint(HttpWrapper httpWrapper) {
-        methods.put(ServiceType.SMS, new SmsPricingMethod(httpWrapper));
-        methods.put(ServiceType.VOICE, new VoicePricingMethod(httpWrapper));
+        super(httpWrapper);
     }
 
-    PricingResponse getPrice(ServiceType serviceType, PricingRequest request) {
-        if (methods.containsKey(serviceType)) {
-            return methods.get(serviceType).execute(request);
-        }
+    @Override
+    protected Class[] getAcceptableAuthMethods() {
+        return ALLOWED_AUTH_METHODS;
+    }
 
-        throw new IllegalArgumentException("Unknown Service Type: " + serviceType);
+    @Override
+    public RequestBuilder makeRequest(PricingRequest request) {
+        String uri = httpWrapper.getHttpConfig().getRestBaseUri() + String.format(PATH, request.getServiceType());
+        return RequestBuilder.get(uri)
+                .setHeader("Accept", "application/json")
+                .addParameter("country", request.getCountryCode());
+    }
+
+    @Override
+    public PricingResponse parseResponse(HttpResponse response) throws IOException {
+        return PricingResponse.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 }

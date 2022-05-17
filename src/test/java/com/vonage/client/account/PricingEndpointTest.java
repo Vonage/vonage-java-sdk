@@ -19,41 +19,44 @@ import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class VoicePricingMethodTest {
-    private VoicePricingMethod method;
-
-    @Before
-    public void setUp() throws Exception {
-        method = new VoicePricingMethod(new HttpWrapper());
-    }
+public class PricingEndpointTest {
 
     @Test
-    public void testDefaultUri() throws Exception {
-        PricingRequest request = new PricingRequest("country");
+    public void testDefaultUriSms() {
+        PricingRequest request = new PricingRequest("nl", ServiceType.SMS);
 
-        RequestBuilder builder = method.makeRequest(request);
+        RequestBuilder builder = new PricingEndpoint(new HttpWrapper()).makeRequest(request);
         assertEquals("GET", builder.getMethod());
-        assertEquals("https://rest.nexmo.com/account/get-pricing/outbound/voice?country=country",
+        assertEquals("https://rest.nexmo.com/account/get-pricing/outbound/sms?country=nl",
                 builder.build().getURI().toString()
         );
         assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
     }
 
     @Test
-    public void testCustomUri() throws Exception {
-        HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri("https://example.com").build());
-        VoicePricingMethod method = new VoicePricingMethod(wrapper);
-        PricingRequest request = new PricingRequest("country");
+    public void testDefaultUriVoice() {
+        PricingRequest request = new PricingRequest("de", ServiceType.VOICE);
 
-        RequestBuilder builder = method.makeRequest(request);
+        RequestBuilder builder = new PricingEndpoint(new HttpWrapper()).makeRequest(request);
+        assertEquals("GET", builder.getMethod());
+        assertEquals("https://rest.nexmo.com/account/get-pricing/outbound/voice?country=de",
+                builder.build().getURI().toString()
+        );
+    }
+
+    @Test
+    public void testCustomUriSmsTransit() {
+        HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri("https://example.com").build());
+        PricingRequest request = new PricingRequest("fr", ServiceType.SMS_TRANSIT);
+
+        RequestBuilder builder = new PricingEndpoint(wrapper).makeRequest(request);
         assertEquals("GET", builder.getMethod());
         assertEquals(
-                "https://example.com/account/get-pricing/outbound/voice?country=country",
+                "https://example.com/account/get-pricing/outbound/sms-transit?country=fr",
                 builder.build().getURI().toString()
         );
     }
