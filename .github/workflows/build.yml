@@ -2,7 +2,7 @@ name: Build Java CI
 on:
   push:
     branches:
-      - 6.x
+      - main
   pull_request:
 
 jobs:
