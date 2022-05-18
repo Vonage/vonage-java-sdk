@@ -51,7 +51,7 @@ public abstract class AbstractAnswerServlet extends HttpServlet {
     /**
      * Handle a request for NCCO instructions from the Vonage Voice API.
      * <p>
-     * Implementations should return an NccoResponse object (most easily constructed using {@link NccoResponseBuilder}.
+     * Implementations should return an NccoResponse object (most easily constructed using {@link NccoResponseBuilder}).
      *
      * @param request the HttpServletRequest parsed from the request made by the Vonage Voice API
      * @return An NccoResponse containing Ncco instructions for the Vonage Voice API

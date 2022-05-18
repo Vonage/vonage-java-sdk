@@ -17,8 +17,10 @@ package com.vonage.client.insight;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public enum InsightStatus {
     SUCCESS(0),
@@ -31,13 +33,10 @@ public enum InsightStatus {
 
     private final int insightStatus;
 
-    private static final Map<Integer, InsightStatus> INSIGHT_STATUS_INDEX = new HashMap<>();
-
-    static {
-        for (InsightStatus insightStatus : InsightStatus.values()) {
-            INSIGHT_STATUS_INDEX.put(insightStatus.insightStatus, insightStatus);
-        }
-    }
+    private static final Map<Integer, InsightStatus> INSIGHT_STATUS_INDEX =
+        Arrays.stream(InsightStatus.values()).collect(Collectors.toMap(
+            InsightStatus::getInsightStatus, Function.identity()
+        ));
 
     /**
      * Look up the {@link InsightStatus} based on the int value.
@@ -48,8 +47,7 @@ public enum InsightStatus {
      */
     @JsonCreator
     public static InsightStatus fromInt(int insightStatus) {
-        InsightStatus foundInsightStatus = INSIGHT_STATUS_INDEX.get(insightStatus);
-        return (foundInsightStatus != null) ? foundInsightStatus : UNKNOWN;
+        return INSIGHT_STATUS_INDEX.getOrDefault(insightStatus, UNKNOWN);
     }
 
     InsightStatus(int insightStatus) {

@@ -113,7 +113,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
     }
 
     /**
-     * Apply an appropriate authentication method (specified by {@link #getAcceptableAuthMethods()} to the provided
+     * Apply an appropriate authentication method (specified by {@link #getAcceptableAuthMethods()}) to the provided
      * {@link RequestBuilder}, and return the result.
      *
      * @param request A RequestBuilder which has not yet had authentication information applied

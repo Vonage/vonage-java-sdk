@@ -19,26 +19,19 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @JsonDeserialize(using = RoamingDeseriazlizer.class)
 public class RoamingDetails {
     public enum RoamingStatus {
         UNKNOWN, ROAMING, NOT_ROAMING;
 
-        private static final Map<String, RoamingStatus> ROAMING_STATUS_INDEX = new HashMap<>();
-
-        static {
-            for (RoamingStatus roamingStatus : RoamingStatus.values()) {
-                ROAMING_STATUS_INDEX.put(roamingStatus.name(), roamingStatus);
-            }
-        }
-
         @JsonCreator
         public static RoamingStatus fromString(String name) {
-            RoamingStatus foundRoamingStatus = ROAMING_STATUS_INDEX.get(name.toUpperCase());
-            return (foundRoamingStatus != null) ? foundRoamingStatus : UNKNOWN;
+            try {
+                return RoamingStatus.valueOf(name.toUpperCase());
+            }
+            catch (IllegalArgumentException ex) {
+                return UNKNOWN;
+            }
         }
     }
 

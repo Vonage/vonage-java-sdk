@@ -36,6 +36,5 @@ public class CancelNumberRequest {
 
     public void addParams(RequestBuilder request) {
         request.addParameter("country", country).addParameter("msisdn", msisdn);
-
     }
 }

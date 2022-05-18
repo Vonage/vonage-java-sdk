@@ -18,9 +18,6 @@ package com.vonage.client.voice;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Voice used to deliver text to a {@link Call} in a {@link TalkRequest}.
  */
@@ -124,14 +121,6 @@ public enum VoiceName {
     ZUZANA("Zuzana"),
     UNKNOWN("Unknown");
 
-    private static final Map<String, VoiceName> voiceNameIndex = new HashMap<>();
-
-    static {
-        for (VoiceName voiceName : VoiceName.values()) {
-            voiceNameIndex.put(voiceName.name(), voiceName);
-        }
-    }
-
     private final String displayName;
 
     VoiceName(String displayName) {
@@ -145,8 +134,12 @@ public enum VoiceName {
 
     @JsonCreator
     public static VoiceName fromString(String name) {
-        VoiceName foundVoiceName = voiceNameIndex.get(name.toUpperCase());
-        return (foundVoiceName != null) ? foundVoiceName : UNKNOWN;
+        try {
+            return VoiceName.valueOf(name.toUpperCase());
+        }
+        catch (IllegalArgumentException ex) {
+            return UNKNOWN;
+        }
     }
 
     @JsonValue

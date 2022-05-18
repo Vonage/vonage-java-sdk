@@ -47,7 +47,7 @@ public class NumbersClient {
      * @throws VonageClientException        if an error is returned by the server.
      */
     public ListNumbersResponse listNumbers() throws VonageResponseParseException, VonageClientException {
-        return listNumbers.listNumbers(new ListNumbersFilter());
+        return listNumbers(new ListNumbersFilter());
     }
 
     /**
@@ -61,7 +61,7 @@ public class NumbersClient {
      * @throws VonageClientException        if an error is returned by the server.
      */
     public ListNumbersResponse listNumbers(ListNumbersFilter filter) throws VonageResponseParseException, VonageClientException {
-        return listNumbers.listNumbers(filter);
+        return listNumbers.execute(filter);
     }
 
 
@@ -86,7 +86,7 @@ public class NumbersClient {
      * @throws VonageClientException        if an error is returned by the server.
      */
     public SearchNumbersResponse searchNumbers(SearchNumbersFilter filter) throws VonageResponseParseException, VonageClientException {
-        return searchNumbers.searchNumbers(filter);
+        return searchNumbers.execute(filter);
     }
 
     /**

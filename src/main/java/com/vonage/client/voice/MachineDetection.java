@@ -18,19 +18,8 @@ package com.vonage.client.voice;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public enum MachineDetection {
     CONTINUE, HANGUP, UNKNOWN;
-
-    private static final Map<String, MachineDetection> MACHINE_DETECTION_INDEX = new HashMap<>();
-
-    static {
-        for (MachineDetection machineDetection : MachineDetection.values()) {
-            MACHINE_DETECTION_INDEX.put(machineDetection.name(), machineDetection);
-        }
-    }
 
     @JsonValue
     @Override
@@ -40,7 +29,11 @@ public enum MachineDetection {
 
     @JsonCreator
     public static MachineDetection fromString(String name) {
-        MachineDetection foundMachineDetection = MACHINE_DETECTION_INDEX.get(name.toUpperCase());
-        return (foundMachineDetection != null) ? foundMachineDetection : UNKNOWN;
+        try {
+            return MachineDetection.valueOf(name.toUpperCase());
+        }
+        catch (IllegalArgumentException ex) {
+            return UNKNOWN;
+        }
     }
 }

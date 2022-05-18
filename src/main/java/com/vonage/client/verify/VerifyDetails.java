@@ -21,6 +21,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class VerifyDetails {
@@ -103,13 +105,10 @@ public class VerifyDetails {
 
         private final String status;
 
-        private static final Map<String, Status> stringStatusValues = new HashMap<>();
-
-        static {
-            for (Status status : Status.values()) {
-                stringStatusValues.put(status.status, status);
-            }
-        }
+        private static final Map<String, Status> stringStatusValues =
+            Arrays.stream(Status.values()).collect(Collectors.toMap(
+                    Status::getStatus, Function.identity()
+            ));
 
         /**
          * Look up the {@link Status} based on the string value.

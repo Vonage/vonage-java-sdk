@@ -63,7 +63,7 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
      * Construct a AdvancedInsightRequest with a number and country.
      *
      * @param number  A single phone number that you need insight about in national or international format.
-     * @param country If a number does not have a country code or it is uncertain, set the two-character country code.
+     * @param country If a number does not have a country code, or it is uncertain, set the two-character country code.
      *
      * @return A new {@link AdvancedInsightRequest} object.
      */
@@ -97,7 +97,7 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
         }
 
         /**
-         * @param country If a number does not have a country code or it is uncertain, set the two-character country
+         * @param country If a number does not have a country code, or it is uncertain, set the two-character country
          *                code.
          *
          * @return The {@link Builder} to keep building.
