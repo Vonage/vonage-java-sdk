@@ -24,8 +24,6 @@ package com.vonage.client.verify;
 import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.auth.TokenAuthMethod;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
@@ -34,7 +32,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 public class Psd2Endpoint extends AbstractMethod<Psd2Request, VerifyResponse> {
-    private static final Log LOG = LogFactory.getLog(Psd2Endpoint.class);
 
     private static final String PATH = "/verify/psd2/json";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};

@@ -20,8 +20,6 @@ import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.auth.JWTAuthMethod;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.RequestBuilder;
@@ -34,7 +32,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 class ListCallsEndpoint extends AbstractMethod<CallsFilter, CallInfoPage> {
-    private static final Log LOG = LogFactory.getLog(CreateCallEndpoint.class);
 
     private static final String PATH = "/calls";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};

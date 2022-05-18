@@ -17,8 +17,6 @@ package com.vonage.client.voice;
 
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.client.methods.RequestBuilder;
@@ -35,10 +33,10 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class StopTalkEndpointTest {
-    private static final Log LOG = LogFactory.getLog(StopTalkEndpointTest.class);
 
     private StopTalkEndpoint method;
 

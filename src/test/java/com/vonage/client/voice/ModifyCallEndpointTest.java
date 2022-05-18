@@ -19,8 +19,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.client.methods.RequestBuilder;
@@ -39,7 +37,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 public class ModifyCallEndpointTest {
-    private static final Log LOG = LogFactory.getLog(ModifyCallEndpointTest.class);
 
     private ModifyCallEndpoint method;
 
