@@ -105,7 +105,7 @@ public class PhoneEndpoint implements Endpoint {
         }
 
         public String getUrl() {
-            return this.url;
+            return url;
         }
 
         public String getRingback() {
