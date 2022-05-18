@@ -13,26 +13,27 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.account;
+package com.vonage.client.application;
 
-import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.VonageBadRequestException;
 import com.vonage.client.VonageClientException;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-class TopUpEndpoint extends AbstractMethod<TopUpRequest, Void> {
+class CreateApplicationEndpoint extends ApplicationMethod<Application, Application> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
-    private static final String PATH = "/account/top-up";
+    private static final String PATH = "/applications";
 
-    TopUpEndpoint(HttpWrapper httpWrapper) {
+    CreateApplicationEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -42,19 +43,20 @@ class TopUpEndpoint extends AbstractMethod<TopUpRequest, Void> {
     }
 
     @Override
-    public RequestBuilder makeRequest(TopUpRequest request) throws UnsupportedEncodingException {
-        String uri = httpWrapper.getHttpConfig().getRestBaseUri() + PATH;
-        return RequestBuilder.get(uri)
-                .setHeader("Content-Type", "application/x-www-form-urlencoded")
-                .addParameter("trx", request.getTrx());
+    public RequestBuilder makeRequest(Application application) throws UnsupportedEncodingException {
+        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v2") + PATH;
+        return RequestBuilder.post(uri)
+                .setHeader("Content-Type", "application/json")
+                .setHeader("Accept", "application/json")
+                .setEntity(new StringEntity(application.toJson()));
     }
 
     @Override
-    public Void parseResponse(HttpResponse response) throws IOException, VonageClientException {
-        if (response.getStatusLine().getStatusCode() != 200) {
+    public Application parseResponse(HttpResponse response) throws IOException, VonageClientException {
+        if (response.getStatusLine().getStatusCode() != 201) {
             throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
         }
 
-        return null;
+        return Application.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 }

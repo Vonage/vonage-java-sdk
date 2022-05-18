@@ -29,15 +29,23 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-class DtmfEndpoint extends AbstractMethod<DtmfRequest, DtmfResponse> {
-    private static final Log LOG = LogFactory.getLog(DtmfEndpoint.class);
+class CreateCallEndpoint extends AbstractMethod<Call, CallEvent> {
+    private static final Log LOG = LogFactory.getLog(CreateCallEndpoint.class);
 
-    private static final String PATH = "/calls/";
+    private static final String PATH = "/calls";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
-    public static final String DTMF_PATH = "/dtmf";
 
-    DtmfEndpoint(HttpWrapper httpWrapper) {
+    CreateCallEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
+    }
+
+    @Override
+    public RequestBuilder makeRequest(Call request) throws UnsupportedEncodingException {
+        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH;
+        return RequestBuilder.post(uri)
+                .setHeader("Content-Type", "application/json")
+                .setHeader("Accept", "application/json")
+                .setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
     }
 
     @Override
@@ -46,16 +54,7 @@ class DtmfEndpoint extends AbstractMethod<DtmfRequest, DtmfResponse> {
     }
 
     @Override
-    public RequestBuilder makeRequest(DtmfRequest request) throws UnsupportedEncodingException {
-        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid() + DTMF_PATH;
-        return RequestBuilder.put(uri)
-                .setHeader("Content-Type", "application/json")
-                .setHeader("Accept", "application/json")
-                .setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
-    }
-
-    @Override
-    public DtmfResponse parseResponse(HttpResponse response) throws IOException {
-        return DtmfResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+    public CallEvent parseResponse(HttpResponse response) throws IOException {
+        return CallEvent.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 }

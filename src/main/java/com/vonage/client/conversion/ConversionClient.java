@@ -53,6 +53,6 @@ public class ConversionClient extends AbstractClient {
                                  String messageId,
                                  boolean delivered,
                                  Date timestamp) throws VonageResponseParseException, VonageClientException {
-        conversionEndpoint.submitConversion(new ConversionRequest(type, messageId, delivered, timestamp));
+        conversionEndpoint.execute(new ConversionRequest(type, messageId, delivered, timestamp));
     }
 }

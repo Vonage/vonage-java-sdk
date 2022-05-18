@@ -23,11 +23,11 @@ import com.vonage.client.*;
  * VonageClient#getRedactClient()}.
  */
 public class RedactClient extends AbstractClient {
+
     private RedactEndpoint redactEndpoint;
 
     public RedactClient(HttpWrapper httpWrapper) {
         super(httpWrapper);
-
         redactEndpoint = new RedactEndpoint(httpWrapper);
     }
 
@@ -70,6 +70,6 @@ public class RedactClient extends AbstractClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public void redactTransaction(RedactRequest redactRequest) throws VonageResponseParseException, VonageClientException {
-        redactEndpoint.redactTransaction(redactRequest);
+        redactEndpoint.execute(redactRequest);
     }
 }

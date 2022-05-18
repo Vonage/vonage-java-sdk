@@ -29,14 +29,14 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-class DtmfEndpoint extends AbstractMethod<DtmfRequest, DtmfResponse> {
-    private static final Log LOG = LogFactory.getLog(DtmfEndpoint.class);
+class StartStreamEndpoint extends AbstractMethod<StreamRequest, StreamResponse> {
+    private static final Log LOG = LogFactory.getLog(StartStreamEndpoint.class);
 
     private static final String PATH = "/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
-    public static final String DTMF_PATH = "/dtmf";
+    private String uri;
 
-    DtmfEndpoint(HttpWrapper httpWrapper) {
+    StartStreamEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -46,8 +46,8 @@ class DtmfEndpoint extends AbstractMethod<DtmfRequest, DtmfResponse> {
     }
 
     @Override
-    public RequestBuilder makeRequest(DtmfRequest request) throws UnsupportedEncodingException {
-        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid() + DTMF_PATH;
+    public RequestBuilder makeRequest(StreamRequest request) throws UnsupportedEncodingException {
+        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid() + "/stream";
         return RequestBuilder.put(uri)
                 .setHeader("Content-Type", "application/json")
                 .setHeader("Accept", "application/json")
@@ -55,7 +55,7 @@ class DtmfEndpoint extends AbstractMethod<DtmfRequest, DtmfResponse> {
     }
 
     @Override
-    public DtmfResponse parseResponse(HttpResponse response) throws IOException {
-        return DtmfResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+    public StreamResponse parseResponse(HttpResponse response) throws IOException {
+        return StreamResponse.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 }

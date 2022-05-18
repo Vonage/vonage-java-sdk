@@ -22,21 +22,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
-class DtmfEndpoint extends AbstractMethod<DtmfRequest, DtmfResponse> {
-    private static final Log LOG = LogFactory.getLog(DtmfEndpoint.class);
+class ReadCallEndpoint extends AbstractMethod<String, CallInfo> {
+    private static final Log LOG = LogFactory.getLog(ReadCallEndpoint.class);
 
     private static final String PATH = "/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
-    public static final String DTMF_PATH = "/dtmf";
 
-    DtmfEndpoint(HttpWrapper httpWrapper) {
+    ReadCallEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -46,16 +42,14 @@ class DtmfEndpoint extends AbstractMethod<DtmfRequest, DtmfResponse> {
     }
 
     @Override
-    public RequestBuilder makeRequest(DtmfRequest request) throws UnsupportedEncodingException {
-        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid() + DTMF_PATH;
-        return RequestBuilder.put(uri)
-                .setHeader("Content-Type", "application/json")
-                .setHeader("Accept", "application/json")
-                .setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
+    public RequestBuilder makeRequest(String callId) {
+        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + callId;
+        return RequestBuilder.get(uri)
+                .setHeader("Accept", "application/json");
     }
 
     @Override
-    public DtmfResponse parseResponse(HttpResponse response) throws IOException {
-        return DtmfResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+    public CallInfo parseResponse(HttpResponse response) throws IOException {
+        return CallInfo.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 }

@@ -23,11 +23,19 @@ import com.vonage.client.*;
  * {@link VonageClient#getApplicationClient()}
  */
 public class ApplicationClient extends AbstractClient {
-    private ApplicationEndpoint applicationEndpoint;
+    private final CreateApplicationEndpoint createApplicationEndpoint;
+    private final UpdateApplicationEndpoint updateApplicationEndpoint;
+    private final GetApplicationEndpoint getApplicationEndpoint;
+    private final DeleteApplicationEndpoint deleteApplicationEndpoint;
+    private final ListApplicationsEndpoint listApplicationsEndpoint;
 
     public ApplicationClient(HttpWrapper httpWrapper) {
         super(httpWrapper);
-        applicationEndpoint = new ApplicationEndpoint(httpWrapper);
+        createApplicationEndpoint = new CreateApplicationEndpoint(httpWrapper);
+        updateApplicationEndpoint = new UpdateApplicationEndpoint(httpWrapper);
+        getApplicationEndpoint = new GetApplicationEndpoint(httpWrapper);
+        deleteApplicationEndpoint = new DeleteApplicationEndpoint(httpWrapper);
+        listApplicationsEndpoint = new ListApplicationsEndpoint(httpWrapper);
     }
 
     /**
@@ -41,7 +49,7 @@ public class ApplicationClient extends AbstractClient {
      * @throws VonageClientException        if there was a problem with the Vonage request.
      */
     public Application createApplication(Application application) throws VonageResponseParseException, VonageClientException {
-        return applicationEndpoint.create(application);
+        return createApplicationEndpoint.execute(application);
     }
 
     /**
@@ -55,7 +63,7 @@ public class ApplicationClient extends AbstractClient {
      * @throws VonageClientException        if there was a problem with the Vonage request.
      */
     public Application updateApplication(Application application) throws VonageResponseParseException, VonageClientException {
-        return applicationEndpoint.update(application);
+        return updateApplicationEndpoint.execute(application);
     }
 
     /**
@@ -69,7 +77,7 @@ public class ApplicationClient extends AbstractClient {
      * @throws VonageClientException        if there was a problem with the Vonage request.
      */
     public Application getApplication(String id) throws VonageResponseParseException, VonageClientException {
-        return applicationEndpoint.get(id);
+        return getApplicationEndpoint.execute(id);
     }
 
     /**
@@ -81,7 +89,7 @@ public class ApplicationClient extends AbstractClient {
      * @throws VonageClientException        if there was a problem with the Vonage request.
      */
     public void deleteApplication(String id) throws VonageResponseParseException, VonageClientException {
-        applicationEndpoint.delete(id);
+        deleteApplicationEndpoint.execute(id);
     }
 
     /**
@@ -107,6 +115,6 @@ public class ApplicationClient extends AbstractClient {
      * @throws VonageClientException        if there was a problem with the Vonage request.
      */
     public ApplicationList listApplications(ListApplicationRequest listApplicationRequest) throws VonageResponseParseException, VonageClientException {
-        return applicationEndpoint.list(listApplicationRequest);
+        return listApplicationsEndpoint.execute(listApplicationRequest);
     }
 }

@@ -29,14 +29,13 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-class DtmfEndpoint extends AbstractMethod<DtmfRequest, DtmfResponse> {
-    private static final Log LOG = LogFactory.getLog(DtmfEndpoint.class);
+class ModifyCallEndpoint extends AbstractMethod<CallModifier, ModifyCallResponse> {
+    private static final Log LOG = LogFactory.getLog(ModifyCallEndpoint.class);
 
     private static final String PATH = "/calls/";
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
-    public static final String DTMF_PATH = "/dtmf";
 
-    DtmfEndpoint(HttpWrapper httpWrapper) {
+    ModifyCallEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -46,8 +45,8 @@ class DtmfEndpoint extends AbstractMethod<DtmfRequest, DtmfResponse> {
     }
 
     @Override
-    public RequestBuilder makeRequest(DtmfRequest request) throws UnsupportedEncodingException {
-        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid() + DTMF_PATH;
+    public RequestBuilder makeRequest(CallModifier request) throws UnsupportedEncodingException {
+        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid();
         return RequestBuilder.put(uri)
                 .setHeader("Content-Type", "application/json")
                 .setHeader("Accept", "application/json")
@@ -55,7 +54,12 @@ class DtmfEndpoint extends AbstractMethod<DtmfRequest, DtmfResponse> {
     }
 
     @Override
-    public DtmfResponse parseResponse(HttpResponse response) throws IOException {
-        return DtmfResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+    public ModifyCallResponse parseResponse(HttpResponse response) throws IOException {
+        if (response.getStatusLine().getStatusCode() == 200) {
+            return ModifyCallResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+        }
+        else {
+            return null;
+        }
     }
 }

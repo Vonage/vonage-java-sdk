@@ -15,26 +15,51 @@
  */
 package com.vonage.client.verify;
 
+import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
-import com.vonage.client.VonageClientException;
-import com.vonage.client.VonageResponseParseException;
+import com.vonage.client.auth.TokenAuthMethod;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.impl.client.BasicResponseHandler;
 
-class CheckEndpoint {
-    private CheckMethod checkMethod;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
+class CheckEndpoint extends AbstractMethod<CheckRequest, CheckResponse> {
+    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
+
+    private static final String PATH = "/verify/check/json";
 
     CheckEndpoint(HttpWrapper httpWrapper) {
-        checkMethod = new CheckMethod(httpWrapper);
+        super(httpWrapper);
     }
 
-    CheckResponse check(final String requestId, final String code, final String ipAddress) throws VonageClientException, VonageResponseParseException {
-        return check(new CheckRequest(requestId, code, ipAddress));
+    @Override
+    protected Class[] getAcceptableAuthMethods() {
+        return ALLOWED_AUTH_METHODS;
     }
 
-    CheckResponse check(final String requestId, final String code) throws VonageClientException, VonageResponseParseException {
-        return check(new CheckRequest(requestId, code));
+    @Override
+    public RequestBuilder makeRequest(CheckRequest request) throws UnsupportedEncodingException {
+        if (request.getRequestId() == null || request.getCode() == null) {
+            throw new IllegalArgumentException("request ID and code parameters are mandatory.");
+        }
+
+        RequestBuilder result = RequestBuilder.post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH)
+                .setHeader("Content-Type", "application/json")
+                .setHeader("Accept", "application/json")
+                .addParameter("request_id", request.getRequestId())
+                .addParameter("code", request.getCode());
+
+        if (request.getIpAddress() != null) {
+            result.addParameter("ip_address", request.getIpAddress());
+        }
+
+        return result;
     }
 
-    private CheckResponse check(CheckRequest request) throws VonageClientException, VonageResponseParseException {
-        return checkMethod.execute(request);
+    @Override
+    public CheckResponse parseResponse(HttpResponse response) throws IOException {
+        return CheckResponse.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 }

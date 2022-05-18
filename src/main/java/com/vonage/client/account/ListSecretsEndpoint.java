@@ -13,7 +13,7 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.redact;
+package com.vonage.client.account;
 
 import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
@@ -23,19 +23,18 @@ import com.vonage.client.auth.SignatureAuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-class RedactEndpoint extends AbstractMethod<RedactRequest, Void> {
+class ListSecretsEndpoint extends AbstractMethod<String, ListSecretsResponse> {
     private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
 
-    private static final String PATH = "/redact/transaction";
+    private static final String PATH = "/accounts/%s/secrets";
 
-    RedactEndpoint(HttpWrapper httpWrapper) {
+    ListSecretsEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
@@ -45,28 +44,23 @@ class RedactEndpoint extends AbstractMethod<RedactRequest, Void> {
     }
 
     @Override
-    public RequestBuilder makeRequest(RedactRequest redactRequest) throws UnsupportedEncodingException {
-        if (redactRequest.getId() == null || redactRequest.getProduct() == null) {
-            throw new IllegalArgumentException("Redact transaction id and product are required.");
+    public RequestBuilder makeRequest(String apiKey) throws UnsupportedEncodingException {
+        if (apiKey == null) {
+            throw new IllegalArgumentException("API key is required.");
         }
 
-        if (redactRequest.getProduct() == RedactRequest.Product.SMS && redactRequest.getType() == null) {
-            throw new IllegalArgumentException("Redacting SMS requires a type.");
-        }
-
-        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH;
-        return RequestBuilder.post(uri)
-                .setHeader("Content-Type", "application/json")
-                .setEntity(new StringEntity(redactRequest.toJson(), ContentType.APPLICATION_JSON));
+        String uri = String.format(httpWrapper.getHttpConfig().getApiBaseUri() + PATH, apiKey);
+        return RequestBuilder.get(uri)
+                .setHeader("Accept", "application/json");
     }
 
     @Override
-    public Void parseResponse(HttpResponse response) throws IOException, VonageClientException {
-        if (response.getStatusLine().getStatusCode() != 204) {
+    public ListSecretsResponse parseResponse(HttpResponse response) throws IOException {
+        if (response.getStatusLine().getStatusCode() != 200) {
             throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
         }
 
-        return null;
+        return ListSecretsResponse.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 
     @Override
