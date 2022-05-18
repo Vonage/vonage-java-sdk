@@ -29,7 +29,7 @@ public abstract class ApplicationMethodTest {
     public void testApplyAuth() throws Exception {
         String expectedAuthStr = "Authorization: Basic NHQ4YWVhZ2I6WHlNczJKa21BMVp6OWRVaw==";
         HttpWrapper wrapper = new HttpWrapper(new TokenAuthMethod("4t8aeagb", "XyMs2JkmA1Zz9dUk"));
-        CreateApplicationMethod method = new CreateApplicationMethod(wrapper);
+        CreateApplicationEndpoint method = new CreateApplicationEndpoint(wrapper);
         RequestBuilder request = method.makeRequest(Application.builder().build());
         RequestBuilder requestWithAuth = method.applyAuth(request);
 

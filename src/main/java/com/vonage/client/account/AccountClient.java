@@ -103,7 +103,7 @@ public class AccountClient extends AbstractClient {
      *                                     that the request was unsuccessful.
      */
     public void topUp(String transaction) throws VonageResponseParseException, VonageClientException {
-        topUp.topUp(new TopUpRequest(transaction));
+        topUp.execute(new TopUpRequest(transaction));
     }
 
     /**
@@ -203,6 +203,6 @@ public class AccountClient extends AbstractClient {
      *                                     that the request was unsuccessful.
      */
     public SettingsResponse updateSettings(SettingsRequest request) throws VonageResponseParseException, VonageClientException {
-        return settings.updateSettings(request);
+        return settings.execute(request);
     }
 }

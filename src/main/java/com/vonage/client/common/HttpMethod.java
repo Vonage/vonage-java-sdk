@@ -17,8 +17,9 @@ package com.vonage.client.common;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Enumeration representing various HTTP Methods
@@ -31,17 +32,13 @@ public enum HttpMethod {
     PATCH,
     UNKNOWN;
 
-    private static final Map<String, HttpMethod> HTTP_METHOD_INDEX = new HashMap<>();
-
-    static {
-        for (HttpMethod httpMethod : HttpMethod.values()) {
-            HTTP_METHOD_INDEX.put(httpMethod.name(), httpMethod);
-        }
-    }
+    private static final Map<String, HttpMethod> HTTP_METHOD_INDEX =
+            Arrays.stream(HttpMethod.values()).collect(
+                    Collectors.toMap(HttpMethod::name, hm -> hm)
+            );
 
     @JsonCreator
     public static HttpMethod fromString(String name) {
-        HttpMethod foundHttpMethod = HTTP_METHOD_INDEX.get(name.toUpperCase());
-        return (foundHttpMethod != null) ? foundHttpMethod : UNKNOWN;
+        return HTTP_METHOD_INDEX.getOrDefault(name.toUpperCase(), UNKNOWN);
     }
 }

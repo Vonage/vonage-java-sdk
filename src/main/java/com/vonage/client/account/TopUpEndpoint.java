@@ -15,16 +15,46 @@
  */
 package com.vonage.client.account;
 
+import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
+import com.vonage.client.VonageBadRequestException;
+import com.vonage.client.VonageClientException;
+import com.vonage.client.auth.TokenAuthMethod;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.util.EntityUtils;
 
-class TopUpEndpoint {
-    private TopUpMethod topUpMethod;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
+class TopUpEndpoint extends AbstractMethod<TopUpRequest, Void> {
+    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
+
+    private static final String PATH = "/account/top-up";
 
     TopUpEndpoint(HttpWrapper httpWrapper) {
-        topUpMethod = new TopUpMethod(httpWrapper);
+        super(httpWrapper);
     }
 
-    void topUp(TopUpRequest request) {
-        topUpMethod.execute(request);
+    @Override
+    protected Class[] getAcceptableAuthMethods() {
+        return ALLOWED_AUTH_METHODS;
+    }
+
+    @Override
+    public RequestBuilder makeRequest(TopUpRequest request) throws UnsupportedEncodingException {
+        String uri = httpWrapper.getHttpConfig().getRestBaseUri() + PATH;
+        return RequestBuilder.get(uri)
+                .setHeader("Content-Type", "application/x-www-form-urlencoded")
+                .addParameter("trx", request.getTrx());
+    }
+
+    @Override
+    public Void parseResponse(HttpResponse response) throws IOException, VonageClientException {
+        if (response.getStatusLine().getStatusCode() != 200) {
+            throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
+        }
+
+        return null;
     }
 }

@@ -19,15 +19,14 @@ import com.vonage.client.ClientTest;
 import com.vonage.client.application.capabilities.*;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.common.Webhook;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 public class ApplicationClientTest extends ClientTest<ApplicationClient> {
-    @Before
-    public void setUp() {
+
+    public ApplicationClientTest() {
         client = new ApplicationClient(wrapper);
     }
 

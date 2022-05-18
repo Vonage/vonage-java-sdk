@@ -57,9 +57,9 @@ public class TestUtils {
         byte[] buf = new byte[size];
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream(2048);
-        try (InputStream is = this.getClass().getResourceAsStream(path)) {
+        try (InputStream is = getClass().getResourceAsStream(path)) {
             if (is == null) {
-                throw new IOException("Could not find resource at: " + this.getClass().getResource(path));
+                throw new IOException("Could not find resource at: " + getClass().getResource(path));
             }
             for (int len; (len = is.read(buf, 0, size)) != -1; bos.write(buf, 0, len));
         }

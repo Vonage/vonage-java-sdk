@@ -15,18 +15,49 @@
  */
 package com.vonage.client.verify;
 
+import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
-import com.vonage.client.VonageClientException;
-import com.vonage.client.VonageResponseParseException;
+import com.vonage.client.auth.TokenAuthMethod;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.impl.client.BasicResponseHandler;
 
-class SearchEndpoint {
-    private SearchMethod searchMethod;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
+class SearchEndpoint extends AbstractMethod<SearchRequest, SearchVerifyResponse> {
+    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
+
+    private static final String PATH = "/verify/search/json";
 
     SearchEndpoint(HttpWrapper httpWrapper) {
-        searchMethod = new SearchMethod(httpWrapper);
+        super(httpWrapper);
     }
 
-    SearchVerifyResponse search(String... requestIds) throws VonageClientException, VonageResponseParseException {
-        return searchMethod.execute(new SearchRequest(requestIds));
+    @Override
+    protected Class[] getAcceptableAuthMethods() {
+        return ALLOWED_AUTH_METHODS;
+    }
+
+    @Override
+    public RequestBuilder makeRequest(SearchRequest request) throws UnsupportedEncodingException {
+        RequestBuilder result = RequestBuilder
+            .post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH)
+            .setHeader("Accept", "application/json");
+
+        if (request.getRequestIds().length == 1) {
+            result.addParameter("request_id", request.getRequestIds()[0]);
+        }
+        else {
+            for (String requestId : request.getRequestIds()) {
+                result.addParameter("request_ids", requestId);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public SearchVerifyResponse parseResponse(HttpResponse response) throws IOException {
+        return SearchVerifyResponse.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 }

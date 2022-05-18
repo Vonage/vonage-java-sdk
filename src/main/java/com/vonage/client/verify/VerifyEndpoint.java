@@ -15,55 +15,77 @@
  */
 package com.vonage.client.verify;
 
+import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
-import com.vonage.client.VonageClientException;
+import com.vonage.client.auth.TokenAuthMethod;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.message.BasicNameValuePair;
 
-import java.util.Locale;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
-class VerifyEndpoint {
-    private VerifyMethod verifyMethod;
+class VerifyEndpoint extends AbstractMethod<VerifyRequest, VerifyResponse> {
+    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
+
+    private static final String PATH = "/verify/json";
 
     VerifyEndpoint(HttpWrapper httpWrapper) {
-        this.verifyMethod = new VerifyMethod(httpWrapper);
+        super(httpWrapper);
     }
 
-    VerifyResponse verify(String number, String brand, String from, int length, Locale locale, VerifyRequest.LineType type) throws VonageClientException {
-        return verify(new VerifyRequest.Builder(number, brand)
-                .senderId(from)
-                .locale(locale)
-                .type(type)
-                .build()
-        );
+    @Override
+    protected Class[] getAcceptableAuthMethods() {
+        return ALLOWED_AUTH_METHODS;
     }
 
-    VerifyResponse verify(String number, String brand, String from, int length, Locale locale) throws VonageClientException {
-        return verify(new VerifyRequest.Builder(number, brand)
-                .senderId(from)
-                .locale(locale)
-                .build()
-        );
+    @Override
+    public RequestBuilder makeRequest(VerifyRequest request) throws UnsupportedEncodingException {
+        RequestBuilder result = RequestBuilder
+                .post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH)
+                .setHeader("Content-Type", "application/json")
+                .setHeader("Accept", "application/json")
+                .addParameter("number", request.getNumber())
+                .addParameter("brand", request.getBrand());
+
+        if (request.getFrom() != null) {
+            result.addParameter("sender_id", request.getFrom());
+        }
+
+        if (request.getLength() != null && request.getLength() > 0) {
+            result.addParameter("code_length", Integer.toString(request.getLength()));
+        }
+
+        if (request.getLocale() != null) {
+            result.addParameter(new BasicNameValuePair("lg", (request.getDashedLocale())));
+        }
+
+        if (request.getType() != null) {
+            result.addParameter("require_type", request.getType().toString());
+        }
+
+        if (request.getCountry() != null) {
+            result.addParameter("country", request.getCountry());
+        }
+
+        if (request.getPinExpiry() != null) {
+            result.addParameter("pin_expiry", request.getPinExpiry().toString());
+        }
+
+        if (request.getNextEventWait() != null) {
+            result.addParameter("next_event_wait", request.getNextEventWait().toString());
+        }
+
+        if (request.getWorkflow() != null) {
+            result.addParameter("workflow_id", String.valueOf(request.getWorkflow().getId()));
+        }
+
+        return result;
     }
 
-    VerifyResponse verify(String number, String brand, String from) throws VonageClientException {
-        return verify(new VerifyRequest.Builder(number, brand)
-                .senderId(from)
-                .build()
-        );
-    }
-
-    VerifyResponse verify(String number, String brand) throws VonageClientException {
-        return verify(new VerifyRequest.Builder(number, brand).build());
-    }
-
-    VerifyResponse verify(String number, String brand, VerifyRequest.Workflow workflow) throws VonageClientException {
-        return verify(
-                new VerifyRequest.Builder(number, brand)
-                        .workflow(workflow)
-                        .build()
-        );
-    }
-
-    VerifyResponse verify(VerifyRequest request) throws VonageClientException {
-        return this.verifyMethod.execute(request);
+    @Override
+    public VerifyResponse parseResponse(HttpResponse response) throws IOException {
+        return VerifyResponse.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 }

@@ -1,39 +1,85 @@
 /*
- *   Copyright 2020 Vonage
+ * Copyright (c) 2011-2017 Nexmo Inc
  *
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- *        http://www.apache.org/licenses/LICENSE-2.0
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 package com.vonage.client.verify;
 
+import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
+import com.vonage.client.auth.TokenAuthMethod;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.impl.client.BasicResponseHandler;
 
-public class Psd2Endpoint {
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
-    public Psd2Method method;
+public class Psd2Endpoint extends AbstractMethod<Psd2Request, VerifyResponse> {
+    private static final Log LOG = LogFactory.getLog(Psd2Endpoint.class);
+
+    private static final String PATH = "/verify/psd2/json";
+    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
 
     public Psd2Endpoint(HttpWrapper wrapper) {
-        method = new Psd2Method(wrapper);
+        super(wrapper);
     }
 
-    public VerifyResponse psd2Verify(String number, Double amount, String payee){
-        return psd2Verify(new Psd2Request.Builder(number, amount, payee).build());
+    @Override
+    protected Class[] getAcceptableAuthMethods() {
+        return ALLOWED_AUTH_METHODS;
     }
 
-    public VerifyResponse psd2Verify(String number, Double amount, String payee, Psd2Request.Workflow workflow){
-        return psd2Verify(new Psd2Request.Builder(number, amount, payee).workflow(workflow).build());
+    @Override
+    public RequestBuilder makeRequest(Psd2Request request) throws UnsupportedEncodingException {
+        RequestBuilder builder =  RequestBuilder
+                .post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH)
+                .setHeader("Accept", "application/json")
+                .addParameter("number", request.getNumber())
+                .addParameter("payee", request.getPayee())
+                .addParameter("amount", Double.toString(request.getAmount()));
+
+        //add additional parameters if they are present
+        if (request.getWorkflow() != null) {
+            builder.addParameter("workflow_id", Integer.toString(request.getWorkflow().getId()));
+        }
+
+        optionalParams(builder, "code_length", request.getLength());
+        optionalParams(builder, "lg", request.getDashedLocale());
+        optionalParams(builder, "country", request.getCountry());
+        optionalParams(builder, "pin_expiry", request.getPinExpiry());
+        optionalParams(builder, "next_event_wait", request.getNextEventWait());
+
+        return builder;
+
     }
 
-    public VerifyResponse psd2Verify(Psd2Request request){
-        return method.execute(request);
+    @Override
+    public VerifyResponse parseResponse(HttpResponse response) throws IOException {
+        return VerifyResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+    }
+
+    private void optionalParams(RequestBuilder builder, String paramName, Object value) {
+        if (value != null) {
+            builder.addParameter(paramName, value + "");
+        }
     }
 }

@@ -15,16 +15,46 @@
  */
 package com.vonage.client.account;
 
+import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
+import com.vonage.client.VonageBadRequestException;
+import com.vonage.client.auth.TokenAuthMethod;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.util.EntityUtils;
 
-class SettingsEndpoint {
-    private SettingsMethod method;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
-    SettingsEndpoint(HttpWrapper wrapper) {
-        method = new SettingsMethod(wrapper);
+class SettingsEndpoint extends AbstractMethod<SettingsRequest, SettingsResponse> {
+    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
+
+    private static final String PATH = "/account/settings";
+
+    SettingsEndpoint(HttpWrapper httpWrapper) {
+        super(httpWrapper);
     }
 
-    SettingsResponse updateSettings(SettingsRequest request) {
-        return method.execute(request);
+    @Override
+    protected Class[] getAcceptableAuthMethods() {
+        return ALLOWED_AUTH_METHODS;
+    }
+
+    @Override
+    public RequestBuilder makeRequest(SettingsRequest request) throws UnsupportedEncodingException {
+        String uri = httpWrapper.getHttpConfig().getRestBaseUri() + PATH;
+        return RequestBuilder.post(uri)
+                .setHeader("Accept", "application/json")
+                .addParameter("moCallBackUrl", request.getIncomingSmsUrl())
+                .addParameter("drCallBackUrl", request.getDeliveryReceiptUrl());
+    }
+
+    @Override
+    public SettingsResponse parseResponse(HttpResponse response) throws IOException {
+        if (response.getStatusLine().getStatusCode() != 200) {
+            throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
+        }
+        return SettingsResponse.fromJson(new BasicResponseHandler().handleResponse(response));
     }
 }

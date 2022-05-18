@@ -18,32 +18,32 @@ package com.vonage.client.account;
 import com.vonage.client.HttpWrapper;
 
 class SecretManagementEndpoint {
-    private ListSecretsMethod listSecretsMethod;
-    private GetSecretMethod getSecretMethod;
-    private CreateSecretMethod createSecretMethod;
-    private RevokeSecretMethod revokeSecretMethod;
+    private ListSecretsEndpoint listSecretsEndpoint;
+    private GetSecretEndpoint getSecretEndpoint;
+    private CreateSecretEndpoint createSecretEndpoint;
+    private RevokeSecretEndpoint revokeSecretEndpoint;
 
     SecretManagementEndpoint(HttpWrapper httpWrapper) {
-        listSecretsMethod = new ListSecretsMethod(httpWrapper);
-        getSecretMethod = new GetSecretMethod(httpWrapper);
-        createSecretMethod = new CreateSecretMethod(httpWrapper);
-        revokeSecretMethod = new RevokeSecretMethod(httpWrapper);
+        listSecretsEndpoint = new ListSecretsEndpoint(httpWrapper);
+        getSecretEndpoint = new GetSecretEndpoint(httpWrapper);
+        createSecretEndpoint = new CreateSecretEndpoint(httpWrapper);
+        revokeSecretEndpoint = new RevokeSecretEndpoint(httpWrapper);
 
     }
 
     ListSecretsResponse listSecrets(String apiKey) {
-        return listSecretsMethod.execute(apiKey);
+        return listSecretsEndpoint.execute(apiKey);
     }
 
     SecretResponse getSecret(SecretRequest secretRequest) {
-        return getSecretMethod.execute(secretRequest);
+        return getSecretEndpoint.execute(secretRequest);
     }
 
     SecretResponse createSecret(CreateSecretRequest createSecretRequest) {
-        return createSecretMethod.execute(createSecretRequest);
+        return createSecretEndpoint.execute(createSecretRequest);
     }
 
     void revokeSecret(SecretRequest secretRequest) {
-        revokeSecretMethod.execute(secretRequest);
+        revokeSecretEndpoint.execute(secretRequest);
     }
 }

@@ -15,8 +15,6 @@
  */
 package com.vonage.client.voice;
 
-
-
 import com.vonage.client.*;
 import com.vonage.client.voice.ncco.Ncco;
 
@@ -25,9 +23,14 @@ import com.vonage.client.voice.ncco.Ncco;
  * VonageClient#getVoiceClient()}.
  */
 public class VoiceClient extends AbstractClient {
-    protected final CallsEndpoint calls;
-    protected final StreamsEndpoint streams;
-    protected final TalkEndpoint talk;
+    protected final CreateCallEndpoint createCall;
+    protected final ReadCallEndpoint readCall;
+    protected final ListCallsEndpoint listCalls;
+    protected final ModifyCallEndpoint modifyCall;
+    protected final StartStreamEndpoint startStream;
+    protected final StopStreamEndpoint stopStream;
+    protected final StartTalkEndpoint startTalk;
+    protected final StopTalkEndpoint stopTalk;
     protected final DtmfEndpoint dtmf;
     protected final DownloadRecordingEndpoint downloadRecording;
 
@@ -38,10 +41,14 @@ public class VoiceClient extends AbstractClient {
      */
     public VoiceClient(HttpWrapper httpWrapper) {
         super(httpWrapper);
-
-        calls = new CallsEndpoint(httpWrapper);
-        streams = new StreamsEndpoint(httpWrapper);
-        talk = new TalkEndpoint(httpWrapper);
+        createCall = new CreateCallEndpoint(httpWrapper);
+        readCall = new ReadCallEndpoint(httpWrapper);
+        listCalls = new ListCallsEndpoint(httpWrapper);
+        modifyCall = new ModifyCallEndpoint(httpWrapper);
+        startStream = new StartStreamEndpoint(httpWrapper);
+        stopStream = new StopStreamEndpoint(httpWrapper);
+        startTalk = new StartTalkEndpoint(httpWrapper);
+        stopTalk = new StopTalkEndpoint(httpWrapper);
         dtmf = new DtmfEndpoint(httpWrapper);
         downloadRecording = new DownloadRecordingEndpoint(httpWrapper);
     }
@@ -58,7 +65,7 @@ public class VoiceClient extends AbstractClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public CallEvent createCall(Call callRequest) throws VonageResponseParseException, VonageClientException {
-        return calls.post(callRequest);
+        return createCall.execute(callRequest);
     }
 
     /**
@@ -71,7 +78,7 @@ public class VoiceClient extends AbstractClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public CallInfoPage listCalls() throws VonageResponseParseException, VonageClientException {
-        return this.listCalls(null);
+        return listCalls(null);
     }
 
     /**
@@ -86,7 +93,7 @@ public class VoiceClient extends AbstractClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public CallInfoPage listCalls(CallsFilter filter) throws VonageResponseParseException, VonageClientException {
-        return calls.get(filter);
+        return listCalls.execute(filter);
     }
 
     /**
@@ -101,7 +108,7 @@ public class VoiceClient extends AbstractClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public CallInfo getCallDetails(String uuid) throws VonageResponseParseException, VonageClientException {
-        return calls.get(uuid);
+        return readCall.execute(uuid);
     }
 
     /**
@@ -119,7 +126,7 @@ public class VoiceClient extends AbstractClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public DtmfResponse sendDtmf(String uuid, String digits) throws VonageResponseParseException, VonageClientException {
-        return dtmf.put(uuid, digits);
+        return dtmf.execute(new DtmfRequest(uuid, digits));
     }
 
     /**
@@ -161,7 +168,7 @@ public class VoiceClient extends AbstractClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public ModifyCallResponse modifyCall(CallModifier modifier) throws VonageResponseParseException, VonageClientException {
-        return calls.put(modifier);
+        return modifyCall.execute(modifier);
     }
 
     /**
@@ -177,7 +184,7 @@ public class VoiceClient extends AbstractClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public ModifyCallResponse transferCall(String uuid, String nccoUrl) throws VonageResponseParseException, VonageClientException {
-        return this.modifyCall(CallModifier.transferCall(uuid, nccoUrl));
+        return modifyCall(CallModifier.transferCall(uuid, nccoUrl));
     }
 
     /**
@@ -193,7 +200,7 @@ public class VoiceClient extends AbstractClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public ModifyCallResponse transferCall(String uuid, Ncco ncco) throws VonageResponseParseException, VonageClientException {
-        return this.modifyCall(CallModifier.transferCall(uuid, ncco));
+        return modifyCall(CallModifier.transferCall(uuid, ncco));
     }
 
     /**
@@ -211,7 +218,7 @@ public class VoiceClient extends AbstractClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public StreamResponse startStream(String uuid, String streamUrl, int loop) throws VonageResponseParseException, VonageClientException {
-        return streams.put(new StreamRequest(uuid, streamUrl, loop));
+        return startStream.execute(new StreamRequest(uuid, streamUrl, loop));
     }
 
     /**
@@ -227,7 +234,7 @@ public class VoiceClient extends AbstractClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public StreamResponse startStream(String uuid, String streamUrl) throws VonageResponseParseException, VonageClientException {
-        return streams.put(new StreamRequest(uuid, streamUrl, 1));
+        return startStream(uuid, streamUrl, 1);
     }
 
     /**
@@ -242,7 +249,7 @@ public class VoiceClient extends AbstractClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public StreamResponse stopStream(String uuid) throws VonageResponseParseException, VonageClientException {
-        return streams.delete(uuid);
+        return stopStream.execute(uuid);
     }
 
     /**
@@ -260,7 +267,7 @@ public class VoiceClient extends AbstractClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public TalkResponse startTalk(String uuid, String text) throws VonageResponseParseException, VonageClientException {
-        return talk.put(new TalkRequest(uuid, text));
+        return startTalk.execute(new TalkRequest(uuid, text));
     }
 
     /**
@@ -278,7 +285,7 @@ public class VoiceClient extends AbstractClient {
      */
     @Deprecated
     public TalkResponse startTalk(String uuid, String text, VoiceName voiceName) throws VonageResponseParseException, VonageClientException {
-        return talk.put(new TalkRequest(uuid, text, voiceName));
+        return startTalk.execute(new TalkRequest(uuid, text, voiceName));
     }
 
     /**
@@ -297,7 +304,7 @@ public class VoiceClient extends AbstractClient {
      *
      */
     public TalkResponse startTalk(String uuid, String text, TextToSpeechLanguage language, Integer style) throws VonageResponseParseException, VonageClientException {
-        return talk.put(new TalkRequest(uuid, text, language, style));
+        return startTalk.execute(new TalkRequest(uuid, text, language, style));
     }
 
     /**
@@ -314,7 +321,7 @@ public class VoiceClient extends AbstractClient {
      *
      */
     public TalkResponse startTalk(String uuid, String text, TextToSpeechLanguage language) throws VonageResponseParseException, VonageClientException {
-        return talk.put(new TalkRequest(uuid, text, language));
+        return startTalk.execute(new TalkRequest(uuid, text, language));
     }
 
     /**
@@ -334,7 +341,7 @@ public class VoiceClient extends AbstractClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public TalkResponse startTalk(String uuid, String text, int loop) throws VonageResponseParseException, VonageClientException {
-        return talk.put(new TalkRequest(uuid, text, loop));
+        return startTalk.execute(new TalkRequest(uuid, text, loop));
     }
 
     /**
@@ -354,7 +361,7 @@ public class VoiceClient extends AbstractClient {
      */
     @Deprecated
     public TalkResponse startTalk(String uuid, String text, VoiceName voiceName, int loop) throws VonageResponseParseException, VonageClientException {
-        return talk.put(new TalkRequest(uuid, text, voiceName, loop));
+        return startTalk.execute(new TalkRequest(uuid, text, voiceName, loop));
     }
 
     /**
@@ -374,7 +381,7 @@ public class VoiceClient extends AbstractClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public TalkResponse startTalk(String uuid, String text, TextToSpeechLanguage language, int style, int loop) throws VonageResponseParseException, VonageClientException {
-        return talk.put(new TalkRequest(uuid, text, language, style, loop));
+        return startTalk.execute(new TalkRequest(uuid, text, language, style, loop));
     }
 
     /**
@@ -392,7 +399,7 @@ public class VoiceClient extends AbstractClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public TalkResponse startTalk(String uuid, String text, TextToSpeechLanguage language, int style) throws VonageResponseParseException, VonageClientException {
-        return talk.put(new TalkRequest(uuid, text, language, style));
+        return startTalk.execute(new TalkRequest(uuid, text, language, style));
     }
 
 
@@ -408,7 +415,7 @@ public class VoiceClient extends AbstractClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public TalkResponse stopTalk(String uuid) throws VonageResponseParseException, VonageClientException {
-        return talk.delete(uuid);
+        return stopTalk.execute(uuid);
     }
 
     /**
@@ -425,6 +432,6 @@ public class VoiceClient extends AbstractClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public Recording downloadRecording(String recordingUrl) throws VonageResponseParseException, VonageClientException {
-        return this.downloadRecording.execute(recordingUrl);
+        return downloadRecording.execute(recordingUrl);
     }
 }

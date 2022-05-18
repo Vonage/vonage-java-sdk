@@ -15,17 +15,62 @@
  */
 package com.vonage.client.redact;
 
+import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
+import com.vonage.client.VonageBadRequestException;
 import com.vonage.client.VonageClientException;
+import com.vonage.client.auth.SignatureAuthMethod;
+import com.vonage.client.auth.TokenAuthMethod;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.util.EntityUtils;
 
-class RedactEndpoint {
-    private RedactMethod redactMethod;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
+class RedactEndpoint extends AbstractMethod<RedactRequest, Void> {
+    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
+
+    private static final String PATH = "/redact/transaction";
 
     RedactEndpoint(HttpWrapper httpWrapper) {
-        redactMethod = new RedactMethod(httpWrapper);
+        super(httpWrapper);
     }
 
-    void redactTransaction(RedactRequest redactRequest) throws VonageClientException {
-        redactMethod.execute(redactRequest);
+    @Override
+    protected Class[] getAcceptableAuthMethods() {
+        return ALLOWED_AUTH_METHODS;
+    }
+
+    @Override
+    public RequestBuilder makeRequest(RedactRequest redactRequest) throws UnsupportedEncodingException {
+        if (redactRequest.getId() == null || redactRequest.getProduct() == null) {
+            throw new IllegalArgumentException("Redact transaction id and product are required.");
+        }
+
+        if (redactRequest.getProduct() == RedactRequest.Product.SMS && redactRequest.getType() == null) {
+            throw new IllegalArgumentException("Redacting SMS requires a type.");
+        }
+
+        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH;
+        return RequestBuilder.post(uri)
+                .setHeader("Content-Type", "application/json")
+                .setEntity(new StringEntity(redactRequest.toJson(), ContentType.APPLICATION_JSON));
+    }
+
+    @Override
+    public Void parseResponse(HttpResponse response) throws IOException, VonageClientException {
+        if (response.getStatusLine().getStatusCode() != 204) {
+            throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
+        }
+
+        return null;
+    }
+
+    @Override
+    protected RequestBuilder applyAuth(RequestBuilder request) throws VonageClientException {
+        return getAuthMethod(getAcceptableAuthMethods()).applyAsBasicAuth(request);
     }
 }

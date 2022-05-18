@@ -40,6 +40,4 @@ public abstract class MethodTest<T> {
         }
         assertFalse("" + params + " should not contain " + key, keys.contains(key));
     }
-
-
 }

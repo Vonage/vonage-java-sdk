@@ -22,7 +22,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.junit.Before;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
@@ -33,8 +32,7 @@ public abstract class ClientTest<T extends AbstractClient> {
     protected HttpWrapper wrapper;
     protected T client;
 
-    @Before
-    public void setupWrapper() {
+    protected ClientTest() {
         wrapper = new HttpWrapper(new TokenAuthMethod("not-an-api-key", "secret"));
     }
 

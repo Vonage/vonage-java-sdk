@@ -67,7 +67,7 @@ public class VerifyClient extends AbstractClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public VerifyResponse verify(final String number, final String brand) throws VonageResponseParseException, VonageClientException {
-        return this.verify.verify(number, brand);
+        return verify(new VerifyRequest.Builder(number, brand).build());
     }
 
     /**
@@ -88,7 +88,10 @@ public class VerifyClient extends AbstractClient {
      */
     public VerifyResponse verify(final String number, final String brand, VerifyRequest.Workflow workflow)
             throws VonageResponseParseException, VonageClientException {
-        return this.verify.verify(number, brand, workflow);
+        return verify(new VerifyRequest.Builder(number, brand)
+                .workflow(workflow)
+                .build()
+        );
     }
 
 
@@ -111,7 +114,10 @@ public class VerifyClient extends AbstractClient {
     public VerifyResponse verify(final String number,
                                  final String brand,
                                  final String from) throws VonageClientException, VonageResponseParseException {
-        return this.verify.verify(number, brand, from);
+        return verify(new VerifyRequest.Builder(number, brand)
+                .senderId(from)
+                .build()
+        );
     }
 
     /**
@@ -138,7 +144,11 @@ public class VerifyClient extends AbstractClient {
                                  final String from,
                                  final int length,
                                  final Locale locale) throws VonageClientException, VonageResponseParseException {
-        return this.verify.verify(number, brand, from, length, locale);
+        return verify(new VerifyRequest.Builder(number, brand)
+                .senderId(from)
+                .locale(locale)
+                .build()
+        );
     }
 
     /**
@@ -168,7 +178,12 @@ public class VerifyClient extends AbstractClient {
                                  final int length,
                                  final Locale locale,
                                  final VerifyRequest.LineType type) throws VonageClientException {
-        return this.verify.verify(number, brand, from, length, locale, type);
+        return verify(new VerifyRequest.Builder(number, brand)
+                .senderId(from)
+                .locale(locale)
+                .type(type)
+                .build()
+        );
     }
 
     /**
@@ -182,7 +197,20 @@ public class VerifyClient extends AbstractClient {
      *
      */
     public VerifyResponse verify(VerifyRequest request) throws VonageClientException, VonageResponseParseException {
-        return this.verify.verify(request);
+        return this.verify.execute(request);
+    }
+
+    /**
+     * Validate a code provided by a user in response to a call from {@link #verify}.
+     *
+     * @param request The request to send for validation.
+     * @return a CheckResponse representing the response received from the API call.
+     *
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     */
+    public CheckResponse check(CheckRequest request) throws VonageClientException, VonageResponseParseException {
+        return this.check.execute(request);
     }
 
     /**
@@ -197,7 +225,7 @@ public class VerifyClient extends AbstractClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public CheckResponse check(final String requestId, final String code) throws VonageClientException, VonageResponseParseException {
-        return this.check.check(requestId, code);
+        return check(new CheckRequest(requestId, code));
     }
 
     /**
@@ -215,7 +243,7 @@ public class VerifyClient extends AbstractClient {
     public CheckResponse check(final String requestId,
                                final String code,
                                final String ipAddress) throws VonageClientException, VonageResponseParseException {
-        return this.check.check(requestId, code, ipAddress);
+        return check(new CheckRequest(requestId, code, ipAddress));
     }
 
     /**
@@ -230,7 +258,7 @@ public class VerifyClient extends AbstractClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public SearchVerifyResponse search(String requestId) throws VonageClientException, VonageResponseParseException {
-        return this.search.search(requestId);
+        return this.search.execute(new SearchRequest(requestId));
     }
 
     /**
@@ -244,7 +272,7 @@ public class VerifyClient extends AbstractClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public SearchVerifyResponse search(String... requestIds) throws VonageClientException, VonageResponseParseException {
-        return this.search.search(requestIds);
+        return this.search.execute(new SearchRequest(requestIds));
     }
 
     /**
@@ -290,7 +318,7 @@ public class VerifyClient extends AbstractClient {
      * @since 5.5.0
      */
     public VerifyResponse psd2Verify(String number, Double amount, String payee) throws VonageClientException, VonageResponseParseException {
-        return this.psd2.psd2Verify(number, amount, payee);
+        return psd2Verify(new Psd2Request.Builder(number, amount, payee).build());
     }
 
     /**
@@ -311,13 +339,13 @@ public class VerifyClient extends AbstractClient {
      */
     public VerifyResponse psd2Verify(String number, Double amount, String payee, Psd2Request.Workflow workflow)
             throws VonageClientException, VonageResponseParseException {
-        return this.psd2.psd2Verify(number, amount, payee, workflow);
+        return psd2Verify(new Psd2Request.Builder(number, amount, payee).workflow(workflow).build());
     }
 
     /**
      * Send a PSD2 verification request to a phone number with optional parameters
      *
-     * @param psd2Request request to to send PSD2 verification to a phone.
+     * @param psd2Request request to send PSD2 verification to a phone.
      *
      * @return A VerifyResponse representing the response from the API.
      *
@@ -327,8 +355,7 @@ public class VerifyClient extends AbstractClient {
      * @since 5.5.0
      */
     public VerifyResponse psd2Verify(Psd2Request psd2Request) throws VonageClientException, VonageResponseParseException {
-        return this.psd2.psd2Verify(psd2Request);
+        return this.psd2.execute(psd2Request);
     }
-
 
 }
