@@ -18,8 +18,10 @@ package com.vonage.client.numbers;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Enumeration representing the type of number.
@@ -30,13 +32,10 @@ public enum Type {
     LANDLINE_TOLL_FREE("landline-toll-free"),
     UNKNOWN("unknown");
 
-    private static final Map<String, Type> TYPE_INDEX = new HashMap<>();
-
-    static {
-        for (Type type : Type.values()) {
-            TYPE_INDEX.put(type.type, type);
-        }
-    }
+    private static final Map<String, Type> TYPE_INDEX =
+        Arrays.stream(Type.values()).collect(Collectors.toMap(
+                Type::getType, Function.identity()
+        ));
 
     private final String type;
 
@@ -51,7 +50,6 @@ public enum Type {
 
     @JsonCreator
     public static Type fromString(String type) {
-        Type foundType = TYPE_INDEX.get(type);
-        return (foundType != null) ? foundType : UNKNOWN;
+        return TYPE_INDEX.getOrDefault(type, UNKNOWN);
     }
 }

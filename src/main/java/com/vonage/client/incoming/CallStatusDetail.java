@@ -17,9 +17,6 @@ package com.vonage.client.incoming;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public enum CallStatusDetail {
     /**
      * no detail field present
@@ -62,22 +59,17 @@ public enum CallStatusDetail {
      * **/
     UNAVAILABLE;
 
-    private static final Map<String, CallStatusDetail> CALL_DETAIL_INDEX = new HashMap<>();
-
-    static {
-        for (CallStatusDetail detail : CallStatusDetail.values()) {
-            CALL_DETAIL_INDEX.put(detail.name(), detail);
-        }
-    }
 
     @JsonCreator
     public static CallStatusDetail fromString(String detail) {
-        if(detail == null)
+        if (detail == null) {
             return NO_DETAIL;
-        CallStatusDetail foundCallStatusDetail = CALL_DETAIL_INDEX.get(detail.toUpperCase());
-        if(foundCallStatusDetail == null){
-            foundCallStatusDetail = UNMAPPED_DETAIL;
         }
-        return foundCallStatusDetail;
+        try {
+            return CallStatusDetail.valueOf(detail.toUpperCase());
+        }
+        catch (IllegalArgumentException ex) {
+            return UNMAPPED_DETAIL;
+        }
     }
 }

@@ -18,7 +18,6 @@ package com.vonage.client.numbers;
 
 import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
-import com.vonage.client.VonageClientException;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
@@ -52,9 +51,5 @@ class ListNumbersEndpoint extends AbstractMethod<ListNumbersFilter, ListNumbersR
     @Override
     public ListNumbersResponse parseResponse(HttpResponse response) throws IOException {
         return ListNumbersResponse.fromJson(new BasicResponseHandler().handleResponse(response));
-    }
-
-    ListNumbersResponse listNumbers(ListNumbersFilter request) throws VonageClientException {
-        return execute(request);
     }
 }

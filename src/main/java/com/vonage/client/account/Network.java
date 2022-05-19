@@ -21,8 +21,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Network {
@@ -67,14 +65,6 @@ public class Network {
     enum Type {
         MOBILE, LANDLINE, PAGER, LANDLINE_TOLLFREE, UNKNOWN;
 
-        private static final Map<String, Type> typesIndex = new HashMap<>();
-
-        static {
-            for (Type type : Type.values()) {
-                typesIndex.put(type.toString(), type);
-            }
-        }
-
         @Override
         @JsonValue
         public String toString() {
@@ -83,8 +73,12 @@ public class Network {
 
         @JsonCreator
         public static Type fromString(String type) {
-            Type foundType = typesIndex.get(type);
-            return (foundType != null) ? foundType : Type.UNKNOWN;
+            try {
+                return Type.valueOf(type.toUpperCase());
+            }
+            catch (IllegalArgumentException ex) {
+                return UNKNOWN;
+            }
         }
     }
 }

@@ -17,8 +17,10 @@ package com.vonage.client.sms;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public enum MessageStatus {
     OK(0),
@@ -46,13 +48,10 @@ public enum MessageStatus {
 
     private final int messageStatus;
 
-    private static final Map<Integer, MessageStatus> MESSAGE_STATUS_INDEX = new HashMap<>();
-
-    static {
-        for (MessageStatus messageStatus : MessageStatus.values()) {
-            MESSAGE_STATUS_INDEX.put(messageStatus.messageStatus, messageStatus);
-        }
-    }
+    private static final Map<Integer, MessageStatus> MESSAGE_STATUS_INDEX =
+        Arrays.stream(MessageStatus.values()).collect(Collectors.toMap(
+            MessageStatus::getMessageStatus, Function.identity()
+        ));
 
     /**
      * Look up the {@link MessageStatus} based on the int value.
@@ -63,8 +62,7 @@ public enum MessageStatus {
      */
     @JsonCreator
     public static MessageStatus fromInt(int messageStatus) {
-        MessageStatus foundStatus = MESSAGE_STATUS_INDEX.get(messageStatus);
-        return (foundStatus != null) ? foundStatus : UNKNOWN;
+        return MESSAGE_STATUS_INDEX.getOrDefault(messageStatus, UNKNOWN);
     }
 
     MessageStatus(int messageStatus) {

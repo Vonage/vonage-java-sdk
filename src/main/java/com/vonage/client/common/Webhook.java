@@ -17,8 +17,10 @@ package com.vonage.client.common;
 
 import com.fasterxml.jackson.annotation.*;
 
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Data class which can be deserialized into a webhook for the Vonage API.
@@ -56,13 +58,10 @@ public class Webhook {
 
         private final String name;
 
-        private static final Map<String, Type> TYPE_INDEX = new HashMap<>();
-
-        static {
-            for (Type type : Type.values()) {
-                TYPE_INDEX.put(type.name, type);
-            }
-        }
+        private static final Map<String, Type> TYPE_INDEX =
+            Arrays.stream(Type.values()).collect(Collectors.toMap(
+                    Type::getName, Function.identity()
+            ));
 
         Type(String name) {
             this.name = name;
@@ -75,8 +74,7 @@ public class Webhook {
 
         @JsonCreator
         public static Type fromName(String name) {
-            Type foundType = TYPE_INDEX.get(name.toLowerCase());
-            return (foundType != null) ? foundType : UNKNOWN;
+            return TYPE_INDEX.getOrDefault(name.toLowerCase(), UNKNOWN);
         }
     }
 }

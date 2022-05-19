@@ -17,8 +17,10 @@ package com.vonage.client.verify;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @JsonDeserialize(using = VerifyStatusDeserializer.class)
 public enum VerifyStatus {
@@ -37,17 +39,16 @@ public enum VerifyStatus {
     INVALID_CODE(16),
     WRONG_CODE_THROTTLED(17),
     TOO_MANY_DESTINATIONS(18),
-    NO_RESPONSE(101), COMMS_FAILURE(-1), UNKNOWN(Integer.MAX_VALUE);
+    NO_RESPONSE(101),
+    COMMS_FAILURE(-1),
+    UNKNOWN(Integer.MAX_VALUE);
 
     private final int verifyStatus;
 
-    private static final Map<Integer, VerifyStatus> VERIFY_STATUS_INDEX = new HashMap<>();
-
-    static {
-        for (VerifyStatus verifyStatus : VerifyStatus.values()) {
-            VERIFY_STATUS_INDEX.put(verifyStatus.verifyStatus, verifyStatus);
-        }
-    }
+    private static final Map<Integer, VerifyStatus> VERIFY_STATUS_INDEX =
+        Arrays.stream(VerifyStatus.values()).collect(Collectors.toMap(
+                VerifyStatus::getVerifyStatus, Function.identity()
+        ));
 
     /**
      * Look up the {@link VerifyStatus} based on the int value.
@@ -57,8 +58,7 @@ public enum VerifyStatus {
      * @return VerifyStatus based on the int value given.
      */
     public static VerifyStatus fromInt(int verifyStatus) {
-        VerifyStatus foundVerifyStatus = VERIFY_STATUS_INDEX.get(verifyStatus);
-        return (foundVerifyStatus != null) ? foundVerifyStatus : UNKNOWN;
+        return VERIFY_STATUS_INDEX.getOrDefault(verifyStatus, UNKNOWN);
     }
 
     VerifyStatus(int verifyStatus) {

@@ -17,23 +17,16 @@ package com.vonage.client.incoming;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public enum CallDirection {
     OUTBOUND, INBOUND, UNKNOWN;
 
-    private static final Map<String, CallDirection> CALL_DIRECTION_INDEX = new HashMap<>();
-
-    static {
-        for (CallDirection callDirection : CallDirection.values()) {
-            CALL_DIRECTION_INDEX.put(callDirection.name(), callDirection);
-        }
-    }
-
     @JsonCreator
     public static CallDirection fromString(String name) {
-        CallDirection foundCallDirection = CALL_DIRECTION_INDEX.get(name.toUpperCase());
-        return (foundCallDirection != null) ? foundCallDirection : UNKNOWN;
+        try {
+            return CallDirection.valueOf(name.toUpperCase());
+        }
+        catch (IllegalArgumentException ex) {
+            return UNKNOWN;
+        }
     }
 }

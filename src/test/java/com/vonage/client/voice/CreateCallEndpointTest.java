@@ -62,6 +62,7 @@ import static org.junit.Assert.assertEquals;
 
 public class CreateCallEndpointTest {
     private static final Log LOG = LogFactory.getLog(CreateCallEndpointTest.class);
+
     private CreateCallEndpoint method;
 
     @Before

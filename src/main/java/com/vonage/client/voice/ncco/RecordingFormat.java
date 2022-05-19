@@ -18,19 +18,8 @@ package com.vonage.client.voice.ncco;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public enum RecordingFormat {
     MP3, WAV, OGG, UNKNOWN;
-
-    private static final Map<String, RecordingFormat> RECORDING_FORMAT_INDEX = new HashMap<>();
-
-    static {
-        for (RecordingFormat recordingFormat : RecordingFormat.values()) {
-            RECORDING_FORMAT_INDEX.put(recordingFormat.name(), recordingFormat);
-        }
-    }
 
     @JsonValue
     @Override
@@ -40,7 +29,11 @@ public enum RecordingFormat {
 
     @JsonCreator
     public static RecordingFormat fromString(String name) {
-        RecordingFormat foundRecordingFormat = RECORDING_FORMAT_INDEX.get(name.toUpperCase());
-        return (foundRecordingFormat != null) ? foundRecordingFormat : UNKNOWN;
+        try {
+            return RecordingFormat.valueOf(name.toUpperCase());
+        }
+        catch (IllegalArgumentException ex) {
+            return UNKNOWN;
+        }
     }
 }

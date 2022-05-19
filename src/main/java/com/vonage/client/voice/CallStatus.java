@@ -18,9 +18,6 @@ package com.vonage.client.voice;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public enum CallStatus {
     STARTED,
     RINGING,
@@ -34,14 +31,6 @@ public enum CallStatus {
     CANCELLED,
     UNKNOWN;
 
-    private static final Map<String, CallStatus> CALL_STATUS_INDEX = new HashMap<>();
-
-    static {
-        for (CallStatus callStatus : CallStatus.values()) {
-            CALL_STATUS_INDEX.put(callStatus.name(), callStatus);
-        }
-    }
-
     @JsonValue
     @Override
     public String toString() {
@@ -50,7 +39,11 @@ public enum CallStatus {
 
     @JsonCreator
     public static CallStatus fromString(String name) {
-        CallStatus foundCallStatus = CALL_STATUS_INDEX.get(name.toUpperCase());
-        return (foundCallStatus != null) ? foundCallStatus : UNKNOWN;
+        try {
+            return CallStatus.valueOf(name.toUpperCase());
+        }
+        catch (IllegalArgumentException ex) {
+            return UNKNOWN;
+        }
     }
 }

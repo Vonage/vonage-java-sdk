@@ -32,6 +32,7 @@ import static org.junit.Assert.assertTrue;
 public class InputEventTest {
 
     private static final Log LOG = LogFactory.getLog(InputEventTest.class);
+
     @Test
     public void testDeserializeInputEvent() {
         String inputJsonStr = getInputEventJsonString().toString();

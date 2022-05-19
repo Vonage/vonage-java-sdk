@@ -22,8 +22,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AdvancedInsightResponse extends StandardInsightResponse {
@@ -99,55 +97,42 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
     public enum PortedStatus {
         UNKNOWN, PORTED, NOT_PORTED, ASSUMED_NOT_PORTED, ASSUMED_PORTED;
 
-        private static final Map<String, PortedStatus> PORTED_STATUS_INDEX = new HashMap<>();
-
-        static {
-            for (PortedStatus portedStatus : PortedStatus.values()) {
-                PORTED_STATUS_INDEX.put(portedStatus.name(), portedStatus);
-            }
-        }
-
         @JsonCreator
         public static PortedStatus fromString(String name) {
-            PortedStatus foundPortedStatus = PORTED_STATUS_INDEX.get(name.toUpperCase());
-            return (foundPortedStatus != null) ? foundPortedStatus : UNKNOWN;
+            try {
+                return PortedStatus.valueOf(name.toUpperCase());
+            }
+            catch (IllegalArgumentException ex) {
+                return UNKNOWN;
+            }
         }
-
     }
 
     public enum Validity {
         UNKNOWN, VALID, NOT_VALID;
 
-        private static final Map<String, Validity> VALIDITY_INDEX = new HashMap<>();
-
-        static {
-            for (Validity validity : Validity.values()) {
-                VALIDITY_INDEX.put(validity.name(), validity);
-            }
-        }
-
         @JsonCreator
         public static Validity fromString(String name) {
-            Validity foundValidity = VALIDITY_INDEX.get(name.toUpperCase());
-            return (foundValidity != null) ? foundValidity : Validity.UNKNOWN;
+            try {
+                return Validity.valueOf(name.toUpperCase());
+            }
+            catch (IllegalArgumentException ex) {
+                return UNKNOWN;
+            }
         }
     }
 
     public enum Reachability {
         UNKNOWN, REACHABLE, UNDELIVERABLE, ABSENT, BAD_NUMBER, BLACKLISTED;
 
-        private static final Map<String, Reachability> REACHABILITY_INDEX = new HashMap<>();
-
-        static {
-            for (Reachability reachability : Reachability.values()) {
-                REACHABILITY_INDEX.put(reachability.name(), reachability);
-            }
-        }
-
         @JsonCreator
         public static Reachability fromString(String name) {
-            Reachability foundReachability = REACHABILITY_INDEX.get(name.toUpperCase());
-            return (foundReachability != null) ? foundReachability : UNKNOWN;
+            try {
+                return Reachability.valueOf(name.toUpperCase());
+            }
+            catch (IllegalArgumentException ex) {
+                return UNKNOWN;
+            }
         }
     }
 }

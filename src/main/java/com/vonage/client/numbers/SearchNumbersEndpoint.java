@@ -52,8 +52,4 @@ class SearchNumbersEndpoint extends AbstractMethod<SearchNumbersFilter, SearchNu
     public SearchNumbersResponse parseResponse(HttpResponse response) throws IOException {
         return SearchNumbersResponse.fromJson(new BasicResponseHandler().handleResponse(response));
     }
-
-    SearchNumbersResponse searchNumbers(SearchNumbersFilter request) {
-        return execute(request);
-    }
 }

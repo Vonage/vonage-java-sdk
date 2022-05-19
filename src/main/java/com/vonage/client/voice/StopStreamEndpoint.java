@@ -18,8 +18,6 @@ package com.vonage.client.voice;
 import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.auth.JWTAuthMethod;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
@@ -28,7 +26,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 class StopStreamEndpoint extends AbstractMethod<String, StreamResponse> {
-    private static final Log LOG = LogFactory.getLog(StopStreamEndpoint.class);
 
     private static final String PATH = "/calls/";
     public static final String STREAM_PATH = "/stream";

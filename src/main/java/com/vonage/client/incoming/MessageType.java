@@ -17,23 +17,17 @@ package com.vonage.client.incoming;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public enum MessageType {
     TEXT, UNICODE, BINARY, UNKNOWN;
 
-    private static final Map<String, MessageType> MESSAGE_TYPE_INDEX = new HashMap<>();
-
-    static {
-        for (MessageType messageType : MessageType.values()) {
-            MESSAGE_TYPE_INDEX.put(messageType.name(), messageType);
-        }
-    }
 
     @JsonCreator
     public static MessageType fromString(String name) {
-        MessageType foundMessageType = MESSAGE_TYPE_INDEX.get(name.toUpperCase());
-        return (foundMessageType != null) ? foundMessageType : UNKNOWN;
+        try {
+            return MessageType.valueOf(name.toUpperCase());
+        }
+        catch (IllegalArgumentException ex) {
+            return UNKNOWN;
+        }
     }
 }
