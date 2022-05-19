@@ -29,11 +29,10 @@ import java.util.Date;
  * More information on method parameters can be found at Vonage website:
  * <a href="https://developer.nexmo.com/messaging/conversion-api/overview">https://developer.nexmo.com/messaging/conversion-api/overview</a>
  */
-public class ConversionClient extends AbstractClient {
+public class ConversionClient {
     final ConversionEndpoint conversionEndpoint;
 
     public ConversionClient(HttpWrapper httpWrapper) {
-        super(httpWrapper);
         conversionEndpoint = new ConversionEndpoint(httpWrapper);
     }
 

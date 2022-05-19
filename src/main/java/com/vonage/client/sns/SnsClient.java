@@ -26,7 +26,7 @@ import com.vonage.client.sns.response.SnsSubscribeResponse;
  * A client for talking to the Vonage Voice API. The standard way to obtain an instance of this class is to use {@link
  * VonageClient#getSnsClient()}.
  */
-public class SnsClient extends AbstractClient {
+public class SnsClient {
     final SnsEndpoint endpoint;
 
     /**
@@ -35,7 +35,6 @@ public class SnsClient extends AbstractClient {
      * @param httpWrapper (required) shared HTTP wrapper object used for making REST calls.
      */
     public SnsClient(HttpWrapper httpWrapper) {
-        super(httpWrapper);
         endpoint = new SnsEndpoint(httpWrapper);
     }
 

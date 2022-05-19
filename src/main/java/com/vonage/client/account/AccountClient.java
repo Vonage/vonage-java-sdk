@@ -21,7 +21,7 @@ import com.vonage.client.*;
  * A client for talking to the Vonage Account API. The standard way to obtain an instance of this class is to use {@link
  * VonageClient#getAccountClient()} ()}.
  */
-public class AccountClient extends AbstractClient {
+public class AccountClient {
     final BalanceEndpoint balance;
     final PricingEndpoint pricing;
     final PrefixPricingEndpoint prefixPricing;
@@ -35,7 +35,6 @@ public class AccountClient extends AbstractClient {
      * @param httpWrapper (required) shared HTTP wrapper object used for making REST calls.
      */
     public AccountClient(HttpWrapper httpWrapper) {
-        super(httpWrapper);
         balance = new BalanceEndpoint(httpWrapper);
         pricing = new PricingEndpoint(httpWrapper);
         prefixPricing = new PrefixPricingEndpoint(httpWrapper);

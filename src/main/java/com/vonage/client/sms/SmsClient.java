@@ -29,7 +29,7 @@ import java.util.List;
  * A client for talking to the Vonage Voice API. The standard way to obtain an instance of this class is to use {@link
  * VonageClient#getSmsClient()}.
  */
-public class SmsClient extends AbstractClient {
+public class SmsClient {
     final SendMessageEndpoint message;
     final SmsSearchEndpoint search;
     final SearchRejectedMessagesEndpoint rejected;
@@ -40,7 +40,6 @@ public class SmsClient extends AbstractClient {
      * @param httpWrapper Http Wrapper used to create a Sms Request
      */
     public SmsClient(HttpWrapper httpWrapper) {
-        super(httpWrapper);
         message = new SendMessageEndpoint(httpWrapper);
         search = new SmsSearchEndpoint(httpWrapper);
         rejected = new SearchRejectedMessagesEndpoint(httpWrapper);

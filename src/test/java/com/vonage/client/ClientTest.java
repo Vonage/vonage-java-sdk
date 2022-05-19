@@ -28,7 +28,7 @@ import java.nio.charset.StandardCharsets;
 
 import static org.mockito.Mockito.*;
 
-public abstract class ClientTest<T extends AbstractClient> {
+public abstract class ClientTest<T> {
     protected HttpWrapper wrapper;
     protected T client;
 

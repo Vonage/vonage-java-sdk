@@ -30,7 +30,7 @@ import java.util.Locale;
  * More information on method parameters can be found at Vonage website:
  * <a href="https://developer.nexmo.com/verify/overview">https://developer.nexmo.com/verify/overview</a>
  */
-public class VerifyClient extends AbstractClient {
+public class VerifyClient {
     final CheckEndpoint check;
     final VerifyEndpoint verify;
     final SearchEndpoint search;
@@ -43,7 +43,6 @@ public class VerifyClient extends AbstractClient {
      * @param httpWrapper (required) shared HTTP wrapper object used for making REST calls.
      */
     public VerifyClient(HttpWrapper httpWrapper) {
-        super(httpWrapper);
         this.check = new CheckEndpoint(httpWrapper);
         this.search = new SearchEndpoint(httpWrapper);
         this.verify = new VerifyEndpoint(httpWrapper);
