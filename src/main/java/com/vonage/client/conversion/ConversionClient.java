@@ -30,11 +30,10 @@ import java.util.Date;
  * <a href="https://developer.nexmo.com/messaging/conversion-api/overview">https://developer.nexmo.com/messaging/conversion-api/overview</a>
  */
 public class ConversionClient extends AbstractClient {
-    private ConversionEndpoint conversionEndpoint;
+    final ConversionEndpoint conversionEndpoint;
 
     public ConversionClient(HttpWrapper httpWrapper) {
         super(httpWrapper);
-
         conversionEndpoint = new ConversionEndpoint(httpWrapper);
     }
 

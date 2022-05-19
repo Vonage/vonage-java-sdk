@@ -21,10 +21,12 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class LoggingUtils {
 
     public static String logResponse(HttpResponse response) throws IOException {
+        Objects.requireNonNull(response, "Response shouldn't be null");
         StringBuilder log = new StringBuilder();
         String responseBody = response.getEntity() != null ? EntityUtils.toString(response.getEntity()) : "";
         int statusCode = response.getStatusLine().getStatusCode();

@@ -31,12 +31,11 @@ import java.util.Locale;
  * <a href="https://developer.nexmo.com/verify/overview">https://developer.nexmo.com/verify/overview</a>
  */
 public class VerifyClient extends AbstractClient {
-
-    private CheckEndpoint check;
-    private VerifyEndpoint verify;
-    private SearchEndpoint search;
-    private ControlEndpoint control;
-    private Psd2Endpoint psd2;
+    final CheckEndpoint check;
+    final VerifyEndpoint verify;
+    final SearchEndpoint search;
+    final ControlEndpoint control;
+    final Psd2Endpoint psd2;
 
     /**
      * Constructor.
@@ -45,7 +44,6 @@ public class VerifyClient extends AbstractClient {
      */
     public VerifyClient(HttpWrapper httpWrapper) {
         super(httpWrapper);
-
         this.check = new CheckEndpoint(httpWrapper);
         this.search = new SearchEndpoint(httpWrapper);
         this.verify = new VerifyEndpoint(httpWrapper);

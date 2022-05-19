@@ -23,16 +23,16 @@ import com.vonage.client.voice.ncco.Ncco;
  * VonageClient#getVoiceClient()}.
  */
 public class VoiceClient extends AbstractClient {
-    protected final CreateCallEndpoint createCall;
-    protected final ReadCallEndpoint readCall;
-    protected final ListCallsEndpoint listCalls;
-    protected final ModifyCallEndpoint modifyCall;
-    protected final StartStreamEndpoint startStream;
-    protected final StopStreamEndpoint stopStream;
-    protected final StartTalkEndpoint startTalk;
-    protected final StopTalkEndpoint stopTalk;
-    protected final DtmfEndpoint dtmf;
-    protected final DownloadRecordingEndpoint downloadRecording;
+    final CreateCallEndpoint createCall;
+    final ReadCallEndpoint readCall;
+    final ListCallsEndpoint listCalls;
+    final ModifyCallEndpoint modifyCall;
+    final StartStreamEndpoint startStream;
+    final StopStreamEndpoint stopStream;
+    final StartTalkEndpoint startTalk;
+    final StopTalkEndpoint stopTalk;
+    final DtmfEndpoint dtmf;
+    final DownloadRecordingEndpoint downloadRecording;
 
     /**
      * Constructor.

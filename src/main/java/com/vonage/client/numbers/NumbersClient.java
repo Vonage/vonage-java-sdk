@@ -24,11 +24,11 @@ import com.vonage.client.VonageResponseParseException;
  * A client for accessing the Vonage API calls that manage phone numbers.
  */
 public class NumbersClient {
-    private ListNumbersEndpoint listNumbers;
-    private SearchNumbersEndpoint searchNumbers;
-    private CancelNumberEndpoint cancelNumber;
-    private BuyNumberEndpoint buyNumber;
-    private UpdateNumberEndpoint updateNumber;
+    final ListNumbersEndpoint listNumbers;
+    final SearchNumbersEndpoint searchNumbers;
+    final CancelNumberEndpoint cancelNumber;
+    final BuyNumberEndpoint buyNumber;
+    final UpdateNumberEndpoint updateNumber;
 
     public NumbersClient(HttpWrapper httpWrapper) {
         listNumbers = new ListNumbersEndpoint(httpWrapper);

@@ -19,34 +19,28 @@ import com.vonage.client.ClientTest;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.VonageClientException;
 import com.vonage.client.auth.TokenAuthMethod;
-import org.junit.Before;
 import org.junit.Test;
-
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
-
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertTrue;
 
 public class AccountClientTest extends ClientTest<AccountClient> {
-    private BalanceResponse sentinel;
 
-    @Before
-    public void setUp() throws Exception {
+    public AccountClientTest() {
         wrapper = new HttpWrapper(new TokenAuthMethod("not-an-api-key", "secret"));
         client = new AccountClient(wrapper);
-        client.balance = mock(BalanceEndpoint.class);
-        sentinel = new BalanceResponse(1.1, true);
-        when(client.balance.execute()).thenReturn(sentinel);
     }
 
     @Test
     public void testGetBalance() throws Exception {
+        String json = "{\"value\": 10.28, \"autoReload\": true}";
+        wrapper.setHttpClient(stubHttpClient(200, json));
         BalanceResponse response = client.getBalance();
-        verify(client.balance).execute();
-        assertEquals(sentinel, response);
+        assertEquals(10.28, response.getValue(), 0.001);
+        assertTrue(response.isAutoReload());
     }
 
     @Test

@@ -23,11 +23,11 @@ import com.vonage.client.*;
  * {@link VonageClient#getApplicationClient()}
  */
 public class ApplicationClient extends AbstractClient {
-    private final CreateApplicationEndpoint createApplicationEndpoint;
-    private final UpdateApplicationEndpoint updateApplicationEndpoint;
-    private final GetApplicationEndpoint getApplicationEndpoint;
-    private final DeleteApplicationEndpoint deleteApplicationEndpoint;
-    private final ListApplicationsEndpoint listApplicationsEndpoint;
+    final CreateApplicationEndpoint createApplicationEndpoint;
+    final UpdateApplicationEndpoint updateApplicationEndpoint;
+    final GetApplicationEndpoint getApplicationEndpoint;
+    final DeleteApplicationEndpoint deleteApplicationEndpoint;
+    final ListApplicationsEndpoint listApplicationsEndpoint;
 
     public ApplicationClient(HttpWrapper httpWrapper) {
         super(httpWrapper);

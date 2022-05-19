@@ -23,9 +23,9 @@ import com.vonage.client.*;
  * {@link VonageClient#getInsightClient()}.
  */
 public class InsightClient extends AbstractClient {
-    protected BasicInsightEndpoint basic;
-    protected StandardInsightEndpoint standard;
-    protected AdvancedInsightEndpoint advanced;
+    final BasicInsightEndpoint basic;
+    final StandardInsightEndpoint standard;
+    final AdvancedInsightEndpoint advanced;
 
     /**
      * Constructor.
@@ -34,7 +34,6 @@ public class InsightClient extends AbstractClient {
      */
     public InsightClient(HttpWrapper httpWrapper) {
         super(httpWrapper);
-
         basic = new BasicInsightEndpoint(httpWrapper);
         standard = new StandardInsightEndpoint(httpWrapper);
         advanced = new AdvancedInsightEndpoint(httpWrapper);

@@ -24,7 +24,7 @@ import com.vonage.client.*;
  */
 public class RedactClient extends AbstractClient {
 
-    private RedactEndpoint redactEndpoint;
+    final RedactEndpoint redactEndpoint;
 
     public RedactClient(HttpWrapper httpWrapper) {
         super(httpWrapper);

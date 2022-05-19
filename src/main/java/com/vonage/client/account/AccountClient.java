@@ -22,12 +22,12 @@ import com.vonage.client.*;
  * VonageClient#getAccountClient()} ()}.
  */
 public class AccountClient extends AbstractClient {
-    protected BalanceEndpoint balance;
-    protected PricingEndpoint pricing;
-    protected PrefixPricingEndpoint prefixPricing;
-    protected TopUpEndpoint topUp;
-    protected SecretManagementEndpoint secret;
-    protected SettingsEndpoint settings;
+    final BalanceEndpoint balance;
+    final PricingEndpoint pricing;
+    final PrefixPricingEndpoint prefixPricing;
+    final TopUpEndpoint topUp;
+    final SecretManagementEndpoint secret;
+    final SettingsEndpoint settings;
 
     /**
      * Constructor.
@@ -36,7 +36,6 @@ public class AccountClient extends AbstractClient {
      */
     public AccountClient(HttpWrapper httpWrapper) {
         super(httpWrapper);
-
         balance = new BalanceEndpoint(httpWrapper);
         pricing = new PricingEndpoint(httpWrapper);
         prefixPricing = new PrefixPricingEndpoint(httpWrapper);

@@ -16,10 +16,7 @@
 package com.vonage.client.sms;
 
 
-import com.vonage.client.HttpWrapper;
-import com.vonage.client.VonageClient;
-import com.vonage.client.VonageClientException;
-import com.vonage.client.VonageResponseParseException;
+import com.vonage.client.*;
 import com.vonage.client.sms.messages.Message;
 
 import java.util.ArrayList;
@@ -32,17 +29,18 @@ import java.util.List;
  * A client for talking to the Vonage Voice API. The standard way to obtain an instance of this class is to use {@link
  * VonageClient#getSmsClient()}.
  */
-public class SmsClient {
-    private SendMessageEndpoint message;
-    private SmsSearchEndpoint search;
-    private SearchRejectedMessagesEndpoint rejected;
-    private SmsSingleSearchEndpoint singleSearch;
+public class SmsClient extends AbstractClient {
+    final SendMessageEndpoint message;
+    final SmsSearchEndpoint search;
+    final SearchRejectedMessagesEndpoint rejected;
+    final SmsSingleSearchEndpoint singleSearch;
 
     /**
      * Create a new SmsClient.
      * @param httpWrapper Http Wrapper used to create a Sms Request
      */
     public SmsClient(HttpWrapper httpWrapper) {
+        super(httpWrapper);
         message = new SendMessageEndpoint(httpWrapper);
         search = new SmsSearchEndpoint(httpWrapper);
         rejected = new SearchRejectedMessagesEndpoint(httpWrapper);
