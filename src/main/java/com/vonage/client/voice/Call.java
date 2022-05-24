@@ -37,12 +37,12 @@ public class Call {
     private String answerUrl;
 
     private String answerMethod = "GET";
-    private String eventUrl = null;
-    private String eventMethod = null;
-    private MachineDetection machineDetection = null;
-    private Integer lengthTimer = null;
-    private Integer ringingTimer = null;
-    private Boolean fromRandomNumber = null;
+    private String eventUrl;
+    private String eventMethod;
+    private MachineDetection machineDetection;
+    private Integer lengthTimer;
+    private Integer ringingTimer;
+    private Boolean fromRandomNumber;
     private Ncco ncco;
 
     public Call() {

@@ -22,6 +22,7 @@ import com.vonage.client.auth.*;
 import com.vonage.client.auth.hashutils.HashUtil;
 import com.vonage.client.conversion.ConversionClient;
 import com.vonage.client.insight.InsightClient;
+import com.vonage.client.messages.MessagesClient;
 import com.vonage.client.numbers.NumbersClient;
 import com.vonage.client.redact.RedactClient;
 import com.vonage.client.sms.SmsClient;
@@ -45,6 +46,7 @@ import java.nio.file.Paths;
  * clients for all of the Vonage APIs.
  */
 public class VonageClient {
+    private final HttpWrapper httpWrapper;
     private final AccountClient account;
     private final ApplicationClient application;
     private final InsightClient insight;
@@ -55,7 +57,7 @@ public class VonageClient {
     private final SnsClient sns;
     private final ConversionClient conversion;
     private final RedactClient redact;
-    private final HttpWrapper httpWrapper;
+    private final MessagesClient messages;
 
     private VonageClient(Builder builder) {
         httpWrapper = new HttpWrapper(builder.httpConfig, builder.authCollection);
@@ -71,6 +73,7 @@ public class VonageClient {
         sns = new SnsClient(httpWrapper);
         conversion = new ConversionClient(httpWrapper);
         redact = new RedactClient(httpWrapper);
+        messages = new MessagesClient(httpWrapper);
     }
 
     public AccountClient getAccountClient() {
@@ -111,6 +114,10 @@ public class VonageClient {
 
     public RedactClient getRedactClient() {
         return redact;
+    }
+
+    public MessagesClient getMessagesClient() {
+        return messages;
     }
 
     /**
