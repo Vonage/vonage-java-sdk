@@ -16,10 +16,7 @@
 package com.vonage.client.sms;
 
 
-import com.vonage.client.HttpWrapper;
-import com.vonage.client.VonageClient;
-import com.vonage.client.VonageClientException;
-import com.vonage.client.VonageResponseParseException;
+import com.vonage.client.*;
 import com.vonage.client.sms.messages.Message;
 
 import java.util.ArrayList;
@@ -33,10 +30,10 @@ import java.util.List;
  * VonageClient#getSmsClient()}.
  */
 public class SmsClient {
-    private SendMessageEndpoint message;
-    private SmsSearchEndpoint search;
-    private SearchRejectedMessagesEndpoint rejected;
-    private SmsSingleSearchEndpoint singleSearch;
+    final SendMessageEndpoint message;
+    final SmsSearchEndpoint search;
+    final SearchRejectedMessagesEndpoint rejected;
+    final SmsSingleSearchEndpoint singleSearch;
 
     /**
      * Create a new SmsClient.

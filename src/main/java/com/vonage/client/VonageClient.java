@@ -45,17 +45,17 @@ import java.nio.file.Paths;
  * clients for all of the Vonage APIs.
  */
 public class VonageClient {
-    private AccountClient account;
-    private ApplicationClient application;
-    private InsightClient insight;
-    private NumbersClient numbers;
-    private SmsClient sms;
-    private VoiceClient voice;
-    private VerifyClient verify;
-    private SnsClient sns;
-    private ConversionClient conversion;
-    private RedactClient redact;
-    private HttpWrapper httpWrapper;
+    private final AccountClient account;
+    private final ApplicationClient application;
+    private final InsightClient insight;
+    private final NumbersClient numbers;
+    private final SmsClient sms;
+    private final VoiceClient voice;
+    private final VerifyClient verify;
+    private final SnsClient sns;
+    private final ConversionClient conversion;
+    private final RedactClient redact;
+    private final HttpWrapper httpWrapper;
 
     private VonageClient(Builder builder) {
         httpWrapper = new HttpWrapper(builder.httpConfig, builder.authCollection);

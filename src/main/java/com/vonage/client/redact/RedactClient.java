@@ -22,12 +22,11 @@ import com.vonage.client.*;
  * A client for talking to the Vonage Redact API. The standard way to obtain an instance of this class is to use {@link
  * VonageClient#getRedactClient()}.
  */
-public class RedactClient extends AbstractClient {
+public class RedactClient {
 
-    private RedactEndpoint redactEndpoint;
+    final RedactEndpoint redactEndpoint;
 
     public RedactClient(HttpWrapper httpWrapper) {
-        super(httpWrapper);
         redactEndpoint = new RedactEndpoint(httpWrapper);
     }
 

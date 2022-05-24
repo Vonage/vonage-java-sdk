@@ -22,10 +22,10 @@ import com.vonage.client.*;
  * A client for talking to the Vonage Number Insight API. The standard way to obtain an instance of this class is to use
  * {@link VonageClient#getInsightClient()}.
  */
-public class InsightClient extends AbstractClient {
-    protected BasicInsightEndpoint basic;
-    protected StandardInsightEndpoint standard;
-    protected AdvancedInsightEndpoint advanced;
+public class InsightClient {
+    final BasicInsightEndpoint basic;
+    final StandardInsightEndpoint standard;
+    final AdvancedInsightEndpoint advanced;
 
     /**
      * Constructor.
@@ -33,8 +33,6 @@ public class InsightClient extends AbstractClient {
      * @param httpWrapper (required) shared HTTP wrapper object used for making REST calls.
      */
     public InsightClient(HttpWrapper httpWrapper) {
-        super(httpWrapper);
-
         basic = new BasicInsightEndpoint(httpWrapper);
         standard = new StandardInsightEndpoint(httpWrapper);
         advanced = new AdvancedInsightEndpoint(httpWrapper);

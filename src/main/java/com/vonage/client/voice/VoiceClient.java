@@ -22,17 +22,17 @@ import com.vonage.client.voice.ncco.Ncco;
  * A client for talking to the Vonage Voice API. The standard way to obtain an instance of this class is to use {@link
  * VonageClient#getVoiceClient()}.
  */
-public class VoiceClient extends AbstractClient {
-    protected final CreateCallEndpoint createCall;
-    protected final ReadCallEndpoint readCall;
-    protected final ListCallsEndpoint listCalls;
-    protected final ModifyCallEndpoint modifyCall;
-    protected final StartStreamEndpoint startStream;
-    protected final StopStreamEndpoint stopStream;
-    protected final StartTalkEndpoint startTalk;
-    protected final StopTalkEndpoint stopTalk;
-    protected final DtmfEndpoint dtmf;
-    protected final DownloadRecordingEndpoint downloadRecording;
+public class VoiceClient {
+    final CreateCallEndpoint createCall;
+    final ReadCallEndpoint readCall;
+    final ListCallsEndpoint listCalls;
+    final ModifyCallEndpoint modifyCall;
+    final StartStreamEndpoint startStream;
+    final StopStreamEndpoint stopStream;
+    final StartTalkEndpoint startTalk;
+    final StopTalkEndpoint stopTalk;
+    final DtmfEndpoint dtmf;
+    final DownloadRecordingEndpoint downloadRecording;
 
     /**
      * Constructor.
@@ -40,7 +40,6 @@ public class VoiceClient extends AbstractClient {
      * @param httpWrapper (required) shared HTTP wrapper object used for making REST calls.
      */
     public VoiceClient(HttpWrapper httpWrapper) {
-        super(httpWrapper);
         createCall = new CreateCallEndpoint(httpWrapper);
         readCall = new ReadCallEndpoint(httpWrapper);
         listCalls = new ListCallsEndpoint(httpWrapper);

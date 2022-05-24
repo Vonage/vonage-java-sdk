@@ -22,15 +22,14 @@ import com.vonage.client.*;
  * A client for talking to the Vonage Application API. The standard way to obtain an instance of this class is to use
  * {@link VonageClient#getApplicationClient()}
  */
-public class ApplicationClient extends AbstractClient {
-    private final CreateApplicationEndpoint createApplicationEndpoint;
-    private final UpdateApplicationEndpoint updateApplicationEndpoint;
-    private final GetApplicationEndpoint getApplicationEndpoint;
-    private final DeleteApplicationEndpoint deleteApplicationEndpoint;
-    private final ListApplicationsEndpoint listApplicationsEndpoint;
+public class ApplicationClient {
+    final CreateApplicationEndpoint createApplicationEndpoint;
+    final UpdateApplicationEndpoint updateApplicationEndpoint;
+    final GetApplicationEndpoint getApplicationEndpoint;
+    final DeleteApplicationEndpoint deleteApplicationEndpoint;
+    final ListApplicationsEndpoint listApplicationsEndpoint;
 
     public ApplicationClient(HttpWrapper httpWrapper) {
-        super(httpWrapper);
         createApplicationEndpoint = new CreateApplicationEndpoint(httpWrapper);
         updateApplicationEndpoint = new UpdateApplicationEndpoint(httpWrapper);
         getApplicationEndpoint = new GetApplicationEndpoint(httpWrapper);
