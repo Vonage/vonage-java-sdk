@@ -21,14 +21,13 @@ import com.vonage.client.VonageBadRequestException;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 class SettingsEndpoint extends AbstractMethod<SettingsRequest, SettingsResponse> {
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
 
     private static final String PATH = "/account/settings";
 
@@ -37,7 +36,7 @@ class SettingsEndpoint extends AbstractMethod<SettingsRequest, SettingsResponse>
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 
@@ -55,6 +54,6 @@ class SettingsEndpoint extends AbstractMethod<SettingsRequest, SettingsResponse>
         if (response.getStatusLine().getStatusCode() != 200) {
             throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
         }
-        return SettingsResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+        return SettingsResponse.fromJson(basicResponseHandler.handleResponse(response));
     }
 }

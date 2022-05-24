@@ -20,21 +20,20 @@ import com.vonage.client.HttpWrapper;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.impl.client.BasicResponseHandler;
 
 import java.io.IOException;
 
 class ReadCallEndpoint extends AbstractMethod<String, CallInfo> {
 
     private static final String PATH = "/calls/";
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 
     ReadCallEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 
@@ -47,6 +46,6 @@ class ReadCallEndpoint extends AbstractMethod<String, CallInfo> {
 
     @Override
     public CallInfo parseResponse(HttpResponse response) throws IOException {
-        return CallInfo.fromJson(new BasicResponseHandler().handleResponse(response));
+        return CallInfo.fromJson(basicResponseHandler.handleResponse(response));
     }
 }

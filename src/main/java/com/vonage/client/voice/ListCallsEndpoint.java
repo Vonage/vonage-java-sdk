@@ -24,7 +24,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.BasicResponseHandler;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -34,14 +33,14 @@ import java.util.List;
 class ListCallsEndpoint extends AbstractMethod<CallsFilter, CallInfoPage> {
 
     private static final String PATH = "/calls";
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 
     ListCallsEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 
@@ -67,6 +66,6 @@ class ListCallsEndpoint extends AbstractMethod<CallsFilter, CallInfoPage> {
 
     @Override
     public CallInfoPage parseResponse(HttpResponse response) throws IOException {
-        return CallInfoPage.fromJson(new BasicResponseHandler().handleResponse(response));
+        return CallInfoPage.fromJson(basicResponseHandler.handleResponse(response));
     }
 }

@@ -31,7 +31,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 class RedactEndpoint extends AbstractMethod<RedactRequest, Void> {
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {SignatureAuthMethod.class, TokenAuthMethod.class};
 
     private static final String PATH = "/redact/transaction";
 
@@ -40,7 +40,7 @@ class RedactEndpoint extends AbstractMethod<RedactRequest, Void> {
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 

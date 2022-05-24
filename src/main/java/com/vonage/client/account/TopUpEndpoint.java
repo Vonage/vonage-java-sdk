@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 class TopUpEndpoint extends AbstractMethod<TopUpRequest, Void> {
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
 
     private static final String PATH = "/account/top-up";
 
@@ -37,7 +37,7 @@ class TopUpEndpoint extends AbstractMethod<TopUpRequest, Void> {
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 

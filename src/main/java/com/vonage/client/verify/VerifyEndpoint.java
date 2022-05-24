@@ -20,14 +20,13 @@ import com.vonage.client.HttpWrapper;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 class VerifyEndpoint extends AbstractMethod<VerifyRequest, VerifyResponse> {
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
 
     private static final String PATH = "/verify/json";
 
@@ -36,7 +35,7 @@ class VerifyEndpoint extends AbstractMethod<VerifyRequest, VerifyResponse> {
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 
@@ -86,6 +85,6 @@ class VerifyEndpoint extends AbstractMethod<VerifyRequest, VerifyResponse> {
 
     @Override
     public VerifyResponse parseResponse(HttpResponse response) throws IOException {
-        return VerifyResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+        return VerifyResponse.fromJson(basicResponseHandler.handleResponse(response));
     }
 }

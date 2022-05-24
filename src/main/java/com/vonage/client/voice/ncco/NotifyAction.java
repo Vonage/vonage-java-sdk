@@ -45,7 +45,7 @@ public class NotifyAction implements Action {
         return ACTION;
     }
 
-    public Map getPayload() {
+    public Map<String, ?> getPayload() {
         return payload;
     }
 

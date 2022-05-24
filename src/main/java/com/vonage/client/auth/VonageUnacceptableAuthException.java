@@ -20,10 +20,10 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.*;
 
 public class VonageUnacceptableAuthException extends VonageAuthException {
-    private static final Map<Class, String> AUTH_DESCRIPTION_MAP = new HashMap<>();
+    private static final Map<Class<?>, String> AUTH_DESCRIPTION_MAP = new HashMap<>();
 
     private final Iterable<AuthMethod> availableAuths;
-    private final Iterable<Class> acceptableAuthClasses;
+    private final Iterable<Class<?>> acceptableAuthClasses;
 
     static {
         AUTH_DESCRIPTION_MAP.put(TokenAuthMethod.class, "API Key and Secret");
@@ -31,9 +31,7 @@ public class VonageUnacceptableAuthException extends VonageAuthException {
         AUTH_DESCRIPTION_MAP.put(JWTAuthMethod.class, "Application ID and Private Key");
     }
 
-    public VonageUnacceptableAuthException(Collection<AuthMethod> availableAuths, Collection<Class>
-            acceptableAuthClasses) {
-        super();
+    public VonageUnacceptableAuthException(Collection<AuthMethod> availableAuths, Collection<Class<?>> acceptableAuthClasses) {
         this.availableAuths = new ArrayList<>(availableAuths);
         this.acceptableAuthClasses = new ArrayList<>(acceptableAuthClasses);
     }
@@ -49,7 +47,7 @@ public class VonageUnacceptableAuthException extends VonageAuthException {
         }
 
         SortedSet<String> acceptableTypes = new TreeSet<>();
-        for (Class klass : acceptableAuthClasses) {
+        for (Class<?> klass : acceptableAuthClasses) {
             acceptableTypes.add(AUTH_DESCRIPTION_MAP.getOrDefault(klass, klass.getSimpleName()));
         }
 

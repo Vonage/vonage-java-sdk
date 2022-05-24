@@ -21,13 +21,12 @@ import com.vonage.client.auth.SignatureAuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.impl.client.BasicResponseHandler;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 class StandardInsightEndpoint extends AbstractMethod<StandardInsightRequest, StandardInsightResponse> {
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {SignatureAuthMethod.class, TokenAuthMethod.class};
 
     private static final String PATH = "/ni/standard/json";
 
@@ -36,7 +35,7 @@ class StandardInsightEndpoint extends AbstractMethod<StandardInsightRequest, Sta
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 
@@ -58,6 +57,6 @@ class StandardInsightEndpoint extends AbstractMethod<StandardInsightRequest, Sta
 
     @Override
     public StandardInsightResponse parseResponse(HttpResponse response) throws IOException {
-        return StandardInsightResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+        return StandardInsightResponse.fromJson(basicResponseHandler.handleResponse(response));
     }
 }

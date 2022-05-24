@@ -21,14 +21,13 @@ import com.vonage.client.VonageClientException;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.impl.client.BasicResponseHandler;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 class ControlEndpoint extends AbstractMethod<ControlRequest, ControlResponse> {
 
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
 
     private static final String PATH = "/verify/control/json";
 
@@ -37,7 +36,7 @@ class ControlEndpoint extends AbstractMethod<ControlRequest, ControlResponse> {
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 
@@ -53,7 +52,7 @@ class ControlEndpoint extends AbstractMethod<ControlRequest, ControlResponse> {
 
     @Override
     public ControlResponse parseResponse(HttpResponse response) throws IOException, VonageClientException {
-        ControlResponse controlResponse = ControlResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+        ControlResponse controlResponse = ControlResponse.fromJson(basicResponseHandler.handleResponse(response));
         if (!controlResponse.getStatus().equals("0")) {
             throw new VerifyException(controlResponse.getStatus(), controlResponse.getErrorText());
         }

@@ -29,14 +29,14 @@ import java.io.UnsupportedEncodingException;
 
 class CancelNumberEndpoint extends AbstractMethod<CancelNumberRequest, Void> {
     private static final String PATH = "/number/cancel";
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
 
     CancelNumberEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 

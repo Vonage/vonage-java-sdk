@@ -35,7 +35,7 @@ public class HttpWrapper {
     private static final String JAVA_VERSION = System.getProperty("java.version");
 
     private AuthCollection authCollection;
-    private HttpClient httpClient = null;
+    private HttpClient httpClient;
     private HttpConfig httpConfig;
 
     public HttpWrapper(AuthCollection authCollection) {
@@ -83,10 +83,11 @@ public class HttpWrapper {
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
         connectionManager.setDefaultMaxPerRoute(200);
         connectionManager.setMaxTotal(200);
-        connectionManager.setDefaultConnectionConfig(ConnectionConfig
-                .custom()
+        connectionManager.setDefaultConnectionConfig(
+            ConnectionConfig.custom()
                 .setCharset(StandardCharsets.UTF_8)
-                .build());
+                .build()
+        );
         connectionManager.setDefaultSocketConfig(SocketConfig.custom().setTcpNoDelay(true).build());
 
         // Need to work out a good value for the following:

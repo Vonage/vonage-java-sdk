@@ -22,7 +22,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicResponseHandler;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -30,7 +29,7 @@ import java.io.UnsupportedEncodingException;
 class StartStreamEndpoint extends AbstractMethod<StreamRequest, StreamResponse> {
 
     private static final String PATH = "/calls/";
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
     private String uri;
 
     StartStreamEndpoint(HttpWrapper httpWrapper) {
@@ -38,7 +37,7 @@ class StartStreamEndpoint extends AbstractMethod<StreamRequest, StreamResponse> 
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 
@@ -53,6 +52,6 @@ class StartStreamEndpoint extends AbstractMethod<StreamRequest, StreamResponse> 
 
     @Override
     public StreamResponse parseResponse(HttpResponse response) throws IOException {
-        return StreamResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+        return StreamResponse.fromJson(basicResponseHandler.handleResponse(response));
     }
 }

@@ -52,7 +52,7 @@ public class ListCallsEndpointTest {
 
     @Test
     public void getAcceptableAuthMethods() throws Exception {
-        assertArrayEquals(new Class[]{JWTAuthMethod.class}, method.getAcceptableAuthMethods());
+        assertArrayEquals(new Class<?>[]{JWTAuthMethod.class}, method.getAcceptableAuthMethods());
     }
 
     @Test

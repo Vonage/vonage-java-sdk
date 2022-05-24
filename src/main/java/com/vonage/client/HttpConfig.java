@@ -20,9 +20,9 @@ public class HttpConfig {
     private static final String DEFAULT_REST_BASE_URI = "https://rest.nexmo.com";
     private static final String DEFAULT_SNS_BASE_URI = "https://sns.nexmo.com";
 
-    private String apiBaseUri;
-    private String restBaseUri;
-    private String snsBaseUri;
+    private final String apiBaseUri;
+    private final String restBaseUri;
+    private final String snsBaseUri;
 
     private HttpConfig(Builder builder) {
         apiBaseUri = builder.apiBaseUri;

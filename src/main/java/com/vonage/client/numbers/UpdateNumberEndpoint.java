@@ -29,7 +29,7 @@ import java.io.UnsupportedEncodingException;
 
 class UpdateNumberEndpoint extends AbstractMethod<UpdateNumberRequest, Void> {
 
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
 
     private static final String PATH = "/number/update";
 
@@ -38,7 +38,7 @@ class UpdateNumberEndpoint extends AbstractMethod<UpdateNumberRequest, Void> {
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 

@@ -20,7 +20,6 @@ import com.vonage.client.HttpWrapper;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.impl.client.BasicResponseHandler;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -28,7 +27,7 @@ import java.io.UnsupportedEncodingException;
 class StopTalkEndpoint extends AbstractMethod<String, TalkResponse> {
 
     private static final String PATH = "/calls/";
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
     public static final String TALK_PATH = "/talk";
 
     StopTalkEndpoint(HttpWrapper httpWrapper) {
@@ -36,7 +35,7 @@ class StopTalkEndpoint extends AbstractMethod<String, TalkResponse> {
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 
@@ -49,6 +48,6 @@ class StopTalkEndpoint extends AbstractMethod<String, TalkResponse> {
 
     @Override
     public TalkResponse parseResponse(HttpResponse response) throws IOException {
-        return TalkResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+        return TalkResponse.fromJson(basicResponseHandler.handleResponse(response));
     }
 }

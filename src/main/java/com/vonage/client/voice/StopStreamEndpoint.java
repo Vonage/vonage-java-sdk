@@ -20,7 +20,6 @@ import com.vonage.client.HttpWrapper;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.impl.client.BasicResponseHandler;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -29,14 +28,14 @@ class StopStreamEndpoint extends AbstractMethod<String, StreamResponse> {
 
     private static final String PATH = "/calls/";
     public static final String STREAM_PATH = "/stream";
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 
     StopStreamEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 
@@ -49,6 +48,6 @@ class StopStreamEndpoint extends AbstractMethod<String, StreamResponse> {
 
     @Override
     public StreamResponse parseResponse(HttpResponse response) throws IOException {
-        return StreamResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+        return StreamResponse.fromJson(basicResponseHandler.handleResponse(response));
     }
 }

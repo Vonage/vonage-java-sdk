@@ -27,6 +27,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
@@ -51,9 +52,10 @@ import java.util.Set;
  */
 public abstract class AbstractMethod<RequestT, ResultT> implements Method<RequestT, ResultT> {
     private static final Log LOG = LogFactory.getLog(AbstractMethod.class);
+    protected static final BasicResponseHandler basicResponseHandler = new BasicResponseHandler();
 
     protected final HttpWrapper httpWrapper;
-    private Set<Class> acceptable;
+    private Set<Class<?>> acceptable;
 
     public AbstractMethod(HttpWrapper httpWrapper) {
         this.httpWrapper = httpWrapper;
@@ -137,7 +139,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      *
      * @throws VonageClientException If no AuthMethod is available from the provided array of acceptableAuthMethods.
      */
-    protected AuthMethod getAuthMethod(Class[] acceptableAuthMethods) throws VonageClientException {
+    protected AuthMethod getAuthMethod(Class<?>[] acceptableAuthMethods) throws VonageClientException {
         if (acceptable == null) {
             acceptable = new HashSet<>();
             Collections.addAll(acceptable, acceptableAuthMethods);
@@ -150,7 +152,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
         httpWrapper.setHttpClient(client);
     }
 
-    protected abstract Class[] getAcceptableAuthMethods();
+    protected abstract Class<?>[] getAcceptableAuthMethods();
 
     /**
      * Construct and return a RequestBuilder instance from the provided request.

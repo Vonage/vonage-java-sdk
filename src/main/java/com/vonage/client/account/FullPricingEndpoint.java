@@ -20,12 +20,11 @@ import com.vonage.client.HttpWrapper;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.impl.client.BasicResponseHandler;
 
 import java.io.IOException;
 
 class FullPricingEndpoint extends AbstractMethod<FullPricingRequest, PricingResponse> {
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
 
     private static final String PATH = "/account/get-full-pricing/outbound/%s";
 
@@ -34,7 +33,7 @@ class FullPricingEndpoint extends AbstractMethod<FullPricingRequest, PricingResp
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 
@@ -47,6 +46,6 @@ class FullPricingEndpoint extends AbstractMethod<FullPricingRequest, PricingResp
 
     @Override
     public PricingResponse parseResponse(HttpResponse response) throws IOException {
-        return PricingResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+        return PricingResponse.fromJson(basicResponseHandler.handleResponse(response));
     }
 }

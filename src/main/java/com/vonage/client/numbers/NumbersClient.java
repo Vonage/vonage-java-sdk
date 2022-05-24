@@ -15,13 +15,14 @@
  */
 package com.vonage.client.numbers;
 
-
 import com.vonage.client.HttpWrapper;
+import com.vonage.client.VonageClient;
 import com.vonage.client.VonageClientException;
 import com.vonage.client.VonageResponseParseException;
 
 /**
- * A client for accessing the Vonage API calls that manage phone numbers.
+ * A client for accessing the Vonage API calls that manage phone numbers. The standard way to obtain an instance of
+ * this class is to use {@link VonageClient#getNumbersClient()}.
  */
 public class NumbersClient {
     final ListNumbersEndpoint listNumbers;

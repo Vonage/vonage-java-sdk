@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 class RevokeSecretEndpoint extends AbstractMethod<SecretRequest, Void> {
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {SignatureAuthMethod.class, TokenAuthMethod.class};
 
     private static final String PATH = "/accounts/%s/secrets/%s";
 
@@ -38,7 +38,7 @@ class RevokeSecretEndpoint extends AbstractMethod<SecretRequest, Void> {
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 

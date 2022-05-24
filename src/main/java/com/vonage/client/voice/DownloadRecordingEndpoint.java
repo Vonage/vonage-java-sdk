@@ -26,7 +26,7 @@ import java.io.UnsupportedEncodingException;
 
 class DownloadRecordingEndpoint extends AbstractMethod<String, Recording> {
 
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 
     DownloadRecordingEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
@@ -38,7 +38,7 @@ class DownloadRecordingEndpoint extends AbstractMethod<String, Recording> {
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 
