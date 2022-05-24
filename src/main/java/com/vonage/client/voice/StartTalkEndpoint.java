@@ -22,7 +22,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicResponseHandler;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -30,14 +29,14 @@ import java.io.UnsupportedEncodingException;
 class StartTalkEndpoint extends AbstractMethod<TalkRequest, TalkResponse> {
 
     private static final String PATH = "/calls/";
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 
     StartTalkEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 
@@ -52,6 +51,6 @@ class StartTalkEndpoint extends AbstractMethod<TalkRequest, TalkResponse> {
 
     @Override
     public TalkResponse parseResponse(HttpResponse response) throws IOException {
-        return TalkResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+        return TalkResponse.fromJson(basicResponseHandler.handleResponse(response));
     }
 }

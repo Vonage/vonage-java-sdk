@@ -40,8 +40,8 @@ public class AdvancedInsightEndpointTest {
 
     @Test
     public void testGetAcceptableAuthMethods() throws Exception {
-        Class[] auths = endpoint.getAcceptableAuthMethods();
-        assertArrayEquals(new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class}, auths);
+        Class<?>[] auths = endpoint.getAcceptableAuthMethods();
+        assertArrayEquals(new Class<?>[]{SignatureAuthMethod.class, TokenAuthMethod.class}, auths);
     }
 
     @Test

@@ -30,7 +30,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.impl.client.BasicResponseHandler;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -42,7 +41,7 @@ import java.util.Map;
 class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
     private static final Log log = LogFactory.getLog(SnsClient.class);
 
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {SignatureAuthMethod.class, TokenAuthMethod.class};
 
     private static final String PATH = "/sns/xml";
 
@@ -53,7 +52,7 @@ class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 
@@ -70,7 +69,7 @@ class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
 
     @Override
     public SnsResponse parseResponse(HttpResponse response) throws IOException {
-        return parseSubmitResponse(new BasicResponseHandler().handleResponse(response));
+        return parseSubmitResponse(basicResponseHandler.handleResponse(response));
     }
 
     protected SnsResponse parseSubmitResponse(String response) {

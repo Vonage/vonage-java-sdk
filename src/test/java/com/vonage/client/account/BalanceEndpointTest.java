@@ -40,8 +40,8 @@ public class BalanceEndpointTest {
 
     @Test
     public void testGetAcceptableAuthMethods() {
-        Class[] auths = endpoint.getAcceptableAuthMethods();
-        assertArrayEquals(new Class[]{TokenAuthMethod.class}, auths);
+        Class<?>[] auths = endpoint.getAcceptableAuthMethods();
+        assertArrayEquals(new Class<?>[]{TokenAuthMethod.class}, auths);
     }
 
 

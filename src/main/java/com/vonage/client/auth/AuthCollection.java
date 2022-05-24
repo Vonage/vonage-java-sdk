@@ -24,7 +24,7 @@ import java.util.*;
  * allow for simple selection of an appropriate AuthMethod for a particular REST endpoint.
  */
 public class AuthCollection {
-    private SortedSet<AuthMethod> authList;
+    private final SortedSet<AuthMethod> authList;
 
     /**
      * Create a new AuthCollection with an empty set of AuthMethods.
@@ -70,7 +70,7 @@ public class AuthCollection {
                 return (T) availableAuthMethod;
             }
         }
-        throw new VonageUnacceptableAuthException(authList, new HashSet<>(Arrays.asList(new Class[]{type})));
+        throw new VonageUnacceptableAuthException(authList, new HashSet<>(Arrays.asList(new Class<?>[]{type})));
     }
 
     /**
@@ -82,7 +82,7 @@ public class AuthCollection {
      *
      * @throws VonageUnacceptableAuthException if no appropriate AuthMethod is held by this AuthCollection
      */
-    public AuthMethod getAcceptableAuthMethod(Set<Class> acceptableAuthMethodClasses) throws VonageUnacceptableAuthException {
+    public AuthMethod getAcceptableAuthMethod(Set<Class<?>> acceptableAuthMethodClasses) throws VonageUnacceptableAuthException {
         for (AuthMethod availableAuthMethod : authList) {
             if (acceptableAuthMethodClasses.contains(availableAuthMethod.getClass())) {
                 return availableAuthMethod;

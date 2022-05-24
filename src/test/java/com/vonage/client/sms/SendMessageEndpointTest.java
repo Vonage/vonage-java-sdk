@@ -266,7 +266,7 @@ public class SendMessageEndpointTest {
         AuthMethod tokenAuth = new TokenAuthMethod("abcd", "def");
 
         when(wrapper.getAuthCollection()).thenReturn(authCollection);
-        @SuppressWarnings("unchecked") Set<Class> anySet = any(Set.class);
+        @SuppressWarnings("unchecked") Set<Class<?>> anySet = any(Set.class);
         when(authCollection.getAcceptableAuthMethod(anySet)).thenReturn(tokenAuth);
         when(wrapper.getHttpClient()).thenReturn(client);
         when(wrapper.getHttpConfig()).thenReturn(httpConfig);

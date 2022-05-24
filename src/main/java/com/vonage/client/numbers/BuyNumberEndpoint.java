@@ -29,14 +29,14 @@ import java.io.UnsupportedEncodingException;
 
 class BuyNumberEndpoint extends AbstractMethod<BuyNumberRequest, Void> {
     private static final String PATH = "/number/buy";
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
 
     BuyNumberEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 

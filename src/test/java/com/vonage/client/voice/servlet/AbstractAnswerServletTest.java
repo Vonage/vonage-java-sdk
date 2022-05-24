@@ -30,7 +30,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class AbstractAnswerServletTest {
-    private AbstractAnswerServlet servlet = new AbstractAnswerServlet() {
+    private final AbstractAnswerServlet servlet = new AbstractAnswerServlet() {
         @Override
         protected NccoResponse handleRequest(HttpServletRequest request) {
             return new NccoResponseBuilder().appendNcco(TalkAction.builder("Hello").build()).getValue();

@@ -21,14 +21,13 @@ import com.vonage.client.VonageClientException;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 class ListApplicationsEndpoint extends ApplicationMethod<ListApplicationRequest, ApplicationList> {
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
 
     private static final String PATH = "/applications";
 
@@ -37,7 +36,7 @@ class ListApplicationsEndpoint extends ApplicationMethod<ListApplicationRequest,
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 
@@ -66,6 +65,6 @@ class ListApplicationsEndpoint extends ApplicationMethod<ListApplicationRequest,
             throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
         }
 
-        return ApplicationList.fromJson(new BasicResponseHandler().handleResponse(response));
+        return ApplicationList.fromJson(basicResponseHandler.handleResponse(response));
     }
 }

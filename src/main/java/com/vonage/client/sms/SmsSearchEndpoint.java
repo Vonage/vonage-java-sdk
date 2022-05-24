@@ -20,14 +20,13 @@ import com.vonage.client.HttpWrapper;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.impl.client.BasicResponseHandler;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 public class SmsSearchEndpoint extends AbstractMethod<SearchSmsRequest, SearchSmsResponse> {
 
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
 
     private static final String PATH = "/search/messages";
 
@@ -36,7 +35,7 @@ public class SmsSearchEndpoint extends AbstractMethod<SearchSmsRequest, SearchSm
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 
@@ -51,6 +50,6 @@ public class SmsSearchEndpoint extends AbstractMethod<SearchSmsRequest, SearchSm
 
     @Override
     public SearchSmsResponse parseResponse(HttpResponse response) throws IOException {
-        return SearchSmsResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+        return SearchSmsResponse.fromJson(basicResponseHandler.handleResponse(response));
     }
 }

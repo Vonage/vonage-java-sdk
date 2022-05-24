@@ -21,21 +21,20 @@ import com.vonage.client.HttpWrapper;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.impl.client.BasicResponseHandler;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 class SearchNumbersEndpoint extends AbstractMethod<SearchNumbersFilter, SearchNumbersResponse> {
     private static final String PATH = "/number/search";
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
 
     SearchNumbersEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 
@@ -50,6 +49,6 @@ class SearchNumbersEndpoint extends AbstractMethod<SearchNumbersFilter, SearchNu
 
     @Override
     public SearchNumbersResponse parseResponse(HttpResponse response) throws IOException {
-        return SearchNumbersResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+        return SearchNumbersResponse.fromJson(basicResponseHandler.handleResponse(response));
     }
 }

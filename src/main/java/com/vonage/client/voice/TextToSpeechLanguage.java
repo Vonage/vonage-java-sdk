@@ -65,10 +65,18 @@ public enum TextToSpeechLanguage {
     UKRAINIAN("uk-UA"),
     VIETNAMESE("vi-VN"),
     CHINESE_YUE("yue-CN"),
+
     @JsonEnumDefaultValue
     UNKNOWN("Unknown");
+
     private final String language;
-    TextToSpeechLanguage(String language){this.language=language;}
+
+    TextToSpeechLanguage(String language) {
+        this.language = language;
+    }
+
     @JsonValue
-    public String getLanguage(){return this.language;}
+    public String getLanguage() {
+        return this.language;
+    }
 }

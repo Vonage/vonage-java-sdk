@@ -55,8 +55,8 @@ public class AbstractMethodTest {
         }
 
         @Override
-        protected Class[] getAcceptableAuthMethods() {
-            return new Class[]{JWTAuthMethod.class};
+        protected Class<?>[] getAcceptableAuthMethods() {
+            return new Class<?>[]{JWTAuthMethod.class};
         }
 
         @Override

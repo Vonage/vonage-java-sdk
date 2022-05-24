@@ -22,7 +22,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicResponseHandler;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -30,7 +29,7 @@ import java.io.UnsupportedEncodingException;
 class DtmfEndpoint extends AbstractMethod<DtmfRequest, DtmfResponse> {
 
     private static final String PATH = "/calls/";
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{JWTAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
     public static final String DTMF_PATH = "/dtmf";
 
     DtmfEndpoint(HttpWrapper httpWrapper) {
@@ -38,7 +37,7 @@ class DtmfEndpoint extends AbstractMethod<DtmfRequest, DtmfResponse> {
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 
@@ -53,6 +52,6 @@ class DtmfEndpoint extends AbstractMethod<DtmfRequest, DtmfResponse> {
 
     @Override
     public DtmfResponse parseResponse(HttpResponse response) throws IOException {
-        return DtmfResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+        return DtmfResponse.fromJson(basicResponseHandler.handleResponse(response));
     }
 }

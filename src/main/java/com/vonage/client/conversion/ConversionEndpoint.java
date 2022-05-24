@@ -31,7 +31,7 @@ import java.text.SimpleDateFormat;
 
 class ConversionEndpoint extends AbstractMethod<ConversionRequest, Void> {
 
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {SignatureAuthMethod.class, TokenAuthMethod.class};
 
     private static final String PATH = "/conversions/";
 
@@ -40,7 +40,7 @@ class ConversionEndpoint extends AbstractMethod<ConversionRequest, Void> {
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 

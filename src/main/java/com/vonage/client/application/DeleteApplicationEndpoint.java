@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 class DeleteApplicationEndpoint extends ApplicationMethod<String, Void> {
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
 
     private static final String PATH = "/applications/%s";
 
@@ -36,7 +36,7 @@ class DeleteApplicationEndpoint extends ApplicationMethod<String, Void> {
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 

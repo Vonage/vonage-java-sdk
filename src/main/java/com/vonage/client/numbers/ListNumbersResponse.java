@@ -27,7 +27,7 @@ import java.io.IOException;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ListNumbersResponse {
     private int count = 0;
-    private OwnedNumber[] numbers = new OwnedNumber[]{};
+    private OwnedNumber[] numbers = new OwnedNumber[0];
 
     public int getCount() {
         return count;
@@ -45,5 +45,4 @@ public class ListNumbersResponse {
             throw new VonageUnexpectedException("Failed to produce json from ListNumbersResponse object.", jpe);
         }
     }
-
 }

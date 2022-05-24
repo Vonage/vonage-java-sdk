@@ -26,7 +26,6 @@ import com.vonage.client.HttpWrapper;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.impl.client.BasicResponseHandler;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -34,14 +33,14 @@ import java.io.UnsupportedEncodingException;
 public class Psd2Endpoint extends AbstractMethod<Psd2Request, VerifyResponse> {
 
     private static final String PATH = "/verify/psd2/json";
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{TokenAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
 
     public Psd2Endpoint(HttpWrapper wrapper) {
         super(wrapper);
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 
@@ -71,7 +70,7 @@ public class Psd2Endpoint extends AbstractMethod<Psd2Request, VerifyResponse> {
 
     @Override
     public VerifyResponse parseResponse(HttpResponse response) throws IOException {
-        return VerifyResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+        return VerifyResponse.fromJson(basicResponseHandler.handleResponse(response));
     }
 
     private void optionalParams(RequestBuilder builder, String paramName, Object value) {

@@ -25,14 +25,13 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 class CreateSecretEndpoint extends AbstractMethod<CreateSecretRequest, SecretResponse> {
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {SignatureAuthMethod.class, TokenAuthMethod.class};
 
     private static final String PATH = "/accounts/%s/secrets";
 
@@ -41,7 +40,7 @@ class CreateSecretEndpoint extends AbstractMethod<CreateSecretRequest, SecretRes
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 
@@ -68,7 +67,7 @@ class CreateSecretEndpoint extends AbstractMethod<CreateSecretRequest, SecretRes
             throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
         }
 
-        return SecretResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+        return SecretResponse.fromJson(basicResponseHandler.handleResponse(response));
     }
 
     @Override

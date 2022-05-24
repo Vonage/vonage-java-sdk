@@ -27,7 +27,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class AuthCollectionTest {
-    private TestUtils testUtils = new TestUtils();
+    private final TestUtils testUtils = new TestUtils();
 
     @Test
     public void testGetAcceptableAuthMethod() throws Exception {
@@ -35,7 +35,7 @@ public class AuthCollectionTest {
         AuthCollection auths = new AuthCollection();
         auths.add(jAuth);
 
-        Set<Class> acceptableAuths = acceptableClassSet(JWTAuthMethod.class);
+        Set<Class<?>> acceptableAuths = acceptableClassSet(JWTAuthMethod.class);
 
         assertEquals(jAuth, auths.getAcceptableAuthMethod(acceptableAuths));
     }
@@ -57,7 +57,7 @@ public class AuthCollectionTest {
     public void testNoAcceptableAuthMethod() throws Exception {
         AuthCollection auths = new AuthCollection();
 
-        Set<Class> acceptableAuths = new HashSet<>();
+        Set<Class<?>> acceptableAuths = new HashSet<>();
         acceptableAuths.add(JWTAuthMethod.class);
 
         try {
@@ -78,7 +78,7 @@ public class AuthCollectionTest {
         auths.add(tAuth);
         auths.add(jAuth);
 
-        Set<Class> acceptableAuths = new HashSet<>();
+        Set<Class<?>> acceptableAuths = new HashSet<>();
         acceptableAuths.add(JWTAuthMethod.class);
 
         assertEquals(jAuth, auths.getAcceptableAuthMethod(acceptableAuths));
@@ -90,7 +90,7 @@ public class AuthCollectionTest {
         AuthCollection auths = new AuthCollection();
         auths.add(tAuth);
 
-        Set<Class> acceptableAuths = new HashSet<>();
+        Set<Class<?>> acceptableAuths = new HashSet<>();
         acceptableAuths.add(JWTAuthMethod.class);
 
         try {
@@ -101,8 +101,8 @@ public class AuthCollectionTest {
         }
     }
 
-    public Set<Class> acceptableClassSet(Class... classes) {
-        Set<Class> result = new HashSet<>();
+    public Set<Class<?>> acceptableClassSet(Class<?>... classes) {
+        Set<Class<?>> result = new HashSet<>();
         Collections.addAll(result, classes);
         return result;
     }

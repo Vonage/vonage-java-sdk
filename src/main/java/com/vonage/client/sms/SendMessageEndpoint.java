@@ -22,14 +22,13 @@ import com.vonage.client.auth.TokenAuthMethod;
 import com.vonage.client.sms.messages.Message;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.impl.client.BasicResponseHandler;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 class SendMessageEndpoint extends AbstractMethod<Message, SmsSubmissionResponse> {
 
-    private static final Class[] ALLOWED_AUTH_METHODS = new Class[]{SignatureAuthMethod.class, TokenAuthMethod.class};
+    private static final Class<?>[] ALLOWED_AUTH_METHODS = {SignatureAuthMethod.class, TokenAuthMethod.class};
 
     private static final String PATH = "/sms/json";
 
@@ -38,7 +37,7 @@ class SendMessageEndpoint extends AbstractMethod<Message, SmsSubmissionResponse>
     }
 
     @Override
-    protected Class[] getAcceptableAuthMethods() {
+    protected Class<?>[] getAcceptableAuthMethods() {
         return ALLOWED_AUTH_METHODS;
     }
 
@@ -54,6 +53,6 @@ class SendMessageEndpoint extends AbstractMethod<Message, SmsSubmissionResponse>
 
     @Override
     public SmsSubmissionResponse parseResponse(HttpResponse response) throws IOException {
-        return SmsSubmissionResponse.fromJson(new BasicResponseHandler().handleResponse(response));
+        return SmsSubmissionResponse.fromJson(basicResponseHandler.handleResponse(response));
     }
 }

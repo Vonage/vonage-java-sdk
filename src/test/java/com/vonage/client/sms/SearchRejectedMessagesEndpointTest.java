@@ -43,8 +43,8 @@ public class SearchRejectedMessagesEndpointTest {
 
     @Test
     public void testGetAcceptableAuthMethods() throws Exception {
-        Class[] auths = endpoint.getAcceptableAuthMethods();
-        assertArrayEquals(new Class[]{TokenAuthMethod.class}, auths);
+        Class<?>[] auths = endpoint.getAcceptableAuthMethods();
+        assertArrayEquals(new Class<?>[]{TokenAuthMethod.class}, auths);
     }
 
     @Test
