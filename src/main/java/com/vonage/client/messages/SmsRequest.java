@@ -15,33 +15,26 @@
  */
 package com.vonage.client.messages;
 
-import org.junit.Test;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class E164Test {
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+public class SmsRequest extends SendMessageRequest {
 
-	@Test
-	public void testValid() {
-		new E164("447900090000");
+	protected Text text;
+
+	public SmsRequest(String from, String to, String text) {
+		super(from, to, MessageType.TEXT, Channel.SMS);
+		this.text = new Text(text);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testInvalid() {
-		new E164("a string");
+	public SmsRequest(String from, String to, String text, String clientRef) {
+		this(from, to, text);
+		this.clientRef = clientRef;
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testEmpty() {
-		new E164("");
-	}
-
-	@Test(expected = NullPointerException.class)
-	public void testNull() {
-		new E164(null);
-	}
-
-	@Test
-	public void testMalformedButSalvagable() {
-		new E164("+44 7900090000");
-		new E164("+1 900-900-0000");
+	@JsonProperty("text")
+	public String getText() {
+		return text.toString();
 	}
 }

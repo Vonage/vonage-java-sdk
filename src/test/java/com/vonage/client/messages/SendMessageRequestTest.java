@@ -146,7 +146,18 @@ public class SendMessageRequestTest {
 	public void testConstructInvalidNumber() {
 		new ConcreteSendMessageRequest(
 				"447900000001",
-				"NaN",
+				"+0 NaN",
+				MessageType.FILE,
+				Channel.MESSENGER,
+				null
+		);
+	}
+
+	@Test
+	public void testConstructMalformedButSalvagableNumbers() {
+		new ConcreteSendMessageRequest(
+				"+44 7900090000",
+				"+1 900-900-0000",
 				MessageType.FILE,
 				Channel.MESSENGER,
 				null

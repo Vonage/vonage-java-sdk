@@ -16,32 +16,26 @@
 package com.vonage.client.messages;
 
 import java.util.Objects;
-import java.util.regex.Pattern;
 
-final class E164 {
+class Text {
+	
+	private final String text;
 
-	static final Pattern PATTERN = Pattern.compile("[1-9]\\d{6,14}");
-
-	private final String number;
-
-	public E164(String number) {
-		Objects.requireNonNull(number, "Number cannot be null");
-		String sanitized = number
-				.replace(" ", "")
-				.replace("-","");
-		if (sanitized.startsWith("+")) {
-			sanitized = sanitized.substring(1);
+	public Text(String text) {
+		Objects.requireNonNull(text, "Text message cannot be null");
+		if (text.isEmpty()) {
+			throw new IllegalArgumentException("Text message cannot be blank");
 		}
-		if (PATTERN.matcher(sanitized).matches()) {
-			this.number = sanitized;
+		if (text.length() > 1000) {
+			throw new IllegalArgumentException(
+					"Text message cannot be longer than 1000 characters"
+			);
 		}
-		else {
-			throw new IllegalArgumentException("Malformed E.164 number: "+number);
-		}
+		this.text = text;
 	}
 
 	@Override
 	public String toString() {
-		return number;
+		return text;
 	}
 }
