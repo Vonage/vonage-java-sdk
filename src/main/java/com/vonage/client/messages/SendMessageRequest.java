@@ -33,22 +33,22 @@ public abstract class SendMessageRequest {
 	SendMessageRequest() {
 	}
 
-	protected SendMessageRequest(String from, String to, MessageType messageType, Channel channel) {
-		this.from = new E164(from);
-		this.to = new E164(to);
-		this.messageType = Objects.requireNonNull(messageType, "Message type cannot be null");
-		this.channel = Objects.requireNonNull(channel, "Channel cannot be null");
-		if (!this.channel.supportsMessageType(messageType)) {
+	protected SendMessageRequest(Builder<?> builder) {
+		from = new E164(builder.from);
+		to = new E164(builder.to);
+		messageType = Objects.requireNonNull(builder.messageType, "Message type cannot be null");
+		channel = Objects.requireNonNull(builder.channel, "Channel cannot be null");
+		if (!channel.supportsMessageType(builder.messageType)) {
 			throw new IllegalArgumentException(messageType+" cannot be sent via "+channel);
 		}
+		clientRef = builder.clientRef;
 	}
 
-	protected MessageType messageType;
-	protected Channel channel;
-	protected E164 from;
-	protected E164 to;
-	protected String messageUuid;
-	protected String clientRef;
+	MessageType messageType;
+	Channel channel;
+	E164 from;
+	E164 to;
+	String clientRef;
 
 	@JsonProperty("message_type")
 	public MessageType getMessageType() {
@@ -70,11 +70,6 @@ public abstract class SendMessageRequest {
 		return to.toString();
 	}
 
-	@JsonProperty("message_uuid")
-	public String getMessageUuid() {
-		return messageUuid;
-	}
-
 	@JsonProperty("client_ref")
 	public String getClientRef() {
 		return clientRef;
@@ -92,5 +87,38 @@ public abstract class SendMessageRequest {
 		catch (JsonProcessingException jpe) {
 			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public abstract static class Builder<B extends Builder<B>> {
+		final Channel channel;
+		MessageType messageType;
+		String from, to, clientRef;
+
+		public Builder(Channel channel) {
+			this.channel = channel;
+		}
+
+		public B messageType(MessageType messageType) {
+			this.messageType = messageType;
+			return (B) this;
+		}
+
+		public B from(String from) {
+			this.from = from;
+			return (B) this;
+		}
+
+		public B to(String to) {
+			this.to = to;
+			return (B) this;
+		}
+
+		public B clientRef(String clientRef) {
+			this.clientRef = clientRef;
+			return (B) this;
+		}
+
+		public abstract SendMessageRequest build();
 	}
 }

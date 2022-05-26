@@ -15,17 +15,26 @@
  */
 package com.vonage.client.messages;
 
-import com.vonage.client.HttpWrapper;
+import java.net.URI;
 
-public class MessagesClient {
+class Payload {
+	protected URI url;
+	protected String caption;
 
-	final SendMessageEndpoint sendMessage;
-
-	public MessagesClient(HttpWrapper httpWrapper) {
-		sendMessage = new SendMessageEndpoint(httpWrapper);
+	public Payload(String url) {
+		this.url = URI.create(url);
 	}
 
-	public SendMessageResponse sendMessage(SendMessageRequest request) {
-		return sendMessage.execute(request);
+	public Payload(String url, String caption) {
+		this(url);
+		this.caption = caption;
+	}
+
+	public String getUrl() {
+		return url.toString();
+	}
+
+	public String getCaption() {
+		return caption;
 	}
 }

@@ -19,22 +19,40 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class SmsRequest extends SendMessageRequest {
+public final class SmsRequest extends SendMessageRequest {
 
-	protected Text text;
+	Text text;
 
-	public SmsRequest(String from, String to, String text) {
-		super(from, to, MessageType.TEXT, Channel.SMS);
-		this.text = new Text(text);
-	}
-
-	public SmsRequest(String from, String to, String text, String clientRef) {
-		this(from, to, text);
-		this.clientRef = clientRef;
+	public SmsRequest(Builder builder) {
+		super(builder);
+		text = new Text(builder.text);
 	}
 
 	@JsonProperty("text")
 	public String getText() {
 		return text.toString();
+	}
+
+
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	public final static class Builder extends SendMessageRequest.Builder<Builder> {
+		public Builder() {
+			super(Channel.SMS);
+			messageType = MessageType.TEXT;
+		}
+
+		String text;
+
+		public Builder text(String text) {
+			this.text = text;
+			return this;
+		}
+
+		public SmsRequest build() {
+			return new SmsRequest(this);
+		}
 	}
 }

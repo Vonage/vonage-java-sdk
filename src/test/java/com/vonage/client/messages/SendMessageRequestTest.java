@@ -25,13 +25,30 @@ import static org.junit.Assert.*;
 public class SendMessageRequestTest {
 
 	static class ConcreteSendMessageRequest extends SendMessageRequest {
+		static class Builder extends SendMessageRequest.Builder<Builder> {
+			Builder(Channel channel) {
+				super(channel);
+			}
+
+			@Override
+			public ConcreteSendMessageRequest build() {
+				return new ConcreteSendMessageRequest(
+					from, to, messageType, channel, clientRef
+				);
+			}
+		}
+
 		ConcreteSendMessageRequest() {
 			super();
 		}
 
 		ConcreteSendMessageRequest(String from, String to, MessageType messageType, Channel channel, String clientRef) {
-			super(from, to, messageType, channel);
-			this.clientRef = clientRef;
+			super(new Builder(channel)
+				.from(from)
+				.to(to)
+				.messageType(messageType)
+				.clientRef(clientRef)
+			);
 		}
 
 		static ConcreteSendMessageRequest fromJson(String json) throws JsonProcessingException {

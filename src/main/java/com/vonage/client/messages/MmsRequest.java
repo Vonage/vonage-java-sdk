@@ -15,17 +15,34 @@
  */
 package com.vonage.client.messages;
 
-import com.vonage.client.HttpWrapper;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-public class MessagesClient {
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+public final class MmsRequest extends SendMessageRequest {
 
-	final SendMessageEndpoint sendMessage;
-
-	public MessagesClient(HttpWrapper httpWrapper) {
-		sendMessage = new SendMessageEndpoint(httpWrapper);
+	public MmsRequest(Builder builder) {
+		super(builder);
 	}
 
-	public SendMessageResponse sendMessage(SendMessageRequest request) {
-		return sendMessage.execute(request);
+
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	public final static class Builder extends SendMessageRequest.Builder<Builder> {
+		String url;
+
+		public Builder() {
+			super(Channel.MMS);
+		}
+
+		public Builder url(String url) {
+			this.url = url;
+			return this;
+		}
+
+		public MmsRequest build() {
+			return new MmsRequest(this);
+		}
 	}
 }
