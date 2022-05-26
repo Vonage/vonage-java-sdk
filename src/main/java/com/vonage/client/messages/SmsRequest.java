@@ -37,4 +37,9 @@ public class SmsRequest extends SendMessageRequest {
 	public String getText() {
 		return text.toString();
 	}
+
+	@Override
+	protected MessageType[] getSupportedMessageTypes() {
+		return new MessageType[]{ MessageType.TEXT };
+	}
 }

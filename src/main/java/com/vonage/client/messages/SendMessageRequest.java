@@ -20,6 +20,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
+
+import java.util.Arrays;
 import java.util.Objects;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -37,6 +39,10 @@ public abstract class SendMessageRequest {
 		this.to = new E164(to);
 		this.messageType = Objects.requireNonNull(messageType, "Message type cannot be null");
 		this.channel = Objects.requireNonNull(channel, "Channel cannot be null");
+		boolean validType = Arrays.asList(getSupportedMessageTypes()).contains(messageType);
+		if (!validType) {
+			throw new IllegalArgumentException(messageType+" cannot be sent via "+channel);
+		}
 	}
 
 	protected MessageType messageType;
@@ -45,6 +51,8 @@ public abstract class SendMessageRequest {
 	protected E164 to;
 	protected String messageUuid;
 	protected String clientRef;
+
+	protected abstract MessageType[] getSupportedMessageTypes();
 
 	@JsonProperty("message_type")
 	public MessageType getMessageType() {

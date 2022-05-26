@@ -29,6 +29,10 @@ public class SendMessageRequestTest {
 			super();
 		}
 
+		protected MessageType[] getSupportedMessageTypes() {
+			return MessageType.values();
+		}
+
 		ConcreteSendMessageRequest(String from, String to, MessageType messageType, Channel channel, String clientRef) {
 			super(from, to, messageType, channel);
 			this.clientRef = clientRef;

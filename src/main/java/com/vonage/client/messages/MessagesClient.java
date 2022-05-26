@@ -25,4 +25,7 @@ public class MessagesClient {
 		sendMessage = new SendMessageEndpoint(httpWrapper);
 	}
 
+	protected SendMessageResponse sendMessage(SendMessageRequest request) {
+		return sendMessage.execute(request);
+	}
 }
