@@ -17,12 +17,27 @@ package com.vonage.client.messages;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
+import java.util.Collection;
+import java.util.EnumSet;
+
+import static com.vonage.client.messages.MessageType.*;
+
 public enum Channel {
-	SMS,
-	MMS,
-	WHATSAPP,
-	MESSENGER,
-	VIBER;
+	SMS (TEXT),
+	MMS (IMAGE, VCARD, AUDIO, VIDEO),
+	WHATSAPP (TEXT, IMAGE, AUDIO, VIDEO, FILE, TEMPLATE, CUSTOM),
+	MESSENGER (TEXT, IMAGE, AUDIO, VIDEO, FILE),
+	VIBER (TEXT, IMAGE);
+
+	private final Collection<MessageType> supportedTypes;
+
+	Channel(MessageType type1, MessageType... additionalTypes) {
+		this.supportedTypes = EnumSet.of(type1, additionalTypes);
+	}
+
+	public boolean supportsMessageType(MessageType type) {
+		return supportedTypes.contains(type);
+	}
 
 	@JsonValue
 	@Override

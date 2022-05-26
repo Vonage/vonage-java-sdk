@@ -29,10 +29,6 @@ public class SendMessageRequestTest {
 			super();
 		}
 
-		protected MessageType[] getSupportedMessageTypes() {
-			return MessageType.values();
-		}
-
 		ConcreteSendMessageRequest(String from, String to, MessageType messageType, Channel channel, String clientRef) {
 			super(from, to, messageType, channel);
 			this.clientRef = clientRef;
@@ -48,7 +44,7 @@ public class SendMessageRequestTest {
 		SendMessageRequest smr = new ConcreteSendMessageRequest(
 				"447900000009",
 				"12002009000",
-				MessageType.IMAGE,
+				MessageType.VIDEO,
 				Channel.MMS,
 				"<40 character string"
 		);
@@ -61,7 +57,7 @@ public class SendMessageRequestTest {
 		assertTrue(generatedJson.contains("\"from\":\"447900000009\""));
 		assertTrue(generatedJson.contains("\"to\":\"12002009000\""));
 		assertTrue(generatedJson.contains("\"channel\":\"mms\""));
-		assertTrue(generatedJson.contains("\"message_type\":\"image\""));
+		assertTrue(generatedJson.contains("\"message_type\":\"video\""));
 	}
 
 	@Test
@@ -69,7 +65,7 @@ public class SendMessageRequestTest {
 		SendMessageRequest smr = new ConcreteSendMessageRequest(
 				"447900000009",
 				"12002009000",
-				MessageType.AUDIO,
+				MessageType.IMAGE,
 				Channel.VIBER,
 				null
 		);
@@ -82,7 +78,7 @@ public class SendMessageRequestTest {
 		assertTrue(generatedJson.contains("\"from\":\"447900000009\""));
 		assertTrue(generatedJson.contains("\"to\":\"12002009000\""));
 		assertTrue(generatedJson.contains("\"channel\":\"viber_service\""));
-		assertTrue(generatedJson.contains("\"message_type\":\"audio\""));
+		assertTrue(generatedJson.contains("\"message_type\":\"image\""));
 	}
 
 	@Test
@@ -125,6 +121,17 @@ public class SendMessageRequestTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
+	public void testConstructInvalidMessageType() {
+		new ConcreteSendMessageRequest(
+				"447900000001",
+				"447900000009",
+				MessageType.IMAGE,
+				Channel.SMS,
+				null
+		);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testConstructEmptyNumbers() {
 		new ConcreteSendMessageRequest(
 				"",
@@ -162,7 +169,7 @@ public class SendMessageRequestTest {
 		new ConcreteSendMessageRequest(
 				"+44 7900090000",
 				"+1 900-900-0000",
-				MessageType.FILE,
+				MessageType.AUDIO,
 				Channel.MESSENGER,
 				null
 		);
