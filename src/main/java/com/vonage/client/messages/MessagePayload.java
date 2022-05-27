@@ -15,19 +15,26 @@
  */
 package com.vonage.client.messages;
 
-import java.net.URI;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-class Payload {
+import java.net.URI;
+import java.util.Arrays;
+import java.util.Collection;
+
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+public class MessagePayload {
 	protected URI url;
 	protected String caption;
 
-	public Payload(String url) {
+	public MessagePayload(String url) {
 		this.url = URI.create(url);
 	}
 
-	public Payload(String url, String caption) {
+	public MessagePayload(String url, String caption) {
 		this(url);
-		this.caption = caption;
+		if ((this.caption = caption) != null && caption.isEmpty()) {
+			throw new IllegalArgumentException("Caption cannot be blank");
+		}
 	}
 
 	public String getUrl() {
@@ -36,5 +43,19 @@ class Payload {
 
 	public String getCaption() {
 		return caption;
+	}
+
+	public void validateExtension(String... allowed) {
+		String path = url.getPath();
+		int lastDot = path.lastIndexOf('.');
+		if (lastDot < 1) return;
+		String ext = path.substring(lastDot+1);
+		Collection<String> extensions = Arrays.asList(allowed);
+		if (!extensions.contains(ext)) {
+			throw new IllegalArgumentException(
+				"Invalid extension: '"+ext+"'. \n"+
+				"Should be one of "+extensions
+			);
+		}
 	}
 }

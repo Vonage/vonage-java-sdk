@@ -33,7 +33,7 @@ public abstract class MessageRequest {
 	MessageRequest() {
 	}
 
-	protected MessageRequest(Builder<?> builder) {
+	protected MessageRequest(Builder<?, ?> builder) {
 		from = new E164(builder.from);
 		to = new E164(builder.to);
 		messageType = Objects.requireNonNull(builder.messageType, "Message type cannot be null");
@@ -90,17 +90,18 @@ public abstract class MessageRequest {
 	}
 
 	@SuppressWarnings("unchecked")
-	public abstract static class Builder<B extends Builder<B>> {
-		final Channel channel;
-		MessageType messageType;
-		String from, to, clientRef;
+	public abstract static class Builder<M extends MessageRequest, B extends Builder<M, B>> {
+		protected Channel channel;
+		protected MessageType messageType;
+		protected String from, to, clientRef;
 
-		public Builder(Channel channel) {
-			this.channel = channel;
+		protected B messageType(MessageType messageType) {
+			this.messageType = messageType;
+			return (B) this;
 		}
 
-		public B messageType(MessageType messageType) {
-			this.messageType = messageType;
+		protected B channel(Channel channel) {
+			this.channel = channel;
 			return (B) this;
 		}
 
@@ -119,6 +120,6 @@ public abstract class MessageRequest {
 			return (B) this;
 		}
 
-		public abstract MessageRequest build();
+		public abstract M build();
 	}
 }

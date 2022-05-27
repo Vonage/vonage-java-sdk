@@ -25,10 +25,7 @@ import static org.junit.Assert.*;
 public class MessageRequestTest {
 
 	static class ConcreteMessageRequest extends MessageRequest {
-		static class Builder extends MessageRequest.Builder<Builder> {
-			Builder(Channel channel) {
-				super(channel);
-			}
+		static class Builder extends MessageRequest.Builder<ConcreteMessageRequest, Builder> {
 
 			@Override
 			public ConcreteMessageRequest build() {
@@ -43,10 +40,11 @@ public class MessageRequestTest {
 		}
 
 		ConcreteMessageRequest(String from, String to, MessageType messageType, Channel channel, String clientRef) {
-			super(new Builder(channel)
+			super(new Builder()
 				.from(from)
 				.to(to)
 				.messageType(messageType)
+				.channel(channel)
 				.clientRef(clientRef)
 			);
 		}

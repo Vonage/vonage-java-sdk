@@ -13,35 +13,47 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages;
+package com.vonage.client.messages.sms;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.messages.Channel;
+import com.vonage.client.messages.MessageRequest;
+import com.vonage.client.messages.MessageType;
+
+import java.util.Objects;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class SmsRequest extends MessageRequest {
 
-	Text text;
+	String text;
 
 	public SmsRequest(Builder builder) {
 		super(builder);
-		text = new Text(builder.text);
+		text = Objects.requireNonNull(builder.text, "Text message cannot be null");
+		if (text.isEmpty()) {
+			throw new IllegalArgumentException("Text message cannot be blank");
+		}
+		if (text.length() > 1000) {
+			throw new IllegalArgumentException(
+					"Text message cannot be longer than 1000 characters"
+			);
+		}
 	}
 
 	@JsonProperty("text")
 	public String getText() {
-		return text.toString();
+		return text;
 	}
-
 
 	public static Builder builder() {
 		return new Builder();
 	}
 
-	public final static class Builder extends MessageRequest.Builder<Builder> {
+	public final static class Builder extends MessageRequest.Builder<SmsRequest, Builder> {
 		public Builder() {
-			super(Channel.SMS);
 			messageType = MessageType.TEXT;
+			channel = Channel.SMS;
 		}
 
 		String text;

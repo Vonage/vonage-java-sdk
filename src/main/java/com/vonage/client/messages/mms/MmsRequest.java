@@ -13,36 +13,33 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages;
+package com.vonage.client.messages.mms;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.vonage.client.messages.Channel;
+import com.vonage.client.messages.MessagePayload;
+import com.vonage.client.messages.MessageRequest;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class MmsRequest extends MessageRequest {
+public abstract class MmsRequest extends MessageRequest {
 
-	public MmsRequest(Builder builder) {
+	protected MessagePayload payload;
+
+	public MmsRequest(Builder<?, ?> builder) {
 		super(builder);
 	}
 
-
-	public static Builder builder() {
-		return new Builder();
-	}
-
-	public final static class Builder extends MessageRequest.Builder<Builder> {
-		String url;
+	@SuppressWarnings("unchecked")
+	public abstract static class Builder<M extends MmsRequest, B extends Builder<M, B>> extends MessageRequest.Builder<M, Builder<M, B>> {
+		protected String url;
 
 		public Builder() {
-			super(Channel.MMS);
+			channel = Channel.MMS;
 		}
 
-		public Builder url(String url) {
+		public B url(String url) {
 			this.url = url;
-			return this;
-		}
-
-		public MmsRequest build() {
-			return new MmsRequest(this);
+			return (B) this;
 		}
 	}
 }
