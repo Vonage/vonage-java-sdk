@@ -16,8 +16,8 @@
 package com.vonage.client.messages.messenger;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.messages.MessageType;
-import com.vonage.client.messages.Text;
+import com.vonage.client.messages.internal.MessageType;
+import com.vonage.client.messages.internal.Text;
 
 public final class MessengerTextRequest extends MessengerRequest {
 

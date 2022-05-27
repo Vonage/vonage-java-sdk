@@ -13,29 +13,35 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages;
+package com.vonage.client.messages.internal;
 
 import java.util.Objects;
+import java.util.regex.Pattern;
 
-public class Text {
-	
-	private final String text;
+public class E164 {
 
-	public Text(String text, int limit) {
-		Objects.requireNonNull(text, "Text message cannot be null");
-		if (text.isEmpty()) {
-			throw new IllegalArgumentException("Text message cannot be blank");
+	static final Pattern PATTERN = Pattern.compile("[1-9]\\d{6,14}");
+
+	private final String number;
+
+	public E164(String number) {
+		Objects.requireNonNull(number, "Number cannot be null");
+		String sanitized = number
+				.replace(" ", "")
+				.replace("-","");
+		if (sanitized.startsWith("+")) {
+			sanitized = sanitized.substring(1);
 		}
-		if (limit > 0 && text.length() > limit) {
-			throw new IllegalArgumentException(
-					"Text message cannot be longer than "+limit+" characters"
-			);
+		if (PATTERN.matcher(sanitized).matches()) {
+			this.number = sanitized;
 		}
-		this.text = text;
+		else {
+			throw new IllegalArgumentException("Malformed E.164 number: "+number);
+		}
 	}
 
 	@Override
 	public String toString() {
-		return text;
+		return number;
 	}
 }

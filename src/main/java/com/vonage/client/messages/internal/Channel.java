@@ -13,23 +13,38 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages;
+package com.vonage.client.messages.internal;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum MessageType {
-	TEXT,
-	IMAGE,
-	AUDIO,
-	VIDEO,
-	FILE,
-	VCARD,
-	TEMPLATE,
-	CUSTOM;
+import java.util.Collection;
+import java.util.EnumSet;
+
+import static com.vonage.client.messages.internal.MessageType.*;
+
+public enum Channel {
+	SMS (TEXT),
+	MMS (IMAGE, VCARD, AUDIO, VIDEO),
+	WHATSAPP (TEXT, IMAGE, AUDIO, VIDEO, FILE, TEMPLATE, CUSTOM),
+	MESSENGER (TEXT, IMAGE, AUDIO, VIDEO, FILE),
+	VIBER (TEXT, IMAGE);
+
+	private final Collection<MessageType> supportedTypes;
+
+	Channel(MessageType type1, MessageType... additionalTypes) {
+		this.supportedTypes = EnumSet.of(type1, additionalTypes);
+	}
+
+	public boolean supportsMessageType(MessageType type) {
+		return supportedTypes.contains(type);
+	}
 
 	@JsonValue
 	@Override
 	public String toString() {
+		if (this == VIBER) {
+			return "viber_service";
+		}
 		return name().toLowerCase();
 	}
 }
