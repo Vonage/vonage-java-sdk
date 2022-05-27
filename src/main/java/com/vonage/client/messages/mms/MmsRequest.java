@@ -30,7 +30,7 @@ public abstract class MmsRequest extends MessageRequest {
 	}
 
 	@SuppressWarnings("unchecked")
-	public abstract static class Builder<M extends MmsRequest, B extends Builder<M, B>> extends MessageRequest.Builder<M, Builder<M, B>> {
+	public abstract static class Builder<M extends MmsRequest, B extends Builder<? extends M, ? extends B>> extends MessageRequest.Builder<M, B> {
 		protected String url;
 
 		public Builder() {

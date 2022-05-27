@@ -90,7 +90,7 @@ public abstract class MessageRequest {
 	}
 
 	@SuppressWarnings("unchecked")
-	public abstract static class Builder<M extends MessageRequest, B extends Builder<M, B>> {
+	public abstract static class Builder<M extends MessageRequest, B extends Builder<? extends M, ? extends B>> {
 		protected Channel channel;
 		protected MessageType messageType;
 		protected String from, to, clientRef;

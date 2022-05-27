@@ -17,6 +17,7 @@ package com.vonage.client.messages.mms;
 
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class MmsImageRequestTest {
@@ -28,8 +29,7 @@ public class MmsImageRequestTest {
 				caption = "Alt text";
 
 		MmsImageRequest mms = MmsImageRequest.builder()
-				.from(from).to(to)
-				.url(url).caption(caption)
+				.from(from).caption(caption).url(url).to(to)
 				.build();
 
 		String json = mms.toJson();
@@ -38,5 +38,52 @@ public class MmsImageRequestTest {
 		assertTrue(json.contains("\"message_type\":\"image\""));
 		assertTrue(json.contains("\"channel\":\"mms\""));
 		assertTrue(json.contains("\"image\":{\"url\":\""+url+"\",\"caption\":\""+caption+"\"}"));
+	}
+
+	@Test
+	public void testSerializeNoCaption() {
+		String from = "447900000001", to = "317900000002",
+				url = "https://foo.tld/path/to/image.jpeg";
+
+		MmsImageRequest mms = MmsImageRequest.builder()
+				.from(from).url(url).to(to).build();
+
+		String json = mms.toJson();
+		assertTrue(json.contains("\"from\":\""+from+"\""));
+		assertTrue(json.contains("\"to\":\""+to+"\""));
+		assertTrue(json.contains("\"message_type\":\"image\""));
+		assertTrue(json.contains("\"channel\":\"mms\""));
+		assertTrue(json.contains("\"image\":{\"url\":\""+url+"\"}"));
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void testConstructNoUrl() {
+		MmsImageRequest.builder()
+				.from("447900000001")
+				.to("317900000002")
+				.build();
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructInvalidExtension() {
+		MmsImageRequest.builder()
+				.from("447900000001")
+				.to("317900000002")
+				.url("http://foo.tld/path/to/image.bmp")
+				.build();
+	}
+
+	@Test
+	public void testValidExtensions() {
+		MmsImageRequest.Builder builder = MmsImageRequest.builder()
+				.from("447900000001")
+				.to("317900000002");
+
+		String baseUrl = "file:///path/to/resource", url;
+		for (String imageType : new String[]{"jpeg", "jpg", "png", "gif"}) {
+			url = baseUrl + imageType;
+			builder.url(url);
+			assertEquals(url, builder.build().getImage().getUrl());
+		}
 	}
 }
