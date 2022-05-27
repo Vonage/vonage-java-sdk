@@ -24,16 +24,16 @@ import com.vonage.client.VonageUnexpectedException;
 import java.util.Objects;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public abstract class SendMessageRequest {
+public abstract class MessageRequest {
 
 	/**
 	 * This constructor is used for tests and is also needed to instantiate this
 	 * object from a JSON string.
 	 */
-	SendMessageRequest() {
+	MessageRequest() {
 	}
 
-	protected SendMessageRequest(Builder<?> builder) {
+	protected MessageRequest(Builder<?> builder) {
 		from = new E164(builder.from);
 		to = new E164(builder.to);
 		messageType = Objects.requireNonNull(builder.messageType, "Message type cannot be null");
@@ -119,6 +119,6 @@ public abstract class SendMessageRequest {
 			return (B) this;
 		}
 
-		public abstract SendMessageRequest build();
+		public abstract MessageRequest build();
 	}
 }

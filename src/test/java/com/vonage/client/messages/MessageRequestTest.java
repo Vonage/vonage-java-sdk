@@ -22,27 +22,27 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class SendMessageRequestTest {
+public class MessageRequestTest {
 
-	static class ConcreteSendMessageRequest extends SendMessageRequest {
-		static class Builder extends SendMessageRequest.Builder<Builder> {
+	static class ConcreteMessageRequest extends MessageRequest {
+		static class Builder extends MessageRequest.Builder<Builder> {
 			Builder(Channel channel) {
 				super(channel);
 			}
 
 			@Override
-			public ConcreteSendMessageRequest build() {
-				return new ConcreteSendMessageRequest(
+			public ConcreteMessageRequest build() {
+				return new ConcreteMessageRequest(
 					from, to, messageType, channel, clientRef
 				);
 			}
 		}
 
-		ConcreteSendMessageRequest() {
+		ConcreteMessageRequest() {
 			super();
 		}
 
-		ConcreteSendMessageRequest(String from, String to, MessageType messageType, Channel channel, String clientRef) {
+		ConcreteMessageRequest(String from, String to, MessageType messageType, Channel channel, String clientRef) {
 			super(new Builder(channel)
 				.from(from)
 				.to(to)
@@ -51,14 +51,14 @@ public class SendMessageRequestTest {
 			);
 		}
 
-		static ConcreteSendMessageRequest fromJson(String json) throws JsonProcessingException {
-			return new ObjectMapper().readValue(json, ConcreteSendMessageRequest.class);
+		static ConcreteMessageRequest fromJson(String json) throws JsonProcessingException {
+			return new ObjectMapper().readValue(json, ConcreteMessageRequest.class);
 		}
 	}
 
 	@Test
 	public void testSerializeAllFields() throws Exception {
-		SendMessageRequest smr = new ConcreteSendMessageRequest(
+		MessageRequest smr = new ConcreteMessageRequest(
 				"447900000009",
 				"12002009000",
 				MessageType.VIDEO,
@@ -67,7 +67,7 @@ public class SendMessageRequestTest {
 		);
 
 		String generatedJson = smr.toJson();
-		SendMessageRequest generatedObject = ConcreteSendMessageRequest.fromJson(generatedJson);
+		MessageRequest generatedObject = ConcreteMessageRequest.fromJson(generatedJson);
 		assertEquals(generatedJson, generatedObject.toJson());
 
 		assertTrue(generatedJson.contains("\"client_ref\":\"<40 character string\""));
@@ -79,7 +79,7 @@ public class SendMessageRequestTest {
 
 	@Test
 	public void testSerializeFieldsWithoutClientRef() throws Exception {
-		SendMessageRequest smr = new ConcreteSendMessageRequest(
+		MessageRequest smr = new ConcreteMessageRequest(
 				"447900000009",
 				"12002009000",
 				MessageType.IMAGE,
@@ -88,7 +88,7 @@ public class SendMessageRequestTest {
 		);
 
 		String generatedJson = smr.toJson();
-		SendMessageRequest generatedObject = ConcreteSendMessageRequest.fromJson(generatedJson);
+		MessageRequest generatedObject = ConcreteMessageRequest.fromJson(generatedJson);
 		assertEquals(generatedJson, generatedObject.toJson());
 
 		assertFalse(generatedJson.contains("client_ref"));
@@ -100,7 +100,7 @@ public class SendMessageRequestTest {
 
 	@Test
 	public void testSerializeFieldsWithoutChannelOrMessageType() throws Exception {
-		SendMessageRequest smr = new ConcreteSendMessageRequest(
+		MessageRequest smr = new ConcreteMessageRequest(
 				"12002009000",
 				"447900000009",
 				MessageType.CUSTOM,
@@ -113,7 +113,7 @@ public class SendMessageRequestTest {
 		smr.setClientRef(null);
 
 		String generatedJson = smr.toJson();
-		SendMessageRequest generatedObject = ConcreteSendMessageRequest.fromJson(generatedJson);
+		MessageRequest generatedObject = ConcreteMessageRequest.fromJson(generatedJson);
 		assertEquals(generatedJson, generatedObject.toJson());
 
 		assertFalse(generatedJson.contains("client_ref"));
@@ -125,7 +125,7 @@ public class SendMessageRequestTest {
 
 	@Test(expected = VonageUnexpectedException.class)
 	public void testSerializeNoNumbers() {
-		SendMessageRequest smr = new ConcreteSendMessageRequest(
+		MessageRequest smr = new ConcreteMessageRequest(
 				"447900000009",
 				"447900000001",
 				MessageType.TEXT,
@@ -139,7 +139,7 @@ public class SendMessageRequestTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructInvalidMessageType() {
-		new ConcreteSendMessageRequest(
+		new ConcreteMessageRequest(
 				"447900000001",
 				"447900000009",
 				MessageType.IMAGE,
@@ -150,7 +150,7 @@ public class SendMessageRequestTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructEmptyNumbers() {
-		new ConcreteSendMessageRequest(
+		new ConcreteMessageRequest(
 				"",
 				"",
 				MessageType.FILE,
@@ -161,7 +161,7 @@ public class SendMessageRequestTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructNoNumbers() {
-		new ConcreteSendMessageRequest(
+		new ConcreteMessageRequest(
 				"",
 				null,
 				MessageType.FILE,
@@ -172,7 +172,7 @@ public class SendMessageRequestTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructInvalidNumber() {
-		new ConcreteSendMessageRequest(
+		new ConcreteMessageRequest(
 				"447900000001",
 				"+0 NaN",
 				MessageType.FILE,
@@ -183,7 +183,7 @@ public class SendMessageRequestTest {
 
 	@Test
 	public void testConstructMalformedButSalvagableNumbers() {
-		new ConcreteSendMessageRequest(
+		new ConcreteMessageRequest(
 				"+44 7900090000",
 				"+1 900-900-0000",
 				MessageType.AUDIO,
@@ -194,7 +194,7 @@ public class SendMessageRequestTest {
 
 	@Test(expected = NullPointerException.class)
 	public void testConstructNoMessageType() {
-		new ConcreteSendMessageRequest(
+		new ConcreteMessageRequest(
 				"447900000001",
 				"447900000009",
 				null,
@@ -205,7 +205,7 @@ public class SendMessageRequestTest {
 
 	@Test(expected = NullPointerException.class)
 	public void testConstructNoChannel() {
-		new ConcreteSendMessageRequest(
+		new ConcreteMessageRequest(
 				"447900000001",
 				"447900000009",
 				MessageType.VCARD,

@@ -19,11 +19,11 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class SendMessageResponseTest {
+public class MessageResponseTest {
 
 	@Test
 	public void testFromJson() {
-		SendMessageResponse response = SendMessageResponse.fromJson("{\n" +
+		MessageResponse response = MessageResponse.fromJson("{\n" +
 			"    \"message_uuid\": \"aaaaaaaa-bbbb-cccc-dddd-0123456789ab\"\n" +
 			"}"
 		);

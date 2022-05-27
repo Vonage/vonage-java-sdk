@@ -18,7 +18,7 @@ package com.vonage.client.messages;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class MmsRequest extends SendMessageRequest {
+public final class MmsRequest extends MessageRequest {
 
 	public MmsRequest(Builder builder) {
 		super(builder);
@@ -29,7 +29,7 @@ public final class MmsRequest extends SendMessageRequest {
 		return new Builder();
 	}
 
-	public final static class Builder extends SendMessageRequest.Builder<Builder> {
+	public final static class Builder extends MessageRequest.Builder<Builder> {
 		String url;
 
 		public Builder() {

@@ -29,7 +29,7 @@ import java.io.IOException;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SendMessageResponse {
+public class MessageResponse {
 
 	private String messageUuid;
 
@@ -38,10 +38,10 @@ public class SendMessageResponse {
 		return messageUuid;
 	}
 
-	public static SendMessageResponse fromJson(String json) {
+	public static MessageResponse fromJson(String json) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readValue(json, SendMessageResponse.class);
+			return mapper.readValue(json, MessageResponse.class);
 		}
 		catch (IOException e) {
 			throw new VonageUnexpectedException("Failed to produce SendMessageResponse from json.", e);

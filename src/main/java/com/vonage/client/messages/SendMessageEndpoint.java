@@ -26,7 +26,7 @@ import org.apache.http.entity.StringEntity;
 
 import java.io.IOException;
 
-class SendMessageEndpoint extends AbstractMethod<SendMessageRequest, SendMessageResponse> {
+class SendMessageEndpoint extends AbstractMethod<MessageRequest, MessageResponse> {
 
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class, TokenAuthMethod.class};
 
@@ -42,7 +42,7 @@ class SendMessageEndpoint extends AbstractMethod<SendMessageRequest, SendMessage
 	}
 
 	@Override
-	public RequestBuilder makeRequest(SendMessageRequest request) {
+	public RequestBuilder makeRequest(MessageRequest request) {
 		String uri = httpWrapper.getHttpConfig().getRestBaseUri() + PATH;
 		return RequestBuilder.post(uri)
 				.setHeader("Content-Type", "application/json")
@@ -51,7 +51,7 @@ class SendMessageEndpoint extends AbstractMethod<SendMessageRequest, SendMessage
 	}
 
 	@Override
-	public SendMessageResponse parseResponse(HttpResponse response) throws IOException {
-		return SendMessageResponse.fromJson(basicResponseHandler.handleResponse(response));
+	public MessageResponse parseResponse(HttpResponse response) throws IOException {
+		return MessageResponse.fromJson(basicResponseHandler.handleResponse(response));
 	}
 }

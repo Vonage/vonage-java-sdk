@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class SmsRequest extends SendMessageRequest {
+public final class SmsRequest extends MessageRequest {
 
 	Text text;
 
@@ -38,7 +38,7 @@ public final class SmsRequest extends SendMessageRequest {
 		return new Builder();
 	}
 
-	public final static class Builder extends SendMessageRequest.Builder<Builder> {
+	public final static class Builder extends MessageRequest.Builder<Builder> {
 		public Builder() {
 			super(Channel.SMS);
 			messageType = MessageType.TEXT;
