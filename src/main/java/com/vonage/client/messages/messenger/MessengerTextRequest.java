@@ -13,23 +13,19 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages.sms;
+package com.vonage.client.messages.messenger;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.messages.Channel;
-import com.vonage.client.messages.MessageRequest;
 import com.vonage.client.messages.MessageType;
 import com.vonage.client.messages.Text;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class SmsRequest extends MessageRequest {
+public final class MessengerTextRequest extends MessengerRequest {
 
 	Text text;
 
-	public SmsRequest(Builder builder) {
+	public MessengerTextRequest(Builder builder) {
 		super(builder);
-		text = new Text(builder.text, 1000);
+		text = new Text(builder.text, 640);
 	}
 
 	@JsonProperty("text")
@@ -41,21 +37,20 @@ public final class SmsRequest extends MessageRequest {
 		return new Builder();
 	}
 
-	public final static class Builder extends MessageRequest.Builder<SmsRequest, Builder> {
+	public static final class Builder extends MessengerRequest.Builder<MessengerTextRequest, Builder> {
+		String text;
+
 		public Builder() {
 			messageType = MessageType.TEXT;
-			channel = Channel.SMS;
 		}
-
-		String text;
 
 		public Builder text(String text) {
 			this.text = text;
 			return this;
 		}
 
-		public SmsRequest build() {
-			return new SmsRequest(this);
+		public MessengerTextRequest build() {
+			return new MessengerTextRequest(this);
 		}
 	}
 }
