@@ -29,6 +29,16 @@ public class MessageRequestTest {
 	static class ConcreteMessageRequest extends MessageRequest {
 		static class Builder extends MessageRequest.Builder<ConcreteMessageRequest, Builder> {
 
+			Builder messageType(MessageType messageType) {
+				this.messageType = messageType;
+				return this;
+			}
+
+			Builder channel(Channel channel) {
+				this.channel = channel;
+				return this;
+			}
+
 			@Override
 			public ConcreteMessageRequest build() {
 				return new ConcreteMessageRequest(

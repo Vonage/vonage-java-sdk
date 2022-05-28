@@ -23,7 +23,7 @@ import com.vonage.client.messages.internal.MessageType;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class MmsVideoRequest extends MmsRequest {
 
-	public MmsVideoRequest(Builder builder) {
+	MmsVideoRequest(Builder builder) {
 		super(builder);
 		payload = new MessagePayload(builder.url, builder.caption);
 	}
@@ -40,7 +40,7 @@ public final class MmsVideoRequest extends MmsRequest {
 	public static final class Builder extends MmsRequest.Builder<MmsVideoRequest, Builder> {
 		String caption;
 
-		public Builder() {
+		Builder() {
 			messageType = MessageType.VIDEO;
 		}
 

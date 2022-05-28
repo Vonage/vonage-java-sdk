@@ -23,7 +23,7 @@ import com.vonage.client.messages.internal.MessageType;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class MmsAudioRequest extends MmsRequest {
 
-	public MmsAudioRequest(Builder builder) {
+	MmsAudioRequest(Builder builder) {
 		super(builder);
 		payload = new MessagePayload(builder.url, builder.caption);
 	}
@@ -40,7 +40,7 @@ public final class MmsAudioRequest extends MmsRequest {
 	public static final class Builder extends MmsRequest.Builder<MmsAudioRequest, Builder> {
 		String caption;
 
-		public Builder() {
+		Builder() {
 			messageType = MessageType.AUDIO;
 		}
 

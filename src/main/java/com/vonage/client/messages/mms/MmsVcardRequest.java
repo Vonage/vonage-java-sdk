@@ -23,7 +23,7 @@ import com.vonage.client.messages.internal.MessageType;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class MmsVcardRequest extends MmsRequest {
 
-	public MmsVcardRequest(Builder builder) {
+	MmsVcardRequest(Builder builder) {
 		super(builder);
 		payload = new MessagePayload(builder.url);
 		payload.validateExtension("vcf");
@@ -40,7 +40,7 @@ public final class MmsVcardRequest extends MmsRequest {
 
 	public static final class Builder extends MmsRequest.Builder<MmsVcardRequest, Builder> {
 
-		public Builder() {
+		Builder() {
 			messageType = MessageType.VCARD;
 		}
 

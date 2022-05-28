@@ -23,7 +23,7 @@ import com.vonage.client.messages.internal.MessageType;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class MmsImageRequest extends MmsRequest {
 
-	public MmsImageRequest(Builder builder) {
+	MmsImageRequest(Builder builder) {
 		super(builder);
 		payload = new MessagePayload(builder.url, builder.caption);
 		payload.validateExtension("jpg", "jpeg", "png", "gif");
@@ -41,7 +41,7 @@ public final class MmsImageRequest extends MmsRequest {
 	public static final class Builder extends MmsRequest.Builder<MmsImageRequest, Builder> {
 		String caption;
 
-		public Builder() {
+		Builder() {
 			messageType = MessageType.IMAGE;
 		}
 

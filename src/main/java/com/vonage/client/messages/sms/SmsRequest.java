@@ -27,7 +27,7 @@ public final class SmsRequest extends MessageRequest {
 
 	Text text;
 
-	public SmsRequest(Builder builder) {
+	protected SmsRequest(Builder builder) {
 		super(builder);
 		text = new Text(builder.text, 1000);
 	}
@@ -42,7 +42,7 @@ public final class SmsRequest extends MessageRequest {
 	}
 
 	public final static class Builder extends MessageRequest.Builder<SmsRequest, Builder> {
-		public Builder() {
+		protected Builder() {
 			messageType = MessageType.TEXT;
 			channel = Channel.SMS;
 		}

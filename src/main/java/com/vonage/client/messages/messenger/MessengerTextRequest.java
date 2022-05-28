@@ -23,7 +23,7 @@ public final class MessengerTextRequest extends MessengerRequest {
 
 	Text text;
 
-	public MessengerTextRequest(Builder builder) {
+	MessengerTextRequest(Builder builder) {
 		super(builder);
 		text = new Text(builder.text, 640);
 	}
@@ -40,7 +40,7 @@ public final class MessengerTextRequest extends MessengerRequest {
 	public static final class Builder extends MessengerRequest.Builder<MessengerTextRequest, Builder> {
 		String text;
 
-		public Builder() {
+		Builder() {
 			messageType = MessageType.TEXT;
 		}
 

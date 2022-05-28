@@ -98,14 +98,7 @@ public abstract class MessageRequest {
 		protected MessageType messageType;
 		protected String from, to, clientRef;
 
-		protected B messageType(MessageType messageType) {
-			this.messageType = messageType;
-			return (B) this;
-		}
-
-		protected B channel(Channel channel) {
-			this.channel = channel;
-			return (B) this;
+		protected Builder() {
 		}
 
 		public B from(String from) {

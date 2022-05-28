@@ -22,13 +22,13 @@ import com.vonage.client.messages.MessageRequest;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class MessengerRequest extends MessageRequest {
 
-	public MessengerRequest(Builder<?, ?> builder) {
+	protected MessengerRequest(Builder<?, ?> builder) {
 		super(builder);
 	}
 
 	public abstract static class Builder<M extends MessengerRequest, B extends Builder<? extends M, ? extends B>> extends MessageRequest.Builder<M, B> {
 
-		public Builder() {
+		protected Builder() {
 			channel = Channel.MESSENGER;
 		}
 

@@ -25,7 +25,7 @@ public abstract class MmsRequest extends MessageRequest {
 
 	protected MessagePayload payload;
 
-	public MmsRequest(Builder<?, ?> builder) {
+	protected MmsRequest(Builder<?, ?> builder) {
 		super(builder);
 	}
 
@@ -33,7 +33,7 @@ public abstract class MmsRequest extends MessageRequest {
 	public abstract static class Builder<M extends MmsRequest, B extends Builder<? extends M, ? extends B>> extends MessageRequest.Builder<M, B> {
 		protected String url;
 
-		public Builder() {
+		protected Builder() {
 			channel = Channel.MMS;
 		}
 
