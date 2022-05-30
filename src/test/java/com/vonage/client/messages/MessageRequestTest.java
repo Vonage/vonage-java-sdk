@@ -202,6 +202,17 @@ public class MessageRequestTest {
 		);
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructTooLongNumber() {
+		new ConcreteMessageRequest(
+				"+447900090000",
+				"19009000000447900090000",
+				MessageType.AUDIO,
+				Channel.MESSENGER,
+				null
+		);
+	}
+
 	@Test(expected = NullPointerException.class)
 	public void testConstructNoMessageType() {
 		new ConcreteMessageRequest(
