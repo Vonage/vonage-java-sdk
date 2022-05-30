@@ -39,12 +39,12 @@ public final class Messenger {
 	}
 
 	@JsonProperty("category")
-	public String getCategory() {
-		return category.toString();
+	public MessageCategory getCategory() {
+		return category;
 	}
 
 	@JsonProperty("tag")
-	public String getTag() {
-		return tag.toString();
+	public MessageTag getTag() {
+		return tag;
 	}
 }

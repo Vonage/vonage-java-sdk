@@ -15,6 +15,8 @@
  */
 package com.vonage.client.messages.messenger;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * See the
  * <a href="https://developers.facebook.com/docs/messenger-platform/send-messages/message-tags">Facebook documentation</a>
@@ -27,6 +29,7 @@ public enum MessageTag {
 	HUMAN_AGENT,
 	CUSTOMER_FEEDBACK;
 
+	@JsonValue
 	@Override
 	public String toString() {
 		return name();

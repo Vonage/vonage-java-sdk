@@ -44,7 +44,7 @@ public final class MessengerFileRequest extends MessengerRequest {
 		String url;
 
 		Builder() {
-			messageType = MessageType.VIDEO;
+			messageType = MessageType.FILE;
 		}
 
 		public Builder url(String url) {

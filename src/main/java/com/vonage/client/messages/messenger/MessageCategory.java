@@ -15,6 +15,8 @@
  */
 package com.vonage.client.messages.messenger;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * See the
  * <a href="https://developers.facebook.com/docs/messenger-platform/send-messages#messaging_types">Facebook documentation</a>
@@ -25,6 +27,7 @@ public enum MessageCategory {
 	UPDATE,
 	MESSAGE_TAG;
 
+	@JsonValue
 	@Override
 	public String toString() {
 		return name().toLowerCase().replace('_', '-');

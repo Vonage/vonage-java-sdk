@@ -24,26 +24,90 @@ public class MessengerTextRequestTest {
 
 	@Test
 	public void testSerializeValid() {
-		String from = "447900000001", to = "317900000002", txt = "Hello, World!";
-		MessengerTextRequest msg = MessengerTextRequest.builder().from(from).to(to).text(txt).build();
-		String json = msg.toJson();
+		String from = "ali", to = "bob", txt = "Hello, World!", cr = "79ac12f";
+		String json = MessengerTextRequest.builder()
+				.from(from).to(to).text(txt)
+				.clientRef(cr)
+				.build().toJson();
 		assertTrue(json.contains("\"text\":\""+txt+"\""));
 		assertTrue(json.contains("\"from\":\""+from+"\""));
 		assertTrue(json.contains("\"to\":\""+to+"\""));
 		assertTrue(json.contains("\"message_type\":\"text\""));
 		assertTrue(json.contains("\"channel\":\"messenger\""));
+		assertTrue(json.contains("\"client_ref\":\""+cr+"\""));
 	}
 
-	@Test(expected = NullPointerException.class)
-	public void testNullText() {
+	@Test
+	public void testSerializeWithCategoryAndTag() {
+		MessengerTextRequest msg = MessengerTextRequest.builder()
+				.category(MessageCategory.UPDATE)
+				.tag(MessageTag.CONFIRMED_EVENT_UPDATE)
+				.from("Sara Lance")
+				.to("Ava Sharpe")
+				.text("I love you!!")
+				.build();
+		String json = msg.toJson();
+		assertTrue(json.contains("\"text\":\""+msg.getText()+"\""));
+		assertTrue(json.contains("\"from\":\""+msg.getFrom()+"\""));
+		assertTrue(json.contains("\"to\":\""+msg.getTo()+"\""));
+		assertTrue(json.contains("\"message_type\":\"text\""));
+		assertTrue(json.contains("\"channel\":\"messenger\""));
+		assertTrue(json.contains(
+				"\"messenger\":{\"category\":\""+ msg.getMessenger().getCategory() +
+				"\",\"tag\":\""+msg.getMessenger().getTag()+"\"}"
+		));
+	}
+
+	@Test
+	public void testSerializeWithoutTag() {
+		MessengerTextRequest msg = MessengerTextRequest.builder()
+				.category(MessageCategory.RESPONSE)
+				.from("Sara Lance")
+				.to("Ava Sharpe")
+				.text("I love you!!")
+				.build();
+		String json = msg.toJson();
+		assertTrue(json.contains("\"text\":\""+msg.getText()+"\""));
+		assertTrue(json.contains("\"from\":\""+msg.getFrom()+"\""));
+		assertTrue(json.contains("\"to\":\""+msg.getTo()+"\""));
+		assertTrue(json.contains("\"message_type\":\"text\""));
+		assertTrue(json.contains("\"channel\":\"messenger\""));
+		assertTrue(json.contains("\"messenger\":{\"category\":\""+msg.getMessenger().getCategory()+"\"}"));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructMessageTagCategoryWithoutTag() {
 		MessengerTextRequest.builder()
-				.from("447900000001")
-				.to("317900000002")
+				.category(MessageCategory.MESSAGE_TAG)
+				.from("Alice")
+				.to("Bob")
+				.text("Hello :wave:")
 				.build();
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testEmptyText() {
+	public void testConstructLongRecipient() {
+		StringBuilder from = new StringBuilder(51);
+		for (int i = 0; i < from.capacity(); i++) {
+			from.append('n');
+		}
+		assertEquals(51, from.length());
+		MessengerTextRequest.builder()
+				.from(from.toString())
+				.to("bob")
+				.build();
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void testConstructNullText() {
+		MessengerTextRequest.builder()
+				.from("ali")
+				.to("bob")
+				.build();
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructEmptyText() {
 		MessengerTextRequest.builder()
 				.from("447900000001")
 				.to("317900000002")
@@ -52,7 +116,7 @@ public class MessengerTextRequestTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testLongText() {
+	public void testConstructLongText() {
 		StringBuilder text = new StringBuilder(1002);
 		for (int i = 0; i < 639; i++) {
 			text.append('*');
