@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.messages.internal.Channel;
+import com.vonage.client.messages.internal.E164;
 import com.vonage.client.messages.internal.MessageType;
 import org.junit.Test;
 
@@ -53,8 +54,8 @@ public class MessageRequestTest {
 
 		ConcreteMessageRequest(String from, String to, MessageType messageType, Channel channel, String clientRef) {
 			super(new Builder()
-				.from(from)
-				.to(to)
+				.from(new E164(from).toString())
+				.to(new E164(to).toString())
 				.messageType(messageType)
 				.channel(channel)
 				.clientRef(clientRef)

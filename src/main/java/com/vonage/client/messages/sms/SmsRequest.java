@@ -17,24 +17,24 @@ package com.vonage.client.messages.sms;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.messages.internal.Channel;
 import com.vonage.client.messages.MessageRequest;
+import com.vonage.client.messages.internal.Channel;
 import com.vonage.client.messages.internal.MessageType;
 import com.vonage.client.messages.internal.Text;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class SmsRequest extends MessageRequest {
 
-	Text text;
+	String text;
 
-	protected SmsRequest(Builder builder) {
+	SmsRequest(Builder builder) {
 		super(builder);
-		text = new Text(builder.text, 1000);
+		text = new Text(builder.text, 1000).toString();
 	}
 
 	@JsonProperty("text")
 	public String getText() {
-		return text.toString();
+		return text;
 	}
 
 	public static Builder builder() {
@@ -42,7 +42,7 @@ public final class SmsRequest extends MessageRequest {
 	}
 
 	public final static class Builder extends MessageRequest.Builder<SmsRequest, Builder> {
-		protected Builder() {
+		Builder() {
 			messageType = MessageType.TEXT;
 			channel = Channel.SMS;
 		}

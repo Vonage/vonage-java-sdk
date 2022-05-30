@@ -30,6 +30,18 @@ public abstract class MessengerRequest extends MessageRequest {
 		messenger = Messenger.construct(builder.category, builder.tag);
 	}
 
+	@Override
+	protected void validateSenderAndRecipient(String from, String to) {
+		for (String id : new String[]{from, to}) {
+			if (id == null || id.isEmpty()) {
+				throw new IllegalArgumentException("ID cannot be empty");
+			}
+			if (id.length() > 50) {
+				throw new IllegalArgumentException("ID cannot be longer than 50 characters");
+			}
+		}
+	}
+
 	@JsonProperty("messenger")
 	public Messenger getMessenger() {
 		return messenger;

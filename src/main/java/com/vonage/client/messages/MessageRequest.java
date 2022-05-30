@@ -29,6 +29,10 @@ import java.util.Objects;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class MessageRequest {
 
+	MessageType messageType;
+	Channel channel;
+	protected String from, to, clientRef;
+
 	/**
 	 * This constructor is used for tests and is also needed to instantiate this
 	 * object from a JSON string.
@@ -37,21 +41,21 @@ public abstract class MessageRequest {
 	}
 
 	protected MessageRequest(Builder<?, ?> builder) {
-		from = new E164(builder.from);
-		to = new E164(builder.to);
 		messageType = Objects.requireNonNull(builder.messageType, "Message type cannot be null");
 		channel = Objects.requireNonNull(builder.channel, "Channel cannot be null");
 		if (!channel.supportsMessageType(builder.messageType)) {
 			throw new IllegalArgumentException(messageType+" cannot be sent via "+channel);
 		}
+		from = builder.from;
+		to = builder.to;
+		validateSenderAndRecipient(from, to);
 		clientRef = builder.clientRef;
 	}
 
-	MessageType messageType;
-	Channel channel;
-	E164 from;
-	E164 to;
-	String clientRef;
+	protected void validateSenderAndRecipient(String from, String to) throws IllegalArgumentException {
+		this.from = new E164(from).toString();
+		this.to = new E164(to).toString();
+	}
 
 	@JsonProperty("message_type")
 	public MessageType getMessageType() {
@@ -65,12 +69,12 @@ public abstract class MessageRequest {
 
 	@JsonProperty("from")
 	public String getFrom() {
-		return from.toString();
+		return from;
 	}
 
 	@JsonProperty("to")
 	public String getTo() {
-		return to.toString();
+		return to;
 	}
 
 	@JsonProperty("client_ref")
