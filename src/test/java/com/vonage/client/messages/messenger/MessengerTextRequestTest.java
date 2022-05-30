@@ -40,8 +40,8 @@ public class MessengerTextRequestTest {
 	@Test
 	public void testSerializeWithCategoryAndTag() {
 		MessengerTextRequest msg = MessengerTextRequest.builder()
-				.category(MessageCategory.UPDATE)
-				.tag(MessageTag.CONFIRMED_EVENT_UPDATE)
+				.category(Category.UPDATE)
+				.tag(Tag.CONFIRMED_EVENT_UPDATE)
 				.from("Sara Lance")
 				.to("Ava Sharpe")
 				.text("I love you!!")
@@ -61,7 +61,7 @@ public class MessengerTextRequestTest {
 	@Test
 	public void testSerializeWithoutTag() {
 		MessengerTextRequest msg = MessengerTextRequest.builder()
-				.category(MessageCategory.RESPONSE)
+				.category(Category.RESPONSE)
 				.from("Sara Lance")
 				.to("Ava Sharpe")
 				.text("I love you!!")
@@ -78,7 +78,7 @@ public class MessengerTextRequestTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructMessageTagCategoryWithoutTag() {
 		MessengerTextRequest.builder()
-				.category(MessageCategory.MESSAGE_TAG)
+				.category(Category.MESSAGE_TAG)
 				.from("Alice")
 				.to("Bob")
 				.text("Hello :wave:")

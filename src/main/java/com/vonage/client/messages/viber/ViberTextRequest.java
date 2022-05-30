@@ -13,48 +13,46 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages.messenger;
+package com.vonage.client.messages.viber;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.messages.internal.MessagePayload;
 import com.vonage.client.messages.internal.MessageType;
+import com.vonage.client.messages.internal.Text;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class MessengerVideoRequest extends MessengerRequest {
-	MessagePayload video;
+public final class ViberTextRequest extends ViberRequest {
 
-	MessengerVideoRequest(Builder builder) {
+	String text;
+
+	ViberTextRequest(Builder builder) {
 		super(builder);
-		video = new MessagePayload(builder.url);
-		video.validateExtension("mp4");
+		text = new Text(builder.text, 1000).toString();
 	}
 
-	@JsonProperty("video")
-	public MessagePayload getVideo() {
-		return video;
+	@JsonProperty("text")
+	public String getText() {
+		return text;
 	}
 
 	public static Builder builder() {
 		return new Builder();
 	}
 
-	public static final class Builder extends MessengerRequest.Builder<MessengerVideoRequest, Builder> {
-		String url;
+	public static final class Builder extends ViberRequest.Builder<ViberTextRequest, Builder> {
+		String text;
 
 		Builder() {
-			messageType = MessageType.VIDEO;
+			messageType = MessageType.TEXT;
 		}
 
-		public Builder url(String url) {
-			this.url = url;
+		public Builder text(String text) {
+			this.text = text;
 			return this;
 		}
 
-		@Override
-		public MessengerVideoRequest build() {
-			return new MessengerVideoRequest(this);
+		public ViberTextRequest build() {
+			return new ViberTextRequest(this);
 		}
 	}
-
 }

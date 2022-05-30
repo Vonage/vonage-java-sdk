@@ -19,17 +19,19 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * See the
- * <a href="https://developers.facebook.com/docs/messenger-platform/send-messages#messaging_types">Facebook documentation</a>
+ * <a href="https://developers.facebook.com/docs/messenger-platform/send-messages/message-tags">Facebook documentation</a>
  * for details on what these mean.
  */
-public enum MessageCategory {
-	RESPONSE,
-	UPDATE,
-	MESSAGE_TAG;
+public enum Tag {
+	CONFIRMED_EVENT_UPDATE,
+	POST_PURCHASE_UPDATE,
+	ACCOUNT_UPDATE,
+	HUMAN_AGENT,
+	CUSTOMER_FEEDBACK;
 
 	@JsonValue
 	@Override
 	public String toString() {
-		return name().toLowerCase().replace('_', '-');
+		return name();
 	}
 }

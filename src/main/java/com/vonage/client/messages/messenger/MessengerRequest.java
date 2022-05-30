@@ -22,7 +22,6 @@ import com.vonage.client.messages.internal.Channel;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class MessengerRequest extends MessageRequest {
-
 	protected Messenger messenger;
 
 	protected MessengerRequest(Builder<?, ?> builder) {
@@ -49,8 +48,8 @@ public abstract class MessengerRequest extends MessageRequest {
 
 	@SuppressWarnings("unchecked")
 	public abstract static class Builder<M extends MessengerRequest, B extends Builder<? extends M, ? extends B>> extends MessageRequest.Builder<M, B> {
-		protected MessageTag tag;
-		protected MessageCategory category;
+		protected Tag tag;
+		protected Category category;
 
 		protected Builder() {
 			channel = Channel.MESSENGER;
@@ -62,7 +61,7 @@ public abstract class MessengerRequest extends MessageRequest {
 		 * @param tag The tag.
 		 * @return This builder.
 		 */
-		public B tag(MessageTag tag) {
+		public B tag(Tag tag) {
 			this.tag = tag;
 			return (B) this;
 		}
@@ -76,7 +75,7 @@ public abstract class MessengerRequest extends MessageRequest {
 		 * @param category The category.
 		 * @return This builder.
 		 */
-		public B category(MessageCategory category) {
+		public B category(Category category) {
 			this.category = category;
 			return (B) this;
 		}

@@ -30,7 +30,6 @@ import java.io.IOException;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MessageResponse {
-
 	private String messageUuid;
 
 	@JsonProperty("message_uuid")

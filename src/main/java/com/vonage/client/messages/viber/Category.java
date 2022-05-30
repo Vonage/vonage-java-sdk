@@ -13,25 +13,22 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages.messenger;
+package com.vonage.client.messages.viber;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * See the
- * <a href="https://developers.facebook.com/docs/messenger-platform/send-messages/message-tags">Facebook documentation</a>
- * for details on what these mean.
+ * The use of different category tags enables the business to send messages for different use cases.
+ * For Viber Service Messages the first message sent from a business to a user must be personal, informative and a
+ * targeted message - not promotional. By default Vonage sends the transaction category to Viber Service Messages.
  */
-public enum MessageTag {
-	CONFIRMED_EVENT_UPDATE,
-	POST_PURCHASE_UPDATE,
-	ACCOUNT_UPDATE,
-	HUMAN_AGENT,
-	CUSTOMER_FEEDBACK;
+public enum Category {
+	TRANSACTION,
+	PROMOTION;
 
 	@JsonValue
 	@Override
 	public String toString() {
-		return name();
+		return name().toLowerCase();
 	}
 }

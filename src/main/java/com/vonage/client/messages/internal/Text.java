@@ -18,7 +18,6 @@ package com.vonage.client.messages.internal;
 import java.util.Objects;
 
 public class Text {
-	
 	private final String text;
 
 	public Text(String text, int limit) {

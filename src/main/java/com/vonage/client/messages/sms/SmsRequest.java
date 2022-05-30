@@ -24,7 +24,6 @@ import com.vonage.client.messages.internal.Text;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class SmsRequest extends MessageRequest {
-
 	String text;
 
 	SmsRequest(Builder builder) {
@@ -42,12 +41,12 @@ public final class SmsRequest extends MessageRequest {
 	}
 
 	public final static class Builder extends MessageRequest.Builder<SmsRequest, Builder> {
+		String text;
+		
 		Builder() {
 			messageType = MessageType.TEXT;
 			channel = Channel.SMS;
 		}
-
-		String text;
 
 		public Builder text(String text) {
 			this.text = text;

@@ -13,29 +13,23 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages.messenger;
+package com.vonage.client.messages.viber;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class Messenger {
+public final class ViberService {
 	private final Category category;
-	private final Tag tag;
+	private final Integer ttl;
+	private final String type;
 
-	private Messenger(Category category, Tag tag) {
+	ViberService(Category category, Integer ttl, String type) {
 		this.category = category;
-		this.tag = tag;
-	}
-
-	static Messenger construct(Category category, Tag tag) {
-		if (category == null && tag == null) {
-			return null;
+		if ((this.ttl = ttl) != null && (ttl < 30 || ttl > 259200)) {
+			throw new IllegalArgumentException("Time-to-live (ttl) must be between 30 and 259200 seconds");
 		}
-		if (category == Category.MESSAGE_TAG && tag == null) {
-			throw new IllegalArgumentException("Tag is mandatory for category "+category);
-		}
-		return new Messenger(category, tag);
+		this.type = type;
 	}
 
 	@JsonProperty("category")
@@ -43,8 +37,13 @@ public final class Messenger {
 		return category;
 	}
 
-	@JsonProperty("tag")
-	public Tag getTag() {
-		return tag;
+	@JsonProperty("ttl")
+	public Integer getTtl() {
+		return ttl;
+	}
+
+	@JsonProperty("type")
+	public String getType() {
+		return type;
 	}
 }

@@ -22,7 +22,6 @@ import com.vonage.client.messages.internal.MessageType;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class MessengerFileRequest extends MessengerRequest {
-
 	MessagePayload file;
 
 	MessengerFileRequest(Builder builder) {
@@ -40,7 +39,6 @@ public final class MessengerFileRequest extends MessengerRequest {
 	}
 
 	public static final class Builder extends MessengerRequest.Builder<MessengerFileRequest, Builder> {
-
 		String url;
 
 		Builder() {

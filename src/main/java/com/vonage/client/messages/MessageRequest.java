@@ -28,7 +28,6 @@ import java.util.Objects;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class MessageRequest {
-
 	MessageType messageType;
 	Channel channel;
 	protected String from, to, clientRef;

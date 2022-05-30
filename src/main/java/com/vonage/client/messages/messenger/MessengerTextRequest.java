@@ -22,17 +22,16 @@ import com.vonage.client.messages.internal.Text;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class MessengerTextRequest extends MessengerRequest {
-
-	Text text;
+	String text;
 
 	MessengerTextRequest(Builder builder) {
 		super(builder);
-		text = new Text(builder.text, 640);
+		text = new Text(builder.text, 640).toString();
 	}
 
 	@JsonProperty("text")
 	public String getText() {
-		return text.toString();
+		return text;
 	}
 
 	public static Builder builder() {

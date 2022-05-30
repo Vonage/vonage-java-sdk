@@ -22,7 +22,6 @@ import com.vonage.client.messages.internal.MessageType;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class MessengerAudioRequest extends MessengerRequest {
-
 	MessagePayload audio;
 
 	MessengerAudioRequest(Builder builder) {
@@ -41,7 +40,6 @@ public final class MessengerAudioRequest extends MessengerRequest {
 	}
 
 	public static final class Builder extends MessengerRequest.Builder<MessengerAudioRequest, Builder> {
-
 		String url;
 
 		Builder() {

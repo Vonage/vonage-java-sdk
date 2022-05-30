@@ -13,18 +13,23 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages;
+package com.vonage.client.messages.messenger;
 
-import com.vonage.client.HttpWrapper;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-public class MessagesClient {
-	final SendMessageEndpoint sendMessage;
+/**
+ * See the
+ * <a href="https://developers.facebook.com/docs/messenger-platform/send-messages#messaging_types">Facebook documentation</a>
+ * for details on what these mean.
+ */
+public enum Category {
+	RESPONSE,
+	UPDATE,
+	MESSAGE_TAG;
 
-	public MessagesClient(HttpWrapper httpWrapper) {
-		sendMessage = new SendMessageEndpoint(httpWrapper);
-	}
-
-	public MessageResponse sendMessage(MessageRequest request) {
-		return sendMessage.execute(request);
+	@JsonValue
+	@Override
+	public String toString() {
+		return name().toLowerCase().replace('_', '-');
 	}
 }
