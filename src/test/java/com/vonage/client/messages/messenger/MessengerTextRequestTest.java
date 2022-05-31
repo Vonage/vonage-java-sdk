@@ -52,10 +52,7 @@ public class MessengerTextRequestTest {
 		assertTrue(json.contains("\"to\":\""+msg.getTo()+"\""));
 		assertTrue(json.contains("\"message_type\":\"text\""));
 		assertTrue(json.contains("\"channel\":\"messenger\""));
-		assertTrue(json.contains(
-				"\"messenger\":{\"category\":\""+ msg.getMessenger().getCategory() +
-				"\",\"tag\":\""+msg.getMessenger().getTag()+"\"}"
-		));
+		assertTrue(json.contains("\"messenger\":{\"category\":\"update\",\"tag\":\"CONFIRMED_EVENT_UPDATE\"}"));
 	}
 
 	@Test
@@ -72,7 +69,7 @@ public class MessengerTextRequestTest {
 		assertTrue(json.contains("\"to\":\""+msg.getTo()+"\""));
 		assertTrue(json.contains("\"message_type\":\"text\""));
 		assertTrue(json.contains("\"channel\":\"messenger\""));
-		assertTrue(json.contains("\"messenger\":{\"category\":\""+msg.getMessenger().getCategory()+"\"}"));
+		assertTrue(json.contains("\"messenger\":{\"category\":\"response\"}"));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -86,15 +83,16 @@ public class MessengerTextRequestTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testConstructLongRecipient() {
-		StringBuilder from = new StringBuilder(51);
-		for (int i = 0; i < from.capacity(); i++) {
-			from.append('n');
+	public void testConstructLongRecipientID() {
+		StringBuilder to = new StringBuilder(51);
+		for (int i = 0; i < to.capacity(); i++) {
+			to.append('n');
 		}
-		assertEquals(51, from.length());
+		assertEquals(51, to.length());
 		MessengerTextRequest.builder()
-				.from(from.toString())
-				.to("bob")
+				.from("alicia")
+				.text("Hello")
+				.to(to.toString())
 				.build();
 	}
 
@@ -130,7 +128,7 @@ public class MessengerTextRequestTest {
 				.build();
 
 		assertEquals(text.toString(), msg.getText());
-		text.append("tt");
+		text.append("xy");
 		assertEquals(641, text.length());
 
 		MessengerTextRequest.builder()
