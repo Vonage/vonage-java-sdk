@@ -24,12 +24,20 @@ public final class ViberService {
 	private final Integer ttl;
 	private final String type;
 
-	ViberService(Category category, Integer ttl, String type) {
+	private ViberService(Category category, Integer ttl, String type) {
 		this.category = category;
-		if ((this.ttl = ttl) != null && (ttl < 30 || ttl > 259200)) {
+		this.ttl = ttl;
+		this.type = type;
+	}
+
+	static ViberService construct(Category category, Integer ttl, String type) {
+		if (category == null && ttl == null && type == null) {
+			return null;
+		}
+		if (ttl != null && (ttl < 30 || ttl > 259200)) {
 			throw new IllegalArgumentException("Time-to-live (ttl) must be between 30 and 259200 seconds");
 		}
-		this.type = type;
+		return new ViberService(category, ttl, type);
 	}
 
 	@JsonProperty("category")

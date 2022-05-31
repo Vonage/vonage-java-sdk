@@ -17,8 +17,7 @@ package com.vonage.client.messages.messenger;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class MessengerTextRequestTest {
 
@@ -27,14 +26,14 @@ public class MessengerTextRequestTest {
 		String from = "ali", to = "bob", txt = "Hello, World!", cr = "79ac12f";
 		String json = MessengerTextRequest.builder()
 				.from(from).to(to).text(txt)
-				.clientRef(cr)
-				.build().toJson();
+				.clientRef(cr).build().toJson();
 		assertTrue(json.contains("\"text\":\""+txt+"\""));
 		assertTrue(json.contains("\"from\":\""+from+"\""));
 		assertTrue(json.contains("\"to\":\""+to+"\""));
 		assertTrue(json.contains("\"message_type\":\"text\""));
 		assertTrue(json.contains("\"channel\":\"messenger\""));
 		assertTrue(json.contains("\"client_ref\":\""+cr+"\""));
+		assertFalse(json.contains("\"messenger\":"));
 	}
 
 	@Test

@@ -26,14 +26,14 @@ public class ViberTextRequestTest {
 		String from = "Thomas Shelby", to = "447900012345", txt = "By the order", cr = "79ac12f";
 		String json = ViberTextRequest.builder()
 				.from(from).to(to).text(txt)
-				.clientRef(cr)
-				.build().toJson();
+				.clientRef(cr).build().toJson();
 		assertTrue(json.contains("\"text\":\""+txt+"\""));
 		assertTrue(json.contains("\"from\":\""+from+"\""));
 		assertTrue(json.contains("\"to\":\""+to+"\""));
 		assertTrue(json.contains("\"message_type\":\"text\""));
 		assertTrue(json.contains("\"channel\":\"viber_service\""));
 		assertTrue(json.contains("\"client_ref\":\""+cr+"\""));
+		assertFalse(json.contains("\"viber_service\":"));
 	}
 
 	@Test

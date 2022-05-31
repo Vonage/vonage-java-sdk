@@ -28,7 +28,7 @@ public abstract class ViberRequest extends MessageRequest {
 
 	protected ViberRequest(Builder<?, ?> builder) {
 		super(builder);
-		viberService = new ViberService(builder.category, builder.ttl, builder.viberType);
+		viberService = ViberService.construct(builder.category, builder.ttl, builder.viberType);
 	}
 
 	@Override
