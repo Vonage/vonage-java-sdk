@@ -13,38 +13,37 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages.sms;
+package com.vonage.client.messages.whatsapp;
 
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class SmsRequestTest {
+public class WhatsappTextRequestTest {
 
 	@Test
 	public void testSerializeValid() {
-		String from = "447900000001", to = "317900000002", msg = "Hello, World!";
-		SmsRequest sms = SmsRequest.builder().from(from).to(to).text(msg).build();
-		String json = sms.toJson();
-		assertTrue(json.contains("\"text\":\""+msg+"\""));
+		String from = "447900000001", to = "317900000002", txt = "Hello, World!";
+		String json = WhatsappTextRequest.builder().from(from).to(to).text(txt).build().toJson();
+		assertTrue(json.contains("\"text\":\""+txt+"\""));
 		assertTrue(json.contains("\"from\":\""+from+"\""));
 		assertTrue(json.contains("\"to\":\""+to+"\""));
 		assertTrue(json.contains("\"message_type\":\"text\""));
-		assertTrue(json.contains("\"channel\":\"sms\""));
+		assertTrue(json.contains("\"channel\":\"whatsapp\""));
 	}
 
 	@Test(expected = NullPointerException.class)
-	public void testNullText() {
-		SmsRequest.builder()
+	public void testConstructNullText() {
+		WhatsappTextRequest.builder()
 				.from("447900000001")
 				.to("317900000002")
 				.build();
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testEmptyText() {
-		SmsRequest.builder()
+	public void testConstructEmptyText() {
+		WhatsappTextRequest.builder()
 				.from("447900000001")
 				.to("317900000002")
 				.text("")
@@ -52,27 +51,27 @@ public class SmsRequestTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testLongText() {
+	public void testConstructLongText() {
 		StringBuilder text = new StringBuilder(1002);
-		for (int i = 0; i < 999; i++) {
+		for (int i = 0; i < 4095; i++) {
 			text.append('*');
 		}
-		assertEquals(999, text.length());
+		assertEquals(4095, text.length());
 
-		SmsRequest sms = SmsRequest.builder()
+		WhatsappTextRequest msg = WhatsappTextRequest.builder()
 				.text(text.toString())
 				.from("447900000001")
 				.to("317900000002")
 				.build();
 
-		assertEquals(text.toString(), sms.getText());
+		assertEquals(text.toString(), msg.getText());
 		text.append("xy");
-		assertEquals(1001, text.length());
+		assertEquals(4097, text.length());
 
-		SmsRequest.builder()
-				.from(sms.getFrom())
+		WhatsappTextRequest.builder()
+				.from(msg.getFrom())
 				.text(text.toString())
-				.to(sms.getTo())
+				.to(msg.getTo())
 				.build();
 	}
 }

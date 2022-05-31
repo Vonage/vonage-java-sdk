@@ -58,4 +58,14 @@ public class MessagePayload {
 			);
 		}
 	}
+
+	public void validateCaptionLength(int max) {
+		if (caption == null) return;
+		if (caption.isEmpty()) {
+			throw new IllegalArgumentException("Caption cannot be empty");
+		}
+		if (caption.length() > max) {
+			throw new IllegalArgumentException("Caption must be less than "+max+" characters");
+		}
+	}
 }

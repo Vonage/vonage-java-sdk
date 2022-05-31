@@ -58,6 +58,7 @@ public class MmsVideoRequestTest {
 	@Test(expected = NullPointerException.class)
 	public void testConstructNoUrl() {
 		MmsVideoRequest.builder()
+				.caption("Description")
 				.from("447900000001")
 				.to("317900000002")
 				.build();

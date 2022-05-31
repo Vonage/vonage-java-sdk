@@ -59,6 +59,7 @@ public class MmsImageRequestTest {
 	@Test(expected = NullPointerException.class)
 	public void testConstructNoUrl() {
 		MmsImageRequest.builder()
+				.caption("Description")
 				.from("447900000001")
 				.to("317900000002")
 				.build();
