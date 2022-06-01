@@ -19,8 +19,7 @@ import com.vonage.client.messages.internal.Channel;
 import com.vonage.client.messages.internal.MessageType;
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class MessageRequestTest {
 
@@ -56,10 +55,8 @@ public class MessageRequestTest {
 	@Test
 	public void testSerializeAllFields() {
 		MessageRequest smr = ConcreteMessageRequest.builder(MessageType.VIDEO, Channel.MMS)
-				.from("447900000009")
-				.to("12002009000")
-				.clientRef("<40 character string")
-				.build();
+				.from("447900000009").to("12002009000")
+				.clientRef("<40 character string").build();
 
 		String generatedJson = smr.toJson();
 		assertTrue(generatedJson.contains("\"client_ref\":\"<40 character string\""));
@@ -154,5 +151,28 @@ public class MessageRequestTest {
 	public void testConstructNoChannel() {
 		ConcreteMessageRequest.builder(MessageType.IMAGE, null)
 				.from("447900000001").to("447900000009").build();
+	}
+
+	@Test
+	public void testConstructLongClientRef() {
+		StringBuilder clientRef = new StringBuilder(41);
+		for (int i = 0; i < 39; i++) {
+			clientRef.append('c');
+		}
+
+		ConcreteMessageRequest.Builder builder = ConcreteMessageRequest
+				.builder(MessageType.TEXT, Channel.SMS)
+				.from("447900000009").to("12002009000");
+
+		assertEquals(39, builder.clientRef(clientRef.toString()).build().getClientRef().length());
+
+		clientRef.append("0f");
+		try {
+			builder.clientRef(clientRef.toString()).build();
+			fail("Expected exception for clientRef > 40 characters");
+		}
+		catch (IllegalArgumentException ex) {
+			assertEquals(41, clientRef.length());
+		}
 	}
 }

@@ -45,6 +45,9 @@ public abstract class MessageRequest {
 		to = builder.to;
 		validateSenderAndRecipient(from, to);
 		clientRef = builder.clientRef;
+		if (clientRef != null && clientRef.length() > 40) {
+			throw new IllegalArgumentException("Client reference cannot be longer than 40 characters");
+		}
 	}
 
 	protected void validateSenderAndRecipient(String from, String to) throws IllegalArgumentException {
@@ -75,10 +78,6 @@ public abstract class MessageRequest {
 	@JsonProperty("client_ref")
 	public String getClientRef() {
 		return clientRef;
-	}
-
-	public void setClientRef(String clientRef) {
-		this.clientRef = clientRef;
 	}
 
 	public String toJson() {
