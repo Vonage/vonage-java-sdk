@@ -22,7 +22,6 @@ import com.vonage.client.messages.internal.Text;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class ViberTextRequest extends ViberRequest {
-
 	String text;
 
 	ViberTextRequest(Builder builder) {

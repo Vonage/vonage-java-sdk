@@ -17,7 +17,7 @@ package com.vonage.client.messages.internal;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import java.util.Collection;
+import java.util.Set;
 import java.util.EnumSet;
 
 import static com.vonage.client.messages.internal.MessageType.*;
@@ -29,14 +29,14 @@ public enum Channel {
 	MESSENGER (TEXT, IMAGE, AUDIO, VIDEO, FILE),
 	VIBER (TEXT, IMAGE);
 
-	private final Collection<MessageType> supportedTypes;
+	private final Set<MessageType> supportedTypes;
 
 	Channel(MessageType type1, MessageType... additionalTypes) {
 		this.supportedTypes = EnumSet.of(type1, additionalTypes);
 	}
 
-	public boolean supportsMessageType(MessageType type) {
-		return supportedTypes.contains(type);
+	public Set<MessageType> getSupportedMessageTypes() {
+		return supportedTypes;
 	}
 
 	@JsonValue

@@ -16,32 +16,77 @@
 package com.vonage.client.messages;
 
 import com.vonage.client.ClientTest;
-import com.vonage.client.messages.sms.SmsRequest;
+import com.vonage.client.messages.mms.*;
+import com.vonage.client.messages.sms.*;
+import com.vonage.client.messages.whatsapp.*;
+import com.vonage.client.messages.messenger.*;
+import com.vonage.client.messages.viber.*;
 import org.junit.Test;
+
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
 public class MessagesClientTest extends ClientTest<MessagesClient> {
 
 	private static final String
-			MESSAGE_UUID = "aaaaaaaa-bbbb-cccc-dddd-0123456789ab",
-			BASIC_RESPONSE_JSON = "{\n" +
-			"  \"message_uuid\": \""+MESSAGE_UUID+"\"\n" +
-			"}",
-			FROM = "447700900001", TO = "447700900000",
-			TEXT = "Nexmo Verification code: 12345. Valid for 10 minutes.";
+			TEXT = "Nexmo Verification code: 12345. Valid for 10 minutes.",
+			IMAGE = "https://www.example.com/picture.jpeg",
+			VIDEO = "https://www.example.com/trailer.mp4",
+			AUDIO = "https://www.example.com/song.mp3",
+			FILE = "https://www.example.com/document.pdf",
+			VCARD = "https://example.com/contact.vcf";
 
 	public MessagesClientTest() {
 		client = new MessagesClient(wrapper);
 	}
 
+	void assertResponse(MessageRequest.Builder<?, ?> builder) throws Exception {
+		assertResponse(builder.from("447700900001").to("447700900000").build());
+	}
+
+	void assertResponse(MessageRequest request) throws Exception {
+		String uuid = UUID.randomUUID().toString();
+		String responseJson = "{\"message_uuid\":\""+uuid+"\"}";
+		wrapper.setHttpClient(stubHttpClient(202, responseJson));
+		MessageResponse responseObject = client.sendMessage(request);
+		assertEquals(uuid, responseObject.getMessageUuid());
+	}
+
 	@Test
 	public void testSendSmsSuccess() throws Exception {
-		wrapper.setHttpClient(stubHttpClient(202, BASIC_RESPONSE_JSON));
+		assertResponse(SmsRequest.builder().text(TEXT));
+	}
 
-		MessageResponse response = client.sendMessage(SmsRequest.builder()
-			.from(FROM).to(TO).text(TEXT).build()
-		);
-		assertEquals(MESSAGE_UUID, response.getMessageUuid());
+	@Test
+	public void testSendMmsSuccess() throws Exception {
+		assertResponse(MmsVcardRequest.builder().url(VCARD));
+		assertResponse(MmsImageRequest.builder().url(IMAGE));
+		assertResponse(MmsAudioRequest.builder().url(AUDIO));
+		assertResponse(MmsAudioRequest.builder().url(VIDEO));
+	}
+
+	@Test
+	public void testSendViberSuccess() throws Exception {
+		assertResponse(ViberTextRequest.builder().text(TEXT));
+		assertResponse(ViberImageRequest.builder().url(IMAGE));
+	}
+
+	@Test
+	public void testSendWhatsappSuccess() throws Exception {
+		assertResponse(WhatsappTextRequest.builder().text(TEXT));
+		assertResponse(WhatsappImageRequest.builder().url(IMAGE));
+		assertResponse(WhatsappAudioRequest.builder().url(AUDIO));
+		assertResponse(WhatsappVideoRequest.builder().url(VIDEO));
+		assertResponse(WhatsappFileRequest.builder().url(FILE));
+	}
+
+	@Test
+	public void testSendMessengerSuccess() throws Exception {
+		assertResponse(MessengerTextRequest.builder().text(TEXT));
+		assertResponse(MessengerImageRequest.builder().url(IMAGE));
+		assertResponse(MessengerAudioRequest.builder().url(AUDIO));
+		assertResponse(MessengerVideoRequest.builder().url(VIDEO));
+		assertResponse(MessengerFileRequest.builder().url(FILE));
 	}
 }

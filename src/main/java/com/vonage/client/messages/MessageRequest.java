@@ -38,7 +38,7 @@ public abstract class MessageRequest {
 	protected MessageRequest(Builder<?, ?> builder) {
 		messageType = Objects.requireNonNull(builder.messageType, "Message type cannot be null");
 		channel = Objects.requireNonNull(builder.channel, "Channel cannot be null");
-		if (!channel.supportsMessageType(builder.messageType)) {
+		if (!channel.getSupportedMessageTypes().contains(builder.messageType)) {
 			throw new IllegalArgumentException(messageType+" cannot be sent via "+channel);
 		}
 		from = builder.from;
