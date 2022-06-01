@@ -28,16 +28,12 @@ import java.util.Objects;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class MessageRequest {
-	MessageType messageType;
-	Channel channel;
-	protected String from, to, clientRef;
 
-	/**
-	 * This constructor is used for tests and is also needed to instantiate this
-	 * object from a JSON string.
-	 */
-	MessageRequest() {
-	}
+	final MessageType messageType;
+	final Channel channel;
+	protected String from;
+	protected String to;
+	protected String clientRef;
 
 	protected MessageRequest(Builder<?, ?> builder) {
 		messageType = Objects.requireNonNull(builder.messageType, "Message type cannot be null");

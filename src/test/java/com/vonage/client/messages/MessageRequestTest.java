@@ -15,69 +15,53 @@
  */
 package com.vonage.client.messages;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.messages.internal.Channel;
-import com.vonage.client.messages.internal.E164;
 import com.vonage.client.messages.internal.MessageType;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class MessageRequestTest {
 
 	static class ConcreteMessageRequest extends MessageRequest {
+
+		static ConcreteMessageRequest.Builder builder(MessageType mt, Channel ct) {
+			return new Builder() {
+				@Override
+				protected MessageType getMessageType() {
+					return mt;
+				}
+
+				@Override
+				protected Channel getChannel() {
+					return ct;
+				}
+			};
+		}
+
 		static abstract class Builder extends MessageRequest.Builder<ConcreteMessageRequest, Builder> {
 
 			@Override
 			public ConcreteMessageRequest build() {
-				return new ConcreteMessageRequest(
-					from, to, messageType, channel, clientRef
-				);
+				return new ConcreteMessageRequest(this);
 			}
 		}
 
-		ConcreteMessageRequest() {
-			super();
-		}
-
-		ConcreteMessageRequest(String from, String to, MessageType mt, Channel chan, String clientRef) {
-			super(new Builder() {
-					@Override
-					protected MessageType getMessageType() {
-						return mt;
-					}
-
-					@Override
-					protected Channel getChannel() {
-						return chan;
-					}
-			}
-				.from(new E164(from).toString())
-				.to(new E164(to).toString())
-				.clientRef(clientRef)
-			);
-		}
-
-		static ConcreteMessageRequest fromJson(String json) throws JsonProcessingException {
-			return new ObjectMapper().readValue(json, ConcreteMessageRequest.class);
+		private ConcreteMessageRequest(Builder builder) {
+			super(builder);
 		}
 	}
 
 	@Test
-	public void testSerializeAllFields() throws Exception {
-		MessageRequest smr = new ConcreteMessageRequest(
-				"447900000009",
-				"12002009000",
-				MessageType.VIDEO,
-				Channel.MMS,
-				"<40 character string"
-		);
+	public void testSerializeAllFields() {
+		MessageRequest smr = ConcreteMessageRequest.builder(MessageType.VIDEO, Channel.MMS)
+				.from("447900000009")
+				.to("12002009000")
+				.clientRef("<40 character string")
+				.build();
 
 		String generatedJson = smr.toJson();
-		MessageRequest generatedObject = ConcreteMessageRequest.fromJson(generatedJson);
-		assertEquals(generatedJson, generatedObject.toJson());
-
 		assertTrue(generatedJson.contains("\"client_ref\":\"<40 character string\""));
 		assertTrue(generatedJson.contains("\"from\":\"447900000009\""));
 		assertTrue(generatedJson.contains("\"to\":\"12002009000\""));
@@ -86,19 +70,11 @@ public class MessageRequestTest {
 	}
 
 	@Test
-	public void testSerializeFieldsWithoutClientRef() throws Exception {
-		MessageRequest smr = new ConcreteMessageRequest(
-				"447900000009",
-				"12002009000",
-				MessageType.IMAGE,
-				Channel.VIBER,
-				null
-		);
+	public void testSerializeFieldsWithoutClientRef() {
+		MessageRequest smr = ConcreteMessageRequest.builder(MessageType.IMAGE, Channel.VIBER)
+				.from("447900000009").to("12002009000").build();
 
 		String generatedJson = smr.toJson();
-		MessageRequest generatedObject = ConcreteMessageRequest.fromJson(generatedJson);
-		assertEquals(generatedJson, generatedObject.toJson());
-
 		assertFalse(generatedJson.contains("client_ref"));
 		assertTrue(generatedJson.contains("\"from\":\"447900000009\""));
 		assertTrue(generatedJson.contains("\"to\":\"12002009000\""));
@@ -107,39 +83,10 @@ public class MessageRequestTest {
 	}
 
 	@Test
-	public void testSerializeFieldsWithoutChannelOrMessageType() throws Exception {
-		MessageRequest smr = new ConcreteMessageRequest(
-				"12002009000",
-				"447900000009",
-				MessageType.CUSTOM,
-				Channel.WHATSAPP,
-				"a reference"
-		);
-
-		smr.messageType = null;
-		smr.channel = null;
-		smr.setClientRef(null);
-
-		String generatedJson = smr.toJson();
-		MessageRequest generatedObject = ConcreteMessageRequest.fromJson(generatedJson);
-		assertEquals(generatedJson, generatedObject.toJson());
-
-		assertFalse(generatedJson.contains("client_ref"));
-		assertFalse(generatedJson.contains("message_type"));
-		assertFalse(generatedJson.contains("channel"));
-		assertTrue(generatedJson.contains("\"to\":\"447900000009\""));
-		assertTrue(generatedJson.contains("\"from\":\"12002009000\""));
-	}
-
-	@Test
 	public void testSerializeNoNumbers() {
-		MessageRequest smr = new ConcreteMessageRequest(
-				"447900000009",
-				"447900000001",
-				MessageType.TEXT,
-				Channel.SMS,
-				null
-		);
+		MessageRequest smr = ConcreteMessageRequest.builder(MessageType.TEXT, Channel.SMS)
+				.from("447900000009").to("447900000001").build();
+
 		smr.from = null;
 		smr.to = null;
 
@@ -152,89 +99,60 @@ public class MessageRequestTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructInvalidMessageType() {
-		new ConcreteMessageRequest(
-				"447900000001",
-				"447900000009",
-				MessageType.IMAGE,
-				Channel.SMS,
-				null
-		);
+		ConcreteMessageRequest.builder(MessageType.IMAGE, Channel.SMS)
+				.from("447900000001").to("447900000009").build();
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testConstructEmptyNumbers() {
-		new ConcreteMessageRequest(
-				"",
-				"",
-				MessageType.FILE,
-				Channel.MESSENGER,
-				null
-		);
+	public void testConstructEmptyNumber() {
+		ConcreteMessageRequest.builder(MessageType.FILE, Channel.MESSENGER)
+				.from("447900000009").to("").build();
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testConstructNoNumbers() {
-		new ConcreteMessageRequest(
-				"",
-				null,
-				MessageType.FILE,
-				Channel.MESSENGER,
-				null
-		);
+	@Test(expected = NullPointerException.class)
+	public void testConstructNullNumber() {
+		ConcreteMessageRequest.builder(MessageType.CUSTOM, Channel.WHATSAPP)
+				.from(null).to("447900000009").build();
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void testConstructNoNumber() {
+		ConcreteMessageRequest.builder(MessageType.CUSTOM, Channel.WHATSAPP)
+				.from("447900000009").build();
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructInvalidNumber() {
-		new ConcreteMessageRequest(
-				"447900000001",
-				"+0 NaN",
-				MessageType.FILE,
-				Channel.MESSENGER,
-				null
-		);
+		ConcreteMessageRequest.builder(MessageType.FILE, Channel.MESSENGER)
+				.to("447900000001").from("+0 NaN").build();
 	}
 
 	@Test
 	public void testConstructMalformedButSalvagableNumbers() {
-		new ConcreteMessageRequest(
-				"+44 7900090000",
-				"+1 900-900-0000",
-				MessageType.AUDIO,
-				Channel.MESSENGER,
-				null
-		);
+		String json = ConcreteMessageRequest.builder(MessageType.AUDIO, Channel.WHATSAPP)
+				.from("+44 7900090000").to("+1 900-900-0000").build().toJson();
+
+		assertTrue(json.contains("\"from\":\"447900090000\""));
+		assertTrue(json.contains("\"to\":\"19009000000\""));
+		assertTrue(json.contains("\"message_type\":\"audio\""));
+		assertTrue(json.contains("\"channel\":\"whatsapp\""));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructTooLongNumber() {
-		new ConcreteMessageRequest(
-				"+447900090000",
-				"19009000000447900090000",
-				MessageType.AUDIO,
-				Channel.MESSENGER,
-				null
-		);
+		ConcreteMessageRequest.builder(MessageType.TEXT, Channel.MESSENGER)
+				.from("+447900090000").to("19009000000447900090000").build();
 	}
 
 	@Test(expected = NullPointerException.class)
 	public void testConstructNoMessageType() {
-		new ConcreteMessageRequest(
-				"447900000001",
-				"447900000009",
-				null,
-				Channel.MESSENGER,
-				null
-		);
+		ConcreteMessageRequest.builder(null, Channel.MMS)
+				.from("447900000001").to("447900000009").build();
 	}
 
 	@Test(expected = NullPointerException.class)
 	public void testConstructNoChannel() {
-		new ConcreteMessageRequest(
-				"447900000001",
-				"447900000009",
-				MessageType.VCARD,
-				null,
-				null
-		);
+		ConcreteMessageRequest.builder(MessageType.IMAGE, null)
+				.from("447900000001").to("447900000009").build();
 	}
 }
