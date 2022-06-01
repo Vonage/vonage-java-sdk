@@ -23,6 +23,7 @@ import com.vonage.client.messages.messenger.*;
 import com.vonage.client.messages.viber.*;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -79,6 +80,7 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 		assertResponse(WhatsappAudioRequest.builder().url(AUDIO));
 		assertResponse(WhatsappVideoRequest.builder().url(VIDEO));
 		assertResponse(WhatsappFileRequest.builder().url(FILE));
+		assertResponse(WhatsappCustomRequest.builder().custom(Collections.emptyMap()));
 	}
 
 	@Test
