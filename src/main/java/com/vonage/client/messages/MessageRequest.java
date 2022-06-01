@@ -97,12 +97,18 @@ public abstract class MessageRequest {
 
 	@SuppressWarnings("unchecked")
 	public abstract static class Builder<M extends MessageRequest, B extends Builder<? extends M, ? extends B>> {
-		protected Channel channel;
-		protected MessageType messageType;
+		final Channel channel;
+		final MessageType messageType;
 		protected String from, to, clientRef;
 
 		protected Builder() {
+			messageType = getMessageType();
+			channel = getChannel();
 		}
+
+		protected abstract MessageType getMessageType();
+
+		protected abstract Channel getChannel();
 
 		public B from(String from) {
 			this.from = from;

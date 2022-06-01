@@ -41,8 +41,11 @@ public final class MmsImageRequest extends MmsRequest {
 	public static final class Builder extends MmsRequest.Builder<MmsImageRequest, Builder> {
 		String caption;
 
-		Builder() {
-			messageType = MessageType.IMAGE;
+		Builder() {}
+
+		@Override
+		protected MessageType getMessageType() {
+			return MessageType.IMAGE;
 		}
 
 		public Builder caption(String caption) {

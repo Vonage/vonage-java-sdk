@@ -42,8 +42,11 @@ public final class ViberTextRequest extends ViberRequest {
 	public static final class Builder extends ViberRequest.Builder<ViberTextRequest, Builder> {
 		String text;
 
-		Builder() {
-			messageType = MessageType.TEXT;
+		Builder() {}
+
+		@Override
+		protected MessageType getMessageType() {
+			return MessageType.TEXT;
 		}
 
 		public Builder text(String text) {

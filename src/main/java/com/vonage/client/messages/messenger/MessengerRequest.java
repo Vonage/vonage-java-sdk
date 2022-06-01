@@ -51,8 +51,9 @@ public abstract class MessengerRequest extends MessageRequest {
 		protected Tag tag;
 		protected Category category;
 
-		protected Builder() {
-			channel = Channel.MESSENGER;
+		@Override
+		protected final Channel getChannel() {
+			return Channel.MESSENGER;
 		}
 
 		/**

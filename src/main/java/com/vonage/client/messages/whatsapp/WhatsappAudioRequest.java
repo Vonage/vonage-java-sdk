@@ -42,8 +42,11 @@ public final class WhatsappAudioRequest extends WhatsappRequest {
 	public static final class Builder extends WhatsappRequest.Builder<WhatsappAudioRequest, Builder> {
 		String url;
 
-		Builder() {
-			messageType = MessageType.AUDIO;
+		Builder() {}
+
+		@Override
+		protected MessageType getMessageType() {
+			return MessageType.AUDIO;
 		}
 
 		public Builder url(String url) {

@@ -36,8 +36,10 @@ public abstract class WhatsappRequest extends MessageRequest {
 	}
 
 	public abstract static class Builder<M extends WhatsappRequest, B extends Builder<? extends M, ? extends B>> extends MessageRequest.Builder<M, B> {
-		protected Builder() {
-			channel = Channel.WHATSAPP;
+
+		@Override
+		protected final Channel getChannel() {
+			return Channel.WHATSAPP;
 		}
 	}
 }

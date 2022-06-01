@@ -41,8 +41,11 @@ public final class MessengerFileRequest extends MessengerRequest {
 	public static final class Builder extends MessengerRequest.Builder<MessengerFileRequest, Builder> {
 		String url;
 
-		Builder() {
-			messageType = MessageType.FILE;
+		Builder() {}
+
+		@Override
+		protected MessageType getMessageType() {
+			return MessageType.FILE;
 		}
 
 		public Builder url(String url) {

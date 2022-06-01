@@ -41,8 +41,11 @@ public final class MessengerTextRequest extends MessengerRequest {
 	public static final class Builder extends MessengerRequest.Builder<MessengerTextRequest, Builder> {
 		String text;
 
-		Builder() {
-			messageType = MessageType.TEXT;
+		Builder() {}
+
+		@Override
+		protected MessageType getMessageType() {
+			return MessageType.TEXT;
 		}
 
 		public Builder text(String text) {

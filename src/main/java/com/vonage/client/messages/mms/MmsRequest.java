@@ -32,8 +32,9 @@ public abstract class MmsRequest extends MessageRequest {
 	public abstract static class Builder<M extends MmsRequest, B extends Builder<? extends M, ? extends B>> extends MessageRequest.Builder<M, B> {
 		protected String url;
 
-		protected Builder() {
-			channel = Channel.MMS;
+		@Override
+		protected final Channel getChannel() {
+			return Channel.MMS;
 		}
 
 		public B url(String url) {

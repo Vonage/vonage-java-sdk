@@ -40,8 +40,11 @@ public final class MmsVideoRequest extends MmsRequest {
 	public static final class Builder extends MmsRequest.Builder<MmsVideoRequest, Builder> {
 		String caption;
 
-		Builder() {
-			messageType = MessageType.VIDEO;
+		Builder() {}
+
+		@Override
+		protected MessageType getMessageType() {
+			return MessageType.VIDEO;
 		}
 
 		public Builder caption(String caption) {

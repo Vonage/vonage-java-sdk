@@ -41,8 +41,11 @@ public final class WhatsappTextRequest extends WhatsappRequest {
 	public static final class Builder extends WhatsappRequest.Builder<WhatsappTextRequest, Builder> {
 		String text;
 
-		Builder() {
-			messageType = MessageType.TEXT;
+		Builder() {}
+
+		@Override
+		protected MessageType getMessageType() {
+			return MessageType.TEXT;
 		}
 
 		public Builder text(String text) {

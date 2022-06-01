@@ -53,8 +53,9 @@ public abstract class ViberRequest extends MessageRequest {
 		protected Integer ttl;
 		protected String viberType;
 
-		protected Builder() {
-			channel = Channel.VIBER;
+		@Override
+		protected final Channel getChannel() {
+			return Channel.VIBER;
 		}
 
 		public B category(Category category) {

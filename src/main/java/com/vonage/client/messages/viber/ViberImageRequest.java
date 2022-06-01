@@ -42,8 +42,11 @@ public final class ViberImageRequest extends ViberRequest {
 	public static final class Builder extends ViberRequest.Builder<ViberImageRequest, Builder> {
 		String url;
 
-		Builder() {
-			messageType = MessageType.IMAGE;
+		Builder() {}
+
+		@Override
+		protected MessageType getMessageType() {
+			return MessageType.IMAGE;
 		}
 
 		public Builder url(String url) {

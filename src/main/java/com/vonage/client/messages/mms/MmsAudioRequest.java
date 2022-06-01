@@ -40,8 +40,11 @@ public final class MmsAudioRequest extends MmsRequest {
 	public static final class Builder extends MmsRequest.Builder<MmsAudioRequest, Builder> {
 		String caption;
 
-		Builder() {
-			messageType = MessageType.AUDIO;
+		Builder() {}
+
+		@Override
+		protected MessageType getMessageType() {
+			return MessageType.AUDIO;
 		}
 
 		public Builder caption(String caption) {

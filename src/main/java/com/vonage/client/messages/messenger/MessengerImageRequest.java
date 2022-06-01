@@ -42,8 +42,11 @@ public final class MessengerImageRequest extends MessengerRequest {
 	public static final class Builder extends MessengerRequest.Builder<MessengerImageRequest, Builder> {
 		String url;
 
-		Builder() {
-			messageType = MessageType.IMAGE;
+		Builder() {}
+
+		@Override
+		protected MessageType getMessageType() {
+			return MessageType.IMAGE;
 		}
 
 		public Builder url(String url) {

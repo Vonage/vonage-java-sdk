@@ -43,8 +43,11 @@ public final class WhatsappImageRequest extends WhatsappRequest {
 	public static final class Builder extends WhatsappRequest.Builder<WhatsappImageRequest, Builder> {
 		String url, caption;
 
-		Builder() {
-			messageType = MessageType.IMAGE;
+		Builder() {}
+
+		@Override
+		protected MessageType getMessageType() {
+			return MessageType.IMAGE;
 		}
 
 		public Builder url(String url) {

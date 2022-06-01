@@ -42,8 +42,11 @@ public final class MessengerAudioRequest extends MessengerRequest {
 	public static final class Builder extends MessengerRequest.Builder<MessengerAudioRequest, Builder> {
 		String url;
 
-		Builder() {
-			messageType = MessageType.AUDIO;
+		Builder() {}
+
+		@Override
+		protected MessageType getMessageType() {
+			return MessageType.AUDIO;
 		}
 
 		public Builder url(String url) {

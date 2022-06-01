@@ -42,8 +42,11 @@ public final class MessengerVideoRequest extends MessengerRequest {
 	public static final class Builder extends MessengerRequest.Builder<MessengerVideoRequest, Builder> {
 		String url;
 
-		Builder() {
-			messageType = MessageType.VIDEO;
+		Builder() {}
+
+		@Override
+		protected MessageType getMessageType() {
+			return MessageType.VIDEO;
 		}
 
 		public Builder url(String url) {

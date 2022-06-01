@@ -39,9 +39,11 @@ public final class MmsVcardRequest extends MmsRequest {
 	}
 
 	public static final class Builder extends MmsRequest.Builder<MmsVcardRequest, Builder> {
+		Builder() {}
 
-		Builder() {
-			messageType = MessageType.VCARD;
+		@Override
+		protected MessageType getMessageType() {
+			return MessageType.VCARD;
 		}
 
 		@Override

@@ -42,8 +42,11 @@ public final class WhatsappVideoRequest extends WhatsappRequest {
 	public static final class Builder extends WhatsappRequest.Builder<WhatsappVideoRequest, Builder> {
 		String url, caption;
 
-		Builder() {
-			messageType = MessageType.VIDEO;
+		Builder() {}
+
+		@Override
+		protected MessageType getMessageType() {
+			return MessageType.VIDEO;
 		}
 
 		public Builder url(String url) {

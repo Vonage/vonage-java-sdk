@@ -41,8 +41,11 @@ public final class WhatsappFileRequest extends WhatsappRequest {
 	public static final class Builder extends WhatsappRequest.Builder<WhatsappFileRequest, Builder> {
 		String url, caption;
 
-		Builder() {
-			messageType = MessageType.FILE;
+		Builder() {}
+
+		@Override
+		protected MessageType getMessageType() {
+			return MessageType.FILE;
 		}
 
 		public Builder url(String url) {

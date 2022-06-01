@@ -42,10 +42,17 @@ public final class SmsRequest extends MessageRequest {
 
 	public final static class Builder extends MessageRequest.Builder<SmsRequest, Builder> {
 		String text;
-		
-		Builder() {
-			messageType = MessageType.TEXT;
-			channel = Channel.SMS;
+
+		Builder() {}
+
+		@Override
+		protected MessageType getMessageType() {
+			return MessageType.TEXT;
+		}
+
+		@Override
+		protected Channel getChannel() {
+			return Channel.SMS;
 		}
 
 		public Builder text(String text) {

@@ -17,7 +17,6 @@ package com.vonage.client.messages;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.messages.internal.Channel;
 import com.vonage.client.messages.internal.E164;
 import com.vonage.client.messages.internal.MessageType;
@@ -28,17 +27,7 @@ import static org.junit.Assert.*;
 public class MessageRequestTest {
 
 	static class ConcreteMessageRequest extends MessageRequest {
-		static class Builder extends MessageRequest.Builder<ConcreteMessageRequest, Builder> {
-
-			Builder messageType(MessageType messageType) {
-				this.messageType = messageType;
-				return this;
-			}
-
-			Builder channel(Channel channel) {
-				this.channel = channel;
-				return this;
-			}
+		static abstract class Builder extends MessageRequest.Builder<ConcreteMessageRequest, Builder> {
 
 			@Override
 			public ConcreteMessageRequest build() {
@@ -52,12 +41,20 @@ public class MessageRequestTest {
 			super();
 		}
 
-		ConcreteMessageRequest(String from, String to, MessageType messageType, Channel channel, String clientRef) {
-			super(new Builder()
+		ConcreteMessageRequest(String from, String to, MessageType mt, Channel chan, String clientRef) {
+			super(new Builder() {
+					@Override
+					protected MessageType getMessageType() {
+						return mt;
+					}
+
+					@Override
+					protected Channel getChannel() {
+						return chan;
+					}
+			}
 				.from(new E164(from).toString())
 				.to(new E164(to).toString())
-				.messageType(messageType)
-				.channel(channel)
 				.clientRef(clientRef)
 			);
 		}
@@ -134,7 +131,7 @@ public class MessageRequestTest {
 		assertTrue(generatedJson.contains("\"from\":\"12002009000\""));
 	}
 
-	@Test(expected = VonageUnexpectedException.class)
+	@Test
 	public void testSerializeNoNumbers() {
 		MessageRequest smr = new ConcreteMessageRequest(
 				"447900000009",
@@ -145,7 +142,12 @@ public class MessageRequestTest {
 		);
 		smr.from = null;
 		smr.to = null;
-		smr.toJson();
+
+		String generatedJson = smr.toJson();
+		assertFalse(generatedJson.contains("from"));
+		assertFalse(generatedJson.contains("to"));
+		assertTrue(generatedJson.contains("text"));
+		assertTrue(generatedJson.contains("sms"));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
