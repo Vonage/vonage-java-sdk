@@ -106,4 +106,14 @@ public class WhatsappImageRequestTest {
 			assertEquals(url, builder.build().getImage().getUrl());
 		}
 	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructEmptyCaption() {
+		WhatsappVideoRequest.builder()
+				.from("447900000001")
+				.url("ftp://rel/path/to/picture.jpeg")
+				.to("317900000002")
+				.caption("")
+				.build();
+	}
 }

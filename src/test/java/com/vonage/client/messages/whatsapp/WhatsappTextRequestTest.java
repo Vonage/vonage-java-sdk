@@ -33,6 +33,23 @@ public class WhatsappTextRequestTest {
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructEmptySender() {
+		WhatsappTextRequest.builder()
+				.from("")
+				.to("317900000002")
+				.text("Hello, World!")
+				.build();
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructNoSender() {
+		WhatsappTextRequest.builder()
+				.to("317900000002")
+				.text("Hello, World!")
+				.build();
+	}
+
 	@Test(expected = NullPointerException.class)
 	public void testConstructNullText() {
 		WhatsappTextRequest.builder()

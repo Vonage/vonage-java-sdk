@@ -95,6 +95,21 @@ public class MessengerTextRequestTest {
 				.build();
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructNullSender() {
+		MessengerTextRequest.builder()
+				.to("Alex")
+				.build();
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructEmptySender() {
+		MessengerTextRequest.builder()
+				.from("")
+				.to("Alex")
+				.build();
+	}
+
 	@Test(expected = NullPointerException.class)
 	public void testConstructNullText() {
 		MessengerTextRequest.builder()

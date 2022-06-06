@@ -62,6 +62,16 @@ public class WhatsappVideoRequestTest {
 				.build();
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructEmptyCaption() {
+		WhatsappVideoRequest.builder()
+				.caption("")
+				.from("447900000001")
+				.url("ftp://rel/path/to/video.mp4")
+				.to("317900000002")
+				.build();
+	}
+
 	@Test
 	public void testValidExtensions() {
 		WhatsappVideoRequest.Builder builder = WhatsappVideoRequest.builder()

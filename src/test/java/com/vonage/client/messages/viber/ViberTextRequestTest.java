@@ -106,6 +106,23 @@ public class ViberTextRequestTest {
 				.build();
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructEmptySender() {
+		ViberTextRequest.builder()
+				.text("Bonjour")
+				.from("")
+				.to("447900000001")
+				.build();
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructNoSender() {
+		ViberTextRequest.builder()
+				.text("Bonjour")
+				.to("447900000001")
+				.build();
+	}
+
 	@Test
 	public void testConstructTtlBounds() {
 		final String from = "Karin", to = "447900000001", text = "こんにちは";

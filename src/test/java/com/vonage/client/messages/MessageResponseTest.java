@@ -15,6 +15,7 @@
  */
 package com.vonage.client.messages;
 
+import com.vonage.client.VonageUnexpectedException;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -22,12 +23,16 @@ import static org.junit.Assert.assertEquals;
 public class MessageResponseTest {
 
 	@Test
-	public void testFromJson() {
+	public void testConstructFromValidJson() {
 		MessageResponse response = MessageResponse.fromJson("{\n" +
 			"    \"message_uuid\": \"aaaaaaaa-bbbb-cccc-dddd-0123456789ab\"\n" +
 			"}"
 		);
-
 		assertEquals("aaaaaaaa-bbbb-cccc-dddd-0123456789ab", response.getMessageUuid());
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void testConstructFromInvalidJson() {
+		MessageResponse.fromJson("{_malformed_}");
 	}
 }
