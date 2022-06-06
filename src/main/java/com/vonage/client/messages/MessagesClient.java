@@ -20,10 +20,29 @@ import com.vonage.client.HttpWrapper;
 public class MessagesClient {
 	final SendMessageEndpoint sendMessage;
 
+	/**
+	 * Create a new SmsClient.
+	 * @param httpWrapper Http Wrapper used to create a Message requests
+	 */
 	public MessagesClient(HttpWrapper httpWrapper) {
 		sendMessage = new SendMessageEndpoint(httpWrapper);
 	}
 
+	/**
+	 * Sends a message. The details of its format, channel, sender, recipient etc. are
+	 * specified entirely by the type and contents of the MessageRequest. For example, to send
+	 * a text via Viber, you would construct the request like so: </br>
+	 * <pre>{@code
+	 *     ViberTextRequest request = ViberTextRequest.builder()
+	 *         .from("My Company")
+	 *         .to("447700900000")
+	 *         .text("Hello from Vonage!")
+	 *         .build();
+	 * }</pre>
+	 *
+	 * @param request The message request object, as described above.
+	 * @return The response, if the request was successful (i.e.a 202 was received from the server).
+	 */
 	public MessageResponse sendMessage(MessageRequest request) {
 		return sendMessage.execute(request);
 	}

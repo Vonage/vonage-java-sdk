@@ -26,6 +26,13 @@ import com.vonage.client.messages.internal.MessageType;
 
 import java.util.Objects;
 
+/**
+ * Abstract base class of all Messages sent via the Messages v1 API.
+ * All subclasses follow a builder pattern to enable easy construction.
+ * The design philosophy is "correct by construction": that is, validation
+ * occurs when calling the {@link Builder#build()} method. It is still the
+ * responsibility of the user to ensure all required parameters are set.
+ */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class MessageRequest {
 

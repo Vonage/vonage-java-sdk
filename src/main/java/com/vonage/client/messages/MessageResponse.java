@@ -32,6 +32,11 @@ import java.io.IOException;
 public class MessageResponse {
 	private String messageUuid;
 
+	/**
+	 * Returns the UUID of the message that was sent.
+	 *
+	 * @return The unique message ID.
+	 */
 	@JsonProperty("message_uuid")
 	public String getMessageUuid() {
 		return messageUuid;

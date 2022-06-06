@@ -70,6 +70,12 @@ public final class WhatsappTemplateRequest extends WhatsappRequest {
 			return this;
 		}
 
+		/**
+		 * The BCP 47 language of the template.
+		 * 
+		 * @param locale The BCP-47 locale.
+		 * @return This builder.
+		 */
 		public Builder locale(String locale) {
 			this.locale = locale;
 			return this;
