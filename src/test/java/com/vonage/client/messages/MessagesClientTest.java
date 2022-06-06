@@ -81,6 +81,7 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 		assertResponse(WhatsappVideoRequest.builder().url(VIDEO));
 		assertResponse(WhatsappFileRequest.builder().url(FILE));
 		assertResponse(WhatsappCustomRequest.builder().custom(Collections.emptyMap()));
+		assertResponse(WhatsappTemplateRequest.builder().name("fb").locale("en_GB"));
 	}
 
 	@Test
