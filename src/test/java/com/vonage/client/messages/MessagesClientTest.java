@@ -56,7 +56,7 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 
 	@Test
 	public void testSendSmsSuccess() throws Exception {
-		assertResponse(SmsRequest.builder().text(TEXT));
+		assertResponse(SmsTextRequest.builder().text(TEXT));
 	}
 
 	@Test

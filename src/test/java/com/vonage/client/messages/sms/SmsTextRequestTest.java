@@ -20,12 +20,12 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class SmsRequestTest {
+public class SmsTextRequestTest {
 
 	@Test
 	public void testSerializeValid() {
 		String from = "447900000001", to = "317900000002", msg = "Hello, World!";
-		SmsRequest sms = SmsRequest.builder().from(from).to(to).text(msg).build();
+		SmsTextRequest sms = SmsTextRequest.builder().from(from).to(to).text(msg).build();
 		String json = sms.toJson();
 		assertTrue(json.contains("\"text\":\""+msg+"\""));
 		assertTrue(json.contains("\"from\":\""+from+"\""));
@@ -36,7 +36,7 @@ public class SmsRequestTest {
 
 	@Test(expected = NullPointerException.class)
 	public void testNullText() {
-		SmsRequest.builder()
+		SmsTextRequest.builder()
 				.from("447900000001")
 				.to("317900000002")
 				.build();
@@ -44,7 +44,7 @@ public class SmsRequestTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testEmptyText() {
-		SmsRequest.builder()
+		SmsTextRequest.builder()
 				.from("447900000001")
 				.to("317900000002")
 				.text("")
@@ -59,7 +59,7 @@ public class SmsRequestTest {
 		}
 		assertEquals(999, text.length());
 
-		SmsRequest sms = SmsRequest.builder()
+		SmsTextRequest sms = SmsTextRequest.builder()
 				.text(text.toString())
 				.from("447900000001")
 				.to("317900000002")
@@ -69,7 +69,7 @@ public class SmsRequestTest {
 		text.append("xy");
 		assertEquals(1001, text.length());
 
-		SmsRequest.builder()
+		SmsTextRequest.builder()
 				.from(sms.getFrom())
 				.text(text.toString())
 				.to(sms.getTo())

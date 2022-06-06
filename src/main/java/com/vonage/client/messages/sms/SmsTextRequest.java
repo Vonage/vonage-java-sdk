@@ -23,10 +23,10 @@ import com.vonage.client.messages.internal.MessageType;
 import com.vonage.client.messages.internal.Text;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class SmsRequest extends MessageRequest {
+public final class SmsTextRequest extends MessageRequest {
 	String text;
 
-	SmsRequest(Builder builder) {
+	SmsTextRequest(Builder builder) {
 		super(builder);
 		text = new Text(builder.text, 1000).toString();
 	}
@@ -40,7 +40,7 @@ public final class SmsRequest extends MessageRequest {
 		return new Builder();
 	}
 
-	public final static class Builder extends MessageRequest.Builder<SmsRequest, Builder> {
+	public final static class Builder extends MessageRequest.Builder<SmsTextRequest, Builder> {
 		String text;
 
 		Builder() {}
@@ -60,8 +60,8 @@ public final class SmsRequest extends MessageRequest {
 			return this;
 		}
 
-		public SmsRequest build() {
-			return new SmsRequest(this);
+		public SmsTextRequest build() {
+			return new SmsTextRequest(this);
 		}
 	}
 }
