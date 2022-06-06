@@ -43,7 +43,7 @@ class SendMessageEndpoint extends AbstractMethod<MessageRequest, MessageResponse
 
 	@Override
 	public RequestBuilder makeRequest(MessageRequest request) {
-		String uri = httpWrapper.getHttpConfig().getRestBaseUri() + PATH;
+		String uri = httpWrapper.getHttpConfig().getApiBaseUri() + PATH;
 		return RequestBuilder.post(uri)
 				.setHeader("Content-Type", "application/json")
 				.setHeader("Accept", "application/json")
