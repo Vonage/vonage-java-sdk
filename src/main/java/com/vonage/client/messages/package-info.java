@@ -17,7 +17,7 @@
 /**
  * This package contains classes and sub-packages to support usage of the
  * <a href=https://developer.vonage.com/api/messages-olympus>Messages v1 API</a>.
- * </br>
+ * <br>
  * The API allows sending various types of messages (text, video, image, audio, files) over
  * various channels (SMS, MMS, Viber, WhatsApp, Facebook Messenger). Only a specific combination
  * of message types and channels are valid, and each channel's service has varying requirements
@@ -26,7 +26,7 @@
  * ideally impossible to construct a malformed MessageRequest when calling
  * {@link com.vonage.client.messages.MessagesClient#sendMessage(com.vonage.client.messages.MessageRequest)}.
  * Hence, types are used heavily to minimize the possibility of creating invalid requests.
- * </br>
+ * <br>
  * Subclasses of {@link com.vonage.client.messages.MessageRequest} explicitly exhaust all supported combinations
  * of message type and channel. They all follow a builder pattern to enable convenient construction of messages
  * with named parameters in any order. However, it is the user's responsibility to ensure that required parameters

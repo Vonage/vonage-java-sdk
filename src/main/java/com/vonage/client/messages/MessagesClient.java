@@ -31,7 +31,7 @@ public class MessagesClient {
 	/**
 	 * Sends a message. The details of its format, channel, sender, recipient etc. are
 	 * specified entirely by the type and contents of the MessageRequest. For example, to send
-	 * a text via Viber, you would construct the request like so: </br>
+	 * a text via Viber, you would construct the request like so: <br>
 	 * <pre>{@code
 	 *     ViberTextRequest request = ViberTextRequest.builder()
 	 *         .from("My Company")
