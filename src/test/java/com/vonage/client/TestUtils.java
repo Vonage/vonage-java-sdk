@@ -95,7 +95,6 @@ public class TestUtils {
         BasicHttpEntity entity = new BasicHttpEntity();
         entity.setContent(jsonStream);
         stubResponse.setEntity(entity);
-
         return stubResponse;
     }
 
