@@ -18,17 +18,17 @@ package com.vonage.client.messages;
 import com.vonage.client.VonageUnexpectedException;
 import org.junit.Test;
 
+import java.util.UUID;
+
 import static org.junit.Assert.assertEquals;
 
 public class MessageResponseTest {
 
 	@Test
 	public void testConstructFromValidJson() {
-		MessageResponse response = MessageResponse.fromJson("{\n" +
-			"    \"message_uuid\": \"aaaaaaaa-bbbb-cccc-dddd-0123456789ab\"\n" +
-			"}"
-		);
-		assertEquals("aaaaaaaa-bbbb-cccc-dddd-0123456789ab", response.getMessageUuid());
+		String uuid = UUID.randomUUID().toString();
+		MessageResponse response = MessageResponse.fromJson("{\"message_uuid\":\""+uuid+"\"}");
+		assertEquals(uuid, response.getMessageUuid());
 	}
 
 	@Test(expected = VonageUnexpectedException.class)

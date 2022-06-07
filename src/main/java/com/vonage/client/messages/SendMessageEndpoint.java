@@ -24,7 +24,8 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 
-import java.io.IOException;
+import java.io.*;
+import java.util.stream.Collectors;
 
 class SendMessageEndpoint extends AbstractMethod<MessageRequest, MessageResponse> {
 
@@ -52,6 +53,20 @@ class SendMessageEndpoint extends AbstractMethod<MessageRequest, MessageResponse
 
 	@Override
 	public MessageResponse parseResponse(HttpResponse response) throws IOException {
-		return MessageResponse.fromJson(basicResponseHandler.handleResponse(response));
+		int statusCode = response.getStatusLine().getStatusCode();
+		String json;
+
+		if (statusCode >= 200 && statusCode < 300) {
+			json = basicResponseHandler.handleResponse(response);
+			return MessageResponse.fromJson(json);
+		}
+		else {
+			try (BufferedReader br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()))) {
+				json = br.lines().collect(Collectors.joining(System.lineSeparator()));
+			}
+			MessageResponseException mrx = MessageResponseException.fromJson(json);
+			mrx.setStatusCode(statusCode);
+			throw mrx;
+		}
 	}
 }

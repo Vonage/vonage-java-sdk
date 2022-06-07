@@ -16,6 +16,8 @@
 package com.vonage.client.messages;
 
 import com.vonage.client.HttpWrapper;
+import com.vonage.client.VonageClientException;
+import com.vonage.client.VonageResponseParseException;
 
 public class MessagesClient {
 	final SendMessageEndpoint sendMessage;
@@ -38,12 +40,20 @@ public class MessagesClient {
 	 *         .to("447700900000")
 	 *         .text("Hello from Vonage!")
 	 *         .build();
-	 * }</pre>
+	 * }</pre><br>
+	 *
+	 * If the message was sent successfully, a {@link MessageResponse} will be returned, containing the
+	 * unique identifier of the message. Otherwise, a {@link MessageResponseException} will be thrown,
+	 * which contains details of why the request failed.
 	 *
 	 * @param request The message request object, as described above.
 	 * @return The response, if the request was successful (i.e.a 202 was received from the server).
+	 *
+	 * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+	 * @throws VonageResponseParseException if the response from the API could not be parsed.
+	 * @throws MessageResponseException     if the request was unsuccessful (a 4xx or 500 status code was returned).
 	 */
-	public MessageResponse sendMessage(MessageRequest request) {
+	public MessageResponse sendMessage(MessageRequest request) throws VonageClientException, VonageResponseParseException {
 		return sendMessage.execute(request);
 	}
 }

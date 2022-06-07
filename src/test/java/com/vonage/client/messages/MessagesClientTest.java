@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class MessagesClientTest extends ClientTest<MessagesClient> {
 
@@ -37,6 +38,9 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 			AUDIO = "https://www.example.com/song.mp3",
 			FILE = "https://www.example.com/document.pdf",
 			VCARD = "https://example.com/contact.vcf";
+
+	private static final MessageRequest REQUEST = SmsTextRequest.builder()
+			.from("447700900001").to("447700900000").text("Hello").build();
 
 	public MessagesClientTest() {
 		client = new MessagesClient(wrapper);
@@ -52,6 +56,40 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 		wrapper.setHttpClient(stubHttpClient(202, responseJson));
 		MessageResponse responseObject = client.sendMessage(request);
 		assertEquals(uuid, responseObject.getMessageUuid());
+	}
+
+	void assertException(int statusCode, MessageResponseException expectedResponse) throws Exception {
+		wrapper.setHttpClient(stubHttpClient(statusCode, expectedResponse.toJson()));
+		expectedResponse.setStatusCode(statusCode);
+		try {
+			client.sendMessage(REQUEST);
+			fail("Expected MessageResponseException");
+		}
+		catch (MessageResponseException mrx) {
+			assertEquals(expectedResponse, mrx);
+		}
+	}
+
+	@Test
+	public void test429Response() throws Exception {
+		assertException(429, MessageResponseException.fromJson("{\n" +
+				"  \"type\": \"https://developer.nexmo.com/api-errors/messages-olympus#1010\",\n" +
+				"  \"title\": \"Rate Limit Hit\",\n" +
+				"  \"detail\": \"Please wait, then retry your request\",\n" +
+				"  \"instance\": \"bf0ca0bf927b3b52e3cb03217e1a1ddf\"\n" +
+				"}"
+		));
+	}
+
+	@Test
+	public void test401Response() throws Exception {
+		assertException(401, MessageResponseException.fromJson("{\n" +
+				"  \"type\": \"https://developer.nexmo.com/api-errors/#unathorized\",\n" +
+				"  \"title\": \"You did not provide correct credentials.\",\n" +
+				"  \"detail\": \"Check that you're using the correct credentials, and that your account has this feature enabled\",\n" +
+				"  \"instance\": \"bf0ca0bf927b3b52e3cb03217e1a1ddf\"\n" +
+				"}"
+		));
 	}
 
 	@Test
