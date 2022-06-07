@@ -52,10 +52,7 @@ public class MessagePayload {
 		String ext = path.substring(lastDot+1);
 		Collection<String> extensions = Arrays.asList(allowed);
 		if (!extensions.contains(ext)) {
-			throw new IllegalArgumentException(
-				"Invalid extension: '"+ext+"'. \n"+
-				"Should be one of "+extensions
-			);
+			throw new IllegalArgumentException("Invalid extension: '"+ext+"'. Should be one of "+extensions);
 		}
 	}
 

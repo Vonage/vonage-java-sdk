@@ -33,11 +33,11 @@ public class MessageResponseExceptionTest {
 			instance = "bf0ca0bf927b3b52e3cb03217e1a1ddf";
 
 		MessageResponseException expected = new MessageResponseException();
-		expected.setStatusCode(status);
-		expected.setType(type);
-		expected.setTitle(title);
-		expected.setDetail(detail);
-		expected.setInstance(instance);
+		expected.statusCode = status;
+		expected.type = type;
+		expected.title = title;
+		expected.detail = detail;
+		expected.instance = instance;
 
 		MessageResponseException actual = MessageResponseException.fromJson(
 			"{\n" +
@@ -47,8 +47,13 @@ public class MessageResponseExceptionTest {
 			"  \"instance\": \""+instance+"\"\n" +
 			"}"
 		);
-		actual.setStatusCode(status);
+		actual.statusCode = status;
 		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void testConstructEmpty() {
+		assertEquals(new MessageResponseException(), MessageResponseException.fromJson("{}"));
 	}
 
 	@Test(expected = VonageUnexpectedException.class)

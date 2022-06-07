@@ -30,14 +30,16 @@ import java.util.Objects;
 
 /**
  * Response returned when sending a message fails (i.e. returns a non-2xx status code).
+ * Since this is an unchecked exception, users are advised to catch it when calling
+ * {@link MessagesClient#sendMessage(MessageRequest)} to handle failures.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MessageResponseException extends VonageClientException {
-	private String type, title, detail, instance;
-	private int statusCode;
+public final class MessageResponseException extends VonageClientException {
+	String type, title, detail, instance;
+	int statusCode;
 
-	protected MessageResponseException() {
+	MessageResponseException() {
 	}
 
 	@JsonProperty("type")
@@ -62,26 +64,6 @@ public class MessageResponseException extends VonageClientException {
 
 	public int getStatusCode() {
 		return statusCode;
-	}
-
-	protected void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
-	}
-
-	protected void setType(String type) {
-		this.type = type;
-	}
-
-	protected void setTitle(String title) {
-		this.title = title;
-	}
-
-	protected void setDetail(String detail) {
-		this.detail = detail;
-	}
-
-	protected void setInstance(String instance) {
-		this.instance = instance;
 	}
 
 	private static class IgnoreInheritedIntrospector extends JacksonAnnotationIntrospector {

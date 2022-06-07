@@ -23,6 +23,7 @@ import com.vonage.client.messages.messenger.*;
 import com.vonage.client.messages.viber.*;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -60,7 +61,7 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 
 	void assertException(int statusCode, MessageResponseException expectedResponse) throws Exception {
 		wrapper.setHttpClient(stubHttpClient(statusCode, expectedResponse.toJson()));
-		expectedResponse.setStatusCode(statusCode);
+		expectedResponse.statusCode = statusCode;
 		try {
 			client.sendMessage(REQUEST);
 			fail("Expected MessageResponseException");

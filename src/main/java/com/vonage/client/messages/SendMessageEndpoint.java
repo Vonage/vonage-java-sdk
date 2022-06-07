@@ -65,7 +65,7 @@ class SendMessageEndpoint extends AbstractMethod<MessageRequest, MessageResponse
 				json = br.lines().collect(Collectors.joining(System.lineSeparator()));
 			}
 			MessageResponseException mrx = MessageResponseException.fromJson(json);
-			mrx.setStatusCode(statusCode);
+			mrx.statusCode = statusCode;
 			throw mrx;
 		}
 	}
