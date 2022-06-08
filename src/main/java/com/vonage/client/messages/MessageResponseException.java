@@ -73,17 +73,6 @@ public final class MessageResponseException extends VonageClientException {
 		}
 	}
 
-	public String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.setAnnotationIntrospector(new IgnoreInheritedIntrospector());
-			return mapper.writeValueAsString(this);
-		}
-		catch (JsonProcessingException e) {
-			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName(), e);
-		}
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -101,6 +90,28 @@ public final class MessageResponseException extends VonageClientException {
 		return Objects.hash(type, title, detail, instance, statusCode);
 	}
 
+	/**
+	 * Generates JSON from this object. Excludes fields inherited from superclasses.
+	 *
+	 * @return The JSON representation of this response object.
+	 */
+	public String toJson() {
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.setAnnotationIntrospector(new IgnoreInheritedIntrospector());
+			return mapper.writeValueAsString(this);
+		}
+		catch (JsonProcessingException e) {
+			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName(), e);
+		}
+	}
+
+	/**
+	 * Creates an instance of this class from a JSON payload.
+	 *
+	 * @param json The JSON string to parse.
+	 * @return An instance of this class with all known fields populated from the JSON payload, if present.
+	 */
 	public static MessageResponseException fromJson(String json) {
 		try {
 			return new ObjectMapper().readValue(json, MessageResponseException.class);

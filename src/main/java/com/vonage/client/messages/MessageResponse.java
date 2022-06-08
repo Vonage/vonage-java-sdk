@@ -29,7 +29,10 @@ import java.io.IOException;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MessageResponse {
-	private String messageUuid;
+	String messageUuid;
+
+	protected MessageResponse() {
+	}
 
 	/**
 	 * Returns the UUID of the message that was sent.
@@ -41,6 +44,12 @@ public class MessageResponse {
 		return messageUuid;
 	}
 
+	/**
+	 * Creates an instance of this class from a JSON payload.
+	 *
+	 * @param json The JSON string to parse.
+	 * @return An instance of this class with the field populated, if present.
+	 */
 	public static MessageResponse fromJson(String json) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
