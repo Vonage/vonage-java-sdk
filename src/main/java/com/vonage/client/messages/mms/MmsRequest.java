@@ -28,7 +28,7 @@ public abstract class MmsRequest extends MessageRequest {
 		super(builder);
 	}
 
-	public abstract static class Builder<M extends MmsRequest, B extends Builder<? extends M, ? extends B>> extends MessageRequest.Builder<M, B> {
+	protected abstract static class Builder<M extends MmsRequest, B extends Builder<? extends M, ? extends B>> extends MessageRequest.Builder<M, B> {
 		String url;
 
 		@Override

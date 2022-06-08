@@ -35,7 +35,7 @@ public abstract class WhatsappRequest extends MessageRequest {
 		this.to = new E164(to).toString();
 	}
 
-	public abstract static class Builder<M extends WhatsappRequest, B extends Builder<? extends M, ? extends B>> extends MessageRequest.Builder<M, B> {
+	protected abstract static class Builder<M extends WhatsappRequest, B extends Builder<? extends M, ? extends B>> extends MessageRequest.Builder<M, B> {
 
 		@Override
 		protected final Channel getChannel() {

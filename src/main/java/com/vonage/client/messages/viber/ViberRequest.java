@@ -47,7 +47,7 @@ public abstract class ViberRequest extends MessageRequest {
 	}
 
 	@SuppressWarnings("unchecked")
-	public abstract static class Builder<M extends ViberRequest, B extends Builder<? extends M, ? extends B>> extends MessageRequest.Builder<M, B> {
+	protected abstract static class Builder<M extends ViberRequest, B extends Builder<? extends M, ? extends B>> extends MessageRequest.Builder<M, B> {
 		protected Category category;
 		protected Integer ttl;
 		protected String viberType;
