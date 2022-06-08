@@ -47,6 +47,23 @@ public final class MmsVideoRequest extends MmsRequest {
 			return MessageType.VIDEO;
 		}
 
+		/**
+		 * Sets the URL of the video attachment.
+		 *
+		 * @param url The URL as a string.
+		 * @return This builder.
+		 */
+		public Builder url(String url) {
+			this.url = url;
+			return this;
+		}
+
+		/**
+		 * Additional text to accompany the video. Must be between 1 and 2000 characters.
+		 *
+		 * @param caption The caption string.
+		 * @return This builder.
+		 */
 		public Builder caption(String caption) {
 			this.caption = caption;
 			return this;

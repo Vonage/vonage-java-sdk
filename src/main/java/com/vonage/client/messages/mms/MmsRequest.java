@@ -22,24 +22,18 @@ import com.vonage.client.messages.MessageRequest;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class MmsRequest extends MessageRequest {
-	protected MessagePayload payload;
+	MessagePayload payload;
 
 	protected MmsRequest(Builder<?, ?> builder) {
 		super(builder);
 	}
 
-	@SuppressWarnings("unchecked")
 	public abstract static class Builder<M extends MmsRequest, B extends Builder<? extends M, ? extends B>> extends MessageRequest.Builder<M, B> {
-		protected String url;
+		String url;
 
 		@Override
 		protected final Channel getChannel() {
 			return Channel.MMS;
-		}
-
-		public B url(String url) {
-			this.url = url;
-			return (B) this;
 		}
 	}
 }

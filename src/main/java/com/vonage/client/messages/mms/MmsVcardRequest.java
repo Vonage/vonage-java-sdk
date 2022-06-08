@@ -46,6 +46,17 @@ public final class MmsVcardRequest extends MmsRequest {
 			return MessageType.VCARD;
 		}
 
+		/**
+		 * Sets the URL of the vCard attachment. Supports only <code>.vcf</code> file extension.
+		 *
+		 * @param url The URL as a string.
+		 * @return This builder.
+		 */
+		public Builder url(String url) {
+			this.url = url;
+			return this;
+		}
+
 		@Override
 		public MmsVcardRequest build() {
 			return new MmsVcardRequest(this);
