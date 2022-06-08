@@ -48,11 +48,24 @@ public final class WhatsappFileRequest extends WhatsappRequest {
 			return MessageType.FILE;
 		}
 
+		/**
+		 * Sets the URL of the file attachment. Supports a wide range of attachments including
+		 * <code>.zip</code>, <code>.csv</code> and <code>.pdf.</code>.
+		 *
+		 * @param url The URL as a string.
+		 * @return This builder.
+		 */
 		public Builder url(String url) {
 			this.url = url;
 			return this;
 		}
 
+		/**
+		 * Additional text to accompany the file.
+		 *
+		 * @param caption The caption string.
+		 * @return This builder.
+		 */
 		public Builder caption(String caption) {
 			this.caption = caption;
 			return this;

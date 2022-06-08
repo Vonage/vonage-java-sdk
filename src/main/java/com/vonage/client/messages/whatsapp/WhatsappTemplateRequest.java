@@ -55,16 +55,39 @@ public final class WhatsappTemplateRequest extends WhatsappRequest {
 
 		Builder() {}
 
+		/**
+		 * The name of the template. For WhatsApp use your WhatsApp namespace (available via Facebook Business Manager),
+		 * followed by a colon : and the name of the template to use.
+		 *
+		 * @param name The template name.
+		 * @return This builder.
+		 */
 		public Builder name(String name) {
 			this.name = name;
 			return this;
 		}
 
+		/**
+		 * The parameters are an array of objects, with the first object being used for {{1}} in the template,
+		 * with the second being {{2}} etc. You can find the full list of supported parameters on WhatsApp's
+		 * <a href=https://developers.facebook.com/docs/whatsapp/on-premises/reference/messages#message-templates>
+		 * messages parameters documentation</a>.
+		 *
+		 * @param parameters The serializable list of Map objects.
+		 * @return This builder.
+		 */
 		public Builder parameters(List<Map<String, ?>> parameters) {
 			this.parameters = parameters;
 			return this;
 		}
 
+		/**
+		 * Policy for resolving what language template to use.
+		 * Defaults to {@link Policy#DETERMINISTIC} if not set.
+		 *
+		 * @param policy The policy field.
+		 * @return This builder.
+		 */
 		public Builder policy(Policy policy) {
 			this.policy = policy;
 			return this;

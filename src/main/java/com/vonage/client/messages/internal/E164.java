@@ -18,8 +18,11 @@ package com.vonage.client.messages.internal;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+/**
+ * Convenience class for validating and sanitising phone numbers to be
+ * compliant with the E164 format.
+ */
 public class E164 {
-
 	static final Pattern PATTERN = Pattern.compile("[1-9]\\d{6,14}");
 
 	private final String number;

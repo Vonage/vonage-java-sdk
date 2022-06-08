@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 /**
  * The use of different category tags enables the business to send messages for different use cases.
  * For Viber Service Messages the first message sent from a business to a user must be personal, informative and a
- * targeted message - not promotional. By default Vonage sends the transaction category to Viber Service Messages.
+ * targeted message - not promotional. By default, Vonage sends the transaction category to Viber Service Messages.
  */
 public enum Category {
 	TRANSACTION,

@@ -55,6 +55,15 @@ public final class SmsTextRequest extends MessageRequest {
 			return Channel.SMS;
 		}
 
+		/**
+		 * Sets the text field. Must be between 1 and 1000 characters. The Messages API automatically
+		 * detects unicode characters when sending SMS and sends the message as a unicode SMS.
+		 * <a href=developer.nexmo.com/messaging/sms/guides/concatenation-and-encoding>
+		 *  Read more about concatenation and encoding</a>.
+		 *
+		 * @param text The text string.
+		 * @return This builder.
+		 */
 		public Builder text(String text) {
 			this.text = text;
 			return this;

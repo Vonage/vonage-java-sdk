@@ -42,7 +42,7 @@ public class MessagesClient {
 	 *         .build();
 	 * }</pre><br>
 	 *
-	 * If the message was sent successfully, a {@link MessageResponse} will be returned, containing the
+	 * If the message was sent successfully, a {@link MessageResponse} will be returned containing the
 	 * unique identifier of the message. Otherwise, a {@link MessageResponseException} will be thrown,
 	 * which contains details of why the request failed.
 	 *

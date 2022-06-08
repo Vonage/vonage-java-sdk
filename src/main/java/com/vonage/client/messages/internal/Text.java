@@ -17,6 +17,9 @@ package com.vonage.client.messages.internal;
 
 import java.util.Objects;
 
+/**
+ * Convenience class for validating text messages.
+ */
 public class Text {
 	private final String text;
 
@@ -26,9 +29,7 @@ public class Text {
 			throw new IllegalArgumentException("Text message cannot be blank");
 		}
 		if (limit > 0 && text.length() > limit) {
-			throw new IllegalArgumentException(
-					"Text message cannot be longer than "+limit+" characters"
-			);
+			throw new IllegalArgumentException("Text message cannot be longer than "+limit+" characters");
 		}
 		this.text = text;
 	}

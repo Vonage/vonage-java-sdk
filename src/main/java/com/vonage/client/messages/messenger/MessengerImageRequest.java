@@ -49,6 +49,13 @@ public final class MessengerImageRequest extends MessengerRequest {
 			return MessageType.IMAGE;
 		}
 
+		/**
+		 * Sets the URL of the image attachment. Supports only <code>.jpg</code>,
+		 * <code>.jpeg</code>, <code>.png</code> and <code>.gif</code> file extensions.
+		 *
+		 * @param url The URL as a string.
+		 * @return This builder.
+		 */
 		public Builder url(String url) {
 			this.url = url;
 			return this;

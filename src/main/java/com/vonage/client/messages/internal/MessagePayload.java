@@ -21,6 +21,10 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 
+/**
+ * Container object for audio, video, image and file message payload contents.
+ * This class also validates the fields.
+ */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class MessagePayload {
 	protected URI url;

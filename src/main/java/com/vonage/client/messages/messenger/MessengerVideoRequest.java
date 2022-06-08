@@ -49,6 +49,13 @@ public final class MessengerVideoRequest extends MessengerRequest {
 			return MessageType.VIDEO;
 		}
 
+		/**
+		 * Sets the URL of the video attachment. Supports only <code>.mp4</code>
+		 * file extension. Only H.264 video codec and AAC audio codec is supported.
+		 *
+		 * @param url The URL as a string.
+		 * @return This builder.
+		 */
 		public Builder url(String url) {
 			this.url = url;
 			return this;

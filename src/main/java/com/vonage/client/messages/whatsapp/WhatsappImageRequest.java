@@ -50,11 +50,24 @@ public final class WhatsappImageRequest extends WhatsappRequest {
 			return MessageType.IMAGE;
 		}
 
+		/**
+		 * Sets the URL of the image attachment. Supports only <code>.jpg</code>,
+		 * <code>.jpeg</code> and <code>.png</code> file extensions.
+		 *
+		 * @param url The URL as a string.
+		 * @return This builder.
+		 */
 		public Builder url(String url) {
 			this.url = url;
 			return this;
 		}
 
+		/**
+		 * Additional text to accompany the image. Must be between 1 and 3000 characters.
+		 *
+		 * @param caption The caption string.
+		 * @return This builder.
+		 */
 		public Builder caption(String caption) {
 			this.caption = caption;
 			return this;

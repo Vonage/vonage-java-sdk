@@ -22,6 +22,9 @@ import java.util.EnumSet;
 
 import static com.vonage.client.messages.internal.MessageType.*;
 
+/**
+ * Represents the services available for sending messages.
+ */
 public enum Channel {
 	SMS (TEXT),
 	MMS (IMAGE, VCARD, AUDIO, VIDEO),
@@ -35,6 +38,12 @@ public enum Channel {
 		this.supportedTypes = EnumSet.of(type1, additionalTypes);
 	}
 
+	/**
+	 * This method is useful for determining which message types are supported
+	 * by this messaging service.
+	 *
+	 * @return The Set of message types that this service can handle.
+	 */
 	public Set<MessageType> getSupportedMessageTypes() {
 		return supportedTypes;
 	}

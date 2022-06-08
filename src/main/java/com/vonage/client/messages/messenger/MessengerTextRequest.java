@@ -48,6 +48,12 @@ public final class MessengerTextRequest extends MessengerRequest {
 			return MessageType.TEXT;
 		}
 
+		/**
+		 * Sets the text field. Must be between 1 and 640 characters, including unicode.
+		 *
+		 * @param text The text string.
+		 * @return This builder.
+		 */
 		public Builder text(String text) {
 			this.text = text;
 			return this;

@@ -17,6 +17,9 @@ package com.vonage.client.messages.whatsapp;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
+/**
+ * Represents the policy for resolving what language template to use.
+ */
 public enum Policy {
 	DETERMINISTIC;
 

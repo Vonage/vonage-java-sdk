@@ -43,9 +43,12 @@ public class SendMessageEndpointTest {
 		assertEquals(HttpMethod.POST.name(), builder.getMethod());
 		assertEquals("https://api.nexmo.com/v1/messages", builder.getUri().toString());
 
+		final String expected = "{\"message_type\":\"text\",\"channel\":\"sms\",\"from\":" +
+				"\"447700900001\",\"to\":\"447700900000\",\"text\":\"Hello, World!\"}";
+
 		try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			builder.getEntity().writeTo(baos);
-			assertEquals("{\"message_type\":\"text\",\"channel\":\"sms\",\"from\":\"447700900001\",\"to\":\"447700900000\",\"text\":\"Hello, World!\"}", baos.toString());
+			assertEquals(expected, baos.toString());
 		}
 	}
 

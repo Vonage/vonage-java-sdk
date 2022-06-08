@@ -49,11 +49,24 @@ public final class WhatsappVideoRequest extends WhatsappRequest {
 			return MessageType.VIDEO;
 		}
 
+		/**
+		 * Sets the URL of the video attachment. Supports only <code>.mp4</code> and
+		 * <code>.3gpp</code> file extensions. Only H.264 video codec and AAC audio codec is supported.
+		 *
+		 * @param url The URL as a string.
+		 * @return This builder.
+		 */
 		public Builder url(String url) {
 			this.url = url;
 			return this;
 		}
 
+		/**
+		 * Additional text to accompany the video.
+		 *
+		 * @param caption The caption string.
+		 * @return This builder.
+		 */
 		public Builder caption(String caption) {
 			this.caption = caption;
 			return this;

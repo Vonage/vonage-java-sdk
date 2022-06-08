@@ -35,28 +35,52 @@ import java.util.Objects;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class MessageRequest {
-
 	final MessageType messageType;
 	final Channel channel;
+	final String clientRef;
 	protected String from;
 	protected String to;
-	protected String clientRef;
 
+	/**
+	 * Constructor where all of this class's fields should be set.
+	 *
+	 * @param builder The mutable builder object used to assign this MessageRequest's fields from.
+	 */
 	protected MessageRequest(Builder<?, ?> builder) {
 		messageType = Objects.requireNonNull(builder.messageType, "Message type cannot be null");
 		channel = Objects.requireNonNull(builder.channel, "Channel cannot be null");
 		if (!channel.getSupportedMessageTypes().contains(builder.messageType)) {
 			throw new IllegalArgumentException(messageType+" cannot be sent via "+channel);
 		}
+		clientRef = validateClientReference(builder.clientRef);
 		from = builder.from;
 		to = builder.to;
 		validateSenderAndRecipient(from, to);
-		clientRef = builder.clientRef;
+	}
+
+	/**
+	 * Validates and possibly sanitizes the client reference.
+	 *
+	 * @param clientRef The clientRef field passed in from the builder.
+	 * @return The clientRef to use; usually the same as the argument.
+	 */
+	protected String validateClientReference(String clientRef) {
 		if (clientRef != null && clientRef.length() > 40) {
 			throw new IllegalArgumentException("Client reference cannot be longer than 40 characters");
 		}
+		return clientRef;
 	}
 
+	/**
+	 * This method is used to validate the format of sender and recipient fields. By default,
+	 * this method checks that both the sender and recipient are E164 compliant numbers.
+	 * Sublasses may override this method to change this behaviour, or to re-assign the
+	 * sender and recipient fields to be well-formed / standardised / compliant.
+	 *
+	 * @param from The sender number or ID passed in from the builder.
+	 * @param to The receipient number or ID passed in from the builder.
+	 * @throws IllegalArgumentException If the sender or recipient are invalid / malformed.
+	 */
 	protected void validateSenderAndRecipient(String from, String to) throws IllegalArgumentException {
 		this.from = new E164(from).toString();
 		this.to = new E164(to).toString();
@@ -87,6 +111,11 @@ public abstract class MessageRequest {
 		return clientRef;
 	}
 
+	/**
+	 * Generates a JSON payload from this request.
+	 *
+	 * @return JSON representation of this MessageRequest object.
+	 */
 	public String toJson() {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
@@ -108,25 +137,58 @@ public abstract class MessageRequest {
 			channel = getChannel();
 		}
 
+		/**
+		 * The type of message to send.
+		 *
+		 * @return The MessageType.
+		 */
 		protected abstract MessageType getMessageType();
 
+		/**
+		 * The service to send the message through.
+		 *
+		 * @return The Channel.
+		 */
 		protected abstract Channel getChannel();
 
+		/**
+		 * Sets the sender number or ID.
+		 *
+		 * @param from The number or ID to send the message from.
+		 * @return This builder.
+		 */
 		public B from(String from) {
 			this.from = from;
 			return (B) this;
 		}
 
+		/**
+		 * Sets the recipient number or ID.
+		 *
+		 * @param to The number or ID to send the message to.
+		 * @return This builder.
+		 */
 		public B to(String to) {
 			this.to = to;
 			return (B) this;
 		}
 
+		/**
+		 * Sets the client reference, which will be present in every message status.
+		 *
+		 * @param clientRef Client reference of up to 40 characters.
+		 * @return This builder.
+		 */
 		public B clientRef(String clientRef) {
 			this.clientRef = clientRef;
 			return (B) this;
 		}
 
+		/**
+		 * Builds the MessageRequest.
+		 *
+		 * @return A MessageRequest, populated with all fields from this builder.
+		 */
 		public abstract M build();
 	}
 }

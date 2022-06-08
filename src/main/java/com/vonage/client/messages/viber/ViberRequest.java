@@ -23,7 +23,6 @@ import com.vonage.client.messages.internal.E164;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class ViberRequest extends MessageRequest {
-
 	protected ViberService viberService;
 
 	protected ViberRequest(Builder<?, ?> builder) {
@@ -58,16 +57,38 @@ public abstract class ViberRequest extends MessageRequest {
 			return Channel.VIBER;
 		}
 
+		/**
+		 * Sets the category tag of the message.
+		 *
+		 * @param category The Viber message category.
+		 * @return This builder.
+		 */
 		public B category(Category category) {
 			this.category = category;
 			return (B) this;
 		}
 
+		/**
+		 * Sets the time-to-live of message to be delivered in seconds. If the message is not
+		 * delivered within this time, it will be deleted. The TTL must be between 30 and
+		 * 259200 seconds (i.e. 3 days), inclusive.
+		 *
+		 * @param ttl The number of seconds the message can live undelivered before being discarded.
+		 * @return This builder.
+		 */
 		public B ttl(int ttl) {
 			this.ttl = ttl;
 			return (B) this;
 		}
 
+		/**
+		 * Viber-specific type definition. To use "template", please contact your Vonage Account Manager
+		 * to set up your templates. To find out more please visit the
+		 * <a href=https://www.vonage.com/communications-apis/messages/>product page</a>.
+		 *
+		 * @param type The Viber type.
+		 * @return This builder.
+		 */
 		public B viberType(String type) {
 			this.viberType = type;
 			return (B) this;

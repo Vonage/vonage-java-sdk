@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class Template {
+public final class Template {
 	private final String name;
 	private final List<Map<String, ?>> parameters;
 

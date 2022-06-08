@@ -49,6 +49,13 @@ public final class MessengerAudioRequest extends MessengerRequest {
 			return MessageType.AUDIO;
 		}
 
+		/**
+		 * Sets the URL of the audio attachment. Supports only <code>.mp3</code> file extension.
+		 * The URL must be between 10 and 2000 characters.
+		 *
+		 * @param url The URL as a string.
+		 * @return This builder.
+		 */
 		public Builder url(String url) {
 			this.url = url;
 			return this;

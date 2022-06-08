@@ -18,9 +18,9 @@ package com.vonage.client.messages.messenger;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * See the
- * <a href="https://developers.facebook.com/docs/messenger-platform/send-messages/message-tags">Facebook documentation</a>
- * for details on what these mean.
+ * Represents a Facebook Message Tag. <br>
+ * See the <a href="https://developers.facebook.com/docs/messenger-platform/send-messages/message-tags">
+ * documentation</a> for details on what these mean.
  */
 public enum Tag {
 	CONFIRMED_EVENT_UPDATE,

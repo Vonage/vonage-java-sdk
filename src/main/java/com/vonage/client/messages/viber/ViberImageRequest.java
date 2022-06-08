@@ -49,6 +49,14 @@ public final class ViberImageRequest extends ViberRequest {
 			return MessageType.IMAGE;
 		}
 
+		/**
+		 * Sets the URL of the image attachment. Supports only
+		 * <code>.jpg</code>, <code>.jpeg</code> and <code>.png</code>
+		 * file extensions.
+		 *
+		 * @param url The URL as a string.
+		 * @return This builder.
+		 */
 		public Builder url(String url) {
 			this.url = url;
 			return this;

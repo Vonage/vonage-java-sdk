@@ -17,6 +17,9 @@ package com.vonage.client.messages.internal;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
+/**
+ * Represents the media type of the message.
+ */
 public enum MessageType {
 	TEXT,
 	IMAGE,
