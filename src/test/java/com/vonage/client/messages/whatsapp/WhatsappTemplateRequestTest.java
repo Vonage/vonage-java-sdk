@@ -73,10 +73,10 @@ public class WhatsappTemplateRequestTest {
 	}
 
 	@Test(expected = NullPointerException.class)
-	public void testConstructNoLocale() {
+	public void testConstructNullLocale() {
 		WhatsappTemplateRequest.builder()
 				.from("Acme Corp").to("447900000001")
-				.name("verify").build();
+				.name("verify").locale(null).build();
 	}
 
 	@Test(expected = IllegalArgumentException.class)

@@ -51,7 +51,7 @@ public final class WhatsappTemplateRequest extends WhatsappRequest {
 		String name;
 		List<Map<String, ?>> parameters;
 		Policy policy = Policy.DETERMINISTIC;
-		String locale;
+		String locale = "en_GB";
 
 		Builder() {}
 
