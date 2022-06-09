@@ -49,6 +49,7 @@ public final class WhatsappFileRequest extends WhatsappRequest {
 		}
 
 		/**
+		 * (REQUIRED)
 		 * Sets the URL of the file attachment. Supports a wide range of attachments including
 		 * <code>.zip</code>, <code>.csv</code> and <code>.pdf.</code>.
 		 *
@@ -61,6 +62,7 @@ public final class WhatsappFileRequest extends WhatsappRequest {
 		}
 
 		/**
+		 * (OPTIONAL)
 		 * Additional text to accompany the file.
 		 *
 		 * @param caption The caption string.

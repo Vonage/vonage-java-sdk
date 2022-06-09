@@ -49,6 +49,7 @@ public final class ViberTextRequest extends ViberRequest {
 		}
 
 		/**
+		 * (REQUIRED)
 		 * Sets the text field. Must be between 1 and 1000 characters, including unicode.
 		 *
 		 * @param text The text string.

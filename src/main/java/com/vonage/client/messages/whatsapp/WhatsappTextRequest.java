@@ -49,6 +49,7 @@ public final class WhatsappTextRequest extends WhatsappRequest {
 		}
 
 		/**
+		 * (REQUIRED)
 		 * Sets the text field. Must be between 1 and 4096 characters, including unicode.
 		 *
 		 * @param text The text string.

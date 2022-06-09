@@ -49,6 +49,7 @@ public final class MessengerTextRequest extends MessengerRequest {
 		}
 
 		/**
+		 * (REQUIRED)
 		 * Sets the text field. Must be between 1 and 640 characters, including unicode.
 		 *
 		 * @param text The text string.

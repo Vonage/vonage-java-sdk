@@ -48,6 +48,7 @@ public final class MmsAudioRequest extends MmsRequest {
 		}
 
 		/**
+		 * (REQUIRED)
 		 * Sets the URL of the audio attachment.
 		 *
 		 * @param url The URL as a string.
@@ -59,6 +60,7 @@ public final class MmsAudioRequest extends MmsRequest {
 		}
 
 		/**
+		 * (OPTIONAL)
 		 * Additional text to accompany the audio. Must be between 1 and 2000 characters.
 		 *
 		 * @param caption The caption string.

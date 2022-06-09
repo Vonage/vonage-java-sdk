@@ -29,9 +29,7 @@ public class E164 {
 
 	public E164(String number) {
 		Objects.requireNonNull(number, "Number cannot be null");
-		String sanitized = number
-				.replace(" ", "")
-				.replace("-","");
+		String sanitized = number.replace(" ", "").replace("-","");
 		if (sanitized.startsWith("+")) {
 			sanitized = sanitized.substring(1);
 		}

@@ -56,6 +56,7 @@ public final class WhatsappTemplateRequest extends WhatsappRequest {
 		Builder() {}
 
 		/**
+		 * (REQUIRED)
 		 * The name of the template. For WhatsApp use your WhatsApp namespace (available via Facebook Business Manager),
 		 * followed by a colon : and the name of the template to use.
 		 *
@@ -68,6 +69,7 @@ public final class WhatsappTemplateRequest extends WhatsappRequest {
 		}
 
 		/**
+		 * (OPTIONAL)
 		 * The parameters are an array of objects, with the first object being used for {{1}} in the template,
 		 * with the second being {{2}} etc. You can find the full list of supported parameters on WhatsApp's
 		 * <a href=https://developers.facebook.com/docs/whatsapp/on-premises/reference/messages#message-templates>
@@ -82,6 +84,7 @@ public final class WhatsappTemplateRequest extends WhatsappRequest {
 		}
 
 		/**
+		 * (REQUIRED)
 		 * Policy for resolving what language template to use.
 		 * Defaults to {@link Policy#DETERMINISTIC} if not set.
 		 *
@@ -94,6 +97,7 @@ public final class WhatsappTemplateRequest extends WhatsappRequest {
 		}
 
 		/**
+		 * (REQUIRED)
 		 * The BCP 47 language of the template.
 		 * 
 		 * @param locale The BCP-47 locale.

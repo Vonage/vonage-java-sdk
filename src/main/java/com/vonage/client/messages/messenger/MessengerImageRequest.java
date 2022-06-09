@@ -50,6 +50,7 @@ public final class MessengerImageRequest extends MessengerRequest {
 		}
 
 		/**
+		 * (REQUIRED)
 		 * Sets the URL of the image attachment. Supports only <code>.jpg</code>,
 		 * <code>.jpeg</code>, <code>.png</code> and <code>.gif</code> file extensions.
 		 *

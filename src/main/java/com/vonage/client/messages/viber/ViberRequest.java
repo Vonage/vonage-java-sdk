@@ -58,6 +58,7 @@ public abstract class ViberRequest extends MessageRequest {
 		}
 
 		/**
+		 * (OPTIONAL)
 		 * Sets the category tag of the message.
 		 *
 		 * @param category The Viber message category.
@@ -69,6 +70,7 @@ public abstract class ViberRequest extends MessageRequest {
 		}
 
 		/**
+		 * (OPTIONAL)
 		 * Sets the time-to-live of message to be delivered in seconds. If the message is not
 		 * delivered within this time, it will be deleted. The TTL must be between 30 and
 		 * 259200 seconds (i.e. 3 days), inclusive.
@@ -82,6 +84,7 @@ public abstract class ViberRequest extends MessageRequest {
 		}
 
 		/**
+		 * (OPTIONAL)
 		 * Viber-specific type definition. To use "template", please contact your Vonage Account Manager
 		 * to set up your templates. To find out more please visit the
 		 * <a href=https://www.vonage.com/communications-apis/messages/>product page</a>.

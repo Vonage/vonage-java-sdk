@@ -27,11 +27,11 @@ import com.vonage.client.messages.internal.MessageType;
 import java.util.Objects;
 
 /**
- * Abstract base class of all Messages sent via the Messages v1 API.
- * All subclasses follow a builder pattern to enable easy construction.
- * The design philosophy is "correct by construction": that is, validation
- * occurs when calling the {@link Builder#build()} method. It is still the
- * responsibility of the user to ensure all required parameters are set.
+ * Abstract base class of all Messages sent via the Messages v1 API. All subclasses follow a
+ * builder pattern to enable easy construction. The design philosophy is "correct by construction":
+ * that is, validation occurs when calling the {@link Builder#build()} method. It is still the
+ * responsibility of the user to ensure all required parameters are set. The Javadoc for each parameter
+ * in the builders indicates whether it is mandatory (REQUIRED) or not (OPTIONAL).
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class MessageRequest {
@@ -162,6 +162,7 @@ public abstract class MessageRequest {
 		protected abstract Channel getChannel();
 
 		/**
+		 * (REQUIRED)
 		 * Sets the sender number or ID.
 		 *
 		 * @param from The number or ID to send the message from.
@@ -173,6 +174,7 @@ public abstract class MessageRequest {
 		}
 
 		/**
+		 * (REQUIRED)
 		 * Sets the recipient number or ID.
 		 *
 		 * @param to The number or ID to send the message to.
@@ -184,6 +186,7 @@ public abstract class MessageRequest {
 		}
 
 		/**
+		 * (OPTIONAL)
 		 * Sets the client reference, which will be present in every message status.
 		 *
 		 * @param clientRef Client reference of up to 40 characters.

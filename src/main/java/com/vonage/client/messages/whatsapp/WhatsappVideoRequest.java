@@ -50,6 +50,7 @@ public final class WhatsappVideoRequest extends WhatsappRequest {
 		}
 
 		/**
+		 * (REQUIRED)
 		 * Sets the URL of the video attachment. Supports only <code>.mp4</code> and
 		 * <code>.3gpp</code> file extensions. Only H.264 video codec and AAC audio codec is supported.
 		 *
@@ -62,6 +63,7 @@ public final class WhatsappVideoRequest extends WhatsappRequest {
 		}
 
 		/**
+		 * (OPTIONAL)
 		 * Additional text to accompany the video.
 		 *
 		 * @param caption The caption string.

@@ -57,6 +57,7 @@ public abstract class MessengerRequest extends MessageRequest {
 		}
 
 		/**
+		 * (OPTIONAL, but REQUIRED if Category is {@link Category#MESSAGE_TAG})
 		 * A tag describing the type and relevance of the 1:1 communication between your app and the end user.
 		 *
 		 * @param tag The tag.
@@ -68,6 +69,7 @@ public abstract class MessengerRequest extends MessageRequest {
 		}
 
 		/**
+		 * (OPTIONAL)
 		 * The use of different category tags enables the business to send messages for different use cases.
 		 * For Facebook Messenger they need to comply with their Messaging Types policy. Vonage maps our category to
 		 * their messaging_type. If message_tag is used, then an additional tag for that type is mandatory. By

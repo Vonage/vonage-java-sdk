@@ -49,6 +49,7 @@ public final class MmsImageRequest extends MmsRequest {
 		}
 
 		/**
+		 * (REQUIRED)
 		 * Sets the URL of the image attachment. Supports only <code>.jpg</code>,
 		 * <code>.jpeg</code>, <code>.png</code> and <code>.gif</code> file extensions.
 		 *
@@ -61,6 +62,7 @@ public final class MmsImageRequest extends MmsRequest {
 		}
 
 		/**
+		 * (OPTIONAL)
 		 * Additional text to accompany the image. Must be between 1 and 2000 characters.
 		 *
 		 * @param caption The caption string.

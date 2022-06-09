@@ -50,6 +50,7 @@ public final class WhatsappCustomRequest extends WhatsappRequest {
 		}
 
 		/**
+		 * (OPTIONAL)
 		 * A custom payload, which is passed directly to WhatsApp for certain features such as templates and
 		 * interactive messages. The schema of a custom object can vary widely.
 		 * <a href=https://developer.vonage.com/messages/concepts/custom-objects>Read about Custom Objects here</a>.
