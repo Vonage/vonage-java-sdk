@@ -29,7 +29,7 @@ import java.io.IOException;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MessageResponse {
-	String messageUuid;
+	protected String messageUuid;
 
 	protected MessageResponse() {
 	}

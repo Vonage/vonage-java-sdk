@@ -114,7 +114,8 @@ public final class MessageResponseException extends VonageClientException {
 	 */
 	public static MessageResponseException fromJson(String json) {
 		try {
-			return new ObjectMapper().readValue(json, MessageResponseException.class);
+			ObjectMapper mapper = new ObjectMapper();
+			return mapper.readValue(json, MessageResponseException.class);
 		}
 		catch (IOException e) {
 			throw new VonageUnexpectedException("Failed to produce MessageResponseException from json.", e);

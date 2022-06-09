@@ -126,6 +126,16 @@ public abstract class MessageRequest {
 		}
 	}
 
+	/**
+	 * Mutable Builder class, designed to simulate named parameters to allow for convenient
+	 * construction of MessageRequests. Subclasses should add their own mutable parameters
+	 * and a method for setting them whilst returning the builder, to allow for chaining.
+	 *
+	 * @param <M> The type of MessageRequest that will be constructed when calling the {@link #build()} method.
+	 * @param <B> The type of Builder that will be returned when chaining method calls. This is necessary
+	 *           to enable the methods to be called in any order and still return the most specific
+	 *           concrete subtype of builder, rather than this base class.
+	 */
 	@SuppressWarnings("unchecked")
 	public abstract static class Builder<M extends MessageRequest, B extends Builder<? extends M, ? extends B>> {
 		final Channel channel;
