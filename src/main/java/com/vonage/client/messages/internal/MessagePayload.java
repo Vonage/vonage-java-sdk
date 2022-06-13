@@ -16,6 +16,7 @@
 package com.vonage.client.messages.internal;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.net.URI;
 import java.util.Arrays;
@@ -41,10 +42,12 @@ public class MessagePayload {
 		}
 	}
 
+	@JsonProperty("url")
 	public String getUrl() {
 		return url.toString();
 	}
 
+	@JsonProperty("caption")
 	public String getCaption() {
 		return caption;
 	}
