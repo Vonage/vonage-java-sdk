@@ -52,7 +52,7 @@ public class MessagePayload {
 		return caption;
 	}
 
-	public void validateExtension(String... allowed) {
+	public void validateUrlExtension(String... allowed) {
 		String path = url.getPath();
 		int lastDot = path.lastIndexOf('.');
 		if (lastDot < 1) return;
@@ -64,9 +64,20 @@ public class MessagePayload {
 	}
 
 	public void validateCaptionLength(int max) {
-		if (caption == null || caption.isEmpty()) return;
+		if (caption == null) return;
 		if (caption.length() > max) {
 			throw new IllegalArgumentException("Caption must be less than "+max+" characters");
+		}
+	}
+
+	public void validateUrlLength(int min, int max) {
+		if (url == null) return;
+		int length = getUrl().length();
+		if (length < min) {
+			throw new IllegalArgumentException("URL must be longer than "+min+" characters");
+		}
+		if (length > max) {
+			throw new IllegalArgumentException("URL must be less than "+max+" characters");
 		}
 	}
 }

@@ -62,4 +62,38 @@ public class WhatsappAudioRequestTest {
 			assertEquals(url, builder.build().getAudio().getUrl());
 		}
 	}
+
+	@Test
+	public void testConstructUrlLength() {
+		int limit = 2000;
+		String baseUrl = "file:///path/to/folder", file = "song.mp3";
+		WhatsappAudioRequest.Builder builder = WhatsappAudioRequest.builder()
+				.from("317900000002").to("447900000001");
+
+		try {
+			builder.url("f:///a").build();
+			fail("Expected exception for short URL");
+		}
+		catch (IllegalArgumentException ex) {
+			assertEquals(22, builder.url(baseUrl).build().getAudio().getUrl().length());
+		}
+
+		StringBuilder sb = new StringBuilder(limit + 1);
+		int paddingLength = (limit - 1) - (baseUrl.length() + file.length());
+		sb.append(baseUrl);
+		for (int i = 0; i < paddingLength; i++) {
+			sb.append('x');
+		}
+		sb.append(file);
+		assertEquals(limit - 1, sb.length());
+
+		String overflow = sb.substring(0, sb.length() - file.length()) + "xy"+file;
+		try {
+			builder.url(overflow).build();
+			fail("Expected exception for URL length");
+		}
+		catch (IllegalArgumentException ex) {
+			assertEquals(limit + 1, overflow.length());
+		}
+	}
 }

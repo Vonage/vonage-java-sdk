@@ -26,6 +26,7 @@ public final class MmsAudioRequest extends MmsRequest {
 	MmsAudioRequest(Builder builder) {
 		super(builder);
 		payload = new MessagePayload(builder.url, builder.caption);
+		payload.validateCaptionLength(2000);
 	}
 
 	@JsonProperty("audio")

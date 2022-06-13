@@ -26,7 +26,7 @@ public final class MmsVcardRequest extends MmsRequest {
 	MmsVcardRequest(Builder builder) {
 		super(builder);
 		payload = new MessagePayload(builder.url);
-		payload.validateExtension("vcf");
+		payload.validateUrlExtension("vcf");
 	}
 
 	@JsonProperty("vcard")

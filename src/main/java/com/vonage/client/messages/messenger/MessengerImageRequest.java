@@ -27,7 +27,7 @@ public final class MessengerImageRequest extends MessengerRequest {
 	MessengerImageRequest(Builder builder) {
 		super(builder);
 		image = new MessagePayload(builder.url);
-		image.validateExtension("jpg", "jpeg", "png", "gif");
+		image.validateUrlExtension("jpg", "jpeg", "png", "gif");
 	}
 
 	@JsonProperty("image")

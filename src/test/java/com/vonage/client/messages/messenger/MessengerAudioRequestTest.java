@@ -17,7 +17,8 @@ package com.vonage.client.messages.messenger;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class MessengerAudioRequestTest {
 
@@ -47,5 +48,39 @@ public class MessengerAudioRequestTest {
 				.url("ftp://rel/path/to/music.wma")
 				.to("317900000002")
 				.build();
+	}
+
+	@Test
+	public void testConstructUrlLength() {
+		int limit = 2000;
+		String baseUrl = "file:///path/to/folder", file = "song.mp3";
+		MessengerAudioRequest.Builder builder = MessengerAudioRequest.builder()
+				.from("sender ID").to("recipient ID");
+
+		try {
+			builder.url("f:///a").build();
+			fail("Expected exception for short URL");
+		}
+		catch (IllegalArgumentException ex) {
+			assertEquals(22, builder.url(baseUrl).build().getAudio().getUrl().length());
+		}
+
+		StringBuilder sb = new StringBuilder(limit + 1);
+		int paddingLength = (limit - 1) - (baseUrl.length() + file.length());
+		sb.append(baseUrl);
+		for (int i = 0; i < paddingLength; i++) {
+			sb.append('x');
+		}
+		sb.append(file);
+		assertEquals(limit - 1, sb.length());
+
+		String overflow = sb.substring(0, sb.length() - file.length()) + "xy"+file;
+		try {
+			builder.url(overflow).build();
+			fail("Expected exception for URL length");
+		}
+		catch (IllegalArgumentException ex) {
+			assertEquals(limit + 1, overflow.length());
+		}
 	}
 }

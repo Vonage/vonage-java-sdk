@@ -31,7 +31,10 @@ import java.util.Objects;
  * builder pattern to enable easy construction. The design philosophy is "correct by construction":
  * that is, validation occurs when calling the {@link Builder#build()} method. It is still the
  * responsibility of the user to ensure all required parameters are set. The Javadoc for each parameter
- * in the builders indicates whether it is mandatory (REQUIRED) or not (OPTIONAL).
+ * in the builders indicates whether it is mandatory (REQUIRED) or not (OPTIONAL). Failure to specify
+ * mandatory parameters will result in {@link NullPointerException} being thrown. Parameters which are
+ * invalid (i.e. have malformed values, such as empty strings) will result in {@link IllegalArgumentException}
+ * being thrown. The documentation on each parameter should provide clarity on parameter restrictions.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class MessageRequest {

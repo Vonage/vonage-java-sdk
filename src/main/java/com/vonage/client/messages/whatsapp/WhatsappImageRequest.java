@@ -27,7 +27,7 @@ public final class WhatsappImageRequest extends WhatsappRequest {
 	WhatsappImageRequest(Builder builder) {
 		super(builder);
 		image = new MessagePayload(builder.url, builder.caption);
-		image.validateExtension("jpg", "jpeg", "png");
+		image.validateUrlExtension("jpg", "jpeg", "png");
 		image.validateCaptionLength(3000);
 	}
 

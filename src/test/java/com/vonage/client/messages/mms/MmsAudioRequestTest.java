@@ -17,7 +17,8 @@ package com.vonage.client.messages.mms;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class MmsAudioRequestTest {
 
@@ -62,5 +63,36 @@ public class MmsAudioRequestTest {
 				.from("447900000001")
 				.to("317900000002")
 				.build();
+	}
+
+	@Test
+	public void testConstructCaptionLength() {
+		MmsAudioRequest.Builder builder = MmsAudioRequest.builder()
+				.url("file:///path/to/audio.wav").from("317900000002").to("447900000001");
+
+		assertEquals(12, builder.build().getTo().length());
+
+		try {
+			builder.caption("").build();
+			fail("Expected exception for empty caption");
+		}
+		catch (IllegalArgumentException ex) {
+			assertEquals("V", builder.caption("V").build().getAudio().getCaption());
+		}
+
+		StringBuilder sb = new StringBuilder(2001);
+		for (int i = 0; i < 1999; i++) {
+			sb.append('*');
+		}
+		assertEquals(1999, sb.length());
+
+		assertEquals(sb.toString(), builder.caption(sb.toString()).build().getAudio().getCaption());
+		try {
+			builder.caption(sb.append("xy").toString()).build();
+			fail("Expected exception for caption length");
+		}
+		catch (IllegalArgumentException ex) {
+			assertEquals(2001, sb.length());
+		}
 	}
 }

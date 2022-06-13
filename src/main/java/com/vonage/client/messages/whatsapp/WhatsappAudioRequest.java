@@ -27,7 +27,8 @@ public final class WhatsappAudioRequest extends WhatsappRequest {
 	WhatsappAudioRequest(Builder builder) {
 		super(builder);
 		audio = new MessagePayload(builder.url);
-		audio.validateExtension("aac", "m4a", "amr", "mp3", "opus");
+		audio.validateUrlExtension("aac", "m4a", "amr", "mp3", "opus");
+		audio.validateUrlLength(10, 2000);
 	}
 
 	@JsonProperty("audio")

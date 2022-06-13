@@ -27,7 +27,7 @@ public final class WhatsappVideoRequest extends WhatsappRequest {
 	WhatsappVideoRequest(Builder builder) {
 		super(builder);
 		video = new MessagePayload(builder.url, builder.caption);
-		video.validateExtension("mp4", "3gpp");
+		video.validateUrlExtension("mp4", "3gpp");
 	}
 
 	@JsonProperty("video")

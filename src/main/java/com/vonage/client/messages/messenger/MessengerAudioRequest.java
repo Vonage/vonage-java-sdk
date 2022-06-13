@@ -27,7 +27,8 @@ public final class MessengerAudioRequest extends MessengerRequest {
 	MessengerAudioRequest(Builder builder) {
 		super(builder);
 		audio = new MessagePayload(builder.url);
-		audio.validateExtension("mp3");
+		audio.validateUrlExtension("mp3");
+		audio.validateUrlLength(10, 2000);
 	}
 
 	@JsonProperty("audio")

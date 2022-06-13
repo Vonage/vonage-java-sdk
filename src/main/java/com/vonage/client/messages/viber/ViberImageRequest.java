@@ -27,7 +27,7 @@ public final class ViberImageRequest extends ViberRequest {
 	ViberImageRequest(Builder builder) {
 		super(builder);
 		image = new MessagePayload(builder.url);
-		image.validateExtension("jpg", "jpeg", "png");
+		image.validateUrlExtension("jpg", "jpeg", "png");
 	}
 
 	@JsonProperty("image")

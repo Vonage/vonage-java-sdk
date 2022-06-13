@@ -27,7 +27,7 @@ public final class MessengerVideoRequest extends MessengerRequest {
 	MessengerVideoRequest(Builder builder) {
 		super(builder);
 		video = new MessagePayload(builder.url);
-		video.validateExtension("mp4");
+		video.validateUrlExtension("mp4");
 	}
 
 	@JsonProperty("video")

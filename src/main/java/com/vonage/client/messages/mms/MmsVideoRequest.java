@@ -26,6 +26,7 @@ public final class MmsVideoRequest extends MmsRequest {
 	MmsVideoRequest(Builder builder) {
 		super(builder);
 		payload = new MessagePayload(builder.url, builder.caption);
+		payload.validateCaptionLength(2000);
 	}
 
 	@JsonProperty("video")
