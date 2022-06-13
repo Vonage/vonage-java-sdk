@@ -44,6 +44,11 @@ public class MessageResponse {
 		return messageUuid;
 	}
 
+	@Override
+	public String toString() {
+		return getClass().getSimpleName()+" {messageUuid='"+messageUuid+"'}";
+	}
+
 	/**
 	 * Creates an instance of this class from a JSON payload.
 	 *

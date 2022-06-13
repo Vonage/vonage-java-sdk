@@ -32,6 +32,8 @@ public class SmsTextRequestTest {
 		assertTrue(json.contains("\"to\":\""+to+"\""));
 		assertTrue(json.contains("\"message_type\":\"text\""));
 		assertTrue(json.contains("\"channel\":\"sms\""));
+
+		assertEquals("SmsTextRequest "+json, sms.toString());
 	}
 
 	@Test(expected = NullPointerException.class)

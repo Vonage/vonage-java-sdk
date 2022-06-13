@@ -90,6 +90,17 @@ public final class MessageResponseException extends VonageClientException {
 		return Objects.hash(type, title, detail, instance, statusCode);
 	}
 
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() +
+				" {type='" + type + '\'' +
+				", title='" + title + '\'' +
+				", detail='" + detail + '\'' +
+				", instance='" + instance + '\'' +
+				", statusCode=" + statusCode + '}';
+	}
+
 	/**
 	 * Generates JSON from this object. Excludes fields inherited from superclasses.
 	 *

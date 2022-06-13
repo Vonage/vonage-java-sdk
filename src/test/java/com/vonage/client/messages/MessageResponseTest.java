@@ -21,6 +21,7 @@ import org.junit.Test;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class MessageResponseTest {
 
@@ -29,6 +30,9 @@ public class MessageResponseTest {
 		String uuid = UUID.randomUUID().toString();
 		MessageResponse response = MessageResponse.fromJson("{\"message_uuid\":\""+uuid+"\"}");
 		assertEquals(uuid, response.getMessageUuid());
+		String toString = response.toString();
+		assertTrue(toString.contains("MessageResponse"));
+		assertTrue(toString.contains(uuid));
 	}
 
 	@Test(expected = VonageUnexpectedException.class)

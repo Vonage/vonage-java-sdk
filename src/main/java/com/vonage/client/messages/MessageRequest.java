@@ -126,6 +126,11 @@ public abstract class MessageRequest {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return getClass().getSimpleName()+' '+toJson();
+	}
+
 	/**
 	 * Mutable Builder class, designed to simulate named parameters to allow for convenient
 	 * construction of MessageRequests. Subclasses should add their own mutable parameters

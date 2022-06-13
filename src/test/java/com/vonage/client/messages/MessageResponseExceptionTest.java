@@ -49,6 +49,8 @@ public class MessageResponseExceptionTest {
 		);
 		actual.statusCode = status;
 		assertEquals(expected, actual);
+		assertEquals(expected.hashCode(), actual.hashCode());
+		assertEquals(expected.toString(), actual.toString());
 	}
 
 	@Test
