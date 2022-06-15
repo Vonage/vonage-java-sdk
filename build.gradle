@@ -30,6 +30,7 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'org.apache.httpcomponents:httpclient:4.5.13'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3'
     implementation 'io.openapitools.jackson.dataformat:jackson-dataformat-hal:1.0.9'
     implementation 'javax.xml.bind:jaxb-api:2.3.1'
     implementation 'com.nexmo:jwt:1.0.1'

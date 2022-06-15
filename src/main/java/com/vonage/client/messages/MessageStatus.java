@@ -15,17 +15,21 @@
  */
 package com.vonage.client.messages;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.ser.InstantSerializer;
 import com.vonage.client.VonageUnexpectedException;
 
 import java.io.IOException;
 import java.net.URI;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Currency;
 import java.util.UUID;
@@ -37,7 +41,8 @@ import java.util.UUID;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class MessageStatus {
-	protected static final DateTimeFormatter ISO_8601 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss Z");
+	static final String ISO_8601_REGEX = "yyyy-MM-dd HH:mm:ss Z";
+	protected static final DateTimeFormatter ISO_8601 = DateTimeFormatter.ofPattern(ISO_8601_REGEX);
 
 	public enum Status {
 		SUBMITTED,
@@ -152,10 +157,12 @@ public class MessageStatus {
 	protected MessageStatus() {
 	}
 
+	@JsonProperty("timestamp")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ISO_8601_REGEX)
+	protected ZonedDateTime timestamp;
 	@JsonProperty("message_uuid") protected UUID messageUuid;
 	@JsonProperty("to") protected String to;
 	@JsonProperty("from") protected String from;
-	@JsonProperty("timestamp") protected Instant timestamp;
 	@JsonProperty("status") protected Status status;
 	@JsonProperty("channel") protected Channel channel;
 	@JsonProperty("client_ref") protected String clientRef;
@@ -195,15 +202,15 @@ public class MessageStatus {
 	}
 
 	protected void setTimestamp(String timestamp) {
-		this.timestamp = (Instant) ISO_8601.parse(timestamp);
+		this.timestamp = ISO_8601.parse(timestamp, ZonedDateTime::from);
 	}
 
 	/**
 	 * The datetime of when the event occurred.
 	 *
-	 * @return The timestamp as an Instant.
+	 * @return The timestamp as a ZonedDateTime.
 	 */
-	public Instant getTimestamp() {
+	public ZonedDateTime getTimestamp() {
 		return timestamp;
 	}
 
@@ -285,6 +292,7 @@ public class MessageStatus {
 	public String toJson() {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
+			mapper.registerModule(new JavaTimeModule());
 			return mapper.writeValueAsString(this);
 		}
 		catch (JsonProcessingException jpe) {
