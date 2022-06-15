@@ -16,7 +16,7 @@
 package com.vonage.client.messages.mms;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.vonage.client.messages.internal.Channel;
+import com.vonage.client.messages.Channel;
 import com.vonage.client.messages.internal.MessagePayload;
 import com.vonage.client.messages.MessageRequest;
 

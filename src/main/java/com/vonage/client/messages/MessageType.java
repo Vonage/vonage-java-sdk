@@ -13,8 +13,9 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages.internal;
+package com.vonage.client.messages;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
@@ -29,6 +30,12 @@ public enum MessageType {
 	VCARD,
 	TEMPLATE,
 	CUSTOM;
+
+	@JsonCreator
+	public static MessageType fromString(String value) {
+		if (value == null) return null;
+		return MessageType.valueOf(value.toUpperCase());
+	}
 
 	@JsonValue
 	@Override

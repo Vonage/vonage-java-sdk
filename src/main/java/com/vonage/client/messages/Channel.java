@@ -13,14 +13,15 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages.internal;
+package com.vonage.client.messages;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.util.Set;
 import java.util.EnumSet;
 
-import static com.vonage.client.messages.internal.MessageType.*;
+import static com.vonage.client.messages.MessageType.*;
 
 /**
  * Represents the services available for sending messages.
@@ -46,6 +47,12 @@ public enum Channel {
 	 */
 	public Set<MessageType> getSupportedMessageTypes() {
 		return supportedTypes;
+	}
+
+	@JsonCreator
+	public static Channel fromString(String value) {
+		if (value == null) return null;
+		return Channel.valueOf(value.toUpperCase());
 	}
 
 	@JsonValue

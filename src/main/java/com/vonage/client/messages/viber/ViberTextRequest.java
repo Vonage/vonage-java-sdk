@@ -17,7 +17,7 @@ package com.vonage.client.messages.viber;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.messages.internal.MessageType;
+import com.vonage.client.messages.MessageType;
 import com.vonage.client.messages.internal.Text;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
