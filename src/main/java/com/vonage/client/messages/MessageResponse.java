@@ -57,15 +57,15 @@ public class MessageResponse {
 	 * Creates an instance of this class from a JSON payload.
 	 *
 	 * @param json The JSON string to parse.
-	 * @return An instance of this class with the field populated, if present.
+	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static MessageResponse fromJson(String json) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			return mapper.readValue(json, MessageResponse.class);
 		}
-		catch (IOException e) {
-			throw new VonageUnexpectedException("Failed to produce SendMessageResponse from json.", e);
+		catch (IOException ex) {
+			throw new VonageUnexpectedException("Failed to produce MessageResponse from json.", ex);
 		}
 	}
 }
