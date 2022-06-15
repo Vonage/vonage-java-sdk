@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
+import java.util.UUID;
 
 /**
  * Response returned when sending a message. Regardless of the channel or message type,
@@ -29,9 +30,13 @@ import java.io.IOException;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MessageResponse {
-	protected String messageUuid;
+	@JsonProperty("message_uuid") protected UUID messageUuid;
 
 	protected MessageResponse() {
+	}
+
+	protected void setMessageUuid(String messageUuid) {
+		this.messageUuid = UUID.fromString(messageUuid);
 	}
 
 	/**
@@ -39,8 +44,7 @@ public class MessageResponse {
 	 *
 	 * @return The unique message ID.
 	 */
-	@JsonProperty("message_uuid")
-	public String getMessageUuid() {
+	public UUID getMessageUuid() {
 		return messageUuid;
 	}
 

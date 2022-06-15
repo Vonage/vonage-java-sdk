@@ -52,7 +52,7 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 	}
 
 	void assertResponse(MessageRequest request) throws Exception {
-		String uuid = UUID.randomUUID().toString();
+		UUID uuid = UUID.randomUUID();
 		String responseJson = "{\"message_uuid\":\""+uuid+"\"}";
 		wrapper.setHttpClient(stubHttpClient(202, responseJson));
 		MessageResponse responseObject = client.sendMessage(request);

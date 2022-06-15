@@ -27,12 +27,12 @@ public class MessageResponseTest {
 
 	@Test
 	public void testConstructFromValidJson() {
-		String uuid = UUID.randomUUID().toString();
+		UUID uuid = UUID.randomUUID();
 		MessageResponse response = MessageResponse.fromJson("{\"message_uuid\":\""+uuid+"\"}");
 		assertEquals(uuid, response.getMessageUuid());
 		String toString = response.toString();
 		assertTrue(toString.contains("MessageResponse"));
-		assertTrue(toString.contains(uuid));
+		assertTrue(toString.contains(uuid.toString()));
 	}
 
 	@Test(expected = VonageUnexpectedException.class)

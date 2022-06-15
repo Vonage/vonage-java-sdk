@@ -54,7 +54,7 @@ public class SendMessageEndpointTest {
 
 	@Test
 	public void testParseResponse202() throws Exception {
-		String uuid = UUID.randomUUID().toString();
+		UUID uuid = UUID.randomUUID();
 		String json = "{\"message_uuid\":\""+uuid+"\"}";
 		MessageResponse response = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(202, json));
 		assertEquals(uuid, response.getMessageUuid());
