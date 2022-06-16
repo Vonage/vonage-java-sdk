@@ -16,7 +16,6 @@
 package com.vonage.client.messages.whatsapp;
 
 import org.junit.Test;
-import org.mockito.internal.matchers.Null;
 
 import java.util.Arrays;
 import java.util.Collections;

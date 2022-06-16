@@ -23,7 +23,6 @@ import com.vonage.client.messages.messenger.*;
 import com.vonage.client.messages.viber.*;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.UUID;
 
