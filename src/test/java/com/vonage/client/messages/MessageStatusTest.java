@@ -17,33 +17,99 @@ package com.vonage.client.messages;
 
 import org.junit.Test;
 
+import java.net.URI;
+import java.util.Currency;
+import java.util.UUID;
+
 import static org.junit.Assert.assertEquals;
 
 public class MessageStatusTest {
 
 	@Test
-	public void testConstructAllFields() {
+	public void testSerdesAllFields() {
+		UUID messageUuid = UUID.randomUUID();
+		String to = "447700900000", from = "447700900001";
+		String timestamp = "2020-01-01 15:43:21 +0200";
+		MessageStatus.Status status = MessageStatus.Status.SUBMITTED;
+		Channel channel = Channel.SMS;
+		URI type = URI.create("https://developer.nexmo.com/api-errors/messages-olympus#1000");
+		int title = 1000;
+		String detail = "Throttled - You have exceeded the submission capacity allowed on this account.";
+		String instance = "bf0ca0bf927b3b52e3cb03217e1a1ddf";
+		Currency currency = Currency.getInstance("EUR");
+		double price = 0.0333;
+		MessageStatus.Error error = new MessageStatus.Error();
+		error.type = type;
+		error.title = title+"";
+		error.detail = detail;
+		error.instance = instance;
+		MessageStatus.Usage usage = new MessageStatus.Usage();
+		usage.price = price;
+		usage.currency = currency;
+
 		String json = "{\n" +
-				"  \"message_uuid\": \"aaaaaaaa-bbbb-cccc-dddd-0123456789ab\",\n" +
-				"  \"to\": \"447700900000\",\n" +
-				"  \"from\": \"447700900001\",\n" +
-				"  \"timestamp\": \"2020-01-01 14:00:00 +0000\",\n" +
-				"  \"status\": \"submitted\",\n" +
-				"  \"channel\": \"sms\",\n" +
+				"  \"message_uuid\": \""+messageUuid+"\",\n" +
+				"  \"to\": \""+to+"\",\n" +
+				"  \"from\": \""+from+"\",\n" +
+				"  \"timestamp\": \""+timestamp+"\",\n" +
+				"  \"status\": \""+status+"\",\n" +
+				"  \"channel\": \""+channel+"\",\n" +
 				"  \"error\": {\n" +
-				"    \"type\": \"https://developer.nexmo.com/api-errors/messages-olympus#1000\",\n" +
-				"    \"title\": 1000,\n" +
-				"    \"detail\": \"Throttled - You have exceeded the submission capacity allowed on this account. Please wait and retry\",\n" +
-				"    \"instance\": \"bf0ca0bf927b3b52e3cb03217e1a1ddf\"\n" +
+				"    \"type\": \""+type+"\",\n" +
+				"    \"title\": "+title+",\n" +
+				"    \"detail\": \""+detail+"\",\n" +
+				"    \"instance\": \""+instance+"\"\n" +
 				"  },\n" +
 				"  \"usage\": {\n" +
-				"    \"currency\": \"EUR\",\n" +
-				"    \"price\": \"0.0333\"\n" +
+				"    \"currency\": \""+currency+"\",\n" +
+				"    \"price\": \""+price+"\"\n" +
 				"  }\n" +
 				"}";
 
-		MessageStatus status = MessageStatus.fromJson(json);
-		String generatedJson = status.toJson();
+		MessageStatus ms = MessageStatus.fromJson(json);
+		String generatedJson = ms.toJson();
 		assertEquals(generatedJson, MessageStatus.fromJson(generatedJson).toJson());
+
+		assertEquals(messageUuid, ms.getMessageUuid());
+		assertEquals(to, ms.getTo());
+		assertEquals(from, ms.getFrom());
+		assertEquals(timestamp, ms.getTimestamp().format(MessageStatus.ISO_8601));
+		assertEquals(status, ms.getStatus());
+		assertEquals("submitted", status.toString());
+		assertEquals(channel, ms.getChannel());
+		assertEquals("sms", channel.toString());
+		assertEquals(error, ms.getError());
+		assertEquals(usage, ms.getUsage());
+	}
+
+	@Test
+	public void testSerdesRequiredFields() {
+		UUID messageUuid = UUID.randomUUID();
+		String to = "447700900000", from = "447700900001";
+		String timestamp = "2020-01-08 15:43:21 +0000";
+		MessageStatus.Status status = MessageStatus.Status.UNDELIVERABLE;
+		Channel channel = Channel.MMS;
+
+		String json = "{\n" +
+				"  \"message_uuid\": \""+messageUuid+"\",\n" +
+				"  \"to\": \""+to+"\",\n" +
+				"  \"from\": \""+from+"\",\n" +
+				"  \"timestamp\": \""+timestamp+"\",\n" +
+				"  \"status\": \""+status+"\",\n" +
+				"  \"channel\": \""+channel+"\"\n" +
+				"}";
+
+		MessageStatus ms = MessageStatus.fromJson(json);
+		String generatedJson = ms.toJson();
+		assertEquals(generatedJson, MessageStatus.fromJson(generatedJson).toJson());
+
+		assertEquals(messageUuid, ms.getMessageUuid());
+		assertEquals(to, ms.getTo());
+		assertEquals(from, ms.getFrom());
+		assertEquals(timestamp, ms.getTimestamp().format(MessageStatus.ISO_8601));
+		assertEquals(status, ms.getStatus());
+		assertEquals("undeliverable", status.toString());
+		assertEquals(channel, ms.getChannel());
+		assertEquals("mms", channel.toString());
 	}
 }

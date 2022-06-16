@@ -32,6 +32,7 @@ import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Currency;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -118,6 +119,31 @@ public class MessageStatus {
 		public String getInstance() {
 			return instance;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			Error error = (Error) o;
+			return Objects.equals(type, error.type) &&
+					Objects.equals(title, error.title) &&
+					Objects.equals(detail, error.detail) &&
+					Objects.equals(instance, error.instance);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(type, title, detail, instance);
+		}
+
+		@Override
+		public String toString() {
+			return getClass().getSimpleName() +
+					" {type='"+type + '\'' +
+					", title='"+title + '\'' +
+					", detail='"+detail + '\'' +
+					", instance='"+instance + "'}";
+		}
 	}
 
 	/**
@@ -152,6 +178,27 @@ public class MessageStatus {
 		 */
 		public double getPrice() {
 			return price;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			Usage usage = (Usage) o;
+			return Double.compare(usage.price, price) == 0 &&
+					Objects.equals(currency, usage.currency);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(price, currency);
+		}
+
+		@Override
+		public String toString() {
+			return getClass().getSimpleName() +
+					" {price="+price +
+					", currency="+currency + '}';
 		}
 	}
 
@@ -300,5 +347,23 @@ public class MessageStatus {
 	@Override
 	public String toString() {
 		return getClass().getSimpleName()+' '+toJson();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		MessageStatus that = (MessageStatus) o;
+		return Objects.equals(timestamp, that.timestamp) &&
+				Objects.equals(messageUuid, that.messageUuid) &&
+				Objects.equals(to, that.to) && Objects.equals(from, that.from) &&
+				status == that.status && channel == that.channel &&
+				Objects.equals(clientRef, that.clientRef) &&
+				Objects.equals(error, that.error) && Objects.equals(usage, that.usage);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(timestamp, messageUuid, to, from, status, channel, clientRef, error, usage);
 	}
 }
