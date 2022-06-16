@@ -68,7 +68,11 @@ public class MessageStatusTest {
 
 		MessageStatus ms = MessageStatus.fromJson(json);
 		String generatedJson = ms.toJson();
-		assertEquals(generatedJson, MessageStatus.fromJson(generatedJson).toJson());
+		MessageStatus generatedMessageStatus = MessageStatus.fromJson(generatedJson);
+		assertEquals(ms, generatedMessageStatus);
+		assertEquals(ms.hashCode(), generatedMessageStatus.hashCode());
+		assertEquals(generatedJson, generatedMessageStatus.toJson());
+		assertEquals(ms.toString(), generatedMessageStatus.toString());
 
 		assertEquals(messageUuid, ms.getMessageUuid());
 		assertEquals(to, ms.getTo());
@@ -79,7 +83,9 @@ public class MessageStatusTest {
 		assertEquals(channel, ms.getChannel());
 		assertEquals("sms", channel.toString());
 		assertEquals(error, ms.getError());
+		assertEquals(error.toString(), ms.getError().toString());
 		assertEquals(usage, ms.getUsage());
+		assertEquals(usage.toString(), ms.getUsage().toString());
 	}
 
 	@Test
