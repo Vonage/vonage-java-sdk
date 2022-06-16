@@ -35,10 +35,6 @@ public class MessageResponse {
 	protected MessageResponse() {
 	}
 
-	protected void setMessageUuid(String messageUuid) {
-		this.messageUuid = UUID.fromString(messageUuid);
-	}
-
 	/**
 	 * Returns the UUID of the message that was sent.
 	 *

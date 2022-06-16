@@ -39,6 +39,7 @@ import java.util.UUID;
  * It provides metadata about the message, such as its status, how much it cost, when it was sent,
  * what service (channel) it was sent via, sender and recipient, message response ID, client reference etc.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class MessageStatus {
 	static final String ISO_8601_REGEX = "yyyy-MM-dd HH:mm:ss Z";
@@ -169,10 +170,6 @@ public class MessageStatus {
 	@JsonProperty("error") protected Error error;
 	@JsonProperty("usage") protected Usage usage;
 
-
-	protected void setMessageUuid(String messageUuid) {
-		this.messageUuid = UUID.fromString(messageUuid);
-	}
 
 	/**
 	 * Unique identifier of the message that was sent, as returned in {@link MessageResponse#getMessageUuid()}.
