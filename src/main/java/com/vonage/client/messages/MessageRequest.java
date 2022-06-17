@@ -43,7 +43,10 @@ public abstract class MessageRequest {
 	protected String to;
 
 	/**
-	 * Constructor where all of this class's fields should be set.
+	 * Constructor where all of this class's fields should be set. This is protected
+	 * to prevent users form explicitly calling it; this should only be called from the
+	 * {@link Builder#build()} method. Subclasses should hide this constructor as well
+	 * to avoid potentially confusing users on how to construct this object.
 	 *
 	 * @param builder The mutable builder object used to assign this MessageRequest's fields from.
 	 */
@@ -148,6 +151,11 @@ public abstract class MessageRequest {
 		final MessageType messageType;
 		protected String from, to, clientRef;
 
+		/**
+		 * Protected constructor to prevent users from explicitly creating this object.
+		 * This should only be called by the static <code>builder()</code> method in
+		 * the non-abstract subclasses of this builder's parent (declaring) class.
+		 */
 		protected Builder() {
 			messageType = getMessageType();
 			channel = getChannel();

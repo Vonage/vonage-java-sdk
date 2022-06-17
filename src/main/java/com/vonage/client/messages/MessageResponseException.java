@@ -39,6 +39,9 @@ public final class MessageResponseException extends VonageClientException {
 	String type, title, detail, instance;
 	int statusCode;
 
+	/**
+	 * Package-private constructor is to prevent users from explicitly creating this object.
+	 */
 	MessageResponseException() {
 	}
 

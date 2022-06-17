@@ -28,9 +28,7 @@ import java.io.*;
 import java.util.stream.Collectors;
 
 class SendMessageEndpoint extends AbstractMethod<MessageRequest, MessageResponse> {
-
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class, TokenAuthMethod.class};
-
 	private static final String PATH = "/v1/messages";
 
 	SendMessageEndpoint(HttpWrapper httpWrapper) {

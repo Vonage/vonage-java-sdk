@@ -32,6 +32,9 @@ import java.util.UUID;
 public class MessageResponse {
 	@JsonProperty("message_uuid") protected UUID messageUuid;
 
+	/**
+	 * Protected to prevent users from explicitly creating this object.
+	 */
 	protected MessageResponse() {
 	}
 

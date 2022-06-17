@@ -37,8 +37,8 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class MessageStatus {
-	static final String ISO_8601_REGEX = "yyyy-MM-dd HH:mm:ss Z";
-	protected static final DateTimeFormatter ISO_8601 = DateTimeFormatter.ofPattern(ISO_8601_REGEX);
+	static final String ISO_8601_PATTERN = "yyyy-MM-dd HH:mm:ss Z";
+	protected static final DateTimeFormatter ISO_8601 = DateTimeFormatter.ofPattern(ISO_8601_PATTERN);
 
 	public enum Status {
 		SUBMITTED,
@@ -200,7 +200,7 @@ public class MessageStatus {
 	}
 
 	@JsonProperty("timestamp")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ISO_8601_REGEX)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ISO_8601_PATTERN)
 	protected ZonedDateTime timestamp;
 	@JsonProperty("message_uuid") protected UUID messageUuid;
 	@JsonProperty("to") protected String to;
