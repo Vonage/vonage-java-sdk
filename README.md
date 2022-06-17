@@ -158,6 +158,56 @@ for (SmsSubmissionResponseMessage response : responses.getMessages()) {
 }
 ```
 
+### Send an MMS
+
+Send an MMS with the Vonage Messages API:
+```java
+MessageRequest request = MmsImageRequest.builder()
+        .from(FROM_NUMBER)
+        .to(TO_NUMBER)
+        .url(IMAGE_URL)
+        .caption(IMAGE_CAPTION)
+        .build();
+MessageResponse response = client.getMessagesClient().sendMessage(request);
+```
+
+### Send a file via Messenger
+
+Send a file over Facebook Messenger using the Vonage Messages API:
+```java
+MessageRequest request = MessengerFileRequest.builder()
+        .from(SENDER_ID)
+        .to(RECIPIENT_ID)
+        .url(FILE_URL)
+        .build();
+MessageResponse response = client.getMessagesClient().sendMessage(request);
+```
+
+### Send an image via Viber
+
+Send a picture over Viber using the Vonage Messages API:
+```java
+MessageRequest request = ViberImageRequest.builder()
+        .from(SENDER_ID)
+        .to(TO_NUMBER)
+        .url(IMAGE_URL)
+        .build();
+MessageResponse response = client.getMessagesClient().sendMessage(request);
+```
+
+### Send a video via WhatsApp
+
+Send a video over WhatsApp using the Vonage Messages API:
+```java
+MessageRequest request = WhatsappVideoRequest.builder()
+        .from(FROM_NUMBER)
+        .to(TO_NUMBER)
+        .url(VIDEO_URL)
+        .caption(VIDEO_DESCRIPTION)
+        .build();
+MessageResponse response = client.getMessagesClient().sendMessage(request);
+```
+
 ### Make Phone Calls
 
 The following code initiates an outbound call which then reads the user [a message](https://nexmo-community.github.io/ncco-examples/first_call_talk.json):
@@ -469,24 +519,24 @@ A: No, it currently does not.
 The following is a list of Vonage APIs and whether the Java SDK provides support for them:
 
 | API                   |  API Release Status  | Supported? |
-| --------------------- | :------------------: | :--------: |
-| Account API           | General Availability |     ✅     |
-| Alerts API            | General Availability |     ✅     |
-| Application API       | General Availability |     ✅     |
-| Audit API             |         Beta         |     ❌     |
-| Conversation API      |         Beta         |     ❌     |
-| Dispatch API          |         Beta         |     ❌     |
-| External Accounts API |         Beta         |     ❌     |
-| Media API             |         Beta         |     ❌     |
-| Messages API          |         Beta         |     ❌     |
-| Number Insight API    | General Availability |     ✅     |
-| Number Management API | General Availability |     ✅     |
-| Pricing API           | General Availability |     ✅     |
-| Redact API            | General Availability |     ✅     |
-| Reports API           |         Beta         |     ❌     |
-| SMS API               | General Availability |     ✅     |
-| Verify API            | General Availability |     ✅     |
-| Voice API             | General Availability |     ✅     |
+| --------------------- |:--------------------:|:----------:|
+| Account API           | General Availability |     ✅      |
+| Alerts API            | General Availability |     ✅      |
+| Application API       | General Availability |     ✅      |
+| Audit API             |         Beta         |     ❌      |
+| Conversation API      |         Beta         |     ❌      |
+| Dispatch API          |         Beta         |     ❌      |
+| External Accounts API |         Beta         |     ❌      |
+| Media API             |         Beta         |     ❌      |
+| Messages API          | General Availability |     ✅      |
+| Number Insight API    | General Availability |     ✅      |
+| Number Management API | General Availability |     ✅      |
+| Pricing API           | General Availability |     ✅      |
+| Redact API            | General Availability |     ✅      |
+| Reports API           |         Beta         |     ❌      |
+| SMS API               | General Availability |     ✅      |
+| Verify API            | General Availability |     ✅      |
+| Voice API             | General Availability |     ✅      |
 
 
 ## License

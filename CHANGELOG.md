@@ -4,8 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [6.4.1]
-- Adding `call_uuid` to webhook call event.
+## [6.5.0]
+- Added Messages v1 API implementation
+- Added `get-full-pricing` endpoint
+- Added `Content-Type` and `Accept` headers in requests where applicable
+- Substantial internal refactoring
+
+## [6.4.2]
+- Added `call_uuid` to webhook call event.
+- Bumped dependency versions
 
 ## [6.4.0]
 - Adding Random From Number Feature for the Voice API, if set to `true`, the from number will be randomly selected from the pool of numbers available to the application making the call. 
@@ -13,7 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Adding extra parsing for top level Roaming Status in Advanced Number Insights
 
 ## [6.3.0]
-- Added parsing for JSON payloads when reading inbound SMS signtures
+- Added parsing for JSON payloads when reading inbound SMS signatures
 
 ## [6.2.0]
 - Adding ContentId and EntityId to message class for DLT

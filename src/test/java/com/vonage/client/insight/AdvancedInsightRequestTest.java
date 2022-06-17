@@ -20,6 +20,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class AdvancedInsightRequestTest {
+
     @Test
     public void testWithNumber() {
         AdvancedInsightRequest request = AdvancedInsightRequest.withNumber("12345");

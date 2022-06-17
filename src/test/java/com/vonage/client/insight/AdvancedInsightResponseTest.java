@@ -24,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class AdvancedInsightResponseTest {
+
     @Test
     public void testFromJson() throws Exception {
         AdvancedInsightResponse response = AdvancedInsightResponse.fromJson("{\n" +
