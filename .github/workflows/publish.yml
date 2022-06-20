@@ -24,7 +24,7 @@ jobs:
       - name: Bump Version
         run: bump2version --new-version ${{ github.event.release.tag_name }} patch &&
              git tag ${{ github.event.release.tag_name }} -f &&
-             git push && git push ${{ github.event.release.tag_name }} origin --force
+             git push && git push --tags origin --force
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
