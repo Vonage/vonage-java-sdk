@@ -18,10 +18,10 @@ package com.vonage.client.insight;
 public class AdvancedInsightRequest extends BaseInsightRequest {
     private final boolean async;
     private final String callback;
+    private final String ipAddress;
 
     private AdvancedInsightRequest(Builder builder) {
-        super(builder.number);
-        country = builder.country;
+        super(builder.number, builder.country);
         cnam = builder.cnam;
         ipAddress = builder.ipAddress;
         callback = builder.callback;

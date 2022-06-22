@@ -17,13 +17,15 @@ package com.vonage.client.insight;
 
 public abstract class BaseInsightRequest {
     protected final String number;
-    protected String country;
-    protected Boolean cnam;
-    protected String ipAddress;
+    protected final String country;
+    Boolean cnam;
 
-    protected BaseInsightRequest(String number) {
+    protected BaseInsightRequest(String number, String country) {
         if ((this.number = number) == null || number.length() < 2) {
             throw new IllegalStateException("Must provide a number for insight.");
+        }
+        if ((this.country = country) != null && country.length() != 2) {
+            throw new IllegalArgumentException("Country code must be 2 letters long.");
         }
     }
 
