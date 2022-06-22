@@ -38,6 +38,7 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
         return cnam;
     }
 
+    @Deprecated
     public String getIpAddress() {
         return ipAddress;
     }
@@ -122,11 +123,15 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
         }
 
         /**
+         * @deprecated This parameter is deprecated as we are no longer able to retrieve reliable
+         * IP data globally from carriers.
+         *
          * @param ipAddress The IP address of the user. If supplied, we will compare this to the country the user's
          *                  phone is located in and return an error if it does not match.
          *
          * @return The {@link Builder} to keep building.
          */
+        @Deprecated
         public Builder ipAddress(String ipAddress) {
             this.ipAddress = ipAddress;
             return this;
@@ -145,6 +150,7 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
 
         /**
          * @param url The URL that Vonage will send a request to when the insight lookup is finished.
+         *            This only takes effect when {@link #async(boolean)} is <code>true</code>.
          *
          * @return The {@link Builder} to keep building.
          */
