@@ -16,8 +16,9 @@
 package com.vonage.client.insight;
 
 public class StandardInsightRequest extends BaseInsightRequest {
+
     private StandardInsightRequest(Builder builder) {
-        number = builder.number;
+        super(builder.number);
         country = builder.country;
         cnam = builder.cnam;
     }

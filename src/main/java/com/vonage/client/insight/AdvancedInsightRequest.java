@@ -16,16 +16,18 @@
 package com.vonage.client.insight;
 
 public class AdvancedInsightRequest extends BaseInsightRequest {
-    private boolean async;
-    private String callback;
+    private final boolean async;
+    private final String callback;
 
     private AdvancedInsightRequest(Builder builder) {
-        number = builder.number;
+        super(builder.number);
         country = builder.country;
         cnam = builder.cnam;
         ipAddress = builder.ipAddress;
-        async = builder.async;
         callback = builder.callback;
+        if ((async = builder.async) && (callback == null || callback.isEmpty())) {
+            throw new IllegalStateException("You must define a callback URL when using asynchronous insights.");
+        }
     }
 
     public static Builder builder(String number) {
@@ -155,9 +157,6 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
          * @return A new {@link AdvancedInsightRequest} object from the stored builder options.
          */
         public AdvancedInsightRequest build() {
-            if (async && (callback == null || callback.isEmpty())) {
-                throw new IllegalStateException("You must define a callback url when using asyncronous insights.");
-            }
             return new AdvancedInsightRequest(this);
         }
     }

@@ -16,10 +16,16 @@
 package com.vonage.client.insight;
 
 public abstract class BaseInsightRequest {
-    protected String number;
+    protected final String number;
     protected String country;
     protected Boolean cnam;
     protected String ipAddress;
+
+    protected BaseInsightRequest(String number) {
+        if ((this.number = number) == null || number.length() < 2) {
+            throw new IllegalStateException("Must provide a number for insight.");
+        }
+    }
 
     public String getNumber() {
         return number;
