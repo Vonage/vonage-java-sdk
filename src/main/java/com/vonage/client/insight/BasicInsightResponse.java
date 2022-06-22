@@ -27,7 +27,6 @@ public class BasicInsightResponse {
     private InsightStatus status;
     private String statusMessage;
     private String errorText;
-
     private String requestId;
     private String internationalFormatNumber;
     private String nationalFormatNumber;
@@ -45,6 +44,7 @@ public class BasicInsightResponse {
         }
     }
 
+    @JsonProperty("status")
     public InsightStatus getStatus() {
         return status;
     }

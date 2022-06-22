@@ -18,25 +18,58 @@ package com.vonage.client.insight;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 import java.util.Arrays;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public enum InsightStatus {
+    /**
+     * Request accepted for delivery.
+     */
     SUCCESS(0),
+    /**
+     * You have made more requests in the last second than are permitted by your account. Please retry.
+     */
     THROTTLED(1),
+    /**
+     * Your request is incomplete and missing some mandatory parameters.
+     */
     INVALID_PARAMS(3),
+    /**
+     * The api_key or api_secret you supplied is either not valid or has been disabled.
+     */
     INVALID_CREDENTIALS(4),
+    /**
+     * The format of the recipient address is not valid.
+     */
     INTERNAL_ERROR(5),
+    /**
+     * Your account does not have sufficient credit to process this request.
+     */
     PARTNER_QUOTA_EXCEEDED(9),
-    UNKNOWN(Integer.MAX_VALUE);
+    /**
+     * Your request makes use of a facility that is not enabled on your account.
+     */
+    FACILITY_NOT_ALLOWED(19),
+    /**
+     * Live mobile lookup not returned. Not all return parameters are available.
+     */
+    LOOKUP_NOT_RETURNED_43(43),
+    /**
+     * Live mobile lookup not returned. Not all return parameters are available.
+     */
+    LOOKUP_NOT_RETURNED_44(44),
+    /**
+     * Live mobile lookup not returned. Not all return parameters are available.
+     */
+    LOOKUP_NOT_RETURNED_45(45),
+    /**
+     * Request unparseable.
+     */
+    REQUEST_UNPARSEABLE(999);
 
-    private final int insightStatus;
+    private final int statusCode;
 
-    private static final Map<Integer, InsightStatus> INSIGHT_STATUS_INDEX =
-        Arrays.stream(InsightStatus.values()).collect(Collectors.toMap(
-            InsightStatus::getInsightStatus, Function.identity()
-        ));
+    InsightStatus(int statusCode) {
+        this.statusCode = statusCode;
+    }
 
     /**
      * Look up the {@link InsightStatus} based on the int value.
@@ -47,14 +80,12 @@ public enum InsightStatus {
      */
     @JsonCreator
     public static InsightStatus fromInt(int insightStatus) {
-        return INSIGHT_STATUS_INDEX.getOrDefault(insightStatus, UNKNOWN);
-    }
-
-    InsightStatus(int insightStatus) {
-        this.insightStatus = insightStatus;
+        return Arrays.stream(InsightStatus.values())
+                .filter(status -> status.statusCode == insightStatus)
+                .findAny().orElse(null);
     }
 
     public int getInsightStatus() {
-        return insightStatus;
+        return statusCode;
     }
 }
