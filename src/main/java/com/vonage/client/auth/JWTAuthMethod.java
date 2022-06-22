@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class JWTAuthMethod extends AbstractAuthMethod {
+public class JWTAuthMethod implements AuthMethod {
     private static final int SORT_KEY = 10;
     private Jwt jwt;
 

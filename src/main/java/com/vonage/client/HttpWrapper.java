@@ -53,11 +53,7 @@ public class HttpWrapper {
     }
 
     public HttpWrapper(HttpConfig httpConfig, AuthMethod... authMethods) {
-        this(new AuthCollection());
-        for (AuthMethod authMethod : authMethods) {
-            authCollection.add(authMethod);
-        }
-
+        this(new AuthCollection(authMethods));
         this.httpConfig = httpConfig;
     }
 

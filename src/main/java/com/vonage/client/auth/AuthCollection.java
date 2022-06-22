@@ -34,10 +34,7 @@ public class AuthCollection {
     }
 
     public AuthCollection(AuthMethod... authMethods) {
-        this();
-        for (AuthMethod method : authMethods) {
-            add(method);
-        }
+        authList = new TreeSet<>(Arrays.asList(authMethods));
     }
 
     public AuthCollection(SortedSet<AuthMethod> authMethods) {
