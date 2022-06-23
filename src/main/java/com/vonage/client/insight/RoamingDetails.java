@@ -21,17 +21,30 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @JsonDeserialize(using = RoamingDeseriazlizer.class)
 public class RoamingDetails {
+    private final RoamingStatus status;
+    private final String roamingCountryCode;
+    private final String roamingNetworkCode;
+    private final String roamingNetworkName;
+
     public enum RoamingStatus {
         UNKNOWN, ROAMING, NOT_ROAMING;
 
         @JsonCreator
         public static RoamingStatus fromString(String name) {
+            if (name == null || name.equalsIgnoreCase("null")) {
+                return null;
+            }
             try {
                 return RoamingStatus.valueOf(name.toUpperCase());
             }
             catch (IllegalArgumentException ex) {
                 return UNKNOWN;
             }
+        }
+
+        @Override
+        public String toString() {
+            return name().toLowerCase();
         }
     }
 
@@ -42,11 +55,7 @@ public class RoamingDetails {
         this.roamingNetworkName = roamingNetworkName;
     }
 
-    private RoamingStatus status;
-    private String roamingCountryCode;
-    private String roamingNetworkCode;
-    private String roamingNetworkName;
-
+    @JsonProperty("status")
     public RoamingStatus getStatus() {
         return status;
     }

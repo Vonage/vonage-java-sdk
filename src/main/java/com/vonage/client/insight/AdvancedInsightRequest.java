@@ -19,19 +19,30 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
     private final boolean async;
     private final String callback;
     private final String ipAddress;
+    private final Boolean realTimeData;
 
     private AdvancedInsightRequest(Builder builder) {
         super(builder.number, builder.country);
         cnam = builder.cnam;
         ipAddress = builder.ipAddress;
         callback = builder.callback;
-        if ((async = builder.async) && (callback == null || callback.isEmpty())) {
-            throw new IllegalStateException("You must define a callback URL when using asynchronous insights.");
+        if (!(async = builder.async)) {
+            realTimeData = builder.realTimeData;
+        }
+        else {
+            realTimeData = null;
+            if (callback == null || callback.isEmpty()) {
+                throw new IllegalStateException("You must define a callback URL when using asynchronous insights.");
+            }
         }
     }
 
     public static Builder builder(String number) {
         return new Builder(number);
+    }
+
+    public Boolean getRealTimeData() {
+        return realTimeData;
     }
 
     public Boolean getCnam() {
@@ -75,12 +86,9 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
     }
 
     public static class Builder {
-        protected String number;
-        protected String country;
-        protected Boolean cnam;
-        protected String ipAddress;
         protected boolean async;
-        protected String callback;
+        protected Boolean cnam, realTimeData;
+        protected String number, country, ipAddress, callback;
 
         /**
          * @param number A single phone number that you need insight about in national or international format.
@@ -117,7 +125,7 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
          *
          * @return The {@link Builder} to keep building.
          */
-        public Builder cnam(Boolean cnam) {
+        public Builder cnam(boolean cnam) {
             this.cnam = cnam;
             return this;
         }
@@ -156,6 +164,17 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
          */
         public Builder callback(String url) {
             this.callback = url;
+            return this;
+        }
+
+        /**
+         * @param realTimeData A boolean to choose whether to get real time data back in the response.
+         *                     This only applies when {@link #async(boolean)} is <code>false</code>.
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder realTimeData(boolean realTimeData) {
+            this.realTimeData = realTimeData;
             return this;
         }
 

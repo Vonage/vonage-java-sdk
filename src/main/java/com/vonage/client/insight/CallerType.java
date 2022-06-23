@@ -24,6 +24,19 @@ public enum CallerType {
 
     @JsonCreator
     public static CallerType fromString(String name) {
-        return CallerType.valueOf(name.toUpperCase());
+        if (name == null || name.equalsIgnoreCase("null")) {
+            return null;
+        }
+        try {
+            return CallerType.valueOf(name.toUpperCase());
+        }
+        catch (IllegalArgumentException iax) {
+            return UNKNOWN;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return name().toLowerCase();
     }
 }

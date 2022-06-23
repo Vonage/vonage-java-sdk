@@ -31,10 +31,12 @@ public class CarrierDetails {
         return networkCode;
     }
 
+    @JsonProperty("name")
     public String getName() {
         return name;
     }
 
+    @JsonProperty("country")
     public String getCountry() {
         return country;
     }
@@ -55,7 +57,20 @@ public class CarrierDetails {
 
         @JsonCreator
         public static NetworkType fromString(String name) {
-            return NetworkType.valueOf(name.toUpperCase());
+            if (name == null || name.equalsIgnoreCase("null")) {
+                return null;
+            }
+            try {
+                return NetworkType.valueOf(name.toUpperCase());
+            }
+            catch (IllegalArgumentException iax) {
+                return UNKNOWN;
+            }
+        }
+
+        @Override
+        public String toString() {
+            return name().toLowerCase();
         }
     }
 }

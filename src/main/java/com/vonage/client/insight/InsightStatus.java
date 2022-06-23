@@ -63,7 +63,11 @@ public enum InsightStatus {
     /**
      * Request unparseable.
      */
-    REQUEST_UNPARSEABLE(999);
+    REQUEST_UNPARSEABLE(999),
+    /**
+     * Undefined or unknown value.
+     */
+    UNKNOWN(Integer.MAX_VALUE);
 
     private final int statusCode;
 
@@ -82,7 +86,7 @@ public enum InsightStatus {
     public static InsightStatus fromInt(int insightStatus) {
         return Arrays.stream(InsightStatus.values())
                 .filter(status -> status.statusCode == insightStatus)
-                .findAny().orElse(null);
+                .findAny().orElse(UNKNOWN);
     }
 
     public int getInsightStatus() {

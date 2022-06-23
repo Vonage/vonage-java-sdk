@@ -59,6 +59,9 @@ class AdvancedInsightEndpoint extends AbstractMethod<AdvancedInsightRequest, Adv
         if (request.getCallback() != null) {
             requestBuilder.addParameter("callback", request.getCallback());
         }
+        if (request.getRealTimeData() != null) {
+            requestBuilder.addParameter("real_time_data", request.getRealTimeData().toString());
+        }
         return requestBuilder;
     }
 

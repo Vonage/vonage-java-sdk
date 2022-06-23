@@ -35,7 +35,7 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
     private String firstName;
     private String lastName;
     private CallerType callerType;
-
+    private RealTimeData realTimeData;
 
     public static AdvancedInsightResponse fromJson(String json) {
         try {
@@ -56,6 +56,7 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
         return reachability;
     }
 
+    @JsonProperty("ported")
     public PortedStatus getPorted() {
         return ported;
     }
@@ -70,6 +71,7 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
         return lookupOutcomeMessage;
     }
 
+    @JsonProperty("roaming")
     public RoamingDetails getRoaming() {
         return roaming;
     }
@@ -94,17 +96,30 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
         return callerType;
     }
 
+    @JsonProperty("real_time_data")
+    public RealTimeData getRealTimeData() {
+        return realTimeData;
+    }
+
     public enum PortedStatus {
         UNKNOWN, PORTED, NOT_PORTED, ASSUMED_NOT_PORTED, ASSUMED_PORTED;
 
         @JsonCreator
         public static PortedStatus fromString(String name) {
+            if (name == null || name.equalsIgnoreCase("null")) {
+                return null;
+            }
             try {
                 return PortedStatus.valueOf(name.toUpperCase());
             }
             catch (IllegalArgumentException ex) {
                 return UNKNOWN;
             }
+        }
+
+        @Override
+        public String toString() {
+            return name().toLowerCase();
         }
     }
 
@@ -113,12 +128,20 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
 
         @JsonCreator
         public static Validity fromString(String name) {
+            if (name == null || name.equalsIgnoreCase("null")) {
+                return null;
+            }
             try {
                 return Validity.valueOf(name.toUpperCase());
             }
             catch (IllegalArgumentException ex) {
                 return UNKNOWN;
             }
+        }
+
+        @Override
+        public String toString() {
+            return name().toLowerCase();
         }
     }
 
@@ -127,12 +150,36 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
 
         @JsonCreator
         public static Reachability fromString(String name) {
+            if (name == null || name.equalsIgnoreCase("null")) {
+                return null;
+            }
             try {
                 return Reachability.valueOf(name.toUpperCase());
             }
             catch (IllegalArgumentException ex) {
                 return UNKNOWN;
             }
+        }
+
+        @Override
+        public String toString() {
+            return name().toLowerCase();
+        }
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class RealTimeData {
+        protected Boolean activeStatus;
+        protected String handsetStatus;
+
+        @JsonProperty("active_status")
+        public Boolean getActiveStatus() {
+            return activeStatus;
+        }
+
+        @JsonProperty("handset_status")
+        public String getHandsetStatus() {
+            return handsetStatus;
         }
     }
 }
