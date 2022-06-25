@@ -111,7 +111,26 @@ public class AdvancedInsightEndpointTest {
         Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
         assertEquals(params.get("number"), "1234");
         assertEquals(params.get("callback"), "https://example.com");
+    }
 
+    @Test
+    public void testRealTimeDataOnlyAppliesToSynchronousRequest() throws Exception {
+        AdvancedInsightRequest.Builder airb = AdvancedInsightRequest.builder("1234")
+            .realTimeData(true)
+            .callback("https://example.com");
+
+        RequestBuilder rb = endpoint.makeRequest(airb.build());
+        assertEquals("POST", rb.getMethod());
+        assertEquals("https://api.nexmo.com/ni/advanced/json", rb.build().getURI().toString());
+        Map<String, String> params = TestUtils.makeParameterMap(rb.getParameters());
+        assertEquals(params.get("number"), "1234");
+        assertEquals(params.get("callback"), "https://example.com");
+        assertTrue(Boolean.parseBoolean(params.get("real_time_data")));
+
+        rb = endpoint.makeRequest(airb.async(true).build());
+        assertEquals("https://api.nexmo.com/ni/advanced/async/json", rb.build().getURI().toString());
+        params = TestUtils.makeParameterMap(rb.getParameters());
+        assertFalse(Boolean.parseBoolean(params.get("real_time_data")));
     }
 
     @Test

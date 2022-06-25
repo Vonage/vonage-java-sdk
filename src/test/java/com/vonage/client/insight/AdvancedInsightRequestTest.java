@@ -48,17 +48,37 @@ public class AdvancedInsightRequestTest {
 
     @Test(expected = IllegalStateException.class)
     public void testAsyncWithoutCallbackThrowsIllegalStateException() {
-        AdvancedInsightRequest request = AdvancedInsightRequest.builder("12345")
+        AdvancedInsightRequest.builder("12345")
                 .async(true)
                 .build();
     }
 
     @Test(expected = IllegalStateException.class)
     public void testAsyncWithBlankCallbackThrowsIllegalStateException() {
-        AdvancedInsightRequest request = AdvancedInsightRequest.builder("12345")
+        AdvancedInsightRequest.builder("12345")
                 .async(true)
                 .callback("")
                 .build();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testBuildWithoutNumberThrowsException() {
+        AdvancedInsightRequest.builder().build();
+    }
+
+    @Test
+    public void testBuildWithNumberAfterConstruction() {
+        AdvancedInsightRequest request = AdvancedInsightRequest.builder()
+                .number("12345").build();
+        assertEquals("12345", request.getNumber());
+    }
+
+    @Test
+    public void testMutateNumberAfterConstruction() {
+        String number = "12345";
+        AdvancedInsightRequest.Builder builder = AdvancedInsightRequest.builder(number);
+        assertEquals(number, builder.build().getNumber());
+        assertEquals(number = "6789", builder.number(number).build().getNumber());
     }
 
     @Test
@@ -69,25 +89,30 @@ public class AdvancedInsightRequestTest {
                 .cnam(true)
                 .async(true)
                 .callback("https://example.com")
+                .realTimeData(false)
                 .build();
         assertEquals(request.getNumber(), "12345");
         assertEquals(request.getCountry(), "GB");
         assertEquals(request.getIpAddress(), "123.123.123.123");
         assertTrue(request.getCnam());
+        Boolean realTimeData = request.getRealTimeData();
+        assertTrue(realTimeData == null || !realTimeData);
 
         request = AdvancedInsightRequest.builder("12345")
                 .number("98765")
                 .country("GB")
                 .ipAddress("123.123.123.123")
-                .cnam(true)
-                .async(true)
+                .cnam(false)
+                .async(false)
                 .callback("https://example.com")
+                .realTimeData(true)
                 .build();
         assertEquals(request.getNumber(), "98765");
         assertEquals(request.getCountry(), "GB");
         assertEquals(request.getIpAddress(), "123.123.123.123");
-        assertTrue(request.getCnam());
-        assertTrue(request.isAsync());
+        assertFalse(request.getCnam());
+        assertFalse(request.isAsync());
+        assertTrue(request.getRealTimeData());
         assertEquals("https://example.com", request.getCallback());
     }
 }
