@@ -36,6 +36,26 @@ public class BasicInsightRequestTest {
         assertEquals(request.getCountry(), "GB");
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void testBuildWithoutNumberThrowsException() {
+        BasicInsightRequest.builder().build();
+    }
+
+    @Test
+    public void testBuildWithNumberAfterConstruction() {
+        BasicInsightRequest request = BasicInsightRequest.builder()
+                .number("12345").build();
+        assertEquals("12345", request.getNumber());
+    }
+
+    @Test
+    public void testMutateNumberAfterConstruction() {
+        String number = "12345";
+        BasicInsightRequest.Builder builder = BasicInsightRequest.builder(number);
+        assertEquals(number, builder.build().getNumber());
+        assertEquals(number = "6789", builder.number(number).build().getNumber());
+    }
+
     @Test
     public void testBuildWithAllFields() throws Exception {
         BasicInsightRequest request = BasicInsightRequest.builder("12345").country("GB").build();

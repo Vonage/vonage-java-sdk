@@ -21,6 +21,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class StandardInsightRequestTest {
+
     @Test
     public void testWithNumber() {
         StandardInsightRequest request = StandardInsightRequest.withNumber("12345");
@@ -33,6 +34,26 @@ public class StandardInsightRequestTest {
         StandardInsightRequest request = StandardInsightRequest.withNumberAndCountry("12345", "GB");
         assertEquals(request.getNumber(), "12345");
         assertEquals(request.getCountry(), "GB");
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testBuildWithoutNumberThrowsException() {
+        StandardInsightRequest.builder().build();
+    }
+
+    @Test
+    public void testBuildWithNumberAfterConstruction() {
+        StandardInsightRequest request = StandardInsightRequest.builder()
+                .number("12345").build();
+        assertEquals("12345", request.getNumber());
+    }
+
+    @Test
+    public void testMutateNumberAfterConstruction() {
+        String number = "12345";
+        StandardInsightRequest.Builder builder = StandardInsightRequest.builder(number);
+        assertEquals(number, builder.build().getNumber());
+        assertEquals(number = "6789", builder.number(number).build().getNumber());
     }
 
     @Test

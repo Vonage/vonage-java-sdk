@@ -97,36 +97,28 @@ public class InsightClientTest extends ClientTest<InsightClient> {
     @Test
     public void testBasicInsightWithNumber() throws Exception {
         wrapper.setHttpClient(stubHttpClient(200, BASIC_RESPOSE_JSON));
-
         BasicInsightResponse response = client.getBasicNumberInsight("1234");
-
         assertBasicResponse(response);
     }
 
     @Test
     public void testBasicInsightWithNumberAndCountry() throws Exception {
         wrapper.setHttpClient(stubHttpClient(200, BASIC_RESPOSE_JSON));
-
         BasicInsightResponse response = client.getBasicNumberInsight("1234", "GB");
-
         assertBasicResponse(response);
     }
 
     @Test
     public void testStandardInsightWithNumber() throws Exception {
         wrapper.setHttpClient(stubHttpClient(200, STANDARD_RESPONSE_JSON));
-
         StandardInsightResponse response = client.getStandardNumberInsight("1234");
-
         assertBasicResponse(response);
     }
 
     @Test
     public void testStandardInsightWithNumberAndCountry() throws Exception {
         wrapper.setHttpClient(stubHttpClient(200, STANDARD_RESPONSE_JSON));
-
         StandardInsightResponse response = client.getStandardNumberInsight("1234", "GB");
-
         assertStandardResponse(response);
     }
     
@@ -134,9 +126,7 @@ public class InsightClientTest extends ClientTest<InsightClient> {
     @Test
     public void testAdvancedInsightWithNumber() throws Exception {
         wrapper.setHttpClient(stubHttpClient(200, ADVANCED_RESPONSE_JSON));
-
         AdvancedInsightResponse response = client.getAdvancedNumberInsight("1234");
-
         assertAdvancedInsightResponse(response);
     }
 

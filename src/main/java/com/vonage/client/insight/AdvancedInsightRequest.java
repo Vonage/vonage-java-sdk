@@ -48,7 +48,6 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
         return new Builder(number);
     }
 
-
     /**
      * This method is the starting point for constructing an Advanced Insight request.
      * Note that the number field must be set.
@@ -81,7 +80,7 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
     }
 
     /**
-     * Construct a AdvancedInsightRequest with a number.
+     * Construct an AdvancedInsightRequest with a number.
      *
      * @param number A single phone number that you need insight about in national or international format.
      *
