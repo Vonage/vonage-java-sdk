@@ -18,7 +18,11 @@ package com.vonage.client.insight;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.vonage.client.VonageUnexpectedException;
 
 import java.io.IOException;
@@ -169,6 +173,23 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class RealTimeData {
+
+        static class ActiveStatusDeserializer extends JsonDeserializer<Boolean> {
+            @Override
+            public Boolean deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+                String text = p.getText();
+                if (text == null) return null;
+                switch (text.toLowerCase()) {
+                    default: return null;
+                    case "true": case "active":
+                        return true;
+                    case "false": case "inactive":
+                        return false;
+                }
+            }
+        }
+
+        @JsonDeserialize(using = ActiveStatusDeserializer.class)
         protected Boolean activeStatus;
         protected String handsetStatus;
 
