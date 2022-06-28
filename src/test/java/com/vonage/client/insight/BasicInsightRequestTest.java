@@ -21,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 public class BasicInsightRequestTest {
+
     @Test
     public void testWithNumber() throws Exception {
         BasicInsightRequest request = BasicInsightRequest.withNumber("12345");
@@ -44,5 +45,10 @@ public class BasicInsightRequestTest {
         request = BasicInsightRequest.builder("12345").number("98765").country("GB").build();
         assertEquals(request.getNumber(), "98765");
         assertEquals(request.getCountry(), "GB");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testWithInvalidCountryCode() {
+        BasicInsightRequest.builder("12345").country("England").build();
     }
 }

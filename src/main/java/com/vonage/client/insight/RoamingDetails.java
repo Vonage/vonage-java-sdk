@@ -31,9 +31,6 @@ public class RoamingDetails {
 
         @JsonCreator
         public static RoamingStatus fromString(String name) {
-            if (name == null || name.equalsIgnoreCase("null")) {
-                return null;
-            }
             try {
                 return RoamingStatus.valueOf(name.toUpperCase());
             }
