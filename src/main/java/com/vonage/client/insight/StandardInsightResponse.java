@@ -23,6 +23,9 @@ import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 import java.math.BigDecimal;
 
+/**
+ * Response object constructed from the JSON payload returned for Standard number insight requests.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StandardInsightResponse extends BasicInsightResponse {
     private BigDecimal requestPrice;
@@ -41,31 +44,51 @@ public class StandardInsightResponse extends BasicInsightResponse {
         }
     }
 
+    /**
+     * @return The amount in EUR charged to your account.
+     */
     @JsonProperty("request_price")
     public BigDecimal getRequestPrice() {
         return requestPrice;
     }
 
+    /**
+     * @return Your account balance in EUR after this request.
+     */
     @JsonProperty("remaining_balance")
     public BigDecimal getRemainingBalance() {
         return remainingBalance;
     }
 
+    /**
+     * @return Information about the network the number was initially connected to.
+     */
     @JsonProperty("original_carrier")
     public CarrierDetails getOriginalCarrier() {
         return originalCarrier;
     }
 
+    /**
+     * @return Information about the network the number is currently connected to.
+     */
     @JsonProperty("current_carrier")
     public CarrierDetails getCurrentCarrier() {
         return currentCarrier;
     }
 
+    /**
+     * @return Information about the caller.
+     */
     @JsonProperty("caller_identity")
     public CallerIdentity getCallerIdentity() {
         return callerIdentity;
     }
 
+    /**
+     * @return If there is an internal lookup error, the refund_price will reflect the lookup price.
+     * If cnam is requested for a non-US number the refund_price will reflect the cnam price.
+     * If both of these conditions occur, refund_price is the sum of the lookup price and cnam price.
+     */
     @JsonProperty("refund_price")
     public BigDecimal getRefundPrice() {
         return refundPrice;

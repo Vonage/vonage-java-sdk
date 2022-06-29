@@ -26,26 +26,44 @@ public class CarrierDetails {
     private String country;
     private NetworkType networkType;
 
+    /**
+     * @return The mobile country code for the carrier the number is associated with.
+     * Unreal numbers are marked as null and the request is rejected altogether if
+     * the number is impossible according to the E.164 guidelines.
+     */
     @JsonProperty("network_code")
     public String getNetworkCode() {
         return networkCode;
     }
 
+    /**
+     * @return The full name of the carrier that the number is associated with.
+     */
     @JsonProperty("name")
     public String getName() {
         return name;
     }
 
+    /**
+     * @return The country that the number is associated with. This is in ISO 3166-1 alpha-2 format.
+     */
     @JsonProperty("country")
     public String getCountry() {
         return country;
     }
 
+    /**
+     * @return The network type, as an enum.
+     */
     @JsonProperty("network_type")
     public NetworkType getNetworkType() {
         return networkType;
     }
 
+    /**
+     * Enum representing the type of network that the number is associated with.
+     * Note that this enum may be <code>null</code>.
+     */
     public enum NetworkType {
         MOBILE,
         LANDLINE,
@@ -57,7 +75,7 @@ public class CarrierDetails {
 
         @JsonCreator
         public static NetworkType fromString(String name) {
-            if (name == null || name.equalsIgnoreCase("null")) {
+            if (name.equalsIgnoreCase("null")) {
                 return null;
             }
             try {

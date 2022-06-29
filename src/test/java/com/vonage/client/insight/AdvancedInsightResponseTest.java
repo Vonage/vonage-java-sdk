@@ -228,7 +228,6 @@ public class AdvancedInsightResponseTest {
                 "    \"caller_type\": \"unknown\",\n" +
                 "    \"ported\": \"null\"\n," +
                 "    \"reachable\": \"null\",\n" +
-                "    \"valid_number\": \"null\",\n" +
                 "    \"real_time_data\": {\n" +
                 "       \"handset_status\": \"Off\"\n" +
                 "    }\n" +
@@ -269,7 +268,6 @@ public class AdvancedInsightResponseTest {
         assertNull(response.getPorted());
         assertNull(response.getRoaming());
         assertNull(response.getReachability());
-        assertNull(response.getValidNumber());
         assertEquals("Off", response.getRealTimeData().getHandsetStatus());
         assertNull(response.getRealTimeData().getActiveStatus());
     }

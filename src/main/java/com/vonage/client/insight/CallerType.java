@@ -17,6 +17,13 @@ package com.vonage.client.insight;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
+/**
+ * Represents the type of the number's owner as an enum.
+ * The value will be <code>BUSINESS</code> if the owner of a phone number is a business.
+ * If the owner is an individual the value will be <code>CONSUMER</code>.
+ * The value will be <code>UNKNOWN</code> if this information is not available.
+ * This parameter is only present if cnam had a value of <code>true</code> in the request.
+ */
 public enum CallerType {
     BUSINESS,
     CONSUMER,

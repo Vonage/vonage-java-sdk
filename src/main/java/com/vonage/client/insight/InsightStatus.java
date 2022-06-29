@@ -89,6 +89,9 @@ public enum InsightStatus {
                 .findAny().orElse(UNKNOWN);
     }
 
+    /**
+     * @return The status code used to create this enum.
+     */
     public int getInsightStatus() {
         return statusCode;
     }
