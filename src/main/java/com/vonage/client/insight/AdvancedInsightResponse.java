@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.vonage.client.VonageUnexpectedException;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * Response object constructed from the JSON payload returned for Advanced number insight requests.
@@ -35,7 +36,7 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
     private Validity validNumber;
     private Reachability reachability;
     private PortedStatus ported;
-    private Integer lookupOutcome;
+    private LookupOutcome lookupOutcome;
     private String lookupOutcomeMessage;
     private RoamingDetails roaming;
     private String callerName;
@@ -78,13 +79,10 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
     }
 
     /**
-     * @return Shows if all information about a phone number has been returned.
-     * <code>0</code> is success, <code>1</code> is a partial success (some fields populated),
-     * <code>2</code> is failure.
-     *
+     * @return The outcome, as an enum.
      */
     @JsonProperty("lookup_outcome")
-    public Integer getLookupOutcome() {
+    public LookupOutcome getLookupOutcome() {
         return lookupOutcome;
     }
 
@@ -146,6 +144,45 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
     @JsonProperty("real_time_data")
     public RealTimeData getRealTimeData() {
         return realTimeData;
+    }
+
+    /**
+     * Enum representing whether all information about a phone number has been returned.
+     *
+     * <code>0</code> is success,
+     * <code>1</code> is a partial success (some fields populated),
+     * <code>2</code> is failure.
+     */
+    public enum LookupOutcome {
+        UNKNOWN(Integer.MAX_VALUE),
+        SUCCESS(0),
+        PARTIAL_SUCCESS(1),
+        FAILED(2);
+
+        private int code;
+
+        LookupOutcome(int code) {
+            this.code = code;
+        }
+
+        /**
+         * @return The code used to create this enum.
+         */
+        public int getCode() {
+            return code;
+        }
+
+        @JsonCreator
+        public static LookupOutcome fromInt(Integer code) {
+            if (code == null) return null;
+            return Arrays.stream(LookupOutcome.values())
+                    .filter(lo -> lo.code == code)
+                    .findFirst().orElseGet(() -> {
+                        LookupOutcome wildcard = UNKNOWN;
+                        wildcard.code = code;
+                        return wildcard;
+                    });
+        }
     }
 
     /**

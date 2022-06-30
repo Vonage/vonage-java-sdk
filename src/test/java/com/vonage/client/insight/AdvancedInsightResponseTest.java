@@ -96,7 +96,8 @@ public class AdvancedInsightResponseTest {
         assertEquals(AdvancedInsightResponse.PortedStatus.ASSUMED_NOT_PORTED, response.getPorted());
         assertEquals(RoamingDetails.RoamingStatus.NOT_ROAMING, response.getRoaming().getStatus());
         assertEquals("not_roaming", response.getRoaming().getStatus().toString());
-        assertEquals(Integer.valueOf(1), response.getLookupOutcome());
+        assertEquals(AdvancedInsightResponse.LookupOutcome.PARTIAL_SUCCESS, response.getLookupOutcome());
+        assertEquals(1, response.getLookupOutcome().getCode());
         assertEquals("Partial success - some fields populated", response.getLookupOutcomeMessage());
 
         assertEquals("Bob", response.getFirstName());
@@ -113,8 +114,8 @@ public class AdvancedInsightResponseTest {
         AdvancedInsightResponse response = AdvancedInsightResponse.fromJson("{\n" +
                 "    \"status\": 0,\n" +
                 "    \"status_message\": \"Success\",\n" +
-                "    \"lookup_outcome\": 1,\n" +
-                "    \"lookup_outcome_message\": \"Partial success - some fields populated\",\n" +
+                "    \"lookup_outcome\": 0,\n" +
+                "    \"lookup_outcome_message\": \"Success\",\n" +
                 "    \"request_id\": \"0c082a69-85df-4bbc-aae6-ee998e17e5a4\",\n" +
                 "    \"international_format_number\": \"441632960960\",\n" +
                 "    \"national_format_number\": \"01632 960960\",\n" +
@@ -182,8 +183,9 @@ public class AdvancedInsightResponseTest {
         assertEquals("assumed_not_ported", response.getPorted().toString());
         assertEquals(RoamingDetails.RoamingStatus.UNKNOWN, response.getRoaming().getStatus());
         assertEquals("unknown", response.getRoaming().getStatus().toString());
-        assertEquals(Integer.valueOf(1), response.getLookupOutcome());
-        assertEquals("Partial success - some fields populated", response.getLookupOutcomeMessage());
+        assertEquals(AdvancedInsightResponse.LookupOutcome.SUCCESS, response.getLookupOutcome());
+        assertEquals(0, response.getLookupOutcome().getCode());
+        assertEquals("Success", response.getLookupOutcomeMessage());
 
         assertEquals("Bob", response.getFirstName());
         assertEquals("Atkey", response.getLastName());
@@ -199,8 +201,8 @@ public class AdvancedInsightResponseTest {
         AdvancedInsightResponse response = AdvancedInsightResponse.fromJson("{\n" +
                 "    \"status\": 0,\n" +
                 "    \"status_message\": \"Success\",\n" +
-                "    \"lookup_outcome\": 1,\n" +
-                "    \"lookup_outcome_message\": \"Partial success - some fields populated\",\n" +
+                "    \"lookup_outcome\": 2,\n" +
+                "    \"lookup_outcome_message\": \"Failure\",\n" +
                 "    \"request_id\": \"0c082a69-85df-4bbc-aae6-ee998e17e5a4\",\n" +
                 "    \"international_format_number\": \"441632960960\",\n" +
                 "    \"national_format_number\": \"01632 960960\",\n" +
@@ -258,8 +260,9 @@ public class AdvancedInsightResponseTest {
         assertEquals(new BigDecimal("18.30908949"), response.getRemainingBalance());
         assertEquals(new BigDecimal("0.03000000"), response.getRequestPrice());
 
-        assertEquals(Integer.valueOf(1), response.getLookupOutcome());
-        assertEquals("Partial success - some fields populated", response.getLookupOutcomeMessage());
+        assertEquals(AdvancedInsightResponse.LookupOutcome.FAILED, response.getLookupOutcome());
+        assertEquals(2, response.getLookupOutcome().getCode());
+        assertEquals("Failure", response.getLookupOutcomeMessage());
 
         assertEquals("Bob", response.getFirstName());
         assertEquals("Atkey", response.getLastName());
@@ -306,6 +309,7 @@ public class AdvancedInsightResponseTest {
         assertEquals(CarrierDetails.NetworkType.UNKNOWN, response.getOriginalCarrier().getNetworkType());
         assertNull(response.getRealTimeData().getActiveStatus());
         assertEquals("unknown", response.getRealTimeData().getHandsetStatus());
+        assertNull(response.getLookupOutcome());
     }
 
     @Test
@@ -355,7 +359,18 @@ public class AdvancedInsightResponseTest {
     }
 
     @Test
-    public void fromBusyJson() throws Exception {
+    public void testUnknownLookupOutcome() {
+        AdvancedInsightResponse response = AdvancedInsightResponse.fromJson("{\n" +
+                "  \"lookup_outcome\": 3,\n" +
+                "  \"lookup_outcome_message\": \"??\"\n" +
+                "}");
+
+        assertEquals(AdvancedInsightResponse.LookupOutcome.UNKNOWN, response.getLookupOutcome());
+        assertEquals(3, response.getLookupOutcome().getCode());
+    }
+
+    @Test
+    public void testFromBusyJson() throws Exception {
         AdvancedInsightResponse response = AdvancedInsightResponse.fromJson(
                 "{\n" +
                         "    \"status\": 1,\n" +
@@ -370,7 +385,7 @@ public class AdvancedInsightResponseTest {
     }
 
     @Test
-    public void fromErrorJson() throws Exception {
+    public void testFromErrorJson() throws Exception {
         AdvancedInsightResponse response = AdvancedInsightResponse.fromJson(
                 "{\n" +
                         "    \"status\": 3,\n" +
