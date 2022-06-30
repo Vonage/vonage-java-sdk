@@ -23,12 +23,13 @@ import java.math.BigDecimal;
 import static org.junit.Assert.*;
 
 public class StandardInsightResponseTest {
+
     @Test
     public void testFromJson() throws Exception {
         StandardInsightResponse response = StandardInsightResponse.fromJson(
                 "{\n" +
-                "    \"status\": 0,\n" +
-                "    \"status_message\": \"Success\",\n" +
+                "    \"status\": 43,\n" +
+                "    \"status_message\": \"Lookup not returned\",\n" +
                 "    \"request_id\": \"34564b7d-df8b-47fd-aa07-b722602dd974\",\n" +
                 "    \"international_format_number\": \"441632960960\",\n" +
                 "    \"national_format_number\": \"01632 960960\",\n" +
@@ -59,9 +60,9 @@ public class StandardInsightResponseTest {
                 "    }\n" +
                 "}");
 
-        assertEquals(InsightStatus.SUCCESS, response.getStatus());
-        assertEquals(0, response.getStatus().getInsightStatus());
-        assertEquals("Success", response.getStatusMessage());
+        assertEquals(InsightStatus.LOOKUP_NOT_RETURNED, response.getStatus());
+        assertEquals(43, response.getStatus().getInsightStatus());
+        assertEquals("Lookup not returned", response.getStatusMessage());
         assertEquals("34564b7d-df8b-47fd-aa07-b722602dd974", response.getRequestId());
         assertEquals("441632960960", response.getInternationalFormatNumber());
         assertEquals("01632 960960", response.getNationalFormatNumber());
@@ -94,21 +95,19 @@ public class StandardInsightResponseTest {
     }
 
     @Test
-    public void testFromBusyJson() throws Exception {
-        StandardInsightResponse response = StandardInsightResponse.fromJson(
-                "{\n" + "    \"status\": 1,\n" + "    \"status_message\": \"Back off\",\n"
-                        + "    \"request_id\": \"d79c3d82-e2ee-46ff-972a-97b76be419cb\"\n" + "}");
+    public void testFromJsonUnknownInsightStatus() {
+        StandardInsightResponse response = StandardInsightResponse.fromJson("{\n" +
+                "    \"status\": 2147,\n" +
+                "    \"status_message\": \"Lookup not returned\"\n" +
+                "}");
 
-        assertEquals(InsightStatus.THROTTLED, response.getStatus());
-        assertEquals(1, response.getStatus().getInsightStatus());
-        assertEquals("Back off", response.getStatusMessage());
-        assertEquals("d79c3d82-e2ee-46ff-972a-97b76be419cb", response.getRequestId());
+        assertEquals(InsightStatus.UNKNOWN, response.getStatus());
+        assertEquals(2147, response.getStatus().getInsightStatus());
     }
 
     @Test
     public void testFromJsonNullNetworkType() throws Exception {
-        StandardInsightResponse response = StandardInsightResponse.fromJson(
-                "{\n" +
+        StandardInsightResponse response = StandardInsightResponse.fromJson("{\n" +
                 "    \"status\": 45,\n" +
                 "    \"status_message\": \"Lookup not returned\",\n" +
                 "    \"request_id\": \"d79c3d82-e2ee-46ff-972a-97b76be419cb\",\n" +
@@ -118,12 +117,23 @@ public class StandardInsightResponseTest {
                 "        \"country\": \"GB\",\n" +
                 "        \"network_type\": \"null\"\n" +
                 "    }\n" +
-                "}"
-        );
+                "}");
 
         assertNull(response.getCurrentCarrier().getNetworkType());
-        assertEquals(InsightStatus.LOOKUP_NOT_RETURNED_45, response.getStatus());
+        assertEquals(InsightStatus.LOOKUP_NOT_RETURNED, response.getStatus());
         assertEquals(45, response.getStatus().getInsightStatus());
+    }
+
+    @Test
+    public void testFromBusyJson() throws Exception {
+        StandardInsightResponse response = StandardInsightResponse.fromJson(
+                "{\n" + "    \"status\": 1,\n" + "    \"status_message\": \"Back off\",\n"
+                        + "    \"request_id\": \"d79c3d82-e2ee-46ff-972a-97b76be419cb\"\n" + "}");
+
+        assertEquals(InsightStatus.THROTTLED, response.getStatus());
+        assertEquals(1, response.getStatus().getInsightStatus());
+        assertEquals("Back off", response.getStatusMessage());
+        assertEquals("d79c3d82-e2ee-46ff-972a-97b76be419cb", response.getRequestId());
     }
 
     @Test

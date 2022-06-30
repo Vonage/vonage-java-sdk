@@ -50,16 +50,9 @@ public enum InsightStatus {
     FACILITY_NOT_ALLOWED(19),
     /**
      * Live mobile lookup not returned. Not all return parameters are available.
+     * Possible values are 43, 44 and 45.
      */
-    LOOKUP_NOT_RETURNED_43(43),
-    /**
-     * Live mobile lookup not returned. Not all return parameters are available.
-     */
-    LOOKUP_NOT_RETURNED_44(44),
-    /**
-     * Live mobile lookup not returned. Not all return parameters are available.
-     */
-    LOOKUP_NOT_RETURNED_45(45),
+    LOOKUP_NOT_RETURNED(43),
     /**
      * Request unparseable.
      */
@@ -69,7 +62,7 @@ public enum InsightStatus {
      */
     UNKNOWN(Integer.MAX_VALUE);
 
-    private final int statusCode;
+    private int statusCode;
 
     InsightStatus(int statusCode) {
         this.statusCode = statusCode;
@@ -78,15 +71,23 @@ public enum InsightStatus {
     /**
      * Look up the {@link InsightStatus} based on the int value.
      *
-     * @param insightStatus the int value of the insight status.
-     *
+     * @param insightStatus the integer value of the insight status.
      * @return InsightStatus based on the int value given.
      */
     @JsonCreator
     public static InsightStatus fromInt(int insightStatus) {
+        if (insightStatus >= 43 && insightStatus <= 45) {
+            InsightStatus lnr = InsightStatus.LOOKUP_NOT_RETURNED;
+            lnr.statusCode = insightStatus;
+            return lnr;
+        }
         return Arrays.stream(InsightStatus.values())
                 .filter(status -> status.statusCode == insightStatus)
-                .findAny().orElse(UNKNOWN);
+                .findAny().orElseGet(() -> {
+                    InsightStatus wildcard = UNKNOWN;
+                    wildcard.statusCode = insightStatus;
+                    return wildcard;
+                });
     }
 
     /**
