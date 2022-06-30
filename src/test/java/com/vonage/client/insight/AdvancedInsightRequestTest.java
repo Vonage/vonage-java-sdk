@@ -82,7 +82,7 @@ public class AdvancedInsightRequestTest {
     }
 
     @Test
-    public void testBuildWithAllFields() throws Exception {
+    public void testBuildWithAllFields() {
         AdvancedInsightRequest request = AdvancedInsightRequest.builder("12345")
                 .country("GB")
                 .ipAddress("123.123.123.123")

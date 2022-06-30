@@ -23,14 +23,14 @@ import static org.junit.Assert.assertNull;
 public class BasicInsightRequestTest {
 
     @Test
-    public void testWithNumber() throws Exception {
+    public void testWithNumber() {
         BasicInsightRequest request = BasicInsightRequest.withNumber("12345");
         assertEquals(request.getNumber(), "12345");
         assertNull(request.getCountry());
     }
 
     @Test
-    public void testWithNumberAndCountry() throws Exception {
+    public void testWithNumberAndCountry() {
         BasicInsightRequest request = BasicInsightRequest.withNumberAndCountry("12345", "GB");
         assertEquals(request.getNumber(), "12345");
         assertEquals(request.getCountry(), "GB");
@@ -57,7 +57,7 @@ public class BasicInsightRequestTest {
     }
 
     @Test
-    public void testBuildWithAllFields() throws Exception {
+    public void testBuildWithAllFields() {
         BasicInsightRequest request = BasicInsightRequest.builder("12345").country("GB").build();
         assertEquals(request.getNumber(), "12345");
         assertEquals(request.getCountry(), "GB");

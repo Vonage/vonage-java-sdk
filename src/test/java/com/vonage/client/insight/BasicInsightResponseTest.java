@@ -19,11 +19,10 @@ import com.vonage.client.VonageUnexpectedException;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class BasicInsightResponseTest {
     @Test
-    public void fromJson() throws Exception {
+    public void fromJson() {
         BasicInsightResponse response = BasicInsightResponse.fromJson("{\n" +
                 "    \"status\": 0,\n" +
                 "    \"status_message\": \"Success\",\n" +
@@ -48,7 +47,7 @@ public class BasicInsightResponseTest {
     }
 
     @Test
-    public void fromBusyJson() throws Exception {
+    public void fromBusyJson() {
         BasicInsightResponse response = BasicInsightResponse.fromJson(
                 "{\n" +
                         "    \"status\": 1,\n" +
@@ -63,7 +62,7 @@ public class BasicInsightResponseTest {
     }
 
     @Test
-    public void fromErrorJson() throws Exception {
+    public void fromErrorJson() {
         BasicInsightResponse response = BasicInsightResponse.fromJson(
                 "{\n" +
                         "    \"status\": 3,\n" +
@@ -77,13 +76,8 @@ public class BasicInsightResponseTest {
         assertEquals("d79c3d82-e2ee-46ff-972a-97b76be419cb", response.getRequestId());
     }
 
-    @Test
-    public void testJsonError() throws Exception {
-        try {
-            BasicInsightResponse.fromJson("blarg");
-            fail("Deserializing nonsense JSON should result in a VonageUnexpectedException");
-        } catch (VonageUnexpectedException nue) {
-            // This is expected
-        }
+    @Test(expected = VonageUnexpectedException.class)
+    public void testJsonError() {
+        BasicInsightResponse.fromJson("blarg");
     }
 }

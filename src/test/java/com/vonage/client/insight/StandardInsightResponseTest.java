@@ -25,7 +25,7 @@ import static org.junit.Assert.*;
 public class StandardInsightResponseTest {
 
     @Test
-    public void testFromJson() throws Exception {
+    public void testFromJson() {
         StandardInsightResponse response = StandardInsightResponse.fromJson(
                 "{\n" +
                 "    \"status\": 43,\n" +
@@ -106,7 +106,7 @@ public class StandardInsightResponseTest {
     }
 
     @Test
-    public void testFromJsonNullNetworkType() throws Exception {
+    public void testFromJsonNullNetworkType() {
         StandardInsightResponse response = StandardInsightResponse.fromJson("{\n" +
                 "    \"status\": 45,\n" +
                 "    \"status_message\": \"Lookup not returned\",\n" +
@@ -125,7 +125,7 @@ public class StandardInsightResponseTest {
     }
 
     @Test
-    public void testFromBusyJson() throws Exception {
+    public void testFromBusyJson() {
         StandardInsightResponse response = StandardInsightResponse.fromJson(
                 "{\n" + "    \"status\": 1,\n" + "    \"status_message\": \"Back off\",\n"
                         + "    \"request_id\": \"d79c3d82-e2ee-46ff-972a-97b76be419cb\"\n" + "}");
@@ -137,7 +137,7 @@ public class StandardInsightResponseTest {
     }
 
     @Test
-    public void testFromErrorJson() throws Exception {
+    public void testFromErrorJson() {
         StandardInsightResponse response = StandardInsightResponse.fromJson(
                 "{\n" + "    \"status\": 3,\n" + "    \"error_text\": \"I'm not sure what you mean\",\n"
                         + "    \"request_id\": \"d79c3d82-e2ee-46ff-972a-97b76be419cb\"\n" + "}");
@@ -147,13 +147,8 @@ public class StandardInsightResponseTest {
         assertEquals("d79c3d82-e2ee-46ff-972a-97b76be419cb", response.getRequestId());
     }
 
-    @Test
-    public void testJsonError() throws Exception {
-        try {
-            StandardInsightResponse.fromJson("blarg");
-            fail("Deserializing nonsense JSON should result in a VonageUnexpectedException");
-        } catch (VonageUnexpectedException nue) {
-            // This is expected
-        }
+    @Test(expected = VonageUnexpectedException.class)
+    public void testJsonError() {
+        StandardInsightResponse.fromJson("blarg");
     }
 }

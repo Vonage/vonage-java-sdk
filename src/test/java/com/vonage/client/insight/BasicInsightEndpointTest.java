@@ -39,7 +39,7 @@ public class BasicInsightEndpointTest {
     }
 
     @Test
-    public void testGetAcceptableAuthMethods() throws Exception {
+    public void testGetAcceptableAuthMethods() {
         Class<?>[] auths = endpoint.getAcceptableAuthMethods();
         assertArrayEquals(new Class<?>[]{SignatureAuthMethod.class, TokenAuthMethod.class}, auths);
     }

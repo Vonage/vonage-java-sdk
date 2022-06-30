@@ -20,12 +20,13 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class AdvancedInsightResponseTest {
 
     @Test
-    public void testFromJson() throws Exception {
+    public void testFromJson() {
         AdvancedInsightResponse response = AdvancedInsightResponse.fromJson("{\n" +
                 "    \"status\": 0,\n" +
                 "    \"status_message\": \"Success\",\n" +
@@ -110,7 +111,7 @@ public class AdvancedInsightResponseTest {
     }
 
     @Test
-    public void testFromJsonUnknownRoaming() throws Exception {
+    public void testFromJsonUnknownRoaming() {
         AdvancedInsightResponse response = AdvancedInsightResponse.fromJson("{\n" +
                 "    \"status\": 0,\n" +
                 "    \"status_message\": \"Success\",\n" +
@@ -197,7 +198,7 @@ public class AdvancedInsightResponseTest {
     }
 
     @Test
-    public void testFromJsonWithNullableEnums() throws Exception {
+    public void testFromJsonWithNullableEnums() {
         AdvancedInsightResponse response = AdvancedInsightResponse.fromJson("{\n" +
                 "    \"status\": 0,\n" +
                 "    \"status_message\": \"Success\",\n" +
@@ -276,7 +277,7 @@ public class AdvancedInsightResponseTest {
     }
 
     @Test
-    public void testDeserializeUnknownEnumsFallbackToUnknown() throws Exception {
+    public void testDeserializeUnknownEnumsFallbackToUnknown() {
         AdvancedInsightResponse response = AdvancedInsightResponse.fromJson(
                 "{\n" +
                 "    \"valid_number\": \"failed_validity\",\n" +
@@ -313,7 +314,7 @@ public class AdvancedInsightResponseTest {
     }
 
     @Test
-    public void testRoamingDeserialization() throws Exception {
+    public void testRoamingDeserialization() {
         AdvancedInsightResponse response = AdvancedInsightResponse.fromJson("{\n" +
                 "  \"status\": 0,\n" +
                 "  \"status_message\": \"Success\",\n" +
@@ -370,7 +371,7 @@ public class AdvancedInsightResponseTest {
     }
 
     @Test
-    public void testFromBusyJson() throws Exception {
+    public void testFromBusyJson() {
         AdvancedInsightResponse response = AdvancedInsightResponse.fromJson(
                 "{\n" +
                         "    \"status\": 1,\n" +
@@ -385,7 +386,7 @@ public class AdvancedInsightResponseTest {
     }
 
     @Test
-    public void testFromErrorJson() throws Exception {
+    public void testFromErrorJson() {
         AdvancedInsightResponse response = AdvancedInsightResponse.fromJson(
                 "{\n" +
                         "    \"status\": 3,\n" +
@@ -399,14 +400,9 @@ public class AdvancedInsightResponseTest {
         assertEquals("d79c3d82-e2ee-46ff-972a-97b76be419cb", response.getRequestId());
     }
 
-    @Test
-    public void testJsonError() throws Exception {
-        try {
-            AdvancedInsightResponse.fromJson("blarg");
-            fail("Deserializing nonsense JSON should result in a VonageUnexpectedException");
-        } catch (VonageUnexpectedException nue) {
-            // This is expected
-        }
+    @Test(expected = VonageUnexpectedException.class)
+    public void testJsonError() {
+        AdvancedInsightResponse.fromJson("blarg");
     }
 
 }
