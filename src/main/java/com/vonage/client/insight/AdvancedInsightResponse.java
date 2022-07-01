@@ -15,18 +15,12 @@
  */
 package com.vonage.client.insight;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.vonage.client.VonageUnexpectedException;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * Response object constructed from the JSON payload returned for Advanced number insight requests.
@@ -97,138 +91,4 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
         return realTimeData;
     }
 
-    /**
-     * Enum representing whether all information about a phone number has been returned.
-     *
-     * <code>0</code> is success,
-     * <code>1</code> is a partial success (some fields populated),
-     * <code>2</code> is failure.
-     */
-    public enum LookupOutcome {
-        UNKNOWN(Integer.MAX_VALUE),
-        SUCCESS(0),
-        PARTIAL_SUCCESS(1),
-        FAILED(2);
-
-        private int code;
-
-        LookupOutcome(int code) {
-            this.code = code;
-        }
-
-        /**
-         * @return The code used to create this enum.
-         */
-        public int getCode() {
-            return code;
-        }
-
-        @JsonCreator
-        public static LookupOutcome fromInt(Integer code) {
-            if (code == null) return null;
-            return Arrays.stream(LookupOutcome.values())
-                    .filter(lo -> lo.code == code)
-                    .findFirst().orElseGet(() -> {
-                        LookupOutcome wildcard = UNKNOWN;
-                        wildcard.code = code;
-                        return wildcard;
-                    });
-        }
-    }
-
-    /**
-     * Enum representing the existence of a number.
-     * <code>UNKNOWN</code> means the number could not be validated. valid means the number is valid.
-     * <code>NOT_VALID</code> means the number is not valid.
-     * <code>INFERRED_NOT_VALID</code> means that the number could not be determined as valid or invalid
-     * via an external system and the best guess is that the number is invalid.
-     * This is applicable to mobile numbers only.
-     */
-    public enum Validity {
-        UNKNOWN, VALID, NOT_VALID, INFERRED, INFERRED_NOT_VALID;
-
-        @JsonCreator
-        public static Validity fromString(String name) {
-            try {
-                return Validity.valueOf(name.toUpperCase());
-            }
-            catch (IllegalArgumentException ex) {
-                return UNKNOWN;
-            }
-        }
-
-        @Override
-        public String toString() {
-            return name().toLowerCase();
-        }
-    }
-
-    /**
-     * Enum representing whether you can call number now. This is applicable to mobile numbers only.
-     * Note that this enum may be <code>null</code>.
-     */
-    public enum Reachability {
-        UNKNOWN, REACHABLE, UNDELIVERABLE, ABSENT, BAD_NUMBER, BLACKLISTED;
-
-        @JsonCreator
-        public static Reachability fromString(String name) {
-            if (name.equalsIgnoreCase("null")) {
-                return null;
-            }
-            try {
-                return Reachability.valueOf(name.toUpperCase());
-            }
-            catch (IllegalArgumentException ex) {
-                return UNKNOWN;
-            }
-        }
-
-        @Override
-        public String toString() {
-            return name().toLowerCase();
-        }
-    }
-
-    /**
-     * Real time data about the number.
-     */
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class RealTimeData {
-
-        static class ActiveStatusDeserializer extends JsonDeserializer<Boolean> {
-            @Override
-            public Boolean deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-                String text = p.getText();
-                if (text == null) return null;
-                switch (text.toLowerCase()) {
-                    default: return null;
-                    case "true": case "active":
-                        return true;
-                    case "false": case "inactive":
-                        return false;
-                }
-            }
-        }
-
-        @JsonDeserialize(using = ActiveStatusDeserializer.class)
-        protected Boolean activeStatus;
-        protected String handsetStatus;
-
-        /**
-         * @return Whether the end-user's phone number is active within an operator's network.
-         * Note that this could be <code>null</code>.
-         */
-        @JsonProperty("active_status")
-        public Boolean getActiveStatus() {
-            return activeStatus;
-        }
-
-        /**
-         * @return Whether the end-user's handset is turned on or off.
-         */
-        @JsonProperty("handset_status")
-        public String getHandsetStatus() {
-            return handsetStatus;
-        }
-    }
 }

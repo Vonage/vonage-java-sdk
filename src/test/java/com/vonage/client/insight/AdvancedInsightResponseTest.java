@@ -89,12 +89,12 @@ public class AdvancedInsightResponseTest {
         assertEquals(CarrierDetails.NetworkType.MOBILE, response.getOriginalCarrier().getNetworkType());
         assertEquals(new BigDecimal("18.30908949"), response.getRemainingBalance());
         assertEquals(new BigDecimal("0.03000000"), response.getRequestPrice());
-        assertEquals(AdvancedInsightResponse.Validity.VALID, response.getValidNumber());
-        assertEquals(AdvancedInsightResponse.Reachability.REACHABLE, response.getReachability());
+        assertEquals(Validity.VALID, response.getValidNumber());
+        assertEquals(Reachability.REACHABLE, response.getReachability());
         assertEquals(PortedStatus.ASSUMED_NOT_PORTED, response.getPorted());
         assertEquals(RoamingDetails.RoamingStatus.NOT_ROAMING, response.getRoaming().getStatus());
         assertEquals("not_roaming", response.getRoaming().getStatus().toString());
-        assertEquals(AdvancedInsightResponse.LookupOutcome.PARTIAL_SUCCESS, response.getLookupOutcome());
+        assertEquals(LookupOutcome.PARTIAL_SUCCESS, response.getLookupOutcome());
         assertEquals(1, response.getLookupOutcome().getCode());
         assertEquals("Partial success - some fields populated", response.getLookupOutcomeMessage());
         assertEquals("Bob", response.getFirstName());
@@ -168,15 +168,15 @@ public class AdvancedInsightResponseTest {
         assertEquals(CarrierDetails.NetworkType.MOBILE, response.getOriginalCarrier().getNetworkType());
         assertEquals(new BigDecimal("18.30908949"), response.getRemainingBalance());
         assertEquals(new BigDecimal("0.03000000"), response.getRequestPrice());
-        assertEquals(AdvancedInsightResponse.Validity.VALID, response.getValidNumber());
+        assertEquals(Validity.VALID, response.getValidNumber());
         assertEquals("valid", response.getValidNumber().toString());
-        assertEquals(AdvancedInsightResponse.Reachability.UNKNOWN, response.getReachability());
+        assertEquals(Reachability.UNKNOWN, response.getReachability());
         assertEquals("unknown", response.getReachability().toString());
         assertEquals(PortedStatus.ASSUMED_NOT_PORTED, response.getPorted());
         assertEquals("assumed_not_ported", response.getPorted().toString());
         assertEquals(RoamingDetails.RoamingStatus.UNKNOWN, response.getRoaming().getStatus());
         assertEquals("unknown", response.getRoaming().getStatus().toString());
-        assertEquals(AdvancedInsightResponse.LookupOutcome.SUCCESS, response.getLookupOutcome());
+        assertEquals(LookupOutcome.SUCCESS, response.getLookupOutcome());
         assertEquals(0, response.getLookupOutcome().getCode());
         assertEquals("Success", response.getLookupOutcomeMessage());
         assertEquals("Bob", response.getFirstName());
@@ -249,7 +249,7 @@ public class AdvancedInsightResponseTest {
         assertEquals(CarrierDetails.NetworkType.MOBILE, response.getOriginalCarrier().getNetworkType());
         assertEquals(new BigDecimal("18.30908949"), response.getRemainingBalance());
         assertEquals(new BigDecimal("0.03000000"), response.getRequestPrice());
-        assertEquals(AdvancedInsightResponse.LookupOutcome.FAILED, response.getLookupOutcome());
+        assertEquals(LookupOutcome.FAILED, response.getLookupOutcome());
         assertEquals(2, response.getLookupOutcome().getCode());
         assertEquals("Failure", response.getLookupOutcomeMessage());
         assertEquals("Bob", response.getFirstName());
@@ -289,8 +289,8 @@ public class AdvancedInsightResponseTest {
                 "}"
         );
 
-        assertEquals(AdvancedInsightResponse.Validity.UNKNOWN, response.getValidNumber());
-        assertEquals(AdvancedInsightResponse.Reachability.UNKNOWN, response.getReachability());
+        assertEquals(Validity.UNKNOWN, response.getValidNumber());
+        assertEquals(Reachability.UNKNOWN, response.getReachability());
         assertEquals(PortedStatus.UNKNOWN, response.getPorted());
         assertEquals(RoamingDetails.RoamingStatus.UNKNOWN, response.getRoaming().getStatus());
         assertNull(response.getCurrentCarrier());
@@ -353,7 +353,7 @@ public class AdvancedInsightResponseTest {
                 "  \"lookup_outcome_message\": \"??\"\n" +
                 "}");
 
-        assertEquals(AdvancedInsightResponse.LookupOutcome.UNKNOWN, response.getLookupOutcome());
+        assertEquals(LookupOutcome.UNKNOWN, response.getLookupOutcome());
         assertEquals(3, response.getLookupOutcome().getCode());
     }
 
