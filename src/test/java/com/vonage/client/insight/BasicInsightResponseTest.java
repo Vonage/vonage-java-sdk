@@ -21,6 +21,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class BasicInsightResponseTest {
+
     @Test
     public void fromJson() {
         BasicInsightResponse response = BasicInsightResponse.fromJson("{\n" +
@@ -48,13 +49,11 @@ public class BasicInsightResponseTest {
 
     @Test
     public void fromBusyJson() {
-        BasicInsightResponse response = BasicInsightResponse.fromJson(
-                "{\n" +
-                        "    \"status\": 1,\n" +
-                        "    \"status_message\": \"Back off\",\n" +
-                        "    \"request_id\": \"d79c3d82-e2ee-46ff-972a-97b76be419cb\"\n" +
-                        "}"
-        );
+        BasicInsightResponse response = BasicInsightResponse.fromJson("{\n" +
+            "    \"status\": 1,\n" +
+            "    \"status_message\": \"Back off\",\n" +
+            "    \"request_id\": \"d79c3d82-e2ee-46ff-972a-97b76be419cb\"\n" +
+            "}");
 
         assertEquals(InsightStatus.THROTTLED, response.getStatus());
         assertEquals("Back off", response.getStatusMessage());
@@ -63,13 +62,11 @@ public class BasicInsightResponseTest {
 
     @Test
     public void fromErrorJson() {
-        BasicInsightResponse response = BasicInsightResponse.fromJson(
-                "{\n" +
-                        "    \"status\": 3,\n" +
-                        "    \"error_text\": \"I'm not sure what you mean\",\n" +
-                        "    \"request_id\": \"d79c3d82-e2ee-46ff-972a-97b76be419cb\"\n" +
-                        "}"
-        );
+        BasicInsightResponse response = BasicInsightResponse.fromJson("{\n" +
+                "    \"status\": 3,\n" +
+                "    \"error_text\": \"I'm not sure what you mean\",\n" +
+                "    \"request_id\": \"d79c3d82-e2ee-46ff-972a-97b76be419cb\"\n" +
+                "}");
 
         assertEquals(InsightStatus.INVALID_PARAMS, response.getStatus());
         assertEquals("I'm not sure what you mean", response.getErrorText());

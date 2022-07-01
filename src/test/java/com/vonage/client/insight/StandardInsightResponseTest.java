@@ -79,6 +79,7 @@ public class StandardInsightResponseTest {
         assertEquals(CarrierDetails.NetworkType.LANDLINE, response.getCurrentCarrier().getNetworkType());
         assertEquals("landline", response.getCurrentCarrier().getNetworkType().toString());
         assertEquals(PortedStatus.ASSUMED_NOT_PORTED, response.getPorted());
+        assertEquals("assumed_not_ported", response.getPorted().toString());
         assertEquals("GB-HAPPY-RESERVED", response.getOriginalCarrier().getNetworkCode());
         assertEquals("United Kingdom Mobile Reserved", response.getOriginalCarrier().getName());
         assertEquals("GB", response.getOriginalCarrier().getCountry());
