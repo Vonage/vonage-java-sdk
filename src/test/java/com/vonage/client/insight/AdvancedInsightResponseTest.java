@@ -64,7 +64,8 @@ public class AdvancedInsightResponseTest {
                 "    \"real_time_data\": {\n" +
                 "       \"active_status\": \"active\",\n" +
                 "       \"handset_status\": \"On\"\n" +
-                "    }\n" +
+                "    }," +
+                "    \"error_text\": \"Success\"\n" +
                 "}");
 
         assertEquals(InsightStatus.SUCCESS, response.getStatus());
@@ -105,6 +106,7 @@ public class AdvancedInsightResponseTest {
         assertEquals(CallerType.UNKNOWN, response.getCallerType());
         assertEquals("On", response.getRealTimeData().getHandsetStatus());
         assertEquals(true, response.getRealTimeData().getActiveStatus());
+        assertEquals("Success", response.getErrorText());
     }
 
     @Test

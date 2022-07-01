@@ -61,15 +61,12 @@ public class BasicInsightResponseTest {
     }
 
     @Test
-    public void fromErrorJson() {
-        BasicInsightResponse response = BasicInsightResponse.fromJson("{\n" +
-                "    \"status\": 3,\n" +
-                "    \"error_text\": \"I'm not sure what you mean\",\n" +
-                "    \"request_id\": \"d79c3d82-e2ee-46ff-972a-97b76be419cb\"\n" +
-                "}");
+    public void testFromUnknownFieldJson() {
+        StandardInsightResponse response = StandardInsightResponse.fromJson(
+                "{\n" + "    \"status\": 3,\n" + "    \"error_text\": \"I'm not sure what you mean\",\n"
+                    + "    \"request_id\": \"d79c3d82-e2ee-46ff-972a-97b76be419cb\"\n" + "}");
 
         assertEquals(InsightStatus.INVALID_PARAMS, response.getStatus());
-        assertEquals("I'm not sure what you mean", response.getErrorText());
         assertEquals("d79c3d82-e2ee-46ff-972a-97b76be419cb", response.getRequestId());
     }
 

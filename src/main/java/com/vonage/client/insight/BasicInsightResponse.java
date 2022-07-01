@@ -29,7 +29,6 @@ import java.io.IOException;
 public class BasicInsightResponse {
     private InsightStatus status;
     private String statusMessage;
-    private String errorText;
     private String requestId;
     private String internationalFormatNumber;
     private String nationalFormatNumber;
@@ -61,16 +60,6 @@ public class BasicInsightResponse {
     @JsonProperty("status_message")
     public String getStatusMessage() {
         return statusMessage;
-    }
-
-    /**
-     * This field is equivalent to status_message field in the other endpoints.
-     *
-     * @return The status description of your request.
-     */
-    @JsonProperty("error_text")
-    public String getErrorText() {
-        return errorText;
     }
 
     /**

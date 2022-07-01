@@ -33,6 +33,7 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
     private String lookupOutcomeMessage;
     private RoamingDetails roaming;
     private RealTimeData realTimeData;
+    private String errorText;
 
     public static AdvancedInsightResponse fromJson(String json) {
         try {
@@ -91,4 +92,12 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
         return realTimeData;
     }
 
+    /**
+     * @return The status description of your request.
+     * This field is equivalent to status_message field in the other endpoints.
+     */
+    @JsonProperty("error_text")
+    public String getErrorText() {
+        return errorText;
+    }
 }
