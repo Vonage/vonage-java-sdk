@@ -83,29 +83,24 @@ public class AdvancedInsightResponseTest {
         assertEquals("United Kingdom Landline Reserved", response.getCurrentCarrier().getName());
         assertEquals("GB", response.getCurrentCarrier().getCountry());
         assertEquals(CarrierDetails.NetworkType.LANDLINE, response.getCurrentCarrier().getNetworkType());
-
         assertEquals("GB-HAPPY-RESERVED", response.getOriginalCarrier().getNetworkCode());
         assertEquals("United Kingdom Mobile Reserved", response.getOriginalCarrier().getName());
         assertEquals("GB", response.getOriginalCarrier().getCountry());
         assertEquals(CarrierDetails.NetworkType.MOBILE, response.getOriginalCarrier().getNetworkType());
-
         assertEquals(new BigDecimal("18.30908949"), response.getRemainingBalance());
         assertEquals(new BigDecimal("0.03000000"), response.getRequestPrice());
-
         assertEquals(AdvancedInsightResponse.Validity.VALID, response.getValidNumber());
         assertEquals(AdvancedInsightResponse.Reachability.REACHABLE, response.getReachability());
-        assertEquals(AdvancedInsightResponse.PortedStatus.ASSUMED_NOT_PORTED, response.getPorted());
+        assertEquals(PortedStatus.ASSUMED_NOT_PORTED, response.getPorted());
         assertEquals(RoamingDetails.RoamingStatus.NOT_ROAMING, response.getRoaming().getStatus());
         assertEquals("not_roaming", response.getRoaming().getStatus().toString());
         assertEquals(AdvancedInsightResponse.LookupOutcome.PARTIAL_SUCCESS, response.getLookupOutcome());
         assertEquals(1, response.getLookupOutcome().getCode());
         assertEquals("Partial success - some fields populated", response.getLookupOutcomeMessage());
-
         assertEquals("Bob", response.getFirstName());
         assertEquals("Atkey", response.getLastName());
         assertEquals("Monads, Incorporated", response.getCallerName());
         assertEquals(CallerType.UNKNOWN, response.getCallerType());
-
         assertEquals("On", response.getRealTimeData().getHandsetStatus());
         assertEquals(true, response.getRealTimeData().getActiveStatus());
     }
@@ -167,27 +162,23 @@ public class AdvancedInsightResponseTest {
         assertEquals("United Kingdom Landline Reserved", response.getCurrentCarrier().getName());
         assertEquals("GB", response.getCurrentCarrier().getCountry());
         assertEquals(CarrierDetails.NetworkType.LANDLINE, response.getCurrentCarrier().getNetworkType());
-
         assertEquals("GB-HAPPY-RESERVED", response.getOriginalCarrier().getNetworkCode());
         assertEquals("United Kingdom Mobile Reserved", response.getOriginalCarrier().getName());
         assertEquals("GB", response.getOriginalCarrier().getCountry());
         assertEquals(CarrierDetails.NetworkType.MOBILE, response.getOriginalCarrier().getNetworkType());
-
         assertEquals(new BigDecimal("18.30908949"), response.getRemainingBalance());
         assertEquals(new BigDecimal("0.03000000"), response.getRequestPrice());
-
         assertEquals(AdvancedInsightResponse.Validity.VALID, response.getValidNumber());
         assertEquals("valid", response.getValidNumber().toString());
         assertEquals(AdvancedInsightResponse.Reachability.UNKNOWN, response.getReachability());
         assertEquals("unknown", response.getReachability().toString());
-        assertEquals(AdvancedInsightResponse.PortedStatus.ASSUMED_NOT_PORTED, response.getPorted());
+        assertEquals(PortedStatus.ASSUMED_NOT_PORTED, response.getPorted());
         assertEquals("assumed_not_ported", response.getPorted().toString());
         assertEquals(RoamingDetails.RoamingStatus.UNKNOWN, response.getRoaming().getStatus());
         assertEquals("unknown", response.getRoaming().getStatus().toString());
         assertEquals(AdvancedInsightResponse.LookupOutcome.SUCCESS, response.getLookupOutcome());
         assertEquals(0, response.getLookupOutcome().getCode());
         assertEquals("Success", response.getLookupOutcomeMessage());
-
         assertEquals("Bob", response.getFirstName());
         assertEquals("Atkey", response.getLastName());
         assertEquals("Monads, Incorporated", response.getCallerName());
@@ -252,19 +243,15 @@ public class AdvancedInsightResponseTest {
         assertEquals("United Kingdom Landline Reserved", response.getCurrentCarrier().getName());
         assertEquals("GB", response.getCurrentCarrier().getCountry());
         assertEquals(CarrierDetails.NetworkType.LANDLINE, response.getCurrentCarrier().getNetworkType());
-
         assertEquals("GB-HAPPY-RESERVED", response.getOriginalCarrier().getNetworkCode());
         assertEquals("United Kingdom Mobile Reserved", response.getOriginalCarrier().getName());
         assertEquals("GB", response.getOriginalCarrier().getCountry());
         assertEquals(CarrierDetails.NetworkType.MOBILE, response.getOriginalCarrier().getNetworkType());
-
         assertEquals(new BigDecimal("18.30908949"), response.getRemainingBalance());
         assertEquals(new BigDecimal("0.03000000"), response.getRequestPrice());
-
         assertEquals(AdvancedInsightResponse.LookupOutcome.FAILED, response.getLookupOutcome());
         assertEquals(2, response.getLookupOutcome().getCode());
         assertEquals("Failure", response.getLookupOutcomeMessage());
-
         assertEquals("Bob", response.getFirstName());
         assertEquals("Atkey", response.getLastName());
         assertEquals("Monads, Incorporated", response.getCallerName());
@@ -304,7 +291,7 @@ public class AdvancedInsightResponseTest {
 
         assertEquals(AdvancedInsightResponse.Validity.UNKNOWN, response.getValidNumber());
         assertEquals(AdvancedInsightResponse.Reachability.UNKNOWN, response.getReachability());
-        assertEquals(AdvancedInsightResponse.PortedStatus.UNKNOWN, response.getPorted());
+        assertEquals(PortedStatus.UNKNOWN, response.getPorted());
         assertEquals(RoamingDetails.RoamingStatus.UNKNOWN, response.getRoaming().getStatus());
         assertNull(response.getCurrentCarrier());
         assertEquals(CarrierDetails.NetworkType.UNKNOWN, response.getOriginalCarrier().getNetworkType());

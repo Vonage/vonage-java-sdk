@@ -33,7 +33,12 @@ public class StandardInsightResponse extends BasicInsightResponse {
     private BigDecimal refundPrice;
     private CarrierDetails originalCarrier;
     private CarrierDetails currentCarrier;
+    private PortedStatus ported;
     private CallerIdentity callerIdentity;
+    private String callerName;
+    private String firstName;
+    private String lastName;
+    private CallerType callerType;
 
     public static StandardInsightResponse fromJson(String json) {
         try {
@@ -77,6 +82,14 @@ public class StandardInsightResponse extends BasicInsightResponse {
     }
 
     /**
+     * @return Whether the number has been ported, as an enum.
+     */
+    @JsonProperty("ported")
+    public PortedStatus getPorted() {
+        return ported;
+    }
+
+    /**
      * @return Information about the caller.
      */
     @JsonProperty("caller_identity")
@@ -92,5 +105,41 @@ public class StandardInsightResponse extends BasicInsightResponse {
     @JsonProperty("refund_price")
     public BigDecimal getRefundPrice() {
         return refundPrice;
+    }
+
+    /**
+     * @return Full name of the person or business who owns the phone number, or "unknown" if this
+     * information is not available. This parameter is only present if cnam had a value of
+     * <code>true</code> in the request.
+     */
+    @JsonProperty("caller_name")
+    public String getCallerName() {
+        return callerName;
+    }
+
+    /**
+     * @return First name of the person who owns the phone number if the owner is an individual.
+     * This parameter is only present if cnam had a value of <code>true</code> in the request.
+     */
+    @JsonProperty("first_name")
+    public String getFirstName() {
+        return firstName;
+    }
+
+    /**
+     * @return Last name of the person who owns the phone number if the owner is an individual.
+     * This parameter is only present if cnam had a value of <code>true</code> in the request.
+     */
+    @JsonProperty("last_name")
+    public String getLastName() {
+        return lastName;
+    }
+
+    /**
+     * @return The caller type, as an enum.
+     */
+    @JsonProperty("caller_type")
+    public CallerType getCallerType() {
+        return callerType;
     }
 }

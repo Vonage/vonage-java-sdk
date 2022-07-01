@@ -197,7 +197,7 @@ public class InsightClientTest extends ClientTest<InsightClient> {
         assertBasicResponse(response);
         assertStandardResponse(response);
 
-        assertEquals(AdvancedInsightResponse.PortedStatus.NOT_PORTED, response.getPorted());
+        assertEquals(PortedStatus.NOT_PORTED, response.getPorted());
 
         assertEquals(RoamingDetails.RoamingStatus.ROAMING, response.getRoaming().getStatus());
         assertEquals("US", response.getRoaming().getRoamingCountryCode());

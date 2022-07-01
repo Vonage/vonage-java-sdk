@@ -35,14 +35,9 @@ import java.util.Arrays;
 public class AdvancedInsightResponse extends StandardInsightResponse {
     private Validity validNumber;
     private Reachability reachability;
-    private PortedStatus ported;
     private LookupOutcome lookupOutcome;
     private String lookupOutcomeMessage;
     private RoamingDetails roaming;
-    private String callerName;
-    private String firstName;
-    private String lastName;
-    private CallerType callerType;
     private RealTimeData realTimeData;
 
     public static AdvancedInsightResponse fromJson(String json) {
@@ -71,14 +66,6 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
     }
 
     /**
-     * @return Whether the number has been ported, as an enum.
-     */
-    @JsonProperty("ported")
-    public PortedStatus getPorted() {
-        return ported;
-    }
-
-    /**
      * @return The outcome, as an enum.
      */
     @JsonProperty("lookup_outcome")
@@ -100,42 +87,6 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
     @JsonProperty("roaming")
     public RoamingDetails getRoaming() {
         return roaming;
-    }
-
-    /**
-     * @return Full name of the person or business who owns the phone number, or "unknown" if this
-     * information is not available. This parameter is only present if cnam had a value of
-     * <code>true</code> in the request.
-     */
-    @JsonProperty("caller_name")
-    public String getCallerName() {
-        return callerName;
-    }
-
-    /**
-     * @return First name of the person who owns the phone number if the owner is an individual.
-     * This parameter is only present if cnam had a value of <code>true</code> in the request.
-     */
-    @JsonProperty("first_name")
-    public String getFirstName() {
-        return firstName;
-    }
-
-    /**
-     * @return Last name of the person who owns the phone number if the owner is an individual.
-     * This parameter is only present if cnam had a value of <code>true</code> in the request.
-     */
-    @JsonProperty("last_name")
-    public String getLastName() {
-        return lastName;
-    }
-
-    /**
-     * @return The caller type, as an enum.
-     */
-    @JsonProperty("caller_type")
-    public CallerType getCallerType() {
-        return callerType;
     }
 
     /**
@@ -182,33 +133,6 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
                         wildcard.code = code;
                         return wildcard;
                     });
-        }
-    }
-
-    /**
-     * Enum representing whether the user has changed carrier for the number.
-     * The assumed status means that the information supplier has replied to the request but has not
-     * explicitly reported that the number is ported. Note that this enum may be <code>null</code>.
-     */
-    public enum PortedStatus {
-        UNKNOWN, PORTED, NOT_PORTED, ASSUMED_NOT_PORTED, ASSUMED_PORTED;
-
-        @JsonCreator
-        public static PortedStatus fromString(String name) {
-            if (name.equalsIgnoreCase("null")) {
-                return null;
-            }
-            try {
-                return PortedStatus.valueOf(name.toUpperCase());
-            }
-            catch (IllegalArgumentException ex) {
-                return UNKNOWN;
-            }
-        }
-
-        @Override
-        public String toString() {
-            return name().toLowerCase();
         }
     }
 
