@@ -28,7 +28,7 @@ public final class WhatsappTemplateRequest extends WhatsappRequest {
 	Whatsapp whatsapp;
 
 	WhatsappTemplateRequest(Builder builder) {
-		super(builder);
+		super(builder, MessageType.TEMPLATE);
 		template = new Template(builder.name, builder.parameters);
 		whatsapp = new Whatsapp(builder.policy, builder.locale);
 	}
@@ -106,11 +106,6 @@ public final class WhatsappTemplateRequest extends WhatsappRequest {
 		public Builder locale(String locale) {
 			this.locale = locale;
 			return this;
-		}
-
-		@Override
-		protected MessageType getMessageType() {
-			return MessageType.TEMPLATE;
 		}
 
 		@Override

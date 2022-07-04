@@ -24,20 +24,17 @@ public class MessageRequestTest {
 	static class ConcreteMessageRequest extends MessageRequest {
 
 		static ConcreteMessageRequest.Builder builder(MessageType mt, Channel ct) {
-			return new Builder() {
-				@Override
-				protected MessageType getMessageType() {
-					return mt;
-				}
-
-				@Override
-				protected Channel getChannel() {
-					return ct;
-				}
-			};
+			return new Builder(mt, ct);
 		}
 
-		static abstract class Builder extends MessageRequest.Builder<ConcreteMessageRequest, Builder> {
+		static class Builder extends MessageRequest.Builder<ConcreteMessageRequest, Builder> {
+			final MessageType messageType;
+			final Channel channel;
+
+			Builder(MessageType messageType, Channel channel) {
+				this.messageType = messageType;
+				this.channel = channel;
+			}
 
 			@Override
 			public ConcreteMessageRequest build() {
@@ -46,7 +43,7 @@ public class MessageRequestTest {
 		}
 
 		private ConcreteMessageRequest(Builder builder) {
-			super(builder);
+			super(builder, builder.channel, builder.messageType);
 		}
 	}
 

@@ -26,7 +26,7 @@ public final class WhatsappCustomRequest extends WhatsappRequest {
 	Map<?, ?> custom;
 
 	WhatsappCustomRequest(Builder builder) {
-		super(builder);
+		super(builder, MessageType.CUSTOM);
 		custom = builder.custom;
 	}
 
@@ -43,11 +43,6 @@ public final class WhatsappCustomRequest extends WhatsappRequest {
 		Map<?, ?> custom;
 
 		Builder() {}
-
-		@Override
-		protected MessageType getMessageType() {
-			return MessageType.CUSTOM;
-		}
 
 		/**
 		 * (OPTIONAL)

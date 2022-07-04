@@ -25,7 +25,7 @@ public final class ViberTextRequest extends ViberRequest {
 	String text;
 
 	ViberTextRequest(Builder builder) {
-		super(builder);
+		super(builder, MessageType.TEXT);
 		text = new Text(builder.text, 1000).toString();
 	}
 
@@ -42,11 +42,6 @@ public final class ViberTextRequest extends ViberRequest {
 		String text;
 
 		Builder() {}
-
-		@Override
-		protected MessageType getMessageType() {
-			return MessageType.TEXT;
-		}
 
 		/**
 		 * (REQUIRED)

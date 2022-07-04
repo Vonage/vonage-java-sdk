@@ -25,7 +25,7 @@ public final class WhatsappVideoRequest extends WhatsappRequest {
 	MessagePayload video;
 
 	WhatsappVideoRequest(Builder builder) {
-		super(builder);
+		super(builder, MessageType.VIDEO);
 		video = new MessagePayload(builder.url, builder.caption);
 		video.validateUrlExtension("mp4", "3gpp");
 	}
@@ -43,11 +43,6 @@ public final class WhatsappVideoRequest extends WhatsappRequest {
 		String url, caption;
 
 		Builder() {}
-
-		@Override
-		protected MessageType getMessageType() {
-			return MessageType.VIDEO;
-		}
 
 		/**
 		 * (REQUIRED)

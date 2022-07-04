@@ -25,7 +25,7 @@ public final class MessengerTextRequest extends MessengerRequest {
 	String text;
 
 	MessengerTextRequest(Builder builder) {
-		super(builder);
+		super(builder, MessageType.TEXT);
 		text = new Text(builder.text, 640).toString();
 	}
 
@@ -42,11 +42,6 @@ public final class MessengerTextRequest extends MessengerRequest {
 		String text;
 
 		Builder() {}
-
-		@Override
-		protected MessageType getMessageType() {
-			return MessageType.TEXT;
-		}
 
 		/**
 		 * (REQUIRED)

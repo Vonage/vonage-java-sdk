@@ -17,14 +17,14 @@ package com.vonage.client.messages.mms;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.messages.internal.MessagePayload;
 import com.vonage.client.messages.MessageType;
+import com.vonage.client.messages.internal.MessagePayload;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class MmsImageRequest extends MmsRequest {
 
 	MmsImageRequest(Builder builder) {
-		super(builder);
+		super(builder, MessageType.IMAGE);
 		payload = new MessagePayload(builder.url, builder.caption);
 		payload.validateUrlExtension("jpg", "jpeg", "png", "gif");
 		payload.validateCaptionLength(2000);
@@ -44,11 +44,6 @@ public final class MmsImageRequest extends MmsRequest {
 
 		Builder() {}
 
-		@Override
-		protected MessageType getMessageType() {
-			return MessageType.IMAGE;
-		}
-
 		/**
 		 * (REQUIRED)
 		 * Sets the URL of the image attachment. Supports only <code>.jpg</code>,
@@ -58,8 +53,7 @@ public final class MmsImageRequest extends MmsRequest {
 		 * @return This builder.
 		 */
 		public Builder url(String url) {
-			this.url = url;
-			return this;
+			return super.url(url);
 		}
 
 		/**

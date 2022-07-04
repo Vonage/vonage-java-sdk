@@ -25,7 +25,7 @@ public final class WhatsappFileRequest extends WhatsappRequest {
 	MessagePayload file;
 
 	WhatsappFileRequest(Builder builder) {
-		super(builder);
+		super(builder, MessageType.FILE);
 		file = new MessagePayload(builder.url, builder.caption);
 	}
 
@@ -42,11 +42,6 @@ public final class WhatsappFileRequest extends WhatsappRequest {
 		String url, caption;
 
 		Builder() {}
-
-		@Override
-		protected MessageType getMessageType() {
-			return MessageType.FILE;
-		}
 
 		/**
 		 * (REQUIRED)

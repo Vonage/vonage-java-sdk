@@ -18,13 +18,14 @@ package com.vonage.client.messages.whatsapp;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vonage.client.messages.MessageRequest;
 import com.vonage.client.messages.Channel;
+import com.vonage.client.messages.MessageType;
 import com.vonage.client.messages.internal.E164;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class WhatsappRequest extends MessageRequest {
 
-	protected WhatsappRequest(Builder<?, ?> builder) {
-		super(builder);
+	protected WhatsappRequest(Builder<?, ?> builder, MessageType messageType) {
+		super(builder, Channel.WHATSAPP, messageType);
 	}
 
 	@Override
@@ -36,10 +37,5 @@ public abstract class WhatsappRequest extends MessageRequest {
 	}
 
 	protected abstract static class Builder<M extends WhatsappRequest, B extends Builder<? extends M, ? extends B>> extends MessageRequest.Builder<M, B> {
-
-		@Override
-		protected final Channel getChannel() {
-			return Channel.WHATSAPP;
-		}
 	}
 }
