@@ -17,14 +17,14 @@ package com.vonage.client.messages.mms;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.messages.internal.MessagePayload;
 import com.vonage.client.messages.MessageType;
+import com.vonage.client.messages.internal.MessagePayload;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class MmsAudioRequest extends MmsRequest {
 
 	MmsAudioRequest(Builder builder) {
-		super(builder);
+		super(builder, MessageType.AUDIO);
 		payload = new MessagePayload(builder.url, builder.caption);
 		payload.validateCaptionLength(2000);
 	}
@@ -43,11 +43,6 @@ public final class MmsAudioRequest extends MmsRequest {
 
 		Builder() {}
 
-		@Override
-		protected MessageType getMessageType() {
-			return MessageType.AUDIO;
-		}
-
 		/**
 		 * (REQUIRED)
 		 * Sets the URL of the audio attachment.
@@ -56,8 +51,7 @@ public final class MmsAudioRequest extends MmsRequest {
 		 * @return This builder.
 		 */
 		public Builder url(String url) {
-			this.url = url;
-			return this;
+			return super.url(url);
 		}
 
 		/**

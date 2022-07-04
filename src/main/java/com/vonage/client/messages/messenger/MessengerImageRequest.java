@@ -25,7 +25,7 @@ public final class MessengerImageRequest extends MessengerRequest {
 	MessagePayload image;
 
 	MessengerImageRequest(Builder builder) {
-		super(builder);
+		super(builder, MessageType.IMAGE);
 		image = new MessagePayload(builder.url);
 		image.validateUrlExtension("jpg", "jpeg", "png", "gif");
 	}
@@ -43,11 +43,6 @@ public final class MessengerImageRequest extends MessengerRequest {
 		String url;
 
 		Builder() {}
-
-		@Override
-		protected MessageType getMessageType() {
-			return MessageType.IMAGE;
-		}
 
 		/**
 		 * (REQUIRED)

@@ -25,7 +25,7 @@ public final class ViberImageRequest extends ViberRequest {
 	MessagePayload image;
 
 	ViberImageRequest(Builder builder) {
-		super(builder);
+		super(builder, MessageType.IMAGE);
 		image = new MessagePayload(builder.url);
 		image.validateUrlExtension("jpg", "jpeg", "png");
 	}
@@ -43,11 +43,6 @@ public final class ViberImageRequest extends ViberRequest {
 		String url;
 
 		Builder() {}
-
-		@Override
-		protected MessageType getMessageType() {
-			return MessageType.IMAGE;
-		}
 
 		/**
 		 * (REQUIRED)

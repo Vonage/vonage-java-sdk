@@ -25,7 +25,7 @@ public final class MessengerVideoRequest extends MessengerRequest {
 	MessagePayload video;
 
 	MessengerVideoRequest(Builder builder) {
-		super(builder);
+		super(builder, MessageType.VIDEO);
 		video = new MessagePayload(builder.url);
 		video.validateUrlExtension("mp4");
 	}
@@ -43,11 +43,6 @@ public final class MessengerVideoRequest extends MessengerRequest {
 		String url;
 
 		Builder() {}
-
-		@Override
-		protected MessageType getMessageType() {
-			return MessageType.VIDEO;
-		}
 
 		/**
 		 * (REQUIRED)

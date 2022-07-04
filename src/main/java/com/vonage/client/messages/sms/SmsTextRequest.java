@@ -27,7 +27,7 @@ public final class SmsTextRequest extends MessageRequest {
 	String text;
 
 	SmsTextRequest(Builder builder) {
-		super(builder);
+		super(builder, Channel.SMS, MessageType.TEXT);
 		text = new Text(builder.text, 1000).toString();
 	}
 
@@ -44,16 +44,6 @@ public final class SmsTextRequest extends MessageRequest {
 		String text;
 
 		Builder() {}
-
-		@Override
-		protected MessageType getMessageType() {
-			return MessageType.TEXT;
-		}
-
-		@Override
-		protected Channel getChannel() {
-			return Channel.SMS;
-		}
 
 		/**
 		 * (REQUIRED)

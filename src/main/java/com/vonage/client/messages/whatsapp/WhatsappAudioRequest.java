@@ -25,7 +25,7 @@ public final class WhatsappAudioRequest extends WhatsappRequest {
 	MessagePayload audio;
 
 	WhatsappAudioRequest(Builder builder) {
-		super(builder);
+		super(builder, MessageType.AUDIO);
 		audio = new MessagePayload(builder.url);
 		audio.validateUrlExtension("aac", "m4a", "amr", "mp3", "opus");
 		audio.validateUrlLength(10, 2000);
@@ -44,11 +44,6 @@ public final class WhatsappAudioRequest extends WhatsappRequest {
 		String url;
 
 		Builder() {}
-
-		@Override
-		protected MessageType getMessageType() {
-			return MessageType.AUDIO;
-		}
 
 		/**
 		 * (REQUIRED)

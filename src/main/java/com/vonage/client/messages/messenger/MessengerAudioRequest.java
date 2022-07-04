@@ -25,7 +25,7 @@ public final class MessengerAudioRequest extends MessengerRequest {
 	MessagePayload audio;
 
 	MessengerAudioRequest(Builder builder) {
-		super(builder);
+		super(builder, MessageType.AUDIO);
 		audio = new MessagePayload(builder.url);
 		audio.validateUrlExtension("mp3");
 		audio.validateUrlLength(10, 2000);
@@ -44,11 +44,6 @@ public final class MessengerAudioRequest extends MessengerRequest {
 		String url;
 
 		Builder() {}
-
-		@Override
-		protected MessageType getMessageType() {
-			return MessageType.AUDIO;
-		}
 
 		/**
 		 * (REQUIRED)

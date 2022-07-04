@@ -19,13 +19,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.MessageRequest;
 import com.vonage.client.messages.Channel;
+import com.vonage.client.messages.MessageType;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class MessengerRequest extends MessageRequest {
 	protected Messenger messenger;
 
-	protected MessengerRequest(Builder<?, ?> builder) {
-		super(builder);
+	protected MessengerRequest(Builder<?, ?> builder, MessageType messageType) {
+		super(builder, Channel.MESSENGER, messageType);
 		messenger = Messenger.construct(builder.category, builder.tag);
 	}
 
@@ -50,11 +51,6 @@ public abstract class MessengerRequest extends MessageRequest {
 	protected abstract static class Builder<M extends MessengerRequest, B extends Builder<? extends M, ? extends B>> extends MessageRequest.Builder<M, B> {
 		protected Tag tag;
 		protected Category category;
-
-		@Override
-		protected final Channel getChannel() {
-			return Channel.MESSENGER;
-		}
 
 		/**
 		 * (OPTIONAL, but REQUIRED if Category is {@link Category#MESSAGE_TAG})

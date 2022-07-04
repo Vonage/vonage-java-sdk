@@ -19,14 +19,15 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.MessageRequest;
 import com.vonage.client.messages.Channel;
+import com.vonage.client.messages.MessageType;
 import com.vonage.client.messages.internal.E164;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class ViberRequest extends MessageRequest {
 	protected ViberService viberService;
 
-	protected ViberRequest(Builder<?, ?> builder) {
-		super(builder);
+	protected ViberRequest(Builder<?, ?> builder, MessageType messageType) {
+		super(builder, Channel.VIBER, messageType);
 		viberService = ViberService.construct(builder.category, builder.ttl, builder.viberType);
 	}
 
@@ -51,11 +52,6 @@ public abstract class ViberRequest extends MessageRequest {
 		protected Category category;
 		protected Integer ttl;
 		protected String viberType;
-
-		@Override
-		protected final Channel getChannel() {
-			return Channel.VIBER;
-		}
 
 		/**
 		 * (OPTIONAL)

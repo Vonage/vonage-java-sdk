@@ -17,14 +17,14 @@ package com.vonage.client.messages.mms;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.messages.internal.MessagePayload;
 import com.vonage.client.messages.MessageType;
+import com.vonage.client.messages.internal.MessagePayload;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class MmsVcardRequest extends MmsRequest {
 
 	MmsVcardRequest(Builder builder) {
-		super(builder);
+		super(builder, MessageType.VCARD);
 		payload = new MessagePayload(builder.url);
 		payload.validateUrlExtension("vcf");
 	}
@@ -41,11 +41,6 @@ public final class MmsVcardRequest extends MmsRequest {
 	public static final class Builder extends MmsRequest.Builder<MmsVcardRequest, Builder> {
 		Builder() {}
 
-		@Override
-		protected MessageType getMessageType() {
-			return MessageType.VCARD;
-		}
-
 		/**
 		 * (REQUIRED)
 		 * Sets the URL of the vCard attachment. Supports only <code>.vcf</code> file extension.
@@ -54,8 +49,7 @@ public final class MmsVcardRequest extends MmsRequest {
 		 * @return This builder.
 		 */
 		public Builder url(String url) {
-			this.url = url;
-			return this;
+			return super.url(url);
 		}
 
 		@Override

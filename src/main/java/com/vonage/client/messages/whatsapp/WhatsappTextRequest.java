@@ -25,7 +25,7 @@ public final class WhatsappTextRequest extends WhatsappRequest {
 	String text;
 
 	WhatsappTextRequest(Builder builder) {
-		super(builder);
+		super(builder, MessageType.TEXT);
 		text = new Text(builder.text, 4096).toString();
 	}
 
@@ -42,11 +42,6 @@ public final class WhatsappTextRequest extends WhatsappRequest {
 		String text;
 
 		Builder() {}
-
-		@Override
-		protected MessageType getMessageType() {
-			return MessageType.TEXT;
-		}
 
 		/**
 		 * (REQUIRED)

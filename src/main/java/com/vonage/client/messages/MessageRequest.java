@@ -49,12 +49,14 @@ public abstract class MessageRequest {
 	 * to avoid potentially confusing users on how to construct this object.
 	 *
 	 * @param builder The mutable builder object used to assign this MessageRequest's fields from.
+	 * @param channel The service to send the message through.
+	 * @param messageType The type of message to send.
 	 */
-	protected MessageRequest(Builder<?, ?> builder) {
-		messageType = Objects.requireNonNull(builder.messageType, "Message type cannot be null");
-		channel = Objects.requireNonNull(builder.channel, "Channel cannot be null");
-		if (!channel.getSupportedMessageTypes().contains(builder.messageType)) {
-			throw new IllegalArgumentException(messageType+" cannot be sent via "+channel);
+	protected MessageRequest(Builder<?, ?> builder, Channel channel, MessageType messageType) {
+		this.messageType = Objects.requireNonNull(messageType, "Message type cannot be null");
+		this.channel = Objects.requireNonNull(channel, "Channel cannot be null");
+		if (!this.channel.getSupportedMessageTypes().contains(this.messageType)) {
+			throw new IllegalArgumentException(this.messageType +" cannot be sent via "+ this.channel);
 		}
 		clientRef = validateClientReference(builder.clientRef);
 		from = builder.from;
@@ -147,8 +149,6 @@ public abstract class MessageRequest {
 	 */
 	@SuppressWarnings("unchecked")
 	public abstract static class Builder<M extends MessageRequest, B extends Builder<? extends M, ? extends B>> {
-		final Channel channel;
-		final MessageType messageType;
 		protected String from, to, clientRef;
 
 		/**
@@ -157,23 +157,7 @@ public abstract class MessageRequest {
 		 * the non-abstract subclasses of this builder's parent (declaring) class.
 		 */
 		protected Builder() {
-			messageType = getMessageType();
-			channel = getChannel();
 		}
-
-		/**
-		 * The type of message to send.
-		 *
-		 * @return The MessageType.
-		 */
-		protected abstract MessageType getMessageType();
-
-		/**
-		 * The service to send the message through.
-		 *
-		 * @return The Channel.
-		 */
-		protected abstract Channel getChannel();
 
 		/**
 		 * (REQUIRED)

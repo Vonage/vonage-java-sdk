@@ -17,6 +17,7 @@ package com.vonage.client.messages.mms;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vonage.client.messages.Channel;
+import com.vonage.client.messages.MessageType;
 import com.vonage.client.messages.internal.MessagePayload;
 import com.vonage.client.messages.MessageRequest;
 
@@ -24,16 +25,17 @@ import com.vonage.client.messages.MessageRequest;
 public abstract class MmsRequest extends MessageRequest {
 	MessagePayload payload;
 
-	protected MmsRequest(Builder<?, ?> builder) {
-		super(builder);
+	protected MmsRequest(Builder<?, ?> builder, MessageType messageType) {
+		super(builder, Channel.MMS, messageType);
 	}
 
+	@SuppressWarnings("unchecked")
 	protected abstract static class Builder<M extends MmsRequest, B extends Builder<? extends M, ? extends B>> extends MessageRequest.Builder<M, B> {
 		String url;
 
-		@Override
-		protected final Channel getChannel() {
-			return Channel.MMS;
+		protected B url(String url) {
+			this.url = url;
+			return (B) this;
 		}
 	}
 }

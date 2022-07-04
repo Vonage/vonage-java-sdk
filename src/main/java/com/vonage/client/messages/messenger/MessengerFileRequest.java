@@ -25,7 +25,7 @@ public final class MessengerFileRequest extends MessengerRequest {
 	MessagePayload file;
 
 	MessengerFileRequest(Builder builder) {
-		super(builder);
+		super(builder, MessageType.FILE);
 		file = new MessagePayload(builder.url);
 	}
 
@@ -42,11 +42,6 @@ public final class MessengerFileRequest extends MessengerRequest {
 		String url;
 
 		Builder() {}
-
-		@Override
-		protected MessageType getMessageType() {
-			return MessageType.FILE;
-		}
 
 		/**
 		 * (REQUIRED)
