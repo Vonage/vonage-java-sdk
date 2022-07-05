@@ -17,9 +17,9 @@ package com.vonage.client.messages.mms;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vonage.client.messages.Channel;
+import com.vonage.client.messages.MessageRequest;
 import com.vonage.client.messages.MessageType;
 import com.vonage.client.messages.internal.MessagePayload;
-import com.vonage.client.messages.MessageRequest;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class MmsRequest extends MessageRequest {

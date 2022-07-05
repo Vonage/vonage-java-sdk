@@ -101,10 +101,10 @@ public class MessageRequestTest {
 				.from("447900000009").to("").build();
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testConstructNullNumber() {
 		ConcreteMessageRequest.builder(MessageType.CUSTOM, Channel.WHATSAPP)
-				.from(null).to("447900000009").build();
+				.to("447900000009").from(null).build();
 	}
 
 	@Test(expected = NullPointerException.class)
@@ -116,7 +116,7 @@ public class MessageRequestTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructInvalidNumber() {
 		ConcreteMessageRequest.builder(MessageType.FILE, Channel.MESSENGER)
-				.to("447900000001").from("+0 NaN").build();
+				.from("447900000001").to("+0 NaN").build();
 	}
 
 	@Test
@@ -124,7 +124,7 @@ public class MessageRequestTest {
 		String json = ConcreteMessageRequest.builder(MessageType.AUDIO, Channel.WHATSAPP)
 				.from("+44 7900090000").to("+1 900-900-0000").build().toJson();
 
-		assertTrue(json.contains("\"from\":\"447900090000\""));
+		assertTrue(json.contains("\"from\":\"+44 7900090000\""));
 		assertTrue(json.contains("\"to\":\"19009000000\""));
 		assertTrue(json.contains("\"message_type\":\"audio\""));
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
