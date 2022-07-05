@@ -79,16 +79,17 @@ public abstract class MessageRequest {
 
 	/**
 	 * This method is used to validate the format of sender and recipient fields. By default,
-	 * this method checks that both the sender and recipient are E164 compliant numbers.
-	 * Subclasses may override this method to change this behaviour, or to re-assign the
-	 * sender and recipient fields to be well-formed / standardised / compliant.
+	 * this method checks that the recipient is an E164-compliant number and that the sender is not blank.
+	 * Subclasses may re-assign the sender and recipient fields to be well-formed / standardised / compliant.
 	 *
 	 * @param from The sender number or ID passed in from the builder.
 	 * @param to The recipient number or ID passed in from the builder.
 	 * @throws IllegalArgumentException If the sender or recipient are invalid / malformed.
 	 */
 	protected void validateSenderAndRecipient(String from, String to) throws IllegalArgumentException {
-		this.from = new E164(from).toString();
+		if (from == null || from.isEmpty()) {
+			throw new IllegalArgumentException("Sender cannot be empty");
+		}
 		this.to = new E164(to).toString();
 	}
 

@@ -16,24 +16,15 @@
 package com.vonage.client.messages.whatsapp;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.vonage.client.messages.MessageRequest;
 import com.vonage.client.messages.Channel;
+import com.vonage.client.messages.MessageRequest;
 import com.vonage.client.messages.MessageType;
-import com.vonage.client.messages.internal.E164;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class WhatsappRequest extends MessageRequest {
 
 	protected WhatsappRequest(Builder<?, ?> builder, MessageType messageType) {
 		super(builder, Channel.WHATSAPP, messageType);
-	}
-
-	@Override
-	protected void validateSenderAndRecipient(String from, String to) throws IllegalArgumentException {
-		if (from == null || from.isEmpty()) {
-			throw new IllegalArgumentException("Sender number or ID cannot be empty");
-		}
-		this.to = new E164(to).toString();
 	}
 
 	protected abstract static class Builder<M extends WhatsappRequest, B extends Builder<? extends M, ? extends B>> extends MessageRequest.Builder<M, B> {
