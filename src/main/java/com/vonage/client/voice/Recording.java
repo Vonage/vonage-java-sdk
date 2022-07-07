@@ -15,12 +15,10 @@
  */
 package com.vonage.client.voice;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,16 +31,14 @@ public class Recording {
     }
 
     public InputStream getContent() throws IOException {
-        return this.response.getEntity().getContent();
+        return response.getEntity().getContent();
     }
 
     public void save(String path) throws IOException {
-        this.save(FileSystems.getDefault().getPath(path));
+        save(FileSystems.getDefault().getPath(path));
     }
 
     public void save(Path path) throws IOException {
-        try (OutputStream out = Files.newOutputStream(path)) {
-            IOUtils.copy(this.response.getEntity().getContent(), out);
-        }
+        Files.copy(response.getEntity().getContent(), path);
     }
 }
