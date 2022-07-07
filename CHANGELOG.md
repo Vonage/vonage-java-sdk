@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.0.0]
+- Removed SMS Search API
+- Allow alphanumeric characters for SMS and MMS sender fields in Messages API
+
 ## [6.5.0]
 - Added Messages v1 API implementation
 - Added `get-full-pricing` endpoint

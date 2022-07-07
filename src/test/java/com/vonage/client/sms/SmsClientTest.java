@@ -27,19 +27,15 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.MatcherAssert;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
 public class SmsClientTest {
@@ -113,143 +109,5 @@ public class SmsClientTest {
         } catch (VonageResponseParseException nrp) {
             // This is expected
         }
-    }
-
-    @Test
-    public void testSearchMessagesId() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(200, "{\n" +
-                "  \"count\": 2,\n" +
-                "  \"items\": [\n" +
-                "    {\n" +
-                "      \"message-id\": \"00A0B0C0\",\n" +
-                "      \"account-id\": \"key\",\n" +
-                "      \"network\": \"20810\",\n" +
-                "      \"from\": \"MyApp\",\n" +
-                "      \"to\": \"123456890\",\n" +
-                "      \"body\": \"hello world\",\n" +
-                "      \"price\": \"0.04500000\",\n" +
-                "      \"date-received\": \"2011-11-25 16:03:00\",\n" +
-                "      \"final-status\": \"DELIVRD\",\n" +
-                "      \"date-closed\": \"2011-11-25 16:03:00\",\n" +
-                "      \"latency\": 11151,\n" +
-                "      \"type\": \"MT\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"message-id\": \"00A0B0C1\",\n" +
-                "      \"account-id\": \"key\",\n" +
-                "      \"network\": \"20810\",\n" +
-                "      \"from\": \"MyApp\",\n" +
-                "      \"to\": \"123456891\",\n" +
-                "      \"body\": \"foo bar\",\n" +
-                "      \"price\": \"0.04500000\",\n" +
-                "      \"date-received\": \"2011-11-25 17:03:00\",\n" +
-                "      \"final-status\": \"DELIVRD\",\n" +
-                "      \"date-closed\": \"2011-11-25 18:03:00\",\n" +
-                "      \"latency\": 14151,\n" +
-                "      \"type\": \"MT\"\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}\n"));
-
-            SearchSmsResponse response = client.searchMessages("an-id");
-            MatcherAssert.assertThat(response.getCount(), CoreMatchers.equalTo(2));
-    }
-
-    @Test
-    public void testSearchMessagesDate() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(200, "{\n" +
-                "  \"count\": 2,\n" +
-                "  \"items\": [\n" +
-                "    {\n" +
-                "      \"message-id\": \"00A0B0C0\",\n" +
-                "      \"account-id\": \"key\",\n" +
-                "      \"network\": \"20810\",\n" +
-                "      \"from\": \"MyApp\",\n" +
-                "      \"to\": \"123456890\",\n" +
-                "      \"body\": \"hello world\",\n" +
-                "      \"price\": \"0.04500000\",\n" +
-                "      \"date-received\": \"2011-11-25 16:03:00\",\n" +
-                "      \"final-status\": \"DELIVRD\",\n" +
-                "      \"date-closed\": \"2011-11-25 16:03:00\",\n" +
-                "      \"latency\": 11151,\n" +
-                "      \"type\": \"MT\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"message-id\": \"00A0B0C1\",\n" +
-                "      \"account-id\": \"key\",\n" +
-                "      \"network\": \"20810\",\n" +
-                "      \"from\": \"MyApp\",\n" +
-                "      \"to\": \"123456891\",\n" +
-                "      \"body\": \"foo bar\",\n" +
-                "      \"price\": \"0.04500000\",\n" +
-                "      \"date-received\": \"2011-11-25 17:03:00\",\n" +
-                "      \"final-status\": \"DELIVRD\",\n" +
-                "      \"date-closed\": \"2011-11-25 18:03:00\",\n" +
-                "      \"latency\": 14151,\n" +
-                "      \"type\": \"MT\"\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}\n"));
-
-        SearchSmsResponse response = client.searchMessages(
-                new GregorianCalendar(2017, Calendar.OCTOBER, 22).getTime(),
-                "447700900983"
-        );
-        MatcherAssert.assertThat(response.getCount(), CoreMatchers.equalTo(2));
-    }
-
-    @Test
-    public void testSearchRejected() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(200, "{\n" +
-                "  \"count\": 1,\n" +
-                "  \"items\": [\n" +
-                "    {\n" +
-                "      \"account-id\": \"key\",\n" +
-                "      \"from\": \"MyApp\",\n" +
-                "      \"to\": \"123456890\",\n" +
-                "      \"date-received\": \"2012-05-02 16:03:00\",\n" +
-                "      \"error-code\": 9,\n" +
-                "      \"error-code-label\": \"partner quota exceeded -- Your pre-pay account does not have sufficient credit to process this message\"\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}\n"));
-
-        SearchRejectedMessagesResponse response = client.searchRejectedMessages(
-                new GregorianCalendar(2017, Calendar.OCTOBER, 22).getTime(),
-                "447700900983"
-        );
-        MatcherAssert.assertThat(response.getCount(), CoreMatchers.equalTo(1));
-    }
-
-    @Test
-    public void testSearchSingleMessagesId() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(200, "{\n" +
-                "      \"message-id\": \"00A0B0C0\",\n" +
-                "      \"account-id\": \"key\",\n" +
-                "      \"network\": \"20810\",\n" +
-                "      \"from\": \"MyApp\",\n" +
-                "      \"to\": \"123456890\",\n" +
-                "      \"body\": \"hello world\",\n" +
-                "      \"price\": \"0.04500000\",\n" +
-                "      \"date-received\": \"2011-11-25 16:03:00\",\n" +
-                "      \"final-status\": \"DELIVRD\",\n" +
-                "      \"date-closed\": \"2011-11-25 16:03:00\",\n" +
-                "      \"latency\": 11151,\n" +
-                "      \"type\": \"MT\"\n" +
-                "    }"));
-
-        SmsSingleSearchResponse response = client.getSms("an-id");
-        assertEquals("00A0B0C0", response.getMessageId());
-        assertEquals("key", response.getAccountId());
-        assertEquals("20810", response.getNetwork());
-        assertEquals("MyApp", response.getFrom());
-        assertEquals("123456890", response.getTo());
-        assertEquals("hello world", response.getBody());
-        assertEquals("0.04500000", response.getPrice());
-        assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2011-11-25 16:03:00"), response.getDateReceived());
-        assertEquals("DELIVRD", response.getFinalStatus());
-        assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2011-11-25 16:03:00"), response.getDateClosed());
-        assertEquals(Integer.valueOf(11151), response.getLatency());
-        assertEquals("MT", response.getType());
     }
 }

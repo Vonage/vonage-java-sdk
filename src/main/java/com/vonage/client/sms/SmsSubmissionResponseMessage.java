@@ -17,7 +17,6 @@ package com.vonage.client.sms;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.math.BigDecimal;
 
@@ -79,6 +78,15 @@ public class SmsSubmissionResponseMessage {
 
     @Override
     public String toString() {
-        return ReflectionToStringBuilder.reflectionToString(this);
+        return "SmsSubmissionResponseMessage {" +
+                "to='" + to + '\'' +
+                ", id='" + id + '\'' +
+                ", status=" + status +
+                ", remainingBalance=" + remainingBalance +
+                ", messagePrice=" + messagePrice +
+                ", network='" + network + '\'' +
+                ", errorText='" + errorText + '\'' +
+                ", clientRef='" + clientRef + '\'' +
+                '}';
     }
 }

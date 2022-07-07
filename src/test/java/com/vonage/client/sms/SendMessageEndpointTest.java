@@ -158,6 +158,7 @@ public class SendMessageEndpointTest {
         assertEquals(new BigDecimal("0.03330000"), firstMessage.getMessagePrice());
         assertEquals("12345", firstMessage.getNetwork());
         assertEquals("first ref", firstMessage.getClientRef());
+        assertTrue(firstMessage.toString().contains("first ref"));
 
         assertEquals("not-a-number-2", secondMessage.getTo());
         assertEquals("message-id-2", secondMessage.getId());
@@ -166,6 +167,7 @@ public class SendMessageEndpointTest {
         assertEquals(new BigDecimal("0.03430000"), secondMessage.getMessagePrice());
         assertEquals("98765", secondMessage.getNetwork());
         assertEquals("second ref", secondMessage.getClientRef());
+        assertTrue(secondMessage.toString().contains("second ref"));
     }
 
     @Test
