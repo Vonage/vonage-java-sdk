@@ -16,13 +16,11 @@
 package com.vonage.client.sms;
 
 
-import com.vonage.client.*;
+import com.vonage.client.HttpWrapper;
+import com.vonage.client.VonageClient;
+import com.vonage.client.VonageClientException;
+import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.sms.messages.Message;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
 
 /**
@@ -31,9 +29,6 @@ import java.util.List;
  */
 public class SmsClient {
     final SendMessageEndpoint message;
-    final SmsSearchEndpoint search;
-    final SearchRejectedMessagesEndpoint rejected;
-    final SmsSingleSearchEndpoint singleSearch;
 
     /**
      * Create a new SmsClient.
@@ -41,9 +36,6 @@ public class SmsClient {
      */
     public SmsClient(HttpWrapper httpWrapper) {
         message = new SendMessageEndpoint(httpWrapper);
-        search = new SmsSearchEndpoint(httpWrapper);
-        rejected = new SearchRejectedMessagesEndpoint(httpWrapper);
-        singleSearch = new SmsSingleSearchEndpoint(httpWrapper);
     }
 
     /**
@@ -71,97 +63,4 @@ public class SmsClient {
         return this.message.execute(message);
     }
 
-    /**
-     * Search for completed SMS transactions.
-     * <p>
-     * You should probably use the helper methods {@link #searchMessages(String, String...)} or {@link
-     * #searchMessages(String, String...)} instead.
-     * <p>
-     *
-     * @param request request to search for a sms message
-     * @return sms messages that match the search criteria
-     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     */
-    public SearchSmsResponse searchMessages(SearchSmsRequest request) throws VonageResponseParseException, VonageClientException {
-        return search.execute(request);
-    }
-
-    /**
-     * Search for completed SMS transactions by ID
-     *
-     * @param id  the first ID to look up
-     * @param ids optional extra IDs to look up
-     *
-     * @return SMS data matching the provided criteria.
-     *
-     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     */
-    public SearchSmsResponse searchMessages(String id, String... ids) throws VonageResponseParseException, VonageClientException {
-        List<String> idList = new ArrayList<>(ids.length + 1);
-        idList.add(id);
-        idList.addAll(Arrays.asList(ids));
-        return searchMessages(new SmsIdSearchRequest(idList));
-    }
-
-    /**
-     * Search for completed SMS transactions by date and recipient MSISDN.
-     *
-     * @param date the date of the SMS message to be looked up
-     * @param to   the MSISDN number of the SMS recipient
-     *
-     * @return SMS data matching the provided criteria
-     *
-     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     */
-    public SearchSmsResponse searchMessages(Date date, String to) throws VonageResponseParseException, VonageClientException {
-        return searchMessages(new SmsDateSearchRequest(date, to));
-    }
-
-    /**
-     * Search for rejected SMS transactions using a {@link SearchRejectedMessagesRequest}.
-     * <p>
-     * You should probably use {@link #searchRejectedMessages(Date, String)} instead.
-     *
-     * @param request search for rejected SMS transactions
-     *
-     * @return rejection data matching the provided criteria
-     *
-     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     */
-    public SearchRejectedMessagesResponse searchRejectedMessages(SearchRejectedMessagesRequest request) throws VonageResponseParseException, VonageClientException {
-        return rejected.execute(request);
-    }
-
-    /**
-     * Search for rejected SMS transactions by date and recipient MSISDN.
-     *
-     * @param date the date of the rejected SMS message to be looked up
-     * @param to   the MSISDN number of the SMS recipient
-     *
-     * @return rejection data matching the provided criteria
-     *
-     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     */
-    public SearchRejectedMessagesResponse searchRejectedMessages(Date date, String to) throws VonageResponseParseException, VonageClientException {
-        return searchRejectedMessages(new SearchRejectedMessagesRequest(date, to));
-    }
-
-    /**
-     * Search for a single SMS by id.
-     *
-     * @param id The message id to search for.
-     *
-     * @return SmsSingleSearchResponse object containing the details of the SMS.
-     *
-     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     */
-    public SmsSingleSearchResponse getSms(String id) throws VonageResponseParseException, VonageClientException {
-        return singleSearch.execute(id);
-    }
 }

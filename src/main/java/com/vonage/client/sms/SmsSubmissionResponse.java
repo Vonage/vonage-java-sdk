@@ -27,10 +27,7 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SmsSubmissionResponse {
-    @JsonProperty("message-count")
     private int messageCount;
-
-    @JsonProperty("messages")
     private List<SmsSubmissionResponseMessage> messages;
 
     public static SmsSubmissionResponse fromJson(String json) {
@@ -44,10 +41,12 @@ public class SmsSubmissionResponse {
         }
     }
 
+    @JsonProperty("message-count")
     public int getMessageCount() {
         return messageCount;
     }
 
+    @JsonProperty("messages")
     public List<SmsSubmissionResponseMessage> getMessages() {
         return messages;
     }
