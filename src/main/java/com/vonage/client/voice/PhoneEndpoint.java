@@ -16,8 +16,8 @@
 package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import java.util.Objects;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class PhoneEndpoint implements Endpoint {
@@ -64,30 +64,17 @@ public class PhoneEndpoint implements Endpoint {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        if (obj.getClass() != getClass()) {
-            return false;
-        }
-        PhoneEndpoint rhs = (PhoneEndpoint) obj;
-        return new EqualsBuilder()
-                .append(this.type, rhs.type)
-                .append(this.number, rhs.number)
-                .append(this.dtmfAnswer, rhs.dtmfAnswer)
-                .isEquals();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PhoneEndpoint that = (PhoneEndpoint) o;
+        return Objects.equals(type, that.type) &&
+                Objects.equals(number, that.number) &&
+                Objects.equals(dtmfAnswer, that.dtmfAnswer);
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(277, 11)
-                .append(this.type)
-                .append(this.number)
-                .append(this.dtmfAnswer)
-                .toHashCode();
+        return Objects.hash(type, number, dtmfAnswer);
     }
 }
