@@ -39,8 +39,7 @@ public abstract class MessageRequest {
 	final MessageType messageType;
 	final Channel channel;
 	final String clientRef;
-	protected String from;
-	protected String to;
+	protected String from, to;
 
 	/**
 	 * Constructor where all of this class's fields should be set. This is protected
