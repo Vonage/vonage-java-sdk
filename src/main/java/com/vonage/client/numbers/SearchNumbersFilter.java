@@ -15,7 +15,6 @@
  */
 package com.vonage.client.numbers;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.methods.RequestBuilder;
 
 /**
@@ -105,7 +104,7 @@ public class SearchNumbersFilter {
     public void addParams(RequestBuilder request) {
         request.addParameter("country", country);
         if (features != null && features.length > 0) {
-            request.addParameter("features", StringUtils.join(features, ","));
+            request.addParameter("features", String.join(",", features));
         }
         if (index != null) {
             request.addParameter("index", index.toString());

@@ -20,7 +20,6 @@ import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.logging.LoggingUtils;
 import io.jsonwebtoken.lang.Assert;
-import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpResponse;
@@ -37,8 +36,11 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -78,6 +80,12 @@ public class AbstractMethodTest {
         @Override
         public String parseResponse(HttpResponse response) throws IOException{
             throw new IOException("This is a test io exception from parse");
+        }
+    }
+
+    static String getEntityContentsAsString(HttpEntity entity) throws IOException {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(entity.getContent(), StandardCharsets.UTF_8))) {
+            return br.lines().collect(Collectors.joining(System.lineSeparator()));
         }
     }
 
@@ -156,9 +164,7 @@ public class AbstractMethodTest {
         verify(mockHttpClient).execute(captor.capture());
 
         HttpEntity entity = ((HttpEntityEnclosingRequest) captor.getValue()).getEntity();
-
-        String entityContents = IOUtils.toString(entity.getContent(), StandardCharsets.UTF_8);
-        assertEquals(json, entityContents);
+        assertEquals(json, getEntityContentsAsString(entity));
     }
 
     @Test
@@ -179,10 +185,7 @@ public class AbstractMethodTest {
         verify(mockHttpClient).execute(captor.capture());
 
         HttpEntity entity = ((HttpEntityEnclosingRequest) captor.getValue()).getEntity();
-
-        String entityContents = IOUtils.toString(entity.getContent(), StandardCharsets.UTF_8);
-
-        assertEquals(json, entityContents);
+        assertEquals(json, getEntityContentsAsString(entity));
     }
 
     @Test

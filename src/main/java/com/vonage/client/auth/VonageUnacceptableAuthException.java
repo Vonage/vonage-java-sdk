@@ -15,8 +15,6 @@
  */
 package com.vonage.client.auth;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.*;
 
 public class VonageUnacceptableAuthException extends VonageAuthException {
@@ -51,8 +49,11 @@ public class VonageUnacceptableAuthException extends VonageAuthException {
             acceptableTypes.add(AUTH_DESCRIPTION_MAP.getOrDefault(klass, klass.getSimpleName()));
         }
 
-        return String.format("No acceptable authentication type could be found. Acceptable types are: %s. Supplied " +
-                "types " +
-                "were: %s", StringUtils.join(acceptableTypes, ", "), StringUtils.join(availableTypes, ", "));
+        return String.format(
+                "No acceptable authentication type could be found. " +
+                "Acceptable types are: %s. Supplied types were: %s",
+                String.join(", ", acceptableTypes),
+                String.join(", ", availableTypes)
+        );
     }
 }
