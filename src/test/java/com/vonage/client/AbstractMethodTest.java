@@ -93,6 +93,13 @@ public class AbstractMethodTest {
     private HttpClient mockHttpClient;
     private AuthCollection mockAuthMethods;
     private AuthMethod mockAuthMethod;
+    private HttpResponse basicResponse = new BasicHttpResponse(
+            new BasicStatusLine(
+                    new ProtocolVersion("1.1", 1, 1),
+                    200,
+                    "OK"
+            )
+    );
 
     @Before
     public void setUp() throws Exception {
@@ -105,19 +112,7 @@ public class AbstractMethodTest {
         when(LoggingUtils.logResponse(any(HttpResponse.class))).thenReturn("response logged");
         when(mockAuthMethods.getAcceptableAuthMethod(any())).thenReturn(mockAuthMethod);
         when(mockWrapper.getHttpClient()).thenReturn(mockHttpClient);
-        when(mockHttpClient.execute(any(HttpUriRequest.class))).thenReturn(
-            new BasicHttpResponse(
-                new BasicStatusLine(
-                    new ProtocolVersion(
-                    "1.1",
-                        1,
-                        1
-                    ),
-         200,
-       "OK"
-                )
-            )
-        );
+        when(mockHttpClient.execute(any(HttpUriRequest.class))).thenReturn(basicResponse);
         when(mockWrapper.getAuthCollection()).thenReturn(mockAuthMethods);
     }
 
@@ -129,25 +124,11 @@ public class AbstractMethodTest {
                     .map(Object::toString)
                     .collect(Collectors.joining(System.lineSeparator()));
 
-            HttpResponse response = new BasicHttpResponse(
-                new BasicStatusLine(
-                    new ProtocolVersion(
-                            "1.1",
-                            1,
-                            1
-                    ),
-                    200,
-                    "OK"
-                )
-            );
-            response.setEntity(new StringEntity(headers));
-            return response;
+            basicResponse.setEntity(new StringEntity(headers));
+            return basicResponse;
         });
 
-        String javaVersion = System.getProperty("java.version");
-        String userAgent = String.format("%s/%s java/%s", "vonage-java-sdk", "X.Y.Z", javaVersion);
-        assertEquals("vonage-java-sdk/X.Y.Z java/"+javaVersion, userAgent);
-
+        String userAgent = "vonage-java-sdk/X.Y.Z java/"+System.getProperty("java.version");
         when(mockWrapper.getUserAgent()).thenReturn(userAgent);
 
         ConcreteMethod method = new ConcreteMethod(mockWrapper);
