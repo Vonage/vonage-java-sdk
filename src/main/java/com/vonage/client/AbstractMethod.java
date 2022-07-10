@@ -73,6 +73,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
     public ResultT execute(RequestT request) throws VonageResponseParseException, VonageClientException {
         try {
             RequestBuilder requestBuilder = applyAuth(makeRequest(request));
+            requestBuilder.setHeader("User-Agent", httpWrapper.getUserAgent());
             HttpUriRequest httpRequest = requestBuilder.build();
 
             // If we have a URL Encoded form entity, we may need to regenerate it as UTF-8
