@@ -33,6 +33,7 @@ public class HttpWrapper {
     private static final String CLIENT_NAME = "vonage-java-sdk";
     private static final String CLIENT_VERSION = "6.5.0";
     private static final String JAVA_VERSION = System.getProperty("java.version");
+    private static final String USER_AGENT = String.format("%s/%s java/%s", CLIENT_NAME, CLIENT_VERSION, JAVA_VERSION);
 
     private AuthCollection authCollection;
     private HttpClient httpClient;
@@ -95,10 +96,9 @@ public class HttpWrapper {
 
         RequestConfig requestConfig = RequestConfig.custom().build();
 
-        return HttpClientBuilder
-                .create()
+        return HttpClientBuilder.create()
                 .setConnectionManager(connectionManager)
-                .setUserAgent(String.format("%s/%s java/%s", CLIENT_NAME, CLIENT_VERSION, JAVA_VERSION))
+                .setUserAgent(USER_AGENT)
                 .setDefaultRequestConfig(requestConfig)
                 .useSystemProperties()
                 .build();
@@ -106,5 +106,9 @@ public class HttpWrapper {
 
     public HttpConfig getHttpConfig() {
         return httpConfig;
+    }
+
+    public String getUserAgent() {
+        return USER_AGENT;
     }
 }

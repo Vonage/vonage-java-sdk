@@ -19,11 +19,8 @@ import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.logging.LoggingUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
@@ -72,25 +69,11 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      */
     public ResultT execute(RequestT request) throws VonageResponseParseException, VonageClientException {
         try {
-            RequestBuilder requestBuilder = applyAuth(makeRequest(request));
-            HttpUriRequest httpRequest = requestBuilder.build();
+            HttpUriRequest httpRequest = applyAuth(makeRequest(request))
+                    .setHeader("User-Agent", httpWrapper.getUserAgent())
+                    .setCharset(StandardCharsets.UTF_8)
+                    .build();
 
-            // If we have a URL Encoded form entity, we may need to regenerate it as UTF-8
-            // due to a bug (or two!) in RequestBuilder:
-            //
-            // This fix can be removed when HttpClient is upgraded to 4.5, although 4.5 also
-            // has a bug where RequestBuilder.put(uri) and RequestBuilder.post(uri) use the
-            // wrong encoding, whereas RequestBuilder.put().setUri(uri) uses UTF-8.
-            // - MS 2017-04-12
-            if (httpRequest instanceof HttpEntityEnclosingRequest) {
-                HttpEntityEnclosingRequest entityRequest = (HttpEntityEnclosingRequest) httpRequest;
-                HttpEntity entity = entityRequest.getEntity();
-                if (entity instanceof UrlEncodedFormEntity) {
-                    entityRequest.setEntity(new UrlEncodedFormEntity(
-                        requestBuilder.getParameters(), StandardCharsets.UTF_8
-                    ));
-                }
-            }
             LOG.debug("Request: " + httpRequest);
             if (LOG.isDebugEnabled() && httpRequest instanceof HttpEntityEnclosingRequestBase) {
                 HttpEntityEnclosingRequestBase enclosingRequest = (HttpEntityEnclosingRequestBase) httpRequest;

@@ -32,7 +32,6 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -40,6 +39,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
@@ -68,7 +68,7 @@ public class AbstractMethodTest {
 
         @Override
         public String parseResponse(HttpResponse response) throws IOException {
-            return "response";
+            return basicResponseHandler.handleResponse(response);
         }
     }
 
@@ -93,6 +93,13 @@ public class AbstractMethodTest {
     private HttpClient mockHttpClient;
     private AuthCollection mockAuthMethods;
     private AuthMethod mockAuthMethod;
+    private HttpResponse basicResponse = new BasicHttpResponse(
+            new BasicStatusLine(
+                    new ProtocolVersion("1.1", 1, 1),
+                    200,
+                    "OK"
+            )
+    );
 
     @Before
     public void setUp() throws Exception {
@@ -100,32 +107,34 @@ public class AbstractMethodTest {
         mockAuthMethods = mock(AuthCollection.class);
         mockAuthMethod = mock(AuthMethod.class);
         mockHttpClient = mock(HttpClient.class);
+        when(mockAuthMethod.apply(any(RequestBuilder.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0, RequestBuilder.class));
         when(LoggingUtils.logResponse(any(HttpResponse.class))).thenReturn("response logged");
         when(mockAuthMethods.getAcceptableAuthMethod(any())).thenReturn(mockAuthMethod);
         when(mockWrapper.getHttpClient()).thenReturn(mockHttpClient);
-        when(mockHttpClient.execute(any(HttpUriRequest.class))).thenReturn(
-            new BasicHttpResponse(
-                new BasicStatusLine(
-                    new ProtocolVersion(
-                    "1.1",
-                        1,
-                        1
-                    ),
-         200,
-       "OK"
-                )
-            )
-        );
+        when(mockHttpClient.execute(any(HttpUriRequest.class))).thenReturn(basicResponse);
         when(mockWrapper.getAuthCollection()).thenReturn(mockAuthMethods);
     }
 
-    @Ignore
     @Test
-    public void testExecute() {
-        ConcreteMethod method = new ConcreteMethod(mockWrapper);
+    public void testExecuteHeaders() throws Exception {
+        when(mockHttpClient.execute(any(HttpUriRequest.class))).thenAnswer(invocation -> {
+            HttpUriRequest request = invocation.getArgument(0, HttpUriRequest.class);
+            String headers = Arrays.stream(request.getAllHeaders())
+                    .map(Object::toString)
+                    .collect(Collectors.joining(System.lineSeparator()));
 
+            basicResponse.setEntity(new StringEntity(headers));
+            return basicResponse;
+        });
+
+        String userAgent = "vonage-java-sdk/X.Y.Z java/"+System.getProperty("java.version");
+        when(mockWrapper.getUserAgent()).thenReturn(userAgent);
+
+        ConcreteMethod method = new ConcreteMethod(mockWrapper);
         String result = method.execute("url");
-        assertEquals("response", result);
+        String expected = "User-Agent: "+userAgent;
+        assertEquals(expected, result);
     }
 
     @Test
