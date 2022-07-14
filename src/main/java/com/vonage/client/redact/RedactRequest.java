@@ -23,7 +23,10 @@ import com.vonage.client.VonageUnexpectedException;
 
 /**
  * Represents a request to the Redact API.
+ *
+ * @deprecated This API will be removed in the next major release.
  */
+@Deprecated
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RedactRequest {
 
