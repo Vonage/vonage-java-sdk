@@ -21,11 +21,14 @@ import com.vonage.client.*;
 /**
  * A client for talking to the Vonage Redact API. The standard way to obtain an instance of this class is to use {@link
  * VonageClient#getRedactClient()}.
+ *
+ * @deprecated This API will be removed in the next major release.
  */
+@Deprecated
 public class RedactClient {
-
     final RedactEndpoint redactEndpoint;
 
+    @Deprecated
     public RedactClient(HttpWrapper httpWrapper) {
         redactEndpoint = new RedactEndpoint(httpWrapper);
     }
@@ -39,6 +42,7 @@ public class RedactClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
+    @Deprecated
     public void redactTransaction(String id, RedactRequest.Product product) throws VonageResponseParseException, VonageClientException {
         redactTransaction(new RedactRequest(id, product));
     }
@@ -53,6 +57,7 @@ public class RedactClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
+    @Deprecated
     public void redactTransaction(String id, RedactRequest.Product product, RedactRequest.Type type) throws VonageResponseParseException, VonageClientException {
         RedactRequest request = new RedactRequest(id, product);
         request.setType(type);
@@ -68,6 +73,7 @@ public class RedactClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
+    @Deprecated
     public void redactTransaction(RedactRequest redactRequest) throws VonageResponseParseException, VonageClientException {
         redactEndpoint.execute(redactRequest);
     }

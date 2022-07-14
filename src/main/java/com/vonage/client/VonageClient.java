@@ -112,6 +112,12 @@ public class VonageClient {
         return conversion;
     }
 
+    /**
+     *
+     * @return The Redact API client.
+     * @deprecated This API will be removed in the next major release.
+     */
+    @Deprecated
     public RedactClient getRedactClient() {
         return redact;
     }

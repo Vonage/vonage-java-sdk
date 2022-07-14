@@ -425,27 +425,6 @@ client.getConversionClient().submitConversion(ConversionRequest.Type.VOICE,
                                      new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
 ```
 
-### Redact Inbound SMS
-
-Submit a request to the Redact API when it has been enabled on your account with:
-```java
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .build();
-client.getRedactClient().redactTransaction(SMS_ID, RedactRequest.Product.SMS, RedactRequest.Type.INBOUND);
-```
-
-### Redact Voice
-
-Submit a request to the Redact API when it has been enabled on your account with:
-```java
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .build();
-client.getRedactClient().redactTransaction(VOICE_ID, RedactRequest.Product.VOICE);
-```
 
 ### Create Secret
 
@@ -532,7 +511,7 @@ The following is a list of Vonage APIs and whether the Java SDK provides support
 | Number Insight API    | General Availability |     ✅      |
 | Number Management API | General Availability |     ✅      |
 | Pricing API           | General Availability |     ✅      |
-| Redact API            | General Availability |     ✅      |
+| Redact API            |  Developer Preview   |     ✅      |
 | Reports API           |         Beta         |     ❌      |
 | SMS API               | General Availability |     ✅      |
 | Verify API            | General Availability |     ✅      |
