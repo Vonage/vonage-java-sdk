@@ -18,6 +18,9 @@ package com.vonage.client.voice;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
+/**
+ * Enum representing call modification actions.
+ */
 public enum ModifyCallAction {
     HANGUP, MUTE, UNMUTE, EARMUFF, UNEARMUFF, TRANSFER, UNKNOWN;
 
