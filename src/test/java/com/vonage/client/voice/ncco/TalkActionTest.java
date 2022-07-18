@@ -84,6 +84,17 @@ public class TalkActionTest {
     }
 
     @Test
+    public void testPremiumField() {
+        TalkAction talk = TalkAction.builder("Talk to me").premium(true).build();
+        String expectedJson = "[{\"text\":\"Talk to me\",\"premium\":true,\"action\":\"talk\"}]";
+        assertEquals(expectedJson, new Ncco(talk).toJson());
+
+        talk = TalkAction.builder("Talk to me").premium(false).build();
+        expectedJson = "[{\"text\":\"Talk to me\",\"premium\":false,\"action\":\"talk\"}]";
+        assertEquals(expectedJson, new Ncco(talk).toJson());
+    }
+
+    @Test
     public void testVoiceNameField() {
         TalkAction talk = TalkAction.builder("Talk to me").voiceName(VoiceName.JENNIFER).build();
 

@@ -34,6 +34,7 @@ public class TalkAction implements Action {
     private Float level;
     private TextToSpeechLanguage language;
     private Integer style;
+    private Boolean premium;
 
     @Deprecated
     private VoiceName voiceName;
@@ -46,6 +47,7 @@ public class TalkAction implements Action {
         this.voiceName = builder.voiceName;
         this.style = builder.style;
         this.language = builder.language;
+        this.premium = builder.premium;
     }
 
     @Override
@@ -73,6 +75,10 @@ public class TalkAction implements Action {
 
     public Integer getStyle() { return style; }
 
+    public Boolean getPremium() {
+        return premium;
+    }
+
     @Deprecated
     public VoiceName getVoiceName() {
         return voiceName;
@@ -84,12 +90,12 @@ public class TalkAction implements Action {
 
     public static class Builder {
         private String text;
-        private Boolean bargeIn = null;
-        private Integer loop = null;
-        private Float level = null;
-        private VoiceName voiceName = null;
-        private TextToSpeechLanguage language = null;
-        private Integer style = null;
+        private Boolean bargeIn, premium;
+        private Integer loop, style;
+        private Float level;
+        private VoiceName voiceName;
+        private TextToSpeechLanguage language;
+
         /**
          * @param text A string of up to 1,500 characters (excluding SSML tags) containing the message to be
          *             synthesized in the Call or Conversation. A single comma in text adds a short pause to the
@@ -155,17 +161,17 @@ public class TalkAction implements Action {
          *
          * @return The {@link Builder} to keep building
          */
-        public Builder language(TextToSpeechLanguage language){
+        public Builder language(TextToSpeechLanguage language) {
             this.language = language;
             return this;
         }
 
         /**
-         * @param style The vocal style to use
+         * @param style The vocal style to use.
          *
          * @return The {@link Builder} to keep building
          */
-        public Builder style(Integer style){
+        public Builder style(Integer style) {
             this.style = style;
             return this;
         }
@@ -182,6 +188,17 @@ public class TalkAction implements Action {
         @Deprecated
         public Builder voiceName(VoiceName voiceName) {
             this.voiceName = voiceName;
+            return this;
+        }
+
+        /**
+         * @param premium Whether to use Premium text-to-speech. Set to <code>true</code> to use the premium version
+         *                of the specified style if available, otherwise the standard version will be used.
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder premium(Boolean premium) {
+            this.premium = premium;
             return this;
         }
 
