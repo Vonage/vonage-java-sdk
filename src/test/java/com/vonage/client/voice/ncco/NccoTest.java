@@ -19,7 +19,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.vonage.client.VonageUnexpectedException;
-import com.vonage.client.voice.VoiceName;
+import com.vonage.client.voice.TextToSpeechLanguage;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -74,14 +74,14 @@ public class NccoTest {
 
     @Test
     public void testSerializeMultipleActions() {
-        TalkAction talk = TalkAction.builder("Test message").voiceName(VoiceName.JOEY).build();
+        TalkAction talk = TalkAction.builder("Test message").language(TextToSpeechLanguage.BASQUE).build();
         DtmfSettings dtmfSettings = new DtmfSettings();
         dtmfSettings.setMaxDigits(5);
         InputAction input = InputAction.builder().dtmf(dtmfSettings).type(Collections.singletonList("dtmf")).build();
         RecordAction record = RecordAction.builder().beepStart(true).build();
         ConnectAction connect = ConnectAction.builder(PhoneEndpoint.builder("15554441234").build()).build();
 
-        String expectedJson = "[{\"text\":\"Test message\",\"voiceName\":\"Joey\",\"action\":\"talk\"}," +
+        String expectedJson = "[{\"text\":\"Test message\",\"language\":\"eu-ES\",\"action\":\"talk\"}," +
                 "{\"type\":[\"dtmf\"],\"dtmf\":{\"maxDigits\":5},\"action\":\"input\"}," +
                 "{\"beepStart\":true,\"action\":\"record\"}," +
                 "{\"endpoint\":[{\"number\":\"15554441234\",\"type\":\"phone\"}],\"action\":\"connect\"}]";

@@ -27,24 +27,17 @@ import java.io.IOException;
 import java.util.Date;
 
 /**
- * CallInfo holds the information related to a call. It is obtained using {@link VoiceClient#listCalls}
+ * CallInfo holds the information related to a call. It is obtained using {@link VoiceClient#listCalls}.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(value = { "_links" }, ignoreUnknown = true)
 public class CallInfo {
-    private Endpoint to;
-    private Endpoint from;
-
-    private String conversationUuid = null;
-    private CallDirection direction = null;
-    private Integer duration = null;
-    private Date endTime = null;
-    private String network = null;
-    private String price = null;
-    private String rate = null;
-    private Date startTime = null;
-    private CallStatus status = null;
-    private String uuid = null;
+    private Endpoint from, to;
+    private String conversationUuid, uuid, network, price, rate;
+    private CallDirection direction;
+    private Integer duration;
+    private Date startTime, endTime;
+    private CallStatus status;
 
     public CallInfo() {}
 

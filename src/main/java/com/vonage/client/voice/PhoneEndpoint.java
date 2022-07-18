@@ -23,7 +23,7 @@ import java.util.Objects;
 public class PhoneEndpoint implements Endpoint {
     private String type = "phone";
     private String number;
-    private String dtmfAnswer = null;
+    private String dtmfAnswer;
 
     public PhoneEndpoint() {
     }

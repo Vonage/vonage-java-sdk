@@ -16,7 +16,6 @@
 package com.vonage.client.voice.ncco;
 
 import com.vonage.client.voice.TextToSpeechLanguage;
-import com.vonage.client.voice.VoiceName;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -36,12 +35,11 @@ public class TalkActionTest {
                 .bargeIn(true)
                 .loop(3)
                 .level(0.3333f)
-                .voiceName(VoiceName.KIMBERLY)
                 .language(TextToSpeechLanguage.AMERICAN_ENGLISH)
                 .style(2)
                 .build();
 
-        String expectedJson = "[{\"text\":\"New Text Message\",\"bargeIn\":true,\"loop\":3,\"level\":0.3333,\"language\":\"en-US\",\"style\":2,\"voiceName\":\"Kimberly\",\"action\":\"talk\"}]";
+        String expectedJson = "[{\"text\":\"New Text Message\",\"bargeIn\":true,\"loop\":3,\"level\":0.3333,\"language\":\"en-US\",\"style\":2,\"action\":\"talk\"}]";
         assertEquals(expectedJson, new Ncco(talk).toJson());
     }
 
@@ -91,14 +89,6 @@ public class TalkActionTest {
 
         talk = TalkAction.builder("Talk to me").premium(false).build();
         expectedJson = "[{\"text\":\"Talk to me\",\"premium\":false,\"action\":\"talk\"}]";
-        assertEquals(expectedJson, new Ncco(talk).toJson());
-    }
-
-    @Test
-    public void testVoiceNameField() {
-        TalkAction talk = TalkAction.builder("Talk to me").voiceName(VoiceName.JENNIFER).build();
-
-        String expectedJson = "[{\"text\":\"Talk to me\",\"voiceName\":\"Jennifer\",\"action\":\"talk\"}]";
         assertEquals(expectedJson, new Ncco(talk).toJson());
     }
 }

@@ -26,8 +26,4 @@ public class ModifyCallPayload {
         return action;
     }
 
-    public void setAction(ModifyCallAction action) {
-        this.action = action;
-    }
-
 }

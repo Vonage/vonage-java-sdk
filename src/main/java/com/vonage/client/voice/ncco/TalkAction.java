@@ -18,7 +18,6 @@ package com.vonage.client.voice.ncco;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vonage.client.voice.TextToSpeechLanguage;
-import com.vonage.client.voice.VoiceName;
 
 /**
  * An NCCO talk action which allows for synthesized speach to be sent to a call.
@@ -36,15 +35,11 @@ public class TalkAction implements Action {
     private Integer style;
     private Boolean premium;
 
-    @Deprecated
-    private VoiceName voiceName;
-
     private TalkAction(Builder builder) {
         this.text = builder.text;
         this.bargeIn = builder.bargeIn;
         this.loop = builder.loop;
         this.level = builder.level;
-        this.voiceName = builder.voiceName;
         this.style = builder.style;
         this.language = builder.language;
         this.premium = builder.premium;
@@ -79,11 +74,6 @@ public class TalkAction implements Action {
         return premium;
     }
 
-    @Deprecated
-    public VoiceName getVoiceName() {
-        return voiceName;
-    }
-
     public static Builder builder(String text) {
         return new Builder(text);
     }
@@ -93,7 +83,6 @@ public class TalkAction implements Action {
         private Boolean bargeIn, premium;
         private Integer loop, style;
         private Float level;
-        private VoiceName voiceName;
         private TextToSpeechLanguage language;
 
         /**
@@ -157,9 +146,9 @@ public class TalkAction implements Action {
         }
 
         /**
-         * @param language The Language to use when converting the text to speech
+         * @param language The Language to use when converting the text to speech.
          *
-         * @return The {@link Builder} to keep building
+         * @return The {@link Builder} to keep building.
          */
         public Builder language(TextToSpeechLanguage language) {
             this.language = language;
@@ -169,25 +158,10 @@ public class TalkAction implements Action {
         /**
          * @param style The vocal style to use.
          *
-         * @return The {@link Builder} to keep building
+         * @return The {@link Builder} to keep building.
          */
         public Builder style(Integer style) {
             this.style = style;
-            return this;
-        }
-
-        /**
-         * @param voiceName The name of the voice used to deliver text. You use the voiceName that has the correct
-         *                  language, gender and accent for the message you are sending.
-         *                  <p>
-         *                  For example, the default
-         *                  voice {@link VoiceName#KIMBERLY} is a female who speaks English with an American accent (en-US).
-         *
-         * @return The {@link Builder} to keep building.
-         */
-        @Deprecated
-        public Builder voiceName(VoiceName voiceName) {
-            this.voiceName = voiceName;
             return this;
         }
 

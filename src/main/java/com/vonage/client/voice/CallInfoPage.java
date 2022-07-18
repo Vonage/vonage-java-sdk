@@ -27,10 +27,7 @@ import java.util.Iterator;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CallInfoPage implements Iterable<CallInfo> {
-    private int count;
-    private int pageSize;
-    private int recordIndex;
-
+    private int count, pageSize, recordIndex;
     private PageLinks links;
     private EmbeddedCalls embedded;
 
