@@ -19,15 +19,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class Template {
 	private final String name;
-	private final List<Map<String, ?>> parameters;
+	private final List<?> parameters;
 
-	Template(String name, List<Map<String, ?>> parameters) {
+	Template(String name, List<?> parameters) {
 		this.name = Objects.requireNonNull(name, "Name cannot be null");
 		this.parameters = parameters;
 	}
@@ -38,7 +37,7 @@ public final class Template {
 	}
 
 	@JsonProperty("parameters")
-	public List<Map<String, ?>> getParameters() {
+	public List<?> getParameters() {
 		return parameters;
 	}
 }
