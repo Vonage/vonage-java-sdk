@@ -44,15 +44,12 @@ public class WhatsappTemplateRequestTest {
 		String json = WhatsappTemplateRequest.builder()
 				.from("Acme Corp").to("447900000001")
 				.name("verify").locale("en-GB").policy(Policy.DETERMINISTIC)
-				.parameters(Arrays.asList(
-						Collections.singletonMap("key1", "value1"),
-						Collections.singletonMap("key2", "value2")
-				))
+				.parameters(Arrays.asList(Collections.singletonMap("k1", "v1"), "blah"))
 				.build().toJson();
 
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
 		assertTrue(json.contains("\"message_type\":\"template\""));
-		assertTrue(json.contains("\"template\":{\"name\":\"verify\",\"parameters\":[{\"key1\":\"value1\"},{\"key2\":\"value2\"}]}"));
+		assertTrue(json.contains("\"template\":{\"name\":\"verify\",\"parameters\":[{\"k1\":\"v1\"},\"blah\"]}"));
 		assertTrue(json.contains("\"whatsapp\":{\"policy\":\"deterministic\",\"locale\":\"en-GB\"}"));
 	}
 

@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.MessageType;
 
 import java.util.List;
-import java.util.Map;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class WhatsappTemplateRequest extends WhatsappRequest {
@@ -49,7 +48,7 @@ public final class WhatsappTemplateRequest extends WhatsappRequest {
 
 	public static final class Builder extends WhatsappRequest.Builder<WhatsappTemplateRequest, Builder> {
 		String name;
-		List<Map<String, ?>> parameters;
+		List<?> parameters;
 		Policy policy = Policy.DETERMINISTIC;
 		String locale = "en_GB";
 
@@ -75,10 +74,10 @@ public final class WhatsappTemplateRequest extends WhatsappRequest {
 		 * <a href=https://developers.facebook.com/docs/whatsapp/on-premises/reference/messages#message-templates>
 		 * messages parameters documentation</a>.
 		 *
-		 * @param parameters The serializable list of Map objects.
+		 * @param parameters The serializable list of objects.
 		 * @return This builder.
 		 */
-		public Builder parameters(List<Map<String, ?>> parameters) {
+		public Builder parameters(List<?> parameters) {
 			this.parameters = parameters;
 			return this;
 		}
