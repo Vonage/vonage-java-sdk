@@ -19,8 +19,19 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+/**
+ * Information about the roaming status for number. This is applicable to mobile numbers only.
+ */
 @JsonDeserialize(using = RoamingDeseriazlizer.class)
 public class RoamingDetails {
+    private final RoamingStatus status;
+    private final String roamingCountryCode;
+    private final String roamingNetworkCode;
+    private final String roamingNetworkName;
+
+    /**
+     * Represents whether the number is outside its home carrier network, as an enum.
+     */
     public enum RoamingStatus {
         UNKNOWN, ROAMING, NOT_ROAMING;
 
@@ -33,6 +44,11 @@ public class RoamingDetails {
                 return UNKNOWN;
             }
         }
+
+        @Override
+        public String toString() {
+            return name().toLowerCase();
+        }
     }
 
     public RoamingDetails(RoamingStatus status, String roamingCountryCode, String roamingNetworkCode, String roamingNetworkName){
@@ -42,25 +58,33 @@ public class RoamingDetails {
         this.roamingNetworkName = roamingNetworkName;
     }
 
-    private RoamingStatus status;
-    private String roamingCountryCode;
-    private String roamingNetworkCode;
-    private String roamingNetworkName;
-
+    /**
+     * @return The roaming status, as an enum.
+     */
+    @JsonProperty("status")
     public RoamingStatus getStatus() {
         return status;
     }
 
+    /**
+     * @return If number is roaming, this is the code of the country the number is roaming in.
+     */
     @JsonProperty("roaming_country_code")
     public String getRoamingCountryCode() {
         return roamingCountryCode;
     }
 
+    /**
+     * @return If the number is roaming, this is the ID of the carrier network the number is roaming in.
+     */
     @JsonProperty("roaming_network_code")
     public String getRoamingNetworkCode() {
         return roamingNetworkCode;
     }
 
+    /**
+     * @return If the number is roaming, this is the name of the carrier network the number is roaming in.
+     */
     @JsonProperty("roaming_network_name")
     public String getRoamingNetworkName() {
         return roamingNetworkName;

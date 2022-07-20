@@ -16,14 +16,10 @@
 package com.vonage.client.insight;
 
 public class StandardInsightRequest extends BaseInsightRequest {
-    private StandardInsightRequest(Builder builder) {
-        number = builder.number;
-        country = builder.country;
-        cnam = builder.cnam;
-    }
 
-    public static Builder builder(String number) {
-        return new Builder(number);
+    private StandardInsightRequest(Builder builder) {
+        super(builder.number, builder.country);
+        cnam = builder.cnam;
     }
 
     public Boolean getCnam() {
@@ -53,17 +49,37 @@ public class StandardInsightRequest extends BaseInsightRequest {
         return new Builder(number).country(country).build();
     }
 
+    /**
+     * This method is the starting point for constructing a Standard Insight request.
+     *
+     * @param number A single phone number that you need insight about in national or international format.
+     *
+     * @return A new {@link Builder} instance.
+     */
+    public static Builder builder(String number) {
+        return new Builder(number);
+    }
+
+    /**
+     * This method is the starting point for constructing a Standard Insight request.
+     * Note that the number field must be set.
+     *
+     * @return A new {@link Builder} instance.
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static class Builder {
         protected String number;
         protected String country;
         protected Boolean cnam;
 
-        /**
-         * @param number A single phone number that you need insight about in national or international format.
-         */
-        public Builder(String number) {
+        protected Builder(String number) {
             this.number = number;
         }
+
+        protected Builder() {}
 
         /**
          * @param number A single phone number that you need insight about in national or international format.

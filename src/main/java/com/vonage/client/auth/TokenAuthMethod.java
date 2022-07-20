@@ -29,7 +29,7 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 
-public class TokenAuthMethod extends AbstractAuthMethod {
+public class TokenAuthMethod implements AuthMethod {
     private final int SORT_KEY = 30;
 
     private String apiKey;

@@ -15,7 +15,6 @@
  */
 package com.vonage.client.insight;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,19 +22,18 @@ import com.vonage.client.VonageUnexpectedException;
 
 import java.io.IOException;
 
+/**
+ * Response object constructed from the JSON payload returned for Advanced number insight requests.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AdvancedInsightResponse extends StandardInsightResponse {
     private Validity validNumber;
     private Reachability reachability;
-    private PortedStatus ported;
-    private Integer lookupOutcome;
+    private LookupOutcome lookupOutcome;
     private String lookupOutcomeMessage;
     private RoamingDetails roaming;
-    private String callerName;
-    private String firstName;
-    private String lastName;
-    private CallerType callerType;
-
+    private RealTimeData realTimeData;
+    private String errorText;
 
     public static AdvancedInsightResponse fromJson(String json) {
         try {
@@ -46,93 +44,60 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
         }
     }
 
+    /**
+     * @return Whether the number exists, as an enum.
+     */
     @JsonProperty("valid_number")
     public Validity getValidNumber() {
         return validNumber;
     }
 
+    /**
+     * @return Whether the number can be called, as an enum.
+     */
     @JsonProperty("reachable")
     public Reachability getReachability() {
         return reachability;
     }
 
-    public PortedStatus getPorted() {
-        return ported;
-    }
-
+    /**
+     * @return The outcome, as an enum.
+     */
     @JsonProperty("lookup_outcome")
-    public Integer getLookupOutcome() {
+    public LookupOutcome getLookupOutcome() {
         return lookupOutcome;
     }
 
+    /**
+     * @return Shows if all information about a phone number has been returned, as a String.
+     */
     @JsonProperty("lookup_outcome_message")
     public String getLookupOutcomeMessage() {
         return lookupOutcomeMessage;
     }
 
+    /**
+     * @return The roaming information, as an enum.
+     */
+    @JsonProperty("roaming")
     public RoamingDetails getRoaming() {
         return roaming;
     }
 
-    @JsonProperty("caller_name")
-    public String getCallerName() {
-        return callerName;
+    /**
+     * @return Real-time data about the number if it was requested, <code>null</code> otherwise.
+     */
+    @JsonProperty("real_time_data")
+    public RealTimeData getRealTimeData() {
+        return realTimeData;
     }
 
-    @JsonProperty("first_name")
-    public String getFirstName() {
-        return firstName;
-    }
-
-    @JsonProperty("last_name")
-    public String getLastName() {
-        return lastName;
-    }
-
-    @JsonProperty("caller_type")
-    public CallerType getCallerType() {
-        return callerType;
-    }
-
-    public enum PortedStatus {
-        UNKNOWN, PORTED, NOT_PORTED, ASSUMED_NOT_PORTED, ASSUMED_PORTED;
-
-        @JsonCreator
-        public static PortedStatus fromString(String name) {
-            try {
-                return PortedStatus.valueOf(name.toUpperCase());
-            }
-            catch (IllegalArgumentException ex) {
-                return UNKNOWN;
-            }
-        }
-    }
-
-    public enum Validity {
-        UNKNOWN, VALID, NOT_VALID;
-
-        @JsonCreator
-        public static Validity fromString(String name) {
-            try {
-                return Validity.valueOf(name.toUpperCase());
-            }
-            catch (IllegalArgumentException ex) {
-                return UNKNOWN;
-            }
-        }
-    }
-
-    public enum Reachability {
-        UNKNOWN, REACHABLE, UNDELIVERABLE, ABSENT, BAD_NUMBER, BLACKLISTED;
-
-        @JsonCreator
-        public static Reachability fromString(String name) {
-            try {
-                return Reachability.valueOf(name.toUpperCase());
-            }
-            catch (IllegalArgumentException ex) {
-                return UNKNOWN;
-            }
-        }
+    /**
+     * @return The status description of your request.
+     * This field is equivalent to status_message field in the other endpoints.
+     */
+    @JsonProperty("error_text")
+    public String getErrorText() {
+        return errorText;
     }
 }

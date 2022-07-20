@@ -17,9 +17,12 @@ package com.vonage.client.auth;
 
 import org.apache.http.client.methods.RequestBuilder;
 
-
 public interface AuthMethod extends Comparable<AuthMethod> {
-    RequestBuilder apply(RequestBuilder request);
+
+    @Override
+    default int compareTo(AuthMethod other) {
+        return Integer.compare(this.getSortKey(), other.getSortKey());
+    }
 
     /**
      * Apply the authentication to the header as basic authentication.
@@ -28,7 +31,11 @@ public interface AuthMethod extends Comparable<AuthMethod> {
      *
      * @return RequestBuilder for more building of the request.
      */
-    RequestBuilder applyAsBasicAuth(RequestBuilder requestBuilder);
+    default RequestBuilder applyAsBasicAuth(RequestBuilder requestBuilder) {
+        throw new UnsupportedOperationException(
+                "applyAsBasicAuth not implemented for " + getClass().getCanonicalName()
+        );
+    }
 
     /**
      * Apply the authentication by adding it to the entity payload.
@@ -37,7 +44,13 @@ public interface AuthMethod extends Comparable<AuthMethod> {
      *
      * @return RequestBuilder for more building of the request.
      */
-    RequestBuilder applyAsJsonProperties(RequestBuilder requestBuilder);
+    default RequestBuilder applyAsJsonProperties(RequestBuilder requestBuilder) {
+        throw new UnsupportedOperationException(
+                "applyAsJsonProperties not implemented for " + getClass().getCanonicalName()
+        );
+    }
+
+    RequestBuilder apply(RequestBuilder request);
 
     int getSortKey();
 }

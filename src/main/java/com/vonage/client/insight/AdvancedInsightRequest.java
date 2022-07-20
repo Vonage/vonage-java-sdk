@@ -16,26 +16,57 @@
 package com.vonage.client.insight;
 
 public class AdvancedInsightRequest extends BaseInsightRequest {
-    private boolean async;
-    private String callback;
+    private final boolean async;
+    private final String callback;
+    private final String ipAddress;
+    private final Boolean realTimeData;
 
     private AdvancedInsightRequest(Builder builder) {
-        number = builder.number;
-        country = builder.country;
+        super(builder.number, builder.country);
         cnam = builder.cnam;
         ipAddress = builder.ipAddress;
-        async = builder.async;
         callback = builder.callback;
+        if (!(async = builder.async)) {
+            realTimeData = builder.realTimeData;
+        }
+        else {
+            realTimeData = null;
+            if (callback == null || callback.isEmpty()) {
+                throw new IllegalStateException("You must define a callback URL when using asynchronous insights.");
+            }
+        }
     }
 
+    /**
+     * This method is the starting point for constructing an Advanced Insight request.
+     *
+     * @param number A single phone number that you need insight about in national or international format.
+     *
+     * @return A new {@link Builder} instance.
+     */
     public static Builder builder(String number) {
         return new Builder(number);
+    }
+
+    /**
+     * This method is the starting point for constructing an Advanced Insight request.
+     * Note that the number field must be set.
+     *
+     * @return A new {@link Builder} instance.
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public Boolean getRealTimeData() {
+        return realTimeData;
     }
 
     public Boolean getCnam() {
         return cnam;
     }
 
+    @Deprecated
     public String getIpAddress() {
         return ipAddress;
     }
@@ -49,7 +80,7 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
     }
 
     /**
-     * Construct a AdvancedInsightRequest with a number.
+     * Construct an AdvancedInsightRequest with a number.
      *
      * @param number A single phone number that you need insight about in national or international format.
      *
@@ -72,23 +103,19 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
     }
 
     public static class Builder {
-        protected String number;
-        protected String country;
-        protected Boolean cnam;
-        protected String ipAddress;
         protected boolean async;
-        protected String callback;
+        protected Boolean cnam, realTimeData;
+        protected String number, country, ipAddress, callback;
 
-        /**
-         * @param number A single phone number that you need insight about in national or international format.
-         */
-        public Builder(String number) {
+        protected Builder(String number) {
             this.number = number;
         }
 
+        protected Builder() {}
+
         /**
          * @param number A single phone number that you need insight about in national or international format.
-         *
+         *              This field is REQUIRED.
          * @return The {@link Builder} to keep building.
          */
         public Builder number(String number) {
@@ -114,17 +141,21 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
          *
          * @return The {@link Builder} to keep building.
          */
-        public Builder cnam(Boolean cnam) {
+        public Builder cnam(boolean cnam) {
             this.cnam = cnam;
             return this;
         }
 
         /**
+         * @deprecated This parameter is deprecated as we are no longer able to retrieve reliable
+         * IP data globally from carriers.
+         *
          * @param ipAddress The IP address of the user. If supplied, we will compare this to the country the user's
          *                  phone is located in and return an error if it does not match.
          *
          * @return The {@link Builder} to keep building.
          */
+        @Deprecated
         public Builder ipAddress(String ipAddress) {
             this.ipAddress = ipAddress;
             return this;
@@ -143,6 +174,7 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
 
         /**
          * @param url The URL that Vonage will send a request to when the insight lookup is finished.
+         *            This only takes effect when {@link #async(boolean)} is <code>true</code>.
          *
          * @return The {@link Builder} to keep building.
          */
@@ -152,12 +184,20 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
         }
 
         /**
+         * @param realTimeData A boolean to choose whether to get real time data back in the response.
+         *                     This only applies when {@link #async(boolean)} is <code>false</code>.
+         *
+         * @return The {@link Builder} to keep building.
+         */
+        public Builder realTimeData(boolean realTimeData) {
+            this.realTimeData = realTimeData;
+            return this;
+        }
+
+        /**
          * @return A new {@link AdvancedInsightRequest} object from the stored builder options.
          */
         public AdvancedInsightRequest build() {
-            if (async && (callback == null || callback.isEmpty())) {
-                throw new IllegalStateException("You must define a callback url when using asyncronous insights.");
-            }
             return new AdvancedInsightRequest(this);
         }
     }

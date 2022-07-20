@@ -21,22 +21,43 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 public class BasicInsightRequestTest {
+
     @Test
-    public void testWithNumber() throws Exception {
+    public void testWithNumber() {
         BasicInsightRequest request = BasicInsightRequest.withNumber("12345");
         assertEquals(request.getNumber(), "12345");
         assertNull(request.getCountry());
     }
 
     @Test
-    public void testWithNumberAndCountry() throws Exception {
+    public void testWithNumberAndCountry() {
         BasicInsightRequest request = BasicInsightRequest.withNumberAndCountry("12345", "GB");
         assertEquals(request.getNumber(), "12345");
         assertEquals(request.getCountry(), "GB");
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void testBuildWithoutNumberThrowsException() {
+        BasicInsightRequest.builder().build();
+    }
+
     @Test
-    public void testBuildWithAllFields() throws Exception {
+    public void testBuildWithNumberAfterConstruction() {
+        BasicInsightRequest request = BasicInsightRequest.builder()
+                .number("12345").build();
+        assertEquals("12345", request.getNumber());
+    }
+
+    @Test
+    public void testMutateNumberAfterConstruction() {
+        String number = "12345";
+        BasicInsightRequest.Builder builder = BasicInsightRequest.builder(number);
+        assertEquals(number, builder.build().getNumber());
+        assertEquals(number = "6789", builder.number(number).build().getNumber());
+    }
+
+    @Test
+    public void testBuildWithAllFields() {
         BasicInsightRequest request = BasicInsightRequest.builder("12345").country("GB").build();
         assertEquals(request.getNumber(), "12345");
         assertEquals(request.getCountry(), "GB");
@@ -44,5 +65,10 @@ public class BasicInsightRequestTest {
         request = BasicInsightRequest.builder("12345").number("98765").country("GB").build();
         assertEquals(request.getNumber(), "98765");
         assertEquals(request.getCountry(), "GB");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testWithInvalidCountryCode() {
+        BasicInsightRequest.builder("12345").country("England").build();
     }
 }

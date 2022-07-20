@@ -21,7 +21,7 @@ import org.apache.http.client.methods.RequestBuilder;
 
 import java.util.List;
 
-public class SignatureAuthMethod extends AbstractAuthMethod {
+public class SignatureAuthMethod implements AuthMethod {
     public final int SORT_KEY = 20;
 
     private String apiKey;

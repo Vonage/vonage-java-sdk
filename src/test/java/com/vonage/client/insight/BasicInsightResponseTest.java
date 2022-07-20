@@ -19,11 +19,11 @@ import com.vonage.client.VonageUnexpectedException;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class BasicInsightResponseTest {
+
     @Test
-    public void fromJson() throws Exception {
+    public void fromJson() {
         BasicInsightResponse response = BasicInsightResponse.fromJson("{\n" +
                 "    \"status\": 0,\n" +
                 "    \"status_message\": \"Success\",\n" +
@@ -48,14 +48,12 @@ public class BasicInsightResponseTest {
     }
 
     @Test
-    public void fromBusyJson() throws Exception {
-        BasicInsightResponse response = BasicInsightResponse.fromJson(
-                "{\n" +
-                        "    \"status\": 1,\n" +
-                        "    \"status_message\": \"Back off\",\n" +
-                        "    \"request_id\": \"d79c3d82-e2ee-46ff-972a-97b76be419cb\"\n" +
-                        "}"
-        );
+    public void fromBusyJson() {
+        BasicInsightResponse response = BasicInsightResponse.fromJson("{\n" +
+            "    \"status\": 1,\n" +
+            "    \"status_message\": \"Back off\",\n" +
+            "    \"request_id\": \"d79c3d82-e2ee-46ff-972a-97b76be419cb\"\n" +
+            "}");
 
         assertEquals(InsightStatus.THROTTLED, response.getStatus());
         assertEquals("Back off", response.getStatusMessage());
@@ -63,27 +61,17 @@ public class BasicInsightResponseTest {
     }
 
     @Test
-    public void fromErrorJson() throws Exception {
-        BasicInsightResponse response = BasicInsightResponse.fromJson(
-                "{\n" +
-                        "    \"status\": 3,\n" +
-                        "    \"error_text\": \"I'm not sure what you mean\",\n" +
-                        "    \"request_id\": \"d79c3d82-e2ee-46ff-972a-97b76be419cb\"\n" +
-                        "}"
-        );
+    public void testFromUnknownFieldJson() {
+        StandardInsightResponse response = StandardInsightResponse.fromJson(
+                "{\n" + "    \"status\": 3,\n" + "    \"error_text\": \"I'm not sure what you mean\",\n"
+                    + "    \"request_id\": \"d79c3d82-e2ee-46ff-972a-97b76be419cb\"\n" + "}");
 
         assertEquals(InsightStatus.INVALID_PARAMS, response.getStatus());
-        assertEquals("I'm not sure what you mean", response.getErrorText());
         assertEquals("d79c3d82-e2ee-46ff-972a-97b76be419cb", response.getRequestId());
     }
 
-    @Test
-    public void testJsonError() throws Exception {
-        try {
-            BasicInsightResponse.fromJson("blarg");
-            fail("Deserializing nonsense JSON should result in a VonageUnexpectedException");
-        } catch (VonageUnexpectedException nue) {
-            // This is expected
-        }
+    @Test(expected = VonageUnexpectedException.class)
+    public void testJsonError() {
+        BasicInsightResponse.fromJson("blarg");
     }
 }

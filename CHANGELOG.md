@@ -6,7 +6,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [7.0.0]
 - Removed SMS Search API
+- Deprecated Redact client
 - Allow alphanumeric characters for SMS and MMS sender fields in Messages API
+- Made `WhatsappTemplateRequest` parameters more permissive
+- Removed dependency on commons-io and commons-lang3
+- Ensured User-Agent is set in request headers
+- Added Premium text-to-speech flag in `TalkAction` NCCO
+- Removed support for legacy `voiceName` parameter
+- Updated SMS error status codes
+- Updated Number Insight to be consistent with API specification
+  - Deprecated IP Address
+  - Added missing InsightStatus codes
+  - Added documentation to Insight Response fields
+  - Moved AdvancedInsight enums to separate files
+  - Added `real_time_data` to AdvancedInsightResponse
 
 ## [6.5.0]
 - Added Messages v1 API implementation

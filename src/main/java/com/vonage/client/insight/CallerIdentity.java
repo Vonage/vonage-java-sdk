@@ -25,21 +25,37 @@ public class CallerIdentity {
     private String firstName;
     private String lastName;
 
+    /**
+     * @return The caller type, as an enum.
+     */
     @JsonProperty("caller_type")
     public CallerType getType() {
         return type;
     }
 
+    /**
+     * @return Full name of the person or business who owns the phone number, or "unknown" if this
+     * information is not available. This parameter is only present if cnam had a value of
+     * <code>true</code> in the request.
+     */
     @JsonProperty("caller_name")
     public String getName() {
         return name;
     }
 
+    /**
+     * @return First name of the person who owns the phone number if the owner is an individual.
+     * This parameter is only present if cnam had a value of <code>true</code> in the request.
+     */
     @JsonProperty("first_name")
     public String getFirstName() {
         return firstName;
     }
 
+    /**
+     * @return Last name of the person who owns the phone number if the owner is an individual.
+     * This parameter is only present if cnam had a value of <code>true</code> in the request.
+     */
     @JsonProperty("last_name")
     public String getLastName() {
         return lastName;
