@@ -17,12 +17,10 @@ package com.vonage.client.sms;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageResponseParseException;
-import com.vonage.client.VonageUnexpectedException;
 
-import java.io.IOException;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -34,18 +32,22 @@ public class SmsSubmissionResponse {
         try {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(json, SmsSubmissionResponse.class);
-        } catch (JsonMappingException jme) {
+        } catch (JsonProcessingException jme) {
             throw new VonageResponseParseException("Failed to produce SmsSubmissionResponse from json.", jme);
-        } catch (IOException jpe) {
-            throw new VonageUnexpectedException("Failed to produce SmsSubmissionResponse from json.", jpe);
         }
     }
 
+    /**
+     * @return The number of messages in the request.
+     */
     @JsonProperty("message-count")
     public int getMessageCount() {
         return messageCount;
     }
 
+    /**
+     * @return Responses for each of the messages.
+     */
     @JsonProperty("messages")
     public List<SmsSubmissionResponseMessage> getMessages() {
         return messages;

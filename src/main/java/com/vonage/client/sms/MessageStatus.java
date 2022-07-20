@@ -29,7 +29,8 @@ import java.util.stream.Collectors;
 public enum MessageStatus {
 
     /**
-     * Message was sent successfully.
+     * A status of zero does not indicate that Vonage delivered your message. Instead, this
+     * status indicates the absence of an error - i.e. the REST call succeeded.
      */
     OK(0),
 
@@ -94,6 +95,12 @@ public enum MessageStatus {
     MESSAGE_TOO_LONG(12),
 
     /**
+     * No longer used.
+     */
+    @Deprecated
+    COMMS_FAILURE(13),
+
+    /**
      * The signature supplied could not be verified.
      */
     INVALID_SIGNATURE(14),
@@ -104,31 +111,31 @@ public enum MessageStatus {
     INVALID_FROM_ADDRESS(15),
 
     /**
-     *
+     * No longer used.
      */
     @Deprecated
     INVALID_TTL(16),
 
     /**
-     * 
+     * No longer used.
      */
     @Deprecated
     NUMBER_UNREACHABLE(17),
 
     /**
-     * 
+     * No longer used.
      */
     @Deprecated
     TOO_MANY_DESTINATIONS(18),
 
     /**
-     * 
+     * No longer used.
      */
     @Deprecated
     FACILITY_NOT_ALLOWED(19),
 
     /**
-     * 
+     * No longer used.
      */
     @Deprecated
     INVALID_MESSAGE_CLASS(20),
@@ -160,7 +167,7 @@ public enum MessageStatus {
     NUMBER_DEACTIVATED(33),
 
     /**
-     * 
+     * Unknown status code.
      */
     UNKNOWN(Integer.MAX_VALUE);
 

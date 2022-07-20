@@ -20,13 +20,11 @@ import org.apache.http.client.methods.RequestBuilder;
 
 /**
  * Represents the details of a plain-text message that is to be submitted via the Vonage REST api.
- *
- *
  */
 public class TextMessage extends Message {
     private final String messageBody;
 
-    private boolean unicode;
+    private final boolean unicode;
 
     /**
      * Instantiate a new text-message request.<br>
@@ -80,15 +78,21 @@ public class TextMessage extends Message {
         return unicode;
     }
 
+    /**
+     * Gets the MessageType.
+     *
+     * @return {@linkplain MessageType#UNICODE} if {@linkplain #isUnicode()}, {@linkplain MessageType#TEXT} otherwise.
+     */
     @Override
     public MessageType getType() {
-        if (unicode) {
-            return MessageType.UNICODE;
-        } else {
-            return MessageType.TEXT;
-        }
+        return unicode ? MessageType.UNICODE : MessageType.TEXT;
     }
 
+    /**
+     * Adds the text as a parameter to the request.
+     *
+     * @param request The request builder to add parameters to.
+     */
     @Override
     public void addParams(RequestBuilder request) {
         super.addParams(request);
