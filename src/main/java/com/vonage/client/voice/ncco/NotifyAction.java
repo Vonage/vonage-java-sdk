@@ -34,6 +34,8 @@ public class NotifyAction implements Action {
     private Collection<String> eventUrl;
     private EventMethod eventMethod;
 
+    NotifyAction() {}
+
     private NotifyAction(Builder builder) {
         this.payload = builder.payload;
         this.eventUrl = builder.eventUrl;

@@ -40,6 +40,8 @@ public class ConnectAction implements Action {
     private Collection<String> eventUrl;
     private EventMethod eventMethod;
 
+    ConnectAction() {}
+
     private ConnectAction(Builder builder) {
         this.endpoint = builder.endpoint;
         this.from = builder.from;

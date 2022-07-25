@@ -35,6 +35,8 @@ public class TalkAction implements Action {
     private Integer style;
     private Boolean premium;
 
+    TalkAction() {}
+
     private TalkAction(Builder builder) {
         this.text = builder.text;
         this.bargeIn = builder.bargeIn;

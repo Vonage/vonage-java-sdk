@@ -34,6 +34,8 @@ public class StreamAction implements Action {
     private Boolean bargeIn;
     private Integer loop;
 
+    StreamAction() {}
+
     private StreamAction(Builder builder) {
         streamUrl = builder.streamUrl;
         level = builder.level;

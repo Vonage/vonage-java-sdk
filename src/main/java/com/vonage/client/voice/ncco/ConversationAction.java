@@ -37,6 +37,8 @@ public class ConversationAction implements Action {
     private Collection<String> eventUrl;
     private EventMethod eventMethod;
 
+    ConversationAction() {}
+
     private ConversationAction(Builder builder) {
         name = builder.name;
         musicOnHoldUrl = builder.musicOnHoldUrl;

@@ -39,6 +39,8 @@ public class RecordAction implements Action {
     private SplitRecording split;
     private Integer channels;
 
+    RecordAction() {}
+
     /**
      * @param builder Builder for building the Record Action
      */

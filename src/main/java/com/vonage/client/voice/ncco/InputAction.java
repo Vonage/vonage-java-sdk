@@ -37,6 +37,8 @@ public class InputAction implements Action {
     private SpeechSettings speech;
     private EventMethod eventMethod;
 
+    InputAction() {}
+
     /**
      * @param builder  builder to create InputAction object
      */
