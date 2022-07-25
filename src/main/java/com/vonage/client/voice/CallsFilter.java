@@ -25,10 +25,8 @@ import java.util.List;
 
 public class CallsFilter {
     private CallStatus status;
-    private Date dateStart;
-    private Date dateEnd;
-    private Integer pageSize;
-    private Integer recordIndex;
+    private Date dateStart, dateEnd;
+    private Integer pageSize, recordIndex;
     private CallOrder order;
     private String conversationUuid;
 

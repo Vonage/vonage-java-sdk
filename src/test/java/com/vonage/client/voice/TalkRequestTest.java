@@ -26,7 +26,13 @@ public class TalkRequestTest {
 
     @Before
     public void setUp() throws Exception {
-        request = new TalkRequest("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", "Wubba lubba dub dub", VoiceName.BRIAN, 0);
+        request = new TalkRequest(
+                "ssf61863-4a51-ef6b-11e1-w6edebcf93bb",
+                "Wubba lubba dub dub",
+                TextToSpeechLanguage.ARABIC,
+                3,
+                0
+        );
     }
 
     @Test
@@ -38,7 +44,7 @@ public class TalkRequestTest {
 
     @Test
     public void toJson() throws Exception {
-        String jsonString = "{\"text\":\"Wubba lubba dub dub\",\"loop\":0,\"voice_name\":\"Brian\"}";
+        String jsonString = "{\"text\":\"Wubba lubba dub dub\",\"loop\":0,\"language\":\"ar\",\"style\":3}";
         assertEquals(jsonString, request.toJson());
     }
 

@@ -18,6 +18,11 @@ package com.vonage.client.voice;
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import com.fasterxml.jackson.annotation.JsonValue;
 
+/**
+ * Enum representing the available TTS language options. See
+ * <a href=https://developer.vonage.com/voice/voice-api/guides/text-to-speech#supported-languages>the documentation</a>
+ * for previews and valid styles.
+ */
 public enum TextToSpeechLanguage {
     ARABIC("ar"),
     SPANISH_CATALAN("ca-ES"),

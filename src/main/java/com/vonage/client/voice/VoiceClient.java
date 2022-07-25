@@ -99,7 +99,7 @@ public class VoiceClient {
      * Look up the status of a single call initiated by {@link #createCall(Call)}.
      *
      * @param uuid (required) The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This
-     *             value can be obtained with {@link CallEvent#getUuid()}
+     *             value can be obtained with {@link CallEvent#getUuid()}.
      *
      * @return A CallInfo object, representing the response from the Vonage Voice API.
      *
@@ -141,8 +141,8 @@ public class VoiceClient {
      * </ul>
      *
      * @param uuid   The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value
-     *               can be obtained with {@link CallEvent#getUuid()}
-     * @param action One of: "hangup", "mute", "unmute", "earmuff", "unearmuff"
+     *               can be obtained with {@link CallEvent#getUuid()}.
+     * @param action The Action to take.
      *
      * @return A ModifyCallResponse object, representing the response from the Vonage Voice API.
      *
@@ -174,8 +174,8 @@ public class VoiceClient {
      * Transfer a call to a different NCCO endpoint.
      *
      * @param uuid    The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value
-     *                can be obtained with {@link CallEvent#getUuid()}
-     * @param nccoUrl The URL of the NCCO endpoint the call should be transferred to
+     *                can be obtained with {@link CallEvent#getUuid()}.
+     * @param nccoUrl The URL of the NCCO endpoint the call should be transferred to.
      *
      * @return A ModifyCallResponse object, representing the response from the Vonage Voice API.
      *
@@ -190,7 +190,7 @@ public class VoiceClient {
      * Transfer a call to a different NCCO.
      *
      * @param uuid The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value can
-     *             be obtained with {@link CallEvent#getUuid()}
+     *             be obtained with {@link CallEvent#getUuid()}.
      * @param ncco The new NCCO that will be used in the call.
      *
      * @return A ModifyCallResponse object, representing the response from the Vonage Voice API.
@@ -206,12 +206,12 @@ public class VoiceClient {
      * Stream audio to an ongoing call.
      *
      * @param uuid      The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value
-     *                  can be obtained with {@link CallEvent#getUuid()}
+     *                  can be obtained with {@link CallEvent#getUuid()}.
      * @param streamUrl A URL of an audio file in MP3 or 16-bit WAV format, to be streamed to the call.
      * @param loop      The number of times to repeat the audio. The default value is {@code 1}, or you can use {@code
      *                  0} to indicate that the audio should be repeated indefinitely.
      *
-     * @return The data returned from the Voice API
+     * @return The data returned from the Voice API.
      *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
@@ -224,7 +224,7 @@ public class VoiceClient {
      * Stream audio to an ongoing call.
      *
      * @param uuid      The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value
-     *                  can be obtained with {@link CallEvent#getUuid()}
+     *                  can be obtained with {@link CallEvent#getUuid()}.
      * @param streamUrl A URL of an audio file in MP3 or 16-bit WAV format, to be streamed to the call.
      *
      * @return The data returned from the Voice API.
@@ -240,9 +240,9 @@ public class VoiceClient {
      * Stop the audio being streamed into a call.
      *
      * @param uuid The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value can
-     *             be obtained with {@link CallEvent#getUuid()}
+     *             be obtained with {@link CallEvent#getUuid()}.
      *
-     * @return The data returned from the Voice API
+     * @return The data returned from the Voice API.
      *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
@@ -254,7 +254,7 @@ public class VoiceClient {
     /**
      * Send a synthesized speech message to an ongoing call.
      * <p>
-     * The message will only play once, spoken with the default voice of Kimberly.
+     * The message will only play once, spoken with the default en-US voice.
      *
      * @param uuid The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value can
      *             be obtained with {@link CallEvent#getUuid()}
@@ -270,48 +270,11 @@ public class VoiceClient {
     }
 
     /**
-     * Send a synthesized speech message to an ongoing call.
-     *
-     * @param uuid      The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value
-     *                  can be obtained with {@link CallEvent#getUuid()}
-     * @param text      The message to be spoken to the call participants.
-     * @param voiceName The voice to be used to speak the message.
-     *
-     * @return The data returned from the Voice API.
-     *
-     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     */
-    @Deprecated
-    public TalkResponse startTalk(String uuid, String text, VoiceName voiceName) throws VonageResponseParseException, VonageClientException {
-        return startTalk.execute(new TalkRequest(uuid, text, voiceName));
-    }
-
-    /**
      * @param uuid      The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value
      *                   can be obtained with {@link CallEvent#getUuid()}
      * @param text       The message to be spoken to the call participants.
      *
-     * @param language  The Language to use when converting text-to-speech
-     *
-     * @param style     The Style to use for Text-To-Speech
-     *
-     * @return The data returned from the Voice API.
-     *
-     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     *
-     */
-    public TalkResponse startTalk(String uuid, String text, TextToSpeechLanguage language, Integer style) throws VonageResponseParseException, VonageClientException {
-        return startTalk.execute(new TalkRequest(uuid, text, language, style));
-    }
-
-    /**
-     * @param uuid      The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value
-     *                   can be obtained with {@link CallEvent#getUuid()}
-     * @param text       The message to be spoken to the call participants.
-     *
-     * @param language  The Language to use when converting text-to-speech
+     * @param language  The Language to use when converting text-to-speech.
      *
      * @return The data returned from the Voice API.
      *
@@ -326,10 +289,10 @@ public class VoiceClient {
     /**
      * Send a synthesized speech message to an ongoing call.
      * <p>
-     * The message will be spoken with the default voice of Kimberly.
+     * The message will be spoken with the default en-US voice.
      *
      * @param uuid The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value can
-     *             be obtained with {@link CallEvent#getUuid()}
+     *             be obtained with {@link CallEvent#getUuid()}.
      * @param text The message to be spoken to the call participants.
      * @param loop The number of times to repeat the message. The default value is {@code 1}, or you can use {@code 0}
      *             to indicate that the message should be repeated indefinitely.
@@ -347,30 +310,10 @@ public class VoiceClient {
      * Send a synthesized speech message to an ongoing call.
      *
      * @param uuid      The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value
-     *                  can be obtained with {@link CallEvent#getUuid()}
+     *                  can be obtained with {@link CallEvent#getUuid()}.
      * @param text      The message to be spoken to the call participants.
-     * @param voiceName The voice to be used to speak the message.
-     * @param loop      The number of times to repeat the message. The default value is {@code 1}, or you can use {@code
-     *                  0} to indicate that the message should be repeated indefinitely.
-     *
-     * @return The data returned from the Voice API.
-     *
-     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     */
-    @Deprecated
-    public TalkResponse startTalk(String uuid, String text, VoiceName voiceName, int loop) throws VonageResponseParseException, VonageClientException {
-        return startTalk.execute(new TalkRequest(uuid, text, voiceName, loop));
-    }
-
-    /**
-     * Send a synthesized speech message to an ongoing call.
-     *
-     * @param uuid      The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value
-     *                  can be obtained with {@link CallEvent#getUuid()}
-     * @param text      The message to be spoken to the call participants.
-     * @param language  The language to use for the text-to-speech
-     * @param style     The language style to use for the text-to-speech
+     * @param language  The language to use for the text-to-speech.
+     * @param style     The language style to use for the text-to-speech.
      * @param loop      The number of times to repeat the message. The default value is {@code 1}, or you can use {@code
      *                  0} to indicate that the message should be repeated indefinitely.
      *
@@ -387,10 +330,10 @@ public class VoiceClient {
      * Send a synthesized speech message to an ongoing call.
      *
      * @param uuid      The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value
-     *                  can be obtained with {@link CallEvent#getUuid()}
+     *                  can be obtained with {@link CallEvent#getUuid()}.
      * @param text      The message to be spoken to the call participants.
-     * @param language  The language to use for the text-to-speech
-     * @param style     The language style to use for the text-to-speech
+     * @param language  The language to use for the text-to-speech.
+     * @param style     The language style to use for the text-to-speech.
      *
      * @return The data returned from the Voice API.
      *
@@ -401,14 +344,13 @@ public class VoiceClient {
         return startTalk.execute(new TalkRequest(uuid, text, language, style));
     }
 
-
     /**
      * Stop the message being spoken into a call.
      *
      * @param uuid The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value can
-     *             be obtained with {@link CallEvent#getUuid()}
+     *             be obtained with {@link CallEvent#getUuid()}.
      *
-     * @return The data returned from the Voice API
+     * @return The data returned from the Voice API.
      *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
@@ -420,12 +362,12 @@ public class VoiceClient {
     /**
      * Download a recording, given the recordingUrl provided from the webhook callback.
      * <p>
-     * This returns a {@link Recording} object which can provide an InputStream of the byte data, or can be used to save
-     * directly to file.
+     * This returns a {@link Recording} object which can provide an InputStream of the byte data, or can be used to
+     * save directly to file.
      *
-     * @param recordingUrl The recordingUrl provided by the webhook callback
+     * @param recordingUrl The recordingUrl provided by the webhook callback.
      *
-     * @return A Recording object, providing access to the recording's bytes
+     * @return A Recording object, providing access to the recording's bytes.
      *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.

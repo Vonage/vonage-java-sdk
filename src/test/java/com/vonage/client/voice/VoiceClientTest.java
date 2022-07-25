@@ -219,7 +219,8 @@ public class VoiceClientTest {
 
         TalkResponse response = client.startTalk("ssf61863-4a51-ef6b-11e1-w6edebcf93bb",
                 "Hello World",
-                VoiceName.CELINE,
+                TextToSpeechLanguage.GREEK,
+                1,
                 8
         );
         assertEquals("Talk started", response.getMessage());
@@ -229,11 +230,17 @@ public class VoiceClientTest {
     @Test
     public void testStartTalkNonLooping() throws Exception {
         VoiceClient client = new VoiceClient(stubHttpWrapper(200,
-                "{\n" + "  \"message\": \"Talk started\",\n" + "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n"
-                        + "}\n"
+            "{\n" +
+                    "  \"message\": \"Talk started\",\n" +
+                    "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
+                    "}\n"
         ));
 
-        TalkResponse response = client.startTalk("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", "Hello World", VoiceName.EMMA);
+        TalkResponse response = client.startTalk(
+                "ssf61863-4a51-ef6b-11e1-w6edebcf93bb",
+                "Hello World", TextToSpeechLanguage.KOREAN,
+                1
+        );
         assertEquals("Talk started", response.getMessage());
         assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
     }
