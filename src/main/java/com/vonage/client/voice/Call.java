@@ -52,11 +52,11 @@ public class Call {
         this(new Endpoint[]{to}, from, answerUrl);
     }
 
-    public Call(String to, String from, Collection<Action> ncco) {
+    public Call(String to, String from, Collection<? extends Action> ncco) {
         this(new PhoneEndpoint(to), new PhoneEndpoint(from), ncco);
     }
 
-    public Call(Endpoint to, Endpoint from, Collection<Action> ncco) {
+    public Call(Endpoint to, Endpoint from, Collection<? extends Action> ncco) {
         this(new Endpoint[]{to}, from, ncco);
     }
 

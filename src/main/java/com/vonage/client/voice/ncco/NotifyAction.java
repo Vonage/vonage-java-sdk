@@ -70,7 +70,7 @@ public class NotifyAction implements Action {
     public static class Builder {
         private Map<String, ?> payload;
         private Collection<String> eventUrl;
-        private EventMethod eventMethod = null;
+        private EventMethod eventMethod;
 
         /**
          * @param payload  A Map of String keys and ? values that will be converted to JSON and sent to your event URL.

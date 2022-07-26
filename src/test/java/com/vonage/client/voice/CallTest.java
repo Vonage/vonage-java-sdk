@@ -16,13 +16,10 @@
 package com.vonage.client.voice;
 
 import com.vonage.client.VonageUnexpectedException;
-import com.vonage.client.voice.ncco.InputAction;
-import com.vonage.client.voice.ncco.RecordAction;
-import com.vonage.client.voice.ncco.TalkAction;
+import com.vonage.client.voice.ncco.*;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -101,42 +98,109 @@ public class CallTest {
         assertEquals(newCall.toJson(), fromJson.toJson());
 
         jsonString = "{\n" +
-                "                \"to\": [\n" +
-                "                    {\n" +
-                "                        \"type\": \"phone\",\n" +
-                "                        \"number\": \"{phoneNumber}\"\n" +
-                "                    }\n" +
-                "                ],\n" +
-                "                \"from\": {\n" +
-                "                    \"type\": \"phone\",\n" +
-                "                    \"number\": \"447441442936\"\n" +
-                "                },\n" +
-                "                \"ncco\": [\n" +
-                "                    {\n" +
-                "                        \"action\": \"talk\",\n" +
-                "                        \"text\": \"There's need to verify your voice, please say Never forget tomorrow is a new day after the tone \",\n" +
-                "                        \"language\": \"en-US\",\n" +
-                "                        \"style\": 10\n" +
-                "                    },\n" +
-                "                    {\n" +
-                "                        \"action\": \"record\",\n" +
-                "                        \"eventUrl\": [\n" +
-                "                            \"http://voice1.yellowfin.npe:9087/callback/verify/{userId}\"\n" +
-                "                        ],\n" +
-                "                        \"endOnKey\": \"#\",\n" +
-                "                        \"timeOut\": 5,\n" +
-                "                        \"beepStart\": true\n" +
-                "                    },\n" +
-                "                    {\n" +
-                "                        \"action\": \"talk\",\n" +
-                "                        \"text\": \"Thank you, good bye\",\n" +
-                "                        \"language\": \"en-US\",\n" +
-                "                        \"style\": 10\n" +
-                "                    }\n" +
-                "                ]\n" +
+                "   \"to\":[\n" +
+                "      {\n" +
+                "         \"type\":\"phone\",\n" +
+                "         \"number\":\"447900000000\"\n" +
+                "      }\n" +
+                "   ],\n" +
+                "   \"from\":{\n" +
+                "      \"type\":\"phone\",\n" +
+                "      \"number\":\"447900000001\"\n" +
+                "   },\n" +
+                "   \"ncco\":[\n" +
+                "      {\n" +
+                "         \"action\":\"record\",\n" +
+                "         \"eventUrl\":[\n" +
+                "            \"http://voice1.yellowfin.npe:9087/callback/verify/{userId}\"\n" +
+                "         ],\n" +
+                "         \"endOnKey\":\"#\",\n" +
+                "         \"timeOut\":5,\n" +
+                "         \"beepStart\":true\n" +
+                "      },\n" +
+                "      {\n" +
+                "         \"action\":\"stream\",\n" +
+                "         \"streamUrl\":[\n" +
+                "            \n" +
+                "         ],\n" +
+                "         \"bargeIn\":true\n" +
+                "      },\n" +
+                "      {\n" +
+                "         \"action\":\"notify\",\n" +
+                "         \"payload\":{\n" +
+                "            \"k1\":\"v1\"\n" +
+                "         }\n" +
+                "      },\n" +
+                "      {\n" +
+                "         \"action\":\"input\",\n" +
+                "         \"dtmf\":{\n" +
+                "            \"timeOut\":30,\n" +
+                "            \"maxDigits\":12,\n" +
+                "            \"submitOnHash\":false\n" +
+                "         }\n" +
+                "      },\n" +
+                "      {\n" +
+                "         \"action\":\"connect\",\n" +
+                "         \"eventType\":\"synchronous\",\n" +
+                "         \"machineDetection\":\"hangup\"\n" +
+                "      },\n" +
+                "      {\n" +
+                "         \"action\":\"conversation\",\n" +
+                "         \"name\":\"Conference call\",\n" +
+                "         \"startOnEnter\":\"false\",\n" +
+                "         \"endOnExit\":true\n" +
+                "      },\n" +
+                "      {\n" +
+                "         \"action\":\"talk\",\n" +
+                "         \"text\":\"Thank you, good bye\",\n" +
+                "         \"language\":\"en-US\",\n" +
+                "         \"style\":10\n" +
+                "      }\n" +
+                "   ]\n" +
                 "}";
 
         fromJson = Call.fromJson(jsonString);
+        assertEquals(1, fromJson.getTo().length);
+        assertEquals("phone", fromJson.getTo()[0].getType());
+        assertEquals("447900000000", ((PhoneEndpoint) fromJson.getTo()[0]).getNumber());
+        assertTrue(fromJson.getFrom() instanceof PhoneEndpoint);
+        assertEquals("447900000001", ((PhoneEndpoint) fromJson.getFrom()).getNumber());
+        Collection<? extends Action> ncco = fromJson.getNcco();
+        assertEquals(7, ncco.size());
+        Iterator<? extends Action> actionsIter = ncco.iterator();
+
+        RecordAction record = (RecordAction) actionsIter.next();
+        assertEquals(1, record.getEventUrl().size());
+        assertEquals(Character.valueOf('#'), record.getEndOnKey());
+        assertEquals(Integer.valueOf(5), record.getTimeOut());
+        assertTrue(record.getBeepStart());
+
+        StreamAction stream = (StreamAction) actionsIter.next();
+        assertTrue(stream.getStreamUrl().isEmpty());
+        assertTrue(stream.getBargeIn());
+
+        NotifyAction notify = (NotifyAction) actionsIter.next();
+        assertEquals(1, notify.getPayload().size());
+
+        InputAction input = (InputAction) actionsIter.next();
+        DtmfSettings dtmf = input.getDtmf();
+        assertEquals(Integer.valueOf(30), dtmf.getTimeOut());
+        assertEquals(Integer.valueOf(12), dtmf.getMaxDigits());
+        assertFalse(dtmf.isSubmitOnHash());
+
+        ConnectAction connect = (ConnectAction) actionsIter.next();
+        assertEquals(EventType.SYNCHRONOUS, connect.getEventType());
+        assertEquals(MachineDetection.HANGUP, connect.getMachineDetection());
+
+        ConversationAction conversation = (ConversationAction) actionsIter.next();
+        assertEquals("Conference call", conversation.getName());
+        assertFalse(conversation.getStartOnEnter());
+        assertTrue(conversation.getEndOnExit());
+
+        TalkAction talk = (TalkAction) actionsIter.next();
+        assertEquals("Thank you, good bye", talk.getText());
+        assertEquals(TextToSpeechLanguage.AMERICAN_ENGLISH, talk.getLanguage());
+        assertEquals(Integer.valueOf(10), talk.getStyle());
     }
 
     @Test
