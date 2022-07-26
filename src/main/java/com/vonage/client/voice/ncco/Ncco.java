@@ -30,7 +30,7 @@ import java.util.Collections;
  */
 public class Ncco {
     @JsonValue
-    private Collection<Action> actions;
+    private Collection<? extends Action> actions;
     private ObjectWriter writer;
 
     public Ncco() {
@@ -45,7 +45,7 @@ public class Ncco {
         this(writer, Collections.emptyList());
     }
 
-    public Ncco(ObjectWriter writer, Collection<Action> actions) {
+    public Ncco(ObjectWriter writer, Collection<? extends Action> actions) {
         this.writer = writer;
         this.actions = actions;
     }
@@ -58,7 +58,7 @@ public class Ncco {
         this(Arrays.asList(action));
     }
 
-    public Collection<Action> getActions() {
+    public Collection<? extends Action> getActions() {
         return this.actions;
     }
 
