@@ -17,17 +17,24 @@ package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.net.URI;
+import java.util.Map;
+
 /**
- * Represents a SIP endpoint used in a {@link ConnectAction}
+ * Represents a SIP endpoint used in a {@link ConnectAction}. See
+ * <a href=https://developer.vonage.com/voice/voice-api/ncco-reference#sip-endpoint>the documentation</a>
+ * for an example.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class SipEndpoint implements Endpoint {
     private static final String TYPE = "sip";
 
-    private String uri;
+    private final URI uri;
+    private final Map<String, ?> headers;
 
     private SipEndpoint(Builder builder) {
         this.uri = builder.uri;
+        this.headers = builder.headers;
     }
 
     @Override
@@ -35,8 +42,12 @@ public class SipEndpoint implements Endpoint {
         return TYPE;
     }
 
-    public String getUri() {
+    public URI getUri() {
         return uri;
+    }
+
+    public Map<String, ?> getHeaders() {
+        return headers;
     }
 
     public static Builder builder(String uri) {
@@ -44,14 +55,28 @@ public class SipEndpoint implements Endpoint {
     }
 
     public static class Builder {
-        private String uri;
+        private URI uri;
+        private Map<String, ?> headers;
 
         public Builder(String uri) {
+            this(URI.create(uri));
+        }
+
+        public Builder(URI uri) {
             this.uri = uri;
         }
 
-        public Builder uri(String uri) {
+        public Builder uri(URI uri) {
             this.uri = uri;
+            return this;
+        }
+
+        public Builder uri(String uri) {
+            return uri(URI.create(uri));
+        }
+
+        public Builder headers(Map<String, ?> headers) {
+            this.headers = headers;
             return this;
         }
 
