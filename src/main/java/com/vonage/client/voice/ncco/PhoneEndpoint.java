@@ -89,12 +89,8 @@ public class PhoneEndpoint implements Endpoint {
     }
 
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    private static class OnAnswer {
+    public static class OnAnswer {
         private final String url, ringback;
-
-        private OnAnswer(String url) {
-            this(url, null);
-        }
 
         private OnAnswer(String url, String ringback) {
             this.url = url;

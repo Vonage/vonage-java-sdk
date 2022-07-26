@@ -17,16 +17,23 @@ package com.vonage.client.voice.ncco;
 
 import org.junit.Test;
 
+import java.util.Collections;
+
 import static org.junit.Assert.assertEquals;
 
 public class SipEndpointTest {
+
     @Test
     public void testAllFields() {
-        SipEndpoint endpoint = SipEndpoint.builder("test-sip-uri").uri("sip:test@example.com").build();
+        SipEndpoint endpoint = SipEndpoint.builder("")
+                .uri("sip:test@example.com")
+                .headers(Collections.singletonMap("k1", "v1"))
+                .build();
 
         ConnectAction connect = ConnectAction.builder(endpoint).build();
 
-        String expectedJson = "[{\"endpoint\":[{\"uri\":\"sip:test@example.com\",\"type\":\"sip\"}],\"action\":\"connect\"}]";
+        String expectedJson = "[{\"endpoint\":[{\"uri\":\"sip:test@example.com\"," +
+                "\"headers\":{\"k1\":\"v1\"},\"type\":\"sip\"}],\"action\":\"connect\"}]";
         assertEquals(expectedJson, new Ncco(connect).toJson());
     }
 }

@@ -31,7 +31,7 @@ public class CallTest {
         assertEquals(
                 "{\"to\":[{\"type\":\"phone\",\"number\":\"4477999000\"}],\"from\":{\"type\":\"phone\","
                         + "\"number\":\"44111222333\""
-                        + "},\"answer_url\":[\"https://callback.example.com/\"],\"answer_method\":\"GET\"}",
+                        + "},\"answer_method\":\"GET\",\"answer_url\":[\"https://callback.example.com/\"]}",
                 call.toJson()
         );
     }
@@ -45,7 +45,7 @@ public class CallTest {
         call.setAnswerUrl("https://callback.example.com/");
 
         assertEquals("{\"to\":[{\"type\":\"phone\",\"number\":\"4477999000\"}],"
-                + "\"answer_url\":[\"https://callback.example.com/\"],\"answer_method\":\"GET\",\"from_random_number\":true}",
+                + "\"answer_method\":\"GET\",\"answer_url\":[\"https://callback.example.com/\"],\"from_random_number\":true}",
                 call.toJson());
     }
 
@@ -56,7 +56,7 @@ public class CallTest {
         assertEquals(
                 "{\"to\":[{\"type\":\"phone\",\"number\":\"4477999000\"}],\"from\":{\"type\":\"phone\","
                         + "\"number\":\"44111222333\""
-                        + "},\"answer_url\":[\"https://callback.example.com/\"],\"answer_method\":\"GET\",\"machine_detection\":\"continue\"}",
+                        + "},\"answer_method\":\"GET\",\"answer_url\":[\"https://callback.example.com/\"],\"machine_detection\":\"continue\"}",
                 call.toJson()
         );
     }
