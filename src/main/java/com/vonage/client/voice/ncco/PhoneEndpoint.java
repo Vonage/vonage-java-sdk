@@ -18,15 +18,16 @@ package com.vonage.client.voice.ncco;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
- * Represents a phone endpoint used in a {@link ConnectAction}
+ * Represents a phone endpoint used in a {@link ConnectAction}. See
+ * <a href=https://developer.vonage.com/voice/voice-api/ncco-reference#phone-endpoint>the documentation</a>
+ * for an example.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class PhoneEndpoint implements Endpoint {
     private static final String TYPE = "phone";
 
-    private String number;
-    private String dtmfAnswer;
-    private OnAnswer onAnswer;
+    private final String number, dtmfAnswer;
+    private final OnAnswer onAnswer;
 
     private PhoneEndpoint(Builder builder) {
         this.number = builder.number;
@@ -55,10 +56,7 @@ public class PhoneEndpoint implements Endpoint {
     }
 
     public static class Builder {
-        private String number;
-        private String dtmfAnswer = null;
-        private String onAnswerUrl = null;
-        private String onAnswerRingback = null;
+        private String number, dtmfAnswer, onAnswerUrl, onAnswerRingback;
 
         public Builder(String number) {
             this.number = number;
@@ -92,15 +90,14 @@ public class PhoneEndpoint implements Endpoint {
 
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
     private static class OnAnswer {
-        private String url;
-        private String ringback;
+        private final String url, ringback;
 
         private OnAnswer(String url) {
-            this.url = url;
+            this(url, null);
         }
 
         private OnAnswer(String url, String ringback) {
-            this(url);
+            this.url = url;
             this.ringback = ringback;
         }
 

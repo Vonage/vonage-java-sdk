@@ -30,9 +30,9 @@ import java.util.Map;
 public class WebSocketEndpoint implements Endpoint {
     private static final String TYPE = "websocket";
 
-    private URI uri;
-    private String contentType;
-    private Map<String, ?> headers;
+    private final URI uri;
+    private final String contentType;
+    private final Map<String, ?> headers;
 
     private WebSocketEndpoint(Builder builder) {
         uri = builder.uri;
