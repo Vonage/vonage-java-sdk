@@ -24,7 +24,7 @@ import java.nio.file.Path;
 
 public class JWTAuthMethod implements AuthMethod {
     private static final int SORT_KEY = 10;
-    private Jwt jwt;
+    private final Jwt jwt;
 
     public JWTAuthMethod(final String applicationId, final byte[] privateKey) {
         jwt = Jwt.builder().applicationId(applicationId).privateKeyContents(new String(privateKey)).build();

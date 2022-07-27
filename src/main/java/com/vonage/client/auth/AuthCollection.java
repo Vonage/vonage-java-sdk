@@ -30,11 +30,11 @@ public class AuthCollection {
      * Create a new AuthCollection with an empty set of AuthMethods.
      */
     public AuthCollection() {
-        authList = new TreeSet<>();
+        this(new TreeSet<>());
     }
 
     public AuthCollection(AuthMethod... authMethods) {
-        authList = new TreeSet<>(Arrays.asList(authMethods));
+        this(new TreeSet<>(Arrays.asList(authMethods)));
     }
 
     public AuthCollection(SortedSet<AuthMethod> authMethods) {
@@ -67,7 +67,7 @@ public class AuthCollection {
                 return (T) availableAuthMethod;
             }
         }
-        throw new VonageUnacceptableAuthException(authList, new HashSet<>(Arrays.asList(new Class<?>[]{type})));
+        throw new VonageUnacceptableAuthException(authList, Arrays.asList(new Class<?>[]{type}));
     }
 
     /**

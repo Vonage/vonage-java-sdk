@@ -32,8 +32,7 @@ import java.io.IOException;
 public class TokenAuthMethod implements AuthMethod {
     private final int SORT_KEY = 30;
 
-    private String apiKey;
-    private String apiSecret;
+    private final String apiKey, apiSecret;
 
     public TokenAuthMethod(String apiKey, String apiSecret) {
         this.apiKey = apiKey;

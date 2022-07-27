@@ -24,19 +24,16 @@ import java.util.List;
 public class SignatureAuthMethod implements AuthMethod {
     public final int SORT_KEY = 20;
 
-    private String apiKey;
-    private String secret;
-    private HashUtil.HashType hashType;
+    private final String apiKey, apiSecret;
+    private final HashUtil.HashType hashType;
 
-    public SignatureAuthMethod(String apiKey, String secret) {
-        this.apiKey = apiKey;
-        this.secret = secret;
-        hashType = HashUtil.HashType.MD5;
+    public SignatureAuthMethod(String apiKey, String apiSecret) {
+        this(apiKey, apiSecret, HashUtil.HashType.MD5);
     }
 
-    public SignatureAuthMethod(String apiKey, String secret, HashUtil.HashType hashType) {
+    public SignatureAuthMethod(String apiKey, String apiSecret, HashUtil.HashType hashType) {
         this.apiKey = apiKey;
-        this.secret = secret;
+        this.apiSecret = apiSecret;
         this.hashType = hashType;
     }
 
@@ -44,11 +41,11 @@ public class SignatureAuthMethod implements AuthMethod {
     public RequestBuilder apply(RequestBuilder request) {
         request.addParameter("api_key", apiKey);
         List<NameValuePair> params = request.getParameters();
-        RequestSigning.constructSignatureForRequestParameters(params, secret, hashType);
+        RequestSigning.constructSignatureForRequestParameters(params, apiSecret, hashType);
 
         // TODO: This is ugly:
-        request.addParameter(params.get(params.size()-1));
-        request.addParameter(params.get(params.size()-2));
+        request.addParameter(params.get(params.size()-1))
+                .addParameter(params.get(params.size()-2));
 
         return request;
     }
