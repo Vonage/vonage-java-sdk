@@ -116,20 +116,21 @@ public class RequestSigning {
         for (NameValuePair param: params) {
             String name = param.getName();
             String value = param.getValue();
-            if (name.equals(PARAM_SIGNATURE))
+            if (name.equals(PARAM_SIGNATURE)) {
                 continue;
-            if (value == null)
+            }
+            if (value == null) {
                 value = "";
-            if (!value.trim().equals(""))
+            }
+            if (!value.trim().isEmpty()) {
                 sortedParams.put(name, value);
+            }
         }
 
         // Now, walk through the sorted list of parameters and construct a string
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, String> param: sortedParams.entrySet()) {
-            String name = param.getKey();
-            String value = param.getValue();
-            sb.append("&").append(clean(name)).append("=").append(clean(value));
+            sb.append("&").append(clean(param.getKey())).append("=").append(clean(param.getValue()));
         }
 
         String str = sb.toString();
@@ -213,7 +214,7 @@ public class RequestSigning {
                     String name = entry.getKey();
                     String value = entry.getValue();
                     log.info("" + name + " = " + value);
-                    if (value == null || value.trim().equals("")) {
+                    if (value == null || value.trim().isEmpty()) {
                         continue;
                     }
                     sortedParams.put(name, value);
