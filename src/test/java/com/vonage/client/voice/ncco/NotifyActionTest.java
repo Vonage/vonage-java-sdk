@@ -24,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 
 public class NotifyActionTest {
+
     @Test
     public void testBuilderMultipleInstances() {
         NotifyAction.Builder builder = NotifyAction.builder(new HashMap<>(), "http://example.com/webhooks/event");

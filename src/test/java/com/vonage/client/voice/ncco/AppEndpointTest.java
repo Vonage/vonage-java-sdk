@@ -20,13 +20,13 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class AppEndpointTest {
-  @Test
-  public void testAppEndpoint() {
-    AppEndpoint endpoint = AppEndpoint.builder("testUser")
-        .build();
-    ConnectAction connect = ConnectAction.builder(endpoint).build();
 
-    String expectedJson = "[{\"endpoint\":[{\"user\":\"testUser\",\"type\":\"app\"}],\"action\":\"connect\"}]";
-    assertEquals(expectedJson, new Ncco(connect).toJson());
-  }
+    @Test
+    public void testAppEndpoint() {
+        AppEndpoint endpoint = AppEndpoint.builder("u").user("testUser").build();
+        ConnectAction connect = ConnectAction.builder(endpoint).build();
+
+        String expectedJson = "[{\"endpoint\":[{\"user\":\"testUser\",\"type\":\"app\"}],\"action\":\"connect\"}]";
+        assertEquals(expectedJson, new Ncco(connect).toJson());
+    }
 }

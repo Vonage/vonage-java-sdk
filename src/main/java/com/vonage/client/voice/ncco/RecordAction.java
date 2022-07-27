@@ -30,14 +30,12 @@ public class RecordAction implements Action {
     private static final String ACTION = "record";
 
     private RecordingFormat format;
-    private Integer endOnSilence;
+    private Integer endOnSilence, timeOut, channels;
     private Character endOnKey;
-    private Integer timeOut;
     private Boolean beepStart;
     private Collection<String> eventUrl;
     private EventMethod eventMethod;
     private SplitRecording split;
-    private Integer channels;
 
     RecordAction() {}
 
@@ -106,15 +104,15 @@ public class RecordAction implements Action {
     }
 
     public static class Builder {
-        private RecordingFormat format = null;
-        private Integer endOnSilence = null;
-        private Character endOnKey = null;
-        private Integer timeOut = null;
-        private Boolean beepStart = null;
-        private Collection<String> eventUrl = null;
-        private EventMethod eventMethod = null;
-        private SplitRecording split = null;
-        private Integer channels = null;
+        private RecordingFormat format;
+        private Character endOnKey;
+        private Integer timeOut, channels, endOnSilence;
+        private Boolean beepStart;
+        private Collection<String> eventUrl;
+        private EventMethod eventMethod;
+        private SplitRecording split;
+
+        Builder() {}
 
         /**
          * @param format Record the Call in a specific {@link RecordingFormat}.

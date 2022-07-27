@@ -58,7 +58,7 @@ public class PhoneEndpoint implements Endpoint {
     public static class Builder {
         private String number, dtmfAnswer, onAnswerUrl, onAnswerRingback;
 
-        public Builder(String number) {
+        Builder(String number) {
             this.number = number;
         }
 

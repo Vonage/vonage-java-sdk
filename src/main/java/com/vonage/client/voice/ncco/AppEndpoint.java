@@ -28,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class AppEndpoint implements Endpoint {
     private static final String TYPE = "app";
 
-    private String user;
+    private final String user;
 
     private AppEndpoint(Builder builder) {
         this.user = builder.user;
@@ -49,8 +49,13 @@ public class AppEndpoint implements Endpoint {
     public static class Builder {
         private String user;
 
-        public Builder(String user) {
+        Builder(String user) {
             this.user = user;
+        }
+
+        public Builder user(String user) {
+            this.user = user;
+            return this;
         }
 
         public AppEndpoint build() {

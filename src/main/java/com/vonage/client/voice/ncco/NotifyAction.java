@@ -64,7 +64,7 @@ public class NotifyAction implements Action {
     }
 
     public static Builder builder(Map<String, ?> payload, String... eventUrl) {
-        return new Builder(payload, eventUrl);
+        return builder(payload, Arrays.asList(eventUrl));
     }
 
     public static class Builder {
@@ -76,17 +76,9 @@ public class NotifyAction implements Action {
          * @param payload  A Map of String keys and ? values that will be converted to JSON and sent to your event URL.
          * @param eventUrl The URL to send events to.
          */
-        public Builder(Map<String, ?> payload, Collection<String> eventUrl) {
+        Builder(Map<String, ?> payload, Collection<String> eventUrl) {
             this.payload = payload;
             this.eventUrl = eventUrl;
-        }
-
-        /**
-         * @param payload  A Map of String keys and ? values that will be converted to JSON and sent to your event URL.
-         * @param eventUrl The URL to send events to.
-         */
-        public Builder(Map<String, ?> payload, String... eventUrl) {
-            this(payload, Arrays.asList(eventUrl));
         }
 
         /**

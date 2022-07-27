@@ -39,7 +39,7 @@ public class TalkActionTest {
                 .style(2)
                 .build();
 
-        String expectedJson = "[{\"text\":\"New Text Message\",\"bargeIn\":true,\"loop\":3,\"level\":0.3333,\"language\":\"en-US\",\"style\":2,\"action\":\"talk\"}]";
+        String expectedJson = "[{\"text\":\"New Text Message\",\"bargeIn\":true,\"loop\":3,\"style\":2,\"level\":0.3333,\"language\":\"en-US\",\"action\":\"talk\"}]";
         assertEquals(expectedJson, new Ncco(talk).toJson());
     }
 

@@ -86,7 +86,7 @@ public class CallInfoTest {
 
         assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", record.getUuid());
         assertEquals(CallStatus.COMPLETED, record.getStatus());
-        assertEquals(CallDirection.OUTBOUND, record.getDirection());
+        assertEquals("outbound", record.getDirection().toString());
         assertEquals("0.02400000", record.getRate());
         assertEquals("0.00280000", record.getPrice());
         assertEquals(7, (long) record.getDuration());

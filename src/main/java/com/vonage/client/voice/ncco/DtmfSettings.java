@@ -23,8 +23,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class DtmfSettings {
-    private Integer timeOut;
-    private Integer maxDigits;
+    private Integer timeOut, maxDigits;
     private Boolean submitOnHash;
 
     public Integer getTimeOut() {

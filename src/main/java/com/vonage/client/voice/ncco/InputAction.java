@@ -79,13 +79,14 @@ public class InputAction implements Action {
         return new Builder();
     }
 
-
     public static class Builder {
         private DtmfSettings dtmf;
         private Collection<String> eventUrl;
         private EventMethod eventMethod;
         private SpeechSettings speech;
         private Collection<String> type;
+
+        Builder() {}
 
         /**
          * @param dtmf DTMF settings object to enable DTMF input.

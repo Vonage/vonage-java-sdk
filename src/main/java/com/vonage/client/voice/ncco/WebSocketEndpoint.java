@@ -67,7 +67,7 @@ public class WebSocketEndpoint implements Endpoint {
         private String contentType;
         private Map<String, ?> headers;
 
-        public Builder(String uri, String contentType) {
+        Builder(String uri, String contentType) {
             this.uri = URI.create(uri);
             this.contentType = contentType;
         }
