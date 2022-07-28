@@ -34,11 +34,12 @@ public class ConnectAction implements Action {
     private Collection<Endpoint> endpoint;
     private String from;
     private EventType eventType;
-    private Integer timeOut;
-    private Integer limit;
+    private Integer timeOut, limit;
     private MachineDetection machineDetection;
     private Collection<String> eventUrl;
     private EventMethod eventMethod;
+
+    ConnectAction() {}
 
     private ConnectAction(Builder builder) {
         this.endpoint = builder.endpoint;
@@ -89,36 +90,35 @@ public class ConnectAction implements Action {
         return eventMethod;
     }
 
+    /**
+     *
+     * @param endpoint Connect the call to a specific #{@link Endpoint}.
+     * @return A {@link Builder}.
+     */
     public static Builder builder(Collection<Endpoint> endpoint) {
         return new Builder(endpoint);
     }
 
+    /**
+     *
+     * @param endpoint Connect the call to a specific #{@link Endpoint}.
+     * @return A {@link Builder}.
+     */
     public static Builder builder(Endpoint... endpoint) {
-        return new Builder(endpoint);
+        return builder(Arrays.asList(endpoint));
     }
 
     public static class Builder {
         private Collection<Endpoint> endpoint;
-        private String from = null;
-        private EventType eventType = null;
-        private Integer timeOut = null;
-        private Integer limit = null;
-        private MachineDetection machineDetection = null;
-        private Collection<String> eventUrl = null;
-        private EventMethod eventMethod = null;
+        private String from;
+        private EventType eventType;
+        private Integer timeOut, limit;
+        private MachineDetection machineDetection;
+        private Collection<String> eventUrl;
+        private EventMethod eventMethod;
 
-        /**
-         * @param endpoint Connect the call to a specific #{@link Endpoint}.
-         */
-        public Builder(Collection<Endpoint> endpoint) {
+        Builder(Collection<Endpoint> endpoint) {
             this.endpoint = endpoint;
-        }
-
-        /**
-         * @param endpoint Connect the call to a specific #{@link Endpoint}.
-         */
-        public Builder(Endpoint... endpoint) {
-            this(Arrays.asList(endpoint));
         }
 
         /**

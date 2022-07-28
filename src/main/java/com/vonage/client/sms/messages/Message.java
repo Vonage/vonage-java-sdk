@@ -197,21 +197,18 @@ public abstract class Message {
         if (messageClass != null) {
             request.addParameter("message-class", Integer.toString(messageClass.getMessageClass()));
         }
-        if(entityId != null){
+        if (entityId != null) {
             request.addParameter("entity-id", entityId);
         }
-        if(contentId != null){
+        if (contentId != null) {
             request.addParameter("content-id", contentId);
         }
     }
 
     /**
      * An enum of the valid values that may be supplied to as the message-class parameter of a rest submission.
-     *
-     *
      */
     public enum MessageClass {
-
         /**
          * Message Class 0
          */
@@ -241,6 +238,5 @@ public abstract class Message {
         public int getMessageClass() {
             return messageClass;
         }
-
     }
 }

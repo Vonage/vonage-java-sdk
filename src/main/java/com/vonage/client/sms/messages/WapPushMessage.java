@@ -24,8 +24,7 @@ import org.apache.http.client.methods.RequestBuilder;
  *
  */
 public class WapPushMessage extends Message {
-    private final String url;
-    private final String title;
+    private final String url, title;
     private Integer validity;
 
     /**
@@ -77,8 +76,7 @@ public class WapPushMessage extends Message {
     @Override
     public void addParams(RequestBuilder request) {
         super.addParams(request);
-        request.addParameter("title", title)
-                .addParameter("url", url);
+        request.addParameter("title", title).addParameter("url", url);
         if (validity != null) {
             request.addParameter("validity", validity.toString());
         }

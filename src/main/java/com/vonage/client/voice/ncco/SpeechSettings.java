@@ -28,12 +28,9 @@ import java.util.Collection;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class SpeechSettings {
 
-    private Collection<String> uuid;
-    private Integer endOnSilence;
+    private Collection<String> uuid, context;
+    private Integer endOnSilence, startTimeout, maxDuration;
     private Language language;
-    private Collection<String> context;
-    private Integer startTimeout;
-    private Integer maxDuration;
 
     public Collection<String> getUuid() {
         return uuid;

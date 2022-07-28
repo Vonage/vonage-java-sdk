@@ -18,19 +18,21 @@ package com.vonage.client.voice.ncco;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.HashMap;
+import java.net.URI;
 import java.util.Map;
 
 /**
- * Represents a web socket endpoint used in a {@link ConnectAction}
+ * Represents a web socket endpoint used in a {@link ConnectAction}. See
+ * <a href=https://developer.vonage.com/voice/voice-api/ncco-reference#websocket-endpoint>the documentation</a>
+ * for an example.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class WebSocketEndpoint implements Endpoint {
     private static final String TYPE = "websocket";
 
-    private String uri;
-    private String contentType;
-    private Map<String, String> headers;
+    private final URI uri;
+    private final String contentType;
+    private final Map<String, ?> headers;
 
     private WebSocketEndpoint(Builder builder) {
         uri = builder.uri;
@@ -38,7 +40,7 @@ public class WebSocketEndpoint implements Endpoint {
         headers = builder.headers;
     }
 
-    public String getUri() {
+    public URI getUri() {
         return uri;
     }
 
@@ -47,7 +49,7 @@ public class WebSocketEndpoint implements Endpoint {
         return contentType;
     }
 
-    public Map<String, String> getHeaders() {
+    public Map<String, ?> getHeaders() {
         return headers;
     }
 
@@ -61,18 +63,22 @@ public class WebSocketEndpoint implements Endpoint {
     }
 
     public static class Builder {
-        private String uri;
+        private URI uri;
         private String contentType;
-        private Map<String, String> headers;
+        private Map<String, ?> headers;
 
-        public Builder(String uri, String contentType) {
-            this.uri = uri;
+        Builder(String uri, String contentType) {
+            this.uri = URI.create(uri);
             this.contentType = contentType;
         }
 
-        public Builder uri(String uri) {
+        public Builder uri(URI uri) {
             this.uri = uri;
             return this;
+        }
+
+        public Builder uri(String uri) {
+            return uri(URI.create(uri));
         }
 
         public Builder contentType(String contentType) {
@@ -80,23 +86,9 @@ public class WebSocketEndpoint implements Endpoint {
             return this;
         }
 
-        public Builder headers(Map<String, String> headers) {
+        public Builder headers(Map<String, ?> headers) {
             this.headers = headers;
             return this;
-        }
-
-        public Builder headers(String... entries) {
-            // TODO: Replace with Map.of when we target Java 9
-            if (entries.length % 2 != 0) {
-                throw new IllegalArgumentException("Entries must be key, value and every key must have a value.");
-            }
-
-            Map<String, String> headers = new HashMap<>();
-            for (int i = 0; i < entries.length - 1; i += 2) {
-                headers.put(entries[i], entries[i + 1]);
-            }
-
-            return headers(headers);
         }
 
         public WebSocketEndpoint build() {

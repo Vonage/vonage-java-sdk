@@ -34,6 +34,8 @@ public class StreamAction implements Action {
     private Boolean bargeIn;
     private Integer loop;
 
+    StreamAction() {}
+
     private StreamAction(Builder builder) {
         streamUrl = builder.streamUrl;
         level = builder.level;
@@ -62,12 +64,22 @@ public class StreamAction implements Action {
         return loop;
     }
 
+    /**
+     * @param streamUrl An array containing a single URL to an mp3 or wav (16-bit) audio file to stream to the
+     *                  Call or Conversation.
+     * @return A {@link Builder}.
+     */
     public static Builder builder(Collection<String> streamUrl) {
         return new Builder(streamUrl);
     }
 
+    /**
+     * @param streamUrl An array containing a single URL to an mp3 or wav (16-bit) audio file to stream to the
+     *                  Call or Conversation.
+     * @return A {@link Builder}.
+     */
     public static Builder builder(String... streamUrl) {
-        return new Builder(streamUrl);
+        return builder(Arrays.asList(streamUrl));
     }
 
     public static class Builder {
@@ -76,20 +88,8 @@ public class StreamAction implements Action {
         private Boolean bargeIn;
         private Integer loop;
 
-        /**
-         * @param streamUrl An array containing a single URL to an mp3 or wav (16-bit) audio file to stream to the
-         *                  Call or Conversation.
-         */
-        public Builder(Collection<String> streamUrl) {
+        Builder(Collection<String> streamUrl) {
             this.streamUrl = streamUrl;
-        }
-
-        /**
-         * @param streamUrl An array containing a single URL to an mp3 or wav (16-bit) audio file to stream to the
-         *                  Call or Conversation.
-         */
-        public Builder(String... streamUrl) {
-            this(Arrays.asList(streamUrl));
         }
 
         /**

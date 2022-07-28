@@ -15,9 +15,26 @@
  */
 package com.vonage.client.voice.ncco;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 /**
  * An NCCO action.
  */
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.EXISTING_PROPERTY,
+        property = "action"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = RecordAction.class, name = "record"),
+        @JsonSubTypes.Type(value = TalkAction.class, name = "talk"),
+        @JsonSubTypes.Type(value = StreamAction.class, name = "stream"),
+        @JsonSubTypes.Type(value = NotifyAction.class, name = "notify"),
+        @JsonSubTypes.Type(value = InputAction.class, name = "input"),
+        @JsonSubTypes.Type(value = ConnectAction.class, name = "connect"),
+        @JsonSubTypes.Type(value = ConversationAction.class, name = "conversation"),
+})
 public interface Action {
     String getAction();
 }

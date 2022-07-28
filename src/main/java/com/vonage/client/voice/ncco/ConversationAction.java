@@ -37,6 +37,8 @@ public class ConversationAction implements Action {
     private Collection<String> eventUrl;
     private EventMethod eventMethod;
 
+    ConversationAction() {}
+
     private ConversationAction(Builder builder) {
         name = builder.name;
         musicOnHoldUrl = builder.musicOnHoldUrl;
@@ -80,6 +82,11 @@ public class ConversationAction implements Action {
         return eventMethod;
     }
 
+    /**
+     *
+     * @param name The name of the Conversation room.
+     * @return A {@link Builder}.
+     */
     public static Builder builder(String name) {
         return new Builder(name);
     }
@@ -87,16 +94,11 @@ public class ConversationAction implements Action {
     public static class Builder {
         private String name;
         private Collection<String> musicOnHoldUrl;
-        private Boolean startOnEnter;
-        private Boolean endOnExit;
-        private Boolean record;
+        private Boolean startOnEnter, endOnExit, record;
         private Collection<String> eventUrl;
         private EventMethod eventMethod;
 
-        /**
-         * @param name The name of the Conversation room.
-         */
-        public Builder(String name) {
+        Builder(String name) {
             this.name = name;
         }
 

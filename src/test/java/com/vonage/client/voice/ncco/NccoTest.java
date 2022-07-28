@@ -33,42 +33,39 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class NccoTest {
+
     @Test(expected = VonageUnexpectedException.class)
     public void testUnableToSerializeJson() throws Exception {
         ObjectWriter writer = mock(ObjectWriter.class);
         when(writer.writeValueAsString(any())).thenThrow(JsonProcessingException.class);
-
         Ncco ncco = new Ncco(writer);
         ncco.toJson();
     }
 
+    @SuppressWarnings("unchecked")
     @Test(expected = UnsupportedOperationException.class)
     public void testItemListImmutableWhenEmpty() {
         Ncco ncco = new Ncco();
-        ncco.getActions().add(TalkAction.builder("Test Message").build());
+        ((Collection<Action>) ncco.getActions()).add(TalkAction.builder("Test Message").build());
     }
 
+    @SuppressWarnings("unchecked")
     @Test(expected = UnsupportedOperationException.class)
     public void testItemListImmutableWhenNotEmpty() {
         TalkAction.Builder builder = TalkAction.builder("Hello!");
         TalkAction intro = builder.build();
         TalkAction outro = builder.text("Thanks for calling!").build();
-
         Ncco ncco = new Ncco(intro);
-        ncco.getActions().add(outro);
+        ((Collection<Action>) ncco.getActions()).add(outro);
     }
 
     @Test
     public void testGetActions() {
         TalkAction.Builder builder = TalkAction.builder("Test Message");
-
         TalkAction actionOne = builder.build();
         TalkAction actionTwo = builder.text("Another message").build();
-
         Collection<Action> actions = Arrays.asList(actionOne, actionTwo);
-
         Ncco ncco = new Ncco(actions);
-
         assertSame(actions, ncco.getActions());
     }
 

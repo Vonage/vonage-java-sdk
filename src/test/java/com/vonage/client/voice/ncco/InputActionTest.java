@@ -63,16 +63,16 @@ public class InputActionTest {
                 "\"eventUrl\":[\"http://example.com\"]," +
                 "\"speech\":{" +
                 "\"uuid\":[\"aaaaaaaa-bbbb-cccc-dddd-0123456789ab\"]," +
-                "\"endOnSilence\":5," +
-                "\"language\":\"en-NG\"," +
                 "\"context\":[\"support\",\"buy\",\"credit\"]," +
+                "\"endOnSilence\":5," +
                 "\"startTimeout\":3," +
-                "\"maxDuration\":50" +
+                "\"maxDuration\":50," +
+                "\"language\":\"en-NG\"" +
                 "}," +
                 "\"eventMethod\":\"POST\"," +
                 "\"action\":\"input\"" +
                 "}]";
-        System.out.println(expectedJson);
+
         assertEquals(expectedJson, new Ncco(input).toJson());
     }
 
@@ -107,7 +107,7 @@ public class InputActionTest {
         speechSettings.setLanguage(SpeechSettings.Language.ENGLISH_NIGERIA);
 
         InputAction input = InputAction.builder().type(Collections.singletonList("speech")).speech(speechSettings).build();
-        String expectedJson = "[{\"type\":[\"speech\"],\"speech\":{\"language\":\"en-NG\",\"startTimeout\":3},\"action\":\"input\"}]";
+        String expectedJson = "[{\"type\":[\"speech\"],\"speech\":{\"startTimeout\":3,\"language\":\"en-NG\"},\"action\":\"input\"}]";
         assertEquals(expectedJson, new Ncco(input).toJson());
     }
 

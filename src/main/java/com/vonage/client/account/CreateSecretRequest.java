@@ -40,8 +40,7 @@ public class CreateSecretRequest {
 
     public String toJson() {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(this);
+            return new ObjectMapper().writeValueAsString(this);
         } catch (JsonProcessingException jpe) {
             throw new VonageUnexpectedException("Failed to produce json from CreateSecretRequest object.", jpe);
         }

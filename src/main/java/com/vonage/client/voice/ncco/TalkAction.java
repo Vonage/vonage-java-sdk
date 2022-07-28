@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vonage.client.voice.TextToSpeechLanguage;
 
 /**
- * An NCCO talk action which allows for synthesized speach to be sent to a call.
+ * An NCCO talk action which allows for synthesized speech to be sent to a call.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -29,11 +29,12 @@ public class TalkAction implements Action {
 
     private String text;
     private Boolean bargeIn;
-    private Integer loop;
+    private Integer loop, style;
     private Float level;
     private TextToSpeechLanguage language;
-    private Integer style;
     private Boolean premium;
+
+    TalkAction() {}
 
     private TalkAction(Builder builder) {
         this.text = builder.text;
@@ -74,6 +75,13 @@ public class TalkAction implements Action {
         return premium;
     }
 
+    /**
+     * @param text A string of up to 1,500 characters (excluding SSML tags) containing the message to be
+     *             synthesized in the Call or Conversation. A single comma in text adds a short pause to the
+     *             synthesized speech. To add a longer pause a break tag needs to be used in SSML.
+     *             <p>
+     *             To use SSML tags, you must enclose the text in a speak element.
+     */
     public static Builder builder(String text) {
         return new Builder(text);
     }
@@ -85,14 +93,8 @@ public class TalkAction implements Action {
         private Float level;
         private TextToSpeechLanguage language;
 
-        /**
-         * @param text A string of up to 1,500 characters (excluding SSML tags) containing the message to be
-         *             synthesized in the Call or Conversation. A single comma in text adds a short pause to the
-         *             synthesized speech. To add a longer pause a break tag needs to be used in SSML.
-         *             <p>
-         *             To use SSML tags, you must enclose the text in a speak element.
-         */
-        public Builder(String text) {
+
+        Builder(String text) {
             this.text = text;
         }
 

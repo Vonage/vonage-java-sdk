@@ -41,7 +41,7 @@ public class RecordActionTest {
                 .build();
 
         assertEquals(
-                "[{\"format\":\"mp3\",\"endOnSilence\":3,\"endOnKey\":\"#\",\"timeOut\":5,\"beepStart\":true,\"eventUrl\":[\"https://example.com\"],\"eventMethod\":\"POST\",\"split\":\"conversation\",\"channels\":10,\"action\":\"record\"}]",
+                "[{\"format\":\"mp3\",\"endOnSilence\":3,\"timeOut\":5,\"channels\":10,\"endOnKey\":\"#\",\"beepStart\":true,\"eventUrl\":[\"https://example.com\"],\"eventMethod\":\"POST\",\"split\":\"conversation\",\"action\":\"record\"}]",
                 new Ncco(record).toJson()
         );
     }
@@ -77,7 +77,7 @@ public class RecordActionTest {
     @Test
     public void testSplitIsSetWhenChannelsGreaterThanOne() {
         RecordAction record = RecordAction.builder().channels(2).build();
-        assertEquals("[{\"split\":\"conversation\",\"channels\":2,\"action\":\"record\"}]", new Ncco(record).toJson());
+        assertEquals("[{\"channels\":2,\"split\":\"conversation\",\"action\":\"record\"}]", new Ncco(record).toJson());
     }
 
     @Test
@@ -127,14 +127,14 @@ public class RecordActionTest {
     @Test
     public void testChannels() {
         RecordAction record = RecordAction.builder().channels(32).build();
-        assertEquals("[{\"split\":\"conversation\",\"channels\":32,\"action\":\"record\"}]", new Ncco(record).toJson());
+        assertEquals("[{\"channels\":32,\"split\":\"conversation\",\"action\":\"record\"}]", new Ncco(record).toJson());
     }
 
     @Test
     public void testMultipleBuilderCallWithDifferentChannelsSetsAndUnsetsSplitCorrectly() {
         RecordAction.Builder recordBuilder = RecordAction.builder();
         assertEquals(
-                "[{\"split\":\"conversation\",\"channels\":2,\"action\":\"record\"}]",
+                "[{\"channels\":2,\"split\":\"conversation\",\"action\":\"record\"}]",
                 new Ncco(recordBuilder.channels(2).build()).toJson()
         );
         assertEquals("[{\"channels\":1,\"action\":\"record\"}]", new Ncco(recordBuilder.channels(1).build()).toJson());
