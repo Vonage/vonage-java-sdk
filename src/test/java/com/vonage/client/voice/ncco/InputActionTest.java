@@ -24,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 
 public class InputActionTest {
+
     @Test
     public void testBuilderMultipleInstances() {
         InputAction.Builder builder = InputAction.builder();

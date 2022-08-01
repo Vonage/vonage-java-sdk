@@ -1,5 +1,5 @@
 /*
- *   Copyright 2020 Vonage
+ *   Copyright 2022 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -41,5 +41,7 @@
  * When calling {@link com.vonage.client.messages.MessagesClient#sendMessage(com.vonage.client.messages.MessageRequest)},
  * it is advised that the user catches {@link com.vonage.client.messages.MessageResponseException} to handle cases
  * where the message was not sent successfully.
+ *
+ * @since 6.5.0
  */
 package com.vonage.client.messages;

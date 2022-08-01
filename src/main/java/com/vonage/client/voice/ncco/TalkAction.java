@@ -81,6 +81,7 @@ public class TalkAction implements Action {
      *             synthesized speech. To add a longer pause a break tag needs to be used in SSML.
      *             <p>
      *             To use SSML tags, you must enclose the text in a speak element.
+     * @return A new {@linkplain Builder} with the text field initialised.
      */
     public static Builder builder(String text) {
         return new Builder(text);
