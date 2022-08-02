@@ -16,7 +16,6 @@
 package com.vonage.client.messages.messenger;
 
 import org.junit.Test;
-
 import static org.junit.Assert.assertTrue;
 
 public class MessengerVideoRequestTest {

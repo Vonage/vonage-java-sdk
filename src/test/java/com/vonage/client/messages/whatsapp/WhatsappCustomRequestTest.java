@@ -16,12 +16,10 @@
 package com.vonage.client.messages.whatsapp;
 
 import org.junit.Test;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 

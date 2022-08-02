@@ -1,5 +1,5 @@
 /*
- *   Copyright 2020 Vonage
+ *   Copyright 2022 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import com.vonage.client.application.capabilities.Voice;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.common.Webhook;
 import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 
 public class ApplicationTest {

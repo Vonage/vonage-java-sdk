@@ -16,7 +16,6 @@
 package com.vonage.client.messages.viber;
 
 import org.junit.Test;
-
 import static org.junit.Assert.assertTrue;
 
 public class ViberImageRequestTest {

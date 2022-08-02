@@ -1,5 +1,5 @@
 /*
- *   Copyright 2020 Vonage
+ *   Copyright 2022 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -36,12 +36,10 @@ import org.apache.http.message.BasicNameValuePair;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-
 import javax.xml.parsers.ParserConfigurationException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
-
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
