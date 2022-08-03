@@ -88,7 +88,7 @@ public class CallTest {
     }
 
     @Test
-    public void testFromJson() {
+    public void testFromJsonWithEveryAction() {
         String jsonString = "{\"to\":" + "[{\"type\":\"phone\",\"number\":\"441632960960\"}],"
                 + "\"from\":{\"type\":\"phone\",\"number\":\"441632960961\"},"
                 + "\"answer_url\":\"http://example.com/answer\"}";
@@ -155,6 +155,11 @@ public class CallTest {
                 "         \"text\":\"Thank you, good bye\",\n" +
                 "         \"language\":\"en-US\",\n" +
                 "         \"style\":10\n" +
+                "      },\n" +
+                "      {\n" +
+                "         \"action\":\"pay\",\n" +
+                "         \"currency\":\"eur\",\n" +
+                "         \"amount\":13.37\n" +
                 "      }\n" +
                 "   ]\n" +
                 "}";
@@ -166,7 +171,7 @@ public class CallTest {
         assertTrue(fromJson.getFrom() instanceof PhoneEndpoint);
         assertEquals("447900000001", ((PhoneEndpoint) fromJson.getFrom()).getNumber());
         Collection<? extends Action> ncco = fromJson.getNcco();
-        assertEquals(7, ncco.size());
+        assertEquals(8, ncco.size());
         Iterator<? extends Action> actionsIter = ncco.iterator();
 
         RecordAction record = (RecordAction) actionsIter.next();
@@ -201,6 +206,10 @@ public class CallTest {
         assertEquals("Thank you, good bye", talk.getText());
         assertEquals(TextToSpeechLanguage.AMERICAN_ENGLISH, talk.getLanguage());
         assertEquals(Integer.valueOf(10), talk.getStyle());
+
+        PayAction pay = (PayAction) actionsIter.next();
+        assertEquals("eur", pay.getCurrency());
+        assertEquals(13.37, pay.getAmount(), 0.001);
     }
 
     @Test

@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added Premium text-to-speech flag in `TalkAction` NCCO
 - Removed support for legacy `voiceName` parameter
 - Updated SMS error status codes
+- Added support for voice payments using NCCO action
 - Updated NCCO classes
   - Fixed Action deserialization (issue #373)
   - Permit Object values for `WebSocketEndpoint` headers
