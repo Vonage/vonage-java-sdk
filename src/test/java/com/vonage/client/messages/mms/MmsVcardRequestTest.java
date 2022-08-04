@@ -16,7 +16,6 @@
 package com.vonage.client.messages.mms;
 
 import org.junit.Test;
-
 import static org.junit.Assert.assertTrue;
 
 public class MmsVcardRequestTest {

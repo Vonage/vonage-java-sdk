@@ -24,7 +24,6 @@ import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.vonage.client.VonageClientException;
 import com.vonage.client.VonageUnexpectedException;
-
 import java.io.IOException;
 import java.util.Objects;
 

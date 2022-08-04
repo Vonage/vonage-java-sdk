@@ -1,5 +1,5 @@
 /*
- *   Copyright 2020 Vonage
+ *   Copyright 2022 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -13,13 +13,11 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-
 package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
-
 import java.io.IOException;
 
 /**

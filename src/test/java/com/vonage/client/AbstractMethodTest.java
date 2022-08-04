@@ -1,5 +1,5 @@
 /*
- *   Copyright 2020 Vonage
+ *   Copyright 2022 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -34,14 +34,12 @@ import org.apache.http.message.BasicStatusLine;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.stream.Collectors;
-
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 

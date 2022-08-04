@@ -1,5 +1,5 @@
 /*
- *   Copyright 2020 Vonage
+ *   Copyright 2022 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -15,14 +15,11 @@
  */
 package com.vonage.client.auth;
 
-
 import com.vonage.client.TestUtils;
 import org.junit.Test;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 

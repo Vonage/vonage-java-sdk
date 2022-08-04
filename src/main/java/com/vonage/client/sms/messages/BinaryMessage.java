@@ -1,5 +1,5 @@
 /*
- *   Copyright 2020 Vonage
+ *   Copyright 2022 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  *   limitations under the License.
  */
 package com.vonage.client.sms.messages;
-
 
 import com.vonage.client.sms.HexUtil;
 import org.apache.http.client.methods.RequestBuilder;

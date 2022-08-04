@@ -17,7 +17,6 @@ package com.vonage.client.messages.whatsapp;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)

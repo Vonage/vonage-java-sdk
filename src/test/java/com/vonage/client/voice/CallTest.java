@@ -1,5 +1,5 @@
 /*
- *   Copyright 2020 Vonage
+ *   Copyright 2022 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -18,9 +18,7 @@ package com.vonage.client.voice;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.voice.ncco.*;
 import org.junit.Test;
-
 import java.util.*;
-
 import static org.junit.Assert.*;
 
 public class CallTest {

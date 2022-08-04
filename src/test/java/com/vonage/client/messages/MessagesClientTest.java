@@ -22,10 +22,8 @@ import com.vonage.client.messages.whatsapp.*;
 import com.vonage.client.messages.messenger.*;
 import com.vonage.client.messages.viber.*;
 import org.junit.Test;
-
 import java.util.Collections;
 import java.util.UUID;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 

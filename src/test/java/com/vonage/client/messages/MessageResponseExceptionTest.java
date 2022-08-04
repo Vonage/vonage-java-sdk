@@ -17,7 +17,6 @@ package com.vonage.client.messages;
 
 import com.vonage.client.VonageUnexpectedException;
 import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 
 public class MessageResponseExceptionTest {

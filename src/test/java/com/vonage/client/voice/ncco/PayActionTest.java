@@ -17,12 +17,10 @@ package com.vonage.client.voice.ncco;
 
 import com.vonage.client.voice.TextToSpeechLanguage;
 import org.junit.Test;
-
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Currency;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 

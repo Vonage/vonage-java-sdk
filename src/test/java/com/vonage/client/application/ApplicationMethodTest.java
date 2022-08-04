@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020  Vonage 
+ * Copyright 2022 Vonage
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.vonage.client.application;
 
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.client.methods.RequestBuilder;
 import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 
 public abstract class ApplicationMethodTest {
