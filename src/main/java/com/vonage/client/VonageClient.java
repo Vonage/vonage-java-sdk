@@ -27,6 +27,7 @@ import com.vonage.client.redact.RedactClient;
 import com.vonage.client.sms.SmsClient;
 import com.vonage.client.sns.SnsClient;
 import com.vonage.client.verify.VerifyClient;
+import com.vonage.client.video.VideoClient;
 import com.vonage.client.voice.VoiceClient;
 import org.apache.http.client.HttpClient;
 import java.io.IOException;
@@ -56,6 +57,7 @@ public class VonageClient {
     private final ConversionClient conversion;
     private final RedactClient redact;
     private final MessagesClient messages;
+    private final VideoClient video;
 
     private VonageClient(Builder builder) {
         httpWrapper = new HttpWrapper(builder.httpConfig, builder.authCollection);
@@ -72,6 +74,7 @@ public class VonageClient {
         conversion = new ConversionClient(httpWrapper);
         redact = new RedactClient(httpWrapper);
         messages = new MessagesClient(httpWrapper);
+        video = new VideoClient(httpWrapper);
     }
 
     public AccountClient getAccountClient() {
@@ -120,8 +123,17 @@ public class VonageClient {
         return redact;
     }
 
+    /**
+     *
+     * @return The Messages API client.
+     * @since 6.5.0
+     */
     public MessagesClient getMessagesClient() {
         return messages;
+    }
+
+    public VideoClient getVideoClient() {
+        return video;
     }
 
     /**
