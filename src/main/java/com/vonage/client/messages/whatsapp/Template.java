@@ -23,9 +23,9 @@ import java.util.Objects;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class Template {
 	private final String name;
-	private final List<?> parameters;
+	private final List<String> parameters;
 
-	Template(String name, List<?> parameters) {
+	Template(String name, List<String> parameters) {
 		this.name = Objects.requireNonNull(name, "Name cannot be null");
 		this.parameters = parameters;
 	}
@@ -36,7 +36,7 @@ public final class Template {
 	}
 
 	@JsonProperty("parameters")
-	public List<?> getParameters() {
+	public List<String> getParameters() {
 		return parameters;
 	}
 }

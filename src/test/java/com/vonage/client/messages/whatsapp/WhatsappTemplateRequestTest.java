@@ -26,7 +26,7 @@ public class WhatsappTemplateRequestTest {
 	public void testSerializeMandatoryFields() {
 		String json = WhatsappTemplateRequest.builder()
 				.from("Acme Corp").to("447900000001")
-				.name("verify").locale("en-GB")
+				.name("verify").locale("en-US")
 				.build().toJson();
 
 		assertTrue(json.contains("\"from\":\"Acme Corp\""));
@@ -34,7 +34,7 @@ public class WhatsappTemplateRequestTest {
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
 		assertTrue(json.contains("\"message_type\":\"template\""));
 		assertTrue(json.contains("\"template\":{\"name\":\"verify\"}"));
-		assertTrue(json.contains("\"whatsapp\":{\"policy\":\"deterministic\",\"locale\":\"en-GB\"}"));
+		assertTrue(json.contains("\"whatsapp\":{\"locale\":\"en-US\"}"));
 	}
 
 	@Test
@@ -42,74 +42,61 @@ public class WhatsappTemplateRequestTest {
 		String json = WhatsappTemplateRequest.builder()
 				.from("Acme Corp").to("447900000001")
 				.name("verify").locale("en-GB").policy(Policy.DETERMINISTIC)
-				.parameters(Arrays.asList(Collections.singletonMap("k1", "v1"), "blah"))
+				.parameters(Arrays.asList("{k1}", "blah"))
 				.build().toJson();
 
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
 		assertTrue(json.contains("\"message_type\":\"template\""));
-		assertTrue(json.contains("\"template\":{\"name\":\"verify\",\"parameters\":[{\"k1\":\"v1\"},\"blah\"]}"));
+		assertTrue(json.contains("\"template\":{\"name\":\"verify\",\"parameters\":[\"{k1}\",\"blah\"]}"));
 		assertTrue(json.contains("\"whatsapp\":{\"policy\":\"deterministic\",\"locale\":\"en-GB\"}"));
 	}
 
 	@Test(expected = NullPointerException.class)
-	public void testConstructNullPolicy() {
-		WhatsappTemplateRequest.builder()
-				.from("Acme Corp").to("447900000001")
-				.name("verify").locale("en-GB").policy(null)
-				.build();
-	}
-
-	@Test(expected = NullPointerException.class)
 	public void testConstructNoName() {
-		WhatsappTemplateRequest.builder()
-				.from("Acme Corp").to("447900000001")
-				.locale("en-GB").build();
+		WhatsappTemplateRequest.builder().from("Acme Corp").to("447900000001").build();
 	}
 
 	@Test(expected = NullPointerException.class)
 	public void testConstructNullLocale() {
 		WhatsappTemplateRequest.builder()
-				.from("Acme Corp").to("447900000001")
-				.name("verify").locale(null).build();
+				.locale(null).name("verify")
+				.from("Acme Corp").to("447900000001").build();
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testConstructEmptyLocale() {
+	public void testConstructInvalidLocale() {
 		WhatsappTemplateRequest.builder()
-				.locale("").name("verify").from("Acme Corp")
-				.to("447900000001").build();
+				.locale(" ").name("verify")
+				.from("Acme Corp").to("447900000001").build();
 	}
 
 	@Test
 	public void testSerializeEmptyParameters() {
 		String json = WhatsappTemplateRequest.builder()
 				.from("Acme Corp").to("447900000001")
-				.name("verify").locale("en-GB")
 				.parameters(Collections.emptyList())
-				.build().toJson();
+				.name("verify").build().toJson();
 
 		assertTrue(json.contains("\"template\":{\"name\":\"verify\",\"parameters\":[]}"));
 	}
 
 	@Test
-	public void testSerializeParametersEmptyMap() {
+	public void testSerializeParametersEmptyString() {
 		String json = WhatsappTemplateRequest.builder()
-				.from("Acme Corp").to("447900000001")
-				.name("verify").locale("en-GB")
-				.parameters(Collections.singletonList(Collections.emptyMap()))
+				.from("Acme Corp").to("447900000001").name("verify")
+				.parameters(Collections.singletonList(""))
 				.build().toJson();
 
-		assertTrue(json.contains("\"template\":{\"name\":\"verify\",\"parameters\":[{}]}"));
+		assertTrue(json.contains("\"template\":{\"name\":\"verify\",\"parameters\":[\"\"]}"));
 	}
 
 	@Test
-	public void testSerializeParametersMultipleEmptyMaps() {
+	public void testSerializeParametersMultipleStrings() {
 		String json = WhatsappTemplateRequest.builder()
-				.from("Acme Corp").to("447900000001")
-				.name("verify").locale("en-GB")
-				.parameters(Arrays.asList(Collections.emptyMap(), Collections.emptyMap()))
+				.from("Acme Corp").to("447900000001").name("verify")
+				.parameters(Arrays.asList("{1}","{2}"))
 				.build().toJson();
 
-		assertTrue(json.contains("\"template\":{\"name\":\"verify\",\"parameters\":[{},{}]}"));
+		assertTrue(json.contains("\"template\":{\"name\":\"verify\",\"parameters\":[\"{1}\",\"{2}\"]}"));
 	}
 }

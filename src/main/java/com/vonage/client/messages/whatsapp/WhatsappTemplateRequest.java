@@ -28,7 +28,7 @@ public final class WhatsappTemplateRequest extends WhatsappRequest {
 	WhatsappTemplateRequest(Builder builder) {
 		super(builder, MessageType.TEMPLATE);
 		template = new Template(builder.name, builder.parameters);
-		whatsapp = new Whatsapp(builder.policy, builder.locale);
+		whatsapp = Whatsapp.construct(builder.policy, builder.locale);
 	}
 
 	@JsonProperty("template")
@@ -46,10 +46,9 @@ public final class WhatsappTemplateRequest extends WhatsappRequest {
 	}
 
 	public static final class Builder extends WhatsappRequest.Builder<WhatsappTemplateRequest, Builder> {
-		String name;
-		List<?> parameters;
-		Policy policy = Policy.DETERMINISTIC;
-		String locale = "en_GB";
+		String name, locale = "en";
+		List<String> parameters;
+		Policy policy;
 
 		Builder() {}
 
@@ -68,23 +67,22 @@ public final class WhatsappTemplateRequest extends WhatsappRequest {
 
 		/**
 		 * (OPTIONAL)
-		 * The parameters are an array of objects, with the first object being used for {{1}} in the template,
-		 * with the second being {{2}} etc. You can find the full list of supported parameters on WhatsApp's
+		 * The parameters are an array of strings, with the first being substituted for {{1}} in the template,
+		 * the second being {{2}} etc. You can find the full list of supported parameters on WhatsApp's
 		 * <a href=https://developers.facebook.com/docs/whatsapp/on-premises/reference/messages#message-templates>
 		 * messages parameters documentation</a>.
 		 *
-		 * @param parameters The serializable list of objects.
+		 * @param parameters The list of template parameters.
 		 * @return This builder.
 		 */
-		public Builder parameters(List<?> parameters) {
+		public Builder parameters(List<String> parameters) {
 			this.parameters = parameters;
 			return this;
 		}
 
 		/**
-		 * (REQUIRED)
+		 * (OPTIONAL)
 		 * Policy for resolving what language template to use.
-		 * Defaults to {@link Policy#DETERMINISTIC} if not set.
 		 *
 		 * @param policy The policy field.
 		 * @return This builder.
@@ -96,7 +94,9 @@ public final class WhatsappTemplateRequest extends WhatsappRequest {
 
 		/**
 		 * (REQUIRED)
-		 * The BCP 47 language of the template.
+		 * The BCP 47 language of the template. Defaults to <code>en</code> if not set.
+		 * See <a href=https://developers.facebook.com/docs/whatsapp/api/messages/message-templates>
+		 *     the documentation</a> for supported language options.
 		 * 
 		 * @param locale The BCP-47 locale.
 		 * @return This builder.

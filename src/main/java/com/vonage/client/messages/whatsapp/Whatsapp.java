@@ -17,6 +17,7 @@ package com.vonage.client.messages.whatsapp;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Objects;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -24,12 +25,9 @@ public final class Whatsapp {
 	private final Policy policy;
 	private final String locale;
 
-	Whatsapp(Policy policy, String locale) {
-		this.policy = Objects.requireNonNull(policy, "Policy cannot be null");
-		this.locale = Objects.requireNonNull(locale, "Locale cannot be null");
-		if (locale.length() < 4) {
-			throw new IllegalArgumentException("Invalid locale");
-		}
+	private Whatsapp(Policy policy, String locale) {
+		this.policy = policy;
+		this.locale = locale;
 	}
 
 	@JsonProperty("policy")
@@ -40,5 +38,13 @@ public final class Whatsapp {
 	@JsonProperty("locale")
 	public String getLocale() {
 		return locale;
+	}
+
+	static Whatsapp construct(Policy policy, String locale) {
+		Objects.requireNonNull(locale, "Locale is required");
+		if (locale.length() < 2) {
+			throw new IllegalArgumentException("Invalid locale");
+		}
+		return new Whatsapp(policy, locale);
 	}
 }
