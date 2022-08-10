@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [7.0.0]
 - Removed SMS Search API
 - Deprecated Redact client
+- Use `vonage-jwt-jdk:1.0.2` library instead of `nexmo-jwt-jdk:1.0.1`
 - Allow alphanumeric characters for SMS and MMS sender fields in Messages API
 - Made `WhatsappTemplateRequest` parameters more permissive
 - Removed dependency on `commons-io` and `commons-lang3`
