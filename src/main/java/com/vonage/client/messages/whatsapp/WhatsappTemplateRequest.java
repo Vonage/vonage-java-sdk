@@ -22,8 +22,8 @@ import java.util.List;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class WhatsappTemplateRequest extends WhatsappRequest {
-	Template template;
-	Whatsapp whatsapp;
+	final Template template;
+	final Whatsapp whatsapp;
 
 	WhatsappTemplateRequest(Builder builder) {
 		super(builder, MessageType.TEMPLATE);

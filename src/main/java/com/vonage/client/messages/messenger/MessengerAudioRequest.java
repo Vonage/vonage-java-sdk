@@ -22,7 +22,7 @@ import com.vonage.client.messages.MessageType;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class MessengerAudioRequest extends MessengerRequest {
-	MessagePayload audio;
+	final MessagePayload audio;
 
 	MessengerAudioRequest(Builder builder) {
 		super(builder, MessageType.AUDIO);

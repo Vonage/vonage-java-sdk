@@ -22,7 +22,7 @@ import com.vonage.client.messages.internal.Text;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class WhatsappTextRequest extends WhatsappRequest {
-	String text;
+	final String text;
 
 	WhatsappTextRequest(Builder builder) {
 		super(builder, MessageType.TEXT);

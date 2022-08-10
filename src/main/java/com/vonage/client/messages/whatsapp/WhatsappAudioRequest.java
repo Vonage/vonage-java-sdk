@@ -22,7 +22,7 @@ import com.vonage.client.messages.MessageType;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class WhatsappAudioRequest extends WhatsappRequest {
-	MessagePayload audio;
+	final MessagePayload audio;
 
 	WhatsappAudioRequest(Builder builder) {
 		super(builder, MessageType.AUDIO);

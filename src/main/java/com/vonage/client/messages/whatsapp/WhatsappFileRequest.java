@@ -22,7 +22,7 @@ import com.vonage.client.messages.MessageType;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class WhatsappFileRequest extends WhatsappRequest {
-	MessagePayload file;
+	final MessagePayload file;
 
 	WhatsappFileRequest(Builder builder) {
 		super(builder, MessageType.FILE);

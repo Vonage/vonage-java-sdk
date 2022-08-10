@@ -22,7 +22,7 @@ import com.vonage.client.messages.MessageType;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class ViberImageRequest extends ViberRequest {
-	MessagePayload image;
+	final MessagePayload image;
 
 	ViberImageRequest(Builder builder) {
 		super(builder, MessageType.IMAGE);
