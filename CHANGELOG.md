@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed incorrect restrictions on `WhatsappTemplateRequest` 
   - Policy is now optional
   - Default locale is `en`
+  - Locale is now an enum rather than String
   - `parameters` is now `List<String>`
 - Removed dependency on `commons-io` and `commons-lang3`
 - Ensured User-Agent is set in request headers

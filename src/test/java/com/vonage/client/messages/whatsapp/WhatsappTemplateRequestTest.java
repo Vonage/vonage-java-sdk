@@ -26,29 +26,28 @@ public class WhatsappTemplateRequestTest {
 	public void testSerializeMandatoryFields() {
 		String json = WhatsappTemplateRequest.builder()
 				.from("Acme Corp").to("447900000001")
-				.name("verify").locale("en-US")
-				.build().toJson();
+				.name("verify").build().toJson();
 
 		assertTrue(json.contains("\"from\":\"Acme Corp\""));
 		assertTrue(json.contains("\"to\":\"447900000001\""));
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
 		assertTrue(json.contains("\"message_type\":\"template\""));
 		assertTrue(json.contains("\"template\":{\"name\":\"verify\"}"));
-		assertTrue(json.contains("\"whatsapp\":{\"locale\":\"en-US\"}"));
+		assertTrue(json.contains("\"whatsapp\":{\"locale\":\"en\"}"));
 	}
 
 	@Test
 	public void testSerializeAllFields() {
 		String json = WhatsappTemplateRequest.builder()
-				.from("Acme Corp").to("447900000001")
-				.name("verify").locale("en-GB").policy(Policy.DETERMINISTIC)
+				.from("Acme Corp").to("447900000001").name("verify")
+				.locale(Locale.ENGLISH_UK).policy(Policy.DETERMINISTIC)
 				.parameters(Arrays.asList("{k1}", "blah"))
 				.build().toJson();
 
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
 		assertTrue(json.contains("\"message_type\":\"template\""));
 		assertTrue(json.contains("\"template\":{\"name\":\"verify\",\"parameters\":[\"{k1}\",\"blah\"]}"));
-		assertTrue(json.contains("\"whatsapp\":{\"policy\":\"deterministic\",\"locale\":\"en-GB\"}"));
+		assertTrue(json.contains("\"whatsapp\":{\"policy\":\"deterministic\",\"locale\":\"en_GB\"}"));
 	}
 
 	@Test(expected = NullPointerException.class)
@@ -60,13 +59,6 @@ public class WhatsappTemplateRequestTest {
 	public void testConstructNullLocale() {
 		WhatsappTemplateRequest.builder()
 				.locale(null).name("verify")
-				.from("Acme Corp").to("447900000001").build();
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testConstructInvalidLocale() {
-		WhatsappTemplateRequest.builder()
-				.locale(" ").name("verify")
 				.from("Acme Corp").to("447900000001").build();
 	}
 
