@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 
 public class SearchVerifyResponseDeserializer extends JsonDeserializer<SearchVerifyResponse> {
+
     @Override
     public SearchVerifyResponse deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         JsonNode node = p.getCodec().readTree(p);

@@ -15,7 +15,7 @@
  */
 package com.vonage.client.auth;
 
-import com.nexmo.jwt.Jwt;
+import com.vonage.jwt.Jwt;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 import java.nio.file.Files;

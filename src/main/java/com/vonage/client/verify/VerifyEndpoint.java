@@ -26,7 +26,6 @@ import java.io.UnsupportedEncodingException;
 
 class VerifyEndpoint extends AbstractMethod<VerifyRequest, VerifyResponse> {
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
-
     private static final String PATH = "/verify/json";
 
     VerifyEndpoint(HttpWrapper httpWrapper) {

@@ -28,7 +28,6 @@ import java.util.Locale;
  * @since 5.5.0
  */
 public class BaseRequest {
-
     private final String number;
     private Integer length;
     private Locale locale;

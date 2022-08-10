@@ -34,7 +34,6 @@ public class ControlResponse {
             @JsonProperty("command") VerifyControlCommand command) {
         this.status = status;
         this.command = command;
-        this.errorText = null;
     }
 
     @JsonProperty

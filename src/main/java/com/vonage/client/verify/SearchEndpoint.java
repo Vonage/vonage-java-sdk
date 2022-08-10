@@ -25,7 +25,6 @@ import java.io.UnsupportedEncodingException;
 
 class SearchEndpoint extends AbstractMethod<SearchRequest, SearchVerifyResponse> {
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
-
     private static final String PATH = "/verify/search/json";
 
     SearchEndpoint(HttpWrapper httpWrapper) {
