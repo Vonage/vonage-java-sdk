@@ -29,7 +29,6 @@ import java.util.Locale;
  * @since 5.5.0
  */
 public class Psd2Request extends BaseRequest {
-
     private Double amount;
     private String payee;
     private Workflow workflow;

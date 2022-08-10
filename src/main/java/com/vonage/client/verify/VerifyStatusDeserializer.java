@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
 public class VerifyStatusDeserializer extends JsonDeserializer<VerifyStatus> {
+
     @Override
     public VerifyStatus deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         // Perform the conversion using parseInt so that potential number format exceptions can be converted into a default

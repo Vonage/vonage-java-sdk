@@ -30,7 +30,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 class Psd2Endpoint extends AbstractMethod<Psd2Request, VerifyResponse> {
-
     private static final String PATH = "/verify/psd2/json";
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
 

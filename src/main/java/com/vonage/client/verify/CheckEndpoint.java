@@ -25,7 +25,6 @@ import java.io.UnsupportedEncodingException;
 
 class CheckEndpoint extends AbstractMethod<CheckRequest, CheckResponse> {
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
-
     private static final String PATH = "/verify/check/json";
 
     CheckEndpoint(HttpWrapper httpWrapper) {

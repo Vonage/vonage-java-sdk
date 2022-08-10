@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class VerifyDetails {
-
     private String requestId;
     private String accountId;
     private String number;

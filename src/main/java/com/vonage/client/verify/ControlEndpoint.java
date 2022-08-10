@@ -25,9 +25,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 class ControlEndpoint extends AbstractMethod<ControlRequest, ControlResponse> {
-
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
-
     private static final String PATH = "/verify/control/json";
 
     ControlEndpoint(HttpWrapper httpWrapper) {
