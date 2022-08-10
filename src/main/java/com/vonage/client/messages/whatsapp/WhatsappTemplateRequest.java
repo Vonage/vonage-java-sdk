@@ -28,7 +28,7 @@ public final class WhatsappTemplateRequest extends WhatsappRequest {
 	WhatsappTemplateRequest(Builder builder) {
 		super(builder, MessageType.TEMPLATE);
 		template = new Template(builder.name, builder.parameters);
-		whatsapp = Whatsapp.construct(builder.policy, builder.locale);
+		whatsapp = new Whatsapp(builder.policy, builder.locale);
 	}
 
 	@JsonProperty("template")

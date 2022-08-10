@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Enum representing BCP-47 locales supported by WhatsApp.
  * The values are derived from the "Supported Languages" section of the
  * <a href=https://developers.facebook.com/docs/whatsapp/api/messages/message-templates>
- * WhatsApp documentation</a>.
+ * WhatsApp Message Templates documentation</a>.
  *
  * @since 7.0.0
  */
