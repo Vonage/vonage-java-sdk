@@ -22,7 +22,7 @@ import com.vonage.client.messages.MessageType;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class WhatsappImageRequest extends WhatsappRequest {
-	MessagePayload image;
+	final MessagePayload image;
 
 	WhatsappImageRequest(Builder builder) {
 		super(builder, MessageType.IMAGE);

@@ -22,7 +22,7 @@ import com.vonage.client.messages.MessageType;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class MessengerImageRequest extends MessengerRequest {
-	MessagePayload image;
+	final MessagePayload image;
 
 	MessengerImageRequest(Builder builder) {
 		super(builder, MessageType.IMAGE);

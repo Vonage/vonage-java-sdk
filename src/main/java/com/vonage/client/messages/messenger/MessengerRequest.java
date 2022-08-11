@@ -23,7 +23,7 @@ import com.vonage.client.messages.MessageType;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class MessengerRequest extends MessageRequest {
-	protected Messenger messenger;
+	protected final Messenger messenger;
 
 	protected MessengerRequest(Builder<?, ?> builder, MessageType messageType) {
 		super(builder, Channel.MESSENGER, messageType);

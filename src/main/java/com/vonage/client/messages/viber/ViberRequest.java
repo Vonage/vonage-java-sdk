@@ -24,7 +24,7 @@ import com.vonage.client.messages.internal.E164;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class ViberRequest extends MessageRequest {
-	protected ViberService viberService;
+	protected final ViberService viberService;
 
 	protected ViberRequest(Builder<?, ?> builder, MessageType messageType) {
 		super(builder, Channel.VIBER, messageType);

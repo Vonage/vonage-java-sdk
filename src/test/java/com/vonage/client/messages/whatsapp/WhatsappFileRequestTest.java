@@ -24,7 +24,7 @@ public class WhatsappFileRequestTest {
 	public void testSerializeValid() {
 		String url = "file:///path/to/attachment.zip", caption = "Srs bzns";
 		String json = WhatsappFileRequest.builder()
-				.from("Acme Corp").to("447900000001")
+				.from("317900000002").to("447900000001")
 				.url(url).caption(caption)
 				.build().toJson();
 		assertTrue(json.contains("\"file\":{\"url\":\""+url+"\",\"caption\":\""+caption+"\"}"));

@@ -22,8 +22,8 @@ import java.util.List;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class WhatsappTemplateRequest extends WhatsappRequest {
-	Template template;
-	Whatsapp whatsapp;
+	final Template template;
+	final Whatsapp whatsapp;
 
 	WhatsappTemplateRequest(Builder builder) {
 		super(builder, MessageType.TEMPLATE);
@@ -47,9 +47,9 @@ public final class WhatsappTemplateRequest extends WhatsappRequest {
 
 	public static final class Builder extends WhatsappRequest.Builder<WhatsappTemplateRequest, Builder> {
 		String name;
-		List<?> parameters;
-		Policy policy = Policy.DETERMINISTIC;
-		String locale = "en_GB";
+		List<String> parameters;
+		Locale locale = Locale.ENGLISH;
+		Policy policy;
 
 		Builder() {}
 
@@ -68,23 +68,22 @@ public final class WhatsappTemplateRequest extends WhatsappRequest {
 
 		/**
 		 * (OPTIONAL)
-		 * The parameters are an array of objects, with the first object being used for {{1}} in the template,
-		 * with the second being {{2}} etc. You can find the full list of supported parameters on WhatsApp's
+		 * The parameters are an array of strings, with the first being substituted for {{1}} in the template,
+		 * the second being {{2}} etc. You can find the full list of supported parameters on WhatsApp's
 		 * <a href=https://developers.facebook.com/docs/whatsapp/on-premises/reference/messages#message-templates>
 		 * messages parameters documentation</a>.
 		 *
-		 * @param parameters The serializable list of objects.
+		 * @param parameters The list of template parameters.
 		 * @return This builder.
 		 */
-		public Builder parameters(List<?> parameters) {
+		public Builder parameters(List<String> parameters) {
 			this.parameters = parameters;
 			return this;
 		}
 
 		/**
-		 * (REQUIRED)
+		 * (OPTIONAL)
 		 * Policy for resolving what language template to use.
-		 * Defaults to {@link Policy#DETERMINISTIC} if not set.
 		 *
 		 * @param policy The policy field.
 		 * @return This builder.
@@ -96,12 +95,12 @@ public final class WhatsappTemplateRequest extends WhatsappRequest {
 
 		/**
 		 * (REQUIRED)
-		 * The BCP 47 language of the template.
+		 * The BCP 47 language of the template. Defaults to {@linkplain Locale#ENGLISH} if not set.
 		 * 
-		 * @param locale The BCP-47 locale.
+		 * @param locale The {@link Locale}.
 		 * @return This builder.
 		 */
-		public Builder locale(String locale) {
+		public Builder locale(Locale locale) {
 			this.locale = locale;
 			return this;
 		}

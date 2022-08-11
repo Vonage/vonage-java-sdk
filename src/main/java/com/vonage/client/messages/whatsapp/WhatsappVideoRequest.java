@@ -22,7 +22,7 @@ import com.vonage.client.messages.MessageType;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class WhatsappVideoRequest extends WhatsappRequest {
-	MessagePayload video;
+	final MessagePayload video;
 
 	WhatsappVideoRequest(Builder builder) {
 		super(builder, MessageType.VIDEO);

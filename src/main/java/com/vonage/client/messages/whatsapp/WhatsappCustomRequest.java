@@ -22,7 +22,7 @@ import java.util.Map;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class WhatsappCustomRequest extends WhatsappRequest {
-	Map<?, ?> custom;
+	final Map<?, ?> custom;
 
 	WhatsappCustomRequest(Builder builder) {
 		super(builder, MessageType.CUSTOM);

@@ -8,8 +8,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Removed SMS Search API
 - Deprecated Redact client
 - Use `vonage-jwt-jdk:1.0.2` library instead of `nexmo-jwt-jdk:1.0.1`
+- Ensure `User-Agent` is set in request headers
 - Allow alphanumeric characters for SMS and MMS sender fields in Messages API
-- Made `WhatsappTemplateRequest` parameters more permissive
+- `WhatsappRequest` sender must now be an E164 number
+- Fixed incorrect restrictions on `WhatsappTemplateRequest` 
+  - Policy is now optional
+  - Default locale is now `en`
+  - Locale is now an enum rather than String
+  - `parameters` is now `List<String>`
 - Removed dependency on `commons-io` and `commons-lang3`
 - Ensured User-Agent is set in request headers
 - Added Premium text-to-speech flag in `TalkAction` NCCO
