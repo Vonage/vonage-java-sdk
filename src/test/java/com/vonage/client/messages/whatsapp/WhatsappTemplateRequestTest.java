@@ -22,52 +22,53 @@ import static org.junit.Assert.*;
 
 public class WhatsappTemplateRequestTest {
 
+	private static final String FROM = "12124567890", TO = "447900000001", NAME = "verify";
+
 	@Test
 	public void testSerializeMandatoryFields() {
 		String json = WhatsappTemplateRequest.builder()
-				.from("Acme Corp").to("447900000001")
-				.name("verify").build().toJson();
+				.from(FROM).to(TO).name(NAME).build().toJson();
 
-		assertTrue(json.contains("\"from\":\"Acme Corp\""));
-		assertTrue(json.contains("\"to\":\"447900000001\""));
+		assertTrue(json.contains("\"from\":\""+FROM+"\""));
+		assertTrue(json.contains("\"to\":\""+TO+"\""));
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
 		assertTrue(json.contains("\"message_type\":\"template\""));
-		assertTrue(json.contains("\"template\":{\"name\":\"verify\"}"));
+		assertTrue(json.contains("\"template\":{\"name\":\""+NAME+"\"}"));
 		assertTrue(json.contains("\"whatsapp\":{\"locale\":\"en\"}"));
 	}
 
 	@Test
 	public void testSerializeAllFields() {
 		String json = WhatsappTemplateRequest.builder()
-				.from("Acme Corp").to("447900000001").name("verify")
+				.from(FROM).to(TO).name("verify")
 				.locale(Locale.ENGLISH_UK).policy(Policy.DETERMINISTIC)
 				.parameters(Arrays.asList("{k1}", "blah"))
 				.build().toJson();
 
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
 		assertTrue(json.contains("\"message_type\":\"template\""));
-		assertTrue(json.contains("\"template\":{\"name\":\"verify\",\"parameters\":[\"{k1}\",\"blah\"]}"));
+		assertTrue(json.contains("\"template\":{\"name\":\""+NAME+"\",\"parameters\":[\"{k1}\",\"blah\"]}"));
 		assertTrue(json.contains("\"whatsapp\":{\"policy\":\"deterministic\",\"locale\":\"en_GB\"}"));
 	}
 
 	@Test(expected = NullPointerException.class)
 	public void testConstructNoName() {
-		WhatsappTemplateRequest.builder().from("Acme Corp").to("447900000001").build();
+		WhatsappTemplateRequest.builder().from(FROM).to(TO).build();
 	}
 
 	@Test(expected = NullPointerException.class)
 	public void testConstructNullLocale() {
 		WhatsappTemplateRequest.builder()
-				.locale(null).name("verify")
-				.from("Acme Corp").to("447900000001").build();
+				.locale(null).name(NAME)
+				.from(FROM).to(TO).build();
 	}
 
 	@Test
 	public void testSerializeEmptyParameters() {
 		String json = WhatsappTemplateRequest.builder()
-				.from("Acme Corp").to("447900000001")
+				.from(FROM).to(TO)
 				.parameters(Collections.emptyList())
-				.name("verify").build().toJson();
+				.name(NAME).build().toJson();
 
 		assertTrue(json.contains("\"template\":{\"name\":\"verify\",\"parameters\":[]}"));
 	}
@@ -75,20 +76,20 @@ public class WhatsappTemplateRequestTest {
 	@Test
 	public void testSerializeParametersEmptyString() {
 		String json = WhatsappTemplateRequest.builder()
-				.from("Acme Corp").to("447900000001").name("verify")
+				.from(FROM).to(TO).name(NAME)
 				.parameters(Collections.singletonList(""))
 				.build().toJson();
 
-		assertTrue(json.contains("\"template\":{\"name\":\"verify\",\"parameters\":[\"\"]}"));
+		assertTrue(json.contains("\"template\":{\"name\":\""+NAME+"\",\"parameters\":[\"\"]}"));
 	}
 
 	@Test
 	public void testSerializeParametersMultipleStrings() {
 		String json = WhatsappTemplateRequest.builder()
-				.from("Acme Corp").to("447900000001").name("verify")
+				.from(FROM).to(TO).name(NAME)
 				.parameters(Arrays.asList("{1}","{2}"))
 				.build().toJson();
 
-		assertTrue(json.contains("\"template\":{\"name\":\"verify\",\"parameters\":[\"{1}\",\"{2}\"]}"));
+		assertTrue(json.contains("\"template\":{\"name\":\""+NAME+"\",\"parameters\":[\"{1}\",\"{2}\"]}"));
 	}
 }

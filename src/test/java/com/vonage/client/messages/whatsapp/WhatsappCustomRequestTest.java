@@ -36,7 +36,7 @@ public class WhatsappCustomRequestTest {
 		customObject.put("key3", nestedMap);
 
 		String json = WhatsappCustomRequest.builder()
-				.from("Acme Corp").to("447900000001")
+				.from("317900000002").to("447900000001")
 				.custom(customObject).build().toJson();
 
 		assertTrue(json.contains("\"message_type\":\"custom\""));
@@ -47,7 +47,7 @@ public class WhatsappCustomRequestTest {
 	@Test
 	public void testSerializeNoMap() {
 		String json = WhatsappCustomRequest.builder()
-				.from("Acme Corp").to("447900000001").build().toJson();
+				.from("317900000002").to("447900000001").build().toJson();
 
 		assertTrue(json.contains("\"message_type\":\"custom\""));
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
@@ -57,7 +57,7 @@ public class WhatsappCustomRequestTest {
 	@Test
 	public void testSerializeEmptyMap() {
 		String json = WhatsappCustomRequest.builder()
-				.from("Acme Corp").to("447900000001")
+				.from("317900000002").to("447900000001")
 				.custom(new HashMap<>(0)).build().toJson();
 
 		assertTrue(json.contains("\"message_type\":\"custom\""));

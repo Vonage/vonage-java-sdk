@@ -24,7 +24,7 @@ public class WhatsappAudioRequestTest {
 	public void testSerializeValid() {
 		String url = "file:///path/to/song.mp3";
 		String json = WhatsappAudioRequest.builder()
-				.from("Acme Corp").to("447900000001")
+				.from("317900000002").to("447900000001")
 				.url(url).build().toJson();
 		assertTrue(json.contains("\"audio\":{\"url\":\""+url+"\"}"));
 		assertTrue(json.contains("\"message_type\":\"audio\""));

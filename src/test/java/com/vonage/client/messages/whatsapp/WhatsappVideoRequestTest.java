@@ -24,7 +24,7 @@ public class WhatsappVideoRequestTest {
 	public void testSerializeValid() {
 		String url = "file:///path/to/clip.mp4", caption = "Cute kittens";
 		String json = WhatsappVideoRequest.builder()
-				.from("Acme Corp").to("447900000001")
+				.from("317900000002").to("447900000001")
 				.url(url).caption(caption)
 				.build().toJson();
 		assertTrue(json.contains("\"video\":{\"url\":\""+url+"\",\"caption\":\""+caption+"\"}"));

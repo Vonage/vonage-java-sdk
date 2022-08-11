@@ -16,6 +16,7 @@
 package com.vonage.client.messages.whatsapp;
 
 import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -41,7 +42,7 @@ public class WhatsappTextRequestTest {
 				.build();
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = NullPointerException.class)
 	public void testConstructNoSender() {
 		WhatsappTextRequest.builder()
 				.to("317900000002")

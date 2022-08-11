@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Use `vonage-jwt-jdk:1.0.2` library instead of `nexmo-jwt-jdk:1.0.1`
 - Ensure `User-Agent` is set in request headers
 - Allow alphanumeric characters for SMS and MMS sender fields in Messages API
+- `WhatsappRequest` sender must now be an E164 number
 - Fixed incorrect restrictions on `WhatsappTemplateRequest` 
   - Policy is now optional
   - Default locale is now `en`

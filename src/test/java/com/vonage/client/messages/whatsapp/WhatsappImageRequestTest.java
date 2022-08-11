@@ -24,7 +24,7 @@ public class WhatsappImageRequestTest {
 	public void testSerializeValid() {
 		String url = "file:///path/to/picture.jpg", caption = "Cute kittens";
 		String json = WhatsappImageRequest.builder()
-				.from("Acme Corp").to("447900000001")
+				.from("317900000002").to("447900000001")
 				.url(url).caption(caption)
 				.build().toJson();
 		assertTrue(json.contains("\"image\":{\"url\":\""+url+"\",\"caption\":\""+caption+"\"}"));
@@ -46,7 +46,7 @@ public class WhatsappImageRequestTest {
 	@Test
 	public void testConstructCaptionLength() {
 		WhatsappImageRequest.Builder builder = WhatsappImageRequest.builder()
-				.url("file:///path/to/picture.png").from("amy").to("447900000001");
+				.url("file:///path/to/picture.png").from("317900000002").to("447900000001");
 
 		assertEquals(12, builder.build().getTo().length());
 
