@@ -8,7 +8,7 @@ plugins {
 
 group = "com.vonage"
 archivesBaseName = "client"
-version = "6.5.0"
+version = "7.0.0"
 
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
