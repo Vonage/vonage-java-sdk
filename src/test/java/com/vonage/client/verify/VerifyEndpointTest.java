@@ -20,14 +20,13 @@ import com.vonage.client.HttpWrapper;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.List;
 import java.util.Locale;
-import static org.junit.Assert.assertEquals;
 
 public class VerifyEndpointTest extends MethodTest<VerifyEndpoint> {
-
     private VerifyRequest verifyRequest;
 
     @Before
@@ -38,7 +37,6 @@ public class VerifyEndpointTest extends MethodTest<VerifyEndpoint> {
                 .senderId("Your friend")
                 .length(4)
                 .locale(new Locale("en", "gb"))
-                .type(VerifyRequest.LineType.MOBILE)
                 .build();
     }
 
@@ -52,7 +50,6 @@ public class VerifyEndpointTest extends MethodTest<VerifyEndpoint> {
         assertContainsParam(params, "sender_id", "Your friend");
         assertContainsParam(params, "code_length", "4");
         assertContainsParam(params, "lg", "en-gb");
-        assertContainsParam(params, "require_type", "MOBILE");
     }
 
     @Test
@@ -95,7 +92,7 @@ public class VerifyEndpointTest extends MethodTest<VerifyEndpoint> {
         assertContainsParam(params, "code_length", "6");
         assertContainsParam(params, "sender_id", "VERIFICATION");
         assertContainsParam(params, "lg", "en-gb");
-        assertContainsParam(params, "require_type", "LANDLINE");
+        assertParamMissing(params, "require_type");
         assertContainsParam(params, "country", "GB");
         assertContainsParam(params, "pin_expiry", "60");
         assertContainsParam(params, "next_event_wait", "90");
@@ -106,7 +103,7 @@ public class VerifyEndpointTest extends MethodTest<VerifyEndpoint> {
     public void testDefaultUri() throws Exception {
         RequestBuilder builder = method.makeRequest(verifyRequest);
         assertEquals("POST", builder.getMethod());
-        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
+        assertEquals(ContentType.APPLICATION_FORM_URLENCODED.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
         assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
         assertEquals("https://api.nexmo.com/verify/json",
                 builder.build().getURI().toString()

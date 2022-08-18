@@ -16,6 +16,8 @@
 package com.vonage.client.verify;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.message.BasicNameValuePair;
 import java.util.Locale;
 
 /**
@@ -26,7 +28,6 @@ public class VerifyRequest extends BaseRequest {
     private String brand;
     private String from;
     private Workflow workflow;
-
 
     public VerifyRequest(Builder builder) {
         super(builder.number, builder.length, builder.locale, builder.country, builder.pinExpiry, builder.nextEventWait);
@@ -43,16 +44,16 @@ public class VerifyRequest extends BaseRequest {
         return this.brand;
     }
 
-
     /**
      * @return the type of network the verification will be restricted to. This value has no effect unless it has been
      * enabled by contacting {@code support@nexmo.com}.
+     *
+     * @deprecated This is no longer used and will be removed in the next major release.
      */
+    @Deprecated
     public LineType getType() {
         return type;
     }
-
-
 
     /**
      * @return the short alphanumeric string to specify the SenderID for SMS sent by Verify, or {@code null} if one was
@@ -63,7 +64,6 @@ public class VerifyRequest extends BaseRequest {
     public String getFrom() {
         return from;
     }
-
 
     /**
      * Types of phone line to be specified for {@link VerifyRequest#type}. This option is not generally available. It will
@@ -79,6 +79,32 @@ public class VerifyRequest extends BaseRequest {
      */
     public Workflow getWorkflow() {
         return workflow;
+    }
+
+    protected void addParams(RequestBuilder result) {
+        result.addParameter("number", getNumber()).addParameter("brand", getBrand());
+
+        if (getFrom() != null) {
+            result.addParameter("sender_id", getFrom());
+        }
+        if (getLength() != null && getLength() > 0) {
+            result.addParameter("code_length", Integer.toString(getLength()));
+        }
+        if (getLocale() != null) {
+            result.addParameter(new BasicNameValuePair("lg", getDashedLocale()));
+        }
+        if (getCountry() != null) {
+            result.addParameter("country", getCountry());
+        }
+        if (getPinExpiry() != null) {
+            result.addParameter("pin_expiry", getPinExpiry().toString());
+        }
+        if (getNextEventWait() != null) {
+            result.addParameter("next_event_wait", getNextEventWait().toString());
+        }
+        if (getWorkflow() != null) {
+            result.addParameter("workflow_id", String.valueOf(getWorkflow().getId()));
+        }
     }
 
     /**
@@ -136,17 +162,11 @@ public class VerifyRequest extends BaseRequest {
      * @since 5.5.0
      */
     public static class Builder {
-
-        private String brand;
-        private String senderId;
+        private String brand, senderId, number, country;
+        private Integer length, pinExpiry, nextEventWait;
         private LineType type;
         private Workflow workflow;
-        private String number;
         private Locale locale;
-        private Integer length;
-        private Integer pinExpiry;
-        private Integer nextEventWait;
-        private String country;
 
         /**
          * @param number (required) The recipient's phone number in <a href="https://en.wikipedia.org/wiki/E.164">E.164</a>
@@ -172,8 +192,12 @@ public class VerifyRequest extends BaseRequest {
         /**
          * @param type the type of network the verification will be restricted to. This value has no effect unless it has been
          *        enabled by contacting {@code support@nexmo.com}.
+         *
+         * @deprecated This is no longer used and will be removed in the next major release.
+         *
          * @return {@link Builder}
          **/
+        @Deprecated
         public Builder type(LineType type) {
             this.type = type;
             return this;

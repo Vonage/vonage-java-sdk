@@ -20,7 +20,6 @@ import com.vonage.client.HttpWrapper;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.message.BasicNameValuePair;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
@@ -41,43 +40,9 @@ class VerifyEndpoint extends AbstractMethod<VerifyRequest, VerifyResponse> {
     public RequestBuilder makeRequest(VerifyRequest request) throws UnsupportedEncodingException {
         RequestBuilder result = RequestBuilder
                 .post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH)
-                .setHeader("Content-Type", "application/json")
-                .setHeader("Accept", "application/json")
-                .addParameter("number", request.getNumber())
-                .addParameter("brand", request.getBrand());
-
-        if (request.getFrom() != null) {
-            result.addParameter("sender_id", request.getFrom());
-        }
-
-        if (request.getLength() != null && request.getLength() > 0) {
-            result.addParameter("code_length", Integer.toString(request.getLength()));
-        }
-
-        if (request.getLocale() != null) {
-            result.addParameter(new BasicNameValuePair("lg", (request.getDashedLocale())));
-        }
-
-        if (request.getType() != null) {
-            result.addParameter("require_type", request.getType().toString());
-        }
-
-        if (request.getCountry() != null) {
-            result.addParameter("country", request.getCountry());
-        }
-
-        if (request.getPinExpiry() != null) {
-            result.addParameter("pin_expiry", request.getPinExpiry().toString());
-        }
-
-        if (request.getNextEventWait() != null) {
-            result.addParameter("next_event_wait", request.getNextEventWait().toString());
-        }
-
-        if (request.getWorkflow() != null) {
-            result.addParameter("workflow_id", String.valueOf(request.getWorkflow().getId()));
-        }
-
+                .setHeader("Content-Type", "application/x-www-form-urlencoded")
+                .setHeader("Accept", "application/json");
+        request.addParams(result);
         return result;
     }
 

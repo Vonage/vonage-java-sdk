@@ -27,7 +27,7 @@ import java.util.Locale;
  * Base request class for {@link VerifyRequest} and {@link Psd2Request}
  * @since 5.5.0
  */
-public class BaseRequest {
+public abstract class BaseRequest {
     private final String number;
     private Integer length;
     private Locale locale;
