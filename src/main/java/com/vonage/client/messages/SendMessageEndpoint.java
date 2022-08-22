@@ -23,7 +23,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.stream.Collectors;
 
 class SendMessageEndpoint extends AbstractMethod<MessageRequest, MessageResponse> {
@@ -62,6 +64,9 @@ class SendMessageEndpoint extends AbstractMethod<MessageRequest, MessageResponse
 				json = br.lines().collect(Collectors.joining(System.lineSeparator()));
 			}
 			MessageResponseException mrx = MessageResponseException.fromJson(json);
+			if (mrx.title == null) {
+				mrx.title = response.getStatusLine().getReasonPhrase();
+			}
 			mrx.statusCode = statusCode;
 			throw mrx;
 		}
