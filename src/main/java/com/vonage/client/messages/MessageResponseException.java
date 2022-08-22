@@ -126,6 +126,9 @@ public final class MessageResponseException extends VonageClientException {
 	 * @return An instance of this class with all known fields populated from the JSON payload, if present.
 	 */
 	public static MessageResponseException fromJson(String json) {
+		if (json == null || json.length() < 2) {
+			return new MessageResponseException();
+		}
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			return mapper.readValue(json, MessageResponseException.class);

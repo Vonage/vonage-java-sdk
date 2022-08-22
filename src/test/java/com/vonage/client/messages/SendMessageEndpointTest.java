@@ -21,11 +21,11 @@ import com.vonage.client.common.HttpMethod;
 import com.vonage.client.messages.sms.SmsTextRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 import java.io.ByteArrayOutputStream;
 import java.util.UUID;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class SendMessageEndpointTest {
 	final SendMessageEndpoint endpoint = new SendMessageEndpoint(new HttpWrapper());
@@ -60,7 +60,7 @@ public class SendMessageEndpointTest {
 	}
 
 	@Test
-	public void testParseResponse422() throws Exception {
+	public void testParseResponseFull() throws Exception {
 		final int statusCode = 422;
 		final String json = "{\n" +
 				"  \"type\": \"https://developer.nexmo.com/api-errors/messages-olympus#1120\",\n" +
@@ -75,6 +75,21 @@ public class SendMessageEndpointTest {
 		}
 		catch (MessageResponseException mrx) {
 			MessageResponseException expected = MessageResponseException.fromJson(json);
+			expected.statusCode = statusCode;
+			assertEquals(expected, mrx);
+		}
+	}
+
+	@Test
+	public void testParseResponseNoBody() throws Exception {
+		final int statusCode = 429;
+		try {
+			endpoint.parseResponse(TestUtils.makeJsonHttpResponse(statusCode, ""));
+			fail("Expected "+MessageResponseException.class.getName());
+		}
+		catch (MessageResponseException mrx) {
+			MessageResponseException expected = MessageResponseException.fromJson("");
+			expected.title = "OK";  // This is what TestUtils.makeJsonHttpResponse sets it to
 			expected.statusCode = statusCode;
 			assertEquals(expected, mrx);
 		}
