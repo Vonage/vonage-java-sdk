@@ -99,6 +99,11 @@ public class VerifyEndpointTest extends MethodTest<VerifyEndpoint> {
         assertContainsParam(params, "workflow_id", "3");
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testInvalidBrand() {
+        VerifyRequest.builder("4477990090090", "A very looooooooooooooong brand name").build();
+    }
+
     @Test
     public void testDefaultUri() throws Exception {
         RequestBuilder builder = method.makeRequest(verifyRequest);

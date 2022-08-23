@@ -31,7 +31,9 @@ public class VerifyRequest extends BaseRequest {
 
     public VerifyRequest(Builder builder) {
         super(builder.number, builder.length, builder.locale, builder.country, builder.pinExpiry, builder.nextEventWait);
-        brand = builder.brand;
+        if ((brand = builder.brand) != null && brand.length() > 18) {
+            throw new IllegalArgumentException("Brand '"+brand+"' is longer than 18 characters");
+        }
         from = builder.senderId;
         type = builder.type;
         workflow = builder.workflow;
