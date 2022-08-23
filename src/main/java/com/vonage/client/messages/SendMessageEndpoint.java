@@ -31,9 +31,16 @@ import java.util.stream.Collectors;
 class SendMessageEndpoint extends AbstractMethod<MessageRequest, MessageResponse> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class, TokenAuthMethod.class};
 	private static final String PATH = "/v1/messages";
+	private static final String SANDBOX_ENDPOINT_URI = "https://messages-sandbox.nexmo.com" + PATH;
+
+	private boolean sandbox = false;
 
 	SendMessageEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
+	}
+
+	public void setSandboxed(boolean sandbox) {
+		this.sandbox = sandbox;
 	}
 
 	@Override
@@ -43,7 +50,7 @@ class SendMessageEndpoint extends AbstractMethod<MessageRequest, MessageResponse
 
 	@Override
 	public RequestBuilder makeRequest(MessageRequest request) {
-		String uri = httpWrapper.getHttpConfig().getApiBaseUri() + PATH;
+		String uri = sandbox ? SANDBOX_ENDPOINT_URI : httpWrapper.getHttpConfig().getApiBaseUri() + PATH;
 		return RequestBuilder.post(uri)
 				.setHeader("Content-Type", "application/json")
 				.setHeader("Accept", "application/json")

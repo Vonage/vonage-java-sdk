@@ -15,6 +15,7 @@
  */
 package com.vonage.client.messages;
 
+import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.VonageClientException;
 import com.vonage.client.VonageResponseParseException;
@@ -55,5 +56,34 @@ public class MessagesClient {
 	 */
 	public MessageResponse sendMessage(MessageRequest request) throws VonageClientException, VonageResponseParseException {
 		return sendMessage.execute(request);
+	}
+
+	private MessagesClient sandbox(boolean sandbox) {
+		sendMessage.setSandboxed(sandbox);
+		return this;
+	}
+
+	/**
+	 * Calling this method will make the client use the sandbox endpoint, which will enable you to
+	 * use the <a href=https://dashboard.nexmo.com/messages/sandbox>Messages Sandbox</a>.
+	 *
+	 * @return This {@linkplain MessagesClient}, for convenience.
+	 * @since 7.1.0
+	 */
+	public MessagesClient useSandboxEndpoint() {
+		return sandbox(true);
+	}
+
+	/**
+	 * Calling this method will make the client use the regular endpoint returned by
+	 * {@link HttpConfig#getApiBaseUri()}, which is the default behaviour. This method is
+	 * provided for convenience if you wish to switch between sandbox and non-sandbox mode.
+	 *
+	 * @see #useSandboxEndpoint()
+	 * @return This {@linkplain MessagesClient}, for convenience.
+	 * @since 7.1.0
+	 */
+	public MessagesClient useRegularEndpoint() {
+		return sandbox(false);
 	}
 }
