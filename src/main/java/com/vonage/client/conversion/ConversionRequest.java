@@ -18,10 +18,10 @@ package com.vonage.client.conversion;
 import java.util.Date;
 
 public class ConversionRequest {
-    private Type type;
-    private String messageId;
-    private boolean delivered;
-    private Date timestamp;
+    private final Type type;
+    private final String messageId;
+    private final boolean delivered;
+    private final Date timestamp;
 
     public ConversionRequest(Type type, String messageId, boolean delivered, Date timestamp) {
         this.type = type;

@@ -19,13 +19,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OwnedNumber {
-    private String country;
-    private String msisdn;
-    private String moHttpUrl;
-    private String type;
+    private String country, msisdn, moHttpUrl, type, voiceCallbackType, voiceCallbackValue;
     private String[] features;
-    private String voiceCallbackType;
-    private String voiceCallbackValue;
 
     public String getCountry() {
         return country;

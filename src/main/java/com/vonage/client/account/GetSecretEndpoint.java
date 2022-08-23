@@ -29,7 +29,6 @@ import java.io.UnsupportedEncodingException;
 
 class GetSecretEndpoint extends AbstractMethod<SecretRequest, SecretResponse> {
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {SignatureAuthMethod.class, TokenAuthMethod.class};
-
     private static final String PATH = "/accounts/%s/secrets/%s";
 
     GetSecretEndpoint(HttpWrapper httpWrapper) {
@@ -43,14 +42,6 @@ class GetSecretEndpoint extends AbstractMethod<SecretRequest, SecretResponse> {
 
     @Override
     public RequestBuilder makeRequest(SecretRequest secretRequest) throws UnsupportedEncodingException {
-        if (secretRequest.getApiKey() == null) {
-            throw new IllegalArgumentException("API key is required.");
-        }
-
-        if (secretRequest.getSecretId() == null) {
-            throw new IllegalArgumentException("Secret id is required.");
-        }
-
         String uri = String.format(
                 httpWrapper.getHttpConfig().getApiBaseUri() + PATH,
                 secretRequest.getApiKey(),

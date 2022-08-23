@@ -16,7 +16,7 @@
 package com.vonage.client.account;
 
 public class TopUpRequest {
-    private String trx;
+    private final String trx;
 
     public TopUpRequest(String trx) {
         this.trx = trx;

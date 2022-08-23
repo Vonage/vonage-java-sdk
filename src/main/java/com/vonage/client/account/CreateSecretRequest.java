@@ -21,9 +21,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 
 public class CreateSecretRequest {
-    @JsonIgnore
-    private String apiKey;
-    private String secret;
+    @JsonIgnore private final String apiKey;
+    private final String secret;
 
     public CreateSecretRequest(String apiKey, String secret) {
         this.apiKey = apiKey;

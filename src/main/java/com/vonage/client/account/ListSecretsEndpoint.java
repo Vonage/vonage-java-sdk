@@ -29,7 +29,6 @@ import java.io.UnsupportedEncodingException;
 
 class ListSecretsEndpoint extends AbstractMethod<String, ListSecretsResponse> {
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {SignatureAuthMethod.class, TokenAuthMethod.class};
-
     private static final String PATH = "/accounts/%s/secrets";
 
     ListSecretsEndpoint(HttpWrapper httpWrapper) {
@@ -43,13 +42,11 @@ class ListSecretsEndpoint extends AbstractMethod<String, ListSecretsResponse> {
 
     @Override
     public RequestBuilder makeRequest(String apiKey) throws UnsupportedEncodingException {
-        if (apiKey == null) {
+        if (apiKey == null || apiKey.isEmpty()) {
             throw new IllegalArgumentException("API key is required.");
         }
-
         String uri = String.format(httpWrapper.getHttpConfig().getApiBaseUri() + PATH, apiKey);
-        return RequestBuilder.get(uri)
-                .setHeader("Accept", "application/json");
+        return RequestBuilder.get(uri).setHeader("Accept", "application/json");
     }
 
     @Override
@@ -57,7 +54,6 @@ class ListSecretsEndpoint extends AbstractMethod<String, ListSecretsResponse> {
         if (response.getStatusLine().getStatusCode() != 200) {
             throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
         }
-
         return ListSecretsResponse.fromJson(basicResponseHandler.handleResponse(response));
     }
 

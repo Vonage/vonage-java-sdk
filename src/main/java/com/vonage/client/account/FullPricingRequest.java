@@ -18,8 +18,7 @@ package com.vonage.client.account;
 import java.util.Objects;
 
 public class FullPricingRequest {
-
-    private ServiceType serviceType;
+    private final ServiceType serviceType;
 
     public FullPricingRequest(ServiceType serviceType) {
         this.serviceType = Objects.requireNonNull(serviceType, "Service type cannot be null.");

@@ -28,8 +28,7 @@ import java.io.IOException;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StreamResponse {
-    private String uuid;
-    private String message;
+    private String uuid, message;
 
     public String getUuid() {
         return uuid;

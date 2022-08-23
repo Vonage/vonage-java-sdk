@@ -18,8 +18,8 @@ package com.vonage.client.account;
 import java.util.Objects;
 
 public class PrefixPricingRequest {
-    private ServiceType serviceType;
-    private String prefix;
+    private final ServiceType serviceType;
+    private final String prefix;
 
     public PrefixPricingRequest(ServiceType serviceType, String prefix) {
         this.serviceType = Objects.requireNonNull(serviceType, "Service type cannot be null.");

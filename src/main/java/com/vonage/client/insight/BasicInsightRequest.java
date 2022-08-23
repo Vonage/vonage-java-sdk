@@ -66,8 +66,7 @@ public class BasicInsightRequest extends BaseInsightRequest {
     }
 
     public static class Builder {
-        protected String number;
-        protected String country;
+        protected String number, country;
 
         protected Builder(String number) {
             this.number = number;

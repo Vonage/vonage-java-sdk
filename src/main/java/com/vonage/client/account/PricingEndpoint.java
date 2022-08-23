@@ -24,7 +24,6 @@ import java.io.IOException;
 
 class PricingEndpoint extends AbstractMethod<PricingRequest, PricingResponse> {
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
-
     private static final String PATH = "/account/get-pricing/outbound/%s";
 
     PricingEndpoint(HttpWrapper httpWrapper) {

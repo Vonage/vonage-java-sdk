@@ -27,7 +27,6 @@ import java.io.UnsupportedEncodingException;
 
 class SettingsEndpoint extends AbstractMethod<SettingsRequest, SettingsResponse> {
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
-
     private static final String PATH = "/account/settings";
 
     SettingsEndpoint(HttpWrapper httpWrapper) {

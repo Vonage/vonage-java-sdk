@@ -16,8 +16,8 @@
 package com.vonage.client.account;
 
 public class PricingRequest {
-    private String countryCode;
-    private ServiceType serviceType;
+    private final String countryCode;
+    private final ServiceType serviceType;
 
     public PricingRequest(String countryCode, ServiceType serviceType) {
         this.countryCode = countryCode;

@@ -27,13 +27,11 @@ import java.io.IOException;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Application {
-    private String id;
-    private String name;
+    private String id, name;
     private Keys keys;
     private Capabilities capabilities;
 
     private Application() {
-
     }
 
     private Application(Builder builder) {
@@ -94,14 +92,11 @@ public class Application {
     }
 
     public static class Builder {
-        private String id;
-        private String name;
+        private String id, name;
         private Keys keys;
         private Capabilities capabilities;
 
-        public Builder() {
-
-        }
+        public Builder() {}
 
         public Builder(Application application) {
             id = application.id;

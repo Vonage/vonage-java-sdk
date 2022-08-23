@@ -19,8 +19,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.http.client.methods.RequestBuilder;
 
 public class ListNumbersFilter {
-    private Integer index;
-    private Integer size;
+    private Integer index, size;
     private String pattern;
     private SearchPattern searchPattern;
 

@@ -17,8 +17,7 @@ package com.vonage.client.insight;
 
 public class AdvancedInsightRequest extends BaseInsightRequest {
     private final boolean async;
-    private final String callback;
-    private final String ipAddress;
+    private final String callback, ipAddress;
     private final Boolean realTimeData;
 
     private AdvancedInsightRequest(Builder builder) {

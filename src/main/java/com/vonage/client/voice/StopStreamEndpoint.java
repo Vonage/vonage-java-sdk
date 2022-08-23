@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 class StopStreamEndpoint extends AbstractMethod<String, StreamResponse> {
-
     private static final String PATH = "/calls/";
     public static final String STREAM_PATH = "/stream";
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};

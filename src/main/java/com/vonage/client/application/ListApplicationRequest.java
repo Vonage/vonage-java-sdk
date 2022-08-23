@@ -16,8 +16,7 @@
 package com.vonage.client.application;
 
 public class ListApplicationRequest {
-    private long pageSize;
-    private long page;
+    private final long pageSize, page;
 
     private ListApplicationRequest(Builder builder) {
         pageSize = builder.pageSize;

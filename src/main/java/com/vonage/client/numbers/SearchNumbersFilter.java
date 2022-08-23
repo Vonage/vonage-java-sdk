@@ -26,8 +26,7 @@ public class SearchNumbersFilter {
     private String pattern;
     private SearchPattern searchPattern;
     private String[] features;
-    private Integer index;
-    private Integer size;
+    private Integer index, size;
     private Type type;
 
     /**

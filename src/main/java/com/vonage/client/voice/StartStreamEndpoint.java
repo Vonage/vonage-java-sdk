@@ -26,10 +26,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 class StartStreamEndpoint extends AbstractMethod<StreamRequest, StreamResponse> {
-
     private static final String PATH = "/calls/";
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
-    private String uri;
 
     StartStreamEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);

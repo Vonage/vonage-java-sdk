@@ -24,7 +24,6 @@ import java.io.IOException;
 
 class PrefixPricingEndpoint extends AbstractMethod<PrefixPricingRequest, PrefixPricingResponse> {
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
-
     private static final String PATH = "/account/get-prefix-pricing/outbound/%s";
 
     PrefixPricingEndpoint(HttpWrapper httpWrapper) {

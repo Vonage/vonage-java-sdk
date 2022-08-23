@@ -20,9 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Country {
-    private String code;
-    private String displayName;
-    private String name;
+    private String code, displayName, name;
 
     @JsonProperty("countryCode")
     public String getCode() {

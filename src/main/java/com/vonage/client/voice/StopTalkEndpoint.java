@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 class StopTalkEndpoint extends AbstractMethod<String, TalkResponse> {
-
     private static final String PATH = "/calls/";
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
     public static final String TALK_PATH = "/talk";

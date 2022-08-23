@@ -25,11 +25,7 @@ import java.math.BigDecimal;
 public class Network {
     private Type type;
     private BigDecimal price;
-    private String currency;
-    private String mcc;
-    private String mnc;
-    private String code;
-    private String name;
+    private String currency, mcc, mnc, code, name;
 
     public Type getType() {
         return type;

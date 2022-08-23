@@ -27,9 +27,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 class UpdateNumberEndpoint extends AbstractMethod<UpdateNumberRequest, Void> {
-
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
-
     private static final String PATH = "/number/update";
 
     UpdateNumberEndpoint(HttpWrapper httpWrapper) {

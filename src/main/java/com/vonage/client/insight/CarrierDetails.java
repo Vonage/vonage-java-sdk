@@ -21,9 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CarrierDetails {
-    private String networkCode;
-    private String name;
-    private String country;
+    private String networkCode, name, country;
     private NetworkType networkType;
 
     /**

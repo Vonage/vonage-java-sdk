@@ -29,9 +29,7 @@ import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 
 class ConversionEndpoint extends AbstractMethod<ConversionRequest, Void> {
-
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {SignatureAuthMethod.class, TokenAuthMethod.class};
-
     private static final String PATH = "/conversions/";
 
     ConversionEndpoint(HttpWrapper httpWrapper) {
@@ -60,7 +58,6 @@ class ConversionEndpoint extends AbstractMethod<ConversionRequest, Void> {
         if (response.getStatusLine().getStatusCode() != 200) {
             throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
         }
-
         return null;
     }
 
