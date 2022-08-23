@@ -24,9 +24,8 @@ import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 
 public class VerifyResponse {
-    private String requestId;
     private VerifyStatus status;
-    private String errorText;
+    private String requestId, errorText, network;
 
     @JsonCreator
     public VerifyResponse(@JsonProperty(value = "status", required = true) VerifyStatus status) {
@@ -45,6 +44,11 @@ public class VerifyResponse {
     @JsonProperty("error_text")
     public String getErrorText() {
         return errorText;
+    }
+
+    @JsonProperty("network")
+    public String getNetwork() {
+        return network;
     }
 
     public static VerifyResponse fromJson(String json) {

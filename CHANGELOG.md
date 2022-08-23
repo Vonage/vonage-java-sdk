@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.1.0]
+- Fixed parsing `MessageResponseException` when entity body is empty
+- Added toggle for using Messages API Sandbox to `MessagesClient`
+- Deprecated `request_type` in `VerifyRequest`
+- Fixed incorrect `Content-Type` header in `VerifyEndpoint`
+- Added `network` field to `VerifyResponse`
+
 ## [7.0.0]
 - Removed SMS Search API
 - Deprecated Redact client
