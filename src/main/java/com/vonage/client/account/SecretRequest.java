@@ -16,12 +16,15 @@
 package com.vonage.client.account;
 
 public class SecretRequest {
-    private String apiKey;
-    private String secretId;
+    private final String apiKey, secretId;
 
     public SecretRequest(String apiKey, String secretId) {
-        this.apiKey = apiKey;
-        this.secretId = secretId;
+        if ((this.apiKey = apiKey) == null || apiKey.isEmpty()) {
+            throw new IllegalArgumentException("API key is required.");
+        }
+        if ((this.secretId = secretId) == null || secretId.isEmpty()) {
+            throw new IllegalArgumentException("Secret id is required.");
+        }
     }
 
     public String getApiKey() {

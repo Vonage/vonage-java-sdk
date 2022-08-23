@@ -27,7 +27,6 @@ import java.io.UnsupportedEncodingException;
 
 class GetApplicationEndpoint extends ApplicationMethod<String, Application> {
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
-
     private static final String PATH = "/applications/%s";
 
     GetApplicationEndpoint(HttpWrapper httpWrapper) {
@@ -42,8 +41,7 @@ class GetApplicationEndpoint extends ApplicationMethod<String, Application> {
     @Override
     public RequestBuilder makeRequest(String id) throws UnsupportedEncodingException {
         String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v2") + String.format(PATH, id);
-        return RequestBuilder.get(uri)
-                .setHeader("Accept", "application/json");
+        return RequestBuilder.get(uri).setHeader("Accept", "application/json");
     }
 
     @Override
@@ -51,7 +49,6 @@ class GetApplicationEndpoint extends ApplicationMethod<String, Application> {
         if (response.getStatusLine().getStatusCode() != 200) {
             throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
         }
-
         return Application.fromJson(basicResponseHandler.handleResponse(response));
     }
 }

@@ -21,6 +21,7 @@ import com.vonage.client.VonageClientException;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 import java.io.IOException;
@@ -28,7 +29,6 @@ import java.io.UnsupportedEncodingException;
 
 class UpdateApplicationEndpoint extends ApplicationMethod<Application, Application> {
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
-
     private static final String PATH = "/applications/%s";
 
     UpdateApplicationEndpoint(HttpWrapper httpWrapper) {
@@ -46,7 +46,7 @@ class UpdateApplicationEndpoint extends ApplicationMethod<Application, Applicati
         return RequestBuilder.put(uri)
                 .setHeader("Content-Type", "application/json")
                 .setHeader("Accept", "application/json")
-                .setEntity(new StringEntity(application.toJson()));
+                .setEntity(new StringEntity(application.toJson(), ContentType.APPLICATION_JSON));
     }
 
     @Override
@@ -54,7 +54,6 @@ class UpdateApplicationEndpoint extends ApplicationMethod<Application, Applicati
         if (response.getStatusLine().getStatusCode() != 200) {
             throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
         }
-
         return Application.fromJson(basicResponseHandler.handleResponse(response));
     }
 }

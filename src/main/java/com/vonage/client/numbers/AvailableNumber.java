@@ -19,10 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AvailableNumber {
-    private String country;
-    private String msisdn;
-    private String cost;
-    private String type;
+    private String country, msisdn, cost, type;
     private String[] features;
 
     public String getCountry() {

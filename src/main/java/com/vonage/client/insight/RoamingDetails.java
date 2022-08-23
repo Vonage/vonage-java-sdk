@@ -25,9 +25,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 @JsonDeserialize(using = RoamingDeseriazlizer.class)
 public class RoamingDetails {
     private final RoamingStatus status;
-    private final String roamingCountryCode;
-    private final String roamingNetworkCode;
-    private final String roamingNetworkName;
+    private final String roamingCountryCode, roamingNetworkCode, roamingNetworkName;
 
     /**
      * Represents whether the number is outside its home carrier network, as an enum.

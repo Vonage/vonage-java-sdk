@@ -24,9 +24,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 class BalanceEndpoint extends AbstractMethod<Void, BalanceResponse> {
-
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
-
     private static final String PATH = "/account/get-balance";
 
     BalanceEndpoint(HttpWrapper httpWrapper) {
@@ -41,8 +39,7 @@ class BalanceEndpoint extends AbstractMethod<Void, BalanceResponse> {
     @Override
     public RequestBuilder makeRequest(Void request) throws UnsupportedEncodingException {
         String uri = httpWrapper.getHttpConfig().getRestBaseUri() + PATH;
-        return RequestBuilder.get(uri)
-                .setHeader("Accept", "application/json");
+        return RequestBuilder.get(uri).setHeader("Accept", "application/json");
     }
 
     public BalanceResponse execute() {

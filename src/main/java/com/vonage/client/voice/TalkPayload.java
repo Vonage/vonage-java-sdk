@@ -45,7 +45,7 @@ public class TalkPayload {
         this.loop = loop;
     }
 
-    public TalkPayload(String text, TextToSpeechLanguage language, int loop){
+    public TalkPayload(String text, TextToSpeechLanguage language, int loop) {
         this.text = text;
         this.language = language;
         this.loop = loop;

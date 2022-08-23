@@ -18,8 +18,7 @@ package com.vonage.client.numbers;
 import org.apache.http.client.methods.RequestBuilder;
 
 public class BuyNumberRequest {
-    private final String country;
-    private final String msisdn;
+    private final String country, msisdn;
 
     public BuyNumberRequest(String country, String msisdn) {
         this.country = country;

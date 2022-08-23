@@ -16,8 +16,7 @@
 package com.vonage.client.account;
 
 public class SettingsRequest {
-    private String incomingSmsUrl;
-    private String deliveryReceiptUrl;
+    private final String incomingSmsUrl, deliveryReceiptUrl;
 
     /**
      * @param incomingSmsUrl     The URL where Vonage will send a webhook when an incoming SMS is received when a

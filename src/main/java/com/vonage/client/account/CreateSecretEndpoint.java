@@ -31,7 +31,6 @@ import java.io.UnsupportedEncodingException;
 
 class CreateSecretEndpoint extends AbstractMethod<CreateSecretRequest, SecretResponse> {
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {SignatureAuthMethod.class, TokenAuthMethod.class};
-
     private static final String PATH = "/accounts/%s/secrets";
 
     CreateSecretEndpoint(HttpWrapper httpWrapper) {
@@ -65,7 +64,6 @@ class CreateSecretEndpoint extends AbstractMethod<CreateSecretRequest, SecretRes
         if (response.getStatusLine().getStatusCode() != 201) {
             throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
         }
-
         return SecretResponse.fromJson(basicResponseHandler.handleResponse(response));
     }
 

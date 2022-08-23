@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 class StartTalkEndpoint extends AbstractMethod<TalkRequest, TalkResponse> {
-
     private static final String PATH = "/calls/";
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 

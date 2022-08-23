@@ -26,9 +26,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 class SendMessageEndpoint extends AbstractMethod<Message, SmsSubmissionResponse> {
-
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {SignatureAuthMethod.class, TokenAuthMethod.class};
-
     private static final String PATH = "/sms/json";
 
     SendMessageEndpoint(HttpWrapper httpWrapper) {

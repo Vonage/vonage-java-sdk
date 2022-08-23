@@ -23,7 +23,6 @@ import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 
 class ReadCallEndpoint extends AbstractMethod<String, CallInfo> {
-
     private static final String PATH = "/calls/";
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 

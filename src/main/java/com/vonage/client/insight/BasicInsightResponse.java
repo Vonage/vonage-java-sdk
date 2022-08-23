@@ -27,14 +27,8 @@ import java.io.IOException;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BasicInsightResponse {
     private InsightStatus status;
-    private String statusMessage;
-    private String requestId;
-    private String internationalFormatNumber;
-    private String nationalFormatNumber;
-    private String countryCode;
-    private String countryCodeIso3;
-    private String countryName;
-    private String countryPrefix;
+    private String statusMessage, requestId, internationalFormatNumber, nationalFormatNumber,
+            countryCode, countryCodeIso3, countryName, countryPrefix;
 
     public static BasicInsightResponse fromJson(String json) {
         try {

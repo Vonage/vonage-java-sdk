@@ -21,9 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CallerIdentity {
     private CallerType type;
-    private String name;
-    private String firstName;
-    private String lastName;
+    private String name, firstName, lastName;
 
     /**
      * @return The caller type, as an enum.

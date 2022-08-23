@@ -26,7 +26,6 @@ import java.io.UnsupportedEncodingException;
 
 class StandardInsightEndpoint extends AbstractMethod<StandardInsightRequest, StandardInsightResponse> {
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {SignatureAuthMethod.class, TokenAuthMethod.class};
-
     private static final String PATH = "/ni/standard/json";
 
     StandardInsightEndpoint(HttpWrapper httpWrapper) {

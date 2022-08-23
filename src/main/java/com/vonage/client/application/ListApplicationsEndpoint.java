@@ -27,7 +27,6 @@ import java.io.UnsupportedEncodingException;
 
 class ListApplicationsEndpoint extends ApplicationMethod<ListApplicationRequest, ApplicationList> {
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
-
     private static final String PATH = "/applications";
 
     ListApplicationsEndpoint(HttpWrapper httpWrapper) {
@@ -49,7 +48,6 @@ class ListApplicationsEndpoint extends ApplicationMethod<ListApplicationRequest,
             if (request.getPageSize() > 0) {
                 builder.addParameter("page_size", String.valueOf(request.getPageSize()));
             }
-
             if (request.getPage() > 0) {
                 builder.addParameter("page", String.valueOf(request.getPage()));
             }

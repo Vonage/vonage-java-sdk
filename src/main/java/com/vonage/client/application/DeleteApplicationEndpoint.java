@@ -27,7 +27,6 @@ import java.io.UnsupportedEncodingException;
 
 class DeleteApplicationEndpoint extends ApplicationMethod<String, Void> {
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
-
     private static final String PATH = "/applications/%s";
 
     DeleteApplicationEndpoint(HttpWrapper httpWrapper) {
@@ -50,7 +49,6 @@ class DeleteApplicationEndpoint extends ApplicationMethod<String, Void> {
         if (response.getStatusLine().getStatusCode() != 204) {
             throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
         }
-
         return null;
     }
 }

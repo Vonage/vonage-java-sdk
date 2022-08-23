@@ -39,9 +39,7 @@ import java.util.Map;
 
 class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
     private static final Log log = LogFactory.getLog(SnsClient.class);
-
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {SignatureAuthMethod.class, TokenAuthMethod.class};
-
     private static final String PATH = "/sns/xml";
 
     private XmlParser xmlParser = new XmlParser();

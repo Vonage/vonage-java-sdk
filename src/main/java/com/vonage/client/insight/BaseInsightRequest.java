@@ -16,8 +16,7 @@
 package com.vonage.client.insight;
 
 public abstract class BaseInsightRequest {
-    protected final String number;
-    protected final String country;
+    protected final String number, country;
     Boolean cnam;
 
     protected BaseInsightRequest(String number, String country) {

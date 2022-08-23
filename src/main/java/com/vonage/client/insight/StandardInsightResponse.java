@@ -27,16 +27,11 @@ import java.math.BigDecimal;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StandardInsightResponse extends BasicInsightResponse {
-    private BigDecimal requestPrice;
-    private BigDecimal remainingBalance;
-    private BigDecimal refundPrice;
-    private CarrierDetails originalCarrier;
-    private CarrierDetails currentCarrier;
+    private BigDecimal requestPrice, remainingBalance, refundPrice;
+    private CarrierDetails originalCarrier, currentCarrier;
     private PortedStatus ported;
     private CallerIdentity callerIdentity;
-    private String callerName;
-    private String firstName;
-    private String lastName;
+    private String callerName, firstName, lastName;
     private CallerType callerType;
 
     public static StandardInsightResponse fromJson(String json) {

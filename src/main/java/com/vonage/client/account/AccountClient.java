@@ -19,15 +19,18 @@ import com.vonage.client.*;
 
 /**
  * A client for talking to the Vonage Account API. The standard way to obtain an instance of this class is to use {@link
- * VonageClient#getAccountClient()} ()}.
+ * VonageClient#getAccountClient()}.
  */
 public class AccountClient {
     final BalanceEndpoint balance;
     final PricingEndpoint pricing;
     final PrefixPricingEndpoint prefixPricing;
     final TopUpEndpoint topUp;
-    final SecretManagementEndpoint secret;
     final SettingsEndpoint settings;
+    final ListSecretsEndpoint listSecrets;
+    final GetSecretEndpoint getSecret;
+    final CreateSecretEndpoint createSecret;
+    final RevokeSecretEndpoint revokeSecret;
 
     /**
      * Constructor.
@@ -39,8 +42,11 @@ public class AccountClient {
         pricing = new PricingEndpoint(httpWrapper);
         prefixPricing = new PrefixPricingEndpoint(httpWrapper);
         topUp = new TopUpEndpoint(httpWrapper);
-        secret = new SecretManagementEndpoint(httpWrapper);
         settings = new SettingsEndpoint(httpWrapper);
+        listSecrets = new ListSecretsEndpoint(httpWrapper);
+        getSecret = new GetSecretEndpoint(httpWrapper);
+        createSecret = new CreateSecretEndpoint(httpWrapper);
+        revokeSecret = new RevokeSecretEndpoint(httpWrapper);
     }
 
     public BalanceResponse getBalance() throws VonageResponseParseException, VonageClientException {
@@ -116,7 +122,7 @@ public class AccountClient {
      *                                     that the request was unsuccessful.
      */
     public ListSecretsResponse listSecrets(String apiKey) throws VonageResponseParseException, VonageClientException {
-        return secret.listSecrets(apiKey);
+        return listSecrets.execute(apiKey);
     }
 
     /**
@@ -132,7 +138,7 @@ public class AccountClient {
      *                                     that the request was unsuccessful.
      */
     public SecretResponse getSecret(String apiKey, String secretId) throws VonageResponseParseException, VonageClientException {
-        return secret.getSecret(new SecretRequest(apiKey, secretId));
+        return getSecret.execute(new SecretRequest(apiKey, secretId));
     }
 
     /**
@@ -148,7 +154,7 @@ public class AccountClient {
      *                                     that the request was unsuccessful.
      */
     public SecretResponse createSecret(String apiKey, String secret) throws VonageResponseParseException, VonageClientException {
-        return this.secret.createSecret(new CreateSecretRequest(apiKey, secret));
+        return createSecret.execute(new CreateSecretRequest(apiKey, secret));
     }
 
     /**
@@ -162,7 +168,7 @@ public class AccountClient {
      *                                     that the request was unsuccessful.
      */
     public void revokeSecret(String apiKey, String secretId) throws VonageResponseParseException, VonageClientException {
-        secret.revokeSecret(new SecretRequest(apiKey, secretId));
+        revokeSecret.execute(new SecretRequest(apiKey, secretId));
     }
 
     /**

@@ -71,8 +71,7 @@ public class StandardInsightRequest extends BaseInsightRequest {
     }
 
     public static class Builder {
-        protected String number;
-        protected String country;
+        protected String number, country;
         protected Boolean cnam;
 
         protected Builder(String number) {
