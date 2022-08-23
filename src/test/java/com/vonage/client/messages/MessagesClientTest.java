@@ -16,16 +16,20 @@
 package com.vonage.client.messages;
 
 import com.vonage.client.ClientTest;
-import com.vonage.client.messages.mms.*;
-import com.vonage.client.messages.sms.*;
-import com.vonage.client.messages.whatsapp.*;
 import com.vonage.client.messages.messenger.*;
-import com.vonage.client.messages.viber.*;
+import com.vonage.client.messages.mms.MmsAudioRequest;
+import com.vonage.client.messages.mms.MmsImageRequest;
+import com.vonage.client.messages.mms.MmsVcardRequest;
+import com.vonage.client.messages.sms.SmsTextRequest;
+import com.vonage.client.messages.viber.ViberImageRequest;
+import com.vonage.client.messages.viber.ViberTextRequest;
+import com.vonage.client.messages.whatsapp.*;
+import org.apache.http.client.methods.RequestBuilder;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 import java.util.Collections;
 import java.util.UUID;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class MessagesClientTest extends ClientTest<MessagesClient> {
 
@@ -127,5 +131,26 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 		assertResponse(MessengerAudioRequest.builder().url(AUDIO));
 		assertResponse(MessengerVideoRequest.builder().url(VIDEO));
 		assertResponse(MessengerFileRequest.builder().url(FILE));
+	}
+
+	@Test
+	public void testSandboxUriToggle() throws Exception {
+		final String defaultUri = "https://api.nexmo.com/v1/messages";
+		final String sandboxUri = "https://messages-sandbox.nexmo.com/v1/messages";
+		SendMessageEndpoint endpoint = client.sendMessage;
+
+		MessageRequest sms = SmsTextRequest.builder()
+				.from("447700900001").to("447700900000")
+				.text("Hello, World!").build();
+
+		RequestBuilder builder = endpoint.makeRequest(sms);
+		assertEquals("POST", builder.getMethod());
+		assertEquals(defaultUri, builder.build().getURI().toString());
+		client.useSandboxEndpoint();
+		builder = endpoint.makeRequest(sms);
+		assertEquals(sandboxUri, builder.build().getURI().toString());
+		client.useRegularEndpoint();
+		builder = endpoint.makeRequest(sms);
+		assertEquals(defaultUri, builder.build().getURI().toString());
 	}
 }
