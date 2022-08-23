@@ -41,6 +41,11 @@
  * When calling {@link com.vonage.client.messages.MessagesClient#sendMessage(com.vonage.client.messages.MessageRequest)},
  * it is advised that the user catches {@link com.vonage.client.messages.MessageResponseException} to handle cases
  * where the message was not sent successfully.
+ * <br>
+ *
+ * Note that the <a href=https://dashboard.nexmo.com/messages/sandbox>Messages Sandbox</a> uses
+ * a different URL. Users can easily switch to this endpoint by calling
+ * {@link com.vonage.client.messages.MessagesClient#useSandboxEndpoint()}.
  *
  * @since 6.5.0
  */
