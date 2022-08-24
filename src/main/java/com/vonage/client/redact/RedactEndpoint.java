@@ -31,7 +31,6 @@ import java.io.UnsupportedEncodingException;
 
 class RedactEndpoint extends AbstractMethod<RedactRequest, Void> {
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {SignatureAuthMethod.class, TokenAuthMethod.class};
-
     private static final String PATH = "/redact/transaction";
 
     RedactEndpoint(HttpWrapper httpWrapper) {
@@ -64,7 +63,6 @@ class RedactEndpoint extends AbstractMethod<RedactRequest, Void> {
         if (response.getStatusLine().getStatusCode() != 204) {
             throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
         }
-
         return null;
     }
 

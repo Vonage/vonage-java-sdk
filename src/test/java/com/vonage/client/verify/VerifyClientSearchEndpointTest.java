@@ -17,13 +17,13 @@ package com.vonage.client.verify;
 
 import com.vonage.client.ClientTest;
 import com.vonage.client.VonageResponseParseException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 public class VerifyClientSearchEndpointTest extends ClientTest<VerifyClient> {
     @Before
@@ -91,12 +91,12 @@ public class VerifyClientSearchEndpointTest extends ClientTest<VerifyClient> {
     @Test
     public void testSearchError() throws Exception {
         //language=JSON
-        String json = "{\n" + "  \"request_id\": \"\",\n" + "  \"status\": \"101\",\n"
-                + "  \"error_text\": \"No response found.\"\n" + "}";
+        String json = "{\n" + "  \"request_id\": \"\",\n" + "  \"status\": \"16\",\n"
+                + "  \"error_text\": \"The code inserted does not match the expected value.\"\n" + "}";
         wrapper.setHttpClient(stubHttpClient(200, json));
 
         SearchVerifyResponse response = client.search("AAAAA");
-        assertEquals(VerifyStatus.NO_RESPONSE, response.getStatus());
+        assertEquals(VerifyStatus.INVALID_CODE, response.getStatus());
     }
 
     @Test
