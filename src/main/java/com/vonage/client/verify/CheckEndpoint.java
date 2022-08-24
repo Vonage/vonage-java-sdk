@@ -43,7 +43,7 @@ class CheckEndpoint extends AbstractMethod<CheckRequest, CheckResponse> {
         }
 
         RequestBuilder result = RequestBuilder.post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH)
-                .setHeader("Content-Type", "application/json")
+                .setHeader("Content-Type", "application/x-www-form-urlencoded")
                 .setHeader("Accept", "application/json")
                 .addParameter("request_id", request.getRequestId())
                 .addParameter("code", request.getCode());

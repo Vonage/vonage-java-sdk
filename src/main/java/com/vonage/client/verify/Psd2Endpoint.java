@@ -46,6 +46,7 @@ class Psd2Endpoint extends AbstractMethod<Psd2Request, VerifyResponse> {
     public RequestBuilder makeRequest(Psd2Request request) throws UnsupportedEncodingException {
         RequestBuilder builder =  RequestBuilder
                 .post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH)
+                .setHeader("Content-Type", "application/x-www-form-urlencoded")
                 .setHeader("Accept", "application/json")
                 .addParameter("number", request.getNumber())
                 .addParameter("payee", request.getPayee())
@@ -63,7 +64,6 @@ class Psd2Endpoint extends AbstractMethod<Psd2Request, VerifyResponse> {
         optionalParams(builder, "next_event_wait", request.getNextEventWait());
 
         return builder;
-
     }
 
     @Override

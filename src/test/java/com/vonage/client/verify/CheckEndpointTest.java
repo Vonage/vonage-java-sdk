@@ -20,10 +20,10 @@ import com.vonage.client.HttpWrapper;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.List;
-import static org.junit.Assert.assertEquals;
 
 public class CheckEndpointTest extends MethodTest<CheckEndpoint> {
     @Before
@@ -59,7 +59,7 @@ public class CheckEndpointTest extends MethodTest<CheckEndpoint> {
         RequestBuilder builder = method.makeRequest(request);
         assertEquals("POST", builder.getMethod());
         assertEquals("https://api.nexmo.com/verify/check/json", builder.build().getURI().toString());
-        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
+        assertEquals(ContentType.APPLICATION_FORM_URLENCODED.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
         assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
     }
 

@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed parsing `MessageResponseException` when entity body is empty
 - Added toggle for using Messages API Sandbox to `MessagesClient`
 - Deprecated `request_type` in `VerifyRequest`
+- Deprecated `ip_address` in `CheckRequest`
 - Fixed incorrect `Content-Type` header in `VerifyEndpoint` (issue #405)
 - Added `network` field to `VerifyResponse`
 - Updated `VerifyStatus` enum values
