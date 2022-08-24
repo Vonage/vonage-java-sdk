@@ -17,11 +17,10 @@ package com.vonage.client.verify;
 
 import com.vonage.client.ClientTest;
 import com.vonage.client.VonageResponseParseException;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.Locale;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
 
@@ -116,12 +115,9 @@ public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
                 "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": 0,\n"
                         + "  \"error_text\": \"error\"\n" + "}"
         ));
-        try {
-            client.verify("447700900999", "TestBrand", "15555215554", 6, Locale.US);
-            fail("An IOException should be thrown if an HTTP 500 response is received.");
-        } catch (VonageResponseParseException nrp) {
-            // This is expected
-        }
+        assertThrows(VonageResponseParseException.class, () ->
+                client.verify("447700900999", "TestBrand", "15555215554", 6, Locale.US)
+        );
     }
 
     @Test

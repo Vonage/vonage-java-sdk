@@ -79,7 +79,7 @@ public enum VerifyStatus {
      */
     INVALID_CODE(16),
     /**
-     * You can run Verify check on a specific <code>request_id/code> up to three times unless a new verification code
+     * You can run Verify check on a specific <code>request_id</code> up to three times unless a new verification code
      * is generated. If you check a request more than three times, it is set to FAILED and you cannot check it again.
      */
     WRONG_CODE_THROTTLED(17),

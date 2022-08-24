@@ -18,18 +18,19 @@ package com.vonage.client.auth;
 import com.vonage.client.auth.hashutils.HashUtil;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import static org.junit.Assert.*;
 import org.junit.Test;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import org.springframework.mock.web.MockHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class RequestSigningTest {
+
     @Test
     public void testConstructSignatureForRequestParameters() {
         List<NameValuePair> params = new ArrayList<>();
@@ -39,7 +40,12 @@ public class RequestSigningTest {
         RequestSigning.constructSignatureForRequestParameters(params, "abcde", 2100);
         Map<String, String> paramMap = constructParamMap(params);
         // md5 -s "&a=alphabet&b=bananas&timestamp=2100abcde"
-        assertEquals("7d43241108912b32cc315b48ce681acf", paramMap.get(RequestSigning.PARAM_SIGNATURE));
+        String expected = "7d43241108912b32cc315b48ce681acf";
+
+        assertEquals(expected, paramMap.get(RequestSigning.PARAM_SIGNATURE));
+        RequestSigning.constructSignatureForRequestParameters(params, "abcde");
+        paramMap = constructParamMap(params);
+        assertNotEquals(expected, paramMap.get(RequestSigning.PARAM_SIGNATURE));
     }
 
     @Test

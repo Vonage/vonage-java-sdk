@@ -228,6 +228,40 @@ public class VerifyClientSearchEndpointTest extends ClientTest<VerifyClient> {
         assertEquals(VerifyDetails.Status.EXPIRED, second.getStatus());
     }
 
+    @Test
+    public void testSearchMultipleRequests() throws Exception {
+        String accountId = "abcde";
+        String json = "{\"verification_requests\":[{" +
+                "\"request_id\":\"request-id-1\"," +
+                "\"account_id\": \"abcde1\"},{" +
+                "\"request_id\":\"request-id-2\"," +
+                "\"account_id\": \"abcde2\"},{" +
+                "\"request_id\":\"request-id-3\"," +
+                "\"account_id\": \"abcde3\"}]}";
+
+        wrapper.setHttpClient(stubHttpClient(200, json));
+        SearchVerifyResponse response = client.search("request-id-1", "request-id-2", "request-id-3");
+        List<VerifyDetails> requests = response.getVerificationRequests();
+        assertEquals(3, requests.size());
+        assertEquals(requests.get(0).getAccountId(), accountId+"1");
+        assertEquals(requests.get(1).getAccountId(), accountId+"2");
+        assertEquals(requests.get(2).getAccountId(), accountId+"3");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNoSearchRequests() throws Exception {
+        client.search();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testTooManySearchRequests() throws Exception {
+        String[] requestIds = new String[11];
+        for (int i = 1; i <= requestIds.length; i++) {
+            requestIds[i-1] = "request-id-"+i;
+        }
+        client.search(requestIds);
+    }
+
     @Test(expected = VonageResponseParseException.class)
     public void testSearchInvalidDates() throws Exception {
         String json = "    { \n" + "      \"request_id\": \"a-random-request-id\",\n"

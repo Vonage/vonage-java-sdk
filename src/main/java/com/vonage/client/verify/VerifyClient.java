@@ -89,8 +89,6 @@ public class VerifyClient {
         );
     }
 
-
-
     /**
      * Send a verification request to a phone number.
      *

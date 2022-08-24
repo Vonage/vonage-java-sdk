@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added toggle for using Messages API Sandbox to `MessagesClient`
 - Deprecated `request_type` in `VerifyRequest`
 - Deprecated `ip_address` in `CheckRequest`
-- Fixed incorrect `Content-Type` header in `VerifyEndpoint` (issue #405)
+- Fixed incorrect `Content-Type` header in `VerifyEndpoint` (issue #405) and `CheckEndpoint`
 - Added `network` field to `VerifyResponse`
 - Added `estimated_price_messages_sent` to `CheckResponse` and `VerifyDetails`
 - Updated `VerifyStatus` enum values

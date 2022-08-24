@@ -16,18 +16,18 @@
 package com.vonage.client.auth;
 
 import com.vonage.client.TestUtils;
-import com.vonage.client.auth.hashutils.HashUtil;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import java.io.IOException;
 import java.util.Arrays;
-import static org.junit.Assert.assertEquals;
 
 public class VonageUnacceptableAuthExceptionTest {
+
     @Test
     public void testAllAuthMethodHaveAppropriateDescriptions() throws IOException {
         VonageUnacceptableAuthException exception = new VonageUnacceptableAuthException(
                 Arrays.asList(new TokenAuthMethod(null, null),
-                        new SignatureAuthMethod(null, null, HashUtil.HashType.MD5),
+                        new SignatureAuthMethod(null, null),
                         new JWTAuthMethod("application_id", new TestUtils().loadKey("test/keys/application_key"))),
                 Arrays.asList(TokenAuthMethod.class, SignatureAuthMethod.class, JWTAuthMethod.class)
         );

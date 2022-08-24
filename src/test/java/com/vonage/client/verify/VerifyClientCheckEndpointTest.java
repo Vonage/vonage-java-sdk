@@ -143,4 +143,31 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
 
         assertEquals(VerifyStatus.UNKNOWN, response.getStatus());
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNullRequestId() throws Exception {
+        client.check(null, "1234");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testLongRequestId() throws Exception {
+        StringBuilder requestId = new StringBuilder(33);
+        for (; requestId.length() < 32; requestId.append("req-"));
+        client.check(requestId.append('0').toString(), "1234");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNullCode() throws Exception {
+        client.check("a-request-id", null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCodeLessThan4Characters() throws Exception {
+        client.check("a-request-id", "012");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCodeMoreThan6Characters() throws Exception {
+        client.check("a-request-id", "1234567");
+    }
 }

@@ -24,7 +24,7 @@ package com.vonage.client.verify;
 import java.util.Locale;
 
 /**
- * Base request class for {@link VerifyRequest} and {@link Psd2Request}
+ * Base request class for {@link VerifyRequest} and {@link Psd2Request}.
  * @since 5.5.0
  */
 public abstract class BaseRequest {
@@ -76,7 +76,7 @@ public abstract class BaseRequest {
      * from the country code included in {@code number}
      */
     public String getDashedLocale() {
-        if(locale != null) {
+        if (locale != null) {
            return locale.toLanguageTag().toLowerCase();
         }
         else return null;
@@ -93,7 +93,7 @@ public abstract class BaseRequest {
 
     /**
      * How long the generated verification code is valid for, in seconds. When you specify both <code>pin_expiry</code>
-     * and <code>next_event_wait</code> then <code>pin_expiry/code> must be an integer multiple of
+     * and <code>next_event_wait</code> then <code>pin_expiry</code> must be an integer multiple of
      * <code>next_event_wait</code>, otherwise <code>pin_expiry</code> will be equal to <code> next_event_wait</code>.
      *
      * @return An Integer between <code>60</code> and <code>3600</code>, or <code>null</code>.

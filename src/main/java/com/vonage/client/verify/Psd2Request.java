@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Locale;
 
 /**
- * Describes a PSD2 verify request when passed to {@link Psd2Endpoint}
+ * Describes a PSD2 verify request when passed to {@link Psd2Endpoint}.
  * @since 5.5.0
  */
 public class Psd2Request extends BaseRequest {
@@ -114,7 +114,6 @@ public class Psd2Request extends BaseRequest {
     }
 
     public static class Builder {
-
         private Double amount;
         private String payee, number, country;
         private Workflow workflow;
