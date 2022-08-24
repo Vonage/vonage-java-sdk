@@ -18,6 +18,12 @@ package com.vonage.client.verify;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
+/**
+ * Enum representing the control command. The possible commands are <code>cancel</code> to request cancellation of
+ * the verification process, or <code>trigger_next_event</code> to advance to the next verification event (if any).
+ * Cancellation is only possible 30 seconds after the start of the verification request and
+ * before the second event (either TTS or SMS) has taken place.
+ */
 public enum VerifyControlCommand {
     CANCEL,
     TRIGGER_NEXT_EVENT;

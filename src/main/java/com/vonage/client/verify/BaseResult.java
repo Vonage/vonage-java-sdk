@@ -18,8 +18,9 @@ package com.vonage.client.verify;
 
 /**
  * An abstract base class for verification results.
- *
+ * @deprecated This class isn't used anywhere in the codebase and will be removed.
  */
+@Deprecated
 public abstract class BaseResult {
     /**
      * Verify was successfully submitted to the Vonage service

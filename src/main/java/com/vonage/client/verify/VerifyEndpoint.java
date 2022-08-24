@@ -38,8 +38,8 @@ class VerifyEndpoint extends AbstractMethod<VerifyRequest, VerifyResponse> {
 
     @Override
     public RequestBuilder makeRequest(VerifyRequest request) throws UnsupportedEncodingException {
-        RequestBuilder result = RequestBuilder
-                .post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH)
+        String uri = httpWrapper.getHttpConfig().getApiBaseUri() + PATH;
+        RequestBuilder result = RequestBuilder.post(uri)
                 .setHeader("Content-Type", "application/x-www-form-urlencoded")
                 .setHeader("Accept", "application/json");
         request.addParams(result);

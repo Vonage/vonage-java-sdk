@@ -146,6 +146,11 @@ public enum VerifyStatus {
         return verifyStatus;
     }
 
+    /**
+     * @return Whether this enum is {@linkplain #THROTTLED} or {@linkplain #INTERNAL_ERROR}.
+     * @deprecated This method may be removed in a future release.
+     */
+    @Deprecated
     public boolean isTemporaryError() {
         return this == THROTTLED || this == INTERNAL_ERROR;
     }

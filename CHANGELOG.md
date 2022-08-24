@@ -11,7 +11,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Deprecated `ip_address` in `CheckRequest`
 - Fixed incorrect `Content-Type` header in `VerifyEndpoint` (issue #405)
 - Added `network` field to `VerifyResponse`
+- Added `estimated_price_messages_sent` to `CheckResponse` and `VerifyDetails`
 - Updated `VerifyStatus` enum values
+- Added missing documentation and validation to requests and responses in Verify API
 
 ## [7.0.0]
 - Removed SMS Search API

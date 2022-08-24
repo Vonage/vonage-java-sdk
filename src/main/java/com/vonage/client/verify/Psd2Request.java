@@ -29,12 +29,11 @@ import java.util.Locale;
  * @since 5.5.0
  */
 public class Psd2Request extends BaseRequest {
-    private Double amount;
-    private String payee;
-    private Workflow workflow;
+    private final Double amount;
+    private final String payee;
+    private final Workflow workflow;
 
-
-    private Psd2Request(Builder builder){
+    private Psd2Request(Builder builder) {
         super(builder.number,builder.length, builder.locale, builder.country, builder.pinExpiry, builder.nextEventWait);
         amount = builder.amount;
         payee = builder.payee;
@@ -56,17 +55,17 @@ public class Psd2Request extends BaseRequest {
     }
 
     /**
-     * @return The predefined sequence of SMS and TTS (Text To Speech) actions to use in order to convey the PIN to your
-     * user.
+     * @return The predefined sequence of SMS and TTS (Text To Speech) actions to use
+     * in order to convey the PIN to your user.
      */
     public Workflow getWorkflow() {
         return workflow;
     }
 
     /**
-     * Enumeration representing different verification workflows.
-     * <p>
-     * See: <a href="https://developer.nexmo.com/verify/guides/workflows-and-events">https://developer.nexmo.com/verify/guides/workflows-and-events</a> for more details.
+     * Enumeration representing different verification workflows. See the
+     * <a href="https://developer.nexmo.com/verify/guides/workflows-and-events">Workflow and Events documentation</a>
+     * for more details.
      */
     public enum Workflow {
         /**
@@ -117,14 +116,10 @@ public class Psd2Request extends BaseRequest {
     public static class Builder {
 
         private Double amount;
-        private String payee;
+        private String payee, number, country;
         private Workflow workflow;
-        private String number;
         private Locale locale;
-        private Integer length;
-        private Integer pinExpiry;
-        private Integer nextEventWait;
-        private String country;
+        private Integer length,  pinExpiry, nextEventWait;
 
         /**
          * @param number The recipient's phone number in <a href="https://en.wikipedia.org/wiki/E.164">E.164</a>
@@ -133,7 +128,7 @@ public class Psd2Request extends BaseRequest {
          * @param payee  An alphanumeric string to indicate to the user the name of the recipient that they
          *               are confirming a payment to.
          */
-        public Builder(String number, Double amount, String payee){
+        public Builder(String number, Double amount, String payee) {
             this.number = number;
             this.payee = payee;
             this.amount = amount;

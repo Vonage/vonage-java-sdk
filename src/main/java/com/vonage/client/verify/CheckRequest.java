@@ -35,10 +35,16 @@ public class CheckRequest {
      */
     @Deprecated
     public CheckRequest(String requestId, String code, String ipAddress) {
-        if ((this.requestId = requestId) != null && requestId.length() > 32) {
+        if ((this.requestId = requestId) == null) {
+            throw new IllegalArgumentException("request_id is required");
+        }
+        if ((this.code = code) == null) {
+            throw new IllegalArgumentException("code is required");
+        }
+        if (requestId.length() > 32) {
             throw new IllegalArgumentException("request_id '"+requestId+"' is longer than 32 characters");
         }
-        if ((this.code = code) != null && (code.length() < 4 || code.length() > 6)) {
+        if (code.length() < 4 || code.length() > 6) {
             throw new IllegalArgumentException("code '"+code+"' is not between 4 and 6 characters long");
         }
         this.ipAddress = ipAddress;

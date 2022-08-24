@@ -35,13 +35,19 @@ public class VerifyCheck {
     }
 
     public enum Status {
-        VALID, INVALID,
+        VALID, INVALID
     }
 
+    /**
+     * @return The date and time this check was received
+     */
     public Date getDate() {
         return this.date;
     }
 
+    /**
+     * @return The code supplied with this check request.
+     */
     public String getCode() {
         return this.code;
     }
@@ -50,6 +56,11 @@ public class VerifyCheck {
         return this.status;
     }
 
+    /**
+     * @return The IP address, if available.
+     * @deprecated This field is no longer used.
+     */
+    @Deprecated
     public String getIpAddress() {
         return this.ipAddress;
     }

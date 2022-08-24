@@ -27,43 +27,74 @@ import java.math.BigDecimal;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CheckResponse {
-    private String requestId;
-    private String eventId;
-    private VerifyStatus status;
-    private BigDecimal price;
-    private String currency;
-    private String errorText;
+    private String requestId, eventId, currency, errorText;
+    private final VerifyStatus status;
+    private BigDecimal price, estimatedPriceMessagesSent;
 
     @JsonCreator
     public CheckResponse(@JsonProperty(value = "status", required = true) VerifyStatus status) {
         this.status = status;
     }
 
+    /**
+     * @return The <code>request_id</code> that you received in the response to the Verify request
+     * and used in the Verify check request.
+     */
     @JsonProperty("request_id")
     public String getRequestId() {
         return requestId;
     }
 
+    /**
+     * @return The ID of the verification event, such as an SMS or TTS call.
+     */
     @JsonProperty("event_id")
     public String getEventId() {
         return eventId;
     }
 
+    /**
+     * @return A value of {@link VerifyStatus#OK} indicates that your user entered the correct code.
+     * Otherwise, check {@link #getErrorText()}.
+     */
     public VerifyStatus getStatus() {
         return status;
     }
 
+    /**
+     * @return The cost incurred for this request.
+     */
     public BigDecimal getPrice() {
         return price;
     }
 
+    /**
+     * @return The currency code.
+     */
     public String getCurrency() {
         return currency;
     }
 
+    /**
+     * @return If the status is non-zero, this explains the error encountered.
+     */
     @JsonProperty("error_text")
     public String getErrorText() {
         return errorText;
+    }
+
+    /**
+     * @return This field may not be present, depending on your pricing model.
+     * The value indicates the cost (in EUR) of the calls made and messages sent for the verification process.
+     * This value may be updated during and shortly after the request completes because user input events can
+     * overlap with message/call events. When this field is present, the total cost of the verification is the
+     * sum of this field and the <code>price</code> field.
+     *
+     * @since 7.1.0
+     */
+    @JsonProperty("estimated_price_messages_sent")
+    public BigDecimal getEstimatedPriceMessagesSent() {
+        return estimatedPriceMessagesSent;
     }
 
     public static CheckResponse fromJson(String json) {

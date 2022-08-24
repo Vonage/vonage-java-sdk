@@ -16,10 +16,10 @@
 package com.vonage.client.verify;
 
 import com.vonage.client.ClientTest;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.Locale;
-import static org.junit.Assert.assertEquals;
 
 public class VerifyClientPsd2EndpointTest extends ClientTest<VerifyClient> {
 
@@ -63,8 +63,8 @@ public class VerifyClientPsd2EndpointTest extends ClientTest<VerifyClient> {
                 .length(4)
                 .locale(Locale.UK)
                 .country("GB")
-                .nextEventWait(30)
-                .pinExpiry(70)
+                .nextEventWait(60)
+                .pinExpiry(900)
                 .build();
 
         VerifyResponse response = client.psd2Verify(request);
