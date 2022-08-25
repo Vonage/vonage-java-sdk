@@ -16,6 +16,7 @@
 package com.vonage.client.verify;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,6 +24,7 @@ import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class VerifyResponse {
     private final VerifyStatus status;
     private String requestId, errorText, network;
