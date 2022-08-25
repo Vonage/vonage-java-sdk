@@ -57,6 +57,9 @@ public class SearchVerifyResponse {
         return verificationRequests;
     }
 
+    /**
+     * @return If status is not SUCCESS, this message explains the issue encountered.
+     */
     @JsonProperty("error_text")
     public String getErrorText() {
         return errorText;

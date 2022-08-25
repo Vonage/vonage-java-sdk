@@ -19,9 +19,9 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 public class VerifyDetailsTest {
+
     @Test
     public void testVerifyDetailsStatusFromString() {
         assertEquals(VerifyDetails.Status.INVALID, VerifyDetails.Status.fromString("101"));
-
     }
 }

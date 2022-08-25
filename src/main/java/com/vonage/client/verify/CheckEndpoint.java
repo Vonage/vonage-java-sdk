@@ -38,12 +38,9 @@ class CheckEndpoint extends AbstractMethod<CheckRequest, CheckResponse> {
 
     @Override
     public RequestBuilder makeRequest(CheckRequest request) throws UnsupportedEncodingException {
-        if (request.getRequestId() == null || request.getCode() == null) {
-            throw new IllegalArgumentException("request ID and code parameters are mandatory.");
-        }
-
-        RequestBuilder result = RequestBuilder.post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH)
-                .setHeader("Content-Type", "application/json")
+        String uri = httpWrapper.getHttpConfig().getApiBaseUri() + PATH;
+        RequestBuilder result = RequestBuilder.post(uri)
+                .setHeader("Content-Type", "application/x-www-form-urlencoded")
                 .setHeader("Accept", "application/json")
                 .addParameter("request_id", request.getRequestId())
                 .addParameter("code", request.getCode());

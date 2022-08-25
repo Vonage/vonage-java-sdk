@@ -24,10 +24,9 @@ import java.util.Locale;
  * Describes a Verify request when passed to {@link VerifyEndpoint}.
  */
 public class VerifyRequest extends BaseRequest {
-    private LineType type;
-    private String brand;
-    private String from;
-    private Workflow workflow;
+    private final LineType type;
+    private final String brand, from;
+    private final Workflow workflow;
 
     public VerifyRequest(Builder builder) {
         super(builder.number, builder.length, builder.locale, builder.country, builder.pinExpiry, builder.nextEventWait);

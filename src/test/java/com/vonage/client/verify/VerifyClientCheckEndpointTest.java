@@ -17,11 +17,11 @@ package com.vonage.client.verify;
 
 import com.vonage.client.ClientTest;
 import com.vonage.client.VonageResponseParseException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 import java.math.BigDecimal;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
 
@@ -77,11 +77,13 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
     @Test
     public void testCheckWithNonNumericStatus() throws Exception {
         String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"status\": \"test\",\n"
-                + "  \"event_id\": \"an-event-id\",\n" + "  \"price\": \"0.10000000\",\n" + "  \"currency\": \"EUR\"\n"
+                + "  \"event_id\": \"an-event-id\",\n" + "  \"price\": \"0.10000000\",\n" +
+                "  \"currency\": \"EUR\",\n" + "  \"estimated_price_messages_sent\": \"0.33001\""
                 + "}\n";
         wrapper.setHttpClient(stubHttpClient(200, json));
         CheckResponse response = client.check("a-request-id", "1234");
         assertEquals(VerifyStatus.INTERNAL_ERROR, response.getStatus());
+        assertEquals(BigDecimal.valueOf(0.33001), response.getEstimatedPriceMessagesSent());
     }
 
     @Test
@@ -140,5 +142,32 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
         CheckResponse response = client.check("a-request-id", "1234", "127.0.0.1");
 
         assertEquals(VerifyStatus.UNKNOWN, response.getStatus());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNullRequestId() throws Exception {
+        client.check(null, "1234");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testLongRequestId() throws Exception {
+        StringBuilder requestId = new StringBuilder(33);
+        for (; requestId.length() < 32; requestId.append("req-"));
+        client.check(requestId.append('0').toString(), "1234");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testNullCode() throws Exception {
+        client.check("a-request-id", null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCodeLessThan4Characters() throws Exception {
+        client.check("a-request-id", "012");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCodeMoreThan6Characters() throws Exception {
+        client.check("a-request-id", "1234567");
     }
 }

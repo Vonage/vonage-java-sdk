@@ -38,9 +38,9 @@ class SearchEndpoint extends AbstractMethod<SearchRequest, SearchVerifyResponse>
 
     @Override
     public RequestBuilder makeRequest(SearchRequest request) throws UnsupportedEncodingException {
-        RequestBuilder result = RequestBuilder
-            .post(httpWrapper.getHttpConfig().getApiBaseUri() + PATH)
-            .setHeader("Accept", "application/json");
+        String uri = httpWrapper.getHttpConfig().getApiBaseUri() + PATH;
+        RequestBuilder result = RequestBuilder.post(uri)
+                .setHeader("Accept", "application/json");
 
         if (request.getRequestIds().length == 1) {
             result.addParameter("request_id", request.getRequestIds()[0]);

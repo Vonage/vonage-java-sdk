@@ -35,8 +35,7 @@ public class ControlRequest {
     }
 
     public void addParams(RequestBuilder request) {
-        request
-                .addParameter("request_id", getRequestId())
+        request.addParameter("request_id", getRequestId())
                 .addParameter("cmd", getCommand().toString());
     }
 

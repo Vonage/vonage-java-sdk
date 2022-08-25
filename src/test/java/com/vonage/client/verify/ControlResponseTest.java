@@ -16,9 +16,8 @@
 package com.vonage.client.verify;
 
 import com.vonage.client.VonageUnexpectedException;
+import static org.junit.Assert.*;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class ControlResponseTest {
 
@@ -33,12 +32,7 @@ public class ControlResponseTest {
     }
 
     @Test
-    public void testBadJson() throws Exception {
-        try {
-            ControlResponse.fromJson("blarg");
-            fail("Deserializing nonsense JSON should result in a VonageUnexpectedException");
-        } catch (VonageUnexpectedException nue) {
-            // This is expected
-        }
+    public void testBadJson() {
+        assertThrows(VonageUnexpectedException.class, () -> ControlResponse.fromJson("blarg"));
     }
 }

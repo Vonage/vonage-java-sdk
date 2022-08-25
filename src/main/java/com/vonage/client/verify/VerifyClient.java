@@ -89,8 +89,6 @@ public class VerifyClient {
         );
     }
 
-
-
     /**
      * Send a verification request to a phone number.
      *
@@ -228,18 +226,23 @@ public class VerifyClient {
      *
      * @param requestId (required) The requestId returned by the {@code verify} call.
      * @param code      (required) The code entered by the user.
-     * @param ipAddress (optional) The IP address obtained from the HTTP request made when the user entered their code.
+     * @param ipAddress (deprecated) This field is no longer used.
      *
      * @return a CheckResponse representing the response received from the API call.
      *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
+     *
+     * @deprecated <code>ipAddress</code> is no longer used and will be removed in the next major release.
+     * Please use {@link #check(String, String)}
      */
+    @Deprecated
     public CheckResponse check(final String requestId,
                                final String code,
                                final String ipAddress) throws VonageClientException, VonageResponseParseException {
         return check(new CheckRequest(requestId, code, ipAddress));
     }
+
 
     /**
      * Search for a previous verification request.

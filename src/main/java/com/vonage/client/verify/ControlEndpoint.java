@@ -53,7 +53,6 @@ class ControlEndpoint extends AbstractMethod<ControlRequest, ControlResponse> {
         if (!controlResponse.getStatus().equals("0")) {
             throw new VerifyException(controlResponse.getStatus(), controlResponse.getErrorText());
         }
-
         return controlResponse;
     }
 }

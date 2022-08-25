@@ -16,10 +16,9 @@
 package com.vonage.client.verify;
 
 import com.vonage.client.ClientTest;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
-import java.util.Locale;
-import static org.junit.Assert.assertEquals;
 
 public class VerifyClientPsd2EndpointTest extends ClientTest<VerifyClient> {
 
@@ -53,19 +52,12 @@ public class VerifyClientPsd2EndpointTest extends ClientTest<VerifyClient> {
     }
 
     @Test
-    public void testPsd2VerifyWithOptionalParameters() throws Exception {
+    public void testPsd2VerifyWithRequestObject() throws Exception {
         wrapper.setHttpClient(stubHttpClient(200,
                 "{" + "\"request_id\": \"abcdef0123456789abcdef0123456789\"," + " \"status\": 0" + "}"
         ));
 
-        Psd2Request request = new Psd2Request.Builder("447700900999", 10.31, "Ebony")
-                .workflow(Psd2Request.Workflow.SMS)
-                .length(4)
-                .locale(Locale.UK)
-                .country("GB")
-                .nextEventWait(30)
-                .pinExpiry(70)
-                .build();
+        Psd2Request request = new Psd2Request.Builder("447700900999", 10.31, "Ebony").build();
 
         VerifyResponse response = client.psd2Verify(request);
 

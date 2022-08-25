@@ -8,8 +8,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed parsing `MessageResponseException` when entity body is empty
 - Added toggle for using Messages API Sandbox to `MessagesClient`
 - Deprecated `request_type` in `VerifyRequest`
-- Fixed incorrect `Content-Type` header in `VerifyEndpoint`
+- Deprecated `ip_address` in `CheckRequest`
+- Fixed incorrect `Content-Type` header in `VerifyEndpoint` (issue #405) and `CheckEndpoint`
 - Added `network` field to `VerifyResponse`
+- Added `estimated_price_messages_sent` to `CheckResponse` and `VerifyDetails`
+- Updated `VerifyStatus` enum values
+- Added missing documentation and validation to requests and responses in Verify API
 
 ## [7.0.0]
 - Removed SMS Search API

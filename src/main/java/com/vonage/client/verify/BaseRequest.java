@@ -24,25 +24,25 @@ package com.vonage.client.verify;
 import java.util.Locale;
 
 /**
- * Base request class for {@link VerifyRequest} and {@link Psd2Request}
+ * Base request class for {@link VerifyRequest} and {@link Psd2Request}.
  * @since 5.5.0
  */
 public abstract class BaseRequest {
-    private final String number;
-    private Integer length;
-    private Locale locale;
-    private String country;
-    private Integer pinExpiry;
-    private Integer nextEventWait;
-
+    private final String number, country;
+    private final Integer length, pinExpiry, nextEventWait;
+    private final Locale locale;
 
     protected BaseRequest(String number, Integer length, Locale locale, String country, Integer pinExpiry, Integer nextEventWait) {
         this.number = number;
         this.length = length;
         this.locale = locale;
         this.country = country;
-        this.pinExpiry = pinExpiry;
-        this.nextEventWait = nextEventWait;
+        if ((this.pinExpiry = pinExpiry) != null && (pinExpiry < 60 || pinExpiry > 3600)) {
+            throw new IllegalArgumentException("pin_expiry '"+pinExpiry+"' is out of bounds");
+        }
+        if ((this.nextEventWait = nextEventWait) != null && (nextEventWait < 60 || nextEventWait > 900)) {
+            throw new IllegalArgumentException("next_event_wait '"+nextEventWait+"' is out of bounds");
+        }
     }
 
     /**
@@ -61,7 +61,6 @@ public abstract class BaseRequest {
         return length;
     }
 
-
     /**
      * @return the default locale used for verification. If this value is {@code null}, the locale will be determined
      * from the country code included in {@code number}
@@ -70,16 +69,14 @@ public abstract class BaseRequest {
         return locale;
     }
 
-
-
     /**
      * @return the default locale used for verification in snake case.
      * Ex: {@code en-gb}
      * If this value is {@code null}, the locale will be determined
      * from the country code included in {@code number}
      */
-    public String getDashedLocale(){
-        if(locale != null){
+    public String getDashedLocale() {
+        if (locale != null) {
            return locale.toLanguageTag().toLowerCase();
         }
         else return null;
@@ -94,22 +91,25 @@ public abstract class BaseRequest {
         return country;
     }
 
-
     /**
-     * @return PIN expiry time in seconds
+     * How long the generated verification code is valid for, in seconds. When you specify both <code>pin_expiry</code>
+     * and <code>next_event_wait</code> then <code>pin_expiry</code> must be an integer multiple of
+     * <code>next_event_wait</code>, otherwise <code>pin_expiry</code> will be equal to <code> next_event_wait</code>.
+     *
+     * @return An Integer between <code>60</code> and <code>3600</code>, or <code>null</code>.
      */
     public Integer getPinExpiry() {
         return pinExpiry;
     }
 
-
     /**
-     * @return the wait time between attempts to deliver the PIN. An Integer between 600-900, or null.
+     * The wait time between attempts to deliver the PIN.
+     *
+     * @return An Integer between <code>60</code> and <code>900</code>, or <code>null</code>.
      */
     public Integer getNextEventWait() {
         return nextEventWait;
     }
-
 
     @Override
     public String toString() {

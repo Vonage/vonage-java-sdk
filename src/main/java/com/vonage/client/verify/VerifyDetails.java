@@ -25,80 +25,144 @@ import java.util.stream.Collectors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class VerifyDetails {
-    private String requestId;
-    private String accountId;
-    private String number;
-    private String senderId;
-    private Date dateSubmitted;
-    private Date dateFinalized;
-    private Date firstEventDate;
-    private Date lastEventDate;
+    private String requestId, accountId, number, senderId, currency;
+    private Date dateSubmitted, dateFinalized, firstEventDate, lastEventDate;
     private Status status;
-    private BigDecimal price;
-    private String currency;
+    private BigDecimal price, estimatedPriceMessagesSent;
     private List<VerifyCheck> checks = new ArrayList<>();
 
+    /**
+     * @return The <code>request_id</code> that you received in the response to the
+     * Verify request and used in the Verify search request.
+     */
     @JsonProperty("request_id")
     public String getRequestId() {
         return requestId;
     }
 
+    /**
+     * @return The Vonage account ID the request was for.
+     */
     @JsonProperty("account_id")
     public String getAccountId() {
         return accountId;
     }
 
+    /**
+     * @return The phone number this verification request was used for.
+     */
     public String getNumber() {
         return number;
     }
 
+    /**
+     * @return The <code>sender_id</code> you provided in the Verify request.
+     */
     @JsonProperty("sender_id")
     public String getSenderId() {
         return senderId;
     }
 
+    /**
+     * @return The date and time the verification request was submitted.
+     */
     @JsonProperty("date_submitted")
     public Date getDateSubmitted() {
         return dateSubmitted;
     }
 
+    /**
+     * @return The date and time the verification request was completed.
+     */
     @JsonProperty("date_finalized")
     public Date getDateFinalized() {
         return dateFinalized;
     }
 
+    /**
+     * @return The date and time the first verification attempt was made.
+     */
     @JsonProperty("first_event_date")
     public Date getFirstEventDate() {
         return firstEventDate;
     }
 
+    /**
+     * @return The date and time the last verification attempt was made.
+     */
     @JsonProperty("last_event_date")
     public Date getLastEventDate() {
         return lastEventDate;
     }
 
+    /**
+     * @return The status.
+     */
     public Status getStatus() {
         return status;
     }
 
+    /**
+     * @return The cost incurred for this verification request.
+     */
     public BigDecimal getPrice() {
         return price;
     }
 
+    /**
+     * @return The currency code.
+     */
     public String getCurrency() {
         return currency;
     }
 
+    /**
+     * @return The list of checks made for this verification and their outcomes.
+     */
     public List<VerifyCheck> getChecks() {
         return checks;
     }
 
+    /**
+     * @return This field may not be present, depending on your pricing model.
+     * The value indicates the cost (in EUR) of the calls made and messages sent for the verification process.
+     * This value may be updated during and shortly after the request completes because user input events can
+     * overlap with message/call events. When this field is present, the total cost of the verification is the
+     * sum of this field and the <code>price</code> field.
+     *
+     * @since 7.1.0
+     */
+    @JsonProperty("estimated_price_messages_sent")
+    public BigDecimal getEstimatedPriceMessagesSent() {
+        return estimatedPriceMessagesSent;
+    }
+
     public enum Status {
+        /**
+         * The search is still in progress.
+         */
         IN_PROGRESS("IN PROGRESS"),
+        /**
+         * Your user entered a correct verification code.
+         */
         SUCCESS("SUCCESS"),
+        /**
+         * Your user entered an incorrect code more than three times.
+         */
         FAILED("FAILED"),
+        /**
+         * Your user did not enter a code before the pin_expiry time elapsed.
+         */
         EXPIRED("EXPIRED"),
+        /**
+         * The verification process was cancelled by a Verify control request.
+         */
         CANCELLED("CANCELLED"),
+        /**
+         * You supplied an invalid <code>request_id</code>, or the data is not available.
+         * Note that for recently-completed requests, there can be a delay of up to 1 minute
+         * before the results are available in search.
+         */
         INVALID("101");
 
         private final String status;
