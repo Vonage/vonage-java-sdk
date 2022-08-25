@@ -23,10 +23,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import java.io.BufferedReader;
+import org.apache.http.util.EntityUtils;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.stream.Collectors;
 
 class SendMessageEndpoint extends AbstractMethod<MessageRequest, MessageResponse> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class, TokenAuthMethod.class};
@@ -67,9 +65,7 @@ class SendMessageEndpoint extends AbstractMethod<MessageRequest, MessageResponse
 			return MessageResponse.fromJson(json);
 		}
 		else {
-			try (BufferedReader br = new BufferedReader(new InputStreamReader(response.getEntity().getContent()))) {
-				json = br.lines().collect(Collectors.joining(System.lineSeparator()));
-			}
+			json = EntityUtils.toString(response.getEntity());
 			MessageResponseException mrx = MessageResponseException.fromJson(json);
 			if (mrx.title == null) {
 				mrx.title = response.getStatusLine().getReasonPhrase();
