@@ -23,6 +23,7 @@ import java.nio.file.Path;
 
 public class JWTAuthMethod implements AuthMethod {
     private static final int SORT_KEY = 10;
+
     private final Jwt jwt;
 
     public JWTAuthMethod(final String applicationId, final byte[] privateKey) {
@@ -40,7 +41,6 @@ public class JWTAuthMethod implements AuthMethod {
     @Override
     public RequestBuilder apply(RequestBuilder request) {
         String token = jwt.generate();
-
         request.setHeader("Authorization", "Bearer " + token);
         return request;
     }
