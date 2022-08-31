@@ -36,6 +36,10 @@ public class SignatureAuthMethod implements AuthMethod {
         this.hashType = hashType;
     }
 
+    public String getApiKey() {
+        return apiKey;
+    }
+
     @Override
     public RequestBuilder apply(RequestBuilder request) {
         request.addParameter("api_key", apiKey);
