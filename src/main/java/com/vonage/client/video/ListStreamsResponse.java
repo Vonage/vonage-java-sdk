@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ListStreamsResponse {
+class ListStreamsResponse {
 	private Integer count;
 	private List<GetStreamResponse> items;
 

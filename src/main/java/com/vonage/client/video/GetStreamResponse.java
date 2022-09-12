@@ -36,7 +36,7 @@ public class GetStreamResponse extends SessionStream {
 	}
 
 	/**
-	 * @return The name of the stream.
+	 * @return The name of the stream (if one was set when the client published the stream).
 	 */
 	public String getName() {
 		return name;

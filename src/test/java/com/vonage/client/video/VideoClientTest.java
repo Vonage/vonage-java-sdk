@@ -49,4 +49,8 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		assertEquals(msUrl, response.getMediaServerUrl());
 	}
 
+	@Test
+	public void testListStreams() throws Exception {
+
+	}
 }

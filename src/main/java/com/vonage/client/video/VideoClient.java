@@ -17,13 +17,17 @@ package com.vonage.client.video;
 
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.VonageClient;
+import java.util.List;
 
 /**
- * A client for talking to the Vonage Verify API. The standard way to obtain an instance of this class is to use
+ * A client for talking to the Vonage Video API. The standard way to obtain an instance of this class is to use
  * {@link VonageClient#getVideoClient()}.
  */
 public class VideoClient {
 	final CreateSessionEndpoint createSession;
+	final SetStreamLayoutEndpoint setStreamLayout;
+	final ListStreamsEndpoint listStreams;
+	final GetStreamEndpoint getStream;
 
 	/**
 	 * Constructor.
@@ -32,10 +36,24 @@ public class VideoClient {
 	 */
 	public VideoClient(HttpWrapper httpWrapper) {
 		createSession = new CreateSessionEndpoint(httpWrapper);
+		setStreamLayout = new SetStreamLayoutEndpoint(httpWrapper);
+		listStreams = new ListStreamsEndpoint(httpWrapper);
+		getStream = new GetStreamEndpoint(httpWrapper);
 	}
 
-	public CreateSessionResponse createSession(CreateSessionRequest createSessionRequest) {
-		return createSession.execute(createSessionRequest);
+	public CreateSessionResponse createSession(CreateSessionRequest request) {
+		return createSession.execute(request);
 	}
 
+	public void setStreamLayout(SetStreamLayoutRequest request) {
+		setStreamLayout.execute(request);
+	}
+
+	public List<GetStreamResponse> listStreams(String sessionId) {
+		return listStreams.execute(sessionId).getItems();
+	}
+
+	public GetStreamResponse getStream(String sessionId, String streamId) {
+		return getStream.execute(new GetStreamRequest(sessionId, streamId));
+	}
 }

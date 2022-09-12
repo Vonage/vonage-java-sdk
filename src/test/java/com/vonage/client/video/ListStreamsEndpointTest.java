@@ -30,7 +30,7 @@ import java.util.UUID;
 
 public class ListStreamsEndpointTest {
 	private ListStreamsEndpoint endpoint;
-	private final String applicationId = "8b732909-0a06-46a2-8ea8-074e64d43422";
+	private final String applicationId = UUID.randomUUID().toString();
 	
 	@Before
 	public void setUp() {
@@ -62,8 +62,8 @@ public class ListStreamsEndpointTest {
 	@Test
 	public void testParseValidResponse() throws Exception {
 		Integer count = 1;
+		VideoType videoType0 = VideoType.CUSTOM;
 		String id0 = UUID.randomUUID().toString(),
-			videoType0 = "camera",
 			name0 = "My Stream",
 			layoutClass0 = "full",
 			json = "{\n" +

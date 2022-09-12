@@ -64,6 +64,7 @@ public class SetStreamLayoutRequest {
 	
 		/**
 		 * @param items The stream layouts to change.
+		 * 
 		 * @return This builder.
 		 */
 		public Builder items(List<SessionStream> items) {
