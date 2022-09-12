@@ -22,16 +22,22 @@ import java.io.IOException;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GetStreamResponse extends SessionStream {
-	private String videoType;
+	private VideoType videoType;
 	private String name;
 
 	protected GetStreamResponse() {
 	}
-	
-	public String getVideoType() {
+
+	/**
+	 * @return The video source for the stream.
+	 */
+	public VideoType getVideoType() {
 		return videoType;
 	}
-	
+
+	/**
+	 * @return The name of the stream.
+	 */
 	public String getName() {
 		return name;
 	}

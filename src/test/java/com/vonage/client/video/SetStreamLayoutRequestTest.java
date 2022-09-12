@@ -32,7 +32,7 @@ public class SetStreamLayoutRequestTest {
 			.build()
 		);
 		SetStreamLayoutRequest request = SetStreamLayoutRequest.builder(id)
-			.items(items).build();
+				.items(items).build();
 		
 		String json = request.toJson();
 	}

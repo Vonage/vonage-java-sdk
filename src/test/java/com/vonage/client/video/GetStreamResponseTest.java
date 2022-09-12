@@ -27,7 +27,8 @@ public class GetStreamResponseTest {
 	
 	@Test
 	public void testFromJsonAllFields() {
-		String videoType = "camera";
+		VideoType videoType = VideoType.CAMERA;
+		assertEquals("camera", videoType.toString());
 		String name = "";
 		String id = "8b732909-0a06-46a2-8ea8-074e64d43422";
 		List<String> layoutClassList = Arrays.asList("full");
@@ -38,7 +39,7 @@ public class GetStreamResponseTest {
 				"\"id\":\""+id+"\",\n" +
 				"\"layoutClassList\":[\"full\"]\n" +
 		"}");
-		
+
 		assertEquals(videoType, response.getVideoType());
 		assertEquals(name, response.getName());
 		assertEquals(id, response.getId());

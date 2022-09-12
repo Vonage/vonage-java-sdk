@@ -22,6 +22,8 @@ import org.junit.Test;
 import java.util.UUID;
 
 public class VideoClientTest extends ClientTest<VideoClient> {
+	final String appId = UUID.randomUUID().toString();
+	final String sessionId = UUID.randomUUID().toString();
 
 	@Before
 	public void setUp() {
@@ -30,17 +32,15 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 	@Test
 	public void testCreateSession() throws Exception {
-		String appId = UUID.randomUUID().toString(),
-			sessionId = UUID.randomUUID().toString(),
-			msUrl = "http://example.com/resource",
+		String msUrl = "http://example.com/resource",
 			createDt = "abc123",
-			json = "{\n" +
+			responseJson = "{\n" +
 				"    \"session_id\": \""+sessionId+"\",\n" +
 				"    \"application_id\": \""+appId+"\",\n" +
 				"    \"create_dt\": \""+createDt+"\",\n" +
 				"    \"media_server_url\": \""+msUrl+"\"\n" +
 				"}";
-		wrapper.setHttpClient(stubHttpClient(200, json));
+		wrapper.setHttpClient(stubHttpClient(200, responseJson));
 		CreateSessionRequest request = CreateSessionRequest.builder().build();
 		CreateSessionResponse response = client.createSession(request);
 		assertEquals(sessionId, response.getSessionId());
@@ -48,4 +48,5 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		assertEquals(createDt, response.getCreateDt());
 		assertEquals(msUrl, response.getMediaServerUrl());
 	}
+
 }
