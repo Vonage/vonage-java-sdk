@@ -15,33 +15,47 @@
  */
 package com.vonage.client.video;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 
 import java.io.IOException;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CreateSessionResponse {
 	private String sessionId, applicationId, createDt, mediaServerUrl;
 
 	protected CreateSessionResponse() {
 	}
 
+	/**
+	 * @return The session ID.
+	 */
 	@JsonProperty("session_id")
 	public String getSessionId() {
 		return sessionId;
 	}
 
+	/**
+	 * @return The application ID.
+	 */
 	@JsonProperty("application_id")
 	public String getApplicationId() {
 		return applicationId;
 	}
 
+	/**
+	 * @return The creation date.
+	 */
 	@JsonProperty("create_dt")
 	public String getCreateDt() {
 		return createDt;
 	}
 
+	/**
+	 * @return The URL of the OpenTok media router used by the session.
+	 */
 	@JsonProperty("media_server_url")
 	public String getMediaServerUrl() {
 		return mediaServerUrl;

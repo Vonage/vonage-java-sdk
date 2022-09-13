@@ -20,6 +20,9 @@ import org.apache.http.client.methods.RequestBuilder;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+/**
+ * Defines the properties used to create a new video session.
+ */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class CreateSessionRequest {
 	private final InetAddress location;

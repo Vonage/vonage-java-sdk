@@ -20,6 +20,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 
+/**
+ * Represents details of a stream, as returned from {@link VideoClient#getStream(String, String)}.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GetStreamResponse extends SessionStream {
 	private VideoType videoType;

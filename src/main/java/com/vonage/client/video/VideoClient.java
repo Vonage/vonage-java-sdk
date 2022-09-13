@@ -41,6 +41,12 @@ public class VideoClient {
 		getStream = new GetStreamEndpoint(httpWrapper);
 	}
 
+	/**
+	 * Generate a new session.
+	 *
+	 * @param request The session properties.
+	 * @return Details of the created session.
+	 */
 	public CreateSessionResponse createSession(CreateSessionRequest request) {
 		return createSession.execute(request);
 	}
@@ -55,10 +61,26 @@ public class VideoClient {
 		setStreamLayout.execute(new SetStreamLayoutRequest(sessionId, streams));
 	}
 
+	/**
+	 * Use this method to get information on all Vonage Video streams in a session.
+	 *
+	 * @param sessionId The session ID.
+	 * @return Details for each stream, as a List.
+	 * @see #getStream(String, String)
+	 */
 	public List<GetStreamResponse> listStreams(String sessionId) {
 		return listStreams.execute(sessionId).getItems();
 	}
 
+	/**
+	 * Use this method to get information on a Vonage Video stream. For example, you can call this method to get
+	 * information about layout classes used by a Vonage Video stream. The layout classes define how the stream is
+	 * displayed in the layout of a broadcast stream.
+	 *
+	 * @param sessionId The session ID.
+	 * @param streamId The ID of the stream to retrieve.
+	 * @return Details of the requested stream.
+	 */
 	public GetStreamResponse getStream(String sessionId, String streamId) {
 		return getStream.execute(new GetStreamRequest(sessionId, streamId));
 	}

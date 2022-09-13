@@ -60,11 +60,23 @@ public class SessionStream {
 			this.id = id;
 		}
 
+		/**
+		 * Use this method to set the layout classes for the stream.
+		 *
+		 * @param layoutClassList The updated layout classes to use for this stream.
+		 *
+		 * @return This builder.
+		 */
 		public Builder layoutClassList(List<String> layoutClassList) {
 			this.layoutClassList = layoutClassList;
 			return this;
 		}
 
+		/**
+		 * Constructs an instance of SessionStream.
+		 *
+		 * @return A new {@linkplain SessionStream} object with this builder's properties.
+		 */
 		public SessionStream build() {
 			return new SessionStream(this);
 		}
