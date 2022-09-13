@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GetStreamResponseTest {
-	private GetStreamResponse endpoint;
 	
 	@Test
 	public void testFromJsonAllFields() {

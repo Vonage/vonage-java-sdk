@@ -27,6 +27,7 @@ import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 
@@ -43,15 +44,14 @@ public class SetStreamLayoutEndpointTest {
 	
 	@Test
 	public void testMakeRequestAllParameters() throws Exception {
-		String sessionId = UUID.randomUUID().toString();
-		SetStreamLayoutRequest request = SetStreamLayoutRequest.builder(sessionId)
-			.items(Arrays.asList(
-				SessionStream.builder(sessionId).layoutClassList(
-					Arrays.asList("full")
-				)
-				.build())
-			)
-			.build();
+		String sessionId = UUID.randomUUID().toString(),
+				streamId0 = UUID.randomUUID().toString(),
+				streamId1 = UUID.randomUUID().toString();
+
+		SetStreamLayoutRequest request = new SetStreamLayoutRequest(sessionId, Arrays.asList(
+				SessionStream.builder(streamId0).build(),
+				SessionStream.builder(streamId1).layoutClassList(Arrays.asList("min", "full")).build()
+		));
 		
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("PUT", builder.getMethod());
@@ -59,13 +59,14 @@ public class SetStreamLayoutEndpointTest {
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		String actualJson = EntityUtils.toString(builder.getEntity());
-		String expectedJson = "{\"items\":[{\"id\":\""+sessionId+"\",\"layoutClassList\":[\"full\"]}]}";
+		String expectedJson = "{\"items\":[{\"id\":\""+streamId0+"\"},"+
+				"{\"id\":\""+streamId1 +"\",\"layoutClassList\":[\"min\",\"full\"]}]}";
 		assertEquals(expectedJson, actualJson);
 	}
 	
 	@Test
 	public void testMakeRequestRequiredParameters() {
-		SetStreamLayoutRequest request = SetStreamLayoutRequest.builder(applicationId).build();
+		SetStreamLayoutRequest request = new SetStreamLayoutRequest("", Collections.emptyList());
 		RequestBuilder builder = endpoint.makeRequest(request);
 		Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
 		assertEquals(0, params.size());

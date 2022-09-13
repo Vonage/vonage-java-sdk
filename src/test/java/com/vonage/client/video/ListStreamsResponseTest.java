@@ -19,24 +19,39 @@ import com.vonage.client.VonageUnexpectedException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import org.junit.Test;
-import java.util.Arrays;
-import java.util.List;
+import java.util.UUID;
 
 public class ListStreamsResponseTest {
-	private ListStreamsResponse endpoint;
 
 	@Test
 	public void testFromJsonAllFields() {
-		Integer count = 1;
-		List<GetStreamResponse> items = Arrays.asList();
-	
+		String id1 = UUID.randomUUID().toString(), name0 = "LiveStream 1";
+		Integer count = 2;
 		ListStreamsResponse response = ListStreamsResponse.fromJson("{\n" +
 				"\"count\":\""+count+"\",\n" +
-				"\"items\":[]\n" +
-		"}");
+				"\"items\":[{\n" +
+				"  \"id\": \"8b732909-0a06-46a2-8ea8-074e64d43422\",\n" +
+				"  \"videoType\": \"camera\",\n" +
+				"  \"name\": \""+name0+"\",\n" +
+				"  \"layoutClassList\": [\n" +
+				"    \"full\"\n" +
+				"   ]\n" +
+				"},{\n" +
+				"  \"id\": \""+id1+"\",\n" +
+				"  \"layoutClassList\": []\n" +
+				"}]}"
+		);
 		
 		assertEquals(count, response.getCount());
-		assertEquals(items, response.getItems());
+		assertEquals(count.intValue(), response.getItems().size());
+		GetStreamResponse gsr0 = response.getItems().get(0), gsr1 = response.getItems().get(1);
+		assertEquals(VideoType.CAMERA, gsr0.getVideoType());
+		assertEquals(name0, gsr0.getName());
+		assertEquals(1, gsr0.getLayoutClassList().size());
+		assertNull(gsr1.getVideoType());
+		assertNull(gsr1.getName());
+		assertEquals(id1, gsr1.getId());
+		assertEquals(0, gsr1.getLayoutClassList().size());
 	}
 	
 	@Test(expected = VonageUnexpectedException.class)

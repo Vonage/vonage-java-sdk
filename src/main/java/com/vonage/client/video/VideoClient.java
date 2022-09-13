@@ -45,8 +45,14 @@ public class VideoClient {
 		return createSession.execute(request);
 	}
 
-	public void setStreamLayout(SetStreamLayoutRequest request) {
-		setStreamLayout.execute(request);
+	/**
+	 *
+	 * @param sessionId The session ID.
+	 *
+	 * @param streams The stream layouts to change.
+	 */
+	public void setStreamLayout(String sessionId, List<SessionStream> streams) {
+		setStreamLayout.execute(new SetStreamLayoutRequest(sessionId, streams));
 	}
 
 	public List<GetStreamResponse> listStreams(String sessionId) {
