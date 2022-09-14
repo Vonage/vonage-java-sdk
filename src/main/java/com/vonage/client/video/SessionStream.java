@@ -32,11 +32,17 @@ public class SessionStream {
 		id = builder.id;
 		layoutClassList = builder.layoutClassList;
 	}
-	
+
+	/**
+	 * @return The stream ID.
+	 */
 	public String getId() {
 		return id;
 	}
-	
+
+	/**
+	 * @return The layout classes for this stream.
+	 */
 	public List<String> getLayoutClassList() {
 		return layoutClassList;
 	}

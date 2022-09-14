@@ -18,6 +18,7 @@ package com.vonage.client.video;
 import com.vonage.client.ClientTest;
 import com.vonage.client.auth.JWTAuthMethod;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.Collections;
@@ -36,6 +37,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 	@Test
 	public void testCreateSession() throws Exception {
+		CreateSessionRequest request = CreateSessionRequest.builder().build();
 		String msUrl = "http://example.com/resource",
 			createDt = "abc123",
 			responseJson = "{\n" +
@@ -45,12 +47,13 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 				"    \"media_server_url\": \""+msUrl+"\"\n" +
 				"}";
 		wrapper.setHttpClient(stubHttpClient(200, responseJson));
-		CreateSessionRequest request = CreateSessionRequest.builder().build();
+
 		CreateSessionResponse response = client.createSession(request);
 		assertEquals(sessionId, response.getSessionId());
 		assertEquals(applicationId, response.getApplicationId());
 		assertEquals(createDt, response.getCreateDt());
 		assertEquals(msUrl, response.getMediaServerUrl());
+		assertThrows(NullPointerException.class, () -> client.createSession(null));
 	}
 
 	@Test
@@ -66,10 +69,12 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 				"  ]\n" +
 				"}";
 		wrapper.setHttpClient(stubHttpClient(200, responseJson));
+
 		List<GetStreamResponse> response = client.listStreams(sessionId);
 		assertEquals(1, response.size());
 		assertEquals(VideoType.SCREEN, response.get(0).getVideoType());
 		assertEquals("", response.get(0).getName());
+		assertThrows(IllegalArgumentException.class, () -> client.listStreams(null));
 	}
 
 	@Test
@@ -84,16 +89,50 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 				"  ]\n" +
 				"}";
 		wrapper.setHttpClient(stubHttpClient(200, responseJson));
+
 		GetStreamResponse response = client.getStream(sessionId, streamId);
 		assertEquals(streamId, response.getId());
 		assertEquals(VideoType.CUSTOM, response.getVideoType());
 		assertEquals(1, response.getLayoutClassList().size());
 		assertEquals("full", response.getLayoutClassList().get(0));
+		assertThrows(IllegalArgumentException.class, () -> client.getStream(null, streamId));
+		assertThrows(IllegalArgumentException.class, () -> client.getStream(sessionId, null));
 	}
 
 	@Test
 	public void testSetStreamLayout() throws Exception {
 		wrapper.setHttpClient(stubHttpClient(200));
-		client.setStreamLayout(sessionId, Collections.emptyList());
+		List<SessionStream> layouts = Collections.emptyList();
+		client.setStreamLayout(sessionId, layouts);
+		assertThrows(IllegalArgumentException.class, () -> client.setStreamLayout(null, layouts));
+		assertThrows(NullPointerException.class, () -> client.setStreamLayout(sessionId, null));
+	}
+
+	@Test
+	public void testSignal() throws Exception {
+		String connectionId = UUID.randomUUID().toString();
+		SignalRequest signalRequest = SignalRequest.builder().data("d").type("t").build();
+		wrapper.setHttpClient(stubHttpClient(200));
+
+		client.signal(sessionId, connectionId, signalRequest);
+		assertThrows(IllegalArgumentException.class, () ->
+				client.signal(sessionId, connectionId, null)
+		);
+		assertThrows(IllegalArgumentException.class, () ->
+				client.signal(sessionId, null, signalRequest)
+		);
+		assertThrows(IllegalArgumentException.class, () ->
+				client.signal(null, connectionId, signalRequest)
+		);
+	}
+
+	@Test
+	public void testSignalAll() throws Exception {
+		SignalRequest signalRequest = SignalRequest.builder().data("d").type("t").build();
+		wrapper.setHttpClient(stubHttpClient(200));
+
+		client.signalAll(sessionId, signalRequest);
+		assertThrows(IllegalArgumentException.class, () -> client.signalAll(sessionId, null));
+		assertThrows(IllegalArgumentException.class, () -> client.signalAll(null, signalRequest));
 	}
 }

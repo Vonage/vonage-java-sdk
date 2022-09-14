@@ -28,7 +28,6 @@ import org.junit.Before;
 import org.junit.Test;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Map;
 import java.util.UUID;
 
 public class SetStreamLayoutEndpointTest {
@@ -58,18 +57,17 @@ public class SetStreamLayoutEndpointTest {
 		String expectedUri = "https://video.api.vonage.com/v2/project/"+applicationId+"/session/"+sessionId+"/stream";
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		String actualJson = EntityUtils.toString(builder.getEntity());
-		String expectedJson = "{\"items\":[{\"id\":\""+streamId0+"\"},"+
+		String expectedPayload = "{\"items\":[{\"id\":\""+streamId0+"\"},"+
 				"{\"id\":\""+streamId1 +"\",\"layoutClassList\":[\"min\",\"full\"]}]}";
-		assertEquals(expectedJson, actualJson);
+		assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
 	}
 	
 	@Test
-	public void testMakeRequestRequiredParameters() {
+	public void testMakeRequestRequiredParameters() throws Exception {
 		SetStreamLayoutRequest request = new SetStreamLayoutRequest("", Collections.emptyList());
 		RequestBuilder builder = endpoint.makeRequest(request);
-		Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
-		assertEquals(0, params.size());
+		String expectedPayload = "{\"items\":[]}";
+		assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
 	}
 
 	@Test
