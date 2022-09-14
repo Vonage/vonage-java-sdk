@@ -21,7 +21,7 @@ import org.apache.http.client.methods.RequestBuilder;
 import java.util.List;
 
 public class SignatureAuthMethod implements AuthMethod {
-    public final int SORT_KEY = 20;
+    private static final int SORT_KEY = 20;
 
     private final String apiKey, apiSecret;
     private final HashUtil.HashType hashType;
@@ -34,6 +34,10 @@ public class SignatureAuthMethod implements AuthMethod {
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
         this.hashType = hashType;
+    }
+
+    public String getApiKey() {
+        return apiKey;
     }
 
     @Override

@@ -28,14 +28,22 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 
+/**
+ * This AuthMethod uses API key and secret either as URL parameters, or as
+ * <code>Basic</code> in the header.
+ */
 public class TokenAuthMethod implements AuthMethod {
-    private final int SORT_KEY = 30;
+    private static final int SORT_KEY = 30;
 
     private final String apiKey, apiSecret;
 
     public TokenAuthMethod(String apiKey, String apiSecret) {
         this.apiKey = apiKey;
         this.apiSecret = apiSecret;
+    }
+
+    public String getApiKey() {
+        return apiKey;
     }
 
     @Override
