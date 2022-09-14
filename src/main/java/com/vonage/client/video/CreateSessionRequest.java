@@ -1,0 +1,198 @@
+/*
+ *   Copyright 2022 Vonage
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
+package com.vonage.client.video;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import org.apache.http.client.methods.RequestBuilder;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+/**
+ * Defines the properties used to create a new video session.
+ */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+public class CreateSessionRequest {
+	private final InetAddress location;
+	private final MediaMode mediaMode;
+	private final ArchiveMode archiveMode;
+
+	private CreateSessionRequest(Builder builder) {
+		location = builder.location;
+		archiveMode = builder.archiveMode;
+		mediaMode = builder.mediaMode;
+		if (archiveMode == ArchiveMode.ALWAYS && mediaMode != MediaMode.ROUTED) {
+		    throw new IllegalStateException("A session with always archive mode must also have the routed media mode.");
+		}
+	}
+
+	protected void addParams(RequestBuilder request) {
+		if (location != null) {
+			request.addParameter("location", location.getHostAddress());
+		}
+		if (mediaMode != null) {
+			request.addParameter("p2p.preference", mediaMode.toString());
+		}
+		if (archiveMode != null) {
+			request.addParameter("archiveMode", getArchiveMode().toString());
+		}
+	}
+
+	/**
+	 * The location hint IP address.
+	 *
+	 * @return The IP address.
+	 */
+	public InetAddress getLocation() {
+		return location;
+	}
+
+	/**
+	 * Defines whether the session will transmit streams using the OpenTok Media Server or attempt
+	 * to transmit streams directly between clients.
+	 *
+	 * @return The MediaMode.
+	 */
+	public MediaMode getMediaMode() {
+		return mediaMode;
+	}
+
+	/**
+	 * Defines whether the session will be automatically archived (<code>ArchiveMode.ALWAYS</code>)
+	 * or not (<code>ArchiveMode.MANUAL</code>).
+	 *
+	 * @return The ArchiveMode.
+	 */
+	public ArchiveMode getArchiveMode() {
+		return archiveMode;
+	}
+
+	/**
+	 * Instantiates a Builder, used to construct this object.
+	 *
+	 * @return A new {@linkplain Builder}.
+	 */
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	/**
+	 * Builder for constructing {@linkplain CreateSessionRequest}.
+	 */
+	public static final class Builder {
+		private InetAddress location;
+		private MediaMode mediaMode;
+		private ArchiveMode archiveMode;
+
+		Builder() {}
+
+		/**
+		 * Call this method to set an IP address that the OpenTok servers will use to
+		 * situate the session in its global network. If you do not set a location hint,
+		 * the OpenTok servers will be based on the first client connecting to the session.
+		 *
+		 * @param location The IP address to serve as the location hint.
+		 *
+		 * @return This builder.
+		 */
+		public Builder location(InetAddress location) {
+			this.location = location;
+			return this;
+		}
+
+		/**
+		 * Call this method to set an IP address that the OpenTok servers will use to
+		 * situate the session in its global network. If you do not set a location hint,
+		 * the OpenTok servers will be based on the first client connecting to the session.
+		 *
+		 * @param location The IP address to serve as the location hint.
+		 *
+		 * @return This builder.
+		 */
+		public Builder location(String location) {
+			try {
+				return location(InetAddress.getByName(location));
+			}
+			catch (UnknownHostException ex) {
+				throw new IllegalArgumentException(ex);
+			}
+		}
+
+		/**
+		 * Call this method to determine whether the session will transmit streams using the
+		 * OpenTok Media Router (<code>MediaMode.ROUTED</code>) or not
+		 * (<code>MediaMode.RELAYED</code>). By default, the <code>mediaMode</code> property
+		 * is set to <code>MediaMode.RELAYED</code>.
+		 *
+		 * <p>
+		 * With the <code>mediaMode</code> property set to <code>MediaMode.RELAYED</code>, the session
+		 * will attempt to transmit streams directly between clients. If clients cannot connect due to
+		 * firewall restrictions, the session uses the OpenTok TURN server to relay audio-video
+		 * streams.
+		 *
+		 * <p>
+		 * The
+		 * <a href="https://tokbox.com/developer/guides/create-session/#media-mode" target="_top">
+		 * OpenTok Media Router</a> provides the following benefits:
+		 *
+		 * <ul>
+		 *   <li>The OpenTok Media Router can decrease bandwidth usage in multiparty sessions.
+		 *       (When the <code>mediaMode</code> property is set to <code>MediaMode.RELAYED</code>,
+		 *       each client must send a separate audio-video stream to each client subscribing to
+		 *       it.)</li>
+		 *   <li>The OpenTok Media Router can improve the quality of the user experience through
+		 *     <a href="https://tokbox.com/platform/fallback" target="_top">audio fallback and video
+		 *     recovery</a>. With these features, if a client's connectivity degrades to a degree that
+		 *     it does not support video for a stream it's subscribing to, the video is dropped on
+		 *     that client (without affecting other clients), and the client receives audio only.
+		 *     If the client's connectivity improves, the video returns.</li>
+		 *   <li>The OpenTok Media Router supports the
+		 *     <a href="http://tokbox.com/developer/guides/archiving" target="_top">archiving</a>
+		 *     feature, which lets you record, save, and retrieve OpenTok sessions.</li>
+		 * </ul>
+		 *
+		 * @param mediaMode Set to a value defined in the {@link MediaMode} enum.
+		 *
+		 * @return This builder.
+		 */
+		public Builder mediaMode(MediaMode mediaMode) {
+			this.mediaMode = mediaMode;
+			return this;
+		}
+
+		/**
+		 * Call this method to determine whether the session will be automatically archived (<code>ArchiveMode.ALWAYS</code>)
+		 * or not (<code>ArchiveMode.MANUAL</code>).
+		 * Using an always archived session also requires the routed media mode (<code>MediaMode.ROUTED</code>).
+		 *
+		 * @param archiveMode The Archive mode.
+		 *
+		 * @return This builder.
+		 */
+		public Builder archiveMode(ArchiveMode archiveMode) {
+			this.archiveMode = archiveMode;
+			return this;
+		}
+
+		/**
+		 * Builds the CreateSessionRequest object.
+		 *
+		 * @return A new {@linkplain CreateSessionRequest} with this builder's properties.
+		 */
+		public CreateSessionRequest build() {
+			return new CreateSessionRequest(this);
+		}
+	}
+}

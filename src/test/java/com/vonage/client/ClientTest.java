@@ -22,9 +22,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
+import static org.mockito.Mockito.*;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
-import static org.mockito.Mockito.*;
 
 public abstract class ClientTest<T> {
     protected HttpWrapper wrapper;
@@ -32,6 +32,10 @@ public abstract class ClientTest<T> {
 
     protected ClientTest() {
         wrapper = new HttpWrapper(new TokenAuthMethod("not-an-api-key", "secret"));
+    }
+
+    protected HttpClient stubHttpClient(int statusCode) throws Exception {
+        return stubHttpClient(statusCode, "");
     }
 
     protected HttpClient stubHttpClient(int statusCode, String content) throws Exception {

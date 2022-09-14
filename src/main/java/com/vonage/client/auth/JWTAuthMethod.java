@@ -23,10 +23,14 @@ import java.nio.file.Path;
 
 public class JWTAuthMethod implements AuthMethod {
     private static final int SORT_KEY = 10;
+
     private final Jwt jwt;
+    private final String applicationId;
 
     public JWTAuthMethod(final String applicationId, final byte[] privateKey) {
-        jwt = Jwt.builder().applicationId(applicationId).privateKeyContents(new String(privateKey)).build();
+        jwt = Jwt.builder()
+                .applicationId(this.applicationId = applicationId)
+                .privateKeyContents(new String(privateKey)).build();
     }
 
     public JWTAuthMethod(String applicationId, Path path) throws IOException {
@@ -37,10 +41,13 @@ public class JWTAuthMethod implements AuthMethod {
         return jwt.generate();
     }
 
+    public String getApplicationId() {
+        return applicationId;
+    }
+
     @Override
     public RequestBuilder apply(RequestBuilder request) {
         String token = jwt.generate();
-
         request.setHeader("Authorization", "Bearer " + token);
         return request;
     }
