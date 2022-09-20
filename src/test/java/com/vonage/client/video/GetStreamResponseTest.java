@@ -16,8 +16,7 @@
 package com.vonage.client.video;
 
 import com.vonage.client.VonageUnexpectedException;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
@@ -57,5 +56,15 @@ public class GetStreamResponseTest {
 		assertNull(response.getName());
 		assertNull(response.getId());
 		assertNull(response.getLayoutClassList());
+	}
+
+	@Test
+	public void testInvalidVideoType() {
+		assertEquals(
+				VideoType.CUSTOM,
+				GetStreamResponse.fromJson("{\"videoType\":\"custom\"}").getVideoType()
+		);
+		GetStreamResponse gsr = GetStreamResponse.fromJson("{\"videoType\":\"Dashcam\"}");
+		assertNull(gsr.getVideoType());
 	}
 }

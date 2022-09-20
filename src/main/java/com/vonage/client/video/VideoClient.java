@@ -18,6 +18,7 @@ package com.vonage.client.video;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.VonageClient;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A client for talking to the Vonage Video API. The standard way to obtain an instance of this class is to use
@@ -28,6 +29,8 @@ public class VideoClient {
 	final SetStreamLayoutEndpoint setStreamLayout;
 	final ListStreamsEndpoint listStreams;
 	final GetStreamEndpoint getStream;
+	final SignalAllEndpoint signalAll;
+	final SignalEndpoint signal;
 
 	/**
 	 * Constructor.
@@ -39,6 +42,14 @@ public class VideoClient {
 		setStreamLayout = new SetStreamLayoutEndpoint(httpWrapper);
 		listStreams = new ListStreamsEndpoint(httpWrapper);
 		getStream = new GetStreamEndpoint(httpWrapper);
+		signalAll = new SignalAllEndpoint(httpWrapper);
+		signal = new SignalEndpoint(httpWrapper);
+	}
+
+	private void validateSessionId(String sessionId) {
+		if (sessionId == null || sessionId.isEmpty()) {
+			throw new IllegalArgumentException("Session ID is required.");
+		}
 	}
 
 	/**
@@ -58,6 +69,8 @@ public class VideoClient {
 	 * @param streams The stream layouts to change.
 	 */
 	public void setStreamLayout(String sessionId, List<SessionStream> streams) {
+		validateSessionId(sessionId);
+		Objects.requireNonNull(streams, "Stream list is required.");
 		setStreamLayout.execute(new SetStreamLayoutRequest(sessionId, streams));
 	}
 
@@ -69,6 +82,7 @@ public class VideoClient {
 	 * @see #getStream(String, String)
 	 */
 	public List<GetStreamResponse> listStreams(String sessionId) {
+		validateSessionId(sessionId);
 		return listStreams.execute(sessionId).getItems();
 	}
 
@@ -82,6 +96,44 @@ public class VideoClient {
 	 * @return Details of the requested stream.
 	 */
 	public GetStreamResponse getStream(String sessionId, String streamId) {
+		validateSessionId(sessionId);
+		if (streamId == null || streamId.isEmpty()) {
+			throw new IllegalArgumentException("Stream ID is required.");
+		}
 		return getStream.execute(new GetStreamRequest(sessionId, streamId));
+	}
+
+	private void validateSignalRequest(SignalRequest request) {
+		if (request == null) {
+			throw new IllegalArgumentException("Signal request properties are required.");
+		}
+	}
+
+	/**
+	 * Sends signals to all participants in an active Vonage Video session.
+	 *
+	 * @param sessionId The session ID.
+	 * @param request Signal payload.
+	 */
+	public void signalAll(String sessionId, SignalRequest request) {
+		validateSessionId(sessionId);
+		validateSignalRequest(request);
+		signalAll.execute(new SignalRequestWrapper(request, sessionId));
+	}
+
+	/**
+	 * Sends signal to a specific participant in an active Vonage Video session.
+	 *
+	 * @param sessionId The session ID.
+	 * @param connectionId Specific publisher connection ID.
+	 * @param request Signal payload.
+	 */
+	public void signal(String sessionId, String connectionId, SignalRequest request) {
+		validateSessionId(sessionId);
+		if (connectionId == null || connectionId.isEmpty()) {
+			throw new IllegalArgumentException("Connection ID is required");
+		}
+		validateSignalRequest(request);
+		signal.execute(new SignalRequestWrapper(request, sessionId, connectionId));
 	}
 }

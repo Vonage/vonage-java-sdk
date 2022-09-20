@@ -45,7 +45,6 @@ public class SetStreamLayoutRequestTest {
 	public void testSerializeNullAndEmptyParameters() {
 		SetStreamLayoutRequest request = new SetStreamLayoutRequest(null, Collections.emptyList());
 		assertEquals("{\"items\":[]}", request.toJson());
-		assertNull(request.sessionId);
 		request = new SetStreamLayoutRequest("", null);
 		assertEquals("{}", request.toJson());
 		assertEquals("", request.sessionId);

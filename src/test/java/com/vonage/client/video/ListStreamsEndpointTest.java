@@ -25,7 +25,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 public class ListStreamsEndpointTest {
@@ -40,23 +39,13 @@ public class ListStreamsEndpointTest {
 	}
 	
 	@Test
-	public void testMakeRequestAllParameters() {
+	public void testMakeRequestAllParameters() throws Exception {
 		String sessionId = UUID.randomUUID().toString();
 		RequestBuilder builder = endpoint.makeRequest(sessionId);
 		assertEquals("GET", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/"+applicationId+"/session/"+sessionId+"/stream";
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
-		assertEquals(0, params.size());
-	}
-	
-	@Test
-	public void testMakeRequestRequiredParameters() {
-		String sessionId = UUID.randomUUID().toString();
-		RequestBuilder builder = endpoint.makeRequest(sessionId);
-		Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
-		assertEquals(0, params.size());
 	}
 
 	@Test
