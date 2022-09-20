@@ -31,6 +31,9 @@ public class VideoClient {
 	final GetStreamEndpoint getStream;
 	final SignalAllEndpoint signalAll;
 	final SignalEndpoint signal;
+	final ForceDisconnectEndpoint forceDisconnect;
+	final MuteStreamEndpoint muteStream;
+	final MuteSessionEndpoint muteSession;
 
 	/**
 	 * Constructor.
@@ -44,12 +47,35 @@ public class VideoClient {
 		getStream = new GetStreamEndpoint(httpWrapper);
 		signalAll = new SignalAllEndpoint(httpWrapper);
 		signal = new SignalEndpoint(httpWrapper);
+		forceDisconnect = new ForceDisconnectEndpoint(httpWrapper);
+		muteStream = new MuteStreamEndpoint(httpWrapper);
+		muteSession = new MuteSessionEndpoint(httpWrapper);
 	}
 
-	private void validateSessionId(String sessionId) {
-		if (sessionId == null || sessionId.isEmpty()) {
-			throw new IllegalArgumentException("Session ID is required.");
+	private String validateId(String param, String name) {
+		if (param == null || param.isEmpty()) {
+			throw new IllegalArgumentException(name+" ID is required.");
 		}
+		return param;
+	}
+
+	private String validateSessionId(String sessionId) {
+		return validateId(sessionId, "Session");
+	}
+
+	private String validateConnectionId(String connectionId) {
+		return validateId(connectionId, "Connection");
+	}
+
+	private String validateStreamId(String streamId) {
+		return validateId(streamId, "Stream");
+	}
+
+	private <T> T validateRequest(T request) {
+		if (request == null) {
+			throw new IllegalArgumentException("Request properties are required.");
+		}
+		return request;
 	}
 
 	/**
@@ -63,15 +89,16 @@ public class VideoClient {
 	}
 
 	/**
-	 *
+	 * Use this method to change layout classes for a Vonage Video stream. The layout classes define how the stream is
+	 * displayed in the layout of a composed Vonage Video archive.
 	 * @param sessionId The session ID.
-	 *
 	 * @param streams The stream layouts to change.
 	 */
 	public void setStreamLayout(String sessionId, List<SessionStream> streams) {
-		validateSessionId(sessionId);
-		Objects.requireNonNull(streams, "Stream list is required.");
-		setStreamLayout.execute(new SetStreamLayoutRequest(sessionId, streams));
+		setStreamLayout.execute(new SetStreamLayoutRequest(
+				validateSessionId(sessionId),
+				Objects.requireNonNull(streams, "Stream list is required.")
+		));
 	}
 
 	/**
@@ -82,8 +109,7 @@ public class VideoClient {
 	 * @see #getStream(String, String)
 	 */
 	public List<GetStreamResponse> listStreams(String sessionId) {
-		validateSessionId(sessionId);
-		return listStreams.execute(sessionId).getItems();
+		return listStreams.execute(validateSessionId(sessionId)).getItems();
 	}
 
 	/**
@@ -95,18 +121,11 @@ public class VideoClient {
 	 * @param streamId The ID of the stream to retrieve.
 	 * @return Details of the requested stream.
 	 */
-	public GetStreamResponse getStream(String sessionId, String streamId) {
-		validateSessionId(sessionId);
-		if (streamId == null || streamId.isEmpty()) {
-			throw new IllegalArgumentException("Stream ID is required.");
-		}
-		return getStream.execute(new GetStreamRequest(sessionId, streamId));
-	}
-
-	private void validateSignalRequest(SignalRequest request) {
-		if (request == null) {
-			throw new IllegalArgumentException("Signal request properties are required.");
-		}
+	public GetStreamResponse getStream(String sessionId, String streamId) {;
+		return getStream.execute(new GetStreamRequest(
+				validateSessionId(sessionId),
+				validateStreamId(streamId)
+		));
 	}
 
 	/**
@@ -116,9 +135,10 @@ public class VideoClient {
 	 * @param request Signal payload.
 	 */
 	public void signalAll(String sessionId, SignalRequest request) {
-		validateSessionId(sessionId);
-		validateSignalRequest(request);
-		signalAll.execute(new SignalRequestWrapper(request, sessionId));
+		signalAll.execute(new SignalRequestWrapper(
+				validateRequest(request),
+				validateSessionId(sessionId)
+		));
 	}
 
 	/**
@@ -129,11 +149,52 @@ public class VideoClient {
 	 * @param request Signal payload.
 	 */
 	public void signal(String sessionId, String connectionId, SignalRequest request) {
-		validateSessionId(sessionId);
-		if (connectionId == null || connectionId.isEmpty()) {
-			throw new IllegalArgumentException("Connection ID is required");
-		}
-		validateSignalRequest(request);
-		signal.execute(new SignalRequestWrapper(request, sessionId, connectionId));
+		signal.execute(new SignalRequestWrapper(
+				validateRequest(request),
+				validateSessionId(sessionId),
+				validateConnectionId(connectionId)
+		));
+	}
+
+	/**
+	 * Force a client to disconnect from a session.
+	 *
+	 * @param sessionId The session ID.
+	 * @param connectionId Specific publisher connection ID.
+	 */
+	public void forceDisconnect(String sessionId, String connectionId) {
+		forceDisconnect.execute(new ForceDisconnectRequestWrapper(
+				validateSessionId(sessionId),
+				validateConnectionId(connectionId)
+		));
+	}
+
+	/**
+	 * Force mute a specific publisher stream.
+	 *
+	 * @param sessionId The session ID.
+	 * @param streamId The ID of the stream to mute.
+	 * @return The project details.
+	 */
+	public ProjectDetails muteStream(String sessionId, String streamId) {
+		return muteStream.execute(new MuteStreamRequestWrapper(
+				validateSessionId(sessionId),
+				validateStreamId(streamId)
+		));
+	}
+
+	/**
+	 * Force all streams (except for an optional list of streams) in a session to mute published audio.
+	 * You can also use this method to disable the force mute state of a session.
+	 *
+	 * @param sessionId The session ID.
+	 * @param request Properties of the mute request.
+	 * @return The project details.
+	 */
+	public ProjectDetails muteSession(String sessionId, MuteSessionRequest request) {
+		return muteSession.execute(new MuteSessionRequestWrapper(
+				validateSessionId(sessionId),
+				validateRequest(request)
+		));
 	}
 }

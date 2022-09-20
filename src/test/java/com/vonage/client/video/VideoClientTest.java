@@ -17,8 +17,7 @@ package com.vonage.client.video;
 
 import com.vonage.client.ClientTest;
 import com.vonage.client.auth.JWTAuthMethod;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.Collections;
@@ -95,6 +94,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		assertEquals(VideoType.CUSTOM, response.getVideoType());
 		assertEquals(1, response.getLayoutClassList().size());
 		assertEquals("full", response.getLayoutClassList().get(0));
+
 		assertThrows(IllegalArgumentException.class, () -> client.getStream(null, streamId));
 		assertThrows(IllegalArgumentException.class, () -> client.getStream(sessionId, null));
 	}
@@ -134,5 +134,61 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		client.signalAll(sessionId, signalRequest);
 		assertThrows(IllegalArgumentException.class, () -> client.signalAll(sessionId, null));
 		assertThrows(IllegalArgumentException.class, () -> client.signalAll(null, signalRequest));
+	}
+
+	@Test
+	public void testForceDisconnect() throws Exception {
+		String connectionId = UUID.randomUUID().toString();
+		wrapper.setHttpClient(stubHttpClient(200));
+
+		client.forceDisconnect(sessionId, connectionId);
+		assertThrows(IllegalArgumentException.class, () -> client.forceDisconnect(null, connectionId));
+		assertThrows(IllegalArgumentException.class, () -> client.forceDisconnect(sessionId, null));
+	}
+
+	@Test
+	public void testMuteStream() throws Exception {
+		String streamId = UUID.randomUUID().toString();
+		String responseJson = "{\n" +
+				"  \"applicationId\": \"78d335fa-323d-0114-9c3d-d6f0d48968cf\",\n" +
+				"  \"status\": \"ACTIVE\",\n" +
+				"  \"name\": \"Joe Montana\",\n" +
+				"  \"environment\": \"standard\",\n" +
+				"  \"createdAt\": 1414642898000\n" +
+				"}";
+		wrapper.setHttpClient(stubHttpClient(200, responseJson));
+
+		ProjectDetails response = client.muteStream(sessionId, streamId);
+		assertEquals("78d335fa-323d-0114-9c3d-d6f0d48968cf", response.getApplicationId());
+		assertEquals(ProjectStatus.ACTIVE, response.getStatus());
+		assertEquals("Joe Montana", response.getName());
+		assertEquals(ProjectEnvironment.STANDARD, response.getEnvironment());
+		assertEquals(1414642898000L, response.getCreatedAt().longValue());
+
+		assertThrows(IllegalArgumentException.class, () -> client.muteStream(null, streamId));
+		assertThrows(IllegalArgumentException.class, () -> client.muteStream(sessionId, null));
+	}
+
+	@Test
+	public void testMuteSession() throws Exception {
+		MuteSessionRequest request = new MuteSessionRequest(true);
+		String responseJson = "{\n" +
+				"  \"applicationId\": \"78d335fa-323d-0114-9c3d-d6f0d48968cf\",\n" +
+				"  \"status\": \"ACTIVE\",\n" +
+				"  \"name\": \"Joe Montana\",\n" +
+				"  \"environment\": \"standard\",\n" +
+				"  \"createdAt\": 1414642898000\n" +
+				"}";
+		wrapper.setHttpClient(stubHttpClient(200, responseJson));
+
+		ProjectDetails response = client.muteSession(sessionId, request);
+		assertEquals("78d335fa-323d-0114-9c3d-d6f0d48968cf", response.getApplicationId());
+		assertEquals(ProjectStatus.ACTIVE, response.getStatus());
+		assertEquals("Joe Montana", response.getName());
+		assertEquals(ProjectEnvironment.STANDARD, response.getEnvironment());
+		assertEquals(1414642898000L, response.getCreatedAt().longValue());
+
+		assertThrows(IllegalArgumentException.class, () -> client.muteSession(null, request));
+		assertThrows(IllegalArgumentException.class, () -> client.muteSession(sessionId, null));
 	}
 }
