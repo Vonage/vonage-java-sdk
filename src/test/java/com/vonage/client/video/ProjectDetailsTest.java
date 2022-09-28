@@ -44,6 +44,19 @@ public class ProjectDetailsTest {
 		assertEquals(environment, response.getEnvironment());
 		assertEquals(createdAt, response.getCreatedAt());
 	}
+
+	@Test
+	public void testFromJsonUnknownEnums() {
+		ProjectDetails response = ProjectDetails.fromJson("{\n" +
+				"\"status\":\"u\",\n" +
+				"\"environment\":\"e\",\n" +
+				"\"name\":\"\""+
+				"}");
+
+		assertEquals("", response.getName());
+		assertNull(response.getStatus());
+		assertNull(response.getEnvironment());
+	}
 	
 	@Test(expected = VonageUnexpectedException.class)
 	public void testFromJsonInvalid() {
