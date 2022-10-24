@@ -16,64 +16,40 @@
 package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
-
 import java.io.IOException;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CreateSessionResponse {
-	private String sessionId, applicationId, createDt, mediaServerUrl;
+class ListArchivesResponse {
+	private Integer count;
+	private List<Archive> items;
 
-	protected CreateSessionResponse() {
+	protected ListArchivesResponse() {
 	}
 
-	/**
-	 * @return The session ID.
-	 */
-	@JsonProperty("session_id")
-	public String getSessionId() {
-		return sessionId;
+	public Integer getCount() {
+		return count;
 	}
 
-	/**
-	 * @return The application ID.
-	 */
-	@JsonProperty("application_id")
-	public String getApplicationId() {
-		return applicationId;
+	public List<Archive> getItems() {
+		return items;
 	}
-
-	/**
-	 * @return The creation date.
-	 */
-	@JsonProperty("create_dt")
-	public String getCreateDt() {
-		return createDt;
-	}
-
-	/**
-	 * @return The URL of the OpenTok media router used by the session.
-	 */
-	@JsonProperty("media_server_url")
-	public String getMediaServerUrl() {
-		return mediaServerUrl;
-	}
-
+	
 	/**
 	 * Creates an instance of this class from a JSON payload.
 	 *
 	 * @param json The JSON string to parse.
 	 * @return An instance of this class with the fields populated, if present.
 	 */
-	public static CreateSessionResponse fromJson(String json) {
+	public static ListArchivesResponse fromJson(String json) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readValue(json, CreateSessionResponse.class);
+			return mapper.readValue(json, ListArchivesResponse.class);
 		}
 		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to produce CreateSessionResponse from json.", ex);
+			throw new VonageUnexpectedException("Failed to produce ListArchivesResponse from json.", ex);
 		}
 	}
 }

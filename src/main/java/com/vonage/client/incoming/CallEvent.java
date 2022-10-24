@@ -42,7 +42,9 @@ public class CallEvent {
     }
 
     @JsonProperty("call_uuid")
-    public String getCallUuid() { return callUuid; }
+    public String getCallUuid() {
+        return callUuid;
+    }
 
     public CallDirection getDirection() {
         return direction;
@@ -68,10 +70,14 @@ public class CallEvent {
         return uuid;
     }
 
-    public String getDetail() { return detail; }
+    public String getDetail() {
+        return detail;
+    }
 
     @JsonIgnore
-    public CallStatusDetail getDetailEnum() { return CallStatusDetail.fromString(detail); }
+    public CallStatusDetail getDetailEnum() {
+        return CallStatusDetail.fromString(detail);
+    }
 
     public static CallEvent fromJson(String json) {
         try {

@@ -15,11 +15,27 @@
  */
 package com.vonage.client.video;
 
-class GetStreamRequest {
-	protected final String sessionId, streamId;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-	protected GetStreamRequest(String sessionId, String streamId) {
-		this.sessionId = sessionId;
-		this.streamId = streamId;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ArchiveStream {
+	private String streamId;
+	private Boolean hasAudio, hasVideo;
+
+	protected ArchiveStream() {}
+
+	public String getStreamId() {
+		return streamId;
+	}
+
+	@JsonProperty("hasAudio")
+	public boolean hasAudio() {
+		return hasAudio;
+	}
+
+	@JsonProperty("hasVideo")
+	public boolean hasVideo() {
+		return hasVideo;
 	}
 }
