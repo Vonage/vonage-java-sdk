@@ -19,14 +19,16 @@ import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 
-class GetStreamEndpoint extends AbstractMethod<GetStreamRequestWrapper, GetStreamResponse> {
+class CreateArchiveEndpoint extends AbstractMethod<CreateArchiveRequest, Archive> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
-	private static final String PATH = "/v2/project/%s/session/%s/stream/%s";
+	private static final String PATH = "/v2/project/%s/archive";
 
-	GetStreamEndpoint(HttpWrapper httpWrapper) {
+	CreateArchiveEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
 	}
 
@@ -36,14 +38,17 @@ class GetStreamEndpoint extends AbstractMethod<GetStreamRequestWrapper, GetStrea
 	}
 
 	@Override
-	public RequestBuilder makeRequest(GetStreamRequestWrapper request) {
-		String path = String.format(PATH, getApplicationIdOrApiKey(), request.sessionId, request.streamId);
+	public RequestBuilder makeRequest(CreateArchiveRequest request) {
+		String path = String.format(PATH, getApplicationIdOrApiKey());
 		String uri = httpWrapper.getHttpConfig().getVideoBaseUri() + path;
-		return RequestBuilder.get(uri).setHeader("Accept", "application/json");
+		return RequestBuilder.post(uri)
+				.setHeader("Content-Type", "application/json")
+				.setHeader("Accept", "application/json")
+				.setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
 	}
 
 	@Override
-	public GetStreamResponse parseResponse(HttpResponse response) throws IOException {
-		return GetStreamResponse.fromJson(basicResponseHandler.handleResponse(response));
+	public Archive parseResponse(HttpResponse response) throws IOException {
+		return Archive.fromJson(basicResponseHandler.handleResponse(response));
 	}
 }

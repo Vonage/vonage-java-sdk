@@ -39,13 +39,14 @@ public class GetStreamEndpointTest {
 	}
 	
 	@Test
-	public void testMakeRequestAllParameters() throws Exception {
+	public void testMakeRequestAllParameters() {
 		String sessionId = UUID.randomUUID().toString(),
 				streamId = UUID.randomUUID().toString(),
 				expectedUri = "https://video.api.vonage.com/v2/project/" +
 					applicationId+"/session/"+sessionId+"/stream/"+streamId;
 
-		RequestBuilder builder = endpoint.makeRequest(new GetStreamRequest(sessionId, streamId));
+		GetStreamRequestWrapper wrapper = new GetStreamRequestWrapper(sessionId, streamId);
+		RequestBuilder builder = endpoint.makeRequest(wrapper);
 		assertEquals("GET", builder.getMethod());
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());

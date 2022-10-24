@@ -22,11 +22,11 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 
-class GetStreamEndpoint extends AbstractMethod<GetStreamRequestWrapper, GetStreamResponse> {
+class GetArchiveEndpoint extends AbstractMethod<String, Archive> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
-	private static final String PATH = "/v2/project/%s/session/%s/stream/%s";
+	private static final String PATH = "/v2/project/%s/archive/%s";
 
-	GetStreamEndpoint(HttpWrapper httpWrapper) {
+	GetArchiveEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
 	}
 
@@ -36,14 +36,14 @@ class GetStreamEndpoint extends AbstractMethod<GetStreamRequestWrapper, GetStrea
 	}
 
 	@Override
-	public RequestBuilder makeRequest(GetStreamRequestWrapper request) {
-		String path = String.format(PATH, getApplicationIdOrApiKey(), request.sessionId, request.streamId);
+	public RequestBuilder makeRequest(String archiveId) {
+		String path = String.format(PATH, getApplicationIdOrApiKey(), archiveId);
 		String uri = httpWrapper.getHttpConfig().getVideoBaseUri() + path;
 		return RequestBuilder.get(uri).setHeader("Accept", "application/json");
 	}
 
 	@Override
-	public GetStreamResponse parseResponse(HttpResponse response) throws IOException {
-		return GetStreamResponse.fromJson(basicResponseHandler.handleResponse(response));
+	public Archive parseResponse(HttpResponse response) throws IOException {
+		return Archive.fromJson(basicResponseHandler.handleResponse(response));
 	}
 }
