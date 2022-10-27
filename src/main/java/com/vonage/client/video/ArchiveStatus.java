@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum ArchiveStatus {
 	/**
-	 * The archive file is available for download from the OpenTok cloud. You can get the URL of the download file by
+	 * The archive file is available for download from the cloud. You can get the URL of the download file by
 	 * calling the {@link Archive#getUrl} method.
 	 */
 	AVAILABLE,
@@ -43,14 +43,13 @@ public enum ArchiveStatus {
 	STOPPED,
 
 	/**
-	 * The archive is available for download from the the upload target Amazon S3 bucket or Windows Azure container you
-	 * set up for your
-	 * <a href="https://tokbox.com/account">OpenTok project</a>.
+	 * The archive is available for download from the upload target Amazon S3 bucket or Windows Azure container you
+	 * set up for your Vonage video project.
 	 */
 	UPLOADED,
 
 	/**
-	 * The archive file is no longer available at the OpenTok cloud.
+	 * The archive file is no longer available in the cloud.
 	 */
 	EXPIRED;
 

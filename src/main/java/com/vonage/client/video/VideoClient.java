@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * A client for talking to the Vonage Video API. The standard way to obtain an instance of this class is to use
+ * A client for using the Vonage Video API. The standard way to obtain an instance of this class is to use
  * {@link VonageClient#getVideoClient()}.
  */
 public class VideoClient {

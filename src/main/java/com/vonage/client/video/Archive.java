@@ -76,22 +76,22 @@ public class Archive {
     }
 
     /**
-     * The OpenTok API key associated with the archive.
+     * The API key associated with the archive.
      */
     public Integer getPartnerId() {
         return partnerId;
     }
 
     /**
-     * For archives with the status Status.STOPPED or Status.FAILED, this string describes the
-     * reason the archive stopped (such as "maximum duration exceeded") or failed.
+     * For archives with {@linkplain ArchiveStatus.STOPPED} or {@linkplain ArchiveStatus.FAILED}, this string
+     * describes the reason the archive stopped (such as "maximum duration exceeded") or failed.
      */
     public String getReason() {
         return reason;
     }
 
     /**
-     * The session ID of the OpenTok session associated with this archive.
+     * The ID of the video session associated with this archive.
      */
     public String getSessionId() {
         return sessionId;

@@ -476,6 +476,7 @@ VonageClient client = VonageClient.builder()
 SecretResponse response = client.getAccountClient().getSecret(API_KEY, SECRET_ID);
 ```
 
+
 ### Custom HTTP Configuration
 
 If you need to configure the Apache HttpClient used for making requests, you can
@@ -491,31 +492,35 @@ Our [Voice API](https://developer.nexmo.com/voice/voice-api/overview) can connec
 ## Frequently Asked Questions
 
 Q: Does this SDK support thread safety? 
-A: No, it currently does not. 
+A: No, it currently does not.
+
+Q: Does this SDK support asynchronous request / response processing?
+A: Currently no, but it is on the roadmap.
 
 ### Supported APIs
 
 The following is a list of Vonage APIs and whether the Java SDK provides support for them:
 
-| API                   |  API Release Status  | Supported? |
-| --------------------- |:--------------------:|:----------:|
-| Account API           | General Availability |     ✅      |
-| Alerts API            | General Availability |     ✅      |
-| Application API       | General Availability |     ✅      |
-| Audit API             |         Beta         |     ❌      |
-| Conversation API      |         Beta         |     ❌      |
-| Dispatch API          |         Beta         |     ❌      |
-| External Accounts API |         Beta         |     ❌      |
-| Media API             |         Beta         |     ❌      |
-| Messages API          | General Availability |     ✅      |
-| Number Insight API    | General Availability |     ✅      |
-| Number Management API | General Availability |     ✅      |
-| Pricing API           | General Availability |     ✅      |
-| Redact API            |  Developer Preview   |     ✅      |
-| Reports API           |         Beta         |     ❌      |
-| SMS API               | General Availability |     ✅      |
-| Verify API            | General Availability |     ✅      |
-| Voice API             | General Availability |     ✅      |
+| API                |  API Release Status  | Supported? |
+|--------------------|:--------------------:|:----------:|
+| Account            | General Availability |     ✅      |
+| Alerts             | General Availability |     ✅      |
+| Application        | General Availability |     ✅      |
+| Audit              |         Beta         |     ❌      |
+| Conversation       |         Beta         |     ❌      |
+| Dispatch           |         Beta         |     ❌      |
+| External Accounts  |         Beta         |     ❌      |
+| Media              |         Beta         |     ❌      |
+| Messages           | General Availability |     ✅      |
+| Number Insight     | General Availability |     ✅      |
+| Number Management  | General Availability |     ✅      |
+| Pricing            | General Availability |     ✅      |
+| Redact             |  Developer Preview   |     ✅      |
+| Reports            |         Beta         |     ❌      |
+| SMS                | General Availability |     ✅      |
+| Verify             | General Availability |     ✅      |
+| Voice              | General Availability |     ✅      |
+| Video              |         Beta         |     ✅      |
 
 
 ## License

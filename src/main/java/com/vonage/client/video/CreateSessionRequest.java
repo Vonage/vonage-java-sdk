@@ -60,7 +60,7 @@ public class CreateSessionRequest {
 	}
 
 	/**
-	 * Defines whether the session will transmit streams using the OpenTok Media Server or attempt
+	 * Defines whether the session will transmit streams using the Vonage Media Server or attempt
 	 * to transmit streams directly between clients.
 	 *
 	 * @return The MediaMode.
@@ -99,9 +99,9 @@ public class CreateSessionRequest {
 		Builder() {}
 
 		/**
-		 * Call this method to set an IP address that the OpenTok servers will use to
+		 * Call this method to set an IP address that the Vonage servers will use to
 		 * situate the session in its global network. If you do not set a location hint,
-		 * the OpenTok servers will be based on the first client connecting to the session.
+		 * the Vonage servers will be based on the first client connecting to the session.
 		 *
 		 * @param location The IP address to serve as the location hint.
 		 *
@@ -113,9 +113,9 @@ public class CreateSessionRequest {
 		}
 
 		/**
-		 * Call this method to set an IP address that the OpenTok servers will use to
+		 * Call this method to set an IP address that the Vonage servers will use to
 		 * situate the session in its global network. If you do not set a location hint,
-		 * the OpenTok servers will be based on the first client connecting to the session.
+		 * the Vonage servers will be based on the first client connecting to the session.
 		 *
 		 * @param location The IP address to serve as the location hint.
 		 *
@@ -132,35 +132,34 @@ public class CreateSessionRequest {
 
 		/**
 		 * Call this method to determine whether the session will transmit streams using the
-		 * OpenTok Media Router (<code>MediaMode.ROUTED</code>) or not
+		 * Vonage Media Router (<code>MediaMode.ROUTED</code>) or not
 		 * (<code>MediaMode.RELAYED</code>). By default, the <code>mediaMode</code> property
 		 * is set to <code>MediaMode.RELAYED</code>.
 		 *
 		 * <p>
 		 * With the <code>mediaMode</code> property set to <code>MediaMode.RELAYED</code>, the session
 		 * will attempt to transmit streams directly between clients. If clients cannot connect due to
-		 * firewall restrictions, the session uses the OpenTok TURN server to relay audio-video
-		 * streams.
+		 * firewall restrictions, the session uses the TURN server to relay audio-video streams.
 		 *
 		 * <p>
 		 * The
 		 * <a href="https://tokbox.com/developer/guides/create-session/#media-mode" target="_top">
-		 * OpenTok Media Router</a> provides the following benefits:
+		 * Media Router</a> provides the following benefits:
 		 *
 		 * <ul>
-		 *   <li>The OpenTok Media Router can decrease bandwidth usage in multiparty sessions.
+		 *   <li>The Media Router can decrease bandwidth usage in multiparty sessions.
 		 *       (When the <code>mediaMode</code> property is set to <code>MediaMode.RELAYED</code>,
 		 *       each client must send a separate audio-video stream to each client subscribing to
 		 *       it.)</li>
-		 *   <li>The OpenTok Media Router can improve the quality of the user experience through
+		 *   <li>The Media Router can improve the quality of the user experience through
 		 *     <a href="https://tokbox.com/platform/fallback" target="_top">audio fallback and video
 		 *     recovery</a>. With these features, if a client's connectivity degrades to a degree that
 		 *     it does not support video for a stream it's subscribing to, the video is dropped on
 		 *     that client (without affecting other clients), and the client receives audio only.
 		 *     If the client's connectivity improves, the video returns.</li>
-		 *   <li>The OpenTok Media Router supports the
+		 *   <li>The Media Router supports the
 		 *     <a href="http://tokbox.com/developer/guides/archiving" target="_top">archiving</a>
-		 *     feature, which lets you record, save, and retrieve OpenTok sessions.</li>
+		 *     feature, which lets you record, save, and retrieve video sessions.</li>
 		 * </ul>
 		 *
 		 * @param mediaMode Set to a value defined in the {@link MediaMode} enum.
