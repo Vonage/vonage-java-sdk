@@ -22,6 +22,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
+import static org.junit.Assert.assertThrows;
+import org.junit.function.ThrowingRunnable;
 import static org.mockito.Mockito.*;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
@@ -53,5 +55,44 @@ public abstract class ClientTest<T> {
         when(response.getEntity()).thenReturn(entity);
 
         return result;
+    }
+
+    protected void stubResponse(int code, String response) throws Exception {
+        wrapper.setHttpClient(stubHttpClient(code, response));
+    }
+
+    protected void stubResponse(String response) throws Exception {
+        stubResponse(200, response);
+    }
+
+    protected void stubResponse(int code) throws Exception {
+        wrapper.setHttpClient(stubHttpClient(code));
+    }
+
+    protected void stubResponseAndRun(Runnable invocation) throws Exception {
+        stubResponseAndRun(200, invocation);
+    }
+
+    protected void stubResponseAndRun(int statusCode, Runnable invocation) throws Exception {
+        stubResponse(statusCode);
+        invocation.run();
+    }
+
+    protected void stubResponseAndAssertThrows(int statusCode, ThrowingRunnable invocation,
+                                               Class<? extends Exception> exceptionClass) throws Exception {
+        stubResponse(statusCode);
+        assertThrows(exceptionClass, invocation);
+    }
+
+    protected void stubResponseAndAssertThrows(String response, ThrowingRunnable invocation,
+                                               Class<? extends Exception> exceptionClass) throws Exception {
+        stubResponse(response);
+        assertThrows(exceptionClass, invocation);
+    }
+
+    protected void stubResponseAndAssertThrows(int statusCode, String response, ThrowingRunnable invocation,
+                                               Class<? extends Exception> exceptionClass) throws Exception {
+        stubResponse(statusCode, response);
+        assertThrows(exceptionClass, invocation);
     }
 }

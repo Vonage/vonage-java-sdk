@@ -341,7 +341,7 @@ client.getVerifyClient().check(ongoingVerify.getRequestId(), CODE)
 Send a PSD2 code to a phone number with:
 
 ````java
-NexmoClient client = NexmoClient.builder()
+VonageClient client = VonageClient.builder()
         .apiKey(API_KEY)
         .apiSecret(API_SECRET)
         .build();

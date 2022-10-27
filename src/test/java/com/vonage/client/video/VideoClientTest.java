@@ -20,8 +20,10 @@ import com.vonage.client.auth.JWTAuthMethod;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.function.ThrowingRunnable;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class VideoClientTest extends ClientTest<VideoClient> {
 	static final String
@@ -61,6 +63,46 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		client = new VideoClient(wrapper);
 	}
 
+	void stubResponseAndAssertThrowsIAX(String response, ThrowingRunnable invocation) throws Exception {
+		stubResponseAndAssertThrows(response, invocation, IllegalArgumentException.class);
+	}
+
+	void stubArchiveJsonAndAssertThrows(ThrowingRunnable invocation) throws Exception {
+		stubResponseAndAssertThrowsIAX(archiveJson, invocation);
+	}
+
+	void stubListArchiveJsonAndAssertThrows(ThrowingRunnable invocation) throws Exception {
+		stubResponseAndAssertThrowsIAX(listArchiveJson, invocation);
+	}
+
+	void stubArchiveJsonAndAssertEquals(Supplier<Archive> invocation) throws Exception {
+		stubResponse(archiveJson);
+		assertArchiveEqualsExpectedJson(invocation.get());
+	}
+
+	void stubListArchiveJsonAndAssertEquals(Supplier<List<Archive>> invocation) throws Exception {
+		stubResponse(listArchiveJson);
+		List<Archive> archives = invocation.get();
+		assertEquals(1, archives.size());
+		assertArchiveEqualsExpectedJson(archives.get(0));
+	}
+
+	void stubResponseAndAssertThrowsIAX(int statusCode, ThrowingRunnable invocation) throws Exception {
+		stubResponseAndAssertThrows(statusCode, invocation, IllegalArgumentException.class);
+	}
+
+	void stubResponseAndAssertThrowsIAX(ThrowingRunnable invocation) throws Exception {
+		stubResponseAndAssertThrowsIAX(200, invocation);
+	}
+
+	void stubResponseAndAssertThrowsNPE(ThrowingRunnable invocation) throws Exception {
+		stubResponseAndAssertThrows(200, invocation, NullPointerException.class);
+	}
+
+	void stubResponseAndAssertThrowsNPE(String response, ThrowingRunnable invocation) throws Exception {
+		stubResponseAndAssertThrows(200, invocation, NullPointerException.class);
+	}
+
 	static void assertArchiveEqualsExpectedJson(Archive response) {
 		assertNotNull(response);
 		assertEquals(Long.valueOf(1384221730000L), response.getCreatedAt());
@@ -95,14 +137,14 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 				"    \"create_dt\": \""+createDt+"\",\n" +
 				"    \"media_server_url\": \""+msUrl+"\"\n" +
 				"}";
-		wrapper.setHttpClient(stubHttpClient(200, responseJson));
 
+		stubResponse(responseJson);
 		CreateSessionResponse response = client.createSession(request);
 		assertEquals(sessionId, response.getSessionId());
 		assertEquals(applicationId, response.getApplicationId());
 		assertEquals(createDt, response.getCreateDt());
 		assertEquals(msUrl, response.getMediaServerUrl());
-		assertThrows(NullPointerException.class, () -> client.createSession(null));
+		stubResponseAndAssertThrowsNPE(responseJson, () -> client.createSession(null));
 	}
 
 	@Test
@@ -117,8 +159,8 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 				"    }\n" +
 				"  ]\n" +
 				"}";
-		wrapper.setHttpClient(stubHttpClient(200, responseJson));
 
+		stubResponse(responseJson);
 		List<GetStreamResponse> response = client.listStreams(sessionId);
 		assertEquals(1, response.size());
 		assertEquals(VideoType.SCREEN, response.get(0).getVideoType());
@@ -136,61 +178,48 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 				"    \"full\"\n" +
 				"  ]\n" +
 				"}";
-		wrapper.setHttpClient(stubHttpClient(200, responseJson));
 
+		stubResponse(responseJson);
 		GetStreamResponse response = client.getStream(sessionId, streamId);
 		assertEquals(streamId, response.getId());
 		assertEquals(VideoType.CUSTOM, response.getVideoType());
 		assertEquals(1, response.getLayoutClassList().size());
 		assertEquals("full", response.getLayoutClassList().get(0));
 
-		assertThrows(IllegalArgumentException.class, () -> client.getStream(null, streamId));
-		assertThrows(IllegalArgumentException.class, () -> client.getStream(sessionId, null));
+		stubResponseAndAssertThrowsIAX(() -> client.getStream(null, streamId));
+		stubResponseAndAssertThrowsIAX(() -> client.getStream(sessionId, null));
 	}
 
 	@Test
 	public void testSetStreamLayout() throws Exception {
-		wrapper.setHttpClient(stubHttpClient(200));
 		List<SessionStream> layouts = Collections.emptyList();
-		client.setStreamLayout(sessionId, layouts);
-		assertThrows(IllegalArgumentException.class, () -> client.setStreamLayout(null, layouts));
-		assertThrows(NullPointerException.class, () -> client.setStreamLayout(sessionId, null));
+		stubResponseAndRun(() -> client.setStreamLayout(sessionId, layouts));
+		stubResponseAndAssertThrowsIAX(() -> client.setStreamLayout(null, layouts));
+		stubResponseAndAssertThrowsNPE(() -> client.setStreamLayout(sessionId, null));
 	}
 
 	@Test
 	public void testSignal() throws Exception {
 		SignalRequest signalRequest = SignalRequest.builder().data("d").type("t").build();
-		wrapper.setHttpClient(stubHttpClient(200));
-
-		client.signal(sessionId, connectionId, signalRequest);
-		assertThrows(IllegalArgumentException.class, () ->
-				client.signal(sessionId, connectionId, null)
-		);
-		assertThrows(IllegalArgumentException.class, () ->
-				client.signal(sessionId, null, signalRequest)
-		);
-		assertThrows(IllegalArgumentException.class, () ->
-				client.signal(null, connectionId, signalRequest)
-		);
+		stubResponseAndRun(() -> client.signal(sessionId, connectionId, signalRequest));
+		stubResponseAndAssertThrowsIAX(() -> client.signal(sessionId, connectionId, null));
+		stubResponseAndAssertThrowsIAX(() -> client.signal(sessionId, null, signalRequest));
+		stubResponseAndAssertThrowsIAX(() -> client.signal(null, connectionId, signalRequest));
 	}
 
 	@Test
 	public void testSignalAll() throws Exception {
 		SignalRequest signalRequest = SignalRequest.builder().data("d").type("t").build();
-		wrapper.setHttpClient(stubHttpClient(200));
-
-		client.signalAll(sessionId, signalRequest);
-		assertThrows(IllegalArgumentException.class, () -> client.signalAll(sessionId, null));
-		assertThrows(IllegalArgumentException.class, () -> client.signalAll(null, signalRequest));
+		stubResponseAndRun(() -> client.signalAll(sessionId, signalRequest));
+		stubResponseAndAssertThrowsIAX(() -> client.signalAll(sessionId, null));
+		stubResponseAndAssertThrowsIAX(() -> client.signalAll(null, signalRequest));
 	}
 
 	@Test
 	public void testForceDisconnect() throws Exception {
-		wrapper.setHttpClient(stubHttpClient(200));
-
-		client.forceDisconnect(sessionId, connectionId);
-		assertThrows(IllegalArgumentException.class, () -> client.forceDisconnect(null, connectionId));
-		assertThrows(IllegalArgumentException.class, () -> client.forceDisconnect(sessionId, null));
+		stubResponseAndRun(() -> client.forceDisconnect(sessionId, connectionId));
+		stubResponseAndAssertThrowsIAX(() -> client.forceDisconnect(null, connectionId));
+		stubResponseAndAssertThrowsIAX(() -> client.forceDisconnect(sessionId, null));
 	}
 
 	@Test
@@ -202,8 +231,8 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 				"  \"environment\": \"standard\",\n" +
 				"  \"createdAt\": 1414642898000\n" +
 				"}";
-		wrapper.setHttpClient(stubHttpClient(200, responseJson));
 
+		stubResponse(responseJson);
 		ProjectDetails response = client.muteStream(sessionId, streamId);
 		assertEquals("78d335fa-323d-0114-9c3d-d6f0d48968cf", response.getApplicationId());
 		assertEquals(ProjectStatus.ACTIVE, response.getStatus());
@@ -211,8 +240,8 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		assertEquals(ProjectEnvironment.STANDARD, response.getEnvironment());
 		assertEquals(1414642898000L, response.getCreatedAt().longValue());
 
-		assertThrows(IllegalArgumentException.class, () -> client.muteStream(null, streamId));
-		assertThrows(IllegalArgumentException.class, () -> client.muteStream(sessionId, null));
+		stubResponseAndAssertThrowsIAX(() -> client.muteStream(null, streamId));
+		stubResponseAndAssertThrowsIAX(() -> client.muteStream(sessionId, null));
 	}
 
 	@Test
@@ -225,8 +254,8 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 				"  \"environment\": \"standard\",\n" +
 				"  \"createdAt\": 1414642898000\n" +
 				"}";
-		wrapper.setHttpClient(stubHttpClient(200, responseJson));
 
+		stubResponse(responseJson);
 		ProjectDetails response = client.muteSession(sessionId, request);
 		assertEquals("78d335fa-323d-0114-9c3d-d6f0d48968cf", response.getApplicationId());
 		assertEquals(ProjectStatus.ACTIVE, response.getStatus());
@@ -234,8 +263,8 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		assertEquals(ProjectEnvironment.STANDARD, response.getEnvironment());
 		assertEquals(1414642898000L, response.getCreatedAt().longValue());
 
-		assertThrows(IllegalArgumentException.class, () -> client.muteSession(null, request));
-		assertThrows(IllegalArgumentException.class, () -> client.muteSession(sessionId, null));
+		stubResponseAndAssertThrowsIAX(() -> client.muteSession(null, request));
+		stubResponseAndAssertThrowsIAX(() -> client.muteSession(sessionId, null));
 	}
 
 	@Test
@@ -243,99 +272,66 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		ArchiveLayout request = ArchiveLayout.builder()
 				.type(ScreenLayoutType.HORIZONTAL).build();
 
-		wrapper.setHttpClient(stubHttpClient(200));
-		client.setArchiveLayout(archiveId, request);
-		assertThrows(IllegalArgumentException.class, () -> client.setArchiveLayout(null, request));
-		assertThrows(IllegalArgumentException.class, () -> client.setArchiveLayout(archiveId, null));
+		stubResponseAndRun(() -> client.setArchiveLayout(archiveId, request));
+		stubResponseAndAssertThrowsIAX(() -> client.setArchiveLayout(null, request));
+		stubResponseAndAssertThrowsIAX(() -> client.setArchiveLayout(archiveId, null));
 	}
 
 	@Test
 	public void testDeleteArchive() throws Exception {
-		wrapper.setHttpClient(stubHttpClient(200));
-		client.deleteArchive(archiveId);
-		assertThrows(IllegalArgumentException.class, () -> client.deleteArchive(null));
+		stubResponseAndRun(() -> client.deleteArchive(archiveId));
+		stubResponseAndAssertThrowsIAX(() -> client.deleteArchive(null));
 	}
 
 	@Test
 	public void testAddArchiveStream() throws Exception {
-		wrapper.setHttpClient(stubHttpClient(204));
-
-		client.addArchiveStream(archiveId, streamId);
-		client.addArchiveStream(archiveId, streamId, true, true);
-		client.addArchiveStream(archiveId, streamId, null, false);
-		client.addArchiveStream(archiveId, streamId, false, null);
-
-		assertThrows(IllegalArgumentException.class, () -> client.addArchiveStream(null, streamId));
-		assertThrows(IllegalArgumentException.class, () -> client.addArchiveStream(archiveId, null));
+		stubResponseAndRun(204, () -> client.addArchiveStream(archiveId, streamId));
+		stubResponseAndRun(204, () -> client.addArchiveStream(archiveId, streamId, true, true));
+		stubResponseAndRun(204, () -> client.addArchiveStream(archiveId, streamId, null, false));
+		stubResponseAndRun(204, () -> client.addArchiveStream(archiveId, streamId, false, null));
+		stubResponseAndAssertThrowsIAX(204, () -> client.addArchiveStream(null, streamId));
+		stubResponseAndAssertThrowsIAX(204, () -> client.addArchiveStream(archiveId, null));
 	}
 
 	@Test
 	public void testRemoveArchiveStream() throws Exception {
-		wrapper.setHttpClient(stubHttpClient(204));
-		client.removeArchiveStream(archiveId, streamId);
-		assertThrows(IllegalArgumentException.class, () -> client.removeArchiveStream(null, streamId));
-		assertThrows(IllegalArgumentException.class, () -> client.removeArchiveStream(archiveId, null));
+		stubResponseAndRun(204, () -> client.removeArchiveStream(archiveId, streamId));
+		stubResponseAndAssertThrowsIAX(204, () -> client.removeArchiveStream(null, streamId));
+		stubResponseAndAssertThrowsIAX(204, () -> client.removeArchiveStream(archiveId, null));
 	}
 
 	@Test
 	public void testStopArchive() throws Exception {
-		wrapper.setHttpClient(stubHttpClient(200, archiveJson));
-		assertArchiveEqualsExpectedJson(client.stopArchive(archiveId));
-		assertThrows(IllegalArgumentException.class, () -> client.stopArchive(null));
+		stubArchiveJsonAndAssertEquals(() -> client.stopArchive(archiveId));
+		stubArchiveJsonAndAssertThrows(() -> client.stopArchive(null));
 	}
 
 	@Test
 	public void testGetArchive() throws Exception {
-		wrapper.setHttpClient(stubHttpClient(200, archiveJson));
-		assertArchiveEqualsExpectedJson(client.getArchive(archiveId));
-		assertThrows(IllegalArgumentException.class, () -> client.getArchive(null));
+		stubArchiveJsonAndAssertEquals(() -> client.getArchive(archiveId));
+		stubArchiveJsonAndAssertThrows(() -> client.getArchive(null));
 	}
 
 	@Test
 	public void testListArchives() throws Exception {
-		wrapper.setHttpClient(stubHttpClient(200, listArchiveJson));
-		List<Archive> archives = client.listArchives();
-		assertEquals(1, archives.size());
-		assertArchiveEqualsExpectedJson(archives.get(0));
-
-		wrapper.setHttpClient(stubHttpClient(200, listArchiveJson));
-		archives = client.listArchives(sessionId);
-		assertArchiveEqualsExpectedJson(archives.get(0));
-
-		wrapper.setHttpClient(stubHttpClient(200, listArchiveJson));
-		archives = client.listArchives(sessionId, 0, 1);
-		assertArchiveEqualsExpectedJson(archives.get(0));
-
-		wrapper.setHttpClient(stubHttpClient(200, listArchiveJson));
-		archives = client.listArchives(null, null, 1000);
-		assertArchiveEqualsExpectedJson(archives.get(0));
-
-		wrapper.setHttpClient(stubHttpClient(200, listArchiveJson));
-		archives = client.listArchives(null, 2, null);
-		assertArchiveEqualsExpectedJson(archives.get(0));
-
-		wrapper.setHttpClient(stubHttpClient(200, listArchiveJson));
-		assertThrows(IllegalArgumentException.class, () -> client.listArchives(null));
-
-		wrapper.setHttpClient(stubHttpClient(200, listArchiveJson));
-		assertThrows(IllegalArgumentException.class, () -> client.listArchives(sessionId, 0, -1));
-
-		wrapper.setHttpClient(stubHttpClient(200, listArchiveJson));
-		assertThrows(IllegalArgumentException.class, () -> client.listArchives(sessionId, 1, -1));
+		stubListArchiveJsonAndAssertEquals(() -> client.listArchives());
+		stubListArchiveJsonAndAssertEquals(() -> client.listArchives(sessionId));
+		stubListArchiveJsonAndAssertEquals(() -> client.listArchives(sessionId, 0, 1));
+		stubListArchiveJsonAndAssertEquals(() -> client.listArchives(null, null, 1000));
+		stubListArchiveJsonAndAssertEquals(() -> client.listArchives(null, 2, null));
+		stubListArchiveJsonAndAssertThrows(() -> client.listArchives(null));
+		stubListArchiveJsonAndAssertThrows(() -> client.listArchives(sessionId, 0, -1));
+		stubListArchiveJsonAndAssertThrows(() -> client.listArchives(sessionId, 1, -1));
 	}
 
 	@Test
 	public void testCreateArchive() throws Exception {
 		String sessionId = "flR1ZSBPY3QgMjkgMTI6MTM6MjMgUERUIDIwMTN";
 		CreateArchiveRequest request = CreateArchiveRequest.builder().build();
-
-		wrapper.setHttpClient(stubHttpClient(200, archiveJson));
-		assertArchiveEqualsExpectedJson(client.createArchive(sessionId, request));
-
-		wrapper.setHttpClient(stubHttpClient(200, archiveJson));
-		assertArchiveEqualsExpectedJson(client.createArchive(sessionId, null));
-
-		wrapper.setHttpClient(stubHttpClient(200, archiveJson));
-		assertThrows(IllegalArgumentException.class, () -> client.createArchive(null, request));
+		stubArchiveJsonAndAssertEquals(() -> client.createArchive(sessionId, request));
+		stubArchiveJsonAndAssertEquals(() -> client.createArchive(sessionId, null));
+		stubArchiveJsonAndAssertEquals(() -> client.createArchive(sessionId));
+		stubArchiveJsonAndAssertThrows(() -> client.createArchive(null, request));
+		stubArchiveJsonAndAssertThrows(() -> client.createArchive(null));
 	}
 }

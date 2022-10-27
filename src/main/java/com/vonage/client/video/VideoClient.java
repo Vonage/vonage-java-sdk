@@ -357,4 +357,16 @@ public class VideoClient {
 	public Archive createArchive(String sessionId, CreateArchiveRequest request) {
 		return createArchive.execute(CreateArchiveRequest.withSessionId(validateSessionId(sessionId), request));
 	}
+
+	/**
+	 * Create a new archive.
+	 *
+	 * @param sessionId The ID of the Vonage Video session you are working with.
+	 *
+	 * @return The created Archive.
+	 * @see #createArchive(String, CreateArchiveRequest)
+	 */
+	public Archive createArchive(String sessionId) {
+		return createArchive(sessionId, null);
+	}
 }
