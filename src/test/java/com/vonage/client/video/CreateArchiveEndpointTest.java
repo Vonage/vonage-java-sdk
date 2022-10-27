@@ -38,15 +38,15 @@ public class CreateArchiveEndpointTest {
 	
 	@Test
 	public void testMakeRequest() throws Exception {
-		String name = "My Archive";
-		CreateArchiveRequest request = CreateArchiveRequest.builder().name(name).hasVideo(false).build();
+		String name = "My Archive", sessionId = UUID.randomUUID().toString();
+		CreateArchiveRequest request = CreateArchiveRequest.builder(sessionId).name(name).hasVideo(false).build();
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("POST", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/"+applicationId+"/archive";
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		String expectedPayload = "{\"name\":\""+name+"\",\"hasVideo\":false}";
+		String expectedPayload = "{\"sessionId\":\""+sessionId+"\",\"name\":\""+name+"\",\"hasVideo\":false}";
 		assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
 	}
 }
