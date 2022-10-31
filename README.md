@@ -97,6 +97,7 @@ HttpConfig httpConfig = HttpConfig.builder()
         .apiBaseUri("https://api.example.com")
         .restBaseUri("https://rest.example.com")
         .snsBaseUri("https://sns.example.com")
+        .videoBaseUri("https://video.example.com")
         .build();
 
 VonageClient client = VonageClient.builder()
@@ -321,10 +322,6 @@ CallEvent event = client.getVoiceClient().createCall(call);
 Send a 2FA code to a phone number with:
 
 ```java
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .build();
 VerifyResponse ongoingVerify = client.getVerifyClient().verify(TO_NUMBER, "NEXMO");
 ```
 
@@ -341,10 +338,6 @@ client.getVerifyClient().check(ongoingVerify.getRequestId(), CODE)
 Send a PSD2 code to a phone number with:
 
 ````java
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .build();
 VerifyResponse verifyPayment = client.getVerifyClient().psd2Verify(TO_NUMBER, 103.33, "Michelle");
 ````
 
@@ -364,12 +357,7 @@ System.out.println(response.getDefaultPrice());
 ### Get a List of Voice Prices for a Country
 
 Get a list of voice prices for a country with:
-
 ```java
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .build();
 PricingResponse response = client.getAccountClient().getVoicePrice("US");
 System.out.println(response.getDefaultPrice());
 ```
@@ -377,12 +365,7 @@ System.out.println(response.getDefaultPrice());
 ### Get a List of SMS Prices for a Prefix
 
 Get a list of SMS prices for a country with:
-
 ```java
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .build();
 PrefixPricingResponse response = client.getAccountClient().getPrefixPrice(ServiceType.SMS, "1");
 System.out.println(response.getCountries().get(0).getDefaultPrice());
 ```
@@ -390,12 +373,7 @@ System.out.println(response.getCountries().get(0).getDefaultPrice());
 ### Get a List of Voice Prices for a Prefix
 
 Get a list of voice prices for a country with:
-
 ```java
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .build();
 PrefixPricingResponse response = client.getAccountClient().getPrefixPrice(ServiceType.VOICE, "1");
 System.out.println(response.getCountries().get(0).getDefaultPrice());
 ```
@@ -404,10 +382,6 @@ System.out.println(response.getCountries().get(0).getDefaultPrice());
 
 Top-up your account that has auto-reload enabled with:
 ```java
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .build();
 client.getAccountClient().topUp("TRANSACTION_NUMBER");
 ```
 
@@ -415,10 +389,6 @@ client.getAccountClient().topUp("TRANSACTION_NUMBER");
 
 Submit a request to the Conversion API when it has been enabled on your account with:
 ```java
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .build();
 client.getConversionClient().submitConversion(ConversionRequest.Type.VOICE,
                                      "MESSAGE-ID",
                                      true,
@@ -429,53 +399,51 @@ client.getConversionClient().submitConversion(ConversionRequest.Type.VOICE,
 ### Create Secret
 
 Create a secret associated with your account id:
-
 ```java
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .build();
 SecretResponse response = client.getAccountClient().createSecret(API_KEY, "Foo84RSecret");
 ```
 
 ### List Secrets
 
 List the secret id (but not content) associated with your account id:
-
 ```java
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .build();
 ListSecretsResponse response = client.getAccountClient().listSecrets(API_KEY);
-
 Collection<SecretResponse> secrets = response.getSecrets();
 ```
 
 ### Revoke Secret
 
 Revoke a secret associated with your account id:
-
 ```java
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .build();
 client.getAccountClient().revokeSecret(API_KEY, SECRET_ID);
 ```
 
 ### Retrieve Secret
 
 Get information about a specific secret associated with your account id:
-
 ```java
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .build();
 SecretResponse response = client.getAccountClient().getSecret(API_KEY, SECRET_ID);
 ```
 
+### Start an Archive recording
+
+Archive a recording of a Vonage Video session. All properties (except `SESSION_ID`) are optional.
+```java
+Archive archive = client.getVideoClient().startArchive(
+    CreateArchiveRequest.builder(SESSION_ID)
+        .name("My_Recording")
+        .outputMode(OutputMode.COMPOSED)
+        .streamMode(StreamMode.AUTO)
+        .resolution(Resolution.HD_LANDSCAPE)
+        .hasAudio(true).hasVideo(true)
+        .layout(
+            ArchiveLayout.builder(ScreenLayoutType.BEST_FIT)
+                .screenshareType(ScreenLayoutType.PIP)
+                .build()
+        )
+        .build();
+);
+```
 
 ### Custom HTTP Configuration
 
@@ -486,7 +454,7 @@ can be useful, for example, if you must use an HTTP proxy to make requests or to
 ## Tips And Tricks
 
 ### Phone Calls And WebSockets
-Our [Voice API](https://developer.nexmo.com/voice/voice-api/overview) can connect a voice call to a websocket! An example using `javax.websocket` for accepting websocket connections can be found on the [Oracle website](http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/HomeWebsocket/WebsocketHome.html#section4).
+Our [Voice API](https://developer.vonage.com/voice/voice-api/overview) can connect a voice call to a websocket! An example using `javax.websocket` for accepting websocket connections can be found on the [Oracle website](http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/HomeWebsocket/WebsocketHome.html#section4).
 [Another  example](http://sparkjava.com/documentation#embedded-web-server) using the Spark framework
 
 ## Frequently Asked Questions
