@@ -269,9 +269,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 	@Test
 	public void testSetArchiveLayout() throws Exception {
-		ArchiveLayout request = ArchiveLayout.builder()
-				.type(ScreenLayoutType.HORIZONTAL).build();
-
+		ArchiveLayout request = ArchiveLayout.builder(ScreenLayoutType.HORIZONTAL).build();
 		stubResponseAndRun(() -> client.setArchiveLayout(archiveId, request));
 		stubResponseAndAssertThrowsIAX(() -> client.setArchiveLayout(null, request));
 		stubResponseAndAssertThrowsIAX(() -> client.setArchiveLayout(archiveId, null));

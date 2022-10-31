@@ -37,16 +37,18 @@ public class CreateArchiveRequest {
 
     private CreateArchiveRequest(Builder builder) {
         if ((sessionId = builder.sessionId) == null || sessionId.isEmpty()) {
-            throw new IllegalArgumentException("Session ID is required");
+            throw new IllegalArgumentException("Session ID is required.");
+        }
+        layout = builder.layout;
+        if ((outputMode = builder.outputMode) != OutputMode.COMPOSED && layout != null) {
+            throw new IllegalStateException("Layout can only be applied to composed archives.");
         }
         name = builder.name;
         multiArchiveTag = builder.multiArchiveTag;
         hasAudio = builder.hasAudio;
         hasVideo = builder.hasVideo;
         resolution = builder.resolution;
-        outputMode = builder.outputMode;
         streamMode = builder.streamMode;
-        layout = builder.layout;
     }
 
     /**
@@ -248,9 +250,10 @@ public class CreateArchiveRequest {
         }
 
         /**
-         * Sets the layout for a composed archive.
+         * Sets the layout for a composed archive. If this option is specified,
+         * {@linkplain Builder#outputMode(OutputMode)} must be {@linkplain OutputMode#COMPOSED}.
          *
-         * @param layout An object of type {@link ArchiveLayout} .
+         * @param layout The layout type to use..
          *
          * @return This Builder with the layout setting.
          */

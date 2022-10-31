@@ -33,8 +33,11 @@ public class ArchiveLayout {
 		type = Objects.requireNonNull(builder.type, "Initial layout type is required.");
 		if ((screenshareType = builder.screenshareType) != null && type != ScreenLayoutType.BEST_FIT) {
 			throw new IllegalStateException(
-				"Layout type must be set to '"+ ScreenLayoutType.BEST_FIT +"' when setting the screen share layout."
+				"Layout type must be set to '"+ScreenLayoutType.BEST_FIT+"' when setting the screen share layout."
 			);
+		}
+		if (screenshareType == ScreenLayoutType.CUSTOM) {
+			throw new IllegalArgumentException("Screen share type cannot be '"+ScreenLayoutType.CUSTOM+"'.");
 		}
 		if ((stylesheet = builder.stylesheet) != null && type != ScreenLayoutType.CUSTOM) {
 			throw new IllegalStateException(
@@ -84,34 +87,31 @@ public class ArchiveLayout {
 		}
 	}
 
-	public static Builder builder() {
-		return new Builder();
+
+	/**
+	 * Entry point for constructing an {@linkplain ArchiveLayout} object.
+	 *
+	 * @param initialLayout Initial layout for the composed archive.
+	 *
+	 * @return A new Builder.
+	 */
+	public static Builder builder(ScreenLayoutType initialLayout) {
+		return new Builder(initialLayout);
 	}
 	
 	public static class Builder {
-		private ScreenLayoutType type;
+		private final ScreenLayoutType type;
 		private ScreenLayoutType screenshareType;
 		private String stylesheet;
 	
-		Builder() {}
-	
-		/**
-		 * (REQUIRED)
-		 * Specify this to assign the initial layout type for the archive. This applies only to composed archives.
-		 * If you specify a "custom" layout type, set the stylesheet property of the layout object to the stylesheet.
-		 *
-		 * @param type The initial archive layout.
-		 * @return This builder.
-		 */
-		public Builder type(ScreenLayoutType type) {
+		Builder(ScreenLayoutType type) {
 			this.type = type;
-			return this;
 		}
 
 		/**
 		 * (OPTIONAL) The layout type to use when there is a screen-sharing stream in the session.
-		 * If you set this property, you must set {@linkplain #type(ScreenLayoutType)} to {@link ScreenLayoutType#BEST_FIT}
-		 * and leave the {@linkplain #stylesheet(String)} property unset.
+		 * If you set this property, the initial layout must be set to {@link ScreenLayoutType#BEST_FIT}
+		 * and the {@linkplain #stylesheet(String)} property left unset.
 		 *
 		 * @param screenshareType The screen share layout type.
 		 * @return This builder.
@@ -139,7 +139,7 @@ public class ArchiveLayout {
 		/**
 		 * Builds the {@linkplain ArchiveLayout}.
 		 *
-		 * @return An instance of SetArchiveLayoutRequest, populated with all fields from this builder.
+		 * @return An instance of ArchiveLayout, populated with all fields from this builder.
 		 */
 		public ArchiveLayout build() {
 			return new ArchiveLayout(this);
