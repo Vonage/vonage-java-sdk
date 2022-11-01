@@ -425,6 +425,68 @@ Get information about a specific secret associated with your account id:
 SecretResponse response = client.getAccountClient().getSecret(API_KEY, SECRET_ID);
 ```
 
+## Video API
+
+The following samples demonstrate usage of the Vonage Video API (formerly OpenTok).
+They all use JWT authentication, so you would instantiate a client using
+your application ID and private key, like so:
+```java
+    VonageClient client = VonageClient.builder()
+		.applicationId(APPLICATION_ID)
+        .privateKeyPath(PRIVATE_KEY_PATH)
+        .build();
+```
+
+### Create a new Session
+
+Generate a new video session:
+```java
+CreateSessionResponse session = client.getVideoClient().createSession(
+    CreateSessionRequest.builder()
+        .mediaMode(MediaMode.ROUTED)
+        .archiveMode(ArchiveMode.MANUAL)
+        .build()
+);
+```
+
+### Mute a video stream
+
+Force mute a specific publisher stream:
+```java
+ProjectDetails response = client.getVideoClient().muteStream(SESSION_ID, STREAM_ID);
+```
+
+### Disconnect a client from a session
+
+Remove a participant from a video session:
+```java
+client.getVideoClient().forceDisconnect(SESSION_ID, CONNECTION_ID);
+```
+
+### Send signal to participant(s)
+
+Signal to a specific participant:
+```java
+SignalRequest request = SignalRequest.builder()
+        .data("Chat text message")
+        .type("chat")
+        .build();
+client.getVideoClient().signal(SESSION_ID, CONNECTION_ID, request);
+```
+
+Signal all participants in a session:
+```java
+SignalRequest request = SignalRequest.builder()
+		.type("chat").data("Hello, World!").build();
+client.getVideoClient().signalAll(SESSION_ID, request);
+```
+
+### Get information about a video Stream
+
+```java
+GetStreamResponse streamInfo = client.getVideoClient().getStream(SESSION_ID, STREAM_ID);
+```
+
 ### Start an Archive recording
 
 Archive a recording of a Vonage Video session. All properties (except `SESSION_ID`) are optional.
@@ -444,6 +506,23 @@ Archive archive = client.getVideoClient().startArchive(
         .build();
 );
 ```
+
+### Stop an Archive recording
+
+```java
+Archive archive = client.getVideoClient().stopArchive(ARCHIVE_ID);
+```
+
+### Add or remove stream in an Archive recording
+
+Change the streams included in a composed archive that was started with the streamMode set to "manual":
+```java
+client.getVideoClient().addArchiveStream(ARCHIVE_ID, STREAM_ID);
+```
+```java
+client.getVideoClient().removeArchiveStream(ARCHIVE_ID, STREAM_ID);
+```
+
 
 ### Custom HTTP Configuration
 

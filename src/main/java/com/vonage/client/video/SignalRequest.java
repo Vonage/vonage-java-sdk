@@ -52,7 +52,12 @@ public class SignalRequest {
 			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
 		}
 	}
-	
+
+	/**
+	 * Entry point for constructing an instance of {@linkplain SignalRequest}.
+	 *
+	 * @return A new Builder.
+	 */
 	public static Builder builder() {
 		return new Builder();
 	}
@@ -64,6 +69,7 @@ public class SignalRequest {
 		Builder() {}
 	
 		/**
+		 * (REQUIRED)
 		 * Type of data that is being sent to the client. This cannot exceed 128 bytes.
 		 *
 		 * @param type The type as a string.
@@ -75,6 +81,7 @@ public class SignalRequest {
 		}
 
 		/**
+		 * (REQUIRED)
 		 * Payload that is being sent to the client. This cannot exceed 8kb.
 		 *
 		 * @param data The data as a string.
