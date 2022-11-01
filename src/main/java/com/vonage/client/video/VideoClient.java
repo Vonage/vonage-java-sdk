@@ -97,9 +97,19 @@ public class VideoClient {
 	}
 
 	/**
+	 * Generate a new session, using default properties.
+	 *
+	 * @return Details of the created session.
+	 * @see #createSession(CreateSessionRequest)
+	 */
+	public CreateSessionResponse createSession() {
+		return createSession(null);
+	}
+
+	/**
 	 * Generate a new session.
 	 *
-	 * @param request The session properties.
+	 * @param request (OPTIONAL) The session properties.
 	 * @return Details of the created session.
 	 */
 	public CreateSessionResponse createSession(CreateSessionRequest request) {
@@ -240,7 +250,8 @@ public class VideoClient {
 	}
 
 	/**
-	 * Removes a stream from a composed archive.
+	 * Removes a stream from a composed archive that was started with the
+	 * <code>streamMode</code> set to {@link StreamMode#MANUAL}.
 	 *
 	 * @param archiveId ID of the archive.
 	 * @param streamId ID of the stream to remove.
@@ -250,7 +261,8 @@ public class VideoClient {
 	}
 
 	/**
-	 * Adds a stream to a composed archive.
+	 * Adds a stream to a composed archive that was started with the
+	 * <code>streamMode</code> set to {@link StreamMode#MANUAL}.
 	 *
 	 * @param archiveId ID of the archive.
 	 * @param streamId ID of the stream to add.

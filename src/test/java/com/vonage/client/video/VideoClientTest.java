@@ -99,10 +99,6 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		stubResponseAndAssertThrows(200, invocation, NullPointerException.class);
 	}
 
-	void stubResponseAndAssertThrowsNPE(String response, ThrowingRunnable invocation) throws Exception {
-		stubResponseAndAssertThrows(200, invocation, NullPointerException.class);
-	}
-
 	static void assertArchiveEqualsExpectedJson(Archive response) {
 		assertNotNull(response);
 		assertEquals(Long.valueOf(1384221730000L), response.getCreatedAt());
@@ -144,7 +140,14 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		assertEquals(applicationId, response.getApplicationId());
 		assertEquals(createDt, response.getCreateDt());
 		assertEquals(msUrl, response.getMediaServerUrl());
-		stubResponseAndAssertThrowsNPE(responseJson, () -> client.createSession(null));
+
+		stubResponse(responseJson);
+		response = client.createSession();
+		assertNotNull(response);
+		assertEquals(sessionId, response.getSessionId());
+		assertEquals(applicationId, response.getApplicationId());
+		assertEquals(createDt, response.getCreateDt());
+		assertEquals(msUrl, response.getMediaServerUrl());
 	}
 
 	@Test

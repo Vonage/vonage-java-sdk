@@ -43,7 +43,9 @@ class CreateSessionEndpoint extends AbstractMethod<CreateSessionRequest, CreateS
 		RequestBuilder request = RequestBuilder.post(uri)
 				.setHeader("Content-Type", "application/x-www-form-urlencoded")
 				.setHeader("Accept", "application/json");
-		session.addParams(request);
+		if (session != null) {
+			session.addParams(request);
+		}
 		return request;
 	}
 
