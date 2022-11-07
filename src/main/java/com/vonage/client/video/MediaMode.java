@@ -26,7 +26,7 @@ public enum MediaMode {
     ROUTED ("disabled"),
     /**
      * The session will attempt to transmit streams directly between clients. If two clients
-     * cannot send and receive each others' streams, due to firewalls on the clients' networks,
+     * cannot send and receive each other's streams, due to firewalls on the clients' networks,
      * their streams will be relayed using the TURN Server. Value is "enabled".
      */
     RELAYED ("enabled");

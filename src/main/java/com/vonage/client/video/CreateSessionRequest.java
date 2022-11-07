@@ -70,8 +70,8 @@ public class CreateSessionRequest {
 	}
 
 	/**
-	 * Defines whether the session will be automatically archived (<code>ArchiveMode.ALWAYS</code>)
-	 * or not (<code>ArchiveMode.MANUAL</code>).
+	 * Defines whether the session will be automatically archived ({@code ArchiveMode.ALWAYS})
+	 * or not ({@code ArchiveMode.MANUAL}).
 	 *
 	 * @return The ArchiveMode.
 	 */
@@ -132,12 +132,12 @@ public class CreateSessionRequest {
 
 		/**
 		 * Call this method to determine whether the session will transmit streams using the
-		 * Vonage Media Router (<code>MediaMode.ROUTED</code>) or not
-		 * (<code>MediaMode.RELAYED</code>). By default, the <code>mediaMode</code> property
-		 * is set to <code>MediaMode.RELAYED</code>.
+		 * Vonage Media Router ({@code MediaMode.ROUTED}) or not
+		 * ({@code MediaMode.RELAYED}). By default, the {@code mediaMode} property
+		 * is set to {@code MediaMode.RELAYED}.
 		 *
 		 * <p>
-		 * With the <code>mediaMode</code> property set to <code>MediaMode.RELAYED</code>, the session
+		 * With the {@code mediaMode} property set to {@code MediaMode.RELAYED}, the session
 		 * will attempt to transmit streams directly between clients. If clients cannot connect due to
 		 * firewall restrictions, the session uses the TURN server to relay audio-video streams.
 		 *
@@ -148,7 +148,7 @@ public class CreateSessionRequest {
 		 *
 		 * <ul>
 		 *   <li>The Media Router can decrease bandwidth usage in multiparty sessions.
-		 *       (When the <code>mediaMode</code> property is set to <code>MediaMode.RELAYED</code>,
+		 *       (When the {@code mediaMode} property is set to {@code MediaMode.RELAYED},
 		 *       each client must send a separate audio-video stream to each client subscribing to
 		 *       it.)</li>
 		 *   <li>The Media Router can improve the quality of the user experience through
@@ -172,9 +172,9 @@ public class CreateSessionRequest {
 		}
 
 		/**
-		 * Call this method to determine whether the session will be automatically archived (<code>ArchiveMode.ALWAYS</code>)
-		 * or not (<code>ArchiveMode.MANUAL</code>).
-		 * Using an always archived session also requires the routed media mode (<code>MediaMode.ROUTED</code>).
+		 * Call this method to determine whether the session will be automatically archived ({@code ArchiveMode.ALWAYS})
+		 * or not ({@code ArchiveMode.MANUAL}).
+		 * Using an always archived session also requires the routed media mode ({@code MediaMode.ROUTED}).
 		 *
 		 * @param archiveMode The Archive mode.
 		 *

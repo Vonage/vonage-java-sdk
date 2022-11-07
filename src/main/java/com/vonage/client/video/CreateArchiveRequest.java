@@ -80,7 +80,7 @@ public class CreateArchiveRequest {
     }
 
     /**
-     * Whether the archive has a video track (<code>true</code>) or not (<code>false</code>).
+     * Whether the archive has a video track ({@code true}) or not ({@code false}).
      */
     @JsonProperty("hasVideo")
     public Boolean hasVideo() {
@@ -88,7 +88,7 @@ public class CreateArchiveRequest {
     }
 
     /**
-     * Whether the archive has an audio track (<code>true</code>) or not (<code>false</code>).
+     * Whether the archive has an audio track ({@code true}) or not ({@code false}).
      */
     @JsonProperty("hasAudio")
     public Boolean hasAudio() {
@@ -189,8 +189,8 @@ public class CreateArchiveRequest {
         }
 
         /**
-         * Call this method to include an audio track (<code>true</code>, the default)
-         * or not <code>false</code>).
+         * Call this method to include an audio track ({@code true}, the default)
+         * or not {@code false}).
          *
          * @param hasAudio Whether the archive will include an audio track.
          *
@@ -202,8 +202,8 @@ public class CreateArchiveRequest {
         }
 
         /**
-         * Call this method to include an video track (<code>true</code>, the default)
-         * or not <code>false</code>).
+         * Call this method to include a video track ({@code true}, the default)
+         * or not {@code false}).
          *
          * @param hasVideo Whether the archive will include a video track.
          *
@@ -229,12 +229,12 @@ public class CreateArchiveRequest {
         /**
          * Sets the stream mode for this archive.
          * <p>
-         * When streams are selected automatically (<code>StreamMode.AUTO</code>, the default), all
+         * When streams are selected automatically ({@code StreamMode.AUTO}, the default), all
          * streams in the session can be included in the archive. When streams are selected manually
-         * (<code>StreamMode.MANUAL</code>), you specify streams to be included based on calls
+         * ({@code StreamMode.MANUAL}), you specify streams to be included based on calls
          * to the {@link VideoClient#addArchiveStream(String, String, Boolean, Boolean)} and
          * {@link VideoClient#removeArchiveStream(String, String)} methods. With
-         * <code>StreamMode.MANUAL</code>, you can specify whether a stream's audio, video, or both
+         * {@code StreamMode.MANUAL}, you can specify whether a stream's audio, video, or both
          * are included in the archive. In both automatic and manual modes, the archive composer
          * includes streams based on
          * <a href="https://tokbox.com/developer/guides/archive-broadcast-layout/#stream-prioritization-rules">stream
@@ -253,7 +253,7 @@ public class CreateArchiveRequest {
          * Sets the layout for a composed archive. If this option is specified,
          * {@linkplain Builder#outputMode(OutputMode)} must be {@linkplain OutputMode#COMPOSED}.
          *
-         * @param layout The layout type to use..
+         * @param layout The layout type to use.
          *
          * @return This Builder with the layout setting.
          */

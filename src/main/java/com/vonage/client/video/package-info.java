@@ -19,7 +19,7 @@
  * <br>
  *
  * This API is a rewrite of the <a href=https://github.com/opentok/Opentok-Java-SDK>OpenTok Java SDK</a>.
- * You can use {@link com.vonage.client.video.VideoClient} in a similar way to the <code>OpenTok</code> class in the
+ * You can use {@link com.vonage.client.video.VideoClient} in a similar way to the {@code OpenTok} class in the
  * OpenTok Java SDK, although some method and class names may differ slightly, as they have been rewritten to
  * be consistent with the rest of this SDK.
  *

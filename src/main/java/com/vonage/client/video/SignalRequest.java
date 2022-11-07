@@ -54,7 +54,7 @@ public class SignalRequest {
 	}
 
 	/**
-	 * Entry point for constructing an instance of {@linkplain SignalRequest}.
+	 * Entry point for constructing an instance of .
 	 *
 	 * @return A new Builder.
 	 */

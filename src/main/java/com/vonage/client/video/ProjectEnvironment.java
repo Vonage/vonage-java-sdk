@@ -18,7 +18,7 @@ package com.vonage.client.video;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/*
+/**
  * Represents the project environment type. Enterprise package partners have access to the enterprise environment.
  */
 public enum ProjectEnvironment {

@@ -28,9 +28,9 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Archive {
     private Long createdAt, size;
-    private Integer duration, partnerId;
+    private Integer duration;
     private Boolean hasVideo, hasAudio;
-    private String id, name, url, reason, sessionId, password, multiArchiveTag;
+    private String id, name, url, reason, sessionId, multiArchiveTag;
     private ArchiveStatus status;
     private OutputMode outputMode;
     private StreamMode streamMode;
@@ -42,6 +42,8 @@ public class Archive {
 
     /**
      * The time at which the archive was created, in milliseconds since the Unix epoch.
+     *
+     * @return The created time, as a long.
      */
     public Long getCreatedAt() {
         return createdAt;
@@ -49,13 +51,17 @@ public class Archive {
 
     /**
      * The duration of the archive, in seconds.
+     *
+     * @return The duration.
      */
     public Integer getDuration() {
         return duration;
     }
 
     /**
-     * The archive ID.
+     * ID of the archive.
+     *
+     * @return The archive ID.
      */
     public String getId() {
         return id;
@@ -63,28 +69,27 @@ public class Archive {
 
     /**
      * The name of the archive.
+     *
+     * @return The archive name.
      */
     public String getName() {
         return name;
     }
 
     /**
-     * The resolution of the archive.
+     * The resolution of the archive as an enum.
+     *
+     * @return The resolution.
      */
     public Resolution getResolution() {
         return resolution;
     }
 
     /**
-     * The API key associated with the archive.
-     */
-    public Integer getPartnerId() {
-        return partnerId;
-    }
-
-    /**
-     * For archives with {@linkplain ArchiveStatus.STOPPED} or {@linkplain ArchiveStatus.FAILED}, this string
+     * For archives with {@link ArchiveStatus#STOPPED} or {@link ArchiveStatus#FAILED}, this string
      * describes the reason the archive stopped (such as "maximum duration exceeded") or failed.
+     *
+     * @return The reason text.
      */
     public String getReason() {
         return reason;
@@ -92,6 +97,8 @@ public class Archive {
 
     /**
      * The ID of the video session associated with this archive.
+     *
+     * @return The session ID.
      */
     public String getSessionId() {
         return sessionId;
@@ -99,6 +106,8 @@ public class Archive {
 
     /**
      * The size of the MP4 file. For archives that have not been generated, this value is set to 0.
+     *
+     * @return The size, as a long.
      */
     public Long getSize() {
         return size;
@@ -106,6 +115,8 @@ public class Archive {
 
     /**
      * The status of the archive, as defined by the {@link ArchiveStatus} enum.
+     *
+     * @return The status.
      */
     public ArchiveStatus getStatus() {
         return status;
@@ -113,18 +124,21 @@ public class Archive {
 
     /**
      * The download URL of the available MP4 file. This is only set for an archive with the status
-     * set to Status.AVAILABLE; for other archives, (including archives with the status of
-     * Status.UPLOADED) this method returns null. The download URL is obfuscated, and the file
+     * set to {@link ArchiveStatus#AVAILABLE}; for other archives (including those with the status of
+     * {@link ArchiveStatus#UPLOADED}) this method returns null. The download URL is obfuscated, and the file
      * is only available from the URL for 10 minutes. To generate a new URL, call the
-     * {@link VideoClient#listArchives()} or {@link VideoClient#getArchive(String)}
-     * method.
+     * {@link VideoClient#listArchives()} or {@link VideoClient#getArchive(String)} method.
+     *
+     * @return The URL.
      */
     public String getUrl() {
         return url;
     }
 
     /**
-     * Whether the archive has a video track (<code>true</code>) or not (<code>false</code>).
+     * Whether the archive has a video track ({@code true}) or not ({@code false}).
+     *
+     * @return Whether the archive has video.
      */
     @JsonProperty("hasVideo")
     public Boolean hasVideo() {
@@ -132,7 +146,9 @@ public class Archive {
     }
 
     /**
-     * Whether the archive has an audio track (<code>true</code>) or not (<code>false</code>).
+     * Whether the archive has an audio track ({@code true}) or not ({@code false}).
+     *
+     * @return Whether the archive has sound.
      */
     @JsonProperty("hasAudio")
     public Boolean hasAudio() {
@@ -140,7 +156,9 @@ public class Archive {
     }
 
     /**
-     * The output mode to be generated for this archive: <code>composed</code> or <code>individual</code>.
+     * The output mode to be generated for this archive: {@code composed} or {@code individual}.
+     *
+     * @return The {@linkplain OutputMode}.
      */
     public OutputMode getOutputMode() {
         return outputMode;
@@ -148,21 +166,18 @@ public class Archive {
 
     /**
      * The stream mode to used for selecting streams to be included in this archive:
-     * <code>StreamMode.AUTO</code> or <code>StreamMode.MANUAL</code>.
+     * {@link StreamMode#AUTO} or {@link StreamMode#MANUAL}.
+     *
+     * @return The {@linkplain StreamMode}.
      */
     public StreamMode getStreamMode() {
         return streamMode;
     }
-    
-    /**
-     * The encrypted password if an archive storage was configured to use an encryption key.
-     */
-    public String getPassword() {
-        return password;
-    }
 
     /**
      * Returns the multiArchiveTag if set for the Archive.
+     *
+     * @return The multiArchiveTag, or {@code null} if not applicable.
      */
     public String getMultiArchiveTag() {
         return multiArchiveTag;
@@ -170,6 +185,8 @@ public class Archive {
 
     /**
      * Returns the streams associated with this archive.
+     *
+     * @return The list of ArchiveStream details.
      */
     public List<ArchiveStream> getStreams() {
         return streams;

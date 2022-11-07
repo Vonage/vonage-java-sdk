@@ -17,11 +17,18 @@ package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-/*
+/**
  * Represents the project status.
  */
 public enum ProjectStatus {
+	/**
+	 * Active
+	 */
 	ACTIVE,
+
+	/**
+	 * Suspended (you will not be able to use the project API key).
+	 */
 	SUSPENDED;
 
 	@JsonCreator

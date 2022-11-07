@@ -89,7 +89,7 @@ public class ArchiveLayout {
 
 
 	/**
-	 * Entry point for constructing an {@linkplain ArchiveLayout} object.
+	 * Entry point for constructing an  object.
 	 *
 	 * @param initialLayout Initial layout for the composed archive.
 	 *
@@ -126,7 +126,7 @@ public class ArchiveLayout {
 		 * For other layout types, do not set this property.
 		 *
 		 * @param stylesheet The CSS code to use for the layout. For example: <br>
-		 * <code>stream.instructor {position: absolute; width: 100%;  height:50%;}</code>
+		 * {@code stream.instructor {position: absolute; width: 100%;  height:50%;}}
 		 *
 		 * @return This builder.
 		 */

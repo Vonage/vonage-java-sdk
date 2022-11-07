@@ -150,7 +150,7 @@ public class VideoClient {
 	 * @param streamId ID of the stream to retrieve.
 	 * @return Details of the requested stream.
 	 */
-	public GetStreamResponse getStream(String sessionId, String streamId) {;
+	public GetStreamResponse getStream(String sessionId, String streamId) {
 		return getStream.execute(new GetStreamRequestWrapper(
 				validateSessionId(sessionId),
 				validateStreamId(streamId)
@@ -251,7 +251,7 @@ public class VideoClient {
 
 	/**
 	 * Removes a stream from a composed archive that was started with the
-	 * <code>streamMode</code> set to {@link StreamMode#MANUAL}.
+	 * {@code streamMode} set to {@link StreamMode#MANUAL}.
 	 *
 	 * @param archiveId ID of the archive.
 	 * @param streamId ID of the stream to remove.
@@ -262,7 +262,7 @@ public class VideoClient {
 
 	/**
 	 * Adds a stream to a composed archive that was started with the
-	 * <code>streamMode</code> set to {@link StreamMode#MANUAL}.
+	 * {@code streamMode} set to {@link StreamMode#MANUAL}.
 	 *
 	 * @param archiveId ID of the archive.
 	 * @param streamId ID of the stream to add.
