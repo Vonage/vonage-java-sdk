@@ -54,7 +54,7 @@ public class CreateSessionResponse {
 	}
 
 	/**
-	 * @return The URL of the OpenTok media router used by the session.
+	 * @return The URL of the Media Router used by the session.
 	 */
 	@JsonProperty("media_server_url")
 	public String getMediaServerUrl() {

@@ -39,7 +39,7 @@ class SignalEndpoint extends AbstractMethod<SignalRequestWrapper, Void> {
 
 	@Override
 	public RequestBuilder makeRequest(SignalRequestWrapper wrapper) {
-		String path = String.format(PATH, getApplicationIdOrApiKey(), wrapper.sessiondId, wrapper.connectionId);
+		String path = String.format(PATH, getApplicationIdOrApiKey(), wrapper.sessionId, wrapper.connectionId);
 		String uri = httpWrapper.getHttpConfig().getVideoBaseUri() + path;
 		return RequestBuilder.post(uri)
 				.setHeader("Content-Type", "application/json")

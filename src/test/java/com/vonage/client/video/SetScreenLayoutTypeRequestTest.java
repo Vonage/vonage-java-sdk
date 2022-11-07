@@ -23,57 +23,60 @@ public class SetScreenLayoutTypeRequestTest {
 	
 	@Test
 	public void testSerializeTypeOnly() {
-		ArchiveLayout request = ArchiveLayout.builder().type(ScreenLayoutType.HORIZONTAL).build();
+		ArchiveLayout request = ArchiveLayout.builder(ScreenLayoutType.HORIZONTAL).build();
 		assertEquals("{\"type\":\"horizontalPresentation\"}", request.toJson());
 	}
 
 	@Test
 	public void testCustomTypeWithStylesheet() {
 		String style = "layout.css";
-		ArchiveLayout request = ArchiveLayout.builder()
-				.type(ScreenLayoutType.CUSTOM).stylesheet(style).build();
+		ArchiveLayout request = ArchiveLayout.builder(ScreenLayoutType.CUSTOM).stylesheet(style).build();
 		assertEquals("{\"type\":\"custom\",\"stylesheet\":\""+style+"\"}", request.toJson());
 	}
 
 	@Test
 	public void testValidScreenshareType() {
-		ArchiveLayout request = ArchiveLayout.builder()
-				.type(ScreenLayoutType.BEST_FIT).screenshareType(ScreenLayoutType.PIP).build();
+		ArchiveLayout request = ArchiveLayout.builder(ScreenLayoutType.BEST_FIT)
+				.screenshareType(ScreenLayoutType.PIP).build();
 		assertEquals("{\"type\":\"bestFit\",\"screenshareType\":\"pip\"}", request.toJson());
 	}
 
 	@Test
 	public void testConstructMissingType() {
-		assertThrows(NullPointerException.class, () -> ArchiveLayout.builder().build());
+		assertThrows(NullPointerException.class, () -> ArchiveLayout.builder(null).build());
 		assertThrows(NullPointerException.class, () ->
-				ArchiveLayout.builder().stylesheet("s.css").build()
+				ArchiveLayout.builder(null).stylesheet("s.css").build()
 		);
 		assertThrows(NullPointerException.class, () ->
-				ArchiveLayout.builder().screenshareType(ScreenLayoutType.BEST_FIT).build()
+				ArchiveLayout.builder(null).screenshareType(ScreenLayoutType.BEST_FIT).build()
 		);
 	}
 
 	@Test(expected = IllegalStateException.class)
-	public void testInvalidScreenshareType() {
-		ArchiveLayout.builder().type(ScreenLayoutType.VERTICAL).screenshareType(ScreenLayoutType.PIP).build();
+	public void testInvalidInitialAndScreenshareType() {
+		ArchiveLayout.builder(ScreenLayoutType.VERTICAL).screenshareType(ScreenLayoutType.PIP).build();
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testCustomScreenshareType() {
+		ArchiveLayout.builder(ScreenLayoutType.BEST_FIT).screenshareType(ScreenLayoutType.CUSTOM).build();
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void testMissingStylesheetWithCustomLayout() {
-		ArchiveLayout.builder().type(ScreenLayoutType.CUSTOM).build();
+		ArchiveLayout.builder(ScreenLayoutType.CUSTOM).build();
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void testRedundantStylesheet() {
-		ArchiveLayout.builder().type(ScreenLayoutType.BEST_FIT).stylesheet("layout.css").build();
+		ArchiveLayout.builder(ScreenLayoutType.BEST_FIT).stylesheet("layout.css").build();
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void testRedundantStylesheetWithScreenshareType() {
-		ArchiveLayout.builder()
-				.type(ScreenLayoutType.BEST_FIT)
+		ArchiveLayout.builder(ScreenLayoutType.BEST_FIT)
 				.stylesheet("layout.css")
-				.screenshareType(ScreenLayoutType.CUSTOM)
+				.screenshareType(ScreenLayoutType.BEST_FIT)
 				.build();
 	}
 }

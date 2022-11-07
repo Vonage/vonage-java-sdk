@@ -28,26 +28,27 @@ import com.vonage.client.VonageUnexpectedException;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class CreateArchiveRequest {
-    private String sessionId, name, multiArchiveTag;
-    private Boolean hasAudio, hasVideo;
-    private Resolution resolution;
-    private OutputMode outputMode;
-    private StreamMode streamMode;
-    private ArchiveLayout layout;
-
-    CreateArchiveRequest(String sessionId) {
-        this.sessionId = sessionId;
-    }
+    private final String sessionId, name, multiArchiveTag;
+    private final Boolean hasAudio, hasVideo;
+    private final Resolution resolution;
+    private final OutputMode outputMode;
+    private final StreamMode streamMode;
+    private final ArchiveLayout layout;
 
     private CreateArchiveRequest(Builder builder) {
+        if ((sessionId = builder.sessionId) == null || sessionId.isEmpty()) {
+            throw new IllegalArgumentException("Session ID is required.");
+        }
+        layout = builder.layout;
+        if ((outputMode = builder.outputMode) != OutputMode.COMPOSED && layout != null) {
+            throw new IllegalStateException("Layout can only be applied to composed archives.");
+        }
         name = builder.name;
         multiArchiveTag = builder.multiArchiveTag;
         hasAudio = builder.hasAudio;
         hasVideo = builder.hasVideo;
         resolution = builder.resolution;
-        outputMode = builder.outputMode;
         streamMode = builder.streamMode;
-        layout = builder.layout;
     }
 
     /**
@@ -79,7 +80,7 @@ public class CreateArchiveRequest {
     }
 
     /**
-     * Whether the archive has a video track (<code>true</code>) or not (<code>false</code>).
+     * Whether the archive has a video track ({@code true}) or not ({@code false}).
      */
     @JsonProperty("hasVideo")
     public Boolean hasVideo() {
@@ -87,7 +88,7 @@ public class CreateArchiveRequest {
     }
 
     /**
-     * Whether the archive has an audio track (<code>true</code>) or not (<code>false</code>).
+     * Whether the archive has an audio track ({@code true}) or not ({@code false}).
      */
     @JsonProperty("hasAudio")
     public Boolean hasAudio() {
@@ -130,21 +131,15 @@ public class CreateArchiveRequest {
         }
     }
 
-    static CreateArchiveRequest withSessionId(String sessionId, CreateArchiveRequest request) {
-        if (request != null) {
-            request.sessionId = sessionId;
-            return request;
-        }
-        return new CreateArchiveRequest(sessionId);
-    }
-
     /**
      * Instantiates a Builder, used to construct this object.
      *
+     * @param sessionId The ID of the Vonage Video session you are working with.
+     *
      * @return A new {@linkplain CreateArchiveRequest.Builder}.
      */
-    public static Builder builder() {
-        return new Builder();
+    public static Builder builder(String sessionId) {
+        return new Builder(sessionId);
     }
 
     /**
@@ -153,6 +148,7 @@ public class CreateArchiveRequest {
      * @see CreateArchiveRequest
      */
     public static class Builder {
+        private final String sessionId;
         private String name, multiArchiveTag;
         private Boolean hasAudio, hasVideo;
         private Resolution resolution;
@@ -160,7 +156,9 @@ public class CreateArchiveRequest {
         private StreamMode streamMode;
         private ArchiveLayout layout;
 
-        Builder() {}
+        Builder(String sessionId) {
+            this.sessionId = sessionId;
+        }
 
         /**
          * Sets a name for the archive.
@@ -191,8 +189,8 @@ public class CreateArchiveRequest {
         }
 
         /**
-         * Call this method to include an audio track (<code>true</code>, the default)
-         * or not <code>false</code>).
+         * Call this method to include an audio track ({@code true}, the default)
+         * or not {@code false}).
          *
          * @param hasAudio Whether the archive will include an audio track.
          *
@@ -204,8 +202,8 @@ public class CreateArchiveRequest {
         }
 
         /**
-         * Call this method to include an video track (<code>true</code>, the default)
-         * or not <code>false</code>).
+         * Call this method to include a video track ({@code true}, the default)
+         * or not {@code false}).
          *
          * @param hasVideo Whether the archive will include a video track.
          *
@@ -231,12 +229,12 @@ public class CreateArchiveRequest {
         /**
          * Sets the stream mode for this archive.
          * <p>
-         * When streams are selected automatically (<code>StreamMode.AUTO</code>, the default), all
+         * When streams are selected automatically ({@code StreamMode.AUTO}, the default), all
          * streams in the session can be included in the archive. When streams are selected manually
-         * (<code>StreamMode.MANUAL</code>), you specify streams to be included based on calls
+         * ({@code StreamMode.MANUAL}), you specify streams to be included based on calls
          * to the {@link VideoClient#addArchiveStream(String, String, Boolean, Boolean)} and
          * {@link VideoClient#removeArchiveStream(String, String)} methods. With
-         * <code>StreamMode.MANUAL</code>, you can specify whether a stream's audio, video, or both
+         * {@code StreamMode.MANUAL}, you can specify whether a stream's audio, video, or both
          * are included in the archive. In both automatic and manual modes, the archive composer
          * includes streams based on
          * <a href="https://tokbox.com/developer/guides/archive-broadcast-layout/#stream-prioritization-rules">stream
@@ -252,9 +250,10 @@ public class CreateArchiveRequest {
         }
 
         /**
-         * Sets the layout for a composed archive.
+         * Sets the layout for a composed archive. If this option is specified,
+         * {@linkplain Builder#outputMode(OutputMode)} must be {@linkplain OutputMode#COMPOSED}.
          *
-         * @param layout An object of type {@link ArchiveLayout} .
+         * @param layout The layout type to use.
          *
          * @return This Builder with the layout setting.
          */

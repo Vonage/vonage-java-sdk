@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * A client for talking to the Vonage Video API. The standard way to obtain an instance of this class is to use
+ * A client for using the Vonage Video API. The standard way to obtain an instance of this class is to use
  * {@link VonageClient#getVideoClient()}.
  */
 public class VideoClient {
@@ -97,9 +97,19 @@ public class VideoClient {
 	}
 
 	/**
+	 * Generate a new session, using default properties.
+	 *
+	 * @return Details of the created session.
+	 * @see #createSession(CreateSessionRequest)
+	 */
+	public CreateSessionResponse createSession() {
+		return createSession(null);
+	}
+
+	/**
 	 * Generate a new session.
 	 *
-	 * @param request The session properties.
+	 * @param request (OPTIONAL) The session properties.
 	 * @return Details of the created session.
 	 */
 	public CreateSessionResponse createSession(CreateSessionRequest request) {
@@ -140,7 +150,7 @@ public class VideoClient {
 	 * @param streamId ID of the stream to retrieve.
 	 * @return Details of the requested stream.
 	 */
-	public GetStreamResponse getStream(String sessionId, String streamId) {;
+	public GetStreamResponse getStream(String sessionId, String streamId) {
 		return getStream.execute(new GetStreamRequestWrapper(
 				validateSessionId(sessionId),
 				validateStreamId(streamId)
@@ -240,7 +250,8 @@ public class VideoClient {
 	}
 
 	/**
-	 * Removes a stream from a composed archive.
+	 * Removes a stream from a composed archive that was started with the
+	 * {@code streamMode} set to {@link StreamMode#MANUAL}.
 	 *
 	 * @param archiveId ID of the archive.
 	 * @param streamId ID of the stream to remove.
@@ -250,7 +261,8 @@ public class VideoClient {
 	}
 
 	/**
-	 * Adds a stream to a composed archive.
+	 * Adds a stream to a composed archive that was started with the
+	 * {@code streamMode} set to {@link StreamMode#MANUAL}.
 	 *
 	 * @param archiveId ID of the archive.
 	 * @param streamId ID of the stream to add.
@@ -349,12 +361,11 @@ public class VideoClient {
 	/**
 	 * Create a new archive.
 	 *
-	 * @param sessionId The ID of the Vonage Video session you are working with.
-	 * @param request (OPTIONAL) Properties of the archive.
+	 * @param request Properties of the archive.
 	 *
 	 * @return The created Archive.
 	 */
-	public Archive createArchive(String sessionId, CreateArchiveRequest request) {
-		return createArchive.execute(CreateArchiveRequest.withSessionId(validateSessionId(sessionId), request));
+	public Archive createArchive(CreateArchiveRequest request) {
+		return createArchive.execute(validateRequest(request));
 	}
 }

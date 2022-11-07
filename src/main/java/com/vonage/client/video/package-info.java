@@ -13,31 +13,16 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.video;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
- * Represents the project status.
+ * This package contains classes to support usage of the <a href=https://developer.vonage.com/api/video>Video API</a>.
+ * <br>
+ *
+ * This API is a rewrite of the <a href=https://github.com/opentok/Opentok-Java-SDK>OpenTok Java SDK</a>.
+ * You can use {@link com.vonage.client.video.VideoClient} in a similar way to the {@code OpenTok} class in the
+ * OpenTok Java SDK, although some method and class names may differ slightly, as they have been rewritten to
+ * be consistent with the rest of this SDK.
+ *
+ * @since 8.0.0
  */
-public enum ProjectStatus {
-	/**
-	 * Active
-	 */
-	ACTIVE,
-
-	/**
-	 * Suspended (you will not be able to use the project API key).
-	 */
-	SUSPENDED;
-
-	@JsonCreator
-	public static ProjectStatus fromString(String value) {
-		try {
-			return valueOf(value.toUpperCase());
-		}
-		catch (NullPointerException | IllegalArgumentException ex) {
-			return null;
-		}
-	}
-}
+package com.vonage.client.video;

@@ -15,6 +15,8 @@
  */
 package com.vonage.client.video;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * Defines values for the archiveMode parameter of the
  * {@link CreateSessionRequest.Builder#archiveMode(ArchiveMode archiveMode)} method.
@@ -22,15 +24,17 @@ package com.vonage.client.video;
 public enum ArchiveMode {
     /**
      * The session is not archived automatically. To archive the session, you can call the
-     * OpenTok.StartArchive() method.
+     * {@link VideoClient#createArchive(CreateArchiveRequest)} method.
      */
     MANUAL,
+
     /**
      * The session is archived automatically (as soon as there are clients connected
      * to the session).
      */
     ALWAYS;
 
+    @JsonValue
     @Override
     public String toString() {
         return name().toLowerCase();

@@ -48,7 +48,7 @@ public class SessionStream {
 	}
 
 	/**
-	 * Entry point for building an instance of {@linkplain SessionStream}.
+	 * Entry point for building an instance of .
 	 *
 	 * @param streamId The ID of the stream.
 	 *

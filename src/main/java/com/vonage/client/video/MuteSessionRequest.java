@@ -34,13 +34,13 @@ public class MuteSessionRequest {
 	 *
 	 * @param active Whether to mute streams in the session (true) and enable the mute state of the session, or to
 	 * disable the mute state of the session (false). With the mute state enabled (true), all current and future
-	 * streams published to the session (with the exception of streams in "excludedStreamIds") are muted. If this is
-	 * set to <code>false</code>, future streams published to the session are not muted (but any existing muted
+	 * streams published to the session (except streams in "excludedStreamIds") are muted. If this is
+	 * set to {@code false}, future streams published to the session are not muted (but any existing muted
 	 * streams will remain muted).
 	 *
 	 * @param excludedStreamIds The stream IDs for streams that should not be muted. This is an optional property.
 	 * If you omit this, all streams in the session will be muted. This only applies when the "active" property is set
-	 * <code>true</code>. When the "active" property is set to <code>false</code>, it is ignored.
+	 * {@code true}. When the "active" property is set to {@code false}, it is ignored.
 	 */
 	public MuteSessionRequest(boolean active, Collection<String> excludedStreamIds) {
 		this.active = active;
@@ -51,20 +51,24 @@ public class MuteSessionRequest {
 	 *
 	 * @param active Whether to mute streams in the session (true) and enable the mute state of the session, or to
 	 * disable the mute state of the session (false). With the mute state enabled (true), all current and future
-	 * streams published to the session (with the exception of streams in "excludedStreamIds") are muted. If this is
-	 * set to <code>false</code>, future streams published to the session are not muted (but any existing muted
+	 * streams published to the session (except streams in "excludedStreamIds") are muted. If this is
+	 * set to {@code false}, future streams published to the session are not muted (but any existing muted
 	 * streams will remain muted).
 	 *
 	 * @param excludedStreamIds The stream IDs for streams that should not be muted. This is an optional property.
 	 * If you omit this, all streams in the session will be muted. This only applies when the "active" property is set
-	 * <code>true</code>. When the "active" property is set to <code>false</code>, it is ignored.
+	 * {@code true}. When the "active" property is set to {@code false}, it is ignored.
 	 */
 	public MuteSessionRequest(boolean active, String... excludedStreamIds) {
 		this(active, Arrays.asList(excludedStreamIds));
 	}
 
 	/**
-	 * Whether to mute streams in the session (true) and enable the mute state of the session, or to disable the mute state of the session (false). With the mute state enabled (true), all current and future streams published to the session (with the exception of streams in the excludedStreamIds array) are muted. When you call this method with the active property set to false, future streams published to the session are not muted (but any existing muted streams remain muted).
+	 * Whether to mute streams in the session (true) and enable the mute state of the session, or to disable
+	 * the mute state of the session (false). With the mute state enabled (true), all current and future streams
+	 * published to the session (except streams in the excludedStreamIds array) are muted. When you call this method
+	 * with the active property set to false, future streams published to the session are not muted (but any
+	 * existing muted streams remain muted).
 	 */
 	public boolean isActive() {
 		return active;

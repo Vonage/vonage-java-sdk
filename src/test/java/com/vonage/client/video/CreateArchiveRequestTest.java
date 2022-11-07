@@ -25,17 +25,14 @@ public class CreateArchiveRequestTest {
 	public void testSerializeAllParams() {
 		String sessionId = "flR1ZSBPY3QgMjkgMTI6MTM6MjMgUERUIDIwMTN";
 		String name = "Test archive", multiArchiveTag = "DemoArchive_TagName";
-		ArchiveLayout layout = ArchiveLayout.builder().type(ScreenLayoutType.VERTICAL).build();
+		ArchiveLayout layout = ArchiveLayout.builder(ScreenLayoutType.VERTICAL).build();
 
-		CreateArchiveRequest request = CreateArchiveRequest.withSessionId(
-				sessionId,
-				CreateArchiveRequest.builder()
-					.name(name).hasAudio(true).hasVideo(true)
-					.resolution(Resolution.HD_LANDSCAPE)
-					.outputMode(OutputMode.COMPOSED)
-					.streamMode(StreamMode.AUTO).layout(layout)
-					.multiArchiveTag(multiArchiveTag).build()
-		);
+		CreateArchiveRequest request = CreateArchiveRequest.builder(sessionId)
+				.name(name).hasAudio(true).hasVideo(true)
+				.resolution(Resolution.HD_LANDSCAPE)
+				.outputMode(OutputMode.COMPOSED)
+				.streamMode(StreamMode.AUTO).layout(layout)
+				.multiArchiveTag(multiArchiveTag).build();
 
 		String expectedJson = "{\"sessionId\":\""+sessionId+"\",\"name\":\""+name+"\",\"multiArchiveTag\":" +
 			"\""+multiArchiveTag+"\",\"resolution\":\"1280x720\",\"outputMode\":\"composed\",\"streamMode\":" +
@@ -45,32 +42,43 @@ public class CreateArchiveRequestTest {
 	}
 
 	@Test
-	public void testSerializeNoSessionId() {
+	public void testSerializeCustomLayout() {
 		String style = "stream.instructor {position: absolute; width: 100%;  height:50%;}";
-		ArchiveLayout layout = ArchiveLayout.builder()
-				.type(ScreenLayoutType.CUSTOM).stylesheet(style).build();
+		ArchiveLayout layout = ArchiveLayout.builder(ScreenLayoutType.CUSTOM).stylesheet(style).build();
 
-		CreateArchiveRequest request = CreateArchiveRequest.builder()
+		CreateArchiveRequest request = CreateArchiveRequest.builder("s1")
 				.hasAudio(false).resolution(Resolution.SD_LANDSCAPE)
 				.streamMode(StreamMode.MANUAL).layout(layout)
-				.outputMode(OutputMode.INDIVIDUAL).build();
+				.outputMode(OutputMode.COMPOSED).build();
 
-		String expectedJson = "{\"resolution\":\"640x480\",\"outputMode\":\"individual\",\"streamMode\":\"manual\"," +
-				"\"layout\":{\"type\":\"custom\",\"stylesheet\":\""+style+"\"},\"hasAudio\":false}";
+		String expectedJson = "{\"sessionId\":\"s1\",\"resolution\":\"640x480\",\"outputMode\":\"composed\"," +
+				"\"streamMode\":\"manual\",\"layout\":{\"type\":\"custom\",\"stylesheet\":\""+style+"\"}," +
+				"\"hasAudio\":false}";
 
 		assertEquals(expectedJson, request.toJson());
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void testConstructCustomLayoutOnNonComposedArchive() {
+		CreateArchiveRequest.builder("sessionId")
+				.layout(ArchiveLayout.builder(ScreenLayoutType.BEST_FIT).build())
+				.outputMode(OutputMode.INDIVIDUAL).build();
 	}
 
 	@Test
 	public void testConstructSessionIdOnly() {
 		String sessionId = UUID.randomUUID().toString();
 		String expectedJson = "{\"sessionId\":\""+sessionId+"\"}";
-		assertEquals(expectedJson, new CreateArchiveRequest(sessionId).toJson());
-		assertEquals(expectedJson, CreateArchiveRequest.withSessionId(sessionId, null).toJson());
+		assertEquals(expectedJson, CreateArchiveRequest.builder(sessionId).build().toJson());
 	}
 
-	@Test
-	public void testSerializeNoParams() {
-		assertEquals("{}", CreateArchiveRequest.builder().build().toJson());
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructNullSessionId() {
+		CreateArchiveRequest.builder(null).build();
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructEmptySessionId() {
+		CreateArchiveRequest.builder("").build();
 	}
 }

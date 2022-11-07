@@ -25,15 +25,31 @@ public class ArchiveStream {
 
 	protected ArchiveStream() {}
 
+
+	/**
+	 * Gets the ID of the archive stream.
+	 *
+	 * @return The Stream ID.
+	 */
 	public String getStreamId() {
 		return streamId;
 	}
 
+	/**
+	 * Whether the recording has audio.
+	 *
+	 * @return {@code true} if the recording has sound.
+	 */
 	@JsonProperty("hasAudio")
 	public boolean hasAudio() {
 		return hasAudio;
 	}
 
+	/**
+	 * Whether the recording has video.
+	 *
+	 * @return {@code true} if the recording has video.
+	 */
 	@JsonProperty("hasVideo")
 	public boolean hasVideo() {
 		return hasVideo;

@@ -94,10 +94,11 @@ By default, the client will use https://api.nexmo.com, https://rest.nexmo.com, a
 
 ```java
 HttpConfig httpConfig = HttpConfig.builder()
-		.apiBaseUri("https://api.example.com")
-		.restBaseUri("https://rest.example.com")
-		.snsBaseUri("https://sns.example.com")
-		.build();
+        .apiBaseUri("https://api.example.com")
+        .restBaseUri("https://rest.example.com")
+        .snsBaseUri("https://sns.example.com")
+        .videoBaseUri("https://video.example.com")
+        .build();
 
 VonageClient client = VonageClient.builder()
         .apiKey(API_KEY)
@@ -425,11 +426,105 @@ SecretResponse response = client.getAccountClient().getSecret(API_KEY, SECRET_ID
 
 ### Video API
 
-The Vonage Video API (formerly OpenTok) is currently in beta. You can try it out by using a beta version.
-Usage instructions can be found on the [8.x-beta branch](https://github.com/Vonage/vonage-java-sdk/tree/8.x-beta#video-api).
-The dependency artifact resides on [GitHub Packages](https://github.com/orgs/Vonage/packages?repo_name=vonage-java-sdk),
-not Maven Central. See the [Releases page](https://github.com/Vonage/vonage-java-sdk/releases) for more information.
+The following samples demonstrate usage of the Vonage Video API (formerly OpenTok).
+Note that this is currently in beta, so you must use a beta version from
+[GitHub Packages](https://github.com/orgs/Vonage/packages?repo_name=vonage-java-sdk), not Maven Central.
+Instructions can be found on the [Releases page](https://github.com/Vonage/vonage-java-sdk/releases).
 
+They all use JWT authentication, so you would instantiate a client using
+your application ID and private key, like so:
+```java
+VonageClient client = VonageClient.builder()
+    .applicationId(APPLICATION_ID)
+    .privateKeyPath(PRIVATE_KEY_PATH)
+    .build();
+```
+
+### Create a new Session
+
+Generate a new video session:
+```java
+CreateSessionResponse session = client.getVideoClient().createSession(
+    CreateSessionRequest.builder()
+        .mediaMode(MediaMode.ROUTED)
+        .archiveMode(ArchiveMode.MANUAL)
+        .build()
+);
+```
+
+### Mute a video stream
+
+Force mute a specific publisher stream:
+```java
+ProjectDetails response = client.getVideoClient().muteStream(SESSION_ID, STREAM_ID);
+```
+
+### Disconnect a client from a session
+
+Remove a participant from a video session:
+```java
+client.getVideoClient().forceDisconnect(SESSION_ID, CONNECTION_ID);
+```
+
+### Send signal to participant(s)
+
+Signal to a specific participant:
+```java
+SignalRequest request = SignalRequest.builder()
+        .data("Chat text message")
+        .type("chat")
+        .build();
+client.getVideoClient().signal(SESSION_ID, CONNECTION_ID, request);
+```
+
+Signal all participants in a session:
+```java
+SignalRequest request = SignalRequest.builder()
+		.type("chat").data("Hello, World!").build();
+client.getVideoClient().signalAll(SESSION_ID, request);
+```
+
+### Get information about a video Stream
+
+```java
+GetStreamResponse streamInfo = client.getVideoClient().getStream(SESSION_ID, STREAM_ID);
+```
+
+### Start an Archive recording
+
+Archive a recording of a Vonage Video session. All properties (except `SESSION_ID`) are optional.
+```java
+Archive archive = client.getVideoClient().startArchive(
+    CreateArchiveRequest.builder(SESSION_ID)
+        .name("My_Recording")
+        .outputMode(OutputMode.COMPOSED)
+        .streamMode(StreamMode.AUTO)
+        .resolution(Resolution.HD_LANDSCAPE)
+        .hasAudio(true).hasVideo(true)
+        .layout(
+            ArchiveLayout.builder(ScreenLayoutType.BEST_FIT)
+                .screenshareType(ScreenLayoutType.PIP)
+                .build()
+        )
+        .build();
+);
+```
+
+### Stop an Archive recording
+
+```java
+Archive archive = client.getVideoClient().stopArchive(ARCHIVE_ID);
+```
+
+### Add or remove stream in an Archive recording
+
+Change the streams included in a composed archive that was started with the streamMode set to "manual":
+```java
+client.getVideoClient().addArchiveStream(ARCHIVE_ID, STREAM_ID);
+```
+```java
+client.getVideoClient().removeArchiveStream(ARCHIVE_ID, STREAM_ID);
+```
 
 ### Custom HTTP Configuration
 
@@ -440,16 +535,13 @@ can be useful, for example, if you must use an HTTP proxy to make requests or to
 ## Tips And Tricks
 
 ### Phone Calls And WebSockets
-Our [Voice API](https://developer.vonage.com/voice/voice-api/overview) can connect a voice call to a websocket! An example using `javax.websocket` for accepting websocket connections can be found on the [Oracle website](http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/HomeWebsocket/WebsocketHome.html#section4).
+Our [Voice API](https://developer.nexmo.com/voice/voice-api/overview) can connect a voice call to a websocket! An example using `javax.websocket` for accepting websocket connections can be found on the [Oracle website](http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/HomeWebsocket/WebsocketHome.html#section4).
 [Another  example](http://sparkjava.com/documentation#embedded-web-server) using the Spark framework
 
 ## Frequently Asked Questions
 
 Q: Does this SDK support thread safety?
 A: No, it currently does not.
-
-Q: Does this SDK support asynchronous request / response processing?
-A: Currently no, but it is on the roadmap.
 
 ### Supported APIs
 

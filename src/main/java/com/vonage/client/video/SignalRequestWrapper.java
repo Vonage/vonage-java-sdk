@@ -17,7 +17,7 @@ package com.vonage.client.video;
 
 class SignalRequestWrapper {
 	final SignalRequest request;
-	final String sessiondId, connectionId;
+	final String sessionId, connectionId;
 
 	SignalRequestWrapper(SignalRequest request, String sessionId) {
 		this(request, sessionId, null);
@@ -25,7 +25,7 @@ class SignalRequestWrapper {
 
 	SignalRequestWrapper(SignalRequest request, String sessionId, String connectionId) {
 		this.request = request;
-		this.sessiondId = sessionId;
+		this.sessionId = sessionId;
 		this.connectionId = connectionId;
 	}
 }

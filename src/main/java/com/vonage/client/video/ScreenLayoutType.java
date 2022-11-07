@@ -22,8 +22,8 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-/*
- * Represents the available layout types for archives in {@link SetArchiveLayoutRequest}.
+/**
+ * Represents the available layout types for archives in {@link ArchiveLayout}.
  */
 public enum ScreenLayoutType {
 	/**
