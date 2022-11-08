@@ -9,9 +9,10 @@ plugins {
 group = "com.vonage"
 archivesBaseName = "client"
 version = "7.1.0"
-
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
+
+ext.githubPath = 'Vonage/vonage-java-sdk'
 
 tasks.withType(JavaCompile) {
     options.compilerArgs << "-Xlint:unchecked"
@@ -26,18 +27,18 @@ dependencies {
 
     implementation 'commons-codec:commons-codec:1.15'
     implementation 'org.apache.httpcomponents:httpclient:4.5.13'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4.2'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.4'
     implementation 'io.openapitools.jackson.dataformat:jackson-dataformat-hal:1.0.9'
     implementation 'javax.xml.bind:jaxb-api:2.3.1'
     implementation 'com.vonage:jwt:1.0.2'
 
     testImplementation 'javax.servlet:javax.servlet-api:4.0.1'
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.mockito:mockito-inline:4.7.0'
+    testImplementation 'org.mockito:mockito-inline:4.8.0'
     testImplementation 'org.hamcrest:hamcrest-all:1.3'
-    testImplementation 'org.springframework:spring-test:5.3.22'
-    testImplementation 'org.springframework:spring-web:5.3.22'
+    testImplementation 'org.springframework:spring-test:5.3.23'
+    testImplementation 'org.springframework:spring-web:5.3.23'
 }
 
 test {
@@ -105,11 +106,11 @@ publishing {
                 artifactId = 'client'
                 packaging = 'jar'
                 description = "Java client for Vonage APIs"
-                url = "https://github.com/Vonage/vonage-java-sdk"
+                url = "https://github.com/$githubPath"
                 licenses {
                     license {
                         name = "The Apache License, Version 2.0"
-                        url = "https://raw.github.com/Vonage/vonage-java-sdk/main/LICENCE.txt"
+                        url = "https://raw.github.com/$githubPath/main/LICENCE.txt"
                     }
                 }
                 developers {
@@ -122,11 +123,11 @@ publishing {
                 scm {
                     connection = "scm:git@github.com:Vonage/vonage-java-sdk"
                     developerConnection = "scm:git@github.com:Vonage/vonage-java-sdk"
-                    url = "http://github.com:Vonage/vonage-java-sdk"
+                    url = "http://github.com:$githubPath"
                 }
                 issueManagement {
                     system = "GitHub"
-                    url = "https://github.com/vonage/vonage-java-sdk/issues"
+                    url = "https://github.com/$githubPath/issues"
                 }
             }
         }
@@ -135,9 +136,22 @@ publishing {
         maven {
             def releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
             def snapshotsRepoUrl = uri("https://oss.sonatype.org/content/repositories/snapshots/")
-            credentials.username(System.getenv("OSS_USERNAME"))
-            credentials.password(System.getenv("OSS_PASSWORD"))
-            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            def githubRepoUrl = uri("https://maven.pkg.github.com/$githubPath")
+            def userEnv, passEnv
+
+            if (version.endsWith('beta')) {
+                userEnv = "GITHUB_ACTOR"
+                passEnv = "GITHUB_TOKEN"
+                url = githubRepoUrl
+            }
+            else {
+                userEnv = "OSS_USERNAME"
+                passEnv = "OSS_PASSWORD"
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            }
+
+            credentials.username(System.getenv(userEnv))
+            credentials.password(System.getenv(passEnv))
         }
     }
 }

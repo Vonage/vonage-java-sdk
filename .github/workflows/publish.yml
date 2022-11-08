@@ -1,4 +1,4 @@
-name: Publish to Nexus
+name: Publish to Maven Repository
 on:
   release:
     types: [published]
@@ -23,7 +23,6 @@ jobs:
           pip install bump2version
       - name: Bump Version
         run: bump2version --new-version ${{ github.event.release.tag_name }} patch &&
-             git tag ${{ github.event.release.tag_name }} -f &&
              git push && git push --tags origin --force
       - name: Setup Java
         uses: actions/setup-java@v3
@@ -44,4 +43,9 @@ jobs:
           signingPassword: ${{secrets.SIGNING_PASSWORD}}
           OSS_USERNAME: ${{secrets.OSS_USERNAME}}
           OSS_PASSWORD: ${{secrets.OSS_PASSWORD}}
-        run: OSS_USERNAME=$OSS_USERNAME OSS_PASSWORD=$OSS_PASSWORD signingKey=$signingKey signingPassword=$signingPassword gradle publish --info
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: |
+          OSS_USERNAME=$OSS_USERNAME OSS_PASSWORD=$OSS_PASSWORD
+          signingKey=$signingKey signingPassword=$signingPassword
+          GITHUB_TOKEN=$GITHUB_TOKEN GITHUB_ACTOR=$GITHUB_ACTOR
+          gradle publish --info
