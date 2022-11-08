@@ -11,10 +11,10 @@
 You can use this Java Server SDK to add [Vonage APIs](https://developer.nexmo.com/api) to your application. To use this, you'll
 need a Vonage account. Sign up [for free at nexmo.com][signup].
 
- * [Installation](#installation)
- * [Usage](#usage)
- * [Tips And Tricks](#tips-and-tricks)
- * [Contribute!](#contribute)
+* [Installation](#installation)
+* [Usage](#usage)
+* [Tips And Tricks](#tips-and-tricks)
+* [Contribute!](#contribute)
 
 ## Installation
 
@@ -52,9 +52,9 @@ Add the following to the correct place in your project's POM file:
 
 ```xml
 <dependency>
-      <groupId>com.vonage</groupId>
-      <artifactId>client</artifactId>
-      <version>7.1.0</version>
+    <groupId>com.vonage</groupId>
+    <artifactId>client</artifactId>
+    <version>7.1.0</version>
 </dependency>
 ```
 
@@ -94,16 +94,17 @@ By default, the client will use https://api.nexmo.com, https://rest.nexmo.com, a
 
 ```java
 HttpConfig httpConfig = HttpConfig.builder()
-        .apiBaseUri("https://api.example.com")
-        .restBaseUri("https://rest.example.com")
-        .snsBaseUri("https://sns.example.com")
-        .build();
+		.apiBaseUri("https://api.example.com")
+		.restBaseUri("https://rest.example.com")
+		.snsBaseUri("https://sns.example.com")
+		.videoBaseUri("https://video.example.com")
+		.build();
 
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .httpConfig(httpConfig)
-        .build();
+		VonageClient client = VonageClient.builder()
+		.apiKey(API_KEY)
+		.apiSecret(API_SECRET)
+		.httpConfig(httpConfig)
+		.build();
 ```
 
 If you do not specify a property, it will take on whatever the default value is. You can also set all three with a single method:
@@ -127,7 +128,7 @@ VonageClient client = VonageClient.builder()
         .apiKey(API_KEY)
         .apiSecret(API_SECRET)
         .httpConfig(httpConfig)
-        .build();;
+        .build();
 ```
 
 You can also instantiate without the parameter:
@@ -274,7 +275,7 @@ System.out.println("Alright. " + stopTalkResponse.getMessage());
 
 ### Generating NCCO Responses
 
-Our library contains a `com.vonage.client.voice.ncco` package, providing JSON-serializable objects for your NCCO webhook endpoints. 
+Our library contains a `com.vonage.client.voice.ncco` package, providing JSON-serializable objects for your NCCO webhook endpoints.
 
 Each of the `Action` items contain a `Builder` class that can be used for constructing various actions. These actions are then added to an `Ncco` object for serialization into JSON:
 
@@ -321,10 +322,6 @@ CallEvent event = client.getVoiceClient().createCall(call);
 Send a 2FA code to a phone number with:
 
 ```java
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .build();
 VerifyResponse ongoingVerify = client.getVerifyClient().verify(TO_NUMBER, "NEXMO");
 ```
 
@@ -341,10 +338,6 @@ client.getVerifyClient().check(ongoingVerify.getRequestId(), CODE)
 Send a PSD2 code to a phone number with:
 
 ````java
-NexmoClient client = NexmoClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .build();
 VerifyResponse verifyPayment = client.getVerifyClient().psd2Verify(TO_NUMBER, 103.33, "Michelle");
 ````
 
@@ -364,12 +357,7 @@ System.out.println(response.getDefaultPrice());
 ### Get a List of Voice Prices for a Country
 
 Get a list of voice prices for a country with:
-
 ```java
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .build();
 PricingResponse response = client.getAccountClient().getVoicePrice("US");
 System.out.println(response.getDefaultPrice());
 ```
@@ -377,12 +365,7 @@ System.out.println(response.getDefaultPrice());
 ### Get a List of SMS Prices for a Prefix
 
 Get a list of SMS prices for a country with:
-
 ```java
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .build();
 PrefixPricingResponse response = client.getAccountClient().getPrefixPrice(ServiceType.SMS, "1");
 System.out.println(response.getCountries().get(0).getDefaultPrice());
 ```
@@ -390,12 +373,7 @@ System.out.println(response.getCountries().get(0).getDefaultPrice());
 ### Get a List of Voice Prices for a Prefix
 
 Get a list of voice prices for a country with:
-
 ```java
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .build();
 PrefixPricingResponse response = client.getAccountClient().getPrefixPrice(ServiceType.VOICE, "1");
 System.out.println(response.getCountries().get(0).getDefaultPrice());
 ```
@@ -404,10 +382,6 @@ System.out.println(response.getCountries().get(0).getDefaultPrice());
 
 Top-up your account that has auto-reload enabled with:
 ```java
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .build();
 client.getAccountClient().topUp("TRANSACTION_NUMBER");
 ```
 
@@ -415,66 +389,143 @@ client.getAccountClient().topUp("TRANSACTION_NUMBER");
 
 Submit a request to the Conversion API when it has been enabled on your account with:
 ```java
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .build();
 client.getConversionClient().submitConversion(ConversionRequest.Type.VOICE,
                                      "MESSAGE-ID",
                                      true,
                                      new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
 ```
 
-
 ### Create Secret
 
 Create a secret associated with your account id:
-
 ```java
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .build();
 SecretResponse response = client.getAccountClient().createSecret(API_KEY, "Foo84RSecret");
 ```
 
 ### List Secrets
 
 List the secret id (but not content) associated with your account id:
-
 ```java
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .build();
 ListSecretsResponse response = client.getAccountClient().listSecrets(API_KEY);
-
 Collection<SecretResponse> secrets = response.getSecrets();
 ```
 
 ### Revoke Secret
 
 Revoke a secret associated with your account id:
-
 ```java
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .build();
 client.getAccountClient().revokeSecret(API_KEY, SECRET_ID);
 ```
 
 ### Retrieve Secret
 
 Get information about a specific secret associated with your account id:
-
 ```java
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .build();
 SecretResponse response = client.getAccountClient().getSecret(API_KEY, SECRET_ID);
 ```
+
+## Video API
+
+The following samples demonstrate usage of the Vonage Video API (formerly OpenTok).
+Note that this is currently in beta, so you must use a beta version from
+[GitHub Packages](https://github.com/orgs/Vonage/packages?repo_name=vonage-java-sdk), not Maven Central.
+Instructions can be found on the [Releases page](https://github.com/Vonage/vonage-java-sdk/releases).
+
+They all use JWT authentication, so you would instantiate a client using
+your application ID and private key, like so:
+```java
+    VonageClient client = VonageClient.builder()
+		.applicationId(APPLICATION_ID)
+        .privateKeyPath(PRIVATE_KEY_PATH)
+        .build();
+```
+
+### Create a new Session
+
+Generate a new video session:
+```java
+CreateSessionResponse session = client.getVideoClient().createSession(
+    CreateSessionRequest.builder()
+        .mediaMode(MediaMode.ROUTED)
+        .archiveMode(ArchiveMode.MANUAL)
+        .build()
+);
+```
+
+### Mute a video stream
+
+Force mute a specific publisher stream:
+```java
+ProjectDetails response = client.getVideoClient().muteStream(SESSION_ID, STREAM_ID);
+```
+
+### Disconnect a client from a session
+
+Remove a participant from a video session:
+```java
+client.getVideoClient().forceDisconnect(SESSION_ID, CONNECTION_ID);
+```
+
+### Send signal to participant(s)
+
+Signal to a specific participant:
+```java
+SignalRequest request = SignalRequest.builder()
+        .data("Chat text message")
+        .type("chat")
+        .build();
+client.getVideoClient().signal(SESSION_ID, CONNECTION_ID, request);
+```
+
+Signal all participants in a session:
+```java
+SignalRequest request = SignalRequest.builder()
+		.type("chat").data("Hello, World!").build();
+client.getVideoClient().signalAll(SESSION_ID, request);
+```
+
+### Get information about a video Stream
+
+```java
+GetStreamResponse streamInfo = client.getVideoClient().getStream(SESSION_ID, STREAM_ID);
+```
+
+### Start an Archive recording
+
+Archive a recording of a Vonage Video session. All properties (except `SESSION_ID`) are optional.
+```java
+Archive archive = client.getVideoClient().startArchive(
+    CreateArchiveRequest.builder(SESSION_ID)
+        .name("My_Recording")
+        .outputMode(OutputMode.COMPOSED)
+        .streamMode(StreamMode.AUTO)
+        .resolution(Resolution.HD_LANDSCAPE)
+        .hasAudio(true).hasVideo(true)
+        .layout(
+            ArchiveLayout.builder(ScreenLayoutType.BEST_FIT)
+                .screenshareType(ScreenLayoutType.PIP)
+                .build()
+        )
+        .build();
+);
+```
+
+### Stop an Archive recording
+
+```java
+Archive archive = client.getVideoClient().stopArchive(ARCHIVE_ID);
+```
+
+### Add or remove stream in an Archive recording
+
+Change the streams included in a composed archive that was started with the streamMode set to "manual":
+```java
+client.getVideoClient().addArchiveStream(ARCHIVE_ID, STREAM_ID);
+```
+```java
+client.getVideoClient().removeArchiveStream(ARCHIVE_ID, STREAM_ID);
+```
+
 
 ### Custom HTTP Configuration
 
@@ -485,37 +536,41 @@ can be useful, for example, if you must use an HTTP proxy to make requests or to
 ## Tips And Tricks
 
 ### Phone Calls And WebSockets
-Our [Voice API](https://developer.nexmo.com/voice/voice-api/overview) can connect a voice call to a websocket! An example using `javax.websocket` for accepting websocket connections can be found on the [Oracle website](http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/HomeWebsocket/WebsocketHome.html#section4).
+Our [Voice API](https://developer.vonage.com/voice/voice-api/overview) can connect a voice call to a websocket! An example using `javax.websocket` for accepting websocket connections can be found on the [Oracle website](http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/HomeWebsocket/WebsocketHome.html#section4).
 [Another  example](http://sparkjava.com/documentation#embedded-web-server) using the Spark framework
 
 ## Frequently Asked Questions
 
-Q: Does this SDK support thread safety? 
-A: No, it currently does not. 
+Q: Does this SDK support thread safety?
+A: No, it currently does not.
+
+Q: Does this SDK support asynchronous request / response processing?
+A: Currently no, but it is on the roadmap.
 
 ### Supported APIs
 
 The following is a list of Vonage APIs and whether the Java SDK provides support for them:
 
-| API                   |  API Release Status  | Supported? |
-| --------------------- |:--------------------:|:----------:|
-| Account API           | General Availability |     ✅      |
-| Alerts API            | General Availability |     ✅      |
-| Application API       | General Availability |     ✅      |
-| Audit API             |         Beta         |     ❌      |
-| Conversation API      |         Beta         |     ❌      |
-| Dispatch API          |         Beta         |     ❌      |
-| External Accounts API |         Beta         |     ❌      |
-| Media API             |         Beta         |     ❌      |
-| Messages API          | General Availability |     ✅      |
-| Number Insight API    | General Availability |     ✅      |
-| Number Management API | General Availability |     ✅      |
-| Pricing API           | General Availability |     ✅      |
-| Redact API            |  Developer Preview   |     ✅      |
-| Reports API           |         Beta         |     ❌      |
-| SMS API               | General Availability |     ✅      |
-| Verify API            | General Availability |     ✅      |
-| Voice API             | General Availability |     ✅      |
+| API                |  API Release Status  | Supported? |
+|--------------------|:--------------------:|:----------:|
+| Account            | General Availability |     ✅      |
+| Alerts             | General Availability |     ✅      |
+| Application        | General Availability |     ✅      |
+| Audit              |         Beta         |     ❌      |
+| Conversation       |         Beta         |     ❌      |
+| Dispatch           |         Beta         |     ❌      |
+| External Accounts  |         Beta         |     ❌      |
+| Media              |         Beta         |     ❌      |
+| Messages           | General Availability |     ✅      |
+| Number Insight     | General Availability |     ✅      |
+| Number Management  | General Availability |     ✅      |
+| Pricing            | General Availability |     ✅      |
+| Redact             |  Developer Preview   |     ✅      |
+| Reports            |         Beta         |     ❌      |
+| SMS                | General Availability |     ✅      |
+| Verify             | General Availability |     ✅      |
+| Voice              | General Availability |     ✅      |
+| Video              |         Beta         |     ☑️     |
 
 
 ## License
@@ -527,14 +582,14 @@ This library is released under the [Apache 2.0 License][license]
 
 _We :heart: contributions to this library!_
 
-It is a good idea to [talk to us](https://developer.nexmo.com/community/slack)
+It is a good idea to [talk to us](https://developer.vonage.com/community/slack)
 first if you plan to add any new functionality.
 Otherwise, [bug reports](https://github.com/Vonage/vonage-java-sdk/issues),
 [bug fixes](https://github.com/Vonage/vonage-java-sdk/pulls) and feedback on the
 library are always appreciated.
 
 
-[create_account]: https://docs.nexmo.com/tools/dashboard#setting-up-your-nexmo-account
+[create_account]: https://developer.vonage.com/account/overview
 [signup]: https://dashboard.nexmo.com/sign-up?utm_source=DEV_REL&utm_medium=github&utm_campaign=[LANGUAGE]-client-library
-[doc_sms]: https://docs.nexmo.com/api-ref/sms-api?utm_source=DEV_REL&utm_medium=github&utm_campaign=[LANGUAGE]-client-library
+[doc_sms]: https://developer.vonage.com/messaging/sms/overview
 [license]: LICENSE.txt
