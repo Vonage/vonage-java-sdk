@@ -70,7 +70,12 @@ public class CreateSessionResponse {
 	public static CreateSessionResponse fromJson(String json) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readValue(json, CreateSessionResponse.class);
+			CreateSessionResponse[] array = mapper.readValue(json, CreateSessionResponse[].class);
+			if (array == null || array.length == 0) {
+				return new CreateSessionResponse();
+			}
+			assert array.length == 1;
+			return array[0];
 		}
 		catch (IOException ex) {
 			throw new VonageUnexpectedException("Failed to produce CreateSessionResponse from json.", ex);
