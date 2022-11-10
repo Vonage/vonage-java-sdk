@@ -35,12 +35,12 @@ public class CreateSessionResponseTest {
 			createDt = "abc123",
 			mediaServerUrl = "ftp://myserver.data/resource";
 
-		CreateSessionResponse response = CreateSessionResponse.fromJson("{\n" +
+		CreateSessionResponse response = CreateSessionResponse.fromJson("[{\n" +
 				"\"session_id\":\""+sessionId+"\",\n" +
 				"\"application_id\":\""+applicationId+"\",\n" +
 				"\"create_dt\":\""+createDt+"\",\n" +
 				"\"media_server_url\":\""+mediaServerUrl+"\"\n" +
-		"}");
+		"}]");
 
 		assertEquals(sessionId, response.getSessionId());
 		assertEquals(applicationId, response.getApplicationId());
@@ -55,7 +55,7 @@ public class CreateSessionResponseTest {
 
 	@Test
 	public void testFromJsonEmpty() {
-		CreateSessionResponse response = CreateSessionResponse.fromJson("{}");
+		CreateSessionResponse response = CreateSessionResponse.fromJson("[{}]");
 		assertNull(response.getApplicationId());
 		assertNull(response.getSessionId());
 		assertNull(response.getMediaServerUrl());

@@ -21,7 +21,6 @@ import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-
 import java.io.IOException;
 
 class CreateSessionEndpoint extends AbstractMethod<CreateSessionRequest, CreateSessionResponse> {

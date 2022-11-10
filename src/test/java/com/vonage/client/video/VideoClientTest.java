@@ -127,12 +127,12 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		CreateSessionRequest request = CreateSessionRequest.builder().build();
 		String msUrl = "http://example.com/resource",
 			createDt = "abc123",
-			responseJson = "{\n" +
+			responseJson = "[{\n" +
 				"    \"session_id\": \""+sessionId+"\",\n" +
 				"    \"application_id\": \""+ applicationId +"\",\n" +
 				"    \"create_dt\": \""+createDt+"\",\n" +
 				"    \"media_server_url\": \""+msUrl+"\"\n" +
-				"}";
+				"}]";
 
 		stubResponse(responseJson);
 		CreateSessionResponse response = client.createSession(request);
