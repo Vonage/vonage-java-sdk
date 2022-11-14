@@ -427,9 +427,7 @@ SecretResponse response = client.getAccountClient().getSecret(API_KEY, SECRET_ID
 ### Video API
 
 The following samples demonstrate usage of the Vonage Video API (formerly OpenTok).
-Note that this is currently in beta, so you must use a beta version from
-[GitHub Packages](https://github.com/orgs/Vonage/packages?repo_name=vonage-java-sdk), not Maven Central.
-Instructions can be found on the [Releases page](https://github.com/Vonage/vonage-java-sdk/releases).
+Note that this is currently in beta. See the [Releases page](https://github.com/Vonage/vonage-java-sdk/releases).
 
 They all use JWT authentication, so you would instantiate a client using
 your application ID and private key, like so:
