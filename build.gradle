@@ -136,22 +136,9 @@ publishing {
         maven {
             def releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
             def snapshotsRepoUrl = uri("https://oss.sonatype.org/content/repositories/snapshots/")
-            def githubRepoUrl = uri("https://maven.pkg.github.com/$githubPath")
-            def userEnv, passEnv
-
-            if (version.endsWith('beta')) {
-                userEnv = "GITHUB_ACTOR"
-                passEnv = "GITHUB_TOKEN"
-                url = githubRepoUrl
-            }
-            else {
-                userEnv = "OSS_USERNAME"
-                passEnv = "OSS_PASSWORD"
-                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-            }
-
-            credentials.username(System.getenv(userEnv))
-            credentials.password(System.getenv(passEnv))
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials.username(System.getenv("OSS_USERNAME"))
+            credentials.password(System.getenv("OSS_PASSWORD"))
         }
     }
 }
