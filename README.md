@@ -41,7 +41,7 @@ For Gradle 3.4 or Higher:
 
 ```groovy
 dependencies {
-    implementation 'com.vonage:server-sdk:7.1.0'
+    implementation 'com.vonage:server-sdk:8.0.0-beta1'
 }
 ```
 
@@ -49,7 +49,7 @@ For older versions:
 
 ```groovy
 dependencies {
-    compile 'com.vonage:server-sdk:7.1.0'
+    compile 'com.vonage:server-sdk:8.0.0-beta1'
 }
 ```
 
@@ -61,7 +61,7 @@ Add the following to the correct place in your project's POM file:
 <dependency>
     <groupId>com.vonage</groupId>
     <artifactId>server-sdk</artifactId>
-    <version>7.1.0</version>
+    <version>8.0.0-beta1</version>
 </dependency>
 ```
 
