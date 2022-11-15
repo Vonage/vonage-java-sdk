@@ -427,8 +427,7 @@ SecretResponse response = client.getAccountClient().getSecret(API_KEY, SECRET_ID
 
 The Vonage Video API (formerly OpenTok) is currently in beta. You can try it out by using a beta version.
 Usage instructions can be found on the [8.x-beta branch](https://github.com/Vonage/vonage-java-sdk/tree/8.x-beta#video-api).
-The dependency artifact resides on [GitHub Packages](https://github.com/orgs/Vonage/packages?repo_name=vonage-java-sdk),
-not Maven Central. See the [Releases page](https://github.com/Vonage/vonage-java-sdk/releases) for more information.
+See the [Releases page](https://github.com/Vonage/vonage-java-sdk/releases) for more information.
 
 
 ### Custom HTTP Configuration
