@@ -1,6 +1,6 @@
 # Vonage Server SDK for Java
 
-[![Maven Release](https://maven-badges.herokuapp.com/maven-central/com.vonage/client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.vonage/client)
+[![Maven Release](https://maven-badges.herokuapp.com/maven-central/com.vonage/server-sdk/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.vonage/server-sdk)
 [![Build Status](https://github.com/vonage/vonage-java-sdk/workflows/build/badge.svg)](https://github.com/Vonage/vonage-java-sdk/actions?query=workflow%3A"Build+Java+CI")
 [![codecov](https://codecov.io/gh/vonage/vonage-java-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/vonage/vonage-java-sdk)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
@@ -8,8 +8,8 @@
 
 <img src="https://developer.nexmo.com/assets/images/Vonage_Nexmo.svg" height="48px" alt="Nexmo is now known as Vonage" />
 
-You can use this Java Server SDK to add [Vonage APIs](https://developer.nexmo.com/api) to your application. To use this, you'll
-need a Vonage account. Sign up [for free at nexmo.com][signup].
+You can use this Java Server SDK to add [Vonage APIs](https://developer.vonage.com/api) to your application. To use this, you'll
+need a Vonage account. Sign up [for free at developer.vonage.com][signup].
 
 * [Installation](#installation)
 * [Usage](#usage)
@@ -19,6 +19,13 @@ need a Vonage account. Sign up [for free at nexmo.com][signup].
 ## Installation
 
 To use the Java Server SDK you'll need to have [created a Vonage account][signup].
+The SDK is available from [Maven Central](https://search.maven.org/artifact/com.vonage/server-sdk).
+
+> **Note**
+> :exclamation:
+> 
+> Prior to version 8, this was released under the artifactId `client` as opposed to `server-sdk`.
+If you are using `com.vonage:client`, please migrate to `com.vonage:server-sdk`, as shown below.
 
 ### Gradle
 
@@ -34,7 +41,7 @@ For Gradle 3.4 or Higher:
 
 ```groovy
 dependencies {
-    implementation 'com.vonage:client:7.1.0'
+    implementation 'com.vonage:server-sdk:7.1.0'
 }
 ```
 
@@ -42,7 +49,7 @@ For older versions:
 
 ```groovy
 dependencies {
-    compile 'com.vonage:client:7.1.0'
+    compile 'com.vonage:server-sdk:7.1.0'
 }
 ```
 
@@ -53,7 +60,7 @@ Add the following to the correct place in your project's POM file:
 ```xml
 <dependency>
     <groupId>com.vonage</groupId>
-    <artifactId>client</artifactId>
+    <artifactId>server-sdk</artifactId>
     <version>7.1.0</version>
 </dependency>
 ```
