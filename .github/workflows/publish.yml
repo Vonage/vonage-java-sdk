@@ -1,4 +1,4 @@
-name: Publish to Maven Repository
+name: Publish to Nexus
 on:
   release:
     types: [published]
@@ -13,7 +13,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v3
         with:
-          python-version: 3.8
+          python-version: 3.11
       - name: Install bump2version
         run: |
           python -m pip install --upgrade pip
@@ -23,6 +23,7 @@ jobs:
           pip install bump2version
       - name: Bump Version
         run: bump2version --new-version ${{ github.event.release.tag_name }} patch &&
+             git tag ${{ github.event.release.tag_name }} -f &&
              git push && git push --tags origin --force
       - name: Setup Java
         uses: actions/setup-java@v3
@@ -46,4 +47,4 @@ jobs:
         run: |
           OSS_USERNAME=$OSS_USERNAME OSS_PASSWORD=$OSS_PASSWORD
           signingKey=$signingKey signingPassword=$signingPassword
-          gradle publish --info
+          gradle publishToSonatype closeAndReleaseSonatypeStagingRepository --info
