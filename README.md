@@ -540,7 +540,7 @@ can be useful, for example, if you must use an HTTP proxy to make requests or to
 ## Tips And Tricks
 
 ### Phone Calls And WebSockets
-Our [Voice API](https://developer.nexmo.com/voice/voice-api/overview) can connect a voice call to a websocket! An example using `javax.websocket` for accepting websocket connections can be found on the [Oracle website](http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/HomeWebsocket/WebsocketHome.html#section4).
+Our [Voice API](https://developer.vonage.com/voice/voice-api/overview) can connect a voice call to a websocket! An example using `javax.websocket` for accepting websocket connections can be found on the [Oracle website](http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/HomeWebsocket/WebsocketHome.html#section4).
 [Another  example](http://sparkjava.com/documentation#embedded-web-server) using the Spark framework
 
 ## Frequently Asked Questions
