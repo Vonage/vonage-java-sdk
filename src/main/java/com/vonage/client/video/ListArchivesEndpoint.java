@@ -22,7 +22,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 
-class ListArchivesEndpoint extends AbstractMethod<ListArchivesRequestWrapper, ListArchivesResponse> {
+class ListArchivesEndpoint extends AbstractMethod<ListArchivesRequest, ListArchivesResponse> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/v2/project/%s/archive";
 
@@ -36,12 +36,12 @@ class ListArchivesEndpoint extends AbstractMethod<ListArchivesRequestWrapper, Li
 	}
 
 	@Override
-	public RequestBuilder makeRequest(ListArchivesRequestWrapper wrapper) {
+	public RequestBuilder makeRequest(ListArchivesRequest request) {
 		String path = String.format(PATH, getApplicationIdOrApiKey());
 		String uri = httpWrapper.getHttpConfig().getVideoBaseUri() + path;
 		RequestBuilder rqBuilder = RequestBuilder.get(uri).setHeader("Accept", "application/json");
-		if (wrapper != null) {
-			wrapper.addParams(rqBuilder);
+		if (request != null) {
+			request.addParams(rqBuilder);
 		}
 		return rqBuilder;
 	}

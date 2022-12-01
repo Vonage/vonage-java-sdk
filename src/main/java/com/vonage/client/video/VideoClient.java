@@ -323,39 +323,18 @@ public class VideoClient {
 	 * @return The list of archives, in order from newest to oldest.
 	 */
 	public List<Archive> listArchives() {
-		return listArchives(null, null, null);
+		return listArchives(null);
 	}
 
 	/**
 	 * List all archives in an application.
 	 *
-	 * @param sessionId Set a sessionId query parameter to list archives for a specific session ID.
-	 * This is useful when listing multiple archives for an automatically archived session.
-	 *
-	 * @return The list of archives for the session, in order from newest to oldest.
-	 */
-	public List<Archive> listArchives(String sessionId) {
-		return listArchives(validateSessionId(sessionId), null, null);
-	}
-
-	/**
-	 * List all archives in an application.
-	 *
-	 * @param sessionId Set a sessionId query parameter to list archives for a specific session ID. This is useful
-	 * when listing multiple archives for an automatically archived session.
-	 *
-	 * @param offset Set an offset query parameters to specify the index offset of the first archive.
-	 * 0 is offset of the most recently started archive (excluding deleted archive). 1 is the offset of the archive
-	 * that started prior to the most recent archive. The default value is 0.
-	 *
-	 * @param count Set a count query parameter to limit the number of archives to be returned. The default number of
-	 * archives returned is 50 (or fewer, if there are fewer than 50 archives). The maximum number of archives the
-	 * call will return is 1000.
+	 * @param request (OPTIONAL) Filter properties of the request.
 	 *
 	 * @return The list of archives matching the filter criteria, in order from newest to oldest.
 	 */
-	public List<Archive> listArchives(String sessionId, Integer offset, Integer count) {
-		return listArchives.execute(new ListArchivesRequestWrapper(sessionId, offset, count)).getItems();
+	public List<Archive> listArchives(ListArchivesRequest request) {
+		return listArchives.execute(request).getItems();
 	}
 
 	/**

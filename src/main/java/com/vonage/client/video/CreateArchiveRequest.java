@@ -280,9 +280,9 @@ public class CreateArchiveRequest {
         }
 
         /**
-         * Builds the ArchiveProperties object.
+         * Builds the {@linkplain CreateArchiveRequest} object with this builder's settings.
          *
-         * @return The ArchiveProperties object.
+         * @return A new {@link CreateArchiveRequest} instance.
          */
         public CreateArchiveRequest build() {
             return new CreateArchiveRequest(this);

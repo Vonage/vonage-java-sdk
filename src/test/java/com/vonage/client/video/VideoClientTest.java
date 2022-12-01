@@ -316,13 +316,8 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 	@Test
 	public void testListArchives() throws Exception {
 		stubListArchiveJsonAndAssertEquals(() -> client.listArchives());
-		stubListArchiveJsonAndAssertEquals(() -> client.listArchives(sessionId));
-		stubListArchiveJsonAndAssertEquals(() -> client.listArchives(sessionId, 0, 1));
-		stubListArchiveJsonAndAssertEquals(() -> client.listArchives(null, null, 1000));
-		stubListArchiveJsonAndAssertEquals(() -> client.listArchives(null, 2, null));
-		stubListArchiveJsonAndAssertThrows(() -> client.listArchives(null));
-		stubListArchiveJsonAndAssertThrows(() -> client.listArchives(sessionId, 0, -1));
-		stubListArchiveJsonAndAssertThrows(() -> client.listArchives(sessionId, 1, -1));
+		stubListArchiveJsonAndAssertEquals(() -> client.listArchives(ListArchivesRequest.builder().build()));
+		stubListArchiveJsonAndAssertEquals(() -> client.listArchives(null));
 	}
 
 	@Test
