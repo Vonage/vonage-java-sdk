@@ -42,10 +42,12 @@ public class ListArchivesEndpointTest {
 	@Test
 	public void testMakeRequestAllParameters() throws Exception {
 		String sessionId = UUID.randomUUID().toString();
-		Integer count = 6, offset = 2;
-		ListArchivesRequestWrapper wrapper = new ListArchivesRequestWrapper(sessionId, offset, count);
+		int count = 6, offset = 2;
+		ListArchivesRequest request = ListArchivesRequest.builder()
+			.offset(offset).count(count).sessionId(sessionId)
+			.build();
 		
-		RequestBuilder builder = endpoint.makeRequest(wrapper);
+		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("GET", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/"+applicationId+"/archive?";
 		assertTrue(builder.build().getURI().toString().startsWith(expectedUri));
@@ -53,8 +55,8 @@ public class ListArchivesEndpointTest {
 		Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
 		assertEquals(3, params.size());
 		assertEquals(sessionId, params.get("sessionId"));
-		assertEquals(offset.toString(), params.get("offset"));
-		assertEquals(count.toString(), params.get("count"));
+		assertEquals(offset, Integer.parseInt(params.get("offset")));
+		assertEquals(count, Integer.parseInt(params.get("count")));
 		String expectedPayload = VideoClientTest.listArchiveJson;
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedPayload);
 		ListArchivesResponse response = endpoint.parseResponse(mockResponse);
@@ -64,7 +66,7 @@ public class ListArchivesEndpointTest {
 
 	@Test
 	public void testMakeRequestNullParameters() {
-		ListArchivesRequestWrapper wrapper = new ListArchivesRequestWrapper(null, null, null);
+		ListArchivesRequest wrapper = ListArchivesRequest.builder().build();
 		RequestBuilder builder = endpoint.makeRequest(wrapper);
 		assertEquals("GET", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/"+applicationId+"/archive";
