@@ -22,7 +22,11 @@
  * You can use {@link com.vonage.client.video.VideoClient} in a similar way to the {@code OpenTok} class in the
  * OpenTok Java SDK, although some method and class names may differ slightly, as they have been rewritten to
  * be consistent with the rest of this SDK.
+ * <br>
  *
- * @since 8.0.0
+ * Learn more about the Video API and how to use this SDK from the
+ * <a href=https://developer.vonage.com/video/server-sdks/java>Vonage Developer Portal</a>.
+ *
+ * @since 8.0.0-beta1
  */
 package com.vonage.client.video;
