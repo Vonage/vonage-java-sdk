@@ -231,12 +231,12 @@ public class VideoClient {
 	 * Dynamically change the layout type of a composed archive while it is being recorded.
 	 *
 	 * @param archiveId ID of the archive to change.
-	 * @param request Properties of the layout change request.
+	 * @param layout Properties of the layout change request.
 	 */
-	public void setArchiveLayout(String archiveId, ArchiveLayout request) {
+	public void setArchiveLayout(String archiveId, ArchiveLayout layout) {
 		setArchiveLayout.execute(new SetArchiveLayoutRequestWrapper(
 				validateArchiveId(archiveId),
-				validateRequest(request)
+				validateRequest(layout)
 		));
 	}
 
@@ -321,6 +321,7 @@ public class VideoClient {
 	 * List all archives in an application.
 	 *
 	 * @return The list of archives, in order from newest to oldest.
+	 * @see #listArchives(ListArchivesRequest)
 	 */
 	public List<Archive> listArchives() {
 		return listArchives(null);

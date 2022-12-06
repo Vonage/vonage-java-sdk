@@ -29,7 +29,7 @@ public class ArchiveLayout {
 	private final ScreenLayoutType type, screenshareType;
 	private final String stylesheet;
 
-	ArchiveLayout(Builder builder) {
+	private ArchiveLayout(Builder builder) {
 		type = Objects.requireNonNull(builder.type, "Initial layout type is required.");
 		if ((screenshareType = builder.screenshareType) != null && type != ScreenLayoutType.BEST_FIT) {
 			throw new IllegalStateException(

@@ -34,7 +34,7 @@ public class CreateSessionRequest {
 		archiveMode = builder.archiveMode;
 		mediaMode = builder.mediaMode;
 		if (archiveMode == ArchiveMode.ALWAYS && mediaMode != MediaMode.ROUTED) {
-		    throw new IllegalStateException("A session with always archive mode must also have the routed media mode.");
+		    throw new IllegalStateException("A session with automatic archiving must also have the ROUTED media mode.");
 		}
 	}
 
