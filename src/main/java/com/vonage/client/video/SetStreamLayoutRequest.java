@@ -29,7 +29,9 @@ class SetStreamLayoutRequest {
 
 	SetStreamLayoutRequest(String sessionId, List<SessionStream> items) {
 		this.sessionId = sessionId;
-		this.items = items;
+		if ((this.items = items) == null || items.isEmpty()) {
+			throw new IllegalArgumentException("At least one stream is required.");
+		}
 	}
 
 	public List<SessionStream> getItems() {

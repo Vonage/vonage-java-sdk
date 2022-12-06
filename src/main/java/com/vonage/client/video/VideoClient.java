@@ -17,12 +17,14 @@ package com.vonage.client.video;
 
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.VonageClient;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * A client for using the Vonage Video API. The standard way to obtain an instance of this class is to use
  * {@link VonageClient#getVideoClient()}.
+ *
+ * @since 8.0.0-beta1
  */
 public class VideoClient {
 	final CreateSessionEndpoint createSession;
@@ -124,10 +126,20 @@ public class VideoClient {
 	 * @param streams The stream layouts to change.
 	 */
 	public void setStreamLayout(String sessionId, List<SessionStream> streams) {
-		setStreamLayout.execute(new SetStreamLayoutRequest(
-				validateSessionId(sessionId),
-				Objects.requireNonNull(streams, "Stream list is required.")
-		));
+		setStreamLayout.execute(new SetStreamLayoutRequest(validateSessionId(sessionId), streams));
+	}
+
+	/**
+	 * Use this method to change layout classes for a Vonage Video stream. The layout classes define how the stream is
+	 * displayed in the layout of a composed Vonage Video archive.
+	 *
+	 * @param sessionId The session ID.
+	 * @param streams The stream layouts to change.
+	 *
+	 * @see #setStreamLayout(String, List)
+	 */
+	public void setStreamLayout(String sessionId, SessionStream... streams) {
+		setStreamLayout(sessionId, Arrays.asList(streams));
 	}
 
 	/**

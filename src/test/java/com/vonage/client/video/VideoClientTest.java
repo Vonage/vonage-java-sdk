@@ -195,10 +195,15 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 	@Test
 	public void testSetStreamLayout() throws Exception {
-		List<SessionStream> layouts = Collections.emptyList();
-		stubResponseAndRun(() -> client.setStreamLayout(sessionId, layouts));
-		stubResponseAndAssertThrowsIAX(() -> client.setStreamLayout(null, layouts));
-		stubResponseAndAssertThrowsNPE(() -> client.setStreamLayout(sessionId, null));
+		SessionStream stream = SessionStream.builder(streamId).build();
+		List<SessionStream> layoutsList = Collections.singletonList(stream);
+		SessionStream[] layoutsArray = new SessionStream[]{stream};
+		stubResponseAndRun(() -> client.setStreamLayout(sessionId, layoutsList));
+		stubResponseAndRun(() -> client.setStreamLayout(sessionId, layoutsArray));
+		stubResponseAndAssertThrowsIAX(() -> client.setStreamLayout(null, layoutsList));
+		stubResponseAndAssertThrowsIAX(() -> client.setStreamLayout(null, layoutsArray));
+		stubResponseAndAssertThrowsIAX(() -> client.setStreamLayout(sessionId, (List<SessionStream>) null));
+		stubResponseAndAssertThrowsNPE(() -> client.setStreamLayout(sessionId, (SessionStream[]) null));
 	}
 
 	@Test

@@ -28,6 +28,7 @@ import org.junit.Before;
 import org.junit.Test;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 public class SetStreamLayoutEndpointTest {
@@ -45,11 +46,13 @@ public class SetStreamLayoutEndpointTest {
 	public void testMakeRequestAllParameters() throws Exception {
 		String sessionId = UUID.randomUUID().toString(),
 				streamId0 = UUID.randomUUID().toString(),
-				streamId1 = UUID.randomUUID().toString();
+				streamId1 = UUID.randomUUID().toString(),
+				streamId2 = UUID.randomUUID().toString();
 
 		SetStreamLayoutRequest request = new SetStreamLayoutRequest(sessionId, Arrays.asList(
 				SessionStream.builder(streamId0).build(),
-				SessionStream.builder(streamId1).layoutClassList(Arrays.asList("min", "full")).build()
+				SessionStream.builder(streamId1).layoutClassList(Arrays.asList("min", "full")).build(),
+				SessionStream.builder(streamId2).layoutClassList().build()
 		));
 		
 		RequestBuilder builder = endpoint.makeRequest(request);
@@ -58,15 +61,17 @@ public class SetStreamLayoutEndpointTest {
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		String expectedPayload = "{\"items\":[{\"id\":\""+streamId0+"\"},"+
-				"{\"id\":\""+streamId1 +"\",\"layoutClassList\":[\"min\",\"full\"]}]}";
+				"{\"id\":\""+streamId1+"\",\"layoutClassList\":[\"min\",\"full\"]}," +
+				"{\"id\":\""+streamId2+"\",\"layoutClassList\":[]}]}";
 		assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
 	}
 	
 	@Test
 	public void testMakeRequestRequiredParameters() throws Exception {
-		SetStreamLayoutRequest request = new SetStreamLayoutRequest("", Collections.emptyList());
+		List<SessionStream> streams = Collections.singletonList(SessionStream.builder("").build());
+		SetStreamLayoutRequest request = new SetStreamLayoutRequest("", streams);
 		RequestBuilder builder = endpoint.makeRequest(request);
-		String expectedPayload = "{\"items\":[]}";
+		String expectedPayload = "{\"items\":[{\"id\":\"\"}]}";
 		assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
 	}
 
