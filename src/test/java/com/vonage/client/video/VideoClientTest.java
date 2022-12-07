@@ -21,6 +21,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.function.ThrowingRunnable;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
@@ -85,6 +86,23 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		List<Archive> archives = invocation.get();
 		assertEquals(1, archives.size());
 		assertArchiveEqualsExpectedJson(archives.get(0));
+	}
+
+	void stubMuteResponseAndAssertEquals(Supplier<ProjectDetails> invocation) throws Exception {
+		String responseJson = "{\n" +
+				"  \"applicationId\": \"78d335fa-323d-0114-9c3d-d6f0d48968cf\",\n" +
+				"  \"status\": \"ACTIVE\",\n" +
+				"  \"name\": \"Joe Montana\",\n" +
+				"  \"environment\": \"standard\",\n" +
+				"  \"createdAt\": 1414642898000\n" +
+				"}";
+		stubResponse(responseJson);
+		ProjectDetails response = invocation.get();
+		assertEquals("78d335fa-323d-0114-9c3d-d6f0d48968cf", response.getApplicationId());
+		assertEquals(ProjectStatus.ACTIVE, response.getStatus());
+		assertEquals("Joe Montana", response.getName());
+		assertEquals(ProjectEnvironment.STANDARD, response.getEnvironment());
+		assertEquals(1414642898000L, response.getCreatedAt().longValue());
 	}
 
 	void stubResponseAndAssertThrowsIAX(int statusCode, ThrowingRunnable invocation) throws Exception {
@@ -232,47 +250,30 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 	@Test
 	public void testMuteStream() throws Exception {
-		String responseJson = "{\n" +
-				"  \"applicationId\": \"78d335fa-323d-0114-9c3d-d6f0d48968cf\",\n" +
-				"  \"status\": \"ACTIVE\",\n" +
-				"  \"name\": \"Joe Montana\",\n" +
-				"  \"environment\": \"standard\",\n" +
-				"  \"createdAt\": 1414642898000\n" +
-				"}";
-
-		stubResponse(responseJson);
-		ProjectDetails response = client.muteStream(sessionId, streamId);
-		assertEquals("78d335fa-323d-0114-9c3d-d6f0d48968cf", response.getApplicationId());
-		assertEquals(ProjectStatus.ACTIVE, response.getStatus());
-		assertEquals("Joe Montana", response.getName());
-		assertEquals(ProjectEnvironment.STANDARD, response.getEnvironment());
-		assertEquals(1414642898000L, response.getCreatedAt().longValue());
-
+		stubMuteResponseAndAssertEquals(() -> client.muteStream(sessionId, streamId));
 		stubResponseAndAssertThrowsIAX(() -> client.muteStream(null, streamId));
 		stubResponseAndAssertThrowsIAX(() -> client.muteStream(sessionId, null));
 	}
 
 	@Test
 	public void testMuteSession() throws Exception {
-		MuteSessionRequest request = new MuteSessionRequest(true);
-		String responseJson = "{\n" +
-				"  \"applicationId\": \"78d335fa-323d-0114-9c3d-d6f0d48968cf\",\n" +
-				"  \"status\": \"ACTIVE\",\n" +
-				"  \"name\": \"Joe Montana\",\n" +
-				"  \"environment\": \"standard\",\n" +
-				"  \"createdAt\": 1414642898000\n" +
-				"}";
+		Collection<String>
+				nullStreamIdsCol = null,
+				emptyStreamIdsCol = Collections.emptyList(),
+				singleStreamIdCol = Collections.singleton(streamId);
+		String[]
+				nullStreamIdsArr = null,
+				emptyStreamIdsArr = {},
+				singleStreamIdArr = {streamId};
 
-		stubResponse(responseJson);
-		ProjectDetails response = client.muteSession(sessionId, request);
-		assertEquals("78d335fa-323d-0114-9c3d-d6f0d48968cf", response.getApplicationId());
-		assertEquals(ProjectStatus.ACTIVE, response.getStatus());
-		assertEquals("Joe Montana", response.getName());
-		assertEquals(ProjectEnvironment.STANDARD, response.getEnvironment());
-		assertEquals(1414642898000L, response.getCreatedAt().longValue());
-
-		stubResponseAndAssertThrowsIAX(() -> client.muteSession(null, request));
-		stubResponseAndAssertThrowsIAX(() -> client.muteSession(sessionId, null));
+		stubMuteResponseAndAssertEquals(() -> client.muteSession(sessionId, true));
+		stubMuteResponseAndAssertEquals(() -> client.muteSession(sessionId, false, nullStreamIdsCol));
+		stubMuteResponseAndAssertEquals(() -> client.muteSession(sessionId, true, nullStreamIdsArr));
+		stubMuteResponseAndAssertEquals(() -> client.muteSession(sessionId, true, emptyStreamIdsCol));
+		stubMuteResponseAndAssertEquals(() -> client.muteSession(sessionId, false, emptyStreamIdsArr));
+		stubMuteResponseAndAssertEquals(() -> client.muteSession(sessionId, true, singleStreamIdCol));
+		stubMuteResponseAndAssertEquals(() -> client.muteSession(sessionId, false, singleStreamIdArr));
+		stubResponseAndAssertThrowsIAX(() -> client.muteSession(null, false));
 	}
 
 	@Test
