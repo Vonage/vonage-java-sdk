@@ -21,7 +21,7 @@ public class ListArchivesRequest {
 	private final Integer offset, count;
 	private final String sessionId;
 
-	ListArchivesRequest(Builder builder) {
+	private ListArchivesRequest(Builder builder) {
 		sessionId = builder.sessionId;
 		if ((offset = builder.offset) != null && offset < 0) {
 			throw new IllegalArgumentException("Offset cannot be negative.");

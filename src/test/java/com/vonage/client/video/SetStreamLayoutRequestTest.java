@@ -23,30 +23,36 @@ import java.util.List;
 import java.util.UUID;
 
 public class SetStreamLayoutRequestTest {
+	final String sessionId = UUID.randomUUID().toString();
 
 	@Test
 	public void testSerializeAllParameters() {
-		String sessionId = UUID.randomUUID().toString();
 		List<SessionStream> streams = Arrays.asList(
-				SessionStream.builder("stream0")
-						.layoutClassList(Collections.emptyList()).build(),
-				SessionStream.builder("stream1")
-						.layoutClassList(Arrays.asList("full")).build(),
-				SessionStream.builder("stream2").build()
+				SessionStream.builder("stream0").layoutClassList(Collections.emptyList()).build(),
+				SessionStream.builder("stream1").layoutClassList(Arrays.asList("full")).build(),
+				SessionStream.builder("stream2").build(),
+				SessionStream.builder("stream3").layoutClassList().build(),
+				SessionStream.builder("stream4").layoutClassList("focus", "min").build()
 		);
 		SetStreamLayoutRequest request = new SetStreamLayoutRequest(sessionId, streams);
-		String expectedJson = "{\"items\":[{\"id\":\"stream0\",\"layoutClassList\":[]}," +
-				"{\"id\":\"stream1\",\"layoutClassList\":[\"full\"]},{\"id\":\"stream2\"}]}";
+		String expectedJson = "{\"items\":[" +
+				"{\"id\":\"stream0\",\"layoutClassList\":[]}," +
+				"{\"id\":\"stream1\",\"layoutClassList\":[\"full\"]}," +
+				"{\"id\":\"stream2\"}," +
+				"{\"id\":\"stream3\",\"layoutClassList\":[]}," +
+				"{\"id\":\"stream4\",\"layoutClassList\":[\"focus\",\"min\"]}" +
+			"]}";
 		assertEquals(expectedJson, request.toJson());
 		assertEquals(sessionId, request.sessionId);
 	}
 
-	@Test
-	public void testSerializeNullAndEmptyParameters() {
-		SetStreamLayoutRequest request = new SetStreamLayoutRequest(null, Collections.emptyList());
-		assertEquals("{\"items\":[]}", request.toJson());
-		request = new SetStreamLayoutRequest("", null);
-		assertEquals("{}", request.toJson());
-		assertEquals("", request.sessionId);
+	@Test(expected = IllegalArgumentException.class)
+	public void testEmptyStreamList() {
+		new SetStreamLayoutRequest(sessionId, Collections.emptyList());
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testNullStreamList() {
+		new SetStreamLayoutRequest(sessionId, null);
 	}
 }

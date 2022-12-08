@@ -17,8 +17,13 @@ package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Represents a stream's metadata in a Vonage Video session.
+ * Used for updating the stream layout in {@link VideoClient#setStreamLayout(String, List)}.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class SessionStream {
@@ -76,6 +81,19 @@ public class SessionStream {
 		public Builder layoutClassList(List<String> layoutClassList) {
 			this.layoutClassList = layoutClassList;
 			return this;
+		}
+
+		/**
+		 * Use this method to set the layout classes for the stream.
+		 *
+		 * @param layoutClasses The updated layout classes to use for this stream.
+		 *
+		 * @return This builder.
+		 * @see #layoutClassList(List)
+		 * @since 8.0.0-beta2
+		 */
+		public Builder layoutClassList(String... layoutClasses) {
+			return layoutClassList(Arrays.asList(layoutClasses));
 		}
 
 		/**
