@@ -23,6 +23,8 @@ import org.apache.http.util.EntityUtils;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.UUID;
 
 public class MuteSessionEndpointTest {
@@ -39,12 +41,11 @@ public class MuteSessionEndpointTest {
 	@Test
 	public void testMakeRequest() throws Exception {
 		boolean active = true;
-		String[] streamIds = {"ID_0", "ID_1", "ID_2"};
+		Collection<String> streamIds = Arrays.asList("ID_0", "ID_1", "ID_2");
 		String sessionId = UUID.randomUUID().toString();
-		MuteSessionRequest request = new MuteSessionRequest(active, streamIds);
-		MuteSessionRequestWrapper wrapper = new MuteSessionRequestWrapper(sessionId, request);
+		MuteSessionRequest request = new MuteSessionRequest(sessionId, active, streamIds);
 
-		RequestBuilder builder = endpoint.makeRequest(wrapper);
+		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("POST", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/" +
 				applicationId+"/session/"+sessionId+"/mute";

@@ -15,72 +15,33 @@
  */
 package com.vonage.client.video;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
-import java.util.Arrays;
 import java.util.Collection;
 
-/**
- * Defines the properties used for {@link VideoClient#muteSession(String, MuteSessionRequest)}.
- */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class MuteSessionRequest {
-	private final boolean active;
-	private final Collection<String> excludedStreamIds;
+class MuteSessionRequest {
+	final boolean active;
+	final Collection<String> excludedStreamIds;
+	@JsonIgnore final String sessionId;
 
-	/**
-	 *
-	 * @param active Whether to mute streams in the session (true) and enable the mute state of the session, or to
-	 * disable the mute state of the session (false). With the mute state enabled (true), all current and future
-	 * streams published to the session (except streams in "excludedStreamIds") are muted. If this is
-	 * set to {@code false}, future streams published to the session are not muted (but any existing muted
-	 * streams will remain muted).
-	 *
-	 * @param excludedStreamIds The stream IDs for streams that should not be muted. This is an optional property.
-	 * If you omit this, all streams in the session will be muted. This only applies when the "active" property is set
-	 * {@code true}. When the "active" property is set to {@code false}, it is ignored.
-	 */
-	public MuteSessionRequest(boolean active, Collection<String> excludedStreamIds) {
+	MuteSessionRequest(String sessionId, boolean active, Collection<String> excludedStreamIds) {
+		this.sessionId = sessionId;
 		this.active = active;
 		this.excludedStreamIds = excludedStreamIds;
 	}
 
-	/**
-	 *
-	 * @param active Whether to mute streams in the session (true) and enable the mute state of the session, or to
-	 * disable the mute state of the session (false). With the mute state enabled (true), all current and future
-	 * streams published to the session (except streams in "excludedStreamIds") are muted. If this is
-	 * set to {@code false}, future streams published to the session are not muted (but any existing muted
-	 * streams will remain muted).
-	 *
-	 * @param excludedStreamIds The stream IDs for streams that should not be muted. This is an optional property.
-	 * If you omit this, all streams in the session will be muted. This only applies when the "active" property is set
-	 * {@code true}. When the "active" property is set to {@code false}, it is ignored.
-	 */
-	public MuteSessionRequest(boolean active, String... excludedStreamIds) {
-		this(active, Arrays.asList(excludedStreamIds));
-	}
-
-	/**
-	 * Whether to mute streams in the session (true) and enable the mute state of the session, or to disable
-	 * the mute state of the session (false). With the mute state enabled (true), all current and future streams
-	 * published to the session (except streams in the excludedStreamIds array) are muted. When you call this method
-	 * with the active property set to false, future streams published to the session are not muted (but any
-	 * existing muted streams remain muted).
-	 */
 	public boolean isActive() {
 		return active;
 	}
 
-	/**
-	 * @return The elements in the excludedStreamIds array are stream IDs (strings) for the streams you wish to exclude from being muted.
-	 */
 	public Collection<String> getExcludedStreamIds() {
 		return excludedStreamIds;
 	}
-	
+
 	/**
 	 * Generates a JSON payload from this request.
 	 *

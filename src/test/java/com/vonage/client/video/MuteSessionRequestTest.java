@@ -20,43 +20,30 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 public class MuteSessionRequestTest {
-	
+	final String sessionId = UUID.randomUUID().toString();
+
 	@Test
 	public void testSerialize() {
 		List<String> excludedStreamIds = Arrays.asList("ID_0", "ID_1", "ID_2");
-		MuteSessionRequest request = new MuteSessionRequest(true, excludedStreamIds);
+		MuteSessionRequest request = new MuteSessionRequest(sessionId, true, excludedStreamIds);
 		String expectedJson = "{\"active\":true,\"excludedStreamIds\":[\"ID_0\",\"ID_1\",\"ID_2\"]}";
 		assertEquals(expectedJson, request.toJson());
 	}
 
 	@Test
 	public void testSerializeEmptyList() {
-		MuteSessionRequest request = new MuteSessionRequest(false, Collections.emptyList());
+		MuteSessionRequest request = new MuteSessionRequest(sessionId, false, Collections.emptyList());
 		String expectedJson = "{\"active\":false,\"excludedStreamIds\":[]}";
-		assertEquals(expectedJson, request.toJson());
-	}
-
-	@Test
-	public void testSerializeEmptyVarargs() {
-		MuteSessionRequest request = new MuteSessionRequest(false);
-		String expectedJson = "{\"active\":false,\"excludedStreamIds\":[]}";
-		assertEquals(expectedJson, request.toJson());
-	}
-
-	@Test
-	public void testSerializeEmptyArray() {
-		String[] streamIds = {};
-		MuteSessionRequest request = new MuteSessionRequest(true, streamIds);
-		String expectedJson = "{\"active\":true,\"excludedStreamIds\":[]}";
 		assertEquals(expectedJson, request.toJson());
 	}
 
 	@Test
 	public void testSerializeNullIds() {
 		List<String> streamIds = null;
-		MuteSessionRequest request = new MuteSessionRequest(false, streamIds);
+		MuteSessionRequest request = new MuteSessionRequest(sessionId, false, streamIds);
 		String expectedJson = "{\"active\":false}";
 		assertEquals(expectedJson, request.toJson());
 	}

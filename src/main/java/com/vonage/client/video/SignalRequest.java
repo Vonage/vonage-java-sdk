@@ -30,10 +30,16 @@ public class SignalRequest {
 		this.data = Objects.requireNonNull(builder.data, "Data is required.");
 	}
 
+	/**
+	 * @return The signal type.
+	 */
 	public String getType() {
 		return type;
 	}
 
+	/**
+	 * @return The signal data.
+	 */
 	public String getData() {
 		return data;
 	}
@@ -54,7 +60,7 @@ public class SignalRequest {
 	}
 
 	/**
-	 * Entry point for constructing an instance of .
+	 * Entry point for constructing an instance of SignalRequest.
 	 *
 	 * @return A new Builder.
 	 */
@@ -82,7 +88,7 @@ public class SignalRequest {
 
 		/**
 		 * (REQUIRED)
-		 * Payload that is being sent to the client. This cannot exceed 8kb.
+		 * Payload that is being sent to the client. This cannot exceed 8 kilobytes.
 		 *
 		 * @param data The data as a string.
 		 * @return This builder.

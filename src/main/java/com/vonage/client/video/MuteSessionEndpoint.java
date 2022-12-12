@@ -24,7 +24,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 
-class MuteSessionEndpoint extends AbstractMethod<MuteSessionRequestWrapper, ProjectDetails> {
+class MuteSessionEndpoint extends AbstractMethod<MuteSessionRequest, ProjectDetails> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/v2/project/%s/session/%s/mute";
 
@@ -38,13 +38,13 @@ class MuteSessionEndpoint extends AbstractMethod<MuteSessionRequestWrapper, Proj
 	}
 
 	@Override
-	public RequestBuilder makeRequest(MuteSessionRequestWrapper wrapper) {
-		String path = String.format(PATH, getApplicationIdOrApiKey(), wrapper.sessionId);
+	public RequestBuilder makeRequest(MuteSessionRequest request) {
+		String path = String.format(PATH, getApplicationIdOrApiKey(), request.sessionId);
 		String uri = httpWrapper.getHttpConfig().getVideoBaseUri() + path;
 		return RequestBuilder.post(uri)
 				.setHeader("Content-Type", "application/json")
 				.setHeader("Accept", "application/json")
-				.setEntity(new StringEntity(wrapper.request.toJson(), ContentType.APPLICATION_JSON));
+				.setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
 	}
 
 	@Override
