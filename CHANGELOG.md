@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [7.1.1]
+- Bumped Jackson version to 2.14
+
 ## [7.1.0]
 - Fixed parsing `MessageResponseException` when entity body is empty
 - Added toggle for using Messages API Sandbox to `MessagesClient`
