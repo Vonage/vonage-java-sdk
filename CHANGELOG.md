@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.0.0-beta2]
+- Added varargs for `SetStreamLayoutRequest`
+- `listArchives` endpoint takes as input `ListArchivesRequest` using builder pattern
+- Simplified `muteSession` and `muteStream` invocation
+
+## [7.1.1]
+- Bumped Jackson version to 2.14
+
+## [8.0.0-beta1]
+- Maven artifact moved to `com.vonage:server-sdk`
+- Initial implementation of [Vonage Video API](https://developer.vonage.com/api/video), with following functionality:
+  - Create sessions
+  - Retrieve or update stream layouts in a session
+  - Create, retrieve, delete archives
+  - Add / remove streams from archive
+  - Change archive layout
+  - Mute streams or individual participants in a session
+  - Disconnect participants from a session
+  - Send signal to participants in a session
+
 ## [7.1.0]
 - Fixed parsing `MessageResponseException` when entity body is empty
 - Added toggle for using Messages API Sandbox to `MessagesClient`

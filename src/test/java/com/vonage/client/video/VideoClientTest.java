@@ -328,7 +328,6 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 	@Test
 	public void testCreateArchive() throws Exception {
-		String sessionId = "flR1ZSBPY3QgMjkgMTI6MTM6MjMgUERUIDIwMTN";
 		CreateArchiveRequest request = CreateArchiveRequest.builder(sessionId).build();
 		stubArchiveJsonAndAssertEquals(() -> client.createArchive(request));
 		stubArchiveJsonAndAssertThrows(() -> client.createArchive(null));
