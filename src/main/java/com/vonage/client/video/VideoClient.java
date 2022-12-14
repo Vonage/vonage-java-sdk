@@ -17,9 +17,14 @@ package com.vonage.client.video;
 
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.VonageClient;
+import com.vonage.client.auth.JWTAuthMethod;
+import com.vonage.jwt.Jwt;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
+import java.util.function.Supplier;
 
 /**
  * A client for using the Vonage Video API. The standard way to obtain an instance of this class is to use
@@ -44,13 +49,15 @@ public class VideoClient {
 	final GetArchiveEndpoint getArchive;
 	final ListArchivesEndpoint listArchives;
 	final CreateArchiveEndpoint createArchive;
+	final Supplier<? extends Jwt.Builder> newJwtSupplier;
 
 	/**
 	 * Constructor.
 	 *
 	 * @param httpWrapper (REQUIRED) shared HTTP wrapper object used for making REST calls.
 	 */
-	public VideoClient(HttpWrapper httpWrapper) {
+	public VideoClient(final HttpWrapper httpWrapper) {
+		newJwtSupplier = () -> httpWrapper.getAuthCollection().getAuth(JWTAuthMethod.class).newJwt();
 		createSession = new CreateSessionEndpoint(httpWrapper);
 		setStreamLayout = new SetStreamLayoutEndpoint(httpWrapper);
 		listStreams = new ListStreamsEndpoint(httpWrapper);
@@ -397,5 +404,27 @@ public class VideoClient {
 	 */
 	public Archive createArchive(CreateArchiveRequest request) {
 		return createArchive.execute(validateRequest(request));
+	}
+
+	/**
+	 * Generates a signed JSON Web Token which can be passed to the client.
+	 *
+	 * @param sessionId The session ID.
+	 * @param options Configuration parameters (claims) of the token, e.g. role, expiry time etc.
+	 *
+	 * @return The JWT with the specified properties, as a raw string.
+	 * @since 8.0.0-beta2
+	 */
+	public String generateToken(String sessionId, TokenOptions options) {
+		Jwt.Builder jwtBuilder = newJwtSupplier.get();
+		if (options == null) {
+			options = TokenOptions.builder().build();
+		}
+		options.addClaims(jwtBuilder);
+		return jwtBuilder
+				.addClaim("session_id", validateSessionId(sessionId))
+				.addClaim("nonce", new Random().nextInt())
+				.issuedAt(ZonedDateTime.now())
+				.build().generate();
 	}
 }

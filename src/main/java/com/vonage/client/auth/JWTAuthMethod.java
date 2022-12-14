@@ -28,8 +28,7 @@ public class JWTAuthMethod implements AuthMethod {
     private final String applicationId;
 
     public JWTAuthMethod(final String applicationId, final byte[] privateKey) {
-        jwt = Jwt.builder()
-                .applicationId(this.applicationId = applicationId)
+        jwt = Jwt.builder().applicationId(this.applicationId = applicationId)
                 .privateKeyContents(new String(privateKey)).build();
     }
 
@@ -45,11 +44,19 @@ public class JWTAuthMethod implements AuthMethod {
         return applicationId;
     }
 
+    /**
+     * Convenience method for creating custom JWTs.
+     *
+     * @return A new {@link Jwt.Builder} with the application ID and private key already set.
+     * @since 8.0.0-beta2
+     */
+    public Jwt.Builder newJwt() {
+        return Jwt.builder().applicationId(applicationId).privateKeyContents(jwt.getPrivateKeyContents());
+    }
+
     @Override
     public RequestBuilder apply(RequestBuilder request) {
-        String token = jwt.generate();
-        request.setHeader("Authorization", "Bearer " + token);
-        return request;
+        return request.setHeader("Authorization", "Bearer " + generateToken());
     }
 
     @Override

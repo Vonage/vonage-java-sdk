@@ -332,4 +332,14 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		stubArchiveJsonAndAssertEquals(() -> client.createArchive(request));
 		stubArchiveJsonAndAssertThrows(() -> client.createArchive(null));
 	}
+
+	@Test
+	public void testGenerateToken() throws Exception {
+		String token = client.generateToken(sessionId, null);
+		assertTrue(token.length() > 100);
+		TokenOptions options = TokenOptions.builder().build();
+		token = client.generateToken(sessionId, options);
+		assertTrue(token.length() > 100);
+		assertThrows(IllegalArgumentException.class, () -> client.generateToken(null, options));
+	}
 }
