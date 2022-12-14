@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [8.0.0-beta2]
+- Added token generation capability to `VideoClient`
 - Added varargs for `SetStreamLayoutRequest`
 - `listArchives` endpoint takes as input `ListArchivesRequest` using builder pattern
 - Simplified `muteSession` and `muteStream` invocation

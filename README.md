@@ -445,6 +445,15 @@ VonageClient client = VonageClient.builder()
     .build();
 ```
 
+### Generate a token
+
+Generate a signed JWT to pass to the Vonage Video Client:
+```java
+String jwt = client.getVideoClient().generateToken(SESSION_ID,
+    TokenOptions.builder().expiryLength(Duration.ofHours(6)).build()
+);
+```
+
 ### Create a new Session
 
 Generate a new video session:

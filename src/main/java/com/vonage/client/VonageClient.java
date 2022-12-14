@@ -41,8 +41,8 @@ import java.nio.file.Paths;
  * Construct an instance of this object with one or more {@link AuthMethod}s (providing all the authentication methods
  * for the APIs you wish to use), and then call {@link #getVoiceClient()} to obtain a client for the Vonage Voice API.
  * <p>
- * Currently this object only constructs and provides access to {@link VoiceClient}. In the future it will manage
- * clients for all of the Vonage APIs.
+ * Currently, this object only constructs and provides access to {@link VoiceClient}. In the future it will manage
+ * clients for all Vonage APIs.
  */
 public class VonageClient {
     private final HttpWrapper httpWrapper;
@@ -124,6 +124,7 @@ public class VonageClient {
     }
 
     /**
+     * Returns the Messages client.
      *
      * @return The Messages API client.
      * @since 6.5.0
@@ -132,6 +133,12 @@ public class VonageClient {
         return messages;
     }
 
+    /**
+     * Returns the Video client.
+     *
+     * @return The Video API client.
+     * @since 8.0.0-beta1
+     */
     public VideoClient getVideoClient() {
         return video;
     }
@@ -183,7 +190,7 @@ public class VonageClient {
         /**
          * @param httpClient Custom implementation of {@link HttpClient}.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder httpClient(HttpClient httpClient) {
             this.httpClient = httpClient;
@@ -195,7 +202,7 @@ public class VonageClient {
          *
          * @param applicationId Used to identify each application.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder applicationId(String applicationId) {
             this.applicationId = applicationId;
@@ -208,7 +215,7 @@ public class VonageClient {
          *
          * @param apiKey The API Key found in the dashboard for your account.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder apiKey(String apiKey) {
             this.apiKey = apiKey;
@@ -220,7 +227,7 @@ public class VonageClient {
          *
          * @param apiSecret The API Secret found in the dashboard for your account.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder apiSecret(String apiSecret) {
             this.apiSecret = apiSecret;
@@ -232,7 +239,7 @@ public class VonageClient {
          *
          * @param signatureSecret The Signature Secret found in the dashboard for your account.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder signatureSecret(String signatureSecret) {
             this.signatureSecret = signatureSecret;
@@ -243,7 +250,7 @@ public class VonageClient {
          *
          * @param hashType The hashing strategy for signature keys.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder hashType(HashUtil.HashType hashType) {
             this.hashType = hashType;
@@ -256,7 +263,7 @@ public class VonageClient {
          *
          * @param privateKeyContents The contents of your private key used for JWT generation.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder privateKeyContents(byte[] privateKeyContents) {
             this.privateKeyContents = privateKeyContents;
@@ -269,7 +276,7 @@ public class VonageClient {
          *
          * @param privateKeyContents The contents of your private key used for JWT generation.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder privateKeyContents(String privateKeyContents) {
             return privateKeyContents(privateKeyContents.getBytes());
@@ -281,7 +288,7 @@ public class VonageClient {
          *
          * @param privateKeyPath The path to your private key used for JWT generation.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          *
          * @throws VonageUnableToReadPrivateKeyException if the private key could not be read from the file system.
          */
@@ -299,7 +306,7 @@ public class VonageClient {
          *
          * @param privateKeyPath The path to your private key used for JWT generation.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          *
          * @throws VonageUnableToReadPrivateKeyException if the private key could not be read from the file system.
          */
