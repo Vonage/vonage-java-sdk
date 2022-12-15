@@ -4,16 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [8.0.0-beta2]
+## [8.0.0-beta2] - 2022-12-15
 - Added token generation capability to `VideoClient`
 - Added varargs for `SetStreamLayoutRequest`
 - `listArchives` endpoint takes as input `ListArchivesRequest` using builder pattern
 - Simplified `muteSession` and `muteStream` invocation
 
-## [7.1.1]
+## [7.1.1] - 2022-11-16
 - Bumped Jackson version to 2.14
 
-## [8.0.0-beta1]
+## [8.0.0-beta1] - 2022-11-15
 - Maven artifact moved to `com.vonage:server-sdk`
 - Initial implementation of [Vonage Video API](https://developer.vonage.com/api/video), with following functionality:
   - Create sessions
@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Disconnect participants from a session
   - Send signal to participants in a session
 
-## [7.1.0]
+## [7.1.0] - 2022-08-25
 - Fixed parsing `MessageResponseException` when entity body is empty
 - Added toggle for using Messages API Sandbox to `MessagesClient`
 - Deprecated `request_type` in `VerifyRequest`
@@ -36,7 +36,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Updated `VerifyStatus` enum values
 - Added missing documentation and validation to requests and responses in Verify API
 
-## [7.0.0]
+## [7.0.0] - 2022-08-11
 - Removed SMS Search API
 - Deprecated Redact client
 - Use `vonage-jwt-jdk:1.0.2` library instead of `nexmo-jwt-jdk:1.0.1`
@@ -68,33 +68,33 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Moved AdvancedInsight enums to separate files
   - Added `real_time_data` to AdvancedInsightResponse
 
-## [6.5.0]
+## [6.5.0] - 2022-06-20
 - Added Messages v1 API implementation
 - Added `get-full-pricing` endpoint
 - Added `Content-Type` and `Accept` headers in requests where applicable
 - Substantial internal refactoring
 
-## [6.4.2]
+## [6.4.2] - 2022-04-14
 - Added `call_uuid` to webhook call event.
 - Bumped dependency versions
 
-## [6.4.0]
+## [6.4.0] - 2021-05-28
 - Adding Random From Number Feature for the Voice API, if set to `true`, the from number will be randomly selected from the pool of numbers available to the application making the call. 
 - adjusting operator used to check json payloads
 - Adding extra parsing for top level Roaming Status in Advanced Number Insights
 
-## [6.3.0]
+## [6.3.0] - 2021-05-20
 - Added parsing for JSON payloads when reading inbound SMS signatures
 
-## [6.2.0]
+## [6.2.0] - 2021-03-11
 - Adding ContentId and EntityId to message class for DLT
 - Adding Detail enum and string for certain voice webhooks
 
-## [6.1.0]
+## [6.1.0] - 2020-12-17
 - Adding Language and Style to the Voice Talk Action and the Talk Request
 - Marking VoiceName as Deprecated
 
-## [6.0.0]
+## [6.0.0] - 2020-11-16
 ## Added
 - ASR (Automatic Speech Recognition)
 
@@ -108,7 +108,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Deprecated MD5Util use HashUtil instead
 - Removed setters from BaseRequest. Set fields in the builders of Psd2Request or VerifyRequest instead.
 
-## [5.6.0]
+## [5.6.0] - 2020-11-10
 ### Added
 - NotifyEvent structure for Notify Actions
 - SHA256 hashing option
@@ -119,11 +119,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - Fixed error throw when trying to log No Content responses
 
-## [5.5.0]
+## [5.5.0] - 2020-09-08
+- Nexmo rebranded to Vonage
 ### Added
 - Added support for PSD2 verification
 
-## [5.4.0]
+## [5.4.0] - 2020-08-20
 ### Added
 - Added AppEndpoint support for ConnectAction.
 - Added the ability to log the API response in when logger is set to debug mode.
@@ -132,25 +133,25 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Send DTMF
   - Stop Talk
   
-## [5.3.0]
+## [5.3.0] - 2020-07-27
 ### Added
 - Added support for new voice names added to the Voice API for [Text to Speech](https://developer.nexmo.com/voice/voice-api/guides/text-to-speech)
 
 ### Fixed
 - Improved error handling when there are apparent networking issues
 
-## [5.2.1]
+## [5.2.1] - 2019-12-18
 ### Added
 - Added new workflows in `VerifyRequest`
 
-## [5.2.0]
+## [5.2.0] - 2019-10-18
 ### Added
 - Added support for verification workflows inside of `VerifyRequest`.
 - Added support for transfer to NCCO via `VoiceClient#transferCall`.
 
 ### Fixed
 - `VerifyClient` had methods that were still claiming to throw an `IOException`. This has been removed as it is not
-posible for it to be thrown.
+possible for it to be thrown.
 
 ## [5.1.0] - 2019-08-18
 

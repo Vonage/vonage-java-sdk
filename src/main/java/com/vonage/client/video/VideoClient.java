@@ -145,6 +145,7 @@ public class VideoClient {
 	 * @param streams The stream layouts to change.
 	 *
 	 * @see #setStreamLayout(String, List)
+	 * @since 8.0.0-beta2
 	 */
 	public void setStreamLayout(String sessionId, SessionStream... streams) {
 		setStreamLayout(sessionId, Arrays.asList(streams));
