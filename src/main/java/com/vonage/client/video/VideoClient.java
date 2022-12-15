@@ -427,4 +427,17 @@ public class VideoClient {
 				.issuedAt(ZonedDateTime.now())
 				.build().generate();
 	}
+
+	/**
+	 * Generates a signed JSON Web Token which can be passed to the client, using the default token options.
+	 *
+	 * @param sessionId The session ID.
+	 *
+	 * @return The JWT with the default properties, as a raw string.
+	 * @see #generateToken(String, TokenOptions)
+	 * @since 8.0.0-beta2
+	 */
+	public String generateToken(String sessionId) {
+		return generateToken(sessionId, null);
+	}
 }

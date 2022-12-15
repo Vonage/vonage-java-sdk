@@ -334,12 +334,15 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 	}
 
 	@Test
-	public void testGenerateToken() throws Exception {
+	public void testGenerateToken() {
 		String token = client.generateToken(sessionId, null);
 		assertTrue(token.length() > 100);
 		TokenOptions options = TokenOptions.builder().build();
 		token = client.generateToken(sessionId, options);
 		assertTrue(token.length() > 100);
 		assertThrows(IllegalArgumentException.class, () -> client.generateToken(null, options));
+		token = client.generateToken(sessionId);
+		assertTrue(token.length() > 100);
+		assertThrows(IllegalArgumentException.class, () -> client.generateToken(null));
 	}
 }
