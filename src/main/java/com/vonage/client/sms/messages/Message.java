@@ -31,30 +31,22 @@ public abstract class Message {
          */
         BINARY,
         /**
-         * Message is a wap-push message to send a browsable / downloadable url to the handset
-         */
-        WAPPUSH,
-        /**
          * Message is a unicode message, for sending messages in non-latin script to a supported handset
          */
         UNICODE;
 
+        @Override
         public String toString() {
             return super.toString().toLowerCase();
         }
     }
 
     private final MessageType type;
-    private final String from;
-    private final String to;
-
-    private String clientReference;
+    private final String from, to;
     private boolean statusReportRequired;
-    private MessageClass messageClass = null;
-    private Long timeToLive = null;
-    private String callbackUrl = null;
-    private String entityId = null;
-    private String contentId = null;
+    private MessageClass messageClass;
+    private Long timeToLive;
+    private String clientReference, callbackUrl, entityId, contentId;
 
     protected Message(final MessageType type,
                       final String from,
@@ -149,13 +141,21 @@ public abstract class Message {
         this.callbackUrl = callbackUrl;
     }
 
-    public String getEntityId() { return entityId; }
+    public String getEntityId() {
+        return entityId;
+    }
 
-    public void setEntityId(String entityId){ this.entityId = entityId; }
+    public void setEntityId(String entityId) {
+        this.entityId = entityId;
+    }
 
-    public String getContentId() { return contentId; }
+    public String getContentId() {
+        return contentId;
+    }
 
-    public void setContentId(String contentId) { this.contentId = contentId; }
+    public void setContentId(String contentId) {
+        this.contentId = contentId;
+    }
 
     /**
      * @return get the value of the 'status-report-req' parameter.

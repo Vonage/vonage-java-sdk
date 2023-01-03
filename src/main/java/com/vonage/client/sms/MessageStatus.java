@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
  * <a href=https://developer.vonage.com/api-errors/sms>the documentation</a> for more details.
  */
 public enum MessageStatus {
-
     /**
      * A status of zero does not indicate that Vonage delivered your message. Instead, this
      * status indicates the absence of an error - i.e. the REST call succeeded.
@@ -178,7 +177,7 @@ public enum MessageStatus {
         ));
 
     /**
-     * Look up the {@link MessageStatus} based on the int value.
+     * Look up the MessageStatus based on the int value.
      *
      * @param messageStatus the int value of the message status.
      *

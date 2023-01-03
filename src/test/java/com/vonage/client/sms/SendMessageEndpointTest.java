@@ -24,7 +24,6 @@ import com.vonage.client.auth.TokenAuthMethod;
 import com.vonage.client.sms.messages.BinaryMessage;
 import com.vonage.client.sms.messages.Message;
 import com.vonage.client.sms.messages.TextMessage;
-import com.vonage.client.sms.messages.WapPushMessage;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.NameValuePair;
@@ -33,27 +32,23 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicNameValuePair;
-import org.junit.Before;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import javax.xml.parsers.ParserConfigurationException;
+import static org.mockito.Mockito.*;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 public class SendMessageEndpointTest {
-    private SendMessageEndpoint endpoint;
-
-    @Before
-    public void setUp() throws ParserConfigurationException {
-        endpoint = new SendMessageEndpoint(new HttpWrapper());
-    }
+    private SendMessageEndpoint endpoint = new SendMessageEndpoint(new HttpWrapper());
 
     @Test
     public void testConstructParamsText() throws Exception {
-        Message message = new TextMessage("TestSender", "not-a-number", "Test");
+        String body = "Hello, World!";
+        TextMessage message = new TextMessage("TestSender", "not-a-number", body);
+        assertFalse(message.isUnicode());
+        assertEquals(body, message.getMessageBody());
 
         RequestBuilder builder = endpoint.makeRequest(message);
         assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
@@ -63,7 +58,7 @@ public class SendMessageEndpointTest {
         assertContainsParam(params, "to", "not-a-number");
         assertContainsParam(params, "type", "text");
         assertMissingParam(params, "status-report-req");
-        assertContainsParam(params, "text", "Test");
+        assertContainsParam(params, "text", body);
     }
 
     @Test
@@ -81,7 +76,9 @@ public class SendMessageEndpointTest {
 
     @Test
     public void testConstructParamsUnicode() throws Exception {
-        Message message = new TextMessage("TestSender", "not-a-number", "Test", true);
+        TextMessage message = new TextMessage("TestSender", "not-a-number", "Test", true);
+        assertTrue(message.isUnicode());
+        assertEquals(Message.MessageType.UNICODE, message.getType());
 
         RequestBuilder requestBuilder = endpoint.makeRequest(message);
         List<NameValuePair> params = requestBuilder.getParameters();
@@ -108,19 +105,6 @@ public class SendMessageEndpointTest {
     }
 
     @Test
-    public void testConstructParamsWapPush() throws Exception {
-        Message message = new WapPushMessage("TestSender", "not-a-number", "http://the-url", "A Title");
-        List<NameValuePair> params = endpoint.makeRequest(message).getParameters();
-
-        assertContainsParam(params, "from", "TestSender");
-        assertContainsParam(params, "to", "not-a-number");
-        assertContainsParam(params, "type", "wappush");
-        assertMissingParam(params, "status-report-req");
-        assertContainsParam(params, "url", "http://the-url");
-        assertContainsParam(params, "title", "A Title");
-    }
-
-    @Test
     public void testConstructParamsValidityPeriodTTL() throws Exception {
         Message message = new BinaryMessage("TestSender", "not-a-number", "abc".getBytes(), "def".getBytes());
         message.setTimeToLive(50L);
@@ -137,11 +121,11 @@ public class SendMessageEndpointTest {
                         + "      \"to\":\"not-a-number\",\n" + "      \"message-id\":\"message-id-1\",\n"
                         + "      \"status\":\"0\",\n" + "      \"remaining-balance\":\"26.43133450\",\n"
                         + "      \"message-price\":\"0.03330000\",\n" + "      \"network\":\"12345\",\n"
-                        + "      \"client-ref\": \"first ref\"\n" + "    },\n" + "    {\n"
+                        + "      \"client-ref\": \"first ref\",\n    \"account-ref\": \"ac1\"},\n" + "    {\n"
                         + "      \"to\":\"not-a-number-2\",\n" + "      \"message-id\":\"message-id-2\",\n"
                         + "      \"status\":\"0\",\n" + "      \"remaining-balance\":\"27.43133450\",\n"
                         + "      \"message-price\":\"0.03430000\",\n" + "      \"network\":\"98765\",\n"
-                        + "      \"client-ref\": \"second ref\"\n" + "    }\n" + "  ]\n" + "}"
+                        + "      \"client-ref\": \"second ref\",\n    \"error-text\":\"sww!\"}\n" + "  ]\n" + "}"
         ));
         assertEquals(rs.getMessageCount(), 2);
         assertEquals(rs.getMessages().size(), 2);
@@ -157,6 +141,8 @@ public class SendMessageEndpointTest {
         assertEquals("12345", firstMessage.getNetwork());
         assertEquals("first ref", firstMessage.getClientRef());
         assertTrue(firstMessage.toString().contains("first ref"));
+        assertEquals("ac1", firstMessage.getAccountRef());
+        assertNull(firstMessage.getErrorText());
 
         assertEquals("not-a-number-2", secondMessage.getTo());
         assertEquals("message-id-2", secondMessage.getId());
@@ -166,6 +152,8 @@ public class SendMessageEndpointTest {
         assertEquals("98765", secondMessage.getNetwork());
         assertEquals("second ref", secondMessage.getClientRef());
         assertTrue(secondMessage.toString().contains("second ref"));
+        assertEquals("sww!", secondMessage.getErrorText());
+        assertNull(secondMessage.getAccountRef());
     }
 
     @Test
