@@ -69,8 +69,7 @@ public class SignalRequest {
 	}
 	
 	public static class Builder {
-		private String type;
-		private String data;
+		private String type, data;
 	
 		Builder() {}
 	

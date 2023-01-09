@@ -224,10 +224,9 @@ public class VideoClient {
 	 *
 	 * @param sessionId The session ID.
 	 * @param streamId ID of the stream to mute.
-	 * @return The project details.
 	 */
-	public ProjectDetails muteStream(String sessionId, String streamId) {
-		return muteStream.execute(new MuteStreamRequestWrapper(
+	public void muteStream(String sessionId, String streamId) {
+		muteStream.execute(new MuteStreamRequestWrapper(
 				validateSessionId(sessionId),
 				validateStreamId(streamId)
 		));
@@ -248,11 +247,9 @@ public class VideoClient {
 	 * @param excludedStreamIds (OPTIONAL) The stream IDs for streams that should not be muted.
 	 * If you omit this, all streams in the session will be muted. This only applies when the "active" property is set
 	 * {@code true}. When the "active" property is set to {@code false}, it is ignored.
-	 *
-	 * @return Metadata about the video project.
 	 */
-	public ProjectDetails muteSession(String sessionId, boolean active, Collection<String> excludedStreamIds) {
-		return muteSession.execute(new MuteSessionRequest(
+	public void muteSession(String sessionId, boolean active, Collection<String> excludedStreamIds) {
+		muteSession.execute(new MuteSessionRequest(
 				validateSessionId(sessionId),
 				active,
 				excludedStreamIds
@@ -275,11 +272,10 @@ public class VideoClient {
 	 * If you omit this, all streams in the session will be muted. This only applies when the "active" property is set
 	 * {@code true}. When the "active" property is set to {@code false}, it is ignored.
 	 *
-	 * @return Metadata about the video project.
 	 * @see #muteSession(String, boolean, Collection)
 	 */
-	public ProjectDetails muteSession(String sessionId, boolean active, String... excludedStreamIds) {
-		return muteSession(sessionId, active,
+	public void muteSession(String sessionId, boolean active, String... excludedStreamIds) {
+		muteSession(sessionId, active,
 				excludedStreamIds != null && excludedStreamIds.length > 0 ?
 					Arrays.asList(excludedStreamIds) : null
 		);
@@ -424,7 +420,7 @@ public class VideoClient {
 		options.addClaims(jwtBuilder);
 		return jwtBuilder
 				.addClaim("session_id", validateSessionId(sessionId))
-				.addClaim("nonce", new Random().nextInt())
+			    .addClaim("nonce", new Random().nextInt())
 				.issuedAt(ZonedDateTime.now())
 				.build().generate();
 	}
