@@ -210,7 +210,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 	@Test
 	public void testSignal() throws Exception {
 		SignalRequest signalRequest = SignalRequest.builder().data("d").type("t").build();
-		stubResponseAndRun(() -> client.signal(sessionId, connectionId, signalRequest));
+		stubResponseAndRun(204, () -> client.signal(sessionId, connectionId, signalRequest));
 		stubResponseAndAssertThrowsIAX(() -> client.signal(sessionId, connectionId, null));
 		stubResponseAndAssertThrowsIAX(() -> client.signal(sessionId, null, signalRequest));
 		stubResponseAndAssertThrowsIAX(() -> client.signal(null, connectionId, signalRequest));
@@ -219,14 +219,14 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 	@Test
 	public void testSignalAll() throws Exception {
 		SignalRequest signalRequest = SignalRequest.builder().data("d").type("t").build();
-		stubResponseAndRun(() -> client.signalAll(sessionId, signalRequest));
+		stubResponseAndRun(204, () -> client.signalAll(sessionId, signalRequest));
 		stubResponseAndAssertThrowsIAX(() -> client.signalAll(sessionId, null));
 		stubResponseAndAssertThrowsIAX(() -> client.signalAll(null, signalRequest));
 	}
 
 	@Test
 	public void testForceDisconnect() throws Exception {
-		stubResponseAndRun(() -> client.forceDisconnect(sessionId, connectionId));
+		stubResponseAndRun(204, () -> client.forceDisconnect(sessionId, connectionId));
 		stubResponseAndAssertThrowsIAX(() -> client.forceDisconnect(null, connectionId));
 		stubResponseAndAssertThrowsIAX(() -> client.forceDisconnect(sessionId, null));
 	}

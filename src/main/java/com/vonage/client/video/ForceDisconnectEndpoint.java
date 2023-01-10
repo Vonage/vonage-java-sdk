@@ -46,7 +46,7 @@ class ForceDisconnectEndpoint extends AbstractMethod<ForceDisconnectRequestWrapp
 
 	@Override
 	public Void parseResponse(HttpResponse response) throws IOException {
-		if (response.getStatusLine().getStatusCode() != 200) {
+		if (response.getStatusLine().getStatusCode() != 204) {
 			throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
 		}
 		return null;
