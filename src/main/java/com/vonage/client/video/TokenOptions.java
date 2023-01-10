@@ -50,7 +50,7 @@ public class TokenOptions {
 
     protected void addClaims(Jwt.Builder jwt) {
         jwt.expiresAt(ZonedDateTime.now().plus(ttl));
-        jwt.addClaim("role", role);
+        jwt.addClaim("role", role.toString());
         if (data != null) {
             jwt.addClaim("connection_data", data);
         }

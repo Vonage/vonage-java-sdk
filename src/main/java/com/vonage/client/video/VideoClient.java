@@ -23,7 +23,6 @@ import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 import java.util.function.Supplier;
 
 /**
@@ -420,7 +419,7 @@ public class VideoClient {
 		options.addClaims(jwtBuilder);
 		return jwtBuilder
 				.addClaim("session_id", validateSessionId(sessionId))
-			    .addClaim("nonce", new Random().nextInt())
+			    .addClaim("scope", "session.connect")
 				.issuedAt(ZonedDateTime.now())
 				.build().generate();
 	}

@@ -16,14 +16,14 @@
 package com.vonage.client.video;
 
 import com.vonage.client.ClientTest;
+import com.vonage.client.TestUtils;
 import com.vonage.client.auth.JWTAuthMethod;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.function.ThrowingRunnable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.time.Duration;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class VideoClientTest extends ClientTest<VideoClient> {
@@ -269,7 +269,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 	@Test
 	public void testDeleteArchive() throws Exception {
-		stubResponseAndRun(() -> client.deleteArchive(archiveId));
+		stubResponseAndRun(204, () -> client.deleteArchive(archiveId));
 		stubResponseAndAssertThrowsIAX(() -> client.deleteArchive(null));
 	}
 
@@ -318,14 +318,43 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 	@Test
 	public void testGenerateToken() {
-		String token = client.generateToken(sessionId, null);
+		String token = client.generateToken(sessionId);
+		Map<String, String> claims = TestUtils.decodeTokenBody(token);
+
+		assertEquals("session.connect", claims.get("scope"));
+		assertEquals(sessionId, claims.get("session_id"));
+		assertEquals(applicationId, claims.get("application_id"));
+		long exp = Long.parseLong(claims.get("exp"));
+		long iat = Long.parseLong(claims.get("iat"));
+		// One minute less than a day = 86340
+		assertTrue((iat + 86340) < exp);
+		assertTrue((iat + 86401) > exp);
 		assertTrue(token.length() > 100);
-		TokenOptions options = TokenOptions.builder().build();
-		token = client.generateToken(sessionId, options);
-		assertTrue(token.length() > 100);
-		assertThrows(IllegalArgumentException.class, () -> client.generateToken(null, options));
-		token = client.generateToken(sessionId);
-		assertTrue(token.length() > 100);
+
+		token = client.generateToken(sessionId, TokenOptions.builder().build());
+		assertEquals(claims.keySet(), TestUtils.decodeTokenBody(token).keySet());
+		token = client.generateToken(sessionId, null);
+		assertEquals(claims.keySet(), TestUtils.decodeTokenBody(token).keySet());
 		assertThrows(IllegalArgumentException.class, () -> client.generateToken(null));
+
+		token = client.generateToken(sessionId,TokenOptions.builder()
+				.role(Role.SUBSCRIBER)
+				.expiryLength(Duration
+			    .ofMinutes(12))
+				.data("foo bar, blah blah")
+				.initialLayoutClassList(Arrays.asList("c1", "c2", "min", "full"))
+		        .build()
+		);
+		claims = TestUtils.decodeTokenBody(token);
+		assertEquals("subscriber", claims.get("role"));
+		assertEquals("foo bar, blah blah", claims.get("connection_data"));
+		assertEquals("c1 c2 min full", claims.get("initial_layout_class_list"));
+		assertEquals("session.connect", claims.get("scope"));
+		assertEquals(sessionId, claims.get("session_id"));
+		assertEquals(applicationId, claims.get("application_id"));
+		exp = Long.parseLong(claims.get("exp"));
+		iat = Long.parseLong(claims.get("iat"));
+		assertTrue((iat + 721) > exp);
+		assertTrue((iat + 700) < exp);
 	}
 }

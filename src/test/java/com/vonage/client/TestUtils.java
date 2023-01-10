@@ -15,6 +15,9 @@
  */
 package com.vonage.client;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.logging.LoggingUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -23,18 +26,15 @@ import org.apache.http.client.HttpResponseException;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
+import static org.junit.Assert.fail;
 import org.mockito.MockedStatic;
+import static org.mockito.Mockito.mockStatic;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.mockStatic;
+import java.util.*;
 
 public class TestUtils {
 
@@ -102,6 +102,20 @@ public class TestUtils {
             fail("A 429 response should raise a HttpResponseException");
         } catch (HttpResponseException e) {
             // This is expected
+        }
+    }
+
+    public static Map<String, String> decodeTokenBody(String jwt) {
+        String[] parts = jwt.split("\\.");
+        if (parts.length < 2 || parts.length > 3) {
+            throw new IllegalArgumentException("Invalid JWT: "+jwt);
+        }
+        String claims = new String(Base64.getDecoder().decode(parts[1]));
+        try {
+            return new ObjectMapper().readValue(claims, new TypeReference<LinkedHashMap<String, String>>(){});
+        }
+        catch (JsonProcessingException ex) {
+            throw new IllegalArgumentException("Could not decode "+claims, ex);
         }
     }
 }
