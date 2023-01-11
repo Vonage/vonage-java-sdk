@@ -470,7 +470,16 @@ CreateSessionResponse session = client.getVideoClient().createSession(
 
 Force mute a specific publisher stream:
 ```java
-ProjectDetails response = client.getVideoClient().muteStream(SESSION_ID, STREAM_ID);
+client.getVideoClient().muteStream(SESSION_ID, STREAM_ID);
+```
+
+### Mute multiple participants in a session
+
+Force all streams (except for an optional list of streams) in a session to mute published audio.
+You can also use this method to disable the force mute state of a session:
+
+```java
+client.getVideoClient().muteSession(SESSION_ID, true);
 ```
 
 ### Disconnect a client from a session

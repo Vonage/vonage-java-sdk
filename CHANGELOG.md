@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.0.0-beta3] - 2023-01-11
+- Removed `WAPPush` SMS message type
+- Fixed token generation (added missing claim & role as string)
+- Fixed incorrect responses for `muteSession` and `muteStream` (they don't return anything)
+- Improved handling of 200 / 204 responses for video endpoints which don't return anything
+
 ## [8.0.0-beta2] - 2022-12-15
 - Added token generation capability to `VideoClient`
 - Added varargs for `SetStreamLayoutRequest`
