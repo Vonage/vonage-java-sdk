@@ -64,10 +64,6 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		client = new VideoClient(wrapper);
 	}
 
-	void stubResponseAndAssertThrowsIAX(String response, ThrowingRunnable invocation) throws Exception {
-		stubResponseAndAssertThrows(response, invocation, IllegalArgumentException.class);
-	}
-
 	void stubArchiveJsonAndAssertThrows(ThrowingRunnable invocation) throws Exception {
 		stubResponseAndAssertThrowsIAX(archiveJson, invocation);
 	}
@@ -86,18 +82,6 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		List<Archive> archives = invocation.get();
 		assertEquals(1, archives.size());
 		assertArchiveEqualsExpectedJson(archives.get(0));
-	}
-
-	void stubResponseAndAssertThrowsIAX(int statusCode, ThrowingRunnable invocation) throws Exception {
-		stubResponseAndAssertThrows(statusCode, invocation, IllegalArgumentException.class);
-	}
-
-	void stubResponseAndAssertThrowsIAX(ThrowingRunnable invocation) throws Exception {
-		stubResponseAndAssertThrowsIAX(200, invocation);
-	}
-
-	void stubResponseAndAssertThrowsNPE(ThrowingRunnable invocation) throws Exception {
-		stubResponseAndAssertThrows(200, invocation, NullPointerException.class);
 	}
 
 	static void assertArchiveEqualsExpectedJson(Archive response) {
@@ -149,6 +133,12 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		assertEquals(applicationId, response.getApplicationId());
 		assertEquals(createDt, response.getCreateDt());
 		assertEquals(msUrl, response.getMediaServerUrl());
+
+		responseJson = "{\n" + "  \"code\": 400,\n" + "  \"message\": "+
+				"\"Invalid request. This response may indicate that data in your request data is invalid JSON. "+
+			    "Or it may indicate that you do not pass in a session ID or you passed in an invalid stream ID.\"\n}";
+
+		stubResponseAndAssertThrowsResponseParseException(400, responseJson, () -> client.createSession(null));
 	}
 
 	@Test
@@ -170,6 +160,12 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		assertEquals(VideoType.SCREEN, response.get(0).getVideoType());
 		assertEquals("", response.get(0).getName());
 		assertThrows(IllegalArgumentException.class, () -> client.listStreams(null));
+
+		responseJson = "{\n" +
+			  "  \"code\": 404,\n" +
+			  "  \"message\": \"The session exists but has not had any streams added to it yet.\"\n" +
+			  "}";
+		stubResponseAndAssertThrowsResponseParseException(404, responseJson, () -> client.listStreams(sessionId));
 	}
 
 	@Test
@@ -183,7 +179,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 				"  ]\n" +
 				"}";
 
-		stubResponse(responseJson);
+		stubResponse(200, responseJson);
 		GetStreamResponse response = client.getStream(sessionId, streamId);
 		assertEquals(streamId, response.getId());
 		assertEquals(VideoType.CUSTOM, response.getVideoType());
@@ -192,6 +188,14 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 		stubResponseAndAssertThrowsIAX(() -> client.getStream(null, streamId));
 		stubResponseAndAssertThrowsIAX(() -> client.getStream(sessionId, null));
+
+		responseJson = "{\n" +
+			  "  \"code\": 408,\n" +
+			  "  \"message\": \"You passed in an invalid stream ID.\"\n" +
+			  "}";
+		stubResponseAndAssertThrowsResponseParseException(408, responseJson,
+			  () -> client.getStream(sessionId, streamId)
+		);
 	}
 
 	@Test
@@ -205,6 +209,14 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		stubResponseAndAssertThrowsIAX(() -> client.setStreamLayout(null, layoutsArray));
 		stubResponseAndAssertThrowsIAX(() -> client.setStreamLayout(sessionId, (List<SessionStream>) null));
 		stubResponseAndAssertThrowsNPE(() -> client.setStreamLayout(sessionId, (SessionStream[]) null));
+
+		String responseJson = "{\n" +
+			  "  \"code\": 403,\n" +
+			  "  \"message\": \"Authentication error\"\n" +
+			  "}";
+		stubResponseAndAssertThrowsBadRequestException(403, responseJson,
+			  () -> client.setStreamLayout(sessionId, layoutsList)
+		);
 	}
 
 	@Test
@@ -214,6 +226,12 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		stubResponseAndAssertThrowsIAX(() -> client.signal(sessionId, connectionId, null));
 		stubResponseAndAssertThrowsIAX(() -> client.signal(sessionId, null, signalRequest));
 		stubResponseAndAssertThrowsIAX(() -> client.signal(null, connectionId, signalRequest));
+
+		String responseJson = "{\n  \"code\": 413,\n  \"message\": \"The type string exceeds the maximum" +
+			  "length (128 bytes), or the data string exceeds the maximum size (8 kB).\"\n}";
+		stubResponseAndAssertThrowsBadRequestException(413, responseJson,
+			  () -> client.signal(sessionId, connectionId, signalRequest)
+		);
 	}
 
 	@Test
@@ -222,6 +240,12 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		stubResponseAndRun(204, () -> client.signalAll(sessionId, signalRequest));
 		stubResponseAndAssertThrowsIAX(() -> client.signalAll(sessionId, null));
 		stubResponseAndAssertThrowsIAX(() -> client.signalAll(null, signalRequest));
+
+		String responseJson = "{\n  \"code\": 413,\n  \"message\": \"The type string exceeds the maximum" +
+			  "length (128 bytes), or the data string exceeds the maximum size (8 kB).\"\n}";
+		stubResponseAndAssertThrowsBadRequestException(413, responseJson,
+			  () -> client.signalAll(sessionId, signalRequest)
+		);
 	}
 
 	@Test
@@ -229,6 +253,12 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		stubResponseAndRun(204, () -> client.forceDisconnect(sessionId, connectionId));
 		stubResponseAndAssertThrowsIAX(() -> client.forceDisconnect(null, connectionId));
 		stubResponseAndAssertThrowsIAX(() -> client.forceDisconnect(sessionId, null));
+
+		String responseJson = "{\n  \"code\": 403,\n  \"message\": " +
+			  "\"You are not authorized to forceDisconnect, check your authentication credentials.\"\n}";
+		stubResponseAndAssertThrowsBadRequestException(403, responseJson,
+			  () -> client.forceDisconnect(sessionId, connectionId)
+		);
 	}
 
 	@Test
@@ -236,6 +266,14 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		stubResponseAndRun(() -> client.muteStream(sessionId, streamId));
 		stubResponseAndAssertThrowsIAX(() -> client.muteStream(null, streamId));
 		stubResponseAndAssertThrowsIAX(() -> client.muteStream(sessionId, null));
+
+		String responseJson = "{\n" +
+			  "  \"code\": 404,\n" +
+			  "  \"message\": \"Not found. The session or stream is not found\"\n" +
+			  "}";
+		stubResponseAndAssertThrowsBadRequestException(404, responseJson,
+			  () -> client.muteStream(sessionId, streamId)
+		);
 	}
 
 	@Test
@@ -257,6 +295,14 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		stubResponseAndRun(() -> client.muteSession(sessionId, true, singleStreamIdCol));
 		stubResponseAndRun(() -> client.muteSession(sessionId, false, singleStreamIdArr));
 		stubResponseAndAssertThrowsIAX(() -> client.muteSession(null, false));
+
+		String responseJson = "{\n" +
+			  "  \"code\": 404,\n" +
+			  "  \"message\": \"Not found. The session or stream is not found\"\n" +
+			  "}";
+		stubResponseAndAssertThrowsBadRequestException(404, responseJson,
+			  () -> client.muteSession(sessionId, false)
+		);
 	}
 
 	@Test
@@ -265,12 +311,26 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		stubResponseAndRun(() -> client.setArchiveLayout(archiveId, request));
 		stubResponseAndAssertThrowsIAX(() -> client.setArchiveLayout(null, request));
 		stubResponseAndAssertThrowsIAX(() -> client.setArchiveLayout(archiveId, null));
+
+		String responseJson = "{\n" +
+			  "  \"code\": 403,\n" +
+			  "  \"message\": \"Authentication error.\"\n" +
+			  "}";
+		stubResponseAndAssertThrowsBadRequestException(403, responseJson,
+			  () -> client.setArchiveLayout(archiveId, request)
+	    );
 	}
 
 	@Test
 	public void testDeleteArchive() throws Exception {
 		stubResponseAndRun(204, () -> client.deleteArchive(archiveId));
 		stubResponseAndAssertThrowsIAX(() -> client.deleteArchive(null));
+
+		String responseJson = "{\n" +
+			  "  \"code\": 409,\n" +
+			  "  \"message\": \"Status of the archive is not \"uploaded\", \"available\", or \"deleted\"\"\n" +
+			  "}";
+		stubResponseAndAssertThrowsBadRequestException(409, responseJson, () -> client.deleteArchive(archiveId));
 	}
 
 	@Test
@@ -281,6 +341,14 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		stubResponseAndRun(204, () -> client.addArchiveStream(archiveId, streamId, false, null));
 		stubResponseAndAssertThrowsIAX(204, () -> client.addArchiveStream(null, streamId));
 		stubResponseAndAssertThrowsIAX(204, () -> client.addArchiveStream(archiveId, null));
+
+		String responseJson = "{\n" +
+			  "  \"code\": 404,\n" +
+			  "  \"message\": \"Archive or stream not found\"\n" +
+			  "}";
+		stubResponseAndAssertThrowsBadRequestException(404, responseJson,
+			  () -> client.addArchiveStream(archiveId, streamId)
+		);
 	}
 
 	@Test
@@ -288,18 +356,38 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		stubResponseAndRun(204, () -> client.removeArchiveStream(archiveId, streamId));
 		stubResponseAndAssertThrowsIAX(204, () -> client.removeArchiveStream(null, streamId));
 		stubResponseAndAssertThrowsIAX(204, () -> client.removeArchiveStream(archiveId, null));
+
+		String responseJson = "{\n" +
+			  "  \"code\": 404,\n" +
+			  "  \"message\": \"Archive or stream not found\"\n" +
+			  "}";
+		stubResponseAndAssertThrowsBadRequestException(404, responseJson,
+			  () -> client.removeArchiveStream(archiveId, streamId)
+		);
 	}
 
 	@Test
 	public void testStopArchive() throws Exception {
 		stubArchiveJsonAndAssertEquals(() -> client.stopArchive(archiveId));
 		stubArchiveJsonAndAssertThrows(() -> client.stopArchive(null));
+
+		String responseJson = "{\n" +
+			  "  \"code\": 409,\n" +
+			  "  \"message\": \"You attempted to stop an archive that was not being recorded\"\n" +
+			  "}";
+		stubResponseAndAssertThrowsResponseParseException(409, responseJson, () -> client.stopArchive(archiveId));
 	}
 
 	@Test
 	public void testGetArchive() throws Exception {
 		stubArchiveJsonAndAssertEquals(() -> client.getArchive(archiveId));
 		stubArchiveJsonAndAssertThrows(() -> client.getArchive(null));
+
+		String responseJson = "{\n" +
+			  "  \"code\": 403,\n" +
+			  "  \"message\": \"You passed in an invalid JWT token.\"\n" +
+			  "}";
+		stubResponseAndAssertThrowsResponseParseException(403, responseJson, () -> client.getArchive(archiveId));
 	}
 
 	@Test
@@ -307,6 +395,12 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		stubListArchiveJsonAndAssertEquals(() -> client.listArchives());
 		stubListArchiveJsonAndAssertEquals(() -> client.listArchives(ListArchivesRequest.builder().build()));
 		stubListArchiveJsonAndAssertEquals(() -> client.listArchives(null));
+
+		String responseJson = "{\n" +
+			  "  \"code\": 403,\n" +
+			  "  \"message\": \"Authentication error\"\n" +
+			  "}";
+		stubResponseAndAssertThrowsResponseParseException(403, responseJson, () -> client.listArchives());
 	}
 
 	@Test
@@ -314,6 +408,10 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		CreateArchiveRequest request = CreateArchiveRequest.builder(sessionId).build();
 		stubArchiveJsonAndAssertEquals(() -> client.createArchive(request));
 		stubArchiveJsonAndAssertThrows(() -> client.createArchive(null));
+
+		String responseJson = "{\n  \"code\": 409,\n  \"message\": \"You attempted to " +
+			  "start an archive for a session that does not use the Vonage Video Media Router.\"\n}";
+		stubResponseAndAssertThrowsResponseParseException(409, responseJson, () -> client.createArchive(request));
 	}
 
 	@Test

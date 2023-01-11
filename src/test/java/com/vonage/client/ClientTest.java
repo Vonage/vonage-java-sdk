@@ -21,12 +21,14 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpUriRequest;
 import static org.junit.Assert.assertThrows;
 import org.junit.function.ThrowingRunnable;
 import static org.mockito.Mockito.*;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.function.Supplier;
 
 public abstract class ClientTest<T> {
     protected HttpWrapper wrapper;
@@ -78,6 +80,16 @@ public abstract class ClientTest<T> {
         invocation.run();
     }
 
+    protected <R> R stubResponseWithResult(int statusCode, String response, Supplier<? extends R> invocation) throws Exception {
+        stubResponse(statusCode, response);
+        return invocation.get();
+    }
+
+    protected <R> R stubResponseWithResult(String response, Supplier<? extends R> invocation) throws Exception {
+        stubResponse(response);
+        return invocation.get();
+    }
+
     protected void stubResponseAndAssertThrows(int statusCode, ThrowingRunnable invocation,
                                                Class<? extends Exception> exceptionClass) throws Exception {
         stubResponse(statusCode);
@@ -94,5 +106,36 @@ public abstract class ClientTest<T> {
                                                Class<? extends Exception> exceptionClass) throws Exception {
         stubResponse(statusCode, response);
         assertThrows(exceptionClass, invocation);
+    }
+
+    protected void stubResponseAndAssertThrowsHttpResponseException(int statusCode, String response,
+                                                                    ThrowingRunnable invocation) throws Exception {
+        stubResponseAndAssertThrows(statusCode, response, invocation, HttpResponseException.class);
+    }
+
+    protected void stubResponseAndAssertThrowsIAX(int statusCode, ThrowingRunnable invocation) throws Exception {
+        stubResponseAndAssertThrows(statusCode, invocation, IllegalArgumentException.class);
+    }
+
+    protected void stubResponseAndAssertThrowsIAX(ThrowingRunnable invocation) throws Exception {
+        stubResponseAndAssertThrowsIAX(200, invocation);
+    }
+
+    protected void stubResponseAndAssertThrowsIAX(String response, ThrowingRunnable invocation) throws Exception {
+        stubResponseAndAssertThrows(response, invocation, IllegalArgumentException.class);
+    }
+
+    protected void stubResponseAndAssertThrowsNPE(ThrowingRunnable invocation) throws Exception {
+        stubResponseAndAssertThrows(200, invocation, NullPointerException.class);
+    }
+
+    protected void stubResponseAndAssertThrowsBadRequestException(int statusCode, String response,
+                                                                  ThrowingRunnable invocation) throws Exception {
+        stubResponseAndAssertThrows(statusCode, response, invocation, VonageBadRequestException.class);
+    }
+
+    protected void stubResponseAndAssertThrowsResponseParseException(int statusCode, String response,
+                                                                  ThrowingRunnable invocation) throws Exception {
+        stubResponseAndAssertThrows(statusCode, response, invocation, VonageResponseParseException.class);
     }
 }
