@@ -90,12 +90,12 @@ to your project's classpath.
 
 ## Usage
 
-* For help understanding our APIs, check out our awesome [developer portal](https://developer.nexmo.com/)
-* Check the [Javadoc](http://vonage.github.io/vonage-java-sdk/) for full reference documentation.
+* For help understanding our APIs, check out our awesome [developer portal](https://developer.vonage.com/)
+* Check the [Javadoc](https://www.javadoc.io/doc/com.vonage/server-sdk/latest/index.html) for full reference documentation.
 * There are also **many useful code samples** in our [nexmo-community/nexmo-java-quickstart](https://github.com/nexmo-community/nexmo-java-quickstart) repository.
 
 ### Customize the Base URI
-By default, the client will use https://api.nexmo.com, https://rest.nexmo.com, and https://sns.nexmo.com as base URIs for the various endpoints. To customize these you can instantiate `VonageClient` with an `HttpConfig` object.
+By default, the client will use https://api.nexmo.com, https://rest.nexmo.com, https://sns.nexmo.com and https://video.api.vonage.com as base URIs for the various endpoints. To customize these you can instantiate `VonageClient` with an `HttpConfig` object.
 
 `HttpConfig.Builder` has been created to assist in building this object. Usage is as follows:
 
