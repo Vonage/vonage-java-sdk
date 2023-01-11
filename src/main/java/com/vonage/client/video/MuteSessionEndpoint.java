@@ -17,14 +17,16 @@ package com.vonage.client.video;
 
 import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
+import com.vonage.client.VonageBadRequestException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 
-class MuteSessionEndpoint extends AbstractMethod<MuteSessionRequest, ProjectDetails> {
+class MuteSessionEndpoint extends AbstractMethod<MuteSessionRequest, Void> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/v2/project/%s/session/%s/mute";
 
@@ -48,7 +50,10 @@ class MuteSessionEndpoint extends AbstractMethod<MuteSessionRequest, ProjectDeta
 	}
 
 	@Override
-	public ProjectDetails parseResponse(HttpResponse response) throws IOException {
-		return ProjectDetails.fromJson(basicResponseHandler.handleResponse(response));
+	public Void parseResponse(HttpResponse response) throws IOException {
+		if (response.getStatusLine().getStatusCode() != 200) {
+			throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
+		}
+		return null;
 	}
 }

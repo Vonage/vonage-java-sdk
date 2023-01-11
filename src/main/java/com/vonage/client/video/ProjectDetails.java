@@ -21,8 +21,7 @@ import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 
 /**
- * Represents properties of a video project,
- * typically returned as a response for muting sessions or streams.
+ * Represents properties of a video project.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProjectDetails {
@@ -76,6 +75,9 @@ public class ProjectDetails {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static ProjectDetails fromJson(String json) {
+		if (json == null || json.trim().isEmpty()) {
+			return new ProjectDetails();
+		}
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			return mapper.readValue(json, ProjectDetails.class);

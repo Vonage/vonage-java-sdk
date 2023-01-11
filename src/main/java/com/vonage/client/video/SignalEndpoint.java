@@ -17,11 +17,13 @@ package com.vonage.client.video;
 
 import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
+import com.vonage.client.VonageBadRequestException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 
 class SignalEndpoint extends AbstractMethod<SignalRequestWrapper, Void> {
@@ -48,7 +50,9 @@ class SignalEndpoint extends AbstractMethod<SignalRequestWrapper, Void> {
 
 	@Override
 	public Void parseResponse(HttpResponse response) throws IOException {
-		basicResponseHandler.handleResponse(response);
+		if (response.getStatusLine().getStatusCode() != 204) {
+			throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
+		}
 		return null;
 	}
 }

@@ -54,7 +54,7 @@ public class TokenOptionsTest {
 		assertEquals(4, claims.size());
 		assertEquals(data, claims.get("connection_data"));
 		assertEquals(String.join(" ", layoutClassList), claims.get("initial_layout_class_list"));
-		assertEquals(role, claims.get("role"));
+		assertEquals(role.toString(), claims.get("role"));
 	}
 
 	@Test
