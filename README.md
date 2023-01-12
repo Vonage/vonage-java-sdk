@@ -83,8 +83,8 @@ to your project's classpath.
 
 ## Usage
 
-* For help understanding our APIs, check out our awesome [developer portal](https://developer.nexmo.com/)
-* Check the [Javadoc](http://vonage.github.io/vonage-java-sdk/) for full reference documentation.
+* For help understanding our APIs, check out our awesome [developer portal](https://developer.vonage.com/)
+* Check the [Javadoc](https://www.javadoc.io/doc/com.vonage/client/latest/index.html) for full reference documentation.
 * There are also **many useful code samples** in our [nexmo-community/nexmo-java-quickstart](https://github.com/nexmo-community/nexmo-java-quickstart) repository.
 
 ### Customize the Base URI
