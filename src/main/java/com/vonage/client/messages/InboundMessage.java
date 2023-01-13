@@ -30,6 +30,8 @@ import java.util.UUID;
  * Refer to the
  * <a href=https://developer.vonage.com/api/messages-olympus#webhooks>Messages API Webhook reference</a>
  * for more details on the response object structure.
+ *
+ * @since 7.2.0
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class InboundMessage {

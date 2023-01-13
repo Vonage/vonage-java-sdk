@@ -4,10 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [7.1.1]
+# [7.2.0]
+- Added inbound message webhook
+
+# [7.1.1] - 2022-11-16
 - Bumped Jackson version to 2.14
 
-## [7.1.0]
+## [7.1.0] - 2022-08-25
 - Fixed parsing `MessageResponseException` when entity body is empty
 - Added toggle for using Messages API Sandbox to `MessagesClient`
 - Deprecated `request_type` in `VerifyRequest`
@@ -18,14 +21,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Updated `VerifyStatus` enum values
 - Added missing documentation and validation to requests and responses in Verify API
 
-## [7.0.0]
+## [7.0.0] - 2022-08-11
 - Removed SMS Search API
 - Deprecated Redact client
 - Use `vonage-jwt-jdk:1.0.2` library instead of `nexmo-jwt-jdk:1.0.1`
 - Ensure `User-Agent` is set in request headers
 - Allow alphanumeric characters for SMS and MMS sender fields in Messages API
 - `WhatsappRequest` sender must now be an E164 number
-- Fixed incorrect restrictions on `WhatsappTemplateRequest` 
+- Fixed incorrect restrictions on `WhatsappTemplateRequest`
   - Policy is now optional
   - Default locale is now `en`
   - Locale is now an enum rather than String
@@ -50,33 +53,33 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Moved AdvancedInsight enums to separate files
   - Added `real_time_data` to AdvancedInsightResponse
 
-## [6.5.0]
+## [6.5.0] - 2022-06-20
 - Added Messages v1 API implementation
 - Added `get-full-pricing` endpoint
 - Added `Content-Type` and `Accept` headers in requests where applicable
 - Substantial internal refactoring
 
-## [6.4.2]
+## [6.4.2] - 2022-04-14
 - Added `call_uuid` to webhook call event.
 - Bumped dependency versions
 
-## [6.4.0]
-- Adding Random From Number Feature for the Voice API, if set to `true`, the from number will be randomly selected from the pool of numbers available to the application making the call. 
+## [6.4.0] - 2021-05-28
+- Adding Random From Number Feature for the Voice API, if set to `true`, the from number will be randomly selected from the pool of numbers available to the application making the call.
 - adjusting operator used to check json payloads
 - Adding extra parsing for top level Roaming Status in Advanced Number Insights
 
-## [6.3.0]
+## [6.3.0] - 2021-05-20
 - Added parsing for JSON payloads when reading inbound SMS signatures
 
-## [6.2.0]
+## [6.2.0] - 2021-03-11
 - Adding ContentId and EntityId to message class for DLT
 - Adding Detail enum and string for certain voice webhooks
 
-## [6.1.0]
+## [6.1.0] - 2020-12-17
 - Adding Language and Style to the Voice Talk Action and the Talk Request
 - Marking VoiceName as Deprecated
 
-## [6.0.0]
+## [6.0.0] - 2020-11-16
 ## Added
 - ASR (Automatic Speech Recognition)
 
@@ -90,7 +93,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Deprecated MD5Util use HashUtil instead
 - Removed setters from BaseRequest. Set fields in the builders of Psd2Request or VerifyRequest instead.
 
-## [5.6.0]
+## [5.6.0] - 2020-11-10
 ### Added
 - NotifyEvent structure for Notify Actions
 - SHA256 hashing option
@@ -101,11 +104,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - Fixed error throw when trying to log No Content responses
 
-## [5.5.0]
+## [5.5.0] - 2020-09-08
+- Nexmo rebranded to Vonage
 ### Added
 - Added support for PSD2 verification
 
-## [5.4.0]
+## [5.4.0] - 2020-08-20
 ### Added
 - Added AppEndpoint support for ConnectAction.
 - Added the ability to log the API response in when logger is set to debug mode.
@@ -113,26 +117,26 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Modify Call
   - Send DTMF
   - Stop Talk
-  
-## [5.3.0]
+
+## [5.3.0] - 2020-07-27
 ### Added
 - Added support for new voice names added to the Voice API for [Text to Speech](https://developer.nexmo.com/voice/voice-api/guides/text-to-speech)
 
 ### Fixed
 - Improved error handling when there are apparent networking issues
 
-## [5.2.1]
+## [5.2.1] - 2019-12-18
 ### Added
 - Added new workflows in `VerifyRequest`
 
-## [5.2.0]
+## [5.2.0] - 2019-10-18
 ### Added
 - Added support for verification workflows inside of `VerifyRequest`.
 - Added support for transfer to NCCO via `VoiceClient#transferCall`.
 
 ### Fixed
 - `VerifyClient` had methods that were still claiming to throw an `IOException`. This has been removed as it is not
-posible for it to be thrown.
+  possible for it to be thrown.
 
 ## [5.1.0] - 2019-08-18
 
@@ -164,7 +168,7 @@ posible for it to be thrown.
 ### Fixed
 - Fix UTF-8 Encoding for endpoints using JSON bodies.
 
-## [4.3.0] - 2019-04-25 
+## [4.3.0] - 2019-04-25
 
 ### Added
 - Added `NotifyAction` for use in `NCCO`.
@@ -203,12 +207,12 @@ posible for it to be thrown.
 ### Added
 - Added `Ncco` class to wrap `Collection<Action>` and handle the serialization of NCCO json through `toJson`.
 - Added the following `Builder` classes:
-    - `ConnectAction.Builder`
-    - `ConversationAction.Builder`
-    - `InputAction.Builder`
-    - `RecordAction.Builder`
-    - `StreamAction.Builder`
-    - `TalkAction.Builder`
+  - `ConnectAction.Builder`
+  - `ConversationAction.Builder`
+  - `InputAction.Builder`
+  - `RecordAction.Builder`
+  - `StreamAction.Builder`
+  - `TalkAction.Builder`
 - Added `PhoneEndpoint` to `com.nexmo.voice.ncco` package for use with `ConnectAction`.
 - Added `WebSocketEndpoint` to `com.nexmo.voice.ncco` package for use with `ConnectAction`.
 - Added `SipEndpoint` to `com.nexmo.voice.ncco` package for use with `ConnectAction`.
@@ -221,15 +225,15 @@ posible for it to be thrown.
 
 ### Changed
 - Renamed all `Ncco` classes to `Action` classes:
-    - Renamed `Ncco` interface to `Action`
-    - Renamed `ConnectNcco` to `ConnectAction`
-    - Renamed `ConversationNcco` to `ConversationAction`
-    - Renamed `InputNcco` to `InputAction`
-    - Renamed `RecordNcco` to `RecordAction`
-    - Renamed `StreamNcco` to `StreamAction`
-    - Renamed `TalkNcco` to `TalkAction`
+  - Renamed `Ncco` interface to `Action`
+  - Renamed `ConnectNcco` to `ConnectAction`
+  - Renamed `ConversationNcco` to `ConversationAction`
+  - Renamed `InputNcco` to `InputAction`
+  - Renamed `RecordNcco` to `RecordAction`
+  - Renamed `StreamNcco` to `StreamAction`
+  - Renamed `TalkNcco` to `TalkAction`
 - All `Action` classes now must be constructed through the provided `Builder` class.
-- All `Action` classes are now immutable. 
+- All `Action` classes are now immutable.
 - The `eventUrl` property of `ConnectAction`, `ConversationAction`, `InputAction`, and `RecordAction` is now a `Collection<String>` instead of an array.
 - The `eventMethod` property of `ConnectAction`, `ConversationAction`, `InputAction`, and `RecordAction` is now an `EventMethod` enum instead of a String.
 - Removed `ConnectWebSocketNcco` as it is built into `ConnectAction`.
@@ -238,8 +242,8 @@ posible for it to be thrown.
 - Made all `*Endpoint` and `*Method` classes package scoped. Users should always go through the appropriate `Client` classes.
 - Moved `AbstractMethod` to the root package.
 - Removed legacy `setUri` methods from the various `VoiceClient` endpoints. This should be done through `HttpConfig`.
-- Changed `BasicInsightRequest`, `StandardInsightRequest`, and `AdvancedInsightRequest` to use builders as constructor 
-telescoping is clunky. Added some static factory methods to these classes to allow shortcutting through the builder for "simple" requests.
+- Changed `BasicInsightRequest`, `StandardInsightRequest`, and `AdvancedInsightRequest` to use builders as constructor
+  telescoping is clunky. Added some static factory methods to these classes to allow shortcutting through the builder for "simple" requests.
 - Updated `BasicInsightEndpoint`, `StandardInsightEndpoint`, and `AdvancedInsightEndpoint` to a more restrictive scope and moved them to the `com.nexmo.client.insight` package.
 - Changed `status` property of `BasicInsightResponse` to an `InsightStatus` enumeration.
 - Changed `SendMessageEndpoint` from XML to JSON. It now returns a `SmsSubmissionResponse` instead of an array result.
@@ -271,23 +275,23 @@ telescoping is clunky. Added some static factory methods to these classes to all
 - Added `com.nexmo.client.incoming.InputEvent` to assist with the deserialization of the JSON payload used for input events.
 - Added `com.nexmo.client.incoming.RecordEvent` to assist with the deserialization of the JSON payload used for record events.
 - Added secret management methods to `AccountClient` in the form of the following methods:
-    - `listSecrets` for listing all secrets.
-    - `getSecret` for getting information on a specific secret.
-    - `revokeSecret` for revoking a secret.
-    - `createSecret` for creating a new secret.
+  - `listSecrets` for listing all secrets.
+  - `getSecret` for getting information on a specific secret.
+  - `revokeSecret` for revoking a secret.
+  - `createSecret` for creating a new secret.
 
 ### Changed
 - User Agent String now includes the Java version in addition to the client version.
 - `enum` classes that are used to deserialize JSON have been updated to return an `UNKNOWN` value instead of throwing an `IllegalArgumentException` when the value cannot be deserialized. These `enum`s are:
-    - `RecordingFormat`
-    - `MachineDetection`
-    - `ModifyCallAction`
-    - `CallDirection`
-    - `CallStatus`
-    - `RoamingDetails.RoamingStatus`
-    - `AdvancedInsightResponse.PortedStatus`
-    - `AdvancedInsightResponse.Validity`
-    - `AdvancedInsightResponse.Reachability`
+  - `RecordingFormat`
+  - `MachineDetection`
+  - `ModifyCallAction`
+  - `CallDirection`
+  - `CallStatus`
+  - `RoamingDetails.RoamingStatus`
+  - `AdvancedInsightResponse.PortedStatus`
+  - `AdvancedInsightResponse.Validity`
+  - `AdvancedInsightResponse.Reachability`
 
 ### Fixed
 - Updated `StreamNcco`'s `streamUrl` to serialize into an array for use in the Voice API.
@@ -313,17 +317,17 @@ telescoping is clunky. Added some static factory methods to these classes to all
 - Updated `VerifyClient` to use the JSON endpoints instead of XML.
 - Updated endpoints which are used by `VerifyClient` from public to package scope in order to encourage usage through `VerifyClient`.
 - Deprecated XML version of the following endpoints:
-    - `VerifyEndpoint`
-    - `CheckEndpoint`
-    - `SearchEndpoint`
+  - `VerifyEndpoint`
+  - `CheckEndpoint`
+  - `SearchEndpoint`
 
 - Deprecated the following XML results:
-    - `VerifyResult` should use `VerifyResponse`
-    - `CheckResult` should use `CheckResponse`
-    - `SearchResult` should use `SearchVerifyResponse`
+  - `VerifyResult` should use `VerifyResponse`
+  - `CheckResult` should use `CheckResponse`
+  - `SearchResult` should use `SearchVerifyResponse`
 
 - Deprecated the following XML methods:
-    - `VerifyCheckMethod`
+  - `VerifyCheckMethod`
 
 ### Added
 - Added `VerifyStatus` enumeration to use for statuses coming back from the verify endpoint.
@@ -442,10 +446,10 @@ telescoping is clunky. Added some static factory methods to these classes to all
 - Correcting some comments and log statements
 - Fix some small things reported by findbugs
 - Re-factor NexmoSmsClient. There are now sub-classes of this client class depending on the level of security required
-    -    `com.nexmo.messaging.sdk.NexmoSmsClient`: The default client
-    -    `com.nexmo.messaging.sdk.NexmoSmsClientSSL`: Uses SSL / HTTPS to encrypt the requests
-    -    `com.nexmo.messaging.sdk.NexmoSmsClientSignedRequests`: Signs the requests using the secret key assigned to your account
-    -    `com.nexmo.messaging.sdk.NexmoSmsClientSignedRequestsSSL`: Signs the requests and uses SSL / HTTPS to encrypt
+  -    `com.nexmo.messaging.sdk.NexmoSmsClient`: The default client
+  -    `com.nexmo.messaging.sdk.NexmoSmsClientSSL`: Uses SSL / HTTPS to encrypt the requests
+  -    `com.nexmo.messaging.sdk.NexmoSmsClientSignedRequests`: Signs the requests using the secret key assigned to your account
+  -    `com.nexmo.messaging.sdk.NexmoSmsClientSignedRequestsSSL`: Signs the requests and uses SSL / HTTPS to encrypt
 
 ## [1.2] - 2011-07-18
 ### Added
@@ -454,7 +458,7 @@ telescoping is clunky. Added some static factory methods to these classes to all
 - Add support for 'messagePrice' in the api response
 - Add reporting of remaining-balance and message-price in the example scripts
 
-## [1.1]
+## [1.1] 
 ### Added
 - Add support for nexmo SNS service
 - Ams submission - report comms-failure as an error response, not as an exception
