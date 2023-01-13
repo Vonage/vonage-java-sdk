@@ -17,6 +17,7 @@ package com.vonage.client.messages;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
+import java.net.URI;
 import java.util.Map;
 import java.util.UUID;
 
@@ -99,7 +100,7 @@ public class InboundMessageTest {
 	}
 
 	@Test
-	public void testMessengerUnsupportedType() throws Exception {
+	public void testMessengerUnsupportedType() {
 		String fullJson = getCommonPartialJsonStub(Channel.MESSENGER, MessageType.UNSUPPORTED) + "\n}";
 		InboundMessage im = InboundMessage.fromJson(fullJson);
 
@@ -114,5 +115,59 @@ public class InboundMessageTest {
 		assertNull(im.getFileUrl());
 		assertNull(im.getImageUrl());
 		assertThrows(IllegalStateException.class, im::getSmsUsage);
+	}
+
+	@Test
+	public void testMmsVcard() {
+		String vcard = "ftp://example.com/contact.vcf";
+		String fullJson = getCommonPartialJsonStub(Channel.MMS, MessageType.VCARD) +
+			  ",\n  \"vcard\": {\n" +
+			  "    \"url\": \""+vcard+"\"\n" +
+			  "}\n}";
+
+		InboundMessage im = InboundMessage.fromJson(fullJson);
+		assertEqualsCommon(im);
+		assertEquals(Channel.MMS, im.getChannel());
+		assertEquals(MessageType.VCARD, im.getMessageType());
+		assertEquals(vcard, im.getVcardUrl().toString());
+
+		assertNull(im.getAdditionalProperties());
+		assertNull(im.getText());
+		assertNull(im.getAudioUrl());
+		assertNull(im.getVideoUrl());
+		assertNull(im.getFileUrl());
+		assertNull(im.getImageUrl());
+	}
+
+	@Test
+	public void testImageOnly() {
+		URI image = URI.create("https://www.example.org/path/to/image.png");
+		String json = "{\"image\": {\"url\":\""+image+"\"}}";
+		InboundMessage im = InboundMessage.fromJson(json);
+		assertEquals(image, im.getImageUrl());
+	}
+
+	@Test
+	public void testAudioOnly() {
+		URI audio = URI.create("https://www.example.org/path/to/audio.mp3");
+		String json = "{\"audio\": {\"url\":\""+audio+"\"}}";
+		InboundMessage im = InboundMessage.fromJson(json);
+		assertEquals(audio, im.getAudioUrl());
+	}
+
+	@Test
+	public void testVideoOnly() {
+		URI video = URI.create("https://www.example.org/path/to/video.mp4");
+		String json = "{\"video\": {\"url\":\""+video+"\"}}";
+		InboundMessage im = InboundMessage.fromJson(json);
+		assertEquals(video, im.getVideoUrl());
+	}
+
+	@Test
+	public void testFileOnly() {
+		URI file = URI.create("https://www.example.org/path/to/file.zip");
+		String json = "{\"file\": {\"url\":\""+file+"\"}}";
+		InboundMessage im = InboundMessage.fromJson(json);
+		assertEquals(file, im.getFileUrl());
 	}
 }
