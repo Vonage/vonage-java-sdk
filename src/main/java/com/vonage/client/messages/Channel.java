@@ -17,9 +17,9 @@ package com.vonage.client.messages;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import java.util.Set;
-import java.util.EnumSet;
 import static com.vonage.client.messages.MessageType.*;
+import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * Represents the services available for sending messages.
@@ -27,8 +27,8 @@ import static com.vonage.client.messages.MessageType.*;
 public enum Channel {
 	SMS (TEXT),
 	MMS (IMAGE, VCARD, AUDIO, VIDEO),
-	WHATSAPP (TEXT, IMAGE, AUDIO, VIDEO, FILE, TEMPLATE, CUSTOM),
-	MESSENGER (TEXT, IMAGE, AUDIO, VIDEO, FILE),
+	WHATSAPP (TEXT, IMAGE, AUDIO, VIDEO, FILE, TEMPLATE, CUSTOM, LOCATION, ORDER, REPLY, UNSUPPORTED),
+	MESSENGER (TEXT, IMAGE, AUDIO, VIDEO, FILE, UNSUPPORTED),
 	VIBER (TEXT, IMAGE);
 
 	private final Set<MessageType> supportedTypes;
