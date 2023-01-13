@@ -198,9 +198,8 @@ public class MessageStatus {
 	protected MessageStatus() {
 	}
 
-	@JsonProperty("timestamp")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ISO_8601_PATTERN)
-	protected ZonedDateTime timestamp;
+	@JsonProperty("timestamp") protected ZonedDateTime timestamp;
 	@JsonProperty("message_uuid") protected UUID messageUuid;
 	@JsonProperty("to") protected String to;
 	@JsonProperty("from") protected String from;
