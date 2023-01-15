@@ -31,7 +31,12 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.message.BasicNameValuePair;
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -42,11 +47,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.List;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class VonageClientTest {
     private final TestUtils testUtils = new TestUtils();
@@ -324,6 +324,23 @@ public class VonageClientTest {
     @Test(expected = VonageUnableToReadPrivateKeyException.class)
     public void testIOExceptionIsWrappedWithUnableToReadPrivateKeyException() {
         VonageClient.builder().privateKeyPath("this/path/does/not/exist");
+    }
+
+    @Test
+    public void testSubClientGetters() {
+        VonageClient client = VonageClient.builder().build();
+        assertNotNull(client.getAccountClient());
+        assertNotNull(client.getApplicationClient());
+        assertNotNull(client.getConversionClient());
+        assertNotNull(client.getVoiceClient());
+        assertNotNull(client.getInsightClient());
+        assertNotNull(client.getMessagesClient());
+        assertNotNull(client.getMeetingsClient());
+        assertNotNull(client.getNumbersClient());
+        assertNotNull(client.getRedactClient());
+        assertNotNull(client.getSmsClient());
+        assertNotNull(client.getSnsClient());
+        assertNotNull(client.getVerifyClient());
     }
 
     private void assertContainsParam(List<NameValuePair> params, String key, String value) {

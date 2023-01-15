@@ -21,6 +21,7 @@ import com.vonage.client.auth.*;
 import com.vonage.client.auth.hashutils.HashUtil;
 import com.vonage.client.conversion.ConversionClient;
 import com.vonage.client.insight.InsightClient;
+import com.vonage.client.meetings.MeetingsClient;
 import com.vonage.client.messages.MessagesClient;
 import com.vonage.client.numbers.NumbersClient;
 import com.vonage.client.redact.RedactClient;
@@ -56,6 +57,7 @@ public class VonageClient {
     private final ConversionClient conversion;
     private final RedactClient redact;
     private final MessagesClient messages;
+    private final MeetingsClient meetings;
 
     private VonageClient(Builder builder) {
         httpWrapper = new HttpWrapper(builder.httpConfig, builder.authCollection);
@@ -72,6 +74,7 @@ public class VonageClient {
         conversion = new ConversionClient(httpWrapper);
         redact = new RedactClient(httpWrapper);
         messages = new MessagesClient(httpWrapper);
+        meetings = new MeetingsClient(httpWrapper);
     }
 
     public AccountClient getAccountClient() {
@@ -122,6 +125,10 @@ public class VonageClient {
 
     public MessagesClient getMessagesClient() {
         return messages;
+    }
+
+    public MeetingsClient getMeetingsClient() {
+        return meetings;
     }
 
     /**
