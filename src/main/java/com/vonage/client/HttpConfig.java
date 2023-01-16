@@ -16,18 +16,19 @@
 package com.vonage.client;
 
 public class HttpConfig {
-    private static final String DEFAULT_API_BASE_URI = "https://api.nexmo.com";
-    private static final String DEFAULT_REST_BASE_URI = "https://rest.nexmo.com";
-    private static final String DEFAULT_SNS_BASE_URI = "https://sns.nexmo.com";
+    private static final String
+          DEFAULT_API_BASE_URI = "https://api.nexmo.com",
+          DEFAULT_REST_BASE_URI = "https://rest.nexmo.com",
+          DEFAULT_SNS_BASE_URI = "https://sns.nexmo.com",
+          DEFAULT_API_EU_BASE_URI = "https://api-eu.vonage.com";
 
-    private final String apiBaseUri;
-    private final String restBaseUri;
-    private final String snsBaseUri;
+    private final String apiBaseUri, restBaseUri, snsBaseUri, apiEuBaseUri;
 
     private HttpConfig(Builder builder) {
         apiBaseUri = builder.apiBaseUri;
         restBaseUri = builder.restBaseUri;
         snsBaseUri = builder.snsBaseUri;
+        apiEuBaseUri = builder.apiEuBaseUri;
     }
 
     public String getApiBaseUri() {
@@ -42,6 +43,10 @@ public class HttpConfig {
         return snsBaseUri;
     }
 
+    public String getApiEuBaseUri() {
+        return apiEuBaseUri;
+    }
+
     public boolean isDefaultApiBaseUri() {
         return DEFAULT_API_BASE_URI.equals(apiBaseUri);
     }
@@ -54,6 +59,10 @@ public class HttpConfig {
         return DEFAULT_SNS_BASE_URI.equals(snsBaseUri);
     }
 
+    public boolean isDefaultApiEuBaseUri() {
+        return DEFAULT_API_EU_BASE_URI.equals(apiEuBaseUri);
+    }
+
     public String getVersionedApiBaseUri(String version) {
         return appendVersionToUri(apiBaseUri, version);
     }
@@ -64,6 +73,10 @@ public class HttpConfig {
 
     public String getVersionedSnsBaseUri(String version) {
         return appendVersionToUri(snsBaseUri, version);
+    }
+
+    public String getVersionedApiEuBaseUri(String version) {
+        return appendVersionToUri(apiEuBaseUri, version);
     }
 
     private String appendVersionToUri(String uri, String version) {
@@ -82,20 +95,16 @@ public class HttpConfig {
     }
 
     public static class Builder {
-        private String apiBaseUri;
-        private String restBaseUri;
-        private String snsBaseUri;
-
-        public Builder() {
-            apiBaseUri = DEFAULT_API_BASE_URI;
-            restBaseUri = DEFAULT_REST_BASE_URI;
-            snsBaseUri = DEFAULT_SNS_BASE_URI;
-        }
+        private String
+              apiBaseUri = DEFAULT_API_BASE_URI,
+              restBaseUri = DEFAULT_REST_BASE_URI,
+              snsBaseUri = DEFAULT_SNS_BASE_URI,
+              apiEuBaseUri = DEFAULT_API_EU_BASE_URI;
 
         /**
          * @param apiBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_API_BASE_URI}
          *
-         * @return The {@link Builder} to keep building.
+         * @return The Builder to keep building.
          */
         public Builder apiBaseUri(String apiBaseUri) {
             this.apiBaseUri = sanitizeUri(apiBaseUri);
@@ -105,7 +114,7 @@ public class HttpConfig {
         /**
          * @param restBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_REST_BASE_URI}
          *
-         * @return The {@link Builder} to keep building.
+         * @return The Builder to keep building.
          */
         public Builder restBaseUri(String restBaseUri) {
             this.restBaseUri = sanitizeUri(restBaseUri);
@@ -115,7 +124,7 @@ public class HttpConfig {
         /**
          * @param snsBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_SNS_BASE_URI}
          *
-         * @return The {@link Builder} to keep building.
+         * @return The Builder to keep building.
          */
         public Builder snsBaseUri(String snsBaseUri) {
             this.snsBaseUri = sanitizeUri(snsBaseUri);
@@ -123,15 +132,26 @@ public class HttpConfig {
         }
 
         /**
+         * @param apiEuBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_API_EU_BASE_URI}
+         *
+         * @return The Builder to keep building.
+         */
+        public Builder apiEuBaseUri(String apiEuBaseUri) {
+            this.apiEuBaseUri = sanitizeUri(apiEuBaseUri);
+            return this;
+        }
+
+        /**
          * @param baseUri The base uri to use in place of {@link HttpConfig#DEFAULT_REST_BASE_URI}, {@link HttpConfig#DEFAULT_API_BASE_URI}, and {@link HttpConfig#DEFAULT_SNS_BASE_URI}
          *
-         * @return The {@link Builder} to keep building.
+         * @return The Builder to keep building.
          */
         public Builder baseUri(String baseUri) {
             String sanitizedUri = sanitizeUri(baseUri);
             apiBaseUri = sanitizedUri;
             restBaseUri = sanitizedUri;
             snsBaseUri = sanitizedUri;
+            apiEuBaseUri = sanitizedUri;
             return this;
         }
 
