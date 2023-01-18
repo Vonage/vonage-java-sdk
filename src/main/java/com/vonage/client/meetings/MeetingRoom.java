@@ -34,6 +34,7 @@ public class MeetingRoom {
 	private ApprovalLevel joinApprovalLevel;
 	private RecordingOptions recordingOptions;
 	private InitialJoinOptions initialJoinOptions;
+	private UISettings uiSettings;
 	private CallbackUrls callbackUrls;
 	private AvailableFeatures availableFeatures;
 	private RoomLinks links;
@@ -54,6 +55,7 @@ public class MeetingRoom {
 		themeId = builder.themeId;
 		joinApprovalLevel = builder.joinApprovalLevel;
 		expiresAt = builder.expiresAt;
+		uiSettings = builder.uiSettings;
 	}
 
 	/**
@@ -125,6 +127,16 @@ public class MeetingRoom {
 	@JsonProperty("initial_join_options")
 	public InitialJoinOptions getInitialJoinOptions() {
 		return initialJoinOptions;
+	}
+
+	/**
+	 * Settings for the user interface of this meeting.
+	 *
+	 * @return The UI settings object.
+	 */
+	@JsonProperty("ui_settings")
+	public UISettings getUiSettings() {
+		return uiSettings;
 	}
 
 	/**
@@ -254,6 +266,7 @@ public class MeetingRoom {
 		private ApprovalLevel joinApprovalLevel;
 		private RecordingOptions recordingOptions;
 		private InitialJoinOptions initialJoinOptions;
+		private UISettings uiSettings;
 		private CallbackUrls callbackUrls;
 		private AvailableFeatures availableFeatures;
 	
@@ -333,6 +346,17 @@ public class MeetingRoom {
 		 */
 		public Builder initialJoinOptions(InitialJoinOptions initialJoinOptions) {
 			this.initialJoinOptions = initialJoinOptions;
+			return this;
+		}
+
+		/**
+		 *
+		 * @param uiSettings Settings for the user interface of this meeting.
+		 *
+		 * @return This builder.
+		 */
+		public Builder uiSettings(UISettings uiSettings) {
+			this.uiSettings = uiSettings;
 			return this;
 		}
 

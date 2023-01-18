@@ -63,8 +63,8 @@ public class MeetingsClient {
 		updateApplication = new UpdateApplicationEndpoint(httpWrapper);
 	}
 
-	public GetRoomsResponse getAvailableRooms(String startId, String endId) {
-		return getAvailableRooms.execute(new GetRoomsRequest(startId, endId, null));
+	public GetRoomsResponse getAvailableRooms(String startId, String endId, Integer pageSize) {
+		return getAvailableRooms.execute(new GetRoomsRequest(startId, endId, pageSize, null));
 	}
 
 	public MeetingRoom getRoom(String roomId) {
@@ -80,7 +80,7 @@ public class MeetingsClient {
 	}
 
 	public GetRoomsResponse getThemeRooms(UUID themeId, String startId, String endId) {
-		return getThemeRooms.execute(new GetRoomsRequest(startId, endId, themeId.toString()));
+		return getThemeRooms.execute(new GetRoomsRequest(startId, endId, null, themeId.toString()));
 	}
 
 	public List<Theme> getThemes() {

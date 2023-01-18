@@ -15,29 +15,21 @@
  */
 package com.vonage.client.meetings;
 
-import org.apache.http.client.methods.RequestBuilder;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-class GetRoomsRequest {
-	final String startId, endId, themeId;
-	final Integer pageSize;
+public class UISettings {
+	private String language;
 
-	GetRoomsRequest(String startId, String endId, Integer pageSize, String themeId) {
-		this.startId = startId;
-		this.endId = endId;
-		this.pageSize = pageSize;
-		this.themeId = themeId;
+	protected UISettings() {
 	}
 
-	RequestBuilder addParameters(RequestBuilder builder) {
-		if (startId != null) {
-			builder.addParameter("start_id", startId);
-		}
-		if (endId != null) {
-			builder.addParameter("end_id", endId);
-		}
-		if (pageSize != null) {
-			builder.addParameter("page_size", pageSize + "");
-		}
-		return builder;
+	/**
+	 * Language setting.
+	 *
+	 * @return The language, as a string.
+	 */
+	@JsonProperty("language")
+	public String getLanguage() {
+		return language;
 	}
 }

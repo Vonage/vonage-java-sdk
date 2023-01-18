@@ -23,16 +23,18 @@ import com.vonage.client.VonageUnexpectedException;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class AvailableFeatures {
-	private final Boolean isRecordingAvailable, isChatAvailable, isWhiteboardAvailable;
+	private final Boolean isRecordingAvailable, isChatAvailable, isWhiteboardAvailable, isLocaleSwitcherAvailable;
 
 	AvailableFeatures(Builder builder) {
 		isRecordingAvailable = builder.isRecordingAvailable;
 		isChatAvailable = builder.isChatAvailable;
 		isWhiteboardAvailable = builder.isWhiteboardAvailable;
+		isLocaleSwitcherAvailable = builder.isLocaleSwitcherAvailable;
 	}
 
 	/**
 	 * Determine if recording feature is available in the UI.
+	 *
 	 * @return {@code true} if the feature is available.
 	 */
 	@JsonProperty("is_recording_available")
@@ -42,6 +44,7 @@ public class AvailableFeatures {
 
 	/**
 	 * Determine if chat feature is available in the UI.
+	 *
 	 * @return {@code true} if the feature is available.
 	 */
 	@JsonProperty("is_chat_available")
@@ -51,13 +54,24 @@ public class AvailableFeatures {
 
 	/**
 	 * Determine if whiteboard feature is available in the UI.
+	 *
 	 * @return {@code true} if the feature is available.
 	 */
 	@JsonProperty("is_whiteboard_available")
 	public Boolean getIsWhiteboardAvailable() {
 		return isWhiteboardAvailable;
 	}
-	
+
+	/**
+	 * Determine if locale switcher feature is available in the UI.
+	 *
+	 * @return {@code true} if the feature is available.
+	 */
+	@JsonProperty("is_locale_available")
+	public Boolean getIsLocaleSwitcherAvailable() {
+		return isLocaleSwitcherAvailable;
+	}
+
 	/**
 	 * Generates a JSON payload from this request.
 	 *
@@ -83,7 +97,7 @@ public class AvailableFeatures {
 	}
 	
 	public static class Builder {
-		private Boolean isRecordingAvailable, isChatAvailable, isWhiteboardAvailable;
+		private Boolean isRecordingAvailable, isChatAvailable, isWhiteboardAvailable, isLocaleSwitcherAvailable;
 	
 		Builder() {}
 	
@@ -120,6 +134,16 @@ public class AvailableFeatures {
 			return this;
 		}
 
+		/**
+		 *
+		 * @param isLocaleSwitcherAvailable Determine if locale switcher feature is available in the UI.
+		 *
+		 * @return This builder.
+		 */
+		public Builder isLocaleSwitcherAvailable(Boolean isLocaleSwitcherAvailable) {
+			this.isLocaleSwitcherAvailable = isLocaleSwitcherAvailable;
+			return this;
+		}
 	
 		/**
 		 * Builds the {@linkplain AvailableFeatures}.
