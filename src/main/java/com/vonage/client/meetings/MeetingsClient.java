@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class MeetingsClient {
-	final GetRoomsEndpoint getRooms;
+	final GetAvailableRoomsEndpoint getAvailableRooms;
 	final GetRoomEndpoint getRoom;
 	final CreateRoomEndpoint createRoom;
 	final UpdateRoomEndpoint updateRoom;
@@ -44,7 +44,7 @@ public class MeetingsClient {
 	 * @param httpWrapper (REQUIRED) shared HTTP wrapper object used for making REST calls.
 	 */
 	public MeetingsClient(HttpWrapper httpWrapper) {
-		getRooms = new GetRoomsEndpoint(httpWrapper);
+		getAvailableRooms = new GetAvailableRoomsEndpoint(httpWrapper);
 		getRoom = new GetRoomEndpoint(httpWrapper);
 		createRoom = new CreateRoomEndpoint(httpWrapper);
 		updateRoom = new UpdateRoomEndpoint(httpWrapper);
@@ -63,8 +63,8 @@ public class MeetingsClient {
 		updateApplication = new UpdateApplicationEndpoint(httpWrapper);
 	}
 
-	public GetRoomsResponse getRooms(Void request) {
-		return getRooms.execute(request);
+	public GetRoomsResponse getAvailableRooms(String startId, String endId) {
+		return getAvailableRooms.execute(new GetRoomsRequest(startId, endId, null));
 	}
 
 	public MeetingRoom getRoom(String roomId) {
@@ -80,14 +80,14 @@ public class MeetingsClient {
 	}
 
 	public GetRoomsResponse getThemeRooms(UUID themeId, String startId, String endId) {
-		return getThemeRooms.execute(new GetThemeRoomsRequest(startId, endId, themeId.toString()));
+		return getThemeRooms.execute(new GetRoomsRequest(startId, endId, themeId.toString()));
 	}
 
 	public List<Theme> getThemes() {
 		return getThemes.execute(null);
 	}
 
-	public Theme getTheme(UUID themeId) {
+	public Theme getTheme(String themeId) {
 		return getTheme.execute(themeId);
 	}
 
@@ -125,8 +125,8 @@ public class MeetingsClient {
 		return getDialNumbers.execute(null);
 	}
 
-	public List<LogoUploadsUrlResponse> getLogoUploadUrls(Void request) {
-		return getLogoUploadUrls.execute(request);
+	public List<LogoUploadsUrlResponse> getLogoUploadUrls() {
+		return getLogoUploadUrls.execute(null);
 	}
 
 	/**

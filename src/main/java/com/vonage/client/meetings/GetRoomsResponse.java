@@ -31,6 +31,7 @@ public class GetRoomsResponse {
 
 	@JsonProperty("_embedded") private Embedded embedded;
 	private Integer pageSize, total;
+	private NavigationLinks links;
 
 	protected GetRoomsResponse() {
 	}
@@ -57,6 +58,16 @@ public class GetRoomsResponse {
 	@JsonProperty("_embedded")
 	public List<MeetingRoom> getMeetingRooms() {
 		return embedded.rooms;
+	}
+
+	/**
+	 * Links to other pages.
+	 *
+	 * @return The navigation links object.
+	 */
+	@JsonProperty("_links")
+	public NavigationLinks getLinks() {
+		return links;
 	}
 	
 	/**

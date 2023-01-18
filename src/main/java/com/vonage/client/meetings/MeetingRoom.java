@@ -36,6 +36,7 @@ public class MeetingRoom {
 	private InitialJoinOptions initialJoinOptions;
 	private CallbackUrls callbackUrls;
 	private AvailableFeatures availableFeatures;
+	private RoomLinks links;
 
 	protected MeetingRoom() {
 	}
@@ -57,6 +58,7 @@ public class MeetingRoom {
 
 	/**
 	 * Name of the meeting room.
+	 *
 	 * @return The display name.
 	 */
 	@JsonProperty("display_name")
@@ -65,7 +67,9 @@ public class MeetingRoom {
 	}
 
 	/**
-	 * Free text that can be attached to a room. This will be passed in the form of a header in events related to this room.
+	 * Free text that can be attached to a room.
+	 * This will be passed in the form of a header in events related to this room.
+	 *
 	 * @return The room description / metadata.
 	 */
 	@JsonProperty("metadata")
@@ -75,6 +79,7 @@ public class MeetingRoom {
 
 	/**
 	 * Type of room.
+	 *
 	 * @return The room type, as an enum.
 	 */
 	@JsonProperty("type")
@@ -83,7 +88,8 @@ public class MeetingRoom {
 	}
 
 	/**
-	 * Once a room becomes unavailable, no new sessions can be created under it
+	 * Once a room becomes unavailable, no new sessions can be created under it.
+	 *
 	 * @return Whether the room is available, or {@code null} if unknown.
 	 */
 	@JsonProperty("is_available")
@@ -93,6 +99,7 @@ public class MeetingRoom {
 
 	/**
 	 * Close the room after a session ends. Only relevant for long_term rooms.
+	 *
 	 * @return {@code true} if the room will close after end of session, or {@code null} if unknown / not applicable.
 	 */
 	@JsonProperty("expire_after_use")
@@ -102,6 +109,7 @@ public class MeetingRoom {
 
 	/**
 	 * Options for recording.
+	 *
 	 * @return The recording options.
 	 */
 	@JsonProperty("recording_options")
@@ -111,6 +119,7 @@ public class MeetingRoom {
 
 	/**
 	 * Options for when a participant joins a meeting.
+	 *
 	 * @return The initial joining options.
 	 */
 	@JsonProperty("initial_join_options")
@@ -120,6 +129,7 @@ public class MeetingRoom {
 
 	/**
 	 * The callback URLs for this meeting.
+	 *
 	 * @return The CallbackUrls object.
 	 */
 	@JsonProperty("callback_urls")
@@ -129,6 +139,7 @@ public class MeetingRoom {
 
 	/**
 	 * The available features for this meeting.
+	 *
 	 * @return The AvailableFeatures object.
 	 */
 	@JsonProperty("available_features")
@@ -138,6 +149,7 @@ public class MeetingRoom {
 
 	/**
 	 * ID of the theme for this room.
+	 *
 	 * @return The theme ID.
 	 */
 	@JsonProperty("theme_id")
@@ -147,6 +159,7 @@ public class MeetingRoom {
 
 	/**
 	 * The level of approval needed to join the meeting in the room.
+	 *
 	 * @return The approval level, as an enum.
 	 */
 	@JsonProperty("join_approval_level")
@@ -156,6 +169,7 @@ public class MeetingRoom {
 
 	/**
 	 * The time for when the room was created, expressed in ISO 8601 format.
+	 *
 	 * @return The room creation time.
 	 */
 	@JsonProperty("created_at")
@@ -165,6 +179,7 @@ public class MeetingRoom {
 
 	/**
 	 * The time for when the room will be expired, expressed in ISO 8601 format.
+	 *
 	 * @return The room expiration time.
 	 */
 	@JsonProperty("expires_at")
@@ -174,11 +189,21 @@ public class MeetingRoom {
 
 	/**
 	 * Identifier of the meeting room.
+	 *
 	 * @return The room ID.
 	 */
 	@JsonProperty("id")
 	public String getId() {
 		return id;
+	}
+
+	/**
+	 * Useful links.
+	 * @return The nested links object.
+	 */
+	@JsonProperty("_links")
+	public RoomLinks getLinks() {
+		return links;
 	}
 
 	/**

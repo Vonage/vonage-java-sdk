@@ -21,9 +21,8 @@ import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
-import java.util.UUID;
 
-class GetThemeEndpoint extends AbstractMethod<UUID, Theme> {
+class GetThemeEndpoint extends AbstractMethod<String, Theme> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/beta/meetings/themes/%s";
 
@@ -37,7 +36,7 @@ class GetThemeEndpoint extends AbstractMethod<UUID, Theme> {
 	}
 
 	@Override
-	public RequestBuilder makeRequest(UUID request) {
+	public RequestBuilder makeRequest(String request) {
 		String path = String.format(PATH, request);
 		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + path;
 		return RequestBuilder.get(uri)

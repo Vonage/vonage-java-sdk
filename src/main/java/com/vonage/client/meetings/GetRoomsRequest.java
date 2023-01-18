@@ -15,12 +15,24 @@
  */
 package com.vonage.client.meetings;
 
-class GetThemeRoomsRequest {
+import org.apache.http.client.methods.RequestBuilder;
+
+class GetRoomsRequest {
 	final String startId, endId, themeId;
 
-	GetThemeRoomsRequest(String startId, String endId, String themeId) {
+	GetRoomsRequest(String startId, String endId, String themeId) {
 		this.startId = startId;
 		this.endId = endId;
 		this.themeId = themeId;
+	}
+
+	RequestBuilder addParameters(RequestBuilder builder) {
+		if (startId != null) {
+			builder.addParameter("start_id", startId);
+		}
+		if (endId != null) {
+			builder.addParameter("end_id", endId);
+		}
+		return builder;
 	}
 }

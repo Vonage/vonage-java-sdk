@@ -25,12 +25,14 @@ import java.io.IOException;
 public class Recording {
 	private String id, sessionId, startedAt, endedAt;
 	private RecordingStatus status;
+	private RecordingLinks links;
 
 	protected Recording() {
 	}
 
 	/**
 	 * Identifier of the recording.
+	 *
 	 * @return The recording ID.
 	 */
 	@JsonProperty("id")
@@ -40,6 +42,7 @@ public class Recording {
 
 	/**
 	 * Corresponds to the underlying Video API session ID.
+	 *
 	 * @return The video session ID.
 	 */
 	@JsonProperty("session_id")
@@ -49,6 +52,7 @@ public class Recording {
 
 	/**
 	 * Recording start time, in ISO 8601 format.
+	 *
 	 * @return The recording start time.
 	 */
 	@JsonProperty("started_at")
@@ -58,6 +62,7 @@ public class Recording {
 
 	/**
 	 * Recording end time, in ISO 8601 format.
+	 *
 	 * @return The recording end time.
 	 */
 	@JsonProperty("ended_at")
@@ -67,6 +72,7 @@ public class Recording {
 
 	/**
 	 * Status of the recording.
+	 *
 	 * @return The recording status, as an enum.
 	 */
 	@JsonProperty("status")

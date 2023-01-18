@@ -22,11 +22,11 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 
-class GetRoomsEndpoint extends AbstractMethod<Void, GetRoomsResponse> {
+class GetAvailableRoomsEndpoint extends AbstractMethod<GetRoomsRequest, GetRoomsResponse> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/beta/meetings/rooms";
 
-	GetRoomsEndpoint(HttpWrapper httpWrapper) {
+	GetAvailableRoomsEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
 	}
 
@@ -36,9 +36,9 @@ class GetRoomsEndpoint extends AbstractMethod<Void, GetRoomsResponse> {
 	}
 
 	@Override
-	public RequestBuilder makeRequest(Void request) {
+	public RequestBuilder makeRequest(GetRoomsRequest request) {
 		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + PATH;
-		return RequestBuilder.get(uri)
+		return request.addParameters(RequestBuilder.get(uri))
 				.setHeader("Accept", "application/json");
 	}
 
