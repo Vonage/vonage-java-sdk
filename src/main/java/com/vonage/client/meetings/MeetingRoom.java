@@ -22,13 +22,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 import java.util.UUID;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MeetingRoom {
+	private ZonedDateTime createdAt, expiresAt;
 	private UUID themeId;
-	private String id, displayName, metadata, createdAt, expiresAt;
+	private String id, displayName, metadata;
 	private Boolean isAvailable, expireAfterUse;
 	private RoomType type;
 	private ApprovalLevel joinApprovalLevel;
@@ -43,7 +47,7 @@ public class MeetingRoom {
 	}
 
 	MeetingRoom(Builder builder) {
-		displayName = builder.displayName;
+		displayName = Objects.requireNonNull(builder.displayName, "Display name is required.");
 		metadata = builder.metadata;
 		type = builder.type;
 		isAvailable = builder.isAvailable;
@@ -184,9 +188,28 @@ public class MeetingRoom {
 	 *
 	 * @return The room creation time.
 	 */
-	@JsonProperty("created_at")
-	public String getCreatedAt() {
+	public ZonedDateTime getCreatedAt() {
 		return createdAt;
+	}
+
+	/**
+	 * Formats the {@link #createdAt} field.
+	 *
+	 * @return {@linkplain #getCreatedAt()} as a String for serialization.
+	 */
+	@JsonProperty("created_at")
+	protected String getCreatedAtAsString() {
+		return createdAt.truncatedTo(ChronoUnit.SECONDS).withFixedOffsetZone().toString();
+	}
+
+	/**
+	 * Sets the {@link #createdAt} field from a String.
+	 *
+	 * @param createdAt The expiration time as a String.
+	 */
+	@JsonProperty("created_at")
+	protected void setCreatedAt(String createdAt) {
+		this.createdAt = ZonedDateTime.parse(createdAt);
 	}
 
 	/**
@@ -194,9 +217,28 @@ public class MeetingRoom {
 	 *
 	 * @return The room expiration time.
 	 */
-	@JsonProperty("expires_at")
-	public String getExpiresAt() {
+	public ZonedDateTime getExpiresAt() {
 		return expiresAt;
+	}
+
+	/**
+	 * Formats the {@link #createdAt} field.
+	 *
+	 * @return {@linkplain #getCreatedAt()} as a String for serialization.
+	 */
+	@JsonProperty("created_at")
+	protected String getExpiresAtAsString() {
+		return expiresAt.truncatedTo(ChronoUnit.SECONDS).withFixedOffsetZone().toString();
+	}
+
+	/**
+	 * Sets the {@link #expiresAt} field from a String.
+	 *
+	 * @param expiresAt The expiration time as a String.
+	 */
+	@JsonProperty("expires_at")
+	protected void setExpiresAt(String expiresAt) {
+		this.expiresAt = ZonedDateTime.parse(expiresAt);
 	}
 
 	/**
@@ -251,16 +293,20 @@ public class MeetingRoom {
 	
 	/**
 	 * Entry point for constructing an instance of this class.
-	 * 
+	 *
+	 * @param displayName Name of the meeting room.
+	 *
 	 * @return A new Builder.
 	 */
-	public static Builder builder() {
-		return new Builder();
+	public static Builder builder(String displayName) {
+		return new Builder(displayName);
 	}
 	
 	public static class Builder {
+		private final String displayName;
 		private UUID themeId;
-		private String displayName, metadata, expiresAt;
+		private String metadata;
+		private ZonedDateTime expiresAt;
 		private Boolean isAvailable, expireAfterUse;
 		private RoomType type;
 		private ApprovalLevel joinApprovalLevel;
@@ -270,17 +316,8 @@ public class MeetingRoom {
 		private CallbackUrls callbackUrls;
 		private AvailableFeatures availableFeatures;
 	
-		Builder() {}
-	
-		/**
-		 *
-		 * @param displayName Name of the meeting room.
-		 *
-		 * @return This builder.
-		 */
-		public Builder displayName(String displayName) {
+		Builder(String displayName) {
 			this.displayName = displayName;
-			return this;
 		}
 
 		/**
@@ -410,7 +447,7 @@ public class MeetingRoom {
 		 *
 		 * @return This builder.
 		 */
-		public Builder expiresAt(String expiresAt) {
+		public Builder expiresAt(ZonedDateTime expiresAt) {
 			this.expiresAt = expiresAt;
 			return this;
 		}
