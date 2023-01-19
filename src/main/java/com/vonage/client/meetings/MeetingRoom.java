@@ -31,8 +31,8 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MeetingRoom {
 	private ZonedDateTime createdAt, expiresAt;
-	private UUID themeId;
-	private String id, displayName, metadata;
+	private UUID id, themeId;
+	private String displayName, metadata, meetingCode;
 	private Boolean isAvailable, expireAfterUse;
 	private RoomType type;
 	private ApprovalLevel joinApprovalLevel;
@@ -48,8 +48,18 @@ public class MeetingRoom {
 
 	MeetingRoom(Builder builder) {
 		displayName = Objects.requireNonNull(builder.displayName, "Display name is required.");
+		expiresAt = builder.expiresAt;
+		if ((type = builder.type) == RoomType.INSTANT && expiresAt != null) {
+			throw new IllegalStateException("Expiration time should not be specified for "+type+" rooms.");
+		}
+		else if (type == RoomType.LONG_TERM && expiresAt == null) {
+			throw new IllegalStateException("Expiration time is must be specified for "+type+" rooms.");
+		}
+		if (expiresAt != null && expiresAt.isBefore(ZonedDateTime.now().plusMinutes(10))) {
+			throw new IllegalArgumentException("Expiration time should be more than 10 minutes from now.");
+		}
+
 		metadata = builder.metadata;
-		type = builder.type;
 		isAvailable = builder.isAvailable;
 		expireAfterUse = builder.expireAfterUse;
 		recordingOptions = builder.recordingOptions;
@@ -58,7 +68,6 @@ public class MeetingRoom {
 		availableFeatures = builder.availableFeatures;
 		themeId = builder.themeId;
 		joinApprovalLevel = builder.joinApprovalLevel;
-		expiresAt = builder.expiresAt;
 		uiSettings = builder.uiSettings;
 	}
 
@@ -81,6 +90,16 @@ public class MeetingRoom {
 	@JsonProperty("metadata")
 	public String getMetadata() {
 		return metadata;
+	}
+
+	/**
+	 * The meeting code, which is used in the URL to join the meeting.
+	 *
+	 * @return The share code for this meeting.
+	 */
+	@JsonProperty("meeting_code")
+	public String getMeetingCode() {
+		return meetingCode;
 	}
 
 	/**
@@ -199,6 +218,7 @@ public class MeetingRoom {
 	 */
 	@JsonProperty("created_at")
 	protected String getCreatedAtAsString() {
+		if (createdAt == null) return null;
 		return createdAt.truncatedTo(ChronoUnit.SECONDS).withFixedOffsetZone().toString();
 	}
 
@@ -222,12 +242,13 @@ public class MeetingRoom {
 	}
 
 	/**
-	 * Formats the {@link #createdAt} field.
+	 * Formats the {@link #expiresAt} field.
 	 *
-	 * @return {@linkplain #getCreatedAt()} as a String for serialization.
+	 * @return {@linkplain #getExpiresAt()} as a String for serialization.
 	 */
-	@JsonProperty("created_at")
+	@JsonProperty("expires_at")
 	protected String getExpiresAtAsString() {
+		if (expiresAt == null) return null;
 		return expiresAt.truncatedTo(ChronoUnit.SECONDS).withFixedOffsetZone().toString();
 	}
 
@@ -247,7 +268,7 @@ public class MeetingRoom {
 	 * @return The room ID.
 	 */
 	@JsonProperty("id")
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 
@@ -442,6 +463,8 @@ public class MeetingRoom {
 		}
 
 		/**
+		 * NOTE: This parameter is REQUIRED if the room type is {@link RoomType#LONG_TERM},
+		 * but should not be present if the room type is {@link RoomType#INSTANT}.
 		 *
 		 * @param expiresAt The time for when the room will be expired, expressed in ISO 8601 format.
 		 *

@@ -20,10 +20,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Recording {
-	private String id, sessionId, startedAt, endedAt;
+	private String id, sessionId;
+	private ZonedDateTime startedAt, endedAt;
 	private RecordingStatus status;
 	private RecordingLinks links;
 
@@ -55,9 +58,29 @@ public class Recording {
 	 *
 	 * @return The recording start time.
 	 */
-	@JsonProperty("started_at")
-	public String getStartedAt() {
+	public ZonedDateTime getStartedAt() {
 		return startedAt;
+	}
+
+	/**
+	 * Formats the {@link #startedAt} field.
+	 *
+	 * @return {@linkplain #getStartedAt()} as a String for serialization.
+	 */
+	@JsonProperty("started_at")
+	protected String getStartedAtAsString() {
+		if (startedAt == null) return null;
+		return startedAt.truncatedTo(ChronoUnit.SECONDS).withFixedOffsetZone().toString();
+	}
+
+	/**
+	 * Sets the {@link #startedAt} field from a String.
+	 *
+	 * @param startedAt The start time as a String.
+	 */
+	@JsonProperty("started_at")
+	protected void setStartedAt(String startedAt) {
+		this.startedAt = ZonedDateTime.parse(startedAt);
 	}
 
 	/**
@@ -65,9 +88,29 @@ public class Recording {
 	 *
 	 * @return The recording end time.
 	 */
-	@JsonProperty("ended_at")
-	public String getEndedAt() {
+	public ZonedDateTime getEndedAt() {
 		return endedAt;
+	}
+
+	/**
+	 * Formats the {@link #endedAt} field.
+	 *
+	 * @return {@linkplain #getEndedAt()} as a String for serialization.
+	 */
+	@JsonProperty("ended_at")
+	protected String getEndedAtAsString() {
+		if (endedAt == null) return null;
+		return endedAt.truncatedTo(ChronoUnit.SECONDS).withFixedOffsetZone().toString();
+	}
+
+	/**
+	 * Sets the {@link #endedAt} field from a String.
+	 *
+	 * @param endedAt The end time as a String.
+	 */
+	@JsonProperty("ended_at")
+	protected void setEndedAt(String endedAt) {
+		this.endedAt = ZonedDateTime.parse(endedAt);
 	}
 
 	/**

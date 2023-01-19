@@ -20,6 +20,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -30,7 +32,8 @@ public class UpdateRoomRequest {
 	private final AvailableFeatures availableFeatures;
 	private final ApprovalLevel joinApprovalLevel;
 	private final UUID themeId;
-	private final String expiresAt, id;
+	private final String id;
+	private final ZonedDateTime expiresAt;
 
 	UpdateRoomRequest(Builder builder) {
 		expireAfterUse = builder.expireAfterUse;
@@ -108,9 +111,19 @@ public class UpdateRoomRequest {
 	 *
 	 * @return The room expiration time.
 	 */
-	@JsonProperty("expires_at")
-	public String getExpiresAt() {
+	public ZonedDateTime getExpiresAt() {
 		return expiresAt;
+	}
+
+	/**
+	 * Formats the {@link #expiresAt} field.
+	 *
+	 * @return {@linkplain #getExpiresAt()} as a String for serialization.
+	 */
+	@JsonProperty("expires_at")
+	protected String getExpiresAtAsString() {
+		if (expiresAt == null) return null;
+		return expiresAt.truncatedTo(ChronoUnit.SECONDS).withFixedOffsetZone().toString();
 	}
 
 	/**
@@ -154,7 +167,8 @@ public class UpdateRoomRequest {
 		private AvailableFeatures availableFeatures;
 		private ApprovalLevel joinApprovalLevel;
 		private UUID themeId;
-		private String expiresAt, id;
+		private String id;
+		private ZonedDateTime expiresAt;
 	
 		Builder() {}
 	
@@ -230,7 +244,7 @@ public class UpdateRoomRequest {
 		 *
 		 * @return This builder.
 		 */
-		public Builder expiresAt(String expiresAt) {
+		public Builder expiresAt(ZonedDateTime expiresAt) {
 			this.expiresAt = expiresAt;
 			return this;
 		}
@@ -256,5 +270,4 @@ public class UpdateRoomRequest {
 			return new UpdateRoomRequest(this);
 		}
 	}
-
 }
