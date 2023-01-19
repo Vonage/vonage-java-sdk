@@ -71,13 +71,23 @@ public class UpdateApplicationRequest {
 	
 		/**
 		 *
-		 * @param defaultThemeId The theme id to set as application default theme.
+		 * @param defaultThemeId The theme ID to set as application default theme.
 		 *
 		 * @return This builder.
 		 */
 		public Builder defaultThemeId(UUID defaultThemeId) {
 			this.defaultThemeId = defaultThemeId;
 			return this;
+		}
+
+		/**
+		 *
+		 * @param defaultThemeId The theme ID to set as application default theme.
+		 *
+		 * @return This builder.
+		 */
+		public Builder defaultThemeId(String defaultThemeId) {
+			return defaultThemeId(UUID.fromString(defaultThemeId));
 		}
 
 	
