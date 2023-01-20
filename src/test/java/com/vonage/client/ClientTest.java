@@ -93,7 +93,7 @@ public abstract class ClientTest<T> {
         invocation.run();
     }
 
-    protected <R> R stubResponseWithResult(int statusCode, String response, Supplier<? extends R> invocation) throws Exception {
+    protected <R> R stubResponseAndGet(int statusCode, String response, Supplier<? extends R> invocation) throws Exception {
         stubResponse(statusCode, response);
         return invocation.get();
     }

@@ -15,6 +15,7 @@
  */
 package com.vonage.client.meetings;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,8 +23,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AvailableFeatures {
-	private final Boolean isRecordingAvailable, isChatAvailable, isWhiteboardAvailable, isLocaleSwitcherAvailable;
+	private Boolean isRecordingAvailable, isChatAvailable, isWhiteboardAvailable, isLocaleSwitcherAvailable;
+
+	protected AvailableFeatures() {
+	}
 
 	AvailableFeatures(Builder builder) {
 		isRecordingAvailable = builder.isRecordingAvailable;
@@ -67,7 +72,7 @@ public class AvailableFeatures {
 	 *
 	 * @return {@code true} if the feature is available.
 	 */
-	@JsonProperty("is_locale_available")
+	@JsonProperty("is_locale_switcher_available")
 	public Boolean getIsLocaleSwitcherAvailable() {
 		return isLocaleSwitcherAvailable;
 	}

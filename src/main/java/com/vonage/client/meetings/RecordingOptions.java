@@ -15,6 +15,7 @@
  */
 package com.vonage.client.meetings;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,8 +23,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RecordingOptions {
-	private final Boolean autoRecord, recordOnlyOwner;
+	private Boolean autoRecord, recordOnlyOwner;
+
+	protected RecordingOptions() {
+	}
 
 	RecordingOptions(Builder builder) {
 		autoRecord = builder.autoRecord;
@@ -32,6 +37,7 @@ public class RecordingOptions {
 
 	/**
 	 * Automatically record all sessions in this room. Recording cannot be stopped when this is set to true.
+	 *
 	 * @return Whether all sessions are automatically recorded, or {@code null} if unknown.
 	 */
 	@JsonProperty("auto_record")
@@ -41,6 +47,7 @@ public class RecordingOptions {
 
 	/**
 	 * Record only the owner screen or any share screen of the video.
+	 *
 	 * @return Whether only the owner screen is recorded, or {@code null} if unknown.
 	 */
 	@JsonProperty("record_only_owner")

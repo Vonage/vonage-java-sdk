@@ -195,7 +195,7 @@ public class MeetingRoom {
 	 *
 	 * @return The approval level, as an enum.
 	 */
-	@JsonProperty("join_approval_level")
+	@JsonProperty("joinApprovalLevel")
 	public ApprovalLevel getJoinApprovalLevel() {
 		return joinApprovalLevel;
 	}
@@ -217,7 +217,7 @@ public class MeetingRoom {
 	@JsonGetter("created_at")
 	protected String getCreatedAtAsString() {
 		if (createdAt == null) return null;
-		return createdAt.truncatedTo(ChronoUnit.SECONDS).withFixedOffsetZone().toString();
+		return createdAt.truncatedTo(ChronoUnit.MILLIS).withFixedOffsetZone().toString();
 	}
 
 	/**
@@ -247,7 +247,7 @@ public class MeetingRoom {
 	@JsonGetter("expires_at")
 	protected String getExpiresAtAsString() {
 		if (expiresAt == null) return null;
-		return expiresAt.truncatedTo(ChronoUnit.SECONDS).withFixedOffsetZone().toString();
+		return expiresAt.truncatedTo(ChronoUnit.MILLIS).withFixedOffsetZone().toString();
 	}
 
 	/**

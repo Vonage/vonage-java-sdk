@@ -15,6 +15,7 @@
  */
 package com.vonage.client.meetings;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,8 +23,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class InitialJoinOptions {
-	private final MicrophoneState microphoneState;
+	private MicrophoneState microphoneState;
+
+	protected InitialJoinOptions() {
+	}
 
 	InitialJoinOptions(Builder builder) {
 		microphoneState = builder.microphoneState;
