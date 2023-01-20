@@ -16,6 +16,7 @@
 package com.vonage.client.meetings;
 
 import com.vonage.client.ClientTest;
+import org.junit.Test;
 
 public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
@@ -23,5 +24,88 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		client = new MeetingsClient(wrapper);
 	}
 
+	@Test
+	public void testGetAvailableRooms() throws Exception {
 
+	}
+
+	@Test
+	public void testGetRoom() throws Exception {
+
+	}
+
+	@Test
+	public void testUpdateRoom() throws Exception {
+
+	}
+
+	@Test
+	public void testCreateRoom() throws Exception {
+
+	}
+
+	@Test
+	public void testGetThemeRooms() throws Exception {
+
+	}
+
+	@Test
+	public void testGetThemes() throws Exception {
+
+	}
+
+	@Test
+	public void testGetTheme() throws Exception {
+
+	}
+
+	@Test
+	public void testCreateTheme() throws Exception {
+
+	}
+
+	@Test
+	public void testUpdateTheme() throws Exception {
+
+	}
+
+	@Test
+	public void testDeleteTheme() throws Exception {
+
+	}
+
+	@Test
+	public void testGetRecordings() throws Exception {
+
+	}
+
+	@Test
+	public void testGetRecording() throws Exception {
+
+	}
+
+	@Test
+	public void testDeleteRecording() throws Exception {
+
+	}
+
+	@Test
+	public void testGetDialNumbers() throws Exception {
+
+	}
+
+	@Test
+	public void testGetLogoUploadUrls() throws Exception {
+
+	}
+
+	@Test
+	public void testFinalizeLogos() throws Exception {
+
+	}
+
+	@Test
+	public void testUpdateApplication() throws Exception {
+
+	}
 }

@@ -15,6 +15,7 @@
  */
 package com.vonage.client;
 
+import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
 import com.vonage.client.logging.LoggingUtils;
 import org.apache.http.HttpEntity;
@@ -22,16 +23,26 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
+import static org.junit.Assert.assertThrows;
+import org.junit.function.ThrowingRunnable;
+import static org.mockito.Mockito.*;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
-import static org.mockito.Mockito.*;
+import java.util.function.Supplier;
 
 public abstract class ClientTest<T> {
     protected HttpWrapper wrapper;
     protected T client;
 
     protected ClientTest() {
-        wrapper = new HttpWrapper(new TokenAuthMethod("not-an-api-key", "secret"));
+        wrapper = new HttpWrapper(
+            new TokenAuthMethod("not-an-api-key", "secret"),
+            new JWTAuthMethod("app-id", new byte[0])
+        );
+    }
+
+    protected HttpClient stubHttpClient(int statusCode) throws Exception {
+        return stubHttpClient(statusCode, "");
     }
 
     protected HttpClient stubHttpClient(int statusCode, String content) throws Exception {
@@ -49,5 +60,41 @@ public abstract class ClientTest<T> {
         when(response.getEntity()).thenReturn(entity);
 
         return result;
+    }
+
+    protected void stubResponse(int code, String response) throws Exception {
+        wrapper.setHttpClient(stubHttpClient(code, response));
+    }
+
+    protected void stubResponse(int code) throws Exception {
+        wrapper.setHttpClient(stubHttpClient(code));
+    }
+
+    protected void stubResponseAndAssertThrows(int statusCode, ThrowingRunnable invocation,
+                                               Class<? extends Exception> exceptionClass) throws Exception {
+        stubResponse(statusCode);
+        assertThrows(exceptionClass, invocation);
+    }
+
+    protected void stubResponseAndAssertThrows(String response, ThrowingRunnable invocation,
+                                               Class<? extends Exception> exceptionClass) throws Exception {
+        stubResponse(200, response);
+        assertThrows(exceptionClass, invocation);
+    }
+
+    protected void stubResponseAndAssertThrows(int statusCode, String response, ThrowingRunnable invocation,
+                                               Class<? extends Exception> exceptionClass) throws Exception {
+        stubResponse(statusCode, response);
+        assertThrows(exceptionClass, invocation);
+    }
+
+    protected void stubResponseAndRun(int statusCode, Runnable invocation) throws Exception {
+        stubResponse(statusCode);
+        invocation.run();
+    }
+
+    protected <R> R stubResponseWithResult(int statusCode, String response, Supplier<? extends R> invocation) throws Exception {
+        stubResponse(statusCode, response);
+        return invocation.get();
     }
 }
