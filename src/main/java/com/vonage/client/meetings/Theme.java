@@ -25,10 +25,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Theme {
+	static final Pattern COLOR_PATTERN = Pattern.compile("(#[a-fA-F0-9]{6}|[a-fA-F0-9]{3})");
+
 	private UUID themeId;
 	private String themeName, mainColor;
 	private ThemeDomain domain;
@@ -46,8 +49,8 @@ public class Theme {
 		}
 
 		mainColor = Objects.requireNonNull(builder.mainColor, "Main color is required.");
-		if (mainColor.length() != 7) {
-			throw new IllegalArgumentException("Main color must be 7 characters.");
+		if (COLOR_PATTERN.matcher(mainColor).matches()) {
+			throw new IllegalArgumentException("Main color must be a valid hex pallet.");
 		}
 
 		if ((themeName = builder.themeName) != null && themeName.length() > 200) {
@@ -246,7 +249,7 @@ public class Theme {
 		/**
 		 * (REQUIRED) The main theme colour code (hex value).
 		 *
-		 * @param mainColor The colour's hex code.
+		 * @param mainColor The colour's hex code, including the # character.
 		 *
 		 * @return This builder.
 		 */
