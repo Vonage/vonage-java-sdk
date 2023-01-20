@@ -15,6 +15,7 @@
  */
 package com.vonage.client.meetings;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -120,7 +121,7 @@ public class UpdateRoomRequest {
 	 *
 	 * @return {@linkplain #getExpiresAt()} as a String for serialization.
 	 */
-	@JsonProperty("expires_at")
+	@JsonGetter("expires_at")
 	protected String getExpiresAtAsString() {
 		if (expiresAt == null) return null;
 		return expiresAt.truncatedTo(ChronoUnit.SECONDS).withFixedOffsetZone().toString();

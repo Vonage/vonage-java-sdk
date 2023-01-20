@@ -15,8 +15,10 @@
  */
 package com.vonage.client.meetings;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
@@ -67,7 +69,7 @@ public class Recording {
 	 *
 	 * @return {@linkplain #getStartedAt()} as a String for serialization.
 	 */
-	@JsonProperty("started_at")
+	@JsonGetter("started_at")
 	protected String getStartedAtAsString() {
 		if (startedAt == null) return null;
 		return startedAt.truncatedTo(ChronoUnit.SECONDS).withFixedOffsetZone().toString();
@@ -78,7 +80,7 @@ public class Recording {
 	 *
 	 * @param startedAt The start time as a String.
 	 */
-	@JsonProperty("started_at")
+	@JsonSetter("started_at")
 	protected void setStartedAt(String startedAt) {
 		this.startedAt = ZonedDateTime.parse(startedAt);
 	}
@@ -97,7 +99,7 @@ public class Recording {
 	 *
 	 * @return {@linkplain #getEndedAt()} as a String for serialization.
 	 */
-	@JsonProperty("ended_at")
+	@JsonGetter("ended_at")
 	protected String getEndedAtAsString() {
 		if (endedAt == null) return null;
 		return endedAt.truncatedTo(ChronoUnit.SECONDS).withFixedOffsetZone().toString();
@@ -108,7 +110,7 @@ public class Recording {
 	 *
 	 * @param endedAt The end time as a String.
 	 */
-	@JsonProperty("ended_at")
+	@JsonSetter("ended_at")
 	protected void setEndedAt(String endedAt) {
 		this.endedAt = ZonedDateTime.parse(endedAt);
 	}

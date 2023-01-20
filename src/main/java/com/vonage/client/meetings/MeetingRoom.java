@@ -15,9 +15,7 @@
  */
 package com.vonage.client.meetings;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
@@ -216,7 +214,7 @@ public class MeetingRoom {
 	 *
 	 * @return {@linkplain #getCreatedAt()} as a String for serialization.
 	 */
-	@JsonProperty("created_at")
+	@JsonGetter("created_at")
 	protected String getCreatedAtAsString() {
 		if (createdAt == null) return null;
 		return createdAt.truncatedTo(ChronoUnit.SECONDS).withFixedOffsetZone().toString();
@@ -227,7 +225,7 @@ public class MeetingRoom {
 	 *
 	 * @param createdAt The expiration time as a String.
 	 */
-	@JsonProperty("created_at")
+	@JsonSetter("created_at")
 	protected void setCreatedAt(String createdAt) {
 		this.createdAt = ZonedDateTime.parse(createdAt);
 	}
@@ -246,7 +244,7 @@ public class MeetingRoom {
 	 *
 	 * @return {@linkplain #getExpiresAt()} as a String for serialization.
 	 */
-	@JsonProperty("expires_at")
+	@JsonGetter("expires_at")
 	protected String getExpiresAtAsString() {
 		if (expiresAt == null) return null;
 		return expiresAt.truncatedTo(ChronoUnit.SECONDS).withFixedOffsetZone().toString();
@@ -257,7 +255,7 @@ public class MeetingRoom {
 	 *
 	 * @param expiresAt The expiration time as a String.
 	 */
-	@JsonProperty("expires_at")
+	@JsonSetter("expires_at")
 	protected void setExpiresAt(String expiresAt) {
 		this.expiresAt = ZonedDateTime.parse(expiresAt);
 	}

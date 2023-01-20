@@ -33,11 +33,10 @@ public class Theme {
 	static final Pattern COLOR_PATTERN = Pattern.compile("(#[a-fA-F0-9]{6}|[a-fA-F0-9]{3})");
 
 	private UUID themeId;
-	private String themeName, mainColor;
+	private String themeName, mainColor, accountId, applicationId;
 	private ThemeDomain domain;
-	private String accountId, applicationId;
-	private String brandText, brandImageColored, brandImageWhite, brandedFavicon;
-	private URI shortCompanyUrl, brandImageColoredUrl, brandImageWhiteUrl, brandedFaviconUrl;
+	private String shortCompanyUrl, brandText, brandImageColored, brandImageWhite, brandedFavicon;
+	private URI brandImageColoredUrl, brandImageWhiteUrl, brandedFaviconUrl;
 
 	protected Theme() {
 	}
@@ -57,11 +56,8 @@ public class Theme {
 			throw new IllegalArgumentException("Theme name cannot exceed 200 characters.");
 		}
 
-		if (builder.shortCompanyUrl != null) {
-			if (builder.shortCompanyUrl.length() > 128) {
-				throw new IllegalArgumentException("Short company URL cannot exceed 128 characters.");
-			}
-			shortCompanyUrl = URI.create(builder.shortCompanyUrl);
+		if ((shortCompanyUrl = builder.shortCompanyUrl) != null && builder.shortCompanyUrl.length() > 128) {
+			throw new IllegalArgumentException("Short company URL cannot exceed 128 characters.");
 		}
 	}
 
@@ -117,7 +113,7 @@ public class Theme {
 	 * @return The company's short URL.
 	 */
 	@JsonProperty("short_company_url")
-	public URI getShortCompanyUrl() {
+	public String getShortCompanyUrl() {
 		return shortCompanyUrl;
 	}
 
