@@ -178,8 +178,8 @@ public class MeetingRoomTest {
 				"}}"
 		);
 		assertEquals(id, response.getId());
-		assertEquals(guestUrl, response.getLinks().getGuestUrl().getHref().toString());
-		assertEquals(hostUrl, response.getLinks().getHostUrl().getHref().toString());
+		assertEquals(guestUrl, response.getLinks().getGuestUrl().toString());
+		assertEquals(hostUrl, response.getLinks().getHostUrl().toString());
 		assertEquals(meetingCode, response.getMeetingCode());
 	}
 

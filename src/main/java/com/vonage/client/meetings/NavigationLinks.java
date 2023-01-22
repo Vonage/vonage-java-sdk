@@ -17,10 +17,17 @@ package com.vonage.client.meetings;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.net.URI;
 
+/**
+ * Represents HAL _links.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NavigationLinks {
-	private UrlContainer first, self, next, prev;
+	@JsonProperty("first") UrlContainer first;
+	@JsonProperty("self") UrlContainer self;
+	@JsonProperty("next") UrlContainer next;
+	@JsonProperty("prev") UrlContainer prev;
 
 	protected NavigationLinks() {
 	}
@@ -28,32 +35,28 @@ public class NavigationLinks {
 	/**
 	 * @return URL of the first page.
 	 */
-	@JsonProperty("first")
-	public UrlContainer getFirst() {
-		return first;
+	public URI getFirst() {
+		return first != null ? first.getHref() : null;
 	}
 
 	/**
 	 * @return URL of the current page.
 	 */
-	@JsonProperty("self")
-	public UrlContainer getSelf() {
-		return self;
+	public URI getSelf() {
+		return self != null ? self.getHref() : null;
 	}
 
 	/**
 	 * @return URL of the next page.
 	 */
-	@JsonProperty("next")
-	public UrlContainer getNext() {
-		return next;
+	public URI getNext() {
+		return next != null ? next.getHref() : null;
 	}
 
 	/**
 	 * @return URL of the previous page.
 	 */
-	@JsonProperty("prev")
-	public UrlContainer getPrev() {
-		return prev;
+	public URI getPrev() {
+		return prev != null ? prev.getHref() : null;
 	}
 }

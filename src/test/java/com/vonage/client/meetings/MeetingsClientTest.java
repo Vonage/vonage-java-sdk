@@ -151,8 +151,8 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		assertEquals("365658578", parsed.getMeetingCode());
 		RoomLinks roomLinks = parsed.getLinks();
 		assertNotNull(roomLinks);
-		assertTrue(roomLinks.getHostUrl().getHref().toString().startsWith("https://meetings.vonage.com/?room_token=365658578&participant_token=ey"));
-		assertEquals("https://meetings.vonage.com/365658578", roomLinks.getGuestUrl().getHref().toString());
+		assertTrue(roomLinks.getHostUrl().toString().startsWith("https://meetings.vonage.com/?room_token=365658578&participant_token=ey"));
+		assertEquals("https://meetings.vonage.com/365658578", roomLinks.getGuestUrl().toString());
 		ZonedDateTime createdAt = ZonedDateTime.of(
 				2023, 1, 17,
 				16, 19, 13,

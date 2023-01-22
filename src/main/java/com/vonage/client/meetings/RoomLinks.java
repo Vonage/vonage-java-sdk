@@ -17,10 +17,12 @@ package com.vonage.client.meetings;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.net.URI;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RoomLinks {
-	UrlContainer hostUrl, guestUrl;
+	@JsonProperty("host_url") UrlContainer hostUrl;
+	@JsonProperty("guest_url") UrlContainer guestUrl;
 
 	protected RoomLinks() {
 	}
@@ -28,16 +30,14 @@ public class RoomLinks {
 	/**
 	 * @return The host URL.
 	 */
-	@JsonProperty("host_url")
-	public UrlContainer getHostUrl() {
-		return hostUrl;
+	public URI getHostUrl() {
+		return hostUrl != null ? hostUrl.getHref() : null;
 	}
 
 	/**
 	 * @return The guest URL.
 	 */
-	@JsonProperty("guest_url")
-	public UrlContainer getGuestUrl() {
-		return guestUrl;
+	public URI getGuestUrl() {
+		return guestUrl != null ? guestUrl.getHref() : null;
 	}
 }
