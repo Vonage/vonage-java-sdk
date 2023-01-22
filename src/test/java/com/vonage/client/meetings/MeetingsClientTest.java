@@ -31,7 +31,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 			"            \"display_name\": \"Sina's room\",\n" +
 			"            \"metadata\": \"foo=bar\",\n" +
 			"            \"type\": \"long_term\",\n" +
-			"            \"expires_at\": \"2024-01-17T15:53:03.377Z\",\n" +
+			"            \"expires_at\": \"3000-01-17T15:53:03.377Z\",\n" +
 			"            \"recording_options\": {\n" +
 			"                \"auto_record\": false,\n" +
 			"                \"record_only_owner\": false\n" +
@@ -138,12 +138,12 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		assertEquals("foo=bar", parsed.getMetadata());
 		assertEquals(RoomType.LONG_TERM, parsed.getType());
 		ZonedDateTime expiresAt = ZonedDateTime.of(
-				2024, 1, 17,
+				3000, 1, 17,
 				15, 53, 3,
 				377_000_000, ZoneId.systemDefault()
 		).truncatedTo(ChronoUnit.MILLIS).withFixedOffsetZone();
 		assertEquals(expiresAt, parsed.getExpiresAt());
-		assertEquals("2024-01-17T15:53:03.377Z", parsed.getExpiresAtAsString());
+		assertEquals("3000-01-17T15:53:03.377Z", parsed.getExpiresAtAsString());
 		RecordingOptions recordingOptions = parsed.getRecordingOptions();
 		assertNotNull(recordingOptions);
 		assertFalse(recordingOptions.getAutoRecord());
