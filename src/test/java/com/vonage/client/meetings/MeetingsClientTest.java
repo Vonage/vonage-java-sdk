@@ -21,11 +21,16 @@ import org.junit.Test;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.UUID;
+import java.util.function.Supplier;
 
 public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 	static final String
 			ROOM_ID = "b84cc862-0764-4887-9265-37e8a863164d",
+			RANDOM_ID = UUID.randomUUID().toString(),
 			GET_ROOM_RESPONSE = "        {\n" +
 			"            \"id\": \""+ROOM_ID+"\",\n" +
 			"            \"display_name\": \"Sina's room\",\n" +
@@ -183,6 +188,10 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		assertTrue(availableFeatures.getIsLocaleSwitcherAvailable());
 	}
 
+	void stubResponseAndAssertEqualsSampleRoom(Supplier<? extends MeetingRoom> call) throws Exception {
+		assertEqualsSampleRoom(stubResponseAndGet(200, GET_ROOM_RESPONSE, call));
+	}
+
 	@Test
 	public void testGetAvailableRooms() throws Exception {
 
@@ -190,22 +199,51 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 	@Test
 	public void testGetRoom() throws Exception {
-		assertEqualsSampleRoom(stubResponseAndGet(200, GET_ROOM_RESPONSE, () -> client.getRoom(ROOM_ID)));
+		stubResponseAndAssertEqualsSampleRoom(() -> client.getRoom(ROOM_ID));
+
+		stubResponseAndAssertThrows(200, GET_ROOM_RESPONSE,
+			() -> client.getRoom(null), NullPointerException.class
+		);
+		stubResponseAndAssertThrows(200, GET_ROOM_RESPONSE,
+			() -> client.getRoom(" "), IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(200, GET_ROOM_RESPONSE,
+			() -> client.getRoom("invalid-id"), IllegalArgumentException.class
+		);
 	}
 
 	@Test
 	public void testUpdateRoom() throws Exception {
+		UpdateRoomRequest request = UpdateRoomRequest.builder().build();
+		stubResponseAndAssertEqualsSampleRoom(() -> client.updateRoom(ROOM_ID, request));
 
+		stubResponseAndAssertThrows(200, GET_ROOM_RESPONSE,
+			() -> client.updateRoom(ROOM_ID, null), NullPointerException.class
+		);
+		stubResponseAndAssertThrows(200, GET_ROOM_RESPONSE,
+			() -> client.updateRoom("invalid-id", request), IllegalArgumentException.class
+		);
 	}
 
 	@Test
 	public void testCreateRoom() throws Exception {
+		MeetingRoom request = MeetingRoom.builder("Sample mr").build();
+		stubResponseAndAssertEqualsSampleRoom(() -> client.createRoom(request));
 
+		stubResponseAndAssertThrows(200, GET_ROOM_RESPONSE,
+			() -> client.createRoom(null), NullPointerException.class
+		);
 	}
 
 	@Test
 	public void testGetThemeRooms() throws Exception {
 
+		stubResponseAndAssertThrows(200, GET_AVAILABLE_ROOMS_RESPONSE,
+			() -> client.getThemeRooms("invalid-theme", 3, 9), IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(200, GET_AVAILABLE_ROOMS_RESPONSE,
+			() -> client.getThemeRooms(RANDOM_ID, 2, 1), IllegalArgumentException.class
+		);
 	}
 
 	@Test
@@ -230,7 +268,14 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 	@Test
 	public void testDeleteTheme() throws Exception {
+		stubResponseAndRun(204, () -> client.deleteTheme(RANDOM_ID, false));
 
+		stubResponseAndAssertThrows(204,
+			() -> client.deleteTheme(null, true), NullPointerException.class
+		);
+		stubResponseAndAssertThrows(204,
+			() -> client.deleteTheme("abc123", true), IllegalArgumentException.class
+		);
 	}
 
 	@Test
@@ -245,7 +290,11 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 	@Test
 	public void testDeleteRecording() throws Exception {
+		stubResponseAndRun(204, () -> client.deleteRecording(RANDOM_ID));
 
+		stubResponseAndAssertThrows(204,
+			() -> client.deleteRecording(null), IllegalArgumentException.class
+		);
 	}
 
 	@Test
@@ -260,11 +309,39 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 	@Test
 	public void testFinalizeLogos() throws Exception {
+		stubResponseAndRun(200,() -> client.finalizeLogos(RANDOM_ID, Arrays.asList("key1", "l-k-2", "k3")));
+		stubResponseAndRun(200, () -> client.finalizeLogos(RANDOM_ID, Collections.singletonList("a")));
 
+		stubResponseAndAssertThrows(200,
+			() -> client.finalizeLogos(null, Arrays.asList("logo_key0")), NullPointerException.class
+		);
+		stubResponseAndAssertThrows(200,
+			() -> client.finalizeLogos("invalid-id", Arrays.asList("logo_0")), IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(200,
+			() -> client.finalizeLogos(RANDOM_ID, null), IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(200,
+			() -> client.finalizeLogos(RANDOM_ID, Collections.emptyList()), IllegalArgumentException.class
+		);
 	}
 
 	@Test
 	public void testUpdateApplication() throws Exception {
+		UpdateApplicationRequest request = UpdateApplicationRequest.builder().build();
+		String appId = UUID.randomUUID().toString(), accId = UUID.randomUUID().toString();
+		String responseJson = "{\n" +
+				"  \"application_id\": \""+appId+"\",\n" +
+				"  \"account_id\": \""+accId+"\",\n" +
+				"  \"default_theme_id\": \""+RANDOM_ID+"\"\n" +
+				"}";
+		Application parsed = stubResponseAndGet(200, responseJson, () -> client.updateApplication(request));
+		assertEquals(appId, parsed.getApplicationId());
+		assertEquals(accId, parsed.getAccountId());
+		assertEquals(RANDOM_ID, parsed.getDefaultThemeId().toString());
 
+		stubResponseAndAssertThrows(200, responseJson,
+			() -> client.updateApplication(null), NullPointerException.class
+		);
 	}
 }

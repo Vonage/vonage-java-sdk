@@ -15,6 +15,7 @@
  */
 package com.vonage.client.meetings;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -25,9 +26,11 @@ import java.util.List;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 class FinalizeLogosRequest {
 	@JsonProperty("keys") List<String> keys;
+	@JsonIgnore String themeId;
 
-	FinalizeLogosRequest(List<String> keys) {
+	FinalizeLogosRequest(String themeId, List<String> keys) {
 		this.keys = keys;
+		this.themeId = themeId;
 	}
 
 	String toJson() {

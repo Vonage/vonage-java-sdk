@@ -18,22 +18,27 @@ package com.vonage.client.meetings;
 import org.apache.http.client.methods.RequestBuilder;
 
 class GetRoomsRequest {
-	final String startId, endId, themeId;
-	final Integer pageSize;
+	final String themeId;
+	final Integer pageSize, startId, endId;
 
-	GetRoomsRequest(String startId, String endId, Integer pageSize, String themeId) {
+	GetRoomsRequest(Integer startId, Integer endId, Integer pageSize, String themeId) {
+		this.themeId = themeId;
 		this.startId = startId;
 		this.endId = endId;
-		this.pageSize = pageSize;
-		this.themeId = themeId;
+		if ((this.pageSize = pageSize) != null && pageSize < 1) {
+			throw new IllegalArgumentException("page_size must be positive.");
+		}
+		if (startId != null && endId != null && startId > endId) {
+			throw new IllegalArgumentException("start_id cannot be greater than end_id.");
+		}
 	}
 
 	RequestBuilder addParameters(RequestBuilder builder) {
 		if (startId != null) {
-			builder.addParameter("start_id", startId);
+			builder.addParameter("start_id", startId + "");
 		}
 		if (endId != null) {
-			builder.addParameter("end_id", endId);
+			builder.addParameter("end_id", endId + "");
 		}
 		if (pageSize != null) {
 			builder.addParameter("page_size", pageSize + "");

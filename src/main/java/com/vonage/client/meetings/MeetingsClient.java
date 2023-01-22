@@ -18,6 +18,7 @@ package com.vonage.client.meetings;
 import com.vonage.client.HttpWrapper;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class MeetingsClient {
 	final GetAvailableRoomsEndpoint getAvailableRooms;
@@ -63,6 +64,33 @@ public class MeetingsClient {
 		updateApplication = new UpdateApplicationEndpoint(httpWrapper);
 	}
 
+	static String validateThemeId(String themeId) {
+		return UUID.fromString(Objects.requireNonNull(themeId,  "Theme ID is required.")).toString();
+	}
+
+	static String validateRoomId(String roomId) {
+		return UUID.fromString(Objects.requireNonNull(roomId,  "Room ID is required.")).toString();
+	}
+
+	static String validateSessionId(String sessionId) {
+		if (sessionId == null || sessionId.trim().isEmpty()) {
+			throw new IllegalArgumentException("Session ID cannot be null or empty.");
+		}
+		return sessionId;
+	}
+
+	static String validateRecordingId(String recordingId) {
+		if (recordingId == null || recordingId.trim().isEmpty()) {
+			throw new IllegalArgumentException("Recording ID cannot be null or empty.");
+		}
+		return recordingId;
+	}
+
+	static Theme validateTheme(Theme theme) {
+		return Objects.requireNonNull(theme, "Theme properties are required.");
+	}
+
+
 	/**
 	 * Get all available rooms in the application.
 	 *
@@ -72,7 +100,7 @@ public class MeetingsClient {
 	 *
 	 * @return The HAL response.
 	 */
-	public GetRoomsResponse getAvailableRooms(String startId, String endId, Integer pageSize) {
+	public GetRoomsResponse getAvailableRooms(Integer startId, Integer endId, Integer pageSize) {
 		return getAvailableRooms.execute(new GetRoomsRequest(startId, endId, pageSize, null));
 	}
 
@@ -84,7 +112,7 @@ public class MeetingsClient {
 	 * @return The meeting room associated with the ID.
 	 */
 	public MeetingRoom getRoom(String roomId) {
-		return getRoom.execute(roomId);
+		return getRoom.execute(validateRoomId(roomId));
 	}
 
 	/**
@@ -95,7 +123,7 @@ public class MeetingsClient {
 	 * @return Details of the created meeting room.
 	 */
 	public MeetingRoom createRoom(MeetingRoom room) {
-		return createRoom.execute(Objects.requireNonNull(room, "Meeting room cannot be null."));
+		return createRoom.execute(Objects.requireNonNull(room, "Meeting room is required."));
 	}
 
 	/**
@@ -107,7 +135,8 @@ public class MeetingsClient {
 	 * @return Details of the updated meeting room.
 	 */
 	public MeetingRoom updateRoom(String roomId, UpdateRoomRequest roomUpdate) {
-		roomUpdate.roomId = roomId;
+		Objects.requireNonNull(roomUpdate, "Room update request properties is required.");
+		roomUpdate.roomId = validateRoomId(roomId);
 		return updateRoom.execute(roomUpdate);
 	}
 
@@ -120,8 +149,8 @@ public class MeetingsClient {
 	 *
 	 * @return The HAL response.
 	 */
-	public GetRoomsResponse getThemeRooms(String themeId, String startId, String endId) {
-		return getThemeRooms.execute(new GetRoomsRequest(startId, endId, null, themeId));
+	public GetRoomsResponse getThemeRooms(String themeId, Integer startId, Integer endId) {
+		return getThemeRooms.execute(new GetRoomsRequest(startId, endId, null, validateThemeId(themeId)));
 	}
 
 	/**
@@ -141,7 +170,7 @@ public class MeetingsClient {
 	 * @return The theme associated with the ID.
 	 */
 	public Theme getTheme(String themeId) {
-		return getTheme.execute(themeId);
+		return getTheme.execute(validateThemeId(themeId));
 	}
 
 	/**
@@ -152,7 +181,7 @@ public class MeetingsClient {
 	 * @return The full created theme details.
 	 */
 	public Theme createTheme(Theme theme) {
-		return createTheme.execute(theme);
+		return createTheme.execute(validateTheme(theme));
 	}
 
 	/**
@@ -163,7 +192,7 @@ public class MeetingsClient {
 	 * @return The full updated theme details.
 	 */
 	public Theme updateTheme(Theme theme) {
-		return updateTheme.execute(theme);
+		return updateTheme.execute(validateTheme(theme));
 	}
 
 	/**
@@ -173,7 +202,7 @@ public class MeetingsClient {
 	 * @param force Whether to delete the theme even if theme is used by rooms or as application default theme.
 	 */
 	public void deleteTheme(String themeId, boolean force) {
-		deleteTheme.execute(new DeleteThemeRequest(themeId, force));
+		deleteTheme.execute(new DeleteThemeRequest(validateThemeId(themeId), force));
 	}
 
 	/**
@@ -184,7 +213,7 @@ public class MeetingsClient {
 	 * @return The list of recordings for the session.
 	 */
 	public List<Recording> getRecordings(String sessionId) {
-		return getRecordings.execute(sessionId).getRecordings();
+		return getRecordings.execute(validateSessionId(sessionId)).getRecordings();
 	}
 
 	/**
@@ -195,7 +224,7 @@ public class MeetingsClient {
 	 * @return The recording properties.
 	 */
 	public Recording getRecording(String recordingId) {
-		return getRecording.execute(recordingId);
+		return getRecording.execute(validateRecordingId(recordingId));
 	}
 
 	/**
@@ -204,7 +233,7 @@ public class MeetingsClient {
 	 * @param recordingId ID of the recording to delete.
 	 */
 	public void deleteRecording(String recordingId) {
-		deleteRecording.execute(recordingId);
+		deleteRecording.execute(validateRecordingId(recordingId));
 	}
 
 	/**
@@ -226,12 +255,16 @@ public class MeetingsClient {
 	}
 
 	/**
-	 * Change logos to be permanent.
+	 * Change logos to be permanent for a given theme.
 	 *
+	 * @param themeId The theme ID containing the logos.
 	 * @param keys List of temporary theme's logo keys to make permanent
 	 */
-	public void finalizeLogos(List<String> keys) {
-		finalizeLogos.execute(new FinalizeLogosRequest(keys));
+	public void finalizeLogos(String themeId, List<String> keys) {
+		if (keys == null || keys.isEmpty()) {
+			throw new IllegalArgumentException("Logo keys are required.");
+		}
+		finalizeLogos.execute(new FinalizeLogosRequest(validateThemeId(themeId), keys));
 	}
 
 	/**
@@ -242,6 +275,8 @@ public class MeetingsClient {
 	 * @return The updated application details.
 	 */
 	public Application updateApplication(UpdateApplicationRequest updateRequest) {
-		return updateApplication.execute(updateRequest);
+		return updateApplication.execute(Objects.requireNonNull(
+				updateRequest, "Application update properties are required.")
+		);
 	}
 }
