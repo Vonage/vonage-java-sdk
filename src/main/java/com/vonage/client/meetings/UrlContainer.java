@@ -21,7 +21,7 @@ import java.net.URI;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UrlContainer {
-	private URI href;
+	URI href;
 
 	protected UrlContainer() {
 	}

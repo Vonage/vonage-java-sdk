@@ -22,7 +22,6 @@ import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Objects;
 import java.util.UUID;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -45,18 +44,10 @@ public class MeetingRoom {
 	}
 
 	MeetingRoom(Builder builder) {
-		displayName = Objects.requireNonNull(builder.displayName, "Display name is required.");
-		expiresAt = builder.expiresAt;
-		if ((type = builder.type) == RoomType.INSTANT && expiresAt != null) {
-			throw new IllegalStateException("Expiration time should not be specified for "+type+" rooms.");
+		if ((displayName = builder.displayName) == null || displayName.trim().isEmpty()) {
+			throw new IllegalArgumentException("Display name is required and cannot be empty.");
 		}
-		else if (type == RoomType.LONG_TERM && expiresAt == null) {
-			throw new IllegalStateException("Expiration time is must be specified for "+type+" rooms.");
-		}
-		if (expiresAt != null && expiresAt.isBefore(ZonedDateTime.now().plusMinutes(10))) {
-			throw new IllegalArgumentException("Expiration time should be more than 10 minutes from now.");
-		}
-
+		validateExpiresAtAndRoomType(expiresAt = builder.expiresAt, type = builder.type);
 		metadata = builder.metadata;
 		isAvailable = builder.isAvailable;
 		expireAfterUse = builder.expireAfterUse;
@@ -67,6 +58,18 @@ public class MeetingRoom {
 		themeId = builder.themeId;
 		joinApprovalLevel = builder.joinApprovalLevel;
 		uiSettings = builder.uiSettings;
+	}
+
+	static void validateExpiresAtAndRoomType(ZonedDateTime expiresAt, RoomType type) {
+		if (type == RoomType.INSTANT && expiresAt != null) {
+			throw new IllegalStateException("Expiration time should not be specified for "+type+" rooms.");
+		}
+		else if (type == RoomType.LONG_TERM && expiresAt == null) {
+			throw new IllegalStateException("Expiration time must be specified for "+type+" rooms.");
+		}
+		if (expiresAt != null && expiresAt.isBefore(ZonedDateTime.now().plusMinutes(10))) {
+			throw new IllegalArgumentException("Expiration time should be more than 10 minutes from now.");
+		}
 	}
 
 	/**

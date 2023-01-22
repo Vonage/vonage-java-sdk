@@ -25,7 +25,6 @@ import org.apache.http.entity.ContentType;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
-import java.util.Map;
 import java.util.UUID;
 
 public class GetRoomEndpointTest {
@@ -44,7 +43,6 @@ public class GetRoomEndpointTest {
 		String expectedUri = "https://api-eu.vonage.com/beta/meetings/rooms/"+roomId;
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, MeetingsClientTest.GET_ROOM_RESPONSE);
 		MeetingRoom parsedResponse = endpoint.parseResponse(mockResponse);
 		MeetingsClientTest.assertEqualsSampleRoom(parsedResponse);

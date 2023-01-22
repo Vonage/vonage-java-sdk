@@ -101,11 +101,13 @@ public class MeetingsClient {
 	/**
 	 * Update an existing room.
 	 *
+	 * @param roomId ID of the meeting room to be updated.
 	 * @param roomUpdate Properties of the meeting room to change.
 	 *
 	 * @return Details of the updated meeting room.
 	 */
-	public MeetingRoom updateRoom(UpdateRoomRequest roomUpdate) {
+	public MeetingRoom updateRoom(String roomId, UpdateRoomRequest roomUpdate) {
+		roomUpdate.roomId = roomId;
 		return updateRoom.execute(roomUpdate);
 	}
 

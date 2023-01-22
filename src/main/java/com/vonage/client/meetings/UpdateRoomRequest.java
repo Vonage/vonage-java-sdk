@@ -16,6 +16,7 @@
 package com.vonage.client.meetings;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -27,13 +28,14 @@ import java.util.UUID;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class UpdateRoomRequest {
+	@JsonIgnore String roomId;
+
 	private final Boolean expireAfterUse;
 	private final InitialJoinOptions initialJoinOptions;
 	private final CallbackUrls callbackUrls;
 	private final AvailableFeatures availableFeatures;
 	private final ApprovalLevel joinApprovalLevel;
 	private final UUID themeId;
-	private final String id;
 	private final ZonedDateTime expiresAt;
 
 	UpdateRoomRequest(Builder builder) {
@@ -43,8 +45,7 @@ public class UpdateRoomRequest {
 		availableFeatures = builder.availableFeatures;
 		joinApprovalLevel = builder.joinApprovalLevel;
 		themeId = builder.themeId;
-		expiresAt = builder.expiresAt;
-		id = builder.id;
+		MeetingRoom.validateExpiresAtAndRoomType(expiresAt = builder.expiresAt, null);
 	}
 
 	/**
@@ -126,16 +127,6 @@ public class UpdateRoomRequest {
 		if (expiresAt == null) return null;
 		return expiresAt.truncatedTo(ChronoUnit.SECONDS).withFixedOffsetZone().toString();
 	}
-
-	/**
-	 * Identifier of the meeting room.
-	 *
-	 * @return The room ID.
-	 */
-	@JsonProperty("id")
-	public String getId() {
-		return id;
-	}
 	
 	/**
 	 * Generates a JSON payload from this request.
@@ -168,7 +159,6 @@ public class UpdateRoomRequest {
 		private AvailableFeatures availableFeatures;
 		private ApprovalLevel joinApprovalLevel;
 		private UUID themeId;
-		private String id;
 		private ZonedDateTime expiresAt;
 	
 		Builder() {}
@@ -250,18 +240,6 @@ public class UpdateRoomRequest {
 			return this;
 		}
 
-		/**
-		 *
-		 * @param id Identifier of the meeting room.
-		 *
-		 * @return This builder.
-		 */
-		public Builder id(String id) {
-			this.id = id;
-			return this;
-		}
-
-	
 		/**
 		 * Builds the {@linkplain UpdateRoomRequest}.
 		 *

@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RoomLinks {
-	private UrlContainer hostUrl, guestUrl;
+	UrlContainer hostUrl, guestUrl;
 
 	protected RoomLinks() {
 	}

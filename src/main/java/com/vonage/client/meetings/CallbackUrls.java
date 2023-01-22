@@ -32,9 +32,9 @@ public class CallbackUrls {
 	}
 
 	CallbackUrls(Builder builder) {
-		roomsCallbackUrl = builder.roomsCallbackUrl;
-		sessionsCallbackUrl = builder.sessionsCallbackUrl;
-		recordingsCallbackUrl = builder.recordingsCallbackUrl;
+		roomsCallbackUrl = URI.create(builder.roomsCallbackUrl);
+		sessionsCallbackUrl = URI.create(builder.sessionsCallbackUrl);
+		recordingsCallbackUrl = URI.create(builder.recordingsCallbackUrl);
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class CallbackUrls {
 	}
 	
 	public static class Builder {
-		private URI roomsCallbackUrl, sessionsCallbackUrl, recordingsCallbackUrl;
+		private String roomsCallbackUrl, sessionsCallbackUrl, recordingsCallbackUrl;
 	
 		Builder() {}
 	
@@ -102,7 +102,7 @@ public class CallbackUrls {
 		 *
 		 * @return This builder.
 		 */
-		public Builder roomsCallbackUrl(URI roomsCallbackUrl) {
+		public Builder roomsCallbackUrl(String roomsCallbackUrl) {
 			this.roomsCallbackUrl = roomsCallbackUrl;
 			return this;
 		}
@@ -113,7 +113,7 @@ public class CallbackUrls {
 		 *
 		 * @return This builder.
 		 */
-		public Builder sessionsCallbackUrl(URI sessionsCallbackUrl) {
+		public Builder sessionsCallbackUrl(String sessionsCallbackUrl) {
 			this.sessionsCallbackUrl = sessionsCallbackUrl;
 			return this;
 		}
@@ -124,7 +124,7 @@ public class CallbackUrls {
 		 *
 		 * @return This builder.
 		 */
-		public Builder recordingsCallbackUrl(URI recordingsCallbackUrl) {
+		public Builder recordingsCallbackUrl(String recordingsCallbackUrl) {
 			this.recordingsCallbackUrl = recordingsCallbackUrl;
 			return this;
 		}

@@ -15,10 +15,21 @@
  */
 package com.vonage.client.meetings;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vonage.client.VonageUnexpectedException;
 
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UISettings {
 	private String language;
+
+	UISettings(Builder builder) {
+		language = builder.language;
+	}
 
 	protected UISettings() {
 	}
@@ -31,5 +42,55 @@ public class UISettings {
 	@JsonProperty("language")
 	public String getLanguage() {
 		return language;
+	}
+
+	/**
+	 * Generates a JSON payload from this request.
+	 *
+	 * @return JSON representation of this UISettings object.
+	 */
+	public String toJson() {
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			return mapper.writeValueAsString(this);
+		}
+		catch (JsonProcessingException jpe) {
+			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
+		}
+	}
+
+	/**
+	 * Entry point for constructing an instance of this class.
+	 *
+	 * @return A new Builder.
+	 */
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	public static class Builder {
+		private String language;
+
+		Builder() {}
+
+		/**
+		 *
+		 * @param language The language setting.
+		 *
+		 * @return This builder.
+		 */
+		public Builder language(String language) {
+			this.language = language;
+			return this;
+		}
+
+		/**
+		 * Builds the {@linkplain UISettings}.
+		 *
+		 * @return An instance of UISettings, populated with all fields from this builder.
+		 */
+		public UISettings build() {
+			return new UISettings(this);
+		}
 	}
 }

@@ -39,7 +39,7 @@ class UpdateRoomEndpoint extends AbstractMethod<UpdateRoomRequest, MeetingRoom> 
 
 	@Override
 	public RequestBuilder makeRequest(UpdateRoomRequest request) {
-		String path = String.format(PATH, request.getId());
+		String path = String.format(PATH, request.roomId);
 		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + path;
 		return RequestBuilder.patch(uri)
 				.setHeader("Content-Type", "application/json")
