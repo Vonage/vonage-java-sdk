@@ -52,7 +52,7 @@ public class DialNumbers {
 	 *
 	 * @return The country's name.
 	 */
-	@JsonProperty("display_name")
+	@JsonProperty("displayName")
 	public String getDisplayName() {
 		return displayName;
 	}

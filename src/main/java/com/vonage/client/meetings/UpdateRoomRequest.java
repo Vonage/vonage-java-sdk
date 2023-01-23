@@ -34,7 +34,7 @@ public class UpdateRoomRequest {
 	private final InitialJoinOptions initialJoinOptions;
 	private final CallbackUrls callbackUrls;
 	private final AvailableFeatures availableFeatures;
-	private final ApprovalLevel joinApprovalLevel;
+	private final JoinApprovalLevel joinApprovalLevel;
 	private final UUID themeId;
 	private final ZonedDateTime expiresAt;
 
@@ -104,7 +104,7 @@ public class UpdateRoomRequest {
 	 * @return The approval level, as an enum.
 	 */
 	@JsonProperty("join_approval_level")
-	public ApprovalLevel getJoinApprovalLevel() {
+	public JoinApprovalLevel getJoinApprovalLevel() {
 		return joinApprovalLevel;
 	}
 
@@ -157,7 +157,7 @@ public class UpdateRoomRequest {
 		private InitialJoinOptions initialJoinOptions;
 		private CallbackUrls callbackUrls;
 		private AvailableFeatures availableFeatures;
-		private ApprovalLevel joinApprovalLevel;
+		private JoinApprovalLevel joinApprovalLevel;
 		private UUID themeId;
 		private ZonedDateTime expiresAt;
 	
@@ -224,7 +224,7 @@ public class UpdateRoomRequest {
 		 *
 		 * @return This builder.
 		 */
-		public Builder joinApprovalLevel(ApprovalLevel joinApprovalLevel) {
+		public Builder joinApprovalLevel(JoinApprovalLevel joinApprovalLevel) {
 			this.joinApprovalLevel = joinApprovalLevel;
 			return this;
 		}

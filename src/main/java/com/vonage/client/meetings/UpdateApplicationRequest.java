@@ -27,7 +27,7 @@ public class UpdateApplicationRequest {
 	private final UUID defaultThemeId;
 
 	UpdateApplicationRequest(Builder builder) {
-		defaultThemeId = builder.defaultThemeId != null ? UUID.fromString(builder.defaultThemeId) : null;
+		defaultThemeId = builder.defaultThemeId;
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class UpdateApplicationRequest {
 	}
 	
 	public static class Builder {
-		private String defaultThemeId;
+		private UUID defaultThemeId;
 	
 		Builder() {}
 
@@ -75,7 +75,7 @@ public class UpdateApplicationRequest {
 		 *
 		 * @return This builder.
 		 */
-		public Builder defaultThemeId(String defaultThemeId) {
+		public Builder defaultThemeId(UUID defaultThemeId) {
 			this.defaultThemeId = defaultThemeId;
 			return this;
 		}

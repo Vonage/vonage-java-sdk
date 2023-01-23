@@ -21,9 +21,7 @@ import org.junit.Test;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class MeetingsClientTest extends ClientTest<MeetingsClient> {
@@ -82,8 +80,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 			"            \"id\": \"2f63e54b-adc1-4dda-a27c-24f04c0f1233\",\n" +
 			"            \"display_name\": \"Manchucks\",\n" +
 			"            \"metadata\": null,\n" +
-			"            \"type\": \"long_term\",\n" +
-			"            \"expires_at\": \"2024-01-17T15:53:03.377Z\",\n" +
+			"            \"type\": \"instant\",\n" +
 			"            \"recording_options\": {\n" +
 			"                \"auto_record\": false,\n" +
 			"                \"record_only_owner\": false\n" +
@@ -99,7 +96,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 			"            },\n" +
 			"            \"created_at\": \"2023-01-18T16:57:27.828Z\",\n" +
 			"            \"is_available\": true,\n" +
-			"            \"expire_after_use\": false,\n" +
+			"            \"expire_after_use\": true,\n" +
 			"            \"theme_id\": null,\n" +
 			"            \"initial_join_options\": {\n" +
 			"                \"microphone_state\": \"default\"\n" +
@@ -190,7 +187,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		InitialJoinOptions initialJoinOptions = parsed.getInitialJoinOptions();
 		assertNotNull(initialJoinOptions);
 		assertEquals(MicrophoneState.OFF, initialJoinOptions.getMicrophoneState());
-		assertEquals(ApprovalLevel.NONE, parsed.getJoinApprovalLevel());
+		assertEquals(JoinApprovalLevel.NONE, parsed.getJoinApprovalLevel());
 		UISettings uiSettings = parsed.getUiSettings();
 		assertNotNull(uiSettings);
 		CallbackUrls callbackUrls = parsed.getCallbackUrls();
@@ -209,6 +206,31 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 	void stubResponseAndAssertEqualsSampleRoom(Supplier<? extends MeetingRoom> call) throws Exception {
 		assertEqualsSampleRoom(stubResponseAndGet(200, GET_ROOM_RESPONSE, call));
+	}
+
+	static void assertEqualsGetAvailableRooms(GetRoomsResponse parsed) {
+		List<MeetingRoom> rooms = parsed.getMeetingRooms();
+		NavigationLinks links = parsed.getLinks();
+
+		assertEquals(2, rooms.size());
+		assertEqualsSampleRoom(rooms.get(0));
+		MeetingRoom otherRoom = rooms.get(1);
+		assertEquals("2f63e54b-adc1-4dda-a27c-24f04c0f1233", otherRoom.getId().toString());
+		assertNull(otherRoom.getMetadata());
+		assertEquals(RoomType.INSTANT, otherRoom.getType());
+		assertEquals("710363620", otherRoom.getMeetingCode());
+		assertTrue(otherRoom.getIsAvailable());
+		assertTrue(otherRoom.getExpireAfterUse());
+		assertEquals(MicrophoneState.DEFAULT, otherRoom.getInitialJoinOptions().getMicrophoneState());
+		assertTrue(otherRoom.getAvailableFeatures().getIsChatAvailable());
+		assertFalse(otherRoom.getAvailableFeatures().getIsLocaleSwitcherAvailable());
+		assertEquals(JoinApprovalLevel.NONE, otherRoom.getJoinApprovalLevel());
+		assertEquals("default", otherRoom.getUiSettings().getLanguage());
+
+		assertEquals("api-us.vonage.com/meetings/rooms?page_size=3", links.getFirst().toString());
+		assertEquals("api-us.vonage.com/meetings/rooms?page_size=3&start_id=1991085", links.getSelf().toString());
+		assertEquals("api-us.vonage.com/meetings/rooms?page_size=3&end_id=1991084", links.getPrev().toString());
+		assertEquals("api-us.vonage.com/meetings/rooms?page_size=3&start_id=1994609", links.getNext().toString());
 	}
 
 	static void assertEqualsSampleTheme(Theme parsed) {
@@ -235,7 +257,25 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 	@Test
 	public void testGetAvailableRooms() throws Exception {
+		assertEqualsGetAvailableRooms(stubResponseAndGet(200, GET_AVAILABLE_ROOMS_RESPONSE,
+				() -> client.getAvailableRooms(1991085, 1994609, 3))
+		);
+		assertEqualsGetAvailableRooms(stubResponseAndGet(200, GET_AVAILABLE_ROOMS_RESPONSE,
+				() -> client.getAvailableRooms(1, 2, 1))
+		);
+		assertEqualsGetAvailableRooms(stubResponseAndGet(200, GET_AVAILABLE_ROOMS_RESPONSE,
+				() -> client.getAvailableRooms(null, null, null))
+		);
+		assertEqualsGetAvailableRooms(stubResponseAndGet(200, GET_AVAILABLE_ROOMS_RESPONSE,
+				() -> client.getAvailableRooms(null, null, 20))
+		);
+		assertEqualsGetAvailableRooms(stubResponseAndGet(200, GET_AVAILABLE_ROOMS_RESPONSE,
+				() -> client.getAvailableRooms(29, 31, null))
+		);
 
+		stubResponseAndAssertThrows(200, GET_AVAILABLE_ROOMS_RESPONSE,
+			() -> client.getAvailableRooms(7, 6, 9), IllegalArgumentException.class
+		);
 	}
 
 	@Test
@@ -272,6 +312,12 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 	@Test
 	public void testGetThemeRooms() throws Exception {
+		assertEqualsGetAvailableRooms(stubResponseAndGet(200, GET_AVAILABLE_ROOMS_RESPONSE,
+				() -> client.getThemeRooms(RANDOM_ID, null, null))
+		);
+		assertEqualsGetAvailableRooms(stubResponseAndGet(200, GET_AVAILABLE_ROOMS_RESPONSE,
+				() -> client.getThemeRooms(RANDOM_ID, 1, 12))
+		);
 
 		stubResponseAndAssertThrows(200, GET_AVAILABLE_ROOMS_RESPONSE,
 			() -> client.getThemeRooms(null, 3, 9), NullPointerException.class
@@ -283,7 +329,11 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 	@Test
 	public void testGetThemes() throws Exception {
-
+		String responseJson = "["+SAMPLE_THEME_RESPONSE+",{\"theme_id\":\""+RANDOM_ID+"\"}]";
+		List<Theme> parsed = stubResponseAndGet(200, responseJson, () -> client.getThemes());
+		assertEquals(2, parsed.size());
+		assertEqualsSampleTheme(parsed.get(0));
+		assertEquals(RANDOM_ID, parsed.get(1).getThemeId());
 	}
 
 	@Test
@@ -348,7 +398,22 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 	@Test
 	public void testGetDialNumbers() throws Exception {
-
+		String responseJson = "[\n" +
+				"{\"number\":\"17329672755\",\"displayName\":\"United States\",\"locale\":\"en_US\"},\n" +
+				"{\"number\":\"48123964788\",\"displayName\":\"Poland\",\"locale\":\"pl_PL\"},\n" +
+				"{\"number\":\"827047844377\",\"displayName\":\"South Korea\",\"locale\":\"ko_KR\"}\n" +
+			"]";
+		List<DialNumbers> parsed = stubResponseAndGet(200, responseJson, () -> client.getDialNumbers());
+		assertEquals(3, parsed.size());
+		assertEquals("17329672755", parsed.get(0).getNumber());
+		assertEquals("United States", parsed.get(0).getDisplayName());
+		assertEquals(Locale.US, parsed.get(0).getLocale());
+		assertEquals("48123964788", parsed.get(1).getNumber());
+		assertEquals("Poland", parsed.get(1).getDisplayName());
+		assertEquals(Locale.forLanguageTag("pl-PL"), parsed.get(1).getLocale());
+		assertEquals("827047844377", parsed.get(2).getNumber());
+		assertEquals("South Korea", parsed.get(2).getDisplayName());
+		assertEquals(Locale.KOREA, parsed.get(2).getLocale());
 	}
 
 	@Test

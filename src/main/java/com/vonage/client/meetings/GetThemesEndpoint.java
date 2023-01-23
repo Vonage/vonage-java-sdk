@@ -23,6 +23,7 @@ import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 class GetThemesEndpoint extends AbstractMethod<Void, List<Theme>> {
@@ -48,6 +49,9 @@ class GetThemesEndpoint extends AbstractMethod<Void, List<Theme>> {
 	@Override
 	public List<Theme> parseResponse(HttpResponse response) throws IOException {
 		String json = basicResponseHandler.handleResponse(response);
+		if (json == null || json.isEmpty()) {
+			return Collections.emptyList();
+		}
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.readValue(json, new TypeReference<List<Theme>>() {});
 	}

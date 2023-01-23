@@ -32,7 +32,7 @@ public class MeetingRoom {
 	private String displayName, metadata, meetingCode;
 	private Boolean isAvailable, expireAfterUse;
 	private RoomType type;
-	private ApprovalLevel joinApprovalLevel;
+	private JoinApprovalLevel joinApprovalLevel;
 	private RecordingOptions recordingOptions;
 	private InitialJoinOptions initialJoinOptions;
 	private UISettings uiSettings;
@@ -199,7 +199,7 @@ public class MeetingRoom {
 	 * @return The approval level, as an enum.
 	 */
 	@JsonProperty("joinApprovalLevel")
-	public ApprovalLevel getJoinApprovalLevel() {
+	public JoinApprovalLevel getJoinApprovalLevel() {
 		return joinApprovalLevel;
 	}
 
@@ -331,7 +331,7 @@ public class MeetingRoom {
 		private ZonedDateTime expiresAt;
 		private Boolean isAvailable, expireAfterUse;
 		private RoomType type;
-		private ApprovalLevel joinApprovalLevel;
+		private JoinApprovalLevel joinApprovalLevel;
 		private RecordingOptions recordingOptions;
 		private InitialJoinOptions initialJoinOptions;
 		private UISettings uiSettings;
@@ -458,7 +458,7 @@ public class MeetingRoom {
 		 *
 		 * @return This builder.
 		 */
-		public Builder joinApprovalLevel(ApprovalLevel joinApprovalLevel) {
+		public Builder joinApprovalLevel(JoinApprovalLevel joinApprovalLevel) {
 			this.joinApprovalLevel = joinApprovalLevel;
 			return this;
 		}

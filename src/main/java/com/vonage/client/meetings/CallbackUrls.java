@@ -32,9 +32,15 @@ public class CallbackUrls {
 	}
 
 	CallbackUrls(Builder builder) {
-		roomsCallbackUrl = URI.create(builder.roomsCallbackUrl);
-		sessionsCallbackUrl = URI.create(builder.sessionsCallbackUrl);
-		recordingsCallbackUrl = URI.create(builder.recordingsCallbackUrl);
+		if (builder.roomsCallbackUrl != null) {
+			roomsCallbackUrl = URI.create(builder.roomsCallbackUrl);
+		}
+		if (builder.sessionsCallbackUrl != null) {
+			sessionsCallbackUrl = URI.create(builder.sessionsCallbackUrl);
+		}
+		if (builder.recordingsCallbackUrl != null) {
+			recordingsCallbackUrl = URI.create(builder.recordingsCallbackUrl);
+		}
 	}
 
 	/**

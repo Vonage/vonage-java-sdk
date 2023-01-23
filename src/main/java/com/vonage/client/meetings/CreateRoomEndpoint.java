@@ -40,7 +40,7 @@ class CreateRoomEndpoint extends AbstractMethod<MeetingRoom, MeetingRoom> {
 	@Override
 	public RequestBuilder makeRequest(MeetingRoom request) {
 		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + PATH;
-		return RequestBuilder.get(uri)
+		return RequestBuilder.post(uri)
 				.setHeader("Content-Type", "application/json")
 				.setHeader("Accept", "application/json")
 				.setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));

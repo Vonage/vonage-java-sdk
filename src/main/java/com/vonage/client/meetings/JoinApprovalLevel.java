@@ -23,13 +23,13 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * When set to "after_owner_only" the participants will join the meeting only after the host joined.
  * When set to "explicit_approval" the participants will join the waiting room and the host will deny/approve them.
  */
-public enum ApprovalLevel {
+public enum JoinApprovalLevel {
 	NONE,
 	AFTER_OWNER_ONLY,
 	EXPLICIT_APPROVAL;
 
 	@JsonCreator
-	public static ApprovalLevel fromString(String value) {
+	public static JoinApprovalLevel fromString(String value) {
 		try {
 			return valueOf(value.toUpperCase());
 		}

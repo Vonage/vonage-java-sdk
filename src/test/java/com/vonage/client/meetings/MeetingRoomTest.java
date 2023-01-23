@@ -35,7 +35,7 @@ public class MeetingRoomTest {
 			sessionsCallbackUrl = "http://example.org/sessionsCb";
 		RoomType type = RoomType.LONG_TERM;
 		MicrophoneState microphoneState = MicrophoneState.ON;
-		ApprovalLevel joinApprovalLevel = ApprovalLevel.EXPLICIT_APPROVAL;
+		JoinApprovalLevel joinApprovalLevel = JoinApprovalLevel.EXPLICIT_APPROVAL;
 		Boolean
 			isAvailable = false,
 			expireAfterUse = true,

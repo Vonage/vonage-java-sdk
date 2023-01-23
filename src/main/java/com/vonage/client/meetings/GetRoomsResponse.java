@@ -24,12 +24,8 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GetRoomsResponse {
+	@JsonProperty("_embedded") private List<MeetingRoom> rooms;
 
-	static class Embedded {
-		@JsonProperty("rooms") List<MeetingRoom> rooms;
-	}
-
-	@JsonProperty("_embedded") private Embedded embedded;
 	private Integer pageSize, total;
 	private NavigationLinks links;
 
@@ -55,9 +51,8 @@ public class GetRoomsResponse {
 	/**
 	 * @return The list of rooms.
 	 */
-	@JsonProperty("_embedded")
 	public List<MeetingRoom> getMeetingRooms() {
-		return embedded.rooms;
+		return rooms;
 	}
 
 	/**
