@@ -16,12 +16,13 @@
 package com.vonage.client.meetings;
 
 import org.apache.http.client.methods.RequestBuilder;
+import java.util.UUID;
 
 class GetRoomsRequest {
-	final String themeId;
+	final UUID themeId;
 	final Integer pageSize, startId, endId;
 
-	GetRoomsRequest(Integer startId, Integer endId, Integer pageSize, String themeId) {
+	GetRoomsRequest(Integer startId, Integer endId, Integer pageSize, UUID themeId) {
 		this.themeId = themeId;
 		this.startId = startId;
 		this.endId = endId;

@@ -27,7 +27,7 @@ public class UpdateApplicationRequest {
 	private final UUID defaultThemeId;
 
 	UpdateApplicationRequest(Builder builder) {
-		defaultThemeId = builder.defaultThemeId;
+		defaultThemeId = builder.defaultThemeId != null ? UUID.fromString(builder.defaultThemeId) : null;
 	}
 
 	/**
@@ -65,20 +65,9 @@ public class UpdateApplicationRequest {
 	}
 	
 	public static class Builder {
-		private UUID defaultThemeId;
+		private String defaultThemeId;
 	
 		Builder() {}
-	
-		/**
-		 *
-		 * @param defaultThemeId The theme ID to set as application default theme.
-		 *
-		 * @return This builder.
-		 */
-		public Builder defaultThemeId(UUID defaultThemeId) {
-			this.defaultThemeId = defaultThemeId;
-			return this;
-		}
 
 		/**
 		 *
@@ -87,7 +76,8 @@ public class UpdateApplicationRequest {
 		 * @return This builder.
 		 */
 		public Builder defaultThemeId(String defaultThemeId) {
-			return defaultThemeId(UUID.fromString(defaultThemeId));
+			this.defaultThemeId = defaultThemeId;
+			return this;
 		}
 
 	

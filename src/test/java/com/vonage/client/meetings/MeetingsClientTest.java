@@ -28,9 +28,10 @@ import java.util.function.Supplier;
 
 public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
+	static final UUID
+			RANDOM_ID = UUID.randomUUID(),
+			ROOM_ID = UUID.fromString("b84cc862-0764-4887-9265-37e8a863164d");
 	static final String
-			ROOM_ID = "b84cc862-0764-4887-9265-37e8a863164d",
-			RANDOM_ID = UUID.randomUUID().toString(),
 			GET_ROOM_RESPONSE = "        {\n" +
 			"            \"id\": \""+ROOM_ID+"\",\n" +
 			"            \"display_name\": \"Sina's room\",\n" +
@@ -130,7 +131,25 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 			"        }\n" +
 			"    },\n" +
 			"    \"total_items\": 5\n" +
-			"}";
+			"}",
+
+			SAMPLE_THEME_RESPONSE = "{\n" +
+					"    \"theme_id\": \"d03e71e5-9336-49c1-8adc-12fb3fa98110\",\n" +
+					"    \"theme_name\": \"Theme1\",\n" +
+					"    \"domain\": \"VBC\",\n" +
+					"    \"account_id\": \"94a99d02-24b2-445a-9526-2846aa5f846\",\n" +
+					"    \"application_id\": \"862f8c7b-d203-4729-68a3-7eded210c9ca\",\n" +
+					"    \"main_color\": \"#12f64e\",\n" +
+					"    \"short_company_url\": \"https://t.co/acme\",\n" +
+					"    \"brand_text\": \"Looney Tunes Ltd.\",\n" +
+					"    \"brand_image_colored\": \"color-key\",\n" +
+					"    \"brand_image_white\": \"white-key\",\n" +
+					"    \"branded_favicon\": \"favicon-key\",\n" +
+					"    \"brand_image_colored_url\": \"https://example.com/color.png\",\n" +
+					"    \"brand_image_white_url\": \"https://example.com/white.png\",\n" +
+					"    \"branded_favicon_url\": \"https://example.com/favicon.png\"\n" +
+					"  }";
+	;
 
 	public MeetingsClientTest() {
 		client = new MeetingsClient(wrapper);
@@ -192,6 +211,28 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		assertEqualsSampleRoom(stubResponseAndGet(200, GET_ROOM_RESPONSE, call));
 	}
 
+	static void assertEqualsSampleTheme(Theme parsed) {
+		assertNotNull(parsed);
+		assertEquals("d03e71e5-9336-49c1-8adc-12fb3fa98110", parsed.getThemeId().toString());
+		assertEquals("Theme1", parsed.getThemeName());
+		assertEquals(ThemeDomain.VBC, parsed.getDomain());
+		assertEquals("94a99d02-24b2-445a-9526-2846aa5f846", parsed.getAccountId());
+		assertEquals("862f8c7b-d203-4729-68a3-7eded210c9ca", parsed.getApplicationId());
+		assertEquals("#12f64e", parsed.getMainColor());
+		assertEquals("https://t.co/acme", parsed.getShortCompanyUrl());
+		assertEquals("Looney Tunes Ltd.", parsed.getBrandText());
+		assertEquals("color-key", parsed.getBrandImageColored());
+		assertEquals("white-key", parsed.getBrandImageWhite());
+		assertEquals("favicon-key", parsed.getBrandedFavicon());
+		assertEquals("https://example.com/color.png", parsed.getBrandImageColoredUrl().toString());
+		assertEquals("https://example.com/white.png", parsed.getBrandImageWhiteUrl().toString());
+		assertEquals("https://example.com/favicon.png", parsed.getBrandedFaviconUrl().toString());
+	}
+
+	void stubResponseAndAssertEqualsSampleTheme(Supplier<? extends Theme> call) throws Exception {
+		assertEqualsSampleTheme(stubResponseAndGet(200, SAMPLE_THEME_RESPONSE, call));
+	}
+
 	@Test
 	public void testGetAvailableRooms() throws Exception {
 
@@ -204,12 +245,6 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		stubResponseAndAssertThrows(200, GET_ROOM_RESPONSE,
 			() -> client.getRoom(null), NullPointerException.class
 		);
-		stubResponseAndAssertThrows(200, GET_ROOM_RESPONSE,
-			() -> client.getRoom(" "), IllegalArgumentException.class
-		);
-		stubResponseAndAssertThrows(200, GET_ROOM_RESPONSE,
-			() -> client.getRoom("invalid-id"), IllegalArgumentException.class
-		);
 	}
 
 	@Test
@@ -221,7 +256,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 			() -> client.updateRoom(ROOM_ID, null), NullPointerException.class
 		);
 		stubResponseAndAssertThrows(200, GET_ROOM_RESPONSE,
-			() -> client.updateRoom("invalid-id", request), IllegalArgumentException.class
+			() -> client.updateRoom(null, request), NullPointerException.class
 		);
 	}
 
@@ -230,7 +265,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		MeetingRoom request = MeetingRoom.builder("Sample mr").build();
 		stubResponseAndAssertEqualsSampleRoom(() -> client.createRoom(request));
 
-		stubResponseAndAssertThrows(200, GET_ROOM_RESPONSE,
+		stubResponseAndAssertThrows(201, GET_ROOM_RESPONSE,
 			() -> client.createRoom(null), NullPointerException.class
 		);
 	}
@@ -239,7 +274,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 	public void testGetThemeRooms() throws Exception {
 
 		stubResponseAndAssertThrows(200, GET_AVAILABLE_ROOMS_RESPONSE,
-			() -> client.getThemeRooms("invalid-theme", 3, 9), IllegalArgumentException.class
+			() -> client.getThemeRooms(null, 3, 9), NullPointerException.class
 		);
 		stubResponseAndAssertThrows(200, GET_AVAILABLE_ROOMS_RESPONSE,
 			() -> client.getThemeRooms(RANDOM_ID, 2, 1), IllegalArgumentException.class
@@ -253,17 +288,34 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 	@Test
 	public void testGetTheme() throws Exception {
+		stubResponseAndAssertEqualsSampleTheme(() -> client.getTheme(RANDOM_ID));
 
+		stubResponseAndAssertThrows(200, SAMPLE_THEME_RESPONSE,
+			() -> client.getTheme(null), NullPointerException.class
+		);
 	}
 
 	@Test
 	public void testCreateTheme() throws Exception {
+		Theme request = Theme.builder().brandText("My Company").mainColor("#fff000").build();
+		stubResponseAndAssertEqualsSampleTheme(() -> client.createTheme(request));
 
+		stubResponseAndAssertThrows(200, SAMPLE_THEME_RESPONSE,
+			() -> client.createTheme(null), NullPointerException.class
+		);
 	}
 
 	@Test
 	public void testUpdateTheme() throws Exception {
+		Theme request = Theme.builder().build();
+		stubResponseAndAssertEqualsSampleTheme(() -> client.updateTheme(RANDOM_ID, request));
 
+		stubResponseAndAssertThrows(200, SAMPLE_THEME_RESPONSE,
+			() -> client.updateTheme(RANDOM_ID, null), NullPointerException.class
+		);
+		stubResponseAndAssertThrows(200, SAMPLE_THEME_RESPONSE,
+			() -> client.updateTheme(null, request), NullPointerException.class
+		);
 	}
 
 	@Test
@@ -272,9 +324,6 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 		stubResponseAndAssertThrows(204,
 			() -> client.deleteTheme(null, true), NullPointerException.class
-		);
-		stubResponseAndAssertThrows(204,
-			() -> client.deleteTheme("abc123", true), IllegalArgumentException.class
 		);
 	}
 
@@ -290,7 +339,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 	@Test
 	public void testDeleteRecording() throws Exception {
-		stubResponseAndRun(204, () -> client.deleteRecording(RANDOM_ID));
+		stubResponseAndRun(204, () -> client.deleteRecording(RANDOM_ID.toString()));
 
 		stubResponseAndAssertThrows(204,
 			() -> client.deleteRecording(null), IllegalArgumentException.class
@@ -316,9 +365,6 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 			() -> client.finalizeLogos(null, Arrays.asList("logo_key0")), NullPointerException.class
 		);
 		stubResponseAndAssertThrows(200,
-			() -> client.finalizeLogos("invalid-id", Arrays.asList("logo_0")), IllegalArgumentException.class
-		);
-		stubResponseAndAssertThrows(200,
 			() -> client.finalizeLogos(RANDOM_ID, null), IllegalArgumentException.class
 		);
 		stubResponseAndAssertThrows(200,
@@ -338,7 +384,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		Application parsed = stubResponseAndGet(200, responseJson, () -> client.updateApplication(request));
 		assertEquals(appId, parsed.getApplicationId());
 		assertEquals(accId, parsed.getAccountId());
-		assertEquals(RANDOM_ID, parsed.getDefaultThemeId().toString());
+		assertEquals(RANDOM_ID, parsed.getDefaultThemeId());
 
 		stubResponseAndAssertThrows(200, responseJson,
 			() -> client.updateApplication(null), NullPointerException.class

@@ -23,7 +23,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -32,7 +31,7 @@ import java.util.regex.Pattern;
 public class Theme {
 	static final Pattern COLOR_PATTERN = Pattern.compile("(#[a-fA-F0-9]{6}|[a-fA-F0-9]{3})");
 
-	private UUID themeId;
+	UUID themeId;
 	private String themeName, mainColor, accountId, applicationId;
 	private ThemeDomain domain;
 	private String shortCompanyUrl, brandText, brandImageColored, brandImageWhite, brandedFavicon;
@@ -42,13 +41,11 @@ public class Theme {
 	}
 
 	Theme(Builder builder) {
-		brandText = Objects.requireNonNull(builder.brandText, "Brand text is required.");
-		if (brandText.length() > 200) {
+		if ((brandText = builder.brandText) != null && brandText.length() > 200) {
 			throw new IllegalArgumentException("Brand text cannot exceed 200 characters.");
 		}
 
-		mainColor = Objects.requireNonNull(builder.mainColor, "Main color is required.");
-		if (COLOR_PATTERN.matcher(mainColor).matches()) {
+		if ((mainColor = builder.mainColor) != null && !COLOR_PATTERN.matcher(mainColor).matches()) {
 			throw new IllegalArgumentException("Main color must be a valid hex pallet.");
 		}
 

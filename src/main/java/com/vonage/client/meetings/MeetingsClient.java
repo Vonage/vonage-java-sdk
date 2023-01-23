@@ -64,12 +64,12 @@ public class MeetingsClient {
 		updateApplication = new UpdateApplicationEndpoint(httpWrapper);
 	}
 
-	static String validateThemeId(String themeId) {
-		return UUID.fromString(Objects.requireNonNull(themeId,  "Theme ID is required.")).toString();
+	static UUID validateThemeId(UUID themeId) {
+		return Objects.requireNonNull(themeId,  "Theme ID is required.");
 	}
 
-	static String validateRoomId(String roomId) {
-		return UUID.fromString(Objects.requireNonNull(roomId,  "Room ID is required.")).toString();
+	static UUID validateRoomId(UUID roomId) {
+		return Objects.requireNonNull(roomId,  "Room ID is required.");
 	}
 
 	static String validateSessionId(String sessionId) {
@@ -84,10 +84,6 @@ public class MeetingsClient {
 			throw new IllegalArgumentException("Recording ID cannot be null or empty.");
 		}
 		return recordingId;
-	}
-
-	static Theme validateTheme(Theme theme) {
-		return Objects.requireNonNull(theme, "Theme properties are required.");
 	}
 
 
@@ -111,7 +107,7 @@ public class MeetingsClient {
 	 *
 	 * @return The meeting room associated with the ID.
 	 */
-	public MeetingRoom getRoom(String roomId) {
+	public MeetingRoom getRoom(UUID roomId) {
 		return getRoom.execute(validateRoomId(roomId));
 	}
 
@@ -134,7 +130,7 @@ public class MeetingsClient {
 	 *
 	 * @return Details of the updated meeting room.
 	 */
-	public MeetingRoom updateRoom(String roomId, UpdateRoomRequest roomUpdate) {
+	public MeetingRoom updateRoom(UUID roomId, UpdateRoomRequest roomUpdate) {
 		Objects.requireNonNull(roomUpdate, "Room update request properties is required.");
 		roomUpdate.roomId = validateRoomId(roomId);
 		return updateRoom.execute(roomUpdate);
@@ -149,8 +145,10 @@ public class MeetingsClient {
 	 *
 	 * @return The HAL response.
 	 */
-	public GetRoomsResponse getThemeRooms(String themeId, Integer startId, Integer endId) {
-		return getThemeRooms.execute(new GetRoomsRequest(startId, endId, null, validateThemeId(themeId)));
+	public GetRoomsResponse getThemeRooms(UUID themeId, Integer startId, Integer endId) {
+		return getThemeRooms.execute(new GetRoomsRequest(
+				startId, endId, null, validateThemeId(themeId))
+		);
 	}
 
 	/**
@@ -169,7 +167,7 @@ public class MeetingsClient {
 	 *
 	 * @return The theme associated with the ID.
 	 */
-	public Theme getTheme(String themeId) {
+	public Theme getTheme(UUID themeId) {
 		return getTheme.execute(validateThemeId(themeId));
 	}
 
@@ -181,18 +179,24 @@ public class MeetingsClient {
 	 * @return The full created theme details.
 	 */
 	public Theme createTheme(Theme theme) {
-		return createTheme.execute(validateTheme(theme));
+		Objects.requireNonNull(theme, "Theme creation properties are required.");
+		Objects.requireNonNull(theme.getBrandText(), "Brand text is required.");
+		Objects.requireNonNull(theme.getMainColor(), "Main color is required.");
+		return createTheme.execute(theme);
 	}
 
 	/**
 	 * Update an existing theme.
 	 *
+	 * @param themeId ID of the theme to update.
 	 * @param theme The partial theme properties to update.
 	 *
 	 * @return The full updated theme details.
 	 */
-	public Theme updateTheme(Theme theme) {
-		return updateTheme.execute(validateTheme(theme));
+	public Theme updateTheme(UUID themeId, Theme theme) {
+		Objects.requireNonNull(theme, "Theme update properties are required.");
+		theme.themeId = validateThemeId(themeId);
+		return updateTheme.execute(theme);
 	}
 
 	/**
@@ -201,7 +205,7 @@ public class MeetingsClient {
 	 * @param themeId ID of the theme to delete.
 	 * @param force Whether to delete the theme even if theme is used by rooms or as application default theme.
 	 */
-	public void deleteTheme(String themeId, boolean force) {
+	public void deleteTheme(UUID themeId, boolean force) {
 		deleteTheme.execute(new DeleteThemeRequest(validateThemeId(themeId), force));
 	}
 
@@ -260,7 +264,7 @@ public class MeetingsClient {
 	 * @param themeId The theme ID containing the logos.
 	 * @param keys List of temporary theme's logo keys to make permanent
 	 */
-	public void finalizeLogos(String themeId, List<String> keys) {
+	public void finalizeLogos(UUID themeId, List<String> keys) {
 		if (keys == null || keys.isEmpty()) {
 			throw new IllegalArgumentException("Logo keys are required.");
 		}

@@ -15,11 +15,13 @@
  */
 package com.vonage.client.meetings;
 
+import java.util.UUID;
+
 class DeleteThemeRequest {
-	final String themeId;
+	final UUID themeId;
 	final boolean force;
 
-	DeleteThemeRequest(String themeId, boolean force) {
+	DeleteThemeRequest(UUID themeId, boolean force) {
 		this.themeId = themeId;
 		this.force = force;
 	}

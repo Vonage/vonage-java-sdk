@@ -28,7 +28,7 @@ import java.util.UUID;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class UpdateRoomRequest {
-	@JsonIgnore String roomId;
+	@JsonIgnore UUID roomId;
 
 	private final Boolean expireAfterUse;
 	private final InitialJoinOptions initialJoinOptions;

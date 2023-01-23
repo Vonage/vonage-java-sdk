@@ -21,8 +21,9 @@ import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
+import java.util.UUID;
 
-class GetRoomEndpoint extends AbstractMethod<String, MeetingRoom> {
+class GetRoomEndpoint extends AbstractMethod<UUID, MeetingRoom> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/beta/meetings/rooms/%s";
 
@@ -36,7 +37,7 @@ class GetRoomEndpoint extends AbstractMethod<String, MeetingRoom> {
 	}
 
 	@Override
-	public RequestBuilder makeRequest(String request) {
+	public RequestBuilder makeRequest(UUID request) {
 		String path = String.format(PATH, request);
 		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + path;
 		return RequestBuilder.get(uri)

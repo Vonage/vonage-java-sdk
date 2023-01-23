@@ -22,13 +22,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import java.util.List;
+import java.util.UUID;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 class FinalizeLogosRequest {
 	@JsonProperty("keys") List<String> keys;
-	@JsonIgnore String themeId;
+	@JsonIgnore UUID themeId;
 
-	FinalizeLogosRequest(String themeId, List<String> keys) {
+	FinalizeLogosRequest(UUID themeId, List<String> keys) {
 		this.keys = keys;
 		this.themeId = themeId;
 	}

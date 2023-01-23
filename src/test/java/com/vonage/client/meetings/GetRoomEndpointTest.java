@@ -29,7 +29,7 @@ import java.util.UUID;
 
 public class GetRoomEndpointTest {
 	private GetRoomEndpoint endpoint;
-	final String roomId = UUID.randomUUID().toString();
+	final UUID roomId = UUID.randomUUID();
 	
 	@Before
 	public void setUp() {
