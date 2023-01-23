@@ -439,7 +439,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 	@Test
 	public void testUpdateApplication() throws Exception {
-		UpdateApplicationRequest request = UpdateApplicationRequest.builder().build();
+		UpdateApplicationRequest request = UpdateApplicationRequest.builder().defaultThemeId(RANDOM_ID).build();
 		String appId = UUID.randomUUID().toString(), accId = UUID.randomUUID().toString();
 		String responseJson = "{\n" +
 				"  \"application_id\": \""+appId+"\",\n" +

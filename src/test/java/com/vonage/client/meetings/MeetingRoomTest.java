@@ -36,7 +36,7 @@ public class MeetingRoomTest {
 		RoomType type = RoomType.LONG_TERM;
 		MicrophoneState microphoneState = MicrophoneState.ON;
 		JoinApprovalLevel joinApprovalLevel = JoinApprovalLevel.EXPLICIT_APPROVAL;
-		Boolean
+		boolean
 			isAvailable = false,
 			expireAfterUse = true,
 			autoRecord = true,

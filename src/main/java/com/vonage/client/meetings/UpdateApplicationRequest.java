@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
+import java.util.Objects;
 import java.util.UUID;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -27,7 +28,7 @@ public class UpdateApplicationRequest {
 	private final UUID defaultThemeId;
 
 	UpdateApplicationRequest(Builder builder) {
-		defaultThemeId = builder.defaultThemeId;
+		defaultThemeId = Objects.requireNonNull(builder.defaultThemeId, "Default theme ID is required.");
 	}
 
 	/**
@@ -46,7 +47,8 @@ public class UpdateApplicationRequest {
 	public String toJson() {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			return mapper.writeValueAsString(this);
+			String nested = mapper.writeValueAsString(this);
+			return "{\"update_details\": "+nested+"}";
 		}
 		catch (JsonProcessingException jpe) {
 			throw new VonageUnexpectedException(
