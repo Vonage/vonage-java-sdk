@@ -131,6 +131,22 @@ public class MeetingRoomTest {
 	}
 
 	@Test
+	public void testExpireAfterUseForInstantRoomType() {
+		assertThrows(IllegalStateException.class, () ->
+				MeetingRoom.builder("A room")
+						.expireAfterUse(false)
+						.type(RoomType.INSTANT)
+						.build()
+		);
+		assertThrows(IllegalStateException.class, () ->
+				MeetingRoom.builder("A room")
+						.expireAfterUse(true)
+						.type(RoomType.INSTANT)
+						.build()
+		);
+	}
+
+	@Test
 	public void testExpiresAtAndRoomTypeValidation() {
 		MeetingRoom.Builder builder = MeetingRoom.builder("My Room");
 		ZonedDateTime expire = ZonedDateTime.now().plusHours(4);

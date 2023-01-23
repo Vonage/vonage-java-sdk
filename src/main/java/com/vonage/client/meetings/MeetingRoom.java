@@ -48,9 +48,11 @@ public class MeetingRoom {
 			throw new IllegalArgumentException("Display name is required and cannot be empty.");
 		}
 		validateExpiresAtAndRoomType(expiresAt = builder.expiresAt, type = builder.type);
+		if ((expireAfterUse = builder.expireAfterUse) != null && type == RoomType.INSTANT) {
+			throw new IllegalStateException("expireAfterUse is not applicable to "+type+" rooms.");
+		}
 		metadata = builder.metadata;
 		isAvailable = builder.isAvailable;
-		expireAfterUse = builder.expireAfterUse;
 		recordingOptions = builder.recordingOptions;
 		initialJoinOptions = builder.initialJoinOptions;
 		callbackUrls = builder.callbackUrls;
@@ -370,7 +372,7 @@ public class MeetingRoom {
 		 *
 		 * @return This builder.
 		 */
-		public Builder isAvailable(Boolean isAvailable) {
+		public Builder isAvailable(boolean isAvailable) {
 			this.isAvailable = isAvailable;
 			return this;
 		}
@@ -381,7 +383,7 @@ public class MeetingRoom {
 		 *
 		 * @return This builder.
 		 */
-		public Builder expireAfterUse(Boolean expireAfterUse) {
+		public Builder expireAfterUse(boolean expireAfterUse) {
 			this.expireAfterUse = expireAfterUse;
 			return this;
 		}

@@ -90,7 +90,7 @@ public class RecordingOptions {
 		 *
 		 * @return This builder.
 		 */
-		public Builder autoRecord(Boolean autoRecord) {
+		public Builder autoRecord(boolean autoRecord) {
 			this.autoRecord = autoRecord;
 			return this;
 		}
@@ -101,7 +101,7 @@ public class RecordingOptions {
 		 *
 		 * @return This builder.
 		 */
-		public Builder recordOnlyOwner(Boolean recordOnlyOwner) {
+		public Builder recordOnlyOwner(boolean recordOnlyOwner) {
 			this.recordOnlyOwner = recordOnlyOwner;
 			return this;
 		}

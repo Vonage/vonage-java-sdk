@@ -112,7 +112,7 @@ public class AvailableFeatures {
 		 *
 		 * @return This builder.
 		 */
-		public Builder isRecordingAvailable(Boolean isRecordingAvailable) {
+		public Builder isRecordingAvailable(boolean isRecordingAvailable) {
 			this.isRecordingAvailable = isRecordingAvailable;
 			return this;
 		}
@@ -123,7 +123,7 @@ public class AvailableFeatures {
 		 *
 		 * @return This builder.
 		 */
-		public Builder isChatAvailable(Boolean isChatAvailable) {
+		public Builder isChatAvailable(boolean isChatAvailable) {
 			this.isChatAvailable = isChatAvailable;
 			return this;
 		}
@@ -134,7 +134,7 @@ public class AvailableFeatures {
 		 *
 		 * @return This builder.
 		 */
-		public Builder isWhiteboardAvailable(Boolean isWhiteboardAvailable) {
+		public Builder isWhiteboardAvailable(boolean isWhiteboardAvailable) {
 			this.isWhiteboardAvailable = isWhiteboardAvailable;
 			return this;
 		}
@@ -145,7 +145,7 @@ public class AvailableFeatures {
 		 *
 		 * @return This builder.
 		 */
-		public Builder isLocaleSwitcherAvailable(Boolean isLocaleSwitcherAvailable) {
+		public Builder isLocaleSwitcherAvailable(boolean isLocaleSwitcherAvailable) {
 			this.isLocaleSwitcherAvailable = isLocaleSwitcherAvailable;
 			return this;
 		}
