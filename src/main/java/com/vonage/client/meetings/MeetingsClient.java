@@ -72,18 +72,15 @@ public class MeetingsClient {
 		return Objects.requireNonNull(roomId,  "Room ID is required.");
 	}
 
+	static UUID validateRecordingId(UUID recordingId) {
+		return Objects.requireNonNull(recordingId,  "Recording ID is required.");
+	}
+
 	static String validateSessionId(String sessionId) {
 		if (sessionId == null || sessionId.trim().isEmpty()) {
 			throw new IllegalArgumentException("Session ID cannot be null or empty.");
 		}
 		return sessionId;
-	}
-
-	static String validateRecordingId(String recordingId) {
-		if (recordingId == null || recordingId.trim().isEmpty()) {
-			throw new IllegalArgumentException("Recording ID cannot be null or empty.");
-		}
-		return recordingId;
 	}
 
 
@@ -248,7 +245,7 @@ public class MeetingsClient {
 	 *
 	 * @return The recording properties.
 	 */
-	public Recording getRecording(String recordingId) {
+	public Recording getRecording(UUID recordingId) {
 		return getRecording.execute(validateRecordingId(recordingId));
 	}
 
@@ -257,7 +254,7 @@ public class MeetingsClient {
 	 *
 	 * @param recordingId ID of the recording to delete.
 	 */
-	public void deleteRecording(String recordingId) {
+	public void deleteRecording(UUID recordingId) {
 		deleteRecording.execute(validateRecordingId(recordingId));
 	}
 

@@ -126,6 +126,11 @@ public class Recording {
 	public RecordingStatus getStatus() {
 		return status;
 	}
+
+	@JsonProperty("_links")
+	public RecordingLinks getLinks() {
+		return links;
+	}
 	
 	/**
 	 * Creates an instance of this class from a JSON payload.

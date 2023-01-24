@@ -17,10 +17,11 @@ package com.vonage.client.meetings;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.net.URI;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RecordingLinks {
-	private UrlContainer url;
+	@JsonProperty("url") private UrlContainer url;
 
 	protected RecordingLinks() {
 	}
@@ -28,8 +29,7 @@ public class RecordingLinks {
 	/**
 	 * @return The recording URL.
 	 */
-	@JsonProperty("url")
-	public UrlContainer getUrl() {
-		return url;
+	public URI getUrl() {
+		return url != null ? url.getHref() : null;
 	}
 }

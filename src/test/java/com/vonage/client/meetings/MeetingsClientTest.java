@@ -145,8 +145,21 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 					"    \"brand_image_colored_url\": \"https://example.com/color.png\",\n" +
 					"    \"brand_image_white_url\": \"https://example.com/white.png\",\n" +
 					"    \"branded_favicon_url\": \"https://example.com/favicon.png\"\n" +
-					"  }";
-	;
+					"  }",
+
+			SAMPLE_RECORDING_RESPONSE = "{\n" +
+					"   \"id\": \"497f6eca-6276-4993-bfeb-53cbbbba6f08\",\n" +
+					"   \"session_id\": \"2_MX40NjMwODczMn5-MTU3NTgyODEwNzQ2MH5OZDJrVmdBRUNDbG5MUzNqNXgya20yQ1Z-fg\",\n" +
+					"   \"started_at\": \"2019-08-24T14:15:22Z\",\n" +
+					"   \"ended_at\": \"2019-08-24T14:15:22Z\",\n" +
+					"   \"status\": \"started\",\n" +
+					"   \"_links\": {\n" +
+					"      \"url\": {\n" +
+					"         \"href\": \"http://example.com/recording.mp4\"\n" +
+					"      }\n" +
+					"   }\n" +
+					"}";
+
 
 	public MeetingsClientTest() {
 		client = new MeetingsClient(wrapper);
@@ -254,6 +267,20 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 	void stubResponseAndAssertEqualsSampleTheme(Supplier<? extends Theme> call) throws Exception {
 		assertEqualsSampleTheme(stubResponseAndGet(200, SAMPLE_THEME_RESPONSE, call));
+	}
+
+	static void assertEqualsSampleRecording(Recording parsed) {
+		assertNotNull(parsed);
+		assertEquals("497f6eca-6276-4993-bfeb-53cbbbba6f08", parsed.getId().toString());
+		assertEquals("2_MX40NjMwODczMn5-MTU3NTgyODEwNzQ2MH5OZDJrVmdBRUNDbG5MUzNqNXgya20yQ1Z-fg", parsed.getSessionId());
+		assertEquals("2019-08-24T14:15:22Z", parsed.getStartedAtAsString());
+		assertEquals("2019-08-24T14:15:22Z", parsed.getEndedAtAsString());
+		assertEquals(RecordingStatus.STARTED, parsed.getStatus());
+		assertEquals("http://example.com/recording.mp4", parsed.getLinks().getUrl().toString());
+	}
+
+	void stubResponseAndAssertEqualsSampleRecording(Supplier<? extends Recording> call) throws Exception {
+		assertEqualsSampleRecording(stubResponseAndGet(200, SAMPLE_RECORDING_RESPONSE, call));
 	}
 
 	@Test
@@ -389,20 +416,33 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 	@Test
 	public void testListRecordings() throws Exception {
+		String responseJson = "{\"_embedded\":{\"recordings\":[" + SAMPLE_RECORDING_RESPONSE + ",{}]}}";
+		stubResponse(200, responseJson);
+		List<Recording> recordings = client.listRecordings("session_id");
+		assertEquals(2, recordings.size());
+		assertEqualsSampleRecording(recordings.get(0));
+		assertNotNull(recordings.get(1));
 
+		stubResponseAndAssertThrows(200,
+			() -> client.listRecordings(null), IllegalArgumentException.class
+		);
 	}
 
 	@Test
 	public void testGetRecording() throws Exception {
+		stubResponseAndAssertEqualsSampleRecording(() -> client.getRecording(RANDOM_ID));
 
+		stubResponseAndAssertThrows(200,
+			() -> client.getRecording(null), NullPointerException.class
+		);
 	}
 
 	@Test
 	public void testDeleteRecording() throws Exception {
-		stubResponseAndRun(204, () -> client.deleteRecording(RANDOM_ID.toString()));
+		stubResponseAndRun(204, () -> client.deleteRecording(RANDOM_ID));
 
 		stubResponseAndAssertThrows(204,
-			() -> client.deleteRecording(null), IllegalArgumentException.class
+			() -> client.deleteRecording(null), NullPointerException.class
 		);
 	}
 

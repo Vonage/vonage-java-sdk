@@ -23,8 +23,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.util.EntityUtils;
 import java.io.IOException;
+import java.util.UUID;
 
-class DeleteRecordingEndpoint extends AbstractMethod<String, Void> {
+class DeleteRecordingEndpoint extends AbstractMethod<UUID, Void> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/beta/meetings/recordings/%s";
 
@@ -38,7 +39,7 @@ class DeleteRecordingEndpoint extends AbstractMethod<String, Void> {
 	}
 
 	@Override
-	public RequestBuilder makeRequest(String request) {
+	public RequestBuilder makeRequest(UUID request) {
 		String path = String.format(PATH, request);
 		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + path;
 		return RequestBuilder.delete(uri)
