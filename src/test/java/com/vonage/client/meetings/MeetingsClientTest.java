@@ -73,7 +73,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 			"            }\n" +
 			"        }",
 
-			GET_AVAILABLE_ROOMS_RESPONSE = "{\n" +
+			LIST_ROOMS_RESPONSE = "{\n" +
 			"    \"page_size\": \"3\",\n" +
 			"    \"_embedded\": [\n" +GET_ROOM_RESPONSE+",\n" +
 			"        {\n" +
@@ -208,7 +208,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		assertEqualsSampleRoom(stubResponseAndGet(200, GET_ROOM_RESPONSE, call));
 	}
 
-	static void assertEqualsGetAvailableRooms(GetRoomsResponse parsed) {
+	static void assertEqualsGetAvailableRooms(ListRoomsResponse parsed) {
 		List<MeetingRoom> rooms = parsed.getMeetingRooms();
 		NavigationLinks links = parsed.getLinks();
 
@@ -256,25 +256,25 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 	}
 
 	@Test
-	public void testGetAvailableRooms() throws Exception {
-		assertEqualsGetAvailableRooms(stubResponseAndGet(200, GET_AVAILABLE_ROOMS_RESPONSE,
-				() -> client.getAvailableRooms(1991085, 1994609, 3))
+	public void testListRooms() throws Exception {
+		assertEqualsGetAvailableRooms(stubResponseAndGet(200, LIST_ROOMS_RESPONSE,
+				() -> client.listRooms(1991085, 1994609, 3))
 		);
-		assertEqualsGetAvailableRooms(stubResponseAndGet(200, GET_AVAILABLE_ROOMS_RESPONSE,
-				() -> client.getAvailableRooms(1, 2, 1))
+		assertEqualsGetAvailableRooms(stubResponseAndGet(200, LIST_ROOMS_RESPONSE,
+				() -> client.listRooms(1, 2, 1))
 		);
-		assertEqualsGetAvailableRooms(stubResponseAndGet(200, GET_AVAILABLE_ROOMS_RESPONSE,
-				() -> client.getAvailableRooms(null, null, null))
+		assertEqualsGetAvailableRooms(stubResponseAndGet(200, LIST_ROOMS_RESPONSE,
+				() -> client.listRooms(null, null, null))
 		);
-		assertEqualsGetAvailableRooms(stubResponseAndGet(200, GET_AVAILABLE_ROOMS_RESPONSE,
-				() -> client.getAvailableRooms(null, null, 20))
+		assertEqualsGetAvailableRooms(stubResponseAndGet(200, LIST_ROOMS_RESPONSE,
+				() -> client.listRooms(null, null, 20))
 		);
-		assertEqualsGetAvailableRooms(stubResponseAndGet(200, GET_AVAILABLE_ROOMS_RESPONSE,
-				() -> client.getAvailableRooms(29, 31, null))
+		assertEqualsGetAvailableRooms(stubResponseAndGet(200, LIST_ROOMS_RESPONSE,
+				() -> client.listRooms(29, 31, null))
 		);
 
-		stubResponseAndAssertThrows(200, GET_AVAILABLE_ROOMS_RESPONSE,
-			() -> client.getAvailableRooms(7, 6, 9), IllegalArgumentException.class
+		stubResponseAndAssertThrows(200, LIST_ROOMS_RESPONSE,
+			() -> client.listRooms(7, 6, 9), IllegalArgumentException.class
 		);
 	}
 
@@ -312,25 +312,25 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 	@Test
 	public void testGetThemeRooms() throws Exception {
-		assertEqualsGetAvailableRooms(stubResponseAndGet(200, GET_AVAILABLE_ROOMS_RESPONSE,
+		assertEqualsGetAvailableRooms(stubResponseAndGet(200, LIST_ROOMS_RESPONSE,
 				() -> client.getThemeRooms(RANDOM_ID, null, null))
 		);
-		assertEqualsGetAvailableRooms(stubResponseAndGet(200, GET_AVAILABLE_ROOMS_RESPONSE,
+		assertEqualsGetAvailableRooms(stubResponseAndGet(200, LIST_ROOMS_RESPONSE,
 				() -> client.getThemeRooms(RANDOM_ID, 1, 12))
 		);
 
-		stubResponseAndAssertThrows(200, GET_AVAILABLE_ROOMS_RESPONSE,
+		stubResponseAndAssertThrows(200, LIST_ROOMS_RESPONSE,
 			() -> client.getThemeRooms(null, 3, 9), NullPointerException.class
 		);
-		stubResponseAndAssertThrows(200, GET_AVAILABLE_ROOMS_RESPONSE,
+		stubResponseAndAssertThrows(200, LIST_ROOMS_RESPONSE,
 			() -> client.getThemeRooms(RANDOM_ID, 2, 1), IllegalArgumentException.class
 		);
 	}
 
 	@Test
-	public void testGetThemes() throws Exception {
+	public void testListThemes() throws Exception {
 		String responseJson = "["+SAMPLE_THEME_RESPONSE+",{\"theme_id\":\""+RANDOM_ID+"\"}]";
-		List<Theme> parsed = stubResponseAndGet(200, responseJson, () -> client.getThemes());
+		List<Theme> parsed = stubResponseAndGet(200, responseJson, () -> client.listThemes());
 		assertEquals(2, parsed.size());
 		assertEqualsSampleTheme(parsed.get(0));
 		assertEquals(RANDOM_ID, parsed.get(1).getThemeId());
@@ -378,7 +378,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 	}
 
 	@Test
-	public void testGetRecordings() throws Exception {
+	public void testListRecordings() throws Exception {
 
 	}
 

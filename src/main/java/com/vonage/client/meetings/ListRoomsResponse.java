@@ -23,13 +23,13 @@ import java.io.IOException;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class GetRoomsResponse {
+public class ListRoomsResponse {
 	@JsonProperty("_embedded") private List<MeetingRoom> rooms;
 
 	private Integer pageSize, total;
 	private NavigationLinks links;
 
-	protected GetRoomsResponse() {
+	protected ListRoomsResponse() {
 	}
 
 	/**
@@ -71,13 +71,13 @@ public class GetRoomsResponse {
 	 * @param json The JSON string to parse.
 	 * @return An instance of this class with the fields populated, if present.
 	 */
-	public static GetRoomsResponse fromJson(String json) {
+	public static ListRoomsResponse fromJson(String json) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readValue(json, GetRoomsResponse.class);
+			return mapper.readValue(json, ListRoomsResponse.class);
 		}
 		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to produce GetRoomsResponse from json.", ex);
+			throw new VonageUnexpectedException("Failed to produce ListRoomsResponse from json.", ex);
 		}
 	}
 }

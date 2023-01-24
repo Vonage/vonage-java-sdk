@@ -21,17 +21,17 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class MeetingsClient {
-	final GetAvailableRoomsEndpoint getAvailableRooms;
+	final ListRoomsEndpoint listRooms;
 	final GetRoomEndpoint getRoom;
 	final CreateRoomEndpoint createRoom;
 	final UpdateRoomEndpoint updateRoom;
 	final GetThemeRoomsEndpoint getThemeRooms;
-	final GetThemesEndpoint getThemes;
+	final ListThemesEndpoint listThemes;
 	final GetThemeEndpoint getTheme;
 	final CreateThemeEndpoint createTheme;
 	final UpdateThemeEndpoint updateTheme;
 	final DeleteThemeEndpoint deleteTheme;
-	final GetRecordingsEndpoint getRecordings;
+	final ListRecordingsEndpoint listRecordings;
 	final GetRecordingEndpoint getRecording;
 	final DeleteRecordingEndpoint deleteRecording;
 	final GetDialNumbersEndpoint getDialNumbers;
@@ -45,17 +45,17 @@ public class MeetingsClient {
 	 * @param httpWrapper (REQUIRED) shared HTTP wrapper object used for making REST calls.
 	 */
 	public MeetingsClient(HttpWrapper httpWrapper) {
-		getAvailableRooms = new GetAvailableRoomsEndpoint(httpWrapper);
+		listRooms = new ListRoomsEndpoint(httpWrapper);
 		getRoom = new GetRoomEndpoint(httpWrapper);
 		createRoom = new CreateRoomEndpoint(httpWrapper);
 		updateRoom = new UpdateRoomEndpoint(httpWrapper);
 		getThemeRooms = new GetThemeRoomsEndpoint(httpWrapper);
-		getThemes = new GetThemesEndpoint(httpWrapper);
+		listThemes = new ListThemesEndpoint(httpWrapper);
 		getTheme = new GetThemeEndpoint(httpWrapper);
 		createTheme = new CreateThemeEndpoint(httpWrapper);
 		updateTheme = new UpdateThemeEndpoint(httpWrapper);
 		deleteTheme = new DeleteThemeEndpoint(httpWrapper);
-		getRecordings = new GetRecordingsEndpoint(httpWrapper);
+		listRecordings = new ListRecordingsEndpoint(httpWrapper);
 		getRecording = new GetRecordingEndpoint(httpWrapper);
 		deleteRecording = new DeleteRecordingEndpoint(httpWrapper);
 		getDialNumbers = new GetDialNumbersEndpoint(httpWrapper);
@@ -96,8 +96,8 @@ public class MeetingsClient {
 	 *
 	 * @return The HAL response.
 	 */
-	public GetRoomsResponse getAvailableRooms(Integer startId, Integer endId, Integer pageSize) {
-		return getAvailableRooms.execute(new GetRoomsRequest(startId, endId, pageSize, null));
+	public ListRoomsResponse listRooms(Integer startId, Integer endId, Integer pageSize) {
+		return listRooms.execute(new ListRoomsRequest(startId, endId, pageSize, null));
 	}
 
 	/**
@@ -145,8 +145,8 @@ public class MeetingsClient {
 	 *
 	 * @return The HAL response.
 	 */
-	public GetRoomsResponse getThemeRooms(UUID themeId, Integer startId, Integer endId) {
-		return getThemeRooms.execute(new GetRoomsRequest(
+	public ListRoomsResponse getThemeRooms(UUID themeId, Integer startId, Integer endId) {
+		return getThemeRooms.execute(new ListRoomsRequest(
 				startId, endId, null, validateThemeId(themeId))
 		);
 	}
@@ -156,8 +156,8 @@ public class MeetingsClient {
 	 *
 	 * @return The list of themes.
 	 */
-	public List<Theme> getThemes() {
-		return getThemes.execute(null);
+	public List<Theme> listThemes() {
+		return listThemes.execute(null);
 	}
 
 	/**
@@ -216,8 +216,8 @@ public class MeetingsClient {
 	 *
 	 * @return The list of recordings for the session.
 	 */
-	public List<Recording> getRecordings(String sessionId) {
-		return getRecordings.execute(validateSessionId(sessionId)).getRecordings();
+	public List<Recording> listRecordings(String sessionId) {
+		return listRecordings.execute(validateSessionId(sessionId)).getRecordings();
 	}
 
 	/**

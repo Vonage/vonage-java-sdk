@@ -22,11 +22,11 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 
-class GetRecordingsEndpoint extends AbstractMethod<String, GetRecordingsResponse> {
+class ListRecordingsEndpoint extends AbstractMethod<String, ListRecordingsResponse> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/beta/meetings/sessions/%s/recordings";
 
-	GetRecordingsEndpoint(HttpWrapper httpWrapper) {
+	ListRecordingsEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
 	}
 
@@ -44,7 +44,7 @@ class GetRecordingsEndpoint extends AbstractMethod<String, GetRecordingsResponse
 	}
 
 	@Override
-	public GetRecordingsResponse parseResponse(HttpResponse response) throws IOException {
-		return GetRecordingsResponse.fromJson(basicResponseHandler.handleResponse(response));
+	public ListRecordingsResponse parseResponse(HttpResponse response) throws IOException {
+		return ListRecordingsResponse.fromJson(basicResponseHandler.handleResponse(response));
 	}
 }

@@ -15,22 +15,18 @@
  */
 package com.vonage.client.meetings;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 
-class GetThemesEndpoint extends AbstractMethod<Void, List<Theme>> {
+class ListRoomsEndpoint extends AbstractMethod<ListRoomsRequest, ListRoomsResponse> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
-	private static final String PATH = "/beta/meetings/themes";
+	private static final String PATH = "/beta/meetings/rooms";
 
-	GetThemesEndpoint(HttpWrapper httpWrapper) {
+	ListRoomsEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
 	}
 
@@ -40,19 +36,14 @@ class GetThemesEndpoint extends AbstractMethod<Void, List<Theme>> {
 	}
 
 	@Override
-	public RequestBuilder makeRequest(Void request) {
+	public RequestBuilder makeRequest(ListRoomsRequest request) {
 		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + PATH;
-		return RequestBuilder.get(uri)
+		return request.addParameters(RequestBuilder.get(uri))
 				.setHeader("Accept", "application/json");
 	}
 
 	@Override
-	public List<Theme> parseResponse(HttpResponse response) throws IOException {
-		String json = basicResponseHandler.handleResponse(response);
-		if (json == null || json.isEmpty()) {
-			return Collections.emptyList();
-		}
-		ObjectMapper mapper = new ObjectMapper();
-		return mapper.readValue(json, new TypeReference<List<Theme>>() {});
+	public ListRoomsResponse parseResponse(HttpResponse response) throws IOException {
+		return ListRoomsResponse.fromJson(basicResponseHandler.handleResponse(response));
 	}
 }

@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class GetRecordingsResponse {
+class ListRecordingsResponse {
 	@JsonProperty("_embedded") private Embedded embedded;
 
 	static class Embedded {
@@ -34,13 +34,13 @@ class GetRecordingsResponse {
 		return embedded.recordings;
 	}
 
-	public static GetRecordingsResponse fromJson(String json) {
+	public static ListRecordingsResponse fromJson(String json) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readValue(json, GetRecordingsResponse.class);
+			return mapper.readValue(json, ListRecordingsResponse.class);
 		}
 		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to produce GetRecordingsResponse from json.", ex);
+			throw new VonageUnexpectedException("Failed to produce ListRecordingsResponse from json.", ex);
 		}
 	}
 }

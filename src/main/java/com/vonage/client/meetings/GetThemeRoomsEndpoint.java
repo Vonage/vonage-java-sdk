@@ -22,7 +22,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 
-class GetThemeRoomsEndpoint extends AbstractMethod<GetRoomsRequest, GetRoomsResponse> {
+class GetThemeRoomsEndpoint extends AbstractMethod<ListRoomsRequest, ListRoomsResponse> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/beta/meetings/themes/%s/rooms";
 
@@ -36,7 +36,7 @@ class GetThemeRoomsEndpoint extends AbstractMethod<GetRoomsRequest, GetRoomsResp
 	}
 
 	@Override
-	public RequestBuilder makeRequest(GetRoomsRequest request) {
+	public RequestBuilder makeRequest(ListRoomsRequest request) {
 		String path = String.format(PATH, request.themeId);
 		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + path;
 		return request.addParameters(RequestBuilder.get(uri))
@@ -44,7 +44,7 @@ class GetThemeRoomsEndpoint extends AbstractMethod<GetRoomsRequest, GetRoomsResp
 	}
 
 	@Override
-	public GetRoomsResponse parseResponse(HttpResponse response) throws IOException {
-		return GetRoomsResponse.fromJson(basicResponseHandler.handleResponse(response));
+	public ListRoomsResponse parseResponse(HttpResponse response) throws IOException {
+		return ListRoomsResponse.fromJson(basicResponseHandler.handleResponse(response));
 	}
 }
