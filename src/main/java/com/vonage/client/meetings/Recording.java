@@ -24,10 +24,12 @@ import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Recording {
-	private String id, sessionId;
+	private UUID id;
+	private String sessionId;
 	private ZonedDateTime startedAt, endedAt;
 	private RecordingStatus status;
 	private RecordingLinks links;
@@ -41,7 +43,7 @@ public class Recording {
 	 * @return The recording ID.
 	 */
 	@JsonProperty("id")
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 

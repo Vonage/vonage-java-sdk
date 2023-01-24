@@ -101,6 +101,17 @@ public class MeetingsClient {
 	}
 
 	/**
+	 * Get all available rooms in the application.
+	 *
+	 * @return The HAL response.
+	 *
+	 * @see #listRooms(Integer, Integer, Integer)
+	 */
+	public ListRoomsResponse listRooms() {
+		return listRooms(null, null, null);
+	}
+
+	/**
 	 * Get details of an existing room.
 	 *
 	 * @param roomId ID of the room to retrieve.

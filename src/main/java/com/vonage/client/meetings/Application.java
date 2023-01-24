@@ -24,8 +24,8 @@ import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Application {
-	private String applicationId, accountId;
-	private UUID defaultThemeId;
+	private String accountId;
+	private UUID applicationId, defaultThemeId;
 
 	protected Application() {
 	}
@@ -36,14 +36,14 @@ public class Application {
 	 * @return The application ID.
 	 */
 	@JsonProperty("application_id")
-	public String getApplicationId() {
+	public UUID getApplicationId() {
 		return applicationId;
 	}
 
 	/**
 	 * ID of the account application.
 	 *
-	 * @return The application account ID.
+	 * @return The account ID.
 	 */
 	@JsonProperty("account_id")
 	public String getAccountId() {
