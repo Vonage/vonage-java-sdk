@@ -25,11 +25,11 @@ import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 import java.util.List;
 
-class GetDialNumbersEndpoint extends AbstractMethod<Void, List<DialNumbers>> {
+class ListDialNumbersEndpoint extends AbstractMethod<Void, List<DialInNumber>> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/beta/meetings/dial-in-numbers";
 
-	GetDialNumbersEndpoint(HttpWrapper httpWrapper) {
+	ListDialNumbersEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
 	}
 
@@ -46,9 +46,9 @@ class GetDialNumbersEndpoint extends AbstractMethod<Void, List<DialNumbers>> {
 	}
 
 	@Override
-	public List<DialNumbers> parseResponse(HttpResponse response) throws IOException {
+	public List<DialInNumber> parseResponse(HttpResponse response) throws IOException {
 		String json = basicResponseHandler.handleResponse(response);
 		ObjectMapper mapper = new ObjectMapper();
-		return mapper.readValue(json, new TypeReference<List<DialNumbers>>() {});
+		return mapper.readValue(json, new TypeReference<List<DialInNumber>>() {});
 	}
 }

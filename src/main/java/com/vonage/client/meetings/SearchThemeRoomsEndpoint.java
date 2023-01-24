@@ -22,11 +22,11 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 
-class GetThemeRoomsEndpoint extends AbstractMethod<ListRoomsRequest, ListRoomsResponse> {
+class SearchThemeRoomsEndpoint extends AbstractMethod<ListRoomsRequest, ListRoomsResponse> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/beta/meetings/themes/%s/rooms";
 
-	GetThemeRoomsEndpoint(HttpWrapper httpWrapper) {
+	SearchThemeRoomsEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
 	}
 

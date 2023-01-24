@@ -25,7 +25,7 @@ public class MeetingsClient {
 	final GetRoomEndpoint getRoom;
 	final CreateRoomEndpoint createRoom;
 	final UpdateRoomEndpoint updateRoom;
-	final GetThemeRoomsEndpoint getThemeRooms;
+	final SearchThemeRoomsEndpoint searchThemeRooms;
 	final ListThemesEndpoint listThemes;
 	final GetThemeEndpoint getTheme;
 	final CreateThemeEndpoint createTheme;
@@ -34,7 +34,7 @@ public class MeetingsClient {
 	final ListRecordingsEndpoint listRecordings;
 	final GetRecordingEndpoint getRecording;
 	final DeleteRecordingEndpoint deleteRecording;
-	final GetDialNumbersEndpoint getDialNumbers;
+	final ListDialNumbersEndpoint listDialNumbers;
 	final GetLogoUploadUrlsEndpoint getLogoUploadUrls;
 	final FinalizeLogosEndpoint finalizeLogos;
 	final UpdateApplicationEndpoint updateApplication;
@@ -49,7 +49,7 @@ public class MeetingsClient {
 		getRoom = new GetRoomEndpoint(httpWrapper);
 		createRoom = new CreateRoomEndpoint(httpWrapper);
 		updateRoom = new UpdateRoomEndpoint(httpWrapper);
-		getThemeRooms = new GetThemeRoomsEndpoint(httpWrapper);
+		searchThemeRooms = new SearchThemeRoomsEndpoint(httpWrapper);
 		listThemes = new ListThemesEndpoint(httpWrapper);
 		getTheme = new GetThemeEndpoint(httpWrapper);
 		createTheme = new CreateThemeEndpoint(httpWrapper);
@@ -58,7 +58,7 @@ public class MeetingsClient {
 		listRecordings = new ListRecordingsEndpoint(httpWrapper);
 		getRecording = new GetRecordingEndpoint(httpWrapper);
 		deleteRecording = new DeleteRecordingEndpoint(httpWrapper);
-		getDialNumbers = new GetDialNumbersEndpoint(httpWrapper);
+		listDialNumbers = new ListDialNumbersEndpoint(httpWrapper);
 		getLogoUploadUrls = new GetLogoUploadUrlsEndpoint(httpWrapper);
 		finalizeLogos = new FinalizeLogosEndpoint(httpWrapper);
 		updateApplication = new UpdateApplicationEndpoint(httpWrapper);
@@ -156,8 +156,8 @@ public class MeetingsClient {
 	 *
 	 * @return The HAL response.
 	 */
-	public ListRoomsResponse getThemeRooms(UUID themeId, Integer startId, Integer endId) {
-		return getThemeRooms.execute(new ListRoomsRequest(
+	public ListRoomsResponse searchRoomsByTheme(UUID themeId, Integer startId, Integer endId) {
+		return searchThemeRooms.execute(new ListRoomsRequest(
 				startId, endId, null, validateThemeId(themeId))
 		);
 	}
@@ -256,8 +256,8 @@ public class MeetingsClient {
 	 *
 	 * @return The list of dial-in numbers, along with their country code.
 	 */
-	public List<DialNumbers> getDialNumbers() {
-		return getDialNumbers.execute(null);
+	public List<DialInNumber> listDialNumbers() {
+		return listDialNumbers.execute(null);
 	}
 
 	/**

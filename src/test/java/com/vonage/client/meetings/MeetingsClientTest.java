@@ -311,19 +311,19 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 	}
 
 	@Test
-	public void testGetThemeRooms() throws Exception {
+	public void testSearchRoomsByTheme() throws Exception {
 		assertEqualsGetAvailableRooms(stubResponseAndGet(200, LIST_ROOMS_RESPONSE,
-				() -> client.getThemeRooms(RANDOM_ID, null, null))
+				() -> client.searchRoomsByTheme(RANDOM_ID, null, null))
 		);
 		assertEqualsGetAvailableRooms(stubResponseAndGet(200, LIST_ROOMS_RESPONSE,
-				() -> client.getThemeRooms(RANDOM_ID, 1, 12))
+				() -> client.searchRoomsByTheme(RANDOM_ID, 1, 12))
 		);
 
 		stubResponseAndAssertThrows(200, LIST_ROOMS_RESPONSE,
-			() -> client.getThemeRooms(null, 3, 9), NullPointerException.class
+			() -> client.searchRoomsByTheme(null, 3, 9), NullPointerException.class
 		);
 		stubResponseAndAssertThrows(200, LIST_ROOMS_RESPONSE,
-			() -> client.getThemeRooms(RANDOM_ID, 2, 1), IllegalArgumentException.class
+			() -> client.searchRoomsByTheme(RANDOM_ID, 2, 1), IllegalArgumentException.class
 		);
 	}
 
@@ -397,13 +397,13 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 	}
 
 	@Test
-	public void testGetDialNumbers() throws Exception {
+	public void testListDialNumbers() throws Exception {
 		String responseJson = "[\n" +
 				"{\"number\":\"17329672755\",\"displayName\":\"United States\",\"locale\":\"en_US\"},\n" +
 				"{\"number\":\"48123964788\",\"displayName\":\"Poland\",\"locale\":\"pl_PL\"},\n" +
 				"{\"number\":\"827047844377\",\"displayName\":\"South Korea\",\"locale\":\"ko_KR\"}\n" +
 			"]";
-		List<DialNumbers> parsed = stubResponseAndGet(200, responseJson, () -> client.getDialNumbers());
+		List<DialInNumber> parsed = stubResponseAndGet(200, responseJson, () -> client.listDialNumbers());
 		assertEquals(3, parsed.size());
 		assertEquals("17329672755", parsed.get(0).getNumber());
 		assertEquals("United States", parsed.get(0).getDisplayName());

@@ -20,11 +20,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Locale;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DialNumbers {
+public class DialInNumber {
 	private String number, displayName;
 	private Locale locale;
 
-	protected DialNumbers() {
+	protected DialInNumber() {
 	}
 
 	/**
