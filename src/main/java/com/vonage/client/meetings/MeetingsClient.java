@@ -96,19 +96,17 @@ public class MeetingsClient {
 	 *
 	 * @return The HAL response.
 	 */
-	public ListRoomsResponse listRooms(Integer startId, Integer endId, Integer pageSize) {
+	ListRoomsResponse listRooms(Integer startId, Integer endId, Integer pageSize) {
 		return listRooms.execute(new ListRoomsRequest(startId, endId, pageSize, null));
 	}
 
 	/**
 	 * Get all available rooms in the application.
 	 *
-	 * @return The HAL response.
-	 *
-	 * @see #listRooms(Integer, Integer, Integer)
+	 * @return The list of all meeting rooms.
 	 */
-	public ListRoomsResponse listRooms() {
-		return listRooms(null, null, null);
+	public List<MeetingRoom> listRooms() {
+		return listRooms(null, null, null).getMeetingRooms();
 	}
 
 	/**
@@ -153,13 +151,25 @@ public class MeetingsClient {
 	 * @param themeId The theme ID to filter by.
 	 * @param startId The ID to start returning events at (inclusive).
 	 * @param endId The ID to end returning events at (exclusive).
+	 * @param pageSize The number of results per page.
 	 *
 	 * @return The HAL response.
 	 */
-	public ListRoomsResponse searchRoomsByTheme(UUID themeId, Integer startId, Integer endId) {
+	ListRoomsResponse searchRoomsByTheme(UUID themeId, Integer startId, Integer endId, Integer pageSize) {
 		return searchThemeRooms.execute(new ListRoomsRequest(
 				startId, endId, null, validateThemeId(themeId))
 		);
+	}
+
+	/**
+	 * Get rooms that are associated with a theme ID.
+	 *
+	 * @param themeId The theme ID to filter by.
+	 *
+	 * @return The list of rooms which use the theme.
+	 */
+	public List<MeetingRoom> searchRoomsByTheme(UUID themeId) {
+		return searchRoomsByTheme(themeId, null, null, null).getMeetingRooms();
 	}
 
 	/**

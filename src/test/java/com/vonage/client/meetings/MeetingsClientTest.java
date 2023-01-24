@@ -208,10 +208,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		assertEqualsSampleRoom(stubResponseAndGet(200, GET_ROOM_RESPONSE, call));
 	}
 
-	static void assertEqualsGetAvailableRooms(ListRoomsResponse parsed) {
-		List<MeetingRoom> rooms = parsed.getMeetingRooms();
-		NavigationLinks links = parsed.getLinks();
-
+	static void assertEqualsGetAvailableRooms(List<MeetingRoom> rooms) {
 		assertEquals(2, rooms.size());
 		assertEqualsSampleRoom(rooms.get(0));
 		MeetingRoom otherRoom = rooms.get(1);
@@ -226,7 +223,11 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		assertFalse(otherRoom.getAvailableFeatures().getIsLocaleSwitcherAvailable());
 		assertEquals(JoinApprovalLevel.NONE, otherRoom.getJoinApprovalLevel());
 		assertEquals("default", otherRoom.getUiSettings().getLanguage());
+	}
 
+	static void assertEqualsGetAvailableRooms(ListRoomsResponse parsed) {
+		assertEqualsGetAvailableRooms(parsed.getMeetingRooms());
+		NavigationLinks links = parsed.getLinks();
 		assertEquals("api-us.vonage.com/meetings/rooms?page_size=3", links.getFirst().toString());
 		assertEquals("api-us.vonage.com/meetings/rooms?page_size=3&start_id=1991085", links.getSelf().toString());
 		assertEquals("api-us.vonage.com/meetings/rooms?page_size=3&end_id=1991084", links.getPrev().toString());
@@ -272,6 +273,9 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		assertEqualsGetAvailableRooms(stubResponseAndGet(200, LIST_ROOMS_RESPONSE,
 				() -> client.listRooms(29, 31, null))
 		);
+		assertEqualsGetAvailableRooms(stubResponseAndGet(200, LIST_ROOMS_RESPONSE,
+				() -> client.listRooms())
+		);
 
 		stubResponseAndAssertThrows(200, LIST_ROOMS_RESPONSE,
 			() -> client.listRooms(7, 6, 9), IllegalArgumentException.class
@@ -313,17 +317,23 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 	@Test
 	public void testSearchRoomsByTheme() throws Exception {
 		assertEqualsGetAvailableRooms(stubResponseAndGet(200, LIST_ROOMS_RESPONSE,
-				() -> client.searchRoomsByTheme(RANDOM_ID, null, null))
+				() -> client.searchRoomsByTheme(RANDOM_ID, null, null, null))
 		);
 		assertEqualsGetAvailableRooms(stubResponseAndGet(200, LIST_ROOMS_RESPONSE,
-				() -> client.searchRoomsByTheme(RANDOM_ID, 1, 12))
+				() -> client.searchRoomsByTheme(RANDOM_ID, 1, 12, 3))
+		);
+		assertEqualsGetAvailableRooms(stubResponseAndGet(200, LIST_ROOMS_RESPONSE,
+				() -> client.searchRoomsByTheme(RANDOM_ID))
 		);
 
 		stubResponseAndAssertThrows(200, LIST_ROOMS_RESPONSE,
-			() -> client.searchRoomsByTheme(null, 3, 9), NullPointerException.class
+			() -> client.searchRoomsByTheme(null, 3, 9, 1), NullPointerException.class
 		);
 		stubResponseAndAssertThrows(200, LIST_ROOMS_RESPONSE,
-			() -> client.searchRoomsByTheme(RANDOM_ID, 2, 1), IllegalArgumentException.class
+			() -> client.searchRoomsByTheme(RANDOM_ID, 2, 1, 30), IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(200, LIST_ROOMS_RESPONSE,
+			() -> client.searchRoomsByTheme(null), NullPointerException.class
 		);
 	}
 
