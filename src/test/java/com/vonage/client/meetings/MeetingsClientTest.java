@@ -18,6 +18,7 @@ package com.vonage.client.meetings;
 import com.vonage.client.ClientTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -151,7 +152,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 					"   \"id\": \"497f6eca-6276-4993-bfeb-53cbbbba6f08\",\n" +
 					"   \"session_id\": \"2_MX40NjMwODczMn5-MTU3NTgyODEwNzQ2MH5OZDJrVmdBRUNDbG5MUzNqNXgya20yQ1Z-fg\",\n" +
 					"   \"started_at\": \"2019-08-24T14:15:22Z\",\n" +
-					"   \"ended_at\": \"2019-08-24T14:15:22Z\",\n" +
+					"   \"ended_at\": \"2019-11-30T00:59:06Z\",\n" +
 					"   \"status\": \"started\",\n" +
 					"   \"_links\": {\n" +
 					"      \"url\": {\n" +
@@ -171,11 +172,11 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		assertEquals("Sina's room", parsed.getDisplayName());
 		assertEquals("foo=bar", parsed.getMetadata());
 		assertEquals(RoomType.LONG_TERM, parsed.getType());
-		ZonedDateTime expiresAt = ZonedDateTime.of(
+		Instant expiresAt = ZonedDateTime.of(
 				3000, 1, 17,
 				15, 53, 3,
-				377_000_000, ZoneId.systemDefault()
-		).truncatedTo(ChronoUnit.MILLIS).withFixedOffsetZone();
+				377_000_000, ZoneId.of("UTC")
+		).truncatedTo(ChronoUnit.MILLIS).toInstant();
 		assertEquals(expiresAt, parsed.getExpiresAt());
 		assertEquals("3000-01-17T15:53:03.377Z", parsed.getExpiresAtAsString());
 		RecordingOptions recordingOptions = parsed.getRecordingOptions();
@@ -187,11 +188,11 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		assertNotNull(roomLinks);
 		assertTrue(roomLinks.getHostUrl().toString().startsWith("https://meetings.vonage.com/?room_token=365658578&participant_token=ey"));
 		assertEquals("https://meetings.vonage.com/365658578", roomLinks.getGuestUrl().toString());
-		ZonedDateTime createdAt = ZonedDateTime.of(
+		Instant createdAt = ZonedDateTime.of(
 				2023, 1, 17,
 				16, 19, 13,
-				518_000_000, ZoneId.systemDefault()
-		).truncatedTo(ChronoUnit.MILLIS).withFixedOffsetZone();
+				518_000_000, ZoneId.of("UTC")
+		).truncatedTo(ChronoUnit.MILLIS).toInstant();
 		assertEquals(createdAt, parsed.getCreatedAt());
 		assertEquals("2023-01-17T16:19:13.518Z", parsed.getCreatedAtAsString());
 		assertTrue(parsed.getIsAvailable());
@@ -273,10 +274,24 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		assertNotNull(parsed);
 		assertEquals("497f6eca-6276-4993-bfeb-53cbbbba6f08", parsed.getId().toString());
 		assertEquals("2_MX40NjMwODczMn5-MTU3NTgyODEwNzQ2MH5OZDJrVmdBRUNDbG5MUzNqNXgya20yQ1Z-fg", parsed.getSessionId());
-		assertEquals("2019-08-24T14:15:22Z", parsed.getStartedAtAsString());
-		assertEquals("2019-08-24T14:15:22Z", parsed.getEndedAtAsString());
 		assertEquals(RecordingStatus.STARTED, parsed.getStatus());
 		assertEquals("http://example.com/recording.mp4", parsed.getLinks().getUrl().toString());
+
+		assertEquals("2019-08-24T14:15:22Z", parsed.getStartedAtAsString());
+		Instant startedAt = ZonedDateTime.of(
+				2019, 8, 24,
+				14, 15, 22,
+				0, ZoneId.of("UTC")
+		).truncatedTo(ChronoUnit.MILLIS).toInstant();
+		assertEquals(startedAt, parsed.getStartedAt());
+
+		assertEquals("2019-11-30T00:59:06Z", parsed.getEndedAtAsString());
+		Instant endedAt = ZonedDateTime.of(
+				2019, 11, 30,
+				0, 59, 6,
+				0, ZoneId.of("UTC")
+		).truncatedTo(ChronoUnit.MILLIS).toInstant();
+		assertEquals(endedAt, parsed.getEndedAt());
 	}
 
 	void stubResponseAndAssertEqualsSampleRecording(Supplier<? extends Recording> call) throws Exception {

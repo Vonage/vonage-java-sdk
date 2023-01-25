@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
@@ -30,7 +30,7 @@ import java.util.UUID;
 public class Recording {
 	private UUID id;
 	private String sessionId;
-	private ZonedDateTime startedAt, endedAt;
+	private Instant startedAt, endedAt;
 	private RecordingStatus status;
 	private RecordingLinks links;
 
@@ -62,7 +62,7 @@ public class Recording {
 	 *
 	 * @return The recording start time.
 	 */
-	public ZonedDateTime getStartedAt() {
+	public Instant getStartedAt() {
 		return startedAt;
 	}
 
@@ -74,7 +74,7 @@ public class Recording {
 	@JsonGetter("started_at")
 	protected String getStartedAtAsString() {
 		if (startedAt == null) return null;
-		return startedAt.truncatedTo(ChronoUnit.SECONDS).withFixedOffsetZone().toString();
+		return startedAt.truncatedTo(ChronoUnit.SECONDS).toString();
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class Recording {
 	 */
 	@JsonSetter("started_at")
 	protected void setStartedAt(String startedAt) {
-		this.startedAt = ZonedDateTime.parse(startedAt);
+		this.startedAt = Instant.parse(startedAt);
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class Recording {
 	 *
 	 * @return The recording end time.
 	 */
-	public ZonedDateTime getEndedAt() {
+	public Instant getEndedAt() {
 		return endedAt;
 	}
 
@@ -104,7 +104,7 @@ public class Recording {
 	@JsonGetter("ended_at")
 	protected String getEndedAtAsString() {
 		if (endedAt == null) return null;
-		return endedAt.truncatedTo(ChronoUnit.SECONDS).withFixedOffsetZone().toString();
+		return endedAt.truncatedTo(ChronoUnit.SECONDS).toString();
 	}
 
 	/**
@@ -114,7 +114,7 @@ public class Recording {
 	 */
 	@JsonSetter("ended_at")
 	protected void setEndedAt(String endedAt) {
-		this.endedAt = ZonedDateTime.parse(endedAt);
+		this.endedAt = Instant.parse(endedAt);
 	}
 
 	/**

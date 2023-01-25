@@ -19,6 +19,7 @@ import com.vonage.client.VonageUnexpectedException;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.net.URI;
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
@@ -59,7 +60,7 @@ public class MeetingRoomTest {
 				.isRecordingAvailable(isRecordingAvailable)
 				.isWhiteboardAvailable(isWhiteboardAvailable).build();
 		UUID themeId = UUID.randomUUID();
-		ZonedDateTime expiresAt = ZonedDateTime.now().plusHours(2).withFixedOffsetZone();
+		Instant expiresAt = Instant.now().plusSeconds(3600);
 		UISettings uiSettings = UISettings.builder().language(language).build();
 
 		MeetingRoom request = MeetingRoom.builder(displayName)
@@ -149,7 +150,7 @@ public class MeetingRoomTest {
 	@Test
 	public void testExpiresAtAndRoomTypeValidation() {
 		MeetingRoom.Builder builder = MeetingRoom.builder("My Room");
-		ZonedDateTime expire = ZonedDateTime.now().plusHours(4);
+		Instant expire = Instant.now().plusSeconds(10_000);
 		assertNull(builder.expiresAt(expire).build().getType());
 		assertEquals(expire, builder.type(RoomType.LONG_TERM).build().getExpiresAt());
 		assertThrows(IllegalStateException.class, () -> builder.expiresAt(expire).type(RoomType.INSTANT).build());
@@ -159,11 +160,11 @@ public class MeetingRoomTest {
 	@Test
 	public void testExpiresAtLeast10MinutesFromNow() {
 		assertThrows(IllegalArgumentException.class, () -> MeetingRoom.builder("My Room")
-				.expiresAt(ZonedDateTime.now().plusMinutes(9).plusSeconds(59)).build()
+				.expiresAt(Instant.now().plusSeconds(599)).build()
 		);
 		assertNotNull(
 				MeetingRoom.builder("My Room")
-						.expiresAt(ZonedDateTime.now().plusMinutes(10).plusSeconds(1))
+						.expiresAt(Instant.now().plusSeconds(601))
 						.build()
 						.getExpiresAtAsString()
 		);

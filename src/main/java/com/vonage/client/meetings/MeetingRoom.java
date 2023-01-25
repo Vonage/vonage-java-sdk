@@ -20,14 +20,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MeetingRoom {
-	private ZonedDateTime createdAt, expiresAt;
+	private Instant createdAt, expiresAt;
 	private UUID id, themeId;
 	private String displayName, metadata, meetingCode;
 	private Boolean isAvailable, expireAfterUse;
@@ -62,14 +62,14 @@ public class MeetingRoom {
 		uiSettings = builder.uiSettings;
 	}
 
-	static void validateExpiresAtAndRoomType(ZonedDateTime expiresAt, RoomType type) {
+	static void validateExpiresAtAndRoomType(Instant expiresAt, RoomType type) {
 		if (type == RoomType.INSTANT && expiresAt != null) {
 			throw new IllegalStateException("Expiration time should not be specified for "+type+" rooms.");
 		}
 		else if (type == RoomType.LONG_TERM && expiresAt == null) {
 			throw new IllegalStateException("Expiration time must be specified for "+type+" rooms.");
 		}
-		if (expiresAt != null && expiresAt.isBefore(ZonedDateTime.now().plusMinutes(10))) {
+		if (expiresAt != null && expiresAt.isBefore(Instant.now().plusSeconds(600))) {
 			throw new IllegalArgumentException("Expiration time should be more than 10 minutes from now.");
 		}
 	}
@@ -210,7 +210,7 @@ public class MeetingRoom {
 	 *
 	 * @return The room creation time.
 	 */
-	public ZonedDateTime getCreatedAt() {
+	public Instant getCreatedAt() {
 		return createdAt;
 	}
 
@@ -222,7 +222,7 @@ public class MeetingRoom {
 	@JsonGetter("created_at")
 	protected String getCreatedAtAsString() {
 		if (createdAt == null) return null;
-		return createdAt.truncatedTo(ChronoUnit.MILLIS).withFixedOffsetZone().toString();
+		return createdAt.truncatedTo(ChronoUnit.MILLIS).toString();
 	}
 
 	/**
@@ -232,7 +232,7 @@ public class MeetingRoom {
 	 */
 	@JsonSetter("created_at")
 	protected void setCreatedAt(String createdAt) {
-		this.createdAt = ZonedDateTime.parse(createdAt);
+		this.createdAt = Instant.parse(createdAt);
 	}
 
 	/**
@@ -240,7 +240,7 @@ public class MeetingRoom {
 	 *
 	 * @return The room expiration time.
 	 */
-	public ZonedDateTime getExpiresAt() {
+	public Instant getExpiresAt() {
 		return expiresAt;
 	}
 
@@ -252,7 +252,7 @@ public class MeetingRoom {
 	@JsonGetter("expires_at")
 	protected String getExpiresAtAsString() {
 		if (expiresAt == null) return null;
-		return expiresAt.truncatedTo(ChronoUnit.MILLIS).withFixedOffsetZone().toString();
+		return expiresAt.truncatedTo(ChronoUnit.MILLIS).toString();
 	}
 
 	/**
@@ -262,7 +262,7 @@ public class MeetingRoom {
 	 */
 	@JsonSetter("expires_at")
 	protected void setExpiresAt(String expiresAt) {
-		this.expiresAt = ZonedDateTime.parse(expiresAt);
+		this.expiresAt = Instant.parse(expiresAt);
 	}
 
 	/**
@@ -330,7 +330,7 @@ public class MeetingRoom {
 		private final String displayName;
 		private UUID themeId;
 		private String metadata;
-		private ZonedDateTime expiresAt;
+		private Instant expiresAt;
 		private Boolean isAvailable, expireAfterUse;
 		private RoomType type;
 		private JoinApprovalLevel joinApprovalLevel;
@@ -473,7 +473,7 @@ public class MeetingRoom {
 		 *
 		 * @return This builder.
 		 */
-		public Builder expiresAt(ZonedDateTime expiresAt) {
+		public Builder expiresAt(Instant expiresAt) {
 			this.expiresAt = expiresAt;
 			return this;
 		}

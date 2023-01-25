@@ -27,38 +27,37 @@ import org.junit.Before;
 import org.junit.Test;
 import java.util.UUID;
 
-public class GetRoomEndpointTest {
-	private GetRoomEndpoint endpoint;
-	
+public class GetRecordingEndpointTest {
+	private GetRecordingEndpoint endpoint;
+
 	@Before
 	public void setUp() {
-		endpoint = new GetRoomEndpoint(new HttpWrapper(new JWTAuthMethod("app-id", new byte[0])));
+		endpoint = new GetRecordingEndpoint(new HttpWrapper(new JWTAuthMethod("app-id", new byte[0])));
 	}
 	
 	@Test
-	public void testMakeRequest() throws Exception {
-		UUID roomId = UUID.randomUUID();
-		RequestBuilder builder = endpoint.makeRequest(roomId);
+	public void testDefaultUri() throws Exception {
+		UUID recordingId = UUID.randomUUID();
+		RequestBuilder builder = endpoint.makeRequest(recordingId);
 		assertEquals("GET", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/beta/meetings/rooms/"+roomId;
+		String expectedUri = "https://api-eu.vonage.com/beta/meetings/recordings/"+recordingId;
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, MeetingsClientTest.GET_ROOM_RESPONSE);
-		MeetingRoom parsedResponse = endpoint.parseResponse(mockResponse);
-		MeetingsClientTest.assertEqualsSampleRoom(parsedResponse);
+		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, MeetingsClientTest.SAMPLE_RECORDING_RESPONSE);
+		MeetingsClientTest.assertEqualsSampleRecording(endpoint.parseResponse(mockResponse));
 	}
 
 	@Test
 	public void testCustomUri() throws Exception {
-		UUID roomId = UUID.randomUUID();
-		String baseUri = "https://example.com";
+		UUID recordingId = UUID.randomUUID();
+		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
-		GetRoomEndpoint endpoint = new GetRoomEndpoint(wrapper);
-		String expectedUri = baseUri + "/beta/meetings/rooms/"+roomId;
-		RequestBuilder builder = endpoint.makeRequest(roomId);
+		GetRecordingEndpoint endpoint = new GetRecordingEndpoint(wrapper);
+		String expectedUri = baseUri + "/beta/meetings/recordings/"+recordingId;
+		RequestBuilder builder = endpoint.makeRequest(recordingId);
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("GET", builder.getMethod());
-		assertEquals(expectedUri, builder.build().getURI().toString());
+        assertEquals(expectedUri, builder.build().getURI().toString());
 	}
 }
