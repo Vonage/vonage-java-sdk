@@ -467,8 +467,43 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 	}
 
 	@Test
-	public void testGetLogoUploadUrls() throws Exception {
-
+	public void testListLogoUploadUrls() throws Exception {
+		String responseJson = "[\n" +
+				"{},   {\n" +
+				"      \"url\": \"https://storage-url.com\",\n" +
+				"      \"fields\": {\n" +
+				"         \"Content-Type\": \"image/png\",\n" +
+				"         \"key\": \"auto-expiring-temp/logos/white/ca63a155-d\",\n" +
+				"         \"logoType\": \"white\",\n" +
+				"         \"bucket\": \"s3\",\n" +
+				"         \"X-Amz-Algorithm\": \"stringA\",\n" +
+				"         \"X-Amz-Credential\": \"stringC\",\n" +
+				"         \"X-Amz-Date\": \"stringD\",\n" +
+				"         \"X-Amz-Security-Token\": \"stringT\",\n" +
+				"         \"Policy\": \"stringP\",\n" +
+				"         \"X-Amz-Signature\": \"stringS\"\n" +
+				"      }\n" +
+				"   }, {\"url\": \"http://example.com\"}\n" +
+				"]";
+		stubResponse(200, responseJson);
+		List<LogoUploadsUrlResponse> parsed = client.listLogoUploadUrls();
+		assertEquals(3, parsed.size());
+		assertNotNull(parsed.get(0));
+		assertEquals("http://example.com", parsed.get(2).getUrl().toString());
+		LogoUploadsUrlResponse sample = parsed.get(1);
+		LogoUploadsUrlResponse.Fields fields = sample.getFields();
+		assertNotNull(fields);
+		assertEquals("https://storage-url.com", sample.getUrl().toString());
+		assertEquals("image/png", fields.getContentType().toString());
+		assertEquals("auto-expiring-temp/logos/white/ca63a155-d", fields.getKey());
+		assertEquals(LogoType.WHITE, fields.getLogoType());
+		assertEquals("s3", fields.getBucket());
+		assertEquals("stringA", fields.getAmzAlgorithm());
+		assertEquals("stringC", fields.getAmzCredential());
+		assertEquals("stringD", fields.getAmzDate());
+		assertEquals("stringT", fields.getAmzSecurityToken());
+		assertEquals("stringP", fields.getPolicy());
+		assertEquals("stringS", fields.getAmzSignature());
 	}
 
 	@Test

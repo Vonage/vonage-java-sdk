@@ -103,7 +103,7 @@ public class MeetingsClient {
 	 * @return The list of all meeting rooms.
 	 */
 	public List<MeetingRoom> listRooms() {
-		return listRooms(null, null, null).getMeetingRooms();
+		return listRooms(null, null, Integer.MAX_VALUE).getMeetingRooms();
 	}
 
 	/**
@@ -153,9 +153,7 @@ public class MeetingsClient {
 	 * @return The HAL response.
 	 */
 	ListRoomsResponse searchRoomsByTheme(UUID themeId, Integer startId, Integer endId, Integer pageSize) {
-		return searchThemeRooms.execute(new ListRoomsRequest(
-				startId, endId, null, validateThemeId(themeId))
-		);
+		return searchThemeRooms.execute(new ListRoomsRequest(startId, endId, pageSize, validateThemeId(themeId)));
 	}
 
 	/**
@@ -166,7 +164,7 @@ public class MeetingsClient {
 	 * @return The list of rooms which use the theme.
 	 */
 	public List<MeetingRoom> searchRoomsByTheme(UUID themeId) {
-		return searchRoomsByTheme(themeId, null, null, null).getMeetingRooms();
+		return searchRoomsByTheme(themeId, null, null, Integer.MAX_VALUE).getMeetingRooms();
 	}
 
 	/**
@@ -272,7 +270,7 @@ public class MeetingsClient {
 	 *
 	 * @return List of URLs and respective credentials / tokens needed for uploading logos to them.
 	 */
-	public List<LogoUploadsUrlResponse> getLogoUploadUrls() {
+	public List<LogoUploadsUrlResponse> listLogoUploadUrls() {
 		return getLogoUploadUrls.execute(null);
 	}
 
