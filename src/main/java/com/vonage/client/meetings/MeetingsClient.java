@@ -93,7 +93,7 @@ public class MeetingsClient {
 	 *
 	 * @return The HAL response.
 	 */
-	ListRoomsResponse listRooms(Integer startId, Integer endId, Integer pageSize) {
+	public ListRoomsResponse listRooms(Integer startId, Integer endId, Integer pageSize) {
 		return listRooms.execute(new ListRoomsRequest(startId, endId, pageSize, null));
 	}
 
@@ -152,7 +152,7 @@ public class MeetingsClient {
 	 *
 	 * @return The HAL response.
 	 */
-	ListRoomsResponse searchRoomsByTheme(UUID themeId, Integer startId, Integer endId, Integer pageSize) {
+	public ListRoomsResponse searchRoomsByTheme(UUID themeId, Integer startId, Integer endId, Integer pageSize) {
 		return searchThemeRooms.execute(new ListRoomsRequest(startId, endId, pageSize, validateThemeId(themeId)));
 	}
 

@@ -18,51 +18,47 @@ package com.vonage.client.meetings;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
+import com.vonage.client.VonageBadRequestException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.entity.ContentType;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.UUID;
 
-public class GetRoomEndpointTest {
-	private GetRoomEndpoint endpoint;
+public class DeleteThemeEndpointTest {
+	private DeleteThemeEndpoint endpoint;
 	
 	@Before
 	public void setUp() {
-		endpoint = new GetRoomEndpoint(new HttpWrapper(new JWTAuthMethod("app-id", new byte[0])));
+		endpoint = new DeleteThemeEndpoint(new HttpWrapper(new JWTAuthMethod("app-id", new byte[0])));
 	}
 	
 	@Test
 	public void testMakeRequest() throws Exception {
-		UUID roomId = UUID.randomUUID();
-		RequestBuilder builder = endpoint.makeRequest(roomId);
-		assertEquals("GET", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/beta/meetings/rooms/"+roomId;
+		UUID themeId = UUID.randomUUID();
+		RequestBuilder builder = endpoint.makeRequest(new DeleteThemeRequest(themeId, false));
+		assertEquals("DELETE", builder.getMethod());
+		String expectedUri = "https://api-eu.vonage.com/beta/meetings/themes/"+themeId+"?force=false";
 		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, MeetingsClientTest.SAMPLE_ROOM_RESPONSE);
-		MeetingRoom parsedResponse = endpoint.parseResponse(mockResponse);
-		MeetingsClientTest.assertEqualsSampleRoom(parsedResponse);
+		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(204, "");
+		endpoint.parseResponse(mockResponse);
 	}
 
 	@Test
 	public void testCustomUri() throws Exception {
-		UUID roomId = UUID.randomUUID();
-		String baseUri = "https://example.com";
+		UUID themeId = UUID.randomUUID();
+		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
-		endpoint = new GetRoomEndpoint(wrapper);
-		String expectedUri = baseUri + "/beta/meetings/rooms/"+roomId;
-		RequestBuilder builder = endpoint.makeRequest(roomId);
+		endpoint = new DeleteThemeEndpoint(wrapper);
+		String expectedUri = baseUri + "/beta/meetings/themes/"+themeId+"?force=true";
+		RequestBuilder builder = endpoint.makeRequest(new DeleteThemeRequest(themeId, true));
 		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		assertEquals("GET", builder.getMethod());
+		assertEquals("DELETE", builder.getMethod());
 	}
 
-	@Test(expected = HttpResponseException.class)
+	@Test(expected = VonageBadRequestException.class)
 	public void testUnsuccessfulResponse() throws Exception {
 		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, ""));
 	}

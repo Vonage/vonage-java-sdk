@@ -42,7 +42,7 @@ class FinalizeLogosEndpoint extends AbstractMethod<FinalizeLogosRequest, Void> {
 	@Override
 	public RequestBuilder makeRequest(FinalizeLogosRequest request) {
 		String path = String.format(PATH, request.themeId);
-		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri();
+		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + path;
 		return RequestBuilder.put(uri)
 				.setHeader("Content-Type", "application/json")
 				.setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));

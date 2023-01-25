@@ -23,40 +23,50 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-import java.util.UUID;
 
-public class GetRoomEndpointTest {
-	private GetRoomEndpoint endpoint;
+public class ListRecordingsEndpointTest {
+	private ListRecordingsEndpoint endpoint;
 	
 	@Before
 	public void setUp() {
-		endpoint = new GetRoomEndpoint(new HttpWrapper(new JWTAuthMethod("app-id", new byte[0])));
+		endpoint = new ListRecordingsEndpoint(new HttpWrapper(new JWTAuthMethod("app-id", new byte[0])));
 	}
 	
 	@Test
 	public void testMakeRequest() throws Exception {
-		UUID roomId = UUID.randomUUID();
-		RequestBuilder builder = endpoint.makeRequest(roomId);
+		String sessionId = "2_MX40NjMwODczMn5-MTU3NTgyODEwNzQ2M...";
+		RequestBuilder builder = endpoint.makeRequest(sessionId);
 		assertEquals("GET", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/beta/meetings/rooms/"+roomId;
+		String expectedUri = "https://api-eu.vonage.com/beta/meetings/sessions/"+sessionId+"/recordings";
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, MeetingsClientTest.SAMPLE_ROOM_RESPONSE);
-		MeetingRoom parsedResponse = endpoint.parseResponse(mockResponse);
-		MeetingsClientTest.assertEqualsSampleRoom(parsedResponse);
+		String expectedPayload = "{\"_embedded\":{\"recordings\":[{},"+MeetingsClientTest.SAMPLE_RECORDING_RESPONSE+"]}}";
+		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedPayload);
+		ListRecordingsResponse parsed = endpoint.parseResponse(mockResponse);
+		assertEquals(2, parsed.getRecordings().size());
+		MeetingsClientTest.assertEqualsSampleRecording(parsed.getRecordings().get(1));
+		Recording empty = parsed.getRecordings().get(0);
+		assertNotNull(empty);
+		assertNull(empty.getId());
+		assertNull(empty.getLinks());
+		assertNull(empty.getEndedAt());
+		assertNull(empty.getEndedAtAsString());
+		assertNull(empty.getStartedAt());
+		assertNull(empty.getStartedAtAsString());
+		assertNull(empty.getStatus());
+		assertNull(empty.getSessionId());
 	}
 
 	@Test
 	public void testCustomUri() throws Exception {
-		UUID roomId = UUID.randomUUID();
-		String baseUri = "https://example.com";
+		String sessionId = "2_MX40NjMwODczMn5-MTU3NTgyODEwNzQ2Jk.." , baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
-		endpoint = new GetRoomEndpoint(wrapper);
-		String expectedUri = baseUri + "/beta/meetings/rooms/"+roomId;
-		RequestBuilder builder = endpoint.makeRequest(roomId);
+		endpoint = new ListRecordingsEndpoint(wrapper);
+		String expectedUri = baseUri + "/beta/meetings/sessions/"+sessionId+"/recordings";
+		RequestBuilder builder = endpoint.makeRequest(sessionId);
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("GET", builder.getMethod());

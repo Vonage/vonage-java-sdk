@@ -31,7 +31,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 			RANDOM_ID = UUID.randomUUID(),
 			ROOM_ID = UUID.fromString("b84cc862-0764-4887-9265-37e8a863164d");
 	static final String
-			GET_ROOM_RESPONSE = "        {\n" +
+			SAMPLE_ROOM_RESPONSE = "        {\n" +
 			"            \"id\": \""+ROOM_ID+"\",\n" +
 			"            \"display_name\": \"Sina's room\",\n" +
 			"            \"metadata\": \"foo=bar\",\n" +
@@ -76,7 +76,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 			LIST_ROOMS_RESPONSE = "{\n" +
 			"    \"page_size\": \"3\",\n" +
-			"    \"_embedded\": [\n" +GET_ROOM_RESPONSE+",\n" +
+			"    \"_embedded\": [\n" + SAMPLE_ROOM_RESPONSE +",\n" +
 			"        {\n" +
 			"            \"id\": \"2f63e54b-adc1-4dda-a27c-24f04c0f1233\",\n" +
 			"            \"display_name\": \"Manchucks\",\n" +
@@ -219,7 +219,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 	}
 
 	void stubResponseAndAssertEqualsSampleRoom(Supplier<? extends MeetingRoom> call) throws Exception {
-		assertEqualsSampleRoom(stubResponseAndGet(200, GET_ROOM_RESPONSE, call));
+		assertEqualsSampleRoom(stubResponseAndGet(200, SAMPLE_ROOM_RESPONSE, call));
 	}
 
 	static void assertEqualsGetAvailableRooms(List<MeetingRoom> rooms) {
@@ -328,7 +328,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 	public void testGetRoom() throws Exception {
 		stubResponseAndAssertEqualsSampleRoom(() -> client.getRoom(ROOM_ID));
 
-		stubResponseAndAssertThrows(200, GET_ROOM_RESPONSE,
+		stubResponseAndAssertThrows(200, SAMPLE_ROOM_RESPONSE,
 			() -> client.getRoom(null), NullPointerException.class
 		);
 	}
@@ -338,10 +338,10 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		UpdateRoomRequest request = UpdateRoomRequest.builder().build();
 		stubResponseAndAssertEqualsSampleRoom(() -> client.updateRoom(ROOM_ID, request));
 
-		stubResponseAndAssertThrows(200, GET_ROOM_RESPONSE,
+		stubResponseAndAssertThrows(200, SAMPLE_ROOM_RESPONSE,
 			() -> client.updateRoom(ROOM_ID, null), NullPointerException.class
 		);
-		stubResponseAndAssertThrows(200, GET_ROOM_RESPONSE,
+		stubResponseAndAssertThrows(200, SAMPLE_ROOM_RESPONSE,
 			() -> client.updateRoom(null, request), NullPointerException.class
 		);
 	}
@@ -351,7 +351,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		MeetingRoom request = MeetingRoom.builder("Sample mr").build();
 		stubResponseAndAssertEqualsSampleRoom(() -> client.createRoom(request));
 
-		stubResponseAndAssertThrows(201, GET_ROOM_RESPONSE,
+		stubResponseAndAssertThrows(201, SAMPLE_ROOM_RESPONSE,
 			() -> client.createRoom(null), NullPointerException.class
 		);
 	}

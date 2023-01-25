@@ -22,43 +22,63 @@ import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.entity.ContentType;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-import java.util.UUID;
+import java.util.List;
+import java.util.Locale;
 
-public class GetRoomEndpointTest {
-	private GetRoomEndpoint endpoint;
+public class ListDialNumbersEndpointTest {
+	private ListDialNumbersEndpoint endpoint;
 	
 	@Before
 	public void setUp() {
-		endpoint = new GetRoomEndpoint(new HttpWrapper(new JWTAuthMethod("app-id", new byte[0])));
+		endpoint = new ListDialNumbersEndpoint(new HttpWrapper(new JWTAuthMethod("app-id", new byte[0])));
 	}
 	
 	@Test
 	public void testMakeRequest() throws Exception {
-		UUID roomId = UUID.randomUUID();
-		RequestBuilder builder = endpoint.makeRequest(roomId);
+		RequestBuilder builder = endpoint.makeRequest(null);
 		assertEquals("GET", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/beta/meetings/rooms/"+roomId;
+		String expectedUri = "https://api-eu.vonage.com/beta/meetings/dial-in-numbers";
 		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, MeetingsClientTest.SAMPLE_ROOM_RESPONSE);
-		MeetingRoom parsedResponse = endpoint.parseResponse(mockResponse);
-		MeetingsClientTest.assertEqualsSampleRoom(parsedResponse);
+		String expectedPayload = "[\n" +
+				"{},   {\n" +
+				"      \"number\": \"17323338801\",\n" +
+				"      \"locale\": \"en-US\",\n" +
+				"      \"displayName\": \"United States\"\n" +
+				"   }," +
+				"  {\"locale\": \"de-DE\",\"unknown property\":0}\n" +
+				"]";
+		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedPayload);
+		List<DialInNumber> parsed = endpoint.parseResponse(mockResponse);
+		assertEquals(3, parsed.size());
+
+		DialInNumber empty = parsed.get(0);
+		assertNotNull(empty);
+		assertNull(empty.getNumber());
+		assertNull(empty.getDisplayName());
+		assertNull(empty.getLocale());
+
+		DialInNumber usa = parsed.get(1);
+		assertEquals("17323338801", usa.getNumber());
+		assertEquals("United States", usa.getDisplayName());
+		assertEquals(Locale.US, usa.getLocale());
+
+		DialInNumber germany = parsed.get(2);
+		assertEquals(Locale.GERMANY, germany.getLocale());
+		assertNull(germany.getDisplayName());
+		assertNull(germany.getNumber());
 	}
 
 	@Test
 	public void testCustomUri() throws Exception {
-		UUID roomId = UUID.randomUUID();
-		String baseUri = "https://example.com";
+		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
-		endpoint = new GetRoomEndpoint(wrapper);
-		String expectedUri = baseUri + "/beta/meetings/rooms/"+roomId;
-		RequestBuilder builder = endpoint.makeRequest(roomId);
+		endpoint = new ListDialNumbersEndpoint(wrapper);
+		String expectedUri = baseUri + "/beta/meetings/dial-in-numbers";
+		RequestBuilder builder = endpoint.makeRequest(null);
 		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("GET", builder.getMethod());
 	}
 
