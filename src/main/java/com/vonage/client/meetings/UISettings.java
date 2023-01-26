@@ -25,7 +25,7 @@ import com.vonage.client.VonageUnexpectedException;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UISettings {
-	private String language;
+	private RoomLanguage language;
 
 	UISettings(Builder builder) {
 		language = builder.language;
@@ -37,10 +37,10 @@ public class UISettings {
 	/**
 	 * Language setting.
 	 *
-	 * @return The language, as a string.
+	 * @return The language, as an enum.
 	 */
 	@JsonProperty("language")
-	public String getLanguage() {
+	public RoomLanguage getLanguage() {
 		return language;
 	}
 
@@ -69,7 +69,7 @@ public class UISettings {
 	}
 
 	public static class Builder {
-		private String language;
+		private RoomLanguage language;
 
 		Builder() {}
 
@@ -79,7 +79,7 @@ public class UISettings {
 		 *
 		 * @return This builder.
 		 */
-		public Builder language(String language) {
+		public Builder language(RoomLanguage language) {
 			this.language = language;
 			return this;
 		}

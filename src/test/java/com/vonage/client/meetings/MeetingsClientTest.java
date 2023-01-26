@@ -209,7 +209,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		assertEquals("https://example.com/rooms", callbackUrls.getRoomsCallbackUrl().toString());
 		assertEquals("https://example.com/sessions", callbackUrls.getSessionsCallbackUrl().toString());
 		assertEquals("https://example.com/recordings", callbackUrls.getRecordingsCallbackUrl().toString());
-		assertEquals("default", uiSettings.getLanguage());
+		assertEquals(RoomLanguage.DEFAULT, uiSettings.getLanguage());
 		AvailableFeatures availableFeatures = parsed.getAvailableFeatures();
 		assertNotNull(availableFeatures);
 		assertTrue(availableFeatures.getIsRecordingAvailable());
@@ -236,7 +236,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		assertTrue(otherRoom.getAvailableFeatures().getIsChatAvailable());
 		assertFalse(otherRoom.getAvailableFeatures().getIsLocaleSwitcherAvailable());
 		assertEquals(JoinApprovalLevel.NONE, otherRoom.getJoinApprovalLevel());
-		assertEquals("default", otherRoom.getUiSettings().getLanguage());
+		assertEquals(RoomLanguage.DEFAULT, otherRoom.getUiSettings().getLanguage());
 	}
 
 	static void assertEqualsGetAvailableRooms(ListRoomsResponse parsed) {

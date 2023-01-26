@@ -30,11 +30,11 @@ public class MeetingRoomTest {
 		String
 			displayName = "Sample room",
 			metadata = "var=val",
-			language = "en-GB",
 			roomsCallbackUrl = "http://example.org/roomsCb",
 			recordingsCallbackUrl = "http://example.org/recordingsCb",
 			sessionsCallbackUrl = "http://example.org/sessionsCb";
 		RoomType type = RoomType.LONG_TERM;
+		RoomLanguage language = RoomLanguage.EN;
 		MicrophoneState microphoneState = MicrophoneState.ON;
 		JoinApprovalLevel joinApprovalLevel = JoinApprovalLevel.EXPLICIT_APPROVAL;
 		boolean
