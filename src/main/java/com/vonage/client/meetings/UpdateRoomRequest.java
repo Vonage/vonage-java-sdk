@@ -36,7 +36,7 @@ public class UpdateRoomRequest {
 	private final AvailableFeatures availableFeatures;
 	private final JoinApprovalLevel joinApprovalLevel;
 	private final UUID themeId;
-	private final Instant expiresAt;
+	@JsonIgnore private final Instant expiresAt;
 
 	UpdateRoomRequest(Builder builder) {
 		expireAfterUse = builder.expireAfterUse;
