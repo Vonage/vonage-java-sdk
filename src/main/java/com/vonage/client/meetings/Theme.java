@@ -32,7 +32,8 @@ public class Theme {
 	static final Pattern COLOR_PATTERN = Pattern.compile("(#[a-fA-F0-9]{6}|[a-fA-F0-9]{3})");
 
 	UUID themeId;
-	private String themeName, mainColor, accountId, applicationId;
+	private UUID applicationId;
+	private String themeName, mainColor, accountId;
 	private ThemeDomain domain;
 	private String shortCompanyUrl, brandText, brandImageColored, brandImageWhite, brandedFavicon;
 	private URI brandImageColoredUrl, brandImageWhiteUrl, brandedFaviconUrl;
@@ -41,20 +42,35 @@ public class Theme {
 	}
 
 	Theme(Builder builder) {
-		if ((brandText = builder.brandText) != null && brandText.length() > 200) {
-			throw new IllegalArgumentException("Brand text cannot exceed 200 characters.");
-		}
-
 		if ((mainColor = builder.mainColor) != null && !COLOR_PATTERN.matcher(mainColor).matches()) {
 			throw new IllegalArgumentException("Main color must be a valid hex pallet.");
 		}
 
-		if ((themeName = builder.themeName) != null && themeName.length() > 200) {
-			throw new IllegalArgumentException("Theme name cannot exceed 200 characters.");
+		if ((brandText = builder.brandText) != null) {
+			if (brandText.length() > 200) {
+				throw new IllegalArgumentException("Brand text cannot exceed 200 characters.");
+			}
+			else if (brandText.trim().isEmpty()) {
+				throw new IllegalArgumentException("Brand text cannot be blank.");
+			}
 		}
 
-		if ((shortCompanyUrl = builder.shortCompanyUrl) != null && builder.shortCompanyUrl.length() > 128) {
-			throw new IllegalArgumentException("Short company URL cannot exceed 128 characters.");
+		if ((themeName = builder.themeName) != null) {
+			if (themeName.length() > 200) {
+				throw new IllegalArgumentException("Theme name cannot exceed 200 characters.");
+			}
+			else if (themeName.trim().isEmpty()) {
+				throw new IllegalArgumentException("Theme name cannot be blank.");
+			}
+		}
+
+		if ((shortCompanyUrl = builder.shortCompanyUrl) != null) {
+			if (shortCompanyUrl.length() > 128) {
+				throw new IllegalArgumentException("Short company URL cannot exceed 128 characters.");
+			}
+			else if (shortCompanyUrl.trim().isEmpty()) {
+				throw new IllegalArgumentException("Short company URL cannot be blank.");
+			}
 		}
 	}
 
@@ -94,7 +110,7 @@ public class Theme {
 	 * @return The application ID.
 	 */
 	@JsonProperty("application_id")
-	public String getApplicationId() {
+	public UUID getApplicationId() {
 		return applicationId;
 	}
 

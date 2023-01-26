@@ -254,7 +254,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		assertEquals("Theme1", parsed.getThemeName());
 		assertEquals(ThemeDomain.VBC, parsed.getDomain());
 		assertEquals("94a99d02-24b2-445a-9526-2846aa5f846", parsed.getAccountId());
-		assertEquals("862f8c7b-d203-4729-68a3-7eded210c9ca", parsed.getApplicationId());
+		assertEquals("862f8c7b-d203-4729-68a3-7eded210c9ca", parsed.getApplicationId().toString());
 		assertEquals("#12f64e", parsed.getMainColor());
 		assertEquals("https://t.co/acme", parsed.getShortCompanyUrl());
 		assertEquals("Looney Tunes Ltd.", parsed.getBrandText());
