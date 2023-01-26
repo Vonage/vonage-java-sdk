@@ -43,11 +43,12 @@ public class ListRecordingsEndpointTest {
 		String expectedUri = "https://api-eu.vonage.com/beta/meetings/sessions/"+sessionId+"/recordings";
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		String expectedPayload = "{\"_embedded\":{\"recordings\":[{},"+MeetingsClientTest.SAMPLE_RECORDING_RESPONSE+"]}}";
+		String expectedPayload = "{\"_embedded\":{\"recordings\":[{},{\"_links\":{},\"status\":\"uploaded\"}]}}";
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedPayload);
 		ListRecordingsResponse parsed = endpoint.parseResponse(mockResponse);
 		assertEquals(2, parsed.getRecordings().size());
-		MeetingsClientTest.assertEqualsSampleRecording(parsed.getRecordings().get(1));
+		assertNotNull(parsed.getRecordings().get(1).getLinks());
+		assertEquals(RecordingStatus.UPLOADED, parsed.getRecordings().get(1).getStatus());
 		Recording empty = parsed.getRecordings().get(0);
 		assertNotNull(empty);
 		assertNull(empty.getId());
@@ -75,5 +76,36 @@ public class ListRecordingsEndpointTest {
 	@Test(expected = HttpResponseException.class)
 	public void testUnsuccessfulResponse() throws Exception {
 		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, ""));
+	}
+
+	@Test
+	public void testEmptyEdgeCases() throws Exception {
+		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, "");
+		ListRecordingsResponse parsed = endpoint.parseResponse(mockResponse);
+		assertNotNull(parsed);
+		assertNull(parsed.getRecordings());
+
+		mockResponse = TestUtils.makeJsonHttpResponse(200, "{}");
+		parsed = endpoint.parseResponse(mockResponse);
+		assertNotNull(parsed);
+		assertNull(parsed.getRecordings());
+
+		mockResponse = TestUtils.makeJsonHttpResponse(200, "{\"_embedded\":{}}");
+		parsed = endpoint.parseResponse(mockResponse);
+		assertNotNull(parsed);
+		assertNull(parsed.getRecordings());
+
+		mockResponse = TestUtils.makeJsonHttpResponse(200, "{\"_embedded\":{\"recordings\":[]}}");
+		parsed = endpoint.parseResponse(mockResponse);
+		assertNotNull(parsed);
+		assertNotNull(parsed.getRecordings());
+		assertEquals(0, parsed.getRecordings().size());
+
+		mockResponse = TestUtils.makeJsonHttpResponse(200, "{\"_embedded\":{\"recordings\":[{}]}}");
+		parsed = endpoint.parseResponse(mockResponse);
+		assertNotNull(parsed);
+		assertNotNull(parsed.getRecordings());
+		assertEquals(1, parsed.getRecordings().size());
+		assertNotNull(parsed.getRecordings().get(0));
 	}
 }

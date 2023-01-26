@@ -45,6 +45,10 @@ class ListRecordingsEndpoint extends AbstractMethod<String, ListRecordingsRespon
 
 	@Override
 	public ListRecordingsResponse parseResponse(HttpResponse response) throws IOException {
-		return ListRecordingsResponse.fromJson(basicResponseHandler.handleResponse(response));
+		String json = basicResponseHandler.handleResponse(response);
+		if (json == null || json.isEmpty()) {
+			return new ListRecordingsResponse();
+		}
+		return ListRecordingsResponse.fromJson(json);
 	}
 }

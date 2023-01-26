@@ -36,7 +36,7 @@ public class DeleteThemeEndpointTest {
 	}
 	
 	@Test
-	public void testMakeRequest() throws Exception {
+	public void testDefaultUri() throws Exception {
 		UUID themeId = UUID.randomUUID();
 		RequestBuilder builder = endpoint.makeRequest(new DeleteThemeRequest(themeId, false));
 		assertEquals("DELETE", builder.getMethod());

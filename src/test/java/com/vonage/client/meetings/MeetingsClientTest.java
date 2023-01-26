@@ -431,12 +431,25 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 	@Test
 	public void testListRecordings() throws Exception {
+		String sessionId = "session_id123";
 		String responseJson = "{\"_embedded\":{\"recordings\":[" + SAMPLE_RECORDING_RESPONSE + ",{}]}}";
 		stubResponse(200, responseJson);
-		List<Recording> recordings = client.listRecordings("session_id");
+		List<Recording> recordings = client.listRecordings(sessionId);
 		assertEquals(2, recordings.size());
 		assertEqualsSampleRecording(recordings.get(0));
 		assertNotNull(recordings.get(1));
+
+		responseJson = "{\"_embedded\":{}}";
+		stubResponse(200, responseJson);
+		recordings = client.listRecordings(sessionId);
+		assertNotNull(recordings);
+		assertEquals(0, recordings.size());
+
+		responseJson = "{\"_embedded\":{\"recordings\":[]}}";
+		stubResponse(200, responseJson);
+		recordings = client.listRecordings(sessionId);
+		assertNotNull(recordings);
+		assertEquals(0, recordings.size());
 
 		stubResponseAndAssertThrows(200,
 			() -> client.listRecordings(null), IllegalArgumentException.class

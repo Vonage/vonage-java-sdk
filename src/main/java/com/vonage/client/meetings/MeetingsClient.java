@@ -16,6 +16,7 @@
 package com.vonage.client.meetings;
 
 import com.vonage.client.HttpWrapper;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -233,7 +234,9 @@ public class MeetingsClient {
 	 * @return The list of recordings for the session.
 	 */
 	public List<Recording> listRecordings(String sessionId) {
-		return listRecordings.execute(validateSessionId(sessionId)).getRecordings();
+		ListRecordingsResponse response = listRecordings.execute(validateSessionId(sessionId));
+		List<Recording> recordings = response.getRecordings();
+		return recordings != null ? recordings : Collections.emptyList();
 	}
 
 	/**

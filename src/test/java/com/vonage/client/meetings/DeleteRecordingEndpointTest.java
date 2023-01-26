@@ -36,7 +36,7 @@ public class DeleteRecordingEndpointTest {
 	}
 	
 	@Test
-	public void testMakeRequest() throws Exception {
+	public void testDefaultUri() throws Exception {
 		UUID recordingId = UUID.randomUUID();
 		RequestBuilder builder = endpoint.makeRequest(recordingId);
 		assertEquals("DELETE", builder.getMethod());

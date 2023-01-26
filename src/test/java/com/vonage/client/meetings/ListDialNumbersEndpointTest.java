@@ -37,7 +37,7 @@ public class ListDialNumbersEndpointTest {
 	}
 	
 	@Test
-	public void testMakeRequest() throws Exception {
+	public void testDefaultUri() throws Exception {
 		RequestBuilder builder = endpoint.makeRequest(null);
 		assertEquals("GET", builder.getMethod());
 		String expectedUri = "https://api-eu.vonage.com/beta/meetings/dial-in-numbers";

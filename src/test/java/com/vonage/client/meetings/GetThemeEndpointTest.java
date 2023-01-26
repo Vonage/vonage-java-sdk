@@ -18,50 +18,53 @@ package com.vonage.client.meetings;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
-import com.vonage.client.VonageBadRequestException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
-import java.util.Arrays;
 import java.util.UUID;
 
-public class FinalizeLogosEndpointTest {
-	private FinalizeLogosEndpoint endpoint;
+public class GetThemeEndpointTest {
+	private GetThemeEndpoint endpoint;
 	
 	@Before
 	public void setUp() {
-		endpoint = new FinalizeLogosEndpoint(new HttpWrapper(new JWTAuthMethod("app-id", new byte[0])));
+		endpoint = new GetThemeEndpoint(new HttpWrapper(new JWTAuthMethod("app-id", new byte[0])));
 	}
 	
 	@Test
 	public void testDefaultUri() throws Exception {
 		UUID themeId = UUID.randomUUID();
-		FinalizeLogosRequest request = new FinalizeLogosRequest(themeId, Arrays.asList("col", "fff"));
-		RequestBuilder builder = endpoint.makeRequest(request);
-		assertEquals("PUT", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/beta/meetings/themes/"+themeId+"/finalizeLogos";
+		RequestBuilder builder = endpoint.makeRequest(themeId);
+		assertEquals("GET", builder.getMethod());
+		String expectedUri = "https://api-eu.vonage.com/beta/meetings/themes/"+themeId;
 		assertEquals(expectedUri, builder.build().getURI().toString());
-		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, "");
-		endpoint.parseResponse(mockResponse);
+		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		String expectedResponse = "{\"nonsense\":true}";
+		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
+		Theme parsed = endpoint.parseResponse(mockResponse);
+		assertNotNull(parsed);
 	}
 
 	@Test
 	public void testCustomUri() throws Exception {
-		UUID themeId = UUID.randomUUID();
 		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
-		endpoint = new FinalizeLogosEndpoint(wrapper);
-		String expectedUri = baseUri + "/beta/meetings/themes/"+themeId+"/finalizeLogos";
-		FinalizeLogosRequest request = new FinalizeLogosRequest(themeId, Arrays.asList("lk1", "lk2"));
-		RequestBuilder builder = endpoint.makeRequest(request);
+		endpoint = new GetThemeEndpoint(wrapper);
+		UUID themeId = UUID.randomUUID();
+		String expectedUri = baseUri + "/beta/meetings/themes/"+themeId;
+		RequestBuilder builder = endpoint.makeRequest(themeId);
 		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals("PUT", builder.getMethod());
+		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		assertEquals("GET", builder.getMethod());
 	}
 
-	@Test(expected = VonageBadRequestException.class)
+	@Test(expected = HttpResponseException.class)
 	public void testUnsuccessfulResponse() throws Exception {
 		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, ""));
 	}

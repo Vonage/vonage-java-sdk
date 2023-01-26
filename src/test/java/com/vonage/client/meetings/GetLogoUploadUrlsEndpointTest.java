@@ -22,48 +22,63 @@ import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.entity.ContentType;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
-import java.util.UUID;
+import java.util.List;
 
-public class GetRoomEndpointTest {
-	private GetRoomEndpoint endpoint;
+public class GetLogoUploadUrlsEndpointTest {
+	private GetLogoUploadUrlsEndpoint endpoint;
 	
 	@Before
 	public void setUp() {
-		endpoint = new GetRoomEndpoint(new HttpWrapper(new JWTAuthMethod("app-id", new byte[0])));
+		endpoint = new GetLogoUploadUrlsEndpoint(new HttpWrapper(new JWTAuthMethod("app-id", new byte[0])));
 	}
 	
 	@Test
 	public void testDefaultUri() throws Exception {
-		UUID roomId = UUID.randomUUID();
-		RequestBuilder builder = endpoint.makeRequest(roomId);
+		RequestBuilder builder = endpoint.makeRequest(null);
 		assertEquals("GET", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/beta/meetings/rooms/"+roomId;
+		String expectedUri = "https://api-eu.vonage.com/beta/meetings/themes/logos-upload-urls";
 		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, MeetingsClientTest.SAMPLE_ROOM_RESPONSE);
-		MeetingRoom parsedResponse = endpoint.parseResponse(mockResponse);
-		MeetingsClientTest.assertEqualsSampleRoom(parsedResponse);
 	}
 
 	@Test
 	public void testCustomUri() throws Exception {
-		UUID roomId = UUID.randomUUID();
-		String baseUri = "https://example.com";
+		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
-		endpoint = new GetRoomEndpoint(wrapper);
-		String expectedUri = baseUri + "/beta/meetings/rooms/"+roomId;
-		RequestBuilder builder = endpoint.makeRequest(roomId);
+		endpoint = new GetLogoUploadUrlsEndpoint(wrapper);
+		String expectedUri = baseUri + "/beta/meetings/themes/logos-upload-urls";
+		RequestBuilder builder = endpoint.makeRequest(null);
 		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("GET", builder.getMethod());
 	}
 
 	@Test(expected = HttpResponseException.class)
 	public void testUnsuccessfulResponse() throws Exception {
 		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, ""));
+	}
+
+	@Test
+	public void testEmptyEdgeCases() throws Exception {
+		String expectedResponse = "[{\"nonsense\":true}]";
+		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
+		List<LogoUploadsUrlResponse> parsed = endpoint.parseResponse(mockResponse);
+		assertNotNull(parsed);
+		assertEquals(1, parsed.size());
+		assertNotNull(parsed.get(0));
+
+		expectedResponse = "[]";
+		mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
+		parsed = endpoint.parseResponse(mockResponse);
+		assertNotNull(parsed);
+		assertEquals(0, parsed.size());
+
+		expectedResponse = "";
+		mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
+		parsed = endpoint.parseResponse(mockResponse);
+		assertNotNull(parsed);
+		assertEquals(0, parsed.size());
 	}
 }

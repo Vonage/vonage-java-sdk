@@ -31,7 +31,7 @@ class ListRecordingsResponse {
 	}
 
 	public List<Recording> getRecordings() {
-		return embedded.recordings;
+		return embedded != null ? embedded.recordings : null;
 	}
 
 	public static ListRecordingsResponse fromJson(String json) {
