@@ -16,12 +16,18 @@
 package com.vonage.client.meetings;
 
 import com.vonage.client.HttpWrapper;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import com.vonage.client.VonageBadRequestException;
+import com.vonage.client.VonageClientException;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.RequestBuilder;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.*;
 
 public class MeetingsClient {
+	final HttpClient httpClient;
 	final ListRoomsEndpoint listRooms;
 	final GetRoomEndpoint getRoom;
 	final CreateRoomEndpoint createRoom;
@@ -36,9 +42,9 @@ public class MeetingsClient {
 	final GetRecordingEndpoint getRecording;
 	final DeleteRecordingEndpoint deleteRecording;
 	final ListDialNumbersEndpoint listDialNumbers;
-	final GetLogoUploadUrlsEndpoint getLogoUploadUrls;
-	final FinalizeLogosEndpoint finalizeLogos;
 	final UpdateApplicationEndpoint updateApplication;
+	final FinalizeLogosEndpoint finalizeLogos;
+	final GetLogoUploadUrlsEndpoint getLogoUploadUrls;
 
 	/**
 	 * Constructor.
@@ -46,6 +52,7 @@ public class MeetingsClient {
 	 * @param httpWrapper (REQUIRED) shared HTTP wrapper object used for making REST calls.
 	 */
 	public MeetingsClient(HttpWrapper httpWrapper) {
+		httpClient = httpWrapper.getHttpClient();
 		listRooms = new ListRoomsEndpoint(httpWrapper);
 		getRoom = new GetRoomEndpoint(httpWrapper);
 		createRoom = new CreateRoomEndpoint(httpWrapper);
@@ -60,9 +67,9 @@ public class MeetingsClient {
 		getRecording = new GetRecordingEndpoint(httpWrapper);
 		deleteRecording = new DeleteRecordingEndpoint(httpWrapper);
 		listDialNumbers = new ListDialNumbersEndpoint(httpWrapper);
-		getLogoUploadUrls = new GetLogoUploadUrlsEndpoint(httpWrapper);
-		finalizeLogos = new FinalizeLogosEndpoint(httpWrapper);
 		updateApplication = new UpdateApplicationEndpoint(httpWrapper);
+		finalizeLogos = new FinalizeLogosEndpoint(httpWrapper);
+		getLogoUploadUrls = new GetLogoUploadUrlsEndpoint(httpWrapper);
 	}
 
 	static UUID validateThemeId(UUID themeId) {
@@ -269,12 +276,16 @@ public class MeetingsClient {
 	}
 
 	/**
-	 * Get URLs that can be used to upload logos for a theme via a POST.
+	 * Update an existing application.
 	 *
-	 * @return List of URLs and respective credentials / tokens needed for uploading logos to them.
+	 * @param updateRequest Properties of the application to update.
+	 *
+	 * @return The updated application details.
 	 */
-	public List<LogoUploadsUrlResponse> listLogoUploadUrls() {
-		return getLogoUploadUrls.execute(null);
+	public Application updateApplication(UpdateApplicationRequest updateRequest) {
+		return updateApplication.execute(Objects.requireNonNull(
+				updateRequest, "Application update properties are required.")
+		);
 	}
 
 	/**
@@ -291,15 +302,47 @@ public class MeetingsClient {
 	}
 
 	/**
-	 * Update an existing application.
+	 * Get URLs that can be used to upload logos for a theme via a POST.
 	 *
-	 * @param updateRequest Properties of the application to update.
-	 *
-	 * @return The updated application details.
+	 * @return List of URLs and respective credentials / tokens needed for uploading logos to them.
 	 */
-	public Application updateApplication(UpdateApplicationRequest updateRequest) {
-		return updateApplication.execute(Objects.requireNonNull(
-				updateRequest, "Application update properties are required.")
-		);
+	List<LogoUploadsUrlResponse> listLogoUploadUrls() {
+		return getLogoUploadUrls.execute(null);
+	}
+
+	/**
+	 * Uploads a logo to the cloud so that it can be used in themes.
+	 *
+	 * @param logoFile Absolute path to the image.
+	 * @param details Credentials, logo key and URL to facilitate the upload request.
+	 */
+	void uploadLogo(Path logoFile, LogoUploadsUrlResponse details) {
+		try {
+			LogoUploadsUrlResponse.Fields fields = details.getFields();
+			HttpResponse response = httpClient.execute(RequestBuilder.post(details.getUrl())
+					.setHeader("Content-Type", "application/json")
+					.addParameter("Content-Type", fields.getContentType().toString())
+					.addParameter("key", fields.getKey())
+					.addParameter("logoType", fields.getLogoType().toString())
+					.addParameter("bucket", fields.getBucket())
+					.addParameter("X-Amz-Algorithm", fields.getAmzAlgorithm())
+					.addParameter("X-Amz-Credential", fields.getAmzCredential())
+					.addParameter("X-Amz-Date", fields.getAmzDate())
+					.addParameter("X-Amz-Security-Token", fields.getAmzSecurityToken())
+					.addParameter("Policy", fields.getPolicy())
+					.addParameter("X-Amz-Signature", fields.getAmzSignature())
+					.addParameter("file", "@"+logoFile)
+					.build()
+			);
+			StatusLine status = response.getStatusLine();
+			if (status.getStatusCode() != 204) {
+				throw new VonageBadRequestException(
+						"Logo upload failed ("+status.getStatusCode()+"): "+status.getReasonPhrase()
+				);
+			}
+		}
+		catch (IOException ex) {
+			throw new VonageClientException(ex);
+		}
 	}
 }

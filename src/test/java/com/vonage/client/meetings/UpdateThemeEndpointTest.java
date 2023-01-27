@@ -54,8 +54,8 @@ public class UpdateThemeEndpointTest {
 		assertEquals(expectedUri, builder.build().getURI().toString());
 
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		String expectedRequest = "{\"theme_name\":\"Vonage theme\",\"main_color\":" +
-				"\"#8a1278\",\"short_company_url\":\"developer.vonage.com\",\"brand_text\":\"Vonage (purple)\"}";
+		String expectedRequest = "{\"update_details\":{\"theme_name\":\"Vonage theme\",\"main_color\":" +
+				"\"#8a1278\",\"short_company_url\":\"developer.vonage.com\",\"brand_text\":\"Vonage (purple)\"}}";
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
@@ -78,7 +78,7 @@ public class UpdateThemeEndpointTest {
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		assertEquals("{}", EntityUtils.toString(builder.getEntity()));
+		assertEquals("{\"update_details\":{}}", EntityUtils.toString(builder.getEntity()));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("PATCH", builder.getMethod());
 	}

@@ -495,6 +495,42 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 	}
 
 	@Test
+	public void testUpdateApplication() throws Exception {
+		UpdateApplicationRequest request = UpdateApplicationRequest.builder().defaultThemeId(RANDOM_ID).build();
+		String accId = "account-id_123";
+		UUID appId = UUID.randomUUID();
+		String responseJson = "{\n" +
+				"  \"application_id\": \""+appId+"\",\n" +
+				"  \"account_id\": \""+accId+"\",\n" +
+				"  \"default_theme_id\": \""+RANDOM_ID+"\"\n" +
+				"}";
+		Application parsed = stubResponseAndGet(200, responseJson, () -> client.updateApplication(request));
+		assertEquals(appId, parsed.getApplicationId());
+		assertEquals(accId, parsed.getAccountId());
+		assertEquals(RANDOM_ID, parsed.getDefaultThemeId());
+
+		stubResponseAndAssertThrows(200, responseJson,
+				() -> client.updateApplication(null), NullPointerException.class
+		);
+	}
+
+	@Test
+	public void testFinalizeLogos() throws Exception {
+		stubResponseAndRun(200,() -> client.finalizeLogos(RANDOM_ID, Arrays.asList("key1", "l-k-2", "k3")));
+		stubResponseAndRun(200, () -> client.finalizeLogos(RANDOM_ID, Collections.singletonList("a")));
+
+		stubResponseAndAssertThrows(200,
+			() -> client.finalizeLogos(null, Arrays.asList("logo_key0")), NullPointerException.class
+		);
+		stubResponseAndAssertThrows(200,
+			() -> client.finalizeLogos(RANDOM_ID, null), IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(200,
+			() -> client.finalizeLogos(RANDOM_ID, Collections.emptyList()), IllegalArgumentException.class
+		);
+	}
+
+	@Test
 	public void testListLogoUploadUrls() throws Exception {
 		String responseJson = "[\n" +
 				"{},   {\n" +
@@ -532,41 +568,5 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		assertEquals("stringT", fields.getAmzSecurityToken());
 		assertEquals("stringP", fields.getPolicy());
 		assertEquals("stringS", fields.getAmzSignature());
-	}
-
-	@Test
-	public void testFinalizeLogos() throws Exception {
-		stubResponseAndRun(200,() -> client.finalizeLogos(RANDOM_ID, Arrays.asList("key1", "l-k-2", "k3")));
-		stubResponseAndRun(200, () -> client.finalizeLogos(RANDOM_ID, Collections.singletonList("a")));
-
-		stubResponseAndAssertThrows(200,
-			() -> client.finalizeLogos(null, Arrays.asList("logo_key0")), NullPointerException.class
-		);
-		stubResponseAndAssertThrows(200,
-			() -> client.finalizeLogos(RANDOM_ID, null), IllegalArgumentException.class
-		);
-		stubResponseAndAssertThrows(200,
-			() -> client.finalizeLogos(RANDOM_ID, Collections.emptyList()), IllegalArgumentException.class
-		);
-	}
-
-	@Test
-	public void testUpdateApplication() throws Exception {
-		UpdateApplicationRequest request = UpdateApplicationRequest.builder().defaultThemeId(RANDOM_ID).build();
-		String accId = "account-id_123";
-		UUID appId = UUID.randomUUID();
-		String responseJson = "{\n" +
-				"  \"application_id\": \""+appId+"\",\n" +
-				"  \"account_id\": \""+accId+"\",\n" +
-				"  \"default_theme_id\": \""+RANDOM_ID+"\"\n" +
-				"}";
-		Application parsed = stubResponseAndGet(200, responseJson, () -> client.updateApplication(request));
-		assertEquals(appId, parsed.getApplicationId());
-		assertEquals(accId, parsed.getAccountId());
-		assertEquals(RANDOM_ID, parsed.getDefaultThemeId());
-
-		stubResponseAndAssertThrows(200, responseJson,
-			() -> client.updateApplication(null), NullPointerException.class
-		);
 	}
 }

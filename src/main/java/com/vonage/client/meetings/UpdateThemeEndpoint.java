@@ -41,10 +41,11 @@ class UpdateThemeEndpoint extends AbstractMethod<Theme, Theme> {
 	public RequestBuilder makeRequest(Theme request) {
 		String path = String.format(PATH, request.getThemeId());
 		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + path;
+		String json = "{\"update_details\":" + request.toJson() + "}";
 		return RequestBuilder.patch(uri)
 				.setHeader("Content-Type", "application/json")
 				.setHeader("Accept", "application/json")
-				.setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
+				.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
 	}
 
 	@Override
