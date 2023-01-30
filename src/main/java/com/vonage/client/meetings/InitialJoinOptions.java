@@ -35,7 +35,9 @@ public class InitialJoinOptions {
 	}
 
 	/**
-	 * Set the default microphone option for users in the pre-join screen of this room.
+	 * The default microphone option for users in the pre-join screen of this room.
+	 *
+	 * @return The microphone state, as an enum
 	 */
 	@JsonProperty("microphone_state")
 	public MicrophoneState getMicrophoneState() {

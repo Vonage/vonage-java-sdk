@@ -21,6 +21,7 @@ import org.junit.Test;
 import java.net.URI;
 import java.time.Instant;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 public class MeetingRoomTest {
@@ -149,12 +150,18 @@ public class MeetingRoomTest {
 
 	@Test
 	public void testExpiresAtAndRoomTypeValidation() {
-		MeetingRoom.Builder builder = MeetingRoom.builder("My Room");
 		Instant expire = Instant.now().plusSeconds(10_000);
-		assertNull(builder.expiresAt(expire).build().getType());
-		assertEquals(expire, builder.type(RoomType.LONG_TERM).build().getExpiresAt());
-		assertThrows(IllegalStateException.class, () -> builder.expiresAt(expire).type(RoomType.INSTANT).build());
-		assertThrows(IllegalStateException.class, () -> builder.expiresAt(null).type(RoomType.LONG_TERM).build());
+		assertNull(MeetingRoom.builder("My Room").expiresAt(expire).build().getType());
+		assertEquals(expire.truncatedTo(ChronoUnit.MILLIS),
+				MeetingRoom.builder("r").type(RoomType.LONG_TERM).expiresAt(expire).build()
+						.getExpiresAt()
+		);
+		assertThrows(IllegalStateException.class, () ->
+				MeetingRoom.builder("My Room").expiresAt(expire).type(RoomType.INSTANT).build()
+		);
+		assertThrows(IllegalStateException.class, () ->
+				MeetingRoom.builder("My Room").type(RoomType.LONG_TERM).build()
+		);
 	}
 
 	@Test

@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 # [7.2.0]
+- Added Meetings API implementation
 - Added inbound message webhook
 
 # [7.1.1] - 2022-11-16

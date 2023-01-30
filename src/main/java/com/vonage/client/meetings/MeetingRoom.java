@@ -474,7 +474,7 @@ public class MeetingRoom {
 		 * @return This builder.
 		 */
 		public Builder expiresAt(Instant expiresAt) {
-			this.expiresAt = expiresAt;
+			this.expiresAt = expiresAt.truncatedTo(ChronoUnit.MILLIS);
 			return this;
 		}
 

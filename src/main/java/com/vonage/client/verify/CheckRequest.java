@@ -30,7 +30,9 @@ public class CheckRequest {
 
     /**
      *
-     * @param ipAddress No longer used
+     * @param requestId The request ID.
+     * @param code The verification code.
+     * @param ipAddress No longer used.
      * @deprecated Please use {@link CheckRequest#CheckRequest(String, String)}.
      */
     @Deprecated
@@ -67,6 +69,7 @@ public class CheckRequest {
 
     /**
      * @deprecated This field is no longer used.
+     * @return The IP address, as a string.
      */
     @Deprecated
     public String getIpAddress() {
