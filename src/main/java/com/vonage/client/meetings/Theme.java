@@ -99,7 +99,7 @@ public class Theme {
 	}
 
 	/**
-	 * @return The account ID.
+	 * @return The account ID (API key).
 	 */
 	@JsonProperty("account_id")
 	public String getAccountId() {

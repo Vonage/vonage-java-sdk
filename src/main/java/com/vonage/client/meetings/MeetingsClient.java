@@ -17,17 +17,22 @@ package com.vonage.client.meetings;
 
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.VonageBadRequestException;
-import com.vonage.client.VonageClientException;
+import com.vonage.client.VonageUnexpectedException;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 public class MeetingsClient {
-	final HttpClient httpClient;
+	HttpClient httpClient;
 	final ListRoomsEndpoint listRooms;
 	final GetRoomEndpoint getRoom;
 	final CreateRoomEndpoint createRoom;
@@ -294,7 +299,7 @@ public class MeetingsClient {
 	 * @param themeId The theme ID containing the logos.
 	 * @param keys List of temporary theme's logo keys to make permanent
 	 */
-	public void finalizeLogos(UUID themeId, List<String> keys) {
+	void finalizeLogos(UUID themeId, List<String> keys) {
 		if (keys == null || keys.isEmpty()) {
 			throw new IllegalArgumentException("Logo keys are required.");
 		}
@@ -311,6 +316,19 @@ public class MeetingsClient {
 	}
 
 	/**
+	 * Finds the appropriate response object from {@linkplain #listLogoUploadUrls()} for the given logo type.
+	 *
+	 * @param logoType The logo type to get details for.
+	 * @return The URL and credential fields for uploading the logo.
+	 */
+	LogoUploadsUrlResponse getUploadDetailsForLogoType(LogoType logoType) {
+		return listLogoUploadUrls().stream()
+				.filter(r -> logoType.equals(r.getFields().getLogoType()))
+				.findFirst()
+				.orElseThrow(() -> new IllegalArgumentException("Logo type "+logoType+" is unavailable."));
+	}
+
+	/**
 	 * Uploads a logo to the cloud so that it can be used in themes.
 	 *
 	 * @param logoFile Absolute path to the image.
@@ -319,20 +337,21 @@ public class MeetingsClient {
 	void uploadLogo(Path logoFile, LogoUploadsUrlResponse details) {
 		try {
 			LogoUploadsUrlResponse.Fields fields = details.getFields();
-			HttpResponse response = httpClient.execute(RequestBuilder.post(details.getUrl())
-					.setHeader("Content-Type", "application/json")
-					.addParameter("Content-Type", fields.getContentType().toString())
-					.addParameter("key", fields.getKey())
-					.addParameter("logoType", fields.getLogoType().toString())
-					.addParameter("bucket", fields.getBucket())
-					.addParameter("X-Amz-Algorithm", fields.getAmzAlgorithm())
-					.addParameter("X-Amz-Credential", fields.getAmzCredential())
-					.addParameter("X-Amz-Date", fields.getAmzDate())
-					.addParameter("X-Amz-Security-Token", fields.getAmzSecurityToken())
-					.addParameter("Policy", fields.getPolicy())
-					.addParameter("X-Amz-Signature", fields.getAmzSignature())
-					.addParameter("file", "@"+logoFile)
-					.build()
+			HttpEntity entity = MultipartEntityBuilder.create()
+					.addTextBody("Content-Type", fields.getContentType().toString())
+					.addTextBody("key", fields.getKey())
+					.addTextBody("logoType", fields.getLogoType().toString())
+					.addTextBody("bucket", fields.getBucket())
+					.addTextBody("X-Amz-Algorithm", fields.getAmzAlgorithm())
+					.addTextBody("X-Amz-Credential", fields.getAmzCredential())
+					.addTextBody("X-Amz-Date", fields.getAmzDate())
+					.addTextBody("X-Amz-Security-Token", fields.getAmzSecurityToken())
+					.addTextBody("Policy", fields.getPolicy())
+					.addTextBody("X-Amz-Signature", fields.getAmzSignature())
+					.addBinaryBody("file", logoFile.toFile())
+					.build();
+			HttpResponse response = httpClient.execute(
+					RequestBuilder.post(details.getUrl()).setEntity(entity).build()
 			);
 			StatusLine status = response.getStatusLine();
 			if (status.getStatusCode() != 204) {
@@ -342,7 +361,25 @@ public class MeetingsClient {
 			}
 		}
 		catch (IOException ex) {
-			throw new VonageClientException(ex);
+			throw new VonageUnexpectedException(ex);
 		}
+	}
+
+	/**
+	 * Upload a logo image and associates it with a theme.
+	 *
+	 * @param themeId ID of the theme which the logo will be associated with.
+	 * @param logoType The logo type to upload.
+	 * @param pngFile Absolute path to the logo image. For restrictions, refer to
+	 * <a href=https://developer.vonage.com/en/meetings/code-snippets/theme-management#uploading-icons-and-logos>
+	 * the documentation</a>. Generally, the image must be a PNG under 1MB, square, under 300x300 pixels and
+	 * have a transparent background.
+	 */
+	public void setThemeLogo(UUID themeId, LogoType logoType, Path pngFile) {
+		LogoUploadsUrlResponse target = getUploadDetailsForLogoType(
+				Objects.requireNonNull(logoType, "Logo type cannot be null.")
+		);
+		uploadLogo(Objects.requireNonNull(pngFile, "Image file cannot be null."), target);
+		finalizeLogos(themeId, Collections.singletonList(target.getFields().getKey()));
 	}
 }

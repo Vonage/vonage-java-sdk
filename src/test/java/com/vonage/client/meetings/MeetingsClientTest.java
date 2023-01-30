@@ -16,8 +16,11 @@
 package com.vonage.client.meetings;
 
 import com.vonage.client.ClientTest;
+import com.vonage.client.VonageBadRequestException;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -568,5 +571,64 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		assertEquals("stringT", fields.getAmzSecurityToken());
 		assertEquals("stringP", fields.getPolicy());
 		assertEquals("stringS", fields.getAmzSignature());
+	}
+
+	@Test
+	public void testGetUploadDetailsForLogoType() throws Exception {
+		String whiteKey = "blanc", colourKey = "colour", faviconKey = "favourite";
+		String responseJson = "[\n" +
+				"{\"fields\":{\"key\": \""+whiteKey+"\",\"logoType\": \"white\"}},\n" +
+				"{\"fields\":{\"key\": \""+colourKey+"\",\"logoType\": \"colored\"}},\n" +
+				"{\"fields\":{\"key\": \""+faviconKey+"\",\"logoType\": \"favicon\"}}]";
+
+		stubResponse(200, responseJson);
+		LogoUploadsUrlResponse colour = client.getUploadDetailsForLogoType(LogoType.COLORED);
+		assertEquals(LogoType.COLORED, colour.getFields().getLogoType());
+		assertEquals(colourKey, colour.getFields().getKey());
+
+		stubResponse(200, responseJson);
+		LogoUploadsUrlResponse favicon = client.getUploadDetailsForLogoType(LogoType.FAVICON);
+		assertEquals(LogoType.FAVICON, favicon.getFields().getLogoType());
+		assertEquals(faviconKey, favicon.getFields().getKey());
+
+		stubResponse(200, responseJson);
+		LogoUploadsUrlResponse white = client.getUploadDetailsForLogoType(LogoType.WHITE);
+		assertEquals(LogoType.WHITE, white.getFields().getLogoType());
+		assertEquals(whiteKey, white.getFields().getKey());
+	}
+
+	@Test
+	public void testUploadLogo() throws Exception {
+		LogoUploadsUrlResponse details = LogoUploadsUrlResponse.fromJson("{\"url\":\"" +
+				"https://s3.amazonaws.com/roomservice-whitelabel-logos-prod\",\"fields\":{" +
+				"\"Content-Type\":\"image/png\",\"key\":\"auto-expiring-temp/logos/colored/REDACTED\"," +
+				"\"logoType\":\"colored\",\"bucket\":\"roomservice-whitelabel-logos-prod\"," +
+				"\"X-Amz-Algorithm\":\"AWS4-HMAC-SHA256\",\"X-Amz-Credential\":" +
+				"\"REDACTED/20230130/us-east-1/s3/aws4_request\",\"X-Amz-Date\":\"20230130T113037Z\"," +
+				"\"X-Amz-Security-Token\":\"REDACTED\",\"Policy\":\"REDACTED\",\"X-Amz-Signature\":\"REDACTED\"}}"
+		);
+		Path image = Paths.get("/path/to/logo.png");
+
+		client.httpClient = stubHttpClient(204);
+		client.uploadLogo(image, details);
+
+		client.httpClient = stubHttpClient(400);
+		assertThrows(VonageBadRequestException.class, () -> client.uploadLogo(image, details));
+	}
+
+	@Test
+	public void testSetThemeLogo() throws Exception {
+		String responseJson = "[{\"url\":\"" +
+				"https://s3.amazonaws.com/roomservice-whitelabel-logos-prod\",\"fields\":{" +
+				"\"Content-Type\":\"image/png\",\"key\":\"auto-expiring-temp/logos/favicon/REDACTED\"," +
+				"\"logoType\":\"favicon\",\"bucket\":\"roomservice-whitelabel-logos-prod\"," +
+				"\"X-Amz-Algorithm\":\"AWS4-HMAC-SHA256\",\"X-Amz-Credential\":" +
+				"\"REDACTED/20230130/us-east-1/s3/aws4_request\",\"X-Amz-Date\":\"20230130T113037Z\"," +
+				"\"X-Amz-Security-Token\":\"REDACTED\",\"Policy\":\"REDACTED\",\"X-Amz-Signature\":\"REDACTED\"}}]";
+
+		Path image = Paths.get("/path/to/logo.png");
+		stubResponse(200, responseJson);
+		client.httpClient = stubHttpClient(204);
+		client.setThemeLogo(RANDOM_ID, LogoType.FAVICON, image);
 	}
 }

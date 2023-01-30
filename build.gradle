@@ -27,7 +27,8 @@ dependencies {
     compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
 
     implementation 'commons-codec:commons-codec:1.15'
-    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.14'
+    implementation 'org.apache.httpcomponents:httpmime:4.5.14'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.1'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.1'
     implementation 'io.openapitools.jackson.dataformat:jackson-dataformat-hal:1.0.9'

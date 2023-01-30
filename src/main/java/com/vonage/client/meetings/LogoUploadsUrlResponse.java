@@ -74,7 +74,7 @@ public class LogoUploadsUrlResponse {
 	public static class Fields {
 		private LogoType logoType;
 		private MimeType contentType;
-		private String key, bucket, policy, amzAlgorithm, amzCredential, amzDate, amzSecurityToken, amzSignature;
+		private String key, bucket, policy, amzDate, amzAlgorithm, amzCredential, amzSecurityToken, amzSignature;
 
 		protected Fields() {
 		}
