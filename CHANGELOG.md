@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [8.0.0-beta4]
+- Removed Payments over the Phone NCCO
+
 ## [8.0.0-beta3] - 2023-01-11
 - Removed `WAPPush` SMS message type
 - Fixed token generation (added missing claim & role as string)
