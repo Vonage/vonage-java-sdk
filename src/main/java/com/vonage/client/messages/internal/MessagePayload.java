@@ -51,8 +51,7 @@ public class MessagePayload {
 		return caption;
 	}
 
-	public void validateUrlExtension(String... allowed) {
-		String path = url.getPath();
+	protected static void validateExtension(String path, String...allowed) {
 		int lastDot = path.lastIndexOf('.');
 		if (lastDot < 1) return;
 		String ext = path.substring(lastDot+1);
@@ -60,6 +59,10 @@ public class MessagePayload {
 		if (!extensions.contains(ext)) {
 			throw new IllegalArgumentException("Invalid extension: '"+ext+"'. Should be one of "+extensions);
 		}
+	}
+
+	public void validateUrlExtension(String... allowed) {
+		validateExtension(url.getPath(), allowed);
 	}
 
 	public void validateCaptionLength(int max) {

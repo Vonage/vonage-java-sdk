@@ -21,8 +21,10 @@ import com.vonage.client.messages.mms.MmsAudioRequest;
 import com.vonage.client.messages.mms.MmsImageRequest;
 import com.vonage.client.messages.mms.MmsVcardRequest;
 import com.vonage.client.messages.sms.SmsTextRequest;
+import com.vonage.client.messages.viber.ViberFileRequest;
 import com.vonage.client.messages.viber.ViberImageRequest;
 import com.vonage.client.messages.viber.ViberTextRequest;
+import com.vonage.client.messages.viber.ViberVideoRequest;
 import com.vonage.client.messages.whatsapp.*;
 import org.apache.http.client.methods.RequestBuilder;
 import static org.junit.Assert.assertEquals;
@@ -111,6 +113,8 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 	public void testSendViberSuccess() throws Exception {
 		assertResponse(ViberTextRequest.builder().text(TEXT));
 		assertResponse(ViberImageRequest.builder().url(IMAGE));
+		assertResponse(ViberVideoRequest.builder().url(VIDEO));
+		assertResponse(ViberFileRequest.builder().url(FILE));
 	}
 
 	@Test
@@ -134,7 +138,7 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 	}
 
 	@Test
-	public void testSandboxUriToggle() throws Exception {
+	public void testSandboxUriToggle() {
 		final String defaultUri = "https://api.nexmo.com/v1/messages";
 		final String sandboxUri = "https://messages-sandbox.nexmo.com/v1/messages";
 		SendMessageEndpoint endpoint = client.sendMessage;

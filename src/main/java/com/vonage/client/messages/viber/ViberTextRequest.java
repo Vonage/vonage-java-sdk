@@ -55,6 +55,7 @@ public final class ViberTextRequest extends ViberRequest {
 			return this;
 		}
 
+		@Override
 		public ViberTextRequest build() {
 			return new ViberTextRequest(this);
 		}

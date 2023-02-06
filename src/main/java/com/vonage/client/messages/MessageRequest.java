@@ -69,8 +69,9 @@ public abstract class MessageRequest {
 	 * @return The clientRef to use; usually the same as the argument.
 	 */
 	protected String validateClientReference(String clientRef) {
-		if (clientRef != null && clientRef.length() > 40) {
-			throw new IllegalArgumentException("Client reference cannot be longer than 40 characters");
+		int limit = 100;
+		if (clientRef != null && clientRef.length() > limit) {
+			throw new IllegalArgumentException("Client reference cannot be longer than "+limit+" characters");
 		}
 		return clientRef;
 	}

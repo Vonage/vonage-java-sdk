@@ -17,38 +17,37 @@ package com.vonage.client.messages.viber;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.messages.internal.MessagePayload;
 import com.vonage.client.messages.MessageType;
+import com.vonage.client.messages.internal.MessagePayload;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class ViberImageRequest extends ViberRequest {
-	final MessagePayload image;
+public final class ViberVideoRequest extends ViberRequest {
+	final MessagePayload video;
 
-	ViberImageRequest(Builder builder) {
-		super(builder, MessageType.IMAGE);
-		image = new MessagePayload(builder.url);
-		image.validateUrlExtension("jpg", "jpeg", "png");
+	ViberVideoRequest(Builder builder) {
+		super(builder, MessageType.VIDEO);
+		video = new MessagePayload(builder.url);
+		video.validateUrlExtension("mp4", "3gpp");
 	}
 
-	@JsonProperty("image")
-	public MessagePayload getImage() {
-		return image;
+	@JsonProperty("video")
+	public MessagePayload getVideo() {
+		return video;
 	}
 
 	public static Builder builder() {
 		return new Builder();
 	}
 
-	public static final class Builder extends ViberRequest.Builder<ViberImageRequest, Builder> {
+	public static final class Builder extends ViberRequest.Builder<ViberVideoRequest, Builder> {
 		String url;
 
 		Builder() {}
 
 		/**
 		 * (REQUIRED)
-		 * Sets the URL of the image attachment. Supports only
-		 * <code>.jpg</code>, <code>.jpeg</code> and <code>.png</code>
-		 * file extensions.
+		 * Sets the URL of the video attachment. Supports only {@code .mp4} and {@code .3gpp} file extensions.
+		 * Note: Video codec must be H.264 and audio codec AAC.
 		 *
 		 * @param url The URL as a string.
 		 * @return This builder.
@@ -59,8 +58,8 @@ public final class ViberImageRequest extends ViberRequest {
 		}
 
 		@Override
-		public ViberImageRequest build() {
-			return new ViberImageRequest(this);
+		public ViberVideoRequest build() {
+			return new ViberVideoRequest(this);
 		}
 	}
 }
