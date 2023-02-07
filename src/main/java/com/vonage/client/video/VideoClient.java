@@ -48,6 +48,7 @@ public class VideoClient {
 	final GetArchiveEndpoint getArchive;
 	final ListArchivesEndpoint listArchives;
 	final CreateArchiveEndpoint createArchive;
+	final SipDialEndpoint sipDial;
 	final Supplier<? extends Jwt.Builder> newJwtSupplier;
 
 	/**
@@ -73,6 +74,7 @@ public class VideoClient {
 		getArchive = new GetArchiveEndpoint(httpWrapper);
 		listArchives = new ListArchivesEndpoint(httpWrapper);
 		createArchive = new CreateArchiveEndpoint(httpWrapper);
+		sipDial = new SipDialEndpoint(httpWrapper);
 	}
 
 	private String validateId(String param, String name) {
@@ -400,6 +402,33 @@ public class VideoClient {
 	 */
 	public Archive createArchive(CreateArchiveRequest request) {
 		return createArchive.execute(validateRequest(request));
+	}
+
+	/**
+	 * To connect your SIP platform to an OpenTok session, submit an HTTP POST request to the dial method. The audio
+	 * from your end of the SIP call is added to the video session as an audio-only stream. The Vonage Media Router
+	 * mixes audio from other streams in the session and sends the mixed audio to your SIP endpoint.
+	 *
+	 * <p>
+	 * The call ends when your SIP server sends a BYE message (to terminate the call). You can also end a call
+	 * using {@link #forceDisconnect(String, String)}. The Vonage Video SIP gateway automatically ends a call after
+	 * 5 minutes of inactivity (5 minutes without media received). Also, as a security measure, the Vonage Video SIP
+	 * gateway closes any SIP call that lasts longer than 6 hours.
+	 *
+	 * <p>
+	 * The SIP interconnect feature requires that you use video session that uses the Vonage Media Router
+	 * (a session with the media mode set to {@link MediaMode#ROUTED}).
+	 *
+	 * <p>
+	 * For more information, including technical details and security considerations, see the
+	 * Vonage SIP interconnect developer guide.
+	 *
+	 * @param request The outbound SIP call's properties.
+	 *
+	 * @return Details of the SIP connection.
+	 */
+	public OutboundSipResponse sipDial(OutboundSipRequest request) {
+		return sipDial.execute(request);
 	}
 
 	/**

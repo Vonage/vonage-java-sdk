@@ -16,7 +16,9 @@
 package com.vonage.client.video;
 
 import com.vonage.client.HttpWrapper;
+import com.vonage.client.TestUtils;
 import com.vonage.client.auth.JWTAuthMethod;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import static org.junit.Assert.assertEquals;
@@ -43,5 +45,10 @@ public class GetArchiveEndpointTest {
 		String expectedUri = "https://video.api.vonage.com/v2/project/"+applicationId+"/archive/"+archiveId;
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+	}
+
+	@Test(expected = HttpResponseException.class)
+	public void testUnsuccessfulResponse() throws Exception {
+		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
 	}
 }

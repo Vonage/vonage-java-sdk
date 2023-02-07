@@ -143,7 +143,7 @@ public class CreateArchiveRequest {
     }
 
     /**
-     * Used to create an ArchiveProperties object.
+     * Used to construct a CreateArchiveRequest object.
      *
      * @see CreateArchiveRequest
      */

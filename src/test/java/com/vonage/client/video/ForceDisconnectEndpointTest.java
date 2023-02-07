@@ -16,7 +16,9 @@
 package com.vonage.client.video;
 
 import com.vonage.client.HttpWrapper;
+import com.vonage.client.TestUtils;
 import com.vonage.client.auth.JWTAuthMethod;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
@@ -44,5 +46,10 @@ public class ForceDisconnectEndpointTest {
 		RequestBuilder builder = endpoint.makeRequest(new ForceDisconnectRequestWrapper(sessionId, connectionId));
 		assertEquals("DELETE", builder.getMethod());
 		assertEquals(expectedUri, builder.build().getURI().toString());
+	}
+
+	@Test(expected = HttpResponseException.class)
+	public void testUnsuccessfulResponse() throws Exception {
+		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
 	}
 }
