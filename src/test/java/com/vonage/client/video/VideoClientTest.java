@@ -419,7 +419,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 	@Test
 	public void testSipDial() throws Exception {
-		OutboundSipRequest request = OutboundSipRequest.builder()
+		SipDialRequest request = SipDialRequest.builder()
 				.uri(URI.create("sip:user@sip.partner.com"), false)
 				.sessionId(sessionId).token(token).build();
 
@@ -430,7 +430,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 				"}"
 		);
 
-		OutboundSipResponse parsed = client.sipDial(request);
+		SipDialResponse parsed = client.sipDial(request);
 		assertEquals(id, parsed.getId());
 		assertEquals(connectionId, parsed.getConnectionId());
 		assertEquals(streamId, parsed.getStreamId());

@@ -30,7 +30,7 @@ import java.util.Objects;
  * Represents an outbound SIP dial request's properties.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class OutboundSipRequest {
+public class SipDialRequest {
 	private final String sessionId, token;
 	@JsonProperty("sip") private final Sip sip = new Sip();
 
@@ -51,7 +51,7 @@ public class OutboundSipRequest {
 		}
 	}
 
-	private OutboundSipRequest(Builder builder) {
+	private SipDialRequest(Builder builder) {
 		sessionId = Objects.requireNonNull(builder.sessionId, "Session ID is required.");
 		token = Objects.requireNonNull(builder.token, "Token is required.");
 		sip.uri = Objects.requireNonNull(builder.uri, "SIP URI is required.");
@@ -127,7 +127,7 @@ public class OutboundSipRequest {
 	/**
 	 * Generates a JSON payload from this request.
 	 *
-	 * @return JSON representation of this OutboundSipRequest object.
+	 * @return JSON representation of this SipDialRequest object.
 	 */
 	public String toJson() {
 		try {
@@ -142,16 +142,16 @@ public class OutboundSipRequest {
 	/**
 	 * Instantiates a Builder, used to construct this object.
 	 *
-	 * @return A new {@linkplain OutboundSipRequest.Builder}.
+	 * @return A new {@linkplain SipDialRequest.Builder}.
 	 */
-	public static OutboundSipRequest.Builder builder() {
-		return new OutboundSipRequest.Builder();
+	public static SipDialRequest.Builder builder() {
+		return new SipDialRequest.Builder();
 	}
 
 	/**
-	 * Used to create an OutboundSipRequest object.
+	 * Used to create an SipDialRequest object.
 	 *
-	 * @see OutboundSipRequest
+	 * @see SipDialRequest
 	 */
 	public static class Builder {
 		private final Map<String, String> headers = new HashMap<>();
@@ -329,12 +329,12 @@ public class OutboundSipRequest {
 		}
 
 		/**
-		 * Builds the {@linkplain OutboundSipRequest} object with this builder's settings.
+		 * Builds the {@linkplain SipDialRequest} object with this builder's settings.
 		 *
-		 * @return A new {@link OutboundSipRequest} instance.
+		 * @return A new {@link SipDialRequest} instance.
 		 */
-		public OutboundSipRequest build() {
-			return new OutboundSipRequest(this);
+		public SipDialRequest build() {
+			return new SipDialRequest(this);
 		}
 	}
 }

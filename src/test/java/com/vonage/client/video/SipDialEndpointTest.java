@@ -42,7 +42,7 @@ public class SipDialEndpointTest {
 	
 	@Test
 	public void testMakeRequest() throws Exception {
-		OutboundSipRequest request = OutboundSipRequest.builder()
+		SipDialRequest request = SipDialRequest.builder()
 				.token("eYjwToken").sessionId("=2SessiondID")
 				.uri(URI.create("sip.example.com"), true).build();
 
@@ -56,7 +56,7 @@ public class SipDialEndpointTest {
 				"\"sip\":{\"uri\":\"sip.example.com;transport=tls\"}}";
 		assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
 
-		OutboundSipResponse parsed = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, "{}"));
+		SipDialResponse parsed = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, "{}"));
 		assertNotNull(parsed);
 		assertNull(parsed.getConnectionId());
 		assertNull(parsed.getId());
@@ -72,7 +72,7 @@ public class SipDialEndpointTest {
 		);
 		endpoint = new SipDialEndpoint(wrapper);
 		String expectedUri = baseUri + "/v2/project/"+applicationId+"/dial";
-		OutboundSipRequest request = OutboundSipRequest.builder()
+		SipDialRequest request = SipDialRequest.builder()
 				.token("t").sessionId("s")
 				.uri(URI.create("sip:u@example.com"), false).build();
 

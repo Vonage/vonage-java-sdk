@@ -24,7 +24,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import java.io.IOException;
 
-class SipDialEndpoint extends AbstractMethod<OutboundSipRequest, OutboundSipResponse> {
+class SipDialEndpoint extends AbstractMethod<SipDialRequest, SipDialResponse> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/v2/project/%s/dial";
 
@@ -38,7 +38,7 @@ class SipDialEndpoint extends AbstractMethod<OutboundSipRequest, OutboundSipResp
 	}
 
 	@Override
-	public RequestBuilder makeRequest(OutboundSipRequest request) {
+	public RequestBuilder makeRequest(SipDialRequest request) {
 		String path = String.format(PATH, getApplicationIdOrApiKey());
 		String uri = httpWrapper.getHttpConfig().getVideoBaseUri() + path;
 		return RequestBuilder.post(uri)
@@ -48,7 +48,7 @@ class SipDialEndpoint extends AbstractMethod<OutboundSipRequest, OutboundSipResp
 	}
 
 	@Override
-	public OutboundSipResponse parseResponse(HttpResponse response) throws IOException {
-		return OutboundSipResponse.fromJson(basicResponseHandler.handleResponse(response));
+	public SipDialResponse parseResponse(HttpResponse response) throws IOException {
+		return SipDialResponse.fromJson(basicResponseHandler.handleResponse(response));
 	}
 }

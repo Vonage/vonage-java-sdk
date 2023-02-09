@@ -409,9 +409,9 @@ public class VideoClient {
 	}
 
 	/**
-	 * To connect your SIP platform to an OpenTok session, submit an HTTP POST request to the dial method. The audio
-	 * from your end of the SIP call is added to the video session as an audio-only stream. The Vonage Media Router
-	 * mixes audio from other streams in the session and sends the mixed audio to your SIP endpoint.
+	 * Use this method to connect your SIP platform to a Vonage video session.
+	 * The audio from your end of the SIP call is added to the video session as an audio-only stream. The Vonage
+	 * Media Router mixes audio from other streams in the session and sends the mixed audio to your SIP endpoint.
 	 *
 	 * <p>
 	 * The call ends when your SIP server sends a BYE message (to terminate the call). You can also end a call
@@ -431,7 +431,7 @@ public class VideoClient {
 	 *
 	 * @return Details of the SIP connection.
 	 */
-	public OutboundSipResponse sipDial(OutboundSipRequest request) {
+	public SipDialResponse sipDial(SipDialRequest request) {
 		return sipDial.execute(request);
 	}
 

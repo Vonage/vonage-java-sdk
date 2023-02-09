@@ -20,7 +20,7 @@ import org.junit.Test;
 import java.net.URI;
 import java.util.Collections;
 
-public class OutboundSipRequestTest {
+public class SipDialRequestTest {
 
 	@Test
 	public void testSerializeAllParams() {
@@ -32,7 +32,7 @@ public class OutboundSipRequestTest {
 				from = "sender@example.com",
 				h1k = "X-foo", h1v = "bar";
 
-		OutboundSipRequest request = OutboundSipRequest.builder()
+		SipDialRequest request = SipDialRequest.builder()
 				.secure(true).observeForceMute(false).video(true)
 				.addHeader(h1k, h1v)
 				.uri(URI.create(uri), true)
@@ -62,7 +62,7 @@ public class OutboundSipRequestTest {
 	@Test
 	public void testSerializeRequiredParams() {
 		String uri = "sip:name@sip.example.org", sessiondId = "SESSION", token = "TOKEN";
-		OutboundSipRequest request = OutboundSipRequest.builder().uri(URI.create(uri), false)
+		SipDialRequest request = SipDialRequest.builder().uri(URI.create(uri), false)
 				.sessionId(sessiondId).token(token).build();
 
 		String expectedJson = "{\"sessionId\":\""+sessiondId+"\",\"token\":\""+token+"\"," +
@@ -80,31 +80,31 @@ public class OutboundSipRequestTest {
 
 	@Test(expected = NullPointerException.class)
 	public void testConstructMissingUrl() {
-		OutboundSipRequest.builder().token("TOKEN").sessionId("SESSION_ID").build();
+		SipDialRequest.builder().token("TOKEN").sessionId("SESSION_ID").build();
 	}
 
 	@Test(expected = NullPointerException.class)
 	public void testConstructMissingSessionId() {
-		OutboundSipRequest.builder().token("TOKEN")
+		SipDialRequest.builder().token("TOKEN")
 				.uri(URI.create("sip://user@example.com"), false).build();
 	}
 
 	@Test(expected = NullPointerException.class)
 	public void testConstructMissingToken() {
-		OutboundSipRequest.builder().sessionId("SESSION_ID")
+		SipDialRequest.builder().sessionId("SESSION_ID")
 				.uri(URI.create("sip://user@example.com"), false).build();
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void testConstructMissingUsernameWhenPasswordProvided() {
-		OutboundSipRequest.builder().token("TOKEN").sessionId("SESSION_ID")
+		SipDialRequest.builder().token("TOKEN").sessionId("SESSION_ID")
 				.uri(URI.create("sip://user@example.com"), false)
 				.password("pa55WD").build();
 	}
 
 	@Test
 	public void testSerializeEmptyHeaders() {
-		OutboundSipRequest request = OutboundSipRequest.builder().token("TOKEN").sessionId("SESSION_ID")
+		SipDialRequest request = SipDialRequest.builder().token("TOKEN").sessionId("SESSION_ID")
 				.uri(URI.create("sip://user@example.com"), false)
 				.addHeaders(Collections.emptyMap()).build();
 
