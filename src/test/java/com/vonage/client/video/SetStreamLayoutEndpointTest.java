@@ -17,9 +17,9 @@ package com.vonage.client.video;
 
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
+import com.vonage.client.VonageBadRequestException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
@@ -82,8 +82,8 @@ public class SetStreamLayoutEndpointTest {
 		assertNull(endpoint.parseResponse(mockHttpResponse));
 	}
 
-	@Test(expected = HttpResponseException.class)
-	public void testUnsuccessfulResponse() throws Exception {
+	@Test(expected = VonageBadRequestException.class)
+	public void test500Response() throws Exception {
 		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
 	}
 }

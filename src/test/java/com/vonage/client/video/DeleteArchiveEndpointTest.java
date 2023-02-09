@@ -17,8 +17,8 @@ package com.vonage.client.video;
 
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
+import com.vonage.client.VonageBadRequestException;
 import com.vonage.client.auth.JWTAuthMethod;
-import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
@@ -46,8 +46,8 @@ public class DeleteArchiveEndpointTest {
 		assertEquals(expectedUri, builder.build().getURI().toString());
 	}
 
-	@Test(expected = HttpResponseException.class)
-	public void testUnsuccessfulResponse() throws Exception {
+	@Test(expected = VonageBadRequestException.class)
+	public void test500Response() throws Exception {
 		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
 	}
 }

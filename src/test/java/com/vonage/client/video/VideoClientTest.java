@@ -439,6 +439,22 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 	}
 
 	@Test
+	public void testSendDtmf() throws Exception {
+		String digits = "*012p9#3p45*86p7#123";
+		stubResponseAndRun(200, () -> client.sendDtmf(sessionId, connectionId, digits));
+		stubResponseAndRun(200, () -> client.sendDtmf(sessionId, digits));
+		stubResponseAndRun(200, () -> client.sendDtmf(sessionId, "0"));
+
+		stubResponseAndAssertThrowsIAX(() -> client.sendDtmf(null, connectionId, digits));
+		stubResponseAndAssertThrowsIAX(() -> client.sendDtmf(sessionId, null, digits));
+		stubResponseAndAssertThrowsIAX(() -> client.sendDtmf(sessionId, connectionId, null));
+		stubResponseAndAssertThrowsIAX(() -> client.sendDtmf(sessionId, connectionId, ""));
+		stubResponseAndAssertThrowsIAX(() -> client.sendDtmf(sessionId, connectionId, "1abc#"));
+		stubResponseAndAssertThrowsIAX(() -> client.sendDtmf(sessionId, connectionId, null));
+		stubResponseAndAssertThrowsIAX(() -> client.sendDtmf(null, digits));
+	}
+
+	@Test
 	public void testGenerateToken() {
 		String token = client.generateToken(sessionId);
 		Map<String, String> claims = TestUtils.decodeTokenBody(token);

@@ -49,6 +49,8 @@ public class VideoClient {
 	final ListArchivesEndpoint listArchives;
 	final CreateArchiveEndpoint createArchive;
 	final SipDialEndpoint sipDial;
+	final SendDtmfToSessionEndpoint sendDtmfToSession;
+	final SendDtmfToConnectionEndpoint sendDtmfToConnection;
 	final Supplier<? extends Jwt.Builder> newJwtSupplier;
 
 	/**
@@ -75,6 +77,8 @@ public class VideoClient {
 		listArchives = new ListArchivesEndpoint(httpWrapper);
 		createArchive = new CreateArchiveEndpoint(httpWrapper);
 		sipDial = new SipDialEndpoint(httpWrapper);
+		sendDtmfToSession = new SendDtmfToSessionEndpoint(httpWrapper);
+		sendDtmfToConnection = new SendDtmfToConnectionEndpoint(httpWrapper);
 	}
 
 	private String validateId(String param, String name) {
@@ -429,6 +433,38 @@ public class VideoClient {
 	 */
 	public OutboundSipResponse sipDial(OutboundSipRequest request) {
 		return sipDial.execute(request);
+	}
+
+	/**
+	 * Play DMTF tones into a specific connection.
+	 * Telephony events are negotiated over SDP and transmitted as RFC4733/RFC2833 digits to the remote endpoint.
+	 *
+	 * @param sessionId The session ID.
+	 * @param connectionId Specific publisher connection ID.
+	 * @param digits The string of DTMF digits to send. This can include 0-9, '*', '#', and 'p'.
+	 * A 'p' indicates a pause of 500ms (if you need to add a delay in sending the digits).
+	 */
+	public void sendDtmf(String sessionId, String connectionId, String digits) {
+		sendDtmfToConnection.execute(new SendDtmfRequest(
+				validateSessionId(sessionId),
+				validateConnectionId(connectionId),
+				String.valueOf(digits)
+		));
+	}
+
+	/**
+	 * Play DTMF tones into a SIP call.
+	 * Telephony events are negotiated over SDP and transmitted as RFC4733/RFC2833 digits to the remote endpoint.
+	 *
+	 * @param sessionId The session ID.
+	 * @param digits The string of DTMF digits to send. This can include 0-9, '*', '#', and 'p'.
+	 * A 'p' indicates a pause of 500ms (if you need to add a delay in sending the digits).
+	 */
+	public void sendDtmf(String sessionId, String digits) {
+		sendDtmfToSession.execute(new SendDtmfRequest(
+				validateSessionId(sessionId),
+				null, String.valueOf(digits)
+		));
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -18,49 +18,39 @@ package com.vonage.client.video;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
+import com.vonage.client.VonageBadRequestException;
 import com.vonage.client.auth.JWTAuthMethod;
-import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
-import java.net.URI;
 import java.util.UUID;
 
-public class SipDialEndpointTest {
-	private SipDialEndpoint endpoint;
+public class SendDtmfToSessionEndpointTest {
+	private SendDtmfToSessionEndpoint endpoint;
 	private final String applicationId = UUID.randomUUID().toString();
 	
 	@Before
 	public void setUp() {
-		endpoint = new SipDialEndpoint(new HttpWrapper(
+		endpoint = new SendDtmfToSessionEndpoint(new HttpWrapper(
 			new JWTAuthMethod(applicationId, new byte[0])
 		));
 	}
-	
+
 	@Test
 	public void testMakeRequest() throws Exception {
-		OutboundSipRequest request = OutboundSipRequest.builder()
-				.token("eYjwToken").sessionId("=2SessiondID")
-				.uri(URI.create("sip.example.com"), true).build();
-
+		String sessionId = "S01", connectionId = "conn23", digits = "*0123456789#";
+		SendDtmfRequest request = new SendDtmfRequest(sessionId, connectionId, digits);
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("POST", builder.getMethod());
-		String expectedUri = "https://video.api.vonage.com/v2/project/"+applicationId+"/dial";
+		String expectedUri = "https://video.api.vonage.com/v2/project/" +
+				applicationId+"/session/"+sessionId+"/play-dtmf";
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		String expectedPayload = "{\"sessionId\":\"=2SessiondID\",\"token\":\"eYjwToken\"," +
-				"\"sip\":{\"uri\":\"sip.example.com;transport=tls\"}}";
-		assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
-
-		OutboundSipResponse parsed = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, "{}"));
-		assertNotNull(parsed);
-		assertNull(parsed.getConnectionId());
-		assertNull(parsed.getId());
-		assertNull(parsed.getStreamId());
+		String expectedRequest = "{\"digits\":\""+digits+"\"}";
+		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 	}
 
 	@Test
@@ -68,25 +58,21 @@ public class SipDialEndpointTest {
 		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(
 				HttpConfig.builder().videoBaseUri(baseUri).build(),
-				new JWTAuthMethod(applicationId, new byte[0])
+				new JWTAuthMethod("app-id", new byte[0])
 		);
-		endpoint = new SipDialEndpoint(wrapper);
-		String expectedUri = baseUri + "/v2/project/"+applicationId+"/dial";
-		OutboundSipRequest request = OutboundSipRequest.builder()
-				.token("t").sessionId("s")
-				.uri(URI.create("sip:u@example.com"), false).build();
-
+		endpoint = new SendDtmfToSessionEndpoint(wrapper);
+		SendDtmfRequest request = new SendDtmfRequest("sesh", "Part", "p90");
+		String expectedUri = baseUri + "/v2/project/app-id/session/"+request.sessionId+"/play-dtmf";
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		String expectedRequest = "{\"sessionId\":\"s\",\"token\":\"t\",\"sip\":{\"uri\":\"sip:u@example.com\"}}";
+		String expectedRequest = "{\"digits\":\""+request.digits+"\"}";
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("POST", builder.getMethod());
 	}
 
-	@Test(expected = HttpResponseException.class)
-	public void test500Response() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
+	@Test(expected = VonageBadRequestException.class)
+	public void test400Response() throws Exception {
+		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, ""));
 	}
 }

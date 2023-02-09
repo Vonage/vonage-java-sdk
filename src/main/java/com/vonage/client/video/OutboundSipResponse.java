@@ -24,7 +24,7 @@ import java.io.IOException;
 /**
  * Represents a Vonage Video SIP call.
  */
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OutboundSipResponse {
     private String id, connectionId, streamId;
 

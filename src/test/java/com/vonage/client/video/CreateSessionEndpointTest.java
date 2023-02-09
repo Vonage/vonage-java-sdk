@@ -66,7 +66,7 @@ public class CreateSessionEndpointTest {
 	}
 
 	@Test(expected = HttpResponseException.class)
-	public void testUnsuccessfulResponse() throws Exception {
+	public void test500Response() throws Exception {
 		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
 	}
 }
