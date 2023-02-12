@@ -22,6 +22,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.function.ThrowingRunnable;
+import java.net.URI;
 import java.time.Duration;
 import java.util.*;
 import java.util.function.Supplier;
@@ -30,7 +31,9 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 	static final String
 			applicationId = "78d335fa-323d-0114-9c3d-d6f0d48968cf",
 			sessionId = "flR1ZSBPY3QgMjkgMTI6MTM6MjMgUERUIDIwMTN",
-			streamId = "abc123",
+			streamId = "abc321",
+			token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.X.Z",
+			id = "b0a5a8c7-dc38-459f-a48d-a7f2008da853",
 			archiveId = "b40ef09b-3811-4726-b508-e41a0f96c68f",
 			connectionId = "09141e29-8770-439b-b180-337d7e637545",
 			archiveJson = "{\n" +
@@ -412,6 +415,43 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		String responseJson = "{\n  \"code\": 409,\n  \"message\": \"You attempted to " +
 			  "start an archive for a session that does not use the Vonage Video Media Router.\"\n}";
 		stubResponseAndAssertThrowsResponseParseException(409, responseJson, () -> client.createArchive(request));
+	}
+
+	@Test
+	public void testSipDial() throws Exception {
+		SipDialRequest request = SipDialRequest.builder()
+				.uri(URI.create("sip:user@sip.partner.com"), false)
+				.sessionId(sessionId).token(token).build();
+
+		stubResponse(200, "{\n" +
+				"  \"id\": \""+id+"\",\n" +
+				"  \"connectionId\": \""+connectionId+"\",\n" +
+				"  \"streamId\": \""+streamId+"\"\n" +
+				"}"
+		);
+
+		SipDialResponse parsed = client.sipDial(request);
+		assertEquals(id, parsed.getId());
+		assertEquals(connectionId, parsed.getConnectionId());
+		assertEquals(streamId, parsed.getStreamId());
+
+		stubResponseAndAssertThrowsResponseParseException(409, "{\"code\":409}", () -> client.sipDial(request));
+	}
+
+	@Test
+	public void testSendDtmf() throws Exception {
+		String digits = "*012p9#3p45*86p7#123";
+		stubResponseAndRun(200, () -> client.sendDtmf(sessionId, connectionId, digits));
+		stubResponseAndRun(200, () -> client.sendDtmf(sessionId, digits));
+		stubResponseAndRun(200, () -> client.sendDtmf(sessionId, "0"));
+
+		stubResponseAndAssertThrowsIAX(() -> client.sendDtmf(null, connectionId, digits));
+		stubResponseAndAssertThrowsIAX(() -> client.sendDtmf(sessionId, null, digits));
+		stubResponseAndAssertThrowsIAX(() -> client.sendDtmf(sessionId, connectionId, null));
+		stubResponseAndAssertThrowsIAX(() -> client.sendDtmf(sessionId, connectionId, ""));
+		stubResponseAndAssertThrowsIAX(() -> client.sendDtmf(sessionId, connectionId, "1abc#"));
+		stubResponseAndAssertThrowsIAX(() -> client.sendDtmf(sessionId, connectionId, null));
+		stubResponseAndAssertThrowsIAX(() -> client.sendDtmf(null, digits));
 	}
 
 	@Test

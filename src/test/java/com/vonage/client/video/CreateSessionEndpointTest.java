@@ -22,12 +22,13 @@ package com.vonage.client.video;
 
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.Map;
-import static org.junit.Assert.assertEquals;
 
 public class CreateSessionEndpointTest {
 	private CreateSessionEndpoint endpoint;
@@ -62,5 +63,10 @@ public class CreateSessionEndpointTest {
 		RequestBuilder builder = endpoint.makeRequest(request);
 		Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
 		assertEquals(0, params.size());
+	}
+
+	@Test(expected = HttpResponseException.class)
+	public void test500Response() throws Exception {
+		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
 	}
 }

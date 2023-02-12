@@ -16,6 +16,8 @@
 package com.vonage.client.video;
 
 import com.vonage.client.HttpWrapper;
+import com.vonage.client.TestUtils;
+import com.vonage.client.VonageBadRequestException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.client.methods.RequestBuilder;
 import static org.junit.Assert.assertEquals;
@@ -44,5 +46,10 @@ public class ForceDisconnectEndpointTest {
 		RequestBuilder builder = endpoint.makeRequest(new ForceDisconnectRequestWrapper(sessionId, connectionId));
 		assertEquals("DELETE", builder.getMethod());
 		assertEquals(expectedUri, builder.build().getURI().toString());
+	}
+
+	@Test(expected = VonageBadRequestException.class)
+	public void test500Response() throws Exception {
+		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
 	}
 }

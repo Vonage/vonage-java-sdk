@@ -48,6 +48,9 @@ public class VideoClient {
 	final GetArchiveEndpoint getArchive;
 	final ListArchivesEndpoint listArchives;
 	final CreateArchiveEndpoint createArchive;
+	final SipDialEndpoint sipDial;
+	final SendDtmfToSessionEndpoint sendDtmfToSession;
+	final SendDtmfToConnectionEndpoint sendDtmfToConnection;
 	final Supplier<? extends Jwt.Builder> newJwtSupplier;
 
 	/**
@@ -73,6 +76,9 @@ public class VideoClient {
 		getArchive = new GetArchiveEndpoint(httpWrapper);
 		listArchives = new ListArchivesEndpoint(httpWrapper);
 		createArchive = new CreateArchiveEndpoint(httpWrapper);
+		sipDial = new SipDialEndpoint(httpWrapper);
+		sendDtmfToSession = new SendDtmfToSessionEndpoint(httpWrapper);
+		sendDtmfToConnection = new SendDtmfToConnectionEndpoint(httpWrapper);
 	}
 
 	private String validateId(String param, String name) {
@@ -400,6 +406,65 @@ public class VideoClient {
 	 */
 	public Archive createArchive(CreateArchiveRequest request) {
 		return createArchive.execute(validateRequest(request));
+	}
+
+	/**
+	 * Use this method to connect your SIP platform to a Vonage video session.
+	 * The audio from your end of the SIP call is added to the video session as an audio-only stream. The Vonage
+	 * Media Router mixes audio from other streams in the session and sends the mixed audio to your SIP endpoint.
+	 *
+	 * <p>
+	 * The call ends when your SIP server sends a BYE message (to terminate the call). You can also end a call
+	 * using {@link #forceDisconnect(String, String)}. The Vonage Video SIP gateway automatically ends a call after
+	 * 5 minutes of inactivity (5 minutes without media received). Also, as a security measure, the Vonage Video SIP
+	 * gateway closes any SIP call that lasts longer than 6 hours.
+	 *
+	 * <p>
+	 * The SIP interconnect feature requires that you use video session that uses the Vonage Media Router
+	 * (a session with the media mode set to {@link MediaMode#ROUTED}).
+	 *
+	 * <p>
+	 * For more information, including technical details and security considerations, see the
+	 * Vonage SIP interconnect developer guide.
+	 *
+	 * @param request The outbound SIP call's properties.
+	 *
+	 * @return Details of the SIP connection.
+	 */
+	public SipDialResponse sipDial(SipDialRequest request) {
+		return sipDial.execute(request);
+	}
+
+	/**
+	 * Play DMTF tones into a specific connection.
+	 * Telephony events are negotiated over SDP and transmitted as RFC4733/RFC2833 digits to the remote endpoint.
+	 *
+	 * @param sessionId The session ID.
+	 * @param connectionId Specific publisher connection ID.
+	 * @param digits The string of DTMF digits to send. This can include 0-9, '*', '#', and 'p'.
+	 * A 'p' indicates a pause of 500ms (if you need to add a delay in sending the digits).
+	 */
+	public void sendDtmf(String sessionId, String connectionId, String digits) {
+		sendDtmfToConnection.execute(new SendDtmfRequest(
+				validateSessionId(sessionId),
+				validateConnectionId(connectionId),
+				String.valueOf(digits)
+		));
+	}
+
+	/**
+	 * Play DTMF tones into a SIP call.
+	 * Telephony events are negotiated over SDP and transmitted as RFC4733/RFC2833 digits to the remote endpoint.
+	 *
+	 * @param sessionId The session ID.
+	 * @param digits The string of DTMF digits to send. This can include 0-9, '*', '#', and 'p'.
+	 * A 'p' indicates a pause of 500ms (if you need to add a delay in sending the digits).
+	 */
+	public void sendDtmf(String sessionId, String digits) {
+		sendDtmfToSession.execute(new SendDtmfRequest(
+				validateSessionId(sessionId),
+				null, String.valueOf(digits)
+		));
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package com.vonage.client.video;
 
+import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
 import com.vonage.client.VonageBadRequestException;
@@ -25,41 +26,53 @@ import org.apache.http.util.EntityUtils;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.UUID;
 
-public class MuteSessionEndpointTest {
-	private MuteSessionEndpoint endpoint;
+public class SendDtmfToSessionEndpointTest {
+	private SendDtmfToSessionEndpoint endpoint;
 	private final String applicationId = UUID.randomUUID().toString();
 	
 	@Before
 	public void setUp() {
-		endpoint = new MuteSessionEndpoint(new HttpWrapper(
+		endpoint = new SendDtmfToSessionEndpoint(new HttpWrapper(
 			new JWTAuthMethod(applicationId, new byte[0])
 		));
 	}
-	
+
 	@Test
 	public void testMakeRequest() throws Exception {
-		boolean active = true;
-		Collection<String> streamIds = Arrays.asList("ID_0", "ID_1", "ID_2");
-		String sessionId = UUID.randomUUID().toString();
-		MuteSessionRequest request = new MuteSessionRequest(sessionId, active, streamIds);
-
+		String sessionId = "S01", connectionId = "conn23", digits = "*0123456789#";
+		SendDtmfRequest request = new SendDtmfRequest(sessionId, connectionId, digits);
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("POST", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/" +
-				applicationId+"/session/"+sessionId+"/mute";
+				applicationId+"/session/"+sessionId+"/play-dtmf";
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		String expectedPayload = "{\"active\":true,\"excludedStreamIds\":[\"ID_0\",\"ID_1\",\"ID_2\"]}";
-		assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
+		String expectedRequest = "{\"digits\":\""+digits+"\"}";
+		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
+	}
+
+	@Test
+	public void testCustomUri() throws Exception {
+		String baseUri = "http://example.com";
+		HttpWrapper wrapper = new HttpWrapper(
+				HttpConfig.builder().videoBaseUri(baseUri).build(),
+				new JWTAuthMethod("app-id", new byte[0])
+		);
+		endpoint = new SendDtmfToSessionEndpoint(wrapper);
+		SendDtmfRequest request = new SendDtmfRequest("sesh", "Part", "p90");
+		String expectedUri = baseUri + "/v2/project/app-id/session/"+request.sessionId+"/play-dtmf";
+		RequestBuilder builder = endpoint.makeRequest(request);
+		assertEquals(expectedUri, builder.build().getURI().toString());
+		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
+		String expectedRequest = "{\"digits\":\""+request.digits+"\"}";
+		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
+		assertEquals("POST", builder.getMethod());
 	}
 
 	@Test(expected = VonageBadRequestException.class)
-	public void test500Response() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
+	public void test400Response() throws Exception {
+		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, ""));
 	}
 }

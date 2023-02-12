@@ -208,8 +208,12 @@ public class Archive {
         }
     }
 
-    @Override
-    public String toString() {
+    /**
+     * Generates a JSON payload from this object.
+     *
+     * @return JSON representation of this Archive instance.
+     */
+    public String toJson() {
         try {
             ObjectMapper om = new ObjectMapper();
             om.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);

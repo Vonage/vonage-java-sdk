@@ -19,6 +19,7 @@ import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import static org.junit.Assert.assertEquals;
@@ -81,5 +82,10 @@ public class ListStreamsEndpointTest {
 		List<String> layoutClassList0 = stream0.getLayoutClassList();
 		assertEquals(1, layoutClassList0.size());
 		assertEquals(layoutClass0, layoutClassList0.get(0));
+	}
+
+	@Test(expected = HttpResponseException.class)
+	public void test500Response() throws Exception {
+		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
 	}
 }

@@ -16,6 +16,8 @@
 package com.vonage.client.video;
 
 import com.vonage.client.HttpWrapper;
+import com.vonage.client.TestUtils;
+import com.vonage.client.VonageBadRequestException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
@@ -53,5 +55,10 @@ public class SignalEndpointTest {
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		String expectedPayload = "{\"type\":\""+type+"\",\"data\":\""+data+"\"}";
 		assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
+	}
+
+	@Test(expected = VonageBadRequestException.class)
+	public void testUnsuccessfulResponse() throws Exception {
+		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
 	}
 }

@@ -54,7 +54,7 @@ public class ListArchivesResponseTest {
 		assertEquals(Resolution.FHD_PORTRAIT, archive0.getResolution());
 		assertEquals(ArchiveStatus.PAUSED, archive0.getStatus());
 		assertEquals(OutputMode.COMPOSED, archive0.getOutputMode());
-		assertEquals(archive0Json, archive0.toString());
+		assertEquals(archive0Json, archive0.toJson());
 		assertNull(archive3.getOutputMode());
 		assertNull(archive3.getStatus());
 		assertNull(archive3.getResolution());
@@ -62,7 +62,7 @@ public class ListArchivesResponseTest {
 		assertFalse(archive3.hasVideo());
 		assertTrue(archive3.hasAudio());
 		assertEquals("n", archive3.getName());
-		assertEquals("{\"name\":\"n\",\"hasVideo\":false,\"hasAudio\":true}", archive3.toString());
+		assertEquals("{\"name\":\"n\",\"hasVideo\":false,\"hasAudio\":true}", archive3.toJson());
 	}
 	
 	@Test(expected = VonageUnexpectedException.class)
