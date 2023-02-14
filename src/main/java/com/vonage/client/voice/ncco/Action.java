@@ -33,8 +33,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(value = NotifyAction.class, name = "notify"),
         @JsonSubTypes.Type(value = InputAction.class, name = "input"),
         @JsonSubTypes.Type(value = ConnectAction.class, name = "connect"),
-        @JsonSubTypes.Type(value = ConversationAction.class, name = "conversation"),
-        @JsonSubTypes.Type(value = PayAction.class, name = "pay")
+        @JsonSubTypes.Type(value = ConversationAction.class, name = "conversation")
 })
 public interface Action {
     String getAction();
