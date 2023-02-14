@@ -19,26 +19,26 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import java.util.UUID;
 
-public class PatchArchiveStreamRequestTest {
+public class PatchVideoStreamRequestTest {
 	private final String streamId = UUID.randomUUID().toString();
 
 	@Test
 	public void testSerializeAddStreamAllParams() {
-		PatchArchiveStreamRequest request = new PatchArchiveStreamRequest(streamId, false, true);
+		PatchComposedStreamsRequest request = new PatchComposedStreamsRequest(streamId, false, true);
 		String expectedJson = "{\"addStream\":\""+streamId+"\",\"hasAudio\":false,\"hasVideo\":true}";
 		assertEquals(expectedJson, request.toJson());
 	}
 
 	@Test
 	public void testSerializeAddStreamRequiredParams() {
-		PatchArchiveStreamRequest request = new PatchArchiveStreamRequest(streamId, null, null);
+		PatchComposedStreamsRequest request = new PatchComposedStreamsRequest(streamId, null, null);
 		String expectedJson = "{\"addStream\":\""+streamId+"\"}";
 		assertEquals(expectedJson, request.toJson());
 	}
 
 	@Test
 	public void testSerializeRemoveStream() {
-		PatchArchiveStreamRequest request = new PatchArchiveStreamRequest(streamId);
+		PatchComposedStreamsRequest request = new PatchComposedStreamsRequest(streamId);
 		String expectedJson = "{\"removeStream\":\""+streamId+"\"}";
 		assertEquals(expectedJson, request.toJson());
 	}

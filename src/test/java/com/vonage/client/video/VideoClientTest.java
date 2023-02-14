@@ -35,6 +35,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 			token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.X.Z",
 			id = "b0a5a8c7-dc38-459f-a48d-a7f2008da853",
 			archiveId = "b40ef09b-3811-4726-b508-e41a0f96c68f",
+			broadcastId = "1748b707-0a81-464c-9759-c46ad10d3734",
 			connectionId = "09141e29-8770-439b-b180-337d7e637545",
 			archiveJson = "{\n" +
 					"  \"createdAt\": 1384221730000,\n" +
@@ -59,13 +60,52 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 					"  ],\n" +
 					"  \"url\": \"https://tokbox.s3.amazonaws.com/"+connectionId+"/archive.mp4\"\n" +
 					"}",
-			listArchiveJson = "{\"count\":1,\"items\":["+archiveJson+"]}";
-
-	@Before
-	public void setUp() {
-		wrapper.getAuthCollection().add(new JWTAuthMethod(applicationId, new byte[0]));
-		client = new VideoClient(wrapper);
-	}
+			listArchiveJson = "{\"count\":1,\"items\":["+archiveJson+"]}",
+			broadcastJson = "{\n" +
+					"  \"id\": \""+broadcastId+"\",\n" +
+					"  \"sessionId\": \"2_MX4xMDBfjE0Mzc2NzY1NDgwMTJ-TjMzfn4\",\n" +
+					"  \"multiBroadcastTag\": \"broadcast-1234b\",\n" +
+					"  \"applicationId\": \""+applicationId+"\",\n" +
+					"  \"createdAt\": 1437676551000,\n" +
+					"  \"updatedAt\": 1437876551000,\n" +
+					"  \"maxDuration\": 5400,\n" +
+					"  \"maxBitrate\": 2000000,\n" +
+					"  \"broadcastUrls\": {\n" +
+					"    \"hls\": \"http://server/fakepath/playlist.m3u8\",\n" +
+					"    \"rtmp\": [\n" +
+					"      {\n" +
+					"        \"id\": \"foo\",\n" +
+					"        \"status\": \"live\",\n" +
+					"        \"serverUrl\": \"rtmps://myfooserver/myfooapp\",\n" +
+					"        \"streamName\": \"myfoostream\"\n" +
+					"      }\n" +
+					"    ]\n" +
+					"  },\n" +
+					"  \"settings\": {\n" +
+					"    \"hls\": {\n" +
+					"      \"lowLatency\": true,\n" +
+					"      \"dvr\": false\n" +
+					"    }\n" +
+					"  },\n" +
+					"  \"resolution\": \"720x1280\",\n" +
+					"  \"hasAudio\": true,\n" +
+					"  \"hasVideo\": true,\n" +
+					"  \"streamMode\": \"manual\",\n" +
+					"  \"status\": \"started\",\n" +
+					"  \"streams\": [\n" +
+					"    {\n" +
+					"      \"streamId\": \""+streamId+"\",\n" +
+					"      \"hasAudio\": \"true\",\n" +
+					"      \"hasVideo\": \"false\"\n" +
+					"    },\n" +
+					"    {\n" +
+					"      \"streamId\": \"482bce73-f882-40fd-8ca5-cb74ff416036\",\n" +
+					"      \"hasAudio\": \"false\",\n" +
+					"      \"hasVideo\": \"true\"\n" +
+					"    }\n"+
+					"  ]\n" +
+					"}",
+			listBroadcastJson = "{\"count\":1,\"items\":["+broadcastJson+"]}";
 
 	void stubArchiveJsonAndAssertThrows(ThrowingRunnable invocation) throws Exception {
 		stubResponseAndAssertThrowsIAX(archiveJson, invocation);
@@ -93,7 +133,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		assertEquals(Integer.valueOf(5049), response.getDuration());
 		assertTrue(response.hasAudio());
 		assertTrue(response.hasVideo());
-		assertEquals("b40ef09b-3811-4726-b508-e41a0f96c68f", response.getId());
+		assertEquals("b40ef09b-3811-4726-b508-e41a0f96c68f", response.getId().toString());
 		assertEquals("Foo", response.getName());
 		assertEquals("", response.getReason());
 		assertEquals(Resolution.HD_LANDSCAPE, response.getResolution());
@@ -101,13 +141,84 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		assertEquals(Long.valueOf(247748791L), response.getSize());
 		assertEquals(ArchiveStatus.AVAILABLE, response.getStatus());
 		assertEquals(StreamMode.MANUAL, response.getStreamMode());
-		List<ArchiveStream> streams = response.getStreams();
+		List<VideoStream> streams = response.getStreams();
 		assertEquals(1, streams.size());
-		ArchiveStream archiveStream = streams.get(0);
+		VideoStream archiveStream = streams.get(0);
 		assertEquals(streamId, archiveStream.getStreamId());
 		assertFalse(archiveStream.hasAudio());
 		assertTrue(archiveStream.hasVideo());
 		assertEquals("https://tokbox.s3.amazonaws.com/"+connectionId+"/archive.mp4", response.getUrl());
+	}
+
+	void stubBroadcastJsonAndAssertThrows(ThrowingRunnable invocation) throws Exception {
+		stubResponseAndAssertThrowsIAX(broadcastJson, invocation);
+	}
+
+	void stubListBroadcastJsonAndAssertThrows(ThrowingRunnable invocation) throws Exception {
+		stubResponseAndAssertThrowsIAX(listBroadcastJson, invocation);
+	}
+
+	void stubBroadcastJsonAndAssertEquals(Supplier<Broadcast> invocation) throws Exception {
+		stubResponse(broadcastJson);
+		assertBroadcastEqualsExpectedJson(invocation.get());
+	}
+
+	void stubListBroadcastJsonAndAssertEquals(Supplier<List<Broadcast>> invocation) throws Exception {
+		stubResponse(listBroadcastJson);
+		List<Broadcast> broadcasts = invocation.get();
+		assertEquals(1, broadcasts.size());
+		assertBroadcastEqualsExpectedJson(broadcasts.get(0));
+	}
+
+	static void assertBroadcastEqualsExpectedJson(Broadcast response) {
+		assertNotNull(response);
+		assertEquals("2_MX4xMDBfjE0Mzc2NzY1NDgwMTJ-TjMzfn4", response.getSessionId());
+		assertEquals(broadcastId, response.getId().toString());
+		assertEquals(applicationId, response.getApplicationId().toString());
+		assertTrue(response.hasAudio());
+		assertTrue(response.hasVideo());
+		assertEquals(BroadcastStatus.STARTED, response.getStatus());
+		assertEquals(Resolution.HD_PORTRAIT, response.getResolution());
+		assertEquals(1437676551000L, response.getCreatedAt().longValue());
+		assertEquals(1437876551000L, response.getUpdatedAt().longValue());
+		assertEquals("broadcast-1234b", response.getMultiBroadcastTag());
+		assertEquals(5400, response.getMaxDuration().intValue());
+		assertEquals(2000000, response.getMaxBitrate().intValue());
+		BroadcastUrls broadcastUrls = response.getBroadcastUrls();
+		assertNotNull(broadcastUrls);
+		assertEquals("http://server/fakepath/playlist.m3u8", broadcastUrls.getHls().toString());
+		List<Rtmp> rtmps = broadcastUrls.getRtmps();
+		assertNotNull(rtmps);
+		assertEquals(1, rtmps.size());
+		Rtmp rtmp = rtmps.get(0);
+		assertNotNull(rtmp);
+		assertEquals("rtmps://myfooserver/myfooapp", rtmp.getServerUrl().toString());
+		assertEquals(RtmpStatus.LIVE, rtmp.getStatus());
+		assertEquals("foo", rtmp.getId());
+		assertEquals("myfoostream", rtmp.getStreamName());
+		Hls hls = response.getHlsSettings();
+		assertNotNull(hls);
+		assertFalse(hls.dvr());
+		assertTrue(hls.lowLatency());
+		List<VideoStream> streams = response.getStreams();
+		assertNotNull(streams);
+		assertEquals(2, streams.size());
+		VideoStream stream1 = streams.get(0);
+		assertNotNull(stream1);
+		assertEquals(streamId, stream1.getStreamId());
+		assertTrue(stream1.hasAudio());
+		assertFalse(stream1.hasVideo());
+		VideoStream stream2 = streams.get(1);
+		assertNotNull(stream2);
+		assertEquals("482bce73-f882-40fd-8ca5-cb74ff416036", stream2.getStreamId());
+		assertTrue(stream2.hasVideo());
+		assertFalse(stream2.hasAudio());
+	}
+
+	@Before
+	public void setUp() {
+		wrapper.getAuthCollection().add(new JWTAuthMethod(applicationId, new byte[0]));
+		client = new VideoClient(wrapper);
 	}
 
 	@Test
@@ -310,7 +421,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 	@Test
 	public void testSetArchiveLayout() throws Exception {
-		ArchiveLayout request = ArchiveLayout.builder(ScreenLayoutType.HORIZONTAL).build();
+		StreamCompositionLayout request = StreamCompositionLayout.builder(ScreenLayoutType.HORIZONTAL).build();
 		stubResponseAndRun(() -> client.setArchiveLayout(archiveId, request));
 		stubResponseAndAssertThrowsIAX(() -> client.setArchiveLayout(null, request));
 		stubResponseAndAssertThrowsIAX(() -> client.setArchiveLayout(archiveId, null));
@@ -396,7 +507,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 	@Test
 	public void testListArchives() throws Exception {
 		stubListArchiveJsonAndAssertEquals(() -> client.listArchives());
-		stubListArchiveJsonAndAssertEquals(() -> client.listArchives(ListArchivesRequest.builder().build()));
+		stubListArchiveJsonAndAssertEquals(() -> client.listArchives(ListStreamCompositionsRequest.builder().build()));
 		stubListArchiveJsonAndAssertEquals(() -> client.listArchives(null));
 
 		String responseJson = "{\n" +
@@ -415,6 +526,111 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		String responseJson = "{\n  \"code\": 409,\n  \"message\": \"You attempted to " +
 			  "start an archive for a session that does not use the Vonage Video Media Router.\"\n}";
 		stubResponseAndAssertThrowsResponseParseException(409, responseJson, () -> client.createArchive(request));
+	}
+
+	@Test
+	public void testUpdateBroadcastLayout() throws Exception {
+		StreamCompositionLayout request = StreamCompositionLayout.builder(ScreenLayoutType.HORIZONTAL).build();
+		stubResponseAndRun(() -> client.updateBroadcastLayout(broadcastId, request));
+		stubResponseAndAssertThrowsIAX(() -> client.updateBroadcastLayout(null, request));
+		stubResponseAndAssertThrowsIAX(() -> client.updateBroadcastLayout(broadcastId, null));
+
+		String responseJson = "{\n" +
+				"  \"code\": 403,\n" +
+				"  \"message\": \"Authentication error.\"\n" +
+				"}";
+		stubResponseAndAssertThrowsBadRequestException(403, responseJson,
+				() -> client.updateBroadcastLayout(broadcastId, request)
+		);
+	}
+
+	@Test
+	public void testAddBroadcastStream() throws Exception {
+		stubResponseAndRun(204, () -> client.addBroadcastStream(broadcastId, streamId));
+		stubResponseAndRun(204, () -> client.addBroadcastStream(broadcastId, streamId, true, true));
+		stubResponseAndRun(204, () -> client.addBroadcastStream(broadcastId, streamId, null, false));
+		stubResponseAndRun(204, () -> client.addBroadcastStream(broadcastId, streamId, false, null));
+		stubResponseAndAssertThrowsIAX(204, () -> client.addBroadcastStream(null, streamId));
+		stubResponseAndAssertThrowsIAX(204, () -> client.addBroadcastStream(broadcastId, null));
+
+		String responseJson = "{\n" +
+				"  \"code\": 404,\n" +
+				"  \"message\": \"Broadcast or stream not found\"\n" +
+				"}";
+		stubResponseAndAssertThrowsBadRequestException(404, responseJson,
+				() -> client.addBroadcastStream(broadcastId, streamId)
+		);
+	}
+
+	@Test
+	public void testRemoveBroadcastStream() throws Exception {
+		stubResponseAndRun(204, () -> client.removeBroadcastStream(broadcastId, streamId));
+		stubResponseAndAssertThrowsIAX(204, () -> client.removeBroadcastStream(null, streamId));
+		stubResponseAndAssertThrowsIAX(204, () -> client.removeBroadcastStream(broadcastId, null));
+
+		String responseJson = "{\n" +
+				"  \"code\": 404,\n" +
+				"  \"message\": \"Broadcast or stream not found\"\n" +
+				"}";
+		stubResponseAndAssertThrowsBadRequestException(404, responseJson,
+				() -> client.removeBroadcastStream(broadcastId, streamId)
+		);
+	}
+
+	@Test
+	public void testStopBroadcast() throws Exception {
+		stubBroadcastJsonAndAssertEquals(() -> client.stopBroadcast(broadcastId));
+		stubBroadcastJsonAndAssertThrows(() -> client.stopBroadcast(null));
+
+		String responseJson = "{\n" +
+				"  \"code\": 409,\n" +
+				"  \"message\": \"You attempted to stop an archive that was not being recorded\"\n" +
+				"}";
+		stubResponseAndAssertThrowsResponseParseException(409, responseJson, () -> client.stopBroadcast(broadcastId));
+	}
+
+	@Test
+	public void testGetBroadcast() throws Exception {
+		stubBroadcastJsonAndAssertEquals(() -> client.getBroadcast(broadcastId));
+		stubBroadcastJsonAndAssertThrows(() -> client.getBroadcast(null));
+
+		String responseJson = "{\n" +
+				"  \"code\": 403,\n" +
+				"  \"message\": \"You passed in an invalid JWT token.\"\n" +
+				"}";
+		stubResponseAndAssertThrowsResponseParseException(403, responseJson, () -> client.getBroadcast(broadcastId));
+	}
+
+	@Test
+	public void testListBroadcasts() throws Exception {
+		stubListBroadcastJsonAndAssertEquals(() -> client.listBroadcasts());
+		stubListBroadcastJsonAndAssertEquals(() -> client.listBroadcasts(ListStreamCompositionsRequest.builder().build()));
+		stubListBroadcastJsonAndAssertEquals(() -> client.listBroadcasts(null));
+
+		String responseJson = "{\n" +
+				"  \"code\": 403,\n" +
+				"  \"message\": \"Authentication error\"\n" +
+				"}";
+		stubResponseAndAssertThrowsResponseParseException(403, responseJson, () -> client.listBroadcasts());
+	}
+
+	@Test
+	public void testCreateBroadcast() throws Exception {
+		Broadcast request = Broadcast.builder(sessionId)
+				.addRtmpStream(Rtmp.builder().streamName("YT_key").serverUrl("https://youtu.be").id("uuID").build())
+				.hls(Hls.builder().dvr(true).lowLatency(false).build())
+				.resolution(Resolution.FHD_LANDSCAPE).streamMode(StreamMode.AUTO)
+				.layout(StreamCompositionLayout.builder(ScreenLayoutType.VERTICAL).build())
+				.multiBroadcastTag("broadcast_tag_provided")
+				.maxBitrate(128_000_000).maxDuration(1200).build();
+
+		stubBroadcastJsonAndAssertEquals(() -> client.createBroadcast(request));
+		stubBroadcastJsonAndAssertThrows(() -> client.createBroadcast(null));
+
+		String responseJson = "{\n  \"code\": 409,\n  \"message\": \"The broadcast has already started for the" +
+				"session.Or if you attempt to start a simultaneous broadcast for a session without setting a" +
+				"unique multiBroadcastTag value.\"\n}";
+		stubResponseAndAssertThrowsResponseParseException(409, responseJson, () -> client.createBroadcast(request));
 	}
 
 	@Test

@@ -9,12 +9,12 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum StreamMode {
 	/**
-	 * Streams will be automatically included in the archive.
+	 * Streams will be automatically included in the broadcast or archive.
 	 */
 	AUTO,
 
 	/**
-	 * Streams will be included in the archive based on calls to the
+	 * Streams will be included in the broadcast or archive based on calls to the
 	 * {@link VideoClient#addArchiveStream(String, String, Boolean, Boolean)} and
 	 * {@link VideoClient#removeArchiveStream(String, String)} methods.
 	 */

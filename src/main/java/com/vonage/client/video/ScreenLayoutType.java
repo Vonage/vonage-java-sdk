@@ -23,7 +23,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Represents the available layout types for archives in {@link ArchiveLayout}.
+ * Represents the available layout types for archives in {@link StreamCompositionLayout}.
  */
 public enum ScreenLayoutType {
 	/**

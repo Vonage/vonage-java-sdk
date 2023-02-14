@@ -23,37 +23,37 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-class PatchArchiveStreamRequest {
-	@JsonIgnore String archiveId;
+class PatchComposedStreamsRequest {
+	@JsonIgnore String id;
 	private String addStream, removeStream;
 	private Boolean hasAudio, hasVideo;
 
-	PatchArchiveStreamRequest(String removeStream) {
+	PatchComposedStreamsRequest(String removeStream) {
 		this.removeStream = removeStream;
 	}
 
-	PatchArchiveStreamRequest(String addStream, Boolean audio, Boolean video) {
+	PatchComposedStreamsRequest(String addStream, Boolean audio, Boolean video) {
 		this.addStream = addStream;
 		this.hasAudio = audio;
 		this.hasVideo = video;
 	}
 
 	/**
-	 * Stream ID to remove from the archive.
+	 * @return Stream ID to remove from the composition.
 	 */
 	public String getRemoveStream() {
 		return removeStream;
 	}
 
 	/**
-	 * Stream ID to add to the archive.
+	 * @return Stream ID to add to the composition.
 	 */
 	public String getAddStream() {
 		return addStream;
 	}
 
 	/**
-	 * Whether the composed archive should include the stream's audio (true by default).
+	 * @return Whether the composition should include the stream's audio (true by default).
 	 */
 	@JsonProperty("hasAudio")
 	public Boolean hasAudio() {
@@ -61,7 +61,7 @@ class PatchArchiveStreamRequest {
 	}
 
 	/**
-	 * Whether the composed archive should include the stream's video (true by default).
+	 * @return Whether the composition should include the stream's video (true by default).
 	 */
 	@JsonProperty("hasVideo")
 	public Boolean hasVideo() {
@@ -71,7 +71,7 @@ class PatchArchiveStreamRequest {
 	/**
 	 * Generates a JSON payload from this request.
 	 *
-	 * @return JSON representation of this PatchArchiveStreamsRequest object.
+	 * @return JSON representation of this PatchComposedStreamsRequest object.
 	 */
 	public String toJson() {
 		try {

@@ -44,7 +44,7 @@ public class ListArchivesEndpointTest {
 	public void testMakeRequestAllParameters() throws Exception {
 		String sessionId = UUID.randomUUID().toString();
 		int count = 6, offset = 2;
-		ListArchivesRequest request = ListArchivesRequest.builder()
+		ListStreamCompositionsRequest request = ListStreamCompositionsRequest.builder()
 			.offset(offset).count(count).sessionId(sessionId)
 			.build();
 		
@@ -67,7 +67,7 @@ public class ListArchivesEndpointTest {
 
 	@Test
 	public void testMakeRequestNullParameters() {
-		ListArchivesRequest wrapper = ListArchivesRequest.builder().build();
+		ListStreamCompositionsRequest wrapper = ListStreamCompositionsRequest.builder().build();
 		RequestBuilder builder = endpoint.makeRequest(wrapper);
 		assertEquals("GET", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/"+applicationId+"/archive";

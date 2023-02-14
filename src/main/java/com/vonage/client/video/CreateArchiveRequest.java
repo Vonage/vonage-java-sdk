@@ -33,7 +33,7 @@ public class CreateArchiveRequest {
     private final Resolution resolution;
     private final OutputMode outputMode;
     private final StreamMode streamMode;
-    private final ArchiveLayout layout;
+    private final StreamCompositionLayout layout;
 
     private CreateArchiveRequest(Builder builder) {
         if ((sessionId = builder.sessionId) == null || sessionId.isEmpty()) {
@@ -112,7 +112,7 @@ public class CreateArchiveRequest {
     /**
      * Returns the custom layout of the archive (composed archives only).
      */
-    public ArchiveLayout getLayout() {
+    public StreamCompositionLayout getLayout() {
         return layout;
     }
 
@@ -154,7 +154,7 @@ public class CreateArchiveRequest {
         private Resolution resolution;
         private OutputMode outputMode;
         private StreamMode streamMode;
-        private ArchiveLayout layout;
+        private StreamCompositionLayout layout;
 
         Builder(String sessionId) {
             this.sessionId = sessionId;
@@ -257,7 +257,7 @@ public class CreateArchiveRequest {
          *
          * @return This Builder with the layout setting.
          */
-        public Builder layout(ArchiveLayout layout) {
+        public Builder layout(StreamCompositionLayout layout) {
             this.layout = layout;
             return this;
         }

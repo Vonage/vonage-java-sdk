@@ -41,8 +41,8 @@ public class SetScreenLayoutTypeEndpointTest {
 	@Test
 	public void testMakeRequest() throws Exception {
 		String archiveId = UUID.randomUUID().toString();
-		ArchiveLayout request = ArchiveLayout.builder(ScreenLayoutType.VERTICAL).build();
-		SetArchiveLayoutRequestWrapper wrapper = new SetArchiveLayoutRequestWrapper(archiveId, request);
+		StreamCompositionLayout request = StreamCompositionLayout.builder(ScreenLayoutType.VERTICAL).build();
+		UpdateStreamCompositionLayoutRequestWrapper wrapper = new UpdateStreamCompositionLayoutRequestWrapper(archiveId, request);
 
 		RequestBuilder builder = endpoint.makeRequest(wrapper);
 		assertEquals("PUT", builder.getMethod());

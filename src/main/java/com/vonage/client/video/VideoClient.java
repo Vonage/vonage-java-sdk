@@ -51,6 +51,12 @@ public class VideoClient {
 	final SipDialEndpoint sipDial;
 	final SendDtmfToSessionEndpoint sendDtmfToSession;
 	final SendDtmfToConnectionEndpoint sendDtmfToConnection;
+	final ListBroadcastsEndpoint listBroadcasts;
+	final CreateBroadcastEndpoint createBroadcast;
+	final GetBroadcastEndpoint getBroadcast;
+	final StopBroadcastEndpoint stopBroadcast;
+	final UpdateBroadcastLayoutEndpoint updateBroadcastLayout;
+	final PatchBroadcastStreamEndpoint patchBroadcastStream;
 	final Supplier<? extends Jwt.Builder> newJwtSupplier;
 
 	/**
@@ -79,6 +85,12 @@ public class VideoClient {
 		sipDial = new SipDialEndpoint(httpWrapper);
 		sendDtmfToSession = new SendDtmfToSessionEndpoint(httpWrapper);
 		sendDtmfToConnection = new SendDtmfToConnectionEndpoint(httpWrapper);
+		listBroadcasts = new ListBroadcastsEndpoint(httpWrapper);
+		createBroadcast = new CreateBroadcastEndpoint(httpWrapper);
+		getBroadcast = new GetBroadcastEndpoint(httpWrapper);
+		stopBroadcast = new StopBroadcastEndpoint(httpWrapper);
+		updateBroadcastLayout = new UpdateBroadcastLayoutEndpoint(httpWrapper);
+		patchBroadcastStream = new PatchBroadcastStreamEndpoint(httpWrapper);
 	}
 
 	private String validateId(String param, String name) {
@@ -102,6 +114,10 @@ public class VideoClient {
 
 	private String validateArchiveId(String archiveId) {
 		return validateId(archiveId, "Archive");
+	}
+
+	private String validateBroadcastId(String broadcastId) {
+		return validateId(broadcastId, "Broadcast");
 	}
 
 	private <T> T validateRequest(T request) {
@@ -292,8 +308,8 @@ public class VideoClient {
 	 * @param archiveId ID of the archive to change.
 	 * @param layout Properties of the layout change request.
 	 */
-	public void setArchiveLayout(String archiveId, ArchiveLayout layout) {
-		setArchiveLayout.execute(new SetArchiveLayoutRequestWrapper(
+	public void setArchiveLayout(String archiveId, StreamCompositionLayout layout) {
+		setArchiveLayout.execute(new UpdateStreamCompositionLayoutRequestWrapper(
 				validateArchiveId(archiveId),
 				validateRequest(layout)
 		));
@@ -316,7 +332,7 @@ public class VideoClient {
 	 * @param streamId ID of the stream to remove.
 	 */
 	public void removeArchiveStream(String archiveId, String streamId) {
-		patchArchiveStream(archiveId, new PatchArchiveStreamRequest(validateStreamId(streamId)));
+		patchArchiveStream(archiveId, new PatchComposedStreamsRequest(validateStreamId(streamId)));
 	}
 
 	/**
@@ -341,12 +357,12 @@ public class VideoClient {
 	 * @param video (OPTIONAL) Whether the composed archive should include the stream's video (true by default).
 	 */
 	public void addArchiveStream(String archiveId, String streamId, Boolean audio, Boolean video) {
-		patchArchiveStream(archiveId, new PatchArchiveStreamRequest(validateStreamId(streamId), audio, video));
+		patchArchiveStream(archiveId, new PatchComposedStreamsRequest(validateStreamId(streamId), audio, video));
 	}
 
-	private void patchArchiveStream(String archiveId, PatchArchiveStreamRequest request) {
-		PatchArchiveStreamRequest pasr = validateRequest(request);
-		pasr.archiveId = validateArchiveId(archiveId);
+	private void patchArchiveStream(String archiveId, PatchComposedStreamsRequest request) {
+		PatchComposedStreamsRequest pasr = validateRequest(request);
+		pasr.id = validateArchiveId(archiveId);
 		patchArchiveStream.execute(pasr);
 	}
 
@@ -380,7 +396,7 @@ public class VideoClient {
 	 * List all archives in an application.
 	 *
 	 * @return The list of archives, in order from newest to oldest.
-	 * @see #listArchives(ListArchivesRequest)
+	 * @see #listArchives(ListStreamCompositionsRequest)
 	 */
 	public List<Archive> listArchives() {
 		return listArchives(null);
@@ -393,7 +409,7 @@ public class VideoClient {
 	 *
 	 * @return The list of archives matching the filter criteria, in order from newest to oldest.
 	 */
-	public List<Archive> listArchives(ListArchivesRequest request) {
+	public List<Archive> listArchives(ListStreamCompositionsRequest request) {
 		return listArchives.execute(request).getItems();
 	}
 
@@ -430,6 +446,8 @@ public class VideoClient {
 	 * @param request The outbound SIP call's properties.
 	 *
 	 * @return Details of the SIP connection.
+	 *
+	 * @since 8.0.0-beta4
 	 */
 	public SipDialResponse sipDial(SipDialRequest request) {
 		return sipDial.execute(request);
@@ -443,6 +461,8 @@ public class VideoClient {
 	 * @param connectionId Specific publisher connection ID.
 	 * @param digits The string of DTMF digits to send. This can include 0-9, '*', '#', and 'p'.
 	 * A 'p' indicates a pause of 500ms (if you need to add a delay in sending the digits).
+	 *
+	 * @since 8.0.0-beta4
 	 */
 	public void sendDtmf(String sessionId, String connectionId, String digits) {
 		sendDtmfToConnection.execute(new SendDtmfRequest(
@@ -459,6 +479,8 @@ public class VideoClient {
 	 * @param sessionId The session ID.
 	 * @param digits The string of DTMF digits to send. This can include 0-9, '*', '#', and 'p'.
 	 * A 'p' indicates a pause of 500ms (if you need to add a delay in sending the digits).
+	 *
+	 * @since 8.0.0-beta4
 	 */
 	public void sendDtmf(String sessionId, String digits) {
 		sendDtmfToSession.execute(new SendDtmfRequest(
@@ -468,12 +490,152 @@ public class VideoClient {
 	}
 
 	/**
+	 * List all broadcasts that are in progress and started in the application.
+	 * Completed broadcasts are not included in the listing.
+	 *
+	 * @return The list of broadcasts up to the first 1000, in order from newest to oldest.
+	 *
+	 * @see #listBroadcasts(ListStreamCompositionsRequest)
+	 * @since 8.0.0-beta4
+	 */
+	public List<Broadcast> listBroadcasts() {
+		return listBroadcasts(ListStreamCompositionsRequest.builder().count(1000).build());
+	}
+
+	/**
+	 * List all broadcasts that are in progress and started in the application.
+	 * Completed broadcasts are not included in the listing.
+	 *
+	 * @param request (OPTIONAL) Filter properties of the request.
+	 *
+	 * @return The list of broadcasts matching the filter criteria, in order from newest to oldest.
+	 *
+	 * @since 8.0.0-beta4
+	 */
+	public List<Broadcast> listBroadcasts(ListStreamCompositionsRequest request) {
+		return listBroadcasts.execute(request).getItems();
+	}
+
+	/**
+	 * Start a new live streaming broadcast.
+	 * This broadcasts the session to an HLS (HTTP live streaming) or to RTMP streams.
+	 * To successfully start broadcasting a session, at least one client must be connected to the session.
+	 * <p>
+	 * The live streaming broadcast can target one HLS endpoint and up to five RTMP servers simultaneously for
+	 * a session. You can only start live streaming for sessions that use the Vonage Media Router (with the
+	 * media mode set to {@linkplain MediaMode#ROUTED}); you cannot use live streaming with sessions that have the
+	 * media mode set to {@linkplain MediaMode#RELAYED}.
+	 *
+	 * @param request Broadcast object with initial properties.
+	 *
+	 * @return The same Broadcast object that was passed in with additional fields populated from the server's response.
+	 *
+	 * @since 8.0.0-beta4
+	 */
+	public Broadcast createBroadcast(Broadcast request) {
+		return createBroadcast.execute(validateRequest(request));
+	}
+
+	/**
+	 * Get Information about a Broadcast that is in progress.
+	 *
+	 * @param broadcastId ID of the broadcast to retrieve.
+	 *
+	 * @return The Broadcast corresponding to the broadcastId.
+	 *
+	 * @since 8.0.0-beta4
+	 */
+	public Broadcast getBroadcast(String broadcastId) {
+		return getBroadcast.execute(validateBroadcastId(broadcastId));
+	}
+
+	/**
+	 * Stop a live broadcast.
+	 * Note that a broadcast stops automatically 60 seconds after the last client disconnects from the session.
+	 * There is a default maximum duration of 4 hours (14400 seconds) for each HLS and RTMP stream (the live
+	 * stream broadcast automatically stops when this duration is reached). You can change the maximum duration for
+	 * the broadcast by setting the {@link Broadcast.Builder#maxDuration(int)} property when you start the broadcast
+	 * using the {@link #createBroadcast(Broadcast)} method.
+	 *
+	 * @param broadcastId ID of the broadcast to stop.
+	 *
+	 * @return Details of the Broadcast.
+	 *
+	 * @since 8.0.0-beta4
+	 */
+	public Broadcast stopBroadcast(String broadcastId) {
+		return stopBroadcast.execute(validateBroadcastId(broadcastId));
+	}
+
+	/**
+	 * Dynamically change the layout type of a live streaming broadcast.
+	 *
+	 * @param broadcastId ID of the broadcast to change.
+	 * @param layout Properties of the layout change request.
+	 *
+	 * @since 8.0.0-beta4
+	 */
+	public void updateBroadcastLayout(String broadcastId, StreamCompositionLayout layout) {
+		updateBroadcastLayout.execute(new UpdateStreamCompositionLayoutRequestWrapper(
+				validateBroadcastId(broadcastId),
+				validateRequest(layout)
+		));
+	}
+
+	/**
+	 * Removes a stream from a live broadcast that was started with the
+	 * {@code streamMode} set to {@link StreamMode#MANUAL}.
+	 *
+	 * @param broadcastId ID of the broadcastId.
+	 * @param streamId ID of the stream to remove.
+	 *
+	 * @since 8.0.0-beta4
+	 */
+	public void removeBroadcastStream(String broadcastId, String streamId) {
+		patchBroadcastStream(broadcastId, new PatchComposedStreamsRequest(validateStreamId(streamId)));
+	}
+
+	/**
+	 * Adds a stream to a live broadcast that was started with the {@code streamMode} set to {@link StreamMode#MANUAL}.
+	 *
+	 * @param broadcastId ID of the broadcast.
+	 * @param streamId ID of the stream to add.
+	 *
+	 * @see #addBroadcastStream(String, String, Boolean, Boolean)
+	 * @since 8.0.0-beta4
+	 */
+	public void addBroadcastStream(String broadcastId, String streamId) {
+		addBroadcastStream(broadcastId, streamId, null, null);
+	}
+
+	/**
+	 * Adds a stream to a live broadcast that was started with the {@code streamMode} set to {@link StreamMode#MANUAL}.
+	 *
+	 * @param broadcastId ID of the broadcast.
+	 * @param streamId ID of the stream to add.
+	 * @param audio (OPTIONAL) Whether the broadcast should include the stream's audio (true by default).
+	 * @param video (OPTIONAL) Whether the broadcast should include the stream's video (true by default).
+	 *
+	 * @since 8.0.0-beta4
+	 */
+	public void addBroadcastStream(String broadcastId, String streamId, Boolean audio, Boolean video) {
+		patchBroadcastStream(broadcastId, new PatchComposedStreamsRequest(validateStreamId(streamId), audio, video));
+	}
+
+	private void patchBroadcastStream(String broadcastId, PatchComposedStreamsRequest request) {
+		PatchComposedStreamsRequest pasr = validateRequest(request);
+		pasr.id = validateBroadcastId(broadcastId);
+		patchBroadcastStream.execute(pasr);
+	}
+
+	/**
 	 * Generates a signed JSON Web Token which can be passed to the client.
 	 *
 	 * @param sessionId The session ID.
 	 * @param options Configuration parameters (claims) of the token, e.g. role, expiry time etc.
 	 *
 	 * @return The JWT with the specified properties, as a raw string.
+	 *
 	 * @since 8.0.0-beta2
 	 */
 	public String generateToken(String sessionId, TokenOptions options) {
@@ -495,6 +657,7 @@ public class VideoClient {
 	 * @param sessionId The session ID.
 	 *
 	 * @return The JWT with the default properties, as a raw string.
+	 *
 	 * @see #generateToken(String, TokenOptions)
 	 * @since 8.0.0-beta2
 	 */

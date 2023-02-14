@@ -15,56 +15,34 @@
  */
 package com.vonage.client.video;
 
-import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
-import java.util.List;
 
 /**
 * Represents an archive of a video session.
 */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Archive {
-    private Long createdAt, size;
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+public class Archive extends StreamComposition {
+    private Long size;
     private Integer duration;
-    private Boolean hasVideo, hasAudio;
-    private String id, name, url, reason, sessionId, multiArchiveTag;
+    private String name, url, reason, multiArchiveTag;
     private ArchiveStatus status;
     private OutputMode outputMode;
-    private StreamMode streamMode;
-    private Resolution resolution;
-    private List<ArchiveStream> streams;
 
     protected Archive() {
     }
 
     /**
-     * The time at which the archive was created, in milliseconds since the Unix epoch.
+     * The duration of the recording, in seconds.
      *
-     * @return The created time, as a long.
-     */
-    public Long getCreatedAt() {
-        return createdAt;
-    }
-
-    /**
-     * The duration of the archive, in seconds.
-     *
-     * @return The duration.
+     * @return The duration as an integer.
      */
     public Integer getDuration() {
         return duration;
-    }
-
-    /**
-     * ID of the archive.
-     *
-     * @return The archive ID.
-     */
-    public String getId() {
-        return id;
     }
 
     /**
@@ -77,15 +55,6 @@ public class Archive {
     }
 
     /**
-     * The resolution of the archive as an enum.
-     *
-     * @return The resolution.
-     */
-    public Resolution getResolution() {
-        return resolution;
-    }
-
-    /**
      * For archives with {@link ArchiveStatus#STOPPED} or {@link ArchiveStatus#FAILED}, this string
      * describes the reason the archive stopped (such as "maximum duration exceeded") or failed.
      *
@@ -93,15 +62,6 @@ public class Archive {
      */
     public String getReason() {
         return reason;
-    }
-
-    /**
-     * The ID of the video session associated with this archive.
-     *
-     * @return The session ID.
-     */
-    public String getSessionId() {
-        return sessionId;
     }
 
     /**
@@ -136,26 +96,6 @@ public class Archive {
     }
 
     /**
-     * Whether the archive has a video track ({@code true}) or not ({@code false}).
-     *
-     * @return Whether the archive has video.
-     */
-    @JsonProperty("hasVideo")
-    public Boolean hasVideo() {
-        return hasVideo;
-    }
-
-    /**
-     * Whether the archive has an audio track ({@code true}) or not ({@code false}).
-     *
-     * @return Whether the archive has sound.
-     */
-    @JsonProperty("hasAudio")
-    public Boolean hasAudio() {
-        return hasAudio;
-    }
-
-    /**
      * The output mode to be generated for this archive: {@code composed} or {@code individual}.
      *
      * @return The {@linkplain OutputMode}.
@@ -165,31 +105,12 @@ public class Archive {
     }
 
     /**
-     * The stream mode to used for selecting streams to be included in this archive:
-     * {@link StreamMode#AUTO} or {@link StreamMode#MANUAL}.
-     *
-     * @return The {@linkplain StreamMode}.
-     */
-    public StreamMode getStreamMode() {
-        return streamMode;
-    }
-
-    /**
      * Returns the multiArchiveTag if set for the Archive.
      *
      * @return The multiArchiveTag, or {@code null} if not applicable.
      */
     public String getMultiArchiveTag() {
         return multiArchiveTag;
-    }
-
-    /**
-     * Returns the streams associated with this archive.
-     *
-     * @return The list of ArchiveStream details.
-     */
-    public List<ArchiveStream> getStreams() {
-        return streams;
     }
 
     /**
@@ -205,21 +126,6 @@ public class Archive {
         }
         catch (IOException ex) {
             throw new VonageUnexpectedException("Failed to produce Archive from json.", ex);
-        }
-    }
-
-    /**
-     * Generates a JSON payload from this object.
-     *
-     * @return JSON representation of this Archive instance.
-     */
-    public String toJson() {
-        try {
-            ObjectMapper om = new ObjectMapper();
-            om.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-            return om.writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            return "";
         }
     }
 }

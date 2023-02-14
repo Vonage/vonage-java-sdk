@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -22,11 +22,11 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 
-class ListArchivesEndpoint extends AbstractMethod<ListStreamCompositionsRequest, ListArchivesResponse> {
+class StopBroadcastEndpoint extends AbstractMethod<String, Broadcast> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
-	private static final String PATH = "/v2/project/%s/archive";
+	private static final String PATH = "/v2/project/%s/broadcast/%s/stop";
 
-	ListArchivesEndpoint(HttpWrapper httpWrapper) {
+	StopBroadcastEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
 	}
 
@@ -36,18 +36,15 @@ class ListArchivesEndpoint extends AbstractMethod<ListStreamCompositionsRequest,
 	}
 
 	@Override
-	public RequestBuilder makeRequest(ListStreamCompositionsRequest request) {
-		String path = String.format(PATH, getApplicationIdOrApiKey());
+	public RequestBuilder makeRequest(String broadcastId) {
+		String path = String.format(PATH, getApplicationIdOrApiKey(), broadcastId);
 		String uri = httpWrapper.getHttpConfig().getVideoBaseUri() + path;
-		RequestBuilder rqBuilder = RequestBuilder.get(uri).setHeader("Accept", "application/json");
-		if (request != null) {
-			request.addParams(rqBuilder);
-		}
-		return rqBuilder;
+		return RequestBuilder.post(uri)
+				.setHeader("Accept", "application/json");
 	}
 
 	@Override
-	public ListArchivesResponse parseResponse(HttpResponse response) throws IOException {
-		return ListArchivesResponse.fromJson(basicResponseHandler.handleResponse(response));
+	public Broadcast parseResponse(HttpResponse response) throws IOException {
+		return Broadcast.fromJson(basicResponseHandler.handleResponse(response));
 	}
 }

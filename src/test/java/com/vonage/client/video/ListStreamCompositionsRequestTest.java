@@ -23,11 +23,11 @@ package com.vonage.client.video;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-public class ListArchivesRequestTest {
+public class ListStreamCompositionsRequestTest {
 
 	@Test
 	public void testNoParameters() {
-		ListArchivesRequest request = ListArchivesRequest.builder().build();
+		ListStreamCompositionsRequest request = ListStreamCompositionsRequest.builder().build();
 		assertNull(request.getSessionId());
 		assertNull(request.getCount());
 		assertNull(request.getOffset());
@@ -37,7 +37,7 @@ public class ListArchivesRequestTest {
 	public void testAllParameters() {
 		String sessionId = "flR1ZSBPY3QgMjkgMTI6MTM6MjMgUERUIDIwMTW";
 		Integer count = 37, offset = 8;
-		ListArchivesRequest request = ListArchivesRequest.builder()
+		ListStreamCompositionsRequest request = ListStreamCompositionsRequest.builder()
 				.count(count).offset(offset)
 				.sessionId(sessionId).build();
 		assertEquals(sessionId, request.getSessionId());
@@ -47,7 +47,7 @@ public class ListArchivesRequestTest {
 
 	@Test
 	public void testNullParameters() {
-		ListArchivesRequest request = ListArchivesRequest.builder().sessionId(null).build();
+		ListStreamCompositionsRequest request = ListStreamCompositionsRequest.builder().sessionId(null).build();
 		assertNull(request.getSessionId());
 		assertNull(request.getOffset());
 		assertNull(request.getCount());
@@ -56,21 +56,21 @@ public class ListArchivesRequestTest {
 	@Test
 	public void testCountBoundaries() {
 		assertThrows(IllegalArgumentException.class, () ->
-			ListArchivesRequest.builder().count(-1).build()
+			ListStreamCompositionsRequest.builder().count(-1).build()
 		);
 		assertThrows(IllegalArgumentException.class, () ->
-			ListArchivesRequest.builder().count(1001).build()
+			ListStreamCompositionsRequest.builder().count(1001).build()
 		);
-		ListArchivesRequest.builder().count(1000).build();
-		ListArchivesRequest.builder().count(0).build();
+		ListStreamCompositionsRequest.builder().count(1000).build();
+		ListStreamCompositionsRequest.builder().count(0).build();
 	}
 
 	@Test
 	public void testOffsetBoundaries() {
 		assertThrows(IllegalArgumentException.class, () ->
-			ListArchivesRequest.builder().offset(-1).build()
+			ListStreamCompositionsRequest.builder().offset(-1).build()
 		);
-		ListArchivesRequest.builder().offset(0).build();
-		ListArchivesRequest.builder().offset(1).build();
+		ListStreamCompositionsRequest.builder().offset(0).build();
+		ListStreamCompositionsRequest.builder().offset(1).build();
 	}
 }

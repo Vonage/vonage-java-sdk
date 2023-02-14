@@ -19,11 +19,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ArchiveStream {
+public class VideoStream {
 	private String streamId;
 	private Boolean hasAudio, hasVideo;
 
-	protected ArchiveStream() {}
+	protected VideoStream() {}
 
 
 	/**
@@ -41,7 +41,7 @@ public class ArchiveStream {
 	 * @return {@code true} if the recording has sound.
 	 */
 	@JsonProperty("hasAudio")
-	public boolean hasAudio() {
+	public Boolean hasAudio() {
 		return hasAudio;
 	}
 
@@ -51,7 +51,7 @@ public class ArchiveStream {
 	 * @return {@code true} if the recording has video.
 	 */
 	@JsonProperty("hasVideo")
-	public boolean hasVideo() {
+	public Boolean hasVideo() {
 		return hasVideo;
 	}
 }

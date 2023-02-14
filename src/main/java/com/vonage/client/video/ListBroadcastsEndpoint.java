@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -22,11 +22,11 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 
-class ListArchivesEndpoint extends AbstractMethod<ListStreamCompositionsRequest, ListArchivesResponse> {
+class ListBroadcastsEndpoint extends AbstractMethod<ListStreamCompositionsRequest, ListBroadcastsResponse> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
-	private static final String PATH = "/v2/project/%s/archive";
+	private static final String PATH = "/v2/project/%s/broadcast";
 
-	ListArchivesEndpoint(HttpWrapper httpWrapper) {
+	ListBroadcastsEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
 	}
 
@@ -47,7 +47,7 @@ class ListArchivesEndpoint extends AbstractMethod<ListStreamCompositionsRequest,
 	}
 
 	@Override
-	public ListArchivesResponse parseResponse(HttpResponse response) throws IOException {
-		return ListArchivesResponse.fromJson(basicResponseHandler.handleResponse(response));
+	public ListBroadcastsResponse parseResponse(HttpResponse response) throws IOException {
+		return ListBroadcastsResponse.fromJson(basicResponseHandler.handleResponse(response));
 	}
 }

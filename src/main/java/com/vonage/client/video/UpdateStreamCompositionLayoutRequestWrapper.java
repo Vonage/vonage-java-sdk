@@ -15,12 +15,12 @@
  */
 package com.vonage.client.video;
 
-class SetArchiveLayoutRequestWrapper {
-	final String archiveId;
-	final ArchiveLayout request;
+class UpdateStreamCompositionLayoutRequestWrapper {
+	final String id;
+	final StreamCompositionLayout request;
 
-	SetArchiveLayoutRequestWrapper(String archiveId, ArchiveLayout request) {
-		this.archiveId = archiveId;
+	UpdateStreamCompositionLayoutRequestWrapper(String id, StreamCompositionLayout request) {
+		this.id = id;
 		this.request = request;
 	}
 }

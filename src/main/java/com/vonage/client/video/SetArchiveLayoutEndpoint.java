@@ -26,7 +26,7 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 
-class SetArchiveLayoutEndpoint extends AbstractMethod<SetArchiveLayoutRequestWrapper, Void> {
+class SetArchiveLayoutEndpoint extends AbstractMethod<UpdateStreamCompositionLayoutRequestWrapper, Void> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/v2/project/%s/archive/%s/layout";
 
@@ -40,8 +40,8 @@ class SetArchiveLayoutEndpoint extends AbstractMethod<SetArchiveLayoutRequestWra
 	}
 
 	@Override
-	public RequestBuilder makeRequest(SetArchiveLayoutRequestWrapper wrapper) {
-		String path = String.format(PATH, getApplicationIdOrApiKey(), wrapper.archiveId);
+	public RequestBuilder makeRequest(UpdateStreamCompositionLayoutRequestWrapper wrapper) {
+		String path = String.format(PATH, getApplicationIdOrApiKey(), wrapper.id);
 		String uri = httpWrapper.getHttpConfig().getVideoBaseUri() + path;
 		return RequestBuilder.put(uri)
 				.setHeader("Content-Type", "application/json")

@@ -22,14 +22,14 @@ import com.vonage.client.VonageUnexpectedException;
 import java.util.Objects;
 
 /**
- * Defines the properties used for {@link VideoClient#setArchiveLayout(String, ArchiveLayout)}.
+ * Defines the properties used for {@link VideoClient#setArchiveLayout(String, StreamCompositionLayout)}.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class ArchiveLayout {
+public class StreamCompositionLayout {
 	private final ScreenLayoutType type, screenshareType;
 	private final String stylesheet;
 
-	private ArchiveLayout(Builder builder) {
+	private StreamCompositionLayout(Builder builder) {
 		type = Objects.requireNonNull(builder.type, "Initial layout type is required.");
 		if ((screenshareType = builder.screenshareType) != null && type != ScreenLayoutType.BEST_FIT) {
 			throw new IllegalStateException(
@@ -137,12 +137,12 @@ public class ArchiveLayout {
 
 	
 		/**
-		 * Builds the {@linkplain ArchiveLayout}.
+		 * Builds the {@linkplain StreamCompositionLayout}.
 		 *
-		 * @return An instance of ArchiveLayout, populated with all fields from this builder.
+		 * @return An instance of StreamCompositionLayout, populated with all fields from this builder.
 		 */
-		public ArchiveLayout build() {
-			return new ArchiveLayout(this);
+		public StreamCompositionLayout build() {
+			return new StreamCompositionLayout(this);
 		}
 	}
 }

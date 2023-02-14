@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -17,16 +17,20 @@ package com.vonage.client.video;
 
 import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
+import com.vonage.client.VonageBadRequestException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 
-class ListArchivesEndpoint extends AbstractMethod<ListStreamCompositionsRequest, ListArchivesResponse> {
+class UpdateBroadcastLayoutEndpoint extends AbstractMethod<UpdateStreamCompositionLayoutRequestWrapper, Void> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
-	private static final String PATH = "/v2/project/%s/archive";
+	private static final String PATH = "/v2/project/%s/broadcast/%s/layout";
 
-	ListArchivesEndpoint(HttpWrapper httpWrapper) {
+	UpdateBroadcastLayoutEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
 	}
 
@@ -36,18 +40,19 @@ class ListArchivesEndpoint extends AbstractMethod<ListStreamCompositionsRequest,
 	}
 
 	@Override
-	public RequestBuilder makeRequest(ListStreamCompositionsRequest request) {
-		String path = String.format(PATH, getApplicationIdOrApiKey());
+	public RequestBuilder makeRequest(UpdateStreamCompositionLayoutRequestWrapper wrapper) {
+		String path = String.format(PATH, getApplicationIdOrApiKey(), wrapper.id);
 		String uri = httpWrapper.getHttpConfig().getVideoBaseUri() + path;
-		RequestBuilder rqBuilder = RequestBuilder.get(uri).setHeader("Accept", "application/json");
-		if (request != null) {
-			request.addParams(rqBuilder);
-		}
-		return rqBuilder;
+		return RequestBuilder.post(uri)
+				.setHeader("Content-Type", "application/json")
+				.setEntity(new StringEntity(wrapper.request.toJson(), ContentType.APPLICATION_JSON));
 	}
 
 	@Override
-	public ListArchivesResponse parseResponse(HttpResponse response) throws IOException {
-		return ListArchivesResponse.fromJson(basicResponseHandler.handleResponse(response));
+	public Void parseResponse(HttpResponse response) throws IOException {
+		if (response.getStatusLine().getStatusCode() != 200) {
+			throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
+		}
+		return null;
 	}
 }
