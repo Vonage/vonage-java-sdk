@@ -63,7 +63,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 			listArchiveJson = "{\"count\":1,\"items\":["+archiveJson+"]}",
 			broadcastJson = "{\n" +
 					"  \"id\": \""+broadcastId+"\",\n" +
-					"  \"sessionId\": \"2_MX4xMDBfjE0Mzc2NzY1NDgwMTJ-TjMzfn4\",\n" +
+					"  \"sessionId\": \""+sessionId+"\",\n" +
 					"  \"multiBroadcastTag\": \"broadcast-1234b\",\n" +
 					"  \"applicationId\": \""+applicationId+"\",\n" +
 					"  \"createdAt\": 1437676551000,\n" +
@@ -172,7 +172,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 	static void assertBroadcastEqualsExpectedJson(Broadcast response) {
 		assertNotNull(response);
-		assertEquals("2_MX4xMDBfjE0Mzc2NzY1NDgwMTJ-TjMzfn4", response.getSessionId());
+		assertEquals(sessionId, response.getSessionId());
 		assertEquals(broadcastId, response.getId().toString());
 		assertEquals(applicationId, response.getApplicationId().toString());
 		assertTrue(response.hasAudio());

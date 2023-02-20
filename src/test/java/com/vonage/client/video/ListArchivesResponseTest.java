@@ -26,8 +26,8 @@ public class ListArchivesResponseTest {
 	@Test
 	public void testFromJsonAllFields() {
 		Integer count = 4;
-		String archive0Json = "{\"resolution\":\"1080x1920\",\"reason\":\"An excuse\"," +
-				"\"status\":\"paused\",\"outputMode\":\"composed\"}",
+		String archive0Json = "{\"reason\":\"An excuse\",\"status\":\"paused\"," +
+				"\"outputMode\":\"composed\",\"resolution\":\"1080x1920\"}",
 				archive1Json = VideoClientTest.archiveJson,
 				archive2Json = "{}",
 				archive3Json = "{\"status\":\"u\",\"outputMode\":\"o\",\"resolution\":\"x\"," +

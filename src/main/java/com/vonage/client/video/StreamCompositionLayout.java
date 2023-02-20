@@ -15,6 +15,7 @@
  */
 package com.vonage.client.video;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,11 +26,15 @@ import java.util.Objects;
  * Defines the properties used for {@link VideoClient#setArchiveLayout(String, StreamCompositionLayout)}.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class StreamCompositionLayout {
-	private final ScreenLayoutType type, screenshareType;
-	private final String stylesheet;
+	private ScreenLayoutType type, screenshareType;
+	private String stylesheet;
 
-	private StreamCompositionLayout(Builder builder) {
+	protected StreamCompositionLayout() {
+	}
+
+	StreamCompositionLayout(Builder builder) {
 		type = Objects.requireNonNull(builder.type, "Initial layout type is required.");
 		if ((screenshareType = builder.screenshareType) != null && type != ScreenLayoutType.BEST_FIT) {
 			throw new IllegalStateException(

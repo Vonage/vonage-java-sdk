@@ -16,8 +16,7 @@
 package com.vonage.client.video;
 
 import com.vonage.client.VonageUnexpectedException;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class ProjectDetailsTest {
@@ -71,5 +70,11 @@ public class ProjectDetailsTest {
 		assertNull(response.getName());
 		assertNull(response.getEnvironment());
 		assertNull(response.getCreatedAt());
+	}
+
+	@Test
+	public void testFromJsonNullAndEmptyString() {
+		assertNotNull(ProjectDetails.fromJson(""));
+		assertNotNull(ProjectDetails.fromJson(null));
 	}
 }

@@ -59,7 +59,7 @@ public abstract class StreamComposition {
 	 *
 	 * @return The composition ID.
 	 */
-	@JsonProperty
+	@JsonProperty("id")
 	public UUID getId() {
 		return id;
 	}
@@ -69,7 +69,7 @@ public abstract class StreamComposition {
 	 *
 	 * @return The session ID.
 	 */
-	@JsonProperty
+	@JsonProperty("sessionId")
 	public String getSessionId() {
 		return sessionId;
 	}
@@ -79,7 +79,7 @@ public abstract class StreamComposition {
 	 *
 	 * @return The resolution as an enum.
 	 */
-	@JsonProperty
+	@JsonProperty("resolution")
 	public Resolution getResolution() {
 		return resolution;
 	}
@@ -110,7 +110,7 @@ public abstract class StreamComposition {
 	 *
 	 * @return The {@linkplain StreamMode}.
 	 */
-	@JsonProperty
+	@JsonProperty("streamMode")
 	public StreamMode getStreamMode() {
 		return streamMode;
 	}
@@ -120,7 +120,7 @@ public abstract class StreamComposition {
 	 *
 	 * @return The created time as a long.
 	 */
-	@JsonProperty
+	@JsonProperty("createdAt")
 	public Long getCreatedAt() {
 		return createdAt;
 	}
@@ -130,9 +130,19 @@ public abstract class StreamComposition {
 	 *
 	 * @return The details for each video stream.
 	 */
-	@JsonProperty
+	@JsonProperty("streams")
 	public List<VideoStream> getStreams() {
 		return streams;
+	}
+
+	/**
+	 * Describes how the streams in this composition are displayed.
+	 *
+	 * @return Layout information for the stream compositions.
+	 */
+	@JsonProperty("layout")
+	public StreamCompositionLayout getLayout() {
+		return layout;
 	}
 
 	/**

@@ -186,7 +186,7 @@ public class Broadcast extends StreamComposition {
 		 * Whether streams included in the broadcast are selected automatically ("auto", the default) or manually
 		 * ("manual"). When streams are selected automatically ("auto"), all streams in the session can be included
 		 * in the broadcast. When streams are selected manually ("manual"), you specify which streams to include
-		 * based on calls to {@link VideoClient#addBroadcastStream(UUID, String, Boolean, Boolean)}.
+		 * based on calls to {@link VideoClient#addBroadcastStream(String, String, Boolean, Boolean)}.
 		 * For both automatic and manual modes, the broadcast composer includes streams based on
 		 * <a href=https://tokbox.com/developer/guides/archive-broadcast-layout/#stream-prioritization-rules>
 		 * stream prioritization rules</a>.
@@ -263,7 +263,9 @@ public class Broadcast extends StreamComposition {
 		 * @see #addRtmpStream(Rtmp)
 		 */
 		public Builder rtmpStreams(Collection<Rtmp> rtmps) {
-			this.rtmps.addAll(Objects.requireNonNull(rtmps, "Rtmps cannot be null."));
+			for (Rtmp rtmp : Objects.requireNonNull(rtmps, "Rtmps cannot be null.")) {
+				addRtmpStream(rtmp);
+			}
 			return this;
 		}
 
