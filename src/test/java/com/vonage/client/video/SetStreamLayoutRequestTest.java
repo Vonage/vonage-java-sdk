@@ -27,23 +27,34 @@ public class SetStreamLayoutRequestTest {
 
 	@Test
 	public void testSerializeAllParameters() {
+		String
+				id0 = UUID.randomUUID().toString(),
+				id1 = UUID.randomUUID().toString(),
+				id2 = UUID.randomUUID().toString(),
+				id3 = UUID.randomUUID().toString(),
+				id4 = UUID.randomUUID().toString();
 		List<SessionStream> streams = Arrays.asList(
-				SessionStream.builder("stream0").layoutClassList(Collections.emptyList()).build(),
-				SessionStream.builder("stream1").layoutClassList(Arrays.asList("full")).build(),
-				SessionStream.builder("stream2").build(),
-				SessionStream.builder("stream3").layoutClassList().build(),
-				SessionStream.builder("stream4").layoutClassList("focus", "min").build()
+				SessionStream.builder(id0).layoutClassList(Collections.emptyList()).build(),
+				SessionStream.builder(id1).layoutClassList(Arrays.asList("full")).build(),
+				SessionStream.builder(id2).build(),
+				SessionStream.builder(id3).layoutClassList().build(),
+				SessionStream.builder(id4).layoutClassList("focus", "min").build()
 		);
 		SetStreamLayoutRequest request = new SetStreamLayoutRequest(sessionId, streams);
 		String expectedJson = "{\"items\":[" +
-				"{\"id\":\"stream0\",\"layoutClassList\":[]}," +
-				"{\"id\":\"stream1\",\"layoutClassList\":[\"full\"]}," +
-				"{\"id\":\"stream2\"}," +
-				"{\"id\":\"stream3\",\"layoutClassList\":[]}," +
-				"{\"id\":\"stream4\",\"layoutClassList\":[\"focus\",\"min\"]}" +
+				"{\"id\":\""+id0+"\",\"layoutClassList\":[]}," +
+				"{\"id\":\""+id1+"\",\"layoutClassList\":[\"full\"]}," +
+				"{\"id\":\""+id2+"\"}," +
+				"{\"id\":\""+id3+"\",\"layoutClassList\":[]}," +
+				"{\"id\":\""+id4+"\",\"layoutClassList\":[\"focus\",\"min\"]}" +
 			"]}";
 		assertEquals(expectedJson, request.toJson());
 		assertEquals(sessionId, request.sessionId);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testConstructInvalidStreamId() {
+		SessionStream.builder("abc123").build();
 	}
 
 	@Test(expected = IllegalArgumentException.class)

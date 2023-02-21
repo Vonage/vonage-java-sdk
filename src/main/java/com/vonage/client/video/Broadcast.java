@@ -22,6 +22,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 
 /**
@@ -32,8 +34,9 @@ import java.util.*;
 public class Broadcast extends StreamComposition {
 	private String multiBroadcastTag;
 	private UUID applicationId;
-	private Long updatedAt;
-	private Integer maxDuration, maxBitrate;
+	@JsonProperty("updatedAt") private Long updatedAt;
+	@JsonProperty("maxDuration") private Integer maxDuration;
+	private Integer maxBitrate;
 	private BroadcastStatus status;
 	private BroadcastUrls broadcastUrls;
 	private Settings settings;
@@ -97,16 +100,32 @@ public class Broadcast extends StreamComposition {
 	 * @return For this start method, this timestamp matches the createdAt timestamp.
 	 */
 	@JsonProperty("updatedAt")
-	public Long getUpdatedAt() {
+	public Long getUpdatedAtRaw() {
 		return updatedAt;
+	}
+
+	/**
+	 * @return The updatedAt time, or {@code null} if unset / not applicable.
+	 */
+	@JsonIgnore
+	public Instant getUpdatedAt() {
+		return updatedAt != null ? Instant.ofEpochMilli(updatedAt) : null;
 	}
 
 	/**
 	 * @return The maximum duration for the broadcast (if one was set), in seconds.
 	 */
 	@JsonProperty("maxDuration")
-	public Integer getMaxDuration() {
+	public Integer getMaxDurationRaw() {
 		return maxDuration;
+	}
+
+	/**
+	 * @return The maximum duration for the broadcast (precision in seconds), or {@code null} if unset.
+	 */
+	@JsonIgnore
+	public Duration getMaxDuration() {
+		return maxDuration != null ? Duration.ofSeconds(maxDuration) : null;
 	}
 
 	/**

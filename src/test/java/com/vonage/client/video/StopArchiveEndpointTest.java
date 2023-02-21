@@ -24,6 +24,7 @@ import org.apache.http.entity.ContentType;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import java.time.Instant;
 import java.util.UUID;
 
 public class StopArchiveEndpointTest {
@@ -70,7 +71,7 @@ public class StopArchiveEndpointTest {
 				"}";
 		Archive response = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, expectedPayload));
 		assertNotNull(response);
-		assertEquals(5049, response.getDuration().longValue());
+		assertEquals(5049, response.getDurationRaw().longValue());
 		assertEquals(ArchiveStatus.AVAILABLE, response.getStatus());
 		assertEquals(1, response.getStreams().size());
 		assertEquals("abc123", response.getStreams().get(0).getStreamId());
@@ -80,7 +81,7 @@ public class StopArchiveEndpointTest {
 		assertEquals("Foo", response.getName());
 		assertTrue(response.hasAudio());
 		assertNull(response.hasVideo());
-		assertEquals(1384221730000L, response.getCreatedAt().longValue());
+		assertEquals(Instant.ofEpochSecond(1384221730L), response.getCreatedAt());
 		assertEquals("flR1ZSBPY3QgMjkgMTI6MTM6MjMgUERUIDIwMTN", response.getSessionId());
 	}
 

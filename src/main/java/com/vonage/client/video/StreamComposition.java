@@ -15,6 +15,7 @@
  */
 package com.vonage.client.video;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,6 +23,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -39,7 +41,7 @@ public abstract class StreamComposition {
 	protected Resolution resolution;
 	protected StreamCompositionLayout layout;
 	protected Boolean hasVideo, hasAudio;
-	protected Long createdAt;
+	@JsonProperty("createdAt") protected Long createdAt;
 	protected List<VideoStream> streams;
 
 	protected StreamComposition() {
@@ -118,11 +120,21 @@ public abstract class StreamComposition {
 	/**
 	 * The time at which this composition was started or created, in milliseconds since the Unix epoch.
 	 *
-	 * @return The created time as a long.
+	 * @return The created time as a long, or {@code null} if absent / not applicable.
 	 */
 	@JsonProperty("createdAt")
-	public Long getCreatedAt() {
+	public Long getCreatedAtRaw() {
 		return createdAt;
+	}
+
+	/**
+	 * The time at which this composition was started or created.
+	 *
+	 * @return The creation time, or {@code null} if absent / not applicable.
+	 */
+	@JsonIgnore
+	public Instant getCreatedAt() {
+		return createdAt != null ? Instant.ofEpochMilli(createdAt) : null;
 	}
 
 	/**

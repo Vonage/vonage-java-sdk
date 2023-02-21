@@ -15,11 +15,15 @@
  */
 package com.vonage.client.video;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
+import java.net.URI;
+import java.time.Duration;
 
 /**
 * Represents an archive of a video session.
@@ -28,8 +32,9 @@ import java.io.IOException;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Archive extends StreamComposition {
     private Long size;
-    private Integer duration;
-    private String name, url, reason, multiArchiveTag;
+    @JsonProperty("duration") private Integer duration;
+    private String name,reason, multiArchiveTag;
+    private URI url;
     private ArchiveStatus status;
     private OutputMode outputMode;
 
@@ -57,8 +62,19 @@ public class Archive extends StreamComposition {
      *
      * @return The duration as an integer.
      */
-    public Integer getDuration() {
+    @JsonProperty("duration")
+    public Integer getDurationRaw() {
         return duration;
+    }
+
+    /**
+     * The duration of the recording (precision in seconds).
+     *
+     * @return The duration.
+     */
+    @JsonIgnore
+    public Duration getDuration() {
+        return duration != null ? Duration.ofSeconds(duration) : null;
     }
 
     /**
@@ -66,6 +82,7 @@ public class Archive extends StreamComposition {
      *
      * @return The archive name.
      */
+    @JsonProperty("name")
     public String getName() {
         return name;
     }
@@ -74,8 +91,9 @@ public class Archive extends StreamComposition {
      * For archives with {@link ArchiveStatus#STOPPED} or {@link ArchiveStatus#FAILED}, this string
      * describes the reason the archive stopped (such as "maximum duration exceeded") or failed.
      *
-     * @return The reason text.
+     * @return The failure reason text, or {@code null} if not applicable.
      */
+    @JsonProperty("reason")
     public String getReason() {
         return reason;
     }
@@ -83,8 +101,9 @@ public class Archive extends StreamComposition {
     /**
      * The size of the MP4 file. For archives that have not been generated, this value is set to 0.
      *
-     * @return The size, as a long.
+     * @return The size as a long, or {@code null} if unset.
      */
+    @JsonProperty("size")
     public Long getSize() {
         return size;
     }
@@ -94,6 +113,7 @@ public class Archive extends StreamComposition {
      *
      * @return The status.
      */
+    @JsonProperty("status")
     public ArchiveStatus getStatus() {
         return status;
     }
@@ -105,9 +125,10 @@ public class Archive extends StreamComposition {
      * is only available from the URL for 10 minutes. To generate a new URL, call the
      * {@link VideoClient#listArchives()} or {@link VideoClient#getArchive(String)} method.
      *
-     * @return The URL.
+     * @return The download URL.
      */
-    public String getUrl() {
+    @JsonProperty("url")
+    public URI getUrl() {
         return url;
     }
 
@@ -116,6 +137,7 @@ public class Archive extends StreamComposition {
      *
      * @return The {@linkplain OutputMode}.
      */
+    @JsonProperty("outputMode")
     public OutputMode getOutputMode() {
         return outputMode;
     }
@@ -125,6 +147,7 @@ public class Archive extends StreamComposition {
      *
      * @return The multiArchiveTag, or {@code null} if not applicable.
      */
+    @JsonProperty("multiArchiveTag")
     public String getMultiArchiveTag() {
         return multiArchiveTag;
     }

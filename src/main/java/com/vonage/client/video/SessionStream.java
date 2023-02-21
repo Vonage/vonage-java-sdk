@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Represents a stream's metadata in a Vonage Video session.
@@ -27,7 +28,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class SessionStream {
-	private String id;
+	private UUID id;
 	private List<String> layoutClassList;
 
 	protected SessionStream() {
@@ -41,7 +42,7 @@ public class SessionStream {
 	/**
 	 * @return The stream ID.
 	 */
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 
@@ -64,11 +65,11 @@ public class SessionStream {
 	}
 
 	public static class Builder {
-		private final String id;
+		private final UUID id;
 		private List<String> layoutClassList;
 
 		protected Builder(String id) {
-			this.id = id;
+			this.id = UUID.fromString(id);
 		}
 
 		/**

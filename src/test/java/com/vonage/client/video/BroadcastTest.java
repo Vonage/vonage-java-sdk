@@ -92,9 +92,9 @@ public class BroadcastTest {
 		assertEquals(sessionId, response.getSessionId());
 		assertEquals(multiBroadcastTag, response.getMultiBroadcastTag());
 		assertEquals(applicationId, response.getApplicationId());
-		assertEquals(createdAt, response.getCreatedAt());
-		assertEquals(updatedAt, response.getUpdatedAt());
-		assertEquals(maxDuration, response.getMaxDuration());
+		assertEquals(createdAt, response.getCreatedAtRaw());
+		assertEquals(updatedAt, response.getUpdatedAtRaw());
+		assertEquals(maxDuration, response.getMaxDurationRaw());
 		assertEquals(maxBitrate, response.getMaxBitrate());
 		assertEquals(hasAudio, response.hasAudio());
 		assertEquals(hasVideo, response.hasVideo());
@@ -298,8 +298,8 @@ public class BroadcastTest {
 		Rtmp rtmp = Rtmp.builder().serverUrl("server").streamName("name").build();
 		Broadcast.Builder builder = Broadcast.builder(sessionId).addRtmpStream(rtmp);
 		int min = 60, max = 36000;
-		assertEquals(min, builder.maxDuration(min).build().getMaxDuration().intValue());
-		assertEquals(max, builder.maxDuration(max).build().getMaxDuration().intValue());
+		assertEquals(min, builder.maxDuration(min).build().getMaxDurationRaw().intValue());
+		assertEquals(max, builder.maxDuration(max).build().getMaxDurationRaw().intValue());
 		assertThrows(IllegalArgumentException.class, () -> builder.maxDuration(min - 1).build());
 		assertThrows(IllegalArgumentException.class, () -> builder.maxDuration(max + 1).build());
 	}

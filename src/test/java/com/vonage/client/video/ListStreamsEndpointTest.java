@@ -53,8 +53,8 @@ public class ListStreamsEndpointTest {
 	public void testParseValidResponse() throws Exception {
 		Integer count = 1;
 		VideoType videoType0 = VideoType.CUSTOM;
-		String id0 = UUID.randomUUID().toString(),
-			name0 = "My Stream",
+		UUID id0 = UUID.randomUUID();
+		String name0 = "My Stream",
 			layoutClass0 = "full",
 			json = "{\n" +
 				"  \"count\": "+count+",\n" +

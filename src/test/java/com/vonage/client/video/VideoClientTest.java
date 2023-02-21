@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.junit.function.ThrowingRunnable;
 import java.net.URI;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -31,7 +32,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 	static final String
 			applicationId = "78d335fa-323d-0114-9c3d-d6f0d48968cf",
 			sessionId = "flR1ZSBPY3QgMjkgMTI6MTM6MjMgUERUIDIwMTN",
-			streamId = "abc321",
+			streamId = "9c18b42f-ee38-4b38-99bb-d37b2eca9741",
 			token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.X.Z",
 			id = "b0a5a8c7-dc38-459f-a48d-a7f2008da853",
 			archiveId = "b40ef09b-3811-4726-b508-e41a0f96c68f",
@@ -129,8 +130,10 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 	static void assertArchiveEqualsExpectedJson(Archive response) {
 		assertNotNull(response);
-		assertEquals(Long.valueOf(1384221730000L), response.getCreatedAt());
-		assertEquals(Integer.valueOf(5049), response.getDuration());
+		assertEquals(Long.valueOf(1384221730000L), response.getCreatedAtRaw());
+		assertEquals(Instant.ofEpochSecond(1384221730L), response.getCreatedAt());
+		assertEquals(Integer.valueOf(5049), response.getDurationRaw());
+		assertEquals(Duration.ofSeconds(5049), response.getDuration());
 		assertTrue(response.hasAudio());
 		assertTrue(response.hasVideo());
 		assertEquals("b40ef09b-3811-4726-b508-e41a0f96c68f", response.getId().toString());
@@ -147,7 +150,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		assertEquals(streamId, archiveStream.getStreamId());
 		assertFalse(archiveStream.hasAudio());
 		assertTrue(archiveStream.hasVideo());
-		assertEquals("https://tokbox.s3.amazonaws.com/"+connectionId+"/archive.mp4", response.getUrl());
+		assertEquals("https://tokbox.s3.amazonaws.com/"+connectionId+"/archive.mp4", response.getUrl().toString());
 	}
 
 	void stubBroadcastJsonAndAssertThrows(ThrowingRunnable invocation) throws Exception {
@@ -179,10 +182,10 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		assertTrue(response.hasVideo());
 		assertEquals(BroadcastStatus.STARTED, response.getStatus());
 		assertEquals(Resolution.HD_PORTRAIT, response.getResolution());
-		assertEquals(1437676551000L, response.getCreatedAt().longValue());
-		assertEquals(1437876551000L, response.getUpdatedAt().longValue());
+		assertEquals(1437676551000L, response.getCreatedAtRaw().longValue());
+		assertEquals(1437876551000L, response.getUpdatedAtRaw().longValue());
 		assertEquals("broadcast-1234b", response.getMultiBroadcastTag());
-		assertEquals(5400, response.getMaxDuration().intValue());
+		assertEquals(Duration.ofSeconds(5400), response.getMaxDuration());
 		assertEquals(2000000, response.getMaxBitrate().intValue());
 		BroadcastUrls broadcastUrls = response.getBroadcastUrls();
 		assertNotNull(broadcastUrls);
@@ -236,17 +239,17 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		stubResponse(responseJson);
 		CreateSessionResponse response = client.createSession(request);
 		assertEquals(sessionId, response.getSessionId());
-		assertEquals(applicationId, response.getApplicationId());
+		assertEquals(applicationId, response.getApplicationId().toString());
 		assertEquals(createDt, response.getCreateDt());
-		assertEquals(msUrl, response.getMediaServerUrl());
+		assertEquals(msUrl, response.getMediaServerUrl().toString());
 
 		stubResponse(responseJson);
 		response = client.createSession();
 		assertNotNull(response);
 		assertEquals(sessionId, response.getSessionId());
-		assertEquals(applicationId, response.getApplicationId());
+		assertEquals(applicationId, response.getApplicationId().toString());
 		assertEquals(createDt, response.getCreateDt());
-		assertEquals(msUrl, response.getMediaServerUrl());
+		assertEquals(msUrl, response.getMediaServerUrl().toString());
 
 		responseJson = "{\n" + "  \"code\": 400,\n" + "  \"message\": "+
 				"\"Invalid request. This response may indicate that data in your request data is invalid JSON. "+
@@ -295,7 +298,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 		stubResponse(200, responseJson);
 		GetStreamResponse response = client.getStream(sessionId, streamId);
-		assertEquals(streamId, response.getId());
+		assertEquals(streamId, response.getId().toString());
 		assertEquals(VideoType.CUSTOM, response.getVideoType());
 		assertEquals(1, response.getLayoutClassList().size());
 		assertEquals("full", response.getLayoutClassList().get(0));

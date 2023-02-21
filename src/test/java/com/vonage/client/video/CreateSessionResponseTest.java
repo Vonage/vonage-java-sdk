@@ -23,16 +23,17 @@ package com.vonage.client.video;
 import com.vonage.client.VonageUnexpectedException;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import java.net.URI;
 import java.util.UUID;
 
 public class CreateSessionResponseTest {
 
 	@Test
 	public void testFromJsonAllFields() {
+		UUID applicationId = UUID.randomUUID();
+		URI mediaServerUrl = URI.create("ftp://myserver.data/resource");
 		String sessionId = "SESSION_ID-123",
-			applicationId = UUID.randomUUID().toString(),
-			createDt = "abc123",
-			mediaServerUrl = "ftp://myserver.data/resource";
+			createDt = "abc123";
 
 		CreateSessionResponse response = CreateSessionResponse.fromJson("[{\n" +
 				"\"session_id\":\""+sessionId+"\",\n" +

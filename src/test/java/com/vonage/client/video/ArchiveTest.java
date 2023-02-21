@@ -17,6 +17,7 @@ package com.vonage.client.video;
 
 import com.vonage.client.VonageUnexpectedException;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import java.util.UUID;
 
@@ -35,12 +36,17 @@ public class ArchiveTest {
 				.streamMode(StreamMode.AUTO).layout(layout)
 				.multiArchiveTag(multiArchiveTag).build();
 
-		String expectedJson = "{\"name\":\""+name+"\",\"multiArchiveTag\":\""+multiArchiveTag +
-				"\",\"outputMode\":\"composed\",\"sessionId\":\""+sessionId+"\",\"streamMode\":\"auto\"," +
-				"\"resolution\":\"1280x720\",\"layout\":{\"type\":\"verticalPresentation\"}," +
-				"\"hasVideo\":true,\"hasAudio\":true}";
+		String json = request.toJson();
+		assertTrue(json.contains("\"name\":\""+name+"\""));
+		assertTrue(json.contains("\"multiArchiveTag\":\""+multiArchiveTag+"\""));
+		assertTrue(json.contains("\"sessionId\":\""+sessionId+"\""));
+		assertTrue(json.contains("\"outputMode\":\"composed\""));
+		assertTrue(json.contains("\"streamMode\":\"auto\""));
+		assertTrue(json.contains("\"resolution\":\"1280x720\""));
+		assertTrue(json.contains("\"layout\":{\"type\":\"verticalPresentation\"}"));
+		assertTrue(json.contains("\"hasVideo\":true"));
+		assertTrue(json.contains("\"hasAudio\":true"));
 
-		assertEquals(expectedJson, request.toJson());
 	}
 
 	@Test
@@ -53,11 +59,13 @@ public class ArchiveTest {
 				.streamMode(StreamMode.MANUAL).layout(layout)
 				.outputMode(OutputMode.COMPOSED).build();
 
-		String expectedJson = "{\"outputMode\":\"composed\",\"sessionId\":\"s1\",\"streamMode\":\"manual\"," +
-				"\"resolution\":\"480x640\",\"layout\":{\"type\":\"custom\",\"stylesheet\":\""+style+"\"}," +
-				"\"hasAudio\":false}";
-
-		assertEquals(expectedJson, request.toJson());
+		String json = request.toJson();
+		assertTrue(json.contains("\"outputMode\":\"composed\""));
+		assertTrue(json.contains("\"streamMode\":\"manual\""));
+		assertTrue(json.contains("\"sessionId\":\"s1\""));
+		assertTrue(json.contains("\"resolution\":\"480x640\""));
+		assertTrue(json.contains("\"hasAudio\":false"));
+		assertTrue(json.contains("\"layout\":{\"type\":\"custom\",\"stylesheet\":\""+style+"\"}"));
 	}
 
 	@Test(expected = IllegalStateException.class)

@@ -51,7 +51,7 @@ public class CreateArchiveEndpointTest {
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		String expectedPayload = "{\"name\":\""+name+"\",\"sessionId\":\""+sessionId+"\",\"hasVideo\":false}";
+		String expectedPayload = "{\"sessionId\":\""+sessionId+"\",\"hasVideo\":false,\"name\":\""+name+"\"}";
 		assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
 		String expectedResponse = "{}";
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);

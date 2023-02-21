@@ -41,12 +41,12 @@ public class GetStreamEndpointTest {
 	
 	@Test
 	public void testMakeRequestAllParameters() {
-		String sessionId = UUID.randomUUID().toString(),
-				streamId = UUID.randomUUID().toString(),
+		UUID streamId = UUID.randomUUID();
+		String sessionId = "2=sessionID",
 				expectedUri = "https://video.api.vonage.com/v2/project/" +
 					applicationId+"/session/"+sessionId+"/stream/"+streamId;
 
-		GetStreamRequestWrapper wrapper = new GetStreamRequestWrapper(sessionId, streamId);
+		GetStreamRequestWrapper wrapper = new GetStreamRequestWrapper(sessionId, streamId.toString());
 		RequestBuilder builder = endpoint.makeRequest(wrapper);
 		assertEquals("GET", builder.getMethod());
 		assertEquals(expectedUri, builder.build().getURI().toString());
@@ -56,8 +56,8 @@ public class GetStreamEndpointTest {
 	@Test
 	public void testParseValidResponse() throws Exception {
 		VideoType videoType = VideoType.SCREEN;
-		String id = UUID.randomUUID().toString(),
-				name = "My Stream",
+		UUID id = UUID.randomUUID();
+		String name = "My Stream",
 				layoutClass = "full",
 				json = "{\n" +
 					"      \"id\": \""+id+"\",\n" +

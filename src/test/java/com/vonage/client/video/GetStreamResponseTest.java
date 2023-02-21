@@ -16,10 +16,12 @@
 package com.vonage.client.video;
 
 import com.vonage.client.VonageUnexpectedException;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class GetStreamResponseTest {
 	
@@ -28,7 +30,7 @@ public class GetStreamResponseTest {
 		VideoType videoType = VideoType.CAMERA;
 		assertEquals("camera", videoType.toString());
 		String name = "";
-		String id = "8b732909-0a06-46a2-8ea8-074e64d43422";
+		UUID id = UUID.fromString("8b732909-0a06-46a2-8ea8-074e64d43422");
 		List<String> layoutClassList = Arrays.asList("full");
 	
 		GetStreamResponse response = GetStreamResponse.fromJson("{\n" +

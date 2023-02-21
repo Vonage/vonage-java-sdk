@@ -19,12 +19,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
-
 import java.io.IOException;
+import java.net.URI;
+import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CreateSessionResponse {
-	private String sessionId, applicationId, createDt, mediaServerUrl;
+	private String sessionId, createDt;
+	private UUID applicationId;
+	private URI mediaServerUrl;
 
 	protected CreateSessionResponse() {
 	}
@@ -41,7 +44,7 @@ public class CreateSessionResponse {
 	 * @return The application ID.
 	 */
 	@JsonProperty("application_id")
-	public String getApplicationId() {
+	public UUID getApplicationId() {
 		return applicationId;
 	}
 
@@ -57,7 +60,7 @@ public class CreateSessionResponse {
 	 * @return The URL of the Media Router used by the session.
 	 */
 	@JsonProperty("media_server_url")
-	public String getMediaServerUrl() {
+	public URI getMediaServerUrl() {
 		return mediaServerUrl;
 	}
 
