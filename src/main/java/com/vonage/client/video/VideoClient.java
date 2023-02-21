@@ -420,7 +420,7 @@ public class VideoClient {
 	 *
 	 * @return The created Archive.
 	 */
-	public Archive createArchive(CreateArchiveRequest request) {
+	public Archive createArchive(Archive request) {
 		return createArchive.execute(validateRequest(request));
 	}
 

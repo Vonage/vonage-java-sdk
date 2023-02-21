@@ -519,7 +519,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 	@Test
 	public void testCreateArchive() throws Exception {
-		CreateArchiveRequest request = CreateArchiveRequest.builder(sessionId).build();
+		Archive request = Archive.builder(sessionId).build();
 		stubArchiveJsonAndAssertEquals(() -> client.createArchive(request));
 		stubArchiveJsonAndAssertThrows(() -> client.createArchive(null));
 

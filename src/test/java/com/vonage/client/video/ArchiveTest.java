@@ -15,11 +15,12 @@
  */
 package com.vonage.client.video;
 
+import com.vonage.client.VonageUnexpectedException;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import java.util.UUID;
 
-public class CreateArchiveRequestTest {
+public class ArchiveTest {
 
 	@Test
 	public void testSerializeAllParams() {
@@ -27,16 +28,17 @@ public class CreateArchiveRequestTest {
 		String name = "Test archive", multiArchiveTag = "DemoArchive_TagName";
 		StreamCompositionLayout layout = StreamCompositionLayout.builder(ScreenLayoutType.VERTICAL).build();
 
-		CreateArchiveRequest request = CreateArchiveRequest.builder(sessionId)
+		Archive request = Archive.builder(sessionId)
 				.name(name).hasAudio(true).hasVideo(true)
 				.resolution(Resolution.HD_LANDSCAPE)
 				.outputMode(OutputMode.COMPOSED)
 				.streamMode(StreamMode.AUTO).layout(layout)
 				.multiArchiveTag(multiArchiveTag).build();
 
-		String expectedJson = "{\"sessionId\":\""+sessionId+"\",\"name\":\""+name+"\",\"multiArchiveTag\":" +
-			"\""+multiArchiveTag+"\",\"resolution\":\"1280x720\",\"outputMode\":\"composed\",\"streamMode\":" +
-			"\"auto\",\"layout\":{\"type\":\"verticalPresentation\"},\"hasAudio\":true,\"hasVideo\":true}";
+		String expectedJson = "{\"name\":\""+name+"\",\"multiArchiveTag\":\""+multiArchiveTag +
+				"\",\"outputMode\":\"composed\",\"sessionId\":\""+sessionId+"\",\"streamMode\":\"auto\"," +
+				"\"resolution\":\"1280x720\",\"layout\":{\"type\":\"verticalPresentation\"}," +
+				"\"hasVideo\":true,\"hasAudio\":true}";
 
 		assertEquals(expectedJson, request.toJson());
 	}
@@ -46,13 +48,13 @@ public class CreateArchiveRequestTest {
 		String style = "stream.instructor {position: absolute; width: 100%;  height:50%;}";
 		StreamCompositionLayout layout = StreamCompositionLayout.builder(ScreenLayoutType.CUSTOM).stylesheet(style).build();
 
-		CreateArchiveRequest request = CreateArchiveRequest.builder("s1")
-				.hasAudio(false).resolution(Resolution.SD_LANDSCAPE)
+		Archive request = Archive.builder("s1")
+				.hasAudio(false).resolution(Resolution.SD_PORTRAIT)
 				.streamMode(StreamMode.MANUAL).layout(layout)
 				.outputMode(OutputMode.COMPOSED).build();
 
-		String expectedJson = "{\"sessionId\":\"s1\",\"resolution\":\"640x480\",\"outputMode\":\"composed\"," +
-				"\"streamMode\":\"manual\",\"layout\":{\"type\":\"custom\",\"stylesheet\":\""+style+"\"}," +
+		String expectedJson = "{\"outputMode\":\"composed\",\"sessionId\":\"s1\",\"streamMode\":\"manual\"," +
+				"\"resolution\":\"480x640\",\"layout\":{\"type\":\"custom\",\"stylesheet\":\""+style+"\"}," +
 				"\"hasAudio\":false}";
 
 		assertEquals(expectedJson, request.toJson());
@@ -60,7 +62,7 @@ public class CreateArchiveRequestTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void testConstructCustomLayoutOnNonComposedArchive() {
-		CreateArchiveRequest.builder("sessionId")
+		Archive.builder("sessionId")
 				.layout(StreamCompositionLayout.builder(ScreenLayoutType.BEST_FIT).build())
 				.outputMode(OutputMode.INDIVIDUAL).build();
 	}
@@ -69,16 +71,26 @@ public class CreateArchiveRequestTest {
 	public void testConstructSessionIdOnly() {
 		String sessionId = UUID.randomUUID().toString();
 		String expectedJson = "{\"sessionId\":\""+sessionId+"\"}";
-		assertEquals(expectedJson, CreateArchiveRequest.builder(sessionId).build().toJson());
+		assertEquals(expectedJson, Archive.builder(sessionId).build().toJson());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructNullSessionId() {
-		CreateArchiveRequest.builder(null).build();
+		Archive.builder(null).build();
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructEmptySessionId() {
-		CreateArchiveRequest.builder("").build();
+		Archive.builder("").build();
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void testFromJsonInvalid() {
+		Archive.fromJson("{malformed]");
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void testUpdateFromJsonInvalid() {
+		new Archive().updateFromJson("");
 	}
 }

@@ -21,8 +21,7 @@
 package com.vonage.client.video;
 
 import com.vonage.client.VonageUnexpectedException;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import java.util.UUID;
 
@@ -30,7 +29,7 @@ public class CreateSessionResponseTest {
 
 	@Test
 	public void testFromJsonAllFields() {
-		String sessionId = UUID.randomUUID().toString(),
+		String sessionId = "SESSION_ID-123",
 			applicationId = UUID.randomUUID().toString(),
 			createDt = "abc123",
 			mediaServerUrl = "ftp://myserver.data/resource";
@@ -54,10 +53,28 @@ public class CreateSessionResponseTest {
 	}
 
 	@Test
-	public void testFromJsonEmpty() {
+	public void testFromJsonEmptyObject() {
 		CreateSessionResponse response = CreateSessionResponse.fromJson("[{}]");
 		assertNull(response.getApplicationId());
 		assertNull(response.getSessionId());
+		assertNull(response.getMediaServerUrl());
+		assertNull(response.getCreateDt());
+	}
+
+	@Test
+	public void testFromJsonEmptyArray() {
+		CreateSessionResponse response = CreateSessionResponse.fromJson("[]");
+		assertNotNull(response);
+	}
+
+	@Test
+	public void testFromJsonMultipleEntries() {
+		String sessionId = "TheSessionIdYouWant";
+		String json = "[{\"session_id\":\""+sessionId+"\"},{},{\"session_id\":\"fake\"}]";
+		CreateSessionResponse response = CreateSessionResponse.fromJson(json);
+		assertNotNull(response);
+		assertEquals(sessionId, response.getSessionId());
+		assertNull(response.getApplicationId());
 		assertNull(response.getMediaServerUrl());
 		assertNull(response.getCreateDt());
 	}

@@ -18,6 +18,7 @@ package com.vonage.client.video;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
+import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpResponseException;
@@ -87,5 +88,10 @@ public class ListBroadcastsEndpointTest {
 	@Test(expected = HttpResponseException.class)
 	public void test500Response() throws Exception {
 		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void testInvalidResponseJson() throws Exception {
+		ListBroadcastsResponse.fromJson("{malformed]");
 	}
 }

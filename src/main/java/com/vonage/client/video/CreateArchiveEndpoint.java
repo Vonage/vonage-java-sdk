@@ -24,9 +24,10 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 
-class CreateArchiveEndpoint extends AbstractMethod<CreateArchiveRequest, Archive> {
+class CreateArchiveEndpoint extends AbstractMethod<Archive, Archive> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/v2/project/%s/archive";
+	private Archive archive;
 
 	CreateArchiveEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
@@ -38,17 +39,29 @@ class CreateArchiveEndpoint extends AbstractMethod<CreateArchiveRequest, Archive
 	}
 
 	@Override
-	public RequestBuilder makeRequest(CreateArchiveRequest request) {
+	public RequestBuilder makeRequest(Archive request) {
 		String path = String.format(PATH, getApplicationIdOrApiKey());
 		String uri = httpWrapper.getHttpConfig().getVideoBaseUri() + path;
 		return RequestBuilder.post(uri)
 				.setHeader("Content-Type", "application/json")
 				.setHeader("Accept", "application/json")
-				.setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
+				.setEntity(new StringEntity((archive = request).toJson(), ContentType.APPLICATION_JSON));
 	}
 
 	@Override
 	public Archive parseResponse(HttpResponse response) throws IOException {
-		return Archive.fromJson(basicResponseHandler.handleResponse(response));
+		try {
+			String json = basicResponseHandler.handleResponse(response);
+			if (archive != null) {
+				archive.updateFromJson(json);
+				return archive;
+			}
+			else {
+				return Archive.fromJson(json);
+			}
+		}
+		finally {
+			archive = null;
+		}
 	}
 }

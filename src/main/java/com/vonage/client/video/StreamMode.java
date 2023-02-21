@@ -4,19 +4,20 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Defines values used in the {@link CreateArchiveRequest.Builder#streamMode(StreamMode)} method and returned by the
- * {@link Archive#getStreamMode()} method.
+ * Defines values for how streams will be selected for broadcasts and archives.
  */
 public enum StreamMode {
 	/**
-	 * Streams will be automatically included in the broadcast or archive.
+	 * Streams will be automatically included in the archive or broadcast.
 	 */
 	AUTO,
 
 	/**
-	 * Streams will be included in the broadcast or archive based on calls to the
-	 * {@link VideoClient#addArchiveStream(String, String, Boolean, Boolean)} and
-	 * {@link VideoClient#removeArchiveStream(String, String)} methods.
+	 * Streams will be included in the archive or broadcast based on calls to the
+	 * {@link VideoClient#addArchiveStream(String, String, Boolean, Boolean)} /
+	 * {@link VideoClient#addBroadcastStream(String, String, Boolean, Boolean)} and
+	 * {@link VideoClient#removeArchiveStream(String, String)} /
+	 * {@link VideoClient#removeBroadcastStream(String, String)} methods.
 	 */
 	MANUAL;
 

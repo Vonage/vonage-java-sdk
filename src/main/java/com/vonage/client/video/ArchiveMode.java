@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum ArchiveMode {
     /**
      * The session is not archived automatically. To archive the session, you can call the
-     * {@link VideoClient#createArchive(CreateArchiveRequest)} method.
+     * {@link VideoClient#createArchive(Archive)} method.
      */
     MANUAL,
 

@@ -74,7 +74,6 @@ public class CreateSessionResponse {
 			if (array == null || array.length == 0) {
 				return new CreateSessionResponse();
 			}
-			assert array.length == 1;
 			return array[0];
 		}
 		catch (IOException ex) {
