@@ -27,13 +27,13 @@ import org.junit.Before;
 import org.junit.Test;
 import java.util.UUID;
 
-public class SetScreenLayoutTypeEndpointTest {
-	private SetArchiveLayoutEndpoint endpoint;
+public class UpdateArchiveLayoutEndpointTest {
+	private UpdateArchiveLayoutEndpoint endpoint;
 	private final String applicationId = UUID.randomUUID().toString();
 	
 	@Before
 	public void setUp() {
-		endpoint = new SetArchiveLayoutEndpoint(new HttpWrapper(
+		endpoint = new UpdateArchiveLayoutEndpoint(new HttpWrapper(
 			new JWTAuthMethod(applicationId, new byte[0])
 		));
 	}

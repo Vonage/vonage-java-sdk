@@ -422,16 +422,16 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 	@Test
 	public void testSetArchiveLayout() throws Exception {
 		StreamCompositionLayout request = StreamCompositionLayout.builder(ScreenLayoutType.HORIZONTAL).build();
-		stubResponseAndRun(() -> client.setArchiveLayout(archiveId, request));
-		stubResponseAndAssertThrowsIAX(() -> client.setArchiveLayout(null, request));
-		stubResponseAndAssertThrowsIAX(() -> client.setArchiveLayout(archiveId, null));
+		stubResponseAndRun(() -> client.updateArchiveLayout(archiveId, request));
+		stubResponseAndAssertThrowsIAX(() -> client.updateArchiveLayout(null, request));
+		stubResponseAndAssertThrowsIAX(() -> client.updateArchiveLayout(archiveId, null));
 
 		String responseJson = "{\n" +
 			  "  \"code\": 403,\n" +
 			  "  \"message\": \"Authentication error.\"\n" +
 			  "}";
 		stubResponseAndAssertThrowsBadRequestException(403, responseJson,
-			  () -> client.setArchiveLayout(archiveId, request)
+			  () -> client.updateArchiveLayout(archiveId, request)
 	    );
 	}
 

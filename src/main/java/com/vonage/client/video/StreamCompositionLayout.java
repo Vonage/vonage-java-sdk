@@ -23,7 +23,7 @@ import com.vonage.client.VonageUnexpectedException;
 import java.util.Objects;
 
 /**
- * Defines the properties used for {@link VideoClient#setArchiveLayout(String, StreamCompositionLayout)}.
+ * Defines the properties used for {@link VideoClient#updateArchiveLayout(String, StreamCompositionLayout)}.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)

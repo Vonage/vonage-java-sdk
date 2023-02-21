@@ -26,11 +26,11 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 
-class SetArchiveLayoutEndpoint extends AbstractMethod<UpdateStreamCompositionLayoutRequestWrapper, Void> {
+class UpdateArchiveLayoutEndpoint extends AbstractMethod<UpdateStreamCompositionLayoutRequestWrapper, Void> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/v2/project/%s/archive/%s/layout";
 
-	SetArchiveLayoutEndpoint(HttpWrapper httpWrapper) {
+	UpdateArchiveLayoutEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
 	}
 
