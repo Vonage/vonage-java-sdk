@@ -35,14 +35,16 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class StreamComposition {
-	protected UUID id;
-	protected String sessionId;
-	protected StreamMode streamMode;
-	protected Resolution resolution;
-	protected StreamCompositionLayout layout;
-	protected Boolean hasVideo, hasAudio;
+	@JsonProperty("id") protected UUID id;
+	@JsonProperty("applicationId") protected UUID applicationId;
+	@JsonProperty("sessionId") protected String sessionId;
+	@JsonProperty("streamMode") protected StreamMode streamMode;
+	@JsonProperty("resolution") protected Resolution resolution;
+	@JsonProperty("layout") protected StreamCompositionLayout layout;
+	@JsonProperty("hasVideo") protected Boolean hasVideo;
+	@JsonProperty("hasAudio") protected Boolean hasAudio;
 	@JsonProperty("createdAt") protected Long createdAt;
-	protected List<VideoStream> streams;
+	@JsonProperty("streams") protected List<VideoStream> streams;
 
 	protected StreamComposition() {
 	}
@@ -61,9 +63,18 @@ public abstract class StreamComposition {
 	 *
 	 * @return The composition ID.
 	 */
-	@JsonProperty("id")
 	public UUID getId() {
 		return id;
+	}
+
+	/**
+	 * Vonage video application ID (as used to create the client).
+	 *
+	 * @return The application ID.
+	 */
+	@JsonProperty("applicationId")
+	public UUID getApplicationId() {
+		return applicationId;
 	}
 
 	/**
@@ -71,7 +82,6 @@ public abstract class StreamComposition {
 	 *
 	 * @return The session ID.
 	 */
-	@JsonProperty("sessionId")
 	public String getSessionId() {
 		return sessionId;
 	}
@@ -81,7 +91,6 @@ public abstract class StreamComposition {
 	 *
 	 * @return The resolution as an enum.
 	 */
-	@JsonProperty("resolution")
 	public Resolution getResolution() {
 		return resolution;
 	}
@@ -91,7 +100,6 @@ public abstract class StreamComposition {
 	 *
 	 * @return Whether this composition has video.
 	 */
-	@JsonProperty("hasVideo")
 	public Boolean hasVideo() {
 		return hasVideo;
 	}
@@ -101,7 +109,6 @@ public abstract class StreamComposition {
 	 *
 	 * @return Whether this composition has sound.
 	 */
-	@JsonProperty("hasAudio")
 	public Boolean hasAudio() {
 		return hasAudio;
 	}
@@ -112,9 +119,17 @@ public abstract class StreamComposition {
 	 *
 	 * @return The {@linkplain StreamMode}.
 	 */
-	@JsonProperty("streamMode")
 	public StreamMode getStreamMode() {
 		return streamMode;
+	}
+
+	/**
+	 * Describes how the streams in this composition are displayed.
+	 *
+	 * @return Layout information for the stream compositions.
+	 */
+	protected StreamCompositionLayout getLayout() {
+		return layout;
 	}
 
 	/**
@@ -135,26 +150,6 @@ public abstract class StreamComposition {
 	@JsonIgnore
 	public Instant getCreatedAt() {
 		return createdAt != null ? Instant.ofEpochMilli(createdAt) : null;
-	}
-
-	/**
-	 * Returns the streams associated with this composition.
-	 *
-	 * @return The details for each video stream.
-	 */
-	@JsonProperty("streams")
-	public List<VideoStream> getStreams() {
-		return streams;
-	}
-
-	/**
-	 * Describes how the streams in this composition are displayed.
-	 *
-	 * @return Layout information for the stream compositions.
-	 */
-	@JsonProperty("layout")
-	public StreamCompositionLayout getLayout() {
-		return layout;
 	}
 
 	/**

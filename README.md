@@ -500,7 +500,7 @@ SignalRequest request = SignalRequest.builder()
 client.getVideoClient().signal(SESSION_ID, CONNECTION_ID, request);
 ```
 
-Signal all participants in a session:
+### Signal all participants in a session:
 ```java
 SignalRequest request = SignalRequest.builder()
 		.type("chat").data("Hello, World!").build();
@@ -518,14 +518,14 @@ GetStreamResponse streamInfo = client.getVideoClient().getStream(SESSION_ID, STR
 Archive a recording of a Vonage Video session. All properties (except `SESSION_ID`) are optional.
 ```java
 Archive archive = client.getVideoClient().startArchive(
-    CreateArchiveRequest.builder(SESSION_ID)
+    Archive.builder(SESSION_ID)
         .name("My_Recording")
         .outputMode(OutputMode.COMPOSED)
         .streamMode(StreamMode.AUTO)
         .resolution(Resolution.HD_LANDSCAPE)
         .hasAudio(true).hasVideo(true)
         .layout(
-            ArchiveLayout.builder(ScreenLayoutType.BEST_FIT)
+            StreamCompositionLayout.builder(ScreenLayoutType.BEST_FIT)
                 .screenshareType(ScreenLayoutType.PIP)
                 .build()
         )
@@ -547,6 +547,12 @@ client.getVideoClient().addArchiveStream(ARCHIVE_ID, STREAM_ID);
 ```
 ```java
 client.getVideoClient().removeArchiveStream(ARCHIVE_ID, STREAM_ID);
+```
+
+### Get details about a Broadcast
+
+```java
+Broadcast broadcast = client.getVideoClient().getBroadcast(BROADCAST_ID);
 ```
 
 ### Custom HTTP Configuration

@@ -73,9 +73,10 @@ public class CreateBroadcastEndpointTest {
 		);
 		endpoint = new CreateBroadcastEndpoint(wrapper);
 		String expectedUri = baseUri + "/v2/project/"+applicationId+"/broadcast";
-		Broadcast request = Broadcast.builder("S")
-				.addRtmpStream(Rtmp.builder().streamName("s").serverUrl("rtmps://s/a").build()).build();
+		Broadcast request = Broadcast.builder("S").hls(Hls.builder().build()).build();
 		RequestBuilder builder = endpoint.makeRequest(request);
+		String expectedRequest = "{\"sessionId\":\"S\",\"outputs\":{\"hls\":{}}}";
+		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());

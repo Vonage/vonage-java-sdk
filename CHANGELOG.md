@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Removed Payments over the Phone NCCO
 - Added SIP functionality to video API
 - Added Broadcast functionality to video API
+- Refactored Archives for consistency with Broadcast
+- Use UUID as return type for IDs where applicable
 
 ## [8.0.0-beta3] - 2023-01-11
 - Removed `WAPPush` SMS message type

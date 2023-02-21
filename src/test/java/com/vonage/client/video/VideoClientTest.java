@@ -55,8 +55,13 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 					"  \"streams\": [\n" +
 					"    {\n" +
 					"      \"streamId\": \""+streamId+"\",\n" +
-					"      \"hasAudio\": false,\n" +
-					"      \"hasVideo\": true\n" +
+					"      \"hasAudio\": \"true\",\n" +
+					"      \"hasVideo\": \"false\"\n" +
+					"    },\n" +
+					"    {\n" +
+					"      \"streamId\": \"482bce73-f882-40fd-8ca5-cb74ff416036\",\n" +
+					"      \"hasAudio\": \"false\",\n" +
+					"      \"hasVideo\": \"true\"\n" +
 					"    }\n" +
 					"  ],\n" +
 					"  \"url\": \"https://tokbox.s3.amazonaws.com/"+connectionId+"/archive.mp4\"\n" +
@@ -92,19 +97,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 					"  \"hasAudio\": true,\n" +
 					"  \"hasVideo\": true,\n" +
 					"  \"streamMode\": \"manual\",\n" +
-					"  \"status\": \"started\",\n" +
-					"  \"streams\": [\n" +
-					"    {\n" +
-					"      \"streamId\": \""+streamId+"\",\n" +
-					"      \"hasAudio\": \"true\",\n" +
-					"      \"hasVideo\": \"false\"\n" +
-					"    },\n" +
-					"    {\n" +
-					"      \"streamId\": \"482bce73-f882-40fd-8ca5-cb74ff416036\",\n" +
-					"      \"hasAudio\": \"false\",\n" +
-					"      \"hasVideo\": \"true\"\n" +
-					"    }\n"+
-					"  ]\n" +
+					"  \"status\": \"started\"\n" +
 					"}",
 			listBroadcastJson = "{\"count\":1,\"items\":["+broadcastJson+"]}";
 
@@ -136,20 +129,28 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		assertEquals(Duration.ofSeconds(5049), response.getDuration());
 		assertTrue(response.hasAudio());
 		assertTrue(response.hasVideo());
-		assertEquals("b40ef09b-3811-4726-b508-e41a0f96c68f", response.getId().toString());
+		assertEquals(archiveId, response.getId().toString());
 		assertEquals("Foo", response.getName());
 		assertEquals("", response.getReason());
 		assertEquals(Resolution.HD_LANDSCAPE, response.getResolution());
 		assertEquals(sessionId, response.getSessionId());
+		assertEquals(applicationId, response.getApplicationId().toString());
 		assertEquals(Long.valueOf(247748791L), response.getSize());
 		assertEquals(ArchiveStatus.AVAILABLE, response.getStatus());
 		assertEquals(StreamMode.MANUAL, response.getStreamMode());
 		List<VideoStream> streams = response.getStreams();
-		assertEquals(1, streams.size());
-		VideoStream archiveStream = streams.get(0);
-		assertEquals(streamId, archiveStream.getStreamId());
-		assertFalse(archiveStream.hasAudio());
-		assertTrue(archiveStream.hasVideo());
+		assertNotNull(streams);
+		assertEquals(2, streams.size());
+		VideoStream stream1 = streams.get(0);
+		assertNotNull(stream1);
+		assertEquals(streamId, stream1.getStreamId());
+		assertTrue(stream1.hasAudio());
+		assertFalse(stream1.hasVideo());
+		VideoStream stream2 = streams.get(1);
+		assertNotNull(stream2);
+		assertEquals("482bce73-f882-40fd-8ca5-cb74ff416036", stream2.getStreamId());
+		assertTrue(stream2.hasVideo());
+		assertFalse(stream2.hasAudio());
 		assertEquals("https://tokbox.s3.amazonaws.com/"+connectionId+"/archive.mp4", response.getUrl().toString());
 	}
 
@@ -203,19 +204,6 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		assertNotNull(hls);
 		assertFalse(hls.dvr());
 		assertTrue(hls.lowLatency());
-		List<VideoStream> streams = response.getStreams();
-		assertNotNull(streams);
-		assertEquals(2, streams.size());
-		VideoStream stream1 = streams.get(0);
-		assertNotNull(stream1);
-		assertEquals(streamId, stream1.getStreamId());
-		assertTrue(stream1.hasAudio());
-		assertFalse(stream1.hasVideo());
-		VideoStream stream2 = streams.get(1);
-		assertNotNull(stream2);
-		assertEquals("482bce73-f882-40fd-8ca5-cb74ff416036", stream2.getStreamId());
-		assertTrue(stream2.hasVideo());
-		assertFalse(stream2.hasAudio());
 	}
 
 	@Before

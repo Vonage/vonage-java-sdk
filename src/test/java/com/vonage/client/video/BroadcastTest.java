@@ -20,7 +20,6 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import java.net.URI;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -41,7 +40,6 @@ public class BroadcastTest {
 		Boolean hasVideo = true;
 		Resolution resolution = Resolution.SD_LANDSCAPE;
 		StreamMode streamMode = StreamMode.AUTO;
-		List<VideoStream> streams = Collections.emptyList();
 		BroadcastStatus status = BroadcastStatus.STOPPED;
 		String stylesheet = "stream.instructor {position: absolute; width: 100%;  height:50%;}";
 		StreamCompositionLayout layout = StreamCompositionLayout.builder(ScreenLayoutType.CUSTOM)
@@ -80,7 +78,6 @@ public class BroadcastTest {
 				"\"hasAudio\":"+hasAudio+",\"hasVideo\":"+hasVideo +
 				",\"resolution\":\""+resolution+"\"," +
 				"\"streamMode\":\""+streamMode+"\"," +
-				"\"streams\":[]," +
 				"\"settings\":{\"hls\":{\"lowLatency\":"+hls.lowLatency()+",\"dvr\":"+hls.dvr()+"}}," +
 				"\"broadcastUrls\":{\"hls\":\""+hlsUrl+"\",\"rtmp\":[{\"id\":\""+rtmp1.getId() +
 				"\",\"serverUrl\":\""+rtmp1.getServerUrl()+"\",\"streamName\":\""+rtmp1.getStreamName() +
@@ -143,15 +140,14 @@ public class BroadcastTest {
 		assertNotNull(requestFromResponseJson);
 		String expectedRequestFromResponseJsonToJson = "{" +
 				"\"id\":\""+id+"\"," +
+				"\"applicationId\":\""+applicationId+"\"," +
 				"\"sessionId\":\""+sessionId+"\"," +
 				"\"streamMode\":\"auto\"," +
 				"\"resolution\":\""+resolution+"\"," +
 				"\"hasVideo\":"+hasVideo+"," +
 				"\"hasAudio\":"+hasAudio+"," +
 				"\"createdAt\":"+createdAt+"," +
-				"\"streams\":[]," +
 				"\"multiBroadcastTag\":\""+multiBroadcastTag+"\"," +
-				"\"applicationId\":\""+applicationId+"\"," +
 				"\"updatedAt\":"+updatedAt+"," +
 				"\"maxDuration\":"+maxDuration+"," +
 				"\"maxBitrate\":"+maxBitrate+"," +
@@ -165,11 +161,11 @@ public class BroadcastTest {
 	}
 
 	@Test
-	public void testSerializeRequiredFields() {
+	public void testSerializeMultipleRtmps() {
 		Rtmp rtmp1 = Rtmp.builder().serverUrl("http://server/file").streamName("test1").build(),
 				rtmp2 = Rtmp.builder().serverUrl("ftp://server2/another.ext").streamName("R2").build();
 		Broadcast request = Broadcast.builder("SESSION_ID-321")
-				.rtmpStreams(Arrays.asList(rtmp1, rtmp2)).build();
+				.rtmpStreams(Collections.singleton(rtmp1)).addRtmpStream(rtmp2).build();
 
 		String expectedJson = "{" +
 				"\"sessionId\":\"SESSION_ID-321\"," +
@@ -194,20 +190,16 @@ public class BroadcastTest {
 		assertNull(request.getHlsSettings());
 		assertNull(request.getResolution());
 		assertNull(request.getLayout());
-		assertNull(request.getStreams());
 		assertNull(request.getStreamMode());
 	}
 
 	@Test(expected = NullPointerException.class)
 	public void testConstructNoSessionId() {
-		Broadcast.builder(null)
-				.addRtmpStream(Rtmp.builder()
-						.streamName("s").serverUrl("http://example.org").build()
-				).build();
+		Broadcast.builder(null).hls(Hls.builder().lowLatency(false).dvr(false).build()).build();
 	}
 
 	@Test
-	public void testConstructNoRtmps() {
+	public void testConstructNoRtmpsOrHls() {
 		final String sessionId = "Sesh-1D";
 		assertThrows(IllegalStateException.class, () ->
 				Broadcast.builder(sessionId).build()
@@ -219,7 +211,13 @@ public class BroadcastTest {
 				Broadcast.builder(sessionId).rtmpStreams(null).build()
 		);
 		assertThrows(NullPointerException.class, () ->
+				Broadcast.builder(sessionId).rtmpStreams(Collections.singletonList(null)).build()
+		);
+		assertThrows(NullPointerException.class, () ->
 				Broadcast.builder(sessionId).addRtmpStream(null).build()
+		);
+		assertThrows(IllegalStateException.class, () ->
+				Broadcast.builder(sessionId).rtmpStreams(Collections.emptyList()).hls(null).build()
 		);
 	}
 
@@ -261,33 +259,28 @@ public class BroadcastTest {
 	@Test
 	public void testHlsSerialization() {
 		String sessionId = "Test_seshID";
-		Rtmp rtmp = Rtmp.builder().serverUrl("server").streamName("name").build();
 
 		Hls hls = Hls.builder().build();
-		Broadcast request = Broadcast.builder(sessionId).addRtmpStream(rtmp).hls(hls).build();
-		String expectedJson = "{\"sessionId\":\"Test_seshID\",\"outputs\":{\"rtmp\":[{" +
-				"\"streamName\":\"name\",\"serverUrl\":\"server\"}],\"hls\":{}}}",
+		Broadcast request = Broadcast.builder(sessionId).hls(hls).build();
+		String expectedJson = "{\"sessionId\":\"Test_seshID\",\"outputs\":{\"hls\":{}}}",
 				actualJson = request.toJson();
 		assertEquals(expectedJson, actualJson);
 
 		hls = Hls.builder().dvr(true).build();
-		request = Broadcast.builder(sessionId).addRtmpStream(rtmp).hls(hls).build();
-		expectedJson = "{\"sessionId\":\"Test_seshID\",\"outputs\":{\"rtmp\":[{" +
-				"\"streamName\":\"name\",\"serverUrl\":\"server\"}],\"hls\":{\"dvr\":true}}}";
+		request = Broadcast.builder(sessionId).hls(hls).build();
+		expectedJson = "{\"sessionId\":\"Test_seshID\",\"outputs\":{\"hls\":{\"dvr\":true}}}";
 		actualJson = request.toJson();
 		assertEquals(expectedJson, actualJson);
 
 		hls = Hls.builder().lowLatency(true).build();
-		request = Broadcast.builder(sessionId).addRtmpStream(rtmp).hls(hls).build();
-		expectedJson = "{\"sessionId\":\"Test_seshID\",\"outputs\":{\"rtmp\":[{" +
-				"\"streamName\":\"name\",\"serverUrl\":\"server\"}],\"hls\":{\"lowLatency\":true}}}";
+		request = Broadcast.builder(sessionId).hls(hls).build();
+		expectedJson = "{\"sessionId\":\"Test_seshID\",\"outputs\":{\"hls\":{\"lowLatency\":true}}}";
 		actualJson = request.toJson();
 		assertEquals(expectedJson, actualJson);
 
 		hls = Hls.builder().lowLatency(false).dvr(false).build();
-		request = Broadcast.builder(sessionId).addRtmpStream(rtmp).hls(hls).build();
-		expectedJson = "{\"sessionId\":\"Test_seshID\",\"outputs\":{\"rtmp\":[{" +
-				"\"streamName\":\"name\",\"serverUrl\":\"server\"}],\"hls\":{\"dvr\":false,\"lowLatency\":false}}}";
+		request = Broadcast.builder(sessionId).hls(hls).build();
+		expectedJson = "{\"sessionId\":\"Test_seshID\",\"outputs\":{\"hls\":{\"dvr\":false,\"lowLatency\":false}}}";
 		actualJson = request.toJson();
 		assertEquals(expectedJson, actualJson);
 	}
@@ -322,7 +315,6 @@ public class BroadcastTest {
 		assertNull(response.getHlsSettings());
 		assertNull(response.getResolution());
 		assertNull(response.getLayout());
-		assertNull(response.getStreams());
 		assertNull(response.getStreamMode());
 	}
 

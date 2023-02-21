@@ -43,7 +43,7 @@ class UpdateBroadcastLayoutEndpoint extends AbstractMethod<UpdateStreamCompositi
 	public RequestBuilder makeRequest(UpdateStreamCompositionLayoutRequestWrapper wrapper) {
 		String path = String.format(PATH, getApplicationIdOrApiKey(), wrapper.id);
 		String uri = httpWrapper.getHttpConfig().getVideoBaseUri() + path;
-		return RequestBuilder.post(uri)
+		return RequestBuilder.put(uri)
 				.setHeader("Content-Type", "application/json")
 				.setEntity(new StringEntity(wrapper.request.toJson(), ContentType.APPLICATION_JSON));
 	}

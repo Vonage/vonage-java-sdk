@@ -47,7 +47,7 @@ public class UpdateBroadcastLayoutEndpointTest {
 				StreamCompositionLayout.builder(ScreenLayoutType.VERTICAL).build()
 		);
 		RequestBuilder builder = endpoint.makeRequest(request);
-		assertEquals("POST", builder.getMethod());
+		assertEquals("PUT", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/"+applicationId +
 				"/broadcast/"+broadcastId+"/layout";
 		assertEquals(expectedUri, builder.build().getURI().toString());
@@ -76,7 +76,7 @@ public class UpdateBroadcastLayoutEndpointTest {
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		String expectedRequest = "{\"type\":\"bestFit\",\"screenshareType\":\"pip\"}";
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
-		assertEquals("POST", builder.getMethod());
+		assertEquals("PUT", builder.getMethod());
 	}
 
 	@Test(expected = VonageBadRequestException.class)

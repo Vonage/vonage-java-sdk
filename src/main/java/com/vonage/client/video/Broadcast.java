@@ -33,7 +33,6 @@ import java.util.*;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Broadcast extends StreamComposition {
 	private String multiBroadcastTag;
-	private UUID applicationId;
 	@JsonProperty("updatedAt") private Long updatedAt;
 	@JsonProperty("maxDuration") private Integer maxDuration;
 	private Integer maxBitrate;
@@ -48,10 +47,10 @@ public class Broadcast extends StreamComposition {
 	protected Broadcast(Builder builder) {
 		super(builder);
 		outputs = new Outputs();
-		if ((outputs.rtmp = builder.rtmps).isEmpty()) {
-			throw new IllegalStateException("At least one RTMP must be specified.");
+		outputs.rtmp = builder.rtmps.isEmpty() ? null : builder.rtmps;
+		if ((outputs.hls = builder.hls) == null && outputs.rtmp == null) {
+			throw new IllegalStateException("At least one output stream (RTMP or HLS) must be specified.");
 		}
-		outputs.hls = builder.hls;
 		if ((maxDuration = builder.maxDuration) != null && (maxDuration < 60 || maxDuration > 36000)) {
 			throw new IllegalArgumentException("maxDuration must be between 60 seconds and 10 hours.");
 		}
@@ -86,14 +85,6 @@ public class Broadcast extends StreamComposition {
 	@JsonProperty("multiBroadcastTag")
 	public String getMultiBroadcastTag() {
 		return multiBroadcastTag;
-	}
-
-	/**
-	 * @return The Vonage application ID.
-	 */
-	@JsonProperty("applicationId")
-	public UUID getApplicationId() {
-		return applicationId;
 	}
 
 	/**
@@ -178,6 +169,7 @@ public class Broadcast extends StreamComposition {
 
 	/**
 	 * Instantiates a Builder, used to construct this object.
+	 * Note that you must specify at least one RTMP stream or HLS properties.
 	 *
 	 * @param sessionId ID of the Vonage Video session to broadcast.
 	 *
@@ -250,8 +242,7 @@ public class Broadcast extends StreamComposition {
 		}
 
 		/**
-		 * (REQUIRED)
-		 * You must specify at least one RTMP stream to add to the broadcast.
+		 * (OPTIONAL, but REQUIRED if HLS is unspecified)
 		 * You can specify up to five target RTMP streams (or just one).
 		 * For each RTMP stream, specify serverUrl (the RTMP server URL), streamName
 		 * (the stream name, such as the YouTube Live stream name or the Facebook stream key), and
@@ -269,6 +260,7 @@ public class Broadcast extends StreamComposition {
 		}
 
 		/**
+		 * (OPTIONAL, but REQUIRED if HLS is unspecified)
 		 * You can specify up to five target RTMP streams (or just one).
 		 * For each RTMP stream, specify serverUrl (the RTMP server URL), streamName
 		 * (the stream name, such as the YouTube Live stream name or the Facebook stream key), and
@@ -289,7 +281,7 @@ public class Broadcast extends StreamComposition {
 		}
 
 		/**
-		 * (OPTIONAL)
+		 * (OPTIONAL, but REQUIRED if no RTMP URLs are set)
 		 * Sets the HTTP Live Streaming (HLS) output of the broadcast.
 		 *
 		 * @param hls The HLS broadcast properties.
