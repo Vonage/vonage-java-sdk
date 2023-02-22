@@ -322,6 +322,20 @@ public class Broadcast extends StreamComposition {
 
 		/**
 		 * (OPTIONAL)
+		 * The maximum duration for the broadcast. The broadcast will automatically stop when the
+		 * maximum duration is reached. You can set the maximum duration to a value from 60 seconds to 10 hours.
+		 * The default maximum duration is 4 hours.
+		 *
+		 * @param maxDuration The maximum duration.
+		 *
+		 * @return This builder.
+		 */
+		public Builder maxDuration(Duration maxDuration) {
+			return maxDuration((int) maxDuration.getSeconds());
+		}
+
+		/**
+		 * (OPTIONAL)
 		 * Set this to support multiple broadcasts for the same session simultaneously.
 		 * Set this to a unique string for each simultaneous broadcast of an ongoing session.
 		 *

@@ -19,6 +19,7 @@ import com.vonage.client.VonageUnexpectedException;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.net.URI;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
@@ -52,8 +53,9 @@ public class BroadcastTest {
 
 		Broadcast request = Broadcast.builder(sessionId)
 				.resolution(resolution).layout(layout).streamMode(streamMode)
-				.maxBitrate(maxBitrate).maxDuration(maxDuration)
-				.multiBroadcastTag(multiBroadcastTag).hls(hls)
+				.maxBitrate(maxBitrate).hls(hls)
+				.maxDuration(Duration.ofSeconds(maxDuration))
+				.multiBroadcastTag(multiBroadcastTag)
 				.addRtmpStream(rtmp1).build();
 
 		String expectedRequestedJson = "{\"sessionId\":\""+sessionId+"\",\"streamMode\":\""+streamMode +

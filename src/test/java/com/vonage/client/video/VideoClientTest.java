@@ -411,7 +411,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 	}
 
 	@Test
-	public void testSetArchiveLayout() throws Exception {
+	public void testUpdateArchiveLayout() throws Exception {
 		StreamCompositionLayout request = StreamCompositionLayout.builder(ScreenLayoutType.HORIZONTAL).build();
 		stubResponseAndRun(() -> client.updateArchiveLayout(archiveId, request));
 		stubResponseAndAssertThrowsIAX(() -> client.updateArchiveLayout(null, request));

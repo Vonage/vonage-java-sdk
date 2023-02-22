@@ -34,7 +34,9 @@ public class Hls {
 	}
 
 	/**
-	 * @return Whether DVR functionality — rewinding, pausing, and resuming — is enabled in players that support it.
+	 * Whether DVR functionality — rewinding, pausing, and resuming — is enabled in players that support it.
+	 *
+	 * @return {@code true} if DVR functionality is enabled, or {@code null} if unknown / unset.
 	 */
 	@JsonProperty("dvr")
 	public Boolean dvr() {
@@ -42,7 +44,9 @@ public class Hls {
 	}
 
 	/**
-	 * @return Whether low-latency mode is enabled for the HLS stream. Some HLS players do not support low-latency mode.
+	 * Whether low-latency mode is enabled for the HLS stream. Some HLS players do not support low-latency mode.
+	 *
+	 * @return {@code true} if low latency mode is enabled, or {@code null} if unknown / unset.
 	 */
 	@JsonProperty("lowLatency")
 	public Boolean lowLatency() {
