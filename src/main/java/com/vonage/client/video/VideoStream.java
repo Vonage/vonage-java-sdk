@@ -17,10 +17,11 @@ package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class VideoStream {
-	private String streamId;
+	private UUID streamId;
 	private Boolean hasAudio, hasVideo;
 
 	protected VideoStream() {}
@@ -31,7 +32,8 @@ public class VideoStream {
 	 *
 	 * @return The Stream ID.
 	 */
-	public String getStreamId() {
+	@JsonProperty("streamId")
+	public UUID getStreamId() {
 		return streamId;
 	}
 

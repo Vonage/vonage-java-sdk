@@ -62,7 +62,7 @@ public class StopArchiveEndpointTest {
 				"  \"streamMode\": \"auto\",\n" +
 				"  \"streams\": [\n" +
 				"    {\n" +
-				"      \"streamId\": \"abc123\",\n" +
+				"      \"streamId\": \"482bce73-f882-40fd-8ca5-cb74ff416036\",\n" +
 				"      \"hasAudio\": true,\n" +
 				"      \"hasVideo\": true\n" +
 				"    }\n" +
@@ -74,7 +74,7 @@ public class StopArchiveEndpointTest {
 		assertEquals(5049, response.getDurationRaw().longValue());
 		assertEquals(ArchiveStatus.AVAILABLE, response.getStatus());
 		assertEquals(1, response.getStreams().size());
-		assertEquals("abc123", response.getStreams().get(0).getStreamId());
+		assertEquals(UUID.fromString("482bce73-f882-40fd-8ca5-cb74ff416036"), response.getStreams().get(0).getStreamId());
 		assertEquals(StreamMode.AUTO, response.getStreamMode());
 		assertEquals(Resolution.HD_PORTRAIT, response.getResolution());
 		assertEquals("", response.getReason());

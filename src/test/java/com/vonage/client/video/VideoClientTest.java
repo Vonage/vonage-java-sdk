@@ -143,12 +143,12 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		assertEquals(2, streams.size());
 		VideoStream stream1 = streams.get(0);
 		assertNotNull(stream1);
-		assertEquals(streamId, stream1.getStreamId());
+		assertEquals(streamId, stream1.getStreamId().toString());
 		assertTrue(stream1.hasAudio());
 		assertFalse(stream1.hasVideo());
 		VideoStream stream2 = streams.get(1);
 		assertNotNull(stream2);
-		assertEquals("482bce73-f882-40fd-8ca5-cb74ff416036", stream2.getStreamId());
+		assertEquals(UUID.fromString("482bce73-f882-40fd-8ca5-cb74ff416036"), stream2.getStreamId());
 		assertTrue(stream2.hasVideo());
 		assertFalse(stream2.hasAudio());
 		assertEquals("https://tokbox.s3.amazonaws.com/"+connectionId+"/archive.mp4", response.getUrl().toString());
