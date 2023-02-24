@@ -97,7 +97,19 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 					"  \"hasAudio\": true,\n" +
 					"  \"hasVideo\": true,\n" +
 					"  \"streamMode\": \"manual\",\n" +
-					"  \"status\": \"started\"\n" +
+					"  \"status\": \"started\",\n" +
+					"  \"streams\": [\n" +
+					"    {\n" +
+					"      \"streamId\": \""+streamId+"\",\n" +
+					"      \"hasAudio\": \"true\",\n" +
+					"      \"hasVideo\": \"false\"\n" +
+					"    },\n" +
+					"    {\n" +
+					"      \"streamId\": \"482bce73-f882-40fd-8ca5-cb74ff416036\",\n" +
+					"      \"hasAudio\": \"false\",\n" +
+					"      \"hasVideo\": \"true\"\n" +
+					"    }\n" +
+					"  ]\n" +
 					"}",
 			listBroadcastJson = "{\"count\":1,\"items\":["+broadcastJson+"]}";
 
@@ -123,9 +135,10 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 	static void assertArchiveEqualsExpectedJson(Archive response) {
 		assertNotNull(response);
-		assertEquals(Long.valueOf(1384221730000L), response.getCreatedAtRaw());
+		assertEquals("https://tokbox.s3.amazonaws.com/"+connectionId+"/archive.mp4", response.getUrl().toString());
+		assertEquals(Long.valueOf(1384221730000L), response.getCreatedAtMillis());
 		assertEquals(Instant.ofEpochSecond(1384221730L), response.getCreatedAt());
-		assertEquals(Integer.valueOf(5049), response.getDurationRaw());
+		assertEquals(Integer.valueOf(5049), response.getDurationSeconds());
 		assertEquals(Duration.ofSeconds(5049), response.getDuration());
 		assertTrue(response.hasAudio());
 		assertTrue(response.hasVideo());
@@ -137,6 +150,10 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		assertEquals(applicationId, response.getApplicationId().toString());
 		assertEquals(Long.valueOf(247748791L), response.getSize());
 		assertEquals(ArchiveStatus.AVAILABLE, response.getStatus());
+		assertVideoStreamsEqualsExpectedJson(response);
+	}
+
+	static void assertVideoStreamsEqualsExpectedJson(StreamComposition response) {
 		assertEquals(StreamMode.MANUAL, response.getStreamMode());
 		List<VideoStream> streams = response.getStreams();
 		assertNotNull(streams);
@@ -151,7 +168,6 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		assertEquals(UUID.fromString("482bce73-f882-40fd-8ca5-cb74ff416036"), stream2.getStreamId());
 		assertTrue(stream2.hasVideo());
 		assertFalse(stream2.hasAudio());
-		assertEquals("https://tokbox.s3.amazonaws.com/"+connectionId+"/archive.mp4", response.getUrl().toString());
 	}
 
 	void stubBroadcastJsonAndAssertThrows(ThrowingRunnable invocation) throws Exception {
@@ -183,8 +199,8 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		assertTrue(response.hasVideo());
 		assertEquals(BroadcastStatus.STARTED, response.getStatus());
 		assertEquals(Resolution.HD_PORTRAIT, response.getResolution());
-		assertEquals(1437676551000L, response.getCreatedAtRaw().longValue());
-		assertEquals(1437876551000L, response.getUpdatedAtRaw().longValue());
+		assertEquals(1437676551000L, response.getCreatedAtMillis().longValue());
+		assertEquals(1437876551000L, response.getUpdatedAtMillis().longValue());
 		assertEquals("broadcast-1234b", response.getMultiBroadcastTag());
 		assertEquals(Duration.ofSeconds(5400), response.getMaxDuration());
 		assertEquals(2000000, response.getMaxBitrate().intValue());
@@ -204,6 +220,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		assertNotNull(hls);
 		assertFalse(hls.dvr());
 		assertTrue(hls.lowLatency());
+		assertVideoStreamsEqualsExpectedJson(response);
 	}
 
 	@Before

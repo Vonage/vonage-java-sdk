@@ -71,7 +71,7 @@ public class StopArchiveEndpointTest {
 				"}";
 		Archive response = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, expectedPayload));
 		assertNotNull(response);
-		assertEquals(5049, response.getDurationRaw().longValue());
+		assertEquals(5049, response.getDurationSeconds().longValue());
 		assertEquals(ArchiveStatus.AVAILABLE, response.getStatus());
 		assertEquals(1, response.getStreams().size());
 		assertEquals(UUID.fromString("482bce73-f882-40fd-8ca5-cb74ff416036"), response.getStreams().get(0).getStreamId());

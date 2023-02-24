@@ -72,7 +72,6 @@ public abstract class StreamComposition {
 	 *
 	 * @return The application ID.
 	 */
-	@JsonProperty("applicationId")
 	public UUID getApplicationId() {
 		return applicationId;
 	}
@@ -124,6 +123,16 @@ public abstract class StreamComposition {
 	}
 
 	/**
+	 * Returns the streams associated with this composition. This is only set when the status is
+	 * "started" and the stream mode is "manual".
+	 *
+	 * @return The details for each video stream, or {@code null} if not applicable.
+	 */
+	public List<VideoStream> getStreams() {
+		return streams;
+	}
+
+	/**
 	 * Describes how the streams in this composition are displayed.
 	 *
 	 * @return Layout information for the stream compositions.
@@ -138,7 +147,7 @@ public abstract class StreamComposition {
 	 * @return The created time as a long, or {@code null} if absent / not applicable.
 	 */
 	@JsonProperty("createdAt")
-	public Long getCreatedAtRaw() {
+	public Long getCreatedAtMillis() {
 		return createdAt;
 	}
 

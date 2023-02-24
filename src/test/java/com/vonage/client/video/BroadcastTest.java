@@ -78,7 +78,8 @@ public class BroadcastTest {
 				"\"maxBitrate\":\""+maxBitrate+"\"," +
 				"\"status\":\""+status+"\"," +
 				"\"hasAudio\":"+hasAudio+",\"hasVideo\":"+hasVideo +
-				",\"resolution\":\""+resolution+"\"," +
+				",\"streams\":[{}]," +
+				"\"resolution\":\""+resolution+"\"," +
 				"\"streamMode\":\""+streamMode+"\"," +
 				"\"settings\":{\"hls\":{\"lowLatency\":"+hls.lowLatency()+",\"dvr\":"+hls.dvr()+"}}," +
 				"\"broadcastUrls\":{\"hls\":\""+hlsUrl+"\",\"rtmp\":[{\"id\":\""+rtmp1.getId() +
@@ -91,9 +92,9 @@ public class BroadcastTest {
 		assertEquals(sessionId, response.getSessionId());
 		assertEquals(multiBroadcastTag, response.getMultiBroadcastTag());
 		assertEquals(applicationId, response.getApplicationId());
-		assertEquals(createdAt, response.getCreatedAtRaw());
-		assertEquals(updatedAt, response.getUpdatedAtRaw());
-		assertEquals(maxDuration, response.getMaxDurationRaw());
+		assertEquals(createdAt, response.getCreatedAtMillis());
+		assertEquals(updatedAt, response.getUpdatedAtMillis());
+		assertEquals(maxDuration, response.getMaxDurationSeconds());
 		assertEquals(maxBitrate, response.getMaxBitrate());
 		assertEquals(hasAudio, response.hasAudio());
 		assertEquals(hasVideo, response.hasVideo());
@@ -112,6 +113,13 @@ public class BroadcastTest {
 		assertEquals(rtmp1.getStreamName(), responseRtmp1.getStreamName());
 		assertEquals(rtmp1Status, responseRtmp1.getStatus());
 		assertNull(response.getLayout());
+		assertNotNull(response.getStreams());
+		assertEquals(1, response.getStreams().size());
+		VideoStream stream1 = response.getStreams().get(0);
+		assertNotNull(stream1);
+		assertNull(stream1.getStreamId());
+		assertNull(stream1.hasAudio());
+		assertNull(stream1.hasVideo());
 
 		Broadcast parsedFromRequestJson = Broadcast.fromJson(requestJson);
 		assertNotNull(parsedFromRequestJson);
@@ -149,6 +157,7 @@ public class BroadcastTest {
 				"\"hasVideo\":"+hasVideo+"," +
 				"\"hasAudio\":"+hasAudio+"," +
 				"\"createdAt\":"+createdAt+"," +
+				"\"streams\":[{}]," +
 				"\"multiBroadcastTag\":\""+multiBroadcastTag+"\"," +
 				"\"updatedAt\":"+updatedAt+"," +
 				"\"maxDuration\":"+maxDuration+"," +
@@ -293,8 +302,8 @@ public class BroadcastTest {
 		Rtmp rtmp = Rtmp.builder().serverUrl("server").streamName("name").build();
 		Broadcast.Builder builder = Broadcast.builder(sessionId).addRtmpStream(rtmp);
 		int min = 60, max = 36000;
-		assertEquals(min, builder.maxDuration(min).build().getMaxDurationRaw().intValue());
-		assertEquals(max, builder.maxDuration(max).build().getMaxDurationRaw().intValue());
+		assertEquals(min, builder.maxDuration(min).build().getMaxDurationSeconds().intValue());
+		assertEquals(max, builder.maxDuration(max).build().getMaxDurationSeconds().intValue());
 		assertThrows(IllegalArgumentException.class, () -> builder.maxDuration(min - 1).build());
 		assertThrows(IllegalArgumentException.class, () -> builder.maxDuration(max + 1).build());
 	}

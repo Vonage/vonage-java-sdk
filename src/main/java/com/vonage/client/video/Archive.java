@@ -24,7 +24,6 @@ import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 import java.net.URI;
 import java.time.Duration;
-import java.util.List;
 
 /**
 * Represents an archive of a video session.
@@ -59,22 +58,12 @@ public class Archive extends StreamComposition {
     }
 
     /**
-     * Returns the streams associated with this archive. This is only set for an archive with the status set to
-     * {@linkplain ArchiveStatus#STARTED} and the streamMode set to {@linkplain StreamMode#MANUAL}.
-     *
-     * @return The details for each video stream.
-     */
-    public List<VideoStream> getStreams() {
-        return streams;
-    }
-
-    /**
      * The duration of the recording, in seconds.
      *
      * @return The duration as an integer.
      */
     @JsonProperty("duration")
-    public Integer getDurationRaw() {
+    public Integer getDurationSeconds() {
         return duration;
     }
 

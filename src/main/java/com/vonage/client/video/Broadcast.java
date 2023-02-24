@@ -80,7 +80,9 @@ public class Broadcast extends StreamComposition {
 	}
 
 	/**
-	 * @return The unique tag for simultaneous broadcasts (if one was set).
+	 * The unique tag for simultaneous broadcasts (if one was set).
+	 *
+	 * @return The multi broadcast tag, or {@code null} if unset.
 	 */
 	@JsonProperty("multiBroadcastTag")
 	public String getMultiBroadcastTag() {
@@ -88,15 +90,19 @@ public class Broadcast extends StreamComposition {
 	}
 
 	/**
-	 * @return For this start method, this timestamp matches the createdAt timestamp.
+	 * For this start method, this timestamp matches the {@link #getCreatedAtMillis()} timestamp.
+	 *
+	 * @return The update time in milliseconds since the Unix epoch.
 	 */
 	@JsonProperty("updatedAt")
-	public Long getUpdatedAtRaw() {
+	public Long getUpdatedAtMillis() {
 		return updatedAt;
 	}
 
 	/**
-	 * @return The updatedAt time, or {@code null} if unset / not applicable.
+	 * For this start method, this timestamp matches the {@link #getCreatedAt()} timestamp.
+	 *
+	 * @return The updatedAt time as an Instant, or {@code null} if unset / not applicable.
 	 */
 	@JsonIgnore
 	public Instant getUpdatedAt() {
@@ -104,15 +110,19 @@ public class Broadcast extends StreamComposition {
 	}
 
 	/**
-	 * @return The maximum duration for the broadcast (if one was set), in seconds.
+	 * The maximum duration for the broadcast (if one was set), in seconds.
+	 *
+	 * @return The maximum duration of this broadcast in seconds as an integer, or {@code null} if unset.
 	 */
 	@JsonProperty("maxDuration")
-	public Integer getMaxDurationRaw() {
+	public Integer getMaxDurationSeconds() {
 		return maxDuration;
 	}
 
 	/**
-	 * @return The maximum duration for the broadcast (precision in seconds), or {@code null} if unset.
+	 * The maximum duration for the broadcast (if one was set).
+	 *
+	 * @return The maximum duration (precision in seconds), or {@code null} if unset.
 	 */
 	@JsonIgnore
 	public Duration getMaxDuration() {
@@ -120,7 +130,9 @@ public class Broadcast extends StreamComposition {
 	}
 
 	/**
-	 * @return The unique tag for simultaneous broadcasts (if one was set).
+	 * The maximum bitrate of the broadcast in bits per second (if one was set).
+	 *
+	 * @return The maximum bits per second as an integer, or {@code null} if unset.
 	 */
 	@JsonProperty("maxBitrate")
 	public Integer getMaxBitrate() {
@@ -128,6 +140,8 @@ public class Broadcast extends StreamComposition {
 	}
 
 	/**
+	 * The status of the broadcast at the time this object was created.
+	 *
 	 * @return Current status of the broadcast as an enum.
 	 */
 	@JsonProperty("status")
@@ -136,7 +150,9 @@ public class Broadcast extends StreamComposition {
 	}
 
 	/**
-	 * @return Details about the HLS and RTMP broadcasts.
+	 * Details on the HLS and RTMP broadcast streams. For an HLS stream, the URL is provided.
+	 *
+	 * @return The URLs for this broadcast, or {@code null} if unknown.
 	 */
 	@JsonProperty("broadcastUrls")
 	public BroadcastUrls getBroadcastUrls() {
