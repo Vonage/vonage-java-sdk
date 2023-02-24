@@ -21,10 +21,10 @@ import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import java.time.Instant;
 import java.util.UUID;
 
 public class StopArchiveEndpointTest {
@@ -51,19 +51,18 @@ public class StopArchiveEndpointTest {
 				"  \"createdAt\": 1384221730000,\n" +
 				"  \"duration\": 5049,\n" +
 				"  \"hasAudio\": true,\n" +
-				"  \"hasVideo\": true,\n" +
 				"  \"id\": \"b40ef09b-3811-4726-b508-e41a0f96c68f\",\n" +
 				"  \"name\": \"Foo\",\n" +
 				"  \"applicationId\": \"78d335fa-323d-0114-9c3d-d6f0d48968cf\",\n" +
 				"  \"reason\": \"\",\n" +
-				"  \"resolution\": \"480x640\",\n" +
+				"  \"resolution\": \"720x1280\",\n" +
 				"  \"sessionId\": \"flR1ZSBPY3QgMjkgMTI6MTM6MjMgUERUIDIwMTN\",\n" +
 				"  \"size\": 247748791,\n" +
 				"  \"status\": \"available\",\n" +
 				"  \"streamMode\": \"auto\",\n" +
 				"  \"streams\": [\n" +
 				"    {\n" +
-				"      \"streamId\": \"abc123\",\n" +
+				"      \"streamId\": \"482bce73-f882-40fd-8ca5-cb74ff416036\",\n" +
 				"      \"hasAudio\": true,\n" +
 				"      \"hasVideo\": true\n" +
 				"    }\n" +
@@ -72,6 +71,18 @@ public class StopArchiveEndpointTest {
 				"}";
 		Archive response = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, expectedPayload));
 		assertNotNull(response);
+		assertEquals(5049, response.getDurationSeconds().longValue());
+		assertEquals(ArchiveStatus.AVAILABLE, response.getStatus());
+		assertEquals(1, response.getStreams().size());
+		assertEquals(UUID.fromString("482bce73-f882-40fd-8ca5-cb74ff416036"), response.getStreams().get(0).getStreamId());
+		assertEquals(StreamMode.AUTO, response.getStreamMode());
+		assertEquals(Resolution.HD_PORTRAIT, response.getResolution());
+		assertEquals("", response.getReason());
+		assertEquals("Foo", response.getName());
+		assertTrue(response.hasAudio());
+		assertNull(response.hasVideo());
+		assertEquals(Instant.ofEpochSecond(1384221730L), response.getCreatedAt());
+		assertEquals("flR1ZSBPY3QgMjkgMTI6MTM6MjMgUERUIDIwMTN", response.getSessionId());
 	}
 
 	@Test(expected = HttpResponseException.class)

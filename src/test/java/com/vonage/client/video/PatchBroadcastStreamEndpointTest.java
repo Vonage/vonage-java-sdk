@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package com.vonage.client.video;
 
+import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
 import com.vonage.client.VonageBadRequestException;
@@ -27,27 +28,26 @@ import org.junit.Before;
 import org.junit.Test;
 import java.util.UUID;
 
-public class PatchArchiveStreamEndpointTest {
-	private PatchArchiveStreamEndpoint endpoint;
+public class PatchBroadcastStreamEndpointTest {
+	private PatchBroadcastStreamEndpoint endpoint;
 	private final String applicationId = UUID.randomUUID().toString();
 	
 	@Before
 	public void setUp() {
-		endpoint = new PatchArchiveStreamEndpoint(new HttpWrapper(
+		endpoint = new PatchBroadcastStreamEndpoint(new HttpWrapper(
 			new JWTAuthMethod(applicationId, new byte[0])
 		));
 	}
-	
+
 	@Test
 	public void testAddStream() throws Exception {
-		String archiveId = UUID.randomUUID().toString(),
-				streamId = UUID.randomUUID().toString();
+		String streamId = UUID.randomUUID().toString();
 		PatchComposedStreamsRequest request = new PatchComposedStreamsRequest(streamId, true, false);
-		request.id = archiveId;
+		request.id = UUID.randomUUID().toString();
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("PATCH", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/" +
-				applicationId+"/archive/"+archiveId+"/streams";
+				applicationId+"/broadcast/"+request.id+"/streams";
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		String expectedPayload = "{\"addStream\":\""+streamId+"\",\"hasAudio\":true,\"hasVideo\":false}";
@@ -56,18 +56,37 @@ public class PatchArchiveStreamEndpointTest {
 
 	@Test
 	public void testRemoveStream() throws Exception {
-		String archiveId = UUID.randomUUID().toString(),
-				streamId = UUID.randomUUID().toString();
+		String streamId = UUID.randomUUID().toString();
 		PatchComposedStreamsRequest request = new PatchComposedStreamsRequest(streamId);
-		request.id = archiveId;
+		request.id = UUID.randomUUID().toString();
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("PATCH", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/" +
-				applicationId+"/archive/"+archiveId+"/streams";
+				applicationId+"/broadcast/"+request.id+"/streams";
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		String expectedPayload = "{\"removeStream\":\""+streamId+"\"}";
 		assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
+	}
+
+	@Test
+	public void testCustomUri() throws Exception {
+		String streamId = UUID.randomUUID().toString();
+		PatchComposedStreamsRequest request = new PatchComposedStreamsRequest(streamId, null, null);
+		request.id = UUID.randomUUID().toString();
+		String baseUri = "http://example.com";
+		HttpWrapper wrapper = new HttpWrapper(
+				HttpConfig.builder().videoBaseUri(baseUri).build(),
+				new JWTAuthMethod(applicationId, new byte[0])
+		);
+		endpoint = new PatchBroadcastStreamEndpoint(wrapper);
+		String expectedUri = baseUri + "/v2/project/"+applicationId+"/broadcast/"+request.id+"/streams";
+		RequestBuilder builder = endpoint.makeRequest(request);
+		assertEquals(expectedUri, builder.build().getURI().toString());
+		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
+		String expectedPayload = "{\"addStream\":\""+streamId+"\"}";
+		assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
+		assertEquals("PATCH", builder.getMethod());
 	}
 
 	@Test(expected = VonageBadRequestException.class)

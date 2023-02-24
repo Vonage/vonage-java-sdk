@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -17,20 +17,16 @@ package com.vonage.client.video;
 
 import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
-import com.vonage.client.VonageBadRequestException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 
-class SetArchiveLayoutEndpoint extends AbstractMethod<SetArchiveLayoutRequestWrapper, Void> {
+class StopBroadcastEndpoint extends AbstractMethod<String, Broadcast> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
-	private static final String PATH = "/v2/project/%s/archive/%s/layout";
+	private static final String PATH = "/v2/project/%s/broadcast/%s/stop";
 
-	SetArchiveLayoutEndpoint(HttpWrapper httpWrapper) {
+	StopBroadcastEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
 	}
 
@@ -40,19 +36,15 @@ class SetArchiveLayoutEndpoint extends AbstractMethod<SetArchiveLayoutRequestWra
 	}
 
 	@Override
-	public RequestBuilder makeRequest(SetArchiveLayoutRequestWrapper wrapper) {
-		String path = String.format(PATH, getApplicationIdOrApiKey(), wrapper.archiveId);
+	public RequestBuilder makeRequest(String broadcastId) {
+		String path = String.format(PATH, getApplicationIdOrApiKey(), broadcastId);
 		String uri = httpWrapper.getHttpConfig().getVideoBaseUri() + path;
-		return RequestBuilder.put(uri)
-				.setHeader("Content-Type", "application/json")
-				.setEntity(new StringEntity(wrapper.request.toJson(), ContentType.APPLICATION_JSON));
+		return RequestBuilder.post(uri)
+				.setHeader("Accept", "application/json");
 	}
 
 	@Override
-	public Void parseResponse(HttpResponse response) throws IOException {
-		if (response.getStatusLine().getStatusCode() != 200) {
-			throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
-		}
-		return null;
+	public Broadcast parseResponse(HttpResponse response) throws IOException {
+		return Broadcast.fromJson(basicResponseHandler.handleResponse(response));
 	}
 }

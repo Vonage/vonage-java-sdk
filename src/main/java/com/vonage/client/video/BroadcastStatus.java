@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -15,28 +15,37 @@
  */
 package com.vonage.client.video;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Defines values for the archiveMode parameter of the
- * {@link CreateSessionRequest.Builder#archiveMode(ArchiveMode archiveMode)} method.
+ * Defines values returned by the {@link Broadcast#getStatus} method.
  */
-public enum ArchiveMode {
-    /**
-     * The session is not archived automatically. To archive the session, you can call the
-     * {@link VideoClient#createArchive(Archive)} method.
-     */
-    MANUAL,
+public enum BroadcastStatus {
 
-    /**
-     * The session is archived automatically (as soon as there are clients connected
-     * to the session).
-     */
-    ALWAYS;
+	/**
+	 * The broadcast is live (started).
+	 */
+	STARTED,
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return name().toLowerCase();
-    }
+	/**
+	 * The broadcast has ended (stopped).
+	 */
+	STOPPED;
+
+	@JsonValue
+	@Override
+	public String toString() {
+		return name().toLowerCase();
+	}
+
+	@JsonCreator
+	public static BroadcastStatus fromString(String value) {
+		try {
+			return BroadcastStatus.valueOf(value.toUpperCase());
+		}
+		catch (NullPointerException | IllegalArgumentException ex) {
+			return null;
+		}
+	}
 }

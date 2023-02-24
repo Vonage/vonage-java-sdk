@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Defines values used in the {@link CreateArchiveRequest.Builder#outputMode(OutputMode)} method and returned by the
+ * Defines values used in the {@link Archive.Builder#outputMode(OutputMode)} method and returned by the
  * {@link Archive#getOutputMode} method.
  */
 public enum OutputMode {

@@ -69,10 +69,11 @@ public class SetStreamLayoutEndpointTest {
 	
 	@Test
 	public void testMakeRequestRequiredParameters() throws Exception {
-		List<SessionStream> streams = Collections.singletonList(SessionStream.builder("").build());
+		String streamId = UUID.randomUUID().toString();
+		List<SessionStream> streams = Collections.singletonList(SessionStream.builder(streamId).build());
 		SetStreamLayoutRequest request = new SetStreamLayoutRequest("", streams);
 		RequestBuilder builder = endpoint.makeRequest(request);
-		String expectedPayload = "{\"items\":[{\"id\":\"\"}]}";
+		String expectedPayload = "{\"items\":[{\"id\":\""+streamId+"\"}]}";
 		assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
 	}
 

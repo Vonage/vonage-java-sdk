@@ -26,7 +26,7 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 
-class PatchArchiveStreamEndpoint extends AbstractMethod<PatchArchiveStreamRequest, Void> {
+class PatchArchiveStreamEndpoint extends AbstractMethod<PatchComposedStreamsRequest, Void> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/v2/project/%s/archive/%s/streams";
 
@@ -40,8 +40,8 @@ class PatchArchiveStreamEndpoint extends AbstractMethod<PatchArchiveStreamReques
 	}
 
 	@Override
-	public RequestBuilder makeRequest(PatchArchiveStreamRequest request) {
-		String path = String.format(PATH, getApplicationIdOrApiKey(), request.archiveId);
+	public RequestBuilder makeRequest(PatchComposedStreamsRequest request) {
+		String path = String.format(PATH, getApplicationIdOrApiKey(), request.id);
 		String uri = httpWrapper.getHttpConfig().getVideoBaseUri() + path;
 		return RequestBuilder.patch(uri)
 				.setHeader("Content-Type", "application/json")

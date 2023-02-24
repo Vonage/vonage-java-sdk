@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -19,14 +19,17 @@ import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 
-class ListArchivesEndpoint extends AbstractMethod<ListStreamCompositionsRequest, ListArchivesResponse> {
+class CreateBroadcastEndpoint extends AbstractMethod<Broadcast, Broadcast> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
-	private static final String PATH = "/v2/project/%s/archive";
+	private static final String PATH = "/v2/project/%s/broadcast";
+	private Broadcast broadcast;
 
-	ListArchivesEndpoint(HttpWrapper httpWrapper) {
+	CreateBroadcastEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
 	}
 
@@ -36,18 +39,29 @@ class ListArchivesEndpoint extends AbstractMethod<ListStreamCompositionsRequest,
 	}
 
 	@Override
-	public RequestBuilder makeRequest(ListStreamCompositionsRequest request) {
+	public RequestBuilder makeRequest(Broadcast request) {
 		String path = String.format(PATH, getApplicationIdOrApiKey());
 		String uri = httpWrapper.getHttpConfig().getVideoBaseUri() + path;
-		RequestBuilder rqBuilder = RequestBuilder.get(uri).setHeader("Accept", "application/json");
-		if (request != null) {
-			request.addParams(rqBuilder);
-		}
-		return rqBuilder;
+		return RequestBuilder.post(uri)
+				.setHeader("Content-Type", "application/json")
+				.setHeader("Accept", "application/json")
+				.setEntity(new StringEntity((broadcast = request).toJson(), ContentType.APPLICATION_JSON));
 	}
 
 	@Override
-	public ListArchivesResponse parseResponse(HttpResponse response) throws IOException {
-		return ListArchivesResponse.fromJson(basicResponseHandler.handleResponse(response));
+	public Broadcast parseResponse(HttpResponse response) throws IOException {
+		try {
+			String json = basicResponseHandler.handleResponse(response);
+			if (broadcast != null) {
+				broadcast.updateFromJson(json);
+				return broadcast;
+			}
+			else {
+				return Broadcast.fromJson(json);
+			}
+		}
+		finally {
+			broadcast = null;
+		}
 	}
 }

@@ -15,6 +15,7 @@
  */
 package com.vonage.client.video;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,14 +23,18 @@ import com.vonage.client.VonageUnexpectedException;
 import java.util.Objects;
 
 /**
- * Defines the properties used for {@link VideoClient#setArchiveLayout(String, ArchiveLayout)}.
+ * Defines the properties used for {@link VideoClient#updateArchiveLayout(String, StreamCompositionLayout)}.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class ArchiveLayout {
-	private final ScreenLayoutType type, screenshareType;
-	private final String stylesheet;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class StreamCompositionLayout {
+	private ScreenLayoutType type, screenshareType;
+	private String stylesheet;
 
-	private ArchiveLayout(Builder builder) {
+	protected StreamCompositionLayout() {
+	}
+
+	StreamCompositionLayout(Builder builder) {
 		type = Objects.requireNonNull(builder.type, "Initial layout type is required.");
 		if ((screenshareType = builder.screenshareType) != null && type != ScreenLayoutType.BEST_FIT) {
 			throw new IllegalStateException(
@@ -137,12 +142,12 @@ public class ArchiveLayout {
 
 	
 		/**
-		 * Builds the {@linkplain ArchiveLayout}.
+		 * Builds the {@linkplain StreamCompositionLayout}.
 		 *
-		 * @return An instance of ArchiveLayout, populated with all fields from this builder.
+		 * @return An instance of StreamCompositionLayout, populated with all fields from this builder.
 		 */
-		public ArchiveLayout build() {
-			return new ArchiveLayout(this);
+		public StreamCompositionLayout build() {
+			return new StreamCompositionLayout(this);
 		}
 	}
 }

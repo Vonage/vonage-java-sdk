@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -18,50 +18,53 @@ package com.vonage.client.video;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
+import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
-import org.apache.http.util.EntityUtils;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
+import java.util.Map;
 import java.util.UUID;
 
-public class CreateArchiveEndpointTest {
-	private CreateArchiveEndpoint endpoint;
+public class ListBroadcastsEndpointTest {
+	private ListBroadcastsEndpoint endpoint;
 	private final String applicationId = UUID.randomUUID().toString();
 	
 	@Before
 	public void setUp() {
-		endpoint = new CreateArchiveEndpoint(new HttpWrapper(
+		endpoint = new ListBroadcastsEndpoint(new HttpWrapper(
 			new JWTAuthMethod(applicationId, new byte[0])
 		));
 	}
 	
 	@Test
-	public void testMakeRequest() throws Exception {
-		String name = "My Archive", sessionId = "2=SESSION_id";
-		Archive request = Archive.builder(sessionId).name(name).hasVideo(false).build();
+	public void testMakeRequestAllParameters() throws Exception {
+		ListStreamCompositionsRequest request = ListStreamCompositionsRequest.builder()
+				.offset(6).count(25).sessionId("SESSION_ID").build();
 		RequestBuilder builder = endpoint.makeRequest(request);
-		assertEquals("POST", builder.getMethod());
-		String expectedUri = "https://video.api.vonage.com/v2/project/"+applicationId+"/archive";
+		assertEquals("GET", builder.getMethod());
+		String expectedUri = "https://video.api.vonage.com/v2/project/"+applicationId +
+				"/broadcast?offset=6&count=25&sessionId=SESSION_ID";
 		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		String expectedPayload = "{\"sessionId\":\""+sessionId+"\",\"hasVideo\":false,\"name\":\""+name+"\"}";
-		assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
-		String expectedResponse = "{}";
+		Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
+		assertEquals(3, params.size());
+		assertEquals(request.getOffset().toString(), params.get("offset"));
+		assertEquals(request.getCount().toString(), params.get("count"));
+		assertEquals(request.getSessionId(), params.get("sessionId"));
+		String expectedResponse = "{\"count\":2,\"items\":[{},{\"applicationId\":\""+applicationId+"\"}]}";
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
-		Archive parsed = endpoint.parseResponse(mockResponse);
+		ListBroadcastsResponse parsed = endpoint.parseResponse(mockResponse);
 		assertNotNull(parsed);
-	}
-
-	@Test(expected = HttpResponseException.class)
-	public void test500Response() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
+		assertEquals(2, parsed.getCount().intValue());
+		assertEquals(2, parsed.getItems().size());
+		assertNotNull(parsed.getItems().get(0));
+		assertEquals(applicationId, parsed.getItems().get(1).getApplicationId().toString());
 	}
 
 	@Test
@@ -71,22 +74,24 @@ public class CreateArchiveEndpointTest {
 				HttpConfig.builder().videoBaseUri(baseUri).build(),
 				new JWTAuthMethod(applicationId, new byte[0])
 		);
-		endpoint = new CreateArchiveEndpoint(wrapper);
-		String expectedUri = baseUri + "/v2/project/"+applicationId+"/archive";
-		Archive request = Archive.builder("S1d").build();
+		endpoint = new ListBroadcastsEndpoint(wrapper);
+		String expectedUri = baseUri + "/v2/project/"+applicationId+"/broadcast";
+		ListStreamCompositionsRequest request = ListStreamCompositionsRequest.builder().build();
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		assertEquals("POST", builder.getMethod());
+		assertEquals("GET", builder.getMethod());
+		Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
+		assertEquals(0, params.size());
 	}
 
-	@Test
-	public void testParseFromFresh() throws Exception {
-		HttpResponse mock = TestUtils.makeJsonHttpResponse(200, VideoClientTest.archiveJson);
-		HttpWrapper wrapper = new HttpWrapper(new JWTAuthMethod(applicationId, new byte[0]));
-		endpoint = new CreateArchiveEndpoint(wrapper);
-		Archive parsed = endpoint.parseResponse(mock);
-		VideoClientTest.assertArchiveEqualsExpectedJson(parsed);
+	@Test(expected = HttpResponseException.class)
+	public void test500Response() throws Exception {
+		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void testInvalidResponseJson() throws Exception {
+		ListBroadcastsResponse.fromJson("{malformed]");
 	}
 }

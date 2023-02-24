@@ -26,8 +26,8 @@ public class ListArchivesResponseTest {
 	@Test
 	public void testFromJsonAllFields() {
 		Integer count = 4;
-		String archive0Json = "{\"reason\":\"An excuse\",\"status\":\"paused\"," +
-				"\"outputMode\":\"composed\",\"resolution\":\"1080x1920\"}",
+		String archive0Json = "{\"resolution\":\"1080x1920\",\"reason\":\"An excuse\"," +
+				"\"status\":\"paused\",\"outputMode\":\"composed\"}",
 				archive1Json = VideoClientTest.archiveJson,
 				archive2Json = "{}",
 				archive3Json = "{\"status\":\"u\",\"outputMode\":\"o\",\"resolution\":\"x\"," +
@@ -62,7 +62,7 @@ public class ListArchivesResponseTest {
 		assertFalse(archive3.hasVideo());
 		assertTrue(archive3.hasAudio());
 		assertEquals("n", archive3.getName());
-		assertEquals("{\"name\":\"n\",\"hasVideo\":false,\"hasAudio\":true}", archive3.toJson());
+		assertEquals("{\"hasVideo\":false,\"hasAudio\":true,\"name\":\"n\"}", archive3.toJson());
 	}
 	
 	@Test(expected = VonageUnexpectedException.class)

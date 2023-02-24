@@ -17,13 +17,14 @@ package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ArchiveStream {
-	private String streamId;
+public class VideoStream {
+	private UUID streamId;
 	private Boolean hasAudio, hasVideo;
 
-	protected ArchiveStream() {}
+	protected VideoStream() {}
 
 
 	/**
@@ -31,7 +32,8 @@ public class ArchiveStream {
 	 *
 	 * @return The Stream ID.
 	 */
-	public String getStreamId() {
+	@JsonProperty("streamId")
+	public UUID getStreamId() {
 		return streamId;
 	}
 
@@ -41,7 +43,7 @@ public class ArchiveStream {
 	 * @return {@code true} if the recording has sound.
 	 */
 	@JsonProperty("hasAudio")
-	public boolean hasAudio() {
+	public Boolean hasAudio() {
 		return hasAudio;
 	}
 
@@ -51,7 +53,7 @@ public class ArchiveStream {
 	 * @return {@code true} if the recording has video.
 	 */
 	@JsonProperty("hasVideo")
-	public boolean hasVideo() {
+	public Boolean hasVideo() {
 		return hasVideo;
 	}
 }

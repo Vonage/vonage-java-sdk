@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -30,38 +30,38 @@ import org.junit.Before;
 import org.junit.Test;
 import java.util.UUID;
 
-public class CreateArchiveEndpointTest {
-	private CreateArchiveEndpoint endpoint;
+public class CreateBroadcastEndpointTest {
+	private CreateBroadcastEndpoint endpoint;
 	private final String applicationId = UUID.randomUUID().toString();
-	
+
 	@Before
 	public void setUp() {
-		endpoint = new CreateArchiveEndpoint(new HttpWrapper(
+		endpoint = new CreateBroadcastEndpoint(new HttpWrapper(
 			new JWTAuthMethod(applicationId, new byte[0])
 		));
 	}
 	
 	@Test
-	public void testMakeRequest() throws Exception {
-		String name = "My Archive", sessionId = "2=SESSION_id";
-		Archive request = Archive.builder(sessionId).name(name).hasVideo(false).build();
+	public void testMakeRequestRequiredParameters() throws Exception {
+		Broadcast request = Broadcast.builder("SESSION_id123")
+				.addRtmpStream(Rtmp.builder()
+						.streamName("My Test Stream")
+						.serverUrl("rtmps://mytestserver/mytestapp")
+						.build()
+				).build();
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("POST", builder.getMethod());
-		String expectedUri = "https://video.api.vonage.com/v2/project/"+applicationId+"/archive";
+		String expectedUri = "https://video.api.vonage.com/v2/project/"+applicationId+"/broadcast";
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
+		String expectedRequest = "{\"sessionId\":\"SESSION_id123\",\"outputs\":{\"rtmp\":[{" +
+				"\"streamName\":\"My Test Stream\",\"serverUrl\":\"rtmps://mytestserver/mytestapp\"}]}}";
+		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		String expectedPayload = "{\"sessionId\":\""+sessionId+"\",\"hasVideo\":false,\"name\":\""+name+"\"}";
-		assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
 		String expectedResponse = "{}";
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
-		Archive parsed = endpoint.parseResponse(mockResponse);
+		Broadcast parsed = endpoint.parseResponse(mockResponse);
 		assertNotNull(parsed);
-	}
-
-	@Test(expected = HttpResponseException.class)
-	public void test500Response() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
 	}
 
 	@Test
@@ -71,22 +71,29 @@ public class CreateArchiveEndpointTest {
 				HttpConfig.builder().videoBaseUri(baseUri).build(),
 				new JWTAuthMethod(applicationId, new byte[0])
 		);
-		endpoint = new CreateArchiveEndpoint(wrapper);
-		String expectedUri = baseUri + "/v2/project/"+applicationId+"/archive";
-		Archive request = Archive.builder("S1d").build();
+		endpoint = new CreateBroadcastEndpoint(wrapper);
+		String expectedUri = baseUri + "/v2/project/"+applicationId+"/broadcast";
+		Broadcast request = Broadcast.builder("S").hls(Hls.builder().build()).build();
 		RequestBuilder builder = endpoint.makeRequest(request);
+		String expectedRequest = "{\"sessionId\":\"S\",\"outputs\":{\"hls\":{}}}";
+		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("POST", builder.getMethod());
 	}
+	
+	@Test(expected = HttpResponseException.class)
+	public void test500Response() throws Exception {
+		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
+	}
 
 	@Test
 	public void testParseFromFresh() throws Exception {
-		HttpResponse mock = TestUtils.makeJsonHttpResponse(200, VideoClientTest.archiveJson);
+		HttpResponse mock = TestUtils.makeJsonHttpResponse(200, VideoClientTest.broadcastJson);
 		HttpWrapper wrapper = new HttpWrapper(new JWTAuthMethod(applicationId, new byte[0]));
-		endpoint = new CreateArchiveEndpoint(wrapper);
-		Archive parsed = endpoint.parseResponse(mock);
-		VideoClientTest.assertArchiveEqualsExpectedJson(parsed);
+		endpoint = new CreateBroadcastEndpoint(wrapper);
+		Broadcast parsed = endpoint.parseResponse(mock);
+		VideoClientTest.assertBroadcastEqualsExpectedJson(parsed);
 	}
 }

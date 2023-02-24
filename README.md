@@ -41,7 +41,7 @@ For Gradle 3.4 or Higher:
 
 ```groovy
 dependencies {
-    implementation 'com.vonage:server-sdk:8.0.0-beta3'
+    implementation 'com.vonage:server-sdk:8.0.0-beta4'
 }
 ```
 
@@ -49,7 +49,7 @@ For older versions:
 
 ```groovy
 dependencies {
-    compile 'com.vonage:server-sdk:8.0.0-beta3'
+    compile 'com.vonage:server-sdk:8.0.0-beta4'
 }
 ```
 
@@ -61,7 +61,7 @@ Add the following to the correct place in your project's POM file:
 <dependency>
     <groupId>com.vonage</groupId>
     <artifactId>server-sdk</artifactId>
-    <version>8.0.0-beta3</version>
+    <version>8.0.0-beta4</version>
 </dependency>
 ```
 
@@ -500,7 +500,7 @@ SignalRequest request = SignalRequest.builder()
 client.getVideoClient().signal(SESSION_ID, CONNECTION_ID, request);
 ```
 
-Signal all participants in a session:
+### Signal all participants in a session:
 ```java
 SignalRequest request = SignalRequest.builder()
 		.type("chat").data("Hello, World!").build();
@@ -517,15 +517,15 @@ GetStreamResponse streamInfo = client.getVideoClient().getStream(SESSION_ID, STR
 
 Archive a recording of a Vonage Video session. All properties (except `SESSION_ID`) are optional.
 ```java
-Archive archive = client.getVideoClient().startArchive(
-    CreateArchiveRequest.builder(SESSION_ID)
+Archive archive = client.getVideoClient().createArchive(
+    Archive.builder(SESSION_ID)
         .name("My_Recording")
         .outputMode(OutputMode.COMPOSED)
         .streamMode(StreamMode.AUTO)
         .resolution(Resolution.HD_LANDSCAPE)
         .hasAudio(true).hasVideo(true)
         .layout(
-            ArchiveLayout.builder(ScreenLayoutType.BEST_FIT)
+            StreamCompositionLayout.builder(ScreenLayoutType.BEST_FIT)
                 .screenshareType(ScreenLayoutType.PIP)
                 .build()
         )
@@ -539,6 +539,24 @@ Archive archive = client.getVideoClient().startArchive(
 Archive archive = client.getVideoClient().stopArchive(ARCHIVE_ID);
 ```
 
+### Delete an Archive recording
+
+```java
+Archive archive = client.getVideoClient().deleteArchive(ARCHIVE_ID);
+```
+
+### Get details about a specific Archive
+
+```java
+Archive archive = client.getVideoClient().getArchive(ARCHIVE_ID);
+```
+
+### List the most recent completed Archives
+
+```java
+List<Archive> archives = client.getVideoClient().listArchives();
+```
+
 ### Add or remove stream in an Archive recording
 
 Change the streams included in a composed archive that was started with the streamMode set to "manual":
@@ -547,6 +565,62 @@ client.getVideoClient().addArchiveStream(ARCHIVE_ID, STREAM_ID);
 ```
 ```java
 client.getVideoClient().removeArchiveStream(ARCHIVE_ID, STREAM_ID);
+```
+
+### List all live Broadcasts
+
+```java
+List<Broadcast> broadcasts = client.getVideoClient().listBroadcasts();
+```
+
+### Get details about a specific Broadcast
+
+```java
+Broadcast broadcast = client.getVideoClient().getBroadcast(BROADCAST_ID);
+```
+
+### Start a live streaming Broadcast
+To successfully start broadcasting a session, at least one client must be connected to the session.
+The live streaming broadcast can target one HLS endpoint and up to five RTMP servers simultaneously for a session.
+Session ID is required and at least one output stream (RTMP and/or HLS) should be specified.
+
+```java
+Broadcast broadcast = client.getVideoClient().createBroadcast(
+		Broadcast.builder(SESSION_ID)
+            .hls(Hls.builder().lowLatency(true).build())
+            .resolution(Resolution.HD_LANDSCAPE)
+		    .streamMode(StreamMode.MANUAL)
+            .layout(StreamCompositionLayout.builder(ScreenLayoutType.BEST_FIT)
+                    .screenshareType(ScreenLayoutType.PIP)
+                    .build()
+            )
+            .maxDuration(Duration.ofMinutes(45))
+        .build()
+);
+```
+
+### Stop a Broadcast recording
+
+```java
+Broadcast broadcast = client.getVideoClient().stopBroadcast(BROADCAST_ID);
+```
+
+### Dynamically changing the layout type of a live streaming Broadcast
+
+```java
+client.getVideoClient().updateBroadcastLayout(BROADCAST_ID,
+		StreamCompositionLayout.builder(ScreenLayoutType.HORIZONTAL).build()
+);
+```
+
+### Add or remove stream in a live streaming Broadcast
+
+Change the streams included in a broadcast that was started with the streamMode set to "manual":
+```java
+client.getVideoClient().addBroadcastStream(BROADCAST_ID, STREAM_ID);
+```
+```java
+client.getVideoClient().removeBroadcastStream(BROADCAST_ID, STREAM_ID);
 ```
 
 ### Custom HTTP Configuration

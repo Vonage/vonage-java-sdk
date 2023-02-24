@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -20,67 +20,46 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
-import java.net.URI;
-import java.util.UUID;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CreateSessionResponse {
-	private String sessionId, createDt;
-	private UUID applicationId;
-	private URI mediaServerUrl;
+class ListBroadcastsResponse {
+	private Integer count;
+	private List<Broadcast> items;
 
-	protected CreateSessionResponse() {
+	protected ListBroadcastsResponse() {
 	}
 
 	/**
-	 * @return The session ID.
+	 * @return The total number of broadcasts in the results.
 	 */
-	@JsonProperty("session_id")
-	public String getSessionId() {
-		return sessionId;
+	@JsonProperty("count")
+	public Integer getCount() {
+		return count;
 	}
 
 	/**
-	 * @return The application ID.
+	 * @return List of objects defining each broadcast retrieved.
+	 * Broadcasts are listed from the newest to the oldest in the return set.
 	 */
-	@JsonProperty("application_id")
-	public UUID getApplicationId() {
-		return applicationId;
+	@JsonProperty("items")
+	public List<Broadcast> getItems() {
+		return items;
 	}
-
-	/**
-	 * @return The creation date.
-	 */
-	@JsonProperty("create_dt")
-	public String getCreateDt() {
-		return createDt;
-	}
-
-	/**
-	 * @return The URL of the Media Router used by the session.
-	 */
-	@JsonProperty("media_server_url")
-	public URI getMediaServerUrl() {
-		return mediaServerUrl;
-	}
-
+	
 	/**
 	 * Creates an instance of this class from a JSON payload.
 	 *
 	 * @param json The JSON string to parse.
 	 * @return An instance of this class with the fields populated, if present.
 	 */
-	public static CreateSessionResponse fromJson(String json) {
+	public static ListBroadcastsResponse fromJson(String json) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			CreateSessionResponse[] array = mapper.readValue(json, CreateSessionResponse[].class);
-			if (array == null || array.length == 0) {
-				return new CreateSessionResponse();
-			}
-			return array[0];
+			return mapper.readValue(json, ListBroadcastsResponse.class);
 		}
 		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to produce CreateSessionResponse from json.", ex);
+			throw new VonageUnexpectedException("Failed to produce ListBroadcastsResponse from json.", ex);
 		}
 	}
 }

@@ -25,7 +25,8 @@ public class ListStreamsResponseTest {
 
 	@Test
 	public void testFromJsonAllFields() {
-		String id1 = UUID.randomUUID().toString(), name0 = "LiveStream 1";
+		UUID id1 = UUID.randomUUID();
+		String name0 = "LiveStream 1";
 		Integer count = 2;
 		ListStreamsResponse response = ListStreamsResponse.fromJson("{\n" +
 				"\"count\":\""+count+"\",\n" +
