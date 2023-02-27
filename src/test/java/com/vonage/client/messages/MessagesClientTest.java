@@ -124,6 +124,7 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 		assertResponse(WhatsappAudioRequest.builder().url(AUDIO));
 		assertResponse(WhatsappVideoRequest.builder().url(VIDEO));
 		assertResponse(WhatsappFileRequest.builder().url(FILE));
+		assertResponse(WhatsappLocationRequest.builder().latitude(40.34772).longitude(-74.18847).build());
 		assertResponse(WhatsappCustomRequest.builder().custom(Collections.emptyMap()));
 		assertResponse(WhatsappTemplateRequest.builder().name("fb"));
 	}

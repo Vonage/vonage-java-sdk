@@ -22,10 +22,12 @@ import com.vonage.client.messages.MessageType;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class WhatsappLocationRequest extends WhatsappRequest {
 	final Location location;
+	final String text;
 
 	WhatsappLocationRequest(Builder builder) {
 		super(builder, MessageType.LOCATION);
 		location = new Location(builder);
+		text = builder.text;
 	}
 
 	@JsonProperty("location")
@@ -33,12 +35,17 @@ public final class WhatsappLocationRequest extends WhatsappRequest {
 		return location;
 	}
 
+	@JsonProperty("text")
+	public String getText() {
+		return text;
+	}
+
 	public static Builder builder() {
 		return new Builder();
 	}
 
 	public static final class Builder extends WhatsappRequest.Builder<WhatsappLocationRequest, Builder> {
-		String name, address;
+		String name, address, text;
 		Double latitude, longitude;
 
 		Builder() {}
@@ -88,6 +95,18 @@ public final class WhatsappLocationRequest extends WhatsappRequest {
 		 */
 		public Builder address(String address) {
 			this.address = address;
+			return this;
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * Accompanying text message to be sent with the location.
+		 *
+		 * @param text The text to go along with the message as a string.
+		 * @return This builder.
+		 */
+		public Builder text(String text) {
+			this.text = text;
 			return this;
 		}
 
