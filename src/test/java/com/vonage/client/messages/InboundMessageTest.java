@@ -18,13 +18,14 @@ package com.vonage.client.messages;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.net.URI;
+import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
 
 public class InboundMessageTest {
 	UUID messageUuid = UUID.randomUUID();
 	String to = "447700900000", from = "447700900001";
-	String timestamp = "2020-01-01 15:43:21 +0200";
+	String timestamp = "2020-01-01T15:43:21Z";
 	String clientRef = UUID.randomUUID().toString();
 	String text = "Hello, world!";
 	String price = "0.0333";
@@ -57,7 +58,7 @@ public class InboundMessageTest {
 		assertEquals(messageUuid, im.getMessageUuid());
 		assertEquals(to, im.getTo());
 		assertEquals(from, im.getFrom());
-		assertEquals(timestamp, MessageStatus.ISO_8601.format(im.getTimestamp()));
+		assertEquals(Instant.parse(timestamp), im.getTimestamp());
 		assertEquals(clientRef, im.getClientRef());
 	}
 

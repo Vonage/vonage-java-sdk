@@ -15,12 +15,15 @@
  */
 package com.vonage.client.messages;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 import java.net.URI;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
 
@@ -44,8 +47,7 @@ public class InboundMessage {
 
 	@JsonAnySetter protected Map<String, Object> unknownProperties;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = MessageStatus.ISO_8601_PATTERN)
-	@JsonProperty("timestamp") protected ZonedDateTime timestamp;
+	@JsonProperty("timestamp") protected Instant timestamp;
 	@JsonProperty("channel") protected Channel channel;
 	@JsonProperty("message_type") protected MessageType messageType;
 	@JsonProperty("message_uuid") protected UUID messageUuid;
@@ -132,16 +134,12 @@ public class InboundMessage {
 		return from;
 	}
 
-	protected void setTimestamp(String timestamp) {
-		this.timestamp = MessageStatus.ISO_8601.parse(timestamp, ZonedDateTime::from);
-	}
-
 	/**
 	 * The datetime of when the event occurred.
 	 *
-	 * @return The timestamp as a ZonedDateTime.
+	 * @return The timestamp as an Instant.
 	 */
-	public ZonedDateTime getTimestamp() {
+	public Instant getTimestamp() {
 		return timestamp;
 	}
 
