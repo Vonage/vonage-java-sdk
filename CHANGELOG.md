@@ -5,7 +5,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 # [7.2.0]
-- Added inbound message webhook
+- Updates to Messages v1:
+  - Added inbound message webhook
+  - Fixed timestamp format deserialization for MessageStatus (now returns an Instant)
+  - Added Viber file and video message types
+  - Added Action button support to Viber image and text messages
+  - Added WhatsApp location message type
+  - `client_ref` character limit increased to 100
+  - Expanded valid message types to accommodate webhooks (MMS text, WhatsApp order, reply & unsupported)
+- Deprecated Pay NCCO action (removed in 8.x)
+- Deprecated WAPPush SMS (removed in 8.x)
+- Bumped dependency versions
 
 # [7.1.1] - 2022-11-16
 - Bumped Jackson version to 2.14
