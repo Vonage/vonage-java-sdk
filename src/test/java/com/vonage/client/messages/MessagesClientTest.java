@@ -113,7 +113,7 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 	public void testSendViberSuccess() throws Exception {
 		assertResponse(ViberTextRequest.builder().text(TEXT));
 		assertResponse(ViberImageRequest.builder().url(IMAGE));
-		assertResponse(ViberVideoRequest.builder().url(VIDEO));
+		assertResponse(ViberVideoRequest.builder().url(VIDEO).thumbUrl(IMAGE));
 		assertResponse(ViberFileRequest.builder().url(FILE));
 	}
 
@@ -124,7 +124,7 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 		assertResponse(WhatsappAudioRequest.builder().url(AUDIO));
 		assertResponse(WhatsappVideoRequest.builder().url(VIDEO));
 		assertResponse(WhatsappFileRequest.builder().url(FILE));
-		assertResponse(WhatsappLocationRequest.builder().latitude(40.34772).longitude(-74.18847).build());
+		assertResponse(WhatsappLocationRequest.builder().latitude(40.34772).longitude(-74.18847));
 		assertResponse(WhatsappCustomRequest.builder().custom(Collections.emptyMap()));
 		assertResponse(WhatsappTemplateRequest.builder().name("fb"));
 	}
