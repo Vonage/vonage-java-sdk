@@ -48,13 +48,17 @@ public class WhatsappLocationRequestTest {
 	}
 
 
-	@Test(expected = NullPointerException.class)
+	@Test(expected = IllegalStateException.class)
 	public void testConstructNoLatitude() {
-		WhatsappLocationRequest.builder().longitude(Math.random()).build();
+		WhatsappLocationRequest.builder()
+				.from("317900000002").to("447900000001")
+				.longitude(Math.random()).build();
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test(expected = IllegalStateException.class)
 	public void testConstructNoLongitude() {
-		WhatsappLocationRequest.builder().latitude(Math.random()).build();
+		WhatsappLocationRequest.builder()
+				.from("317900000002").to("447900000001")
+				.latitude(Math.random()).build();
 	}
 }
