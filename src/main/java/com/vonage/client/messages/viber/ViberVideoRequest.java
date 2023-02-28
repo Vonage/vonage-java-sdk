@@ -18,20 +18,18 @@ package com.vonage.client.messages.viber;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.MessageType;
-import com.vonage.client.messages.internal.MessagePayload;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class ViberVideoRequest extends ViberRequest {
-	final MessagePayload video;
+	final Video video;
 
 	ViberVideoRequest(Builder builder) {
 		super(builder, MessageType.VIDEO);
-		video = new MessagePayload(builder.url);
-		video.validateUrlExtension("mp4", "3gpp");
+		video = new Video(builder.url, builder.thumbUrl, builder.caption);
 	}
 
 	@JsonProperty("video")
-	public MessagePayload getVideo() {
+	public Video getVideo() {
 		return video;
 	}
 
@@ -40,7 +38,7 @@ public final class ViberVideoRequest extends ViberRequest {
 	}
 
 	public static final class Builder extends ViberRequest.Builder<ViberVideoRequest, Builder> {
-		String url;
+		String url, thumbUrl, caption;
 
 		Builder() {}
 
@@ -49,11 +47,35 @@ public final class ViberVideoRequest extends ViberRequest {
 		 * Sets the URL of the video attachment. Supports only {@code .mp4} and {@code .3gpp} file extensions.
 		 * Note: Video codec must be H.264 and audio codec AAC.
 		 *
-		 * @param url The URL as a string.
+		 * @param url The video URL as a string.
 		 * @return This builder.
 		 */
 		public Builder url(String url) {
 			this.url = url;
+			return this;
+		}
+
+		/**
+		 * (REQUIRED)
+		 * URL to an image file (.jpg) for a thumbnail preview of the video.
+		 *
+		 * @param thumbUrl The thumbnail image URL as a string.
+		 * @return This builder.
+		 */
+		public Builder thumbUrl(String thumbUrl) {
+			this.thumbUrl = thumbUrl;
+			return this;
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * Additional text to accompany the video.
+		 *
+		 * @param caption The caption string.
+		 * @return This builder.
+		 */
+		public Builder caption(String caption) {
+			this.caption = caption;
 			return this;
 		}
 

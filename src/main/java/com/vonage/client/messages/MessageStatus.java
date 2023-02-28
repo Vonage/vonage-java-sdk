@@ -67,10 +67,6 @@ public class MessageStatus {
 		@JsonProperty("detail") String detail;
 		@JsonProperty("instance") String instance;
 
-		void setType(String type) {
-			this.type = URI.create(type);
-		}
-
 		/**
 		 * The type of error encountered. Follow this URL for more details.
 		 *

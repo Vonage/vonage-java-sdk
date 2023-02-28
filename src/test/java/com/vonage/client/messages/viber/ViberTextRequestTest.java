@@ -38,21 +38,22 @@ public class ViberTextRequestTest {
 	@Test
 	public void testSerializeWithAllViberServiceFields() {
 		ViberTextRequest msg = ViberTextRequest.builder()
-				.viberType("template")
-				.ttl(612)
-				.from("Business")
-				.category(Category.TRANSACTION)
-				.to("447900012345")
-				.text("CA$H£")
-				.build();
+				.viberType("template").ttl(612).from("Business")
+				.category(Category.TRANSACTION).to("447900012345")
+				.text("CA$H£").actionText("Find out more")
+				.actionUrl("https://example.com/page1.html").build();
+		ViberService vbs = msg.getViberService();
+		Action action = vbs.getAction();
+
 		String json = msg.toJson();
 		assertTrue(json.contains("\"text\":\""+msg.getText()+"\""));
 		assertTrue(json.contains("\"from\":\""+msg.getFrom()+"\""));
 		assertTrue(json.contains("\"to\":\""+msg.getTo()+"\""));
 		assertTrue(json.contains("\"message_type\":\"text\""));
 		assertTrue(json.contains("\"channel\":\"viber_service\""));
-		assertTrue(json.contains(
-				"\"viber_service\":{\"category\":\"transaction\",\"ttl\":612,\"type\":\"template\"}"
+		assertTrue(json.contains("\"viber_service\":{" +
+				"\"category\":\"transaction\",\"ttl\":"+vbs.getTtl()+",\"type\":\"template\"," +
+				"\"action\":{\"url\":\""+action.getUrl()+"\",\"text\":\""+action.getText()+"\"}}"
 		));
 	}
 
