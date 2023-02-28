@@ -15,20 +15,28 @@
  */
 package com.vonage.client.messages;
 
+import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
 import com.vonage.client.common.HttpMethod;
+import com.vonage.client.messages.mms.MmsVcardRequest;
 import com.vonage.client.messages.sms.SmsTextRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
+import org.apache.http.util.EntityUtils;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import org.junit.Before;
 import org.junit.Test;
-import java.io.ByteArrayOutputStream;
 import java.util.UUID;
 
 public class SendMessageEndpointTest {
-	final SendMessageEndpoint endpoint = new SendMessageEndpoint(new HttpWrapper());
+	SendMessageEndpoint endpoint;
+
+	@Before
+	public void setUp() {
+		endpoint = new SendMessageEndpoint(new HttpWrapper());
+	}
 
 	@Test
 	public void testConstructPayloadSms() throws Exception {
@@ -45,10 +53,7 @@ public class SendMessageEndpointTest {
 		final String expected = "{\"message_type\":\"text\",\"channel\":\"sms\",\"from\":" +
 				"\"447700900001\",\"to\":\"447700900000\",\"text\":\"Hello, World!\"}";
 
-		try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-			builder.getEntity().writeTo(baos);
-			assertEquals(expected, baos.toString());
-		}
+		assertEquals(expected, EntityUtils.toString(builder.getEntity()));
 	}
 
 	@Test
@@ -93,5 +98,22 @@ public class SendMessageEndpointTest {
 			expected.statusCode = statusCode;
 			assertEquals(expected, mrx);
 		}
+	}
+
+	@Test
+	public void testCustomUri() throws Exception {
+		String baseUri = "http://example.com";
+		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().apiBaseUri(baseUri).build());
+		endpoint = new SendMessageEndpoint(wrapper);
+
+		MessageRequest request = MmsVcardRequest.builder()
+				.url("https://www.example.org/path/to/contacts.vcf")
+				.from("447700900001").to("447700900000").build();
+
+		RequestBuilder builder = endpoint.makeRequest(request);
+		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
+		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		assertEquals("POST", builder.getMethod());
+		assertEquals(baseUri+"/v1/messages", builder.getUri().toString());
 	}
 }
