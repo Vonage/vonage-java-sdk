@@ -17,6 +17,7 @@ package com.vonage.client.messages.viber;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
+import java.net.URI;
 
 public class ViberTextRequestTest {
 
@@ -90,6 +91,26 @@ public class ViberTextRequestTest {
 		assertTrue(json.contains("\"message_type\":\"text\""));
 		assertTrue(json.contains("\"channel\":\"viber_service\""));
 		assertTrue(json.contains("\"viber_service\":{\"ttl\":2147}"));
+	}
+
+	@Test
+	public void testIllegalAction() {
+		ViberTextRequest.Builder builder = ViberTextRequest.builder()
+				.from("Me").to("447900012345").text("Hey up");
+		assertTrue(builder.build().toJson().contains("\"from\":\"Me\""));
+
+		assertNull(builder.actionUrl);
+		assertNull(builder.actionText);
+		assertThrows(IllegalStateException.class, () -> builder.actionUrl("http://example.com").build());
+		builder.actionUrl = null;
+		assertThrows(IllegalStateException.class, () -> builder.actionText("Click here").build());
+		ViberTextRequest request = builder.actionUrl("http://example.com").build();
+		ViberService viberService = request.getViberService();
+		assertNotNull(viberService);
+		Action action = viberService.getAction();
+		assertNotNull(action);
+		assertEquals("Click here", action.getText());
+		assertEquals(URI.create("http://example.com"), action.getUrl());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
