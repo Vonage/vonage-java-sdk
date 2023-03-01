@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Added Viber file and video message types
   - Added Action button support to Viber image and text messages
   - Added WhatsApp location message type
+  - Added WhatsApp Product custom message types
   - `client_ref` character limit increased to 100
   - Expanded valid message types to accommodate webhooks (MMS text, WhatsApp order, reply & unsupported)
 - Deprecated Pay NCCO action (removed in 8.x)
