@@ -17,42 +17,41 @@ package com.vonage.client.messages.whatsapp;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.messages.internal.MessagePayload;
+import java.net.URI;
+import java.util.UUID;
 
 /**
  * @since 7.2.0
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class Location {
-	private final double latitude, longitude;
-	private final String name, address;
+public final class Sticker {
+	private final URI url;
+	private final UUID id;
 
-	Location(WhatsappLocationRequest.Builder builder) {
-		if (builder.latitude == null || builder.longitude == null) {
-			throw new IllegalStateException("Both latitude and longitude are required.");
+	Sticker(String url, String id) {
+		boolean noId = id == null, noUrl = url == null;
+		if ((noId && noUrl) || (!noId && !noUrl)) {
+			throw new IllegalStateException("Must specify either an ID or URL for sticker, but not both.");
 		}
-		latitude = builder.latitude;
-		longitude = builder.longitude;
-		name = builder.name;
-		address = builder.address;
+		if (noId) {
+			MessagePayload.validateExtension(url, "webp");
+			this.url = URI.create(url);
+			this.id = null;
+		}
+		else {
+			this.id = UUID.fromString(id);
+			this.url = null;
+		}
 	}
 
-	@JsonProperty("lat")
-	public double getLatitude() {
-		return latitude;
+	@JsonProperty("url")
+	public URI getUrl() {
+		return url;
 	}
 
-	@JsonProperty("long")
-	public double getLongitude() {
-		return longitude;
-	}
-
-	@JsonProperty("name")
-	public String getName() {
-		return name;
-	}
-
-	@JsonProperty("address")
-	public String getAddress() {
-		return address;
+	@JsonProperty("id")
+	public UUID getId() {
+		return id;
 	}
 }

@@ -9,8 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Added inbound message webhook
   - Fixed timestamp format deserialization for MessageStatus (now returns an Instant)
   - Added Viber file and video message types
-  - Added Action button support to Viber image and text messages
-  - Added WhatsApp location message type
+  - Added Action button support to Viber image and text messages 
+  - Added WhatsApp Sticker message type
+  - Added WhatsApp Location message type
   - Added WhatsApp Product custom message types
   - `client_ref` character limit increased to 100
   - Expanded valid message types to accommodate webhooks (MMS text, WhatsApp order, reply & unsupported)

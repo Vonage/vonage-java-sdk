@@ -15,6 +15,7 @@
  */
 package com.vonage.client.messages;
 
+import com.vonage.client.VonageUnexpectedException;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.net.URI;
@@ -159,5 +160,10 @@ public class MessageStatusTest {
 		assertEquals("1234567890", conversation.get("id"));
 		Map<String, ?> origin = (Map<String, ?>) conversation.get("origin");
 		assertEquals("user_initiated", origin.get("type"));
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void testFromJsonInvalid() {
+		MessageStatus.fromJson("{malformed]");
 	}
 }

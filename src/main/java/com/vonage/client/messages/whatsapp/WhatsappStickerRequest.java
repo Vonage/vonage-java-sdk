@@ -20,102 +20,63 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.MessageType;
 
 /**
+ * See <a href=https://developer.vonage.com/en/messages/concepts/whatsapp-stickers>the documentation</a>
+ * for more information on sending stickers.
+ *
  * @since 7.2.0
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class WhatsappLocationRequest extends WhatsappRequest {
-	final Location location;
-	final String text;
+public final class WhatsappStickerRequest extends WhatsappRequest {
+	final Sticker sticker;
 
-	WhatsappLocationRequest(Builder builder) {
-		super(builder, MessageType.LOCATION);
-		location = new Location(builder);
-		text = builder.text;
+	WhatsappStickerRequest(Builder builder) {
+		super(builder, MessageType.STICKER);
+		sticker = new Sticker(builder.url, builder.id);
 	}
 
-	@JsonProperty("location")
-	public Location getLocation() {
-		return location;
-	}
-
-	@JsonProperty("text")
-	public String getText() {
-		return text;
+	@JsonProperty("sticker")
+	public Sticker getSticker() {
+		return sticker;
 	}
 
 	public static Builder builder() {
 		return new Builder();
 	}
 
-	public static final class Builder extends WhatsappRequest.Builder<WhatsappLocationRequest, Builder> {
-		String name, address, text;
-		Double latitude, longitude;
+	public static final class Builder extends WhatsappRequest.Builder<WhatsappStickerRequest, Builder> {
+		String url, id;
 
 		Builder() {}
 
 		/**
-		 * (REQUIRED)
-		 * Latitude of the location.
+		 * (REQUIRED if {@link #id(String)} is not specified)
+		 * The publicly accessible URL of the sticker image. Must be in {@code .webp} format.
+		 * You must specify only the ID or the URL, but not both.
 		 *
-		 * @param latitude The latitude as a double.
+		 * @param url The sticker URL as a string.
 		 * @return This builder.
 		 */
-		public Builder latitude(double latitude) {
-			this.latitude = latitude;
+		public Builder url(String url) {
+			this.url = url;
 			return this;
 		}
 
 		/**
-		 * (REQUIRED)
-		 * Longitude of the location.
+		 * (REQUIRED if {@link #url(String)} is not specified)
+		 * The ID of the sticker in relation to a specific WhatsApp deployment.
+		 * You must specify only the ID or the URL, but not both.
 		 *
-		 * @param longitude The longitude as a double.
+		 * @param id The sticker's unique identifier as a string.
 		 * @return This builder.
 		 */
-		public Builder longitude(double longitude) {
-			this.longitude = longitude;
-			return this;
-		}
-
-		/**
-		 * (OPTIONAL)
-		 * Name of the location.
-		 *
-		 * @param name The location name.
-		 * @return This builder.
-		 */
-		public Builder name(String name) {
-			this.name = name;
-			return this;
-		}
-
-		/**
-		 * (OPTIONAL)
-		 * Address of the location. Only displayed if name is present.
-		 *
-		 * @param address The location address as a string.
-		 * @return This builder.
-		 */
-		public Builder address(String address) {
-			this.address = address;
-			return this;
-		}
-
-		/**
-		 * (OPTIONAL)
-		 * Accompanying text message to be sent with the location.
-		 *
-		 * @param text The text to go along with the message as a string.
-		 * @return This builder.
-		 */
-		public Builder text(String text) {
-			this.text = text;
+		public Builder id(String id) {
+			this.id = id;
 			return this;
 		}
 
 		@Override
-		public WhatsappLocationRequest build() {
-			return new WhatsappLocationRequest(this);
+		public WhatsappStickerRequest build() {
+			return new WhatsappStickerRequest(this);
 		}
 	}
 }

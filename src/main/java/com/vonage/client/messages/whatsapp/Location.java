@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @since 7.2.0
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class Location {
+public final class Location {
 	private final double latitude, longitude;
 	private final String name, address;
 

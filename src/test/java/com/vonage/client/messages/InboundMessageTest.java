@@ -15,6 +15,7 @@
  */
 package com.vonage.client.messages;
 
+import com.vonage.client.VonageUnexpectedException;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.net.URI;
@@ -170,5 +171,10 @@ public class InboundMessageTest {
 		String json = "{\"file\": {\"url\":\""+file+"\"}}";
 		InboundMessage im = InboundMessage.fromJson(json);
 		assertEquals(file, im.getFileUrl());
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void testFromJsonInvalid() {
+		InboundMessage.fromJson("{malformed]");
 	}
 }

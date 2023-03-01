@@ -79,10 +79,10 @@ public class MmsImageRequestTest {
 				.to("317900000002");
 
 		String baseUrl = "file:///path/to/resource", url;
-		for (String imageType : new String[]{"jpeg", "jpg", "png", "gif"}) {
+		for (String imageType : new String[]{".jpeg", ".jpg", ".png", ".gif"}) {
 			url = baseUrl + imageType;
 			builder.url(url);
-			assertEquals(url, builder.build().getImage().getUrl());
+			assertEquals(url, builder.build().getImage().getUrl().toString());
 		}
 	}
 
