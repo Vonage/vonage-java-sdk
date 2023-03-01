@@ -20,6 +20,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.MessageType;
 import java.util.*;
 
+/**
+ * See <a href=https://developer.vonage.com/en/messages/concepts/whatsapp-product-messages>
+ * WhatsApp Product Messages documentation for details.</a>
+ *
+ * @since 7.2.0
+ */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class WhatsappSingleProductRequest extends WhatsappRequest {
 	final Map<String, Object> custom;

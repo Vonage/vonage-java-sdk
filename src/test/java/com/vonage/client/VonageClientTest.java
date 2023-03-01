@@ -31,7 +31,12 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.message.BasicNameValuePair;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -42,11 +47,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.List;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class VonageClientTest {
     private final TestUtils testUtils = new TestUtils();

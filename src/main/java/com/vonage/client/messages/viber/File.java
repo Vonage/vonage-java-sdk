@@ -19,6 +19,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.internal.MessagePayload;
 
+/**
+ * @since 7.2.0
+ */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class File extends MessagePayload {
 	protected String name;

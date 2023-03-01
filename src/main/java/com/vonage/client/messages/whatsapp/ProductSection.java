@@ -20,6 +20,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * @since 7.2.0
+ */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 final class ProductSection {
 	@JsonProperty("title") final String title;

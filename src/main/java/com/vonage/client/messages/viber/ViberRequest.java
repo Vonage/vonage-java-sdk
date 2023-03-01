@@ -104,6 +104,7 @@ public abstract class ViberRequest extends MessageRequest {
 		 *
 		 * @param actionUrl The URL as a string.
 		 * @return This builder.
+		 * @since 7.2.0
 		 */
 		protected B actionUrl(String actionUrl) {
 			this.actionUrl = actionUrl;
@@ -116,6 +117,7 @@ public abstract class ViberRequest extends MessageRequest {
 		 *
 		 * @param actionText The action button description.
 		 * @return This builder.
+		 * @since 7.2.0
 		 */
 		protected B actionText(String actionText) {
 			this.actionText = actionText;
