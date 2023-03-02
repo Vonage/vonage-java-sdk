@@ -22,17 +22,17 @@ public class WhatsappLocationRequestTest {
 
 	@Test
 	public void testSerializeAllParams() {
+		double longitude = 51.5231022, latitude = -0.0876017;
 		String name = "Vonage", address = "15 Bonhill St, London EC2A 4DN", text = "Here it is!";
 		String json = WhatsappLocationRequest.builder()
-				.name(name).address(address).text(text)
+				.name(name).address(address)
 				.from("317900000002").to("447900000001")
-				.longitude(51.5231022).latitude(-0.0876017)
+				.longitude(longitude).latitude(latitude)
 				.build().toJson();
-		assertTrue(json.contains("\"location\":{\"lat\":-0.0876017,\"long\":51.5231022," +
-				"\"name\":\""+name+"\",\"address\":\""+address+"\"}"
+		assertTrue(json.contains("\"custom\":{\"type\":\"location\",\"location\":{" +
+				"\"lat\":"+latitude+",\"long\":"+longitude+",\"name\":\""+name+"\",\"address\":\""+address+"\"}}"
 		));
-		assertTrue(json.contains("\"text\":\""+text+"\""));
-		assertTrue(json.contains("\"message_type\":\"location\""));
+		assertTrue(json.contains("\"message_type\":\"custom\""));
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
 	}
 
@@ -43,7 +43,7 @@ public class WhatsappLocationRequestTest {
 				.from("317900000002").to("447900000001")
 				.build().toJson();
 		assertTrue(json.contains("\"location\":{\"lat\":-0.0890882,\"long\":51.5216317}"));
-		assertTrue(json.contains("\"message_type\":\"location\""));
+		assertTrue(json.contains("\"message_type\":\"custom\""));
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
 	}
 

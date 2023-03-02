@@ -18,29 +18,26 @@ package com.vonage.client.messages.whatsapp;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.MessageType;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @since 7.2.0
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class WhatsappLocationRequest extends WhatsappRequest {
-	final Location location;
-	final String text;
+	final Map<String, Object> custom;
 
 	WhatsappLocationRequest(Builder builder) {
-		super(builder, MessageType.LOCATION);
-		location = new Location(builder);
-		text = builder.text;
+		super(builder, MessageType.CUSTOM);
+		custom = new LinkedHashMap<>(4);
+		custom.put("type", "location");
+		custom.put("location", new Location(builder));
 	}
 
-	@JsonProperty("location")
-	public Location getLocation() {
-		return location;
-	}
-
-	@JsonProperty("text")
-	public String getText() {
-		return text;
+	@JsonProperty("custom")
+	public Map<?, ?> getCustom() {
+		return custom;
 	}
 
 	public static Builder builder() {
@@ -98,18 +95,6 @@ public final class WhatsappLocationRequest extends WhatsappRequest {
 		 */
 		public Builder address(String address) {
 			this.address = address;
-			return this;
-		}
-
-		/**
-		 * (OPTIONAL)
-		 * Accompanying text message to be sent with the location.
-		 *
-		 * @param text The text to go along with the message as a string.
-		 * @return This builder.
-		 */
-		public Builder text(String text) {
-			this.text = text;
 			return this;
 		}
 

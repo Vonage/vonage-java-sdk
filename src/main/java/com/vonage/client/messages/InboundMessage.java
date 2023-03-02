@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.messages.whatsapp.Location;
+import com.vonage.client.messages.whatsapp.Reply;
 import java.io.IOException;
 import java.net.URI;
 import java.time.Instant;
@@ -64,7 +65,10 @@ public class InboundMessage {
 	@JsonProperty("file") protected UrlWrapper file;
 	@JsonProperty("vcard") protected UrlWrapper vcard;
 	@JsonProperty("sticker") protected UrlWrapper sticker;
+	@JsonProperty("provider_message") String providerMessage;
 	@JsonProperty("location") protected Location whatsappLocation;
+	@JsonProperty("reply") protected Reply whatsappReply;
+
 
 	/**
 	 * This is a catch-all method which encapsulates all fields in the response JSON
@@ -227,6 +231,26 @@ public class InboundMessage {
 	 */
 	public Location getWhatsappLocation() {
 		return whatsappLocation;
+	}
+
+	/**
+	 * If {@linkplain #getChannel()} is {@linkplain Channel#WHATSAPP}, returns the {@code provider_message} field.
+	 * This is a message from the channel provider, which may contain a description, error codes or other information.
+	 *
+	 * @return The provider message or {@code null} if not applicable.
+	 */
+	public String getProviderMessage() {
+		return providerMessage;
+	}
+
+	/**
+	 * If {@linkplain #getMessageType()} is {@linkplain MessageType#REPLY} and {@linkplain #getChannel()} is
+	 * {@linkplain Channel#WHATSAPP}, returns the reply.
+	 *
+	 * @return The deserialized WhatsApp reply, or {@code null} if not applicable.
+	 */
+	public Reply getWhatsappReply() {
+		return whatsappReply;
 	}
 
 	/**

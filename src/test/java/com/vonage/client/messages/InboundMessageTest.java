@@ -17,6 +17,7 @@ package com.vonage.client.messages;
 
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.messages.whatsapp.Location;
+import com.vonage.client.messages.whatsapp.Reply;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.net.URI;
@@ -95,6 +96,9 @@ public class InboundMessageTest {
 		assertNull(im.getVideoUrl());
 		assertNull(im.getFileUrl());
 		assertNull(im.getImageUrl());
+		assertNull(im.getWhatsappReply());
+		assertNull(im.getWhatsappLocation());
+		assertNull(im.getProviderMessage());
 
 		Map<String, String> smsMap = (Map<String, String>) im.getAdditionalProperties().get("sms");
 		assertNotNull(smsMap);
@@ -117,6 +121,9 @@ public class InboundMessageTest {
 		assertNull(im.getVideoUrl());
 		assertNull(im.getFileUrl());
 		assertNull(im.getImageUrl());
+		assertNull(im.getWhatsappReply());
+		assertNull(im.getWhatsappLocation());
+		assertNull(im.getProviderMessage());
 		assertThrows(IllegalStateException.class, im::getSmsUsage);
 	}
 
@@ -140,6 +147,9 @@ public class InboundMessageTest {
 		assertNull(im.getVideoUrl());
 		assertNull(im.getFileUrl());
 		assertNull(im.getImageUrl());
+		assertNull(im.getWhatsappReply());
+		assertNull(im.getWhatsappLocation());
+		assertNull(im.getProviderMessage());
 	}
 
 	@Test
@@ -195,6 +205,18 @@ public class InboundMessageTest {
 		assertEquals(latitude, location.getLatitude(), 0.000001);
 		assertEquals(name, location.getName());
 		assertEquals(address, location.getAddress());
+	}
+
+	@Test
+	public void testWhatsappReplyOnly() {
+		String id = "row1", title = "9am", description = "Select 9am appointmaent time";
+		String json = "{\"reply\":{\"id\":\""+id+"\",\"title\":\""+title+"\",\"description\":\""+description+"\"}}";
+		InboundMessage im = InboundMessage.fromJson(json);
+		Reply reply = im.getWhatsappReply();
+		assertNotNull(reply);
+		assertEquals(id, reply.getId());
+		assertEquals(title, reply.getTitle());
+		assertEquals(description, reply.getDescription());
 	}
 
 	@Test(expected = VonageUnexpectedException.class)
