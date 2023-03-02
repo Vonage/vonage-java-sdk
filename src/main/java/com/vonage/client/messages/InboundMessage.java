@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.messages.whatsapp.Location;
 import java.io.IOException;
 import java.net.URI;
 import java.time.Instant;
@@ -62,6 +63,8 @@ public class InboundMessage {
 	@JsonProperty("video") protected UrlWrapper video;
 	@JsonProperty("file") protected UrlWrapper file;
 	@JsonProperty("vcard") protected UrlWrapper vcard;
+	@JsonProperty("sticker") protected UrlWrapper sticker;
+	@JsonProperty("location") protected Location whatsappLocation;
 
 	/**
 	 * This is a catch-all method which encapsulates all fields in the response JSON
@@ -205,6 +208,25 @@ public class InboundMessage {
 	 */
 	public URI getVcardUrl() {
 		return vcard != null ? vcard.url : null;
+	}
+
+	/**
+	 * If {@linkplain #getMessageType()} is {@linkplain MessageType#STICKER}, returns the URL of the sticker.
+	 *
+	 * @return The sticker URL, or {@code null} if not applicable.
+	 */
+	public URI getStickerUrl() {
+		return sticker != null ? sticker.url : null;
+	}
+
+	/**
+	 * If {@linkplain #getMessageType()} is {@linkplain MessageType#LOCATION} and {@linkplain #getChannel()} is
+	 * {@linkplain Channel#WHATSAPP}, returns the location.
+	 *
+	 * @return The deserialized WhatsApp location, or {@code null} if not applicable.
+	 */
+	public Location getWhatsappLocation() {
+		return whatsappLocation;
 	}
 
 	/**

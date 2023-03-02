@@ -16,6 +16,7 @@
 package com.vonage.client.messages;
 
 import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.messages.whatsapp.Location;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.net.URI;
@@ -171,6 +172,29 @@ public class InboundMessageTest {
 		String json = "{\"file\": {\"url\":\""+file+"\"}}";
 		InboundMessage im = InboundMessage.fromJson(json);
 		assertEquals(file, im.getFileUrl());
+	}
+
+	@Test
+	public void testStickerOnly() {
+		URI sticker = URI.create("https://www.example.org/path/to/sticker.webp");
+		String json = "{\"sticker\": {\"url\":\""+sticker+"\"}}";
+		InboundMessage im = InboundMessage.fromJson(json);
+		assertEquals(sticker, im.getStickerUrl());
+	}
+
+	@Test
+	public void testWhatsappLocationOnly() {
+		double latitude = 40.34772, longitude = 74.18847;
+		String name = "Vonage", address = "23 Main St, Holmdel, NJ 07733, USA";
+		String json = "{\"location\":{\"lat\":"+latitude+",\"long\":"+longitude +
+				",\"name\":\""+name+"\",\"address\":\""+address+"\"}}";
+		InboundMessage im = InboundMessage.fromJson(json);
+		Location location = im.getWhatsappLocation();
+		assertNotNull(location);
+		assertEquals(longitude, location.getLongitude(), 0.000001);
+		assertEquals(latitude, location.getLatitude(), 0.000001);
+		assertEquals(name, location.getName());
+		assertEquals(address, location.getAddress());
 	}
 
 	@Test(expected = VonageUnexpectedException.class)
