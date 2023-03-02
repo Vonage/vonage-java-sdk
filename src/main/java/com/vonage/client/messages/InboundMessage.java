@@ -22,8 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.vonage.client.VonageUnexpectedException;
-import com.vonage.client.messages.whatsapp.Location;
-import com.vonage.client.messages.whatsapp.Reply;
+import com.vonage.client.messages.whatsapp.*;
 import java.io.IOException;
 import java.net.URI;
 import java.time.Instant;
@@ -57,6 +56,7 @@ public class InboundMessage {
 	@JsonProperty("to") protected String to;
 	@JsonProperty("from") protected String from;
 	@JsonProperty("client_ref") protected String clientRef;
+	@JsonProperty("provider_message") String providerMessage;
 
 	@JsonProperty("text") protected String text;
 	@JsonProperty("image") protected UrlWrapper image;
@@ -65,10 +65,12 @@ public class InboundMessage {
 	@JsonProperty("file") protected UrlWrapper file;
 	@JsonProperty("vcard") protected UrlWrapper vcard;
 	@JsonProperty("sticker") protected UrlWrapper sticker;
-	@JsonProperty("provider_message") String providerMessage;
+
+	@JsonProperty("profile") protected Profile whatsappProfile;
+	@JsonProperty("context") protected Context whatsappContext;
 	@JsonProperty("location") protected Location whatsappLocation;
 	@JsonProperty("reply") protected Reply whatsappReply;
-
+	@JsonProperty("order") protected Order whatsappOrder;
 
 	/**
 	 * This is a catch-all method which encapsulates all fields in the response JSON
@@ -224,16 +226,6 @@ public class InboundMessage {
 	}
 
 	/**
-	 * If {@linkplain #getMessageType()} is {@linkplain MessageType#LOCATION} and {@linkplain #getChannel()} is
-	 * {@linkplain Channel#WHATSAPP}, returns the location.
-	 *
-	 * @return The deserialized WhatsApp location, or {@code null} if not applicable.
-	 */
-	public Location getWhatsappLocation() {
-		return whatsappLocation;
-	}
-
-	/**
 	 * If {@linkplain #getChannel()} is {@linkplain Channel#WHATSAPP}, returns the {@code provider_message} field.
 	 * This is a message from the channel provider, which may contain a description, error codes or other information.
 	 *
@@ -244,6 +236,16 @@ public class InboundMessage {
 	}
 
 	/**
+	 * If {@linkplain #getMessageType()} is {@linkplain MessageType#LOCATION} and {@linkplain #getChannel()} is
+	 * {@linkplain Channel#WHATSAPP}, returns the location.
+	 *
+	 * @return The deserialized WhatsApp location, or {@code null} if not applicable.
+	 */
+	public Location getWhatsappLocation() {
+		return whatsappLocation;
+	}
+
+	/**
 	 * If {@linkplain #getMessageType()} is {@linkplain MessageType#REPLY} and {@linkplain #getChannel()} is
 	 * {@linkplain Channel#WHATSAPP}, returns the reply.
 	 *
@@ -251,6 +253,37 @@ public class InboundMessage {
 	 */
 	public Reply getWhatsappReply() {
 		return whatsappReply;
+	}
+
+	/**
+	 * If {@linkplain #getMessageType()} is {@linkplain MessageType#ORDER} and {@linkplain #getChannel()} is
+	 * {@linkplain Channel#WHATSAPP}, returns the order.
+	 *
+	 * @return The deserialized WhatsApp order, or {@code null} if not applicable.
+	 */
+	public Order getWhatsappOrder() {
+		return whatsappOrder;
+	}
+
+	/**
+	 * If the {@linkplain #getChannel()} is {@linkplain Channel#WHATSAPP}, returns information
+	 * about the sender's WhatsApp profile.
+	 *
+	 * @return The deserialized WhatsApp profile, or {@code null} if not applicable.
+	 */
+	public Profile getWhatsappProfile() {
+		return whatsappProfile;
+	}
+
+	/**
+	 * If the {@linkplain #getChannel()} is {@linkplain Channel#WHATSAPP}, returns the WhatsApp message context.
+	 * This is only present where the user is quoting another message. It provides information about the quoted
+	 * message and/or the product message being responded to.
+	 *
+	 * @return The deserialized WhatsApp context, or {@code null} if not applicable.
+	 */
+	public Context getWhatsappContext() {
+		return whatsappContext;
 	}
 
 	/**

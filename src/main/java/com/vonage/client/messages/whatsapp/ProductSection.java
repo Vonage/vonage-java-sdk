@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * @since 7.2.0
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-final class ProductSection {
+class ProductSection {
 	@JsonProperty("title") final String title;
 	@JsonProperty("product_items") final List<ProductItem> products;
 
@@ -44,14 +44,5 @@ final class ProductSection {
 	@JsonProperty("product_items")
 	public List<ProductItem> getProducts() {
 		return products;
-	}
-
-	static final class ProductItem {
-		@JsonProperty("product_retailer_id")
-		final String productRetailerId;
-
-		public ProductItem(String productRetailerId) {
-			this.productRetailerId = Objects.requireNonNull(productRetailerId, "Product SKU is required.");
-		}
 	}
 }

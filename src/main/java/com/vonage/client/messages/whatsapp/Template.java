@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class Template {
+public class Template {
 	private final String name;
 	private final List<String> parameters;
 

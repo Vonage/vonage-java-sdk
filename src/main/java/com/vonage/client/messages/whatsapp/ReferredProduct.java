@@ -19,43 +19,36 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Used for inbound interactive messages.
+ * Contains details of a product from a product message being quoted or replied to
+ * using the 'Message Business' option.
  *
  * @since 7.2.0
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Reply {
-	private String id, title, description;
+public class ReferredProduct {
+	private String productRetailerId, catalogId;
 
-	Reply() {}
+	ReferredProduct() {}
 
 	/**
-	 * An identifier to help identify the exact interactive message response.
+	 * The ID of the product from the product message being quoted or replied to
+	 * using the 'Message Business' option.
 	 *
-	 * @return The reply ID.
+	 * @return The product ID.
 	 */
-	@JsonProperty("id")
-	public String getId() {
-		return id;
+	@JsonProperty("product_retailer_id")
+	public String getProductRetailerId() {
+		return productRetailerId;
 	}
 
 	/**
-	 * The title displayed on the interactive option chosen.
+	 * The ID of the catalog associated with the product from the product message being quoted or replied to
+	 * using the 'Message Business' option.
 	 *
-	 * @return The chosen option's title.
+	 * @return The product catalog ID.
 	 */
-	@JsonProperty("title")
-	public String getTitle() {
-		return title;
-	}
-
-	/**
-	 * A description that may be added to the interactive options presented (available only on interactive lists).
-	 *
-	 * @return The description, or {@code null} if not applicable.
-	 */
-	@JsonProperty("description")
-	public String getDescription() {
-		return description;
+	@JsonProperty("catalog_id")
+	public String getCatalogId() {
+		return catalogId;
 	}
 }

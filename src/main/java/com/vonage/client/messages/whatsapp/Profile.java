@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -15,28 +15,27 @@
  */
 package com.vonage.client.messages.whatsapp;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Objects;
+/**
+ * Used for inbound messages.
+ *
+ * @since 7.2.0
+ */
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Profile {
+	private String name;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class Whatsapp {
-	private final Policy policy;
-	private final Locale locale;
+	Profile() {}
 
-	Whatsapp(Policy policy, Locale locale) {
-		this.policy = policy;
-		this.locale = Objects.requireNonNull(locale, "Locale is required");;
-	}
-
-	@JsonProperty("policy")
-	public Policy getPolicy() {
-		return policy;
-	}
-
-	@JsonProperty("locale")
-	public Locale getLocale() {
-		return locale;
+	/**
+	 * The WhatsApp number's displayed profile name.
+	 *
+	 * @return The profile name.
+	 */
+	@JsonProperty("name")
+	public String getName() {
+		return name;
 	}
 }

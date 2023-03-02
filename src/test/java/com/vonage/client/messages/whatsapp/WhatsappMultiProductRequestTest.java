@@ -138,7 +138,7 @@ public class WhatsappMultiProductRequestTest {
 				new ProductSection(tempSection.title, Collections.emptyList())
 		);
 		assertThrows(NullPointerException.class, () -> new ProductSection(null,
-				tempSection.getProducts().stream().map(pi -> pi.productRetailerId).collect(Collectors.toList()))
+				tempSection.getProducts().stream().map(ProductItem::getProductRetailerId).collect(Collectors.toList()))
 		);
 		assertThrows(IllegalStateException.class, builder::build);
 	}

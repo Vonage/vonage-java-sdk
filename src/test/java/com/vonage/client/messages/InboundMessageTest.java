@@ -16,12 +16,13 @@
 package com.vonage.client.messages;
 
 import com.vonage.client.VonageUnexpectedException;
-import com.vonage.client.messages.whatsapp.Location;
-import com.vonage.client.messages.whatsapp.Reply;
+import com.vonage.client.messages.whatsapp.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.net.URI;
 import java.time.Instant;
+import java.util.Currency;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -96,8 +97,10 @@ public class InboundMessageTest {
 		assertNull(im.getVideoUrl());
 		assertNull(im.getFileUrl());
 		assertNull(im.getImageUrl());
+		assertNull(im.getWhatsappContext());
 		assertNull(im.getWhatsappReply());
 		assertNull(im.getWhatsappLocation());
+		assertNull(im.getWhatsappOrder());
 		assertNull(im.getProviderMessage());
 
 		Map<String, String> smsMap = (Map<String, String>) im.getAdditionalProperties().get("sms");
@@ -121,8 +124,10 @@ public class InboundMessageTest {
 		assertNull(im.getVideoUrl());
 		assertNull(im.getFileUrl());
 		assertNull(im.getImageUrl());
+		assertNull(im.getWhatsappContext());
 		assertNull(im.getWhatsappReply());
 		assertNull(im.getWhatsappLocation());
+		assertNull(im.getWhatsappOrder());
 		assertNull(im.getProviderMessage());
 		assertThrows(IllegalStateException.class, im::getSmsUsage);
 	}
@@ -147,8 +152,10 @@ public class InboundMessageTest {
 		assertNull(im.getVideoUrl());
 		assertNull(im.getFileUrl());
 		assertNull(im.getImageUrl());
+		assertNull(im.getWhatsappContext());
 		assertNull(im.getWhatsappReply());
 		assertNull(im.getWhatsappLocation());
+		assertNull(im.getWhatsappOrder());
 		assertNull(im.getProviderMessage());
 	}
 
@@ -217,6 +224,81 @@ public class InboundMessageTest {
 		assertEquals(id, reply.getId());
 		assertEquals(title, reply.getTitle());
 		assertEquals(description, reply.getDescription());
+	}
+
+	@Test
+	public void testWhatsappOrderOnly() {
+		Integer quantity = 3;
+		Double price = 9.99;
+		String cid = "2806150799683508", pid = "pk1v7rudbg", currency = "USD",
+				json = "{\"order\":{\"catalog_id\":\""+cid+"\",\"product_items\":[{},{\n"+
+						"    \"product_retailer_id\": \""+pid+"\",\n" +
+						"    \"quantity\": \""+quantity+"\",\n" +
+						"    \"item_price\": \""+price+"\",\n" +
+						"    \"currency\": \""+currency+"\"\n" +
+						"}]}}";
+		InboundMessage im = InboundMessage.fromJson(json);
+		Order order = im.getWhatsappOrder();
+		assertNotNull(order);
+		assertEquals(cid, order.getCatalogId());
+		List<ProductItem> items = order.getProductItems();
+		assertNotNull(items);
+		assertEquals(2, items.size());
+		ProductItem emptyItem = items.get(0), mainItem = items.get(1);
+		assertNotNull(emptyItem);
+		assertNull(emptyItem.getProductRetailerId());
+		assertNull(emptyItem.getQuantity());
+		assertNull(emptyItem.getItemPrice());
+		assertNull(emptyItem.getCurrency());
+		assertNotNull(mainItem);
+		assertEquals(pid, mainItem.getProductRetailerId());
+		assertEquals(quantity, mainItem.getQuantity());
+		assertEquals(price, mainItem.getItemPrice());
+		assertEquals(Currency.getInstance(currency), mainItem.getCurrency());
+	}
+
+	@Test
+	public void testWhatsappContextForOrderOnly() {
+		UUID messageId = UUID.randomUUID();
+		String cid = "1267260820787549", pid = "r07qei73l7", from = "447700900001", json = "{\n" +
+				"  \"context\": {\n" +
+				"      \"whatsapp_referred_product\": {\n" +
+				"         \"catalog_id\": \""+cid+"\",\n" +
+				"         \"product_retailer_id\": \""+pid+"\"\n" +
+				"      },\n"+
+				"      \"message_uuid\": \""+messageId+"\",\n" +
+				"      \"message_from\": \""+from+"\"\n" +
+				"   }" +
+				"}";
+		InboundMessage im = InboundMessage.fromJson(json);
+		Context context = im.getWhatsappContext();
+		assertNotNull(context);
+		assertEquals(messageId, context.getMessageUuid());
+		assertEquals(from, context.getMessageFrom());
+		ReferredProduct wrp = context.getReferredProduct();
+		assertNotNull(wrp);
+		assertEquals(cid, wrp.getCatalogId());
+		assertEquals(pid, wrp.getProductRetailerId());
+	}
+
+	@Test
+	public void testWhatsappContextAndProfileOnly() {
+		UUID messageId = UUID.randomUUID();
+		String name = "Jane Smith", from = "447700900000", json = "{\n" +
+				"  \"profile\":{\"name\": \""+name+"\"},\n" +
+				"   \"context\": {\n" +
+				"      \"message_uuid\": \""+messageId+"\",\n" +
+				"      \"message_from\": \""+from+"\"\n" +
+				"   }" +
+				"}";
+		InboundMessage im = InboundMessage.fromJson(json);
+		Profile profile = im.getWhatsappProfile();
+		assertNotNull(profile);
+		assertEquals(name, profile.getName());
+		Context context = im.getWhatsappContext();
+		assertNotNull(context);
+		assertEquals(messageId, context.getMessageUuid());
+		assertEquals(from, context.getMessageFrom());
 	}
 
 	@Test(expected = VonageUnexpectedException.class)
