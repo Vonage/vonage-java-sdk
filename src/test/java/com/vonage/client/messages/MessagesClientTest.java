@@ -30,6 +30,7 @@ import org.apache.http.client.methods.RequestBuilder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import org.junit.Test;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -41,7 +42,8 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 			VIDEO = "https://www.example.com/trailer.mp4",
 			AUDIO = "https://www.example.com/song.mp3",
 			FILE = "https://www.example.com/document.pdf",
-			VCARD = "https://example.com/contact.vcf";
+			VCARD = "https://example.com/contact.vcf",
+			STICKER = "https://example.com/sticker.webp";
 
 	private static final MessageRequest REQUEST = SmsTextRequest.builder()
 			.from("447700900001").to("447700900000").text("Hello").build();
@@ -124,7 +126,13 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 		assertResponse(WhatsappAudioRequest.builder().url(AUDIO));
 		assertResponse(WhatsappVideoRequest.builder().url(VIDEO));
 		assertResponse(WhatsappFileRequest.builder().url(FILE));
+		assertResponse(WhatsappStickerRequest.builder().url(STICKER));
 		assertResponse(WhatsappLocationRequest.builder().latitude(40.34772).longitude(-74.18847));
+		assertResponse(WhatsappSingleProductRequest.builder().catalogId("c1d").productRetailerId("p1d"));
+		assertResponse(WhatsappMultiProductRequest.builder()
+				.catalogId("ca7").bodyText("b0d").headerText("Check it out")
+				.addProductsSection("test", Arrays.asList("5ku1", "p2"))
+		);
 		assertResponse(WhatsappCustomRequest.builder().custom(Collections.emptyMap()));
 		assertResponse(WhatsappTemplateRequest.builder().name("fb"));
 	}

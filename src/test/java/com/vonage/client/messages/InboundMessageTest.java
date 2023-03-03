@@ -16,6 +16,7 @@
 package com.vonage.client.messages;
 
 import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.messages.sms.SmsInboundMetadata;
 import com.vonage.client.messages.whatsapp.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -51,11 +52,13 @@ public class InboundMessageTest {
 			  ",\n  \"text\": \""+text+"\"";
 	}
 
-	String getSmsPartialStubWithUsage() {
+	String getSmsPartialStubWithUsageAndMetadata() {
 		return getSmsPartialJsonStub() + ",\n  \"usage\": {\n" +
 			  "    \"currency\": \""+currency+"\",\n" +
 			  "    \"price\": \""+price+"\"\n"+
-			  "  }";
+			  "  },\n  \"sms\": {\n" +
+				"  \"num_messages\": \"2\",\n" +
+				"  \"keyword\": \"HELLO\"\n  }";
 	}
 
 	void assertEqualsCommon(InboundMessage im) {
@@ -73,24 +76,33 @@ public class InboundMessageTest {
 		assertEquals(text, im.getText());
 	}
 
-	void assertEqualsSmsWithUsage(InboundMessage im) {
+	void assertEqualsSmsWithUsageAndMetadata(InboundMessage im) {
 		assertEqualsSms(im);
-		MessageStatus.Usage usage = im.getSmsUsage();
+		MessageStatus.Usage usage = im.getUsage();
 		assertNotNull(usage);
 		assertEquals(currency, usage.getCurrency().getCurrencyCode());
 		assertEquals(price, ""+usage.getPrice());
+		SmsInboundMetadata metadata = im.getSmsMetadata();
+		assertNotNull(metadata);
+		assertEquals(2, metadata.getNumMessages().intValue());
+		assertEquals("HELLO", metadata.getKeyword());
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testUnknownProperty() {
-		String fullJson = getSmsPartialStubWithUsage() + ",\n  \"sms\": {\n" +
-			  "  \"num_messages\": \"2\",\n" +
-			  "  \"keyword\": \"HELLO\"\n" +
-			  "}\n}";
+		String fullJson = getSmsPartialStubWithUsageAndMetadata() +
+				",\n\"someRandomProp\": {\"int_field\": 19, \"str_field\": \"A value\", \"col\":[]}}";
 
 		InboundMessage im = InboundMessage.fromJson(fullJson);
-		assertEqualsSmsWithUsage(im);
+		assertEqualsSmsWithUsageAndMetadata(im);
+
+		Map<String, Object> randomProp = (Map<String, Object>) im.getUnmappedProperties().get("someRandomProp");
+		assertNotNull(randomProp);
+		assertEquals(3, randomProp.size());
+		assertEquals(19, randomProp.get("int_field"));
+		assertEquals("A value", randomProp.get("str_field"));
+		assertTrue(((List<?>) randomProp.get("col")).isEmpty());
 
 		assertNull(im.getAudioUrl());
 		assertNull(im.getVcardUrl());
@@ -102,11 +114,6 @@ public class InboundMessageTest {
 		assertNull(im.getWhatsappLocation());
 		assertNull(im.getWhatsappOrder());
 		assertNull(im.getProviderMessage());
-
-		Map<String, String> smsMap = (Map<String, String>) im.getAdditionalProperties().get("sms");
-		assertNotNull(smsMap);
-		assertEquals("2", smsMap.get("num_messages"));
-		assertEquals("HELLO", smsMap.get("keyword"));
 	}
 
 	@Test
@@ -117,7 +124,7 @@ public class InboundMessageTest {
 		assertEqualsCommon(im);
 		assertEquals(Channel.MESSENGER, im.getChannel());
 		assertEquals(MessageType.UNSUPPORTED, im.getMessageType());
-		assertNull(im.getAdditionalProperties());
+		assertNull(im.getUnmappedProperties());
 		assertNull(im.getText());
 		assertNull(im.getAudioUrl());
 		assertNull(im.getVcardUrl());
@@ -129,7 +136,8 @@ public class InboundMessageTest {
 		assertNull(im.getWhatsappLocation());
 		assertNull(im.getWhatsappOrder());
 		assertNull(im.getProviderMessage());
-		assertThrows(IllegalStateException.class, im::getSmsUsage);
+		assertNull(im.getUsage());
+		assertNull(im.getSmsMetadata());
 	}
 
 	@Test
@@ -146,7 +154,7 @@ public class InboundMessageTest {
 		assertEquals(MessageType.VCARD, im.getMessageType());
 		assertEquals(vcard, im.getVcardUrl().toString());
 
-		assertNull(im.getAdditionalProperties());
+		assertNull(im.getUnmappedProperties());
 		assertNull(im.getText());
 		assertNull(im.getAudioUrl());
 		assertNull(im.getVideoUrl());
@@ -157,6 +165,8 @@ public class InboundMessageTest {
 		assertNull(im.getWhatsappLocation());
 		assertNull(im.getWhatsappOrder());
 		assertNull(im.getProviderMessage());
+		assertNull(im.getUsage());
+		assertNull(im.getSmsMetadata());
 	}
 
 	@Test

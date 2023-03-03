@@ -25,7 +25,7 @@ import java.util.UUID;
  * @since 7.2.0
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class Sticker {
+public final class Sticker {
 	private final URI url;
 	private final UUID id;
 

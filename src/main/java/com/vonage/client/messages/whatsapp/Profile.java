@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @since 7.2.0
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Profile {
+public final class Profile {
 	private String name;
 
 	Profile() {}

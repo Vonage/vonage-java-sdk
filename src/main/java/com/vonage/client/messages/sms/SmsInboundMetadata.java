@@ -13,49 +13,42 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages.whatsapp;
+package com.vonage.client.messages.sms;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Used for inbound interactive messages.
+ * Used to describe inbound SMS metadata.
  *
  * @since 7.2.0
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class Reply {
-	private String id, title, description;
+public final class SmsInboundMetadata {
+	private Integer numMessages;
+	private String keyword;
 
-	Reply() {}
+	SmsInboundMetadata() {}
 
 	/**
-	 * An identifier to help identify the exact interactive message response.
+	 * The number of inbound SMS messages concatenated together to comprise this message. SMS messages are 160
+	 * characters, if an inbound message exceeds that size they are concatenated together to form a single message.
+	 * This number indicates how many messages formed this webhook.
 	 *
-	 * @return The reply ID.
+	 * @return The total number of SMS messages used to create the text message.
 	 */
-	@JsonProperty("id")
-	public String getId() {
-		return id;
+	@JsonProperty("num_messages")
+	public Integer getNumMessages() {
+		return numMessages;
 	}
 
 	/**
-	 * The title displayed on the interactive option chosen.
+	 * The first word of the message sent to uppercase.
 	 *
-	 * @return The chosen option's title.
+	 * @return The keyword.
 	 */
-	@JsonProperty("title")
-	public String getTitle() {
-		return title;
-	}
-
-	/**
-	 * A description that may be added to the interactive options presented (available only on interactive lists).
-	 *
-	 * @return The description, or {@code null} if not applicable.
-	 */
-	@JsonProperty("description")
-	public String getDescription() {
-		return description;
+	@JsonProperty("keyword")
+	public String getKeyword() {
+		return keyword;
 	}
 }

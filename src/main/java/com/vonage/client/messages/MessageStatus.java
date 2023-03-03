@@ -137,6 +137,7 @@ public class MessageStatus {
 	 * Describes the charge incurred for sending the message.
 	 */
 	@JsonInclude(value = JsonInclude.Include.NON_NULL)
+	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static final class Usage {
 		@JsonProperty("price") double price;
 		@JsonProperty("currency") Currency currency;

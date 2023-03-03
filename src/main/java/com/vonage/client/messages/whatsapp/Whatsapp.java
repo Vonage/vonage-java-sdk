@@ -21,13 +21,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class Whatsapp {
+public final class Whatsapp {
 	private final Policy policy;
 	private final Locale locale;
 
 	Whatsapp(Policy policy, Locale locale) {
 		this.policy = policy;
-		this.locale = Objects.requireNonNull(locale, "Locale is required");;
+		this.locale = Objects.requireNonNull(locale, "Locale is required");
 	}
 
 	@JsonProperty("policy")

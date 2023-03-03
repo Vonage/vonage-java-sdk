@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * @since 7.2.0
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-class ProductSection {
+final class ProductSection {
 	@JsonProperty("title") final String title;
 	@JsonProperty("product_items") final List<ProductItem> products;
 

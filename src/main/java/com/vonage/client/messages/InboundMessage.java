@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.messages.sms.SmsInboundMetadata;
 import com.vonage.client.messages.whatsapp.*;
 import java.io.IOException;
 import java.net.URI;
@@ -71,31 +72,17 @@ public class InboundMessage {
 	@JsonProperty("location") protected Location whatsappLocation;
 	@JsonProperty("reply") protected Reply whatsappReply;
 	@JsonProperty("order") protected Order whatsappOrder;
+	@JsonProperty("usage") protected MessageStatus.Usage usage;
+	@JsonProperty("sms") protected SmsInboundMetadata smsMetadata;
 
 	/**
 	 * This is a catch-all method which encapsulates all fields in the response JSON
-	 * that are not already a field in this class. Channel-specific response objects
-	 * are deserialized into this Map. For example, an SMS message may have the following
-	 * response object which is not deserialized into a field by this class:<br>
-	 * {@code
-	 *     "sms": {
-	 *     "num_messages": "2",
-	 *     "keyword": "HELLO"
-	 *   }
-	 * } <br><br>
-	 *
-	 * To obtain the "num_messages" from the map, you could do the following:<br>
-	 *
-	 * {@code
-	 *      Map<String, ?> additionalProps = inboundMessage.getAdditionalProperties();
-	 *      Map<String, String> smsObj = (Map<String, String>) additionalProps.get("sms");
-	 *      int numMessages = Integer.parseInt(smsObj.get("num_messages"));
-	 * }
+	 * that are not already a field in this class.
 	 *
 	 * @return The Map of unknown properties to their values.
 	 */
 	@JsonAnyGetter
-	public Map<String, ?> getAdditionalProperties() {
+	public Map<String, ?> getUnmappedProperties() {
 		return unknownProperties;
 	}
 
@@ -287,27 +274,28 @@ public class InboundMessage {
 	}
 
 	/**
-	 * Convenience method for obtaining the credit usage of an SMS message.
+	 * If the {@linkplain #getChannel()} is {@linkplain Channel#SMS}, returns the usage
+	 * information (charged incurred for the message).
 	 *
-	 * @return The deserialized usage object, or <code>null</code> if absent or not applicable.
-	 * @throws IllegalStateException If the channel is not {@linkplain Channel#SMS}.
+	 * @return The deserialized usage object, or {@code null} if not applicable.
 	 */
-	@SuppressWarnings("unchecked")
-	public MessageStatus.Usage getSmsUsage() {
-		if (channel != Channel.SMS) {
-			throw new IllegalStateException("Usage only applies to SMS messages");
-		}
-		Map<String, String> usageMap = (Map<String, String>) unknownProperties.get("usage");
-		if (usageMap == null) return null;
-		MessageStatus.Usage usageObj = new MessageStatus.Usage();
-		usageObj.setCurrency(usageMap.get("currency"));
-		usageObj.setPrice(usageMap.get("price"));
-		return usageObj;
+	public MessageStatus.Usage getUsage() {
+		return usage;
+	}
+
+	/**
+	 * If the {@linkplain #getChannel()} is {@linkplain Channel#SMS},
+	 * returns additional information about the message.
+	 *
+	 * @return The SMS metadata, or {@code null} if not applicable.
+	 */
+	public SmsInboundMetadata getSmsMetadata() {
+		return smsMetadata;
 	}
 
 	/**
 	 * Constructs an instance of this class from a JSON payload. Known fields will be mapped, whilst
-	 * unknown fields can be manually obtained through the {@linkplain #getAdditionalProperties()} method.
+	 * unknown fields can be manually obtained through the {@linkplain #getUnmappedProperties()} method.
 	 *
 	 * @param json The webhook response JSON string.
 	 *

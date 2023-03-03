@@ -28,7 +28,7 @@ import java.util.Objects;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ProductItem {
+public final class ProductItem {
 	private String productRetailerId;
 	private Integer quantity;
 	private Double itemPrice;

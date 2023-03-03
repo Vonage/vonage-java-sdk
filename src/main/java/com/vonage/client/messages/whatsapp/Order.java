@@ -25,7 +25,7 @@ import java.util.List;
  * @since 7.2.0
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Order {
+public final class Order {
 	private String catalogId;
 	private List<ProductItem> productItems;
 
