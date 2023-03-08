@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ public class CheckResponse {
     }
 
     /**
-     * @return The <code>request_id</code> that you received in the response to the Verify request
+     * @return The {@code request_id} that you received in the response to the Verify request
      * and used in the Verify check request.
      */
     @JsonProperty("request_id")
@@ -88,7 +88,7 @@ public class CheckResponse {
      * The value indicates the cost (in EUR) of the calls made and messages sent for the verification process.
      * This value may be updated during and shortly after the request completes because user input events can
      * overlap with message/call events. When this field is present, the total cost of the verification is the
-     * sum of this field and the <code>price</code> field.
+     * sum of this field and the {@code price} field.
      *
      * @since 7.1.0
      */

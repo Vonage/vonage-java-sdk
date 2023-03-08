@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -233,7 +233,7 @@ public class VerifyClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      *
-     * @deprecated <code>ipAddress</code> is no longer used and will be removed in the next major release.
+     * @deprecated {@code ipAddress} is no longer used and will be removed in the next major release.
      * Please use {@link #check(String, String)}
      */
     @Deprecated

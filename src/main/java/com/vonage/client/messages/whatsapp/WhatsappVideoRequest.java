@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -46,8 +46,8 @@ public final class WhatsappVideoRequest extends WhatsappRequest {
 
 		/**
 		 * (REQUIRED)
-		 * Sets the URL of the video attachment. Supports only <code>.mp4</code> and
-		 * <code>.3gpp</code> file extensions. Only H.264 video codec and AAC audio codec is supported.
+		 * Sets the URL of the video attachment. Supports only {@code .mp4} and
+		 * {@code .3gpp} file extensions. Only H.264 video codec and AAC audio codec is supported.
 		 *
 		 * @param url The URL as a string.
 		 * @return This builder.

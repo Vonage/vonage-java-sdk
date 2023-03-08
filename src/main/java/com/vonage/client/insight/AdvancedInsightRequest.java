@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -173,7 +173,7 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
 
         /**
          * @param url The URL that Vonage will send a request to when the insight lookup is finished.
-         *            This only takes effect when {@link #async(boolean)} is <code>true</code>.
+         *            This only takes effect when {@link #async(boolean)} is {@code true}.
          *
          * @return The {@link Builder} to keep building.
          */
@@ -184,7 +184,7 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
 
         /**
          * @param realTimeData A boolean to choose whether to get real time data back in the response.
-         *                     This only applies when {@link #async(boolean)} is <code>false</code>.
+         *                     This only applies when {@link #async(boolean)} is {@code false}.
          *
          * @return The {@link Builder} to keep building.
          */

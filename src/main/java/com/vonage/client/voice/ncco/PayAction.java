@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -148,7 +148,7 @@ public class PayAction implements Action {
 		/**
 		 * (OPTIONAL)
 		 *
-		 * @param currency The currency. Default is <code>USD</code>, see the list of supported codes in
+		 * @param currency The currency. Default is {@code USD}, see the list of supported codes in
 		 * <a href=https://developer.vonage.com/voice/voice-api/guides/payments#currency>the guide</a>.
 		 *
 		 * @return This builder.
@@ -161,7 +161,7 @@ public class PayAction implements Action {
 		/**
 		 * (OPTIONAL)
 		 *
-		 * @param currencyCode Currency code. Default value is <code>usd</code>, see the list of supported codes in
+		 * @param currencyCode Currency code. Default value is {@code usd}, see the list of supported codes in
 		 * <a href=https://developer.vonage.com/voice/voice-api/guides/payments#currency>the guide</a>.
 		 *
 		 * @return This builder.
@@ -184,7 +184,7 @@ public class PayAction implements Action {
 		/**
 		 * (OPTIONAL)
 		 *
-		 * @param language The language (BCP-47 format) for the prompts. Default is <code>en-US</code>.
+		 * @param language The language (BCP-47 format) for the prompts. Default is {@code en-US}.
 		 * @return This builder.
 		 */
 		public Builder language(TextToSpeechLanguage language) {
@@ -195,7 +195,7 @@ public class PayAction implements Action {
 		/**
 		 * (OPTIONAL)
 		 *
-		 * @param style The vocal style (vocal range, tessitura and timbre). Default is <code>0</code>.
+		 * @param style The vocal style (vocal range, tessitura and timbre). Default is {@code 0}.
 		 * Possible values are listed in the
 		 * <a href=https://developer.vonage.com/voice/voice-api/guides/text-to-speech#supported-languages>
 		 * Text-To-Speech guide</a>.

@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -67,7 +67,7 @@ public class MessagesClient {
 	 * Calling this method will make the client use the sandbox endpoint, which will enable you to
 	 * use the <a href=https://dashboard.nexmo.com/messages/sandbox>Messages Sandbox</a>.
 	 *
-	 * @return This {@linkplain MessagesClient}, for convenience.
+	 * @return This MessagesClient, for convenience.
 	 * @since 7.1.0
 	 */
 	public MessagesClient useSandboxEndpoint() {
@@ -80,7 +80,7 @@ public class MessagesClient {
 	 * provided for convenience if you wish to switch between sandbox and non-sandbox mode.
 	 *
 	 * @see #useSandboxEndpoint()
-	 * @return This {@linkplain MessagesClient}, for convenience.
+	 * @return This MessagesClient, for convenience.
 	 * @since 7.1.0
 	 */
 	public MessagesClient useRegularEndpoint() {

@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -153,7 +153,7 @@ public abstract class MessageRequest {
 
 		/**
 		 * Protected constructor to prevent users from explicitly creating this object.
-		 * This should only be called by the static <code>builder()</code> method in
+		 * This should only be called by the static {@code builder()} method in
 		 * the non-abstract subclasses of this builder's parent (declaring) class.
 		 */
 		protected Builder() {

@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -166,7 +166,7 @@ public abstract class Message {
 
     /**
      * Set the value of the 'status-report-req' parameter.
-     *
+     * <p>
      * If set to 'true', Vonage will call 'callbackUrl' with status updates about the delivery of this message. If this
      * value is set to 'true', then 'callbackUrl' should also be set to a URL that is configured to receive these
      * status updates.

@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ public final class MmsVcardRequest extends MmsRequest {
 
 		/**
 		 * (REQUIRED)
-		 * Sets the URL of the vCard attachment. Supports only <code>.vcf</code> file extension.
+		 * Sets the URL of the vCard attachment. Supports only {@code .vcf} file extension.
 		 *
 		 * @param url The URL as a string.
 		 * @return This builder.

@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -169,7 +169,7 @@ public class TalkAction implements Action {
         }
 
         /**
-         * @param premium Whether to use Premium text-to-speech. Set to <code>true</code> to use the premium version
+         * @param premium Whether to use Premium text-to-speech. Set to {@code true} to use the premium version
          *                of the specified style if available, otherwise the standard version will be used.
          *
          * @return The {@link Builder} to keep building.

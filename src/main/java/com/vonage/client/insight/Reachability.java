@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
  * Enum representing whether you can call number now. This is applicable to mobile numbers only.
- * Note that this enum may be <code>null</code>.
+ * Note that this enum may be {@code null}.
  */
 public enum Reachability {
 	UNKNOWN, REACHABLE, UNDELIVERABLE, ABSENT, BAD_NUMBER, BLACKLISTED;
