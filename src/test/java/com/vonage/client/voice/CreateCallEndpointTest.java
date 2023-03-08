@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-/* Copyright 2022 Vonage
+/* Copyright 2023 Vonage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
