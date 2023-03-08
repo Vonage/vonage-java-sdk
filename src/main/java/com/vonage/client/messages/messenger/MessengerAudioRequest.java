@@ -47,7 +47,7 @@ public final class MessengerAudioRequest extends MessengerRequest {
 
 		/**
 		 * (REQUIRED)
-		 * Sets the URL of the audio attachment. Supports only <code>.mp3</code> file extension.
+		 * Sets the URL of the audio attachment. Supports only {@code .mp3} file extension.
 		 * The URL must be between 10 and 2000 characters.
 		 *
 		 * @param url The URL as a string.

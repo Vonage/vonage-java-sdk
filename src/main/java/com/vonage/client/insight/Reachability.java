@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
  * Enum representing whether you can call number now. This is applicable to mobile numbers only.
- * Note that this enum may be <code>null</code>.
+ * Note that this enum may be {@code null}.
  */
 public enum Reachability {
 	UNKNOWN, REACHABLE, UNDELIVERABLE, ABSENT, BAD_NUMBER, BLACKLISTED;

@@ -60,7 +60,7 @@ public class CarrierDetails {
 
     /**
      * Enum representing the type of network that the number is associated with.
-     * Note that this enum may be <code>null</code>.
+     * Note that this enum may be {@code null}.
      */
     public enum NetworkType {
         MOBILE,

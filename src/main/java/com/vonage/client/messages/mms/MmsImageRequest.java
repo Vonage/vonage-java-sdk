@@ -46,8 +46,8 @@ public final class MmsImageRequest extends MmsRequest {
 
 		/**
 		 * (REQUIRED)
-		 * Sets the URL of the image attachment. Supports only <code>.jpg</code>,
-		 * <code>.jpeg</code>, <code>.png</code> and <code>.gif</code> file extensions.
+		 * Sets the URL of the image attachment. Supports only {@code .jpg},
+		 * {@code .jpeg}, {@code .png} and {@code .gif} file extensions.
 		 *
 		 * @param url The URL as a string.
 		 * @return This builder.

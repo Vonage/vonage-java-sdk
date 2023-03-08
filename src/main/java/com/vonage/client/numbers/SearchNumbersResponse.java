@@ -37,7 +37,7 @@ public class SearchNumbersResponse {
 
     /**
      * Obtain an array of matching numbers than are available to buy.
-     * @return list of available numbers
+     * @return Array of available numbers
      */
     public AvailableNumber[] getNumbers() {
         return numbers;

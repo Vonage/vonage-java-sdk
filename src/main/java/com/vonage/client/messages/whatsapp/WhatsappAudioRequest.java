@@ -47,8 +47,8 @@ public final class WhatsappAudioRequest extends WhatsappRequest {
 
 		/**
 		 * (REQUIRED)
-		 * Sets the URL of the audio attachment. Supports only <code>.aac</code>, <code>.m4a</code>
-		 * <code>.amr</code>, <code>.mp3</code> and <code>.opus</code> file extensions.
+		 * Sets the URL of the audio attachment. Supports only {@code .aac}, {@code .m4a}
+		 * {@code .amr}, {@code .mp3} and {@code .opus} file extensions.
 		 *
 		 * @param url The URL as a string.
 		 * @return This builder.

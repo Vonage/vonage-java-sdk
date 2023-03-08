@@ -46,7 +46,7 @@ public final class MessengerVideoRequest extends MessengerRequest {
 
 		/**
 		 * (REQUIRED)
-		 * Sets the URL of the video attachment. Supports only <code>.mp4</code>
+		 * Sets the URL of the video attachment. Supports only {@code .mp4}
 		 * file extension. Only H.264 video codec and AAC audio codec is supported.
 		 *
 		 * @param url The URL as a string.

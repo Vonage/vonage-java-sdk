@@ -166,7 +166,7 @@ public abstract class Message {
 
     /**
      * Set the value of the 'status-report-req' parameter.
-     *
+     * <p>
      * If set to 'true', Vonage will call 'callbackUrl' with status updates about the delivery of this message. If this
      * value is set to 'true', then 'callbackUrl' should also be set to a URL that is configured to receive these
      * status updates.

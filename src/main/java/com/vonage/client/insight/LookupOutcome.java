@@ -20,10 +20,10 @@ import java.util.Arrays;
 
 /**
  * Enum representing whether all information about a phone number has been returned.
- *
- * <code>0</code> is success,
- * <code>1</code> is a partial success (some fields populated),
- * <code>2</code> is failure.
+ * <p>
+ * {@code 0} is success,
+ * {@code 1} is a partial success (some fields populated),
+ * {@code 2} is failure.
  */
 public enum LookupOutcome {
 	UNKNOWN(Integer.MAX_VALUE),

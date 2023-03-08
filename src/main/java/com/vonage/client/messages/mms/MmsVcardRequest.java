@@ -43,7 +43,7 @@ public final class MmsVcardRequest extends MmsRequest {
 
 		/**
 		 * (REQUIRED)
-		 * Sets the URL of the vCard attachment. Supports only <code>.vcf</code> file extension.
+		 * Sets the URL of the vCard attachment. Supports only {@code .vcf} file extension.
 		 *
 		 * @param url The URL as a string.
 		 * @return This builder.

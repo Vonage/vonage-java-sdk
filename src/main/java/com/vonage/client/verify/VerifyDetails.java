@@ -32,7 +32,7 @@ public class VerifyDetails {
     private List<VerifyCheck> checks = new ArrayList<>();
 
     /**
-     * @return The <code>request_id</code> that you received in the response to the
+     * @return The {@code request_id} that you received in the response to the
      * Verify request and used in the Verify search request.
      */
     @JsonProperty("request_id")
@@ -56,7 +56,7 @@ public class VerifyDetails {
     }
 
     /**
-     * @return The <code>sender_id</code> you provided in the Verify request.
+     * @return The {@code sender_id} you provided in the Verify request.
      */
     @JsonProperty("sender_id")
     public String getSenderId() {
@@ -128,7 +128,7 @@ public class VerifyDetails {
      * The value indicates the cost (in EUR) of the calls made and messages sent for the verification process.
      * This value may be updated during and shortly after the request completes because user input events can
      * overlap with message/call events. When this field is present, the total cost of the verification is the
-     * sum of this field and the <code>price</code> field.
+     * sum of this field and the {@code price} field.
      *
      * @since 7.1.0
      */
@@ -159,7 +159,7 @@ public class VerifyDetails {
          */
         CANCELLED("CANCELLED"),
         /**
-         * You supplied an invalid <code>request_id</code>, or the data is not available.
+         * You supplied an invalid {@code request_id}, or the data is not available.
          * Note that for recently-completed requests, there can be a delay of up to 1 minute
          * before the results are available in search.
          */

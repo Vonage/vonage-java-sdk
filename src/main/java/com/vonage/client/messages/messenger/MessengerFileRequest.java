@@ -46,7 +46,7 @@ public final class MessengerFileRequest extends MessengerRequest {
 		/**
 		 * (REQUIRED)
 		 * Sets the URL of the file attachment. Supports a wide range of attachments including
-		 * <code>.zip</code>, <code>.csv</code> and <code>.pdf.</code>.
+		 * {@code .zip}, {@code .csv} and {@code .pdf.}.
 		 *
 		 * @param url The URL as a string.
 		 * @return This builder.

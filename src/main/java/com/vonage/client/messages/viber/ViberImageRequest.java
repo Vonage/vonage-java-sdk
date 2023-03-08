@@ -47,7 +47,7 @@ public final class ViberImageRequest extends ViberRequest {
 		/**
 		 * (REQUIRED)
 		 * Sets the URL of the image attachment. Supports only
-		 * <code>.jpg</code>, <code>.jpeg</code> and <code>.png</code>
+		 * {@code .jpg}, {@code .jpeg} and {@code .png}
 		 * file extensions.
 		 *
 		 * @param url The URL as a string.

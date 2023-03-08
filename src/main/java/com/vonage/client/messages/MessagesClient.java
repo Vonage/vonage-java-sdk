@@ -67,7 +67,7 @@ public class MessagesClient {
 	 * Calling this method will make the client use the sandbox endpoint, which will enable you to
 	 * use the <a href=https://dashboard.nexmo.com/messages/sandbox>Messages Sandbox</a>.
 	 *
-	 * @return This {@linkplain MessagesClient}, for convenience.
+	 * @return This MessagesClient, for convenience.
 	 * @since 7.1.0
 	 */
 	public MessagesClient useSandboxEndpoint() {
@@ -80,7 +80,7 @@ public class MessagesClient {
 	 * provided for convenience if you wish to switch between sandbox and non-sandbox mode.
 	 *
 	 * @see #useSandboxEndpoint()
-	 * @return This {@linkplain MessagesClient}, for convenience.
+	 * @return This MessagesClient, for convenience.
 	 * @since 7.1.0
 	 */
 	public MessagesClient useRegularEndpoint() {

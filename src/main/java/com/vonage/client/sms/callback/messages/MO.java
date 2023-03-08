@@ -21,9 +21,7 @@ import java.util.Date;
 
 
 /**
- * This represents an incoming MO callback request
- *
- *
+ * This represents an incoming MO callback request.
  */
 public class MO implements java.io.Serializable {
 

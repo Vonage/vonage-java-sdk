@@ -53,7 +53,7 @@ public class RealTimeData {
 
 	/**
 	 * @return Whether the end-user's phone number is active within an operator's network.
-	 * Note that this could be <code>null</code>.
+	 * Note that this could be {@code null}.
 	 */
 	@JsonProperty("active_status")
 	public Boolean getActiveStatus() {

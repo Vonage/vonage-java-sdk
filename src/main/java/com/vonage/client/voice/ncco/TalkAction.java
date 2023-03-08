@@ -169,7 +169,7 @@ public class TalkAction implements Action {
         }
 
         /**
-         * @param premium Whether to use Premium text-to-speech. Set to <code>true</code> to use the premium version
+         * @param premium Whether to use Premium text-to-speech. Set to {@code true} to use the premium version
          *                of the specified style if available, otherwise the standard version will be used.
          *
          * @return The {@link Builder} to keep building.

@@ -31,7 +31,7 @@ public class XmlParser {
 
     /**
      * Used for parsing XML data.
-     *
+     * <p>
      * Do not use this without locking on {@link #documentBuilderLock}
      */
     private DocumentBuilder documentBuilder;

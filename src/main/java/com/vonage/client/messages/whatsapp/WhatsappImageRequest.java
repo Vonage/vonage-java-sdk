@@ -47,8 +47,8 @@ public final class WhatsappImageRequest extends WhatsappRequest {
 
 		/**
 		 * (REQUIRED)
-		 * Sets the URL of the image attachment. Supports only <code>.jpg</code>,
-		 * <code>.jpeg</code> and <code>.png</code> file extensions.
+		 * Sets the URL of the image attachment. Supports only {@code .jpg},
+		 * {@code .jpeg} and {@code .png} file extensions.
 		 *
 		 * @param url The URL as a string.
 		 * @return This builder.

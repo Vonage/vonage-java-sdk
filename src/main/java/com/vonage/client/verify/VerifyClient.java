@@ -233,7 +233,7 @@ public class VerifyClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      *
-     * @deprecated <code>ipAddress</code> is no longer used and will be removed in the next major release.
+     * @deprecated {@code ipAddress} is no longer used and will be removed in the next major release.
      * Please use {@link #check(String, String)}
      */
     @Deprecated

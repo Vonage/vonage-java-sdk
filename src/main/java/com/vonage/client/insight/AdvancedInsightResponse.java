@@ -84,7 +84,7 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
     }
 
     /**
-     * @return Real-time data about the number if it was requested, <code>null</code> otherwise.
+     * @return Real-time data about the number if it was requested, {@code null} otherwise.
      */
     @JsonProperty("real_time_data")
     public RealTimeData getRealTimeData() {

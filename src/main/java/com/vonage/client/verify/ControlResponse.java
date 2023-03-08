@@ -49,7 +49,7 @@ public class ControlResponse {
     /**
      * If the status is non-zero, this explains the error encountered.
      *
-     * @return The error description, or <code>null</code> if there was no error.
+     * @return The error description, or {@code null} if there was no error.
      */
     @JsonProperty("error_text")
     public String getErrorText() {

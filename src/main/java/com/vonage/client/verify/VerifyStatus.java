@@ -79,7 +79,7 @@ public enum VerifyStatus {
      */
     INVALID_CODE(16),
     /**
-     * You can run Verify check on a specific <code>request_id</code> up to three times unless a new verification code
+     * You can run Verify check on a specific {@code request_id} up to three times unless a new verification code
      * is generated. If you check a request more than three times, it is set to FAILED and you cannot check it again.
      */
     WRONG_CODE_THROTTLED(17),
@@ -89,14 +89,14 @@ public enum VerifyStatus {
     @Deprecated
     TOO_MANY_DESTINATIONS(18),
     /**
-     * For <code>cancel</code>: Either you have not waited at least 30 seconds after sending a Verify request
+     * For {@code cancel}: Either you have not waited at least 30 seconds after sending a Verify request
      * before cancelling or Verify has made too many attempts to deliver the verification code for this request,
-     * and you must now wait for the process to complete. For <code>trigger_next_event</code>: All attempts to
+     * and you must now wait for the process to complete. For {@code trigger_next_event}: All attempts to
      * deliver the verification code for this request have completed and there are no remaining events to advance to.
      */
     WAIT_FOR_COMPLETION(19),
     /**
-     * Only certain accounts have the ability to set the <code>pin_code</code> parameter.
+     * Only certain accounts have the ability to set the {@code pin_code} parameter.
      * Please contact your account manager for more information.
      */
     UNSUPPORTED_PIN_CODE(20),

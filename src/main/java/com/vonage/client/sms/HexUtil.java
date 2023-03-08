@@ -21,8 +21,6 @@ import java.io.UnsupportedEncodingException;
 
 /**
  * Static helper methods for working with hex values.
- *
- *
  */
 public class HexUtil {
 

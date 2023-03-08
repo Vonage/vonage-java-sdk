@@ -153,7 +153,7 @@ public abstract class MessageRequest {
 
 		/**
 		 * Protected constructor to prevent users from explicitly creating this object.
-		 * This should only be called by the static <code>builder()</code> method in
+		 * This should only be called by the static {@code builder()} method in
 		 * the non-abstract subclasses of this builder's parent (declaring) class.
 		 */
 		protected Builder() {
