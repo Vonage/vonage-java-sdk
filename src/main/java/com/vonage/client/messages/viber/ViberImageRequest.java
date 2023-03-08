@@ -58,6 +58,17 @@ public final class ViberImageRequest extends ViberRequest {
 			return this;
 		}
 
+		@Override
+		public Builder actionUrl(String actionUrl) {
+			return super.actionUrl(actionUrl);
+		}
+
+		@Override
+		public Builder actionText(String actionText) {
+			return super.actionText(actionText);
+		}
+
+		@Override
 		public ViberImageRequest build() {
 			return new ViberImageRequest(this);
 		}

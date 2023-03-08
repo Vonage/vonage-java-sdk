@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -13,26 +13,29 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages;
+package com.vonage.client.messages.whatsapp;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Represents the media type of the message.
+ * Used for inbound messages.
+ *
+ * @since 7.2.0
  */
-public enum MessageType {
-	TEXT, IMAGE, AUDIO, VIDEO, FILE, VCARD, TEMPLATE, CUSTOM, LOCATION, STICKER, UNSUPPORTED, REPLY, ORDER;
+@JsonIgnoreProperties(ignoreUnknown = true)
+public final class Profile {
+	private String name;
 
-	@JsonCreator
-	public static MessageType fromString(String value) {
-		if (value == null) return null;
-		return MessageType.valueOf(value.toUpperCase());
-	}
+	Profile() {}
 
-	@JsonValue
-	@Override
-	public String toString() {
-		return name().toLowerCase();
+	/**
+	 * The WhatsApp number's displayed profile name.
+	 *
+	 * @return The profile name.
+	 */
+	@JsonProperty("name")
+	public String getName() {
+		return name;
 	}
 }

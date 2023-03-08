@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -13,30 +13,31 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages.whatsapp;
+package com.vonage.client.messages.viber;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+import com.vonage.client.messages.internal.MessagePayload;
+import java.net.URI;
 import java.util.Objects;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class Whatsapp {
-	private final Policy policy;
-	private final Locale locale;
+public class Video extends MessagePayload {
+	protected URI thumbUrl;
 
-	Whatsapp(Policy policy, Locale locale) {
-		this.policy = policy;
-		this.locale = Objects.requireNonNull(locale, "Locale is required");
+	protected Video(String url, String thumbUrl, String caption) {
+		super(url, caption);
+		this.thumbUrl = URI.create(Objects.requireNonNull(thumbUrl, "Thumbnail URL is required"));
+		validateFileExtensions();
 	}
 
-	@JsonProperty("policy")
-	public Policy getPolicy() {
-		return policy;
+	@JsonProperty("thumb_url")
+	public URI getThumbUrl() {
+		return thumbUrl;
 	}
 
-	@JsonProperty("locale")
-	public Locale getLocale() {
-		return locale;
+	protected void validateFileExtensions() {
+		validateUrlExtension("mp4", "3gpp");
+		validateExtension(thumbUrl.getPath(), "jpg", "jpeg", "png", "bmp", "gif");
 	}
 }

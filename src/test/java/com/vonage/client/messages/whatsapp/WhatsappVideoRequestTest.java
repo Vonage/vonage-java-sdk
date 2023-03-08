@@ -79,9 +79,9 @@ public class WhatsappVideoRequestTest {
 
 		String baseUrl = "file:///path/to/resource", url;
 		for (String imageType : new String[]{"mp4", "3gpp"}) {
-			url = baseUrl + imageType;
+			url = baseUrl+'.'+imageType;
 			builder.url(url);
-			assertEquals(url, builder.build().getVideo().getUrl());
+			assertEquals(url, builder.build().getVideo().getUrl().toString());
 		}
 	}
 }

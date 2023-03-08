@@ -55,6 +55,17 @@ public final class ViberTextRequest extends ViberRequest {
 			return this;
 		}
 
+		@Override
+		public Builder actionUrl(String actionUrl) {
+			return super.actionUrl(actionUrl);
+		}
+
+		@Override
+		public Builder actionText(String actionText) {
+			return super.actionText(actionText);
+		}
+
+		@Override
 		public ViberTextRequest build() {
 			return new ViberTextRequest(this);
 		}

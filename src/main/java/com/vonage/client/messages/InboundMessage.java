@@ -15,12 +15,18 @@
  */
 package com.vonage.client.messages;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.messages.sms.SmsInboundMetadata;
+import com.vonage.client.messages.whatsapp.*;
 import java.io.IOException;
 import java.net.URI;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
 
@@ -44,14 +50,14 @@ public class InboundMessage {
 
 	@JsonAnySetter protected Map<String, Object> unknownProperties;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = MessageStatus.ISO_8601_PATTERN)
-	@JsonProperty("timestamp") protected ZonedDateTime timestamp;
+	@JsonProperty("timestamp") protected Instant timestamp;
 	@JsonProperty("channel") protected Channel channel;
 	@JsonProperty("message_type") protected MessageType messageType;
 	@JsonProperty("message_uuid") protected UUID messageUuid;
 	@JsonProperty("to") protected String to;
 	@JsonProperty("from") protected String from;
 	@JsonProperty("client_ref") protected String clientRef;
+	@JsonProperty("provider_message") String providerMessage;
 
 	@JsonProperty("text") protected String text;
 	@JsonProperty("image") protected UrlWrapper image;
@@ -59,31 +65,24 @@ public class InboundMessage {
 	@JsonProperty("video") protected UrlWrapper video;
 	@JsonProperty("file") protected UrlWrapper file;
 	@JsonProperty("vcard") protected UrlWrapper vcard;
+	@JsonProperty("sticker") protected UrlWrapper sticker;
+
+	@JsonProperty("profile") protected Profile whatsappProfile;
+	@JsonProperty("context") protected Context whatsappContext;
+	@JsonProperty("location") protected Location whatsappLocation;
+	@JsonProperty("reply") protected Reply whatsappReply;
+	@JsonProperty("order") protected Order whatsappOrder;
+	@JsonProperty("usage") protected MessageStatus.Usage usage;
+	@JsonProperty("sms") protected SmsInboundMetadata smsMetadata;
 
 	/**
 	 * This is a catch-all method which encapsulates all fields in the response JSON
-	 * that are not already a field in this class. Channel-specific response objects
-	 * are deserialized into this Map. For example, an SMS message may have the following
-	 * response object which is not deserialized into a field by this class:<br>
-	 * {@code
-	 *     "sms": {
-	 *     "num_messages": "2",
-	 *     "keyword": "HELLO"
-	 *   }
-	 * } <br><br>
-	 *
-	 * To obtain the "num_messages" from the map, you could do the following:<br>
-	 *
-	 * {@code
-	 *      Map<String, ?> additionalProps = inboundMessage.getAdditionalProperties();
-	 *      Map<String, String> smsObj = (Map<String, String>) additionalProps.get("sms");
-	 *      int numMessages = Integer.parseInt(smsObj.get("num_messages"));
-	 * }
+	 * that are not already a field in this class.
 	 *
 	 * @return The Map of unknown properties to their values.
 	 */
 	@JsonAnyGetter
-	public Map<String, ?> getAdditionalProperties() {
+	public Map<String, ?> getUnmappedProperties() {
 		return unknownProperties;
 	}
 
@@ -132,16 +131,12 @@ public class InboundMessage {
 		return from;
 	}
 
-	protected void setTimestamp(String timestamp) {
-		this.timestamp = MessageStatus.ISO_8601.parse(timestamp, ZonedDateTime::from);
-	}
-
 	/**
 	 * The datetime of when the event occurred.
 	 *
-	 * @return The timestamp as a ZonedDateTime.
+	 * @return The timestamp as an Instant.
 	 */
-	public ZonedDateTime getTimestamp() {
+	public Instant getTimestamp() {
 		return timestamp;
 	}
 
@@ -209,27 +204,98 @@ public class InboundMessage {
 	}
 
 	/**
-	 * Convenience method for obtaining the credit usage of an SMS message.
+	 * If {@linkplain #getMessageType()} is {@linkplain MessageType#STICKER}, returns the URL of the sticker.
 	 *
-	 * @return The deserialized usage object, or <code>null</code> if absent or not applicable.
-	 * @throws IllegalStateException If the channel is not {@linkplain Channel#SMS}.
+	 * @return The sticker URL, or {@code null} if not applicable.
 	 */
-	@SuppressWarnings("unchecked")
-	public MessageStatus.Usage getSmsUsage() {
-		if (channel != Channel.SMS) {
-			throw new IllegalStateException("Usage only applies to SMS messages");
-		}
-		Map<String, String> usageMap = (Map<String, String>) unknownProperties.get("usage");
-		if (usageMap == null) return null;
-		MessageStatus.Usage usageObj = new MessageStatus.Usage();
-		usageObj.setCurrency(usageMap.get("currency"));
-		usageObj.setPrice(usageMap.get("price"));
-		return usageObj;
+	public URI getStickerUrl() {
+		return sticker != null ? sticker.url : null;
+	}
+
+	/**
+	 * If {@linkplain #getChannel()} is {@linkplain Channel#WHATSAPP}, returns the {@code provider_message} field.
+	 * This is a message from the channel provider, which may contain a description, error codes or other information.
+	 *
+	 * @return The provider message or {@code null} if not applicable.
+	 */
+	public String getProviderMessage() {
+		return providerMessage;
+	}
+
+	/**
+	 * If {@linkplain #getMessageType()} is {@linkplain MessageType#LOCATION} and {@linkplain #getChannel()} is
+	 * {@linkplain Channel#WHATSAPP}, returns the location.
+	 *
+	 * @return The deserialized WhatsApp location, or {@code null} if not applicable.
+	 */
+	public Location getWhatsappLocation() {
+		return whatsappLocation;
+	}
+
+	/**
+	 * If {@linkplain #getMessageType()} is {@linkplain MessageType#REPLY} and {@linkplain #getChannel()} is
+	 * {@linkplain Channel#WHATSAPP}, returns the reply.
+	 *
+	 * @return The deserialized WhatsApp reply, or {@code null} if not applicable.
+	 */
+	public Reply getWhatsappReply() {
+		return whatsappReply;
+	}
+
+	/**
+	 * If {@linkplain #getMessageType()} is {@linkplain MessageType#ORDER} and {@linkplain #getChannel()} is
+	 * {@linkplain Channel#WHATSAPP}, returns the order.
+	 *
+	 * @return The deserialized WhatsApp order, or {@code null} if not applicable.
+	 */
+	public Order getWhatsappOrder() {
+		return whatsappOrder;
+	}
+
+	/**
+	 * If the {@linkplain #getChannel()} is {@linkplain Channel#WHATSAPP}, returns information
+	 * about the sender's WhatsApp profile.
+	 *
+	 * @return The deserialized WhatsApp profile, or {@code null} if not applicable.
+	 */
+	public Profile getWhatsappProfile() {
+		return whatsappProfile;
+	}
+
+	/**
+	 * If the {@linkplain #getChannel()} is {@linkplain Channel#WHATSAPP}, returns the WhatsApp message context.
+	 * This is only present where the user is quoting another message. It provides information about the quoted
+	 * message and/or the product message being responded to.
+	 *
+	 * @return The deserialized WhatsApp context, or {@code null} if not applicable.
+	 */
+	public Context getWhatsappContext() {
+		return whatsappContext;
+	}
+
+	/**
+	 * If the {@linkplain #getChannel()} is {@linkplain Channel#SMS}, returns the usage
+	 * information (charged incurred for the message).
+	 *
+	 * @return The deserialized usage object, or {@code null} if not applicable.
+	 */
+	public MessageStatus.Usage getUsage() {
+		return usage;
+	}
+
+	/**
+	 * If the {@linkplain #getChannel()} is {@linkplain Channel#SMS},
+	 * returns additional information about the message.
+	 *
+	 * @return The SMS metadata, or {@code null} if not applicable.
+	 */
+	public SmsInboundMetadata getSmsMetadata() {
+		return smsMetadata;
 	}
 
 	/**
 	 * Constructs an instance of this class from a JSON payload. Known fields will be mapped, whilst
-	 * unknown fields can be manually obtained through the {@linkplain #getAdditionalProperties()} method.
+	 * unknown fields can be manually obtained through the {@linkplain #getUnmappedProperties()} method.
 	 *
 	 * @param json The webhook response JSON string.
 	 *
@@ -239,6 +305,7 @@ public class InboundMessage {
 	public static InboundMessage fromJson(String json) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
+			mapper.registerModule(new JavaTimeModule());
 			return mapper.readValue(json, InboundMessage.class);
 		}
 		catch (IOException ex) {

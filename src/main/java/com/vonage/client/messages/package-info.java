@@ -16,8 +16,8 @@
 
 /**
  * This package contains classes and sub-packages to support usage of the
- * <a href=https://developer.vonage.com/api/messages-olympus>Messages v1 API</a>.
- * <br>
+ * <a href=https://developer.vonage.com/en/messages/overview>Vonage Messages API</a>.
+ * <br><br>
  *
  * The API allows sending various types of messages (text, video, image, audio, files) over
  * various channels (SMS, MMS, Viber, WhatsApp, Facebook Messenger). Only a specific combination
@@ -27,7 +27,7 @@
  * ideally impossible to construct a malformed MessageRequest when calling
  * {@link com.vonage.client.messages.MessagesClient#sendMessage(com.vonage.client.messages.MessageRequest)}.
  * Hence, types are used heavily to minimize the possibility of creating invalid requests.
- * <br>
+ * <br><br>
  *
  * Subclasses of {@link com.vonage.client.messages.MessageRequest} explicitly exhaust all supported combinations
  * of message type and channel. They all follow a builder pattern to enable convenient construction of messages
@@ -36,12 +36,12 @@
  * that they are sensible values. When in doubt, please consult the
  * <a href=https://developer.vonage.com/api/messages-olympus#SendMessage>API specification</a>
  * for required and optional parameters, as well as requirements for valid values.
- * <br>
+ * <br><br>
  *
  * When calling {@link com.vonage.client.messages.MessagesClient#sendMessage(com.vonage.client.messages.MessageRequest)},
  * it is advised that the user catches {@link com.vonage.client.messages.MessageResponseException} to handle cases
  * where the message was not sent successfully.
- * <br>
+ * <br><br>
  *
  * Note that the <a href=https://dashboard.nexmo.com/messages/sandbox>Messages Sandbox</a> uses
  * a different URL. Users can easily switch to this endpoint by calling

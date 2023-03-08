@@ -15,16 +15,22 @@
  */
 package com.vonage.client.messages;
 
+import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.messages.sms.SmsInboundMetadata;
+import com.vonage.client.messages.whatsapp.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.net.URI;
+import java.time.Instant;
+import java.util.Currency;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 public class InboundMessageTest {
 	UUID messageUuid = UUID.randomUUID();
 	String to = "447700900000", from = "447700900001";
-	String timestamp = "2020-01-01 15:43:21 +0200";
+	String timestamp = "2020-01-01T15:43:21Z";
 	String clientRef = UUID.randomUUID().toString();
 	String text = "Hello, world!";
 	String price = "0.0333";
@@ -46,18 +52,20 @@ public class InboundMessageTest {
 			  ",\n  \"text\": \""+text+"\"";
 	}
 
-	String getSmsPartialStubWithUsage() {
+	String getSmsPartialStubWithUsageAndMetadata() {
 		return getSmsPartialJsonStub() + ",\n  \"usage\": {\n" +
 			  "    \"currency\": \""+currency+"\",\n" +
 			  "    \"price\": \""+price+"\"\n"+
-			  "  }";
+			  "  },\n  \"sms\": {\n" +
+				"  \"num_messages\": \"2\",\n" +
+				"  \"keyword\": \"HELLO\"\n  }";
 	}
 
 	void assertEqualsCommon(InboundMessage im) {
 		assertEquals(messageUuid, im.getMessageUuid());
 		assertEquals(to, im.getTo());
 		assertEquals(from, im.getFrom());
-		assertEquals(timestamp, MessageStatus.ISO_8601.format(im.getTimestamp()));
+		assertEquals(Instant.parse(timestamp), im.getTimestamp());
 		assertEquals(clientRef, im.getClientRef());
 	}
 
@@ -68,35 +76,44 @@ public class InboundMessageTest {
 		assertEquals(text, im.getText());
 	}
 
-	void assertEqualsSmsWithUsage(InboundMessage im) {
+	void assertEqualsSmsWithUsageAndMetadata(InboundMessage im) {
 		assertEqualsSms(im);
-		MessageStatus.Usage usage = im.getSmsUsage();
+		MessageStatus.Usage usage = im.getUsage();
 		assertNotNull(usage);
 		assertEquals(currency, usage.getCurrency().getCurrencyCode());
 		assertEquals(price, ""+usage.getPrice());
+		SmsInboundMetadata metadata = im.getSmsMetadata();
+		assertNotNull(metadata);
+		assertEquals(2, metadata.getNumMessages().intValue());
+		assertEquals("HELLO", metadata.getKeyword());
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testUnknownProperty() {
-		String fullJson = getSmsPartialStubWithUsage() + ",\n  \"sms\": {\n" +
-			  "  \"num_messages\": \"2\",\n" +
-			  "  \"keyword\": \"HELLO\"\n" +
-			  "}\n}";
+		String fullJson = getSmsPartialStubWithUsageAndMetadata() +
+				",\n\"someRandomProp\": {\"int_field\": 19, \"str_field\": \"A value\", \"col\":[]}}";
 
 		InboundMessage im = InboundMessage.fromJson(fullJson);
-		assertEqualsSmsWithUsage(im);
+		assertEqualsSmsWithUsageAndMetadata(im);
+
+		Map<String, Object> randomProp = (Map<String, Object>) im.getUnmappedProperties().get("someRandomProp");
+		assertNotNull(randomProp);
+		assertEquals(3, randomProp.size());
+		assertEquals(19, randomProp.get("int_field"));
+		assertEquals("A value", randomProp.get("str_field"));
+		assertTrue(((List<?>) randomProp.get("col")).isEmpty());
 
 		assertNull(im.getAudioUrl());
 		assertNull(im.getVcardUrl());
 		assertNull(im.getVideoUrl());
 		assertNull(im.getFileUrl());
 		assertNull(im.getImageUrl());
-
-		Map<String, String> smsMap = (Map<String, String>) im.getAdditionalProperties().get("sms");
-		assertNotNull(smsMap);
-		assertEquals("2", smsMap.get("num_messages"));
-		assertEquals("HELLO", smsMap.get("keyword"));
+		assertNull(im.getWhatsappContext());
+		assertNull(im.getWhatsappReply());
+		assertNull(im.getWhatsappLocation());
+		assertNull(im.getWhatsappOrder());
+		assertNull(im.getProviderMessage());
 	}
 
 	@Test
@@ -107,14 +124,20 @@ public class InboundMessageTest {
 		assertEqualsCommon(im);
 		assertEquals(Channel.MESSENGER, im.getChannel());
 		assertEquals(MessageType.UNSUPPORTED, im.getMessageType());
-		assertNull(im.getAdditionalProperties());
+		assertNull(im.getUnmappedProperties());
 		assertNull(im.getText());
 		assertNull(im.getAudioUrl());
 		assertNull(im.getVcardUrl());
 		assertNull(im.getVideoUrl());
 		assertNull(im.getFileUrl());
 		assertNull(im.getImageUrl());
-		assertThrows(IllegalStateException.class, im::getSmsUsage);
+		assertNull(im.getWhatsappContext());
+		assertNull(im.getWhatsappReply());
+		assertNull(im.getWhatsappLocation());
+		assertNull(im.getWhatsappOrder());
+		assertNull(im.getProviderMessage());
+		assertNull(im.getUsage());
+		assertNull(im.getSmsMetadata());
 	}
 
 	@Test
@@ -131,12 +154,19 @@ public class InboundMessageTest {
 		assertEquals(MessageType.VCARD, im.getMessageType());
 		assertEquals(vcard, im.getVcardUrl().toString());
 
-		assertNull(im.getAdditionalProperties());
+		assertNull(im.getUnmappedProperties());
 		assertNull(im.getText());
 		assertNull(im.getAudioUrl());
 		assertNull(im.getVideoUrl());
 		assertNull(im.getFileUrl());
 		assertNull(im.getImageUrl());
+		assertNull(im.getWhatsappContext());
+		assertNull(im.getWhatsappReply());
+		assertNull(im.getWhatsappLocation());
+		assertNull(im.getWhatsappOrder());
+		assertNull(im.getProviderMessage());
+		assertNull(im.getUsage());
+		assertNull(im.getSmsMetadata());
 	}
 
 	@Test
@@ -169,5 +199,120 @@ public class InboundMessageTest {
 		String json = "{\"file\": {\"url\":\""+file+"\"}}";
 		InboundMessage im = InboundMessage.fromJson(json);
 		assertEquals(file, im.getFileUrl());
+	}
+
+	@Test
+	public void testStickerOnly() {
+		URI sticker = URI.create("https://www.example.org/path/to/sticker.webp");
+		String json = "{\"sticker\": {\"url\":\""+sticker+"\"}}";
+		InboundMessage im = InboundMessage.fromJson(json);
+		assertEquals(sticker, im.getStickerUrl());
+	}
+
+	@Test
+	public void testWhatsappLocationOnly() {
+		double latitude = 40.34772, longitude = 74.18847;
+		String name = "Vonage", address = "23 Main St, Holmdel, NJ 07733, USA";
+		String json = "{\"location\":{\"lat\":"+latitude+",\"long\":"+longitude +
+				",\"name\":\""+name+"\",\"address\":\""+address+"\"}}";
+		InboundMessage im = InboundMessage.fromJson(json);
+		Location location = im.getWhatsappLocation();
+		assertNotNull(location);
+		assertEquals(longitude, location.getLongitude(), 0.000001);
+		assertEquals(latitude, location.getLatitude(), 0.000001);
+		assertEquals(name, location.getName());
+		assertEquals(address, location.getAddress());
+	}
+
+	@Test
+	public void testWhatsappReplyOnly() {
+		String id = "row1", title = "9am", description = "Select 9am appointmaent time";
+		String json = "{\"reply\":{\"id\":\""+id+"\",\"title\":\""+title+"\",\"description\":\""+description+"\"}}";
+		InboundMessage im = InboundMessage.fromJson(json);
+		Reply reply = im.getWhatsappReply();
+		assertNotNull(reply);
+		assertEquals(id, reply.getId());
+		assertEquals(title, reply.getTitle());
+		assertEquals(description, reply.getDescription());
+	}
+
+	@Test
+	public void testWhatsappOrderOnly() {
+		Integer quantity = 3;
+		Double price = 9.99;
+		String cid = "2806150799683508", pid = "pk1v7rudbg", currency = "USD",
+				json = "{\"order\":{\"catalog_id\":\""+cid+"\",\"product_items\":[{},{\n"+
+						"    \"product_retailer_id\": \""+pid+"\",\n" +
+						"    \"quantity\": \""+quantity+"\",\n" +
+						"    \"item_price\": \""+price+"\",\n" +
+						"    \"currency\": \""+currency+"\"\n" +
+						"}]}}";
+		InboundMessage im = InboundMessage.fromJson(json);
+		Order order = im.getWhatsappOrder();
+		assertNotNull(order);
+		assertEquals(cid, order.getCatalogId());
+		List<ProductItem> items = order.getProductItems();
+		assertNotNull(items);
+		assertEquals(2, items.size());
+		ProductItem emptyItem = items.get(0), mainItem = items.get(1);
+		assertNotNull(emptyItem);
+		assertNull(emptyItem.getProductRetailerId());
+		assertNull(emptyItem.getQuantity());
+		assertNull(emptyItem.getItemPrice());
+		assertNull(emptyItem.getCurrency());
+		assertNotNull(mainItem);
+		assertEquals(pid, mainItem.getProductRetailerId());
+		assertEquals(quantity, mainItem.getQuantity());
+		assertEquals(price, mainItem.getItemPrice());
+		assertEquals(Currency.getInstance(currency), mainItem.getCurrency());
+	}
+
+	@Test
+	public void testWhatsappContextForOrderOnly() {
+		UUID messageId = UUID.randomUUID();
+		String cid = "1267260820787549", pid = "r07qei73l7", from = "447700900001", json = "{\n" +
+				"  \"context\": {\n" +
+				"      \"whatsapp_referred_product\": {\n" +
+				"         \"catalog_id\": \""+cid+"\",\n" +
+				"         \"product_retailer_id\": \""+pid+"\"\n" +
+				"      },\n"+
+				"      \"message_uuid\": \""+messageId+"\",\n" +
+				"      \"message_from\": \""+from+"\"\n" +
+				"   }" +
+				"}";
+		InboundMessage im = InboundMessage.fromJson(json);
+		Context context = im.getWhatsappContext();
+		assertNotNull(context);
+		assertEquals(messageId, context.getMessageUuid());
+		assertEquals(from, context.getMessageFrom());
+		ReferredProduct wrp = context.getReferredProduct();
+		assertNotNull(wrp);
+		assertEquals(cid, wrp.getCatalogId());
+		assertEquals(pid, wrp.getProductRetailerId());
+	}
+
+	@Test
+	public void testWhatsappContextAndProfileOnly() {
+		UUID messageId = UUID.randomUUID();
+		String name = "Jane Smith", from = "447700900000", json = "{\n" +
+				"  \"profile\":{\"name\": \""+name+"\"},\n" +
+				"   \"context\": {\n" +
+				"      \"message_uuid\": \""+messageId+"\",\n" +
+				"      \"message_from\": \""+from+"\"\n" +
+				"   }" +
+				"}";
+		InboundMessage im = InboundMessage.fromJson(json);
+		Profile profile = im.getWhatsappProfile();
+		assertNotNull(profile);
+		assertEquals(name, profile.getName());
+		Context context = im.getWhatsappContext();
+		assertNotNull(context);
+		assertEquals(messageId, context.getMessageUuid());
+		assertEquals(from, context.getMessageFrom());
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void testFromJsonInvalid() {
+		InboundMessage.fromJson("{malformed]");
 	}
 }

@@ -25,7 +25,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * the documentation</a> for details.
  *
  * @since 7.0.0
+ * @deprecated Will be removed in the next major release.
  */
+@Deprecated
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class PaymentPrompt {
 	private final Type type;

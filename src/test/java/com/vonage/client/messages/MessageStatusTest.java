@@ -15,11 +15,14 @@
  */
 package com.vonage.client.messages;
 
+import com.vonage.client.VonageUnexpectedException;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import java.net.URI;
+import java.time.Instant;
 import java.util.Currency;
+import java.util.Map;
 import java.util.UUID;
-import static org.junit.Assert.assertEquals;
 
 public class MessageStatusTest {
 
@@ -27,7 +30,7 @@ public class MessageStatusTest {
 	public void testSerdesAllFields() {
 		UUID messageUuid = UUID.randomUUID();
 		String to = "447700900000", from = "447700900001";
-		String timestamp = "2020-01-01 15:43:21 +0200";
+		String timestamp = "2020-01-01T14:00:03.010Z";
 		MessageStatus.Status status = MessageStatus.Status.SUBMITTED;
 		Channel channel = Channel.SMS;
 		URI type = URI.create("https://developer.nexmo.com/api-errors/messages-olympus#1000");
@@ -75,7 +78,7 @@ public class MessageStatusTest {
 		assertEquals(messageUuid, ms.getMessageUuid());
 		assertEquals(to, ms.getTo());
 		assertEquals(from, ms.getFrom());
-		assertEquals(timestamp, ms.getTimestamp().format(MessageStatus.ISO_8601));
+		assertEquals(Instant.parse(timestamp), ms.getTimestamp());
 		assertEquals(status, ms.getStatus());
 		assertEquals("submitted", status.toString());
 		assertEquals(channel, ms.getChannel());
@@ -84,13 +87,14 @@ public class MessageStatusTest {
 		assertEquals(error.toString(), ms.getError().toString());
 		assertEquals(usage, ms.getUsage());
 		assertEquals(usage.toString(), ms.getUsage().toString());
+		assertNull(ms.getAdditionalProperties());
 	}
 
 	@Test
 	public void testSerdesRequiredFields() {
 		UUID messageUuid = UUID.randomUUID();
 		String to = "447700900000", from = "447700900001";
-		String timestamp = "2020-01-08 15:43:21 +0000";
+		String timestamp = "2020-01-08T15:43:21.000Z";
 		MessageStatus.Status status = MessageStatus.Status.UNDELIVERABLE;
 		Channel channel = Channel.MMS;
 
@@ -110,10 +114,56 @@ public class MessageStatusTest {
 		assertEquals(messageUuid, ms.getMessageUuid());
 		assertEquals(to, ms.getTo());
 		assertEquals(from, ms.getFrom());
-		assertEquals(timestamp, ms.getTimestamp().format(MessageStatus.ISO_8601));
+		assertEquals(Instant.parse(timestamp), ms.getTimestamp());
 		assertEquals(status, ms.getStatus());
 		assertEquals("undeliverable", status.toString());
 		assertEquals(channel, ms.getChannel());
 		assertEquals("mms", channel.toString());
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testDeserializeUnknownProperties() {
+		String json = "{\n" +
+				"   \"message_uuid\": \"aaaaaaaa-bbbb-cccc-dddd-0123456789ab\",\n" +
+				"   \"to\": \"447700900000\",\n" +
+				"   \"from\": \"447700900001\",\n" +
+				"   \"timestamp\": \"2020-01-01T14:00:00.000Z\",\n" +
+				"   \"status\": \"read\",\n" +
+				"   \"error\": {\n" +
+				"      \"type\": \"https://developer.nexmo.com/api-errors/messages-olympus#1000\",\n" +
+				"      \"title\": 1000,\n" +
+				"      \"detail\": \"Throttled - You have exceeded the submission capacity allowed on this account. Please wait and retry\",\n" +
+				"      \"instance\": \"bf0ca0bf927b3b52e3cb03217e1a1ddf\"\n" +
+				"   },\n" +
+				"   \"usage\": {\n" +
+				"      \"currency\": \"EUR\",\n" +
+				"      \"price\": \"0.0333\"\n" +
+				"   },\n" +
+				"   \"client_ref\": \"string\",\n" +
+				"   \"channel\": \"whatsapp\",\n" +
+				"   \"whatsapp\": {\n" +
+				"      \"conversation\": {\n" +
+				"         \"id\": \"1234567890\",\n" +
+				"         \"origin\": {\n" +
+				"            \"type\": \"user_initiated\"\n" +
+				"         }\n" +
+				"      }\n" +
+				"   }\n" +
+				"}";
+		MessageStatus ms = MessageStatus.fromJson(json);
+		Map<String, ?> unknown = ms.getAdditionalProperties();
+		assertNotNull(unknown);
+		assertEquals(1, unknown.size());
+		Map<String, ?> whatsapp = (Map<String, ?>) unknown.get("whatsapp");
+		Map<String, ?> conversation = (Map<String, ?>) whatsapp.get("conversation");
+		assertEquals("1234567890", conversation.get("id"));
+		Map<String, ?> origin = (Map<String, ?>) conversation.get("origin");
+		assertEquals("user_initiated", origin.get("type"));
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void testFromJsonInvalid() {
+		MessageStatus.fromJson("{malformed]");
 	}
 }

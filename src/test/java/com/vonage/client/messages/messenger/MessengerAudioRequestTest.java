@@ -60,7 +60,7 @@ public class MessengerAudioRequestTest {
 			fail("Expected exception for short URL");
 		}
 		catch (IllegalArgumentException ex) {
-			assertEquals(22, builder.url(baseUrl).build().getAudio().getUrl().length());
+			assertEquals(22, builder.url(baseUrl).build().getAudio().getUrl().toString().length());
 		}
 
 		StringBuilder sb = new StringBuilder(limit + 1);

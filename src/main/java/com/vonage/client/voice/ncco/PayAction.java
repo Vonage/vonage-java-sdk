@@ -28,9 +28,11 @@ import java.util.Currency;
  * <a href=https://developer.vonage.com/voice/voice-api/ncco-reference#pay>the documentation</a> for details.
  *
  * @since 7.0.0
+ * @deprecated This is no longer supported and will be removed in the next major release.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Deprecated
 public class PayAction implements Action {
 	private static final String ACTION = "pay";
 

@@ -13,30 +13,34 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages.whatsapp;
+package com.vonage.client.messages.viber;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.messages.internal.MessagePayload;
 
-import java.util.Objects;
-
+/**
+ * @since 7.2.0
+ */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class Whatsapp {
-	private final Policy policy;
-	private final Locale locale;
+public class File extends MessagePayload {
+	protected String name;
 
-	Whatsapp(Policy policy, Locale locale) {
-		this.policy = policy;
-		this.locale = Objects.requireNonNull(locale, "Locale is required");
+	protected File(String url, String name) {
+		super(url);
+		this.name = name;
+		validateFileExtensions();
 	}
 
-	@JsonProperty("policy")
-	public Policy getPolicy() {
-		return policy;
+	@JsonProperty("name")
+	public String getName() {
+		return name;
 	}
 
-	@JsonProperty("locale")
-	public Locale getLocale() {
-		return locale;
+	protected void validateFileExtensions() {
+		validateExtension(name != null ? name : url.getPath(),
+				"doc", "docx", "rtf", "dot", "dotx", "odt", "odf", "fodt", "txt", "info",
+				"pdf", "xps", "pdax", "eps", "xls", "xlsx", "ods", "fods", "csv", "xlsm", "xltx"
+		);
 	}
 }

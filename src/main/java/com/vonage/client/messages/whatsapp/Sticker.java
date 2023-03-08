@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -17,26 +17,41 @@ package com.vonage.client.messages.whatsapp;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.messages.internal.MessagePayload;
+import java.net.URI;
+import java.util.UUID;
 
-import java.util.Objects;
-
+/**
+ * @since 7.2.0
+ */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class Whatsapp {
-	private final Policy policy;
-	private final Locale locale;
+public final class Sticker {
+	private final URI url;
+	private final UUID id;
 
-	Whatsapp(Policy policy, Locale locale) {
-		this.policy = policy;
-		this.locale = Objects.requireNonNull(locale, "Locale is required");
+	Sticker(String url, String id) {
+		boolean noId = id == null, noUrl = url == null;
+		if ((noId && noUrl) || (!noId && !noUrl)) {
+			throw new IllegalStateException("Must specify either an ID or URL for sticker, but not both.");
+		}
+		if (noId) {
+			MessagePayload.validateExtension(url, "webp");
+			this.url = URI.create(url);
+			this.id = null;
+		}
+		else {
+			this.id = UUID.fromString(id);
+			this.url = null;
+		}
 	}
 
-	@JsonProperty("policy")
-	public Policy getPolicy() {
-		return policy;
+	@JsonProperty("url")
+	public URI getUrl() {
+		return url;
 	}
 
-	@JsonProperty("locale")
-	public Locale getLocale() {
-		return locale;
+	@JsonProperty("id")
+	public UUID getId() {
+		return id;
 	}
 }

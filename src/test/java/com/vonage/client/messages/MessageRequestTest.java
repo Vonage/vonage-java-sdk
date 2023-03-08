@@ -150,7 +150,7 @@ public class MessageRequestTest {
 	@Test
 	public void testConstructLongClientRef() {
 		StringBuilder clientRef = new StringBuilder(41);
-		for (int i = 0; i < 39; i++) {
+		for (int i = 0; i < 99; i++) {
 			clientRef.append('c');
 		}
 
@@ -158,15 +158,15 @@ public class MessageRequestTest {
 				.builder(MessageType.TEXT, Channel.SMS)
 				.from("447900000009").to("12002009000");
 
-		assertEquals(39, builder.clientRef(clientRef.toString()).build().getClientRef().length());
+		assertEquals(99, builder.clientRef(clientRef.toString()).build().getClientRef().length());
 
 		clientRef.append("0f");
 		try {
 			builder.clientRef(clientRef.toString()).build();
-			fail("Expected exception for clientRef > 40 characters");
+			fail("Expected exception for clientRef > 100 characters");
 		}
 		catch (IllegalArgumentException ex) {
-			assertEquals(41, clientRef.length());
+			assertEquals(101, clientRef.length());
 		}
 	}
 

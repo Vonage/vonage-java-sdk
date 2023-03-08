@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -17,26 +17,32 @@ package com.vonage.client.messages.whatsapp;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.*;
+import java.util.stream.Collectors;
 
-import java.util.Objects;
-
+/**
+ * @since 7.2.0
+ */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class Whatsapp {
-	private final Policy policy;
-	private final Locale locale;
+final class ProductSection {
+	@JsonProperty("title") final String title;
+	@JsonProperty("product_items") final List<ProductItem> products;
 
-	Whatsapp(Policy policy, Locale locale) {
-		this.policy = policy;
-		this.locale = Objects.requireNonNull(locale, "Locale is required");
+	public ProductSection(String title, List<String> products) {
+		this.title = Objects.requireNonNull(title, "Section title is required.");
+		if (products == null || products.isEmpty()) {
+			throw new IllegalArgumentException("At least one product is required for each section.");
+		}
+		this.products = products.stream().map(ProductItem::new).collect(Collectors.toList());
 	}
 
-	@JsonProperty("policy")
-	public Policy getPolicy() {
-		return policy;
+	@JsonProperty("title")
+	public String getTitle() {
+		return title;
 	}
 
-	@JsonProperty("locale")
-	public Locale getLocale() {
-		return locale;
+	@JsonProperty("product_items")
+	public List<ProductItem> getProducts() {
+		return products;
 	}
 }

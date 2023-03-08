@@ -100,9 +100,9 @@ public class WhatsappImageRequestTest {
 
 		String baseUrl = "file:///path/to/resource", url;
 		for (String imageType : new String[]{"jpeg", "jpg", "png"}) {
-			url = baseUrl + imageType;
+			url = baseUrl+'.'+imageType;
 			builder.url(url);
-			assertEquals(url, builder.build().getImage().getUrl());
+			assertEquals(url, builder.build().getImage().getUrl().toString());
 		}
 	}
 
