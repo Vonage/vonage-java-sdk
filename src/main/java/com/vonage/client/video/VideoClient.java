@@ -367,7 +367,7 @@ public class VideoClient {
 	 * @since 8.0.0-beta4
 	 */
 	public SipDialResponse sipDial(SipDialRequest request) {
-		return sipDial.execute(request);
+		return sipDial.execute(validateRequest(request));
 	}
 
 	/**

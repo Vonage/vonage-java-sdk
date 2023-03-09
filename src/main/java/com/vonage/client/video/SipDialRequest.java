@@ -142,10 +142,10 @@ public class SipDialRequest {
 	/**
 	 * Instantiates a Builder, used to construct this object.
 	 *
-	 * @return A new {@linkplain SipDialRequest.Builder}.
+	 * @return A new {@linkplain Builder}.
 	 */
-	public static SipDialRequest.Builder builder() {
-		return new SipDialRequest.Builder();
+	public static Builder builder() {
+		return new Builder();
 	}
 
 	/**

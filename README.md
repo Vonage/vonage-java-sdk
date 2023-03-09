@@ -623,6 +623,33 @@ client.getVideoClient().addBroadcastStream(BROADCAST_ID, STREAM_ID);
 client.getVideoClient().removeBroadcastStream(BROADCAST_ID, STREAM_ID);
 ```
 
+### Dial in to a SIP video call
+
+Connect your SIP platform to a Vonage video session:
+```java
+SipDialRequest request = SipDialRequest.builder()
+	.uri(URI.create("sip:user@sip.partner.com"), false)
+	.sessionId(sessionId).token(token).build();
+
+SipDialResponse parsed = client.getVideoClient().sipDial(request);
+```
+
+### Play DTMF tones into a video call
+
+Send DTMF tones to all participants in a call:
+
+```java
+String digits = "*0123456789#";
+client.getVideoClient().sendDtmf(sessionId, digits);
+```
+
+or to a specific participant:
+
+```java
+client.getVideoClient().sendDtmf(sessionId, connectionId, digits);
+```
+
+
 ### Custom HTTP Configuration
 
 If you need to configure the Apache HttpClient used for making requests, you can
