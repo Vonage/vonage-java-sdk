@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ public class XmlParser {
 
     /**
      * Used for parsing XML data.
-     *
+     * <p>
      * Do not use this without locking on {@link #documentBuilderLock}
      */
     private DocumentBuilder documentBuilder;

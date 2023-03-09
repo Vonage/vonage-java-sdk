@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ public class CarrierDetails {
 
     /**
      * Enum representing the type of network that the number is associated with.
-     * Note that this enum may be <code>null</code>.
+     * Note that this enum may be {@code null}.
      */
     public enum NetworkType {
         MOBILE,

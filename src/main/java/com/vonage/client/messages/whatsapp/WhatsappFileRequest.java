@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ public final class WhatsappFileRequest extends WhatsappRequest {
 		/**
 		 * (REQUIRED)
 		 * Sets the URL of the file attachment. Supports a wide range of attachments including
-		 * <code>.zip</code>, <code>.csv</code> and <code>.pdf.</code>.
+		 * {@code .zip}, {@code .csv} and {@code .pdf.}.
 		 *
 		 * @param url The URL as a string.
 		 * @return This builder.

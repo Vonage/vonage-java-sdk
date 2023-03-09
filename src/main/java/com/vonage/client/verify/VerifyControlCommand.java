@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Enum representing the control command. The possible commands are <code>cancel</code> to request cancellation of
- * the verification process, or <code>trigger_next_event</code> to advance to the next verification event (if any).
+ * Enum representing the control command. The possible commands are {@code cancel} to request cancellation of
+ * the verification process, or {@code trigger_next_event} to advance to the next verification event (if any).
  * Cancellation is only possible 30 seconds after the start of the verification request and
  * before the second event (either TTS or SMS) has taken place.
  */

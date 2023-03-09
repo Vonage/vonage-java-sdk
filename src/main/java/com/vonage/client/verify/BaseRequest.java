@@ -92,11 +92,11 @@ public abstract class BaseRequest {
     }
 
     /**
-     * How long the generated verification code is valid for, in seconds. When you specify both <code>pin_expiry</code>
-     * and <code>next_event_wait</code> then <code>pin_expiry</code> must be an integer multiple of
-     * <code>next_event_wait</code>, otherwise <code>pin_expiry</code> will be equal to <code> next_event_wait</code>.
+     * How long the generated verification code is valid for, in seconds. When you specify both {@code pin_expiry}
+     * and {@code next_event_wait} then {@code pin_expiry} must be an integer multiple of
+     * {@code next_event_wait}, otherwise {@code pin_expiry} will be equal to {@code next_event_wait}.
      *
-     * @return An Integer between <code>60</code> and <code>3600</code>, or <code>null</code>.
+     * @return An Integer between {@code 60} and {@code 3600}, or {@code null}.
      */
     public Integer getPinExpiry() {
         return pinExpiry;
@@ -105,7 +105,7 @@ public abstract class BaseRequest {
     /**
      * The wait time between attempts to deliver the PIN.
      *
-     * @return An Integer between <code>60</code> and <code>900</code>, or <code>null</code>.
+     * @return An Integer between {@code 60} and {@code 900}, or {@code null}.
      */
     public Integer getNextEventWait() {
         return nextEventWait;

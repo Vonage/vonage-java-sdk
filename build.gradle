@@ -39,7 +39,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-inline:4.11.0'
     testImplementation 'org.hamcrest:hamcrest-all:1.3'
     testImplementation 'org.springframework:spring-test:5.3.25'
-    testImplementation 'org.springframework:spring-websocket:5.3.25'
+    testImplementation 'org.springframework:spring-web:5.3.25'
 }
 
 test {

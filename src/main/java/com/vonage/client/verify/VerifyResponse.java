@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ public class VerifyResponse {
     }
 
     /**
-     * @return The unique ID of the Verify request. You need this <code>request_id</code> for the Verify check.
+     * @return The unique ID of the Verify request. You need this {@code request_id} for the Verify check.
      * Note that this may not be present when {@link #getNetwork()} returns a non-null / non-empty value.
      */
     @JsonProperty("request_id")
@@ -44,7 +44,7 @@ public class VerifyResponse {
     }
 
     /**
-     * @return The outcome of the request; <code>0</code> (i.e. {@link VerifyStatus#OK}) indicates success.
+     * @return The outcome of the request; {@code 0} (i.e. {@link VerifyStatus#OK}) indicates success.
      */
     public VerifyStatus getStatus() {
         return status;

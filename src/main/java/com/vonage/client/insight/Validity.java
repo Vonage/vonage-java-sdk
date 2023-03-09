@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
  * Enum representing the existence of a number.
- * <code>UNKNOWN</code> means the number could not be validated. valid means the number is valid.
- * <code>NOT_VALID</code> means the number is not valid.
- * <code>INFERRED_NOT_VALID</code> means that the number could not be determined as valid or invalid
+ * {@code UNKNOWN} means the number could not be validated. valid means the number is valid.
+ * {@code NOT_VALID} means the number is not valid.
+ * {@code INFERRED_NOT_VALID} means that the number could not be determined as valid or invalid
  * via an external system and the best guess is that the number is invalid.
  * This is applicable to mobile numbers only.
  */

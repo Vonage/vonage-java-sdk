@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -23,21 +23,23 @@ public final class ViberService {
 	private final Category category;
 	private final Integer ttl;
 	private final String type;
+	private final Action action;
 
-	private ViberService(Category category, Integer ttl, String type) {
+	private ViberService(Category category, Integer ttl, String type, Action action) {
 		this.category = category;
 		this.ttl = ttl;
 		this.type = type;
+		this.action = action;
 	}
 
-	static ViberService construct(Category category, Integer ttl, String type) {
-		if (category == null && ttl == null && type == null) {
+	static ViberService construct(Category category, Integer ttl, String type, Action action) {
+		if (category == null && ttl == null && type == null && action == null) {
 			return null;
 		}
 		if (ttl != null && (ttl < 30 || ttl > 259200)) {
 			throw new IllegalArgumentException("Time-to-live (ttl) must be between 30 and 259200 seconds");
 		}
-		return new ViberService(category, ttl, type);
+		return new ViberService(category, ttl, type, action);
 	}
 
 	@JsonProperty("category")
@@ -53,5 +55,10 @@ public final class ViberService {
 	@JsonProperty("type")
 	public String getType() {
 		return type;
+	}
+
+	@JsonProperty("action")
+	public Action getAction() {
+		return action;
 	}
 }

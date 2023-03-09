@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -21,13 +21,16 @@ import com.vonage.client.messages.mms.MmsAudioRequest;
 import com.vonage.client.messages.mms.MmsImageRequest;
 import com.vonage.client.messages.mms.MmsVcardRequest;
 import com.vonage.client.messages.sms.SmsTextRequest;
+import com.vonage.client.messages.viber.ViberFileRequest;
 import com.vonage.client.messages.viber.ViberImageRequest;
 import com.vonage.client.messages.viber.ViberTextRequest;
+import com.vonage.client.messages.viber.ViberVideoRequest;
 import com.vonage.client.messages.whatsapp.*;
 import org.apache.http.client.methods.RequestBuilder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import org.junit.Test;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -39,7 +42,8 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 			VIDEO = "https://www.example.com/trailer.mp4",
 			AUDIO = "https://www.example.com/song.mp3",
 			FILE = "https://www.example.com/document.pdf",
-			VCARD = "https://example.com/contact.vcf";
+			VCARD = "https://example.com/contact.vcf",
+			STICKER = "https://example.com/sticker.webp";
 
 	private static final MessageRequest REQUEST = SmsTextRequest.builder()
 			.from("447700900001").to("447700900000").text("Hello").build();
@@ -111,6 +115,8 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 	public void testSendViberSuccess() throws Exception {
 		assertResponse(ViberTextRequest.builder().text(TEXT));
 		assertResponse(ViberImageRequest.builder().url(IMAGE));
+		assertResponse(ViberVideoRequest.builder().url(VIDEO).thumbUrl(IMAGE));
+		assertResponse(ViberFileRequest.builder().url(FILE));
 	}
 
 	@Test
@@ -120,6 +126,13 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 		assertResponse(WhatsappAudioRequest.builder().url(AUDIO));
 		assertResponse(WhatsappVideoRequest.builder().url(VIDEO));
 		assertResponse(WhatsappFileRequest.builder().url(FILE));
+		assertResponse(WhatsappStickerRequest.builder().url(STICKER));
+		assertResponse(WhatsappLocationRequest.builder().latitude(40.34772).longitude(-74.18847));
+		assertResponse(WhatsappSingleProductRequest.builder().catalogId("c1d").productRetailerId("p1d"));
+		assertResponse(WhatsappMultiProductRequest.builder()
+				.catalogId("ca7").bodyText("b0d").headerText("Check it out")
+				.addProductsSection("test", Arrays.asList("5ku1", "p2"))
+		);
 		assertResponse(WhatsappCustomRequest.builder().custom(Collections.emptyMap()));
 		assertResponse(WhatsappTemplateRequest.builder().name("fb"));
 	}
@@ -134,7 +147,7 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 	}
 
 	@Test
-	public void testSandboxUriToggle() throws Exception {
+	public void testSandboxUriToggle() {
 		final String defaultUri = "https://api.nexmo.com/v1/messages";
 		final String sandboxUri = "https://messages-sandbox.nexmo.com/v1/messages";
 		SendMessageEndpoint endpoint = client.sendMessage;

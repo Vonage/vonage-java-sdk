@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -17,19 +17,19 @@ package com.vonage.client.messages;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import java.util.Set;
-import java.util.EnumSet;
 import static com.vonage.client.messages.MessageType.*;
+import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * Represents the services available for sending messages.
  */
 public enum Channel {
 	SMS (TEXT),
-	MMS (IMAGE, VCARD, AUDIO, VIDEO),
-	WHATSAPP (TEXT, IMAGE, AUDIO, VIDEO, FILE, TEMPLATE, CUSTOM),
-	MESSENGER (TEXT, IMAGE, AUDIO, VIDEO, FILE),
-	VIBER (TEXT, IMAGE);
+	MMS (TEXT, IMAGE, VCARD, AUDIO, VIDEO),
+	WHATSAPP (TEXT, IMAGE, AUDIO, VIDEO, FILE, TEMPLATE, CUSTOM, LOCATION, STICKER, ORDER, REPLY, UNSUPPORTED),
+	MESSENGER (TEXT, IMAGE, AUDIO, VIDEO, FILE, UNSUPPORTED),
+	VIBER (TEXT, IMAGE, VIDEO, FILE);
 
 	private final Set<MessageType> supportedTypes;
 

@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -25,10 +25,15 @@ public class ViberImageRequestTest {
 		String url = "file:///path/to/picture.jpg";
 		String json = ViberImageRequest.builder()
 				.from("Amy").to("447900000001").url(url)
+				.actionText("Lights! Camera! Action!")
+				.actionUrl("http://petsovernight.com")
 				.build().toJson();
 		assertTrue(json.contains("\"image\":{\"url\":\""+url+"\"}"));
 		assertTrue(json.contains("\"message_type\":\"image\""));
 		assertTrue(json.contains("\"channel\":\"viber_service\""));
+		assertTrue(json.contains("\"viber_service\":{\"action\":{\"url\":\"" +
+				"http://petsovernight.com\",\"text\":\"Lights! Camera! Action!\"}}"
+		));
 	}
 
 	@Test(expected = NullPointerException.class)

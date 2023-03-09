@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ public class ControlResponse {
     /**
      * If the status is non-zero, this explains the error encountered.
      *
-     * @return The error description, or <code>null</code> if there was no error.
+     * @return The error description, or {@code null} if there was no error.
      */
     @JsonProperty("error_text")
     public String getErrorText() {

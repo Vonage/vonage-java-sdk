@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ public final class MessengerVideoRequest extends MessengerRequest {
 
 		/**
 		 * (REQUIRED)
-		 * Sets the URL of the video attachment. Supports only <code>.mp4</code>
+		 * Sets the URL of the video attachment. Supports only {@code .mp4}
 		 * file extension. Only H.264 video codec and AAC audio codec is supported.
 		 *
 		 * @param url The URL as a string.

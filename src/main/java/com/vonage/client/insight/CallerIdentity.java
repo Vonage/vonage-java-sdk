@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ public class CallerIdentity {
     /**
      * @return Full name of the person or business who owns the phone number, or "unknown" if this
      * information is not available. This parameter is only present if cnam had a value of
-     * <code>true</code> in the request.
+     * {@code true} in the request.
      */
     @JsonProperty("caller_name")
     public String getName() {
@@ -43,7 +43,7 @@ public class CallerIdentity {
 
     /**
      * @return First name of the person who owns the phone number if the owner is an individual.
-     * This parameter is only present if cnam had a value of <code>true</code> in the request.
+     * This parameter is only present if cnam had a value of {@code true} in the request.
      */
     @JsonProperty("first_name")
     public String getFirstName() {
@@ -52,7 +52,7 @@ public class CallerIdentity {
 
     /**
      * @return Last name of the person who owns the phone number if the owner is an individual.
-     * This parameter is only present if cnam had a value of <code>true</code> in the request.
+     * This parameter is only present if cnam had a value of {@code true} in the request.
      */
     @JsonProperty("last_name")
     public String getLastName() {

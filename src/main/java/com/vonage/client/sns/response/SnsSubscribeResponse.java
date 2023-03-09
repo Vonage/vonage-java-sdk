@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@ package com.vonage.client.sns.response;
 
 /**
  * Represents the result of a publish service request to the Vonage SNS Service.
- *
- *
  */
 public class SnsSubscribeResponse extends SnsResponse {
     private final String subscriberArn;
