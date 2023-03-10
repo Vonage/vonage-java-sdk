@@ -52,6 +52,23 @@ public class MessageResponseExceptionTest {
 	}
 
 	@Test
+	public void testToString() {
+		MessageResponseException mrx = new MessageResponseException();
+		mrx.statusCode = 500;
+		assertEquals(mrx.getLocalizedMessage(), mrx.getMessage());
+		assertEquals(mrx.getClass().getName(), mrx.toString());
+
+		mrx.title = "Internal error";
+		assertEquals("500 (Internal error)", mrx.getMessage());
+
+		mrx.detail = "There was an error processing your request in the Platform.";
+		assertEquals(
+		"500 (Internal error): There was an error processing your request in the Platform.",
+				mrx.getMessage()
+		);
+	}
+
+	@Test
 	public void testConstructEmpty() {
 		assertEquals(new MessageResponseException(), MessageResponseException.fromJson("{}"));
 	}

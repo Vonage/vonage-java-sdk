@@ -68,6 +68,18 @@ public final class MessageResponseException extends VonageClientException {
 		return statusCode;
 	}
 
+	@Override
+	public String getMessage() {
+		if (statusCode > 0 && title != null) {
+			String message = statusCode+" ("+title+")";
+			if (detail != null) {
+				message += ": "+detail;
+			}
+			return message;
+		}
+		else return super.getMessage();
+	}
+
 	private static class IgnoreInheritedIntrospector extends JacksonAnnotationIntrospector {
 		@Override
 		public boolean hasIgnoreMarker(final AnnotatedMember m) {
@@ -90,17 +102,6 @@ public final class MessageResponseException extends VonageClientException {
 	@Override
 	public int hashCode() {
 		return Objects.hash(type, title, detail, instance, statusCode);
-	}
-
-
-	@Override
-	public String toString() {
-		return getClass().getSimpleName() +
-				" {type='" + type + '\'' +
-				", title='" + title + '\'' +
-				", detail='" + detail + '\'' +
-				", instance='" + instance + '\'' +
-				", statusCode=" + statusCode + '}';
 	}
 
 	/**
