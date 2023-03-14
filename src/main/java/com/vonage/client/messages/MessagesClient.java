@@ -25,7 +25,8 @@ public class MessagesClient {
 
 	/**
 	 * Create a new MessagesClient.
-	 * @param httpWrapper Http Wrapper used to create a Message requests
+	 *
+	 * @param httpWrapper Http Wrapper used to create message requests.
 	 */
 	public MessagesClient(HttpWrapper httpWrapper) {
 		sendMessage = new SendMessageEndpoint(httpWrapper);
