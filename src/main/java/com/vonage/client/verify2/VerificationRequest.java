@@ -42,6 +42,7 @@ public abstract class VerificationRequest {
 		workflow.add(new Workflow(builder.channel, builder.to));
 	}
 
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	protected static class Workflow {
 		@JsonProperty("channel") protected Channel channel;
 		@JsonProperty("to") protected String to;

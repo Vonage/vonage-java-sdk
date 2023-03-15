@@ -27,6 +27,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class EmailVerificationRequest extends RegularVerificationRequest {
 
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	static final class Workflow extends VerificationRequest.Workflow {
 		@JsonProperty("from") String from;
 

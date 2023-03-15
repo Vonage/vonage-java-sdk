@@ -18,7 +18,7 @@ package com.vonage.client.verify2;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Represents the channel type in {@link Workflow}.
+ * Represents the channel type in a Workflow.
  */
 public enum Channel {
 	SMS,
