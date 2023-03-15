@@ -15,13 +15,12 @@
  */
 package com.vonage.client.verify2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class VerificationRequestTest {
 	static final Locale LOCALE = Locale.PORTUGUESE_PORTUGAL;
-	static final int CODE_LENGTH = 8, TIMEOUT = 120;
+	static final int CODE_LENGTH = 8, CHANNEL_TIMEOUT = 120;
 	static final String
 			BRAND = "Vonage",
 			TO_NUMBER = "447700900000",
@@ -35,11 +34,12 @@ public class VerificationRequestTest {
 	}
 
 	<B extends RegularVerificationRequest.Builder<?, B>> B applyRegularRequiredParams(B builder) {
-		return applyBaseRequiredParams(builder).codeLength(CODE_LENGTH);
+		return applyBaseRequiredParams(builder);
 	}
 
 	<B extends RegularVerificationRequest.Builder<?, B>> B applyRegularAllParams(B builder) {
-		return applyRegularRequiredParams(builder).clientRef(CLIENT_REF).timeout(TIMEOUT).locale(LOCALE);
+		return applyRegularRequiredParams(builder)
+				.codeLength(CODE_LENGTH).clientRef(CLIENT_REF).timeout(CHANNEL_TIMEOUT).locale(LOCALE);
 	}
 
 	EmailVerificationRequest.Builder applyEmailRequiredParams(EmailVerificationRequest.Builder builder) {
@@ -65,21 +65,22 @@ public class VerificationRequestTest {
 		}
 	}
 
-	VerificationRequest.Builder<?, ?> getBuilderWithAllParamsForChannel(Channel channel) {
+	@SuppressWarnings("unchecked")
+	<B extends VerificationRequest.Builder<?, ? extends B>> B getBuilderWithAllParamsForChannel(Channel channel) {
 		switch (channel) {
 			default: throw new IllegalStateException();
 			case SMS:
-				return applyRegularAllParams(SmsVerificationRequest.builder().appHash(APP_HASH));
+				return (B) applyRegularAllParams(SmsVerificationRequest.builder().appHash(APP_HASH));
 			case VOICE:
-				return applyRegularAllParams(VoiceVerificationRequest.builder());
+				return (B) applyRegularAllParams(VoiceVerificationRequest.builder());
 			case WHATSAPP:
-				return applyRegularAllParams(WhatsappVerificationRequest.builder());
+				return (B) applyRegularAllParams(WhatsappVerificationRequest.builder());
 			case WHATSAPP_INTERACTIVE:
-				return applyRegularAllParams(WhatsappInteractiveVerificationRequest.builder());
+				return (B) applyRegularAllParams(WhatsappInteractiveVerificationRequest.builder());
 			case EMAIL:
-				return applyEmailRequiredParams(applyRegularAllParams(EmailVerificationRequest.builder()));
+				return (B) applyEmailRequiredParams(applyRegularAllParams(EmailVerificationRequest.builder()));
 			case SILENT_AUTH:
-				return applyBaseRequiredParams(SilentAuthVerificationRequest.builder());
+				return (B) applyBaseRequiredParams(SilentAuthVerificationRequest.builder());
 		}
 	}
 
@@ -98,11 +99,7 @@ public class VerificationRequestTest {
 		if (channel == Channel.EMAIL) {
 			expectedJson += ",\"from\":\""+FROM_EMAIL+"\"";
 		}
-		expectedJson += "}]";
-		if (channel != Channel.SILENT_AUTH) {
-			expectedJson += ",\"code_length\":" + CODE_LENGTH;
-		}
-		expectedJson += "}";
+		expectedJson += "}]}";
 		return expectedJson;
 	}
 
@@ -114,8 +111,9 @@ public class VerificationRequestTest {
 			expectedJson = expectedJson.replace(prefix, replacement);
 		}
 		if (channel != Channel.SILENT_AUTH) {
-			prefix = "}],";
-			replacement = prefix + "\"locale\":\"pt-pt\",\"channel_timeout\":"+TIMEOUT+",";
+			prefix = "}]";
+			replacement = prefix + ",\"locale\":\"pt-pt\",\"channel_timeout\":"+ CHANNEL_TIMEOUT +
+					",\"code_length\":"+CODE_LENGTH;
 			expectedJson = expectedJson.replace(prefix, replacement);
 			prefix = "\"code_length\":"+CODE_LENGTH;
 			replacement = prefix + ",\"client_ref\":\""+CLIENT_REF+"\"";
@@ -145,10 +143,89 @@ public class VerificationRequestTest {
 	}
 
 	@Test
+	public void testWithoutBrand() {
+		for (Channel channel : Channel.values()) {
+			VerificationRequest.Builder<?, ?> builder = getBuilderWithRequiredParamsForChannel(channel);
+			assertEquals(BRAND, builder.build().getBrand());
+			builder.brand(null);
+			assertNull(builder.brand);
+			assertThrows(IllegalArgumentException.class, builder::build);
+			builder.brand("");
+			assertTrue(builder.brand.isEmpty());
+			assertThrows(IllegalArgumentException.class, builder::build);
+		}
+	}
+
+	@Test
+	public void testWithoutRecipient() {
+		for (Channel channel : Channel.values()) {
+			VerificationRequest.Builder<?, ?> builder = getBuilderWithRequiredParamsForChannel(channel);
+			String to = channel == Channel.EMAIL ? TO_EMAIL : TO_NUMBER;
+			assertEquals(to, builder.build().getRecipient());
+			builder.to(null);
+			assertNull(builder.to);
+			assertThrows(IllegalArgumentException.class, builder::build);
+			builder.to("");
+			assertTrue(builder.to.isEmpty());
+			assertThrows(IllegalArgumentException.class, builder::build);
+		}
+	}
+
+	@Test
+	public void testCodeLengthBoundaries() {
+		for (Channel channel : Channel.values()) {
+			if (channel == Channel.SILENT_AUTH) continue;
+			RegularVerificationRequest.Builder<?, ?> builder = getBuilderWithAllParamsForChannel(channel);
+			assertEquals(CODE_LENGTH, builder.build().getCodeLength().intValue());
+			int min = 4, max = 10;
+			builder.codeLength(min - 1);
+			assertThrows(IllegalArgumentException.class, builder::build);
+			builder.codeLength(min);
+			assertEquals(min, builder.build().getCodeLength().intValue());
+			builder.codeLength(max + 1);
+			assertThrows(IllegalArgumentException.class, builder::build);
+			builder.codeLength(max);
+			assertEquals(max, builder.build().getCodeLength().intValue());
+		}
+	}
+
+	@Test
+	public void testChannelTimeoutBoundaries() {
+		for (Channel channel : Channel.values()) {
+			if (channel == Channel.SILENT_AUTH) continue;
+			RegularVerificationRequest.Builder<?, ?> builder = getBuilderWithAllParamsForChannel(channel);
+			assertEquals(CHANNEL_TIMEOUT, builder.build().getChannelTimeout().intValue());
+			int min = 60, max = 900;
+			builder.timeout(min - 1);
+			assertThrows(IllegalArgumentException.class, builder::build);
+			builder.timeout(min);
+			assertEquals(min, builder.build().getChannelTimeout().intValue());
+			builder.timeout(max + 1);
+			assertThrows(IllegalArgumentException.class, builder::build);
+			builder.timeout(max);
+			assertEquals(max, builder.build().getChannelTimeout().intValue());
+		}
+	}
+
+	@Test
 	public void testInvalidAppHash() {
 		SmsVerificationRequest.Builder builder = getBuilderWithRequiredParamsForChannel(Channel.SMS);
 		assertThrows(IllegalArgumentException.class, () -> builder.appHash("1234567890").build());
 		assertThrows(IllegalArgumentException.class, () -> builder.appHash("1234567890ab").build());
-		assertEquals(SmsVerificationRequest.class, builder.appHash("1234567890a").build().getClass());
+		String appHash = builder.appHash("1234567890a").build().getAppHash();
+		assertNotNull(appHash);
+		assertEquals(11, appHash.length());
+	}
+
+	@Test
+	public void testEmailWithoutSender() {
+		EmailVerificationRequest.Builder builder = getBuilderWithRequiredParamsForChannel(Channel.EMAIL);
+		assertEquals(FROM_EMAIL, builder.build().getSender());
+		builder.from(null);
+		assertNull(builder.from);
+		assertThrows(IllegalArgumentException.class, builder::build);
+		builder.from("");
+		assertTrue(builder.from.isEmpty());
+		assertThrows(IllegalArgumentException.class, builder::build);
 	}
 }
