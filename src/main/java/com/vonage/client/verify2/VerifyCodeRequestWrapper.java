@@ -25,9 +25,9 @@ import com.vonage.client.VonageUnexpectedException;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 class VerifyCodeRequestWrapper {
 	@JsonIgnore final String requestId;
-	@JsonProperty("code") final int code;
+	@JsonProperty("code") final String code;
 
-	public VerifyCodeRequestWrapper(String requestId, int code) {
+	public VerifyCodeRequestWrapper(String requestId, String code) {
 		this.requestId = requestId;
 		this.code = code;
 	}

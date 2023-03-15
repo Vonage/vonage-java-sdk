@@ -40,7 +40,7 @@ public class Verify2Client {
 	 *
 	 * @return The server's response, if successful.
 	 */
-	public VerificationResponse verify(VerificationRequest request) {
+	public VerificationResponse sendVerification(VerificationRequest request) {
 		return verifyUser.execute(Objects.requireNonNull(request));
 	}
 
@@ -50,7 +50,7 @@ public class Verify2Client {
 	 * @param requestId ID of the verify request, obtained from {@link VerificationResponse#getRequestId()}.
 	 * @param code The code supplied by the user.
 	 */
-	public void validateVerificationRequest(UUID requestId, int code) {
+	public void validateVerificationCode(UUID requestId, String code) {
 		Objects.requireNonNull(requestId, "Request ID is required.");
 		verifyRequest.execute(new VerifyCodeRequestWrapper(requestId.toString(), code));
 	}

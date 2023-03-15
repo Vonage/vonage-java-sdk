@@ -39,6 +39,7 @@ public abstract class VerificationRequest {
 		if ((brand = builder.brand) == null || brand.isEmpty()) {
 			throw new IllegalArgumentException("Brand name is required.");
 		}
+		workflow.add(new Workflow(builder.channel, builder.to));
 	}
 
 	protected static class Workflow {

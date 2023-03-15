@@ -36,7 +36,6 @@ abstract class RegularVerificationRequest extends VerificationRequest {
 		if ((codeLength = builder.codeLength) != null && (codeLength < 4 || codeLength > 10)) {
 			throw new IllegalArgumentException("Code length must be between 4 and 10.");
 		}
-		workflow.add(new Workflow(builder.channel, builder.to));
 	}
 
 	@JsonProperty("locale")
@@ -62,7 +61,7 @@ abstract class RegularVerificationRequest extends VerificationRequest {
 	@SuppressWarnings("unchecked")
 	protected abstract static class Builder<V extends RegularVerificationRequest, B extends Builder<V, B>> extends VerificationRequest.Builder<V, B> {
 		protected Locale locale;
-		protected String to, clientRef;
+		protected String clientRef;
 		protected Integer timeout, codeLength;
 
 		protected Builder(Channel channel) {

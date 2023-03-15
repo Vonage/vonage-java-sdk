@@ -17,15 +17,17 @@ package com.vonage.client.verify2;
 
 import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
+import com.vonage.client.VonageBadRequestException;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 
-class VerifyCodeEndpoint extends AbstractMethod<VerifyCodeRequestWrapper, VerificationResponse> {
+class VerifyCodeEndpoint extends AbstractMethod<VerifyCodeRequestWrapper, Void> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class, TokenAuthMethod.class};
 	private static final String PATH = "/v2/verify/%s";
 
@@ -44,12 +46,14 @@ class VerifyCodeEndpoint extends AbstractMethod<VerifyCodeRequestWrapper, Verifi
 		String uri = httpWrapper.getHttpConfig().getApiBaseUri() + path;
 		return RequestBuilder.post(uri)
 				.setHeader("Content-Type", "application/json")
-				.setHeader("Accept", "application/json")
 				.setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
 	}
 
 	@Override
-	public VerificationResponse parseResponse(HttpResponse response) throws IOException {
-		return VerificationResponse.fromJson(basicResponseHandler.handleResponse(response));
+	public Void parseResponse(HttpResponse response) throws IOException {
+		if (response.getStatusLine().getStatusCode() != 200) {
+			throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
+		}
+		return null;
 	}
 }

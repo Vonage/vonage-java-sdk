@@ -45,9 +45,6 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 			VCARD = "https://example.com/contact.vcf",
 			STICKER = "https://example.com/sticker.webp";
 
-	private static final MessageRequest REQUEST = SmsTextRequest.builder()
-			.from("447700900001").to("447700900000").text("Hello").build();
-
 	public MessagesClientTest() {
 		client = new MessagesClient(wrapper);
 	}
@@ -68,7 +65,10 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 		wrapper.setHttpClient(stubHttpClient(statusCode, expectedResponse.toJson()));
 		expectedResponse.statusCode = statusCode;
 		try {
-			client.sendMessage(REQUEST);
+			client.sendMessage(SmsTextRequest.builder()
+					.from("447700900001").to("447700900000")
+					.text("Hello").build()
+			);
 			fail("Expected MessageResponseException");
 		}
 		catch (MessageResponseException mrx) {

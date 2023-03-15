@@ -29,7 +29,6 @@ public final class SilentAuthVerificationRequest extends VerificationRequest {
 		super(builder);
 	}
 
-
 	/**
 	 * Entry point for constructing an instance of this class.
 	 *
