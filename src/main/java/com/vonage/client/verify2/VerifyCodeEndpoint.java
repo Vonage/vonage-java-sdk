@@ -17,14 +17,12 @@ package com.vonage.client.verify2;
 
 import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
-import com.vonage.client.VonageBadRequestException;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 
 class VerifyCodeEndpoint extends AbstractMethod<VerifyCodeRequestWrapper, Void> {
@@ -51,9 +49,12 @@ class VerifyCodeEndpoint extends AbstractMethod<VerifyCodeRequestWrapper, Void> 
 
 	@Override
 	public Void parseResponse(HttpResponse response) throws IOException {
-		if (response.getStatusLine().getStatusCode() != 200) {
-			throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode >= 200 && statusCode < 300) {
+			return null;
 		}
-		return null;
+		else {
+			throw VerifyResponseException.fromHttpResponse(response);
+		}
 	}
 }

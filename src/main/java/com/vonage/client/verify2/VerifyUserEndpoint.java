@@ -49,6 +49,12 @@ class VerifyUserEndpoint extends AbstractMethod<VerificationRequest, Verificatio
 
 	@Override
 	public VerificationResponse parseResponse(HttpResponse response) throws IOException {
-		return VerificationResponse.fromJson(basicResponseHandler.handleResponse(response));
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode >= 200 && statusCode < 300) {
+			return VerificationResponse.fromJson(basicResponseHandler.handleResponse(response));
+		}
+		else {
+			throw VerifyResponseException.fromHttpResponse(response);
+		}
 	}
 }

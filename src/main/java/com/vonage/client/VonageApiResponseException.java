@@ -26,37 +26,68 @@ import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Objects;
 
+/**
+ * Base class for exceptions which represent an error API response conforming to
+ * <a href=https://www.rfc-editor.org/rfc/rfc7807>RFC 7807</a> standard.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class VonageApiResponseException extends VonageClientException {
-	protected String type, title, detail, instance;
+	protected URI type;
+	protected String title, detail, instance;
 	@JsonIgnore protected int statusCode;
 
 	protected VonageApiResponseException() {
 	}
 
+	/**
+	 * Link to the <a href=https://developer.vonage.com/en/api-errors>API error type</a>.
+	 *
+	 * @return URL of the error type / description.
+	 */
 	@JsonProperty("type")
-	public String getType() {
+	public URI getType() {
 		return type;
 	}
 
+	/**
+	 * Brief description / name of the error.
+	 *
+	 * @return The error title.
+	 */
 	@JsonProperty("title")
 	public String getTitle() {
 		return title;
 	}
 
+	/**
+	 * Extended description of the error, explaining the cause.
+	 *
+	 * @return The detailed error description.
+	 */
 	@JsonProperty("detail")
 	public String getDetail() {
 		return detail;
 	}
 
+	/**
+	 * Internal trace ID of the request.
+	 *
+	 * @return The instance ID.
+	 */
 	@JsonProperty("instance")
 	public String getInstance() {
 		return instance;
 	}
 
+	/**
+	 * The API response status code, usually 4xx or 500.
+	 *
+	 * @return The status code.
+	 */
 	public int getStatusCode() {
 		return statusCode;
 	}
