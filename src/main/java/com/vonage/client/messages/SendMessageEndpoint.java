@@ -23,7 +23,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 
 class SendMessageEndpoint extends AbstractMethod<MessageRequest, MessageResponse> {
@@ -58,20 +57,11 @@ class SendMessageEndpoint extends AbstractMethod<MessageRequest, MessageResponse
 	@Override
 	public MessageResponse parseResponse(HttpResponse response) throws IOException {
 		int statusCode = response.getStatusLine().getStatusCode();
-		String json;
-
 		if (statusCode >= 200 && statusCode < 300) {
-			json = basicResponseHandler.handleResponse(response);
-			return MessageResponse.fromJson(json);
+			return MessageResponse.fromJson(basicResponseHandler.handleResponse(response));
 		}
 		else {
-			json = EntityUtils.toString(response.getEntity());
-			MessageResponseException mrx = MessageResponseException.fromJson(json);
-			if (mrx.title == null) {
-				mrx.title = response.getStatusLine().getReasonPhrase();
-			}
-			mrx.statusCode = statusCode;
-			throw mrx;
+			throw MessageResponseException.fromHttpResponse(response);
 		}
 	}
 }

@@ -63,7 +63,7 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 
 	void assertException(int statusCode, MessageResponseException expectedResponse) throws Exception {
 		wrapper.setHttpClient(stubHttpClient(statusCode, expectedResponse.toJson()));
-		expectedResponse.statusCode = statusCode;
+		expectedResponse.setStatusCode(statusCode);
 		try {
 			client.sendMessage(SmsTextRequest.builder()
 					.from("447700900001").to("447700900000")

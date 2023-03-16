@@ -80,8 +80,9 @@ public class SendMessageEndpointTest {
 		}
 		catch (MessageResponseException mrx) {
 			MessageResponseException expected = MessageResponseException.fromJson(json);
-			expected.statusCode = statusCode;
+			expected.setStatusCode(statusCode);
 			assertEquals(expected, mrx);
+			assertEquals(statusCode, mrx.getStatusCode());
 		}
 	}
 
@@ -93,9 +94,8 @@ public class SendMessageEndpointTest {
 			fail("Expected "+MessageResponseException.class.getName());
 		}
 		catch (MessageResponseException mrx) {
-			MessageResponseException expected = MessageResponseException.fromJson("");
-			expected.title = "OK";  // This is what TestUtils.makeJsonHttpResponse sets it to
-			expected.statusCode = statusCode;
+			MessageResponseException expected = MessageResponseException.fromJson("{\"title\":\"OK\"}");
+			expected.setStatusCode(statusCode);
 			assertEquals(expected, mrx);
 		}
 	}
