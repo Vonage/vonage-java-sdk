@@ -16,23 +16,45 @@
 package com.vonage.client.verify2;
 
 import com.vonage.client.ClientTest;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import org.junit.Test;
+import org.junit.function.ThrowingRunnable;
 import java.util.UUID;
 
 public class Verify2ClientTest extends ClientTest<Verify2Client> {
 	static final UUID REQUEST_ID = UUID.randomUUID();
+	static final String CODE = "1234";
 	static final String VERIFICATION_RESPONSE = "{\"request_id\": \""+REQUEST_ID+"\"}";
 
 	public Verify2ClientTest() {
 		client = new Verify2Client(wrapper);
 	}
 
-	@Test
-	public void testVerifyCode() throws Exception {
-		UUID requestId = UUID.randomUUID();
-		stubResponseAndRun(200, () -> client.validateVerificationCode(requestId, "1234"));
+	void assert429ResponseException(ThrowingRunnable invocation) throws Exception {
+		int statusCode = 429;
+		VerifyResponseException expectedResponse = VerifyResponseException.fromJson(
+				"{\n" +
+				"   \"title\": \"Rate Limit Hit\",\n" +
+				"   \"type\": \"https://www.developer.vonage.com/api-errors#throttled\",\n" +
+				"   \"detail\": \"Please wait, then retry your request\",\n" +
+				"   \"instance\": \"bf0ca0bf927b3b52e3cb03217e1a1ddf\"\n" +
+				"}"
+		);
+
+		wrapper.setHttpClient(stubHttpClient(statusCode, expectedResponse.toJson()));
+		expectedResponse.setStatusCode(statusCode);
+		String failPrefix = "Expected VerifyResponseException, but got ";
+
+		try {
+			invocation.run();
+			fail(failPrefix + "nothing.");
+		}
+		catch (VerifyResponseException mrx) {
+			assertEquals(expectedResponse, mrx);
+		}
+		catch (Throwable ex) {
+			fail(failPrefix + ex);
+		}
 	}
 
 	<B extends VerificationRequest.Builder<?, B>> B applyBaseVerificationParams(B builder) {
@@ -61,20 +83,58 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 		stubSuccessfulVerifyUserResponseAndRun(applyAndBuildRegularVerification(builder));
 	}
 
+	EmailVerificationRequest.Builder emailBuilder() {
+		return EmailVerificationRequest.builder().from("hello@example.com").to("email@domain.tld");
+	}
+
 	@Test
 	public void testVerifyUserSuccess() throws Exception {
 		testSuccessfulRegularVerificationRequest(SmsVerificationRequest.builder());
 		testSuccessfulRegularVerificationRequest(VoiceVerificationRequest.builder());
 		testSuccessfulRegularVerificationRequest(WhatsappVerificationRequest.builder());
 		testSuccessfulRegularVerificationRequest(WhatsappInteractiveVerificationRequest.builder());
+		stubSuccessfulVerifyUserResponseAndRun(applyAndBuildRegularVerification(emailBuilder()));
+		stubSuccessfulVerifyUserResponseAndRun(applyBaseVerificationParams(SilentAuthVerificationRequest.builder()).build());
+	}
 
-		stubSuccessfulVerifyUserResponseAndRun(
-				applyAndBuildRegularVerification(EmailVerificationRequest.builder()
-						.from("hello@example.com").to("email@domain.tld")
-				)
-		);
-		stubSuccessfulVerifyUserResponseAndRun(
+	@Test
+	public void testVerifyUser429() throws Exception {
+		assert429ResponseException(() -> client.sendVerification(
+				applyAndBuildRegularVerification(SmsVerificationRequest.builder())
+		));
+		assert429ResponseException(() -> client.sendVerification(
+				applyAndBuildRegularVerification(VoiceVerificationRequest.builder())
+		));
+		assert429ResponseException(() -> client.sendVerification(
+				applyAndBuildRegularVerification(WhatsappVerificationRequest.builder())
+		));
+		assert429ResponseException(() -> client.sendVerification(
+				applyAndBuildRegularVerification(WhatsappInteractiveVerificationRequest.builder())
+		));
+		assert429ResponseException(() -> client.sendVerification(
+				applyAndBuildRegularVerification(emailBuilder())
+		));
+		assert429ResponseException(() -> client.sendVerification(
 				applyBaseVerificationParams(SilentAuthVerificationRequest.builder()).build()
+		));
+	}
+
+	@Test
+	public void testVerifyCodeSuccess() throws Exception {
+		stubResponseAndRun(204, () -> client.validateVerificationCode(REQUEST_ID, CODE));
+	}
+
+	@Test
+	public void testVerifyCodeFailure() throws Exception {
+		assert429ResponseException(() -> client.validateVerificationCode(REQUEST_ID, CODE));
+
+		stubResponseAndAssertThrows(204, () ->
+				client.validateVerificationCode(null, CODE),
+				NullPointerException.class
+		);
+		stubResponseAndAssertThrows(204, () ->
+				client.validateVerificationCode(REQUEST_ID, null),
+				NullPointerException.class
 		);
 	}
 }

@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import java.net.URI;
 
 public class VonageApiResponseExceptionTest {
 
@@ -50,7 +51,7 @@ public class VonageApiResponseExceptionTest {
 
 		ConcreteVonageApiResponseException expected = new ConcreteVonageApiResponseException();
 		expected.statusCode = status;
-		expected.type = type;
+		expected.type = URI.create(type);
 		expected.title = title;
 		expected.detail = detail;
 		expected.instance = instance;

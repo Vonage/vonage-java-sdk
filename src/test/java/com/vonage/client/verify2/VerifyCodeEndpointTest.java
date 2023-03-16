@@ -17,13 +17,16 @@ package com.vonage.client.verify2;
 
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
+import com.vonage.client.TestUtils;
 import com.vonage.client.common.HttpMethod;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
+import java.net.URI;
 import java.util.UUID;
 
 public class VerifyCodeEndpointTest {
@@ -45,6 +48,54 @@ public class VerifyCodeEndpointTest {
 
 		String expectedJson = "{\"code\":\""+request.code+"\"}";
 		assertEquals(expectedJson, EntityUtils.toString(builder.getEntity()));
+	}
+
+	@Test
+	public void testParseResponseFailureAllParams() throws Exception {
+		final int statusCode = 422;
+		String title = "Conflict";
+		URI type = URI.create("https://www.developer.vonage.com/api-errors/verify#conflict");
+		String detail = "Concurrent verifications to the same number are not allowed.";
+		String instance = "738f9313-418a-4259-9b0d-6670f06fa82d";
+		UUID requestId = UUID.fromString("575a2054-aaaf-4405-994e-290be7b9a91f");
+		String json = "{\n" +
+				"   \"title\": \""+title+"\",\n" +
+				"   \"type\": \""+type+"\",\n" +
+				"   \"detail\": \""+detail+"\",\n" +
+				"   \"instance\": \""+instance+"\",\n" +
+				"   \"request_id\": \""+requestId+"\"\n" +
+				"}";
+
+		try {
+			endpoint.parseResponse(TestUtils.makeJsonHttpResponse(statusCode, json));
+			fail("Expected "+ VerifyResponseException.class.getName());
+		}
+		catch (VerifyResponseException vrx) {
+			VerifyResponseException expected = VerifyResponseException.fromJson(json);
+			expected.setStatusCode(statusCode);
+			assertEquals(expected, vrx);
+			assertEquals(statusCode, vrx.getStatusCode());
+			assertEquals(title, vrx.getTitle());
+			assertEquals(type, vrx.getType());
+			assertEquals(detail, vrx.getDetail());
+			assertEquals(instance, vrx.getInstance());
+			assertEquals(requestId, vrx.getRequestId());
+		}
+	}
+
+	@Test
+	public void testParseResponseFailureNoBody() throws Exception {
+		final int statusCode = 500;
+		try {
+			endpoint.parseResponse(TestUtils.makeJsonHttpResponse(statusCode, ""));
+			fail("Expected "+VerifyResponseException.class.getName());
+		}
+		catch (VerifyResponseException mrx) {
+			// The mock returns "OK"
+			VerifyResponseException expected = VerifyResponseException.fromJson("{\"title\":\"OK\"}");
+			expected.setStatusCode(statusCode);
+			assertEquals(expected, mrx);
+		}
 	}
 
 	@Test

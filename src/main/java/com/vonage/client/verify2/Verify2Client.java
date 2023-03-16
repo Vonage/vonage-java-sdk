@@ -71,6 +71,7 @@ public class Verify2Client {
 	 */
 	public void validateVerificationCode(UUID requestId, String code) {
 		Objects.requireNonNull(requestId, "Request ID is required.");
+		Objects.requireNonNull(code, "Code is required.");
 		verifyRequest.execute(new VerifyCodeRequestWrapper(requestId.toString(), code));
 	}
 }
