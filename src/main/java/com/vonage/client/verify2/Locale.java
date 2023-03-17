@@ -18,7 +18,8 @@ package com.vonage.client.verify2;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Represents the available locales for user verification.
+ * Represents the available locales for user verification. These are
+ * <a href=https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>ISO_639-1 codes</a>.
  */
 public enum Locale {
 	ENGLISH_US("en-us"),

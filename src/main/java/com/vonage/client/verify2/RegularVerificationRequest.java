@@ -38,21 +38,41 @@ abstract class RegularVerificationRequest extends VerificationRequest {
 		}
 	}
 
+	/**
+	 * Language for the request in ISO_639-1 format.
+	 *
+	 * @return The language as an enum, or {@code null} if not set (the default).
+	 */
 	@JsonProperty("locale")
 	public Locale getLocale() {
 		return locale;
 	}
 
+	/**
+	 * Specifies the wait time in seconds between attempts to delivery the verification code.
+	 *
+	 * @return The delivery timeout, or {@code null} if not set (the default).
+	 */
 	@JsonProperty("channel_timeout")
 	public Integer getChannelTimeout() {
 		return channelTimeout;
 	}
 
+	/**
+	 * Length of the code to send to the user. Does not apply to codeless verification channels.
+	 *
+	 * @return The verification code length, or {@code null} if unset (the default) or not applicable.
+	 */
 	@JsonProperty("code_length")
 	public Integer getCodeLength() {
 		return codeLength;
 	}
 
+	/**
+	 * If the client_ref is set when the request is sent, it will be included in the callbacks.
+	 *
+	 * @return The client reference, or {@code null} if not set.
+	 */
 	@JsonProperty("client_ref")
 	public String getClientRef() {
 		return clientRef;
@@ -116,7 +136,7 @@ abstract class RegularVerificationRequest extends VerificationRequest {
 		 *
 		 * @return This builder.
 		 */
-		public B clientRef(String clientRef) {
+		protected B clientRef(String clientRef) {
 			this.clientRef = clientRef;
 			return (B) this;
 		}

@@ -16,6 +16,8 @@
 
 /**
  * Implementation of the <a href=https://developer.vonage.com/en/api/verify.v2>Verify v2 API</a>.
+ * See the <a href=https://developer.vonage.com/en/verify/verify-v2/overview>Vonage developer portal</a>
+ * for an overview and documentation.
  *
  * @since 7.3.0
  */

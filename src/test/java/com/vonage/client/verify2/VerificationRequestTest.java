@@ -57,7 +57,7 @@ public class VerificationRequestTest {
 			case WHATSAPP:
 				return (B) applyRegularRequiredParams(WhatsappVerificationRequest.builder());
 			case WHATSAPP_INTERACTIVE:
-				return (B) applyRegularRequiredParams(WhatsappInteractiveVerificationRequest.builder());
+				return (B) applyRegularRequiredParams(WhatsappCodelessVerificationRequest.builder());
 			case EMAIL:
 				return (B) applyEmailRequiredParams(EmailVerificationRequest.builder());
 			case SILENT_AUTH:
@@ -76,7 +76,7 @@ public class VerificationRequestTest {
 			case WHATSAPP:
 				return (B) applyRegularAllParams(WhatsappVerificationRequest.builder());
 			case WHATSAPP_INTERACTIVE:
-				return (B) applyRegularAllParams(WhatsappInteractiveVerificationRequest.builder());
+				return (B) applyRegularAllParams(WhatsappCodelessVerificationRequest.builder());
 			case EMAIL:
 				return (B) applyEmailRequiredParams(applyRegularAllParams(EmailVerificationRequest.builder()));
 			case SILENT_AUTH:

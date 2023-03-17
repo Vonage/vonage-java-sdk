@@ -19,16 +19,19 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
- * Defines properties for sending a verification code to a user over a WhatsApp message.
+ * Defines properties for sending a verification code to a user over WhatsApp
+ * using an interaction prompt, where the user selects "Yes" or "No" to verify. See the
+ * <a href=https://developer.vonage.com/en/verify/verify-v2/guides/using-whatsapp-interactive>
+ * WhatsApp Interactive guide</a> for an overview of how this works.
  * <p>
  * By default, WhatsApp messages will be sent using a Vonage WhatsApp Business Account (WABA).
  * Please contact sales in order to configure Verify v2 to use your company’s WABA.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class WhatsappVerificationRequest extends RegularVerificationRequest {
+public final class WhatsappCodelessVerificationRequest extends RegularVerificationRequest {
 
-	WhatsappVerificationRequest(Builder builder) {
+	WhatsappCodelessVerificationRequest(Builder builder) {
 		super(builder);
 	}
 
@@ -41,14 +44,9 @@ public final class WhatsappVerificationRequest extends RegularVerificationReques
 		return new Builder();
 	}
 
-	public static final class Builder extends RegularVerificationRequest.Builder<WhatsappVerificationRequest, Builder> {
+	public static final class Builder extends RegularVerificationRequest.Builder<WhatsappCodelessVerificationRequest, Builder> {
 		Builder() {
-			super(Channel.WHATSAPP);
-		}
-
-		@Override
-		protected Builder codeLength(int codeLength) {
-			return super.codeLength(codeLength);
+			super(Channel.WHATSAPP_INTERACTIVE);
 		}
 
 		@Override
@@ -67,8 +65,8 @@ public final class WhatsappVerificationRequest extends RegularVerificationReques
 		}
 
 		@Override
-		public WhatsappVerificationRequest build() {
-			return new WhatsappVerificationRequest(this);
+		public WhatsappCodelessVerificationRequest build() {
+			return new WhatsappCodelessVerificationRequest(this);
 		}
 	}
 }

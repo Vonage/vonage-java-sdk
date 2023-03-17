@@ -85,6 +85,26 @@ public final class SmsVerificationRequest extends RegularVerificationRequest {
 		}
 
 		@Override
+		protected Builder codeLength(int codeLength) {
+			return super.codeLength(codeLength);
+		}
+
+		@Override
+		protected Builder timeout(int timeout) {
+			return super.timeout(timeout);
+		}
+
+		@Override
+		protected Builder locale(Locale locale) {
+			return super.locale(locale);
+		}
+
+		@Override
+		protected Builder clientRef(String clientRef) {
+			return super.clientRef(clientRef);
+		}
+
+		@Override
 		public SmsVerificationRequest build() {
 			return new SmsVerificationRequest(this);
 		}

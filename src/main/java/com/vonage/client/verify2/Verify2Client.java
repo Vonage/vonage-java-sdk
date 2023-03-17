@@ -34,9 +34,17 @@ public class Verify2Client {
 	}
 
 	/**
-	 * Request a verification be sent to a user.
+	 * Request a verification be sent to a user. This is the first step in the verification process.
 	 *
-	 * @param request Properties of the verification request.
+	 * @param request Properties of the verification request. All verification channels follow
+	 * the builder pattern. For example, to verify using a voice call:
+	 * <pre>
+	 * {@code VoiceVerificationRequest.builder()
+	 *      .brand("My Company")
+	 *      .to("447000000001")
+	 *      .codeLength(6)
+	 *      .build()}.
+	 * </pre>
 	 *
 	 * @return The server's response, if successful.
 	 *
@@ -69,7 +77,7 @@ public class Verify2Client {
 	 *
 	 * @throws VerifyResponseException If the code was invalid, or any other error.
 	 */
-	public void validateVerificationCode(UUID requestId, String code) {
+	public void checkVerificationCode(UUID requestId, String code) {
 		Objects.requireNonNull(requestId, "Request ID is required.");
 		Objects.requireNonNull(code, "Code is required.");
 		verifyRequest.execute(new VerifyCodeRequestWrapper(requestId.toString(), code));

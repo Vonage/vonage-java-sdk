@@ -22,6 +22,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Defines properties for sending a verification code to a user via e-mail.
+ * <p>
+ * Our email solution supports domain registration, if you plan to scale email verification to high volumes with
+ * Verify v2, please contact Sales in order to get your account configured properly.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -91,6 +94,26 @@ public final class EmailVerificationRequest extends RegularVerificationRequest {
 		@Override
 		public Builder to(String to) {
 			return super.to(to);
+		}
+
+		@Override
+		protected Builder codeLength(int codeLength) {
+			return super.codeLength(codeLength);
+		}
+
+		@Override
+		protected Builder timeout(int timeout) {
+			return super.timeout(timeout);
+		}
+
+		@Override
+		protected Builder locale(Locale locale) {
+			return super.locale(locale);
+		}
+
+		@Override
+		protected Builder clientRef(String clientRef) {
+			return super.clientRef(clientRef);
 		}
 
 		@Override

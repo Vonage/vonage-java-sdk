@@ -92,7 +92,7 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 		testSuccessfulRegularVerificationRequest(SmsVerificationRequest.builder());
 		testSuccessfulRegularVerificationRequest(VoiceVerificationRequest.builder());
 		testSuccessfulRegularVerificationRequest(WhatsappVerificationRequest.builder());
-		testSuccessfulRegularVerificationRequest(WhatsappInteractiveVerificationRequest.builder());
+		testSuccessfulRegularVerificationRequest(WhatsappCodelessVerificationRequest.builder());
 		stubSuccessfulVerifyUserResponseAndRun(applyAndBuildRegularVerification(emailBuilder()));
 		stubSuccessfulVerifyUserResponseAndRun(applyBaseVerificationParams(SilentAuthVerificationRequest.builder()).build());
 	}
@@ -109,7 +109,7 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 				applyAndBuildRegularVerification(WhatsappVerificationRequest.builder())
 		));
 		assert429ResponseException(() -> client.sendVerification(
-				applyAndBuildRegularVerification(WhatsappInteractiveVerificationRequest.builder())
+				applyAndBuildRegularVerification(WhatsappCodelessVerificationRequest.builder())
 		));
 		assert429ResponseException(() -> client.sendVerification(
 				applyAndBuildRegularVerification(emailBuilder())
@@ -121,19 +121,19 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 
 	@Test
 	public void testVerifyCodeSuccess() throws Exception {
-		stubResponseAndRun(204, () -> client.validateVerificationCode(REQUEST_ID, CODE));
+		stubResponseAndRun(204, () -> client.checkVerificationCode(REQUEST_ID, CODE));
 	}
 
 	@Test
 	public void testVerifyCodeFailure() throws Exception {
-		assert429ResponseException(() -> client.validateVerificationCode(REQUEST_ID, CODE));
+		assert429ResponseException(() -> client.checkVerificationCode(REQUEST_ID, CODE));
 
 		stubResponseAndAssertThrows(204, () ->
-				client.validateVerificationCode(null, CODE),
+				client.checkVerificationCode(null, CODE),
 				NullPointerException.class
 		);
 		stubResponseAndAssertThrows(204, () ->
-				client.validateVerificationCode(REQUEST_ID, null),
+				client.checkVerificationCode(REQUEST_ID, null),
 				NullPointerException.class
 		);
 	}

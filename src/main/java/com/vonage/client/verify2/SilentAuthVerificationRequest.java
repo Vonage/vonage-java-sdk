@@ -19,7 +19,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
- * Defines properties for mobile network-based authentication.
+ * Defines properties for mobile network-based authentication. See the
+ * <a href=https://developer.vonage.com/en/verify/verify-v2/guides/silent-authentication>Silent Auth guide</a>
+ * for an overview of how this works.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
