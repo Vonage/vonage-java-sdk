@@ -92,6 +92,7 @@ public abstract class VonageApiResponseException extends VonageClientException {
 		return statusCode;
 	}
 
+	@JsonIgnore
 	@Override
 	public String getMessage() {
 		if (statusCode > 0 && title != null) {
@@ -107,7 +108,7 @@ public abstract class VonageApiResponseException extends VonageClientException {
 	private static class IgnoreInheritedIntrospector extends JacksonAnnotationIntrospector {
 		@Override
 		public boolean hasIgnoreMarker(final AnnotatedMember m) {
-			return m.getDeclaringClass().isAssignableFrom(VonageApiResponseException.class) || super.hasIgnoreMarker(m);
+			return m.getDeclaringClass().equals(Throwable.class) || super.hasIgnoreMarker(m);
 		}
 	}
 

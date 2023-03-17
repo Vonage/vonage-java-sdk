@@ -52,6 +52,7 @@ public abstract class ClientTest<T> {
         when(LoggingUtils.logResponse(any(HttpResponse.class))).thenReturn("response logged");
         when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
         when(sl.getStatusCode()).thenReturn(statusCode);
+        when(sl.getReasonPhrase()).thenReturn("Test reason");
         when(response.getStatusLine()).thenReturn(sl);
         when(response.getEntity()).thenReturn(entity);
 
