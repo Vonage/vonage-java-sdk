@@ -36,13 +36,16 @@ public class Verify2Client {
 	/**
 	 * Request a verification be sent to a user. This is the first step in the verification process.
 	 *
-	 * @param request Properties of the verification request. All verification channels follow
-	 * the builder pattern. For example, to verify using a voice call:
+	 * @param request Properties of the verification request. You must specify the brand name and at least one
+	 * contact method (workflow). For example, to verify using Whatsapp and fall back to a voice call as backup
+	 * to the same number with a 6-digit code and a 3-minute wait between attempts:
 	 * <pre>
-	 * {@code VoiceVerificationRequest.builder()
+	 * {@code VerificationRequest.builder()
 	 *      .brand("My Company")
-	 *      .to("447000000001")
+	 *      .addWorkflow(new WhatsappWorkflow("447000000001"))
+	 *      .addWorkflow(new VoiceWorkflow("447000000001"))
 	 *      .codeLength(6)
+	 *      .channelTimeout(180)
 	 *      .build()}.
 	 * </pre>
 	 *
