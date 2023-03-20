@@ -19,6 +19,8 @@ import com.vonage.client.ClientTest;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.function.ThrowingRunnable;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 public class Verify2ClientTest extends ClientTest<Verify2Client> {
@@ -60,20 +62,24 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 		}
 	}
 
-	<B extends VerificationRequest.Builder<?, B>> B applyBaseVerificationParams(B builder) {
-		if (builder.to == null) {
-			builder.to("447100000009");
-		}
-		return builder.brand("Nexmo");
-	}
-
-	<V extends RegularVerificationRequest, B extends RegularVerificationRequest.Builder<V, B>> V applyAndBuildRegularVerification(B builder) {
-		return applyBaseVerificationParams(builder)
-				.codeLength(8).timeout(500)
+	VerificationRequest newVerificationRequestWithAllParamsAndWorkflows() {
+		String toNumber = "447100000009", toEmail = "email@domain.tld", fromEmail = "hello@example.com";
+		List<Workflow> workflows = Arrays.asList(
+				new SmsWorkflow(toNumber),
+				new EmailWorkflow(toEmail, fromEmail),
+				new VoiceWorkflow(toNumber),
+				new WhatsappWorkflow(toNumber),
+				new WhatsappCodelessWorkflow(toNumber),
+				new SilentAuthWorkflow(toNumber)
+		);
+		return VerificationRequest.builder()
+				.brand("Nexmo (now Vonage)")
+				.codeLength(8).channelTimeout(500)
 				.locale(Locale.GERMAN_GERMANY)
 				.clientRef("callback-ref0x1")
-				.build();
+				.workflows(workflows).build();
 	}
+
 
 	void stubSuccessfulVerifyUserResponseAndRun(VerificationRequest request) throws Exception {
 		stubResponse(202, VERIFICATION_RESPONSE);
@@ -82,44 +88,15 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 		assertEquals(REQUEST_ID, response.getRequestId());
 	}
 
-	<V extends RegularVerificationRequest, B extends RegularVerificationRequest.Builder<V, B>> void testSuccessfulRegularVerificationRequest(B builder) throws Exception {
-		stubSuccessfulVerifyUserResponseAndRun(applyAndBuildRegularVerification(builder));
-	}
-
-	EmailVerificationRequest.Builder emailBuilder() {
-		return EmailVerificationRequest.builder().from("hello@example.com").to("email@domain.tld");
-	}
 
 	@Test
 	public void testVerifyUserSuccess() throws Exception {
-		testSuccessfulRegularVerificationRequest(SmsVerificationRequest.builder());
-		testSuccessfulRegularVerificationRequest(VoiceVerificationRequest.builder());
-		testSuccessfulRegularVerificationRequest(WhatsappVerificationRequest.builder());
-		testSuccessfulRegularVerificationRequest(WhatsappCodelessVerificationRequest.builder());
-		stubSuccessfulVerifyUserResponseAndRun(applyAndBuildRegularVerification(emailBuilder()));
-		stubSuccessfulVerifyUserResponseAndRun(applyBaseVerificationParams(SilentAuthVerificationRequest.builder()).build());
+		stubSuccessfulVerifyUserResponseAndRun(newVerificationRequestWithAllParamsAndWorkflows());
 	}
 
 	@Test
 	public void testVerifyUser429() throws Exception {
-		assert429ResponseException(() -> client.sendVerification(
-				applyAndBuildRegularVerification(SmsVerificationRequest.builder())
-		));
-		assert429ResponseException(() -> client.sendVerification(
-				applyAndBuildRegularVerification(VoiceVerificationRequest.builder())
-		));
-		assert429ResponseException(() -> client.sendVerification(
-				applyAndBuildRegularVerification(WhatsappVerificationRequest.builder())
-		));
-		assert429ResponseException(() -> client.sendVerification(
-				applyAndBuildRegularVerification(WhatsappCodelessVerificationRequest.builder())
-		));
-		assert429ResponseException(() -> client.sendVerification(
-				applyAndBuildRegularVerification(emailBuilder())
-		));
-		assert429ResponseException(() -> client.sendVerification(
-				applyBaseVerificationParams(SilentAuthVerificationRequest.builder()).build()
-		));
+		assert429ResponseException(() -> client.sendVerification(newVerificationRequestWithAllParamsAndWorkflows()));
 	}
 
 	@Test

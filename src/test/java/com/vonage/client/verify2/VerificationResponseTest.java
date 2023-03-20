@@ -13,38 +13,36 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages;
+package com.vonage.client.verify2;
 
 import com.vonage.client.VonageUnexpectedException;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import org.junit.Test;
 import java.util.UUID;
 
-public class MessageResponseTest {
+public class VerificationResponseTest {
 
 	@Test
 	public void testConstructFromValidJson() {
-		UUID uuid = UUID.randomUUID();
-		MessageResponse response = MessageResponse.fromJson("{\"message_uuid\":\""+uuid+"\"}");
-		assertEquals(uuid, response.getMessageUuid());
-		String toString = response.toString();
-		assertTrue(toString.contains("MessageResponse"));
-		assertTrue(toString.contains(uuid.toString()));
+		UUID rqid = UUID.randomUUID();
+		VerificationResponse response = VerificationResponse.fromJson("{\"request_id\":\""+rqid+"\"}");
+		assertEquals(rqid, response.getRequestId());
 	}
 
 	@Test
 	public void testConstructFromEmptyJson() {
-		MessageResponse response = MessageResponse.fromJson("{}");
-		assertNull(response.getMessageUuid());
+		VerificationResponse response = VerificationResponse.fromJson("{}");
+		assertNull(response.getRequestId());
 	}
 
 	@Test(expected = VonageUnexpectedException.class)
 	public void testConstructFromInvalidJson() {
-		MessageResponse.fromJson("{_malformed_}");
+		VerificationResponse.fromJson("{_malformed_}");
 	}
 
 	@Test(expected = VonageUnexpectedException.class)
 	public void testConstructFromEmptyString() {
-		MessageResponse.fromJson("");
+		VerificationResponse.fromJson("");
 	}
 }

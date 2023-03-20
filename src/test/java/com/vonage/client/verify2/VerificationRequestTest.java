@@ -17,6 +17,8 @@ package com.vonage.client.verify2;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
+import java.util.Collections;
+import java.util.Objects;
 
 public class VerificationRequestTest {
 	static final Locale LOCALE = Locale.PORTUGUESE_PORTUGAL;
@@ -29,70 +31,49 @@ public class VerificationRequestTest {
 			CLIENT_REF = "my-personal-reference",
 			APP_HASH = "kkeid8sksd3";
 
-	<B extends VerificationRequest.Builder<?, B>> B applyBaseRequiredParams(B builder) {
-		return builder.brand(BRAND).to(TO_NUMBER);
+	VerificationRequest.Builder newBuilder() {
+		return VerificationRequest.builder().brand(BRAND);
 	}
 
-	<B extends RegularVerificationRequest.Builder<?, B>> B applyRegularRequiredParams(B builder) {
-		return applyBaseRequiredParams(builder);
+	VerificationRequest.Builder newBuilderAllParams() {
+		return newBuilder().codeLength(CODE_LENGTH).clientRef(CLIENT_REF)
+				.channelTimeout(CHANNEL_TIMEOUT).locale(LOCALE);
 	}
 
-	<B extends RegularVerificationRequest.Builder<?, B>> B applyRegularAllParams(B builder) {
-		return applyRegularRequiredParams(builder)
-				.codeLength(CODE_LENGTH).clientRef(CLIENT_REF).timeout(CHANNEL_TIMEOUT).locale(LOCALE);
-	}
-
-	EmailVerificationRequest.Builder applyEmailRequiredParams(EmailVerificationRequest.Builder builder) {
-		return applyRegularRequiredParams(builder).to(TO_EMAIL).from(FROM_EMAIL);
-	}
-
-	@SuppressWarnings("unchecked")
-	<B extends VerificationRequest.Builder<?, B>> B getBuilderWithRequiredParamsForChannel(Channel channel) {
+	Workflow getWorkflowRequiredParamsForChannel(Channel channel) {
 		switch (channel) {
 			default: throw new IllegalStateException();
 			case SMS:
-				return (B) applyRegularRequiredParams(SmsVerificationRequest.builder());
+				return new SmsWorkflow(TO_NUMBER);
 			case VOICE:
-				return (B) applyRegularRequiredParams(VoiceVerificationRequest.builder());
+				return new VoiceWorkflow(TO_NUMBER);
 			case WHATSAPP:
-				return (B) applyRegularRequiredParams(WhatsappVerificationRequest.builder());
+				return new WhatsappWorkflow(TO_NUMBER);
 			case WHATSAPP_INTERACTIVE:
-				return (B) applyRegularRequiredParams(WhatsappCodelessVerificationRequest.builder());
+				return new WhatsappCodelessWorkflow(TO_NUMBER);
 			case EMAIL:
-				return (B) applyEmailRequiredParams(EmailVerificationRequest.builder());
+				return new EmailWorkflow(TO_EMAIL, FROM_EMAIL);
 			case SILENT_AUTH:
-				return (B) applyBaseRequiredParams(SilentAuthVerificationRequest.builder());
+				return new SilentAuthWorkflow(TO_NUMBER);
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	<B extends VerificationRequest.Builder<?, ? extends B>> B getBuilderWithAllParamsForChannel(Channel channel) {
-		switch (channel) {
-			default: throw new IllegalStateException();
-			case SMS:
-				return (B) applyRegularAllParams(SmsVerificationRequest.builder().appHash(APP_HASH));
-			case VOICE:
-				return (B) applyRegularAllParams(VoiceVerificationRequest.builder());
-			case WHATSAPP:
-				return (B) applyRegularAllParams(WhatsappVerificationRequest.builder());
-			case WHATSAPP_INTERACTIVE:
-				return (B) applyRegularAllParams(WhatsappCodelessVerificationRequest.builder());
-			case EMAIL:
-				return (B) applyEmailRequiredParams(applyRegularAllParams(EmailVerificationRequest.builder()));
-			case SILENT_AUTH:
-				return (B) applyBaseRequiredParams(SilentAuthVerificationRequest.builder());
+	Workflow getWorkflowAllParamsForChannel(Channel channel) {
+		if (Objects.requireNonNull(channel) == Channel.SMS) {
+			return new SmsWorkflow(TO_NUMBER, APP_HASH);
 		}
+		return getWorkflowRequiredParamsForChannel(channel);
 	}
 
-	VerificationRequest createRequestWithRequiredParamsForChannel(Channel channel) {
-		return getBuilderWithRequiredParamsForChannel(channel).build();
+	VerificationRequest.Builder getBuilderRequiredParamsSingleWorkflow(Channel channel) {
+		return newBuilder().addWorkflow(getWorkflowRequiredParamsForChannel(channel));
 	}
 
-	VerificationRequest createRequestWithAllParamsForChannel(Channel channel) {
-		return getBuilderWithAllParamsForChannel(channel).build();
+	VerificationRequest.Builder getBuilderAllParamsSingleWorkflow(Channel channel) {
+		return newBuilderAllParams().addWorkflow(getWorkflowAllParamsForChannel(channel));
 	}
 
-	String getExpectedRequiredParamsJson(Channel channel) {
+	String getExpectedRequiredParamsForSingleWorkflowJson(Channel channel) {
 		String to = channel == Channel.EMAIL ? TO_EMAIL : TO_NUMBER;
 		String expectedJson = "{\"brand\":\""+BRAND+"\",\"workflow\":[{" +
 				"\"channel\":\""+channel+"\",\"to\":\""+to+"\"";
@@ -103,34 +84,30 @@ public class VerificationRequestTest {
 		return expectedJson;
 	}
 
-	String getExpectedAllParamsJson(Channel channel) {
-		String expectedJson = getExpectedRequiredParamsJson(channel), prefix, replacement;
+	String getExpectedAllParamsForSingleWorkflowJson(Channel channel) {
+		String expectedJson = getExpectedRequiredParamsForSingleWorkflowJson(channel), prefix, replacement;
 		if (channel == Channel.SMS) {
 			prefix = TO_NUMBER + "\"";
 			replacement = prefix + ",\"app_hash\":\""+APP_HASH+"\"";
 			expectedJson = expectedJson.replace(prefix, replacement);
 		}
-		if (channel != Channel.SILENT_AUTH) {
-			prefix = "}]";
-			replacement = prefix + ",\"locale\":\"pt-pt\",\"channel_timeout\":"+ CHANNEL_TIMEOUT +
-					",\"code_length\":"+CODE_LENGTH;
-			expectedJson = expectedJson.replace(prefix, replacement);
-			prefix = "\"code_length\":"+CODE_LENGTH;
-			replacement = prefix + ",\"client_ref\":\""+CLIENT_REF+"\"";
-			expectedJson = expectedJson.replace(prefix, replacement);
-		}
+		expectedJson = "{\"locale\":\"pt-pt\",\"channel_timeout\":"+ CHANNEL_TIMEOUT +
+				",\"code_length\":"+CODE_LENGTH + expectedJson.replaceFirst("\\{", ",");
+		prefix = BRAND + "\",";
+		replacement = prefix + "\"client_ref\":\""+CLIENT_REF+"\",";
+		expectedJson = expectedJson.replace(prefix, replacement);
 		return expectedJson;
 	}
 
 	void assertEqualsRequiredParams(Channel channel) {
-		String expectedJson = getExpectedRequiredParamsJson(channel);
-		String actualJson = createRequestWithRequiredParamsForChannel(channel).toJson();
+		String expectedJson = getExpectedRequiredParamsForSingleWorkflowJson(channel);
+		String actualJson = getBuilderRequiredParamsSingleWorkflow(channel).build().toJson();
 		assertEquals(expectedJson, actualJson);
 	}
 
 	void assertEqualsAllParams(Channel channel) {
-		String expectedJson = getExpectedAllParamsJson(channel);
-		String actualJson = createRequestWithAllParamsForChannel(channel).toJson();
+		String expectedJson = getExpectedAllParamsForSingleWorkflowJson(channel);
+		String actualJson = getBuilderAllParamsSingleWorkflow(channel).build().toJson();
 		assertEquals(expectedJson, actualJson);
 	}
 
@@ -143,9 +120,17 @@ public class VerificationRequestTest {
 	}
 
 	@Test
+	public void testWithoutWorkflow() {
+		assertThrows(IllegalStateException.class, () -> newBuilder().build());
+		assertThrows(IllegalStateException.class, () -> newBuilderAllParams().build());
+		assertThrows(IllegalStateException.class, () -> newBuilder().workflows(Collections.emptyList()).build());
+		assertThrows(IllegalStateException.class, () -> newBuilderAllParams().workflows(Collections.emptyList()).build());
+	}
+
+	@Test
 	public void testWithoutBrand() {
 		for (Channel channel : Channel.values()) {
-			VerificationRequest.Builder<?, ?> builder = getBuilderWithRequiredParamsForChannel(channel);
+			VerificationRequest.Builder builder = getBuilderRequiredParamsSingleWorkflow(channel);
 			assertEquals(BRAND, builder.build().getBrand());
 			builder.brand(null);
 			assertNull(builder.brand);
@@ -157,75 +142,54 @@ public class VerificationRequestTest {
 	}
 
 	@Test
-	public void testWithoutRecipient() {
-		for (Channel channel : Channel.values()) {
-			VerificationRequest.Builder<?, ?> builder = getBuilderWithRequiredParamsForChannel(channel);
-			String to = channel == Channel.EMAIL ? TO_EMAIL : TO_NUMBER;
-			assertEquals(to, builder.build().getRecipient());
-			builder.to(null);
-			assertNull(builder.to);
-			assertThrows(IllegalArgumentException.class, builder::build);
-			builder.to("");
-			assertTrue(builder.to.isEmpty());
-			assertThrows(IllegalArgumentException.class, builder::build);
+	public void testAllWorkflowsWithoutRecipientOrSender() {
+		for (String invalid : new String[]{"", " ", null}) {
+			assertThrows(IllegalArgumentException.class, () -> new SilentAuthWorkflow(invalid));
+			assertThrows(IllegalArgumentException.class, () -> new SmsWorkflow(invalid));
+			assertThrows(IllegalArgumentException.class, () -> new VoiceWorkflow(invalid));
+			assertThrows(IllegalArgumentException.class, () -> new WhatsappWorkflow(invalid));
+			assertThrows(IllegalArgumentException.class, () -> new WhatsappCodelessWorkflow(invalid));
+			assertThrows(IllegalArgumentException.class, () -> new EmailWorkflow(invalid, "hello@example.org"));
+			assertThrows(IllegalArgumentException.class, () -> new EmailWorkflow("hello@example.org", invalid));
 		}
 	}
 
 	@Test
 	public void testCodeLengthBoundaries() {
-		for (Channel channel : Channel.values()) {
-			if (channel == Channel.SILENT_AUTH) continue;
-			RegularVerificationRequest.Builder<?, ?> builder = getBuilderWithAllParamsForChannel(channel);
-			assertEquals(CODE_LENGTH, builder.build().getCodeLength().intValue());
-			int min = 4, max = 10;
-			builder.codeLength(min - 1);
-			assertThrows(IllegalArgumentException.class, builder::build);
-			builder.codeLength(min);
-			assertEquals(min, builder.build().getCodeLength().intValue());
-			builder.codeLength(max + 1);
-			assertThrows(IllegalArgumentException.class, builder::build);
-			builder.codeLength(max);
-			assertEquals(max, builder.build().getCodeLength().intValue());
-		}
+		VerificationRequest.Builder builder = getBuilderAllParamsSingleWorkflow(Channel.VOICE);
+		assertEquals(CODE_LENGTH, builder.build().getCodeLength().intValue());
+		int min = 4, max = 10;
+		builder.codeLength(min - 1);
+		assertThrows(IllegalArgumentException.class, builder::build);
+		builder.codeLength(min);
+		assertEquals(min, builder.build().getCodeLength().intValue());
+		builder.codeLength(max + 1);
+		assertThrows(IllegalArgumentException.class, builder::build);
+		builder.codeLength(max);
+		assertEquals(max, builder.build().getCodeLength().intValue());
 	}
 
 	@Test
 	public void testChannelTimeoutBoundaries() {
-		for (Channel channel : Channel.values()) {
-			if (channel == Channel.SILENT_AUTH) continue;
-			RegularVerificationRequest.Builder<?, ?> builder = getBuilderWithAllParamsForChannel(channel);
-			assertEquals(CHANNEL_TIMEOUT, builder.build().getChannelTimeout().intValue());
-			int min = 60, max = 900;
-			builder.timeout(min - 1);
-			assertThrows(IllegalArgumentException.class, builder::build);
-			builder.timeout(min);
-			assertEquals(min, builder.build().getChannelTimeout().intValue());
-			builder.timeout(max + 1);
-			assertThrows(IllegalArgumentException.class, builder::build);
-			builder.timeout(max);
-			assertEquals(max, builder.build().getChannelTimeout().intValue());
-		}
+		VerificationRequest.Builder builder = getBuilderAllParamsSingleWorkflow(Channel.VOICE);
+		assertEquals(CHANNEL_TIMEOUT, builder.build().getChannelTimeout().intValue());
+		int min = 60, max = 900;
+		builder.channelTimeout(min - 1);
+		assertThrows(IllegalArgumentException.class, builder::build);
+		builder.channelTimeout(min);
+		assertEquals(min, builder.build().getChannelTimeout().intValue());
+		builder.channelTimeout(max + 1);
+		assertThrows(IllegalArgumentException.class, builder::build);
+		builder.channelTimeout(max);
+		assertEquals(max, builder.build().getChannelTimeout().intValue());
 	}
 
 	@Test
 	public void testInvalidAppHash() {
-		SmsVerificationRequest.Builder builder = getBuilderWithRequiredParamsForChannel(Channel.SMS);
-		assertThrows(IllegalArgumentException.class, () -> builder.appHash("1234567890").build());
-		assertThrows(IllegalArgumentException.class, () -> builder.appHash("1234567890ab").build());
-		String appHash = builder.appHash("1234567890a").build().getAppHash();
+		assertThrows(IllegalArgumentException.class, () -> new SmsWorkflow(TO_NUMBER, "1234567890"));
+		assertThrows(IllegalArgumentException.class, () -> new SmsWorkflow(TO_NUMBER, "1234567890ab"));
+		String appHash = new SmsWorkflow(TO_NUMBER, "1234567890a").getAppHash();
 		assertNotNull(appHash);
 		assertEquals(11, appHash.length());
-	}
-
-	@Test
-	public void testEmailWithoutSender() {
-		EmailVerificationRequest.Builder builder = getBuilderWithRequiredParamsForChannel(Channel.EMAIL);
-		assertEquals(FROM_EMAIL, builder.build().getSender());
-		builder.from(null);
-		assertNull(builder.from);
-		assertThrows(IllegalArgumentException.class, builder::build);
-		builder.from("");
-		assertTrue(builder.from.isEmpty());
-		assertThrows(IllegalArgumentException.class, builder::build);
 	}
 }

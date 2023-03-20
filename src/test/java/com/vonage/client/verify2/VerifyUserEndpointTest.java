@@ -39,14 +39,13 @@ public class VerifyUserEndpointTest {
 
 	@Test
 	public void testVerifySmsAllParams() throws Exception {
-		VerificationRequest request = SmsVerificationRequest.builder()
-				.to("447700900001")
+		VerificationRequest request = VerificationRequest.builder()
 				.brand("ACME, Inc")
 				.codeLength(6)
-				.timeout(320)
+				.channelTimeout(320)
 				.clientRef("my-personal-reference")
-				.appHash("FA+9qCX9VSu")
 				.locale(Locale.ENGLISH_UK)
+				.addWorkflow(new SmsWorkflow("447700900001", "FA+9qCX9VSu"))
 				.build();
 
 		RequestBuilder builder = endpoint.makeRequest(request);
@@ -55,10 +54,9 @@ public class VerifyUserEndpointTest {
 		assertEquals(HttpMethod.POST.name(), builder.getMethod());
 		assertEquals("https://api.nexmo.com/v2/verify", builder.getUri().toString());
 
-		String expectedJson = "{\"brand\":\"ACME, Inc\",\"workflow\":[{" +
-				"\"channel\":\"sms\",\"to\":\"447700900001\",\"app_hash\":\"FA+9qCX9VSu\"}]," +
-				"\"locale\":\"en-gb\",\"channel_timeout\":320,\"code_length\":6," +
-				"\"client_ref\":\"my-personal-reference\"}";
+		String expectedJson = "{\"locale\":\"en-gb\",\"channel_timeout\":320,\"code_length\":6," +
+				"\"brand\":\"ACME, Inc\",\"client_ref\":\"my-personal-reference\",\"workflow\":" +
+				"[{\"channel\":\"sms\",\"to\":\"447700900001\",\"app_hash\":\"FA+9qCX9VSu\"}]}";
 
 		assertEquals(expectedJson, EntityUtils.toString(builder.getEntity()));
 	}
@@ -125,8 +123,8 @@ public class VerifyUserEndpointTest {
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().apiBaseUri(baseUri).build());
 		endpoint = new VerifyUserEndpoint(wrapper);
 
-		VerificationRequest request = SilentAuthVerificationRequest.builder()
-				.to("447700900002").brand("Megacorp").build();
+		VerificationRequest request = VerificationRequest.builder()
+				.addWorkflow(new SilentAuthWorkflow("447700900002")).brand("Megacorp").build();
 
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());

@@ -15,7 +15,6 @@
  */
 package com.vonage.client.verify2;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
@@ -28,45 +27,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * Please contact sales in order to configure Verify v2 to use your company’s WABA.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public final class WhatsappCodelessVerificationRequest extends RegularVerificationRequest {
-
-	WhatsappCodelessVerificationRequest(Builder builder) {
-		super(builder);
-	}
+public final class WhatsappCodelessWorkflow extends Workflow {
 
 	/**
-	 * Entry point for constructing an instance of this class.
+	 * Constructs a new WhatsApp interactive verification workflow.
 	 *
-	 * @return A new Builder.
+	 * @param to The number to send the verification prompt to, in E.164 format.
 	 */
-	public static Builder builder() {
-		return new Builder();
-	}
-
-	public static final class Builder extends RegularVerificationRequest.Builder<WhatsappCodelessVerificationRequest, Builder> {
-		Builder() {
-			super(Channel.WHATSAPP_INTERACTIVE);
-		}
-
-		@Override
-		protected Builder timeout(int timeout) {
-			return super.timeout(timeout);
-		}
-
-		@Override
-		protected Builder locale(Locale locale) {
-			return super.locale(locale);
-		}
-
-		@Override
-		protected Builder clientRef(String clientRef) {
-			return super.clientRef(clientRef);
-		}
-
-		@Override
-		public WhatsappCodelessVerificationRequest build() {
-			return new WhatsappCodelessVerificationRequest(this);
-		}
+	public WhatsappCodelessWorkflow(String to) {
+		super(Channel.WHATSAPP_INTERACTIVE, to);
 	}
 }

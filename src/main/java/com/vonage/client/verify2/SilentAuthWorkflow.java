@@ -15,7 +15,6 @@
  */
 package com.vonage.client.verify2;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
@@ -24,30 +23,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * for an overview of how this works.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public final class SilentAuthVerificationRequest extends VerificationRequest {
-
-	SilentAuthVerificationRequest(Builder builder) {
-		super(builder);
-	}
+public final class SilentAuthWorkflow extends Workflow {
 
 	/**
-	 * Entry point for constructing an instance of this class.
+	 * Constructs a new Silent Auth verification workflow.
 	 *
-	 * @return A new Builder.
+	 * @param to The number to registered to the device on the network to authenticate.
 	 */
-	public static Builder builder() {
-		return new Builder();
-	}
-
-	public static final class Builder extends VerificationRequest.Builder<SilentAuthVerificationRequest, Builder> {
-		Builder() {
-			super(Channel.SILENT_AUTH);
-		}
-
-		@Override
-		public SilentAuthVerificationRequest build() {
-			return new SilentAuthVerificationRequest(this);
-		}
+	public SilentAuthWorkflow(String to) {
+		super(Channel.SILENT_AUTH, to);
 	}
 }
