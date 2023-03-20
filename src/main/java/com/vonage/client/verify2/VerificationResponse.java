@@ -45,6 +45,11 @@ public class VerificationResponse {
 		return requestId;
 	}
 
+	@Override
+	public String toString() {
+		return getClass().getSimpleName()+" {requestId='"+requestId+"'}";
+	}
+
 	/**
 	 * Creates an instance of this class from a JSON payload.
 	 *

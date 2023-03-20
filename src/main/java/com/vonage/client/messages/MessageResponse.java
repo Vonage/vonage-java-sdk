@@ -16,7 +16,6 @@
 package com.vonage.client.messages;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
@@ -28,9 +27,8 @@ import java.util.UUID;
  * the returned response (HTTP 202 payload) is always the same format.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MessageResponse {
-	@JsonProperty("message_uuid") protected UUID messageUuid;
+	protected UUID messageUuid;
 
 	/**
 	 * Protected to prevent users from explicitly creating this object.
@@ -43,6 +41,7 @@ public class MessageResponse {
 	 *
 	 * @return The unique message ID.
 	 */
+	@JsonProperty("message_uuid")
 	public UUID getMessageUuid() {
 		return messageUuid;
 	}

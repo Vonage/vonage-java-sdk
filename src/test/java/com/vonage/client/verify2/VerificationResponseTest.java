@@ -16,8 +16,8 @@
 package com.vonage.client.verify2;
 
 import com.vonage.client.VonageUnexpectedException;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import java.util.UUID;
 
@@ -28,6 +28,9 @@ public class VerificationResponseTest {
 		UUID rqid = UUID.randomUUID();
 		VerificationResponse response = VerificationResponse.fromJson("{\"request_id\":\""+rqid+"\"}");
 		assertEquals(rqid, response.getRequestId());
+		String toString = response.toString();
+		assertTrue(toString.contains("VerificationResponse"));
+		assertTrue(toString.contains(rqid.toString()));
 	}
 
 	@Test
