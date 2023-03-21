@@ -15,29 +15,25 @@
  */
 package com.vonage.client.verify2;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Objects;
+import java.time.Instant;
 
 /**
- * Base workflow.
+ *
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class Workflow {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class WorkflowStatus {
 	protected Channel channel;
-	protected String to;
+	protected Instant initiatedAt;
+	protected VerificationStatus status;
 
-	protected Workflow(Channel channel, String to) {
-		this.channel = Objects.requireNonNull(channel, "Verification channel is required.");
-		if ((this.to = to) == null || to.trim().isEmpty()) {
-			throw new IllegalArgumentException("Recipient is required.");
-		}
+	protected WorkflowStatus() {
 	}
 
 	/**
-	 * The communication channel for this verification workflow.
 	 *
-	 * @return The channel as an enum.
+	 * @return
 	 */
 	@JsonProperty("channel")
 	public Channel getChannel() {
@@ -45,12 +41,20 @@ public class Workflow {
 	}
 
 	/**
-	 * The phone number to contact with the message.
 	 *
-	 * @return The recipient's phone number, in E.164 format.
+	 * @return
 	 */
-	@JsonProperty("to")
-	public String getTo() {
-		return to;
+	@JsonProperty("initiated_at")
+	public Instant getInitiatedAt() {
+		return initiatedAt;
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	@JsonProperty("status")
+	public VerificationStatus getStatus() {
+		return status;
 	}
 }
