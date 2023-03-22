@@ -18,7 +18,6 @@ package com.vonage.client.verify2;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.util.Collections;
-import java.util.Objects;
 
 public class VerificationRequestTest {
 	static final Locale LOCALE = Locale.PORTUGUESE_PORTUGAL;
@@ -26,6 +25,7 @@ public class VerificationRequestTest {
 	static final String
 			BRAND = "Vonage",
 			TO_NUMBER = "447700900000",
+			FROM_NUMBER = "447900100000",
 			TO_EMAIL = "alice@example.org",
 			FROM_EMAIL = "bob@example.org",
 			CLIENT_REF = "my-personal-reference",
@@ -52,17 +52,23 @@ public class VerificationRequestTest {
 			case WHATSAPP_INTERACTIVE:
 				return new WhatsappCodelessWorkflow(TO_NUMBER);
 			case EMAIL:
-				return new EmailWorkflow(TO_EMAIL, FROM_EMAIL);
+				return new EmailWorkflow(TO_EMAIL);
 			case SILENT_AUTH:
 				return new SilentAuthWorkflow(TO_NUMBER);
 		}
 	}
 
 	Workflow getWorkflowAllParamsForChannel(Channel channel) {
-		if (Objects.requireNonNull(channel) == Channel.SMS) {
-			return new SmsWorkflow(TO_NUMBER, APP_HASH);
+		switch (channel) {
+			case SMS:
+				return new SmsWorkflow(TO_NUMBER, APP_HASH);
+			case WHATSAPP:
+				return new WhatsappWorkflow(TO_NUMBER, FROM_NUMBER);
+			case EMAIL:
+				return new EmailWorkflow(TO_EMAIL, FROM_EMAIL);
+			default:
+				return getWorkflowRequiredParamsForChannel(channel);
 		}
-		return getWorkflowRequiredParamsForChannel(channel);
 	}
 
 	VerificationRequest.Builder getBuilderRequiredParamsSingleWorkflow(Channel channel) {
@@ -75,13 +81,8 @@ public class VerificationRequestTest {
 
 	String getExpectedRequiredParamsForSingleWorkflowJson(Channel channel) {
 		String to = channel == Channel.EMAIL ? TO_EMAIL : TO_NUMBER;
-		String expectedJson = "{\"brand\":\""+BRAND+"\",\"workflow\":[{" +
-				"\"channel\":\""+channel+"\",\"to\":\""+to+"\"";
-		if (channel == Channel.EMAIL) {
-			expectedJson += ",\"from\":\""+FROM_EMAIL+"\"";
-		}
-		expectedJson += "}]}";
-		return expectedJson;
+		return "{\"brand\":\""+BRAND+"\",\"workflow\":[{" +
+				"\"channel\":\""+channel+"\",\"to\":\""+to+"\"}]}";
 	}
 
 	String getExpectedAllParamsForSingleWorkflowJson(Channel channel) {
@@ -89,6 +90,16 @@ public class VerificationRequestTest {
 		if (channel == Channel.SMS) {
 			prefix = TO_NUMBER + "\"";
 			replacement = prefix + ",\"app_hash\":\""+APP_HASH+"\"";
+			expectedJson = expectedJson.replace(prefix, replacement);
+		}
+		if (channel == Channel.WHATSAPP) {
+			prefix = TO_NUMBER + "\"";
+			replacement = prefix + ",\"from\":\""+FROM_NUMBER+"\"";
+			expectedJson = expectedJson.replace(prefix, replacement);
+		}
+		if (channel == Channel.EMAIL) {
+			prefix = TO_EMAIL + "\"";
+			replacement = prefix + ",\"from\":\""+FROM_EMAIL+"\"";
 			expectedJson = expectedJson.replace(prefix, replacement);
 		}
 		expectedJson = "{\"locale\":\"pt-pt\",\"channel_timeout\":"+ CHANNEL_TIMEOUT +
@@ -142,15 +153,24 @@ public class VerificationRequestTest {
 	}
 
 	@Test
-	public void testAllWorkflowsWithoutRecipientOrSender() {
+	public void testAllWorkflowsWithoutRecipient() {
 		for (String invalid : new String[]{"", " ", null}) {
 			assertThrows(IllegalArgumentException.class, () -> new SilentAuthWorkflow(invalid));
 			assertThrows(IllegalArgumentException.class, () -> new SmsWorkflow(invalid));
 			assertThrows(IllegalArgumentException.class, () -> new VoiceWorkflow(invalid));
 			assertThrows(IllegalArgumentException.class, () -> new WhatsappWorkflow(invalid));
 			assertThrows(IllegalArgumentException.class, () -> new WhatsappCodelessWorkflow(invalid));
-			assertThrows(IllegalArgumentException.class, () -> new EmailWorkflow(invalid, "hello@example.org"));
-			assertThrows(IllegalArgumentException.class, () -> new EmailWorkflow("hello@example.org", invalid));
+			assertThrows(IllegalArgumentException.class, () -> new EmailWorkflow(invalid));
+		}
+	}
+
+	@Test
+	public void testSenderValidation() {
+		assertEquals(FROM_NUMBER, new WhatsappWorkflow(TO_NUMBER, FROM_NUMBER).getFrom());
+		assertEquals(FROM_EMAIL, new EmailWorkflow(TO_EMAIL, FROM_EMAIL).getFrom());
+		for (String invalid : new String[]{"", " "}) {
+			assertThrows(IllegalArgumentException.class, () -> new WhatsappWorkflow(TO_NUMBER, invalid));
+			assertThrows(IllegalArgumentException.class, () -> new EmailWorkflow(TO_EMAIL, invalid));
 		}
 	}
 

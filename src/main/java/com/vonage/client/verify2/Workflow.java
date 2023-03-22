@@ -25,12 +25,19 @@ import java.util.Objects;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Workflow {
 	protected Channel channel;
-	protected String to;
+	protected String to, from;
 
 	protected Workflow(Channel channel, String to) {
+		this(channel, to, null);
+	}
+
+	protected Workflow(Channel channel, String to, String from) {
 		this.channel = Objects.requireNonNull(channel, "Verification channel is required.");
 		if ((this.to = to) == null || to.trim().isEmpty()) {
 			throw new IllegalArgumentException("Recipient is required.");
+		}
+		if ((this.from = from) != null && from.trim().isEmpty()) {
+			throw new IllegalArgumentException("Sender cannot be empty.");
 		}
 	}
 

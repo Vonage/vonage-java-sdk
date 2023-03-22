@@ -63,12 +63,13 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 	}
 
 	VerificationRequest newVerificationRequestWithAllParamsAndWorkflows() {
-		String toNumber = "447100000009", toEmail = "email@domain.tld", fromEmail = "hello@example.com";
+		String toNumber = "447100000009", fromNumber = "447900000001",
+				toEmail = "email@domain.tld", fromEmail = "hello@example.com";
 		List<Workflow> workflows = Arrays.asList(
 				new SmsWorkflow(toNumber),
 				new EmailWorkflow(toEmail, fromEmail),
 				new VoiceWorkflow(toNumber),
-				new WhatsappWorkflow(toNumber),
+				new WhatsappWorkflow(toNumber, fromNumber),
 				new WhatsappCodelessWorkflow(toNumber),
 				new SilentAuthWorkflow(toNumber)
 		);
@@ -80,14 +81,12 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 				.workflows(workflows).build();
 	}
 
-
 	void stubSuccessfulVerifyUserResponseAndRun(VerificationRequest request) throws Exception {
 		stubResponse(202, VERIFICATION_RESPONSE);
 		VerificationResponse response = client.sendVerification(request);
 		assertNotNull(response);
 		assertEquals(REQUEST_ID, response.getRequestId());
 	}
-
 
 	@Test
 	public void testVerifyUserSuccess() throws Exception {

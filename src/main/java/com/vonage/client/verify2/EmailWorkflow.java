@@ -26,26 +26,32 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class EmailWorkflow extends Workflow {
-	final String from;
 
 	/**
-	 * Constructs a new SMS verification workflow.
+	 * Constructs a new e-mail verification workflow.
+	 *
+	 * @param to The email address to send the verification request to.
+	 */
+	public EmailWorkflow(String to) {
+		this(to, null);
+	}
+
+	/**
+	 * Constructs a new e-mail verification workflow with a custom sender address.
 	 *
 	 * @param to The email address to send the verification request to.
 	 *
 	 * @param from The e-mail address to send the verification request from.
+	 * Note that you will need to get in touch with the Vonage sales team to enable use of the field.
 	 */
 	public EmailWorkflow(String to, String from) {
-		super(Channel.EMAIL, to);
-		if ((this.from = from) == null || from.trim().isEmpty()) {
-			throw new IllegalArgumentException("Sender e-mail address is required.");
-		}
+		super(Channel.EMAIL, to, from);
 	}
 
 	/**
-	 * The e-mail address to send the verification request from.
+	 * The e-mail address to send the verification request from, if configured.
 	 *
-	 * @return The sender e-mail address.
+	 * @return The sender e-mail address, or {@code null} if unset.
 	 */
 	@JsonProperty("from")
 	public String getFrom() {

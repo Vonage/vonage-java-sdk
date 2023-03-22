@@ -349,7 +349,7 @@ VerifyResponse verifyPayment = client.getVerifyClient().psd2Verify(TO_NUMBER, 10
 VerificationResponse response = client.getVerify2Client().sendVerification(
     VerificationRequest.builder()
         .addWorkflow(new WhatsappCodelessWorkflow(TO_NUMBER))
-        .addWorkflow(new EmailWorkflow(TO_EMAIL, FROM_EMAIL))
+        .addWorkflow(new EmailWorkflow(TO_EMAIL))
         .addWorkflow(new VoiceWorkflow(TO_NUMBER))
         .codeLength(6).brand("ACME Inc.").build()
 );

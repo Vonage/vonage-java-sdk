@@ -16,6 +16,7 @@
 package com.vonage.client.verify2;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Defines properties for sending a verification code to a user over a WhatsApp message.
@@ -26,12 +27,34 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class WhatsappWorkflow extends Workflow {
 
+
 	/**
 	 * Constructs a new WhatsApp verification workflow.
 	 *
 	 * @param to The number to send the message to, in E.164 format.
 	 */
 	public WhatsappWorkflow(String to) {
-		super(Channel.WHATSAPP, to);
+		this(to, null);
+	}
+
+	/**
+	 * Constructs a new WhatsApp verification workflow with a custom sender number.
+	 *
+	 * @param to The number to send the message to, in E.164 format.
+	 * @param from The number to send the message from, in E.164 format.
+	 * Note that you will need to get in touch with the Vonage sales team to enable use of the field.
+	 */
+	public WhatsappWorkflow(String to, String from) {
+		super(Channel.WHATSAPP, to, from);
+	}
+
+	/**
+	 * The number to send the verification request from, if configured.
+	 *
+	 * @return The sender phone number, or {@code null} if unset.
+	 */
+	@JsonProperty("from")
+	public String getFrom() {
+		return from;
 	}
 }
