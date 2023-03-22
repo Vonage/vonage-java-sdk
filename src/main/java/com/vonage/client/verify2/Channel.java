@@ -18,14 +18,37 @@ package com.vonage.client.verify2;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Represents the channel type in a Workflow.
+ * Represents the verification channel type in a Workflow.
  */
 public enum Channel {
+	/**
+	 * SMS text message.
+	 */
 	SMS,
+
+	/**
+	 * WhatsApp text message.
+	 */
 	WHATSAPP,
+
+	/**
+	 * WhatsApp Yes/No prompt message (codeless).
+	 */
 	WHATSAPP_INTERACTIVE,
+
+	/**
+	 * Telephone voice call.
+	 */
 	VOICE,
+
+	/**
+	 * E-mail text message.
+	 */
 	EMAIL,
+
+	/**
+	 * Network-based authentication (using the device).
+	 */
 	SILENT_AUTH;
 
 	@JsonValue

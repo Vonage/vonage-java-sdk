@@ -27,6 +27,7 @@ import com.vonage.client.redact.RedactClient;
 import com.vonage.client.sms.SmsClient;
 import com.vonage.client.sns.SnsClient;
 import com.vonage.client.verify.VerifyClient;
+import com.vonage.client.verify2.Verify2Client;
 import com.vonage.client.voice.VoiceClient;
 import org.apache.http.client.HttpClient;
 import java.io.IOException;
@@ -40,8 +41,8 @@ import java.nio.file.Paths;
  * Construct an instance of this object with one or more {@link AuthMethod}s (providing all the authentication methods
  * for the APIs you wish to use), and then call {@link #getVoiceClient()} to obtain a client for the Vonage Voice API.
  * <p>
- * Currently this object only constructs and provides access to {@link VoiceClient}. In the future it will manage
- * clients for all of the Vonage APIs.
+ * Currently, this object only constructs and provides access to {@link VoiceClient}. In the future it will manage
+ * clients for all the Vonage APIs.
  */
 public class VonageClient {
     private final HttpWrapper httpWrapper;
@@ -56,6 +57,7 @@ public class VonageClient {
     private final ConversionClient conversion;
     private final RedactClient redact;
     private final MessagesClient messages;
+    private final Verify2Client verify2Client;
 
     private VonageClient(Builder builder) {
         httpWrapper = new HttpWrapper(builder.httpConfig, builder.authCollection);
@@ -72,6 +74,7 @@ public class VonageClient {
         conversion = new ConversionClient(httpWrapper);
         redact = new RedactClient(httpWrapper);
         messages = new MessagesClient(httpWrapper);
+        verify2Client = new Verify2Client(httpWrapper);
     }
 
     public AccountClient getAccountClient() {
@@ -120,8 +123,22 @@ public class VonageClient {
         return redact;
     }
 
+    /**
+     *
+     * @return The Messages v1 client.
+     * @since 6.5.0
+     */
     public MessagesClient getMessagesClient() {
         return messages;
+    }
+
+    /**
+     *
+     * @return The Verify v2 client.
+     * @since 7.3.0
+     */
+    public Verify2Client getVerify2Client() {
+        return verify2Client;
     }
 
     /**

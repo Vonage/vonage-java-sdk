@@ -23,32 +23,32 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum VerificationStatus {
 	/**
-	 *
+	 * Completed.
 	 */
 	COMPLETED,
 
 	/**
-	 *
+	 * Failed.
 	 */
 	FAILED,
 
 	/**
-	 *
+	 * Expired.
 	 */
 	EXPIRED,
 
 	/**
-	 *
+	 * User rejected.
 	 */
 	USER_REJECTED,
 
 	/**
-	 *
+	 * Action pending.
 	 */
 	ACTION_PENDING,
 
 	/**
-	 *
+	 * Unused.
 	 */
 	UNUSED;
 
