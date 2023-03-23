@@ -29,9 +29,9 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Abstract class to assist in implementing a call against a REST endpoint.
@@ -51,7 +51,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
     protected static final BasicResponseHandler basicResponseHandler = new BasicResponseHandler();
 
     protected final HttpWrapper httpWrapper;
-    private Set<Class<?>> acceptable;
+    private Set<Class<? extends AuthMethod>> acceptable;
 
     public AbstractMethod(HttpWrapper httpWrapper) {
         this.httpWrapper = httpWrapper;
@@ -121,10 +121,13 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      *
      * @throws VonageClientException If no AuthMethod is available from the provided array of acceptableAuthMethods.
      */
+    @SuppressWarnings("unchecked")
     protected AuthMethod getAuthMethod(Class<?>[] acceptableAuthMethods) throws VonageClientException {
         if (acceptable == null) {
-            acceptable = new HashSet<>();
-            Collections.addAll(acceptable, acceptableAuthMethods);
+            acceptable = Arrays.stream(acceptableAuthMethods)
+                    .filter(AuthMethod.class::isAssignableFrom)
+                    .map(c -> (Class<? extends AuthMethod>) c)
+                    .collect(Collectors.toSet());
         }
 
         return httpWrapper.getAuthCollection().getAcceptableAuthMethod(acceptable);

@@ -33,15 +33,15 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicNameValuePair;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import static org.mockito.Mockito.*;
 import javax.xml.parsers.ParserConfigurationException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 public class SendMessageEndpointTest {
     private SendMessageEndpoint endpoint;
@@ -266,7 +266,7 @@ public class SendMessageEndpointTest {
         AuthMethod tokenAuth = new TokenAuthMethod("abcd", "def");
 
         when(wrapper.getAuthCollection()).thenReturn(authCollection);
-        @SuppressWarnings("unchecked") Set<Class<?>> anySet = any(Set.class);
+        @SuppressWarnings("unchecked") Set<Class<? extends AuthMethod>> anySet = any(Set.class);
         when(authCollection.getAcceptableAuthMethod(anySet)).thenReturn(tokenAuth);
         when(wrapper.getHttpClient()).thenReturn(client);
         when(wrapper.getHttpConfig()).thenReturn(httpConfig);

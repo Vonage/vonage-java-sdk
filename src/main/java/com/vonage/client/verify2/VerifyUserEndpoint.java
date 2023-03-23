@@ -40,6 +40,11 @@ class VerifyUserEndpoint extends AbstractMethod<VerificationRequest, Verificatio
 
 	@Override
 	public RequestBuilder makeRequest(VerificationRequest request) {
+		if (request.isCodeless() && !httpWrapper.getAuthCollection().hasAuthMethod(JWTAuthMethod.class)) {
+			throw new IllegalStateException(
+					"Codeless verification requires an application ID to be set in order to use webhooks."
+			);
+		}
 		String uri = httpWrapper.getHttpConfig().getApiBaseUri() + PATH;
 		return RequestBuilder.post(uri)
 				.setHeader("Content-Type", "application/json")

@@ -15,6 +15,7 @@
  */
 package com.vonage.client.verify2;
 
+import com.vonage.client.verify2.VerificationRequest.Builder;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.util.Collections;
@@ -31,11 +32,11 @@ public class VerificationRequestTest {
 			CLIENT_REF = "my-personal-reference",
 			APP_HASH = "kkeid8sksd3";
 
-	VerificationRequest.Builder newBuilder() {
+	Builder newBuilder() {
 		return VerificationRequest.builder().brand(BRAND);
 	}
 
-	VerificationRequest.Builder newBuilderAllParams() {
+	Builder newBuilderAllParams() {
 		return newBuilder().codeLength(CODE_LENGTH).clientRef(CLIENT_REF)
 				.channelTimeout(CHANNEL_TIMEOUT).locale(LOCALE);
 	}
@@ -71,12 +72,17 @@ public class VerificationRequestTest {
 		}
 	}
 
-	VerificationRequest.Builder getBuilderRequiredParamsSingleWorkflow(Channel channel) {
+	Builder getBuilderRequiredParamsSingleWorkflow(Channel channel) {
 		return newBuilder().addWorkflow(getWorkflowRequiredParamsForChannel(channel));
 	}
 
-	VerificationRequest.Builder getBuilderAllParamsSingleWorkflow(Channel channel) {
-		return newBuilderAllParams().addWorkflow(getWorkflowAllParamsForChannel(channel));
+	Builder getBuilderAllParamsSingleWorkflow(Channel channel) {
+		Builder builder = newBuilderAllParams()
+				.addWorkflow(getWorkflowAllParamsForChannel(channel));
+		if (channel == Channel.SILENT_AUTH || channel == Channel.WHATSAPP_INTERACTIVE) {
+			builder.codeLength = null;
+		}
+		return builder;
 	}
 
 	String getExpectedRequiredParamsForSingleWorkflowJson(Channel channel) {
@@ -102,8 +108,11 @@ public class VerificationRequestTest {
 			replacement = prefix + ",\"from\":\""+FROM_EMAIL+"\"";
 			expectedJson = expectedJson.replace(prefix, replacement);
 		}
-		expectedJson = "{\"locale\":\"pt-pt\",\"channel_timeout\":"+ CHANNEL_TIMEOUT +
-				",\"code_length\":"+CODE_LENGTH + expectedJson.replaceFirst("\\{", ",");
+		prefix = "{\"locale\":\"pt-pt\",\"channel_timeout\":"+ CHANNEL_TIMEOUT;
+		if (channel != Channel.SILENT_AUTH && channel != Channel.WHATSAPP_INTERACTIVE) {
+			prefix += ",\"code_length\":"+CODE_LENGTH;
+		}
+		expectedJson = prefix + expectedJson.replaceFirst("\\{", ",");
 		prefix = BRAND + "\",";
 		replacement = prefix + "\"client_ref\":\""+CLIENT_REF+"\",";
 		expectedJson = expectedJson.replace(prefix, replacement);
@@ -141,7 +150,7 @@ public class VerificationRequestTest {
 	@Test
 	public void testWithoutBrand() {
 		for (Channel channel : Channel.values()) {
-			VerificationRequest.Builder builder = getBuilderRequiredParamsSingleWorkflow(channel);
+			Builder builder = getBuilderRequiredParamsSingleWorkflow(channel);
 			assertEquals(BRAND, builder.build().getBrand());
 			builder.brand(null);
 			assertNull(builder.brand);
@@ -175,8 +184,20 @@ public class VerificationRequestTest {
 	}
 
 	@Test
+	public void testCodelessAndCodeLengthValidation() {
+		Builder requiredBuilder = getBuilderRequiredParamsSingleWorkflow(Channel.SILENT_AUTH);
+		assertTrue(requiredBuilder.build().isCodeless());
+		requiredBuilder.addWorkflow(new WhatsappCodelessWorkflow(TO_NUMBER));
+		assertTrue(requiredBuilder.build().isCodeless());
+		requiredBuilder.codeLength(9);
+		assertThrows(IllegalStateException.class, requiredBuilder::build);
+		Builder allBuilder = getBuilderAllParamsSingleWorkflow(Channel.WHATSAPP_INTERACTIVE).codeLength(4);
+		assertThrows(IllegalStateException.class, allBuilder::build);
+	}
+
+	@Test
 	public void testCodeLengthBoundaries() {
-		VerificationRequest.Builder builder = getBuilderAllParamsSingleWorkflow(Channel.VOICE);
+		Builder builder = getBuilderAllParamsSingleWorkflow(Channel.VOICE);
 		assertEquals(CODE_LENGTH, builder.build().getCodeLength().intValue());
 		int min = 4, max = 10;
 		builder.codeLength(min - 1);
@@ -191,7 +212,7 @@ public class VerificationRequestTest {
 
 	@Test
 	public void testChannelTimeoutBoundaries() {
-		VerificationRequest.Builder builder = getBuilderAllParamsSingleWorkflow(Channel.VOICE);
+		Builder builder = getBuilderAllParamsSingleWorkflow(Channel.VOICE);
 		assertEquals(CHANNEL_TIMEOUT, builder.build().getChannelTimeout().intValue());
 		int min = 60, max = 900;
 		builder.channelTimeout(min - 1);

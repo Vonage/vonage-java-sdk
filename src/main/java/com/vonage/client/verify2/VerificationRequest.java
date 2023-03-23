@@ -15,6 +15,7 @@
  */
 package com.vonage.client.verify2;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -58,6 +59,9 @@ public class VerificationRequest {
 		}
 		if ((workflows = builder.workflows).isEmpty()) {
 			throw new IllegalStateException("At least one workflow must be defined.");
+		}
+		if (isCodeless() && codeLength != null) {
+			throw new IllegalStateException("Code length has no effect for codeless workflows.");
 		}
 	}
 
@@ -120,6 +124,20 @@ public class VerificationRequest {
 	@JsonProperty("workflow")
 	protected List<Workflow> getWorkflows() {
 		return workflows;
+	}
+
+	/**
+	 * Determines if the workflows defined in this request do not prompt the user for code entry.
+	 *
+	 * @return {@code true} if all the defined workflows do not require a code or {@code false}
+	 * if at least one of the contact methods involves a code being sent to the user.
+	 */
+	@JsonIgnore
+	public boolean isCodeless() {
+		return workflows.stream().allMatch(type ->
+				type instanceof WhatsappCodelessWorkflow ||
+				type instanceof SilentAuthWorkflow
+		);
 	}
 
 	/**

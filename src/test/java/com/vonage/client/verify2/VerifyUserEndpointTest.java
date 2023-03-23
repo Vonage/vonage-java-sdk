@@ -18,12 +18,12 @@ package com.vonage.client.verify2;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
+import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import java.net.URI;
@@ -118,13 +118,29 @@ public class VerifyUserEndpointTest {
 	}
 
 	@Test
+	public void testCodelessAndBasicAuth() throws Exception {
+		VerificationRequest request = VerificationRequest.builder()
+				.brand("Vonage").addWorkflow(new SilentAuthWorkflow("447700900001")).build();
+		assertThrows(IllegalStateException.class, () -> endpoint.makeRequest(request));
+
+		endpoint = new VerifyUserEndpoint(new HttpWrapper(new JWTAuthMethod("app-id", new byte[0])));
+		RequestBuilder rqBuilder = endpoint.makeRequest(request);
+		String actualJson = EntityUtils.toString(rqBuilder.getEntity());
+		String expectedJson = "{\"brand\":\"Vonage\",\"workflow\":[{\"channel\":\"silent_auth\",\"to\":\"447700900001\"}]}";
+		assertEquals(expectedJson, actualJson);
+	}
+
+	@Test
 	public void testCustomUri() throws Exception {
 		String baseUri = "http://example.com";
-		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().apiBaseUri(baseUri).build());
+		HttpWrapper wrapper = new HttpWrapper(
+				HttpConfig.builder().apiBaseUri(baseUri).build(),
+				new JWTAuthMethod("app-id", new byte[0])
+		);
 		endpoint = new VerifyUserEndpoint(wrapper);
 
 		VerificationRequest request = VerificationRequest.builder()
-				.addWorkflow(new SilentAuthWorkflow("447700900002")).brand("Megacorp").build();
+				.addWorkflow(new WhatsappCodelessWorkflow("447700900002")).brand("Megacorp").build();
 
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
@@ -132,7 +148,7 @@ public class VerifyUserEndpointTest {
 		assertEquals("POST", builder.getMethod());
 		assertEquals(baseUri+"/v2/verify", builder.getUri().toString());
 
-		String expectedJson = "{\"brand\":\"Megacorp\",\"workflow\":[{\"channel\":\"silent_auth\",\"to\":\"447700900002\"}]}";
+		String expectedJson = "{\"brand\":\"Megacorp\",\"workflow\":[{\"channel\":\"whatsapp_interactive\",\"to\":\"447700900002\"}]}";
 		assertEquals(expectedJson, EntityUtils.toString(builder.getEntity()));
 	}
 }

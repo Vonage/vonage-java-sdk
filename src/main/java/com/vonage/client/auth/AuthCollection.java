@@ -42,9 +42,9 @@ public class AuthCollection {
     }
 
     /**
-     * Add a new {@link AuthMethod} to the set managed by this AuthCollection
+     * Add a new {@link AuthMethod} to the set managed by this AuthCollection.
      *
-     * @param auth AuthMethod method to be added to this collection
+     * @param auth AuthMethod method to be added to this collection.
      */
     public void add(AuthMethod auth) {
         authList.add(auth);
@@ -53,10 +53,10 @@ public class AuthCollection {
     /**
      * Obtain an AuthMethod of type T, if one is contained in this collection.
      *
-     * @param type The type of AuthMethod to be located
-     * @param <T>  The type of AuthMethod which will be returned
+     * @param type The type of AuthMethod to be located.
+     * @param <T>  The type of AuthMethod which will be returned.
      *
-     * @return An AuthMethod subclass matching type
+     * @return An AuthMethod subclass matching type.
      *
      * @throws VonageUnacceptableAuthException if no matching AuthMethod is found.
      */
@@ -67,7 +67,7 @@ public class AuthCollection {
                 return (T) availableAuthMethod;
             }
         }
-        throw new VonageUnacceptableAuthException(authList, Arrays.asList(new Class<?>[]{type}));
+        throw new VonageUnacceptableAuthException(authList, Collections.singletonList(type));
     }
 
     /**
@@ -75,16 +75,31 @@ public class AuthCollection {
      *
      * @param acceptableAuthMethodClasses A Set of AuthMethod classes which are suitable for the target REST endpoint.
      *
-     * @return the preferred AuthMethod from the provided set of acceptable AuthMethod classes
+     * @return the preferred AuthMethod from the provided set of acceptable AuthMethod classes.
      *
-     * @throws VonageUnacceptableAuthException if no appropriate AuthMethod is held by this AuthCollection
+     * @throws VonageUnacceptableAuthException if no appropriate AuthMethod is held by this AuthCollection.
      */
-    public AuthMethod getAcceptableAuthMethod(Set<Class<?>> acceptableAuthMethodClasses) throws VonageUnacceptableAuthException {
+    public AuthMethod getAcceptableAuthMethod(Set<Class<? extends AuthMethod>> acceptableAuthMethodClasses) throws VonageUnacceptableAuthException {
         for (AuthMethod availableAuthMethod : authList) {
-            if (acceptableAuthMethodClasses.contains(availableAuthMethod.getClass())) {
-                return availableAuthMethod;
+            for (Class<? extends AuthMethod> acceptable : acceptableAuthMethodClasses) {
+                if (acceptable.isAssignableFrom(availableAuthMethod.getClass())) {
+                    return availableAuthMethod;
+                }
             }
         }
         throw new VonageUnacceptableAuthException(authList, acceptableAuthMethodClasses);
+    }
+
+    /**
+     * Utility method for determining whether a certain authentication method has been registered.
+     *
+     * @param authMethod The authentication method type.
+     *
+     * @return {@code true} if the specified auth method is available, {@code false} otherwise.
+     *
+     * @since 7.3.0
+     */
+    public boolean hasAuthMethod(Class<? extends AuthMethod> authMethod) {
+        return authList.stream().map(AuthMethod::getClass).anyMatch(authMethod::equals);
     }
 }
