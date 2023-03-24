@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 class StartTalkEndpoint extends AbstractMethod<TalkRequest, TalkResponse> {
-    private static final String PATH = "/calls/";
+    private static final String PATH = "/calls/%s/talk";
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 
     StartTalkEndpoint(HttpWrapper httpWrapper) {
@@ -40,11 +40,12 @@ class StartTalkEndpoint extends AbstractMethod<TalkRequest, TalkResponse> {
 
     @Override
     public RequestBuilder makeRequest(TalkRequest request) throws UnsupportedEncodingException {
-        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid() + "/talk";
+        String path = String.format(PATH, request.uuid);
+        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + path;
         return RequestBuilder.put(uri)
                 .setHeader("Content-Type", "application/json")
                 .setHeader("Accept", "application/json")
-                .setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
+                .setEntity(new StringEntity(request.payload.toJson(), ContentType.APPLICATION_JSON));
     }
 
     @Override

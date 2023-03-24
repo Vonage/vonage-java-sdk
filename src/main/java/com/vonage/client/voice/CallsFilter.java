@@ -23,11 +23,11 @@ import java.util.Date;
 import java.util.List;
 
 public class CallsFilter {
-    private CallStatus status;
-    private Date dateStart, dateEnd;
-    private Integer pageSize, recordIndex;
-    private CallOrder order;
-    private String conversationUuid;
+    private final CallStatus status;
+    private final Date dateStart, dateEnd;
+    private final Integer pageSize, recordIndex;
+    private final CallOrder order;
+    private final String conversationUuid;
 
     private CallsFilter(Builder builder) {
         this.status = builder.status;
@@ -114,7 +114,7 @@ public class CallsFilter {
         /**
          * @param status The status of the calls to lookup.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This Builder to keep building.
          */
         public Builder status(CallStatus status) {
             this.status = status;
@@ -124,7 +124,7 @@ public class CallsFilter {
         /**
          * @param dateStart The minimum in the date range of the calls to lookup.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This Builder to keep building.
          */
         public Builder dateStart(Date dateStart) {
             this.dateStart = dateStart;
@@ -134,7 +134,7 @@ public class CallsFilter {
         /**
          * @param dateEnd The maximum in the date range of calls to lookup.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This Builder to keep building.
          */
         public Builder dateEnd(Date dateEnd) {
             this.dateEnd = dateEnd;
@@ -144,7 +144,7 @@ public class CallsFilter {
         /**
          * @param pageSize The number of calls in the response.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This Builder to keep building.
          */
         public Builder pageSize(Integer pageSize) {
             this.pageSize = pageSize;
@@ -154,7 +154,7 @@ public class CallsFilter {
         /**
          * @param recordIndex The starting index.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This Builder to keep building.
          */
         public Builder recordIndex(Integer recordIndex) {
             this.recordIndex = recordIndex;
@@ -164,7 +164,7 @@ public class CallsFilter {
         /**
          * @param order The order of the calls.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This Builder to keep building.
          */
         public Builder order(CallOrder order) {
             this.order = order;
@@ -174,7 +174,7 @@ public class CallsFilter {
         /**
          * @param conversationUuid The specific conversation to return calls for.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This Builder to keep building.
          */
         public Builder conversationUuid(String conversationUuid) {
             this.conversationUuid = conversationUuid;
@@ -182,6 +182,8 @@ public class CallsFilter {
         }
 
         /**
+         * Constructs an instance of {@linkplain CallsFilter}.
+         *
          * @return A new {@link CallsFilter} object with the stored builder options.
          */
         public CallsFilter build() {

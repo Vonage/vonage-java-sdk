@@ -15,8 +15,13 @@
  */
 package com.vonage.client.voice;
 
-import com.vonage.client.*;
+import com.vonage.client.HttpWrapper;
+import com.vonage.client.VonageClient;
+import com.vonage.client.VonageClientException;
+import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.voice.ncco.Ncco;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * A client for talking to the Vonage Voice API. The standard way to obtain an instance of this class is to use {@link
@@ -50,6 +55,10 @@ public class VoiceClient {
         stopTalk = new StopTalkEndpoint(httpWrapper);
         dtmf = new DtmfEndpoint(httpWrapper);
         downloadRecording = new DownloadRecordingEndpoint(httpWrapper);
+    }
+
+    private String validateUuid(String uuid) {
+        return UUID.fromString(Objects.requireNonNull(uuid, "UUID is required.")).toString();
     }
 
     /**
@@ -253,6 +262,27 @@ public class VoiceClient {
 
     /**
      * Send a synthesized speech message to an ongoing call.
+     * @param uuid The UUID of the call, obtained from the object returned by {@link #createCall(Call)}.
+     * This value can be obtained with {@link CallEvent#getUuid()}.
+     *
+     * @param properties Properties of the text-to-speech request.
+     *
+     * @return Metadata from the Voice API if successful.
+     *
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     *
+     * @since 7.3.0
+     */
+    public TalkResponse startTalk(String uuid, TalkPayload properties) {
+        return startTalk.execute(new TalkRequest(
+                validateUuid(uuid),
+                Objects.requireNonNull(properties, "TalkPayload is required)")
+        ));
+    }
+
+    /**
+     * Send a synthesized speech message to an ongoing call.
      * <p>
      * The message will only play once, spoken with the default en-US voice.
      *
@@ -264,9 +294,12 @@ public class VoiceClient {
      *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
+     *
+     * @deprecated Use {@link #startTalk(String, TalkPayload)}.
      */
+    @Deprecated
     public TalkResponse startTalk(String uuid, String text) throws VonageResponseParseException, VonageClientException {
-        return startTalk.execute(new TalkRequest(uuid, text));
+        return startTalk.execute(new TalkRequest(uuid, TalkPayload.builder(text).build()));
     }
 
     /**
@@ -281,9 +314,11 @@ public class VoiceClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      *
+     * @deprecated Use {@link #startTalk(String, TalkPayload)}.
      */
+    @Deprecated
     public TalkResponse startTalk(String uuid, String text, TextToSpeechLanguage language) throws VonageResponseParseException, VonageClientException {
-        return startTalk.execute(new TalkRequest(uuid, text, language));
+        return startTalk(uuid, TalkPayload.builder(text).language(language).build());
     }
 
     /**
@@ -301,9 +336,12 @@ public class VoiceClient {
      *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
+     *
+     * @deprecated Use {@link #startTalk(String, TalkPayload)}.
      */
+    @Deprecated
     public TalkResponse startTalk(String uuid, String text, int loop) throws VonageResponseParseException, VonageClientException {
-        return startTalk.execute(new TalkRequest(uuid, text, loop));
+        return startTalk(uuid, TalkPayload.builder(text).loop(loop).build());
     }
 
     /**
@@ -321,9 +359,12 @@ public class VoiceClient {
      *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
+     *
+     * @deprecated Use {@link #startTalk(String, TalkPayload)}.
      */
+    @Deprecated
     public TalkResponse startTalk(String uuid, String text, TextToSpeechLanguage language, int style, int loop) throws VonageResponseParseException, VonageClientException {
-        return startTalk.execute(new TalkRequest(uuid, text, language, style, loop));
+        return startTalk(uuid, TalkPayload.builder(text).loop(loop).language(language).style(style).build());
     }
 
     /**
@@ -339,9 +380,12 @@ public class VoiceClient {
      *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
+     *
+     * @deprecated Use {@link #startTalk(String, TalkPayload)}.
      */
+    @Deprecated
     public TalkResponse startTalk(String uuid, String text, TextToSpeechLanguage language, int style) throws VonageResponseParseException, VonageClientException {
-        return startTalk.execute(new TalkRequest(uuid, text, language, style));
+        return startTalk(uuid, TalkPayload.builder(text).language(language).style(style).build());
     }
 
     /**

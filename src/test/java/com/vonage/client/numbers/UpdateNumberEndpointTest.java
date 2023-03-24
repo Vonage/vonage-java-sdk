@@ -22,10 +22,10 @@ import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.Map;
-import static org.junit.Assert.*;
 
 public class UpdateNumberEndpointTest {
     private UpdateNumberEndpoint endpoint;

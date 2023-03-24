@@ -22,6 +22,7 @@ import org.apache.http.entity.ContentType;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+import java.util.UUID;
 
 public class StartTalkEndpointTest {
     private StartTalkEndpoint method;
@@ -33,10 +34,11 @@ public class StartTalkEndpointTest {
 
     @Test
     public void testDefaultUri() throws Exception {
-        TalkRequest request = new TalkRequest("uuid", "text", 0);
+        String uuid = UUID.randomUUID().toString();
+        TalkRequest request = new TalkRequest(uuid, TalkPayload.builder("Hey up").style(0).build());
         RequestBuilder builder = method.makeRequest(request);
         assertEquals("PUT", builder.getMethod());
-        assertEquals("https://api.nexmo.com/v1/calls/uuid/talk", builder.build().getURI().toString());
+        assertEquals("https://api.nexmo.com/v1/calls/"+uuid+"/talk", builder.build().getURI().toString());
         assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
         assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
     }
@@ -45,10 +47,10 @@ public class StartTalkEndpointTest {
     public void testCustomUri() throws Exception {
         HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri("https://example.com").build());
         StartTalkEndpoint method = new StartTalkEndpoint(wrapper);
-        TalkRequest request = new TalkRequest("uuid", "text", 0);
-
+        String uuid = UUID.randomUUID().toString();
+        TalkRequest request = new TalkRequest(uuid, TalkPayload.builder("Sample text").build());
         RequestBuilder builder = method.makeRequest(request);
         assertEquals("PUT", builder.getMethod());
-        assertEquals("https://example.com/v1/calls/uuid/talk", builder.build().getURI().toString());
+        assertEquals("https://example.com/v1/calls/"+uuid+"/talk", builder.build().getURI().toString());
     }
 }
