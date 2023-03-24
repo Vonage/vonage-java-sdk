@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -55,7 +56,7 @@ public class RequestSigning {
      *
      */
     public static void constructSignatureForRequestParameters(List<NameValuePair> params, String secretKey) {
-        constructSignatureForRequestParameters(params, secretKey, System.currentTimeMillis() / 1000);
+        constructSignatureForRequestParameters(params, secretKey, Instant.now().getEpochSecond());
     }
 
     /**
@@ -69,7 +70,7 @@ public class RequestSigning {
      * @param hashType The type of hash that is to be used in construction
      */
     public static void constructSignatureForRequestParameters(List<NameValuePair> params, String secretKey, HashUtil.HashType hashType) {
-        constructSignatureForRequestParameters(params, secretKey, System.currentTimeMillis() / 1000, hashType);
+        constructSignatureForRequestParameters(params, secretKey, Instant.now().getEpochSecond(), hashType);
     }
 
     /**
@@ -208,7 +209,7 @@ public class RequestSigning {
             ObjectMapper mapper = new ObjectMapper();
             try{
                 Map<String,String> params = mapper.readValue(request.getInputStream(), new TypeReference<Map<String,String>>(){});
-                for (Map.Entry<String, String> entry: params.entrySet()) {
+                for (Map.Entry<String, String> entry : params.entrySet()) {
                     String name = entry.getKey();
                     String value = entry.getValue();
                     log.info("" + name + " = " + value);
@@ -236,8 +237,7 @@ public class RequestSigning {
 
         // identify the signature supplied in the request ...
         String suppliedSignature = sortedParams.get(PARAM_SIGNATURE);
-        if (suppliedSignature == null)
-            return false;
+        if (suppliedSignature == null) return false;
 
         // Extract the timestamp parameter and verify that it is within 5 minutes of 'current time'
         String timeString = sortedParams.get(PARAM_TIMESTAMP);
@@ -258,9 +258,8 @@ public class RequestSigning {
 
         // walk this sorted list of parameters and construct a string
         StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, String> param: sortedParams.entrySet()) {
-            if (param.getKey().equals(PARAM_SIGNATURE))
-                continue;
+        for (Map.Entry<String, String> param : sortedParams.entrySet()) {
+            if (param.getKey().equals(PARAM_SIGNATURE)) continue;
             String name = param.getKey();
             String value = param.getValue();
             sb.append("&").append(clean(name)).append("=").append(clean(value));

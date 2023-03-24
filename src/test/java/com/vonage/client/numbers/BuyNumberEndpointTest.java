@@ -19,28 +19,32 @@ import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
 import com.vonage.client.VonageBadRequestException;
+import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 
 public class BuyNumberEndpointTest {
     private BuyNumberEndpoint endpoint;
 
     @Before
     public void setUp() throws Exception {
-        endpoint = new BuyNumberEndpoint(new HttpWrapper());
+        endpoint = new BuyNumberEndpoint(new HttpWrapper(
+                new TokenAuthMethod("abc123", "a2cd5f789")
+        ));
     }
 
     @Test
@@ -51,6 +55,15 @@ public class BuyNumberEndpointTest {
         Map<String, String> params = TestUtils.makeParameterMap(request.getParameters());
         assertEquals("AA", params.get("country"));
         assertEquals("447700900000", params.get("msisdn"));
+    }
+
+    @Test
+    public void applyAuth() throws Exception {
+        RequestBuilder builder = endpoint.applyAuth(endpoint.makeRequest(
+                new BuyNumberRequest("UK", "447700900001")
+        ));
+        List<NameValuePair> params = builder.getParameters();
+        assertEquals(2, params.size());
     }
 
     @Test

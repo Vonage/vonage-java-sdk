@@ -57,4 +57,9 @@ class UpdateNumberEndpoint extends AbstractMethod<UpdateNumberRequest, Void> {
         }
         return null;
     }
+
+    @Override
+    protected RequestBuilder applyAuth(RequestBuilder request) throws VonageClientException {
+        return getAuthMethod(getAcceptableAuthMethods()).applyAsBasicAuth(request);
+    }
 }
