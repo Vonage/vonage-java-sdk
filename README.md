@@ -261,7 +261,10 @@ System.out.println("Alright. " + stopStreamResponse.getMessage());
 To send a synthesized speech message to an active call, just use the following method:
 
 ```java
-TalkResponse startTalkResponse = client.getVoiceClient().startTalk(event.getUuid(), "Hello World");
+TalkResponse startTalkResponse = client.getVoiceClient().startTalk(
+		event.getUuid(), 
+        TalkPayload.builder("Hello, world!").language(TextToSpeechLanguage.SWEDISH).build()
+);
 System.out.println("Success! " + startTalkResponse.getMessage());
 ```
 
