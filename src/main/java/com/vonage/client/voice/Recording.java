@@ -23,7 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Recording {
-    private HttpResponse response;
+    private final HttpResponse response;
 
     public Recording(HttpResponse response) {
         this.response = response;

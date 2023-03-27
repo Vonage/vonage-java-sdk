@@ -25,18 +25,18 @@ import static org.junit.Assert.assertEquals;
 import java.util.UUID;
 
 public class StartTalkEndpointTest {
-    private StartTalkEndpoint method;
+    private StartTalkEndpoint endpoint;
 
     @Before
     public void setUp() throws Exception {
-        method = new StartTalkEndpoint(new HttpWrapper());
+        endpoint = new StartTalkEndpoint(new HttpWrapper());
     }
 
     @Test
     public void testDefaultUri() throws Exception {
         String uuid = UUID.randomUUID().toString();
         TalkRequest request = new TalkRequest(uuid, TalkPayload.builder("Hey up").style(0).build());
-        RequestBuilder builder = method.makeRequest(request);
+        RequestBuilder builder = endpoint.makeRequest(request);
         assertEquals("PUT", builder.getMethod());
         assertEquals("https://api.nexmo.com/v1/calls/"+uuid+"/talk", builder.build().getURI().toString());
         assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
@@ -46,10 +46,10 @@ public class StartTalkEndpointTest {
     @Test
     public void testCustomUri() throws Exception {
         HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri("https://example.com").build());
-        StartTalkEndpoint method = new StartTalkEndpoint(wrapper);
+        endpoint = new StartTalkEndpoint(wrapper);
         String uuid = UUID.randomUUID().toString();
         TalkRequest request = new TalkRequest(uuid, TalkPayload.builder("Sample text").build());
-        RequestBuilder builder = method.makeRequest(request);
+        RequestBuilder builder = endpoint.makeRequest(request);
         assertEquals("PUT", builder.getMethod());
         assertEquals("https://example.com/v1/calls/"+uuid+"/talk", builder.build().getURI().toString());
     }

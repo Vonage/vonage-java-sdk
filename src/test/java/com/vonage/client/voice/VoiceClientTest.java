@@ -34,6 +34,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
 
 public class VoiceClientTest {
     private final TestUtils testUtils = new TestUtils();
@@ -209,7 +210,23 @@ public class VoiceClientTest {
     }
 
     @Test
-    public void testStartTalkAllParams() throws Exception {
+    public void testStartTalkAllParamsModern() throws Exception {
+        VoiceClient client = new VoiceClient(stubHttpWrapper(200,
+                "{\n" + "  \"message\": \"Talk started\",\n" + "  \"uuid\": \"944dd293-ca13-4a58-bc37-6252e11474be\"\n"
+                        + "}\n"
+        ));
+
+        TalkResponse response = client.startTalk("944dd293-ca13-4a58-bc37-6252e11474be",
+                TalkPayload.builder("Bonjour, monde!")
+                        .style(1).level(-0.5).loop(3).premium(false)
+                        .language(TextToSpeechLanguage.FRENCH).build()
+        );
+        assertEquals("Talk started", response.getMessage());
+        assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
+    }
+
+    @Test
+    public void testStartTalkAllParamsLegacy() throws Exception {
         VoiceClient client = new VoiceClient(stubHttpWrapper(200,
                 "{\n" + "  \"message\": \"Talk started\",\n" + "  \"uuid\": \"944dd293-ca13-4a58-bc37-6252e11474be\"\n"
                         + "}\n"
@@ -314,5 +331,13 @@ public class VoiceClientTest {
         TalkResponse response = client.stopTalk("944dd293-ca13-4a58-bc37-6252e11474be");
         assertEquals("Talk stopped", response.getMessage());
         assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
+    }
+
+    @Test
+    public void testDownloadRecording() throws Exception {
+        VoiceClient client = new VoiceClient(stubHttpWrapper(200, "Bleep bloop"));
+        Recording recording = client.downloadRecording("http://example.org/sample");
+        String content = new Scanner(recording.getContent()).useDelimiter("\\A").next();
+        assertEquals("Bleep bloop", content);
     }
 }
