@@ -154,7 +154,9 @@ public class Call {
     }
 
     @JsonProperty("from_random_number")
-    public Boolean getFromRandomNumber(){ return fromRandomNumber; }
+    public Boolean getFromRandomNumber() {
+        return fromRandomNumber;
+    }
 
 
     /**

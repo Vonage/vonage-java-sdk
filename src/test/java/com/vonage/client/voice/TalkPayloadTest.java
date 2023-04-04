@@ -15,41 +15,63 @@
  */
 package com.vonage.client.voice;
 
-import org.junit.Before;
+import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThrows;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
 
 public class TalkPayloadTest {
-    private TalkPayload payload;
 
-    @Before
-    public void setUp() throws Exception {
-        payload = new TalkPayload("Hola Mundo!", TextToSpeechLanguage.AMERICAN_ENGLISH, 2, 0);
+    @Test
+    public void testAllParams() {
+        TalkPayload payload = TalkPayload.builder("Hola Mundo!")
+                .language(TextToSpeechLanguage.NORWEGIAN)
+                .style(2).premium(true).level(0.3).build();
+
+        String expectedJson = "{\"text\":\"Hola Mundo!\",\"style\":2,\"level\":0.3,\"premium\":true," +
+                "\"language\":\"no-NO\"}", actualJson = payload.toJson();
+        assertEquals(expectedJson, actualJson);
     }
 
     @Test
-    public void getLoop() throws Exception {
-        assertEquals(0, payload.getLoop());
+    public void testRequiredParams() {
+        String text = "Bonjour, wie geht es dier?";
+        TalkPayload payload = TalkPayload.builder(text).build();
+        assertEquals("{\"text\":\""+text+"\"}", payload.toJson());
+        assertNull(payload.getLanguage());
+        assertNull(payload.getLoop());
+        assertNull(payload.getStyle());
+        assertNull(payload.getLevel());
+        assertNull(payload.getPremium());
     }
 
     @Test
-    public void getText() throws Exception {
-        assertEquals("Hola Mundo!", payload.getText());
+    public void testNoText() {
+        assertThrows(IllegalArgumentException.class, () -> TalkPayload.builder(null).build());
+        assertThrows(IllegalArgumentException.class, () -> TalkPayload.builder("").build());
+        assertThrows(IllegalArgumentException.class, () -> TalkPayload.builder(" ").build());
     }
 
     @Test
-    public void getLanguage() throws Exception {
-        assertEquals(TextToSpeechLanguage.AMERICAN_ENGLISH, payload.getLanguage());
+    public void testInvalidVolumeLevel() {
+        TalkPayload.Builder builder = TalkPayload.builder("Guten tag");
+        assertEquals(-1.0, builder.level(-1).build().getLevel(), 0.01);
+        assertEquals(1.0, builder.level(1).build().getLevel(), 0.01);
+        assertThrows(IllegalArgumentException.class, () -> builder.level(-1.1).build());
+        assertThrows(IllegalArgumentException.class, () -> builder.level(1.1).build());
     }
 
     @Test
-    public void getStyle() throws Exception {
-        assertEquals(Integer.valueOf(2), payload.getStyle());
+    public void testInvalidStyle() {
+        TalkPayload.Builder builder = TalkPayload.builder("Guten tag");
+        assertEquals(0, builder.style(0).build().getStyle().intValue());
+        assertThrows(IllegalArgumentException.class, () -> builder.style(-1).build());
     }
 
     @Test
-    public void toJson() throws Exception {
-        String jsonString = "{\"text\":\"Hola Mundo!\",\"loop\":0,\"language\":\"en-US\",\"style\":2}";
-        assertEquals(jsonString, payload.toJson());
+    public void testInvalidLoop() {
+        TalkPayload.Builder builder = TalkPayload.builder("Guten tag");
+        assertEquals(0, builder.loop(0).build().getLoop().intValue());
+        assertThrows(IllegalArgumentException.class, () -> builder.loop(-1).build());
     }
 }

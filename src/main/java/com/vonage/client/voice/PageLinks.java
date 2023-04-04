@@ -16,11 +16,7 @@
 package com.vonage.client.voice;
 
 public class PageLinks {
-    private PageLink self;
-    private PageLink next;
-    private PageLink prev;
-    private PageLink first;
-    private PageLink last;
+    private PageLink self, next, prev, first, last;
 
     public PageLink getSelf() {
         return self;
