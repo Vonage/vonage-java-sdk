@@ -17,6 +17,7 @@ package com.vonage.client.numbers;
 
 import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
+import com.vonage.client.VonageClientException;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
@@ -48,5 +49,10 @@ class SearchNumbersEndpoint extends AbstractMethod<SearchNumbersFilter, SearchNu
     @Override
     public SearchNumbersResponse parseResponse(HttpResponse response) throws IOException {
         return SearchNumbersResponse.fromJson(basicResponseHandler.handleResponse(response));
+    }
+
+    @Override
+    protected RequestBuilder applyAuth(RequestBuilder request) throws VonageClientException {
+        return getAuthMethod(getAcceptableAuthMethods()).applyAsBasicAuth(request);
     }
 }

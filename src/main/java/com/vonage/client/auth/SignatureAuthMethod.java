@@ -41,11 +41,8 @@ public class SignatureAuthMethod implements AuthMethod {
         request.addParameter("api_key", apiKey);
         List<NameValuePair> params = request.getParameters();
         RequestSigning.constructSignatureForRequestParameters(params, apiSecret, hashType);
-
-        // TODO: This is ugly:
-        request.addParameter(params.get(params.size()-1))
-                .addParameter(params.get(params.size()-2));
-
+        int last = params.size() - 1;
+        request.addParameters(params.get(last), params.get(last - 1));
         return request;
     }
 

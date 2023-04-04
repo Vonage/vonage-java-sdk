@@ -53,7 +53,11 @@ class BuyNumberEndpoint extends AbstractMethod<BuyNumberRequest, Void> {
         if (response.getStatusLine().getStatusCode() != 200) {
             throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
         }
-
         return null;
+    }
+
+    @Override
+    protected RequestBuilder applyAuth(RequestBuilder request) throws VonageClientException {
+        return getAuthMethod(getAcceptableAuthMethods()).applyAsBasicAuth(request);
     }
 }
