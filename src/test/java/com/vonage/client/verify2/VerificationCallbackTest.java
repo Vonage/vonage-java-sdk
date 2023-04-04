@@ -44,7 +44,6 @@ public class VerificationCallbackTest {
 		assertEquals(Instant.ofEpochMilli(1577890800001L), webhook.getFinalizedAt());
 		assertEquals("my-personal-ref", webhook.getClientRef());
 		assertNull(webhook.getChannelTimeout());
-		assertNull(webhook.getPrice());
 		assertNull(webhook.getSilentAuthUrl());
 		assertNull(webhook.getWorkflows());
 		assertNull(webhook.getSubmittedAt());
@@ -118,7 +117,6 @@ public class VerificationCallbackTest {
 		assertEquals(Instant.ofEpochMilli(1608894120300L), workflowUnderEvaluation.getInitiatedAt());
 		assertEquals(VerificationStatus.UNUSED, workflowUnderEvaluation.getStatus());
 
-		assertEquals(0.300000125, webhook.getPrice(), 0.00000000001);
 		assertEquals("my-personal-ref", webhook.getClientRef());
 		assertNull(webhook.getSilentAuthUrl());
 		assertNull(webhook.getChannel());
@@ -157,7 +155,6 @@ public class VerificationCallbackTest {
 		assertNull(webhook.getFinalizedAt());
 		assertNull(webhook.getClientRef());
 		assertNull(webhook.getChannelTimeout());
-		assertNull(webhook.getPrice());
 		assertNull(webhook.getWorkflows());
 		assertNull(webhook.getSubmittedAt());
 	}

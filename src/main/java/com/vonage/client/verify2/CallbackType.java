@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum CallbackType {
 	/**
-	 * Used for miscellaneous events and Silent Auth updates.
+	 * Used for miscellaneous event updates.
 	 */
 	EVENT,
 

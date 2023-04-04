@@ -74,7 +74,7 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 				new SilentAuthWorkflow(toNumber)
 		);
 		return VerificationRequest.builder()
-				.brand("Nexmo (now Vonage)")
+				.brand("Nexmo").fraudCheck(false)
 				.codeLength(8).channelTimeout(500)
 				.locale(Locale.GERMAN_GERMANY)
 				.clientRef("callback-ref0x1")

@@ -38,7 +38,7 @@ public class VerificationRequestTest {
 
 	Builder newBuilderAllParams() {
 		return newBuilder().codeLength(CODE_LENGTH).clientRef(CLIENT_REF)
-				.channelTimeout(CHANNEL_TIMEOUT).locale(LOCALE);
+				.channelTimeout(CHANNEL_TIMEOUT).locale(LOCALE).fraudCheck(true);
 	}
 
 	Workflow getWorkflowRequiredParamsForChannel(Channel channel) {
@@ -113,8 +113,8 @@ public class VerificationRequestTest {
 			prefix += ",\"code_length\":"+CODE_LENGTH;
 		}
 		expectedJson = prefix + expectedJson.replaceFirst("\\{", ",");
-		prefix = BRAND + "\",";
-		replacement = prefix + "\"client_ref\":\""+CLIENT_REF+"\",";
+		prefix = "\"brand\":\"" + BRAND + "\",";
+		replacement = "\"fraud_check\":true," + prefix + "\"client_ref\":\""+CLIENT_REF+"\",";
 		expectedJson = expectedJson.replace(prefix, replacement);
 		return expectedJson;
 	}

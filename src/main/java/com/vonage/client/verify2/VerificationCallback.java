@@ -40,7 +40,6 @@ public class VerificationCallback {
 	protected CallbackType type;
 	protected String clientRef;
 	protected Integer channelTimeout;
-	protected Double price;
 	protected List<WorkflowStatus> workflows;
 	@JsonProperty("action") List<Action> actions;
 
@@ -118,7 +117,7 @@ public class VerificationCallback {
 	}
 
 	/**
-	 * Type of response.
+	 * Type of response. {@linkplain CallbackType#SUMMARY} only applies to WhatsApp Interactive and Silent Auth.
 	 *
 	 * @return The event type as an enum.
 	 */
@@ -146,17 +145,6 @@ public class VerificationCallback {
 	@JsonProperty("channel_timeout")
 	public Integer getChannelTimeout() {
 		return channelTimeout;
-	}
-
-	/**
-	 * If {@linkplain #getType()} is {@linkplain CallbackType#SUMMARY}, this will return the total cost
-	 * for this request so far in Euros (this may differ as the request progresses), {@code null} otherwise.
-	 *
-	 * @return The total cost of the verification request in EUR, or {@code null} if not applicable.
-	 */
-	@JsonProperty("price")
-	public Double getPrice() {
-		return price;
 	}
 
 	/**

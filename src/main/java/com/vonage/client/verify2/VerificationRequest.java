@@ -40,14 +40,16 @@ import java.util.Objects;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class VerificationRequest {
-	protected Locale locale;
-	protected Integer channelTimeout, codeLength;
-	protected String brand, clientRef;
-	protected List<Workflow> workflows;
+	protected final Locale locale;
+	protected final Integer channelTimeout, codeLength;
+	protected final Boolean fraudCheck;
+	protected final String brand, clientRef;
+	protected final List<Workflow> workflows;
 
 	VerificationRequest(Builder builder) {
 		locale = builder.locale;
 		clientRef = builder.clientRef;
+		fraudCheck = builder.fraudCheck;
 		if ((brand = builder.brand) == null || brand.isEmpty()) {
 			throw new IllegalArgumentException("Brand name is required.");
 		}
@@ -117,6 +119,17 @@ public class VerificationRequest {
 	}
 
 	/**
+	 * Determines if the network level fraud check is enforced. See
+	 * <a href=https://developer.vonage.com/en/verify/verify-v2/guides/v2-anti-fraud>the documentation</a>.
+	 *
+	 * @return Whether network block is respected, or {@code null} if not set (the default).
+	 */
+	@JsonProperty("fraud_check")
+	public Boolean getFraudCheck() {
+		return fraudCheck;
+	}
+
+	/**
 	 * Workflows are a sequence of actions that Vonage use to reach the user you wish to verify with a PIN code.
 	 *
 	 * @return The list of workflows (contact methods) to be used in verification, in order of preference.
@@ -165,6 +178,7 @@ public class VerificationRequest {
 	}
 	
 	public static final class Builder {
+		Boolean fraudCheck;
 		String brand, clientRef;
 		Integer timeout, codeLength;
 		Locale locale;
@@ -272,6 +286,22 @@ public class VerificationRequest {
 		 */
 		public Builder clientRef(String clientRef) {
 			this.clientRef = clientRef;
+			return this;
+		}
+
+		/**
+		 * Set this parameter to {@code false} to force through the request even if it's
+		 * blocked by the network's fraud protection. Refer to
+		 * <a href=https://developer.vonage.com/en/verify/verify-v2/guides/v2-anti-fraud>
+		 * the documentation</a> for details.
+		 *
+		 * @param fraudCheck Whether to enforce network block. Default is {@code true}.
+		 * Set to {@code false} to bypass a network block for this request.
+		 *
+		 * @return This builder.
+		 */
+		public Builder fraudCheck(boolean fraudCheck) {
+			this.fraudCheck = fraudCheck;
 			return this;
 		}
 
