@@ -15,21 +15,34 @@
  */
 package com.vonage.client.voice;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.EXISTING_PROPERTY,
-        property = "type"
-)
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = PhoneEndpoint.class, name = "phone"),
-        @JsonSubTypes.Type(value = SipEndpoint.class, name = "sip"),
-        @JsonSubTypes.Type(value = WebSocketEndpoint.class, name = "websocket"),
-        @JsonSubTypes.Type(value = AppEndpoint.class, name = "app")
-})
-public interface Endpoint {
-    String getType();
-    String toLog();
+/**
+ * TODO.
+ *
+ * @since 7.2.1
+ */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+public class AppEndpoint implements Endpoint {
+    private static final String TYPE = "app";
+
+    private String user;
+
+    public AppEndpoint() {
+        // NOOP
+    }
+
+    @Override
+    public String toLog() {
+        return "user=" + user;
+    }
+
+    public String getType() {
+        return TYPE;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
 }
