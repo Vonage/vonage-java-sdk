@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-# [7.2.0]
+# [7.2.0] - 2023-03-08
 - Updates to Messages v1:
   - Added `InboundMessage` webhook class
   - Fixed timestamp format deserialization for MessageStatus (now returns an Instant)
