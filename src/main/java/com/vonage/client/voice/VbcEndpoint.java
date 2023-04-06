@@ -18,35 +18,40 @@ package com.vonage.client.voice;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+/**
+ * Represents a VBC call type.
+ *
+ * @since 7.3.0
+ */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SipEndpoint implements Endpoint {
-    private static final String TYPE = "sip";
-    private String uri;
+public class VbcEndpoint implements Endpoint {
+    private static final String TYPE = "vbc";
+    private String extension;
 
-    protected SipEndpoint() {
+    protected VbcEndpoint() {
     }
 
-    public SipEndpoint(String uri) {
-        this.uri = uri;
+    public VbcEndpoint(String extension) {
+        this.extension = extension;
     }
 
-    @Deprecated
-    public void setUri(String uri) {
-        this.uri = uri;
+    /**
+     * The extension to call.
+     *
+     * @return The VBC extension, or {@code null} if unset.
+     */
+    public String getExtension() {
+        return extension;
     }
 
-    public String getUri() {
-        return uri;
+    @Override
+    public String toLog() {
+        return extension;
     }
 
     @Override
     public String getType() {
         return TYPE;
-    }
-
-    @Override
-    public String toLog() {
-        return uri;
     }
 }

@@ -18,20 +18,20 @@ package com.vonage.client.voice.ncco;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
- * Represents an app endpoint used in a {@link ConnectAction}. See
- * <a href=https://developer.vonage.com/voice/voice-api/ncco-reference#app-endpoint>the documentation</a>
+ * Represents a VBC endpoint used in a {@link ConnectAction}. See
+ * <a href=https://developer.vonage.com/voice/voice-api/ncco-reference#vbc-endpoint>the documentation</a>
  * for an example.
  *
- * @since 5.4.0
+ * @since 7.3.0
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class AppEndpoint implements Endpoint {
+public class VbcEndpoint implements Endpoint {
     private static final String TYPE = "app";
 
-    private final String user;
+    private final String extension;
 
-    private AppEndpoint(Builder builder) {
-        this.user = builder.user;
+    private VbcEndpoint(Builder builder) {
+        this.extension = builder.extension;
     }
 
     @Override
@@ -39,8 +39,8 @@ public class AppEndpoint implements Endpoint {
         return TYPE;
     }
 
-    public String getUser() {
-        return user;
+    public String getExtension() {
+        return extension;
     }
 
     public static Builder builder(String user) {
@@ -48,19 +48,19 @@ public class AppEndpoint implements Endpoint {
     }
 
     public static class Builder {
-        private String user;
+        private String extension;
 
-        Builder(String user) {
-            this.user = user;
+        Builder(String extension) {
+            this.extension = extension;
         }
 
-        public Builder user(String user) {
-            this.user = user;
+        public Builder extension(String extension) {
+            this.extension = extension;
             return this;
         }
 
-        public AppEndpoint build() {
-            return new AppEndpoint(this);
+        public VbcEndpoint build() {
+            return new VbcEndpoint(this);
         }
     }
 }
