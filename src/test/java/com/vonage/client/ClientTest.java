@@ -22,9 +22,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
+import static org.mockito.Mockito.*;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
-import static org.mockito.Mockito.*;
 
 public abstract class ClientTest<T> {
     protected HttpWrapper wrapper;

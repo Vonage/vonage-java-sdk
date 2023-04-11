@@ -13,14 +13,15 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.voice.endpoints;
+package com.vonage.client.voice;
 
-import com.vonage.client.voice.PhoneEndpoint;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 
 public class PhoneEndpointTest {
+
     @Test
     public void testConstructor() throws Exception {
         PhoneEndpoint e = new PhoneEndpoint("number", "dtmf");

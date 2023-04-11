@@ -18,35 +18,40 @@ package com.vonage.client.voice;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+/**
+ * Represents an app-to-app call type.
+ *
+ * @since 7.3.0
+ */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SipEndpoint implements Endpoint {
-    private static final String TYPE = "sip";
-    private String uri;
+public class AppEndpoint implements Endpoint {
+    private static final String TYPE = "app";
+    private String user;
 
-    protected SipEndpoint() {
+    protected AppEndpoint() {
     }
 
-    public SipEndpoint(String uri) {
-        this.uri = uri;
+    public AppEndpoint(String user) {
+        this.user = user;
     }
 
-    @Deprecated
-    public void setUri(String uri) {
-        this.uri = uri;
+    /**
+     * The username to call.
+     *
+     * @return The app user, or {@code null} if unset.
+     */
+    public String getUser() {
+        return user;
     }
 
-    public String getUri() {
-        return uri;
+    @Override
+    public String toLog() {
+        return user;
     }
 
     @Override
     public String getType() {
         return TYPE;
-    }
-
-    @Override
-    public String toLog() {
-        return uri;
     }
 }

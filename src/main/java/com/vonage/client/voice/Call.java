@@ -98,7 +98,7 @@ public class Call {
     @JsonProperty("answer_method")
     public String getAnswerMethod() {
         // Hide the answer method if the answer url isn't defined
-        return (answerUrl != null) ? answerMethod : null;
+        return answerUrl != null ? answerMethod : null;
     }
 
     public void setAnswerMethod(String answerMethod) {
@@ -158,12 +158,13 @@ public class Call {
         return fromRandomNumber;
     }
 
-
     /**
      * Set to true to use random phone number as from. The number will be selected from the list of the numbers assigned to the current application. random_from_number: true cannot be used together with from.
      * @param fromRandomNumber Whether to use random number.
      */
-    public void setFromRandomNumber(Boolean fromRandomNumber) { this.fromRandomNumber = fromRandomNumber; }
+    public void setFromRandomNumber(Boolean fromRandomNumber) {
+        this.fromRandomNumber = fromRandomNumber;
+    }
 
     @JsonProperty("ncco")
     public Collection<? extends Action> getNcco() {
