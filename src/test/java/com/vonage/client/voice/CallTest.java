@@ -17,9 +17,9 @@ package com.vonage.client.voice;
 
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.voice.ncco.*;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import java.util.*;
-import static org.junit.Assert.*;
 
 public class CallTest {
 
@@ -27,22 +27,22 @@ public class CallTest {
     public void testToJson() throws Exception {
         Call call = new Call("4477999000", "44111222333", "https://callback.example.com/");
         assertEquals(
-                "{\"to\":[{\"type\":\"phone\",\"number\":\"4477999000\"}],\"from\":{\"type\":\"phone\","
-                        + "\"number\":\"44111222333\""
-                        + "},\"answer_method\":\"GET\",\"answer_url\":[\"https://callback.example.com/\"]}",
+                "{\"to\":[{\"number\":\"4477999000\",\"type\":\"phone\"}]," +
+                        "\"from\":{\"number\":\"44111222333\",\"type\":\"phone\"}," +
+                        "\"answer_method\":\"GET\",\"answer_url\":[\"https://callback.example.com/\"]}",
                 call.toJson()
         );
     }
 
     @Test
-    public void testToJsonRandomNumber() throws Exception{
+    public void testToJsonRandomNumber() throws Exception {
         Call call = new Call();
         call.setTo(new Endpoint[]{new PhoneEndpoint("4477999000")});
         call.setFromRandomNumber(true);
         call.setAnswerMethod("GET");
         call.setAnswerUrl("https://callback.example.com/");
 
-        assertEquals("{\"to\":[{\"type\":\"phone\",\"number\":\"4477999000\"}],"
+        assertEquals("{\"to\":[{\"number\":\"4477999000\",\"type\":\"phone\"}],"
                 + "\"answer_method\":\"GET\",\"answer_url\":[\"https://callback.example.com/\"],\"from_random_number\":true}",
                 call.toJson());
     }
@@ -52,9 +52,9 @@ public class CallTest {
         Call call = new Call("4477999000", "44111222333", "https://callback.example.com/");
         call.setMachineDetection(MachineDetection.CONTINUE);
         assertEquals(
-                "{\"to\":[{\"type\":\"phone\",\"number\":\"4477999000\"}],\"from\":{\"type\":\"phone\","
-                        + "\"number\":\"44111222333\""
-                        + "},\"answer_method\":\"GET\",\"answer_url\":[\"https://callback.example.com/\"],\"machine_detection\":\"continue\"}",
+                "{\"to\":[{\"number\":\"4477999000\",\"type\":\"phone\"}],"
+                        + "\"from\":{\"number\":\"44111222333\",\"type\":\"phone\"},"
+                        + "\"answer_method\":\"GET\",\"answer_url\":[\"https://callback.example.com/\"],\"machine_detection\":\"continue\"}",
                 call.toJson()
         );
     }
@@ -86,27 +86,54 @@ public class CallTest {
     }
 
     @Test
-    public void testFromJsonWithEveryAction() {
-        String jsonString = "{\"to\":" + "[{\"type\":\"phone\",\"number\":\"441632960960\"}],"
-                + "\"from\":{\"type\":\"phone\",\"number\":\"441632960961\"},"
-                + "\"answer_url\":\"http://example.com/answer\"}";
+    public void testFromJsonWithEveryActionAndEndpoint() {
+        String toFromJsonStart = "{\"to\":[" +
+                "{\"type\":\"phone\",\"number\":\"441632960960\"}," +
+                "{\"type\":\"sip\",\"uri\":\"sip:sip@example.com\"}," +
+                "{\"type\":\"vbc\",\"extension\":\"123\"}," +
+                "{\"type\": \"websocket\",\n" +
+                "        \"uri\": \"ws://example.com/socket\",\n" +
+                "        \"content-type\": \"audio/l16;rate=16000\",\n" +
+                "        \"headers\": {\n" +
+                "            \"name\": \"J Doe\",\n" +
+                "            \"age\": 40,\n" +
+                "            \"address\": {\n" +
+                "                \"line_1\": \"Apartment 14\",\n" +
+                "                \"line_2\": \"123 Example Street\",\n" +
+                "                \"city\": \"New York City\"\n" +
+                "            },\n" +
+                "            \"system_roles\": [183493, 1038492, 22],\n" +
+                "            \"enable_auditing\": false\n" +
+                "         }" +
+                "}],\"from\":{\"type\":\"app\",\"user\":\"nexmo\"}";
 
-        Call newCall = new Call("441632960960", "441632960961", "http://example.com/answer");
+        Map<String, Object> headers = new LinkedHashMap<>(8);
+        headers.put("name", "J Doe");
+        headers.put("age", 40);
+        Map<String, String> address = new LinkedHashMap<>(4);
+        address.put("line_1", "Apartment 14");
+        address.put("line_2", "123 Example Street");
+        address.put("city", "New York City");
+        headers.put("address", address);
+        headers.put("system_roles", Arrays.asList(183493, 1038492, 22));
+        headers.put("enable_auditing", false);
+        com.vonage.client.voice.Endpoint[] endpoints = {
+                new PhoneEndpoint("441632960960"),
+                new SipEndpoint("sip:sip@example.com"),
+                new VbcEndpoint("123"),
+                new WebSocketEndpoint(
+                        "ws://example.com/socket",
+                        "audio/l16;rate=16000",
+                        headers
+                )
+        };
+        com.vonage.client.voice.Endpoint fromEndpoint = new com.vonage.client.voice.AppEndpoint("nexmo");
+        Call expectedCall = new Call(endpoints, fromEndpoint, "http://example.com/answer");
+        String jsonString = toFromJsonStart + ",\"answer_url\":\"http://example.com/answer\"}";
         Call fromJson = Call.fromJson(jsonString);
-        assertEquals(newCall.toJson(), fromJson.toJson());
+        assertEquals(expectedCall.toJson(), fromJson.toJson());
 
-        jsonString = "{\n" +
-                "   \"to\":[\n" +
-                "      {\n" +
-                "         \"type\":\"phone\",\n" +
-                "         \"number\":\"447900000000\"\n" +
-                "      }\n" +
-                "   ],\n" +
-                "   \"from\":{\n" +
-                "      \"type\":\"phone\",\n" +
-                "      \"number\":\"447900000001\"\n" +
-                "   },\n" +
-                "   \"ncco\":[\n" +
+        jsonString = toFromJsonStart + ",\n   \"ncco\":[\n" +
                 "      {\n" +
                 "         \"action\":\"record\",\n" +
                 "         \"eventUrl\":[\n" +
@@ -163,11 +190,18 @@ public class CallTest {
                 "}";
 
         fromJson = Call.fromJson(jsonString);
-        assertEquals(1, fromJson.getTo().length);
+        assertEquals(4, fromJson.getTo().length);
         assertEquals("phone", fromJson.getTo()[0].getType());
-        assertEquals("447900000000", ((PhoneEndpoint) fromJson.getTo()[0]).getNumber());
-        assertTrue(fromJson.getFrom() instanceof PhoneEndpoint);
-        assertEquals("447900000001", ((PhoneEndpoint) fromJson.getFrom()).getNumber());
+        assertEquals("441632960960", ((PhoneEndpoint) fromJson.getTo()[0]).getNumber());
+        assertEquals("sip", fromJson.getTo()[1].getType());
+        assertEquals("sip:sip@example.com", ((SipEndpoint) fromJson.getTo()[1]).getUri());
+        assertEquals("vbc", fromJson.getTo()[2].getType());
+        assertEquals("123", ((VbcEndpoint) fromJson.getTo()[2]).getExtension());
+        assertEquals("websocket", fromJson.getTo()[3].getType());
+        assertEquals("ws://example.com/socket", ((WebSocketEndpoint) fromJson.getTo()[3]).getUri());
+        assertEquals("audio/l16;rate=16000", ((WebSocketEndpoint) fromJson.getTo()[3]).getContentType());
+        assertEquals("app", fromJson.getFrom().getType());
+        assertEquals("nexmo", ((AppEndpoint) fromJson.getFrom()).getUser());
         Collection<? extends Action> ncco = fromJson.getNcco();
         assertEquals(8, ncco.size());
         Iterator<? extends Action> actionsIter = ncco.iterator();
@@ -236,7 +270,7 @@ public class CallTest {
     public void testNccoParameterWithEmptyNcco() {
         Call call = new Call("15551234567", "25551234567", Collections.emptyList());
         assertEquals(
-                "{\"to\":[{\"type\":\"phone\",\"number\":\"15551234567\"}],\"from\":{\"type\":\"phone\",\"number\":\"25551234567\"},\"ncco\":[]}",
+                "{\"to\":[{\"number\":\"15551234567\",\"type\":\"phone\"}],\"from\":{\"number\":\"25551234567\",\"type\":\"phone\"},\"ncco\":[]}",
                 call.toJson()
         );
     }
@@ -245,7 +279,7 @@ public class CallTest {
     public void testNccoParameterWithSingleActionNcco() {
         Call call = new Call("15551234567", "25551234567", Collections.singletonList(TalkAction.builder("Hello World").build()));
         assertEquals(
-                "{\"to\":[{\"type\":\"phone\",\"number\":\"15551234567\"}],\"from\":{\"type\":\"phone\",\"number\":\"25551234567\"},\"ncco\":[{\"text\":\"Hello World\",\"action\":\"talk\"}]}",
+                "{\"to\":[{\"number\":\"15551234567\",\"type\":\"phone\"}],\"from\":{\"number\":\"25551234567\",\"type\":\"phone\"},\"ncco\":[{\"text\":\"Hello World\",\"action\":\"talk\"}]}",
                 call.toJson()
         );
     }
@@ -259,7 +293,7 @@ public class CallTest {
                 TalkAction.builder("Goodbye").build()
         ));
         assertEquals(
-                "{\"to\":[{\"type\":\"phone\",\"number\":\"15551234567\"}],\"from\":{\"type\":\"phone\",\"number\":\"25551234567\"},\"ncco\":[{\"text\":\"Hello World\",\"action\":\"talk\"},{\"action\":\"record\"},{\"action\":\"input\"},{\"text\":\"Goodbye\",\"action\":\"talk\"}]}",
+                "{\"to\":[{\"number\":\"15551234567\",\"type\":\"phone\"}],\"from\":{\"number\":\"25551234567\",\"type\":\"phone\"},\"ncco\":[{\"text\":\"Hello World\",\"action\":\"talk\"},{\"action\":\"record\"},{\"action\":\"input\"},{\"text\":\"Goodbye\",\"action\":\"talk\"}]}",
                 call.toJson()
         );
     }

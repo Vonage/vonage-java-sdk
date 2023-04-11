@@ -15,12 +15,14 @@
  */
 package com.vonage.client.voice;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.Objects;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PhoneEndpoint implements Endpoint {
-    private final String type = "phone";
+    private static final String TYPE = "phone";
     private String number, dtmfAnswer;
 
     public PhoneEndpoint() {
@@ -37,7 +39,7 @@ public class PhoneEndpoint implements Endpoint {
 
     @Override
     public String getType() {
-        return type;
+        return TYPE;
     }
 
     @Override
@@ -66,13 +68,12 @@ public class PhoneEndpoint implements Endpoint {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PhoneEndpoint that = (PhoneEndpoint) o;
-        return Objects.equals(type, that.type) &&
-                Objects.equals(number, that.number) &&
+        return Objects.equals(number, that.number) &&
                 Objects.equals(dtmfAnswer, that.dtmfAnswer);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, number, dtmfAnswer);
+        return Objects.hash(TYPE, number, dtmfAnswer);
     }
 }
