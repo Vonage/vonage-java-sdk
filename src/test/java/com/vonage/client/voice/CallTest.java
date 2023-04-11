@@ -16,6 +16,7 @@
 package com.vonage.client.voice;
 
 import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.common.HttpMethod;
 import com.vonage.client.voice.ncco.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -43,7 +44,7 @@ public class CallTest {
         call.setAnswerUrl("https://callback.example.com/");
 
         assertEquals("{\"to\":[{\"number\":\"4477999000\",\"type\":\"phone\"}],"
-                + "\"answer_method\":\"GET\",\"answer_url\":[\"https://callback.example.com/\"],\"from_random_number\":true}",
+                + "\"answer_method\":\"GET\",\"answer_url\":[\"https://callback.example.com/\"],\"random_from_number\":true}",
                 call.toJson());
     }
 
@@ -66,7 +67,7 @@ public class CallTest {
         Call call = new Call("", "", "https://callback.example.com/");
         call.setAnswerMethod("BREW");
         call.setAnswerUrl("https://answer.example.com/");
-        call.setEventMethod("RUN");
+        call.setEventMethod("PUT");
         call.setEventUrl("https://events.example.com/");
         call.setFrom(from);
         call.setLengthTimer(101);
@@ -74,9 +75,9 @@ public class CallTest {
         call.setRingingTimer(300);
         call.setTo(new PhoneEndpoint[]{to});
 
-        assertEquals("BREW", call.getAnswerMethod());
+        assertEquals("UNKNOWN", call.getAnswerMethod());
         assertEquals("https://answer.example.com/", call.getAnswerUrl()[0]);
-        assertEquals("RUN", call.getEventMethod());
+        assertEquals("PUT", call.getEventMethod());
         assertEquals("https://events.example.com/", call.getEventUrl()[0]);
         assertEquals(from, call.getFrom());
         assertEquals(101, call.getLengthTimer().intValue());
@@ -298,4 +299,114 @@ public class CallTest {
         );
     }
 
+    @Test
+    public void testConstructAllParams() {
+        Call call = Call.builder()
+                .from("447900000001")
+                .to(
+                    new AppEndpoint("nexmo"),
+                    new SipEndpoint("sip://example.com"),
+                    new VbcEndpoint("7890"),
+                    new WebSocketEndpoint("wss://example.org", "audio/l16", Collections.emptyMap())
+                )
+                .ncco(
+                    TalkAction.builder("Hello").build(),
+                    RecordAction.builder().build(),
+                    ConnectAction.builder().build()
+                )
+                .answerMethod(HttpMethod.POST).eventMethod(HttpMethod.POST)
+                .eventUrl("https://example.com/voice/event")
+                .answerUrl("https://example.com/voice/answer")
+                .fromRandomNumber(false).machineDetection(MachineDetection.HANGUP)
+                .lengthTimer(30).ringingTimer(55).build();
+
+        assertEquals(30, call.getLengthTimer().intValue());
+        assertEquals(55, call.getRingingTimer().intValue());
+        assertNotNull(call.getAnswerUrl());
+        assertNotNull(call.getEventUrl());
+        assertEquals("POST", call.getAnswerMethod());
+        assertEquals("POST", call.getEventMethod());
+        assertFalse(call.getFromRandomNumber());
+        assertEquals(MachineDetection.HANGUP, call.getMachineDetection());
+        assertEquals("phone", call.getFrom().getType());
+        Endpoint[] to = call.getTo();
+        assertEquals(4, to.length);
+        assertEquals("app", to[0].getType());
+        assertEquals("sip", to[1].getType());
+        assertEquals("vbc", to[2].getType());
+        assertEquals("websocket", to[3].getType());
+        Collection<? extends Action> ncco = call.getNcco();
+        assertNotNull(ncco);
+        assertEquals(3, ncco.size());
+        Iterator<? extends Action> nccoIter = ncco.iterator();
+        assertEquals("talk", nccoIter.next().getAction());
+        assertEquals("record", nccoIter.next().getAction());
+        assertEquals("connect", nccoIter.next().getAction());
+    }
+
+    @Test
+    public void testConstructRequiredParams() {
+        Call call = Call.builder().to(new VbcEndpoint("123")).build();
+        assertNull(call.getEventUrl());
+        assertNull(call.getAnswerUrl());
+        assertNull(call.getNcco());
+        assertNull(call.getEventMethod());
+        assertNull(call.getAnswerMethod());
+        assertNull(call.getLengthTimer());
+        assertNull(call.getRingingTimer());
+        assertNull(call.getMachineDetection());
+        assertNull(call.getFromRandomNumber());
+        assertNull(call.getFrom());
+        assertEquals("123", call.getTo()[0].toLog());
+        assertThrows(IllegalStateException.class, () -> Call.builder().build());
+        assertThrows(IllegalStateException.class, () -> Call.builder().to().build());
+        assertThrows(IllegalStateException.class, () -> Call.builder().to((Endpoint) null).build());
+    }
+
+    @Test
+    public void testConstructDefaultAnswerMethod() {
+        Call call = Call.builder().to(new VbcEndpoint("123"))
+                .answerUrl("http://example.com/answer").build();
+        assertEquals("GET", call.getAnswerMethod());
+    }
+
+    @Test
+    public void testConstructFromRandomNumber() {
+        VbcEndpoint vbc = new VbcEndpoint("789");
+        assertThrows(IllegalStateException.class, () ->
+            Call.builder().to(vbc).from("447900000001").fromRandomNumber(true).build()
+        );
+        assertTrue(Call.builder().to(vbc).fromRandomNumber(true).build().getFromRandomNumber());
+    }
+
+    @Test
+    public void testConstructInvalidMethod() {
+        VbcEndpoint vbc = new VbcEndpoint("789");
+        assertThrows(IllegalArgumentException.class, () ->
+                Call.builder().to(vbc).answerMethod(HttpMethod.PATCH).build()
+        );
+        assertThrows(IllegalArgumentException.class, () ->
+                Call.builder().to(vbc).eventMethod(HttpMethod.PATCH).build()
+        );
+    }
+
+    @Test
+    public void testRingingTimerBounds() {
+        Call.Builder builder = Call.builder().to(new VbcEndpoint("789"));
+        int min = 1, max = 120;
+        assertEquals(min, builder.ringingTimer(min).build().getRingingTimer().intValue());
+        assertEquals(max, builder.ringingTimer(max).build().getRingingTimer().intValue());
+        assertThrows(IllegalArgumentException.class, () -> builder.ringingTimer(max+1).build());
+        assertThrows(IllegalArgumentException.class, () -> builder.ringingTimer(0).build());
+    }
+
+    @Test
+    public void testLengthTimerBounds() {
+        Call.Builder builder = Call.builder().to(new VbcEndpoint("789"));
+        int min = 1, max = 7200;
+        assertEquals(min, builder.lengthTimer(min).build().getLengthTimer().intValue());
+        assertEquals(max, builder.lengthTimer(max).build().getLengthTimer().intValue());
+        assertThrows(IllegalArgumentException.class, () -> builder.lengthTimer(max+1).build());
+        assertThrows(IllegalArgumentException.class, () -> builder.lengthTimer(0).build());
+    }
 }

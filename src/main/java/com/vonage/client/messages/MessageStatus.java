@@ -300,6 +300,7 @@ public class MessageStatus {
 	 * Creates an instance of this class from a JSON payload.
 	 *
 	 * @param json The JSON string to parse.
+	 *
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static MessageStatus fromJson(String json) {
