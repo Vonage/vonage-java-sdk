@@ -335,6 +335,10 @@ public class CallTest {
         assertEquals("sip", to[1].getType());
         assertEquals("vbc", to[2].getType());
         assertEquals("websocket", to[3].getType());
+        assertNotNull(to[0].toLog());
+        assertNotNull(to[1].toLog());
+        assertNotNull(to[2].toLog());
+        assertNotNull(to[3].toLog());
         Collection<? extends Action> ncco = call.getNcco();
         assertNotNull(ncco);
         assertEquals(3, ncco.size());

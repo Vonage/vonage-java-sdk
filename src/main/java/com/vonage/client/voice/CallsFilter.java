@@ -104,12 +104,17 @@ public class CallsFilter {
 
     public static class Builder {
         private CallStatus status;
-        private Date dateStart;
-        private Date dateEnd;
-        private Integer pageSize;
-        private Integer recordIndex;
+        private Date dateStart, dateEnd;
+        private Integer pageSize, recordIndex;
         private CallOrder order;
         private String conversationUuid;
+
+        /**
+         * @deprecated Use {@link #builder()}.
+         */
+        @Deprecated
+        public Builder() {
+        }
 
         /**
          * @param status The status of the calls to lookup.

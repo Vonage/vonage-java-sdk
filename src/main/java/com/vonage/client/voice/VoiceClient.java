@@ -159,7 +159,7 @@ public class VoiceClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public ModifyCallResponse modifyCall(String uuid, ModifyCallAction action) throws VonageResponseParseException, VonageClientException {
-        return this.modifyCall(new CallModifier(uuid, action));
+        return modifyCall(new CallModifier(uuid, action));
     }
 
     /**
