@@ -20,6 +20,8 @@ import com.vonage.client.VonageClient;
 import com.vonage.client.VonageClientException;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.voice.ncco.Ncco;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -36,7 +38,7 @@ public class VoiceClient {
     final StopStreamEndpoint stopStream;
     final StartTalkEndpoint startTalk;
     final StopTalkEndpoint stopTalk;
-    final DtmfEndpoint dtmf;
+    final SendDtmfEndpoint sendDtmf;
     final DownloadRecordingEndpoint downloadRecording;
 
     /**
@@ -53,12 +55,25 @@ public class VoiceClient {
         stopStream = new StopStreamEndpoint(httpWrapper);
         startTalk = new StartTalkEndpoint(httpWrapper);
         stopTalk = new StopTalkEndpoint(httpWrapper);
-        dtmf = new DtmfEndpoint(httpWrapper);
+        sendDtmf = new SendDtmfEndpoint(httpWrapper);
         downloadRecording = new DownloadRecordingEndpoint(httpWrapper);
     }
 
     private String validateUuid(String uuid) {
         return UUID.fromString(Objects.requireNonNull(uuid, "UUID is required.")).toString();
+    }
+
+    private String validateUrl(String url) {
+        if (url == null || url.trim().isEmpty()) {
+            throw new IllegalArgumentException("URL is required.");
+        }
+        try {
+            new URI(url);
+        }
+        catch (URISyntaxException ex) {
+            throw new IllegalArgumentException("Invalid URL provided.", ex);
+        }
+        return url;
     }
 
     /**
@@ -116,15 +131,15 @@ public class VoiceClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public CallInfo getCallDetails(String uuid) throws VonageResponseParseException, VonageClientException {
-        return readCall.execute(uuid);
+        return readCall.execute(validateUuid(uuid));
     }
 
     /**
      * Send DTMF codes to an ongoing call.
      *
-     * @param uuid   (required) The UUID of the call, obtained from the object returned by {@link #createCall(Call)}.
+     * @param uuid   (REQUIRED) The UUID of the call, obtained from the object returned by {@link #createCall(Call)}.
      *               This value can be obtained with {@link CallEvent#getUuid()}
-     * @param digits (required) A string specifying the digits to be sent to the call. Valid characters are the digits
+     * @param digits (REQUIRED) A string specifying the digits to be sent to the call. Valid characters are the digits
      *               {@code 1-9</tt>, <tt>#</tt>, <tt>*</tt>, with the special character <tt>p} indicating a short pause
      *               between tones.
      *
@@ -134,7 +149,10 @@ public class VoiceClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public DtmfResponse sendDtmf(String uuid, String digits) throws VonageResponseParseException, VonageClientException {
-        return dtmf.execute(new DtmfRequestWrapper(uuid, new DtmfPayload(digits)));
+        if (digits == null || digits.trim().isEmpty()) {
+            throw new IllegalArgumentException("Must include at least one digit to send.");
+        }
+        return sendDtmf.execute(new DtmfRequestWrapper(validateUuid(uuid), new DtmfPayload(digits)));
     }
 
     /**
@@ -159,7 +177,7 @@ public class VoiceClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public ModifyCallResponse modifyCall(String uuid, ModifyCallAction action) throws VonageResponseParseException, VonageClientException {
-        return modifyCall(uuid, new ModifyCallPayload(action));
+        return modifyCall(uuid, new ModifyCallPayload(Objects.requireNonNull(action, "Action is required.")));
     }
 
     /**
@@ -173,7 +191,7 @@ public class VoiceClient {
      * @since 7.3.0
      */
     private ModifyCallResponse modifyCall(String uuid, ModifyCallPayload payload) {
-        return modifyCall.execute(new ModifyCallRequestWrapper(uuid, payload));
+        return modifyCall.execute(new ModifyCallRequestWrapper(validateUuid(uuid), payload));
     }
 
     /**
@@ -189,7 +207,7 @@ public class VoiceClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      *
-     * @deprecated Use {@link #modifyCall(String, ModifyCallAction)}
+     * @deprecated Use {@link #modifyCall(String, ModifyCallAction)}. This will be removed in the next major release.
      */
     @Deprecated
     public ModifyCallResponse modifyCall(CallModifier modifier) throws VonageResponseParseException, VonageClientException {
@@ -209,7 +227,7 @@ public class VoiceClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public ModifyCallResponse transferCall(String uuid, String nccoUrl) throws VonageResponseParseException, VonageClientException {
-        return modifyCall(uuid, new TransferCallPayload(nccoUrl));
+        return modifyCall(uuid, new TransferCallPayload(validateUrl(nccoUrl)));
     }
 
     /**
@@ -225,7 +243,7 @@ public class VoiceClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public ModifyCallResponse transferCall(String uuid, Ncco ncco) throws VonageResponseParseException, VonageClientException {
-        return modifyCall(uuid, new TransferCallPayload(ncco));
+        return modifyCall(uuid, new TransferCallPayload(Objects.requireNonNull(ncco, "NCCO is required.")));
     }
 
     /**
@@ -264,7 +282,10 @@ public class VoiceClient {
      * @since 7.3.0
      */
     public StreamResponse startStream(String uuid, String streamUrl, int loop, double level) throws VonageResponseParseException, VonageClientException {
-        return startStream.execute(new StreamRequestWrapper(uuid, new StreamPayload(streamUrl, loop, level)));
+        return startStream.execute(new StreamRequestWrapper(
+                validateUuid(uuid),
+                new StreamPayload(validateUrl(streamUrl), loop, level)
+        ));
     }
 
     /**
@@ -295,7 +316,7 @@ public class VoiceClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public StreamResponse stopStream(String uuid) throws VonageResponseParseException, VonageClientException {
-        return stopStream.execute(uuid);
+        return stopStream.execute(validateUuid(uuid));
     }
 
     /**
@@ -438,7 +459,7 @@ public class VoiceClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public TalkResponse stopTalk(String uuid) throws VonageResponseParseException, VonageClientException {
-        return stopTalk.execute(uuid);
+        return stopTalk.execute(validateUuid(uuid));
     }
 
     /**
@@ -455,6 +476,6 @@ public class VoiceClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public Recording downloadRecording(String recordingUrl) throws VonageResponseParseException, VonageClientException {
-        return downloadRecording.execute(recordingUrl);
+        return downloadRecording.execute(validateUrl(recordingUrl));
     }
 }

@@ -28,6 +28,7 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import org.junit.Test;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -132,6 +133,12 @@ public class VoiceClientTest {
         DtmfResponse response = client.sendDtmf("944dd293-ca13-4a58-bc37-6252e11474be", "332393");
         assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
         assertEquals("DTMF sent", response.getMessage());
+        assertThrows(IllegalArgumentException.class, () ->
+                client.sendDtmf("944dd293-ca13-4a58-bc37-6252e11474be", null)
+        );
+        assertThrows(IllegalArgumentException.class, () ->
+                client.sendDtmf("invalid", "1234")
+        );
     }
 
     @Test
@@ -139,13 +146,29 @@ public class VoiceClientTest {
         VoiceClient client = new VoiceClient(stubHttpWrapper(200, "{\"message\":\"Received\"}"));
         ModifyCallResponse call = client.modifyCall("93137ee3-580e-45f7-a61a-e0b5716000ef", ModifyCallAction.HANGUP);
         assertEquals("Received", call.getMessage());
+        assertThrows(IllegalArgumentException.class, () -> client.modifyCall("invalid", ModifyCallAction.HANGUP));
+        assertThrows(NullPointerException.class, () ->
+                client.modifyCall("93137ee3-580e-45f7-a61a-e0b5716000ef", null)
+        );
+    }
+
+    @Test
+    public void testModifyCallLegacy() throws Exception {
+        VoiceClient client = new VoiceClient(stubHttpWrapper(200, "{\"message\":\"Received\"}"));
+        ModifyCallResponse call = client.modifyCall(new CallModifier("93137ee3-580e-45f7-a61a-e0b5716000ef", ModifyCallAction.HANGUP));
+        assertEquals("Received", call.getMessage());
     }
 
     @Test
     public void testTransferCall() throws Exception {
         VoiceClient client = new VoiceClient(stubHttpWrapper(200, "{\"message\":\"Received\"}"));
-        ModifyCallResponse call = client.transferCall("93137ee3-580e-45f7-a61a-e0b5716000ef", "https://example.com/ncco2");
+        final String url = "https://example.com/ncco2";
+        ModifyCallResponse call = client.transferCall("93137ee3-580e-45f7-a61a-e0b5716000ef", url);
         assertEquals("Received", call.getMessage());
+        assertThrows(IllegalArgumentException.class, () ->
+                client.transferCall("93137ee3-580e-45f7-a61a-e0b5716000ef", "';,x^")
+        );
+        assertThrows(NullPointerException.class, () -> client.transferCall(null, url));
     }
 
     @Test
@@ -155,6 +178,9 @@ public class VoiceClientTest {
                 new Ncco(TalkAction.builder("Thank you for calling!").build(), TalkAction.builder("Bye!").build())
         );
         assertEquals("Received", call.getMessage());
+        assertThrows(NullPointerException.class, () ->
+                client.transferCall("93137ee3-580e-45f7-a61a-e0b5716000ef", (Ncco) null)
+        );
     }
 
     @Test
@@ -163,12 +189,12 @@ public class VoiceClientTest {
                 "{\n" + "  \"message\": \"Stream started\",\n"
                         + "  \"uuid\": \"944dd293-ca13-4a58-bc37-6252e11474be\"\n" + "}"
         ));
-        StreamResponse response = client.startStream(
-                "944dd293-ca13-4a58-bc37-6252e11474be",
-                "https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3"
-        );
+        final String url = "https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3";
+        StreamResponse response = client.startStream("944dd293-ca13-4a58-bc37-6252e11474be", url);
         assertEquals("Stream started", response.getMessage());
         assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
+        assertThrows(NullPointerException.class, () -> client.startStream(null, url));
+        assertThrows(IllegalArgumentException.class, () -> client.startStream("944dd293-ca13-4a58-bc37-6252e11474be", null));
     }
 
     @Test
@@ -212,6 +238,12 @@ public class VoiceClientTest {
         );
         assertEquals("Talk started", response.getMessage());
         assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
+        assertThrows(NullPointerException.class, () ->
+                client.startTalk(null, TalkPayload.builder("Hi").build())
+        );
+        assertThrows(NullPointerException.class, () ->
+                client.startTalk("944dd293-ca13-4a58-bc37-6252e11474be", (TalkPayload) null)
+        );
     }
 
     @Test
@@ -320,6 +352,7 @@ public class VoiceClientTest {
         TalkResponse response = client.stopTalk("944dd293-ca13-4a58-bc37-6252e11474be");
         assertEquals("Talk stopped", response.getMessage());
         assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
+        assertThrows(IllegalArgumentException.class, () -> client.stopTalk("Blah"));
     }
 
     @Test
@@ -328,5 +361,8 @@ public class VoiceClientTest {
         Recording recording = client.downloadRecording("http://example.org/sample");
         String content = new Scanner(recording.getContent()).useDelimiter("\\A").next();
         assertEquals("Bleep bloop", content);
+        assertThrows(IllegalArgumentException.class, () -> client.downloadRecording(",,[]}{{}D:sd"));
+        assertThrows(IllegalArgumentException.class, () -> client.downloadRecording(null));
+        assertThrows(IllegalArgumentException.class, () -> client.downloadRecording(""));
     }
 }

@@ -25,12 +25,12 @@ import org.apache.http.entity.StringEntity;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-class DtmfEndpoint extends AbstractMethod<DtmfRequestWrapper, DtmfResponse> {
+class SendDtmfEndpoint extends AbstractMethod<DtmfRequestWrapper, DtmfResponse> {
     private static final String PATH = "/calls/";
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
     public static final String DTMF_PATH = "/dtmf";
 
-    DtmfEndpoint(HttpWrapper httpWrapper) {
+    SendDtmfEndpoint(HttpWrapper httpWrapper) {
         super(httpWrapper);
     }
 

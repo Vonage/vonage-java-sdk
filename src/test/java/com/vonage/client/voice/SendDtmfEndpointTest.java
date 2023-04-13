@@ -35,19 +35,19 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-public class DtmfEndpointTest {
-    private DtmfEndpoint endpoint;
+public class SendDtmfEndpointTest {
+    private SendDtmfEndpoint endpoint;
     private final String uuid = UUID.randomUUID().toString();
 
     @Before
     public void setUp() throws Exception {
-        endpoint = new DtmfEndpoint(new HttpWrapper());
+        endpoint = new SendDtmfEndpoint(new HttpWrapper());
     }
 
     @Test
     public void makeRequest() throws Exception {
         HttpWrapper httpWrapper = new HttpWrapper();
-        DtmfEndpoint methodUnderTest = new DtmfEndpoint(httpWrapper);
+        SendDtmfEndpoint methodUnderTest = new SendDtmfEndpoint(httpWrapper);
 
         RequestBuilder request = methodUnderTest.makeRequest(new DtmfRequestWrapper(uuid, new DtmfPayload("867")));
 
@@ -63,7 +63,7 @@ public class DtmfEndpointTest {
     @Test
     public void parseResponse() throws Exception {
         HttpWrapper wrapper = new HttpWrapper();
-        DtmfEndpoint methodUnderTest = new DtmfEndpoint(wrapper);
+        SendDtmfEndpoint methodUnderTest = new SendDtmfEndpoint(wrapper);
 
         HttpResponse stubResponse = new BasicHttpResponse(new BasicStatusLine(new ProtocolVersion("1.1", 1, 1),
                 200,
@@ -83,14 +83,14 @@ public class DtmfEndpointTest {
 
     @Test
     public void testRequestThrottleResponse() throws Exception {
-        test429(new DtmfEndpoint(null));
+        test429(new SendDtmfEndpoint(null));
     }
 
     @Test
     public void testCustomUri() throws Exception {
         String expectedUri = "https://example.com/v1/calls/"+uuid+"/dtmf";
         HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri("https://example.com").build());
-        endpoint = new DtmfEndpoint(wrapper);
+        endpoint = new SendDtmfEndpoint(wrapper);
         RequestBuilder builder = endpoint.makeRequest(new DtmfRequestWrapper(uuid, new DtmfPayload("1")));
         assertEquals("PUT", builder.getMethod());
         assertEquals(expectedUri, builder.build().getURI().toString());
