@@ -15,29 +15,17 @@
  */
 package com.vonage.client.voice;
 
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+/**
+ * The request object to stream an audio file.
+ * <p>
+ * Contains the {@code uuid} of the {@link Call} and the {@link StreamPayload} to be sent in the request.
+ */
+class StreamRequestWrapper {
+    final StreamPayload payload;
+    final String uuid;
 
-
-
-public class DtmfModifyCallPayloadTest {
-    private DtmfPayload payload;
-
-    @Before
-    public void setUp() {
-        payload = new DtmfPayload("8675309");
+    public StreamRequestWrapper(String uuid, StreamPayload payload) {
+        this.payload = payload;
+        this.uuid = uuid;
     }
-
-    @Test
-    public void getDigits() throws Exception {
-        assertEquals("8675309", payload.getDigits());
-    }
-
-    @Test
-    public void setDigits() throws Exception {
-        payload.setDigits("1234");
-        assertEquals("1234", payload.getDigits());
-    }
-
 }

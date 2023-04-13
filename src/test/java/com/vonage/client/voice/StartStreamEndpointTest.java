@@ -22,8 +22,10 @@ import org.apache.http.entity.ContentType;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+import java.util.UUID;
 
 public class StartStreamEndpointTest {
+    private final String uuid = UUID.randomUUID().toString();
     private StartStreamEndpoint method;
 
     @Before
@@ -33,10 +35,10 @@ public class StartStreamEndpointTest {
 
     @Test
     public void testDefaultUri() throws Exception {
-        StreamRequest request = new StreamRequest("uuid", "stream-url", 0);
+        StreamRequestWrapper request = new StreamRequestWrapper(uuid, new StreamPayload("stream-url", 0, 0d));
         RequestBuilder builder = method.makeRequest(request);
         assertEquals("PUT", builder.getMethod());
-        assertEquals("https://api.nexmo.com/v1/calls/uuid/stream", builder.build().getURI().toString());
+        assertEquals("https://api.nexmo.com/v1/calls/"+uuid+"/stream", builder.build().getURI().toString());
         assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
         assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
     }
@@ -45,10 +47,9 @@ public class StartStreamEndpointTest {
     public void testCustomUri() throws Exception {
         HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri("https://example.com").build());
         StartStreamEndpoint method = new StartStreamEndpoint(wrapper);
-        StreamRequest request = new StreamRequest("uuid", "stream-url", 0);
-
+        StreamRequestWrapper request = new StreamRequestWrapper(uuid, new StreamPayload("stream-url", 0, 0d));
         RequestBuilder builder = method.makeRequest(request);
         assertEquals("PUT", builder.getMethod());
-        assertEquals("https://example.com/v1/calls/uuid/stream", builder.build().getURI().toString());
+        assertEquals("https://example.com/v1/calls/"+uuid+"/stream", builder.build().getURI().toString());
     }
 }

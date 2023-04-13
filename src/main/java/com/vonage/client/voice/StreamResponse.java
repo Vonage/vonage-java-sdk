@@ -25,7 +25,6 @@ import java.io.IOException;
  * <p>
  * This would be returned by {@link VoiceClient#startStream(String, String)} or {@link VoiceClient#stopStream(String)}
  */
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StreamResponse {
     private String uuid, message;
@@ -38,6 +37,13 @@ public class StreamResponse {
         return message;
     }
 
+    /**
+     * Creates an instance of this class from a JSON payload.
+     *
+     * @param json The JSON string to parse.
+     *
+     * @return An instance of this class with the fields populated, if present.
+     */
     public static StreamResponse fromJson(String json) {
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -46,5 +52,4 @@ public class StreamResponse {
             throw new VonageUnexpectedException("Failed to produce json from StreamResponse object.", jpe);
         }
     }
-
 }

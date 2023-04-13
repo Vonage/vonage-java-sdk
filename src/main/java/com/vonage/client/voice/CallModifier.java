@@ -20,6 +20,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.voice.ncco.Ncco;
 
+/**
+ * @deprecated Will be removed in next major release.
+ */
+@Deprecated
 public class CallModifier {
     private final String uuid;
     private final ModifyCallPayload modifyCallPayload;

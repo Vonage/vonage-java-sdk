@@ -15,24 +15,36 @@
  */
 package com.vonage.client.voice;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vonage.client.VonageUnexpectedException;
+
 /**
- * The JSON payload that will be sent in a {@link DtmfRequest}.
+ * The JSON payload that will be sent in a {@link DtmfRequestWrapper}.
  * <p>
  * {@code digits} are the DTMF tones to be sent to a {@link Call}.
  */
-
-public class DtmfPayload {
-    private String digits;
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+class DtmfPayload {
+    private final String digits;
 
     public DtmfPayload(String digits) {
         this.digits = digits;
     }
 
+    @JsonProperty("digits")
     public String getDigits() {
         return digits;
     }
 
-    public void setDigits(String digits) {
-        this.digits = digits;
+    public String toJson() {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.writeValueAsString(this);
+        } catch (JsonProcessingException jpe) {
+            throw new VonageUnexpectedException("Failed to produce json from "+getClass().getName()+" object.", jpe);
+        }
     }
 }

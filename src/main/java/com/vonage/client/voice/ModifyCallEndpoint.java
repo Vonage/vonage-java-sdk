@@ -25,8 +25,7 @@ import org.apache.http.entity.StringEntity;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-class ModifyCallEndpoint extends AbstractMethod<CallModifier, ModifyCallResponse> {
-
+class ModifyCallEndpoint extends AbstractMethod<ModifyCallRequestWrapper, ModifyCallResponse> {
     private static final String PATH = "/calls/";
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 
@@ -40,12 +39,12 @@ class ModifyCallEndpoint extends AbstractMethod<CallModifier, ModifyCallResponse
     }
 
     @Override
-    public RequestBuilder makeRequest(CallModifier request) throws UnsupportedEncodingException {
-        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid();
+    public RequestBuilder makeRequest(ModifyCallRequestWrapper request) throws UnsupportedEncodingException {
+        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.uuid;
         return RequestBuilder.put(uri)
                 .setHeader("Content-Type", "application/json")
                 .setHeader("Accept", "application/json")
-                .setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
+                .setEntity(new StringEntity(request.payload.toJson(), ContentType.APPLICATION_JSON));
     }
 
     @Override

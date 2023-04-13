@@ -76,7 +76,6 @@ public class CallsFilter {
         conditionalAdd(result, "record_index", this.recordIndex);
         conditionalAdd(result, "order", (this.order != null) ? this.order.getCallOrder() : null);
         conditionalAdd(result, "conversation_uuid", this.conversationUuid);
-
         return result;
     }
 
