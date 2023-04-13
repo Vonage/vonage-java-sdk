@@ -226,7 +226,28 @@ public class VoiceClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public StreamResponse startStream(String uuid, String streamUrl, int loop) throws VonageResponseParseException, VonageClientException {
-        return startStream.execute(new StreamRequest(uuid, streamUrl, loop));
+        return startStream(uuid, streamUrl, loop, 0d);
+    }
+
+    /**
+     * Stream audio to an ongoing call.
+     *
+     * @param uuid      The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value
+     *                  can be obtained with {@link CallEvent#getUuid()}.
+     * @param streamUrl A URL of an audio file in MP3 or 16-bit WAV format, to be streamed to the call.
+     * @param loop      The number of times to repeat the audio. The default value is {@code 1}, or you can use {@code
+     *                  0} to indicate that the audio should be repeated indefinitely.
+     * @param level The audio level of the stream, between -1 and 1 with a precision of 0.1. The default value is 0.
+     *
+     * @return The data returned from the Voice API.
+     *
+     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
+     * @throws VonageResponseParseException if the response from the API could not be parsed.
+     *
+     * @since 7.3.0
+     */
+    public StreamResponse startStream(String uuid, String streamUrl, int loop, double level) throws VonageResponseParseException, VonageClientException {
+        return startStream.execute(new StreamRequestWrapper(uuid, new StreamPayload(streamUrl, loop, level)));
     }
 
     /**

@@ -15,34 +15,43 @@
  */
 package com.vonage.client.voice;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 
 /**
- * The JSON payload that will be sent in a {@link StreamRequest}.
+ * The JSON payload that will be sent in a {@link StreamRequestWrapper}.
  * <p>
  * {@code streamUrl}: An array containing a single URL to an mp3 or wav (16-bit) audio file.
  * {@code loop}: The number of times the audio file at {@code streamUrl} is repeated before the stream ends. Set to 0 to loop infinitely
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+class StreamPayload {
+    private final String[] streamUrl;
+    private final Integer loop;
+    private final Double level;
 
-public class StreamPayload {
-    private String[] streamUrl;
-    private int loop;
-
-    public StreamPayload(String streamUrl, int loop) {
+    public StreamPayload(String streamUrl, Integer loop, Double level) {
         this.streamUrl = new String[]{streamUrl};
         this.loop = loop;
-    }
-
-    public int getLoop() {
-        return loop;
+        this.level = level;
     }
 
     @JsonProperty("stream_url")
     public String[] getStreamUrl() {
         return streamUrl;
+    }
+
+    @JsonProperty("loop")
+    public Integer getLoop() {
+        return loop;
+    }
+
+    @JsonProperty("level")
+    public Double getLevel() {
+        return level;
     }
 
     public String toJson() {
