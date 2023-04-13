@@ -30,6 +30,7 @@ public class CallInfoPage implements Iterable<CallInfo> {
     private PageLinks links;
     private EmbeddedCalls embedded;
 
+    @JsonProperty("count")
     public int getCount() {
         return count;
     }
