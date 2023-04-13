@@ -15,8 +15,6 @@
  */
 package com.vonage.client.voice;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-
 public enum CallOrder {
     ASCENDING("asc"), DESCENDING("desc");
 
@@ -27,12 +25,6 @@ public enum CallOrder {
     }
 
     public String getCallOrder() {
-        return callOrder;
-    }
-
-    @JsonValue
-    @Override
-    public String toString() {
         return callOrder;
     }
 }

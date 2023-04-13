@@ -25,7 +25,7 @@ import org.apache.http.entity.StringEntity;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-class DtmfEndpoint extends AbstractMethod<DtmfRequest, DtmfResponse> {
+class DtmfEndpoint extends AbstractMethod<DtmfRequestWrapper, DtmfResponse> {
     private static final String PATH = "/calls/";
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
     public static final String DTMF_PATH = "/dtmf";
@@ -40,12 +40,12 @@ class DtmfEndpoint extends AbstractMethod<DtmfRequest, DtmfResponse> {
     }
 
     @Override
-    public RequestBuilder makeRequest(DtmfRequest request) throws UnsupportedEncodingException {
-        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid() + DTMF_PATH;
+    public RequestBuilder makeRequest(DtmfRequestWrapper request) throws UnsupportedEncodingException {
+        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.uuid + DTMF_PATH;
         return RequestBuilder.put(uri)
                 .setHeader("Content-Type", "application/json")
                 .setHeader("Accept", "application/json")
-                .setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
+                .setEntity(new StringEntity(request.payload.toJson(), ContentType.APPLICATION_JSON));
     }
 
     @Override

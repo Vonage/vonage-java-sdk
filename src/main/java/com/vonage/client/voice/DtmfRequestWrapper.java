@@ -15,29 +15,17 @@
  */
 package com.vonage.client.voice;
 
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+/**
+ * The request object to send DTMF tones.
+ * <p>
+ * Contains the {@code uuid} of the {@link Call} and the {@link DtmfPayload} to be sent in the request.
+ */
+class DtmfRequestWrapper {
+    final String uuid;
+    final DtmfPayload payload;
 
-
-
-public class DtmfModifyCallPayloadTest {
-    private DtmfPayload payload;
-
-    @Before
-    public void setUp() {
-        payload = new DtmfPayload("8675309");
+    public DtmfRequestWrapper(String uuid, DtmfPayload payload) {
+        this.uuid = uuid;
+        this.payload = payload;
     }
-
-    @Test
-    public void getDigits() throws Exception {
-        assertEquals("8675309", payload.getDigits());
-    }
-
-    @Test
-    public void setDigits() throws Exception {
-        payload.setDigits("1234");
-        assertEquals("1234", payload.getDigits());
-    }
-
 }

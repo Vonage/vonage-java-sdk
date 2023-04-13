@@ -19,8 +19,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import static com.vonage.client.TestUtils.test429;
 import org.apache.http.HttpResponse;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.client.methods.RequestBuilder;
@@ -28,22 +27,21 @@ import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import static com.vonage.client.TestUtils.test429;
-import static org.junit.Assert.assertEquals;
-
+import java.util.UUID;
 
 public class DtmfEndpointTest {
-    private static final Log LOG = LogFactory.getLog(DtmfEndpointTest.class);
+    private DtmfEndpoint endpoint;
+    private final String uuid = UUID.randomUUID().toString();
 
-    private DtmfEndpoint method;
     @Before
     public void setUp() throws Exception {
-        method = new DtmfEndpoint(new HttpWrapper());
+        endpoint = new DtmfEndpoint(new HttpWrapper());
     }
 
     @Test
@@ -51,7 +49,7 @@ public class DtmfEndpointTest {
         HttpWrapper httpWrapper = new HttpWrapper();
         DtmfEndpoint methodUnderTest = new DtmfEndpoint(httpWrapper);
 
-        RequestBuilder request = methodUnderTest.makeRequest(new DtmfRequest("abc-123", "867"));
+        RequestBuilder request = methodUnderTest.makeRequest(new DtmfRequestWrapper(uuid, new DtmfPayload("867")));
 
         assertEquals("PUT", request.getMethod());
         assertEquals(ContentType.APPLICATION_JSON.getMimeType(), request.getFirstHeader("Content-Type").getValue());
@@ -59,7 +57,6 @@ public class DtmfEndpointTest {
 
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode node = objectMapper.readValue(request.getEntity().getContent(), JsonNode.class);
-        LOG.info(request.getEntity().getContent());
         assertEquals("867", node.get("digits").asText());
     }
 
@@ -73,7 +70,7 @@ public class DtmfEndpointTest {
                 "OK"
         ));
 
-        String json = "{\"message\": \"DTMF sent\",\"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"}";
+        String json = "{\"message\": \"DTMF sent\",\"uuid\": \""+uuid+"\"}";
         InputStream jsonStream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
         BasicHttpEntity entity = new BasicHttpEntity();
         entity.setContent(jsonStream);
@@ -81,7 +78,7 @@ public class DtmfEndpointTest {
 
         DtmfResponse response = methodUnderTest.parseResponse(stubResponse);
         assertEquals("DTMF sent", response.getMessage());
-        assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
+        assertEquals(uuid, response.getUuid());
     }
 
     @Test
@@ -91,12 +88,10 @@ public class DtmfEndpointTest {
 
     @Test
     public void testCustomUri() throws Exception {
-        String expectedUri = "https://example.com/v1/calls/ssf61863-4a51-ef6b-11e1-w6edebcf93bb/dtmf";
-
+        String expectedUri = "https://example.com/v1/calls/"+uuid+"/dtmf";
         HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri("https://example.com").build());
-        method = new DtmfEndpoint(wrapper);
-
-        RequestBuilder builder = method.makeRequest(new DtmfRequest("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", "1"));
+        endpoint = new DtmfEndpoint(wrapper);
+        RequestBuilder builder = endpoint.makeRequest(new DtmfRequestWrapper(uuid, new DtmfPayload("1")));
         assertEquals("PUT", builder.getMethod());
         assertEquals(expectedUri, builder.build().getURI().toString());
     }

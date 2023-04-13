@@ -24,7 +24,7 @@ import com.vonage.client.voice.ncco.Ncco;
  * @deprecated Will be made package-private in next major release.
  */
 @Deprecated
-@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class TransferDestination {
     private final Type type;
     private final String[] urls;

@@ -134,7 +134,7 @@ public class VoiceClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public DtmfResponse sendDtmf(String uuid, String digits) throws VonageResponseParseException, VonageClientException {
-        return dtmf.execute(new DtmfRequest(uuid, digits));
+        return dtmf.execute(new DtmfRequestWrapper(uuid, new DtmfPayload(digits)));
     }
 
     /**
