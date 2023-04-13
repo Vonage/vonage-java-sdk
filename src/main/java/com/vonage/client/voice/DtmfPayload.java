@@ -20,7 +20,6 @@ package com.vonage.client.voice;
  * <p>
  * {@code digits} are the DTMF tones to be sent to a {@link Call}.
  */
-
 public class DtmfPayload {
     private String digits;
 

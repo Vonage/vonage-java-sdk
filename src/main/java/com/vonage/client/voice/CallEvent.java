@@ -27,15 +27,6 @@ public class CallEvent {
     private CallStatus status;
     private CallDirection direction;
 
-    public static CallEvent fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, CallEvent.class);
-        } catch (IOException jpe) {
-            throw new VonageUnexpectedException("Failed to produce json from Call object.", jpe);
-        }
-    }
-
     @JsonProperty("uuid")
     public String getUuid() {
         return uuid;
@@ -74,5 +65,21 @@ public class CallEvent {
     @Deprecated
     public void setDirection(CallDirection direction) {
         this.direction = direction;
+    }
+
+    /**
+     * Creates an instance of this class from a JSON payload.
+     *
+     * @param json The JSON string to parse.
+     *
+     * @return An instance of this class with the fields populated, if present.
+     */
+    public static CallEvent fromJson(String json) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(json, CallEvent.class);
+        } catch (IOException jpe) {
+            throw new VonageUnexpectedException("Failed to produce json from Call object.", jpe);
+        }
     }
 }

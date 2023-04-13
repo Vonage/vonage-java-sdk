@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 class DtmfEndpoint extends AbstractMethod<DtmfRequest, DtmfResponse> {
-
     private static final String PATH = "/calls/";
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
     public static final String DTMF_PATH = "/dtmf";

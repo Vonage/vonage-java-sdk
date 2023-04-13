@@ -60,6 +60,13 @@ public class CallInfoPage implements Iterable<CallInfo> {
         return new ArrayIterator<>(embedded.getCallInfos());
     }
 
+    /**
+     * Creates an instance of this class from a JSON payload.
+     *
+     * @param json The JSON string to parse.
+     *
+     * @return An instance of this class with the fields populated, if present.
+     */
     public static CallInfoPage fromJson(String json) {
         try {
             ObjectMapper mapper = new ObjectMapper();
