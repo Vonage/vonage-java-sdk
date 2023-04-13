@@ -159,7 +159,21 @@ public class VoiceClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public ModifyCallResponse modifyCall(String uuid, ModifyCallAction action) throws VonageResponseParseException, VonageClientException {
-        return modifyCall(new CallModifier(uuid, action));
+        return modifyCall(uuid, new ModifyCallPayload(action));
+    }
+
+    /**
+     * Internal implementation of {@code updateCall}.
+     *
+     * @param uuid The call ID.
+     * @param payload The request body.
+     *
+     * @return The server response.
+     *
+     * @since 7.3.0
+     */
+    private ModifyCallResponse modifyCall(String uuid, ModifyCallPayload payload) {
+        return modifyCall.execute(new ModifyCallRequestWrapper(uuid, payload));
     }
 
     /**
@@ -174,9 +188,12 @@ public class VoiceClient {
      *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
+     *
+     * @deprecated Use {@link #modifyCall(String, ModifyCallAction)}
      */
+    @Deprecated
     public ModifyCallResponse modifyCall(CallModifier modifier) throws VonageResponseParseException, VonageClientException {
-        return modifyCall.execute(modifier);
+        return modifyCall(modifier.getUuid(), modifier.getAction());
     }
 
     /**
@@ -192,7 +209,7 @@ public class VoiceClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public ModifyCallResponse transferCall(String uuid, String nccoUrl) throws VonageResponseParseException, VonageClientException {
-        return modifyCall(CallModifier.transferCall(uuid, nccoUrl));
+        return modifyCall(uuid, new TransferCallPayload(nccoUrl));
     }
 
     /**
@@ -208,7 +225,7 @@ public class VoiceClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public ModifyCallResponse transferCall(String uuid, Ncco ncco) throws VonageResponseParseException, VonageClientException {
-        return modifyCall(CallModifier.transferCall(uuid, ncco));
+        return modifyCall(uuid, new TransferCallPayload(ncco));
     }
 
     /**

@@ -29,7 +29,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 class ListCallsEndpoint extends AbstractMethod<CallsFilter, CallInfoPage> {
-
     private static final String PATH = "/calls";
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 

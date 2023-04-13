@@ -26,17 +26,18 @@ import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import java.util.UUID;
 
 public class ModifyCallEndpointTest {
-
     private ModifyCallEndpoint method;
+    private final String uuid = UUID.randomUUID().toString();
 
     @Before
     public void setUp() throws Exception {
@@ -45,73 +46,19 @@ public class ModifyCallEndpointTest {
 
     @Test
     public void makeRequest() throws Exception {
-        RequestBuilder request = method.makeRequest(
-                new CallModifier("abc-123", ModifyCallAction.HANGUP)
-        );
+        for (ModifyCallAction action : ModifyCallAction.values()) {
+            RequestBuilder request = method.makeRequest(new ModifyCallRequestWrapper(
+                    uuid, new ModifyCallPayload(action)
+            ));
 
-        assertEquals("PUT", request.getMethod());
-        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), request.getFirstHeader("Content-Type").getValue());
-        assertEquals(ContentType.APPLICATION_JSON.getMimeType(), request.getFirstHeader("Accept").getValue());
+            assertEquals("PUT", request.getMethod());
+            assertEquals(ContentType.APPLICATION_JSON.getMimeType(), request.getFirstHeader("Content-Type").getValue());
+            assertEquals(ContentType.APPLICATION_JSON.getMimeType(), request.getFirstHeader("Accept").getValue());
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode node = objectMapper.readValue(request.getEntity().getContent(), JsonNode.class);
-        assertEquals("hangup", node.get("action").asText());
-    }
-
-    @Test
-    public void earmuffRequest() throws Exception {
-        RequestBuilder request = method.makeRequest(
-                new CallModifier("abc-123", ModifyCallAction.EARMUFF)
-        );
-
-        assertEquals("PUT", request.getMethod());
-        assertEquals("application/json", request.getFirstHeader("Content-Type").getValue());
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode node = objectMapper.readValue(request.getEntity().getContent(), JsonNode.class);
-        assertEquals("earmuff", node.get("action").asText());
-    }
-
-    @Test
-    public void unearmuffRequest() throws Exception {
-        RequestBuilder request = method.makeRequest(
-                new CallModifier("abc-123", ModifyCallAction.UNEARMUFF)
-        );
-
-        assertEquals("PUT", request.getMethod());
-        assertEquals("application/json", request.getFirstHeader("Content-Type").getValue());
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode node = objectMapper.readValue(request.getEntity().getContent(), JsonNode.class);
-        assertEquals("unearmuff", node.get("action").asText());
-    }
-
-    @Test
-    public void muteRequest() throws Exception {
-        RequestBuilder request = method.makeRequest(
-                new CallModifier("abc-123", ModifyCallAction.MUTE)
-        );
-
-        assertEquals("PUT", request.getMethod());
-        assertEquals("application/json", request.getFirstHeader("Content-Type").getValue());
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode node = objectMapper.readValue(request.getEntity().getContent(), JsonNode.class);
-        assertEquals("mute", node.get("action").asText());
-    }
-
-    @Test
-    public void unmuteRequest() throws Exception {
-        RequestBuilder request = method.makeRequest(
-                new CallModifier("abc-123", ModifyCallAction.UNMUTE)
-        );
-
-        assertEquals("PUT", request.getMethod());
-        assertEquals("application/json", request.getFirstHeader("Content-Type").getValue());
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode node = objectMapper.readValue(request.getEntity().getContent(), JsonNode.class);
-        assertEquals("unmute", node.get("action").asText());
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode node = objectMapper.readValue(request.getEntity().getContent(), JsonNode.class);
+            assertEquals(action.name().toLowerCase(), node.get("action").asText());
+        }
     }
 
     @Test
@@ -135,21 +82,20 @@ public class ModifyCallEndpointTest {
         HttpResponse stubResponse = new BasicHttpResponse(
                 new BasicStatusLine(new ProtocolVersion("1.1", 1, 1), 204, "OK")
         );
-
         ModifyCallResponse response = method.parseResponse(stubResponse);
         assertNull(response);
     }
 
     @Test
     public void testCustomUri() throws Exception {
-        String expectedUri = "https://example.com/v1/calls/ssf61863-4a51-ef6b-11e1-w6edebcf93bA";
+        String expectedUri = "https://example.com/v1/calls/"+uuid;
 
         HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri("https://example.com").build());
         method = new ModifyCallEndpoint(wrapper);
 
-        RequestBuilder builder = method.makeRequest(
-                new CallModifier("ssf61863-4a51-ef6b-11e1-w6edebcf93bA", ModifyCallAction.HANGUP)
-        );
+        RequestBuilder builder = method.makeRequest(new ModifyCallRequestWrapper(
+                uuid, new ModifyCallPayload(ModifyCallAction.HANGUP)
+        ));
         assertEquals("PUT", builder.getMethod());
         assertEquals(expectedUri, builder.build().getURI().toString());
     }
