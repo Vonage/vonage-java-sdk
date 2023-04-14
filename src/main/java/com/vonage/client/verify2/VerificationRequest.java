@@ -25,6 +25,7 @@ import com.vonage.client.VonageUnexpectedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * Defines properties for a verify request to be sent to the user. Such properties include the brand
@@ -40,10 +41,12 @@ import java.util.Objects;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class VerificationRequest {
+	static final Pattern CODE_REGEX = Pattern.compile("[a-zA-Z0-9]{4,10}");
+
 	protected final Locale locale;
 	protected final Integer channelTimeout, codeLength;
 	protected final Boolean fraudCheck;
-	protected final String brand, clientRef;
+	protected final String brand, code, clientRef;
 	protected final List<Workflow> workflows;
 
 	VerificationRequest(Builder builder) {
@@ -56,14 +59,25 @@ public class VerificationRequest {
 		if ((channelTimeout = builder.timeout) != null && (channelTimeout < 60 || channelTimeout > 900)) {
 			throw new IllegalArgumentException("Delivery wait timeout must be between 60 and 900 seconds.");
 		}
-		if ((codeLength = builder.codeLength) != null && (codeLength < 4 || codeLength > 10)) {
-			throw new IllegalArgumentException("Code length must be between 4 and 10.");
-		}
 		if ((workflows = builder.workflows).isEmpty()) {
 			throw new IllegalStateException("At least one workflow must be defined.");
 		}
-		if (isCodeless() && codeLength != null) {
-			throw new IllegalStateException("Code length has no effect for codeless workflows.");
+		if ((codeLength = builder.codeLength) != null && (codeLength < 4 || codeLength > 10)) {
+			throw new IllegalArgumentException("Code length must be between 4 and 10 (inclusive).");
+		}
+		if ((code = builder.code) != null && !CODE_REGEX.matcher(code).matches()) {
+			throw new IllegalArgumentException("Custom verification code must be 4-10 alphanumeric characters.");
+		}
+		if (isCodeless()) {
+			if (codeLength != null) {
+				throw new IllegalStateException("Code length has no effect for codeless workflows.");
+			}
+			if (code != null) {
+				throw new IllegalStateException("Code has no effect for codeless workflows.");
+			}
+		}
+		if (code != null && codeLength != null && code.length() != codeLength) {
+			throw new IllegalStateException("Code '"+code+"' is not "+codeLength+" characters.");
 		}
 	}
 
@@ -106,6 +120,16 @@ public class VerificationRequest {
 	@JsonProperty("code_length")
 	public Integer getCodeLength() {
 		return codeLength;
+	}
+
+	/**
+	 * Custom alphanumeric verification code to send to the user instead of the Vonage-generated one.
+	 *
+	 * @return The custom code, or {@code null} if unset.
+	 */
+	@JsonProperty("code")
+	public String getCode() {
+		return code;
 	}
 
 	/**
@@ -179,7 +203,7 @@ public class VerificationRequest {
 	
 	public static final class Builder {
 		Boolean fraudCheck;
-		String brand, clientRef;
+		String brand, code, clientRef;
 		Integer timeout, codeLength;
 		Locale locale;
 		List<Workflow> workflows = new ArrayList<>(1);
@@ -232,6 +256,20 @@ public class VerificationRequest {
 		 */
 		public Builder brand(String brand) {
 			this.brand = brand;
+			return this;
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * An optional alphanumeric custom code to use, if you don't want Vonage to generate the code. Must be
+		 * between 4 and 10 alphanumeric characters. This is not used for Silent Auth or Whatsapp Interactive.
+		 *
+		 * @param code The code to use as a string.
+		 *
+		 * @return This builder.
+		 */
+		public Builder code(String code) {
+			this.code = code;
 			return this;
 		}
 

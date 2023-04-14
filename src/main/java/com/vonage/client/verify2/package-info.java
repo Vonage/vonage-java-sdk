@@ -19,6 +19,6 @@
  * See the <a href=https://developer.vonage.com/en/verify/verify-v2/overview>Vonage developer portal</a>
  * for an overview and documentation.
  *
- * @since 7.3.0
+ * @since 7.4.0
  */
 package com.vonage.client.verify2;

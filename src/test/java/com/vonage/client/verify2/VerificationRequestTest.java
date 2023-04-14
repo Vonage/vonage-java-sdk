@@ -196,6 +196,18 @@ public class VerificationRequestTest {
 	}
 
 	@Test
+	public void testCodelessAndCodeValidation() {
+		Builder requiredBuilder = getBuilderRequiredParamsSingleWorkflow(Channel.SILENT_AUTH);
+		assertTrue(requiredBuilder.build().isCodeless());
+		requiredBuilder.addWorkflow(new WhatsappCodelessWorkflow(TO_NUMBER));
+		assertTrue(requiredBuilder.build().isCodeless());
+		requiredBuilder.code("12345678");
+		assertThrows(IllegalStateException.class, requiredBuilder::build);
+		Builder allBuilder = getBuilderAllParamsSingleWorkflow(Channel.WHATSAPP_INTERACTIVE).code("5670");
+		assertThrows(IllegalStateException.class, allBuilder::build);
+	}
+
+	@Test
 	public void testCodeLengthBoundaries() {
 		Builder builder = getBuilderAllParamsSingleWorkflow(Channel.VOICE);
 		assertEquals(CODE_LENGTH, builder.build().getCodeLength().intValue());
@@ -208,6 +220,27 @@ public class VerificationRequestTest {
 		assertThrows(IllegalArgumentException.class, builder::build);
 		builder.codeLength(max);
 		assertEquals(max, builder.build().getCodeLength().intValue());
+	}
+
+	@Test
+	public void testCodeRegex() {
+		Builder builder = getBuilderRequiredParamsSingleWorkflow(Channel.SMS);
+		assertEquals(10, builder.code("AbC3dfghi0").build().getCode().length());
+		assertEquals(4, builder.code("1234").build().getCode().length());
+		assertEquals(9, builder.code("abcdefghi").build().getCode().length());
+		assertEquals(4, builder.code("ABCD").build().getCode().length());
+		assertThrows(IllegalArgumentException.class, () -> builder.code("123").build());
+		assertThrows(IllegalArgumentException.class, () -> builder.code("01234567890").build());
+		assertThrows(IllegalArgumentException.class, () -> builder.code("a*B*3*C*").build());
+		assertThrows(IllegalArgumentException.class, () -> builder.code("2.567").build());
+	}
+
+	@Test
+	public void testCodeAndCodeLengthMatch() {
+		Builder builder = getBuilderRequiredParamsSingleWorkflow(Channel.WHATSAPP).code("1234567");
+		assertEquals(7, builder.build().getCode().length());
+		assertThrows(IllegalStateException.class, () -> builder.codeLength(5).build());
+		assertEquals(7, builder.codeLength(7).build().getCode().length());
 	}
 
 	@Test

@@ -75,7 +75,8 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 		);
 		return VerificationRequest.builder()
 				.brand("Nexmo").fraudCheck(false)
-				.codeLength(8).channelTimeout(500)
+				.code("ab2c3de5").codeLength(8)
+				.channelTimeout(500)
 				.locale(Locale.GERMAN_GERMANY)
 				.clientRef("callback-ref0x1")
 				.workflows(workflows).build();
