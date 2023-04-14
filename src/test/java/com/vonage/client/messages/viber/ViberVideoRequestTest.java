@@ -15,19 +15,21 @@
  */
 package com.vonage.client.messages.viber;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class ViberVideoRequestTest {
 
 	@Test
 	public void testSerializeAllParams() {
+		int duration = 91, fileSize = 67;
 		String url = "file:///path/to/video.mp4", thumbUrl = "https://example.com/thumbnail.jpg";
-		String caption = "Check this out!";
-		String json = ViberVideoRequest.builder()
+		String caption = "Check this out!", json = ViberVideoRequest.builder()
 				.from("Amy").to("447900000001")
+				.duration(duration).fileSize(fileSize)
 				.url(url).caption(caption).thumbUrl(thumbUrl)
 				.build().toJson();
+
 		assertTrue(json.contains("\"video\":{" +
 				"\"url\":\""+url+"\",\"caption\":\""+caption+"\",\"thumb_url\":\""+thumbUrl+"\"}"
 		));
@@ -35,6 +37,7 @@ public class ViberVideoRequestTest {
 		assertTrue(json.contains("\"channel\":\"viber_service\""));
 		assertTrue(json.contains("\"from\":\"Amy\""));
 		assertTrue(json.contains("\"to\":\"447900000001\""));
+		assertTrue(json.contains("\"viber_service\":{\"duration\":"+duration+",\"file_size\":"+fileSize+"}"));
 	}
 
 	@Test
@@ -42,8 +45,10 @@ public class ViberVideoRequestTest {
 		String url = "ftp:///path/to/video.3gpp", thumbUrl = "http://example.com/thumbnail.jpeg";
 		String json = ViberVideoRequest.builder()
 				.from("Jo").to("447900000001")
+				.duration(9).fileSize(20)
 				.url(url).thumbUrl(thumbUrl)
 				.build().toJson();
+		assertTrue(json.contains("\"viber_service\":{\"duration\":9,\"file_size\":20}"));
 		assertTrue(json.contains("\"video\":{\"url\":\""+url+"\",\"thumb_url\":\""+thumbUrl+"\"}"));
 		assertTrue(json.contains("\"message_type\":\"video\""));
 		assertTrue(json.contains("\"channel\":\"viber_service\""));
@@ -56,7 +61,7 @@ public class ViberVideoRequestTest {
 		ViberVideoRequest.builder()
 				.from("447900000001").to("317900000002")
 				.thumbUrl("https://example.com/thumb.jpg")
-				.build();
+				.duration(10).fileSize(10).build();
 	}
 
 	@Test(expected = NullPointerException.class)
@@ -64,7 +69,7 @@ public class ViberVideoRequestTest {
 		ViberVideoRequest.builder()
 				.from("447900000001").to("317900000002")
 				.url("https://example.com/clip.mp4")
-				.build();
+				.duration(10).fileSize(10).build();
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -72,18 +77,41 @@ public class ViberVideoRequestTest {
 		ViberVideoRequest.builder()
 				.from("447900000001")
 				.thumbUrl("https://example.com/preview.jpg")
-				.url("ftp://rel/path/to/clip.flv")
-				.to("317900000002")
-				.build();
+				.url("ftp://rel/path/to/clip.flv").to("317900000002")
+				.duration(10).fileSize(10).build();
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testConstructInvalidThumbnailExtension() {
 		ViberVideoRequest.builder()
-				.from("447900000001")
-				.thumbUrl("https://example.com/preview.eps")
-				.url("ftp://rel/path/to/clip.mp4")
-				.to("317900000002")
-				.build();
+				.from("447900000001").thumbUrl("https://example.com/preview.eps")
+				.url("ftp://rel/path/to/clip.mp4").to("317900000002")
+				.duration(10).fileSize(10).build();
+	}
+
+	@Test
+	public void testDurationBounds() {
+		ViberVideoRequest.Builder builder = ViberVideoRequest.builder()
+				.from("447900000001").thumbUrl("https://example.com/preview.jpg")
+				.url("ftp://rel/path/to/clip.3gpp").to("317900000002").fileSize(10);
+
+		assertThrows(NullPointerException.class, builder::build);
+		assertThrows(IllegalArgumentException.class, () -> builder.duration(0).build());
+		assertThrows(IllegalArgumentException.class, () -> builder.duration(601).build());
+		assertEquals(1, builder.duration(1).build().getViberService().getDuration().intValue());
+		assertEquals(600, builder.duration(600).build().getViberService().getDuration().intValue());
+	}
+
+	@Test
+	public void testFileSizeBounds() {
+		ViberVideoRequest.Builder builder = ViberVideoRequest.builder()
+				.from("447900000001").thumbUrl("https://example.com/preview.jpg")
+				.url("ftp://rel/path/to/clip.3gpp").to("317900000002").duration(10);
+
+		assertThrows(NullPointerException.class, builder::build);
+		assertThrows(IllegalArgumentException.class, () -> builder.fileSize(0).build());
+		assertThrows(IllegalArgumentException.class, () -> builder.fileSize(201).build());
+		assertEquals(1, builder.fileSize(1).build().getViberService().getFileSize().intValue());
+		assertEquals(200, builder.fileSize(200).build().getViberService().getFileSize().intValue());
 	}
 }

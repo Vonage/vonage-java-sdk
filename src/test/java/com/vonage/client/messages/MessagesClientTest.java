@@ -115,7 +115,7 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 	public void testSendViberSuccess() throws Exception {
 		assertResponse(ViberTextRequest.builder().text(TEXT));
 		assertResponse(ViberImageRequest.builder().url(IMAGE));
-		assertResponse(ViberVideoRequest.builder().url(VIDEO).thumbUrl(IMAGE));
+		assertResponse(ViberVideoRequest.builder().url(VIDEO).thumbUrl(IMAGE).duration(15).fileSize(8));
 		assertResponse(ViberFileRequest.builder().url(FILE));
 	}
 

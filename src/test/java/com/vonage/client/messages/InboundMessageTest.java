@@ -58,6 +58,7 @@ public class InboundMessageTest {
 			  "    \"price\": \""+price+"\"\n"+
 			  "  },\n  \"sms\": {\n" +
 				"  \"num_messages\": \"2\",\n" +
+				"  \"total_count\": \"3\",\n" +
 				"  \"keyword\": \"HELLO\"\n  }";
 	}
 
@@ -85,6 +86,7 @@ public class InboundMessageTest {
 		SmsInboundMetadata metadata = im.getSmsMetadata();
 		assertNotNull(metadata);
 		assertEquals(2, metadata.getNumMessages().intValue());
+		assertEquals(3, metadata.getTotalCount().intValue());
 		assertEquals("HELLO", metadata.getKeyword());
 	}
 
