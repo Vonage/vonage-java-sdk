@@ -3,13 +3,13 @@ plugins {
     id 'jacoco'
     id 'signing'
     id 'maven-publish'
-    id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'io.github.gradle-nexus.publish-plugin' version '1.3.0'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 group = "com.vonage"
 archivesBaseName = "client"
-version = "7.2.0"
+version = "7.3.0"
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
@@ -36,8 +36,8 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-inline:4.11.0'
     testImplementation 'org.hamcrest:hamcrest-all:1.3'
-    testImplementation 'org.springframework:spring-test:5.3.25'
-    testImplementation 'org.springframework:spring-web:5.3.25'
+    testImplementation 'org.springframework:spring-test:5.3.26'
+    testImplementation 'org.springframework:spring-web:5.3.26'
 }
 
 test {

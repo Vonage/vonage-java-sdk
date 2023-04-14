@@ -34,7 +34,7 @@ For Gradle 3.4 or Higher:
 
 ```groovy
 dependencies {
-    implementation 'com.vonage:client:7.2.0'
+    implementation 'com.vonage:client:7.3.0'
 }
 ```
 
@@ -42,7 +42,7 @@ For older versions:
 
 ```groovy
 dependencies {
-    compile 'com.vonage:client:7.2.0'
+    compile 'com.vonage:client:7.3.0'
 }
 ```
 
@@ -54,7 +54,7 @@ Add the following to the correct place in your project's POM file:
 <dependency>
     <groupId>com.vonage</groupId>
     <artifactId>client</artifactId>
-    <version>7.2.0</version>
+    <version>7.3.0</version>
 </dependency>
 ```
 
@@ -234,7 +234,7 @@ System.out.println("This cost: " + info.getPrice() + " EUR");
 You can modify an existing call in progress, for example by hanging up on the current call:
 
 ```java
-ModifyCallResponse modifyResponse = client.getVoiceClient().modifyCall(event.getUuid(), "hangup");
+ModifyCallResponse modifyResponse = client.getVoiceClient().modifyCall(event.getUuid(), ModifyCallAction.HANGUP);
 System.out.println(modifyResponse.getMessage());
 ```
 
