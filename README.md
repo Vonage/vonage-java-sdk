@@ -234,7 +234,7 @@ System.out.println("This cost: " + info.getPrice() + " EUR");
 You can modify an existing call in progress, for example by hanging up on the current call:
 
 ```java
-ModifyCallResponse modifyResponse = client.getVoiceClient().modifyCall(event.getUuid(), "hangup");
+ModifyCallResponse modifyResponse = client.getVoiceClient().modifyCall(event.getUuid(), ModifyCallAction.HANGUP);
 System.out.println(modifyResponse.getMessage());
 ```
 

@@ -14,8 +14,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added `vbc` and `app` endpoint types for voice calls
 - Fixed incorrect serialisation of `random_from_number`
 - Added Builder for constructing `Call` request
+- Added validation for UUIDs, URLs and request objects in `VoiceClient`
 - Made internal request classes for Voice API package-private
-- Deprecated public-facing usages of `CallModifer`
+- Deprecated public-facing usages of `CallModifer` & `ModifyCallPayload`
 - Deprecated setters on classes in Voice API in favour of builders / constructors
 - `com.vonage.client.voice.WebSocketEndpoint` now uses Map for headers
 
