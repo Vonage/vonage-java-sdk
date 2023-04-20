@@ -1,0 +1,92 @@
+/*
+ *   Copyright 2023 Vonage
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
+package com.vonage.client.proactiveconnect;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vonage.client.VonageUnexpectedException;
+import java.io.IOException;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ListsResponse {
+	private Integer page, pageSize, totalItems, totalPages;
+	private EmbeddedLists embedded;
+	//private HalLinks links;
+
+	protected ListsResponse() {
+	}
+
+	/**
+	 * @return The current page number.
+	 */
+	@JsonProperty("page")
+	public Integer getPage() {
+		return page;
+	}
+
+	/**
+	 * @return Number of results per page.
+	 */
+	@JsonProperty("page_size")
+	public Integer getPageSize() {
+		return pageSize;
+	}
+
+	/**
+	 * @return Number of results on this page.
+	 */
+	@JsonProperty("total_items")
+	public Integer getTotalItems() {
+		return totalItems;
+	}
+
+	/**
+	 * @return Total number of available pages.
+	 */
+	@JsonProperty("total_pages")
+	public Integer getTotalPages() {
+		return totalPages;
+	}
+
+	
+	@JsonProperty("_embedded")
+	public EmbeddedLists getEmbedded() {
+		return embedded;
+	}
+
+	
+	/*@JsonProperty("_links")
+	public HalLinks getLinks() {
+		return links;
+	}*/
+	
+	/**
+	 * Creates an instance of this class from a JSON payload.
+	 *
+	 * @param json The JSON string to parse.
+	 * @return An instance of this class with the fields populated, if present.
+	 */
+	public static ListsResponse fromJson(String json) {
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			return mapper.readValue(json, ListsResponse.class);
+		}
+		catch (IOException ex) {
+			throw new VonageUnexpectedException("Failed to produce ListsResponse from json.", ex);
+		}
+	}
+}
