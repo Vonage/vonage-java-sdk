@@ -21,6 +21,7 @@ import com.vonage.client.VonageClientException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -67,7 +68,7 @@ public class ProactiveConnectClient {
 	 *
 	 * @param request
 	 *
-	 * @return
+	 * @return The list that was created with updated metadata.
 	 */
 	public ContactsList createList(ContactsList request) {
 		return createList.execute(request);
@@ -77,7 +78,7 @@ public class ProactiveConnectClient {
 	 *
 	 * @param listId
 	 *
-	 * @return
+	 * @return The list associated with the ID.
 	 */
 	public ContactsList getList(String listId) {
 		return getList.execute(listId);
@@ -98,7 +99,7 @@ public class ProactiveConnectClient {
 	 *
 	 * @param listId
 	 *
-	 * @return
+	 * @return The list that was deleted.
 	 */
 	public ContactsList deleteList(String listId) {
 		return deleteList.execute(listId);
@@ -121,11 +122,12 @@ public class ProactiveConnectClient {
 	}
 
 	/**
+	 * Gets the first 1000 lists in the application.
 	 *
-	 * @return
+	 * @return The lists in order of creation.
 	 */
-	public ListsResponse getLists() {
-		return listLists(null, null);
+	public List<ContactsList> getLists() {
+		return listLists(1, 1000).getLists();
 	}
 
 	/**

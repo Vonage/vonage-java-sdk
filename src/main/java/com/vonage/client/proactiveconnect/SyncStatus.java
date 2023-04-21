@@ -30,7 +30,11 @@ public class SyncStatus {
 	protected SyncStatus() {
 	}
 
-
+	/**
+	 * Synchronization state of the list.
+	 *
+	 * @return The sync status enum.
+	 */
 	@JsonProperty("value")
 	public SyncStatusValue getValue() {
 		return value;

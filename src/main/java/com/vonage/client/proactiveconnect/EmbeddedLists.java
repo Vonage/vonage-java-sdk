@@ -23,13 +23,12 @@ import java.io.IOException;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EmbeddedLists {
+class EmbeddedLists {
 	private List<ContactsList> lists;
 
 	protected EmbeddedLists() {
 	}
 
-	
 	@JsonProperty("_lists")
 	public List<ContactsList> getLists() {
 		return lists;

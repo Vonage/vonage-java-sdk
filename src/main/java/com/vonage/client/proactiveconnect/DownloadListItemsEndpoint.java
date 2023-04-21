@@ -32,8 +32,7 @@ import java.nio.file.Path;
 class DownloadListItemsEndpoint extends AbstractMethod<DownloadListItemsRequestWrapper, byte[]> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/v0.1/bulk/lists/%s/items/download";
-
-	Path file;
+	private Path file;
 
 	DownloadListItemsEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);

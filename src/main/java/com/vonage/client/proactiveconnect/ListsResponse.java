@@ -15,22 +15,26 @@
  */
 package com.vonage.client.proactiveconnect;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ListsResponse {
 	private Integer page, pageSize, totalItems, totalPages;
-	private EmbeddedLists embedded;
+	@JsonProperty("_embedded") private EmbeddedLists _embedded;
 	//private HalLinks links;
 
 	protected ListsResponse() {
 	}
 
 	/**
+	 * Current page.
+	 *
 	 * @return The current page number.
 	 */
 	@JsonProperty("page")
@@ -39,6 +43,8 @@ public class ListsResponse {
 	}
 
 	/**
+	 * Size of each page.
+	 *
 	 * @return Number of results per page.
 	 */
 	@JsonProperty("page_size")
@@ -47,6 +53,8 @@ public class ListsResponse {
 	}
 
 	/**
+	 * Size of this page.
+	 *
 	 * @return Number of results on this page.
 	 */
 	@JsonProperty("total_items")
@@ -55,6 +63,8 @@ public class ListsResponse {
 	}
 
 	/**
+	 * Number of results pages.
+	 *
 	 * @return Total number of available pages.
 	 */
 	@JsonProperty("total_pages")
@@ -62,10 +72,14 @@ public class ListsResponse {
 		return totalPages;
 	}
 
-	
-	@JsonProperty("_embedded")
-	public EmbeddedLists getEmbedded() {
-		return embedded;
+	/**
+	 * Gets the lists contained in the _embedded response.
+	 *
+	 * @return The lists for this page.
+	 */
+	@JsonIgnore
+	public List<ContactsList> getLists() {
+		return _embedded != null ? _embedded.getLists() : null;
 	}
 
 	

@@ -15,9 +15,7 @@
  */
 package com.vonage.client.proactiveconnect;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
@@ -44,13 +42,31 @@ public class ListItem {
 		return data != null ? data.getData() : null;
 	}
 
-	
+	@JsonGetter("data")
+	private ListItemData getDataRaw() {
+		return data;
+	}
+
+	@JsonSetter("data")
+	private void setDataRaw(ListItemData data) {
+		this.data = data;
+	}
+
+	/**
+	 * Time this item was created, in ISO 8601 format.
+	 *
+	 * @return The creation timestamp, or {@code null} if unknown.
+	 */
 	@JsonProperty("created_at")
 	public Instant getCreatedAt() {
 		return createdAt;
 	}
 
-	
+	/**
+	 * Time this item was last updated, in ISO 8601 format.
+	 *
+	 * @return The last update timestamp, or {@code null} if unknown.
+	 */
 	@JsonProperty("updated_at")
 	public Instant getUpdatedAt() {
 		return updatedAt;

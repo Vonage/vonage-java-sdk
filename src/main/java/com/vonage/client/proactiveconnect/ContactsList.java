@@ -125,6 +125,21 @@ public class ContactsList {
 	}
 
 	/**
+	 * Updates (hydrates) this object's fields from additional JSON data.
+	 *
+	 * @param json The JSON payload.
+	 */
+	public void updateFromJson(String json) {
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.readerForUpdating(this).readValue(json, getClass());
+		}
+		catch (IOException ex) {
+			throw new VonageUnexpectedException("Failed to update "+getClass().getSimpleName()+" from json.", ex);
+		}
+	}
+
+	/**
 	 * Creates an instance of this class from a JSON payload.
 	 *
 	 * @param json The JSON string to parse.
@@ -243,5 +258,4 @@ public class ContactsList {
 			return new ContactsList(this);
 		}
 	}
-
 }

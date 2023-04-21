@@ -27,6 +27,7 @@ import java.io.IOException;
 class CreateListEndpoint extends AbstractMethod<ContactsList, ContactsList> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/v0.1/bulk/lists";
+	private ContactsList contactsList;
 
 	CreateListEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
@@ -43,11 +44,23 @@ class CreateListEndpoint extends AbstractMethod<ContactsList, ContactsList> {
 		return RequestBuilder.post(uri)
 				.setHeader("Content-Type", "application/json")
 				.setHeader("Accept", "application/json")
-				.setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
+				.setEntity(new StringEntity((contactsList = request).toJson(), ContentType.APPLICATION_JSON));
 	}
 
 	@Override
 	public ContactsList parseResponse(HttpResponse response) throws IOException {
-		return ContactsList.fromJson(basicResponseHandler.handleResponse(response));
+		try {
+			String json = basicResponseHandler.handleResponse(response);
+			if (contactsList != null) {
+				contactsList.updateFromJson(json);
+				return contactsList;
+			}
+			else {
+				return ContactsList.fromJson(json);
+			}
+		}
+		finally {
+			contactsList = null;
+		}
 	}
 }

@@ -21,6 +21,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 
+/**
+ * Results from list upload.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UploadListItemsResponse {
 	private Integer inserted, updated, deleted;
@@ -28,19 +31,31 @@ public class UploadListItemsResponse {
 	protected UploadListItemsResponse() {
 	}
 
-	
+	/**
+	 * Items inserted in the list.
+	 *
+	 * @return The number of inserted items, or {@code null} if not applicable.
+	 */
 	@JsonProperty("inserted")
 	public Integer getInserted() {
 		return inserted;
 	}
 
-	
+	/**
+	 * Items updated in the list.
+	 *
+	 * @return The number of updated items, or {@code null} if not applicable.
+	 */
 	@JsonProperty("updated")
 	public Integer getUpdated() {
 		return updated;
 	}
 
-	
+	/**
+	 * Items deleted in the list.
+	 *
+	 * @return The number of deleted items, or {@code null} if not applicable.
+	 */
 	@JsonProperty("deleted")
 	public Integer getDeleted() {
 		return deleted;
