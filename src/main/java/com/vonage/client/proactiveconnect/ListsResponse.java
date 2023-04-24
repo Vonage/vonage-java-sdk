@@ -20,60 +20,28 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.common.HalPageResponse;
 import java.io.IOException;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ListsResponse {
-	private Integer page, pageSize, totalItems, totalPages;
-	@JsonProperty("_embedded") private EmbeddedLists _embedded;
-	//private HalLinks links;
+public final class ListsResponse extends HalPageResponse {
+	@JsonProperty("_embedded") private Embedded _embedded;
 
-	protected ListsResponse() {
+	ListsResponse() {}
+
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	static final class Embedded {
+		private List<ContactsList> lists;
+
+		@JsonProperty("lists")
+		public List<ContactsList> getLists() {
+			return lists;
+		}
 	}
 
 	/**
-	 * Current page.
-	 *
-	 * @return The current page number.
-	 */
-	@JsonProperty("page")
-	public Integer getPage() {
-		return page;
-	}
-
-	/**
-	 * Size of each page.
-	 *
-	 * @return Number of results per page.
-	 */
-	@JsonProperty("page_size")
-	public Integer getPageSize() {
-		return pageSize;
-	}
-
-	/**
-	 * Size of this page.
-	 *
-	 * @return Number of results on this page.
-	 */
-	@JsonProperty("total_items")
-	public Integer getTotalItems() {
-		return totalItems;
-	}
-
-	/**
-	 * Number of results pages.
-	 *
-	 * @return Total number of available pages.
-	 */
-	@JsonProperty("total_pages")
-	public Integer getTotalPages() {
-		return totalPages;
-	}
-
-	/**
-	 * Gets the lists contained in the _embedded response.
+	 * Gets the lists contained in the {@code _embedded} response.
 	 *
 	 * @return The lists for this page.
 	 */
@@ -81,12 +49,6 @@ public class ListsResponse {
 	public List<ContactsList> getLists() {
 		return _embedded != null ? _embedded.getLists() : null;
 	}
-
-	
-	/*@JsonProperty("_links")
-	public HalLinks getLinks() {
-		return links;
-	}*/
 	
 	/**
 	 * Creates an instance of this class from a JSON payload.

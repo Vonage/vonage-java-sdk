@@ -17,27 +17,25 @@ package com.vonage.client.common;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.net.URI;
 
+/**
+ * Represents a link under the {@code _links} section of a HAL response.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PageList {
-    @JsonProperty("page_size") private long pageSize;
-    @JsonProperty("page") private long page;
-    @JsonProperty("total_pages") private long totalPages;
-    @JsonProperty("total_items") private long totalItems;
+class UrlContainer {
+	URI href;
 
-    public long getPageSize() {
-        return pageSize;
-    }
+	protected UrlContainer() {
+	}
 
-    public long getPage() {
-        return page;
-    }
-
-    public long getTotalPages() {
-        return totalPages;
-    }
-
-    public long getTotalItems() {
-        return totalItems;
-    }
+	/**
+	 * {@code href} property of the link.
+	 *
+	 * @return The URL.
+	 */
+	@JsonProperty("href")
+	public URI getHref() {
+		return href;
+	}
 }
