@@ -21,6 +21,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 
+/**
+ * Provides info on list changes compared to the latest sync.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SyncStatus {
 	private SyncStatusValue value;
@@ -41,7 +44,9 @@ public class SyncStatus {
 	}
 
 	/**
-	 * @return Details on the sync status.
+	 * Details on the sync status.
+	 *
+	 * @return Sync status details as a string.
 	 */
 	@JsonProperty("details")
 	public String getDetails() {
@@ -49,7 +54,9 @@ public class SyncStatus {
 	}
 
 	/**
-	 * @return Whether the list definition has been modified since last sync.
+	 * Whether the list definition has been modified since last sync.
+	 *
+	 * @return {@code true} if the list metadata was modified since last sync.
 	 */
 	@JsonProperty("metadata_modified")
 	public Boolean getMetadataModified() {
@@ -57,7 +64,9 @@ public class SyncStatus {
 	}
 
 	/**
-	 * @return Whether one or more list items were added, removed and/or modified since last sync.
+	 * Whether one or more list items were added, removed and/or modified since last sync.
+	 *
+	 * @return {@code true} if the list data was modified since last sync.
 	 */
 	@JsonProperty("data_modified")
 	public Boolean getDataModified() {
@@ -65,7 +74,9 @@ public class SyncStatus {
 	}
 
 	/**
-	 * @return Whether the list content or metadata were modified since last sync.
+	 * Whether the list content or metadata were modified since last sync.
+	 *
+	 * @return {@code true} if the list was modified since last sync.
 	 */
 	@JsonProperty("dirty")
 	public Boolean getDirty() {

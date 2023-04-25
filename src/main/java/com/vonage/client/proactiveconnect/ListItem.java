@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ListItem {
-	@JsonProperty("data") private ListItemData data;
+	@JsonProperty("data") private DataWrapper data;
 	private Instant createdAt, updatedAt;
 	private UUID id, listId;
 
@@ -43,12 +43,12 @@ public class ListItem {
 	}
 
 	@JsonGetter("data")
-	private ListItemData getDataRaw() {
+	private DataWrapper getDataRaw() {
 		return data;
 	}
 
 	@JsonSetter("data")
-	private void setDataRaw(ListItemData data) {
+	private void setDataRaw(DataWrapper data) {
 		this.data = data;
 	}
 

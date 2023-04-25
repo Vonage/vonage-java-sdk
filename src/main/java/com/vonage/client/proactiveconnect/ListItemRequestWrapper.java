@@ -17,9 +17,9 @@ package com.vonage.client.proactiveconnect;
 
 class ListItemRequestWrapper {
 	final String listId, itemId;
-	final ListItemData request;
+	final DataWrapper request;
 
-	ListItemRequestWrapper(String listId, String itemId, ListItemData request) {
+	ListItemRequestWrapper(String listId, String itemId, DataWrapper request) {
 		this.listId = listId;
 		this.itemId = itemId;
 		this.request = request;

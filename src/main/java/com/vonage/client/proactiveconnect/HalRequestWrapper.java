@@ -17,12 +17,14 @@ package com.vonage.client.proactiveconnect;
 
 import org.apache.http.client.methods.RequestBuilder;
 
-class ListListsRequest {
+class HalRequestWrapper {
 	final Integer page, pageSize;
+	final String id;
 
-	ListListsRequest(Integer page, Integer pageSize) {
+	HalRequestWrapper(Integer page, Integer pageSize, String id) {
 		this.page = page;
 		this.pageSize = pageSize;
+		this.id = id;
 	}
 
 	RequestBuilder addParams(RequestBuilder builder) {

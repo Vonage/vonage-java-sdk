@@ -42,6 +42,8 @@ public class ProactiveConnectClient {
 	final DeleteListItemEndpoint deleteListItem;
 	final DownloadListItemsEndpoint downloadListItems;
 	final UploadListItemsEndpoint uploadListItems;
+	final ListItemsEndpoint listItems;
+	final ListEventsEndpoint listEvents;
 
 	/**
 	 * Constructor.
@@ -62,6 +64,8 @@ public class ProactiveConnectClient {
 		deleteListItem = new DeleteListItemEndpoint(httpWrapper);
 		downloadListItems = new DownloadListItemsEndpoint(httpWrapper);
 		uploadListItems = new UploadListItemsEndpoint(httpWrapper);
+		listItems = new ListItemsEndpoint(httpWrapper);
+		listEvents = new ListEventsEndpoint(httpWrapper);
 	}
 
 	/**
@@ -152,7 +156,7 @@ public class ProactiveConnectClient {
 	}
 
 	private ListsResponse listLists(Integer page, Integer pageSize) {
-		return listLists.execute(new ListListsRequest(page, pageSize));
+		return listLists.execute(new HalRequestWrapper(page, pageSize, null));
 	}
 
 	/**
@@ -163,7 +167,7 @@ public class ProactiveConnectClient {
 	 * @return
 	 */
 	public ListItem createListItem(String listId, Map<String, ?> data) {
-		return createListItem.execute(new ListItemRequestWrapper(listId, null, new ListItemData(data)));
+		return createListItem.execute(new ListItemRequestWrapper(listId, null, new DataWrapper(data)));
 	}
 
 	/**
@@ -185,7 +189,7 @@ public class ProactiveConnectClient {
 	 *
 	 * @return
 	 */
-	public ListItem updateListItem(String listId, String itemId, ListItemData request) {
+	public ListItem updateListItem(String listId, String itemId, DataWrapper request) {
 		return updateListItem.execute(new ListItemRequestWrapper(listId, itemId, request));
 	}
 
@@ -234,5 +238,45 @@ public class ProactiveConnectClient {
 		catch (IOException ex) {
 			throw new VonageClientException("Could not read from file.", ex);
 		}
+	}
+
+
+	public ListItemsResponse listItems(HalRequestWrapper request) {
+		return listItems.execute(request);
+	}
+
+
+	private ListEventsResponse listEventsImpl(Integer page, Integer pageSize) {
+		return listEvents.execute(new HalRequestWrapper(page, pageSize, null));
+	}
+
+	/**
+	 * Gets the first 1000 events in the application.
+	 *
+	 * @return The events in order of creation.
+	 */
+	public List<Event> listEvents() {
+		return listEventsImpl(1, 1000).getItems();
+	}
+
+	/**
+	 *
+	 * @param page
+	 *
+	 * @return
+	 */
+	public ListEventsResponse listEvents(int page) {
+		return listEventsImpl(page, null);
+	}
+
+	/**
+	 *
+	 * @param page
+	 * @param pageSize
+	 *
+	 * @return
+	 */
+	public ListEventsResponse listEvents(int page, int pageSize) {
+		return listEventsImpl(page, pageSize);
 	}
 }

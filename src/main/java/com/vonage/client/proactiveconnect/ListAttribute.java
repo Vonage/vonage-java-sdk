@@ -28,7 +28,10 @@ public class ListAttribute {
 	}
 
 	/**
-	 * Alternative name to use for this attribute. Use when you wish to correlate between 2 or more list that are using different attribute names for the same semantic data.
+	 * Alternative name to use for this attribute. Use when you wish to correlate between 2 or more lists
+	 * that are using different attribute names for the same semantic data.
+	 *
+	 * @return The attribute alias or {@code null} if unset.
 	 */
 	@JsonProperty("alias")
 	public String getAlias() {
@@ -37,6 +40,8 @@ public class ListAttribute {
 
 	/**
 	 * List attribute name.
+	 *
+	 * @return The attribute name or {@code null} if unset.
 	 */
 	@JsonProperty("name")
 	public String getName() {
@@ -45,6 +50,8 @@ public class ListAttribute {
 
 	/**
 	 * Set to true if this attribute should be used to correlate between 2 or more lists.
+	 *
+	 * @return Whether this attribute is used as a key, or {@code null} if unknown.
 	 */
 	@JsonProperty("key")
 	public Boolean getKey() {

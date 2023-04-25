@@ -23,10 +23,10 @@ import com.vonage.client.VonageUnexpectedException;
 import java.util.Map;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-class ListItemData {
+class DataWrapper {
 	private final Map<String, ?> data;
 
-	public ListItemData(Map<String, ?> data) {
+	public DataWrapper(Map<String, ?> data) {
 		this.data = data;
 	}
 
@@ -38,7 +38,7 @@ class ListItemData {
 	/**
 	 * Generates a JSON payload from this request.
 	 *
-	 * @return JSON representation of this ListItemData object.
+	 * @return JSON representation of this DataWrapper object.
 	 */
 	public String toJson() {
 		try {
