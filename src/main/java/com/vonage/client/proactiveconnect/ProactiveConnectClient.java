@@ -15,14 +15,18 @@
  */
 package com.vonage.client.proactiveconnect;
 
+import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.VonageClient;
 import com.vonage.client.VonageClientException;
+import com.vonage.client.common.HalPageResponse;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * A client for talking to the Vonage Proactive Connect API. The standard way to obtain an instance of this class is to use
@@ -68,61 +72,78 @@ public class ProactiveConnectClient {
 		listEvents = new ListEventsEndpoint(httpWrapper);
 	}
 
-	/**
-	 *
-	 * @param request
-	 *
-	 * @return The list that was created with updated metadata.
-	 */
-	public ContactsList createList(ContactsList request) {
-		return createList.execute(request);
+	private String validateUuid(String name, String uuid) {
+		return UUID.fromString(Objects.requireNonNull(uuid, name+" is required.")).toString();
+	}
+
+	private <R extends HalPageResponse> R halRequest(AbstractMethod<HalRequestWrapper, R> endpoint, Integer page, Integer pageSize) {
+		if (page != null && page < 1) {
+			throw new IllegalArgumentException("Page number must be positive.");
+		}
+		if (pageSize != null && pageSize < 1) {
+			throw new IllegalArgumentException("Page size must be positive.");
+		}
+		return endpoint.execute(new HalRequestWrapper(page, pageSize, null));
 	}
 
 	/**
 	 *
-	 * @param listId
+	 * @param list The new list's properties.
+	 *
+	 * @return The list that was created with updated metadata.
+	 */
+	public ContactsList createList(ContactsList list) {
+		return createList.execute(Objects.requireNonNull(list, "List structure is required."));
+	}
+
+	/**
+	 *
+	 * @param listId Unique ID of the list.
 	 *
 	 * @return The list associated with the ID.
 	 */
 	public ContactsList getList(String listId) {
-		return getList.execute(listId);
+		return getList.execute(validateUuid("List ID", listId));
 	}
 
 	/**
 	 *
-	 * @param listId
-	 * @param updatedList
+	 * @param listId Unique ID of the list.
+	 * @param updatedList The new list properties.
 	 *
 	 * @return
 	 */
 	public ContactsList updateList(String listId, ContactsList updatedList) {
-		return updateList.execute(new UpdateListRequestWrapper(listId, updatedList));
+		return updateList.execute(new UpdateListRequestWrapper(
+				validateUuid("List ID", listId),
+				Objects.requireNonNull(updatedList, "List structure is required.")
+		));
 	}
 
 	/**
 	 *
-	 * @param listId
+	 * @param listId Unique ID of the list.
 	 *
 	 * @return The list that was deleted.
 	 */
 	public ContactsList deleteList(String listId) {
-		return deleteList.execute(listId);
+		return deleteList.execute(validateUuid("List ID", listId));
 	}
 
 	/**
 	 *
-	 * @param listId
+	 * @param listId Unique ID of the list.
 	 */
 	public void clearList(String listId) {
-		clearList.execute(listId);
+		clearList.execute(validateUuid("List ID", listId));
 	}
 
 	/**
 	 *
-	 * @param listId
+	 * @param listId Unique ID of the list.
 	 */
 	public void fetchList(String listId) {
-		fetchList.execute(listId);
+		fetchList.execute(validateUuid("List ID", listId));
 	}
 
 	/**
@@ -131,123 +152,157 @@ public class ProactiveConnectClient {
 	 * @return The lists in order of creation.
 	 */
 	public List<ContactsList> getLists() {
-		return listLists(1, 1000).getLists();
+		return halRequest(listLists, 1, 1000).getLists();
 	}
 
 	/**
 	 *
-	 * @param page
+	 * @param page The page number of the HAL response to parse results.
 	 *
-	 * @return
+	 * @return The lists page.
 	 */
 	public ListsResponse getLists(int page) {
-		return listLists(page, null);
+		return halRequest(listLists, page, null);
 	}
 
 	/**
 	 *
-	 * @param page
-	 * @param pageSize
+	 * @param page The page number of the HAL response to parse results.
+	 * @param pageSize Number of results per page in the HAL response.
 	 *
-	 * @return
+	 * @return The lists page.
 	 */
 	public ListsResponse getLists(int page, int pageSize) {
-		return listLists(page, pageSize);
-	}
-
-	private ListsResponse listLists(Integer page, Integer pageSize) {
-		return listLists.execute(new HalRequestWrapper(page, pageSize, null));
+		return halRequest(listLists, page, pageSize);
 	}
 
 	/**
 	 *
-	 * @param listId
-	 * @param data
+	 * @param listId Unique ID of the list.
+	 * @param data The new item's data as a Map.
 	 *
 	 * @return
 	 */
 	public ListItem createListItem(String listId, Map<String, ?> data) {
-		return createListItem.execute(new ListItemRequestWrapper(listId, null, new DataWrapper(data)));
+		return createListItem.execute(new ListItemRequestWrapper(
+				validateUuid("List ID", listId), null,
+				new DataWrapper(Objects.requireNonNull(data, "List data is required."))
+		));
 	}
 
 	/**
 	 *
-	 * @param listId
-	 * @param itemId
+	 * @param listId Unique ID of the list.
+	 * @param itemId Unique ID of the item.
 	 *
 	 * @return
 	 */
 	public ListItem getListItem(String listId, String itemId) {
-		return getListItem.execute(new ListItemRequestWrapper(listId, itemId, null));
+		return getListItem.execute(new ListItemRequestWrapper(
+				validateUuid("List ID", listId), validateUuid("Item ID", itemId), null
+		));
 	}
 
 	/**
 	 *
-	 * @param listId
-	 * @param itemId
-	 * @param request
+	 * @param listId Unique ID of the list.
+	 * @param itemId Unique ID of the item.
+	 * @param data The updated item data as a Map.
 	 *
 	 * @return
 	 */
-	public ListItem updateListItem(String listId, String itemId, DataWrapper request) {
-		return updateListItem.execute(new ListItemRequestWrapper(listId, itemId, request));
+	public ListItem updateListItem(String listId, String itemId, Map<String, ?> data) {
+		return updateListItem.execute(new ListItemRequestWrapper(
+				validateUuid("List ID", listId),
+				validateUuid("Item ID", itemId),
+				new DataWrapper(Objects.requireNonNull(data, "List item data is required."))
+		));
 	}
 
 	/**
 	 *
-	 * @param listId
-	 * @param itemId
+	 * @param listId Unique ID of the list.
+	 * @param itemId Unique ID of the item.
 	 *
 	 * @return
 	 */
 	public ListItem deleteListItem(String listId, String itemId) {
-		return deleteListItem.execute(new ListItemRequestWrapper(listId, itemId, null));
+		return deleteListItem.execute(new ListItemRequestWrapper(
+				validateUuid("List ID", listId), validateUuid("Item ID", itemId), null
+		));
 	}
 
 	/**
 	 *
-	 * @param listId
+	 * @param listId Unique ID of the list.
 	 *
 	 * @return
 	 */
 	public byte[] downloadListItems(String listId) {
-		return downloadListItems.execute(new DownloadListItemsRequestWrapper(listId, null));
+		return downloadListItems.execute(new DownloadListItemsRequestWrapper(
+				validateUuid("List ID", listId), null
+		));
 	}
 
 	/**
 	 *
-	 * @param listId
-	 * @param file
+	 * @param listId Unique ID of the list.
+	 * @param file Path of the file to write the downloaded results to.
 	 */
 	public void downloadListItems(String listId, Path file) {
-		downloadListItems.execute(new DownloadListItemsRequestWrapper(listId, file));
+		downloadListItems.execute(new DownloadListItemsRequestWrapper(
+				validateUuid("List ID", listId),
+				Objects.requireNonNull(file, "CSV file is required.")
+		));
 	}
 
 	/**
 	 *
-	 * @param listId
-	 * @param csvFile
+	 * @param listId Unique ID of the list.
+	 * @param csvFile Path to the CSV file to upload.
 	 *
 	 * @return
 	 */
 	public UploadListItemsResponse uploadListItems(String listId, Path csvFile) {
 		try {
 			byte[] data = Files.readAllBytes(csvFile);
-			return uploadListItems.execute(new UploadListItemsRequestWrapper(listId, data));
+			return uploadListItems.execute(new UploadListItemsRequestWrapper(
+					validateUuid("List ID", listId), data
+			));
 		}
 		catch (IOException ex) {
 			throw new VonageClientException("Could not read from file.", ex);
 		}
 	}
 
-
-	public ListItemsResponse listItems(HalRequestWrapper request) {
-		return listItems.execute(request);
+	/**
+	 * Gets the first 1000 events in the application.
+	 *
+	 * @return The events in order of creation.
+	 */
+	public List<ListItem> listItems() {
+		return halRequest(listItems, 1, 1000).getItems();
 	}
 
+	/**
+	 *
+	 * @param page The page number of the HAL response to parse results.
+	 *
+	 * @return The items page.
+	 */
+	public ListItemsResponse listItems(int page) {
+		return halRequest(listItems, page, null);
+	}
 
-	private ListEventsResponse listEventsImpl(Integer page, Integer pageSize) {
-		return listEvents.execute(new HalRequestWrapper(page, pageSize, null));
+	/**
+	 *
+	 * @param page The page number of the HAL response to parse results.
+	 * @param pageSize Number of results per page in the HAL response.
+	 *
+	 * @return The items page.
+	 */
+	public ListItemsResponse listItems(int page, int pageSize) {
+		return halRequest(listItems, page, pageSize);
 	}
 
 	/**
@@ -256,27 +311,27 @@ public class ProactiveConnectClient {
 	 * @return The events in order of creation.
 	 */
 	public List<Event> listEvents() {
-		return listEventsImpl(1, 1000).getItems();
+		return halRequest(listEvents, 1, 1000).getEvents();
 	}
 
 	/**
 	 *
-	 * @param page
+	 * @param page The page number of the HAL response to parse results.
 	 *
-	 * @return
+	 * @return The events page.
 	 */
 	public ListEventsResponse listEvents(int page) {
-		return listEventsImpl(page, null);
+		return halRequest(listEvents, page, null);
 	}
 
 	/**
 	 *
-	 * @param page
-	 * @param pageSize
+	 * @param page The page number of the HAL response to parse results.
+	 * @param pageSize Number of results per page in the HAL response.
 	 *
-	 * @return
+	 * @return The events page.
 	 */
 	public ListEventsResponse listEvents(int page, int pageSize) {
-		return listEventsImpl(page, pageSize);
+		return halRequest(listEvents, page, pageSize);
 	}
 }

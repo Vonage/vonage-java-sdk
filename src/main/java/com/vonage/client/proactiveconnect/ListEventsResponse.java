@@ -36,22 +36,22 @@ public final class ListEventsResponse extends HalPageResponse {
 
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	static final class Embedded {
-		private List<Event> items;
+		private List<Event> events;
 
-		@JsonProperty("items")
-		public List<Event> getItems() {
-			return items;
+		@JsonProperty("events")
+		public List<Event> getEvents() {
+			return events;
 		}
 	}
 
 	/**
-	 * Gets the items contained in the {@code _embedded} response.
+	 * Gets the events contained in the {@code _embedded} response.
 	 *
-	 * @return The items for this page.
+	 * @return The events for this page.
 	 */
 	@JsonIgnore
-	public List<Event> getItems() {
-		return _embedded != null ? _embedded.getItems() : null;
+	public List<Event> getEvents() {
+		return _embedded != null ? _embedded.getEvents() : null;
 	}
 	
 	/**
@@ -69,4 +69,5 @@ public final class ListEventsResponse extends HalPageResponse {
 			throw new VonageUnexpectedException("Failed to produce ListEventsResponse from json.", ex);
 		}
 	}
+
 }
