@@ -69,5 +69,4 @@ public final class ListEventsResponse extends HalPageResponse {
 			throw new VonageUnexpectedException("Failed to produce ListEventsResponse from json.", ex);
 		}
 	}
-
 }

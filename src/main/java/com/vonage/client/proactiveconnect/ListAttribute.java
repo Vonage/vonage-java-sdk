@@ -15,16 +15,23 @@
  */
 package com.vonage.client.proactiveconnect;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ListAttribute {
-	private final String alias, name;
-	private final Boolean key;
+	private String alias, name;
+	private Boolean key;
 
-	protected ListAttribute(String alias, String name, Boolean key) {
-		this.alias = alias;
-		this.name = name;
-		this.key = key;
+	protected ListAttribute() {
+	}
+
+	ListAttribute(Builder builder) {
+		alias = builder.alias;
+		name = builder.name;
+		key = builder.key;
 	}
 
 	/**
@@ -49,12 +56,73 @@ public class ListAttribute {
 	}
 
 	/**
-	 * Set to true if this attribute should be used to correlate between 2 or more lists.
+	 * Will be {@code true} if this attribute should be used to correlate between 2 or more lists.
 	 *
 	 * @return Whether this attribute is used as a key, or {@code null} if unknown.
 	 */
 	@JsonProperty("key")
 	public Boolean getKey() {
 		return key;
+	}
+
+	/**
+	 * Entry point for constructing an instance of this class.
+	 *
+	 * @return A new Builder.
+	 */
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	public static class Builder {
+		protected String name, alias;
+		protected Boolean key;
+
+		Builder() {}
+
+		/**
+		 * Sets the list attribute name.
+		 *
+		 * @param name The name.
+		 *
+		 * @return This builder.
+		 */
+		public Builder name(String name) {
+			this.name = name;
+			return this;
+		}
+
+		/**
+		 * Sets the list attribute alias.
+		 *
+		 * @param alias The alias.
+		 *
+		 * @return This builder.
+		 */
+		public Builder alias(String alias) {
+			this.alias = alias;
+			return this;
+		}
+
+		/**
+		 * Set to {@code true} if this attribute should be used to correlate between 2 or more lists.
+		 *
+		 * @param key Whether this attribute is used as a key.
+		 *
+		 * @return This builder.
+		 */
+		public Builder key(boolean key) {
+			this.key = key;
+			return this;
+		}
+
+		/**
+		 * Builds the list attribute object.
+		 *
+		 * @return A new ListAttribute with this builder's properties.
+		 */
+		public ListAttribute build() {
+			return new ListAttribute(this);
+		}
 	}
 }
