@@ -27,6 +27,7 @@ import java.io.IOException;
 class UpdateListEndpoint extends AbstractMethod<UpdateListRequestWrapper, ContactsList> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/v0.1/bulk/lists/%s";
+	private UpdateListRequestWrapper cachedWrapper;
 
 	UpdateListEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
@@ -39,7 +40,7 @@ class UpdateListEndpoint extends AbstractMethod<UpdateListRequestWrapper, Contac
 
 	@Override
 	public RequestBuilder makeRequest(UpdateListRequestWrapper wrapper) {
-		String path = String.format(PATH, wrapper.listId);
+		String path = String.format(PATH, (cachedWrapper = wrapper).listId);
 		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + path;
 		return RequestBuilder.put(uri)
 				.setHeader("Content-Type", "application/json")
@@ -49,6 +50,14 @@ class UpdateListEndpoint extends AbstractMethod<UpdateListRequestWrapper, Contac
 
 	@Override
 	public ContactsList parseResponse(HttpResponse response) throws IOException {
-		return ContactsList.fromJson(basicResponseHandler.handleResponse(response));
+		try {
+			String json = basicResponseHandler.handleResponse(response);
+			cachedWrapper.request.updateFromJson(json);
+			assert cachedWrapper.request.getId().toString().equals(cachedWrapper.listId);
+			return cachedWrapper.request;
+		}
+		finally {
+			cachedWrapper = null;
+		}
 	}
 }

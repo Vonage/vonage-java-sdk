@@ -51,13 +51,8 @@ class CreateListEndpoint extends AbstractMethod<ContactsList, ContactsList> {
 	public ContactsList parseResponse(HttpResponse response) throws IOException {
 		try {
 			String json = basicResponseHandler.handleResponse(response);
-			if (contactsList != null) {
-				contactsList.updateFromJson(json);
-				return contactsList;
-			}
-			else {
-				return ContactsList.fromJson(json);
-			}
+			contactsList.updateFromJson(json);
+			return contactsList;
 		}
 		finally {
 			contactsList = null;

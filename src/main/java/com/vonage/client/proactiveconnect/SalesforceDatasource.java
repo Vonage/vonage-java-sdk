@@ -25,6 +25,10 @@ import java.util.Objects;
 public class SalesforceDatasource extends Datasource {
 	private String integrationId, soql;
 
+	protected SalesforceDatasource() {
+		super("salesforce");
+	}
+
 	/**
 	 * Creates a new Salesforce datasource for the list.
 	 *
@@ -32,7 +36,7 @@ public class SalesforceDatasource extends Datasource {
 	 * @param soql Salesforce query defining which data to fetch from salesforce.
 	 */
 	public SalesforceDatasource(String integrationId, String soql) {
-		super("salesforce");
+		this();
 		this.integrationId = Objects.requireNonNull(integrationId, "Integration ID is required.");
 		this.soql = Objects.requireNonNull(soql, "Salesforce query is required.");
 	}

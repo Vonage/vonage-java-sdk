@@ -111,7 +111,7 @@ public class ProactiveConnectClient {
 	 * @param listId Unique ID of the list.
 	 * @param updatedList The new list properties.
 	 *
-	 * @return
+	 * @return The updated list.
 	 */
 	public ContactsList updateList(String listId, ContactsList updatedList) {
 		return updateList.execute(new UpdateListRequestWrapper(
@@ -181,7 +181,7 @@ public class ProactiveConnectClient {
 	 * @param listId Unique ID of the list.
 	 * @param data The new item's data as a Map.
 	 *
-	 * @return
+	 * @return The created list item.
 	 */
 	public ListItem createListItem(String listId, Map<String, ?> data) {
 		return createListItem.execute(new ListItemRequestWrapper(
@@ -195,7 +195,7 @@ public class ProactiveConnectClient {
 	 * @param listId Unique ID of the list.
 	 * @param itemId Unique ID of the item.
 	 *
-	 * @return
+	 * @return The requested list item.
 	 */
 	public ListItem getListItem(String listId, String itemId) {
 		return getListItem.execute(new ListItemRequestWrapper(
@@ -209,7 +209,7 @@ public class ProactiveConnectClient {
 	 * @param itemId Unique ID of the item.
 	 * @param data The updated item data as a Map.
 	 *
-	 * @return
+	 * @return The updated list item.
 	 */
 	public ListItem updateListItem(String listId, String itemId, Map<String, ?> data) {
 		return updateListItem.execute(new ListItemRequestWrapper(
@@ -224,7 +224,7 @@ public class ProactiveConnectClient {
 	 * @param listId Unique ID of the list.
 	 * @param itemId Unique ID of the item.
 	 *
-	 * @return
+	 * @return The list item that was deleted.
 	 */
 	public ListItem deleteListItem(String listId, String itemId) {
 		return deleteListItem.execute(new ListItemRequestWrapper(
@@ -236,7 +236,7 @@ public class ProactiveConnectClient {
 	 *
 	 * @param listId Unique ID of the list.
 	 *
-	 * @return
+	 * @return The list items CSV file contents (binary) as a byte array.
 	 */
 	public byte[] downloadListItems(String listId) {
 		return downloadListItems.execute(new DownloadListItemsRequestWrapper(
@@ -261,7 +261,7 @@ public class ProactiveConnectClient {
 	 * @param listId Unique ID of the list.
 	 * @param csvFile Path to the CSV file to upload.
 	 *
-	 * @return
+	 * @return Result of the upload if successful.
 	 */
 	public UploadListItemsResponse uploadListItems(String listId, Path csvFile) {
 		try {
