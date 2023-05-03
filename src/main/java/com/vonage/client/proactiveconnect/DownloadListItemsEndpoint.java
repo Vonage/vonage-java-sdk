@@ -27,12 +27,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
 
 class DownloadListItemsEndpoint extends AbstractMethod<DownloadListItemsRequestWrapper, byte[]> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/v0.1/bulk/lists/%s/items/download";
-	private Path file;
+	private DownloadListItemsRequestWrapper cachedWrapper;
 
 	DownloadListItemsEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
@@ -45,8 +44,7 @@ class DownloadListItemsEndpoint extends AbstractMethod<DownloadListItemsRequestW
 
 	@Override
 	public RequestBuilder makeRequest(DownloadListItemsRequestWrapper wrapper) {
-		file = wrapper.file;
-		String path = String.format(PATH, wrapper.listId);
+		String path = String.format(PATH, (cachedWrapper = wrapper).listId);
 		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + path;
 		return RequestBuilder.get(uri)
 				.setHeader("Content-Type", "application/json")
@@ -55,7 +53,7 @@ class DownloadListItemsEndpoint extends AbstractMethod<DownloadListItemsRequestW
 
 	private static void writeToOutputStream(HttpResponse response, OutputStream os) throws IOException {
 		try (InputStream is = response.getEntity().getContent()) {
-			byte[] buffer = new byte[0xFFFF];
+			byte[] buffer = new byte[0xffff];
 			for (int len = is.read(buffer); len != -1; len = is.read(buffer)) {
 				os.write(buffer, 0, len);
 			}
@@ -68,8 +66,8 @@ class DownloadListItemsEndpoint extends AbstractMethod<DownloadListItemsRequestW
 			StatusLine statusLine = response.getStatusLine();
 			int statusCode = statusLine.getStatusCode();
 			if (statusCode >= 200 && statusCode < 300) {
-				if (file != null) {
-					try (OutputStream os = Files.newOutputStream(file)) {
+				if (cachedWrapper.file != null) {
+					try (OutputStream os = Files.newOutputStream(cachedWrapper.file)) {
 						writeToOutputStream(response, os);
 					}
 					return null;
@@ -84,7 +82,7 @@ class DownloadListItemsEndpoint extends AbstractMethod<DownloadListItemsRequestW
 			throw new VonageUnexpectedException(statusLine.toString());
 		}
 		finally {
-			file = null;
+			cachedWrapper = null;
 		}
 	}
 }

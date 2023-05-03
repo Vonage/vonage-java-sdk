@@ -19,6 +19,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+/**
+ * Base class for datasource types used in Proactive Connect lists.
+ */
 @JsonTypeInfo(
 		use = JsonTypeInfo.Id.NAME,
 		property = "type"
@@ -34,6 +37,11 @@ public abstract class Datasource {
 		this.type = type;
 	}
 
+	/**
+	 * Name of the datasource.
+	 *
+	 * @return The datasource type as a string.
+	 */
 	@JsonProperty("type")
 	public String getType() {
 		return type;

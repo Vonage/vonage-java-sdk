@@ -26,6 +26,9 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Represents a Proactive Connect list.
+ */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ContactsList {
@@ -38,7 +41,7 @@ public class ContactsList {
 	private Integer itemsCount;
 	private SyncStatus syncStatus;
 
-	protected ContactsList() {
+	ContactsList() {
 	}
 
 	ContactsList(Builder builder) {
@@ -51,6 +54,8 @@ public class ContactsList {
 
 	/**
 	 * The name of the resource (max 255 characters).
+	 *
+	 * @return Resource name or {@code null} if unknown.
 	 */
 	@JsonProperty("name")
 	public String getName() {
@@ -59,6 +64,8 @@ public class ContactsList {
 
 	/**
 	 * The description of the resource (max 1024 characters).
+	 *
+	 * @return Resource description or {@code null} if unknown.
 	 */
 	@JsonProperty("description")
 	public String getDescription() {
@@ -67,38 +74,58 @@ public class ContactsList {
 
 	/**
 	 * Up to 10 custom strings assigned with a resource - each must be between 1 and 15 characters.
+	 *
+	 * @return The list of tags or {@code null} if unknown.
 	 */
 	@JsonProperty("tags")
 	public List<String> getTags() {
 		return tags;
 	}
 
-
+	/**
+	 * The list attributes.
+	 *
+	 * @return The list's attributes or {@code null} if unknown.
+	 */
 	@JsonProperty("attributes")
 	public ListAttribute getAttributes() {
 		return attributes;
 	}
 
-
+	/**
+	 * The list's datasource.
+	 *
+	 * @return The datasource or {@code null} if unknown.
+	 */
 	@JsonProperty("datasource")
 	public Datasource getDatasource() {
 		return datasource;
 	}
 
-	
+	/**
+	 * The creation timestamp in ISO 8601 format.
+	 *
+	 * @return The creation time or {@code null} if unknown.
+	 */
 	@JsonProperty("created_at")
 	public Instant getCreatedAt() {
 		return createdAt;
 	}
 
-	
+	/**
+	 * The last update timestamp in ISO 8601 format.
+	 *
+	 * @return The last updated time or {@code null} if unknown.
+	 */
 	@JsonProperty("updated_at")
 	public Instant getUpdatedAt() {
 		return updatedAt;
 	}
 
 	/**
-	 * @return The number of items in the list, or {@code null} if unknown.
+	 * The total number of list items.
+	 *
+	 * @return The number of items in the list or {@code null} if unknown.
 	 */
 	@JsonProperty("items_count")
 	public Integer getItemsCount() {
@@ -117,6 +144,7 @@ public class ContactsList {
 
 	/**
 	 * Synchronization status between the list content (items) and its datasource.
+	 *
 	 * @return The synchronisation status, or {@code null} if unknown.
 	 */
 	@JsonProperty("sync_status")
@@ -170,11 +198,6 @@ public class ContactsList {
 		}
 	}
 	
-	@Override
-	public String toString() {
-		return getClass().getSimpleName()+' '+toJson();
-	}
-	
 	/**
 	 * Entry point for constructing an instance of this class.
 	 * 
@@ -194,6 +217,7 @@ public class ContactsList {
 		Builder() {}
 	
 		/**
+		 * Sets the resource name.
 		 *
 		 * @param name The name of the resource (max 255 characters).
 		 *
@@ -205,6 +229,7 @@ public class ContactsList {
 		}
 
 		/**
+		 * Sets the resource description.
 		 *
 		 * @param description The description of the resource (max 1024 characters).
 		 *
@@ -216,6 +241,7 @@ public class ContactsList {
 		}
 
 		/**
+		 * Sets the tags.
 		 *
 		 * @param tags Up to 10 custom strings assigned with a resource - each must be between 1 and 15 characters.
 		 *
@@ -227,8 +253,9 @@ public class ContactsList {
 		}
 
 		/**
+		 * Sets the list attributes.
 		 *
-		 * @param attributes 
+		 * @param attributes The list's attributes.
 		 *
 		 * @return This builder.
 		 */
@@ -238,8 +265,9 @@ public class ContactsList {
 		}
 
 		/**
+		 * Sets the datasource.
 		 *
-		 * @param datasource 
+		 * @param datasource The datasource type.
 		 *
 		 * @return This builder.
 		 */

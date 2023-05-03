@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * 
+ * HAL response for {@link ProactiveConnectClient#listItems(int, int)}.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class ListItemsResponse extends HalPageResponse {

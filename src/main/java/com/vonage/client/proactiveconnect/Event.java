@@ -25,6 +25,9 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.UUID;
 
+/**
+ * Represents an event in the Proactive Connect API.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Event {
 	private UUID id, actionId, invocationId, runItemId, runId, jobId;

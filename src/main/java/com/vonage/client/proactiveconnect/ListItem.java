@@ -23,6 +23,9 @@ import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Represents a list item in the Proactive Connect API.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ListItem {
 	@JsonProperty("data") private DataWrapper data;

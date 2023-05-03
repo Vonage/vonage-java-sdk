@@ -29,8 +29,8 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * A client for talking to the Vonage Proactive Connect API. The standard way to obtain an instance of this class is to use
- * {@link VonageClient#getProactiveConnectClient()}.
+ * A client for talking to the Vonage Proactive Connect API. The standard way to obtain an instance
+ * of this class is to use {@link VonageClient#getProactiveConnectClient()}.
  */
 public class ProactiveConnectClient {
 	final CreateListEndpoint createList;
@@ -87,6 +87,7 @@ public class ProactiveConnectClient {
 	}
 
 	/**
+	 * Create a new list.
 	 *
 	 * @param list The new list's properties.
 	 *
@@ -97,6 +98,7 @@ public class ProactiveConnectClient {
 	}
 
 	/**
+	 * Retrieve a list.
 	 *
 	 * @param listId Unique ID of the list.
 	 *
@@ -107,6 +109,7 @@ public class ProactiveConnectClient {
 	}
 
 	/**
+	 * Update an existing list.
 	 *
 	 * @param listId Unique ID of the list.
 	 * @param updatedList The new list properties.
@@ -121,6 +124,7 @@ public class ProactiveConnectClient {
 	}
 
 	/**
+	 * Delete a list.
 	 *
 	 * @param listId Unique ID of the list.
 	 *
@@ -131,6 +135,7 @@ public class ProactiveConnectClient {
 	}
 
 	/**
+	 * Delete all items in a list.
 	 *
 	 * @param listId Unique ID of the list.
 	 */
@@ -139,6 +144,7 @@ public class ProactiveConnectClient {
 	}
 
 	/**
+	 * Fetch and replace all items from datasource.
 	 *
 	 * @param listId Unique ID of the list.
 	 */
@@ -151,32 +157,36 @@ public class ProactiveConnectClient {
 	 *
 	 * @return The lists in order of creation.
 	 */
-	public List<ContactsList> getLists() {
+	public List<ContactsList> listLists() {
 		return halRequest(listLists, 1, 1000).getLists();
 	}
 
 	/**
+	 * Get all lists on a particular page (with the default number of lists per page).
 	 *
 	 * @param page The page number of the HAL response to parse results.
 	 *
 	 * @return The lists page.
+	 * @see #listLists(int, int)
 	 */
-	public ListsResponse getLists(int page) {
+	public ListsResponse listLists(int page) {
 		return halRequest(listLists, page, null);
 	}
 
 	/**
+	 * Get all lists on a particular page.
 	 *
 	 * @param page The page number of the HAL response to parse results.
 	 * @param pageSize Number of results per page in the HAL response.
 	 *
 	 * @return The lists page.
 	 */
-	public ListsResponse getLists(int page, int pageSize) {
+	public ListsResponse listLists(int page, int pageSize) {
 		return halRequest(listLists, page, pageSize);
 	}
 
 	/**
+	 * Create a new list item.
 	 *
 	 * @param listId Unique ID of the list.
 	 * @param data The new item's data as a Map.
@@ -191,6 +201,7 @@ public class ProactiveConnectClient {
 	}
 
 	/**
+	 * Retrieve a list item.
 	 *
 	 * @param listId Unique ID of the list.
 	 * @param itemId Unique ID of the item.
@@ -204,6 +215,7 @@ public class ProactiveConnectClient {
 	}
 
 	/**
+	 * Update an existing list item.
 	 *
 	 * @param listId Unique ID of the list.
 	 * @param itemId Unique ID of the item.
@@ -220,6 +232,7 @@ public class ProactiveConnectClient {
 	}
 
 	/**
+	 * Delete a list item.
 	 *
 	 * @param listId Unique ID of the list.
 	 * @param itemId Unique ID of the item.
@@ -233,10 +246,13 @@ public class ProactiveConnectClient {
 	}
 
 	/**
+	 * Download all items in a list in CSV format.
+	 * Use {@link #downloadListItems(String, Path)} to save the CSV as a file.
 	 *
 	 * @param listId Unique ID of the list.
 	 *
 	 * @return The list items CSV file contents (binary) as a byte array.
+	 * @see #downloadListItems(String, Path)
 	 */
 	public byte[] downloadListItems(String listId) {
 		return downloadListItems.execute(new DownloadListItemsRequestWrapper(
@@ -245,6 +261,8 @@ public class ProactiveConnectClient {
 	}
 
 	/**
+	 * Download all items in a list in CSV format.
+	 * Use {@link #downloadListItems(String)} to get the results as a raw binary.
 	 *
 	 * @param listId Unique ID of the list.
 	 * @param file Path of the file to write the downloaded results to.
@@ -257,6 +275,7 @@ public class ProactiveConnectClient {
 	}
 
 	/**
+	 * Import list items from a CSV file.
 	 *
 	 * @param listId Unique ID of the list.
 	 * @param csvFile Path to the CSV file to upload.
@@ -285,16 +304,19 @@ public class ProactiveConnectClient {
 	}
 
 	/**
+	 * Get all items on a particular page (with the default number of items per page).
 	 *
 	 * @param page The page number of the HAL response to parse results.
 	 *
 	 * @return The items page.
+	 * @see #listItems(int, int)
 	 */
 	public ListItemsResponse listItems(int page) {
 		return halRequest(listItems, page, null);
 	}
 
 	/**
+	 * Get all items on a particular page.
 	 *
 	 * @param page The page number of the HAL response to parse results.
 	 * @param pageSize Number of results per page in the HAL response.
@@ -315,16 +337,19 @@ public class ProactiveConnectClient {
 	}
 
 	/**
+	 * Get all events on a particular page (with the default number of events per page).
 	 *
 	 * @param page The page number of the HAL response to parse results.
 	 *
 	 * @return The events page.
+	 * @see #listEvents(int, int)
 	 */
 	public ListEventsResponse listEvents(int page) {
 		return halRequest(listEvents, page, null);
 	}
 
 	/**
+	 * Get all events on a particular page.
 	 *
 	 * @param page The page number of the HAL response to parse results.
 	 * @param pageSize Number of results per page in the HAL response.
