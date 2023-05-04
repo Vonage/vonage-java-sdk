@@ -15,14 +15,13 @@
  */
 package com.vonage.client.proactiveconnect;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -34,7 +33,7 @@ public class Event {
 	private String recipientId, sourceContext;
 	private EventType type;
 	private Instant occuredAt;
-	@JsonProperty("data") private DataWrapper data;
+	private Map<String, ?> data;
 
 	protected Event() {
 	}
@@ -45,18 +44,8 @@ public class Event {
 	 * @return The event data as a Map, or {@code null} if absent.
 	 */
 	@JsonProperty("data")
-	public DataWrapper getData() {
+	public Map<String, ?> getData() {
 		return data;
-	}
-
-	@JsonGetter("data")
-	private DataWrapper getDataRaw() {
-		return data;
-	}
-
-	@JsonSetter("data")
-	private void setDataRaw(DataWrapper data) {
-		this.data = data;
 	}
 
 	/**

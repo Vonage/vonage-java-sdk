@@ -196,7 +196,7 @@ public class ProactiveConnectClient {
 	public ListItem createListItem(String listId, Map<String, ?> data) {
 		return createListItem.execute(new ListItemRequestWrapper(
 				validateUuid("List ID", listId), null,
-				new DataWrapper(Objects.requireNonNull(data, "List data is required."))
+				Objects.requireNonNull(data, "List data is required.")
 		));
 	}
 
@@ -227,7 +227,7 @@ public class ProactiveConnectClient {
 		return updateListItem.execute(new ListItemRequestWrapper(
 				validateUuid("List ID", listId),
 				validateUuid("Item ID", itemId),
-				new DataWrapper(Objects.requireNonNull(data, "List item data is required."))
+				Objects.requireNonNull(data, "List item data is required.")
 		));
 	}
 

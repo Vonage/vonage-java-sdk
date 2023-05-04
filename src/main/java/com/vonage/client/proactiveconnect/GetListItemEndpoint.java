@@ -44,7 +44,7 @@ class GetListItemEndpoint extends AbstractMethod<ListItemRequestWrapper, ListIte
 		return RequestBuilder.get(uri)
 				.setHeader("Content-Type", "application/json")
 				.setHeader("Accept", "application/json")
-				.setEntity(new StringEntity(wrapper.request.toJson(), ContentType.APPLICATION_JSON));
+				.setEntity(new StringEntity(wrapper.toJson(), ContentType.APPLICATION_JSON));
 	}
 
 	@Override

@@ -17,6 +17,7 @@ package com.vonage.client.proactiveconnect;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 import java.time.Instant;
@@ -27,8 +28,9 @@ import java.util.UUID;
  * Represents a list item in the Proactive Connect API.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class ListItem {
-	@JsonProperty("data") private DataWrapper data;
+	private Map<String, ?> data;
 	private Instant createdAt, updatedAt;
 	private UUID id, listId;
 
@@ -40,19 +42,9 @@ public class ListItem {
 	 *
 	 * @return The list data as a Map, or {@code null} if unset.
 	 */
-	@JsonIgnore
+	@JsonProperty("data")
 	public Map<String, ?> getData() {
-		return data != null ? data.getData() : null;
-	}
-
-	@JsonGetter("data")
-	private DataWrapper getDataRaw() {
 		return data;
-	}
-
-	@JsonSetter("data")
-	private void setDataRaw(DataWrapper data) {
-		this.data = data;
 	}
 
 	/**
@@ -104,6 +96,7 @@ public class ListItem {
 	public static ListItem fromJson(String json) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
+			mapper.registerModule(new JavaTimeModule());
 			return mapper.readValue(json, ListItem.class);
 		}
 		catch (IOException ex) {
