@@ -13,25 +13,36 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages;
+package com.vonage.client.verify2;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.VonageApiResponseException;
 import org.apache.http.HttpResponse;
 import java.io.IOException;
+import java.util.UUID;
 
 /**
- * Response returned when sending a message fails (i.e. returns a non-2xx status code).
- * Since this is an unchecked exception, users are advised to catch it when calling
- * {@link MessagesClient#sendMessage(MessageRequest)} to handle failures.
+ * Response returned when verification fails (i.e. returns a non-2xx status code).
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public final class MessageResponseException extends VonageApiResponseException {
+public final class VerifyResponseException extends VonageApiResponseException {
+	UUID requestId;
 
 	void setStatusCode(int statusCode) {
 		this.statusCode = statusCode;
+	}
+
+	/**
+	 * The request ID, if the status code is 409 for a failed outbound request.
+	 *
+	 * @return The request ID, or {@code null} if not applicable / available.
+	 */
+	@JsonProperty("request_id")
+	public UUID getRequestId() {
+		return requestId;
 	}
 
 	/**
@@ -40,11 +51,11 @@ public final class MessageResponseException extends VonageApiResponseException {
 	 * @param json The JSON string to parse.
 	 * @return An instance of this class with all known fields populated from the JSON payload, if present.
 	 */
-	public static MessageResponseException fromJson(String json) {
-		return fromJson(MessageResponseException.class, json);
+	public static VerifyResponseException fromJson(String json) {
+		return fromJson(VerifyResponseException.class, json);
 	}
 
-	static MessageResponseException fromHttpResponse(HttpResponse response) throws IOException {
-		return fromHttpResponse(MessageResponseException.class, response);
+	static VerifyResponseException fromHttpResponse(HttpResponse response) throws IOException {
+		return fromHttpResponse(VerifyResponseException.class, response);
 	}
 }

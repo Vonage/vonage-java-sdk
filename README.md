@@ -343,6 +343,24 @@ Send a PSD2 code to a phone number with:
 VerifyResponse verifyPayment = client.getVerifyClient().psd2Verify(TO_NUMBER, 103.33, "Michelle");
 ````
 
+### Prompt a WhatsApp user for verification, with Voice call and e-mail as fallback
+
+```java
+VerificationResponse response = client.getVerify2Client().sendVerification(
+    VerificationRequest.builder()
+        .addWorkflow(new WhatsappCodelessWorkflow(TO_NUMBER))
+        .addWorkflow(new EmailWorkflow(TO_EMAIL))
+        .addWorkflow(new VoiceWorkflow(TO_NUMBER))
+        .codeLength(6).brand("ACME Inc.").build()
+);
+```
+
+If the codeless verification fails, you can check the user-entered code (sent via backup contact methods) like this:
+
+```java
+client.getVerify2Client().checkVerificationCode(response.getRequestId(), CODE);
+```
+
 ### Get a List of SMS Prices for a Country
 
 Get a list of SMS prices for a country with:

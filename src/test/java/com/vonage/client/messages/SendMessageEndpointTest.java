@@ -24,8 +24,7 @@ import com.vonage.client.messages.sms.SmsTextRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.UUID;
@@ -57,7 +56,7 @@ public class SendMessageEndpointTest {
 	}
 
 	@Test
-	public void testParseResponse202() throws Exception {
+	public void testParseResponseSuccess() throws Exception {
 		UUID uuid = UUID.randomUUID();
 		String json = "{\"message_uuid\":\""+uuid+"\"}";
 		MessageResponse response = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(202, json));
@@ -65,7 +64,7 @@ public class SendMessageEndpointTest {
 	}
 
 	@Test
-	public void testParseResponseFull() throws Exception {
+	public void testParseResponseFailureAllParams() throws Exception {
 		final int statusCode = 422;
 		final String json = "{\n" +
 				"  \"type\": \"https://developer.nexmo.com/api-errors/messages-olympus#1120\",\n" +
@@ -80,22 +79,27 @@ public class SendMessageEndpointTest {
 		}
 		catch (MessageResponseException mrx) {
 			MessageResponseException expected = MessageResponseException.fromJson(json);
-			expected.statusCode = statusCode;
+			expected.setStatusCode(statusCode);
 			assertEquals(expected, mrx);
+			assertEquals(statusCode, mrx.getStatusCode());
+			assertNotNull(mrx.getType());
+			assertNotNull(mrx.getTitle());
+			assertNotNull(mrx.getDetail());
+			assertNotNull(mrx.getInstance());
 		}
 	}
 
 	@Test
-	public void testParseResponseNoBody() throws Exception {
+	public void testParseResponseFailureNoBody() throws Exception {
 		final int statusCode = 429;
 		try {
 			endpoint.parseResponse(TestUtils.makeJsonHttpResponse(statusCode, ""));
 			fail("Expected "+MessageResponseException.class.getName());
 		}
 		catch (MessageResponseException mrx) {
-			MessageResponseException expected = MessageResponseException.fromJson("");
-			expected.title = "OK";  // This is what TestUtils.makeJsonHttpResponse sets it to
-			expected.statusCode = statusCode;
+			// The mock returns "OK"
+			MessageResponseException expected = MessageResponseException.fromJson("{\"title\":\"OK\"}");
+			expected.setStatusCode(statusCode);
 			assertEquals(expected, mrx);
 		}
 	}

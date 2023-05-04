@@ -13,7 +13,7 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages;
+package com.vonage.client.verify2;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -23,32 +23,31 @@ import java.io.IOException;
 import java.util.UUID;
 
 /**
- * Response returned when sending a message. Regardless of the channel or message type,
- * the returned response (HTTP 202 payload) is always the same format.
+ * Metadata about an outbound verification request.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MessageResponse {
-	protected UUID messageUuid;
+public class VerificationResponse {
+	protected UUID requestId;
 
 	/**
 	 * Protected to prevent users from explicitly creating this object.
 	 */
-	protected MessageResponse() {
+	protected VerificationResponse() {
 	}
 
 	/**
-	 * Returns the UUID of the message that was sent.
+	 * Returns the UUID of the request that was sent.
 	 *
-	 * @return The unique message ID.
+	 * @return The unique request ID.
 	 */
-	@JsonProperty("message_uuid")
-	public UUID getMessageUuid() {
-		return messageUuid;
+	@JsonProperty("request_id")
+	public UUID getRequestId() {
+		return requestId;
 	}
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName()+" {messageUuid='"+messageUuid+"'}";
+		return getClass().getSimpleName()+" {requestId='"+requestId+"'}";
 	}
 
 	/**
@@ -57,13 +56,13 @@ public class MessageResponse {
 	 * @param json The JSON string to parse.
 	 * @return An instance of this class with the fields populated, if present.
 	 */
-	public static MessageResponse fromJson(String json) {
+	public static VerificationResponse fromJson(String json) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readValue(json, MessageResponse.class);
+			return mapper.readValue(json, VerificationResponse.class);
 		}
 		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to produce MessageResponse from json.", ex);
+			throw new VonageUnexpectedException("Failed to produce VerificationResponse from json.", ex);
 		}
 	}
 }

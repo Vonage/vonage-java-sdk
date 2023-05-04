@@ -13,7 +13,7 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages;
+package com.vonage.client.verify2;
 
 import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
@@ -25,19 +25,12 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import java.io.IOException;
 
-class SendMessageEndpoint extends AbstractMethod<MessageRequest, MessageResponse> {
+class VerifyUserEndpoint extends AbstractMethod<VerificationRequest, VerificationResponse> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class, TokenAuthMethod.class};
-	private static final String PATH = "/v1/messages";
-	private static final String SANDBOX_ENDPOINT_URI = "https://messages-sandbox.nexmo.com" + PATH;
+	private static final String PATH = "/v2/verify";
 
-	private boolean sandbox = false;
-
-	SendMessageEndpoint(HttpWrapper httpWrapper) {
+	VerifyUserEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
-	}
-
-	public void setSandboxed(boolean sandbox) {
-		this.sandbox = sandbox;
 	}
 
 	@Override
@@ -46,8 +39,13 @@ class SendMessageEndpoint extends AbstractMethod<MessageRequest, MessageResponse
 	}
 
 	@Override
-	public RequestBuilder makeRequest(MessageRequest request) {
-		String uri = sandbox ? SANDBOX_ENDPOINT_URI : httpWrapper.getHttpConfig().getApiBaseUri() + PATH;
+	public RequestBuilder makeRequest(VerificationRequest request) {
+		if (request.isCodeless() && !httpWrapper.getAuthCollection().hasAuthMethod(JWTAuthMethod.class)) {
+			throw new IllegalStateException(
+					"Codeless verification requires an application ID to be set in order to use webhooks."
+			);
+		}
+		String uri = httpWrapper.getHttpConfig().getApiBaseUri() + PATH;
 		return RequestBuilder.post(uri)
 				.setHeader("Content-Type", "application/json")
 				.setHeader("Accept", "application/json")
@@ -55,13 +53,13 @@ class SendMessageEndpoint extends AbstractMethod<MessageRequest, MessageResponse
 	}
 
 	@Override
-	public MessageResponse parseResponse(HttpResponse response) throws IOException {
+	public VerificationResponse parseResponse(HttpResponse response) throws IOException {
 		int statusCode = response.getStatusLine().getStatusCode();
 		if (statusCode >= 200 && statusCode < 300) {
-			return MessageResponse.fromJson(basicResponseHandler.handleResponse(response));
+			return VerificationResponse.fromJson(basicResponseHandler.handleResponse(response));
 		}
 		else {
-			throw MessageResponseException.fromHttpResponse(response);
+			throw VerifyResponseException.fromHttpResponse(response);
 		}
 	}
 }

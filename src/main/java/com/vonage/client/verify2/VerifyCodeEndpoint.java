@@ -13,7 +13,7 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages;
+package com.vonage.client.verify2;
 
 import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
@@ -25,19 +25,12 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import java.io.IOException;
 
-class SendMessageEndpoint extends AbstractMethod<MessageRequest, MessageResponse> {
+class VerifyCodeEndpoint extends AbstractMethod<VerifyCodeRequestWrapper, Void> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class, TokenAuthMethod.class};
-	private static final String PATH = "/v1/messages";
-	private static final String SANDBOX_ENDPOINT_URI = "https://messages-sandbox.nexmo.com" + PATH;
+	private static final String PATH = "/v2/verify/%s";
 
-	private boolean sandbox = false;
-
-	SendMessageEndpoint(HttpWrapper httpWrapper) {
+	VerifyCodeEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
-	}
-
-	public void setSandboxed(boolean sandbox) {
-		this.sandbox = sandbox;
 	}
 
 	@Override
@@ -46,22 +39,22 @@ class SendMessageEndpoint extends AbstractMethod<MessageRequest, MessageResponse
 	}
 
 	@Override
-	public RequestBuilder makeRequest(MessageRequest request) {
-		String uri = sandbox ? SANDBOX_ENDPOINT_URI : httpWrapper.getHttpConfig().getApiBaseUri() + PATH;
+	public RequestBuilder makeRequest(VerifyCodeRequestWrapper request) {
+		String path = String.format(PATH, request.requestId);
+		String uri = httpWrapper.getHttpConfig().getApiBaseUri() + path;
 		return RequestBuilder.post(uri)
 				.setHeader("Content-Type", "application/json")
-				.setHeader("Accept", "application/json")
 				.setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
 	}
 
 	@Override
-	public MessageResponse parseResponse(HttpResponse response) throws IOException {
+	public Void parseResponse(HttpResponse response) throws IOException {
 		int statusCode = response.getStatusLine().getStatusCode();
 		if (statusCode >= 200 && statusCode < 300) {
-			return MessageResponse.fromJson(basicResponseHandler.handleResponse(response));
+			return null;
 		}
 		else {
-			throw MessageResponseException.fromHttpResponse(response);
+			throw VerifyResponseException.fromHttpResponse(response);
 		}
 	}
 }
