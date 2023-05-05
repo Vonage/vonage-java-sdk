@@ -36,9 +36,9 @@ class ListEventsEndpoint extends AbstractMethod<HalRequestWrapper, ListEventsRes
 	}
 
 	@Override
-	public RequestBuilder makeRequest(HalRequestWrapper wrapper) {
+	public RequestBuilder makeRequest(HalRequestWrapper request) {
 		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + PATH;
-		return RequestBuilder.get(uri)
+		return request.addParams(RequestBuilder.get(uri))
 				.setHeader("Accept", "application/json");
 	}
 

@@ -23,24 +23,23 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
-import org.apache.http.util.EntityUtils;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
-import java.time.Instant;
-import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 
-public class CreateListItemEndpointTest {
-	CreateListItemEndpoint endpoint;
+public class ListItemsEndpointTest {
+	ListItemsEndpoint endpoint;
 	String listId = UUID.randomUUID().toString();
-
+	
+	
 	@Before
 	public void setUp() {
-		endpoint = new CreateListItemEndpoint(new HttpWrapper());
+		endpoint = new ListItemsEndpoint(new HttpWrapper());
 	}
-
+	
 	@Test
 	public void testAuthMethod() {
 		Class<?>[] authMethods = endpoint.getAcceptableAuthMethods();
@@ -49,46 +48,41 @@ public class CreateListItemEndpointTest {
 	}
 	
 	@Test
-	public void testDefaultUri() throws Exception {
-		Map<String, ?> data =  Collections.singletonMap("Property", "Value");
-		ListItemRequestWrapper request = new ListItemRequestWrapper(listId, null, data);
-
+	public void testMakeRequestAllParams() throws Exception {
+		HalRequestWrapper request = new HalRequestWrapper(7, 30, listId);
 		RequestBuilder builder = endpoint.makeRequest(request);
-		assertEquals("POST", builder.getMethod());
+		assertEquals("GET", builder.getMethod());
+		String expectedUri = "https://api-eu.vonage.com/v0.1/bulk/lists/"+request.id+"/items" +
+				"?page=" + request.page + "&page_size=" +request.pageSize;
+		assertEquals(expectedUri, builder.build().getURI().toString());
+		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
+		assertEquals(2, params.size());
+		String expectedResponse = "{}";
+		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
+		ListItemsResponse parsed = endpoint.parseResponse(mockResponse);
+		assertNotNull(parsed);
+	}
+
+	@Test
+	public void testDefaultUri() throws Exception {
+		RequestBuilder builder = endpoint.makeRequest(new HalRequestWrapper(null, null, listId));
+		assertEquals("GET", builder.getMethod());
 		String expectedUri = "https://api-eu.vonage.com/v0.1/bulk/lists/"+listId+"/items";
 		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		String dataStr = "\"data\":{\"Property\":\"Value\"}";
-		String expectedRequest = "{"+dataStr+"}";
-		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		UUID itemId = UUID.randomUUID();
-		String expectedResponse = "{\"id\":\""+itemId+"\",\"list_id\":\""+listId+"\"," +
-				dataStr + ",\"created_at\":\"2022-06-19T17:59:28.085Z\"}";
-		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
-		ListItem parsed = endpoint.parseResponse(mockResponse);
-		assertNotNull(parsed);
-		assertEquals(1, parsed.getData().size());
-		assertEquals("Value", parsed.getData().get("Property"));
-		assertEquals(listId, parsed.getListId().toString());
-		assertEquals(itemId, parsed.getId());
-		assertTrue(parsed.getCreatedAt().isBefore(Instant.now()));
-		assertNull(parsed.getUpdatedAt());
 	}
 
 	@Test
 	public void testCustomUri() throws Exception {
 		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
-		endpoint = new CreateListItemEndpoint(wrapper);
-		String expectedUri = baseUri + "/v0.1/bulk/lists/"+listId+"/items";
-		ListItemRequestWrapper request = new ListItemRequestWrapper(listId, null, Collections.emptyMap());
+		endpoint = new ListItemsEndpoint(wrapper);
+		HalRequestWrapper request = new HalRequestWrapper(2, null, listId);
+		String expectedUri = baseUri + "/v0.1/bulk/lists/"+request.id+"/items?page="+request.page;
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		String expectedRequest = "{\"data\":{}}";
-		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
-		assertEquals("POST", builder.getMethod());
+		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		assertEquals("GET", builder.getMethod());
 	}
 
 	@Test(expected = HttpResponseException.class)

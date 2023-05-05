@@ -36,10 +36,10 @@ class ListItemsEndpoint extends AbstractMethod<HalRequestWrapper, ListItemsRespo
 	}
 
 	@Override
-	public RequestBuilder makeRequest(HalRequestWrapper wrapper) {
-		String path = String.format(PATH, wrapper.id);
+	public RequestBuilder makeRequest(HalRequestWrapper request) {
+		String path = String.format(PATH, request.id);
 		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + path;
-		return RequestBuilder.get(uri)
+		return request.addParams(RequestBuilder.get(uri))
 				.setHeader("Accept", "application/json");
 	}
 

@@ -32,7 +32,7 @@ class HalRequestWrapper {
 			builder.addParameter("page", page.toString());
 		}
 		if (pageSize != null) {
-			builder.addParameter("pageSize", pageSize.toString());
+			builder.addParameter("page_size", pageSize.toString());
 		}
 		return builder;
 	}

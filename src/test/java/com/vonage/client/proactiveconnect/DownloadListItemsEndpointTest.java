@@ -18,23 +18,23 @@ package com.vonage.client.proactiveconnect;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
+import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.UUID;
 
-public class ClearListEndpointTest {
-	ClearListEndpoint endpoint;
+public class DownloadListItemsEndpointTest {
+	DownloadListItemsEndpoint endpoint;
 	String listId = UUID.randomUUID().toString();
 	
 	@Before
 	public void setUp() {
-		endpoint = new ClearListEndpoint(new HttpWrapper());
+		endpoint = new DownloadListItemsEndpoint(new HttpWrapper());
 	}
 
 	@Test
@@ -45,28 +45,30 @@ public class ClearListEndpointTest {
 	}
 	
 	@Test
-	public void testDefaultUri() throws Exception {
-		RequestBuilder builder = endpoint.makeRequest(listId);
-		assertEquals("POST", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/v0.1/bulk/lists/"+listId+"/clear";
+	public void testNoFile() throws Exception {
+		RequestBuilder builder = endpoint.makeRequest(new DownloadListItemsRequestWrapper(listId, null));
+		assertEquals("GET", builder.getMethod());
+		String expectedUri = "https://api-eu.vonage.com/v0.1/bulk/lists/"+listId+"/items/download";
 		assertEquals(expectedUri, builder.build().getURI().toString());
-		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, "");
-		assertNull(endpoint.parseResponse(mockResponse));
+		String expectedResponse = "{}";
+		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
+		byte[] parsed = endpoint.parseResponse(mockResponse);
+		assertNotNull(parsed);
 	}
 
 	@Test
 	public void testCustomUri() throws Exception {
 		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
-		endpoint = new ClearListEndpoint(wrapper);
-		String expectedUri = baseUri + "/v0.1/bulk/lists/"+listId+"/clear";
-		RequestBuilder builder = endpoint.makeRequest(listId);
+		endpoint = new DownloadListItemsEndpoint(wrapper);
+		String expectedUri = baseUri + "/v0.1/bulk/lists/"+listId+"/items/download";
+		RequestBuilder builder = endpoint.makeRequest(new DownloadListItemsRequestWrapper(listId, null));
 		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals("POST", builder.getMethod());
+		assertEquals("GET", builder.getMethod());
 	}
 	
-	@Test(expected = HttpResponseException.class)
+	@Test(expected = VonageUnexpectedException.class)
 	public void test500Response() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, "{}"));
+		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
 	}
 }

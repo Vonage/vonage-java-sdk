@@ -22,19 +22,20 @@ import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.UUID;
 
-public class ClearListEndpointTest {
-	ClearListEndpoint endpoint;
+public class GetListEndpointTest {
+	GetListEndpoint endpoint;
 	String listId = UUID.randomUUID().toString();
 	
 	@Before
 	public void setUp() {
-		endpoint = new ClearListEndpoint(new HttpWrapper());
+		endpoint = new GetListEndpoint(new HttpWrapper());
 	}
 
 	@Test
@@ -43,26 +44,35 @@ public class ClearListEndpointTest {
 		assertEquals(1, authMethods.length);
 		assertEquals(JWTAuthMethod.class, authMethods[0]);
 	}
-	
+
 	@Test
 	public void testDefaultUri() throws Exception {
 		RequestBuilder builder = endpoint.makeRequest(listId);
-		assertEquals("POST", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/v0.1/bulk/lists/"+listId+"/clear";
+		assertEquals("GET", builder.getMethod());
+		String expectedUri = "https://api-eu.vonage.com/v0.1/bulk/lists/"+listId;
 		assertEquals(expectedUri, builder.build().getURI().toString());
-		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, "");
-		assertNull(endpoint.parseResponse(mockResponse));
+		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		String expectedResponse = "{\"sync_status\":{\"value\":\"paused\"}}}";
+		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
+		ContactsList parsed = endpoint.parseResponse(mockResponse);
+		assertNotNull(parsed);
+		assertEquals(SyncStatusValue.PAUSED, parsed.getSyncStatus().getValue());
 	}
 
 	@Test
 	public void testCustomUri() throws Exception {
 		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
-		endpoint = new ClearListEndpoint(wrapper);
-		String expectedUri = baseUri + "/v0.1/bulk/lists/"+listId+"/clear";
+		endpoint = new GetListEndpoint(wrapper);
+		String expectedUri = baseUri + "/v0.1/bulk/lists/"+listId;
 		RequestBuilder builder = endpoint.makeRequest(listId);
 		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals("POST", builder.getMethod());
+		assertEquals("GET", builder.getMethod());
+	}
+
+	@Test(expected = HttpResponseException.class)
+	public void test400Response() throws Exception {
+		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, "{}"));
 	}
 	
 	@Test(expected = HttpResponseException.class)

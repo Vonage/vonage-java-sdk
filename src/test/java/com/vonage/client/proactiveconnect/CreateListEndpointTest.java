@@ -18,6 +18,7 @@ package com.vonage.client.proactiveconnect;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
+import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
@@ -35,9 +36,16 @@ public class CreateListEndpointTest {
 	public void setUp() {
 		endpoint = new CreateListEndpoint(new HttpWrapper());
 	}
+
+	@Test
+	public void testAuthMethod() {
+		Class<?>[] authMethods = endpoint.getAcceptableAuthMethods();
+		assertEquals(1, authMethods.length);
+		assertEquals(JWTAuthMethod.class, authMethods[0]);
+	}
 	
 	@Test
-	public void testMakeRequestAllParameters() throws Exception {
+	public void testDefaultUri() throws Exception {
 		ContactsList request = ContactsList.builder()
 			.name("My name")
 			.description("My description")
