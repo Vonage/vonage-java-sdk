@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Represents the sync status values for {@link SyncStatus#getValue()).
+ * Represents the sync status values for {@link SyncStatus#getValue()}.
  */
 public enum SyncStatusValue {
 	CONFIGURED,

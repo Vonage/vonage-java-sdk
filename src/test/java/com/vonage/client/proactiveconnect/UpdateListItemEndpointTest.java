@@ -15,6 +15,7 @@
  */
 package com.vonage.client.proactiveconnect;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
@@ -24,11 +25,12 @@ import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import java.time.Instant;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -61,10 +63,37 @@ public class UpdateListItemEndpointTest {
 		String expectedRequest = "{\"data\":{\"foo\":\"bar\"}}";
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		String expectedResponse = "{}";
+	}
+
+	@Test
+	public void testParseResponse() throws Exception {
+		LinkedHashMap<String, Object> data = new LinkedHashMap<>(8);
+		data.put("firstName", "Alice");
+		data.put("registered", true);
+		data.put("number", 15550067383L);
+		data.put("props", Collections.emptyMap());
+		data.put("keywords", Collections.singleton("Test"));
+		Instant createdAt = Instant.now();
+		Instant updatedAt = createdAt.plusSeconds(3600);
+		UUID id = UUID.fromString("29192c4a-4058-49da-86c2-3e349d1065b7");
+		UUID listId = UUID.fromString("4cb98f71-a879-49f7-b5cf-2314353eb52c");
+		String expectedResponse = "{\n" +
+				"\"data\":"+new ObjectMapper().writeValueAsString(data)+",\n" +
+				"\"created_at\":\""+createdAt+"\",\n" +
+				"\"updated_at\":\""+updatedAt+"\",\n" +
+				"\"id\":\""+id+"\",\n" +
+				"\"list_id\":\""+listId+"\"\n}";
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
 		ListItem parsed = endpoint.parseResponse(mockResponse);
 		assertNotNull(parsed);
+		assertNotNull(parsed.getData());
+		assertEquals(data.size(), parsed.getData().size());
+		assertEquals(data.keySet(), parsed.getData().keySet());
+		assertEquals(data.values().toString(), parsed.getData().values().toString());
+		assertEquals(createdAt, parsed.getCreatedAt());
+		assertEquals(updatedAt, parsed.getUpdatedAt());
+		assertEquals(id, parsed.getId());
+		assertEquals(listId, parsed.getListId());
 	}
 
 	@Test
@@ -81,6 +110,14 @@ public class UpdateListItemEndpointTest {
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("PUT", builder.getMethod());
+		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, "{}");
+		ListItem parsed = endpoint.parseResponse(mockResponse);
+		assertNotNull(parsed);
+		assertNull(parsed.getData());
+		assertNull(parsed.getCreatedAt());
+		assertNull(parsed.getUpdatedAt());
+		assertNull(parsed.getId());
+		assertNull(parsed.getListId());
 	}
 
 	@Test(expected = HttpResponseException.class)

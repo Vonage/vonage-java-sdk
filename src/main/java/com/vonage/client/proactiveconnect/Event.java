@@ -79,7 +79,8 @@ public class Event {
 	}
 
 	/**
-	 * Identifier the item ID during a job run - this is the list item ID which is copied while taking the list snapshot.
+	 * Identifier for the item ID during a job run - this is the list item ID which is copied
+	 * while taking the list snapshot.
 	 *
 	 * @return The run's item ID or {@code null} if unknown.
 	 */
@@ -119,7 +120,8 @@ public class Event {
 	}
 
 	/**
-	 * src_ctx field.
+	 * {@code src_ctx} field.
+	 *
 	 * @return The source context or {@code null} if unknown.
 	 */
 	@JsonProperty("src_ctx")
@@ -128,11 +130,12 @@ public class Event {
 	}
 
 	/**
-	 * Date & time the event occured in ISO 8601 format.
+	 * Date and time the event occurred in ISO 8601 format.
+	 *
 	 * @return The event timestamp or {@code null} if unknown.
 	 */
-	@JsonProperty("occured_at")
-	public Instant getOccuredAt() {
+	@JsonProperty("occurred_at")
+	public Instant getOccurredAt() {
 		return occuredAt;
 	}
 

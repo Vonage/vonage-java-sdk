@@ -69,6 +69,9 @@ public class GetListItemEndpointTest {
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("GET", builder.getMethod());
+		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, "{}");
+		ListItem parsed = endpoint.parseResponse(mockResponse);
+		assertNotNull(parsed);
 	}
 
 	@Test(expected = HttpResponseException.class)

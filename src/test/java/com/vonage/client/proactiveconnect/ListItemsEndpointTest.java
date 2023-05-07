@@ -19,22 +19,23 @@ import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
 import com.vonage.client.auth.JWTAuthMethod;
+import com.vonage.client.common.HalLinks;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.Assert;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 public class ListItemsEndpointTest {
 	ListItemsEndpoint endpoint;
 	String listId = UUID.randomUUID().toString();
-	
-	
+
 	@Before
 	public void setUp() {
 		endpoint = new ListItemsEndpoint(new HttpWrapper());
@@ -83,6 +84,65 @@ public class ListItemsEndpointTest {
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("GET", builder.getMethod());
+	}
+
+	@Test
+	public void testEmptyResponse() throws Exception {
+		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, "{}");
+		ListItemsResponse parsed = endpoint.parseResponse(mockResponse);
+		assertNotNull(parsed);
+		assertNull(parsed.getItems());
+		assertNull(parsed.getLinks());
+		assertNull(parsed.getPage());
+		assertNull(parsed.getPageSize());
+		assertNull(parsed.getTotalItems());
+		assertNull(parsed.getTotalPages());
+	}
+
+	@Test
+	public void testFullResponse() throws Exception {
+		String expectedResponse = "{\n" +
+				"   \"page_size\": 50,\n" +
+				"   \"page\": 7,\n" +
+				"   \"total_pages\": 9,\n" +
+				"   \"total_items\": 42,\n" +
+				"   \"_links\": {\n" +
+				"      \"first\": {\n" +
+				"         \"href\": \"https://api-eu.vonage.com/v0.1/bulk/lists?page=5&page_size=10\"\n" +
+				"      },\n" +
+				"      \"self\": {\n" +
+				"         \"href\": \"https://api-eu.vonage.com/v0.1/bulk/lists?page=5&page_size=10\"\n" +
+				"      },\n" +
+				"      \"prev\": {\n" +
+				"         \"href\": \"https://api-eu.vonage.com/v0.1/bulk/lists?page=5&page_size=10\"\n" +
+				"      },\n" +
+				"      \"next\": {\n" +
+				"         \"href\": \"https://api-eu.vonage.com/v0.1/bulk/lists?page=5&page_size=10\"\n" +
+				"      }\n" +
+				"   },\n" +
+				"   \"_embedded\": {\n" +
+				"      \"items\": [\n" +
+				"         {},{},{}\n" +
+				"      ]\n" +
+				"   }\n" +
+				"}";
+		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
+		ListItemsResponse parsed = endpoint.parseResponse(mockResponse);
+		assertNotNull(parsed);
+		HalLinks links = parsed.getLinks();
+		assertNotNull(links);
+		assertNotNull(links.getSelfUrl());
+		assertNotNull(links.getFirstUrl());
+		assertNotNull(links.getNextUrl());
+		assertNotNull(links.getPrevUrl());
+		assertEquals(7, parsed.getPage().intValue());
+		assertEquals(50, parsed.getPageSize().intValue());
+		assertEquals(9, parsed.getTotalPages().intValue());
+		assertEquals(42, parsed.getTotalItems().intValue());
+		List<ListItem> items = parsed.getItems();
+		assertNotNull(items);
+		assertEquals(3, items.size());
+		items.forEach(Assert::assertNotNull);
 	}
 
 	@Test(expected = HttpResponseException.class)

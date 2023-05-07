@@ -24,10 +24,10 @@ import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import java.util.Collections;
 import java.util.UUID;
 
 public class UpdateListEndpointTest {
@@ -48,14 +48,14 @@ public class UpdateListEndpointTest {
 	
 	@Test
 	public void testDefaultUri() throws Exception {
-		ContactsList contacts = ContactsList.builder().build();
+		ContactsList contacts = ContactsList.builder().tags(Collections.emptyList()).build();
 		UpdateListRequestWrapper request = new UpdateListRequestWrapper(listId, contacts);
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("PUT", builder.getMethod());
 		String expectedUri = "https://api-eu.vonage.com/v0.1/bulk/lists/"+listId;
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		String expectedRequest = "{}";
+		String expectedRequest = "{\"tags\":[]}";
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		String expectedResponse = "{\"id\":\""+listId+"\"}";
@@ -64,6 +64,8 @@ public class UpdateListEndpointTest {
 		assertNotNull(parsed);
 		assertEquals(request.listId, parsed.getId().toString());
 		assertEquals(contacts, parsed);
+		assertNotNull(parsed.getTags());
+		assertEquals(0, parsed.getTags().size());
 	}
 
 	@Test

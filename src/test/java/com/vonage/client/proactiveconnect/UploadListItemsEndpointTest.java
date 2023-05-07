@@ -24,8 +24,7 @@ import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.UUID;
@@ -55,10 +54,13 @@ public class UploadListItemsEndpointTest {
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("", EntityUtils.toString(builder.getEntity()));
-		String expectedResponse = "{}";
+		String expectedResponse = "{\"inserted\":21,\"updated\":3,\"deleted\":0}";
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
 		UploadListItemsResponse parsed = endpoint.parseResponse(mockResponse);
 		assertNotNull(parsed);
+		assertEquals(21, parsed.getInserted().intValue());
+		assertEquals(3, parsed.getUpdated().intValue());
+		assertEquals(0, parsed.getDeleted().intValue());
 	}
 
 	@Test
@@ -73,6 +75,12 @@ public class UploadListItemsEndpointTest {
 		assertEquals("", EntityUtils.toString(builder.getEntity()));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("POST", builder.getMethod());
+		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, "{}");
+		UploadListItemsResponse parsed = endpoint.parseResponse(mockResponse);
+		assertNotNull(parsed);
+		assertNull(parsed.getInserted());
+		assertNull(parsed.getUpdated());
+		assertNull(parsed.getDeleted());
 	}
 
 	@Test(expected = HttpResponseException.class)
