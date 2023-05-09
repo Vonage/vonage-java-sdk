@@ -18,13 +18,13 @@ package com.vonage.client.proactiveconnect;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
+import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.UUID;
@@ -72,6 +72,23 @@ public class GetListItemEndpointTest {
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, "{}");
 		ListItem parsed = endpoint.parseResponse(mockResponse);
 		assertNotNull(parsed);
+	}
+
+	@Test
+	public void testEmptyResponse() throws Exception {
+		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, "{}");
+		ListItem parsed = endpoint.parseResponse(mockResponse);
+		assertNotNull(parsed);
+		assertNull(parsed.getData());
+		assertNull(parsed.getCreatedAt());
+		assertNull(parsed.getUpdatedAt());
+		assertNull(parsed.getId());
+		assertNull(parsed.getListId());
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void testInvalidResponse() {
+		ListItem.fromJson("{malformed]");
 	}
 
 	@Test(expected = HttpResponseException.class)

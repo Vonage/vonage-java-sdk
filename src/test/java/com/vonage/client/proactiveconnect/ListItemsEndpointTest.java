@@ -18,6 +18,7 @@ package com.vonage.client.proactiveconnect;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
+import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.common.HalLinks;
 import org.apache.http.HttpResponse;
@@ -143,6 +144,11 @@ public class ListItemsEndpointTest {
 		assertNotNull(items);
 		assertEquals(3, items.size());
 		items.forEach(Assert::assertNotNull);
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void testInvalidResponse() {
+		ListItemsResponse.fromJson("{malformed]");
 	}
 
 	@Test(expected = HttpResponseException.class)

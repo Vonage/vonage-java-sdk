@@ -18,6 +18,7 @@ package com.vonage.client.proactiveconnect;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
+import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpResponseException;
@@ -54,13 +55,6 @@ public class UploadListItemsEndpointTest {
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("", EntityUtils.toString(builder.getEntity()));
-		String expectedResponse = "{\"inserted\":21,\"updated\":3,\"deleted\":0}";
-		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
-		UploadListItemsResponse parsed = endpoint.parseResponse(mockResponse);
-		assertNotNull(parsed);
-		assertEquals(21, parsed.getInserted().intValue());
-		assertEquals(3, parsed.getUpdated().intValue());
-		assertEquals(0, parsed.getDeleted().intValue());
 	}
 
 	@Test
@@ -75,12 +69,32 @@ public class UploadListItemsEndpointTest {
 		assertEquals("", EntityUtils.toString(builder.getEntity()));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("POST", builder.getMethod());
+	}
+
+	@Test
+	public void testFullResponse() throws Exception {
+		String expectedResponse = "{\"inserted\":21,\"updated\":3,\"deleted\":0}";
+		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
+		UploadListItemsResponse parsed = endpoint.parseResponse(mockResponse);
+		assertNotNull(parsed);
+		assertEquals(21, parsed.getInserted().intValue());
+		assertEquals(3, parsed.getUpdated().intValue());
+		assertEquals(0, parsed.getDeleted().intValue());
+	}
+
+	@Test
+	public void testEmptyResponse() throws Exception {
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, "{}");
 		UploadListItemsResponse parsed = endpoint.parseResponse(mockResponse);
 		assertNotNull(parsed);
 		assertNull(parsed.getInserted());
 		assertNull(parsed.getUpdated());
 		assertNull(parsed.getDeleted());
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void testInvalidResponse() {
+		UploadListItemsResponse.fromJson("{malformed]");
 	}
 
 	@Test(expected = HttpResponseException.class)

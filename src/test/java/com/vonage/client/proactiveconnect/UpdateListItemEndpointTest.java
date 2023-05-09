@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
+import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpResponseException;
@@ -66,7 +67,23 @@ public class UpdateListItemEndpointTest {
 	}
 
 	@Test
-	public void testParseResponse() throws Exception {
+	public void testCustomUri() throws Exception {
+		String baseUri = "http://example.com";
+		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
+		endpoint = new UpdateListItemEndpoint(wrapper);
+		ListItemRequestWrapper request = new ListItemRequestWrapper(listId, itemId, Collections.emptyMap());
+		String expectedUri = baseUri + "/v0.1/bulk/lists/"+request.listId+"/items/"+request.itemId;
+		RequestBuilder builder = endpoint.makeRequest(request);
+		assertEquals(expectedUri, builder.build().getURI().toString());
+		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
+		String expectedRequest = "{\"data\":{}}";
+		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
+		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		assertEquals("PUT", builder.getMethod());
+	}
+
+	@Test
+	public void testFullResponse() throws Exception {
 		LinkedHashMap<String, Object> data = new LinkedHashMap<>(8);
 		data.put("firstName", "Alice");
 		data.put("registered", true);
@@ -97,19 +114,7 @@ public class UpdateListItemEndpointTest {
 	}
 
 	@Test
-	public void testCustomUri() throws Exception {
-		String baseUri = "http://example.com";
-		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
-		endpoint = new UpdateListItemEndpoint(wrapper);
-		ListItemRequestWrapper request = new ListItemRequestWrapper(listId, itemId, Collections.emptyMap());
-		String expectedUri = baseUri + "/v0.1/bulk/lists/"+request.listId+"/items/"+request.itemId;
-		RequestBuilder builder = endpoint.makeRequest(request);
-		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		String expectedRequest = "{\"data\":{}}";
-		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		assertEquals("PUT", builder.getMethod());
+	public void testEmptyResponse() throws Exception {
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, "{}");
 		ListItem parsed = endpoint.parseResponse(mockResponse);
 		assertNotNull(parsed);
@@ -118,6 +123,11 @@ public class UpdateListItemEndpointTest {
 		assertNull(parsed.getUpdatedAt());
 		assertNull(parsed.getId());
 		assertNull(parsed.getListId());
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void testInvalidResponse() {
+		ListItem.fromJson("{malformed]");
 	}
 
 	@Test(expected = HttpResponseException.class)
