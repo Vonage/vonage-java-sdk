@@ -53,6 +53,7 @@ public class UploadListItemsEndpointTest {
 		assertEquals("POST", builder.getMethod());
 		String expectedUri = "https://api-eu.vonage.com/v0.1/bulk/lists/"+request.listId+"/items/import";
 		assertEquals(expectedUri, builder.build().getURI().toString());
+		assertEquals(ContentType.MULTIPART_FORM_DATA.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("", EntityUtils.toString(builder.getEntity()));
 	}
@@ -67,6 +68,7 @@ public class UploadListItemsEndpointTest {
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals("", EntityUtils.toString(builder.getEntity()));
+		assertEquals(ContentType.MULTIPART_FORM_DATA.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("POST", builder.getMethod());
 	}

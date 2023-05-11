@@ -24,6 +24,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,7 +37,7 @@ public class ContactsList {
 	private UUID id;
 	private String name, description;
 	private List<String> tags;
-	private ListAttribute attributes;
+	private List<ListAttribute> attributes;
 	private Datasource datasource;
 	private Instant createdAt, updatedAt;
 	private Integer itemsCount;
@@ -89,7 +90,7 @@ public class ContactsList {
 	 * @return The list's attributes or {@code null} if unknown.
 	 */
 	@JsonProperty("attributes")
-	public ListAttribute getAttributes() {
+	public List<ListAttribute> getAttributes() {
 		return attributes;
 	}
 
@@ -178,6 +179,7 @@ public class ContactsList {
 	public static ContactsList fromJson(String json) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
+			mapper.registerModule(new JavaTimeModule());
 			return mapper.readValue(json, ContactsList.class);
 		}
 		catch (IOException ex) {
@@ -210,10 +212,9 @@ public class ContactsList {
 	}
 	
 	public static class Builder {
-		private String name;
-		private String description;
+		private String name, description;
 		private List<String> tags;
-		private ListAttribute attributes;
+		private List<ListAttribute> attributes;
 		private Datasource datasource;
 	
 		Builder() {}
@@ -257,11 +258,22 @@ public class ContactsList {
 		/**
 		 * Sets the list attributes.
 		 *
-		 * @param attributes The list's attributes.
+		 * @param attributes The list attributes as an array (or varargs) of {@code ListAttribute}s.
 		 *
 		 * @return This builder.
 		 */
-		public Builder attributes(ListAttribute attributes) {
+		public Builder attributes(ListAttribute... attributes) {
+			return attributes(Arrays.asList(attributes));
+		}
+
+		/**
+		 * Sets the list attributes.
+		 *
+		 * @param attributes The list of attributes.
+		 *
+		 * @return This builder.
+		 */
+		public Builder attributes(List<ListAttribute> attributes) {
 			this.attributes = attributes;
 			return this;
 		}
