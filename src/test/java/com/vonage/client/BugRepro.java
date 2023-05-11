@@ -21,6 +21,8 @@
  */
 package com.vonage.client;
 
+import com.vonage.client.verify2.*;
+
 /**
  * Convenience class for debugging / live testing.
  */
@@ -40,6 +42,14 @@ public class BugRepro {
 				.build();
 
 		// Debug code here
+		Verify2Client verify2 = client.getVerify2Client();
+		VerificationResponse response = verify2.sendVerification(VerificationRequest.builder()
+						.brand("Devoxx")
+						//.addWorkflow(new SmsWorkflow("447577739826"))
+						//.code("d3V0xX23")
+						.addWorkflow(new WhatsappCodelessWorkflow("447577739826"))
+						.build()
+		);
 
 
 		System.out.println("Success");

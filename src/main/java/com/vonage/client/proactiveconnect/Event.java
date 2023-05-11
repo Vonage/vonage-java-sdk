@@ -18,6 +18,7 @@ package com.vonage.client.proactiveconnect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 import java.time.Instant;
@@ -32,7 +33,7 @@ public class Event {
 	private UUID id, actionId, invocationId, runItemId, runId, jobId;
 	private String recipientId, sourceContext;
 	private EventType type;
-	private Instant occuredAt;
+	private Instant occurredAt;
 	private Map<String, ?> data;
 
 	protected Event() {
@@ -136,7 +137,7 @@ public class Event {
 	 */
 	@JsonProperty("occurred_at")
 	public Instant getOccurredAt() {
-		return occuredAt;
+		return occurredAt;
 	}
 
 	/**
@@ -158,6 +159,7 @@ public class Event {
 	public static Event fromJson(String json) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
+			mapper.registerModule(new JavaTimeModule());
 			return mapper.readValue(json, Event.class);
 		}
 		catch (IOException ex) {
