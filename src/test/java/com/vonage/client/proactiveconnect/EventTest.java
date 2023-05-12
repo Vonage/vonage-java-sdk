@@ -90,4 +90,12 @@ public class EventTest {
 		assertNull(response.getOccurredAt());
 		assertNull(response.getType());
 	}
+
+	@Test
+	public void testInvalidEventType() {
+		Event valid = Event.fromJson("{\"type\":\"run_item_skipped\"}");
+		assertEquals(EventType.RUN_ITEM_SKIPPED, valid.getType());
+		Event invalid = Event.fromJson("{\"type\":\"blahh\"}");
+		assertNull(invalid.getType());
+	}
 }

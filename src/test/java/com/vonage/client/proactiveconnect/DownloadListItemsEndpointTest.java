@@ -22,10 +22,11 @@ import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.UUID;
 
 public class DownloadListItemsEndpointTest {
@@ -45,15 +46,31 @@ public class DownloadListItemsEndpointTest {
 	}
 	
 	@Test
-	public void testNoFile() throws Exception {
+	public void testDefaultUriNoFile() throws Exception {
 		RequestBuilder builder = endpoint.makeRequest(new DownloadListItemsRequestWrapper(listId, null));
 		assertEquals("GET", builder.getMethod());
 		String expectedUri = "https://api-eu.vonage.com/v0.1/bulk/lists/"+listId+"/items/download";
 		assertEquals(expectedUri, builder.build().getURI().toString());
-		String expectedResponse = "{}";
+		String expectedResponse = "ROW1,ROW2\nCOLUMN1,COLUMN2";
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
 		byte[] parsed = endpoint.parseResponse(mockResponse);
 		assertNotNull(parsed);
+		assertEquals(25, parsed.length);
+	}
+
+	@Test
+	public void testDefaultUriWithFile() throws Exception {
+		Path file = Files.createTempFile(getClass().getSimpleName(), null);
+		RequestBuilder builder = endpoint.makeRequest(new DownloadListItemsRequestWrapper(listId, file));
+		assertEquals("GET", builder.getMethod());
+		String expectedUri = "https://api-eu.vonage.com/v0.1/bulk/lists/"+listId+"/items/download";
+		assertEquals(expectedUri, builder.build().getURI().toString());
+		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, "abc123DEF567");
+		assertNull(endpoint.parseResponse(mockResponse));
+	}
+
+	@Test
+	public void testResponseWithFile() throws Exception {
 	}
 
 	@Test

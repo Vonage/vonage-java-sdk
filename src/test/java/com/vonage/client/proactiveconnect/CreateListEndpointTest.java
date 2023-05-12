@@ -49,15 +49,14 @@ public class CreateListEndpointTest {
 		ContactsList request = ContactsList.builder()
 			.name("My name")
 			.description("My description")
-			.attributes(ListAttribute.builder().build())
-			.build();
+			.attributes().build();
 
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("POST", builder.getMethod());
 		String expectedUri = "https://api-eu.vonage.com/v0.1/bulk/lists";
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		String expectedRequest = "{\"name\":\""+request.getName()+"\",\"description\":\""+request.getDescription()+"\",\"attributes\":{}}";
+		String expectedRequest = "{\"name\":\""+request.getName()+"\",\"description\":\""+request.getDescription()+"\",\"attributes\":[]}";
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		String expectedResponse = "{\"updated_at\":\"2022-06-21T15:03:00.099Z\"}";
@@ -74,11 +73,11 @@ public class CreateListEndpointTest {
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
 		endpoint = new CreateListEndpoint(wrapper);
 		String expectedUri = baseUri + "/v0.1/bulk/lists";
-		ContactsList request = ContactsList.builder().build();
+		ContactsList request = ContactsList.builder().attributes(ListAttribute.builder().build()).build();
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		String expectedRequest = "{}";
+		String expectedRequest = "{\"attributes\":[{}]}";
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		assertEquals("POST", builder.getMethod());
 	}

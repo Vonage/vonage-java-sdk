@@ -57,4 +57,12 @@ public class SyncStatusTest {
 		assertNull(response.getDataModified());
 		assertNull(response.getDirty());
 	}
+
+	@Test
+	public void testInvalidSyncStatusValue() {
+		SyncStatus valid = SyncStatus.fromJson("{\"value\":\"clearing\"}");
+		assertEquals(SyncStatusValue.CLEARING, valid.getValue());
+		SyncStatus invalid = SyncStatus.fromJson("{\"value\":\"foobar\"}");
+		assertNull(invalid.getValue());
+	}
 }
