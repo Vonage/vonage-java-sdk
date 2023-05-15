@@ -40,18 +40,16 @@ public class VerifyCodeEndpointTest {
 	@Test
 	public void testVerifySuccess() throws Exception {
 		VerifyCodeRequestWrapper request = new VerifyCodeRequestWrapper(UUID.randomUUID().toString(), "54321");
-
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		assertEquals(HttpMethod.POST.name(), builder.getMethod());
 		assertEquals("https://api.nexmo.com/v2/verify/"+request.requestId, builder.getUri().toString());
-
 		String expectedJson = "{\"code\":\""+request.code+"\"}";
 		assertEquals(expectedJson, EntityUtils.toString(builder.getEntity()));
 	}
 
 	@Test
-	public void testParseResponseFailureAllParams() throws Exception {
+	public void testParse422AllParams() throws Exception {
 		final int statusCode = 422;
 		String title = "Conflict";
 		URI type = URI.create("https://www.developer.vonage.com/api-errors/verify#conflict");

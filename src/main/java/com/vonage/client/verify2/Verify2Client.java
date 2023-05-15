@@ -22,6 +22,7 @@ import java.util.UUID;
 public class Verify2Client {
 	final VerifyUserEndpoint verifyUser;
 	final VerifyCodeEndpoint verifyRequest;
+	final CancelEndpoint cancel;
 
 	/**
 	 * Create a new Verify2Client.
@@ -31,6 +32,7 @@ public class Verify2Client {
 	public Verify2Client(HttpWrapper httpWrapper) {
 		verifyUser = new VerifyUserEndpoint(httpWrapper);
 		verifyRequest = new VerifyCodeEndpoint(httpWrapper);
+		cancel = new CancelEndpoint(httpWrapper);
 	}
 
 	/**
@@ -84,5 +86,19 @@ public class Verify2Client {
 		Objects.requireNonNull(requestId, "Request ID is required.");
 		Objects.requireNonNull(code, "Code is required.");
 		verifyRequest.execute(new VerifyCodeRequestWrapper(requestId.toString(), code));
+	}
+
+	/**
+	 * Attempts to abort an active verification workflow.
+	 * If successful (HTTP status 204), this method will return normally.
+	 * Otherwise, an exception will be thrown indicating a 404 response.
+	 *
+	 * @param requestId ID of the verify request, obtained from {@link VerificationResponse#getRequestId()}.
+	 *
+	 * @throws VerifyResponseException If the request ID was not found or it has been verified already.
+	 */
+	public void cancelVerification(UUID requestId) {
+		Objects.requireNonNull(requestId, "Request ID is required.");
+		cancel.execute(requestId.toString());
 	}
 }
