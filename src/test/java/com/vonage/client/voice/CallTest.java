@@ -168,7 +168,12 @@ public class CallTest {
                 "      {\n" +
                 "         \"action\":\"connect\",\n" +
                 "         \"eventType\":\"synchronous\",\n" +
-                "         \"machineDetection\":\"hangup\"\n" +
+                "         \"machineDetection\":\"hangup\"\n," +
+                "         \"advancedMachineDetection\":{\n" +
+                "             \"behavior\": \"continue\",\n" +
+                "             \"mode\": \"detect_beep\",\n" +
+                "             \"beep_timeout\": 51" +
+                "         }\n" +
                 "      },\n" +
                 "      {\n" +
                 "         \"action\":\"conversation\",\n" +
@@ -229,6 +234,11 @@ public class CallTest {
         ConnectAction connect = (ConnectAction) actionsIter.next();
         assertEquals(EventType.SYNCHRONOUS, connect.getEventType());
         assertEquals(MachineDetection.HANGUP, connect.getMachineDetection());
+        AdvancedMachineDetection amd = connect.getAdvancedMachineDetection();
+        assertNotNull(amd);
+        assertEquals(MachineDetection.CONTINUE, amd.getBehavior());
+        assertEquals(AdvancedMachineDetection.Mode.DETECT_BEEP, amd.getMode());
+        assertEquals(51, amd.getBeepTimeout().intValue());
 
         ConversationAction conversation = (ConversationAction) actionsIter.next();
         assertEquals("Conference call", conversation.getName());
@@ -299,6 +309,13 @@ public class CallTest {
         );
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void testInvalidMachineDetectionCombination() {
+        Call.builder().machineDetection(MachineDetection.HANGUP)
+                .advancedMachineDetection(AdvancedMachineDetection.builder().build())
+                .build();
+    }
+
     @Test
     public void testConstructAllParams() {
         Call call = Call.builder()
@@ -359,6 +376,7 @@ public class CallTest {
         assertNull(call.getLengthTimer());
         assertNull(call.getRingingTimer());
         assertNull(call.getMachineDetection());
+        assertNull(call.getAdvancedMachineDetection());
         assertNull(call.getFromRandomNumber());
         assertNull(call.getFrom());
         assertEquals("123", call.getTo()[0].toLog());

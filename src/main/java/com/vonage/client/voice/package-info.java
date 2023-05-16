@@ -15,6 +15,6 @@
  */
 
 /**
- * Provides access to the Vonage Voice API.
+ * Implementation of the <a href=https://developer.vonage.com/en/voice/voice-api/overview>Vonage Voice API</a>.
  */
 package com.vonage.client.voice;

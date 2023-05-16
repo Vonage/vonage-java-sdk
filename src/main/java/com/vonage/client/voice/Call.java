@@ -39,6 +39,7 @@ public class Call {
     private HttpMethod answerMethod = HttpMethod.GET, eventMethod;
     private String answerUrl, eventUrl;
     private MachineDetection machineDetection;
+    private AdvancedMachineDetection advancedMachineDetection;
     private Integer lengthTimer, ringingTimer;
     private Boolean fromRandomNumber;
     private Collection<? extends Action> ncco;
@@ -73,8 +74,11 @@ public class Call {
         }
         answerUrl = builder.answerUrl;
         eventUrl = builder.eventUrl;
-        machineDetection = builder.machineDetection;
         ncco = builder.ncco;
+        advancedMachineDetection = builder.advancedMachineDetection;
+        if ((machineDetection = builder.machineDetection) != null && advancedMachineDetection != null) {
+            throw new IllegalStateException("Cannot set both machineDetection and advancedMachineDetection.");
+        }
     }
 
     /**
@@ -146,6 +150,18 @@ public class Call {
     @JsonProperty("machine_detection")
     public MachineDetection getMachineDetection() {
         return machineDetection;
+    }
+
+    /**
+     * Premium machine detection, overrides {@link #getMachineDetection()} if both are set.
+     *
+     * @return The advanced machine detection settings, or {@code null} if not set.
+     *
+     * @since 7.4.0
+     */
+    @JsonProperty("advanced_machine_detection")
+    public AdvancedMachineDetection getAdvancedMachineDetection() {
+        return advancedMachineDetection;
     }
 
     @JsonProperty("length_timer")
@@ -275,6 +291,7 @@ public class Call {
         private HttpMethod answerMethod, eventMethod;
         private String answerUrl, eventUrl;
         private MachineDetection machineDetection;
+        private AdvancedMachineDetection advancedMachineDetection;
         private Integer lengthTimer, ringingTimer;
         private Boolean fromRandomNumber;
         private Collection<Action> ncco;
@@ -378,6 +395,21 @@ public class Call {
          */
         public Builder machineDetection(MachineDetection machineDetection) {
             this.machineDetection = machineDetection;
+            return this;
+        }
+
+        /**
+         * Configure the behavior of Vonage's advanced machine detection. This overrides the
+         * {@link #machineDetection(MachineDetection)}, so you cannot set both.
+         *
+         * @param advancedMachineDetection The advanced machine detection settings.
+         *
+         * @return This builder.
+         *
+         * @since 7.4.0
+         */
+        public Builder advancedMachineDetection(AdvancedMachineDetection advancedMachineDetection) {
+            this.advancedMachineDetection = advancedMachineDetection;
             return this;
         }
 

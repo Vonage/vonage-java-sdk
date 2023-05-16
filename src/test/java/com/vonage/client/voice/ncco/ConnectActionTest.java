@@ -15,10 +15,11 @@
  */
 package com.vonage.client.voice.ncco;
 
+import com.vonage.client.voice.AdvancedMachineDetection;
 import com.vonage.client.voice.MachineDetection;
-import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
+import org.junit.Test;
 
 public class ConnectActionTest {
     @Test
@@ -40,7 +41,10 @@ public class ConnectActionTest {
                 .eventMethod(EventMethod.POST)
                 .build();
 
-        String expectedJson = "[{\"endpoint\":[{\"number\":\"15554441234\",\"type\":\"phone\"}],\"from\":\"15554449876\",\"eventType\":\"synchronous\",\"limit\":2,\"machineDetection\":\"continue\",\"eventUrl\":[\"https://example.com\"],\"eventMethod\":\"POST\",\"action\":\"connect\",\"timeout\":3}]";
+        String expectedJson = "[{\"endpoint\":[{\"number\":\"15554441234\",\"type\":\"phone\"}]," +
+                "\"from\":\"15554449876\",\"eventType\":\"synchronous\",\"limit\":2,\"timeout\":3," +
+                "\"machineDetection\":\"continue\",\"eventUrl\":[\"https://example.com\"]," +
+                "\"eventMethod\":\"POST\",\"action\":\"connect\"}]";
         assertEquals(expectedJson, new Ncco(connect).toJson());
     }
 
@@ -57,7 +61,10 @@ public class ConnectActionTest {
                 .eventMethod(EventMethod.POST)
                 .build();
 
-        String expectedJson = "[{\"endpoint\":[{\"uri\":\"wss://example.com\",\"type\":\"websocket\",\"content-type\":\"content-type\"}],\"from\":\"15554449876\",\"eventType\":\"synchronous\",\"limit\":2,\"machineDetection\":\"continue\",\"eventUrl\":[\"https://example.com\"],\"eventMethod\":\"POST\",\"action\":\"connect\",\"timeout\":3}]";
+        String expectedJson = "[{\"endpoint\":[{\"uri\":\"wss://example.com\",\"type\":\"websocket\"," +
+                "\"content-type\":\"content-type\"}],\"from\":\"15554449876\",\"eventType\":\"synchronous\"," +
+                "\"limit\":2,\"timeout\":3,\"machineDetection\":\"continue\"," +
+                "\"eventUrl\":[\"https://example.com\"],\"eventMethod\":\"POST\",\"action\":\"connect\"}]";
         assertEquals(expectedJson, new Ncco(connect).toJson());
     }
 
@@ -74,7 +81,10 @@ public class ConnectActionTest {
                 .eventMethod(EventMethod.POST)
                 .build();
 
-        String expectedJson = "[{\"endpoint\":[{\"uri\":\"sip:test@sip.example.com\",\"type\":\"sip\"}],\"from\":\"15554449876\",\"eventType\":\"synchronous\",\"limit\":2,\"machineDetection\":\"continue\",\"eventUrl\":[\"https://example.com\"],\"eventMethod\":\"POST\",\"action\":\"connect\",\"timeout\":3}]";
+        String expectedJson = "[{\"endpoint\":[{\"uri\":\"sip:test@sip.example.com\",\"type\":\"sip\"}]," +
+                "\"from\":\"15554449876\",\"eventType\":\"synchronous\",\"limit\":2,\"timeout\":3," +
+                "\"machineDetection\":\"continue\",\"eventUrl\":[\"https://example.com\"]," +
+                "\"eventMethod\":\"POST\",\"action\":\"connect\"}]";
         assertEquals(expectedJson, new Ncco(connect).toJson());
     }
 
@@ -146,7 +156,8 @@ public class ConnectActionTest {
     public void testTimeOut() {
         ConnectAction connect = ConnectAction.builder(PhoneEndpoint.builder("15554441234").build()).timeOut(5).build();
 
-        String expectedJson = "[{\"endpoint\":[{\"number\":\"15554441234\",\"type\":\"phone\"}],\"action\":\"connect\",\"timeout\":5}]";
+        String expectedJson = "[{\"endpoint\":[{\"number\":\"15554441234\",\"type\":\"phone\"}]," +
+                "\"timeout\":5,\"action\":\"connect\"}]";
         assertEquals(expectedJson, new Ncco(connect).toJson());
     }
 
@@ -162,10 +173,26 @@ public class ConnectActionTest {
     public void testMachineDetection() {
         ConnectAction.Builder builder = ConnectAction.builder(PhoneEndpoint.builder("15554441234").build());
         ConnectAction connectContinue = builder.machineDetection(MachineDetection.CONTINUE).build();
-        ConnectAction connectHangup = builder.machineDetection(MachineDetection.CONTINUE).build();
+        ConnectAction connectHangup = builder.machineDetection(MachineDetection.HANGUP).build();
 
-        String expectedJson = "[{\"endpoint\":[{\"number\":\"15554441234\",\"type\":\"phone\"}],\"machineDetection\":\"continue\",\"action\":\"connect\"},{\"endpoint\":[{\"number\":\"15554441234\",\"type\":\"phone\"}],\"machineDetection\":\"continue\",\"action\":\"connect\"}]";
+        String expectedJson = "[{\"endpoint\":[{\"number\":\"15554441234\",\"type\":\"phone\"}]," +
+                "\"machineDetection\":\"continue\",\"action\":\"connect\"},{\"endpoint\":[{\"number\":\"15554441234\"," +
+                "\"type\":\"phone\"}],\"machineDetection\":\"hangup\",\"action\":\"connect\"}]";
         assertEquals(expectedJson, new Ncco(connectContinue, connectHangup).toJson());
+    }
+
+    @Test
+    public void testAdvancedMachineDetection() {
+        PhoneEndpoint phone = PhoneEndpoint.builder("15554321234").build();
+        AdvancedMachineDetection amd = AdvancedMachineDetection.builder()
+                .mode(AdvancedMachineDetection.Mode.DETECT_BEEP)
+                .behavior(MachineDetection.CONTINUE)
+                .build();
+        ConnectAction ca = ConnectAction.builder(phone).advancedMachineDetection(amd).build();
+        String expectedJson = "[{\"endpoint\":[{\"number\":\"15554321234\",\"type\":\"phone\"}]," +
+                "\"advancedMachineDetection\":{\"behavior\":\"continue\",\"mode\":\"detect_beep\"}," +
+                "\"action\":\"connect\"}]";
+        assertEquals(expectedJson, new Ncco(ca).toJson());
     }
 
     @Test
