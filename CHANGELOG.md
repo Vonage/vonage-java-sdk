@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+# [7.4.0] - 2023-05
+- Added Verify v2 API implementation
+
 # [7.3.0] - 2023-04-14
 - Viber video message now requires setting duration and file size
 - Numbers API now uses Basic auth in header rather than query params

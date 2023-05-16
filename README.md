@@ -34,7 +34,7 @@ For Gradle 3.4 or Higher:
 
 ```groovy
 dependencies {
-    implementation 'com.vonage:client:7.3.0'
+    implementation 'com.vonage:client:7.4.0'
 }
 ```
 
@@ -42,7 +42,7 @@ For older versions:
 
 ```groovy
 dependencies {
-    compile 'com.vonage:client:7.3.0'
+    compile 'com.vonage:client:7.4.0'
 }
 ```
 
@@ -54,7 +54,7 @@ Add the following to the correct place in your project's POM file:
 <dependency>
     <groupId>com.vonage</groupId>
     <artifactId>client</artifactId>
-    <version>7.3.0</version>
+    <version>7.4.0</version>
 </dependency>
 ```
 
@@ -324,7 +324,7 @@ CallEvent event = client.getVoiceClient().createCall(call);
 Send a 2FA code to a phone number with:
 
 ```java
-VerifyResponse ongoingVerify = client.getVerifyClient().verify(TO_NUMBER, "NEXMO");
+VerifyResponse ongoingVerify = client.getVerifyClient().verify(TO_NUMBER, "Vonage");
 ```
 
 ### Check the 2FA Code
@@ -346,7 +346,7 @@ VerifyResponse verifyPayment = client.getVerifyClient().psd2Verify(TO_NUMBER, 10
 ### Prompt a WhatsApp user for verification, with Voice call and e-mail as fallback
 
 ```java
-VerificationResponse response = client.getVerify2Client().sendVerification(
+VerificationResponse ongoingVerify = client.getVerify2Client().sendVerification(
     VerificationRequest.builder()
         .addWorkflow(new WhatsappCodelessWorkflow(TO_NUMBER))
         .addWorkflow(new EmailWorkflow(TO_EMAIL))
@@ -358,7 +358,15 @@ VerificationResponse response = client.getVerify2Client().sendVerification(
 If the codeless verification fails, you can check the user-entered code (sent via backup contact methods) like this:
 
 ```java
-client.getVerify2Client().checkVerificationCode(response.getRequestId(), CODE);
+client.getVerify2Client().checkVerificationCode(ongoingVerify.getRequestId(), CODE);
+```
+
+### Cancel a pending verification
+
+Abort a verification workflow like this:
+
+```java
+client.getVerify2Client().cancelVerification(ongoingVerify.getRequestId());
 ```
 
 ### Get a List of SMS Prices for a Country

@@ -117,4 +117,17 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 				NullPointerException.class
 		);
 	}
+
+	@Test
+	public void testCancelVerificationSuccess() throws Exception {
+		stubResponseAndRun(204, () -> client.cancelVerification(REQUEST_ID));
+	}
+
+	@Test
+	public void testCancelVerificationFailure() throws Exception {
+		stubResponseAndAssertThrows(404, () ->
+				client.cancelVerification(REQUEST_ID),
+				VerifyResponseException.class
+		);
+	}
 }
