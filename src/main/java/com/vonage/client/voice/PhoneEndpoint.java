@@ -17,6 +17,7 @@ package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -29,15 +30,29 @@ public class PhoneEndpoint implements Endpoint {
     public PhoneEndpoint() {
     }
 
+    /**
+     * Constructor.
+     *
+     * @param number The phone number to connect to in E.164 format.
+     */
     public PhoneEndpoint(String number) {
         this.number = number;
     }
 
+    /**
+     * Constructor.
+     *
+     * @param number The phone number to connect to in E.164 format.
+     *
+     * @param dtmfAnswer Set the digits that are sent to the user as soon as the Call is answered.
+     * The * and # digits are respected. You create pauses using p. Each pause is 500ms.
+     */
     public PhoneEndpoint(String number, String dtmfAnswer) {
         this.number = number;
         this.dtmfAnswer = dtmfAnswer;
     }
 
+    @JsonProperty("type")
     @Override
     public String getType() {
         return TYPE;
@@ -48,10 +63,23 @@ public class PhoneEndpoint implements Endpoint {
         return number;
     }
 
+    /**
+     * The phone number to connect to in E.164 format.
+     *
+     * @return The phone number as a string.
+     */
+    @JsonProperty("number")
     public String getNumber() {
         return number;
     }
 
+    /**
+     * Set the digits that are sent to the user as soon as the Call is answered.
+     * The * and # digits are respected. You create pauses using p. Each pause is 500ms.
+     *
+     * @return The DTMF digits as a string.
+     */
+    @JsonProperty("dtmfAnswer")
     public String getDtmfAnswer() {
         return dtmfAnswer;
     }

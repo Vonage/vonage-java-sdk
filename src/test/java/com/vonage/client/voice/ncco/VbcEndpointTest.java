@@ -13,8 +13,19 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
+package com.vonage.client.voice.ncco;
 
-/**
- * Implementation of the <a href=https://developer.vonage.com/en/voice/voice-api/overview>Vonage Voice API</a>.
- */
-package com.vonage.client.voice;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+
+public class VbcEndpointTest {
+
+    @Test
+    public void testVbcEndpoint() {
+        String ext = "123";
+        VbcEndpoint endpoint = VbcEndpoint.builder("abcd").extension(ext).build();
+        ConnectAction connect = ConnectAction.builder(endpoint).build();
+        String expectedJson = "[{\"endpoint\":[{\"extension\":\"%s\",\"type\":\"vbc\"}],\"action\":\"connect\"}]";
+        assertEquals(String.format(expectedJson, ext), new Ncco(connect).toJson());
+    }
+}

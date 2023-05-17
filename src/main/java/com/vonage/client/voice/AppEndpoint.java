@@ -17,6 +17,7 @@ package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Represents an app-to-app call type.
@@ -37,10 +38,11 @@ public class AppEndpoint implements Endpoint {
     }
 
     /**
-     * The username to call.
+     * The username of the user to connect to. This username must have been added as a user.
      *
      * @return The app user, or {@code null} if unset.
      */
+    @JsonProperty("user")
     public String getUser() {
         return user;
     }
@@ -50,6 +52,7 @@ public class AppEndpoint implements Endpoint {
         return user;
     }
 
+    @JsonProperty("type")
     @Override
     public String getType() {
         return TYPE;
