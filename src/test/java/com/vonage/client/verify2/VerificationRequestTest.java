@@ -38,7 +38,7 @@ public class VerificationRequestTest {
 
 	Builder newBuilderAllParams() {
 		return newBuilder().codeLength(CODE_LENGTH).clientRef(CLIENT_REF)
-				.channelTimeout(CHANNEL_TIMEOUT).locale(LOCALE).fraudCheck(true);
+				.channelTimeout(CHANNEL_TIMEOUT).locale(LOCALE).fraudCheck();
 	}
 
 	Workflow getWorkflowRequiredParamsForChannel(Channel channel) {
@@ -114,7 +114,7 @@ public class VerificationRequestTest {
 		}
 		expectedJson = prefix + expectedJson.replaceFirst("\\{", ",");
 		prefix = "\"brand\":\"" + BRAND + "\",";
-		replacement = "\"fraud_check\":true," + prefix + "\"client_ref\":\""+CLIENT_REF+"\",";
+		replacement = "\"fraud_check\":false," + prefix + "\"client_ref\":\""+CLIENT_REF+"\",";
 		expectedJson = expectedJson.replace(prefix, replacement);
 		return expectedJson;
 	}
@@ -265,5 +265,19 @@ public class VerificationRequestTest {
 		String appHash = new SmsWorkflow(TO_NUMBER, "1234567890a").getAppHash();
 		assertNotNull(appHash);
 		assertEquals(11, appHash.length());
+	}
+
+	@Test
+	public void testFraudCheckOnlyIncludedIfFalse() {
+		for (Channel channel : Channel.values()) {
+			Builder builder = getBuilderRequiredParamsSingleWorkflow(channel).fraudCheck(true);
+			String expectedJson = getExpectedRequiredParamsForSingleWorkflowJson(channel);
+			VerificationRequest request = builder.build();
+			assertNull(request.getFraudCheck());
+			assertEquals(expectedJson, request.toJson());
+			request = builder.fraudCheck(false).build();
+			expectedJson = "{\"fraud_check\":false," + expectedJson.substring(1);
+			assertEquals(expectedJson, request.toJson());
+		}
 	}
 }

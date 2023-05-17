@@ -52,7 +52,7 @@ public class VerificationRequest {
 	VerificationRequest(Builder builder) {
 		locale = builder.locale;
 		clientRef = builder.clientRef;
-		fraudCheck = builder.fraudCheck;
+		fraudCheck = builder.fraudCheck != null && !builder.fraudCheck ? false : null;
 		if ((brand = builder.brand) == null || brand.isEmpty()) {
 			throw new IllegalArgumentException("Brand name is required.");
 		}
@@ -145,8 +145,9 @@ public class VerificationRequest {
 	/**
 	 * Determines if the network level fraud check is enforced. See
 	 * <a href=https://developer.vonage.com/en/verify/verify-v2/guides/v2-anti-fraud>the documentation</a>.
+	 * This feature only takes effect if it has been enabled on your account.
 	 *
-	 * @return Whether network block is respected, or {@code null} if not set (the default).
+	 * @return Whether network block is respected, or {@code null} if not set or {@code true} (the default).
 	 */
 	@JsonProperty("fraud_check")
 	public Boolean getFraudCheck() {
@@ -331,7 +332,7 @@ public class VerificationRequest {
 		 * Set this parameter to {@code false} to force through the request even if it's
 		 * blocked by the network's fraud protection. Refer to
 		 * <a href=https://developer.vonage.com/en/verify/verify-v2/guides/v2-anti-fraud>
-		 * the documentation</a> for details.
+		 * the documentation</a> for details. This feature must be enabled on your account to take effect.
 		 *
 		 * @param fraudCheck Whether to enforce network block. Default is {@code true}.
 		 * Set to {@code false} to bypass a network block for this request.
@@ -341,6 +342,16 @@ public class VerificationRequest {
 		public Builder fraudCheck(boolean fraudCheck) {
 			this.fraudCheck = fraudCheck;
 			return this;
+		}
+
+		/**
+		 * Bypasses the network block used for fraud check. See {@link #fraudCheck(boolean)}.
+		 * 
+		 * @return This builder.
+		 * @see #fraudCheck(boolean)
+		 */
+		public Builder fraudCheck() {
+			return fraudCheck(false);
 		}
 
 		/**
