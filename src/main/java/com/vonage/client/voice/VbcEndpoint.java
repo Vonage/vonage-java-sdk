@@ -17,6 +17,7 @@ package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Represents a VBC call type.
@@ -41,6 +42,7 @@ public class VbcEndpoint implements Endpoint {
      *
      * @return The VBC extension, or {@code null} if unset.
      */
+    @JsonProperty("extension")
     public String getExtension() {
         return extension;
     }
@@ -50,6 +52,7 @@ public class VbcEndpoint implements Endpoint {
         return extension;
     }
 
+    @JsonProperty("type")
     @Override
     public String getType() {
         return TYPE;

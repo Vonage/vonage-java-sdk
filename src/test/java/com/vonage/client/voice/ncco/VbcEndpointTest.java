@@ -25,7 +25,7 @@ public class VbcEndpointTest {
         String ext = "123";
         VbcEndpoint endpoint = VbcEndpoint.builder("abcd").extension(ext).build();
         ConnectAction connect = ConnectAction.builder(endpoint).build();
-        String expectedJson = "[{\"endpoint\":[{\"type\":\"vbc\",\"extension\":\"%s\"}],\"action\":\"connect\"}]";
+        String expectedJson = "[{\"endpoint\":[{\"extension\":\"%s\",\"type\":\"vbc\"}],\"action\":\"connect\"}]";
         assertEquals(String.format(expectedJson, ext), new Ncco(connect).toJson());
     }
 }

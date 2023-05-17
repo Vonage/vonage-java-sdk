@@ -17,6 +17,7 @@ package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -36,10 +37,12 @@ public class SipEndpoint implements Endpoint {
         this.uri = uri;
     }
 
+    @JsonProperty("uri")
     public String getUri() {
         return uri;
     }
 
+    @JsonProperty("type")
     @Override
     public String getType() {
         return TYPE;

@@ -35,11 +35,6 @@ public class VbcEndpoint implements Endpoint {
         this.extension = builder.extension;
     }
 
-    @Override
-    public String getType() {
-        return TYPE;
-    }
-
     /**
      * The VBC extension to connect the call to.
      *
@@ -48,6 +43,12 @@ public class VbcEndpoint implements Endpoint {
     @JsonProperty("extension")
     public String getExtension() {
         return extension;
+    }
+
+    @JsonProperty("type")
+    @Override
+    public String getType() {
+        return TYPE;
     }
 
     /**

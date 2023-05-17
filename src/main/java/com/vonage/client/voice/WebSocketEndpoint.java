@@ -49,6 +49,7 @@ public class WebSocketEndpoint implements Endpoint {
         setHeaders(headers);
     }
 
+    @JsonProperty("type")
     @Override
     public String getType() {
         return TYPE;
@@ -59,10 +60,20 @@ public class WebSocketEndpoint implements Endpoint {
         return "uri=" + uri + " content-type=" + contentType;
     }
 
+    /**
+     * The URI to the websocket you are streaming to.
+     *
+     * @return
+     */
+    @JsonProperty("uri")
     public String getUri() {
         return uri;
     }
 
+    /**
+     *
+     * @return
+     */
     @JsonProperty("content-type")
     public String getContentType() {
         return contentType;
