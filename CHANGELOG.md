@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added Verify v2 API implementation
 - Added Advanced Machine Detection to Voice API
 - Fixed VbcEndpoint NCCO
+- Made `jakarta.servlet` an optional dependency
+- Deprecated all methods and classes that use `javax.servlet.HttpServletRequest`
 
 # [7.3.0] - 2023-04-14
 - Viber video message now requires setting duration and file size

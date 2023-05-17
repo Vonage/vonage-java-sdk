@@ -24,13 +24,14 @@ repositories {
 }
 
 dependencies {
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:4.0.4'
+
     implementation 'commons-codec:commons-codec:1.15'
     implementation 'org.apache.httpcomponents:httpclient:4.5.14'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.0'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.0'
     implementation 'io.openapitools.jackson.dataformat:jackson-dataformat-hal:1.0.9'
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api:2.3.3'
-    implementation 'jakarta.servlet:jakarta.servlet-api:4.0.4'
     implementation 'com.vonage:jwt:1.0.2'
 
     testImplementation 'junit:junit:4.13.2'
