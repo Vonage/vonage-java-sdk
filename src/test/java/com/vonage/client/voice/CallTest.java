@@ -311,7 +311,9 @@ public class CallTest {
 
     @Test(expected = IllegalStateException.class)
     public void testInvalidMachineDetectionCombination() {
-        Call.builder().machineDetection(MachineDetection.HANGUP)
+        Call.builder().from("447900000001")
+                .to(new VbcEndpoint("456"))
+                .machineDetection(MachineDetection.HANGUP)
                 .advancedMachineDetection(AdvancedMachineDetection.builder().build())
                 .build();
     }

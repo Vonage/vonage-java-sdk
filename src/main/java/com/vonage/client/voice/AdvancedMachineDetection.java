@@ -107,6 +107,11 @@ public class AdvancedMachineDetection {
 		return beepTimeout;
 	}
 
+	/**
+	 * Entry point for constructing an instance of this class.
+	 *
+	 * @return A new builder.
+	 */
 	public static Builder builder() {
 		return new Builder();
 	}
@@ -118,21 +123,52 @@ public class AdvancedMachineDetection {
 
 		Builder() {}
 
+		/**
+		 * Define how the system responds when a machine is detected.
+		 * When {@link MachineDetection#HANGUP} is used, the call will be terminated if a machine is detected.
+		 * When {@link MachineDetection#CONTINUE} is used, the call will continue even if a machine is detected.
+		 *
+		 * @param behavior The machine detection behaviour as an enum.
+		 *
+		 * @return This builder.
+		 */
 		public Builder behavior(MachineDetection behavior) {
 			this.behavior = behavior;
 			return this;
 		}
 
+		/**
+		 * Detect if machine answered and sends a human or machine status in the webhook payload. When set to
+		 * {@link Mode#DETECT_BEEP}, the system also attempts to detect voice mail beep and sends an additional
+		 * parameter {@code sub_state} in the webhook with the value {@code beep_start}.
+		 *
+		 * @param mode The machine detection mode enum.
+		 *
+		 * @return This builder.
+		 */
 		public Builder mode(Mode mode) {
 			this.mode = mode;
 			return this;
 		}
 
+		/**
+		 * Maximum time in seconds Vonage should wait for a machine beep to be detected. A machine event with
+		 * {@code sub_state} set to {@code beep_timeout} will be sent if the timeout is exceeded.
+		 *
+		 * @param beepTimeout The beep timeout in seconds as an integer.
+		 *
+		 * @return This builder.
+		 */
 		public Builder beepTimeout(int beepTimeout) {
 			this.beepTimeout = beepTimeout;
 			return this;
 		}
 
+		/**
+		 * Constructs the AdvancedMachineDetection object.
+		 *
+		 * @return A new AdvancedMachineDetection instance with this builder's properties.
+		 */
 		public AdvancedMachineDetection build() {
 			return new AdvancedMachineDetection(this);
 		}

@@ -235,6 +235,10 @@ public class Call {
         this.fromRandomNumber = fromRandomNumber;
     }
 
+    /**
+     *
+     * @return The NCCO actions.
+     */
     @JsonProperty("ncco")
     public Collection<? extends Action> getNcco() {
         return ncco;
