@@ -212,7 +212,7 @@ public class RequestSigning {
                 for (Map.Entry<String, String> entry : params.entrySet()) {
                     String name = entry.getKey();
                     String value = entry.getValue();
-                    log.info("" + name + " = " + value);
+                    log.info(name + " = " + value);
                     if (value == null || value.trim().isEmpty()) {
                         continue;
                     }
@@ -227,7 +227,7 @@ public class RequestSigning {
             for (Map.Entry<String, String[]> entry: request.getParameterMap().entrySet()) {
                 String name = entry.getKey();
                 String value = entry.getValue()[0];
-                log.info("" + name + " = " + value);
+                log.info(name + " = " + value);
                 if (value == null || value.trim().equals("")) {
                     continue;
                 }
