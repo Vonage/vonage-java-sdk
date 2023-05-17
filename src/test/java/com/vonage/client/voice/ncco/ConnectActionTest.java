@@ -89,6 +89,22 @@ public class ConnectActionTest {
     }
 
     @Test
+    public void testAllFieldsWithVbcEndpoint() {
+        VbcEndpoint endpoint = VbcEndpoint.builder("9870").build();
+        ConnectAction connect = ConnectAction.builder(endpoint)
+                .from("15554449876").eventType(EventType.SYNCHRONOUS)
+                .advancedMachineDetection(AdvancedMachineDetection.builder().build())
+                .eventUrl("https://example.com").eventMethod(EventMethod.POST)
+                .timeOut(61).limit(3602).build();
+
+        String expectedJson = "[{\"endpoint\":[{\"type\":\"vbc\",\"extension\":\"9870\"}]," +
+                "\"from\":\"15554449876\",\"eventType\":\"synchronous\",\"limit\":3602,\"timeout\":61," +
+                "\"advancedMachineDetection\":{},\"eventUrl\":[\"https://example.com\"],\"eventMethod\":\"POST\"," +
+                "\"action\":\"connect\"}]";
+        assertEquals(expectedJson, new Ncco(connect).toJson());
+    }
+
+    @Test
     public void testGetAction() {
         ConnectAction connect = ConnectAction.builder(PhoneEndpoint.builder("15554441234").build()).build();
         assertEquals("connect", connect.getAction());

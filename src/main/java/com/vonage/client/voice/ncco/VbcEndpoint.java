@@ -16,17 +16,18 @@
 package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Represents a VBC endpoint used in a {@link ConnectAction}. See
- * <a href=https://developer.vonage.com/voice/voice-api/ncco-reference#vbc-endpoint>the documentation</a>
- * for an example.
+ * <a href=https://developer.vonage.com/en/voice/voice-api/ncco-reference#vbc---the-vonage-business-cloud-vbc-extension-to-connect-to>
+ * the documentation</a> for an example.
  *
  * @since 7.3.0
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class VbcEndpoint implements Endpoint {
-    private static final String TYPE = "app";
+    private static final String TYPE = "vbc";
 
     private final String extension;
 
@@ -39,12 +40,25 @@ public class VbcEndpoint implements Endpoint {
         return TYPE;
     }
 
+    /**
+     * The VBC extension to connect the call to.
+     *
+     * @return The VBC extension number as a string.
+     */
+    @JsonProperty("extension")
     public String getExtension() {
         return extension;
     }
 
-    public static Builder builder(String user) {
-        return new Builder(user);
+    /**
+     * Entry point for constructing an instance of this class.
+     *
+     * @param extension The VBC extension number as a string.
+     *
+     * @return A new Builder.
+     */
+    public static Builder builder(String extension) {
+        return new Builder(extension);
     }
 
     public static class Builder {
@@ -54,11 +68,23 @@ public class VbcEndpoint implements Endpoint {
             this.extension = extension;
         }
 
+        /**
+         * The VBC extension to connect the call to.
+         *
+         * @param extension The VBC extension number as a string.
+         *
+         * @return This builder.
+         */
         public Builder extension(String extension) {
             this.extension = extension;
             return this;
         }
 
+        /**
+         * Builds the VbcEndpoint with this builder's properties.
+         *
+         * @return A new VbcEndpoint instance.
+         */
         public VbcEndpoint build() {
             return new VbcEndpoint(this);
         }
