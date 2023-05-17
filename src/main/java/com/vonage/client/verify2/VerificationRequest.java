@@ -145,6 +145,7 @@ public class VerificationRequest {
 	/**
 	 * Determines if the network level fraud check is enforced. See
 	 * <a href=https://developer.vonage.com/en/verify/verify-v2/guides/v2-anti-fraud>the documentation</a>.
+	 * This feature only takes effect if it has been enabled on your account.
 	 *
 	 * @return Whether network block is respected, or {@code null} if not set or {@code true} (the default).
 	 */
@@ -331,7 +332,7 @@ public class VerificationRequest {
 		 * Set this parameter to {@code false} to force through the request even if it's
 		 * blocked by the network's fraud protection. Refer to
 		 * <a href=https://developer.vonage.com/en/verify/verify-v2/guides/v2-anti-fraud>
-		 * the documentation</a> for details.
+		 * the documentation</a> for details. This feature must be enabled on your account.
 		 *
 		 * @param fraudCheck Whether to enforce network block. Default is {@code true}.
 		 * Set to {@code false} to bypass a network block for this request.
@@ -344,7 +345,7 @@ public class VerificationRequest {
 		}
 
 		/**
-		 * Bypasses the network block used for fraud check.
+		 * Bypasses the network block used for fraud check. See {@link #fraudCheck(boolean)}.
 		 * 
 		 * @return This builder.
 		 * @see #fraudCheck(boolean)
