@@ -4,8 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-# [7.4.0] - 2023-05
+# [7.4.0] - 2023-05-18
 - Added Verify v2 API implementation
+- Added Advanced Machine Detection to Voice API
+- Fixed VbcEndpoint NCCO
 
 # [7.3.0] - 2023-04-14
 - Viber video message now requires setting duration and file size

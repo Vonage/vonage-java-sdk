@@ -332,7 +332,7 @@ public class VerificationRequest {
 		 * Set this parameter to {@code false} to force through the request even if it's
 		 * blocked by the network's fraud protection. Refer to
 		 * <a href=https://developer.vonage.com/en/verify/verify-v2/guides/v2-anti-fraud>
-		 * the documentation</a> for details. This feature must be enabled on your account.
+		 * the documentation</a> for details. This feature must be enabled on your account to take effect.
 		 *
 		 * @param fraudCheck Whether to enforce network block. Default is {@code true}.
 		 * Set to {@code false} to bypass a network block for this request.
