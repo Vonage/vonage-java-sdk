@@ -16,5 +16,7 @@
 
 /**
  * Provides an abstract Servlet for building NCCO webhooks for the Vonage Voice API.
+ *
+ * @deprecated This package is no longer maintained and may be removed or substantially refactored in a future release.
  */
 package com.vonage.client.voice.servlet;

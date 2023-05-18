@@ -28,7 +28,10 @@ import java.nio.charset.StandardCharsets;
  *     Implement {@link #handleRequest(HttpServletRequest)} to return an {@link NccoResponse} and this servlet will
  *     ensure that the response is serialized correctly for the Vonage Voice API.
  * </p>
+ *
+ * @deprecated This class is no longer maintained and may be removed in a future release.
  */
+@Deprecated
 public abstract class AbstractAnswerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
