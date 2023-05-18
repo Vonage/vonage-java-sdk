@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added Verify v2 API implementation
 - Added Advanced Machine Detection to Voice API
 - Fixed VbcEndpoint NCCO
+- Removed dependency on `jakarta.xml.bind`
 - Made `jakarta.servlet` an optional dependency
 - Deprecated all methods and classes that use `javax.servlet.HttpServletRequest`
 

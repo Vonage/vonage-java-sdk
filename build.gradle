@@ -31,7 +31,6 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.0'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.0'
     implementation 'io.openapitools.jackson.dataformat:jackson-dataformat-hal:1.0.9'
-    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:2.3.3'
     implementation 'com.vonage:jwt:1.0.2'
 
     testImplementation 'junit:junit:4.13.2'
