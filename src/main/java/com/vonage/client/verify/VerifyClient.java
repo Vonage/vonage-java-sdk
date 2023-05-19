@@ -83,10 +83,7 @@ public class VerifyClient {
      */
     public VerifyResponse verify(final String number, final String brand, VerifyRequest.Workflow workflow)
             throws VonageResponseParseException, VonageClientException {
-        return verify(new VerifyRequest.Builder(number, brand)
-                .workflow(workflow)
-                .build()
-        );
+        return verify(new VerifyRequest.Builder(number, brand).workflow(workflow).build());
     }
 
     /**

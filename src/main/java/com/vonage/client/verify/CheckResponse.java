@@ -18,10 +18,8 @@ package com.vonage.client.verify;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageResponseParseException;
-import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 import java.math.BigDecimal;
 
@@ -101,10 +99,8 @@ public class CheckResponse {
         try {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(json, CheckResponse.class);
-        } catch (JsonMappingException jme) {
+        } catch (IOException jme) {
             throw new VonageResponseParseException("Failed to produce CheckResponse from json.", jme);
-        } catch (IOException jpe) {
-            throw new VonageUnexpectedException("Failed to produce CheckResponse from json.", jpe);
         }
     }
 }

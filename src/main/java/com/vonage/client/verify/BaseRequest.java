@@ -34,14 +34,16 @@ public abstract class BaseRequest {
 
     protected BaseRequest(String number, Integer length, Locale locale, String country, Integer pinExpiry, Integer nextEventWait) {
         this.number = number;
-        this.length = length;
         this.locale = locale;
         this.country = country;
+        if ((this.length = length) != null && (length != 4 && length != 6)) {
+            throw new IllegalArgumentException("code_length must be 4 or 6.");
+        }
         if ((this.pinExpiry = pinExpiry) != null && (pinExpiry < 60 || pinExpiry > 3600)) {
-            throw new IllegalArgumentException("pin_expiry '"+pinExpiry+"' is out of bounds");
+            throw new IllegalArgumentException("pin_expiry '"+pinExpiry+"' is out of bounds.");
         }
         if ((this.nextEventWait = nextEventWait) != null && (nextEventWait < 60 || nextEventWait > 900)) {
-            throw new IllegalArgumentException("next_event_wait '"+nextEventWait+"' is out of bounds");
+            throw new IllegalArgumentException("next_event_wait '"+nextEventWait+"' is out of bounds.");
         }
     }
 
