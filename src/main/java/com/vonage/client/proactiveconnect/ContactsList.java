@@ -47,9 +47,23 @@ public class ContactsList {
 	}
 
 	ContactsList(Builder builder) {
-		name = builder.name;
+		if ((name = builder.name) == null || name.trim().isEmpty()) {
+			throw new IllegalArgumentException("List name is required.");
+		}
+		if ((tags = builder.tags) != null) {
+			if (tags.size() > 10) {
+				throw new IllegalStateException("Too many tags provided. Maximum is 10.");
+			}
+			for (String tag : tags) {
+				if (tag == null || tag.trim().isEmpty()) {
+					throw new IllegalArgumentException("Tag cannot be null or blank.");
+				}
+				if (tag.length() > 15) {
+					throw new IllegalArgumentException("Tag cannot be longer than 15 characters.");
+				}
+			}
+		}
 		description = builder.description;
-		tags = builder.tags;
 		attributes = builder.attributes;
 		datasource = builder.datasource;
 	}
@@ -204,31 +218,24 @@ public class ContactsList {
 	
 	/**
 	 * Entry point for constructing an instance of this class.
-	 * 
+	 *
+	 * @param name The name of the resource (max 255 characters).
+	 *
 	 * @return A new Builder.
 	 */
-	public static Builder builder() {
-		return new Builder();
+	public static Builder builder(String name) {
+		return new Builder(name);
 	}
 	
 	public static class Builder {
-		private String name, description;
+		private final String name;
+		private String description;
 		private List<String> tags;
 		private List<ListAttribute> attributes;
 		private Datasource datasource;
 	
-		Builder() {}
-	
-		/**
-		 * Sets the resource name.
-		 *
-		 * @param name The name of the resource (max 255 characters).
-		 *
-		 * @return This builder.
-		 */
-		public Builder name(String name) {
+		Builder(String name) {
 			this.name = name;
-			return this;
 		}
 
 		/**
@@ -244,15 +251,28 @@ public class ContactsList {
 		}
 
 		/**
+		 * Sets the list's tags.
+		 *
+		 * @param tags Up to 10 custom strings assigned with a resource - each must be between 1 and 15 characters.
+		 *
+		 * @return This builder.
+		 * @see #tags(String...)
+		 */
+		public Builder tags(List<String> tags) {
+			this.tags = tags;
+			return this;
+		}
+
+		/**
 		 * Sets the tags.
 		 *
 		 * @param tags Up to 10 custom strings assigned with a resource - each must be between 1 and 15 characters.
 		 *
 		 * @return This builder.
+		 * @see #tags(List)
 		 */
-		public Builder tags(List<String> tags) {
-			this.tags = tags;
-			return this;
+		public Builder tags(String... tags) {
+			return tags(Arrays.asList(tags));
 		}
 
 		/**

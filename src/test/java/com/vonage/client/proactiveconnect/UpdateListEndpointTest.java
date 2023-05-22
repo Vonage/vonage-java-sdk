@@ -49,14 +49,14 @@ public class UpdateListEndpointTest {
 	
 	@Test
 	public void testDefaultUri() throws Exception {
-		ContactsList contacts = ContactsList.builder().tags(Collections.emptyList()).build();
+		ContactsList contacts = ContactsList.builder("Test").tags(Collections.emptyList()).build();
 		UpdateListRequestWrapper request = new UpdateListRequestWrapper(listId, contacts);
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("PUT", builder.getMethod());
 		String expectedUri = "https://api-eu.vonage.com/v0.1/bulk/lists/"+listId;
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		String expectedRequest = "{\"tags\":[]}";
+		String expectedRequest = "{\"name\":\"Test\",\"tags\":[]}";
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		String expectedResponse = "{\"id\":\""+listId+"\"}";
@@ -74,13 +74,13 @@ public class UpdateListEndpointTest {
 		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
 		endpoint = new UpdateListEndpoint(wrapper);
-		ContactsList contacts = ContactsList.builder().build();
+		ContactsList contacts = ContactsList.builder("Custom").build();
 		UpdateListRequestWrapper request = new UpdateListRequestWrapper(listId, contacts);
 		String expectedUri = baseUri + "/v0.1/bulk/lists/" + request.listId;
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		String expectedRequest = "{}";
+		String expectedRequest = "{\"name\":\"Custom\"}";
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("PUT", builder.getMethod());

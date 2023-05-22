@@ -53,7 +53,8 @@ class UpdateListEndpoint extends AbstractMethod<UpdateListRequestWrapper, Contac
 		try {
 			String json = basicResponseHandler.handleResponse(response);
 			cachedWrapper.request.updateFromJson(json);
-			assert cachedWrapper.request.getId().toString().equals(cachedWrapper.listId);
+			assert cachedWrapper.request.getId() == null ||
+					cachedWrapper.request.getId().toString().equals(cachedWrapper.listId);
 			return cachedWrapper.request;
 		}
 		finally {

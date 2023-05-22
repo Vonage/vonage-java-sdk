@@ -36,7 +36,7 @@ public enum EventType {
 	@JsonCreator
 	public static EventType fromString(String value) {
 		try {
-			return valueOf(value.toUpperCase());
+			return valueOf(value.toUpperCase().replace('-', '_'));
 		}
 		catch (NullPointerException | IllegalArgumentException ex) {
 			return null;
@@ -46,6 +46,6 @@ public enum EventType {
 	@JsonValue
 	@Override
 	public String toString() {
-		return name().toLowerCase();
+		return name().toLowerCase().replace('_', '-');
 	}	
 }

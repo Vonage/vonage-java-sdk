@@ -46,8 +46,7 @@ public class CreateListEndpointTest {
 	
 	@Test
 	public void testDefaultUri() throws Exception {
-		ContactsList request = ContactsList.builder()
-			.name("My name")
+		ContactsList request = ContactsList.builder("My name")
 			.description("My description")
 			.attributes().build();
 
@@ -73,11 +72,11 @@ public class CreateListEndpointTest {
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
 		endpoint = new CreateListEndpoint(wrapper);
 		String expectedUri = baseUri + "/v0.1/bulk/lists";
-		ContactsList request = ContactsList.builder().attributes(ListAttribute.builder().build()).build();
+		ContactsList request = ContactsList.builder("L").attributes(ListAttribute.builder().build()).build();
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		String expectedRequest = "{\"attributes\":[{}]}";
+		String expectedRequest = "{\"name\":\"L\",\"attributes\":[{}]}";
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		assertEquals("POST", builder.getMethod());
 	}

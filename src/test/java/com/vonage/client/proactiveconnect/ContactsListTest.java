@@ -41,8 +41,8 @@ public class ContactsListTest {
 				"select Id, LastName, FirstName, Phone, Email FROM Contact"
 		);
 
-		ContactsList request = ContactsList.builder()
-				.name(name).description(description).tags(tags)
+		ContactsList request = ContactsList.builder(name)
+				.description(description).tags(tags)
 				.attributes(attribute1, attribute2, attribute3)
 				.datasource(datasource).build();
 		

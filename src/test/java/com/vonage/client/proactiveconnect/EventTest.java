@@ -17,8 +17,7 @@ package com.vonage.client.proactiveconnect;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import java.time.Instant;
 import java.util.LinkedHashMap;
@@ -41,7 +40,7 @@ public class EventTest {
 		String recipientId = "15551584817";
 		String sourceContext = "UK recipient";
 		Instant occurredAt = Instant.parse("2022-03-20T20:41:59.086Z");
-		EventType type = EventType.ACTION_CALL_SUCCEEDED;
+		EventType type = EventType.RUN_ITEMS_EXCLUDED;
 	
 		Event response = Event.fromJson("{\n" +
 				"\"id\":\""+id+"\",\n" +
@@ -78,6 +77,7 @@ public class EventTest {
 	@Test
 	public void testFromJsonEmpty() {
 		Event response = Event.fromJson("{}");
+		assertNotNull(response);
 		assertNull(response.getId());
 		assertNull(response.getJobId());
 		assertNull(response.getRunId());
