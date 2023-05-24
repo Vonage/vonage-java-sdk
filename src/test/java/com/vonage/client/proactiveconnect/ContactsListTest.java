@@ -18,12 +18,12 @@ package com.vonage.client.proactiveconnect;
 import com.vonage.client.VonageUnexpectedException;
 import static org.junit.Assert.*;
 import org.junit.Test;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class ContactsListTest {
-	
+
 	@Test
 	public void testSerializeAndParseAllParameters() {
 		String name = "My name";
@@ -137,5 +137,39 @@ public class ContactsListTest {
 		assertNull(response.getItemsCount());
 		assertNull(response.getId());
 		assertNull(response.getSyncStatus());
+	}
+
+	@Test
+	public void testConstructRequiredParameters() {
+		ContactsList minimal = ContactsList.builder("T").build();
+		assertEquals("{\"name\":\"T\"}", minimal.toJson());
+		assertThrows(IllegalArgumentException.class, () -> ContactsList.builder(null).build());
+		assertThrows(IllegalArgumentException.class, () -> ContactsList.builder("").build());
+		assertThrows(IllegalArgumentException.class, () -> ContactsList.builder("  ").build());
+	}
+
+	@Test
+	public void testTagsValidation() {
+		String name = "Test";
+		assertNull(ContactsList.builder(name).build().getTags());
+		assertTrue(ContactsList.builder(name).tags().build().getTags().isEmpty());
+		assertEquals(1, ContactsList.builder(name).tags("T1").build().getTags().size());
+		List<String> ten = IntStream.rangeClosed(1, 10).mapToObj(i -> "Tag "+i).collect(Collectors.toList());
+		assertEquals(10, ContactsList.builder(name).tags(ten).build().getTags().size());
+		List<String> eleven = new ArrayList<>(11);
+		eleven.addAll(ten);
+		eleven.add("Tag 11");
+		assertThrows(IllegalStateException.class, () -> ContactsList.builder(name).tags(eleven).build());
+		int random = new Random().nextInt(ten.size()-1);
+		ten.set(random, null);
+		assertThrows(IllegalArgumentException.class, () -> ContactsList.builder(name).tags(ten).build());
+		ten.set(random, "");
+		assertThrows(IllegalArgumentException.class, () -> ContactsList.builder(name).tags(ten).build());
+		ten.set(random, "  ");
+		assertThrows(IllegalArgumentException.class, () -> ContactsList.builder(name).tags(ten).build());
+		ten.set(random, "ABCDEFGHIJKLMNO");
+		assertEquals(15, ContactsList.builder(name).tags(ten).build().getTags().get(random).length());
+		ten.set(random, ten.get(random) + "P");
+		assertThrows(IllegalArgumentException.class, () -> ContactsList.builder(name).tags(ten).build());
 	}
 }
