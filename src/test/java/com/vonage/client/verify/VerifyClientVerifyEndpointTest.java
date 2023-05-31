@@ -137,4 +137,17 @@ public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
         assertEquals("error", response.getErrorText());
         assertEquals("not-really-a-request-id", response.getRequestId());
     }
+
+    @Test
+    public void testVerifyWithWorkflow() throws Exception {
+        wrapper.setHttpClient(stubHttpClient(200,
+                "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": \"test\",\n"
+                        + "  \"error_text\": \"error\"\n" + "}"
+        ));
+
+        VerifyResponse response = client.verify("447900000000", "testBrand", VerifyRequest.Workflow.SMS);
+        assertEquals(VerifyStatus.INTERNAL_ERROR, response.getStatus());
+        assertEquals("error", response.getErrorText());
+        assertEquals("not-really-a-request-id", response.getRequestId());
+    }
 }

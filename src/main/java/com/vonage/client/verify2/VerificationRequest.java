@@ -275,7 +275,7 @@ public class VerificationRequest {
 		}
 
 		/**
-		 * (REQUIRED)
+		 * (OPTIONAL)
 		 * Length of the code to send to the user, must be between 4 and 10 (inclusive).
 		 * This is not used for Silent Auth or Whatsapp Interactive.
 		 *
