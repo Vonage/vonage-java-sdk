@@ -132,12 +132,10 @@ public class VerificationCallbackTest {
 				"   \"type\": \"event\",\n" +
 				"   \"channel\": \"silent_auth\",\n" +
 				"   \"status\": \"action_pending\",\n" +
-				"   \"action\": [\n" +
-				"      {\n" +
-				"         \"type\": \"check\",\n" +
-				"         \"check_url\": \"https://eu.api.silent.auth/phone_check/v0.1/checks/request_id/redirect\"\n" +
-				"      }\n" +
-				"   ]\n" +
+				"   \"action\": {\n" +
+				"       \"type\": \"check\",\n" +
+				"       \"check_url\": \"https://eu.api.silent.auth/phone_check/v0.1/checks/request_id/redirect\"\n" +
+				"    }\n" +
 				"}"
 		);
 		assertEquals(UUID.fromString("c15236f4-00bf-4b89-84ba-88b25df97315"), webhook.getRequestId());
@@ -145,9 +143,8 @@ public class VerificationCallbackTest {
 		assertEquals(CallbackType.EVENT, webhook.getType());
 		assertEquals(Channel.SILENT_AUTH, webhook.getChannel());
 		assertEquals(VerificationStatus.ACTION_PENDING, webhook.getStatus());
-		assertNotNull(webhook.actions);
-		assertEquals(1, webhook.actions.size());
-		assertEquals("check", webhook.actions.get(0).type);
+		assertNotNull(webhook.action);
+		assertEquals("check", webhook.action.type);
 		assertEquals(
 				URI.create("https://eu.api.silent.auth/phone_check/v0.1/checks/request_id/redirect"),
 				webhook.getSilentAuthUrl()
