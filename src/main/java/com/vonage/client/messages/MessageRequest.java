@@ -53,7 +53,7 @@ public abstract class MessageRequest {
 	protected MessageRequest(Builder<?, ?> builder, Channel channel, MessageType messageType) {
 		this.messageType = Objects.requireNonNull(messageType, "Message type cannot be null");
 		this.channel = Objects.requireNonNull(channel, "Channel cannot be null");
-		if (!this.channel.getSupportedMessageTypes().contains(this.messageType)) {
+		if (!this.channel.getSupportedOutboundMessageTypes().contains(this.messageType)) {
 			throw new IllegalArgumentException(this.messageType +" cannot be sent via "+ this.channel);
 		}
 		clientRef = validateClientReference(builder.clientRef);
