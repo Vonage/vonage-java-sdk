@@ -34,7 +34,7 @@ For Gradle 3.4 or Higher:
 
 ```groovy
 dependencies {
-    implementation 'com.vonage:client:7.4.0'
+    implementation 'com.vonage:client:7.5.0'
 }
 ```
 
@@ -42,7 +42,7 @@ For older versions:
 
 ```groovy
 dependencies {
-    compile 'com.vonage:client:7.4.0'
+    compile 'com.vonage:client:7.5.0'
 }
 ```
 
@@ -54,7 +54,7 @@ Add the following to the correct place in your project's POM file:
 <dependency>
     <groupId>com.vonage</groupId>
     <artifactId>client</artifactId>
-    <version>7.4.0</version>
+    <version>7.5.0</version>
 </dependency>
 ```
 
