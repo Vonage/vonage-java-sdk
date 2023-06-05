@@ -41,7 +41,7 @@ public class VerificationCallback {
 	protected String clientRef;
 	protected Integer channelTimeout;
 	protected List<WorkflowStatus> workflows;
-	@JsonProperty("action") List<Action> actions;
+	@JsonProperty("action") Action action;
 
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	static class Action {
@@ -166,10 +166,10 @@ public class VerificationCallback {
 	 */
 	@JsonIgnore
 	public URI getSilentAuthUrl() {
-		if (actions == null || actions.isEmpty() || channel != Channel.SILENT_AUTH) {
+		if (action == null || channel != Channel.SILENT_AUTH) {
 			return null;
 		}
-		return actions.get(0).checkUrl;
+		return action.checkUrl;
 	}
 
 	/**
