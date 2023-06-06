@@ -15,23 +15,23 @@
  */
 package com.vonage.client.subaccounts;
 
-import java.io.IOException;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageResponseParseException;
+import com.vonage.client.VonageUnexpectedException;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.Instant;
 
+/**
+ * Represents a subaccount.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Account {
-	private String apiKey;
-	private String primaryAccountApiKey;
-	private String name;
-	private Boolean usePrimaryAccountBalance;
-	private Boolean suspended;
+	private String apiKey, primaryAccountApiKey, name;
+	private Boolean usePrimaryAccountBalance, suspended;
 	private Instant createdAt;
-	private BigDecimal balance;
-	private BigDecimal creditLimit;
+	private BigDecimal balance, creditLimit;
 
 	protected Account() {
 	}

@@ -16,13 +16,9 @@
 package com.vonage.client.subaccounts;
 
 import com.vonage.client.HttpWrapper;
-import com.vonage.client.VonageClient;
 import java.util.List;
+import java.util.Objects;
 
-/**
- * A client for talking to the Vonage SubaccountsClient API. The standard way to obtain an instance of this class is to use
- * {@link VonageClient#getSubaccountsClient()}.
- */
 public class SubaccountsClient {
 	final CreateSubaccountEndpoint createSubaccount;
 	final UpdateSubaccountEndpoint updateSubaccount;
@@ -51,39 +47,100 @@ public class SubaccountsClient {
 		transferNumber = new TransferNumberEndpoint(httpWrapper);
 	}
 
+	private <T> T requireRequest(T request) {
+		return Objects.requireNonNull(request, "Request is required.");
+	}
+
+	/**
+	 * Create a new subaccount under this API primary account.
+	 *
+	 * @param request Properties for the new subaccount.
+	 *
+	 * @return Details of the created subaccount.
+	 */
 	public Account createSubaccount(CreateSubaccountRequest request) {
-		return createSubaccount.execute(request);
+		return createSubaccount.execute(requireRequest(request));
 	}
 
+	/**
+	 * Change one or more properties of a subaccount.
+	 *
+	 * @param request Properties of the subaccount to update.
+	 *
+	 * @return Details of the updated subaccount.
+	 */
 	public Account updateSubaccount(UpdateSubaccountRequest request) {
-		return updateSubaccount.execute(request);
+		return updateSubaccount.execute(requireRequest(request));
 	}
 
-	public Account listSubaccounts() {
+	/**
+	 * Retrieve all subaccounts owned by the primary account.
+	 *
+	 * @return The primary account details and list of subaccounts associated with it.
+	 */
+	public ListSubaccountsResponse listSubaccounts() {
 		return listSubaccounts.execute(null);
 	}
 
-	public Account getSubaccount(String request) {
-		return getSubaccount.execute(request);
+	/**
+	 * Get information about a specific subaccount.
+	 *
+	 * @param subaccountApiKey Unique ID of the subaccount to retrieve.
+	 *
+	 * @return Details of the requested subaccount.
+	 */
+	public Account getSubaccount(String subaccountApiKey) {
+		return getSubaccount.execute(AbstractTransfer.validateAccountKey(subaccountApiKey, "Subaccount"));
 	}
 
+	/**
+	 * Retrieve a list of credit transfers that have taken place for the primary account within a specified time period.
+	 *
+	 * @return The list of credit transfers.
+	 */
 	public List<CreditTransfer> listCreditTransfers() {
 		return listCreditTransfers.execute(null);
 	}
 
+	/**
+	 * Retrieve a list of balance transfers that have taken place for the primary account within a specified time period.
+	 *
+	 * @return The list of balance transfers.
+	 */
 	public List<BalanceTransfer> listBalanceTransfers() {
 		return listBalanceTransfers.execute(null);
 	}
 
+	/**
+	 * Transfer credit limit between the primary account and one of its subaccounts.
+	 *
+	 * @param request Properties of the credit transfer.
+	 *
+	 * @return Details of the transfer if successful.
+	 */
 	public CreditTransfer transferCredit(CreditTransfer request) {
-		return transferCredit.execute(request);
+		return transferCredit.execute(requireRequest(request));
 	}
 
+	/**
+	 * Transfer balance between the primary account and one of its subaccounts.
+	 *
+	 * @param request Properties of the balance transfer.
+	 *
+	 * @return Details of the transfer if successful.
+	 */
 	public BalanceTransfer transferBalance(BalanceTransfer request) {
-		return transferBalance.execute(request);
+		return transferBalance.execute(requireRequest(request));
 	}
 
+	/**
+	 * Transfer a number between subaccounts.
+	 *
+	 * @param request Properties of the number transfer.
+	 *
+	 * @return Details of the transfer if successful.
+	 */
 	public NumberTransfer transferNumber(NumberTransfer request) {
-		return transferNumber.execute(request);
+		return transferNumber.execute(requireRequest(request));
 	}
 }

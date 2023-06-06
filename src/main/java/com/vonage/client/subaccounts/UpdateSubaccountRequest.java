@@ -15,6 +15,7 @@
  */
 package com.vonage.client.subaccounts;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,28 +24,15 @@ import com.vonage.client.VonageUnexpectedException;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class UpdateSubaccountRequest {
-	private final String primaryAccountApiKey;
+	@JsonIgnore final String subaccountApiKey;
 	private final String name;
-	private final Boolean usePrimaryAccountBalance;
-	private final String subaccountApiKey;
-	private final Boolean suspended;
+	private final Boolean usePrimaryAccountBalance, suspended;
 
 	UpdateSubaccountRequest(Builder builder) {
-		primaryAccountApiKey = builder.primaryAccountApiKey;
+		subaccountApiKey = AbstractTransfer.validateAccountKey(builder.subaccountApiKey, "Subaccount");
 		name = builder.name;
 		usePrimaryAccountBalance = builder.usePrimaryAccountBalance;
-		subaccountApiKey = builder.subaccountApiKey;
 		suspended = builder.suspended;
-	}
-
-	/**
-	 * (REQUIRED) The primary account's API key.
-	 * 
-	 * @return The primary account API key.
-	 */
-	@JsonProperty("primary_account_api_key")
-	public String getPrimaryAccountApiKey() {
-		return primaryAccountApiKey;
 	}
 
 	/**
@@ -64,15 +52,6 @@ public class UpdateSubaccountRequest {
 	 */
 	public Boolean getUsePrimaryAccountBalance() {
 		return usePrimaryAccountBalance;
-	}
-
-	/**
-	 * (REQUIRED) The subaccount's API key.
-	 * 
-	 * @return The subaccount API key.
-	 */
-	public String getSubaccountApiKey() {
-		return subaccountApiKey;
 	}
 
 	/**
@@ -107,32 +86,22 @@ public class UpdateSubaccountRequest {
 	
 	/**
 	 * Entry point for constructing an instance of this class.
+	 *
+	 * @param subaccountApiKey (REQUIRED) The subaccount's API key.
 	 * 
 	 * @return A new Builder.
 	 */
-	public static Builder builder() {
-		return new Builder();
+	public static Builder builder(String subaccountApiKey) {
+		return new Builder(subaccountApiKey);
 	}
 	
 	public static class Builder {
-		private String primaryAccountApiKey;
+		private final String subaccountApiKey;
 		private String name;
-		private Boolean usePrimaryAccountBalance;
-		private String subaccountApiKey;
-		private Boolean suspended;
+		private Boolean usePrimaryAccountBalance, suspended;
 	
-		Builder() {}
-	
-		/**
-		 * (REQUIRED) The primary account's API key.
-		 *
-		 * @param primaryAccountApiKey The primary account API key.
-		 *
-		 * @return This builder.
-		 */
-		public Builder primaryAccountApiKey(String primaryAccountApiKey) {
-			this.primaryAccountApiKey = primaryAccountApiKey;
-			return this;
+		Builder(String subaccountApiKey) {
+			this.subaccountApiKey = subaccountApiKey;
 		}
 
 		/**
@@ -160,18 +129,6 @@ public class UpdateSubaccountRequest {
 		}
 
 		/**
-		 * (REQUIRED) The subaccount's API key.
-		 *
-		 * @param subaccountApiKey The subaccount API key.
-		 *
-		 * @return This builder.
-		 */
-		public Builder subaccountApiKey(String subaccountApiKey) {
-			this.subaccountApiKey = subaccountApiKey;
-			return this;
-		}
-
-		/**
 		 * (OPTIONAL) Whether to suspend this subaccount.
 		 *
 		 * @param suspended Whether this subaccount should be suspended, or {@code null} if not set (the default).
@@ -183,7 +140,6 @@ public class UpdateSubaccountRequest {
 			return this;
 		}
 
-	
 		/**
 		 * Builds the {@linkplain UpdateSubaccountRequest}.
 		 *
@@ -193,5 +149,4 @@ public class UpdateSubaccountRequest {
 			return new UpdateSubaccountRequest(this);
 		}
 	}
-
 }

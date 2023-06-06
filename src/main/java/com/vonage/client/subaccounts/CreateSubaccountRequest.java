@@ -34,7 +34,7 @@ public class CreateSubaccountRequest {
 	}
 
 	/**
-	 * (REQUIRED) The primary account's API key.
+	 * The primary account's API key.
 	 *
 	 * @return The primary account API key.
 	 */

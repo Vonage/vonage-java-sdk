@@ -39,7 +39,7 @@ class CreateSubaccountEndpoint extends AbstractMethod<CreateSubaccountRequest, A
 
 	@Override
 	public RequestBuilder makeRequest(CreateSubaccountRequest request) {
-		String path = String.format(PATH, getApplicationIdOrApiKey());
+		String path = String.format(PATH, request.primaryAccountApiKey = getApplicationIdOrApiKey());
 		String uri = httpWrapper.getHttpConfig().getApiBaseUri() + path;
 		return RequestBuilder.post(uri)
 				.setHeader("Content-Type", "application/json")

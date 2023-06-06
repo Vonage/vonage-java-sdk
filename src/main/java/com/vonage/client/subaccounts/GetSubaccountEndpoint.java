@@ -19,8 +19,6 @@ import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 
@@ -38,8 +36,8 @@ class GetSubaccountEndpoint extends AbstractMethod<String, Account> {
 	}
 
 	@Override
-	public RequestBuilder makeRequest(String request) {
-		String path = String.format(PATH, getApplicationIdOrApiKey());
+	public RequestBuilder makeRequest(String subApiKey) {
+		String path = String.format(PATH, getApplicationIdOrApiKey(), subApiKey);
 		String uri = httpWrapper.getHttpConfig().getApiBaseUri() + path;
 		return RequestBuilder.get(uri)
 				.setHeader("Accept", "application/json");

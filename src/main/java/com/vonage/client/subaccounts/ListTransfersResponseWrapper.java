@@ -19,59 +19,40 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.VonageResponseParseException;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * Response container for {@link SubaccountsClient#listSubaccounts()}.
- */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ListSubaccountsResponse {
+class ListTransfersResponseWrapper {
+
+	ListTransfersResponseWrapper() {}
+
 	@JsonProperty("_embedded") private Embedded embedded;
 
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	private static final class Embedded {
-		@JsonProperty("primary_account") private Account primaryAccount;
-		@JsonProperty("subaccounts") private List<Account> subaccounts;
+		@JsonProperty("balance-transfers") private List<BalanceTransfer> balanceTransfers;
+		@JsonProperty("credit-transfers") private List<CreditTransfer> creditTransfers;
 	}
 
-	protected ListSubaccountsResponse() {
-	}
-
-	/**
-	 * Parent account.
-	 * 
-	 * @return The primary account details.
-	 */
 	@JsonIgnore
-	public Account getPrimaryAccount() {
-		return embedded != null ? embedded.primaryAccount : null;
+	public List<BalanceTransfer> getBalanceTransfers() {
+		return embedded != null ? embedded.balanceTransfers : null;
 	}
 
-	/**
-	 * The subaccounts associated with the primary account.
-	 * 
-	 * @return List of subaccount details.
-	 */
 	@JsonIgnore
-	public List<Account> getSubaccounts() {
-		return embedded != null ? embedded.subaccounts : null;
+	public List<CreditTransfer> getCreditTransfers() {
+		return embedded != null ? embedded.creditTransfers : null;
 	}
-	
-	/**
-	 * Creates an instance of this class from a JSON payload.
-	 *
-	 * @param json The JSON string to parse.
-	 * @return An instance of this class with the fields populated, if present.
-	 */
-	public static ListSubaccountsResponse fromJson(String json) {
+
+	public static ListTransfersResponseWrapper fromJson(String json) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readValue(json, ListSubaccountsResponse.class);
+			return mapper.readValue(json, ListTransfersResponseWrapper.class);
 		}
 		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to produce ListSubaccountsResponse from json.", ex);
+			throw new VonageResponseParseException("Failed to produce ListTransfersResponseWrapper from json.", ex);
 		}
 	}
 }

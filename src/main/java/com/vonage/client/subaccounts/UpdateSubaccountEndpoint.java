@@ -39,7 +39,7 @@ class UpdateSubaccountEndpoint extends AbstractMethod<UpdateSubaccountRequest, A
 
 	@Override
 	public RequestBuilder makeRequest(UpdateSubaccountRequest request) {
-		String path = String.format(PATH, getApplicationIdOrApiKey());
+		String path = String.format(PATH, getApplicationIdOrApiKey(), request.subaccountApiKey);
 		String uri = httpWrapper.getHttpConfig().getApiBaseUri() + path;
 		return RequestBuilder.patch(uri)
 				.setHeader("Content-Type", "application/json")

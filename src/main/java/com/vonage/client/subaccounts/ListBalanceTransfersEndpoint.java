@@ -19,10 +19,9 @@ import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
+import java.util.List;
 
 class ListBalanceTransfersEndpoint extends AbstractMethod<Void, List<BalanceTransfer>> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
@@ -41,12 +40,11 @@ class ListBalanceTransfersEndpoint extends AbstractMethod<Void, List<BalanceTran
 	public RequestBuilder makeRequest(Void request) {
 		String path = String.format(PATH, getApplicationIdOrApiKey());
 		String uri = httpWrapper.getHttpConfig().getApiBaseUri() + path;
-		return RequestBuilder.get(uri)
-				.setHeader("Accept", "application/json");
+		return RequestBuilder.get(uri).setHeader("Accept", "application/json");
 	}
 
 	@Override
 	public List<BalanceTransfer> parseResponse(HttpResponse response) throws IOException {
-		return List<BalanceTransfer>.fromJson(basicResponseHandler.handleResponse(response));
+		return ListTransfersResponseWrapper.fromJson(basicResponseHandler.handleResponse(response)).getBalanceTransfers();
 	}
 }

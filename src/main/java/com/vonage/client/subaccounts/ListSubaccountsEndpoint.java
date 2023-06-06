@@ -19,12 +19,10 @@ import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 
-class ListSubaccountsEndpoint extends AbstractMethod<Void, Account> {
+class ListSubaccountsEndpoint extends AbstractMethod<Void, ListSubaccountsResponse> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
 	private static final String PATH = "accounts/%s/subaccounts";
 
@@ -41,12 +39,11 @@ class ListSubaccountsEndpoint extends AbstractMethod<Void, Account> {
 	public RequestBuilder makeRequest(Void request) {
 		String path = String.format(PATH, getApplicationIdOrApiKey());
 		String uri = httpWrapper.getHttpConfig().getApiBaseUri() + path;
-		return RequestBuilder.get(uri)
-				.setHeader("Accept", "application/json");
+		return RequestBuilder.get(uri).setHeader("Accept", "application/json");
 	}
 
 	@Override
-	public Account parseResponse(HttpResponse response) throws IOException {
-		return Account.fromJson(basicResponseHandler.handleResponse(response));
+	public ListSubaccountsResponse parseResponse(HttpResponse response) throws IOException {
+		return ListSubaccountsResponse.fromJson(basicResponseHandler.handleResponse(response));
 	}
 }

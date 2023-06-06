@@ -18,52 +18,26 @@ package com.vonage.client.subaccounts;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
-import java.util.Objects;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class NumberTransfer {
-	private String from;
-	private String to;
-	private String country;
-	private String number;
+public class NumberTransfer extends AbstractTransfer {
+	private String country, number;
 
 	protected NumberTransfer() {
 	}
 
 	NumberTransfer(Builder builder) {
-		from = Objects.requireNonNull(builder.from);
-		to = Objects.requireNonNull(builder.to);
+		super(builder);
 		country = builder.country;
 		number = builder.number;
 	}
 
 	/**
-	 * Account to transfer from.
-	 * 
-	 * @return The transferer account ID.
-	 */
-	@JsonProperty("from")
-	public String getFrom() {
-		return from;
-	}
-
-	/**
-	 * (REQUIRED) Account to transfer to.
-	 * 
-	 * @return The transferee account ID.
-	 */
-	@JsonProperty("to")
-	public String getTo() {
-		return to;
-	}
-
-	/**
-	 * (REQUIRED) Country the number is registered in.
+	 * Country the number is registered in.
 	 * 
 	 * @return The two letter country code for the number.
 	 */
@@ -73,7 +47,7 @@ public class NumberTransfer {
 	}
 
 	/**
-	 * (REQUIRED) The number being transferred between accounts.
+	 * The number being transferred between accounts.
 	 * 
 	 * @return The transfer phone number in E164 format.
 	 */
@@ -97,26 +71,6 @@ public class NumberTransfer {
 			throw new VonageUnexpectedException("Failed to produce NumberTransfer from json.", ex);
 		}
 	}
-
-	/**
-	 * Generates a JSON payload from this request.
-	 *
-	 * @return JSON representation of this NumberTransfer object.
-	 */
-	public String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.writeValueAsString(this);
-		}
-		catch (JsonProcessingException jpe) {
-			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
-		}
-	}
-	
-	@Override
-	public String toString() {
-		return getClass().getSimpleName()+' '+toJson();
-	}
 	
 	/**
 	 * Entry point for constructing an instance of this class.
@@ -127,37 +81,10 @@ public class NumberTransfer {
 		return new Builder();
 	}
 	
-	public static class Builder {
-		private String from;
-		private String to;
-		private String country;
-		private String number;
+	public static class Builder extends AbstractTransfer.Builder<NumberTransfer, Builder> {
+		private String country, number;
 	
 		Builder() {}
-	
-		/**
-		 * Account to transfer from.
-		 *
-		 * @param from The transferer account ID.
-		 *
-		 * @return This builder.
-		 */
-		public Builder from(String from) {
-			this.from = from;
-			return this;
-		}
-
-		/**
-		 * (REQUIRED) Account to transfer to.
-		 *
-		 * @param to The transferee account ID.
-		 *
-		 * @return This builder.
-		 */
-		public Builder to(String to) {
-			this.to = to;
-			return this;
-		}
 
 		/**
 		 * (REQUIRED) Country the number is registered in.
@@ -193,5 +120,4 @@ public class NumberTransfer {
 			return new NumberTransfer(this);
 		}
 	}
-
 }
