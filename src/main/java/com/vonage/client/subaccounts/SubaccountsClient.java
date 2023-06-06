@@ -97,18 +97,44 @@ public class SubaccountsClient {
 	 * Retrieve a list of credit transfers that have taken place for the primary account within a specified time period.
 	 *
 	 * @return The list of credit transfers.
+	 * @see #listCreditTransfers(ListTransfersFilter)
 	 */
 	public List<CreditTransfer> listCreditTransfers() {
-		return listCreditTransfers.execute(null);
+		return listCreditTransfers(ListTransfersFilter.builder().build());
+	}
+
+	/**
+	 * Retrieve a list of credit transfers that have taken place for the primary account within a specified time period.
+	 *
+	 * @param filter Additional parameters to narrow down the returned list by.
+	 *
+	 * @return The list of credit transfers.
+	 * @see #listCreditTransfers()
+	 */
+	public List<CreditTransfer> listCreditTransfers(ListTransfersFilter filter) {
+		return listCreditTransfers.execute(requireRequest(filter));
 	}
 
 	/**
 	 * Retrieve a list of balance transfers that have taken place for the primary account within a specified time period.
 	 *
 	 * @return The list of balance transfers.
+	 * @see #listBalanceTransfers(ListTransfersFilter)
 	 */
 	public List<BalanceTransfer> listBalanceTransfers() {
-		return listBalanceTransfers.execute(null);
+		return listBalanceTransfers(ListTransfersFilter.builder().build());
+	}
+
+	/**
+	 * Retrieve a list of balance transfers that have taken place for the primary account within a specified time period.
+	 *
+	 * @param filter Additional parameters to narrow down the returned list by.
+	 *
+	 * @return The list of balance transfers.
+	 * @see #listBalanceTransfers()
+	 */
+	public List<BalanceTransfer> listBalanceTransfers(ListTransfersFilter filter) {
+		return listBalanceTransfers.execute(requireRequest(filter));
 	}
 
 	/**

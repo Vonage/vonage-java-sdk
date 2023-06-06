@@ -483,26 +483,27 @@ A: Currently no, but it is on the roadmap.
 
 The following is a list of Vonage APIs and whether the Java SDK provides support for them:
 
-| API                |  API Release Status  | Supported? |
-|--------------------|:--------------------:|:----------:|
-| Account            | General Availability |     ✅      |
-| Alerts             | General Availability |     ✅      |
-| Application        | General Availability |     ✅      |
-| Audit              |         Beta         |     ❌      |
-| Conversation       |         Beta         |     ❌      |
-| Dispatch           |         Beta         |     ❌      |
-| External Accounts  |         Beta         |     ❌      |
-| Media              |         Beta         |     ❌      |
-| Messages           | General Availability |     ✅      |
-| Number Insight     | General Availability |     ✅      |
-| Number Management  | General Availability |     ✅      |
-| Pricing            | General Availability |     ✅      |
-| Redact             |  Developer Preview   |     ✅      |
-| Reports            |         Beta         |     ❌      |
-| SMS                | General Availability |     ✅      |
-| Verify             | General Availability |     ✅      |
-| Voice              | General Availability |     ✅      |
-| Video              |         Beta         |     ☑️     |
+| API               |  API Release Status  | Supported? |
+|-------------------|:--------------------:|:----------:|
+| Account           | General Availability |     ✅      |
+| Alerts            | General Availability |     ✅      |
+| Application       | General Availability |     ✅      |
+| Audit             |         Beta         |     ❌      |
+| Conversation      |         Beta         |     ❌      |
+| Dispatch          |         Beta         |     ❌      |
+| External Accounts |         Beta         |     ❌      |
+| Media             |         Beta         |     ❌      |
+| Messages          | General Availability |     ✅      |
+| Number Insight    | General Availability |     ✅      |
+| Number Management | General Availability |     ✅      |
+| Pricing           | General Availability |     ✅      |
+| Redact            |  Developer Preview   |     ✅      |
+| Reports           |         Beta         |     ❌      |
+| SMS               | General Availability |     ✅      |
+| Subaccounts       | General Availability |     ✅      |
+| Verify            | General Availability |     ✅      |
+| Voice             | General Availability |     ✅      |
+| Video             |         Beta         |     ☑️     |
 
 
 ## License

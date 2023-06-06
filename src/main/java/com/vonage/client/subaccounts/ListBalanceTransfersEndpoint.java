@@ -23,7 +23,7 @@ import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 import java.util.List;
 
-class ListBalanceTransfersEndpoint extends AbstractMethod<Void, List<BalanceTransfer>> {
+class ListBalanceTransfersEndpoint extends AbstractMethod<ListTransfersFilter, List<BalanceTransfer>> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
 	private static final String PATH = "accounts/%s/balance-transfers";
 
@@ -37,10 +37,11 @@ class ListBalanceTransfersEndpoint extends AbstractMethod<Void, List<BalanceTran
 	}
 
 	@Override
-	public RequestBuilder makeRequest(Void request) {
+	public RequestBuilder makeRequest(ListTransfersFilter request) {
 		String path = String.format(PATH, getApplicationIdOrApiKey());
 		String uri = httpWrapper.getHttpConfig().getApiBaseUri() + path;
-		return RequestBuilder.get(uri).setHeader("Accept", "application/json");
+		return request.addParams(RequestBuilder.get(uri)
+				.setHeader("Accept", "application/json"));
 	}
 
 	@Override
