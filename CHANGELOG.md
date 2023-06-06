@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 # [7.5.0] - 2023-06
+- Added Subaccounts API implementation
 - Added custom PIN functionality to Verify v1
 - Fixed Silent Auth action URL webhook deserialization issue
 
