@@ -46,6 +46,13 @@ class ListCreditTransfersEndpoint extends AbstractMethod<ListTransfersFilter, Li
 
 	@Override
 	public List<CreditTransfer> parseResponse(HttpResponse response) throws IOException {
-		return ListTransfersResponseWrapper.fromJson(basicResponseHandler.handleResponse(response)).getCreditTransfers();
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode >= 200 && statusCode < 300) {
+			String json = basicResponseHandler.handleResponse(response);
+			return ListTransfersResponseWrapper.fromJson(json).getCreditTransfers();
+		}
+		else {
+			throw SubaccountsResponseException.fromHttpResponse(response);
+		}
 	}
 }

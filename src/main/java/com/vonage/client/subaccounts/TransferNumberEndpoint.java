@@ -49,6 +49,12 @@ class TransferNumberEndpoint extends AbstractMethod<NumberTransfer, NumberTransf
 
 	@Override
 	public NumberTransfer parseResponse(HttpResponse response) throws IOException {
-		return NumberTransfer.fromJson(basicResponseHandler.handleResponse(response));
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode >= 200 && statusCode < 300) {
+			return NumberTransfer.fromJson(basicResponseHandler.handleResponse(response));
+		}
+		else {
+			throw SubaccountsResponseException.fromHttpResponse(response);
+		}
 	}
 }

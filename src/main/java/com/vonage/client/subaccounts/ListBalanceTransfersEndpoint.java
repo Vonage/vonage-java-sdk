@@ -46,6 +46,13 @@ class ListBalanceTransfersEndpoint extends AbstractMethod<ListTransfersFilter, L
 
 	@Override
 	public List<BalanceTransfer> parseResponse(HttpResponse response) throws IOException {
-		return ListTransfersResponseWrapper.fromJson(basicResponseHandler.handleResponse(response)).getBalanceTransfers();
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode >= 200 && statusCode < 300) {
+			String json = basicResponseHandler.handleResponse(response);
+			return ListTransfersResponseWrapper.fromJson(json).getBalanceTransfers();
+		}
+		else {
+			throw SubaccountsResponseException.fromHttpResponse(response);
+		}
 	}
 }

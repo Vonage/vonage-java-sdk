@@ -40,9 +40,6 @@ public abstract class VonageApiResponseException extends VonageClientException {
 	protected String title, detail, instance;
 	@JsonIgnore protected int statusCode;
 
-	protected VonageApiResponseException() {
-	}
-
 	/**
 	 * Link to the <a href=https://developer.vonage.com/en/api-errors>API error type</a>.
 	 *

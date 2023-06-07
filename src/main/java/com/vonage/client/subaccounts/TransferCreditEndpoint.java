@@ -49,6 +49,12 @@ class TransferCreditEndpoint extends AbstractMethod<CreditTransfer, CreditTransf
 
 	@Override
 	public CreditTransfer parseResponse(HttpResponse response) throws IOException {
-		return CreditTransfer.fromJson(basicResponseHandler.handleResponse(response));
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode >= 200 && statusCode < 300) {
+			return CreditTransfer.fromJson(basicResponseHandler.handleResponse(response));
+		}
+		else {
+			throw SubaccountsResponseException.fromHttpResponse(response);
+		}
 	}
 }

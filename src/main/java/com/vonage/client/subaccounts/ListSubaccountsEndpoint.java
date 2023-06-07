@@ -44,6 +44,12 @@ class ListSubaccountsEndpoint extends AbstractMethod<Void, ListSubaccountsRespon
 
 	@Override
 	public ListSubaccountsResponse parseResponse(HttpResponse response) throws IOException {
-		return ListSubaccountsResponse.fromJson(basicResponseHandler.handleResponse(response));
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode >= 200 && statusCode < 300) {
+			return ListSubaccountsResponse.fromJson(basicResponseHandler.handleResponse(response));
+		}
+		else {
+			throw SubaccountsResponseException.fromHttpResponse(response);
+		}
 	}
 }

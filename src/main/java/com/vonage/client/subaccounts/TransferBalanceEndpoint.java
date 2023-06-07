@@ -49,6 +49,12 @@ class TransferBalanceEndpoint extends AbstractMethod<BalanceTransfer, BalanceTra
 
 	@Override
 	public BalanceTransfer parseResponse(HttpResponse response) throws IOException {
-		return BalanceTransfer.fromJson(basicResponseHandler.handleResponse(response));
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode >= 200 && statusCode < 300) {
+			return BalanceTransfer.fromJson(basicResponseHandler.handleResponse(response));
+		}
+		else {
+			throw SubaccountsResponseException.fromHttpResponse(response);
+		}
 	}
 }
