@@ -25,12 +25,16 @@ import com.vonage.client.VonageUnexpectedException;
 public class CreateSubaccountRequest {
 	String primaryAccountApiKey;
 	private final String name, secret;
-	private final boolean usePrimaryAccountBalance;
+	private final Boolean usePrimaryAccountBalance;
 
 	CreateSubaccountRequest(Builder builder) {
-		name = builder.name;
+		if ((name = builder.name) == null || name.trim().isEmpty()) {
+			throw new IllegalArgumentException("Name is required.");
+		}
+		if ((secret = builder.secret) == null || secret.trim().isEmpty()) {
+			throw new IllegalArgumentException("Secret is required.");
+		}
 		usePrimaryAccountBalance = builder.usePrimaryAccountBalance;
-		secret = builder.secret;
 	}
 
 	/**
@@ -58,6 +62,7 @@ public class CreateSubaccountRequest {
 	 *
 	 * @return {@code true} if the balance is shared with the primary account or {@code null} if unspecified (the default).
 	 */
+	@JsonProperty("use_primary_account_balance")
 	public Boolean getUsePrimaryAccountBalance() {
 		return usePrimaryAccountBalance;
 	}
@@ -142,7 +147,6 @@ public class CreateSubaccountRequest {
 			this.secret = secret;
 			return this;
 		}
-
 	
 		/**
 		 * Builds the {@linkplain CreateSubaccountRequest}.
@@ -153,5 +157,4 @@ public class CreateSubaccountRequest {
 			return new CreateSubaccountRequest(this);
 		}
 	}
-
 }

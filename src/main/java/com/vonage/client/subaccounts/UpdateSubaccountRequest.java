@@ -50,6 +50,7 @@ public class UpdateSubaccountRequest {
 	 * 
 	 * @return {@code true} if the balance is shared with the primary account or {@code null} if not set (the default).
 	 */
+	@JsonProperty("use_primary_account_balance")
 	public Boolean getUsePrimaryAccountBalance() {
 		return usePrimaryAccountBalance;
 	}

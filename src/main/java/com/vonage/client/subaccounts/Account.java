@@ -18,7 +18,8 @@ package com.vonage.client.subaccounts;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.vonage.client.VonageResponseParseException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -125,10 +126,11 @@ public class Account {
 	public static Account fromJson(String json) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
+			mapper.registerModule(new JavaTimeModule());
 			return mapper.readValue(json, Account.class);
 		}
 		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to produce Account from json.", ex);
+			throw new VonageResponseParseException("Failed to produce Account from json.", ex);
 		}
 	}
 }

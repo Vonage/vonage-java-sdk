@@ -18,7 +18,7 @@ package com.vonage.client.subaccounts;
 import org.apache.http.client.methods.RequestBuilder;
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class ListTransfersFilter {
@@ -121,7 +121,7 @@ public class ListTransfersFilter {
 		 * @return This builder.
 		 */
 		public Builder subaccounts(String... subaccounts) {
-			this.subaccounts = new HashSet<>(Arrays.asList(subaccounts));
+			this.subaccounts = new LinkedHashSet<>(Arrays.asList(subaccounts));
 			return this;
 		}
 	

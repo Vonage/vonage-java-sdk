@@ -26,7 +26,7 @@ import java.io.IOException;
 
 class TransferNumberEndpoint extends AbstractMethod<NumberTransfer, NumberTransfer> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
-	private static final String PATH = "accounts/%s/transfer-number";
+	private static final String PATH = "/accounts/%s/transfer-number";
 
 	TransferNumberEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);

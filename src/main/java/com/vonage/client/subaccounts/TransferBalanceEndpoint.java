@@ -26,7 +26,7 @@ import java.io.IOException;
 
 class TransferBalanceEndpoint extends AbstractMethod<BalanceTransfer, BalanceTransfer> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
-	private static final String PATH = "accounts/%s/balance-transfers";
+	private static final String PATH = "/accounts/%s/balance-transfers";
 
 	TransferBalanceEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);

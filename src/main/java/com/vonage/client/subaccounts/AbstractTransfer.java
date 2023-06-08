@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.vonage.client.VonageUnexpectedException;
 import java.util.Objects;
 
@@ -72,6 +73,7 @@ class AbstractTransfer {
 	public String toJson() {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
+			mapper.registerModule(new JavaTimeModule());
 			return mapper.writeValueAsString(this);
 		}
 		catch (JsonProcessingException jpe) {
@@ -84,6 +86,7 @@ class AbstractTransfer {
 		return getClass().getSimpleName()+' '+toJson();
 	}
 
+	@SuppressWarnings("unchecked")
 	protected abstract static class Builder<T extends AbstractTransfer, B extends Builder<? extends T, ? extends B>> {
 		private String from, to;
 	

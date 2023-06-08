@@ -25,7 +25,7 @@ import java.util.List;
 
 class ListCreditTransfersEndpoint extends AbstractMethod<ListTransfersFilter, List<CreditTransfer>> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
-	private static final String PATH = "accounts/%s/credit-transfers";
+	private static final String PATH = "/accounts/%s/credit-transfers";
 
 	ListCreditTransfersEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);

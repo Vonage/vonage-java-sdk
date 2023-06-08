@@ -67,7 +67,8 @@ class AbstractMoneyTransfer extends AbstractTransfer {
 	public String getReference() {
 		return reference;
 	}
-	
+
+	@SuppressWarnings("unchecked")
 	protected static abstract class Builder<T extends AbstractMoneyTransfer, B extends Builder<? extends T, ? extends B>> extends AbstractTransfer.Builder<T, B> {
 		private BigDecimal amount;
 		private String from, to, reference;

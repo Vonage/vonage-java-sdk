@@ -26,7 +26,7 @@ import java.io.IOException;
 
 class TransferCreditEndpoint extends AbstractMethod<CreditTransfer, CreditTransfer> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
-	private static final String PATH = "accounts/%s/credit-transfers";
+	private static final String PATH = "/accounts/%s/credit-transfers";
 
 	TransferCreditEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);

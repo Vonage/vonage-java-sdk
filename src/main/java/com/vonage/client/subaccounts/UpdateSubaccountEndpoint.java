@@ -26,7 +26,7 @@ import java.io.IOException;
 
 class UpdateSubaccountEndpoint extends AbstractMethod<UpdateSubaccountRequest, Account> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
-	private static final String PATH = "accounts/%s/subaccounts/%s";
+	private static final String PATH = "/accounts/%s/subaccounts/%s";
 
 	UpdateSubaccountEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
