@@ -29,7 +29,7 @@ import java.time.Instant;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Account {
-	private String apiKey, primaryAccountApiKey, name;
+	private String apiKey, primaryAccountApiKey, name, secret;
 	private Boolean usePrimaryAccountBalance, suspended;
 	private Instant createdAt;
 	private BigDecimal balance, creditLimit;
@@ -65,6 +65,16 @@ public class Account {
 	@JsonProperty("name")
 	public String getName() {
 		return name;
+	}
+
+	/**
+	 * API secret of the subaccount.
+	 *
+	 * @return The subaccount secret if available, or {@code null} if redacted for this response.
+	 */
+	@JsonProperty("secret")
+	public String getSecret() {
+		return secret;
 	}
 
 	/**

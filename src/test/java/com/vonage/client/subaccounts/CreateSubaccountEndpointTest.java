@@ -15,10 +15,7 @@
  */
 package com.vonage.client.subaccounts;
 
-import com.vonage.client.HttpConfig;
-import com.vonage.client.HttpWrapper;
-import com.vonage.client.TestUtils;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.*;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
@@ -89,6 +86,7 @@ public class CreateSubaccountEndpointTest {
 		String expectedResponse = "{\n" +
 				"   \"api_key\": \"bbe6222f\",\n" +
 				"   \"name\": \"Subaccount department A\",\n" +
+				"   \"secret\": \"Password123\",\n" +
 				"   \"primary_account_api_key\": \"acc6111f\",\n" +
 				"   \"use_primary_account_balance\": true,\n" +
 				"   \"created_at\": \"2018-03-02T16:34:49Z\",\n" +
@@ -101,6 +99,7 @@ public class CreateSubaccountEndpointTest {
 		assertNotNull(parsed);
 		assertEquals("bbe6222f", parsed.getApiKey());
 		assertEquals("Subaccount department A", parsed.getName());
+		assertEquals("Password123", parsed.getSecret());
 		assertTrue(parsed.getUsePrimaryAccountBalance());
 		assertEquals(1520008489L, parsed.getCreatedAt().getEpochSecond());
 		assertFalse(parsed.getSuspended());
@@ -114,6 +113,7 @@ public class CreateSubaccountEndpointTest {
 		Account parsed = endpoint.parseResponse(mockResponse);
 		assertNotNull(parsed);
 		assertNull(parsed.getApiKey());
+		assertNull(parsed.getSecret());
 		assertNull(parsed.getPrimaryAccountApiKey());
 		assertNull(parsed.getName());
 		assertNull(parsed.getUsePrimaryAccountBalance());
@@ -123,7 +123,7 @@ public class CreateSubaccountEndpointTest {
 		assertNull(parsed.getCreditLimit());
 	}
 	
-	@Test(expected = VonageUnexpectedException.class)
+	@Test(expected = VonageResponseParseException.class)
 	public void testInvalidResponse() {
 		Account.fromJson("{malformed]");
 	}

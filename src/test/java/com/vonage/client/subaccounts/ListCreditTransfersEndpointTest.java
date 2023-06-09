@@ -18,12 +18,13 @@ package com.vonage.client.subaccounts;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
+import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import java.time.Instant;
@@ -53,7 +54,7 @@ public class ListCreditTransfersEndpointTest {
 		ListTransfersFilter request = ListTransfersFilter.builder()
 				.startDate(Instant.parse(startDate))
 				.endDate(Instant.parse(endDate))
-				.subaccounts(sub1, sub2).build();
+				.subaccounts(sub1, sub2, sub2).build();
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("GET", builder.getMethod());
 		String expectedUri = "https://api.nexmo.com/accounts/"+apiKey+"/credit-transfers?" +
@@ -63,6 +64,9 @@ public class ListCreditTransfersEndpointTest {
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		List<NameValuePair> params = builder.getParameters();
 		assertEquals(4, params.size());
+		assertEquals(2, request.getSubaccounts().size());
+		assertEquals(Instant.parse(startDate), request.getStartDate());
+		assertEquals(Instant.parse(endDate), request.getEndDate());
 	}
 
 	@Test
@@ -71,11 +75,20 @@ public class ListCreditTransfersEndpointTest {
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build(), authMethod);
 		endpoint = new ListCreditTransfersEndpoint(wrapper);
 		String expectedUri = baseUri + "/accounts/"+apiKey+"/credit-transfers";
-		RequestBuilder builder = endpoint.makeRequest(ListTransfersFilter.builder().build());
+		ListTransfersFilter request = ListTransfersFilter.builder().build();
+		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(0, builder.getParameters().size());
+		assertNull(request.getStartDate());
+		assertNull(request.getEndDate());
+		assertNull(request.getSubaccounts());
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("GET", builder.getMethod());
+	}
+
+	@Test(expected = VonageResponseParseException.class)
+	public void testMalformedResponse() throws Exception {
+		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, "{\"_embedded}"));
 	}
 
 	@Test(expected = SubaccountsResponseException.class)

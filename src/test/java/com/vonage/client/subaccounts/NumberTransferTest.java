@@ -31,6 +31,11 @@ public class NumberTransferTest {
 		assertThrows(IllegalArgumentException.class, builder::build);
 		builder.number("23507703696");
 		assertThrows(IllegalArgumentException.class, builder::build);
+		assertEquals(
+				"NumberTransfer {\"from\":\"ad6dc56f\",\"to\":\"ad6dc56f\"," +
+						"\"number\":\"23507703696\",\"country\":\"US\"}",
+				builder.country("US").build().toString()
+		);
 	}
 
 	@Test

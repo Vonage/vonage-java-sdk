@@ -26,18 +26,14 @@ public class BalanceTransferTest {
 	
 	@Test
 	public void testSerializeAndParseAllParameters() {
-		BigDecimal amount = BigDecimal.valueOf(123.45);
-		String from = "7c9738e6";
-		String to = "ad6dc56f";
-		String reference = "This gets added to the audit log";
-		BalanceTransfer request = BalanceTransfer.builder()
-				.amount(amount).from(from).to(to).reference(reference).build();
-		
+		BalanceTransfer request = BalanceTransfer.builder().amount(BigDecimal.valueOf(123.45))
+				.from("7c9738e6").to("ad6dc56f").reference("This gets added to the audit log").build();
+
 		String json = request.toJson();
-		assertTrue(json.contains("\"amount\":123.45"));
-		assertTrue(json.contains("\"from\":\""+from+"\""));
-		assertTrue(json.contains("\"to\":\""+to+"\""));
-		assertTrue(json.contains("\"reference\":\""+reference+"\""));
+		assertTrue(json.contains("\"amount\":"+request.getAmount()));
+		assertTrue(json.contains("\"from\":\""+request.getFrom()+"\""));
+		assertTrue(json.contains("\"to\":\""+request.getTo()+"\""));
+		assertTrue(json.contains("\"reference\":\""+request.getReference()+"\""));
 	
 		BalanceTransfer response = BalanceTransfer.fromJson(json);
 		assertEquals(request.getAmount(), response.getAmount());
