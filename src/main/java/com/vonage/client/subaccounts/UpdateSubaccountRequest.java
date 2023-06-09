@@ -80,11 +80,6 @@ public class UpdateSubaccountRequest {
 		}
 	}
 	
-	@Override
-	public String toString() {
-		return getClass().getSimpleName()+' '+toJson();
-	}
-	
 	/**
 	 * Entry point for constructing an instance of this class.
 	 *

@@ -15,6 +15,7 @@
  */
 package com.vonage.client.verify2;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -51,6 +52,7 @@ public final class VerifyResponseException extends VonageApiResponseException {
 	 * @param json The JSON string to parse.
 	 * @return An instance of this class with all known fields populated from the JSON payload, if present.
 	 */
+	@JsonCreator
 	public static VerifyResponseException fromJson(String json) {
 		return fromJson(VerifyResponseException.class, json);
 	}

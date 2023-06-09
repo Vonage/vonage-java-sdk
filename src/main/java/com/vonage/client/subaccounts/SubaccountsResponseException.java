@@ -15,6 +15,7 @@
  */
 package com.vonage.client.subaccounts;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vonage.client.VonageApiResponseException;
@@ -38,6 +39,7 @@ public final class SubaccountsResponseException extends VonageApiResponseExcepti
 	 * @param json The JSON string to parse.
 	 * @return An instance of this class with all known fields populated from the JSON payload, if present.
 	 */
+	@JsonCreator
 	public static SubaccountsResponseException fromJson(String json) {
 		return fromJson(SubaccountsResponseException.class, json);
 	}

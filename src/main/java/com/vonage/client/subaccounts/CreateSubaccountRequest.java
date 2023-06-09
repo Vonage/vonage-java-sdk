@@ -91,11 +91,6 @@ public class CreateSubaccountRequest {
 			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
 		}
 	}
-
-	@Override
-	public String toString() {
-		return getClass().getSimpleName()+' '+toJson();
-	}
 	
 	/**
 	 * Entry point for constructing an instance of this class.

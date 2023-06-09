@@ -22,8 +22,15 @@ import org.junit.Test;
 public class NumberTransferTest {
 
 	@Test
-	public void testRequiredParameters() {
-
+	public void testConstructRequiredParameters() {
+		NumberTransfer.Builder builder = NumberTransfer.builder();
+		assertThrows(NullPointerException.class, builder::build);
+		builder.from("ad6dc56f").to("ad6dc56f");
+		assertThrows(NullPointerException.class, builder::build);
+		builder.country("abc").number("         ");
+		assertThrows(IllegalArgumentException.class, builder::build);
+		builder.number("23507703696");
+		assertThrows(IllegalArgumentException.class, builder::build);
 	}
 
 	@Test

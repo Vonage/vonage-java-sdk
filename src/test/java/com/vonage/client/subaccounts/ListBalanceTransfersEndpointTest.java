@@ -51,10 +51,9 @@ public class ListBalanceTransfersEndpointTest {
 		String sub1 = "def123ab", sub2 = "567a90bc";
 		String startDate = "2022-06-01T08:00:00Z", endDate = "2023-06-08T09:01:40Z";
 		ListTransfersFilter request = ListTransfersFilter.builder()
-			.startDate(Instant.parse(startDate))
-			.endDate(Instant.parse(endDate))
-			.subaccounts(sub1, sub2).build();
-
+				.startDate(Instant.parse(startDate))
+				.endDate(Instant.parse(endDate))
+				.subaccounts(sub1, sub2).build();
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("GET", builder.getMethod());
 		String expectedUri = "https://api.nexmo.com/accounts/"+apiKey+"/balance-transfers?" +

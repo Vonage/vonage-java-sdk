@@ -55,7 +55,7 @@ public class TransferNumberEndpointTest {
 		String expectedUri = "https://api.nexmo.com/accounts/"+apiKey+"/transfer-number";
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		String expectedRequest = "{\"from\":\"7c9738e6\",\"to\":\"ad6dc56f\",\"country\":\"GB\",\"number\":\"23507703696\"}";
+		String expectedRequest = "{\"from\":\"7c9738e6\",\"to\":\"ad6dc56f\",\"number\":\"23507703696\",\"country\":\"GB\"}";
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 	}
@@ -72,7 +72,7 @@ public class TransferNumberEndpointTest {
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		String expectedRequest = "{\"from\":\""+request.getFrom()+"\",\"to\":\""+request.getTo() +
-				"\",\"country\":\""+request.getCountry()+"\",\"number\":\""+request.getNumber()+"\"}";
+				"\",\"number\":\""+request.getNumber()+"\",\"country\":\""+request.getCountry()+"\"}";
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("POST", builder.getMethod());

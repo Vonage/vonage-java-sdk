@@ -21,24 +21,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.vonage.client.VonageResponseParseException;
+import com.vonage.client.common.E164;
 import java.io.IOException;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class NumberTransfer extends AbstractTransfer {
-	private String country, number;
+	private String number, country;
 
 	protected NumberTransfer() {
 	}
 
 	NumberTransfer(Builder builder) {
 		super(builder);
-		country = builder.country;
-		number = builder.number;
+		number = new E164(builder.number).toString();
+		if ((country = builder.country) == null || country.trim().length() != 2) {
+			throw new IllegalArgumentException("ISO 3166-1 alpha-2 country code is required.");
+		}
 	}
 
 	/**
-	 * Country the number is registered in.
+	 * Country the number is registered in (ISO 3166-1 alpha-2 format).
 	 * 
 	 * @return The two-letter country code for the number.
 	 */
@@ -84,12 +87,12 @@ public class NumberTransfer extends AbstractTransfer {
 	}
 	
 	public static class Builder extends AbstractTransfer.Builder<NumberTransfer, Builder> {
-		private String country, number;
+		private String number, country;
 	
 		Builder() {}
 
 		/**
-		 * (REQUIRED) Country the number is registered in.
+		 * (REQUIRED) Country the number is registered in, in ISO 3166-1 alpha-2 format.
 		 *
 		 * @param country The two letter country code for the number.
 		 *

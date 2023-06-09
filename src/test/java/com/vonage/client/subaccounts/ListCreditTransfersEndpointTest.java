@@ -54,7 +54,6 @@ public class ListCreditTransfersEndpointTest {
 				.startDate(Instant.parse(startDate))
 				.endDate(Instant.parse(endDate))
 				.subaccounts(sub1, sub2).build();
-
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("GET", builder.getMethod());
 		String expectedUri = "https://api.nexmo.com/accounts/"+apiKey+"/credit-transfers?" +
@@ -78,7 +77,6 @@ public class ListCreditTransfersEndpointTest {
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("GET", builder.getMethod());
 	}
-
 
 	@Test(expected = SubaccountsResponseException.class)
 	public void test400Response() throws Exception {
