@@ -74,11 +74,11 @@ public class ListBalanceTransfersEndpointTest {
 		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build(), authMethod);
 		endpoint = new ListBalanceTransfersEndpoint(wrapper);
-		String expectedUri = baseUri + "/accounts/"+apiKey+"/balance-transfers";
+		String expectedUri = baseUri + "/accounts/"+apiKey+"/balance-transfers?start_date=1970-01-01T00%3A00%3A00Z";
 		ListTransfersFilter request = ListTransfersFilter.builder().build();
 		RequestBuilder builder = endpoint.makeRequest(request);
-		assertEquals(0, builder.getParameters().size());
-		assertNull(request.getStartDate());
+		assertEquals(1, builder.getParameters().size());
+		assertEquals(Instant.EPOCH, request.getStartDate());
 		assertNull(request.getEndDate());
 		assertNull(request.getSubaccounts());
 		assertEquals(expectedUri, builder.build().getURI().toString());

@@ -26,15 +26,13 @@ public class ListTransfersFilter {
 	private final Set<String> subaccounts;
 
 	ListTransfersFilter(Builder builder) {
-		startDate = builder.startDate;
+		startDate = builder.startDate != null ? builder.startDate : Instant.EPOCH;
 		endDate = builder.endDate;
 		subaccounts = builder.subaccounts;
 	}
 	
 	RequestBuilder addParams(RequestBuilder request) {
-		if (startDate != null) {
-            request.addParameter("start_date", startDate.toString());
-        }
+        request.addParameter("start_date", startDate.toString());
 		if (endDate != null) {
             request.addParameter("end_date", endDate.toString());
         }
@@ -49,7 +47,7 @@ public class ListTransfersFilter {
 	/**
 	 * Start of the retrieval period.
 	 *
-	 * @return The start date of the range or {@code null} if unspecified (the default).
+	 * @return The start date of the range or {@linkplain Instant#EPOCH} if unspecified (the default).
 	 */
 	public Instant getStartDate() {
 		return startDate;
