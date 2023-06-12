@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.vonage.client.VonageResponseParseException;
 import java.io.IOException;
 import java.util.List;
@@ -49,6 +50,7 @@ class ListTransfersResponseWrapper {
 	public static ListTransfersResponseWrapper fromJson(String json) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
+			mapper.registerModule(new JavaTimeModule());
 			return mapper.readValue(json, ListTransfersResponseWrapper.class);
 		}
 		catch (IOException ex) {

@@ -27,6 +27,7 @@ import java.io.IOException;
 class TransferCreditEndpoint extends AbstractMethod<CreditTransfer, CreditTransfer> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
 	private static final String PATH = "/accounts/%s/credit-transfers";
+	private CreditTransfer cachedTransfer;
 
 	TransferCreditEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
@@ -44,17 +45,27 @@ class TransferCreditEndpoint extends AbstractMethod<CreditTransfer, CreditTransf
 		return RequestBuilder.post(uri)
 				.setHeader("Content-Type", "application/json")
 				.setHeader("Accept", "application/json")
-				.setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
+				.setEntity(new StringEntity((cachedTransfer = request).toJson(), ContentType.APPLICATION_JSON));
 	}
 
 	@Override
 	public CreditTransfer parseResponse(HttpResponse response) throws IOException {
-		int statusCode = response.getStatusLine().getStatusCode();
-		if (statusCode >= 200 && statusCode < 300) {
-			return CreditTransfer.fromJson(basicResponseHandler.handleResponse(response));
+		try {
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode >= 200 && statusCode < 300) {
+				String json = basicResponseHandler.handleResponse(response);
+				if (cachedTransfer != null) {
+					cachedTransfer.updateFromJson(json);
+					return cachedTransfer;
+				}
+				else return CreditTransfer.fromJson(json);
+			}
+			else {
+				throw SubaccountsResponseException.fromHttpResponse(response);
+			}
 		}
-		else {
-			throw SubaccountsResponseException.fromHttpResponse(response);
+		finally {
+			cachedTransfer = null;
 		}
 	}
 }

@@ -18,11 +18,7 @@ package com.vonage.client.subaccounts;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.common.E164;
-import java.io.IOException;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -67,14 +63,9 @@ public class NumberTransfer extends AbstractTransfer {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static NumberTransfer fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.registerModule(new JavaTimeModule());
-			return mapper.readValue(json, NumberTransfer.class);
-		}
-		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to produce NumberTransfer from json.", ex);
-		}
+		NumberTransfer transfer = new NumberTransfer();
+		transfer.updateFromJson(json);
+		return transfer;
 	}
 	
 	/**

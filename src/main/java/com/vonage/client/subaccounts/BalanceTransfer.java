@@ -18,10 +18,6 @@ package com.vonage.client.subaccounts;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.vonage.client.VonageResponseParseException;
-import java.io.IOException;
 import java.util.UUID;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -53,14 +49,9 @@ public class BalanceTransfer extends AbstractMoneyTransfer {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static BalanceTransfer fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.registerModule(new JavaTimeModule());
-			return mapper.readValue(json, BalanceTransfer.class);
-		}
-		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to produce BalanceTransfer from json.", ex);
-		}
+		BalanceTransfer transfer = new BalanceTransfer();
+		transfer.updateFromJson(json);
+		return transfer;
 	}
 
 	/**

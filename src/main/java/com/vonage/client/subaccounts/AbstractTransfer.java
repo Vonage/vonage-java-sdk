@@ -21,7 +21,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.VonageUnexpectedException;
+import java.io.IOException;
 import java.util.Objects;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -78,6 +80,22 @@ class AbstractTransfer {
 		}
 		catch (JsonProcessingException jpe) {
 			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
+		}
+	}
+
+	/**
+	 * Updates (hydrates) this object's fields from additional JSON data.
+	 *
+	 * @param json The JSON payload.
+	 */
+	public void updateFromJson(String json) {
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.registerModule(new JavaTimeModule());
+			mapper.readerForUpdating(this).readValue(json, getClass());
+		}
+		catch (IOException ex) {
+			throw new VonageResponseParseException("Failed to update "+getClass().getSimpleName()+" from json.", ex);
 		}
 	}
 	

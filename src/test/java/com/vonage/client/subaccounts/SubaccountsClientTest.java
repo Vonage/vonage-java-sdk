@@ -21,12 +21,12 @@ import org.junit.Test;
 import org.junit.function.ThrowingRunnable;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
-	static final UUID TRANSFER_ID = UUID.randomUUID();
 	static final String FROM_API_KEY = "cde3214b", TO_API_KEY = "12c4d5e6",
-		ACCOUNT_JSON = "{\n" +
+		ACCOUNT_RESPONSE_JSON = "{\n" +
 				"   \"secret\": \"Password123\",\n" +
 				"   \"api_key\": \"bbe6222f\",\n" +
 				"   \"name\": \"Subaccount Department B\",\n" +
@@ -36,7 +36,17 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 				"   \"suspended\": false,\n" +
 				"   \"balance\": 99.23,\n" +
 				"   \"credit_limit\": -101.68\n" +
-				"}";
+				"}",
+		MONEY_TRANSFER_PARTIAL_RESPONSE_JSON = "{\n" +
+				"   \"amount\": 145.32,\n" +
+				"   \"from\": \"7c9738e6\",\n" +
+				"   \"to\": \"ad6dc56f\",\n" +
+				"   \"reference\": \"Audit log ref\",\n" +
+				"   \"created_at\": \"2019-03-02T16:34:51Z\",\n   ",
+		CREDIT_TRANSFER_RESPONSE_JSON = MONEY_TRANSFER_PARTIAL_RESPONSE_JSON +
+				"\"credit_transfer_id\": \"ec48b760-8f26-40c6-9082-a122b6ca3640\"\n}",
+		BALANCE_TRANSFER_RESPONSE_JSON = MONEY_TRANSFER_PARTIAL_RESPONSE_JSON +
+					"\"balance_transfer_id\": \"2e70a7aa-8c89-4f55-8942-e86169fcfd61\"\n}";
 
 	public SubaccountsClientTest() {
 		client = new SubaccountsClient(wrapper);
@@ -83,12 +93,31 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 		assertEquals(BigDecimal.valueOf(99.23), response.getBalance());
 		assertEquals(BigDecimal.valueOf(-101.68), response.getCreditLimit());
 	}
+
+	static void assertEqualsExpectedMoneyTransfer(AbstractMoneyTransfer response) {
+		assertNotNull(response);
+		assertEquals(BigDecimal.valueOf(145.32), response.getAmount());
+		assertEquals("7c9738e6", response.getFrom());
+		assertEquals("ad6dc56f", response.getTo());
+		assertEquals("Audit log ref", response.getReference());
+		assertEquals(Instant.parse("2019-03-02T16:34:51Z"), response.getCreatedAt());
+	}
+
+	static void assertEqualsExpectedCreditTransfer(CreditTransfer response) {
+		assertEqualsExpectedMoneyTransfer(response);
+		assertEquals(UUID.fromString("ec48b760-8f26-40c6-9082-a122b6ca3640"), response.getCreditTransferId());
+	}
+
+	static void assertEqualsExpectedBalanceTransfer(BalanceTransfer response) {
+		assertEqualsExpectedMoneyTransfer(response);
+		assertEquals(UUID.fromString("2e70a7aa-8c89-4f55-8942-e86169fcfd61"), response.getBalanceTransferId());
+	}
 	
 	@Test
 	public void testCreateSubaccount() throws Exception {
 		CreateSubaccountRequest request = CreateSubaccountRequest.builder()
 				.name("Test sub").secret("16charactrSecr3T").build();
-		assertEqualsExpectedAccount(stubResponseAndGet(ACCOUNT_JSON, () -> client.createSubaccount(request)));
+		assertEqualsExpectedAccount(stubResponseAndGet(ACCOUNT_RESPONSE_JSON, () -> client.createSubaccount(request)));
 		stubResponseAndAssertThrows(200, () -> client.createSubaccount(null), NullPointerException.class);
 		stubResponseAndAssertThrows(401, () -> client.createSubaccount(request), SubaccountsResponseException.class);
 		assert403ResponseException(() -> client.createSubaccount(request));
@@ -97,7 +126,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 	@Test
 	public void testUpdateSubaccount() throws Exception {
 		UpdateSubaccountRequest request = UpdateSubaccountRequest.builder(FROM_API_KEY).build();
-		assertEqualsExpectedAccount(stubResponseAndGet(ACCOUNT_JSON, () -> client.updateSubaccount(request)));
+		assertEqualsExpectedAccount(stubResponseAndGet(ACCOUNT_RESPONSE_JSON, () -> client.updateSubaccount(request)));
 		stubResponseAndAssertThrows(200, () -> client.updateSubaccount(null), NullPointerException.class);
 		stubResponseAndAssertThrows(401, () -> client.updateSubaccount(request), SubaccountsResponseException.class);
 		assert403ResponseException(() -> client.updateSubaccount(request));
@@ -105,16 +134,25 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 
 	@Test
 	public void testListSubaccounts() throws Exception {
-		String responseJson = "{}";
-		stubResponseAndRun(responseJson, client::listSubaccounts);
+		stubResponse("{\"_embedded\":{\"primary_account\":" +
+				ACCOUNT_RESPONSE_JSON + ",\"subaccounts\":[{}," + ACCOUNT_RESPONSE_JSON +",{}]}}"
+		);
+		ListSubaccountsResponse response = client.listSubaccounts();
+		assertNotNull(response);
+		assertEqualsExpectedAccount(response.getPrimaryAccount());
+		List<Account> subaccounts = response.getSubaccounts();
+		assertNotNull(subaccounts);
+		assertEquals(3, subaccounts.size());
+		assertNotNull(subaccounts.get(0));
+		assertEqualsExpectedAccount(subaccounts.get(1));
+		assertNotNull(subaccounts.get(2));
 		stubResponseAndAssertThrows(401, client::listSubaccounts, SubaccountsResponseException.class);
 		assert403ResponseException(client::listSubaccounts);
 	}
 
 	@Test
 	public void testGetSubaccount() throws Exception {
-		String responseJson = "{}";
-		stubResponseAndRun(responseJson, () -> client.getSubaccount(FROM_API_KEY));
+		assertEqualsExpectedAccount(stubResponseAndGet(ACCOUNT_RESPONSE_JSON, () -> client.getSubaccount(FROM_API_KEY)));
 		stubResponseAndAssertThrows(200, () -> client.getSubaccount(null), NullPointerException.class);
 		stubResponseAndAssertThrows(401, () -> client.getSubaccount(FROM_API_KEY), SubaccountsResponseException.class);
 		assert403ResponseException(() -> client.getSubaccount(FROM_API_KEY));
@@ -124,9 +162,14 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 	public void testListCreditTransfers() throws Exception {
 		ListTransfersFilter request = ListTransfersFilter.builder()
 				.endDate(Instant.now()).subaccounts(FROM_API_KEY).build();
-		String responseJson = "{}";
-		stubResponseAndRun(responseJson, () -> client.listCreditTransfers(request));
-		stubResponseAndRun(responseJson, client::listCreditTransfers);
+		String responseJson = "{\"_embedded\":{\"credit-transfers\":[{},"+CREDIT_TRANSFER_RESPONSE_JSON+",{}]}}";
+		List<CreditTransfer> response = stubResponseAndGet(responseJson, () -> client.listCreditTransfers(request));
+		assertNotNull(response);
+		assertEquals(3, response.size());
+		assertNotNull(response.get(0));
+		assertNotNull(response.get(2));
+		assertEqualsExpectedCreditTransfer(response.get(1));
+		assertNotNull(stubResponseAndGet(responseJson, client::listCreditTransfers));
 		stubResponseAndAssertThrows(200, () -> client.listCreditTransfers(null), NullPointerException.class);
 		stubResponseAndAssertThrows(401, () -> client.listCreditTransfers(request), SubaccountsResponseException.class);
 		assert403ResponseException(client::listCreditTransfers);
@@ -136,9 +179,14 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 	public void testListBalanceTransfers() throws Exception {
 		ListTransfersFilter request = ListTransfersFilter.builder()
 				.endDate(Instant.now()).subaccounts(FROM_API_KEY).build();
-		String responseJson = "{}";
-		stubResponseAndRun(responseJson, () -> client.listBalanceTransfers(request));
-		stubResponseAndRun(responseJson, client::listBalanceTransfers);
+		String responseJson = "{\"_embedded\":{\"balance-transfers\":[{},"+BALANCE_TRANSFER_RESPONSE_JSON+",{}]}}";
+		List<BalanceTransfer> response = stubResponseAndGet(responseJson, () -> client.listBalanceTransfers(request));
+		assertNotNull(response);
+		assertEquals(3, response.size());
+		assertNotNull(response.get(0));
+		assertNotNull(response.get(2));
+		assertEqualsExpectedBalanceTransfer(response.get(1));
+		assertNotNull(stubResponseAndGet(responseJson, client::listBalanceTransfers));
 		stubResponseAndAssertThrows(200, () -> client.listBalanceTransfers(null), NullPointerException.class);
 		stubResponseAndAssertThrows(401, () -> client.listBalanceTransfers(request), SubaccountsResponseException.class);
 		assert403ResponseException(client::listBalanceTransfers);
@@ -147,8 +195,9 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 	@Test
 	public void testTransferCredit() throws Exception {
 		CreditTransfer request = CreditTransfer.builder().amount(0.04).from(FROM_API_KEY).to(TO_API_KEY).build();
-		String responseJson = "{}";
-		stubResponseAndRun(responseJson, () -> client.transferCredit(request));
+		assertEqualsExpectedCreditTransfer(stubResponseAndGet(
+				CREDIT_TRANSFER_RESPONSE_JSON, () -> client.transferCredit(request)
+		));
 		stubResponseAndAssertThrows(200, () -> client.transferCredit(null), NullPointerException.class);
 		stubResponseAndAssertThrows(401, () -> client.transferCredit(request), SubaccountsResponseException.class);
 		assert403ResponseException(() -> client.transferCredit(request));
@@ -157,8 +206,9 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 	@Test
 	public void testTransferBalance() throws Exception {
 		BalanceTransfer request = BalanceTransfer.builder().amount(0.04).from(FROM_API_KEY).to(TO_API_KEY).build();
-		String responseJson = "{}";
-		stubResponseAndRun(responseJson, () -> client.transferBalance(request));
+		assertEqualsExpectedBalanceTransfer(stubResponseAndGet(
+				BALANCE_TRANSFER_RESPONSE_JSON, () -> client.transferBalance(request)
+		));
 		stubResponseAndAssertThrows(200, () -> client.transferBalance(null), NullPointerException.class);
 		stubResponseAndAssertThrows(401, () -> client.transferBalance(request), SubaccountsResponseException.class);
 		assert403ResponseException(() -> client.transferBalance(request));
@@ -168,8 +218,17 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 	public void testTransferNumber() throws Exception {
 		NumberTransfer request = NumberTransfer.builder()
 				.from(FROM_API_KEY).to(TO_API_KEY).number("447900000001").country("GB").build();
-		String responseJson = "{}";
-		stubResponseAndRun(responseJson, () -> client.transferNumber(request));
+		String responseJson = "{\n" +
+				"   \"number\": \"235077036\",\n" +
+				"   \"country\": \"DE\",\n" +
+				"   \"from\": \"7c9738e6\",\n" +
+				"   \"to\": \"ad6dc56f\"\n" +
+				"}";
+		NumberTransfer response = stubResponseAndGet(responseJson, () -> client.transferNumber(request));
+		assertEquals("235077036", response.getNumber());
+		assertEquals("DE", response.getCountry());
+		assertEquals("7c9738e6", response.getFrom());
+		assertEquals("ad6dc56f", response.getTo());
 		stubResponseAndAssertThrows(200, () -> client.transferNumber(null), NullPointerException.class);
 		stubResponseAndAssertThrows(401, () -> client.transferNumber(request), SubaccountsResponseException.class);
 		assert403ResponseException(() -> client.transferNumber(request));
