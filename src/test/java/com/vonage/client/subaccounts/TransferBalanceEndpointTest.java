@@ -15,7 +15,10 @@
  */
 package com.vonage.client.subaccounts;
 
-import com.vonage.client.*;
+import com.vonage.client.HttpConfig;
+import com.vonage.client.HttpWrapper;
+import com.vonage.client.TestUtils;
+import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
@@ -26,6 +29,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public class TransferBalanceEndpointTest {
 	final String apiKey = "a1b2c3d4", apiSecret = "1234567890abcdef";
@@ -60,6 +64,13 @@ public class TransferBalanceEndpointTest {
 				"\",\"amount\":"+request.getAmount()+",\"reference\":\""+request.getReference()+"\"}";
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		UUID transferId = UUID.randomUUID();
+		String responseJson = expectedRequest.replace("{\"from",
+				"{\"balance_transfer_id\":\""+transferId+"\",\"from"
+		);
+		BalanceTransfer parsed = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, responseJson));
+		assertEquals(request, parsed);
+		assertEquals(transferId, parsed.getBalanceTransferId());
 	}
 
 	@Test
@@ -80,14 +91,6 @@ public class TransferBalanceEndpointTest {
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("POST", builder.getMethod());
-	}
-
-	@Test
-	public void testFullResponse() throws Exception {
-		String expectedResponse = "{}";
-		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
-		BalanceTransfer parsed = endpoint.parseResponse(mockResponse);
-		assertNotNull(parsed);
 	}
 	
 	@Test

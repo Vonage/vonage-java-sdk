@@ -29,6 +29,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public class TransferCreditEndpointTest {
 	final String apiKey = "a1b2c3d4", apiSecret = "1234567890abcdef";
@@ -63,6 +64,13 @@ public class TransferCreditEndpointTest {
 				"\",\"amount\":"+request.getAmount()+",\"reference\":\""+request.getReference()+"\"}";
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		UUID transferId = UUID.randomUUID();
+		String responseJson = expectedRequest.replace("{\"from",
+				"{\"credit_transfer_id\":\""+transferId+"\",\"from"
+		);
+		CreditTransfer parsed = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, responseJson));
+		assertEquals(request, parsed);
+		assertEquals(transferId, parsed.getCreditTransferId());
 	}
 
 	@Test
@@ -82,14 +90,6 @@ public class TransferCreditEndpointTest {
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("POST", builder.getMethod());
-	}
-
-	@Test
-	public void testFullResponse() throws Exception {
-		String expectedResponse = "{}";
-		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
-		CreditTransfer parsed = endpoint.parseResponse(mockResponse);
-		assertNotNull(parsed);
 	}
 	
 	@Test

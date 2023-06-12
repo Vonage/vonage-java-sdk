@@ -58,6 +58,8 @@ public class TransferNumberEndpointTest {
 		String expectedRequest = "{\"from\":\"7c9738e6\",\"to\":\"ad6dc56f\",\"number\":\"23507703696\",\"country\":\"GB\"}";
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		NumberTransfer parsed = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, request.toJson()));
+		assertEquals(request, parsed);
 	}
 
 	@Test
@@ -76,14 +78,6 @@ public class TransferNumberEndpointTest {
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("POST", builder.getMethod());
-	}
-
-	@Test
-	public void testFullResponse() throws Exception {
-		String expectedResponse = "{}";
-		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
-		NumberTransfer parsed = endpoint.parseResponse(mockResponse);
-		assertNotNull(parsed);
 	}
 	
 	@Test
