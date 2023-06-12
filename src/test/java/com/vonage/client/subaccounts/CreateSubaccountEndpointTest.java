@@ -68,14 +68,12 @@ public class CreateSubaccountEndpointTest {
 		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build(), authMethod);
 		endpoint = new CreateSubaccountEndpoint(wrapper);
-		CreateSubaccountRequest request = CreateSubaccountRequest.builder()
-				.name("Test sub").secret("ab12cx340987ucvjklf").build();
+		CreateSubaccountRequest request = CreateSubaccountRequest.builder().name("Test sub").build();
 		String expectedUri = baseUri + "/accounts/"+apiKey+"/subaccounts";
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		String expectedRequest = "{\"primary_account_api_key\":\"" + apiKey +
-				"\",\"name\":\""+request.getName()+"\",\"secret\":\""+request.getSecret()+"\"}";
+		String expectedRequest = "{\"primary_account_api_key\":\""+apiKey+"\",\"name\":\""+request.getName()+"\"}";
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("POST", builder.getMethod());

@@ -24,7 +24,7 @@ public class CreateSubaccountRequestTest {
 	public void testSerializeValid() {
 		String primaryAccountApiKey = "acc6111f";
 		String name = "Subaccount department A";
-		String secret = "plidzhjrfg9845";
+		String secret = "1234567890abcdef";
 		CreateSubaccountRequest request = CreateSubaccountRequest.builder()
 				.name(name).usePrimaryAccountBalance(false).secret(secret).build();
 		request.primaryAccountApiKey = primaryAccountApiKey;
@@ -38,25 +38,22 @@ public class CreateSubaccountRequestTest {
 
 	@Test
 	public void testConstructRequiredParameters() {
-		CreateSubaccountRequest request = CreateSubaccountRequest.builder()
-				.name("Sub dept B").secret("kujhwe59074y5").build();
-		String expectedJson = "{\"name\":\""+request.getName()+"\",\"secret\":\""+request.getSecret()+"\"}";
-		assertEquals(expectedJson, request.toJson());
+		CreateSubaccountRequest request = CreateSubaccountRequest.builder().name("Sub dept B").build();
+		assertEquals("{\"name\":\""+request.getName()+"\"}", request.toJson());
 		assertNull(request.getPrimaryAccountApiKey());
 		assertNull(request.getUsePrimaryAccountBalance());
 	}
 
 	@Test
 	public void testConstructNoName() {
-		CreateSubaccountRequest.Builder builder = CreateSubaccountRequest.builder().secret("94wer7yrghg");
+		CreateSubaccountRequest.Builder builder = CreateSubaccountRequest.builder();
 		assertThrows(IllegalArgumentException.class, builder::build);
 		assertThrows(IllegalArgumentException.class, () -> builder.name("  ").build());
 	}
 
 	@Test
-	public void testConstructNoSecret() {
+	public void testConstructShortSecret() {
 		CreateSubaccountRequest.Builder builder = CreateSubaccountRequest.builder().name("Department C");
-		assertThrows(IllegalArgumentException.class, builder::build);
-		assertThrows(IllegalArgumentException.class, () -> builder.secret("  ").build());
+		assertThrows(IllegalArgumentException.class, () -> builder.secret("  9awer7yrghgp68 ").build());
 	}
 }

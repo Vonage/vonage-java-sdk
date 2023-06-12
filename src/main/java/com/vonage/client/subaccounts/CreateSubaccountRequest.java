@@ -31,8 +31,8 @@ public class CreateSubaccountRequest {
 		if ((name = builder.name) == null || name.trim().isEmpty()) {
 			throw new IllegalArgumentException("Name is required.");
 		}
-		if ((secret = builder.secret) == null || secret.trim().isEmpty()) {
-			throw new IllegalArgumentException("Secret is required.");
+		if ((secret = builder.secret) != null && secret.trim().length() < 16) {
+			throw new IllegalArgumentException("Secret must be 16 characters long.");
 		}
 		usePrimaryAccountBalance = builder.usePrimaryAccountBalance;
 	}

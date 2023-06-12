@@ -119,7 +119,7 @@ public class UpdateSubaccountRequest {
 		 *
 		 * @return This builder.
 		 */
-		public Builder usePrimaryAccountBalance(Boolean usePrimaryAccountBalance) {
+		public Builder usePrimaryAccountBalance(boolean usePrimaryAccountBalance) {
 			this.usePrimaryAccountBalance = usePrimaryAccountBalance;
 			return this;
 		}
@@ -131,7 +131,7 @@ public class UpdateSubaccountRequest {
 		 *
 		 * @return This builder.
 		 */
-		public Builder suspended(Boolean suspended) {
+		public Builder suspended(boolean suspended) {
 			this.suspended = suspended;
 			return this;
 		}
