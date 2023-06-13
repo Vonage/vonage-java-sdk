@@ -37,8 +37,9 @@ public class UpdateSubaccountRequestTest {
 
 	@Test
 	public void testSerializeRequiredParameters() {
-		UpdateSubaccountRequest request = UpdateSubaccountRequest.builder("acc6111f").build();
-		assertEquals("{}", request.toJson());
+		UpdateSubaccountRequest.Builder builder  = UpdateSubaccountRequest.builder("abc6123f");
+		assertThrows(IllegalStateException.class, builder::build);
+		assertEquals("{\"suspended\":false}", builder.suspended(false).build().toJson());
 	}
 
 	@Test
@@ -63,6 +64,6 @@ public class UpdateSubaccountRequestTest {
 				super(builder);
 			}
 		}
-		new SelfRefrencing(UpdateSubaccountRequest.builder("a1b2c3d4")).toJson();
+		new SelfRefrencing(UpdateSubaccountRequest.builder("a1b2c3d4").suspended(true)).toJson();
 	}
 }

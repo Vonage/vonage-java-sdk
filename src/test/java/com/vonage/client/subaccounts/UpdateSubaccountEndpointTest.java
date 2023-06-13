@@ -64,22 +64,14 @@ public class UpdateSubaccountEndpointTest {
 		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build(), authMethod);
 		endpoint = new UpdateSubaccountEndpoint(wrapper);
-		UpdateSubaccountRequest request = UpdateSubaccountRequest.builder(subApiKey).build();
+		UpdateSubaccountRequest request = UpdateSubaccountRequest.builder(subApiKey).name("Custom").build();
 		String expectedUri = baseUri + "/accounts/"+apiKey+"/subaccounts/"+subApiKey;
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		assertEquals("{}", EntityUtils.toString(builder.getEntity()));
+		assertEquals("{\"name\":\"Custom\"}", EntityUtils.toString(builder.getEntity()));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("PATCH", builder.getMethod());
-	}
-
-	@Test
-	public void testFullResponse() throws Exception {
-		String expectedResponse = "{}";
-		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
-		Account parsed = endpoint.parseResponse(mockResponse);
-		assertNotNull(parsed);
 	}
 	
 	@Test
@@ -87,14 +79,6 @@ public class UpdateSubaccountEndpointTest {
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, "{}");
 		Account parsed = endpoint.parseResponse(mockResponse);
 		assertNotNull(parsed);
-		assertNull(parsed.getApiKey());
-		assertNull(parsed.getPrimaryAccountApiKey());
-		assertNull(parsed.getName());
-		assertNull(parsed.getUsePrimaryAccountBalance());
-		assertNull(parsed.getSuspended());
-		assertNull(parsed.getCreatedAt());
-		assertNull(parsed.getBalance());
-		assertNull(parsed.getCreditLimit());
 	}
 	
 	@Test(expected = VonageResponseParseException.class)

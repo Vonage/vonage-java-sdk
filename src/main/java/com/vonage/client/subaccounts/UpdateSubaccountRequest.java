@@ -33,6 +33,9 @@ public class UpdateSubaccountRequest {
 		name = builder.name;
 		usePrimaryAccountBalance = builder.usePrimaryAccountBalance;
 		suspended = builder.suspended;
+		if (name == null && usePrimaryAccountBalance == null && suspended == null) {
+			throw new IllegalStateException("At least one property must be set for updating.");
+		}
 	}
 
 	/**

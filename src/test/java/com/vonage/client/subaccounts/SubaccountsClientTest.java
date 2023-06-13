@@ -112,7 +112,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 
 	@Test
 	public void testUpdateSubaccount() throws Exception {
-		UpdateSubaccountRequest request = UpdateSubaccountRequest.builder(FROM_API_KEY).build();
+		UpdateSubaccountRequest request = UpdateSubaccountRequest.builder(FROM_API_KEY).name("New name").build();
 		assertEqualsExpectedAccount(stubResponseAndGet(ACCOUNT_RESPONSE_JSON, () -> client.updateSubaccount(request)));
 		stubResponseAndAssertThrows(200, () -> client.updateSubaccount(null), NullPointerException.class);
 		stubResponseAndAssertThrows(401, () -> client.updateSubaccount(request), SubaccountsResponseException.class);
