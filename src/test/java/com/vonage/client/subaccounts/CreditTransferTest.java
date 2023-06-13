@@ -52,7 +52,7 @@ public class CreditTransferTest {
 		String reference = "This gets added to the audit log";
 	
 		CreditTransfer response = CreditTransfer.fromJson("{\n" +
-				"\"credit_transfer_id\":\""+creditTransferId+"\",\n" +
+				"\"id\":\""+creditTransferId+"\",\n" +
 				"\"created_at\":\""+createdAt+"\",\n" +
 				"\"amount\":\""+amount+"\",\n" +
 				"\"from\":\""+from+"\",\n" +
@@ -60,7 +60,7 @@ public class CreditTransferTest {
 				"\"reference\":\""+reference+"\"\n" +
 		"}");
 		
-		assertEquals(creditTransferId, response.getCreditTransferId());
+		assertEquals(creditTransferId, response.getId());
 		assertEquals(createdAt, response.getCreatedAt());
 		assertEquals(amount, response.getAmount());
 		assertEquals(from, response.getFrom());
@@ -76,7 +76,7 @@ public class CreditTransferTest {
 	@Test
 	public void testFromJsonEmpty() {
 		CreditTransfer response = CreditTransfer.fromJson("{}");
-		assertNull(response.getCreditTransferId());
+		assertNull(response.getId());
 		assertNull(response.getCreatedAt());
 		assertNull(response.getAmount());
 		assertNull(response.getFrom());

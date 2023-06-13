@@ -52,7 +52,7 @@ public class BalanceTransferTest {
 		String reference = "This gets added to the audit log";
 	
 		BalanceTransfer response = BalanceTransfer.fromJson("{\n" +
-				"\"balance_transfer_id\":\""+balanceTransferId+"\",\n" +
+				"\"id\":\""+balanceTransferId+"\",\n" +
 				"\"created_at\":\""+createdAt+"\",\n" +
 				"\"amount\":"+amount+",\n" +
 				"\"from\":\""+from+"\",\n" +
@@ -60,7 +60,7 @@ public class BalanceTransferTest {
 				"\"reference\":\""+reference+"\"\n" +
 		"}");
 		
-		assertEquals(balanceTransferId, response.getBalanceTransferId());
+		assertEquals(balanceTransferId, response.getId());
 		assertEquals(createdAt, response.getCreatedAt());
 		assertEquals(amount, response.getAmount());
 		assertEquals(from, response.getFrom());
@@ -76,7 +76,7 @@ public class BalanceTransferTest {
 	@Test
 	public void testFromJsonEmpty() {
 		BalanceTransfer response = BalanceTransfer.fromJson("{}");
-		assertNull(response.getBalanceTransferId());
+		assertNull(response.getId());
 		assertNull(response.getCreatedAt());
 		assertNull(response.getAmount());
 		assertNull(response.getFrom());

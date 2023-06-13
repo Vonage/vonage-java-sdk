@@ -26,8 +26,8 @@ public class SubaccountsClient {
 	final GetSubaccountEndpoint getSubaccount;
 	final ListCreditTransfersEndpoint listCreditTransfers;
 	final ListBalanceTransfersEndpoint listBalanceTransfers;
-	final TransferCreditEndpoint transferCredit;
-	final TransferBalanceEndpoint transferBalance;
+	final TransferMoneyEndpoint<CreditTransfer> transferCredit;
+	final TransferMoneyEndpoint<BalanceTransfer> transferBalance;
 	final TransferNumberEndpoint transferNumber;
 
 	/**
@@ -42,8 +42,8 @@ public class SubaccountsClient {
 		getSubaccount = new GetSubaccountEndpoint(httpWrapper);
 		listCreditTransfers = new ListCreditTransfersEndpoint(httpWrapper);
 		listBalanceTransfers = new ListBalanceTransfersEndpoint(httpWrapper);
-		transferCredit = new TransferCreditEndpoint(httpWrapper);
-		transferBalance = new TransferBalanceEndpoint(httpWrapper);
+		transferCredit = new TransferMoneyEndpoint<>(httpWrapper, CreditTransfer.class);
+		transferBalance = new TransferMoneyEndpoint<>(httpWrapper, BalanceTransfer.class);
 		transferNumber = new TransferNumberEndpoint(httpWrapper);
 	}
 

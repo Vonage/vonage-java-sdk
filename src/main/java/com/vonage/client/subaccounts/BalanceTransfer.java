@@ -17,29 +17,16 @@ package com.vonage.client.subaccounts;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.UUID;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BalanceTransfer extends AbstractMoneyTransfer {
-	private UUID balanceTransferId;
+public final class BalanceTransfer extends AbstractMoneyTransfer {
 
-	protected BalanceTransfer() {
+	BalanceTransfer() {
 	}
 
 	BalanceTransfer(Builder builder) {
 		super(builder);
-	}
-
-	/**
-	 * Unique balance transfer ID.
-	 * 
-	 * @return The UUID of the balance transfer.
-	 */
-	@JsonProperty("balance_transfer_id")
-	public UUID getBalanceTransferId() {
-		return balanceTransferId;
 	}
 
 	/**

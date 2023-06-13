@@ -21,10 +21,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Objects;
+import java.util.UUID;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-class AbstractMoneyTransfer extends AbstractTransfer {
+abstract class AbstractMoneyTransfer extends AbstractTransfer {
+	private UUID id;
 	private Instant createdAt;
 	private BigDecimal amount;
 	private String reference;
@@ -36,6 +38,11 @@ class AbstractMoneyTransfer extends AbstractTransfer {
 		super(builder);
 		amount = Objects.requireNonNull(builder.amount, "Amount is required.");
 		reference = builder.reference;
+	}
+
+	@JsonProperty("id")
+	public UUID getId() {
+		return id;
 	}
 
 	/**

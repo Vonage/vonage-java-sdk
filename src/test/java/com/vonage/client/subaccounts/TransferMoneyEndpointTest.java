@@ -15,10 +15,7 @@
  */
 package com.vonage.client.subaccounts;
 
-import com.vonage.client.HttpConfig;
-import com.vonage.client.HttpWrapper;
-import com.vonage.client.TestUtils;
-import com.vonage.client.VonageResponseParseException;
+import com.vonage.client.*;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
@@ -31,14 +28,28 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public class TransferBalanceEndpointTest {
+public class TransferMoneyEndpointTest {
 	final String apiKey = "a1b2c3d4", apiSecret = "1234567890abcdef";
 	final AuthMethod authMethod = new TokenAuthMethod(apiKey, apiSecret);
-	TransferBalanceEndpoint endpoint;
-	
+	TransferMoneyEndpoint<KudosTransfer> endpoint;
+
+	static final class KudosTransfer extends AbstractMoneyTransfer {
+		public KudosTransfer() {}
+
+		KudosTransfer(Builder builder) {
+			super(builder);
+		}
+
+		static class Builder extends AbstractMoneyTransfer.Builder<KudosTransfer, Builder> {
+			public KudosTransfer build() {
+				return new KudosTransfer(this);
+			}
+		}
+	}
+
 	@Before
 	public void setUp() {
-		endpoint = new TransferBalanceEndpoint(new HttpWrapper(authMethod));
+		endpoint = new TransferMoneyEndpoint<>(new HttpWrapper(authMethod), KudosTransfer.class);
 	}
 	
 	@Test
@@ -50,14 +61,14 @@ public class TransferBalanceEndpointTest {
 	
 	@Test
 	public void testDefaultUri() throws Exception {
-		BalanceTransfer request = BalanceTransfer.builder()
+		KudosTransfer request = new KudosTransfer.Builder()
 				.from("7c9738e6").to("ad6dc56f")
 				.reference("This gets added to the audit log")
 				.amount(BigDecimal.valueOf(123.45)).build();
 
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("POST", builder.getMethod());
-		String expectedUri = "https://api.nexmo.com/accounts/"+apiKey+"/balance-transfers";
+		String expectedUri = "https://api.nexmo.com/accounts/"+apiKey+"/kudos-transfers";
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		String expectedRequest = "{\"from\":\""+request.getFrom()+"\",\"to\":\""+request.getTo() +
@@ -65,24 +76,22 @@ public class TransferBalanceEndpointTest {
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		UUID transferId = UUID.randomUUID();
-		String responseJson = expectedRequest.replace("{\"from",
-				"{\"balance_transfer_id\":\""+transferId+"\",\"from"
-		);
-		BalanceTransfer parsed = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, responseJson));
+		String responseJson = expectedRequest.replace("{\"from", "{\"id\":\""+transferId+"\",\"from");
+		KudosTransfer parsed = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, responseJson));
 		assertEquals(request, parsed);
-		assertEquals(transferId, parsed.getBalanceTransferId());
+		assertEquals(transferId, parsed.getId());
 	}
 
 	@Test
 	public void testCustomUri() throws Exception {
 		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build(), authMethod);
-		endpoint = new TransferBalanceEndpoint(wrapper);
-		BalanceTransfer request = BalanceTransfer.builder()
+		endpoint = new TransferMoneyEndpoint<>(wrapper, KudosTransfer.class);
+		KudosTransfer request = new KudosTransfer.Builder()
 				.from("ad6dc56f").to("7c9738e6")
 				.amount(BigDecimal.valueOf(67.89)).build();
 
-		String expectedUri = baseUri + "/accounts/"+apiKey+"/balance-transfers";
+		String expectedUri = baseUri + "/accounts/"+apiKey+"/kudos-transfers";
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
@@ -96,19 +105,32 @@ public class TransferBalanceEndpointTest {
 	@Test
 	public void testEmptyResponse() throws Exception {
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, "{}");
-		BalanceTransfer parsed = endpoint.parseResponse(mockResponse);
+		KudosTransfer parsed = endpoint.parseResponse(mockResponse);
 		assertNotNull(parsed);
-		assertNull(parsed.getBalanceTransferId());
+		assertNull(parsed.getId());
 		assertNull(parsed.getCreatedAt());
 		assertNull(parsed.getAmount());
 		assertNull(parsed.getFrom());
 		assertNull(parsed.getTo());
 		assertNull(parsed.getReference());
 	}
-	
-	@Test(expected = VonageResponseParseException.class)
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void testInvalidTransferClass() throws Exception {
+		class TransferBad extends AbstractMoneyTransfer {
+			TransferBad(boolean dummy) {}
+		}
+		TransferMoneyEndpoint<TransferBad> badEndpoint = new TransferMoneyEndpoint<>(
+				new HttpWrapper(authMethod), TransferBad.class
+		);
+		badEndpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, "{}"));
+	}
+
+	@Test
 	public void testInvalidResponse() {
-		BalanceTransfer.fromJson("{malformed]");
+		String malformed = "{malformed]";
+		assertThrows(VonageResponseParseException.class, () -> BalanceTransfer.fromJson(malformed));
+		assertThrows(VonageResponseParseException.class, () -> CreditTransfer.fromJson(malformed));
 	}
 
 	@Test(expected = SubaccountsResponseException.class)
