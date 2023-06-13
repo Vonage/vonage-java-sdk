@@ -17,6 +17,7 @@ package com.vonage.client.subaccounts;
 
 import org.apache.http.client.methods.RequestBuilder;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -30,11 +31,15 @@ public class ListTransfersFilter {
 		endDate = builder.endDate;
 		subaccounts = builder.subaccounts;
 	}
-	
+
+	private static String formatTime(Instant timestamp) {
+		return timestamp.truncatedTo(ChronoUnit.SECONDS).toString();
+	}
+
 	RequestBuilder addParams(RequestBuilder request) {
-        request.addParameter("start_date", startDate.toString());
+        request.addParameter("start_date", formatTime(startDate));
 		if (endDate != null) {
-            request.addParameter("end_date", endDate.toString());
+            request.addParameter("end_date", formatTime(endDate));
         }
 		if (subaccounts != null) {
 			for (String subaccount : subaccounts) {
