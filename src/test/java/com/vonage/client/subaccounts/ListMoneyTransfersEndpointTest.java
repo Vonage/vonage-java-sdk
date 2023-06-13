@@ -21,14 +21,14 @@ import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 import java.time.Instant;
-import java.util.List;
+import java.util.Map;
 
 public class ListMoneyTransfersEndpointTest {
 	final String apiKey = "a1b2c3d4", apiSecret = "1234567890abcdef";
@@ -49,24 +49,20 @@ public class ListMoneyTransfersEndpointTest {
 	
 	@Test
 	public void testDefaultUri() throws Exception {
-		String sub1 = "def123ab", sub2 = "567a90bc";
-		String startDate = "2022-06-01T08:00:00Z", endDate = "2023-06-08T09:01:40Z";
+		String sub = "def123ab", startDate = "2022-06-01T08:00:00Z", endDate = "2023-06-08T09:01:40Z";
 		ListTransfersFilter request = ListTransfersFilter.builder()
 				.startDate(Instant.parse(startDate))
 				.endDate(Instant.parse(endDate))
-				.subaccounts(sub1, sub2, sub1).build();
+				.subaccount(sub).build();
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("GET", builder.getMethod());
 		String expectedUri = "https://api.nexmo.com/accounts/"+apiKey+"/kudos-transfers?" +
 				"start_date=2022-06-01T08%3A00%3A00Z&end_date=2023-06-08T09%3A01%3A40Z" +
-				"&subaccount=" + sub1 + "&subaccount=" + sub2;
+				"&subaccount=" + sub;
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		List<NameValuePair> params = builder.getParameters();
-		assertEquals(4, params.size());
-		assertEquals(2, request.getSubaccounts().size());
-		assertEquals(Instant.parse(startDate), request.getStartDate());
-		assertEquals(Instant.parse(endDate), request.getEndDate());
+		Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
+		assertEquals(3, params.size());
 	}
 
 	@Test
@@ -80,7 +76,7 @@ public class ListMoneyTransfersEndpointTest {
 		assertEquals(1, builder.getParameters().size());
 		assertEquals(Instant.EPOCH, request.getStartDate());
 		assertNull(request.getEndDate());
-		assertNull(request.getSubaccounts());
+		assertNull(request.getSubaccount());
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("GET", builder.getMethod());

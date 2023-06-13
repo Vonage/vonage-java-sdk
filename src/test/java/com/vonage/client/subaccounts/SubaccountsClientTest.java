@@ -148,7 +148,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 	@Test
 	public void testListCreditTransfers() throws Exception {
 		ListTransfersFilter request = ListTransfersFilter.builder()
-				.endDate(Instant.now()).subaccounts(FROM_API_KEY).build();
+				.endDate(Instant.now()).subaccount(FROM_API_KEY).build();
 		String responseJson = "{\"_embedded\":{\"credit_transfers\":[{},"+MONEY_TRANSFER_RESPONSE_JSON+",{}]}}";
 		List<MoneyTransfer> response = stubResponseAndGet(responseJson, () -> client.listCreditTransfers(request));
 		assertNotNull(response);
@@ -165,7 +165,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 	@Test
 	public void testListBalanceTransfers() throws Exception {
 		ListTransfersFilter request = ListTransfersFilter.builder()
-				.endDate(Instant.now()).subaccounts(FROM_API_KEY).build();
+				.endDate(Instant.now()).subaccount(FROM_API_KEY).build();
 		String responseJson = "{\"_embedded\":{\"balance_transfers\":[{},"+MONEY_TRANSFER_RESPONSE_JSON+",{}]}}";
 		List<MoneyTransfer> response = stubResponseAndGet(responseJson, () -> client.listBalanceTransfers(request));
 		assertNotNull(response);

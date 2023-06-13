@@ -18,18 +18,17 @@ package com.vonage.client.subaccounts;
 import org.apache.http.client.methods.RequestBuilder;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 public class ListTransfersFilter {
 	private final Instant startDate, endDate;
-	private final Set<String> subaccounts;
+	private final String subaccount;
 
 	ListTransfersFilter(Builder builder) {
 		startDate = builder.startDate != null ? builder.startDate : Instant.EPOCH;
 		endDate = builder.endDate;
-		subaccounts = builder.subaccounts;
+		if ((subaccount = builder.subaccount) != null) {
+			AbstractTransfer.validateAccountKey(builder.subaccount, "Subaccount");
+		}
 	}
 
 	private static String formatTime(Instant timestamp) {
@@ -41,10 +40,8 @@ public class ListTransfersFilter {
 		if (endDate != null) {
             request.addParameter("end_date", formatTime(endDate));
         }
-		if (subaccounts != null) {
-			for (String subaccount : subaccounts) {
-				request.addParameter("subaccount", subaccount);
-			}
+		if (subaccount != null) {
+			request.addParameter("subaccount", subaccount);
         }
 		return request;
 	}
@@ -68,12 +65,12 @@ public class ListTransfersFilter {
 	}
 
 	/**
-	 * Subaccount API keys to filter by.
+	 * Subaccount API key to filter by.
 	 *
-	 * @return The set of subaccount keys to include in the results, or null if unspecified (the default).
+	 * @return The subaccount ID to filter by, or null if unspecified (the default).
 	 */
-	public Set<String> getSubaccounts() {
-		return subaccounts;
+	public String getSubaccount() {
+		return subaccount;
 	}
 
 	/**
@@ -87,7 +84,7 @@ public class ListTransfersFilter {
 	
 	public static class Builder {
 		private Instant startDate, endDate;
-		private Set<String> subaccounts;
+		private String subaccount;
 	
 		Builder() {}
 	
@@ -116,15 +113,15 @@ public class ListTransfersFilter {
 		}
 
 		/**
-		 * (OPTIONAL) Subaccount IDs to include in the search. If you set this,
+		 * (OPTIONAL) Subaccount ID to include in the search. If you set this,
 		 * all other subaccounts will be excluded from the search results.
 		 *
-		 * @param subaccounts The subaccount API keys to filter by.
+		 * @param subaccount The subaccount API key to filter by.
 		 *
 		 * @return This builder.
 		 */
-		public Builder subaccounts(String... subaccounts) {
-			this.subaccounts = new LinkedHashSet<>(Arrays.asList(subaccounts));
+		public Builder subaccount(String subaccount) {
+			this.subaccount = subaccount;
 			return this;
 		}
 	
