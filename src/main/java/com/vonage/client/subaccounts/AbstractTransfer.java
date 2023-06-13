@@ -26,6 +26,9 @@ import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * Base class for number and balance / credit transfers.
+ */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 class AbstractTransfer {
@@ -34,7 +37,7 @@ class AbstractTransfer {
 	protected AbstractTransfer() {
 	}
 
-	AbstractTransfer(Builder<?, ?> builder) {
+	protected AbstractTransfer(Builder<?, ?> builder) {
 		from = validateAccountKey(builder.from, "From account");
 		to = validateAccountKey(builder.to, "To account");
 	}
@@ -58,7 +61,7 @@ class AbstractTransfer {
 	}
 
 	/**
-	 * (REQUIRED) Account to transfer to.
+	 * Account to transfer to.
 	 * 
 	 * @return The transferee account ID.
 	 */
