@@ -55,6 +55,14 @@ public class SubaccountsClient {
 	 * @param request Properties for the new subaccount.
 	 *
 	 * @return Details of the created subaccount.
+	 *
+	 * @throws SubaccountsResponseException If the request was unsuccessful. This could be for the following reasons:
+	 * <ul>
+	 *   <li><b>401</b>: Credential is missing or invalid.</li>
+	 * 	 <li><b>403</b>: Action is forbidden.</li>
+	 * 	 <li><b>404</b>: The account ID provided does not exist in our system or you do not have access.</li>
+	 * 	 <li><b>422</b>: Validation error.</li>
+	 * </ul>
 	 */
 	public Account createSubaccount(CreateSubaccountRequest request) {
 		return createSubaccount.execute(requireRequest(request));
@@ -66,6 +74,14 @@ public class SubaccountsClient {
 	 * @param request Properties of the subaccount to update.
 	 *
 	 * @return Details of the updated subaccount.
+	 *
+	 * @throws SubaccountsResponseException If the request was unsuccessful. This could be for the following reasons:
+	 * <ul>
+	 *   <li><b>401</b>: Credential is missing or invalid.</li>
+	 * 	 <li><b>403</b>: Action is forbidden.</li>
+	 * 	 <li><b>404</b>: The account ID provided does not exist in our system or you do not have access.</li>
+	 * 	 <li><b>422</b>: Validation error.</li>
+	 * </ul>
 	 */
 	public Account updateSubaccount(UpdateSubaccountRequest request) {
 		return updateSubaccount.execute(requireRequest(request));
@@ -75,6 +91,13 @@ public class SubaccountsClient {
 	 * Retrieve all subaccounts owned by the primary account.
 	 *
 	 * @return The primary account details and list of subaccounts associated with it.
+	 *
+	 * @throws SubaccountsResponseException If the request was unsuccessful. This could be for the following reasons:
+	 * <ul>
+	 *   <li><b>401</b>: Credential is missing or invalid.</li>
+	 * 	 <li><b>403</b>: Action is forbidden.</li>
+	 * 	 <li><b>404</b>: The account ID provided does not exist in our system or you do not have access.</li>
+	 * </ul>
 	 */
 	public ListSubaccountsResponse listSubaccounts() {
 		return listSubaccounts.execute(null);
@@ -86,6 +109,13 @@ public class SubaccountsClient {
 	 * @param subaccountApiKey Unique ID of the subaccount to retrieve.
 	 *
 	 * @return Details of the requested subaccount.
+	 *
+	 * @throws SubaccountsResponseException If the request was unsuccessful. This could be for the following reasons:
+	 * <ul>
+	 *   <li><b>401</b>: Credential is missing or invalid.</li>
+	 * 	 <li><b>403</b>: Action is forbidden.</li>
+	 * 	 <li><b>404</b>: The account ID provided does not exist in our system or you do not have access.</li>
+	 * </ul>
 	 */
 	public Account getSubaccount(String subaccountApiKey) {
 		return getSubaccount.execute(AbstractTransfer.validateAccountKey(subaccountApiKey, "Subaccount"));
@@ -96,6 +126,13 @@ public class SubaccountsClient {
 	 *
 	 * @return The list of credit transfers.
 	 * @see #listCreditTransfers(ListTransfersFilter)
+	 *
+	 * @throws SubaccountsResponseException If the request was unsuccessful. This could be for the following reasons:
+	 * <ul>
+	 *   <li><b>401</b>: Credential is missing or invalid.</li>
+	 * 	 <li><b>403</b>: Action is forbidden.</li>
+	 * 	 <li><b>404</b>: The account ID provided does not exist in our system or you do not have access.</li>
+	 * </ul>
 	 */
 	public List<MoneyTransfer> listCreditTransfers() {
 		return listCreditTransfers(ListTransfersFilter.builder().build());
@@ -108,6 +145,13 @@ public class SubaccountsClient {
 	 *
 	 * @return The list of credit transfers.
 	 * @see #listCreditTransfers()
+	 *
+	 * @throws SubaccountsResponseException If the request was unsuccessful. This could be for the following reasons:
+	 * <ul>
+	 *   <li><b>401</b>: Credential is missing or invalid.</li>
+	 * 	 <li><b>403</b>: Action is forbidden.</li>
+	 * 	 <li><b>404</b>: The account ID provided does not exist in our system or you do not have access.</li>
+	 * </ul>
 	 */
 	public List<MoneyTransfer> listCreditTransfers(ListTransfersFilter filter) {
 		return listCreditTransfers.execute(requireRequest(filter)).getCreditTransfers();
@@ -118,6 +162,13 @@ public class SubaccountsClient {
 	 *
 	 * @return The list of balance transfers.
 	 * @see #listBalanceTransfers(ListTransfersFilter)
+	 *
+	 * @throws SubaccountsResponseException If the request was unsuccessful. This could be for the following reasons:
+	 * <ul>
+	 *   <li><b>401</b>: Credential is missing or invalid.</li>
+	 * 	 <li><b>403</b>: Action is forbidden.</li>
+	 * 	 <li><b>404</b>: The account ID provided does not exist in our system or you do not have access.</li>
+	 * </ul>
 	 */
 	public List<MoneyTransfer> listBalanceTransfers() {
 		return listBalanceTransfers(ListTransfersFilter.builder().build());
@@ -130,6 +181,13 @@ public class SubaccountsClient {
 	 *
 	 * @return The list of balance transfers.
 	 * @see #listBalanceTransfers()
+	 *
+	 * @throws SubaccountsResponseException If the request was unsuccessful. This could be for the following reasons:
+	 * <ul>
+	 *   <li><b>401</b>: Credential is missing or invalid.</li>
+	 * 	 <li><b>403</b>: Action is forbidden.</li>
+	 * 	 <li><b>404</b>: The account ID provided does not exist in our system or you do not have access.</li>
+	 * </ul>
 	 */
 	public List<MoneyTransfer> listBalanceTransfers(ListTransfersFilter filter) {
 		return listBalanceTransfers.execute(requireRequest(filter)).getBalanceTransfers();
@@ -141,6 +199,14 @@ public class SubaccountsClient {
 	 * @param request Properties of the credit transfer.
 	 *
 	 * @return Details of the transfer if successful.
+	 *
+	 * @throws SubaccountsResponseException If the request was unsuccessful. This could be for the following reasons:
+	 * <ul>
+	 *   <li><b>401</b>: Credential is missing or invalid.</li>
+	 * 	 <li><b>403</b>: Action is forbidden.</li>
+	 * 	 <li><b>404</b>: The account ID provided does not exist in our system or you do not have access.</li>
+	 * 	 <li><b>422</b>: Validation error.</li>
+	 * </ul>
 	 */
 	public MoneyTransfer transferCredit(MoneyTransfer request) {
 		return transferCredit.execute(requireRequest(request));
@@ -152,6 +218,14 @@ public class SubaccountsClient {
 	 * @param request Properties of the balance transfer.
 	 *
 	 * @return Details of the transfer if successful.
+	 *
+	 * @throws SubaccountsResponseException If the request was unsuccessful. This could be for the following reasons:
+	 * <ul>
+	 *   <li><b>401</b>: Credential is missing or invalid.</li>
+	 * 	 <li><b>403</b>: Action is forbidden.</li>
+	 * 	 <li><b>404</b>: The account ID provided does not exist in our system or you do not have access.</li>
+	 * 	 <li><b>422</b>: Validation error.</li>
+	 * </ul>
 	 */
 	public MoneyTransfer transferBalance(MoneyTransfer request) {
 		return transferBalance.execute(requireRequest(request));
@@ -163,6 +237,15 @@ public class SubaccountsClient {
 	 * @param request Properties of the number transfer.
 	 *
 	 * @return Details of the transfer if successful.
+	 *
+	 * @throws SubaccountsResponseException If the request was unsuccessful. This could be for the following reasons:
+	 * <ul>
+	 *   <li><b>401</b>: Credential is missing or invalid.</li>
+	 * 	 <li><b>403</b>: Action is forbidden.</li>
+	 * 	 <li><b>404</b>: The account ID provided does not exist in our system or you do not have access.</li>
+	 * 	 <li><b>409</b>: Transfer conflict.</li>
+	 * 	 <li><b>422</b>: Validation error.</li>
+	 * </ul>
 	 */
 	public NumberTransfer transferNumber(NumberTransfer request) {
 		return transferNumber.execute(requireRequest(request));
