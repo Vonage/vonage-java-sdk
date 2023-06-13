@@ -15,6 +15,7 @@
  */
 package com.vonage.client.subaccounts;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.VonageUnexpectedException;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -92,5 +93,13 @@ public class NumberTransferTest {
 		assertNull(response.getTo());
 		assertNull(response.getCountry());
 		assertNull(response.getNumber());
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void triggerJsonProcessingException() {
+		class SelfRefrencing extends AbstractTransfer {
+			@JsonProperty("self") SelfRefrencing self = this;
+		}
+		new SelfRefrencing().toJson();
 	}
 }

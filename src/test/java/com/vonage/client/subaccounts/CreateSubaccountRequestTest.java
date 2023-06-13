@@ -15,8 +15,10 @@
  */
 package com.vonage.client.subaccounts;
 
-import org.junit.Test;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.VonageUnexpectedException;
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class CreateSubaccountRequestTest {
 	
@@ -55,5 +57,17 @@ public class CreateSubaccountRequestTest {
 	public void testConstructShortSecret() {
 		CreateSubaccountRequest.Builder builder = CreateSubaccountRequest.builder().name("Department C");
 		assertThrows(IllegalArgumentException.class, () -> builder.secret("  9awer7yrghgp68 ").build());
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void triggerJsonProcessingException() {
+		class SelfRefrencing extends CreateSubaccountRequest {
+			@JsonProperty("self") SelfRefrencing self = this;
+
+			SelfRefrencing(Builder builder) {
+				super(builder);
+			}
+		}
+		new SelfRefrencing(CreateSubaccountRequest.builder().name("Name")).toJson();
 	}
 }

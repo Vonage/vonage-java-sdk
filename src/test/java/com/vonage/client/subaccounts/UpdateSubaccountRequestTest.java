@@ -15,6 +15,8 @@
  */
 package com.vonage.client.subaccounts;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.VonageUnexpectedException;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -23,8 +25,7 @@ public class UpdateSubaccountRequestTest {
 	@Test
 	public void testSerializeAllParameters() {
 		String name = "Subaccount department A";
-		Boolean usePrimaryAccountBalance = false;
-		Boolean suspended = true;
+		boolean usePrimaryAccountBalance = false, suspended = true;
 		UpdateSubaccountRequest request = UpdateSubaccountRequest.builder("acc6111f")
 				.name(name).usePrimaryAccountBalance(usePrimaryAccountBalance)
 				.suspended(suspended).build();
@@ -51,5 +52,17 @@ public class UpdateSubaccountRequestTest {
 		assertThrows(IllegalArgumentException.class, () ->
 				UpdateSubaccountRequest.builder("        ").build()
 		);
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void triggerJsonProcessingException() {
+		class SelfRefrencing extends UpdateSubaccountRequest {
+			@JsonProperty("self") SelfRefrencing self = this;
+
+			SelfRefrencing(Builder builder) {
+				super(builder);
+			}
+		}
+		new SelfRefrencing(UpdateSubaccountRequest.builder("a1b2c3d4")).toJson();
 	}
 }
