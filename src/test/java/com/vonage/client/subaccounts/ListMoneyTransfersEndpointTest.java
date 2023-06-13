@@ -30,14 +30,14 @@ import org.junit.Test;
 import java.time.Instant;
 import java.util.List;
 
-public class ListBalanceTransfersEndpointTest {
+public class ListMoneyTransfersEndpointTest {
 	final String apiKey = "a1b2c3d4", apiSecret = "1234567890abcdef";
 	final AuthMethod authMethod = new TokenAuthMethod(apiKey, apiSecret);
-	ListBalanceTransfersEndpoint endpoint;
+	ListMoneyTransfersEndpoint endpoint;
 
 	@Before
 	public void setUp() {
-		endpoint = new ListBalanceTransfersEndpoint(new HttpWrapper(authMethod));
+		endpoint = new ListMoneyTransfersEndpoint(new HttpWrapper(authMethod), "kudos");
 	}
 	
 	@Test
@@ -57,7 +57,7 @@ public class ListBalanceTransfersEndpointTest {
 				.subaccounts(sub1, sub2, sub1).build();
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("GET", builder.getMethod());
-		String expectedUri = "https://api.nexmo.com/accounts/"+apiKey+"/balance-transfers?" +
+		String expectedUri = "https://api.nexmo.com/accounts/"+apiKey+"/kudos-transfers?" +
 				"start_date=2022-06-01T08%3A00%3A00Z&end_date=2023-06-08T09%3A01%3A40Z" +
 				"&subaccount=" + sub1 + "&subaccount=" + sub2;
 		assertEquals(expectedUri, builder.build().getURI().toString());
@@ -73,8 +73,8 @@ public class ListBalanceTransfersEndpointTest {
 	public void testCustomUri() throws Exception {
 		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build(), authMethod);
-		endpoint = new ListBalanceTransfersEndpoint(wrapper);
-		String expectedUri = baseUri + "/accounts/"+apiKey+"/balance-transfers?start_date=1970-01-01T00%3A00%3A00Z";
+		endpoint = new ListMoneyTransfersEndpoint(wrapper, "point");
+		String expectedUri = baseUri + "/accounts/"+apiKey+"/point-transfers?start_date=1970-01-01T00%3A00%3A00Z";
 		ListTransfersFilter request = ListTransfersFilter.builder().build();
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(1, builder.getParameters().size());

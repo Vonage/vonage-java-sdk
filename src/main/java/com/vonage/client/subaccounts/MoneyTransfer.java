@@ -23,23 +23,31 @@ import java.time.Instant;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * Represents a credit or balance transfer between accounts.
+ */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-abstract class AbstractMoneyTransfer extends AbstractTransfer {
+public class MoneyTransfer extends AbstractTransfer {
 	private UUID id;
 	private Instant createdAt;
 	private BigDecimal amount;
 	private String reference;
 
-	protected AbstractMoneyTransfer() {
+	protected MoneyTransfer() {
 	}
 
-	AbstractMoneyTransfer(Builder<?, ?> builder) {
+	protected MoneyTransfer(Builder builder) {
 		super(builder);
 		amount = Objects.requireNonNull(builder.amount, "Amount is required.");
 		reference = builder.reference;
 	}
 
+	/**
+	 * Unique ID of the transfer.
+	 *
+	 * @return The transfer ID.
+	 */
 	@JsonProperty("id")
 	public UUID getId() {
 		return id;
@@ -75,8 +83,28 @@ abstract class AbstractMoneyTransfer extends AbstractTransfer {
 		return reference;
 	}
 
-	@SuppressWarnings("unchecked")
-	protected static abstract class Builder<T extends AbstractMoneyTransfer, B extends Builder<? extends T, ? extends B>> extends AbstractTransfer.Builder<T, B> {
+	/**
+	 * Creates an instance of this class from a JSON payload.
+	 *
+	 * @param json The JSON string to parse.
+	 * @return An instance of this class with the fields populated, if present.
+	 */
+	protected static MoneyTransfer fromJson(String json) {
+		MoneyTransfer transfer = new MoneyTransfer();
+		transfer.updateFromJson(json);
+		return transfer;
+	}
+
+	/**
+	 * Entry point for constructing an instance of this class.
+	 *
+	 * @return A new Builder.
+	 */
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	public static class Builder extends AbstractTransfer.Builder<MoneyTransfer, Builder> {
 		private BigDecimal amount;
 		private String from, to, reference;
 	
@@ -89,9 +117,9 @@ abstract class AbstractMoneyTransfer extends AbstractTransfer {
 		 *
 		 * @return This builder.
 		 */
-		public B amount(BigDecimal amount) {
+		public Builder amount(BigDecimal amount) {
 			this.amount = amount;
-			return (B) this;
+			return this;
 		}
 
 		/**
@@ -101,7 +129,7 @@ abstract class AbstractMoneyTransfer extends AbstractTransfer {
 		 *
 		 * @return This builder.
 		 */
-		public B amount(double amount) {
+		public Builder amount(double amount) {
 			return amount(BigDecimal.valueOf(amount));
 		}
 
@@ -112,9 +140,18 @@ abstract class AbstractMoneyTransfer extends AbstractTransfer {
 		 *
 		 * @return This builder.
 		 */
-		public B reference(String reference) {
+		public Builder reference(String reference) {
 			this.reference = reference;
-			return (B) this;
+			return this;
+		}
+
+		/**
+		 * Builds the {@linkplain MoneyTransfer}.
+		 *
+		 * @return An instance of MoneyTransfer, populated with all fields from this builder.
+		 */
+		public MoneyTransfer build() {
+			return new MoneyTransfer(this);
 		}
 	}
 

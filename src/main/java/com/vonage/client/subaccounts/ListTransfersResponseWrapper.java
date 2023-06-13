@@ -33,17 +33,17 @@ class ListTransfersResponseWrapper {
 
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	private static final class Embedded {
-		@JsonProperty("balance_transfers") private List<BalanceTransfer> balanceTransfers;
-		@JsonProperty("credit_transfers") private List<CreditTransfer> creditTransfers;
+		@JsonProperty("balance_transfers") private List<MoneyTransfer> balanceTransfers;
+		@JsonProperty("credit_transfers") private List<MoneyTransfer> creditTransfers;
 	}
 
 	@JsonIgnore
-	public List<BalanceTransfer> getBalanceTransfers() {
+	public List<MoneyTransfer> getBalanceTransfers() {
 		return embedded != null ? embedded.balanceTransfers : null;
 	}
 
 	@JsonIgnore
-	public List<CreditTransfer> getCreditTransfers() {
+	public List<MoneyTransfer> getCreditTransfers() {
 		return embedded != null ? embedded.creditTransfers : null;
 	}
 

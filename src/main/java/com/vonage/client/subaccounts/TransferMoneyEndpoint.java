@@ -17,27 +17,21 @@ package com.vonage.client.subaccounts;
 
 import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
-import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 
-class TransferMoneyEndpoint<T extends AbstractMoneyTransfer> extends AbstractMethod<T, T> {
+class TransferMoneyEndpoint extends AbstractMethod<MoneyTransfer, MoneyTransfer> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
-	private static final String PATH = "/accounts/%s/%s-transfers";
-	private T cachedTransfer;
-	private final String transferName;
-	private final Class<T> transferType;
+	private MoneyTransfer cachedTransfer;
+	private final String path;
 
-	TransferMoneyEndpoint(HttpWrapper httpWrapper, Class<T> transferType) {
+	TransferMoneyEndpoint(HttpWrapper httpWrapper, String transferName) {
 		super(httpWrapper);
-		String className = (this.transferType = transferType).getSimpleName();
-		int transferIndex = className.indexOf("Transfer");
-		transferName = className.substring(0, transferIndex > 0 ? transferIndex : className.length()).toLowerCase();
+		path = "/accounts/%s/"+transferName+"-transfers";
 	}
 
 	@Override
@@ -46,9 +40,8 @@ class TransferMoneyEndpoint<T extends AbstractMoneyTransfer> extends AbstractMet
 	}
 
 	@Override
-	public RequestBuilder makeRequest(T request) {
-		String path = String.format(PATH, getApplicationIdOrApiKey(), transferName);
-		String uri = httpWrapper.getHttpConfig().getApiBaseUri() + path;
+	public RequestBuilder makeRequest(MoneyTransfer request) {
+		String uri = httpWrapper.getHttpConfig().getApiBaseUri() + String.format(path, getApplicationIdOrApiKey());
 		return RequestBuilder.post(uri)
 				.setHeader("Content-Type", "application/json")
 				.setHeader("Accept", "application/json")
@@ -56,7 +49,7 @@ class TransferMoneyEndpoint<T extends AbstractMoneyTransfer> extends AbstractMet
 	}
 
 	@Override
-	public T parseResponse(HttpResponse response) throws IOException {
+	public MoneyTransfer parseResponse(HttpResponse response) throws IOException {
 		try {
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode >= 200 && statusCode < 300) {
@@ -66,17 +59,12 @@ class TransferMoneyEndpoint<T extends AbstractMoneyTransfer> extends AbstractMet
 					return cachedTransfer;
 				}
 				else {
-					T fresh = transferType.getConstructor().newInstance();
-					fresh.updateFromJson(json);
-					return fresh;
+					return MoneyTransfer.fromJson(json);
 				}
 			}
 			else {
 				throw SubaccountsResponseException.fromHttpResponse(response);
 			}
-		}
-		catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException ex) {
-			throw new VonageUnexpectedException(ex);
 		}
 		finally {
 			cachedTransfer = null;

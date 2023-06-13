@@ -24,10 +24,8 @@ public class SubaccountsClient {
 	final UpdateSubaccountEndpoint updateSubaccount;
 	final ListSubaccountsEndpoint listSubaccounts;
 	final GetSubaccountEndpoint getSubaccount;
-	final ListCreditTransfersEndpoint listCreditTransfers;
-	final ListBalanceTransfersEndpoint listBalanceTransfers;
-	final TransferMoneyEndpoint<CreditTransfer> transferCredit;
-	final TransferMoneyEndpoint<BalanceTransfer> transferBalance;
+	final ListMoneyTransfersEndpoint listBalanceTransfers, listCreditTransfers;
+	final TransferMoneyEndpoint transferBalance, transferCredit;
 	final TransferNumberEndpoint transferNumber;
 
 	/**
@@ -40,10 +38,10 @@ public class SubaccountsClient {
 		updateSubaccount = new UpdateSubaccountEndpoint(httpWrapper);
 		listSubaccounts = new ListSubaccountsEndpoint(httpWrapper);
 		getSubaccount = new GetSubaccountEndpoint(httpWrapper);
-		listCreditTransfers = new ListCreditTransfersEndpoint(httpWrapper);
-		listBalanceTransfers = new ListBalanceTransfersEndpoint(httpWrapper);
-		transferCredit = new TransferMoneyEndpoint<>(httpWrapper, CreditTransfer.class);
-		transferBalance = new TransferMoneyEndpoint<>(httpWrapper, BalanceTransfer.class);
+		listBalanceTransfers = new ListMoneyTransfersEndpoint(httpWrapper, "balance");
+		listCreditTransfers = new ListMoneyTransfersEndpoint(httpWrapper, "credit");
+		transferBalance = new TransferMoneyEndpoint(httpWrapper, "balance");
+		transferCredit = new TransferMoneyEndpoint(httpWrapper, "credit");
 		transferNumber = new TransferNumberEndpoint(httpWrapper);
 	}
 
@@ -99,7 +97,7 @@ public class SubaccountsClient {
 	 * @return The list of credit transfers.
 	 * @see #listCreditTransfers(ListTransfersFilter)
 	 */
-	public List<CreditTransfer> listCreditTransfers() {
+	public List<MoneyTransfer> listCreditTransfers() {
 		return listCreditTransfers(ListTransfersFilter.builder().build());
 	}
 
@@ -111,8 +109,8 @@ public class SubaccountsClient {
 	 * @return The list of credit transfers.
 	 * @see #listCreditTransfers()
 	 */
-	public List<CreditTransfer> listCreditTransfers(ListTransfersFilter filter) {
-		return listCreditTransfers.execute(requireRequest(filter));
+	public List<MoneyTransfer> listCreditTransfers(ListTransfersFilter filter) {
+		return listCreditTransfers.execute(requireRequest(filter)).getCreditTransfers();
 	}
 
 	/**
@@ -121,7 +119,7 @@ public class SubaccountsClient {
 	 * @return The list of balance transfers.
 	 * @see #listBalanceTransfers(ListTransfersFilter)
 	 */
-	public List<BalanceTransfer> listBalanceTransfers() {
+	public List<MoneyTransfer> listBalanceTransfers() {
 		return listBalanceTransfers(ListTransfersFilter.builder().build());
 	}
 
@@ -133,8 +131,8 @@ public class SubaccountsClient {
 	 * @return The list of balance transfers.
 	 * @see #listBalanceTransfers()
 	 */
-	public List<BalanceTransfer> listBalanceTransfers(ListTransfersFilter filter) {
-		return listBalanceTransfers.execute(requireRequest(filter));
+	public List<MoneyTransfer> listBalanceTransfers(ListTransfersFilter filter) {
+		return listBalanceTransfers.execute(requireRequest(filter)).getBalanceTransfers();
 	}
 
 	/**
@@ -144,7 +142,7 @@ public class SubaccountsClient {
 	 *
 	 * @return Details of the transfer if successful.
 	 */
-	public CreditTransfer transferCredit(CreditTransfer request) {
+	public MoneyTransfer transferCredit(MoneyTransfer request) {
 		return transferCredit.execute(requireRequest(request));
 	}
 
@@ -155,7 +153,7 @@ public class SubaccountsClient {
 	 *
 	 * @return Details of the transfer if successful.
 	 */
-	public BalanceTransfer transferBalance(BalanceTransfer request) {
+	public MoneyTransfer transferBalance(MoneyTransfer request) {
 		return transferBalance.execute(requireRequest(request));
 	}
 

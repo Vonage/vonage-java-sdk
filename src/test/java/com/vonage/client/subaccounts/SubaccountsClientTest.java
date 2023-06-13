@@ -90,7 +90,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 		assertEquals(BigDecimal.valueOf(-101.68), response.getCreditLimit());
 	}
 
-	static void assertEqualsExpectedMoneyTransfer(AbstractMoneyTransfer response) {
+	static void assertEqualsExpectedMoneyTransfer(MoneyTransfer response) {
 		assertNotNull(response);
 		assertEquals(BigDecimal.valueOf(145.32), response.getAmount());
 		assertEquals("7c9738e6", response.getFrom());
@@ -150,7 +150,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 		ListTransfersFilter request = ListTransfersFilter.builder()
 				.endDate(Instant.now()).subaccounts(FROM_API_KEY).build();
 		String responseJson = "{\"_embedded\":{\"credit_transfers\":[{},"+MONEY_TRANSFER_RESPONSE_JSON+",{}]}}";
-		List<CreditTransfer> response = stubResponseAndGet(responseJson, () -> client.listCreditTransfers(request));
+		List<MoneyTransfer> response = stubResponseAndGet(responseJson, () -> client.listCreditTransfers(request));
 		assertNotNull(response);
 		assertEquals(3, response.size());
 		assertNotNull(response.get(0));
@@ -167,7 +167,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 		ListTransfersFilter request = ListTransfersFilter.builder()
 				.endDate(Instant.now()).subaccounts(FROM_API_KEY).build();
 		String responseJson = "{\"_embedded\":{\"balance_transfers\":[{},"+MONEY_TRANSFER_RESPONSE_JSON+",{}]}}";
-		List<BalanceTransfer> response = stubResponseAndGet(responseJson, () -> client.listBalanceTransfers(request));
+		List<MoneyTransfer> response = stubResponseAndGet(responseJson, () -> client.listBalanceTransfers(request));
 		assertNotNull(response);
 		assertEquals(3, response.size());
 		assertNotNull(response.get(0));
@@ -181,7 +181,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 
 	@Test
 	public void testTransferCredit() throws Exception {
-		CreditTransfer request = CreditTransfer.builder().amount(0.04).from(FROM_API_KEY).to(TO_API_KEY).build();
+		MoneyTransfer request = MoneyTransfer.builder().amount(0.04).from(FROM_API_KEY).to(TO_API_KEY).build();
 		assertEqualsExpectedMoneyTransfer(stubResponseAndGet(
 				MONEY_TRANSFER_RESPONSE_JSON, () -> client.transferCredit(request)
 		));
@@ -192,7 +192,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 
 	@Test
 	public void testTransferBalance() throws Exception {
-		BalanceTransfer request = BalanceTransfer.builder().amount(0.04).from(FROM_API_KEY).to(TO_API_KEY).build();
+		MoneyTransfer request = MoneyTransfer.builder().amount(0.04).from(FROM_API_KEY).to(TO_API_KEY).build();
 		assertEqualsExpectedMoneyTransfer(stubResponseAndGet(
 				MONEY_TRANSFER_RESPONSE_JSON, () -> client.transferBalance(request)
 		));

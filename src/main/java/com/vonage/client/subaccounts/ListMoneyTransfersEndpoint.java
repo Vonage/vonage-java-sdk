@@ -21,14 +21,14 @@ import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
-import java.util.List;
 
-class ListBalanceTransfersEndpoint extends AbstractMethod<ListTransfersFilter, List<BalanceTransfer>> {
+class ListMoneyTransfersEndpoint extends AbstractMethod<ListTransfersFilter, ListTransfersResponseWrapper> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {TokenAuthMethod.class};
-	private static final String PATH = "/accounts/%s/balance-transfers";
+	private final String path;
 
-	ListBalanceTransfersEndpoint(HttpWrapper httpWrapper) {
+	ListMoneyTransfersEndpoint(HttpWrapper httpWrapper, String transferName) {
 		super(httpWrapper);
+		path = "/accounts/%s/"+transferName+"-transfers";
 	}
 
 	@Override
@@ -38,18 +38,16 @@ class ListBalanceTransfersEndpoint extends AbstractMethod<ListTransfersFilter, L
 
 	@Override
 	public RequestBuilder makeRequest(ListTransfersFilter request) {
-		String path = String.format(PATH, getApplicationIdOrApiKey());
-		String uri = httpWrapper.getHttpConfig().getApiBaseUri() + path;
-		return request.addParams(RequestBuilder.get(uri)
-				.setHeader("Accept", "application/json"));
+		String uri = httpWrapper.getHttpConfig().getApiBaseUri() + String.format(path, getApplicationIdOrApiKey());
+		return request.addParams(RequestBuilder.get(uri).setHeader("Accept", "application/json"));
 	}
 
 	@Override
-	public List<BalanceTransfer> parseResponse(HttpResponse response) throws IOException {
+	public ListTransfersResponseWrapper parseResponse(HttpResponse response) throws IOException {
 		int statusCode = response.getStatusLine().getStatusCode();
 		if (statusCode >= 200 && statusCode < 300) {
 			String json = basicResponseHandler.handleResponse(response);
-			return ListTransfersResponseWrapper.fromJson(json).getBalanceTransfers();
+			return ListTransfersResponseWrapper.fromJson(json);
 		}
 		else {
 			throw SubaccountsResponseException.fromHttpResponse(response);

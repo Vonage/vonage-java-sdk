@@ -31,25 +31,11 @@ import java.util.UUID;
 public class TransferMoneyEndpointTest {
 	final String apiKey = "a1b2c3d4", apiSecret = "1234567890abcdef";
 	final AuthMethod authMethod = new TokenAuthMethod(apiKey, apiSecret);
-	TransferMoneyEndpoint<KudosTransfer> endpoint;
-
-	static final class KudosTransfer extends AbstractMoneyTransfer {
-		public KudosTransfer() {}
-
-		KudosTransfer(Builder builder) {
-			super(builder);
-		}
-
-		static class Builder extends AbstractMoneyTransfer.Builder<KudosTransfer, Builder> {
-			public KudosTransfer build() {
-				return new KudosTransfer(this);
-			}
-		}
-	}
+	TransferMoneyEndpoint endpoint;
 
 	@Before
 	public void setUp() {
-		endpoint = new TransferMoneyEndpoint<>(new HttpWrapper(authMethod), KudosTransfer.class);
+		endpoint = new TransferMoneyEndpoint(new HttpWrapper(authMethod), "kudos");
 	}
 	
 	@Test
@@ -61,7 +47,7 @@ public class TransferMoneyEndpointTest {
 	
 	@Test
 	public void testDefaultUri() throws Exception {
-		KudosTransfer request = new KudosTransfer.Builder()
+		MoneyTransfer request = new MoneyTransfer.Builder()
 				.from("7c9738e6").to("ad6dc56f")
 				.reference("This gets added to the audit log")
 				.amount(BigDecimal.valueOf(123.45)).build();
@@ -77,7 +63,7 @@ public class TransferMoneyEndpointTest {
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		UUID transferId = UUID.randomUUID();
 		String responseJson = expectedRequest.replace("{\"from", "{\"id\":\""+transferId+"\",\"from");
-		KudosTransfer parsed = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, responseJson));
+		MoneyTransfer parsed = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, responseJson));
 		assertEquals(request, parsed);
 		assertEquals(transferId, parsed.getId());
 	}
@@ -86,12 +72,12 @@ public class TransferMoneyEndpointTest {
 	public void testCustomUri() throws Exception {
 		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build(), authMethod);
-		endpoint = new TransferMoneyEndpoint<>(wrapper, KudosTransfer.class);
-		KudosTransfer request = new KudosTransfer.Builder()
+		endpoint = new TransferMoneyEndpoint(wrapper, "applause");
+		MoneyTransfer request = new MoneyTransfer.Builder()
 				.from("ad6dc56f").to("7c9738e6")
 				.amount(BigDecimal.valueOf(67.89)).build();
 
-		String expectedUri = baseUri + "/accounts/"+apiKey+"/kudos-transfers";
+		String expectedUri = baseUri + "/accounts/"+apiKey+"/applause-transfers";
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
@@ -105,7 +91,7 @@ public class TransferMoneyEndpointTest {
 	@Test
 	public void testEmptyResponse() throws Exception {
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, "{}");
-		KudosTransfer parsed = endpoint.parseResponse(mockResponse);
+		MoneyTransfer parsed = endpoint.parseResponse(mockResponse);
 		assertNotNull(parsed);
 		assertNull(parsed.getId());
 		assertNull(parsed.getCreatedAt());
@@ -115,22 +101,9 @@ public class TransferMoneyEndpointTest {
 		assertNull(parsed.getReference());
 	}
 
-	@Test(expected = VonageUnexpectedException.class)
-	public void testInvalidTransferClass() throws Exception {
-		class TransferBad extends AbstractMoneyTransfer {
-			TransferBad(boolean dummy) {}
-		}
-		TransferMoneyEndpoint<TransferBad> badEndpoint = new TransferMoneyEndpoint<>(
-				new HttpWrapper(authMethod), TransferBad.class
-		);
-		badEndpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, "{}"));
-	}
-
-	@Test
+	@Test(expected = VonageResponseParseException.class)
 	public void testInvalidResponse() {
-		String malformed = "{malformed]";
-		assertThrows(VonageResponseParseException.class, () -> BalanceTransfer.fromJson(malformed));
-		assertThrows(VonageResponseParseException.class, () -> CreditTransfer.fromJson(malformed));
+		MoneyTransfer.fromJson("{malformed]");
 	}
 
 	@Test(expected = SubaccountsResponseException.class)
