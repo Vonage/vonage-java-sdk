@@ -19,6 +19,6 @@
  * <a href=https://developer.vonage.com/en/proactive-connect/overview>Vonage Proactive Connect API</a>.
  * <br><br>
  *
- * @since 7.5.0
+ * @since 7.6.0
  */
 package com.vonage.client.proactiveconnect;

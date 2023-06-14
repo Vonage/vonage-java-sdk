@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 import java.time.Instant;
@@ -180,7 +181,7 @@ public class ContactsList {
 			mapper.readerForUpdating(this).readValue(json, getClass());
 		}
 		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to update "+getClass().getSimpleName()+" from json.", ex);
+			throw new VonageResponseParseException("Failed to update "+getClass().getSimpleName()+" from json.", ex);
 		}
 	}
 

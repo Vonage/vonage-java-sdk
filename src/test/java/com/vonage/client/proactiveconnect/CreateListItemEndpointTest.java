@@ -18,6 +18,7 @@ package com.vonage.client.proactiveconnect;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
+import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpResponseException;
@@ -29,6 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 import java.time.Instant;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -99,5 +101,13 @@ public class CreateListItemEndpointTest {
 	@Test(expected = HttpResponseException.class)
 	public void test500Response() throws Exception {
 		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, "{}"));
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void triggerJsonProcessingException() {
+		Map<String, Object> data = new HashMap<>(2);
+		ListItemRequestWrapper wrapper = new ListItemRequestWrapper(null, null, data);
+		data.put("self", wrapper);
+		wrapper.toJson();
 	}
 }

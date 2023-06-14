@@ -15,6 +15,8 @@
  */
 package com.vonage.client.proactiveconnect;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.VonageUnexpectedException;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -137,6 +139,19 @@ public class ContactsListTest {
 		assertNull(response.getItemsCount());
 		assertNull(response.getId());
 		assertNull(response.getSyncStatus());
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void triggerJsonProcessingException() {
+		class SelfRefrencing extends ContactsList {
+			@JsonProperty("self") SelfRefrencing self = this;
+		}
+		new SelfRefrencing().toJson();
+	}
+
+	@Test(expected = VonageResponseParseException.class)
+	public void testMalformedUpdateFromJson() {
+		new ContactsList().updateFromJson("{malformed]");
 	}
 
 	@Test
