@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import static com.vonage.client.messages.MessageType.*;
 import java.util.EnumSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Represents the services available for sending messages.
@@ -38,13 +39,25 @@ public enum Channel {
 	}
 
 	/**
-	 * This method is useful for determining which message types are supported
-	 * by this messaging service.
+	 * This method is useful for determining which message types are applicable to this messaging service.
 	 *
 	 * @return The Set of message types that this service can handle.
 	 */
 	public Set<MessageType> getSupportedMessageTypes() {
 		return supportedTypes;
+	}
+
+	/**
+	 * Similar to {@link #getSupportedMessageTypes()} but excludes message types used only for inbound / webhooks.
+	 *
+	 * @return The Set of message types that this service can send.
+	 * @since 7.5.0
+	 */
+	public Set<MessageType> getSupportedOutboundMessageTypes() {
+		return getSupportedMessageTypes().stream().filter(mt -> mt != MessageType.UNSUPPORTED &&
+				mt != MessageType.REPLY && mt != MessageType.ORDER &&
+				(this != Channel.MMS || mt != MessageType.TEXT)
+		).collect(Collectors.toSet());
 	}
 
 	@JsonCreator

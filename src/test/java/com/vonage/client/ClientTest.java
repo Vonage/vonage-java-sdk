@@ -33,12 +33,13 @@ import java.util.function.Supplier;
 
 public abstract class ClientTest<T> {
     protected String applicationId = UUID.randomUUID().toString();
+    protected String apiKey = "a1b2c3d4", apiSecret = "1234567890abcdef";
     protected HttpWrapper wrapper;
     protected T client;
 
     protected ClientTest() {
         wrapper = new HttpWrapper(
-                new TokenAuthMethod("not-an-api-key", "secret"),
+                new TokenAuthMethod(apiKey, apiSecret),
                 new JWTAuthMethod(applicationId, new byte[0])
         );
     }

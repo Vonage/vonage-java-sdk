@@ -18,10 +18,8 @@ package com.vonage.client.verify;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageResponseParseException;
-import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -60,6 +58,7 @@ public class VerifyResponse {
 
     /**
      * @return The network ID, if {@link #getStatus()} returns {@link VerifyStatus#NUMBER_BARRED}.
+     *
      * @since 7.1.0
      */
     @JsonProperty("network")
@@ -71,10 +70,9 @@ public class VerifyResponse {
         try {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(json, VerifyResponse.class);
-        } catch (JsonMappingException jme) {
+        }
+        catch (IOException jme) {
             throw new VonageResponseParseException("Failed to produce VerifyResponse from json.", jme);
-        } catch (IOException jpe) {
-            throw new VonageUnexpectedException("Failed to produce VerifyResponse from json.", jpe);
         }
     }
 }

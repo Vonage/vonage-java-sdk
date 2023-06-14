@@ -13,14 +13,14 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages.internal;
+package com.vonage.client.common;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
- * Convenience class for validating and sanitising phone numbers to be
- * compliant with the E164 format.
+ * Utility class for validating and sanitising phone numbers to be compliant with the E164 format.
  */
 public class E164 {
 	static final Pattern PATTERN = Pattern.compile("[1-9]\\d{6,14}");
@@ -41,6 +41,7 @@ public class E164 {
 		}
 	}
 
+	@JsonValue
 	@Override
 	public String toString() {
 		return number;

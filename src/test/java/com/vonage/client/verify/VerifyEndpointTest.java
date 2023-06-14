@@ -20,7 +20,7 @@ import com.vonage.client.HttpWrapper;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.List;
@@ -38,6 +38,21 @@ public class VerifyEndpointTest extends MethodTest<VerifyEndpoint> {
                 .length(4)
                 .locale(new Locale("en", "gb"))
                 .build();
+    }
+
+    @Test
+    public void testPinLengthBoundaries() {
+        VerifyRequest.Builder builder = VerifyRequest.builder(verifyRequest.getNumber(), verifyRequest.getBrand())
+                .senderId(verifyRequest.getFrom()).locale(verifyRequest.getLocale());
+
+        assertEquals(4, builder.length(4).build().getLength().intValue());
+        assertEquals(6, builder.length(6).build().getLength().intValue());
+        assertThrows(IllegalArgumentException.class, () -> builder.length(5).build());
+        builder.length(null);
+        assertThrows(IllegalArgumentException.class, () -> builder.pinCode("123").build());
+        assertThrows(IllegalArgumentException.class, () -> builder.pinCode("A1234567890").build());
+        assertEquals(4, builder.pinCode("abcd").build().getPinCode().length());
+        assertEquals(10, builder.pinCode("0123456789").build().getPinCode().length());
     }
 
     @Test
@@ -66,8 +81,18 @@ public class VerifyEndpointTest extends MethodTest<VerifyEndpoint> {
         assertParamMissing(params, "require_type");
         assertParamMissing(params, "country");
         assertParamMissing(params, "pin_expiry");
+        assertParamMissing(params, "pin_code");
         assertParamMissing(params, "next_event_wait");
         assertParamMissing(params, "workflow_id");
+        assertNull(verifyRequest.getLength());
+        assertNull(verifyRequest.getLocale());
+        assertNull(verifyRequest.getFrom());
+        assertNull(verifyRequest.getType());
+        assertNull(verifyRequest.getCountry());
+        assertNull(verifyRequest.getPinExpiry());
+        assertNull(verifyRequest.getPinCode());
+        assertNull(verifyRequest.getNextEventWait());
+        assertNull(verifyRequest.getWorkflow());
     }
 
     @Test
@@ -80,19 +105,23 @@ public class VerifyEndpointTest extends MethodTest<VerifyEndpoint> {
                 .type(VerifyRequest.LineType.LANDLINE)
                 .country("GB")
                 .pinExpiry(60)
+                .pinCode("a1b2C3")
                 .nextEventWait(90)
                 .workflow(VerifyRequest.Workflow.TTS_TTS)
                 .build();
 
+        assertNotNull(verifyRequest.toString());
+        assertNotNull(verifyRequest.getType());
         RequestBuilder request = method.makeRequest(verifyRequest);
         List<NameValuePair> params = request.getParameters();
+        assertParamMissing(params, "require_type");
+        assertParamMissing(params, "type");
         assertContainsParam(params, "number", "4477990090090");
         assertContainsParam(params, "brand", "Brand.com");
-
+        assertContainsParam(params, "pin_code", "a1b2C3");
         assertContainsParam(params, "code_length", "6");
         assertContainsParam(params, "sender_id", "VERIFICATION");
         assertContainsParam(params, "lg", "en-gb");
-        assertParamMissing(params, "require_type");
         assertContainsParam(params, "country", "GB");
         assertContainsParam(params, "pin_expiry", "60");
         assertContainsParam(params, "next_event_wait", "90");
@@ -110,9 +139,7 @@ public class VerifyEndpointTest extends MethodTest<VerifyEndpoint> {
         assertEquals("POST", builder.getMethod());
         assertEquals(ContentType.APPLICATION_FORM_URLENCODED.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
         assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-        assertEquals("https://api.nexmo.com/verify/json",
-                builder.build().getURI().toString()
-        );
+        assertEquals("https://api.nexmo.com/verify/json", builder.build().getURI().toString());
     }
 
     @Test

@@ -16,6 +16,9 @@
 package com.vonage.client;
 
 import com.vonage.client.auth.AuthMethod;
+import com.vonage.client.auth.JWTAuthMethod;
+import com.vonage.client.auth.SignatureAuthMethod;
+import com.vonage.client.auth.TokenAuthMethod;
 import com.vonage.client.logging.LoggingUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -131,6 +134,37 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
         }
 
         return httpWrapper.getAuthCollection().getAcceptableAuthMethod(acceptable);
+    }
+
+    /**
+     * Call {@linkplain #getAuthMethod(Class[])} with {@linkplain #getAcceptableAuthMethods()}.
+     *
+     * @return An AuthMethod created from the accepted auth methods.
+     * @throws VonageUnexpectedException If no AuthMethod is available.
+     */
+    protected AuthMethod getAuthMethod() throws VonageUnexpectedException {
+        return getAuthMethod(getAcceptableAuthMethods());
+    }
+
+    /**
+     * Utility method for obtaining the Application ID or API key from the auth method.
+     *
+     * @return The Application ID or API key.
+     * @throws VonageUnexpectedException If no AuthMethod is available.
+     * @throws IllegalStateException If the AuthMethod does not have an Application ID or API key.
+     */
+    protected String getApplicationIdOrApiKey() throws VonageUnexpectedException {
+        AuthMethod am = getAuthMethod();
+        if (am instanceof JWTAuthMethod) {
+            return ((JWTAuthMethod) am).getApplicationId();
+        }
+        if (am instanceof TokenAuthMethod) {
+            return ((TokenAuthMethod) am).getApiKey();
+        }
+        if (am instanceof SignatureAuthMethod) {
+            return ((SignatureAuthMethod) am).getApiKey();
+        }
+        throw new IllegalStateException(am.getClass().getSimpleName() + " does not have API key.");
     }
 
     public void setHttpClient(HttpClient client) {

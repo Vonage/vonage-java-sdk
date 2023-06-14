@@ -38,6 +38,10 @@ public class TokenAuthMethod implements AuthMethod {
         this.apiSecret = apiSecret;
     }
 
+    public String getApiKey() {
+        return apiKey;
+    }
+
     @Override
     public RequestBuilder apply(RequestBuilder request) {
         return request.addParameter("api_key", apiKey).addParameter("api_secret", apiSecret);
