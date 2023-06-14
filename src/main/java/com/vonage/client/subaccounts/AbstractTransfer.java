@@ -32,7 +32,7 @@ import java.util.Objects;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 class AbstractTransfer {
-	private String from, to;
+	private String from, to, primaryAccountId;
 
 	protected AbstractTransfer() {
 	}
@@ -48,6 +48,16 @@ class AbstractTransfer {
 			throw new IllegalArgumentException("Invalid '"+name+"' API key.");
 		}
 		return key;
+	}
+
+	/**
+	 * Primary account ID for this transaction.
+	 *
+	 * @return The primary account API key, or {@code null} if unknown.
+	 */
+	@JsonProperty("masterAccountId")
+	public String getPrimaryAccountId() {
+		return primaryAccountId;
 	}
 
 	/**

@@ -44,28 +44,33 @@ public class MoneyTransferTest {
 	
 	@Test
 	public void testFromJsonAllFields() {
-		UUID MoneyTransferId = UUID.randomUUID();
+		UUID transferId = UUID.randomUUID();
 		Instant createdAt = Instant.parse("2019-03-02T16:34:49Z");
 		BigDecimal amount = BigDecimal.valueOf(321.54);
 		String from = "7c9738e6";
 		String to = "ad6dc56f";
 		String reference = "This gets added to the audit log";
+		String masterAccountId = "e4e5d4a3";
 	
 		MoneyTransfer response = MoneyTransfer.fromJson("{\n" +
-				"\"id\":\""+MoneyTransferId+"\",\n" +
+				"\"_links\":{\"self\":{\n" +
+				"  \"href\":\"/accounts/"+masterAccountId+"/balance-transfers/"+transferId+"\"}},\n" +
+				"\"id\":\""+transferId+"\",\n" +
 				"\"created_at\":\""+createdAt+"\",\n" +
 				"\"amount\":"+amount+",\n" +
 				"\"from\":\""+from+"\",\n" +
 				"\"to\":\""+to+"\",\n" +
-				"\"reference\":\""+reference+"\"\n" +
+				"\"reference\":\""+reference+"\",\n" +
+				"\"masterAccountId\":\""+masterAccountId+"\"\n" +
 		"}");
-		
-		assertEquals(MoneyTransferId, response.getId());
+
+		assertEquals(transferId, response.getId());
 		assertEquals(createdAt, response.getCreatedAt());
 		assertEquals(amount, response.getAmount());
 		assertEquals(from, response.getFrom());
 		assertEquals(to, response.getTo());
 		assertEquals(reference, response.getReference());
+		assertEquals(masterAccountId, response.getPrimaryAccountId());
 	}
 	
 	@Test(expected = VonageUnexpectedException.class)
@@ -82,5 +87,6 @@ public class MoneyTransferTest {
 		assertNull(response.getFrom());
 		assertNull(response.getTo());
 		assertNull(response.getReference());
+		assertNull(response.getPrimaryAccountId());
 	}
 }

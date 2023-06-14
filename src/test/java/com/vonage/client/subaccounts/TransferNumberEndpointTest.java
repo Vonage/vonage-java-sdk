@@ -89,6 +89,7 @@ public class TransferNumberEndpointTest {
 		assertNull(parsed.getTo());
 		assertNull(parsed.getCountry());
 		assertNull(parsed.getNumber());
+		assertNull(parsed.getPrimaryAccountId());
 	}
 	
 	@Test(expected = VonageResponseParseException.class)
