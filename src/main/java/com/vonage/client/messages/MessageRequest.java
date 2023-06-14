@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
-import com.vonage.client.messages.internal.E164;
+import com.vonage.client.common.E164;
 import java.util.Objects;
 
 /**

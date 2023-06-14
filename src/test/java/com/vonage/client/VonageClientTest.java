@@ -338,6 +338,7 @@ public class VonageClientTest {
         assertNotNull(client.getRedactClient());
         assertNotNull(client.getSmsClient());
         assertNotNull(client.getSnsClient());
+        assertNotNull(client.getSubaccountsClient());
         assertNotNull(client.getVerifyClient());
         assertNotNull(client.getVerify2Client());
     }

@@ -53,9 +53,9 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 			invocation.run();
 			fail(failPrefix + "nothing.");
 		}
-		catch (VerifyResponseException mrx) {
-			assertEquals(expectedResponse, mrx);
-			assertEquals(expectedJson, mrx.toJson());
+		catch (VerifyResponseException ex) {
+			assertEquals(expectedResponse, ex);
+			assertEquals(expectedJson, ex.toJson());
 		}
 		catch (Throwable ex) {
 			fail(failPrefix + ex);

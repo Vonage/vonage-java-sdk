@@ -452,6 +452,57 @@ Get information about a specific secret associated with your account id:
 SecretResponse response = client.getAccountClient().getSecret(API_KEY, SECRET_ID);
 ```
 
+### Create a Subaccount
+
+Create a subaccount for separate usage tracking:
+```java
+Account subaccount = client.getSubaccountsClient().createSubaccount(
+		CreateSubaccountRequest.builder().name("Department A").build());
+```
+
+### Suspend a Subaccount
+
+Deactivate a subaccount:
+```java
+Account updated = client.getSubaccountsClient().updateSubaccount(
+		UpdateSubaccountRequest.builder(SUB_API_KEY).suspended(true).build());
+```
+
+### List subaccounts
+
+```java
+List<Account> subaccounts = client.getSubaccountsClient().listSubaccounts().getSubaccounts();
+```
+### Transfer a number between your accounts
+
+Change the (sub)account a number is associated with.
+```java
+NumberTransfer transfer = NumberTransfer.builder()
+        .from(SOURCE_API_KEY).to(TARGET_API_KEY)
+        .number(NUMBER).country(COUNTRY_CODE).build();
+client.getSubaccountsClient().transferNumber(transfer);
+```
+
+### Transfer balance to a subaccount
+
+If a subaccount does not share its balance with the primary account, you can transfer funds to it like so:
+```java
+MoneyTransfer transfer = MoneyTransfer.builder()
+        .from(VONAGE_API_KEY).to(SUB_API_KEY)
+        .amount(BigDecimal.valueOf(12.34))
+        .reference("Top up").build();
+client.getSubaccountsClient().transferBalance(transfer);
+```
+
+### List balance transfers to a subaccount since last week
+
+```java
+ListTransfersFilter filter = ListTransfersFilter.builder()
+        .startDate(Instant.now().minus(Duration.ofDays(7)))
+        .subaccount(SUB_API_KEY).build();
+List<MoneyTransfer> balanceTransfers =  client.getSubaccountsClient().listBalanceTransfers(filter);
+```
+
 ### Video API
 
 The Vonage Video API (formerly OpenTok) is currently in beta. You can try it out by using a beta version.
@@ -483,26 +534,27 @@ A: Currently no, but it is on the roadmap.
 
 The following is a list of Vonage APIs and whether the Java SDK provides support for them:
 
-| API                |  API Release Status  | Supported? |
-|--------------------|:--------------------:|:----------:|
-| Account            | General Availability |     ✅      |
-| Alerts             | General Availability |     ✅      |
-| Application        | General Availability |     ✅      |
-| Audit              |         Beta         |     ❌      |
-| Conversation       |         Beta         |     ❌      |
-| Dispatch           |         Beta         |     ❌      |
-| External Accounts  |         Beta         |     ❌      |
-| Media              |         Beta         |     ❌      |
-| Messages           | General Availability |     ✅      |
-| Number Insight     | General Availability |     ✅      |
-| Number Management  | General Availability |     ✅      |
-| Pricing            | General Availability |     ✅      |
-| Redact             |  Developer Preview   |     ✅      |
-| Reports            |         Beta         |     ❌      |
-| SMS                | General Availability |     ✅      |
-| Verify             | General Availability |     ✅      |
-| Voice              | General Availability |     ✅      |
-| Video              |         Beta         |     ☑️     |
+| API               |  API Release Status  | Supported? |
+|-------------------|:--------------------:|:----------:|
+| Account           | General Availability |     ✅      |
+| Alerts            | General Availability |     ✅      |
+| Application       | General Availability |     ✅      |
+| Audit             |         Beta         |     ❌      |
+| Conversation      |         Beta         |     ❌      |
+| Dispatch          |         Beta         |     ❌      |
+| External Accounts |         Beta         |     ❌      |
+| Media             |         Beta         |     ❌      |
+| Messages          | General Availability |     ✅      |
+| Number Insight    | General Availability |     ✅      |
+| Number Management | General Availability |     ✅      |
+| Pricing           | General Availability |     ✅      |
+| Redact            |  Developer Preview   |     ✅      |
+| Reports           |         Beta         |     ❌      |
+| SMS               | General Availability |     ✅      |
+| Subaccounts       | General Availability |     ✅      |
+| Verify            | General Availability |     ✅      |
+| Voice             | General Availability |     ✅      |
+| Video             |         Beta         |     ☑️     |
 
 
 ## License

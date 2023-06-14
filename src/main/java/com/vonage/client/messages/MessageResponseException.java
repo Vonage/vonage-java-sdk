@@ -15,6 +15,7 @@
  */
 package com.vonage.client.messages;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vonage.client.VonageApiResponseException;
@@ -40,6 +41,7 @@ public final class MessageResponseException extends VonageApiResponseException {
 	 * @param json The JSON string to parse.
 	 * @return An instance of this class with all known fields populated from the JSON payload, if present.
 	 */
+	@JsonCreator
 	public static MessageResponseException fromJson(String json) {
 		return fromJson(MessageResponseException.class, json);
 	}

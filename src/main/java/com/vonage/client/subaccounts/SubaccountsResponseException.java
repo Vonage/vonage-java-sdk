@@ -13,37 +13,24 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.verify2;
+package com.vonage.client.subaccounts;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.VonageApiResponseException;
 import org.apache.http.HttpResponse;
 import java.io.IOException;
-import java.util.UUID;
 
 /**
- * Response returned when verification fails (i.e. returns a non-2xx status code).
+ * Response returned when an error is encountered (i.e. the API returns a non-2xx status code).
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public final class VerifyResponseException extends VonageApiResponseException {
-	UUID requestId;
+public final class SubaccountsResponseException extends VonageApiResponseException {
 
 	void setStatusCode(int statusCode) {
 		this.statusCode = statusCode;
-	}
-
-	/**
-	 * The request ID, if the status code is 409 for a failed outbound request.
-	 *
-	 * @return The request ID, or {@code null} if not applicable / available.
-	 */
-	@JsonProperty("request_id")
-	public UUID getRequestId() {
-		return requestId;
 	}
 
 	/**
@@ -53,11 +40,11 @@ public final class VerifyResponseException extends VonageApiResponseException {
 	 * @return An instance of this class with all known fields populated from the JSON payload, if present.
 	 */
 	@JsonCreator
-	public static VerifyResponseException fromJson(String json) {
-		return fromJson(VerifyResponseException.class, json);
+	public static SubaccountsResponseException fromJson(String json) {
+		return fromJson(SubaccountsResponseException.class, json);
 	}
 
-	static VerifyResponseException fromHttpResponse(HttpResponse response) throws IOException {
-		return fromHttpResponse(VerifyResponseException.class, response);
+	static SubaccountsResponseException fromHttpResponse(HttpResponse response) throws IOException {
+		return fromHttpResponse(SubaccountsResponseException.class, response);
 	}
 }
