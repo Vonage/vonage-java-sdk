@@ -42,7 +42,7 @@ public class WorkflowStatus {
 	}
 
 	/**
-	 * Date & time this workflow was initiated.
+	 * Date and time this workflow was initiated.
 	 *
 	 * @return The initiation timestamp.
 	 */
