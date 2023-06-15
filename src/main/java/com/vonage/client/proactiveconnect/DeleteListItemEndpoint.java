@@ -39,12 +39,17 @@ class DeleteListItemEndpoint extends AbstractMethod<ListItemRequestWrapper, List
 	public RequestBuilder makeRequest(ListItemRequestWrapper wrapper) {
 		String path = String.format(PATH, wrapper.listId, wrapper.itemId);
 		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + path;
-		return RequestBuilder.delete(uri)
-				.setHeader("Accept", "application/json");
+		return RequestBuilder.delete(uri).setHeader("Accept", "application/json");
 	}
 
 	@Override
 	public ListItem parseResponse(HttpResponse response) throws IOException {
-		return ListItem.fromJson(basicResponseHandler.handleResponse(response));
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode >= 200 && statusCode < 300) {
+			return ListItem.fromJson(basicResponseHandler.handleResponse(response));
+		}
+		else {
+			throw ProactiveConnectResponseException.fromHttpResponse(response);
+		}
 	}
 }

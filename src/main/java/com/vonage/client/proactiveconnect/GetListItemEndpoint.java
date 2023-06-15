@@ -49,6 +49,12 @@ class GetListItemEndpoint extends AbstractMethod<ListItemRequestWrapper, ListIte
 
 	@Override
 	public ListItem parseResponse(HttpResponse response) throws IOException {
-		return ListItem.fromJson(basicResponseHandler.handleResponse(response));
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode >= 200 && statusCode < 300) {
+			return ListItem.fromJson(basicResponseHandler.handleResponse(response));
+		}
+		else {
+			throw ProactiveConnectResponseException.fromHttpResponse(response);
+		}
 	}
 }

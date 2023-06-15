@@ -15,10 +15,12 @@
  */
 package com.vonage.client.proactiveconnect;
 
-import com.vonage.client.*;
+import com.vonage.client.HttpConfig;
+import com.vonage.client.HttpWrapper;
+import com.vonage.client.TestUtils;
+import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import static org.junit.Assert.*;
@@ -88,12 +90,12 @@ public class GetListItemEndpointTest {
 		ListItem.fromJson("{malformed]");
 	}
 
-	@Test(expected = HttpResponseException.class)
+	@Test(expected = ProactiveConnectResponseException.class)
 	public void test400Response() throws Exception {
 		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, "{}"));
 	}
 	
-	@Test(expected = HttpResponseException.class)
+	@Test(expected = ProactiveConnectResponseException.class)
 	public void test500Response() throws Exception {
 		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, "{}"));
 	}

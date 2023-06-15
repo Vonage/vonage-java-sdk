@@ -17,10 +17,8 @@ package com.vonage.client.proactiveconnect;
 
 import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
-import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 
@@ -46,10 +44,8 @@ class FetchListEndpoint extends AbstractMethod<String, Void> {
 
 	@Override
 	public Void parseResponse(HttpResponse response) throws IOException {
-		StatusLine statusLine = response.getStatusLine();
-		if (statusLine.getStatusCode() > 300) {
-			// TODO
-			throw new VonageResponseParseException(statusLine.toString());//ProactiveConnectResponseException.fromHttpResponse(response);
+		if (response.getStatusLine().getStatusCode() > 300) {
+			throw ProactiveConnectResponseException.fromHttpResponse(response);
 		}
 		return null;
 	}

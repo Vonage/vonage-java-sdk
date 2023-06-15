@@ -44,8 +44,9 @@ class ClearListEndpoint extends AbstractMethod<String, Void> {
 
 	@Override
 	public Void parseResponse(HttpResponse response) throws IOException {
-		basicResponseHandler.handleResponse(response);
-		// TODO
+		if (response.getStatusLine().getStatusCode() > 300) {
+			throw ProactiveConnectResponseException.fromHttpResponse(response);
+		}
 		return null;
 	}
 }

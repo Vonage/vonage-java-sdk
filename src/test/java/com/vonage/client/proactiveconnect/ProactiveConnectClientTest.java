@@ -23,6 +23,7 @@ import org.junit.AfterClass;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.function.ThrowingRunnable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -129,6 +130,40 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 
 	public ProactiveConnectClientTest() {
 		client = new ProactiveConnectClient(wrapper);
+	}
+
+	void assert409ResponseException(ThrowingRunnable invocation) throws Exception {
+		int statusCode = 409;
+		ProactiveConnectResponseException expectedResponse = ProactiveConnectResponseException.fromJson(
+				"{\n" +
+				"   \"type\": \"https://developer.vonage.com/en/api-errors\",\n" +
+				"   \"title\": \"Request data did not validate\",\n" +
+				"   \"detail\": \"Bad Request\",\n" +
+				"   \"instance\": \"14225136-3501-4f29-8ee1-6b6301e9b64c\",\n" +
+				"   \"errors\": [\n" +
+				"      \"First problem\",\n" +
+				"      \"another problem.\"\n" +
+				"   ]\n" +
+				"}"
+		);
+
+		String expectedJson = expectedResponse.toJson();
+		assertEquals(212, expectedJson.length());
+		wrapper.setHttpClient(stubHttpClient(statusCode, expectedJson));
+		expectedResponse.setStatusCode(statusCode);
+		String failPrefix = "Expected "+expectedResponse.getClass().getSimpleName()+", but got ";
+
+		try {
+			invocation.run();
+			fail(failPrefix + "nothing.");
+		}
+		catch (ProactiveConnectResponseException ex) {
+			assertEquals(expectedResponse, ex);
+			assertEquals(expectedJson, ex.toJson());
+		}
+		catch (Throwable ex) {
+			fail(failPrefix + ex);
+		}
 	}
 
 	static void assertEqualsSampleHal(HalPageResponse response) {
@@ -261,15 +296,16 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 		assertNull(request.getSyncStatus());
 		assertNull(request.getItemsCount());
 		assertNotNull(request.getName());
+		assert409ResponseException(() -> client.createList(request));
 		stubResponseAndRun(SAMPLE_LIST_RESPONSE, () -> client.createList(request));
 		assertEqualsSampleList(request);
-		stubResponseAndAssertThrows(200, () -> client.createList(null), NullPointerException.class);
-		stubResponseAndAssertThrows(200, () ->
+		stubResponseAndAssertThrows(201, () -> client.createList(null), NullPointerException.class);
+		stubResponseAndAssertThrows(201, () ->
 				client.createList(ContactsList.builder(null).build()),
 				IllegalArgumentException.class
 		);
-		stubResponseAndAssertThrows(200, () ->
-						client.createList(ContactsList.builder("").build()),
+		stubResponseAndAssertThrows(201, () ->
+				client.createList(ContactsList.builder("").build()),
 				IllegalArgumentException.class
 		);
 	}
@@ -278,8 +314,9 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 	public void testGetList() throws Exception {
 		stubResponse(200, SAMPLE_LIST_RESPONSE);
 		assertEqualsSampleList(client.getList(SAMPLE_LIST_ID));
-		stubResponseAndAssertThrows( () -> client.getList(null), NullPointerException.class);
+		stubResponseAndAssertThrows(() -> client.getList(null), NullPointerException.class);
 		stubResponseAndAssertThrows(() -> client.getList("not_a/uuid"), IllegalArgumentException.class);
+		assert409ResponseException(() -> client.getList(SAMPLE_LIST_ID));
 	}
 	
 	@Test
@@ -305,24 +342,28 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 
 		stubResponseAndAssertThrows(() -> client.updateList(null, request), NullPointerException.class);
 		stubResponseAndAssertThrows(() -> client.updateList(SAMPLE_LIST_ID, null), NullPointerException.class);
+		assert409ResponseException(() -> client.updateList(SAMPLE_LIST_ID, request));
 	}
 	
 	@Test
 	public void testDeleteList() throws Exception {
 		assertEqualsSampleList(stubResponseAndGet(SAMPLE_LIST_RESPONSE, () -> client.deleteList(SAMPLE_LIST_ID)));
 		stubResponseAndAssertThrows(200, () -> client.deleteList("ID"), IllegalArgumentException.class);
+		assert409ResponseException(() -> client.deleteList(SAMPLE_LIST_ID));
 	}
 	
 	@Test
 	public void testClearList() throws Exception {
 		stubResponseAndRun(200, () -> client.clearList(SAMPLE_LIST_ID));
 		stubResponseAndAssertThrows(200, () -> client.clearList("123"), IllegalArgumentException.class);
+		assert409ResponseException(() -> client.clearList(SAMPLE_LIST_ID));
 	}
 	
 	@Test
 	public void testFetchList() throws Exception {
 		stubResponseAndRun(200, () -> client.fetchList(SAMPLE_LIST_ID));
 		stubResponseAndAssertThrows(200, () -> client.fetchList("1d"), IllegalArgumentException.class);
+		assert409ResponseException(() -> client.fetchList(SAMPLE_LIST_ID));
 	}
 	
 	@Test
@@ -346,6 +387,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 		assertNull(stubResponseAndGet("{}", client::listLists));
 		String emptyListsResponse = "{\"_embedded\":{\"lists\":[]}}";
 		assertEquals(0, stubResponseAndGet(emptyListsResponse, client::listLists).size());
+		assert409ResponseException(client::listLists);
 	}
 	
 	@Test
@@ -360,6 +402,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 		stubResponseAndAssertThrows(200, () ->
 				client.createListItem(SAMPLE_LIST_ID, null), NullPointerException.class
 		);
+		assert409ResponseException(() -> client.createListItem(SAMPLE_LIST_ID, data));
 	}
 	
 	@Test
@@ -376,6 +419,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 		stubResponseAndAssertThrows(SAMPLE_LIST_ITEM_RESPONSE, () ->
 				client.getListItem(null, null), NullPointerException.class
 		);
+		assert409ResponseException(() -> client.getListItem(SAMPLE_LIST_ID, SAMPLE_ITEM_ID));
 	}
 	
 	@Test
@@ -393,6 +437,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 		stubResponseAndAssertThrows(SAMPLE_LIST_ITEM_RESPONSE, () ->
 				client.updateListItem(SAMPLE_LIST_ID, SAMPLE_ITEM_ID, null), NullPointerException.class
 		);
+		assert409ResponseException(() -> client.updateListItem(SAMPLE_LIST_ID, SAMPLE_ITEM_ID, data));
 	}
 	
 	@Test
@@ -409,6 +454,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 		stubResponseAndAssertThrows(SAMPLE_LIST_ITEM_RESPONSE, () ->
 				client.deleteListItem(null, null), NullPointerException.class
 		);
+		assert409ResponseException(() -> client.deleteListItem(SAMPLE_LIST_ID, SAMPLE_ITEM_ID));
 	}
 	
 	@Test
@@ -434,6 +480,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 		stubResponseAndAssertThrows(responseBin, () ->
 				client.downloadListItems("not-an-id", SAMPLE_CSV_PATH), IllegalArgumentException.class
 		);
+		assert409ResponseException(() -> client.downloadListItems(SAMPLE_LIST_ID));
 	}
 	
 	@Test
@@ -454,6 +501,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 		stubResponseAndAssertThrows(json, () ->
 				client.uploadListItems(SAMPLE_LIST_ID, Paths.get("dummy")), VonageClientException.class
 		);
+		assert409ResponseException(() -> client.uploadListItems(SAMPLE_LIST_ID, SAMPLE_CSV_PATH));
 	}
 	
 	@Test
@@ -477,6 +525,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 		assertNull(stubResponseAndGet("{}", client::listItems));
 		String emptyListsResponse = "{\"_embedded\":{\"items\":[]}}";
 		assertEquals(0, stubResponseAndGet(emptyListsResponse, client::listItems).size());
+		assert409ResponseException(client::listItems);
 	}
 	
 	@Test
@@ -498,5 +547,6 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 		assertNull(stubResponseAndGet("{}", client::listEvents));
 		String emptyListsResponse = "{\"_embedded\":{\"events\":[]}}";
 		assertEquals(0, stubResponseAndGet(emptyListsResponse, client::listEvents).size());
+		assert409ResponseException(client::listEvents);
 	}
 }

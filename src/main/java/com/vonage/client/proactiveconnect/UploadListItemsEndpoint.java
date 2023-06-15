@@ -48,6 +48,12 @@ class UploadListItemsEndpoint extends AbstractMethod<UploadListItemsRequestWrapp
 
 	@Override
 	public UploadListItemsResponse parseResponse(HttpResponse response) throws IOException {
-		return UploadListItemsResponse.fromJson(basicResponseHandler.handleResponse(response));
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode >= 200 && statusCode < 300) {
+			return UploadListItemsResponse.fromJson(basicResponseHandler.handleResponse(response));
+		}
+		else {
+			throw ProactiveConnectResponseException.fromHttpResponse(response);
+		}
 	}
 }

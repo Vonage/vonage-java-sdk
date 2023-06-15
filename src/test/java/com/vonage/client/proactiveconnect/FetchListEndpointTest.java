@@ -62,12 +62,12 @@ public class FetchListEndpointTest {
 		assertEquals("POST", builder.getMethod());
 	}
 
-	@Test(expected = VonageResponseParseException.class)
+	@Test(expected = ProactiveConnectResponseException.class)
 	public void test400Response() throws Exception {
 		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, ""));
 	}
 	
-	@Test(expected = VonageResponseParseException.class)
+	@Test(expected = ProactiveConnectResponseException.class)
 	public void test500Response() throws Exception {
 		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
 	}

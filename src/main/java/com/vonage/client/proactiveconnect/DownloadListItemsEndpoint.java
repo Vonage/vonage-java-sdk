@@ -17,7 +17,6 @@ package com.vonage.client.proactiveconnect;
 
 import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
-import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -78,8 +77,9 @@ class DownloadListItemsEndpoint extends AbstractMethod<DownloadListItemsRequestW
 					return os.toByteArray();
 				}
 			}
-			// TODO
-			throw new VonageUnexpectedException(statusLine.toString());
+			else {
+				throw ProactiveConnectResponseException.fromHttpResponse(response);
+			}
 		}
 		finally {
 			cachedWrapper = null;

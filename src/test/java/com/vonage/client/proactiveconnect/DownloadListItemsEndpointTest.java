@@ -18,7 +18,6 @@ package com.vonage.client.proactiveconnect;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
-import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
@@ -84,7 +83,7 @@ public class DownloadListItemsEndpointTest {
 		assertEquals("GET", builder.getMethod());
 	}
 	
-	@Test(expected = VonageUnexpectedException.class)
+	@Test(expected = ProactiveConnectResponseException.class)
 	public void test500Response() throws Exception {
 		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
 	}

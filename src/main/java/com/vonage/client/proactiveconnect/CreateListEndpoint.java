@@ -27,7 +27,7 @@ import java.io.IOException;
 class CreateListEndpoint extends AbstractMethod<ContactsList, ContactsList> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/v0.1/bulk/lists";
-	private ContactsList contactsList;
+	private ContactsList cachedList;
 
 	CreateListEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
@@ -44,18 +44,29 @@ class CreateListEndpoint extends AbstractMethod<ContactsList, ContactsList> {
 		return RequestBuilder.post(uri)
 				.setHeader("Content-Type", "application/json")
 				.setHeader("Accept", "application/json")
-				.setEntity(new StringEntity((contactsList = request).toJson(), ContentType.APPLICATION_JSON));
+				.setEntity(new StringEntity((cachedList = request).toJson(), ContentType.APPLICATION_JSON));
 	}
 
 	@Override
 	public ContactsList parseResponse(HttpResponse response) throws IOException {
 		try {
-			String json = basicResponseHandler.handleResponse(response);
-			contactsList.updateFromJson(json);
-			return contactsList;
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode >= 200 && statusCode < 300) {
+				String json = basicResponseHandler.handleResponse(response);
+				if (cachedList != null) {
+					cachedList.updateFromJson(json);
+					return cachedList;
+				}
+				else {
+					return ContactsList.fromJson(json);
+				}
+			}
+			else {
+				throw ProactiveConnectResponseException.fromHttpResponse(response);
+			}
 		}
 		finally {
-			contactsList = null;
+			cachedList = null;
 		}
 	}
 }

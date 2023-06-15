@@ -45,6 +45,12 @@ class ListItemsEndpoint extends AbstractMethod<HalRequestWrapper, ListItemsRespo
 
 	@Override
 	public ListItemsResponse parseResponse(HttpResponse response) throws IOException {
-		return ListItemsResponse.fromJson(basicResponseHandler.handleResponse(response));
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode >= 200 && statusCode < 300) {
+			return ListItemsResponse.fromJson(basicResponseHandler.handleResponse(response));
+		}
+		else {
+			throw ProactiveConnectResponseException.fromHttpResponse(response);
+		}
 	}
 }

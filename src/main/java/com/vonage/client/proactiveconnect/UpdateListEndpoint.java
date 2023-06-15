@@ -19,9 +19,9 @@ import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 
 class UpdateListEndpoint extends AbstractMethod<UpdateListRequestWrapper, ContactsList> {
@@ -51,11 +51,17 @@ class UpdateListEndpoint extends AbstractMethod<UpdateListRequestWrapper, Contac
 	@Override
 	public ContactsList parseResponse(HttpResponse response) throws IOException {
 		try {
-			String json = basicResponseHandler.handleResponse(response);
-			cachedWrapper.request.updateFromJson(json);
-			assert cachedWrapper.request.getId() == null ||
-					cachedWrapper.request.getId().toString().equals(cachedWrapper.listId);
-			return cachedWrapper.request;
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode >= 200 && statusCode < 300) {
+				String json = basicResponseHandler.handleResponse(response);
+				cachedWrapper.request.updateFromJson(json);
+				assert cachedWrapper.request.getId() == null ||
+						cachedWrapper.request.getId().toString().equals(cachedWrapper.listId);
+				return cachedWrapper.request;
+			}
+			else {
+				throw ProactiveConnectResponseException.fromHttpResponse(response);
+			}
 		}
 		finally {
 			cachedWrapper = null;

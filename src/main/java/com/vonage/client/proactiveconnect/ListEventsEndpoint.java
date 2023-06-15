@@ -44,6 +44,12 @@ class ListEventsEndpoint extends AbstractMethod<HalRequestWrapper, ListEventsRes
 
 	@Override
 	public ListEventsResponse parseResponse(HttpResponse response) throws IOException {
-		return ListEventsResponse.fromJson(basicResponseHandler.handleResponse(response));
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode >= 200 && statusCode < 300) {
+			return ListEventsResponse.fromJson(basicResponseHandler.handleResponse(response));
+		}
+		else {
+			throw ProactiveConnectResponseException.fromHttpResponse(response);
+		}
 	}
 }

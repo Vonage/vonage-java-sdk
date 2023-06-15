@@ -20,7 +20,6 @@ import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -65,7 +64,7 @@ public class ClearListEndpointTest {
 		assertEquals("POST", builder.getMethod());
 	}
 	
-	@Test(expected = HttpResponseException.class)
+	@Test(expected = ProactiveConnectResponseException.class)
 	public void test500Response() throws Exception {
 		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, "{}"));
 	}

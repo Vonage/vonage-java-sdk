@@ -45,6 +45,12 @@ class GetListEndpoint extends AbstractMethod<String, ContactsList> {
 
 	@Override
 	public ContactsList parseResponse(HttpResponse response) throws IOException {
-		return ContactsList.fromJson(basicResponseHandler.handleResponse(response));
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode >= 200 && statusCode < 300) {
+			return ContactsList.fromJson(basicResponseHandler.handleResponse(response));
+		}
+		else {
+			throw ProactiveConnectResponseException.fromHttpResponse(response);
+		}
 	}
 }
