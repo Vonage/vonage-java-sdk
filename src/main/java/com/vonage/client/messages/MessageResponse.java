@@ -18,7 +18,7 @@ package com.vonage.client.messages;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.VonageResponseParseException;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -63,7 +63,7 @@ public class MessageResponse {
 			return mapper.readValue(json, MessageResponse.class);
 		}
 		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to produce MessageResponse from json.", ex);
+			throw new VonageResponseParseException("Failed to produce MessageResponse from json.", ex);
 		}
 	}
 }

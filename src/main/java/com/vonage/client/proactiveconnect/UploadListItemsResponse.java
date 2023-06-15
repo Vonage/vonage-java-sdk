@@ -18,7 +18,7 @@ package com.vonage.client.proactiveconnect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.VonageResponseParseException;
 import java.io.IOException;
 
 /**
@@ -73,7 +73,7 @@ public class UploadListItemsResponse {
 			return mapper.readValue(json, UploadListItemsResponse.class);
 		}
 		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to produce UploadListItemsResponse from json.", ex);
+			throw new VonageResponseParseException("Failed to produce UploadListItemsResponse from json.", ex);
 		}
 	}
 }

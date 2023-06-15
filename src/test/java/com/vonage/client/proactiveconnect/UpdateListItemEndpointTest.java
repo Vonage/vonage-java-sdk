@@ -16,10 +16,7 @@
 package com.vonage.client.proactiveconnect;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.HttpConfig;
-import com.vonage.client.HttpWrapper;
-import com.vonage.client.TestUtils;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.*;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpResponseException;
@@ -125,7 +122,7 @@ public class UpdateListItemEndpointTest {
 		assertNull(parsed.getListId());
 	}
 
-	@Test(expected = VonageUnexpectedException.class)
+	@Test(expected = VonageResponseParseException.class)
 	public void testInvalidResponse() {
 		ListItem.fromJson("{malformed]");
 	}

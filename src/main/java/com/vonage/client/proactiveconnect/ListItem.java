@@ -15,10 +15,12 @@
  */
 package com.vonage.client.proactiveconnect;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.VonageResponseParseException;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Map;
@@ -100,7 +102,7 @@ public class ListItem {
 			return mapper.readValue(json, ListItem.class);
 		}
 		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to produce ListItem from json.", ex);
+			throw new VonageResponseParseException("Failed to produce ListItem from json.", ex);
 		}
 	}
 }

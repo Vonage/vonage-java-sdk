@@ -198,7 +198,7 @@ public class ContactsList {
 			return mapper.readValue(json, ContactsList.class);
 		}
 		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to produce ContactsList from json.", ex);
+			throw new VonageResponseParseException("Failed to produce ContactsList from json.", ex);
 		}
 	}
 

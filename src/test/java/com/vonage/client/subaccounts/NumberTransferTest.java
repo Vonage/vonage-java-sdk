@@ -16,6 +16,7 @@
 package com.vonage.client.subaccounts;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.VonageUnexpectedException;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -81,7 +82,7 @@ public class NumberTransferTest {
 		assertEquals(number, response.getNumber());
 	}
 	
-	@Test(expected = VonageUnexpectedException.class)
+	@Test(expected = VonageResponseParseException.class)
 	public void testFromJsonInvalid() {
 		NumberTransfer.fromJson("{malformed]");
 	}

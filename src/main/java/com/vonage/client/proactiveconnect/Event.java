@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.VonageResponseParseException;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Map;
@@ -163,7 +163,7 @@ public class Event {
 			return mapper.readValue(json, Event.class);
 		}
 		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to produce Event from json.", ex);
+			throw new VonageResponseParseException("Failed to produce Event from json.", ex);
 		}
 	}
 }

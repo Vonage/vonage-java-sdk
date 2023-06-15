@@ -15,7 +15,7 @@
  */
 package com.vonage.client.proactiveconnect;
 
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.VonageResponseParseException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import org.junit.Test;
@@ -43,7 +43,7 @@ public class SyncStatusTest {
 		assertEquals(dirty, response.getDirty());
 	}
 	
-	@Test(expected = VonageUnexpectedException.class)
+	@Test(expected = VonageResponseParseException.class)
 	public void testFromJsonInvalid() {
 		SyncStatus.fromJson("{malformed]");
 	}

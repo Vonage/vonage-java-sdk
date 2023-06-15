@@ -15,9 +15,8 @@
  */
 package com.vonage.client.verify2;
 
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.VonageResponseParseException;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import java.util.UUID;
 
@@ -39,12 +38,12 @@ public class VerificationResponseTest {
 		assertNull(response.getRequestId());
 	}
 
-	@Test(expected = VonageUnexpectedException.class)
+	@Test(expected = VonageResponseParseException.class)
 	public void testConstructFromInvalidJson() {
 		VerificationResponse.fromJson("{_malformed_}");
 	}
 
-	@Test(expected = VonageUnexpectedException.class)
+	@Test(expected = VonageResponseParseException.class)
 	public void testConstructFromEmptyString() {
 		VerificationResponse.fromJson("");
 	}

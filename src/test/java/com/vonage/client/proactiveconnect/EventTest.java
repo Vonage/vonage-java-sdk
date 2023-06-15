@@ -16,7 +16,7 @@
 package com.vonage.client.proactiveconnect;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.VonageResponseParseException;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.time.Instant;
@@ -69,7 +69,7 @@ public class EventTest {
 		assertEquals(type, response.getType());
 	}
 	
-	@Test(expected = VonageUnexpectedException.class)
+	@Test(expected = VonageResponseParseException.class)
 	public void testFromJsonInvalid() {
 		Event.fromJson("{malformed]");
 	}
