@@ -504,7 +504,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 	@Test
 	public void testListItems() throws Exception {
 		stubResponse(HAL_TEMPLATE_RESPONSE + "  \"items\": [{},"+ SAMPLE_LIST_ITEM_RESPONSE +",{}]\n}  \n}");
-		ListItemsResponse parsed = client.listItems(2, 10);
+		ListItemsResponse parsed = client.listItems(SAMPLE_LIST_ID, 2, 10);
 		assertEqualsSampleHal(parsed);
 		List<ListItem> items = parsed.getItems();
 		assertNotNull(items);
@@ -512,17 +512,26 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 		assertNullListItem(items.get(0));
 		assertEqualsSampleListItem(items.get(1));
 		assertNullListItem(items.get(2));
-		assertNull(stubResponseAndGet("{}", () -> client.listItems(1, 1).getItems()));
+		assertNull(stubResponseAndGet("{}", () -> client.listItems(SAMPLE_LIST_ID, 1, 1).getItems()));
 		stubResponseAndAssertThrows("{}", () ->
-				client.listItems(1, 0), IllegalArgumentException.class
+				client.listItems(SAMPLE_LIST_ID, 1, 0), IllegalArgumentException.class
 		);
 		stubResponseAndAssertThrows("{}", () ->
-				client.listItems(0), IllegalArgumentException.class
+				client.listItems(SAMPLE_LIST_ID, 0), IllegalArgumentException.class
 		);
-		assertNull(stubResponseAndGet("{}", client::listItems));
+		stubResponseAndAssertThrows("{}", () ->
+				client.listItems(null), NullPointerException.class
+		);
+		stubResponseAndAssertThrows("{}", () ->
+				client.listItems(null, 3, 25), NullPointerException.class
+		);
+		stubResponseAndAssertThrows("{}", () ->
+				client.listItems(null, 2), NullPointerException.class
+		);
+		assertNull(stubResponseAndGet("{}", () -> client.listItems(SAMPLE_LIST_ID)));
 		String emptyListsResponse = "{\"_embedded\":{\"items\":[]}}";
-		assertEquals(0, stubResponseAndGet(emptyListsResponse, client::listItems).size());
-		assert409ResponseException(client::listItems);
+		assertEquals(0, stubResponseAndGet(emptyListsResponse, () -> client.listItems(SAMPLE_LIST_ID)).size());
+		assert409ResponseException(() -> client.listItems(SAMPLE_LIST_ID));
 	}
 	
 	@Test
