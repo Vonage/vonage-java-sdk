@@ -36,9 +36,10 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 	static final Instant
 		SAMPLE_CREATED_AT = Instant.parse("2022-06-19T17:59:28.085Z"),
 		SAMPLE_UPDATED_AT = Instant.now();
+	static final UUID
+			SAMPLE_LIST_ID = UUID.fromString("29192c4a-4058-49da-86c2-3e349d1065b7"),
+			SAMPLE_ITEM_ID = UUID.fromString("4cb98f71-a879-49f7-b5cf-2314353eb52c");
 	static final String
-		SAMPLE_LIST_ID = "29192c4a-4058-49da-86c2-3e349d1065b7",
-		SAMPLE_ITEM_ID = "4cb98f71-a879-49f7-b5cf-2314353eb52c",
 		BASE_URL = "https://api-eu.vonage.com/v0.1/bulk",
 		HAL_TEMPLATE_RESPONSE = "{\n" +
 			"   \"page_size\": 10,\n" +
@@ -222,14 +223,14 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 		assertFalse(syncStatus.getDataModified());
 		assertTrue(syncStatus.getMetadataModified());
 		assertFalse(syncStatus.getDirty());
-		assertEquals(UUID.fromString(SAMPLE_LIST_ID), parsed.getId());
+		assertEquals(SAMPLE_LIST_ID, parsed.getId());
 		assertEquals(500, parsed.getItemsCount().intValue());
 	}
 
 	static void assertEqualsSampleListItem(ListItem parsed) {
 		assertNotNull(parsed);
-		assertEquals(UUID.fromString(SAMPLE_ITEM_ID), parsed.getId());
-		assertEquals(UUID.fromString(SAMPLE_LIST_ID), parsed.getListId());
+		assertEquals(SAMPLE_ITEM_ID, parsed.getId());
+		assertEquals(SAMPLE_LIST_ID, parsed.getListId());
 		assertEquals(SAMPLE_CREATED_AT, parsed.getCreatedAt());
 		assertEquals(SAMPLE_UPDATED_AT, parsed.getUpdatedAt());
 		Map<String, ?> data = parsed.getData();
@@ -315,7 +316,6 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 		stubResponse(200, SAMPLE_LIST_RESPONSE);
 		assertEqualsSampleList(client.getList(SAMPLE_LIST_ID));
 		stubResponseAndAssertThrows(() -> client.getList(null), NullPointerException.class);
-		stubResponseAndAssertThrows(() -> client.getList("not_a/uuid"), IllegalArgumentException.class);
 		assert409ResponseException(() -> client.getList(SAMPLE_LIST_ID));
 	}
 	
@@ -347,22 +347,22 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 	
 	@Test
 	public void testDeleteList() throws Exception {
-		stubResponseAndRun(200, () -> client.deleteList(SAMPLE_LIST_ID));
-		stubResponseAndAssertThrows(200, () -> client.deleteList("ID"), IllegalArgumentException.class);
+		stubResponseAndRun(202, () -> client.deleteList(SAMPLE_LIST_ID));
+		stubResponseAndAssertThrows(202, () -> client.deleteList(null), NullPointerException.class);
 		assert409ResponseException(() -> client.deleteList(SAMPLE_LIST_ID));
 	}
 	
 	@Test
 	public void testClearList() throws Exception {
 		stubResponseAndRun(202, () -> client.clearList(SAMPLE_LIST_ID));
-		stubResponseAndAssertThrows(202, () -> client.clearList("123"), IllegalArgumentException.class);
+		stubResponseAndAssertThrows(202, () -> client.clearList(null), NullPointerException.class);
 		assert409ResponseException(() -> client.clearList(SAMPLE_LIST_ID));
 	}
 	
 	@Test
 	public void testFetchList() throws Exception {
 		stubResponseAndRun(202, () -> client.fetchList(SAMPLE_LIST_ID));
-		stubResponseAndAssertThrows(202, () -> client.fetchList("1d"), IllegalArgumentException.class);
+		stubResponseAndAssertThrows(202, () -> client.fetchList(null), NullPointerException.class);
 		assert409ResponseException(() -> client.fetchList(SAMPLE_LIST_ID));
 	}
 	
@@ -397,7 +397,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 				client.createListItem(SAMPLE_LIST_ID, data)
 		);
 		stubResponseAndAssertThrows(200, () ->
-				client.createListItem("ID", data), IllegalArgumentException.class
+				client.createListItem(null, data), NullPointerException.class
 		);
 		stubResponseAndAssertThrows(200, () ->
 				client.createListItem(SAMPLE_LIST_ID, null), NullPointerException.class
@@ -411,10 +411,10 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 				SAMPLE_LIST_ITEM_RESPONSE, () -> client.getListItem(SAMPLE_LIST_ID, SAMPLE_ITEM_ID)
 		));
 		stubResponseAndAssertThrows(SAMPLE_LIST_ITEM_RESPONSE, () ->
-				client.getListItem("abc", SAMPLE_ITEM_ID), IllegalArgumentException.class
+				client.getListItem(null, SAMPLE_ITEM_ID), NullPointerException.class
 		);
 		stubResponseAndAssertThrows(SAMPLE_LIST_ITEM_RESPONSE, () ->
-				client.getListItem(SAMPLE_LIST_ID, "abc"), IllegalArgumentException.class
+				client.getListItem(SAMPLE_LIST_ID, null), NullPointerException.class
 		);
 		stubResponseAndAssertThrows(SAMPLE_LIST_ITEM_RESPONSE, () ->
 				client.getListItem(null, null), NullPointerException.class
@@ -429,10 +429,10 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 				client.updateListItem(SAMPLE_LIST_ID, SAMPLE_ITEM_ID, data)
 		));
 		stubResponseAndAssertThrows(SAMPLE_LIST_ITEM_RESPONSE, () ->
-				client.updateListItem("1", SAMPLE_ITEM_ID, data), IllegalArgumentException.class
+				client.updateListItem(null, SAMPLE_ITEM_ID, data), NullPointerException.class
 		);
 		stubResponseAndAssertThrows(SAMPLE_LIST_ITEM_RESPONSE, () ->
-				client.updateListItem(SAMPLE_LIST_ID, "1", data), IllegalArgumentException.class
+				client.updateListItem(SAMPLE_LIST_ID, null, data), NullPointerException.class
 		);
 		stubResponseAndAssertThrows(SAMPLE_LIST_ITEM_RESPONSE, () ->
 				client.updateListItem(SAMPLE_LIST_ID, SAMPLE_ITEM_ID, null), NullPointerException.class
@@ -444,10 +444,10 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 	public void testDeleteListItem() throws Exception {
 		stubResponseAndRun(204, () -> client.deleteListItem(SAMPLE_LIST_ID, SAMPLE_ITEM_ID));
 		stubResponseAndAssertThrows(SAMPLE_LIST_ITEM_RESPONSE, () ->
-				client.deleteListItem("abc", SAMPLE_ITEM_ID), IllegalArgumentException.class
+				client.deleteListItem(null, SAMPLE_ITEM_ID), NullPointerException.class
 		);
 		stubResponseAndAssertThrows(SAMPLE_LIST_ITEM_RESPONSE, () ->
-				client.deleteListItem(SAMPLE_LIST_ID, "abc"), IllegalArgumentException.class
+				client.deleteListItem(SAMPLE_LIST_ID, null), NullPointerException.class
 		);
 		stubResponseAndAssertThrows(SAMPLE_LIST_ITEM_RESPONSE, () ->
 				client.deleteListItem(null, null), NullPointerException.class
@@ -461,7 +461,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 		String parsed = stubResponseAndGet(stub, () -> client.downloadListItems(SAMPLE_LIST_ID));
 		assertEquals(stub, parsed);
 		stubResponseAndAssertThrows(stub, () ->
-				client.downloadListItems("Id"), IllegalArgumentException.class
+				client.downloadListItems(null), NullPointerException.class
 		);
 		byte[] fileContents = Files.readAllBytes(SAMPLE_CSV_PATH);
 		assertEquals(0, fileContents.length);
@@ -475,7 +475,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 				client.downloadListItems(SAMPLE_LIST_ID, null), NullPointerException.class
 		);
 		stubResponseAndAssertThrows(stub, () ->
-				client.downloadListItems("not-an-id", SAMPLE_CSV_PATH), IllegalArgumentException.class
+				client.downloadListItems(null, SAMPLE_CSV_PATH), NullPointerException.class
 		);
 		assert409ResponseException(() -> client.downloadListItems(SAMPLE_LIST_ID));
 	}
@@ -490,7 +490,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 		assertEquals(11, response.getUpdated().intValue());
 		assertEquals(6, response.getDeleted().intValue());
 		stubResponseAndAssertThrows(json, () ->
-				client.uploadListItems("id", SAMPLE_CSV_PATH), IllegalArgumentException.class
+				client.uploadListItems(null, SAMPLE_CSV_PATH), NullPointerException.class
 		);
 		stubResponseAndAssertThrows(json, () ->
 				client.uploadListItems(SAMPLE_LIST_ID, null), NullPointerException.class

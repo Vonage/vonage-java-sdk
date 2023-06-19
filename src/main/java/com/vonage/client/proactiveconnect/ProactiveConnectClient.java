@@ -72,8 +72,8 @@ public class ProactiveConnectClient {
 		listEvents = new ListEventsEndpoint(httpWrapper);
 	}
 
-	private String validateUuid(String name, String uuid) {
-		return UUID.fromString(Objects.requireNonNull(uuid, name+" is required.")).toString();
+	private String validateUuid(String name, UUID uuid) {
+		return Objects.requireNonNull(uuid, name+" is required.").toString();
 	}
 
 	private <R extends HalPageResponse> R halRequest(AbstractMethod<HalRequestWrapper, R> endpoint, Integer page, Integer pageSize) {
@@ -104,7 +104,7 @@ public class ProactiveConnectClient {
 	 *
 	 * @return The list associated with the ID.
 	 */
-	public ContactsList getList(String listId) {
+	public ContactsList getList(UUID listId) {
 		return getList.execute(validateUuid("List ID", listId));
 	}
 
@@ -116,7 +116,7 @@ public class ProactiveConnectClient {
 	 *
 	 * @return The updated list.
 	 */
-	public ContactsList updateList(String listId, ContactsList updatedList) {
+	public ContactsList updateList(UUID listId, ContactsList updatedList) {
 		return updateList.execute(new UpdateListRequestWrapper(
 				validateUuid("List ID", listId),
 				Objects.requireNonNull(updatedList, "List structure is required.")
@@ -128,7 +128,7 @@ public class ProactiveConnectClient {
 	 *
 	 * @param listId Unique ID of the list.
 	 */
-	public void deleteList(String listId) {
+	public void deleteList(UUID listId) {
 		deleteList.execute(validateUuid("List ID", listId));
 	}
 
@@ -137,7 +137,7 @@ public class ProactiveConnectClient {
 	 *
 	 * @param listId Unique ID of the list.
 	 */
-	public void clearList(String listId) {
+	public void clearList(UUID listId) {
 		clearList.execute(validateUuid("List ID", listId));
 	}
 
@@ -146,7 +146,7 @@ public class ProactiveConnectClient {
 	 *
 	 * @param listId Unique ID of the list.
 	 */
-	public void fetchList(String listId) {
+	public void fetchList(UUID listId) {
 		fetchList.execute(validateUuid("List ID", listId));
 	}
 
@@ -191,7 +191,7 @@ public class ProactiveConnectClient {
 	 *
 	 * @return The created list item.
 	 */
-	public ListItem createListItem(String listId, Map<String, ?> data) {
+	public ListItem createListItem(UUID listId, Map<String, ?> data) {
 		return createListItem.execute(new ListItemRequestWrapper(
 				validateUuid("List ID", listId), null,
 				Objects.requireNonNull(data, "List data is required.")
@@ -206,7 +206,7 @@ public class ProactiveConnectClient {
 	 *
 	 * @return The requested list item.
 	 */
-	public ListItem getListItem(String listId, String itemId) {
+	public ListItem getListItem(UUID listId, UUID itemId) {
 		return getListItem.execute(new ListItemRequestWrapper(
 				validateUuid("List ID", listId), validateUuid("Item ID", itemId), null
 		));
@@ -221,7 +221,7 @@ public class ProactiveConnectClient {
 	 *
 	 * @return The updated list item.
 	 */
-	public ListItem updateListItem(String listId, String itemId, Map<String, ?> data) {
+	public ListItem updateListItem(UUID listId, UUID itemId, Map<String, ?> data) {
 		return updateListItem.execute(new ListItemRequestWrapper(
 				validateUuid("List ID", listId),
 				validateUuid("Item ID", itemId),
@@ -235,7 +235,7 @@ public class ProactiveConnectClient {
 	 * @param listId Unique ID of the list.
 	 * @param itemId Unique ID of the item.
 	 */
-	public void deleteListItem(String listId, String itemId) {
+	public void deleteListItem(UUID listId, UUID itemId) {
 		deleteListItem.execute(new ListItemRequestWrapper(
 				validateUuid("List ID", listId), validateUuid("Item ID", itemId), null
 		));
@@ -243,14 +243,14 @@ public class ProactiveConnectClient {
 
 	/**
 	 * Download all items in a list in CSV format.
-	 * Use {@link #downloadListItems(String, Path)} to save the CSV as a file.
+	 * Use {@link #downloadListItems(UUID, Path)} to save the CSV as a file.
 	 *
 	 * @param listId Unique ID of the list.
 	 *
 	 * @return The list items CSV file contents as a String.
-	 * @see #downloadListItems(String, Path)
+	 * @see #downloadListItems(UUID, Path)
 	 */
-	public String downloadListItems(String listId) {
+	public String downloadListItems(UUID listId) {
 		return new String(downloadListItems.execute(new DownloadListItemsRequestWrapper(
 				validateUuid("List ID", listId), null
 		)));
@@ -258,12 +258,12 @@ public class ProactiveConnectClient {
 
 	/**
 	 * Download all items in a list in CSV format.
-	 * Use {@link #downloadListItems(String)} to get the results as a raw binary.
+	 * Use {@link #downloadListItems(UUID)} to get the results as a raw binary.
 	 *
 	 * @param listId Unique ID of the list.
 	 * @param file Path of the file to write the downloaded results to.
 	 */
-	public void downloadListItems(String listId, Path file) {
+	public void downloadListItems(UUID listId, Path file) {
 		downloadListItems.execute(new DownloadListItemsRequestWrapper(
 				validateUuid("List ID", listId),
 				Objects.requireNonNull(file, "CSV file is required.")
@@ -278,7 +278,7 @@ public class ProactiveConnectClient {
 	 *
 	 * @return Result of the upload if successful.
 	 */
-	public UploadListItemsResponse uploadListItems(String listId, Path csvFile) {
+	public UploadListItemsResponse uploadListItems(UUID listId, Path csvFile) {
 		try {
 			byte[] data = Files.readAllBytes(csvFile);
 			return uploadListItems.execute(new UploadListItemsRequestWrapper(
