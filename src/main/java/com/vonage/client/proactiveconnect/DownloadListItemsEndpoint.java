@@ -19,7 +19,6 @@ import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -62,8 +61,7 @@ class DownloadListItemsEndpoint extends AbstractMethod<DownloadListItemsRequestW
 	@Override
 	public byte[] parseResponse(HttpResponse response) throws IOException {
 		try {
-			StatusLine statusLine = response.getStatusLine();
-			int statusCode = statusLine.getStatusCode();
+			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode >= 200 && statusCode < 300) {
 				if (cachedWrapper.file != null) {
 					try (OutputStream os = Files.newOutputStream(cachedWrapper.file)) {

@@ -54,7 +54,7 @@ public class DownloadListItemsEndpointTest {
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
 		byte[] parsed = endpoint.parseResponse(mockResponse);
 		assertNotNull(parsed);
-		assertEquals(25, parsed.length);
+		assertEquals(expectedResponse, new String(parsed));
 	}
 
 	@Test
@@ -66,10 +66,6 @@ public class DownloadListItemsEndpointTest {
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, "abc123DEF567");
 		assertNull(endpoint.parseResponse(mockResponse));
-	}
-
-	@Test
-	public void testResponseWithFile() throws Exception {
 	}
 
 	@Test
