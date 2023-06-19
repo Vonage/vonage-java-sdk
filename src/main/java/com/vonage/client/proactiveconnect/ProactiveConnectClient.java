@@ -92,6 +92,14 @@ public class ProactiveConnectClient {
 	 * @param list The new list's properties.
 	 *
 	 * @return The list that was created with updated metadata.
+	 *
+	 * @throws ProactiveConnectResponseException If the request was unsuccessful.
+	 * This could be for the following reasons:
+	 * <ul>
+	 *   <li><b>400</b>: Invalid request parameter or body.</li>
+	 * 	 <li><b>409</b>: Conflict.</li>
+	 * 	 <li><b>422</b>: Resource limit reached / exceeded.</li>
+	 * </ul>
 	 */
 	public ContactsList createList(ContactsList list) {
 		return createList.execute(Objects.requireNonNull(list, "List structure is required."));
@@ -103,6 +111,8 @@ public class ProactiveConnectClient {
 	 * @param listId Unique ID of the list.
 	 *
 	 * @return The list associated with the ID.
+	 *
+	 * @throws ProactiveConnectResponseException If the list does not exist or couldn't be retrieved.
 	 */
 	public ContactsList getList(UUID listId) {
 		return getList.execute(validateUuid("List ID", listId));
@@ -115,6 +125,14 @@ public class ProactiveConnectClient {
 	 * @param updatedList The new list properties.
 	 *
 	 * @return The updated list.
+	 *
+	 * @throws ProactiveConnectResponseException If the request was unsuccessful.
+	 * This could be for the following reasons:
+	 * <ul>
+	 *   <li><b>400</b>: Invalid request parameter or body.</li>
+	 * 	 <li><b>404</b>: List not found.</li>
+	 * 	 <li><b>409</b>: Conflict.</li>
+	 * </ul>
 	 */
 	public ContactsList updateList(UUID listId, ContactsList updatedList) {
 		return updateList.execute(new UpdateListRequestWrapper(
@@ -127,6 +145,8 @@ public class ProactiveConnectClient {
 	 * Delete a list.
 	 *
 	 * @param listId Unique ID of the list.
+	 *
+	 * @throws ProactiveConnectResponseException If the list does not exist or couldn't be deleted.
 	 */
 	public void deleteList(UUID listId) {
 		deleteList.execute(validateUuid("List ID", listId));
@@ -136,6 +156,8 @@ public class ProactiveConnectClient {
 	 * Delete all items in a list.
 	 *
 	 * @param listId Unique ID of the list.
+	 *
+	 * @throws ProactiveConnectResponseException If the list does not exist or couldn't be cleared.
 	 */
 	public void clearList(UUID listId) {
 		clearList.execute(validateUuid("List ID", listId));
@@ -145,6 +167,8 @@ public class ProactiveConnectClient {
 	 * Fetch and replace all items from datasource.
 	 *
 	 * @param listId Unique ID of the list.
+	 *
+	 * @throws ProactiveConnectResponseException If the list does not exist or couldn't be fetched.
 	 */
 	public void fetchList(UUID listId) {
 		fetchList.execute(validateUuid("List ID", listId));
@@ -154,6 +178,8 @@ public class ProactiveConnectClient {
 	 * Gets the first 1000 lists in the application.
 	 *
 	 * @return The lists in order of creation.
+	 *
+	 * @throws ProactiveConnectResponseException If there was an error in retrieving the lists.
 	 */
 	public List<ContactsList> listLists() {
 		return halRequest(listLists, 1, 1000).getLists();
@@ -166,6 +192,8 @@ public class ProactiveConnectClient {
 	 *
 	 * @return The lists page.
 	 * @see #listLists(int, int)
+	 *
+	 * @throws ProactiveConnectResponseException If there was an error in retrieving the lists.
 	 */
 	public ListsResponse listLists(int page) {
 		return halRequest(listLists, page, null);
@@ -178,6 +206,8 @@ public class ProactiveConnectClient {
 	 * @param pageSize Number of results per page in the HAL response.
 	 *
 	 * @return The lists page.
+	 *
+	 * @throws ProactiveConnectResponseException If there was an error in retrieving the lists.
 	 */
 	public ListsResponse listLists(int page, int pageSize) {
 		return halRequest(listLists, page, pageSize);
@@ -190,6 +220,14 @@ public class ProactiveConnectClient {
 	 * @param data The new item's data as a Map.
 	 *
 	 * @return The created list item.
+	 *
+	 * @throws ProactiveConnectResponseException If the request was unsuccessful.
+	 * This could be for the following reasons:
+	 * <ul>
+	 *   <li><b>400</b>: Invalid request parameter or body.</li>
+	 * 	 <li><b>404</b>: List not found.</li>
+	 * 	 <li><b>422</b>: Resource limit reached / exceeded.</li>
+	 * </ul>
 	 */
 	public ListItem createListItem(UUID listId, Map<String, ?> data) {
 		return createListItem.execute(new ListItemRequestWrapper(
@@ -205,6 +243,8 @@ public class ProactiveConnectClient {
 	 * @param itemId Unique ID of the item.
 	 *
 	 * @return The requested list item.
+	 *
+	 * @throws ProactiveConnectResponseException If the list or item does not exist or couldn't be retrieved.
 	 */
 	public ListItem getListItem(UUID listId, UUID itemId) {
 		return getListItem.execute(new ListItemRequestWrapper(
@@ -220,6 +260,13 @@ public class ProactiveConnectClient {
 	 * @param data The updated item data as a Map.
 	 *
 	 * @return The updated list item.
+	 *
+	 * @throws ProactiveConnectResponseException If the request was unsuccessful.
+	 * This could be for the following reasons:
+	 * <ul>
+	 *   <li><b>400</b>: Invalid request parameter or body.</li>
+	 * 	 <li><b>404</b>: List or item not found.</li>
+	 * </ul>
 	 */
 	public ListItem updateListItem(UUID listId, UUID itemId, Map<String, ?> data) {
 		return updateListItem.execute(new ListItemRequestWrapper(
@@ -234,6 +281,8 @@ public class ProactiveConnectClient {
 	 *
 	 * @param listId Unique ID of the list.
 	 * @param itemId Unique ID of the item.
+	 *
+	 * @throws ProactiveConnectResponseException If the list or item does not exist or couldn't be deleted.
 	 */
 	public void deleteListItem(UUID listId, UUID itemId) {
 		deleteListItem.execute(new ListItemRequestWrapper(
@@ -249,6 +298,8 @@ public class ProactiveConnectClient {
 	 *
 	 * @return The list items CSV file contents as a String.
 	 * @see #downloadListItems(UUID, Path)
+	 *
+	 * @throws ProactiveConnectResponseException If the list does not exist or couldn't be retrieved.
 	 */
 	public String downloadListItems(UUID listId) {
 		return new String(downloadListItems.execute(new DownloadListItemsRequestWrapper(
@@ -262,6 +313,8 @@ public class ProactiveConnectClient {
 	 *
 	 * @param listId Unique ID of the list.
 	 * @param file Path of the file to write the downloaded results to.
+	 *
+	 * @throws ProactiveConnectResponseException If the list does not exist or couldn't be retrieved.
 	 */
 	public void downloadListItems(UUID listId, Path file) {
 		downloadListItems.execute(new DownloadListItemsRequestWrapper(
@@ -277,6 +330,13 @@ public class ProactiveConnectClient {
 	 * @param csvFile Path to the CSV file to upload.
 	 *
 	 * @return Result of the upload if successful.
+	 *
+	 * @throws ProactiveConnectResponseException If the request was unsuccessful.
+	 * This could be for the following reasons:
+	 * <ul>
+	 * 	 <li><b>404</b>: List not found.</li>
+	 * 	 <li><b>422</b>: Resource limit reached / exceeded.</li>
+	 * </ul>
 	 */
 	public UploadListItemsResponse uploadListItems(UUID listId, Path csvFile) {
 		try {
@@ -294,6 +354,8 @@ public class ProactiveConnectClient {
 	 * Gets the first 1000 events in the application.
 	 *
 	 * @return The events in order of creation.
+	 *
+	 * @throws ProactiveConnectResponseException If the list does not exist or the items couldn't be retrieved.
 	 */
 	public List<ListItem> listItems() {
 		return halRequest(listItems, 1, 1000).getItems();
@@ -306,6 +368,8 @@ public class ProactiveConnectClient {
 	 *
 	 * @return The items page.
 	 * @see #listItems(int, int)
+	 *
+	 * @throws ProactiveConnectResponseException If the list does not exist or the items couldn't be retrieved.
 	 */
 	public ListItemsResponse listItems(int page) {
 		return halRequest(listItems, page, null);
@@ -318,6 +382,8 @@ public class ProactiveConnectClient {
 	 * @param pageSize Number of results per page in the HAL response.
 	 *
 	 * @return The items page.
+	 *
+	 * @throws ProactiveConnectResponseException If the list does not exist or the items couldn't be retrieved.
 	 */
 	public ListItemsResponse listItems(int page, int pageSize) {
 		return halRequest(listItems, page, pageSize);
@@ -327,6 +393,8 @@ public class ProactiveConnectClient {
 	 * Gets the first 1000 events in the application.
 	 *
 	 * @return The events in order of creation.
+	 *
+	 * @throws ProactiveConnectResponseException If the events couldn't be retrieved.
 	 */
 	public List<Event> listEvents() {
 		return halRequest(listEvents, 1, 1000).getEvents();
@@ -339,6 +407,8 @@ public class ProactiveConnectClient {
 	 *
 	 * @return The events page.
 	 * @see #listEvents(int, int)
+	 *
+	 * @throws ProactiveConnectResponseException If the events couldn't be retrieved.
 	 */
 	public ListEventsResponse listEvents(int page) {
 		return halRequest(listEvents, page, null);
@@ -351,6 +421,8 @@ public class ProactiveConnectClient {
 	 * @param pageSize Number of results per page in the HAL response.
 	 *
 	 * @return The events page.
+	 *
+	 * @throws ProactiveConnectResponseException If the events couldn't be retrieved.
 	 */
 	public ListEventsResponse listEvents(int page, int pageSize) {
 		return halRequest(listEvents, page, pageSize);
