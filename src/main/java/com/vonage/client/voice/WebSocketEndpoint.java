@@ -63,7 +63,7 @@ public class WebSocketEndpoint implements Endpoint {
     /**
      * The URI to the websocket you are streaming to.
      *
-     * @return
+     * @return The URI as a string.
      */
     @JsonProperty("uri")
     public String getUri() {
@@ -72,7 +72,7 @@ public class WebSocketEndpoint implements Endpoint {
 
     /**
      *
-     * @return
+     * @return Thge content type.
      */
     @JsonProperty("content-type")
     public String getContentType() {

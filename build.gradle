@@ -15,8 +15,8 @@ targetCompatibility = "1.8"
 
 ext.githubPath = 'Vonage/vonage-java-sdk'
 
-tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs << "-Xlint:unchecked"
+tasks.withType(Javadoc).configureEach {
+    options.addStringOption('Xdoclint:all', '-quiet')
 }
 
 repositories {

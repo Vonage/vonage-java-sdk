@@ -24,9 +24,10 @@ import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.common.HalPageResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 /**
- * HAL response for {@link ProactiveConnectClient#listItems(int, int)}.
+ * HAL response for {@link ProactiveConnectClient#listItems(UUID, int, int)}.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class ListItemsResponse extends HalPageResponse {
