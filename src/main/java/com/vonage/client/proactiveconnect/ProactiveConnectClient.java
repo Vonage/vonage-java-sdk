@@ -247,13 +247,13 @@ public class ProactiveConnectClient {
 	 *
 	 * @param listId Unique ID of the list.
 	 *
-	 * @return The list items CSV file contents (binary) as a byte array.
+	 * @return The list items CSV file contents as a String.
 	 * @see #downloadListItems(String, Path)
 	 */
-	public byte[] downloadListItems(String listId) {
-		return downloadListItems.execute(new DownloadListItemsRequestWrapper(
+	public String downloadListItems(String listId) {
+		return new String(downloadListItems.execute(new DownloadListItemsRequestWrapper(
 				validateUuid("List ID", listId), null
-		));
+		)));
 	}
 
 	/**

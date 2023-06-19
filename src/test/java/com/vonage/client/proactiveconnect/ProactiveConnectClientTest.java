@@ -354,15 +354,15 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 	
 	@Test
 	public void testClearList() throws Exception {
-		stubResponseAndRun(200, () -> client.clearList(SAMPLE_LIST_ID));
-		stubResponseAndAssertThrows(200, () -> client.clearList("123"), IllegalArgumentException.class);
+		stubResponseAndRun(202, () -> client.clearList(SAMPLE_LIST_ID));
+		stubResponseAndAssertThrows(202, () -> client.clearList("123"), IllegalArgumentException.class);
 		assert409ResponseException(() -> client.clearList(SAMPLE_LIST_ID));
 	}
 	
 	@Test
 	public void testFetchList() throws Exception {
-		stubResponseAndRun(200, () -> client.fetchList(SAMPLE_LIST_ID));
-		stubResponseAndAssertThrows(200, () -> client.fetchList("1d"), IllegalArgumentException.class);
+		stubResponseAndRun(202, () -> client.fetchList(SAMPLE_LIST_ID));
+		stubResponseAndAssertThrows(202, () -> client.fetchList("1d"), IllegalArgumentException.class);
 		assert409ResponseException(() -> client.fetchList(SAMPLE_LIST_ID));
 	}
 	
@@ -457,25 +457,24 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 	
 	@Test
 	public void testDownloadListItems() throws Exception {
-		String responseBin = "<BINARY>";
-		stubResponse(responseBin);
-		byte[] response = client.downloadListItems(SAMPLE_LIST_ID);
-		assertNotNull(response);
-		assertEquals(responseBin.length(), response.length);
-		stubResponseAndAssertThrows(responseBin, () ->
+		String stub = "<BINARY>";
+		String parsed = stubResponseAndGet(stub, () -> client.downloadListItems(SAMPLE_LIST_ID));
+		assertEquals(stub, parsed);
+		stubResponseAndAssertThrows(stub, () ->
 				client.downloadListItems("Id"), IllegalArgumentException.class
 		);
 		byte[] fileContents = Files.readAllBytes(SAMPLE_CSV_PATH);
 		assertEquals(0, fileContents.length);
 
-		stubResponseAndRun(responseBin, () -> client.downloadListItems(SAMPLE_LIST_ID, SAMPLE_CSV_PATH));
+		stub = "Item Key 1,K2,K3\nval1,Value B,123";
+		stubResponseAndRun(stub, () -> client.downloadListItems(SAMPLE_LIST_ID, SAMPLE_CSV_PATH));
 		fileContents = Files.readAllBytes(SAMPLE_CSV_PATH);
-		assertArrayEquals(response, fileContents);
+		assertEquals(stub, new String(fileContents));
 
-		stubResponseAndAssertThrows(responseBin, () ->
+		stubResponseAndAssertThrows(stub, () ->
 				client.downloadListItems(SAMPLE_LIST_ID, null), NullPointerException.class
 		);
-		stubResponseAndAssertThrows(responseBin, () ->
+		stubResponseAndAssertThrows(stub, () ->
 				client.downloadListItems("not-an-id", SAMPLE_CSV_PATH), IllegalArgumentException.class
 		);
 		assert409ResponseException(() -> client.downloadListItems(SAMPLE_LIST_ID));
