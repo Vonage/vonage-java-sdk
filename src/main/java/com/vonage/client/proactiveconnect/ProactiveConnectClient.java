@@ -127,11 +127,9 @@ public class ProactiveConnectClient {
 	 * Delete a list.
 	 *
 	 * @param listId Unique ID of the list.
-	 *
-	 * @return The list that was deleted.
 	 */
-	public ContactsList deleteList(String listId) {
-		return deleteList.execute(validateUuid("List ID", listId));
+	public void deleteList(String listId) {
+		deleteList.execute(validateUuid("List ID", listId));
 	}
 
 	/**
@@ -236,11 +234,9 @@ public class ProactiveConnectClient {
 	 *
 	 * @param listId Unique ID of the list.
 	 * @param itemId Unique ID of the item.
-	 *
-	 * @return The list item that was deleted.
 	 */
-	public ListItem deleteListItem(String listId, String itemId) {
-		return deleteListItem.execute(new ListItemRequestWrapper(
+	public void deleteListItem(String listId, String itemId) {
+		deleteListItem.execute(new ListItemRequestWrapper(
 				validateUuid("List ID", listId), validateUuid("Item ID", itemId), null
 		));
 	}

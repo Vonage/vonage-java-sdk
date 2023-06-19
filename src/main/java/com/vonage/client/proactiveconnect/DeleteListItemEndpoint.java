@@ -22,7 +22,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 
-class DeleteListItemEndpoint extends AbstractMethod<ListItemRequestWrapper, ListItem> {
+class DeleteListItemEndpoint extends AbstractMethod<ListItemRequestWrapper, Void> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/v0.1/bulk/lists/%s/items/%s";
 
@@ -43,10 +43,10 @@ class DeleteListItemEndpoint extends AbstractMethod<ListItemRequestWrapper, List
 	}
 
 	@Override
-	public ListItem parseResponse(HttpResponse response) throws IOException {
+	public Void parseResponse(HttpResponse response) throws IOException {
 		int statusCode = response.getStatusLine().getStatusCode();
 		if (statusCode >= 200 && statusCode < 300) {
-			return ListItem.fromJson(basicResponseHandler.handleResponse(response));
+			return null;
 		}
 		else {
 			throw ProactiveConnectResponseException.fromHttpResponse(response);

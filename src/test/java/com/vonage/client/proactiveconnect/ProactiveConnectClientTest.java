@@ -347,7 +347,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 	
 	@Test
 	public void testDeleteList() throws Exception {
-		assertEqualsSampleList(stubResponseAndGet(SAMPLE_LIST_RESPONSE, () -> client.deleteList(SAMPLE_LIST_ID)));
+		stubResponseAndRun(200, () -> client.deleteList(SAMPLE_LIST_ID));
 		stubResponseAndAssertThrows(200, () -> client.deleteList("ID"), IllegalArgumentException.class);
 		assert409ResponseException(() -> client.deleteList(SAMPLE_LIST_ID));
 	}
@@ -442,9 +442,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 	
 	@Test
 	public void testDeleteListItem() throws Exception {
-		assertEqualsSampleListItem(stubResponseAndGet(SAMPLE_LIST_ITEM_RESPONSE, () ->
-				client.deleteListItem(SAMPLE_LIST_ID, SAMPLE_ITEM_ID)
-		));
+		stubResponseAndRun(204, () -> client.deleteListItem(SAMPLE_LIST_ID, SAMPLE_ITEM_ID));
 		stubResponseAndAssertThrows(SAMPLE_LIST_ITEM_RESPONSE, () ->
 				client.deleteListItem("abc", SAMPLE_ITEM_ID), IllegalArgumentException.class
 		);

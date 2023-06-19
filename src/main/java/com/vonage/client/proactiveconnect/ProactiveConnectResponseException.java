@@ -30,7 +30,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class ProactiveConnectResponseException extends VonageApiResponseException {
-	List<String> errors;
+	List<?> errors;
 
 	void setStatusCode(int statusCode) {
 		this.statusCode = statusCode;
@@ -40,10 +40,10 @@ public final class ProactiveConnectResponseException extends VonageApiResponseEx
 	 * Additional description of problems encountered with the request.
 	 * This is typically only applicable to 400 or 409 error codes.
 	 *
-	 * @return The list of error messages returned from the server, or {@code null} if none.
+	 * @return The list of errors returned from the server (could be a Map or String), or {@code null} if none.
 	 */
 	@JsonProperty("errors")
-	public List<String> getErrors() {
+	public List<?> getErrors() {
 		return errors;
 	}
 

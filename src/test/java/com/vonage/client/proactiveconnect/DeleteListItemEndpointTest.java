@@ -19,11 +19,10 @@ import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
 import com.vonage.client.auth.JWTAuthMethod;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.UUID;
@@ -53,10 +52,7 @@ public class DeleteListItemEndpointTest {
 		String expectedUri = "https://api-eu.vonage.com/v0.1/bulk/lists/"+listId+"/items/"+itemId;
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		String expectedResponse = "{}";
-		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
-		ListItem parsed = endpoint.parseResponse(mockResponse);
-		assertNotNull(parsed);
+		assertNull(endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, "")));
 	}
 
 	@Test

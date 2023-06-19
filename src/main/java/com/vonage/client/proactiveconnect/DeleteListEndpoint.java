@@ -22,7 +22,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 
-class DeleteListEndpoint extends AbstractMethod<String, ContactsList> {
+class DeleteListEndpoint extends AbstractMethod<String, Void> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/v0.1/bulk/lists/%s";
 
@@ -43,10 +43,10 @@ class DeleteListEndpoint extends AbstractMethod<String, ContactsList> {
 	}
 
 	@Override
-	public ContactsList parseResponse(HttpResponse response) throws IOException {
+	public Void parseResponse(HttpResponse response) throws IOException {
 		int statusCode = response.getStatusLine().getStatusCode();
 		if (statusCode >= 200 && statusCode < 300) {
-			return ContactsList.fromJson(basicResponseHandler.handleResponse(response));
+			return null;
 		}
 		else {
 			throw ProactiveConnectResponseException.fromHttpResponse(response);
