@@ -15,7 +15,7 @@
  */
 package com.vonage.client.subaccounts;
 
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.VonageResponseParseException;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.math.BigDecimal;
@@ -73,7 +73,7 @@ public class MoneyTransferTest {
 		assertEquals(masterAccountId, response.getPrimaryAccountId());
 	}
 	
-	@Test(expected = VonageUnexpectedException.class)
+	@Test(expected = VonageResponseParseException.class)
 	public void testFromJsonInvalid() {
 		MoneyTransfer.fromJson("{malformed]");
 	}

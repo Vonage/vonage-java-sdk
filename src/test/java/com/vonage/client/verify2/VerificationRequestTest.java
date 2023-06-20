@@ -15,6 +15,8 @@
  */
 package com.vonage.client.verify2;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.verify2.VerificationRequest.Builder;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -279,5 +281,19 @@ public class VerificationRequestTest {
 			expectedJson = "{\"fraud_check\":false," + expectedJson.substring(1);
 			assertEquals(expectedJson, request.toJson());
 		}
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void triggerJsonProcessingException() {
+		class SelfRefrencing extends VerificationRequest {
+			@JsonProperty("self") SelfRefrencing self = this;
+
+			SelfRefrencing(Builder builder) {
+				super(builder);
+			}
+		}
+		new SelfRefrencing(VerificationRequest.builder()
+				.addWorkflow(new SmsWorkflow("447900000000")).brand("Test")
+		).toJson();
 	}
 }

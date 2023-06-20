@@ -63,7 +63,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 		assertEquals(224, expectedJson.length());
 		wrapper.setHttpClient(stubHttpClient(statusCode, expectedJson));
 		expectedResponse.setStatusCode(statusCode);
-		String failPrefix = "Expected SubaccountsResponseException, but got ";
+		String failPrefix = "Expected "+expectedResponse.getClass().getSimpleName()+", but got ";
 
 		try {
 			invocation.run();

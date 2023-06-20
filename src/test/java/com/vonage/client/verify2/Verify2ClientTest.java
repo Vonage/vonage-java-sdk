@@ -47,7 +47,7 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 		assertEquals(183, expectedJson.length());
 		wrapper.setHttpClient(stubHttpClient(statusCode, expectedJson));
 		expectedResponse.setStatusCode(statusCode);
-		String failPrefix = "Expected VerifyResponseException, but got ";
+		String failPrefix = "Expected "+expectedResponse.getClass().getSimpleName()+", but got ";
 
 		try {
 			invocation.run();

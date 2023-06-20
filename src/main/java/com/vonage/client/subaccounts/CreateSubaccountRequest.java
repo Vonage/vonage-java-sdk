@@ -28,11 +28,11 @@ public class CreateSubaccountRequest {
 	private final Boolean usePrimaryAccountBalance;
 
 	CreateSubaccountRequest(Builder builder) {
-		if ((name = builder.name) == null || name.trim().isEmpty()) {
-			throw new IllegalArgumentException("Name is required.");
+		if ((name = builder.name) == null || (name.trim().isEmpty() || name.length() > 80) ){
+			throw new IllegalArgumentException("Name must be between 1 and 80 characters long.");
 		}
-		if ((secret = builder.secret) != null && secret.trim().length() < 16) {
-			throw new IllegalArgumentException("Secret must be 16 characters long.");
+		if ((secret = builder.secret) != null && (secret.trim().length() < 8 || secret.length() > 25)) {
+			throw new IllegalArgumentException("Secret must be between 8 and 25 characters long.");
 		}
 		usePrimaryAccountBalance = builder.usePrimaryAccountBalance;
 	}
@@ -132,7 +132,14 @@ public class CreateSubaccountRequest {
 		}
 
 		/**
-		 * (REQUIRED) Secret for the subaccount.
+		 * (OPTIONAL) Secret for the subaccount. The requirements are as follows:
+		 * <ul>
+		 *   <li>Between 8 and 25 characters long</li>
+		 *   <li>1 lowercase letter</li>
+		 *   <li>1 capital letter</li>
+		 *   <li>1 digit</li>
+		 *   <li>Must be unique.</li>
+		 * </ul>
 		 *
 		 * @param secret Subaccount API secret.
 		 *

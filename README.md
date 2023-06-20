@@ -34,7 +34,7 @@ For Gradle 3.4 or Higher:
 
 ```groovy
 dependencies {
-    implementation 'com.vonage:client:7.5.0'
+    implementation 'com.vonage:client:7.6.0'
 }
 ```
 
@@ -42,7 +42,7 @@ For older versions:
 
 ```groovy
 dependencies {
-    compile 'com.vonage:client:7.5.0'
+    compile 'com.vonage:client:7.6.0'
 }
 ```
 
@@ -54,7 +54,7 @@ Add the following to the correct place in your project's POM file:
 <dependency>
     <groupId>com.vonage</groupId>
     <artifactId>client</artifactId>
-    <version>7.5.0</version>
+    <version>7.6.0</version>
 </dependency>
 ```
 
@@ -534,7 +534,7 @@ A: Currently no, but it is on the roadmap.
 
 The following is a list of Vonage APIs and whether the Java SDK provides support for them:
 
-| API               |  API Release Status  | Supported? |
+| API               |    Release Status    | Supported? |
 |-------------------|:--------------------:|:----------:|
 | Account           | General Availability |     ✅      |
 | Alerts            | General Availability |     ✅      |
@@ -542,12 +542,13 @@ The following is a list of Vonage APIs and whether the Java SDK provides support
 | Audit             |         Beta         |     ❌      |
 | Conversation      |         Beta         |     ❌      |
 | Dispatch          |         Beta         |     ❌      |
-| External Accounts |         Beta         |     ❌      |
+| External Accounts |  Developer Preview   |     ❌      |
 | Media             |         Beta         |     ❌      |
 | Messages          | General Availability |     ✅      |
 | Number Insight    | General Availability |     ✅      |
 | Number Management | General Availability |     ✅      |
 | Pricing           | General Availability |     ✅      |
+| Proactive Connect | General Availability |     ✅      |
 | Redact            |  Developer Preview   |     ✅      |
 | Reports           |         Beta         |     ❌      |
 | SMS               | General Availability |     ✅      |

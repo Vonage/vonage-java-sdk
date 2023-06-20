@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+# [7.6.0] - 2023-06-29
+- Added Proactive Connect API implementation
+- Updated Subaccounts name & secret validation logic
+
 # [7.5.0] - 2023-06-14
 - Added Subaccounts API implementation
 - Added custom PIN functionality to Verify v1

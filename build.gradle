@@ -9,14 +9,14 @@ plugins {
 
 group = "com.vonage"
 archivesBaseName = "client"
-version = "7.5.0"
+version = "7.6.0"
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
 ext.githubPath = 'Vonage/vonage-java-sdk'
 
-tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs << "-Xlint:unchecked"
+tasks.withType(Javadoc).configureEach {
+    options.addStringOption('Xdoclint:all', '-quiet')
 }
 
 repositories {

@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Instant;
 
 /**
- *
+ * Describes the status of a workflow.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WorkflowStatus {
@@ -32,8 +32,9 @@ public class WorkflowStatus {
 	}
 
 	/**
+	 * The workflow type.
 	 *
-	 * @return
+	 * @return The channel enum.
 	 */
 	@JsonProperty("channel")
 	public Channel getChannel() {
@@ -41,8 +42,9 @@ public class WorkflowStatus {
 	}
 
 	/**
+	 * Date and time this workflow was initiated.
 	 *
-	 * @return
+	 * @return The initiation timestamp.
 	 */
 	@JsonProperty("initiated_at")
 	public Instant getInitiatedAt() {
@@ -50,8 +52,9 @@ public class WorkflowStatus {
 	}
 
 	/**
+	 * State of the verification workflow.
 	 *
-	 * @return
+	 * @return The status enum.
 	 */
 	@JsonProperty("status")
 	public VerificationStatus getStatus() {

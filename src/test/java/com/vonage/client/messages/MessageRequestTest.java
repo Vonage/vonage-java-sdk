@@ -15,8 +15,10 @@
  */
 package com.vonage.client.messages;
 
-import org.junit.Test;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.VonageUnexpectedException;
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class MessageRequestTest {
 
@@ -178,5 +180,17 @@ public class MessageRequestTest {
 
 		String expected = "ConcreteMessageRequest {\"message_type\":\"custom\",\"channel\":\"whatsapp\",\"from\":\"447900000009\",\"to\":\"12002009000\"}";
 		assertEquals(expected, request.toString());
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void triggerJsonProcessingException() {
+		class SelfRefrencing extends ConcreteMessageRequest {
+			@JsonProperty("self") SelfRefrencing self = this;
+
+			SelfRefrencing() {
+				super(builder(MessageType.TEXT, Channel.SMS).from("447900000009").to("12002009000"));
+			}
+		}
+		new SelfRefrencing().toJson();
 	}
 }

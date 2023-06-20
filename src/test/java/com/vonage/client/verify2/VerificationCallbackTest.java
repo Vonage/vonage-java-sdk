@@ -15,7 +15,7 @@
  */
 package com.vonage.client.verify2;
 
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.VonageResponseParseException;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.net.URI;
@@ -156,7 +156,7 @@ public class VerificationCallbackTest {
 		assertNull(webhook.getSubmittedAt());
 	}
 
-	@Test(expected = VonageUnexpectedException.class)
+	@Test(expected = VonageResponseParseException.class)
 	public void testFromJsonInvalid() {
 		VerificationCallback.fromJson("{malformed]");
 	}

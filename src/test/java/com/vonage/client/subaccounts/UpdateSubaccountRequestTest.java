@@ -55,6 +55,18 @@ public class UpdateSubaccountRequestTest {
 		);
 	}
 
+	@Test
+	public void testNameLength() {
+		UpdateSubaccountRequest.Builder builder = UpdateSubaccountRequest.builder("abc123d4");
+		assertEquals(8, builder.name("N").build().subaccountApiKey.length());
+		assertThrows(IllegalArgumentException.class, () -> builder.name(" \t \n  ").build());
+		int limit = 80;
+		StringBuilder sb = new StringBuilder(limit);
+		for (int i = 0; i < limit; sb.append((char) ((i++ % 26) + 65)));
+		assertEquals(limit, builder.name(sb.toString()).build().getName().length());
+		assertThrows(IllegalArgumentException.class, () -> builder.name(sb.append("0").toString()).build());
+	}
+
 	@Test(expected = VonageUnexpectedException.class)
 	public void triggerJsonProcessingException() {
 		class SelfRefrencing extends UpdateSubaccountRequest {

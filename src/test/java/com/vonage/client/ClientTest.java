@@ -15,6 +15,7 @@
  */
 package com.vonage.client;
 
+import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
 import com.vonage.client.logging.LoggingUtils;
 import org.apache.http.HttpEntity;
@@ -27,15 +28,20 @@ import static org.junit.Assert.assertThrows;
 import org.junit.function.ThrowingRunnable;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 public abstract class ClientTest<T> {
+    protected String applicationId = UUID.randomUUID().toString();
     protected String apiKey = "a1b2c3d4", apiSecret = "1234567890abcdef";
     protected HttpWrapper wrapper;
     protected T client;
 
     protected ClientTest() {
-        wrapper = new HttpWrapper(new TokenAuthMethod(apiKey, apiSecret));
+        wrapper = new HttpWrapper(
+                new TokenAuthMethod(apiKey, apiSecret),
+                new JWTAuthMethod(applicationId, new byte[0])
+        );
     }
 
     protected HttpClient stubHttpClient(int statusCode) throws Exception {

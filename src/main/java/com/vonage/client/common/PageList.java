@@ -20,13 +20,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PageList {
-    @JsonProperty("page_size")
-    private long pageSize;
-    private long page;
-    @JsonProperty("total_pages")
-    private long totalPages;
-    @JsonProperty("total_items")
-    private long totalItems;
+    @JsonProperty("page_size") private long pageSize;
+    @JsonProperty("page") private long page;
+    @JsonProperty("total_pages") private long totalPages;
+    @JsonProperty("total_items") private long totalItems;
 
     public long getPageSize() {
         return pageSize;

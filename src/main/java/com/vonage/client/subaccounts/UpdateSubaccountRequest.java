@@ -30,9 +30,11 @@ public class UpdateSubaccountRequest {
 
 	UpdateSubaccountRequest(Builder builder) {
 		subaccountApiKey = AbstractTransfer.validateAccountKey(builder.subaccountApiKey, "Subaccount");
-		name = builder.name;
 		usePrimaryAccountBalance = builder.usePrimaryAccountBalance;
 		suspended = builder.suspended;
+		if ((name = builder.name) != null && (name.length() > 80 || name.trim().isEmpty())) {
+			throw new IllegalArgumentException("Name must be between 1 and 80 characters long.");
+		}
 		if (name == null && usePrimaryAccountBalance == null && suspended == null) {
 			throw new IllegalStateException("At least one property must be set for updating.");
 		}

@@ -23,6 +23,7 @@ import com.vonage.client.conversion.ConversionClient;
 import com.vonage.client.insight.InsightClient;
 import com.vonage.client.messages.MessagesClient;
 import com.vonage.client.numbers.NumbersClient;
+import com.vonage.client.proactiveconnect.ProactiveConnectClient;
 import com.vonage.client.redact.RedactClient;
 import com.vonage.client.sms.SmsClient;
 import com.vonage.client.sns.SnsClient;
@@ -60,6 +61,7 @@ public class VonageClient {
     private final MessagesClient messages;
     private final Verify2Client verify2;
     private final SubaccountsClient subaccounts;
+    private final ProactiveConnectClient proactiveConnect;
 
     private VonageClient(Builder builder) {
         httpWrapper = new HttpWrapper(builder.httpConfig, builder.authCollection);
@@ -78,6 +80,7 @@ public class VonageClient {
         messages = new MessagesClient(httpWrapper);
         verify2 = new Verify2Client(httpWrapper);
         subaccounts = new SubaccountsClient(httpWrapper);
+        proactiveConnect = new ProactiveConnectClient(httpWrapper);
     }
 
     public AccountClient getAccountClient() {
@@ -137,8 +140,17 @@ public class VonageClient {
 
     /**
      *
+     * @return The Proactive Connect client.
+     * @since 7.6.0
+     */
+    public ProactiveConnectClient getProactiveConnectClient() {
+        return proactiveConnect;
+    }
+
+    /**
+     *
      * @return The Verify v2 client.
-     * @since 7.3.0
+     * @since 7.4.0
      */
     public Verify2Client getVerify2Client() {
         return verify2;

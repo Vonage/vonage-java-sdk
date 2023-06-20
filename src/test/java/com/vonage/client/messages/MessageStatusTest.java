@@ -15,6 +15,7 @@
  */
 package com.vonage.client.messages;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.VonageUnexpectedException;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -165,5 +166,13 @@ public class MessageStatusTest {
 	@Test(expected = VonageUnexpectedException.class)
 	public void testFromJsonInvalid() {
 		MessageStatus.fromJson("{malformed]");
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void triggerJsonProcessingException() {
+		class SelfRefrencing extends MessageStatus {
+			@JsonProperty("self") SelfRefrencing self = this;
+		}
+		new SelfRefrencing().toJson();
 	}
 }

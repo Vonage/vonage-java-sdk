@@ -15,9 +15,11 @@
  */
 package com.vonage.client.verify2;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
+import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.common.HttpMethod;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
@@ -110,5 +112,16 @@ public class VerifyCodeEndpointTest {
 
 		String expectedJson = "{\"code\":\""+request.code+"\"}";
 		assertEquals(expectedJson, EntityUtils.toString(builder.getEntity()));
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void triggerJsonProcessingException() {
+		class SelfRefrencing extends VerifyCodeRequestWrapper {
+			@JsonProperty("self") SelfRefrencing self = this;
+			SelfRefrencing() {
+				super(null, null);
+			}
+		}
+		new SelfRefrencing().toJson();
 	}
 }

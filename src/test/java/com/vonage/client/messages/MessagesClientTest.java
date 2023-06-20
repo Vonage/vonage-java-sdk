@@ -70,7 +70,7 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 					.from("447700900001").to("447700900000")
 					.text("Hello").build()
 			);
-			fail("Expected MessageResponseException");
+			fail("Expected "+expectedResponse.getClass().getSimpleName());
 		}
 		catch (MessageResponseException mrx) {
 			assertEquals(expectedResponse, mrx);
