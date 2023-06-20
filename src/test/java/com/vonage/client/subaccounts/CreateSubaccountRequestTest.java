@@ -56,7 +56,19 @@ public class CreateSubaccountRequestTest {
 	@Test
 	public void testConstructShortSecret() {
 		CreateSubaccountRequest.Builder builder = CreateSubaccountRequest.builder().name("Department C");
-		assertThrows(IllegalArgumentException.class, () -> builder.secret("  9awer7yrghgp68 ").build());
+		assertThrows(IllegalArgumentException.class, () -> builder.secret("A1b23c5").build());
+	}
+
+	@Test
+	public void testNameLength() {
+		CreateSubaccountRequest.Builder builder = CreateSubaccountRequest.builder();
+		assertEquals(1, builder.name("N").build().getName().length());
+		assertThrows(IllegalArgumentException.class, () -> builder.name(" \t \n  ").build());
+		int limit = 80;
+		StringBuilder sb = new StringBuilder(limit);
+		for (int i = 0; i < limit; sb.append((char) ((i++ % 26) + 65)));
+		assertEquals(limit, builder.name(sb.toString()).build().getName().length());
+		assertThrows(IllegalArgumentException.class, () -> builder.name(sb.append("0").toString()).build());
 	}
 
 	@Test(expected = VonageUnexpectedException.class)
