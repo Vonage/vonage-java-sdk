@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import org.apache.http.entity.StringEntity;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-class StartStreamEndpoint extends AbstractMethod<StreamRequest, StreamResponse> {
+class StartStreamEndpoint extends AbstractMethod<StreamRequestWrapper, StreamResponse> {
     private static final String PATH = "/calls/";
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 
@@ -39,12 +39,12 @@ class StartStreamEndpoint extends AbstractMethod<StreamRequest, StreamResponse> 
     }
 
     @Override
-    public RequestBuilder makeRequest(StreamRequest request) throws UnsupportedEncodingException {
-        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.getUuid() + "/stream";
+    public RequestBuilder makeRequest(StreamRequestWrapper request) throws UnsupportedEncodingException {
+        String uri = httpWrapper.getHttpConfig().getVersionedApiBaseUri("v1") + PATH + request.uuid + "/stream";
         return RequestBuilder.put(uri)
                 .setHeader("Content-Type", "application/json")
                 .setHeader("Accept", "application/json")
-                .setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
+                .setEntity(new StringEntity(request.payload.toJson(), ContentType.APPLICATION_JSON));
     }
 
     @Override

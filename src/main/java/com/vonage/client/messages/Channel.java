@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -20,16 +20,17 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import static com.vonage.client.messages.MessageType.*;
 import java.util.EnumSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Represents the services available for sending messages.
  */
 public enum Channel {
 	SMS (TEXT),
-	MMS (IMAGE, VCARD, AUDIO, VIDEO),
-	WHATSAPP (TEXT, IMAGE, AUDIO, VIDEO, FILE, TEMPLATE, CUSTOM, LOCATION, ORDER, REPLY, UNSUPPORTED),
+	MMS (TEXT, IMAGE, VCARD, AUDIO, VIDEO),
+	WHATSAPP (TEXT, IMAGE, AUDIO, VIDEO, FILE, TEMPLATE, CUSTOM, LOCATION, STICKER, ORDER, REPLY, UNSUPPORTED),
 	MESSENGER (TEXT, IMAGE, AUDIO, VIDEO, FILE, UNSUPPORTED),
-	VIBER (TEXT, IMAGE);
+	VIBER (TEXT, IMAGE, VIDEO, FILE);
 
 	private final Set<MessageType> supportedTypes;
 
@@ -38,13 +39,25 @@ public enum Channel {
 	}
 
 	/**
-	 * This method is useful for determining which message types are supported
-	 * by this messaging service.
+	 * This method is useful for determining which message types are applicable to this messaging service.
 	 *
 	 * @return The Set of message types that this service can handle.
 	 */
 	public Set<MessageType> getSupportedMessageTypes() {
 		return supportedTypes;
+	}
+
+	/**
+	 * Similar to {@link #getSupportedMessageTypes()} but excludes message types used only for inbound / webhooks.
+	 *
+	 * @return The Set of message types that this service can send.
+	 * @since 7.5.0
+	 */
+	public Set<MessageType> getSupportedOutboundMessageTypes() {
+		return getSupportedMessageTypes().stream().filter(mt -> mt != MessageType.UNSUPPORTED &&
+				mt != MessageType.REPLY && mt != MessageType.ORDER &&
+				(this != Channel.MMS || mt != MessageType.TEXT)
+		).collect(Collectors.toSet());
 	}
 
 	@JsonCreator

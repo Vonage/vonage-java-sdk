@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -36,16 +36,17 @@ public class SignatureAuthMethod implements AuthMethod {
         this.hashType = hashType;
     }
 
+    public String getApiKey() {
+        return apiKey;
+    }
+
     @Override
     public RequestBuilder apply(RequestBuilder request) {
         request.addParameter("api_key", apiKey);
         List<NameValuePair> params = request.getParameters();
         RequestSigning.constructSignatureForRequestParameters(params, apiSecret, hashType);
-
-        // TODO: This is ugly:
-        request.addParameter(params.get(params.size()-1))
-                .addParameter(params.get(params.size()-2));
-
+        int last = params.size() - 1;
+        request.addParameters(params.get(last), params.get(last - 1));
         return request;
     }
 

@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -83,7 +83,7 @@ public class NotifyAction implements Action {
         /**
          * @param payload A Map of String keys and ? values that will be converted to JSON and sent to your event URL.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder payload(Map<String, ?> payload) {
             this.payload = payload;
@@ -93,7 +93,7 @@ public class NotifyAction implements Action {
         /**
          * @param eventUrl The URL to send events to.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder eventUrl(Collection<String> eventUrl) {
             this.eventUrl = eventUrl;
@@ -103,7 +103,7 @@ public class NotifyAction implements Action {
         /**
          * @param eventUrl The URL to send events to.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder eventUrl(String... eventUrl) {
             return eventUrl(Arrays.asList(eventUrl));
@@ -112,7 +112,7 @@ public class NotifyAction implements Action {
         /**
          * @param eventMethod The HTTP method to use when sending the payload to your event url.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder eventMethod(EventMethod eventMethod) {
             this.eventMethod = eventMethod;

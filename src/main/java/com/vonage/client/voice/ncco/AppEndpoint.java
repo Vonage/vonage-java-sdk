@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Represents an app endpoint used in a {@link ConnectAction}. See
@@ -34,14 +35,29 @@ public class AppEndpoint implements Endpoint {
         this.user = builder.user;
     }
 
+    @JsonProperty("type")
+    @Override
     public String getType() {
         return TYPE;
     }
 
+    /**
+     * The user to connect to. This username must have been added as a user.
+     *
+     * @return The username.
+     */
+    @JsonProperty("user")
     public String getUser() {
         return user;
     }
 
+    /**
+     * Entry point for constructing an instance of this class.
+     *
+     * @param user The username to connect to.
+     *
+     * @return A new Builder.
+     */
     public static Builder builder(String user) {
         return new Builder(user);
     }
@@ -58,6 +74,11 @@ public class AppEndpoint implements Endpoint {
             return this;
         }
 
+        /**
+         * Builds the AppEndpoint.
+         *
+         * @return A new AppEndpoint with this builder's properties.
+         */
         public AppEndpoint build() {
             return new AppEndpoint(this);
         }

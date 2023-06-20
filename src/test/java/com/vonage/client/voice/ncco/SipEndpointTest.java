@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -15,9 +15,9 @@
  */
 package com.vonage.client.voice.ncco;
 
+import org.junit.Assert;
 import org.junit.Test;
 import java.util.Collections;
-import static org.junit.Assert.assertEquals;
 
 public class SipEndpointTest {
 
@@ -32,6 +32,6 @@ public class SipEndpointTest {
 
         String expectedJson = "[{\"endpoint\":[{\"uri\":\"sip:test@example.com\"," +
                 "\"headers\":{\"k1\":\"v1\"},\"type\":\"sip\"}],\"action\":\"connect\"}]";
-        assertEquals(expectedJson, new Ncco(connect).toJson());
+        Assert.assertEquals(expectedJson, new Ncco(connect).toJson());
     }
 }

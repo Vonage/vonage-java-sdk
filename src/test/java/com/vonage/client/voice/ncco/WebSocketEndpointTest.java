@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -15,11 +15,12 @@
  */
 package com.vonage.client.voice.ncco;
 
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import java.util.Collections;
-import static org.junit.Assert.assertEquals;
 
 public class WebSocketEndpointTest {
+
     @Test
     public void testAllFields() {
         WebSocketEndpoint endpoint = WebSocketEndpoint.builder("wss://example.com", "some-content")
@@ -29,7 +30,8 @@ public class WebSocketEndpointTest {
                 .build();
         ConnectAction connect = ConnectAction.builder(endpoint).build();
 
-        String expectedJson = "[{\"endpoint\":[{\"uri\":\"wss://example.net\",\"headers\":{\"keyOne\":[1]},\"type\":\"websocket\",\"content-type\":\"some-content-type\"}],\"action\":\"connect\"}]";
+        String expectedJson = "[{\"endpoint\":[{\"uri\":\"wss://example.net\",\"content-type\":\"some-content-type\"," +
+                "\"headers\":{\"keyOne\":[1]},\"type\":\"websocket\"}],\"action\":\"connect\"}]";
         assertEquals(expectedJson, new Ncco(connect).toJson());
     }
 }

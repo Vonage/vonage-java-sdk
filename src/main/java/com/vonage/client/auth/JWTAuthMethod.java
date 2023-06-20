@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -24,9 +24,12 @@ import java.nio.file.Path;
 public class JWTAuthMethod implements AuthMethod {
     private static final int SORT_KEY = 10;
     private final Jwt jwt;
+    private final String applicationId;
 
     public JWTAuthMethod(final String applicationId, final byte[] privateKey) {
-        jwt = Jwt.builder().applicationId(applicationId).privateKeyContents(new String(privateKey)).build();
+        jwt = Jwt.builder()
+                .applicationId(this.applicationId = applicationId)
+                .privateKeyContents(new String(privateKey)).build();
     }
 
     public JWTAuthMethod(String applicationId, Path path) throws IOException {
@@ -35,6 +38,10 @@ public class JWTAuthMethod implements AuthMethod {
 
     public String generateToken() {
         return jwt.generate();
+    }
+
+    public String getApplicationId() {
+        return applicationId;
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ public final class Whatsapp {
 
 	Whatsapp(Policy policy, Locale locale) {
 		this.policy = policy;
-		this.locale = Objects.requireNonNull(locale, "Locale is required");;
+		this.locale = Objects.requireNonNull(locale, "Locale is required");
 	}
 
 	@JsonProperty("policy")

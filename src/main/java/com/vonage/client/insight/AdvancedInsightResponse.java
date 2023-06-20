@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -84,7 +84,7 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
     }
 
     /**
-     * @return Real-time data about the number if it was requested, <code>null</code> otherwise.
+     * @return Real-time data about the number if it was requested, {@code null} otherwise.
      */
     @JsonProperty("real_time_data")
     public RealTimeData getRealTimeData() {

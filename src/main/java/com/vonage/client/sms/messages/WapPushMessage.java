@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -20,8 +20,9 @@ import org.apache.http.client.methods.RequestBuilder;
 /**
  * Represents the details of a wap-push message that is to be submitted via the Vonage REST api.
  *
- *
+ * @deprecated Will be removed in the next major release.
  */
+@Deprecated
 public class WapPushMessage extends Message {
     private final String url, title;
     private Integer validity;

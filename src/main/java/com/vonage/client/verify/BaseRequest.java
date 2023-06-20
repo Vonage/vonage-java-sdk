@@ -34,14 +34,16 @@ public abstract class BaseRequest {
 
     protected BaseRequest(String number, Integer length, Locale locale, String country, Integer pinExpiry, Integer nextEventWait) {
         this.number = number;
-        this.length = length;
         this.locale = locale;
         this.country = country;
+        if ((this.length = length) != null && (length != 4 && length != 6)) {
+            throw new IllegalArgumentException("code_length must be 4 or 6.");
+        }
         if ((this.pinExpiry = pinExpiry) != null && (pinExpiry < 60 || pinExpiry > 3600)) {
-            throw new IllegalArgumentException("pin_expiry '"+pinExpiry+"' is out of bounds");
+            throw new IllegalArgumentException("pin_expiry '"+pinExpiry+"' is out of bounds.");
         }
         if ((this.nextEventWait = nextEventWait) != null && (nextEventWait < 60 || nextEventWait > 900)) {
-            throw new IllegalArgumentException("next_event_wait '"+nextEventWait+"' is out of bounds");
+            throw new IllegalArgumentException("next_event_wait '"+nextEventWait+"' is out of bounds.");
         }
     }
 
@@ -92,11 +94,11 @@ public abstract class BaseRequest {
     }
 
     /**
-     * How long the generated verification code is valid for, in seconds. When you specify both <code>pin_expiry</code>
-     * and <code>next_event_wait</code> then <code>pin_expiry</code> must be an integer multiple of
-     * <code>next_event_wait</code>, otherwise <code>pin_expiry</code> will be equal to <code> next_event_wait</code>.
+     * How long the generated verification code is valid for, in seconds. When you specify both {@code pin_expiry}
+     * and {@code next_event_wait} then {@code pin_expiry} must be an integer multiple of
+     * {@code next_event_wait}, otherwise {@code pin_expiry} will be equal to {@code next_event_wait}.
      *
-     * @return An Integer between <code>60</code> and <code>3600</code>, or <code>null</code>.
+     * @return An Integer between {@code 60} and {@code 3600}, or {@code null}.
      */
     public Integer getPinExpiry() {
         return pinExpiry;
@@ -105,7 +107,7 @@ public abstract class BaseRequest {
     /**
      * The wait time between attempts to deliver the PIN.
      *
-     * @return An Integer between <code>60</code> and <code>900</code>, or <code>null</code>.
+     * @return An Integer between {@code 60} and {@code 900}, or {@code null}.
      */
     public Integer getNextEventWait() {
         return nextEventWait;

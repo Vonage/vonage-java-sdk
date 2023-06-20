@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -27,13 +27,15 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.junit.Test;
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
+import org.junit.Test;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
 
 public class VoiceClientTest {
     private final TestUtils testUtils = new TestUtils();
@@ -124,13 +126,19 @@ public class VoiceClientTest {
     @Test
     public void testSendDtmf() throws Exception {
         VoiceClient client = new VoiceClient(stubHttpWrapper(200,
-                "{\n" + "  \"message\": \"DTMF sent\",\n" + "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n"
+                "{\n" + "  \"message\": \"DTMF sent\",\n" + "  \"uuid\": \"944dd293-ca13-4a58-bc37-6252e11474be\"\n"
                         + "}"
         ));
 
-        DtmfResponse response = client.sendDtmf("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", "332393");
-        assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
+        DtmfResponse response = client.sendDtmf("944dd293-ca13-4a58-bc37-6252e11474be", "332393");
+        assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
         assertEquals("DTMF sent", response.getMessage());
+        assertThrows(IllegalArgumentException.class, () ->
+                client.sendDtmf("944dd293-ca13-4a58-bc37-6252e11474be", null)
+        );
+        assertThrows(IllegalArgumentException.class, () ->
+                client.sendDtmf("invalid", "1234")
+        );
     }
 
     @Test
@@ -138,24 +146,29 @@ public class VoiceClientTest {
         VoiceClient client = new VoiceClient(stubHttpWrapper(200, "{\"message\":\"Received\"}"));
         ModifyCallResponse call = client.modifyCall("93137ee3-580e-45f7-a61a-e0b5716000ef", ModifyCallAction.HANGUP);
         assertEquals("Received", call.getMessage());
+        assertThrows(IllegalArgumentException.class, () -> client.modifyCall("invalid", ModifyCallAction.HANGUP));
+        assertThrows(NullPointerException.class, () ->
+                client.modifyCall("93137ee3-580e-45f7-a61a-e0b5716000ef", null)
+        );
     }
 
     @Test
-    public void testModifyCall2() throws Exception {
+    public void testModifyCallLegacy() throws Exception {
         VoiceClient client = new VoiceClient(stubHttpWrapper(200, "{\"message\":\"Received\"}"));
-        ModifyCallResponse call = client.modifyCall(new CallModifier("93137ee3-580e-45f7-a61a-e0b5716000ef",
-                ModifyCallAction.MUTE
-        ));
+        ModifyCallResponse call = client.modifyCall(new CallModifier("93137ee3-580e-45f7-a61a-e0b5716000ef", ModifyCallAction.HANGUP));
         assertEquals("Received", call.getMessage());
     }
 
     @Test
     public void testTransferCall() throws Exception {
         VoiceClient client = new VoiceClient(stubHttpWrapper(200, "{\"message\":\"Received\"}"));
-        ModifyCallResponse call = client.transferCall("93137ee3-580e-45f7-a61a-e0b5716000ef",
-                "https://example.com/ncco2"
-        );
+        final String url = "https://example.com/ncco2";
+        ModifyCallResponse call = client.transferCall("93137ee3-580e-45f7-a61a-e0b5716000ef", url);
         assertEquals("Received", call.getMessage());
+        assertThrows(IllegalArgumentException.class, () ->
+                client.transferCall("93137ee3-580e-45f7-a61a-e0b5716000ef", "';,x^")
+        );
+        assertThrows(NullPointerException.class, () -> client.transferCall(null, url));
     }
 
     @Test
@@ -165,64 +178,89 @@ public class VoiceClientTest {
                 new Ncco(TalkAction.builder("Thank you for calling!").build(), TalkAction.builder("Bye!").build())
         );
         assertEquals("Received", call.getMessage());
+        assertThrows(NullPointerException.class, () ->
+                client.transferCall("93137ee3-580e-45f7-a61a-e0b5716000ef", (Ncco) null)
+        );
     }
 
     @Test
     public void testStartStreamNonLooping() throws Exception {
         VoiceClient client = new VoiceClient(stubHttpWrapper(200,
                 "{\n" + "  \"message\": \"Stream started\",\n"
-                        + "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" + "}"
+                        + "  \"uuid\": \"944dd293-ca13-4a58-bc37-6252e11474be\"\n" + "}"
         ));
-        StreamResponse response = client.startStream(
-                "ssf61863-4a51-ef6b-11e1-w6edebcf93bb",
-                "https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3"
-        );
+        final String url = "https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3";
+        StreamResponse response = client.startStream("944dd293-ca13-4a58-bc37-6252e11474be", url);
         assertEquals("Stream started", response.getMessage());
-        assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
+        assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
+        assertThrows(NullPointerException.class, () -> client.startStream(null, url));
+        assertThrows(IllegalArgumentException.class, () -> client.startStream("944dd293-ca13-4a58-bc37-6252e11474be", null));
     }
 
     @Test
     public void testStartStreamLooping() throws Exception {
         VoiceClient client = new VoiceClient(stubHttpWrapper(200,
                 "{\n" + "  \"message\": \"Stream started\",\n"
-                        + "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" + "}"
+                        + "  \"uuid\": \"944dd293-ca13-4a58-bc37-6252e11474be\"\n" + "}"
         ));
         StreamResponse response = client.startStream(
-                "ssf61863-4a51-ef6b-11e1-w6edebcf93bb",
+                "944dd293-ca13-4a58-bc37-6252e11474be",
                 "https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3",
                 5
         );
         assertEquals("Stream started", response.getMessage());
-        assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
+        assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
     }
 
     @Test
     public void testStopStream() throws Exception {
         VoiceClient client = new VoiceClient(stubHttpWrapper(200,
                 "{\n" + "  \"message\": \"Stream stopped\",\n"
-                        + "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" + "}\n"
+                        + "  \"uuid\": \"944dd293-ca13-4a58-bc37-6252e11474be\"\n" + "}\n"
         ));
 
-        StreamResponse response = client.stopStream("ssf61863-4a51-ef6b-11e1-w6edebcf93bb");
+        StreamResponse response = client.stopStream("944dd293-ca13-4a58-bc37-6252e11474be");
         assertEquals("Stream stopped", response.getMessage());
-        assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
+        assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
     }
 
     @Test
-    public void testStartTalkAllParams() throws Exception {
+    public void testStartTalkAllParamsModern() throws Exception {
         VoiceClient client = new VoiceClient(stubHttpWrapper(200,
-                "{\n" + "  \"message\": \"Talk started\",\n" + "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n"
+                "{\n" + "  \"message\": \"Talk started\",\n" + "  \"uuid\": \"944dd293-ca13-4a58-bc37-6252e11474be\"\n"
                         + "}\n"
         ));
 
-        TalkResponse response = client.startTalk("ssf61863-4a51-ef6b-11e1-w6edebcf93bb",
+        TalkResponse response = client.startTalk("944dd293-ca13-4a58-bc37-6252e11474be",
+                TalkPayload.builder("Bonjour, monde!")
+                        .style(1).level(-0.5).loop(3).premium(false)
+                        .language(TextToSpeechLanguage.FRENCH).build()
+        );
+        assertEquals("Talk started", response.getMessage());
+        assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
+        assertThrows(NullPointerException.class, () ->
+                client.startTalk(null, TalkPayload.builder("Hi").build())
+        );
+        assertThrows(NullPointerException.class, () ->
+                client.startTalk("944dd293-ca13-4a58-bc37-6252e11474be", (TalkPayload) null)
+        );
+    }
+
+    @Test
+    public void testStartTalkAllParamsLegacy() throws Exception {
+        VoiceClient client = new VoiceClient(stubHttpWrapper(200,
+                "{\n" + "  \"message\": \"Talk started\",\n" + "  \"uuid\": \"944dd293-ca13-4a58-bc37-6252e11474be\"\n"
+                        + "}\n"
+        ));
+
+        TalkResponse response = client.startTalk("944dd293-ca13-4a58-bc37-6252e11474be",
                 "Hello World",
                 TextToSpeechLanguage.GREEK,
                 1,
                 8
         );
         assertEquals("Talk started", response.getMessage());
-        assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
+        assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
     }
 
     @Test
@@ -230,89 +268,101 @@ public class VoiceClientTest {
         VoiceClient client = new VoiceClient(stubHttpWrapper(200,
             "{\n" +
                     "  \"message\": \"Talk started\",\n" +
-                    "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n" +
+                    "  \"uuid\": \"944dd293-ca13-4a58-bc37-6252e11474be\"\n" +
                     "}\n"
         ));
 
         TalkResponse response = client.startTalk(
-                "ssf61863-4a51-ef6b-11e1-w6edebcf93bb",
+                "944dd293-ca13-4a58-bc37-6252e11474be",
                 "Hello World", TextToSpeechLanguage.KOREAN,
                 1
         );
         assertEquals("Talk started", response.getMessage());
-        assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
+        assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
     }
 
     @Test
     public void testStartTalkLoopingWithDefaultVoice() throws Exception {
         VoiceClient client = new VoiceClient(stubHttpWrapper(200,
-                "{\n" + "  \"message\": \"Talk started\",\n" + "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n"
+                "{\n" + "  \"message\": \"Talk started\",\n" + "  \"uuid\": \"944dd293-ca13-4a58-bc37-6252e11474be\"\n"
                         + "}\n"
         ));
 
-        TalkResponse response = client.startTalk("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", "Hello World", 3);
+        TalkResponse response = client.startTalk("944dd293-ca13-4a58-bc37-6252e11474be", "Hello World", 3);
         assertEquals("Talk started", response.getMessage());
-        assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
+        assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
     }
 
     @Test
     public void testStartTalkWithLanguageAndStyle() throws Exception {
         VoiceClient client = new VoiceClient(stubHttpWrapper(200,
-                "{\n" + "  \"message\": \"Talk started\",\n" + "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n"
+                "{\n" + "  \"message\": \"Talk started\",\n" + "  \"uuid\": \"944dd293-ca13-4a58-bc37-6252e11474be\"\n"
                         + "}\n"
         ));
 
-        TalkResponse response = client.startTalk("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", "Hello World", TextToSpeechLanguage.AMERICAN_ENGLISH, 5);
+        TalkResponse response = client.startTalk("944dd293-ca13-4a58-bc37-6252e11474be", "Hello World", TextToSpeechLanguage.AMERICAN_ENGLISH, 5);
         assertEquals("Talk started", response.getMessage());
-        assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
+        assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
     }
 
     @Test
     public void testStartTalkWithLanguageStyleAndLoop() throws Exception {
         VoiceClient client = new VoiceClient(stubHttpWrapper(200,
-                "{\n" + "  \"message\": \"Talk started\",\n" + "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n"
+                "{\n" + "  \"message\": \"Talk started\",\n" + "  \"uuid\": \"944dd293-ca13-4a58-bc37-6252e11474be\"\n"
                         + "}\n"
         ));
 
-        TalkResponse response = client.startTalk("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", "Hello World", TextToSpeechLanguage.AMERICAN_ENGLISH, 5,1);
+        TalkResponse response = client.startTalk("944dd293-ca13-4a58-bc37-6252e11474be", "Hello World", TextToSpeechLanguage.AMERICAN_ENGLISH, 5,1);
         assertEquals("Talk started", response.getMessage());
-        assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
+        assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
     }
 
     @Test
     public void testStartTalkWithLanguage() throws Exception {
         VoiceClient client = new VoiceClient(stubHttpWrapper(200,
-                "{\n" + "  \"message\": \"Talk started\",\n" + "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n"
+                "{\n" + "  \"message\": \"Talk started\",\n" + "  \"uuid\": \"944dd293-ca13-4a58-bc37-6252e11474be\"\n"
                         + "}\n"
         ));
 
-        TalkResponse response = client.startTalk("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", "Hello World", TextToSpeechLanguage.AMERICAN_ENGLISH);
+        TalkResponse response = client.startTalk("944dd293-ca13-4a58-bc37-6252e11474be", "Hello World", TextToSpeechLanguage.AMERICAN_ENGLISH);
         assertEquals("Talk started", response.getMessage());
-        assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
+        assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
     }
 
 
     @Test
     public void testStartTalkNonLoopingWithDefaultVoice() throws Exception {
         VoiceClient client = new VoiceClient(stubHttpWrapper(200,
-                "{\n" + "  \"message\": \"Talk started\",\n" + "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n"
+                "{\n" + "  \"message\": \"Talk started\",\n" + "  \"uuid\": \"944dd293-ca13-4a58-bc37-6252e11474be\"\n"
                         + "}\n"
         ));
 
-        TalkResponse response = client.startTalk("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", "Hello World");
+        TalkResponse response = client.startTalk("944dd293-ca13-4a58-bc37-6252e11474be", "Hello World");
         assertEquals("Talk started", response.getMessage());
-        assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
+        assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
     }
 
     @Test
     public void testStopTalk() throws Exception {
         VoiceClient client = new VoiceClient(stubHttpWrapper(200,
-                "{\n" + "  \"message\": \"Talk stopped\",\n" + "  \"uuid\": \"ssf61863-4a51-ef6b-11e1-w6edebcf93bb\"\n"
+                "{\n" + "  \"message\": \"Talk stopped\",\n" + "  \"uuid\": \"944dd293-ca13-4a58-bc37-6252e11474be\"\n"
                         + "}\n"
         ));
 
-        TalkResponse response = client.stopTalk("ssf61863-4a51-ef6b-11e1-w6edebcf93bb");
+        TalkResponse response = client.stopTalk("944dd293-ca13-4a58-bc37-6252e11474be");
         assertEquals("Talk stopped", response.getMessage());
-        assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
+        assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
+        assertThrows(IllegalArgumentException.class, () -> client.stopTalk("Blah"));
+    }
+
+    @Test
+    public void testDownloadRecording() throws Exception {
+        VoiceClient client = new VoiceClient(stubHttpWrapper(200, "Bleep bloop"));
+        Recording recording = client.downloadRecording("http://example.org/sample");
+        String content = new Scanner(recording.getContent()).useDelimiter("\\A").next();
+        assertEquals("Bleep bloop", content);
+        assertThrows(IllegalArgumentException.class, () -> client.downloadRecording(",,[]}{{}D:sd"));
+        assertThrows(IllegalArgumentException.class, () -> client.downloadRecording(null));
+        assertThrows(IllegalArgumentException.class, () -> client.downloadRecording(""));
     }
 }

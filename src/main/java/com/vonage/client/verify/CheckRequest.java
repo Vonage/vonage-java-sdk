@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -30,8 +30,8 @@ public class CheckRequest {
 
     /**
      *
-     * @param requestId The request ID.
-     * @param code The verification code.
+     * @param requestId The Verify request to check.
+     * @param code The verification code entered by your user. Between 4 and 6 characters.
      * @param ipAddress No longer used.
      * @deprecated Please use {@link CheckRequest#CheckRequest(String, String)}.
      */
@@ -53,8 +53,9 @@ public class CheckRequest {
     }
 
     /**
-     * @return The Verify request to check.
      * This is the request_id you received in the response to the Verify request.
+     *
+     * @return The Verify request to check.
      */
     public String getRequestId() {
         return requestId;
@@ -69,7 +70,7 @@ public class CheckRequest {
 
     /**
      * @deprecated This field is no longer used.
-     * @return The IP address, as a string.
+     * @return The IP address.
      */
     @Deprecated
     public String getIpAddress() {

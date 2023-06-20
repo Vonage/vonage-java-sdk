@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -44,7 +44,8 @@ public class VerifyClientSearchEndpointTest extends ClientTest<VerifyClient> {
                 + "      \"status\": \"VALID\",\n" + "      \"ip_address\": \"\"\n" + "    }\n" + "  ],\n"
                 + "  \"first_event_date\": \"2012-01-02 03:04:05\",\n"
                 + "  \"last_event_date\": \"2012-01-02 03:04:06\",\n" + "  \"price\": \"0.03000000\",\n"
-                + "  \"currency\": \"EUR\",\n" + "  \"status\": \"SUCCESS\"\n" + "}";
+                + "  \"currency\": \"EUR\",\n" + "  \"status\": \"SUCCESS\",\n"
+                + "  \"estimated_price_messages_sent\": \"0.03330000\"\n}";
         wrapper.setHttpClient(stubHttpClient(200, json));
 
         SearchVerifyResponse response = client.search("not-a-search-request-id");
@@ -75,6 +76,7 @@ public class VerifyClientSearchEndpointTest extends ClientTest<VerifyClient> {
         assertEquals("not-a-search-request-id", details.getRequestId());
         assertEquals("447700900991", details.getSenderId());
         assertEquals(VerifyDetails.Status.SUCCESS, details.getStatus());
+        assertEquals(0.03330000, details.getEstimatedPriceMessagesSent().doubleValue(), 0.001);
 
         List<VerifyCheck> checks = details.getChecks();
 

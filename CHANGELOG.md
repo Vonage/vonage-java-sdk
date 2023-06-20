@@ -4,9 +4,54 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-# [7.2.0]
+# [7.6.0] - 2023-06-29
+- Added Proactive Connect API implementation
 - Added Meetings API implementation
-- Added inbound message webhook
+- Updated Subaccounts name & secret validation logic
+
+# [7.5.0] - 2023-06-14
+- Added Subaccounts API implementation
+- Added custom PIN functionality to Verify v1
+- Fixed Silent Auth action URL webhook deserialization issue
+
+# [7.4.0] - 2023-05-18
+- Added Verify v2 API implementation
+- Added Advanced Machine Detection to Voice API
+- Fixed VbcEndpoint NCCO
+- Removed dependency on `jakarta.xml.bind`
+- Made `jakarta.servlet` an optional dependency
+- Deprecated all methods and classes that use `javax.servlet.HttpServletRequest`
+
+# [7.3.0] - 2023-04-14
+- Viber video message now requires setting duration and file size
+- Numbers API now uses Basic auth in header rather than query params
+- Made `jakarta.servlet-api` a required dependency (replacing `javax.servlet` as compileOnly)
+- Use `jakarta.xml.bind-api` instead of `javax.xml.bind`
+- Added `premium` and `level` fields to Start Talk request
+- Refactored `TalkPayload` to use Builder pattern
+- Added `vbc` and `app` endpoint types for voice calls
+- Fixed incorrect serialisation of `random_from_number`
+- Added Builder for constructing `Call` request
+- Added validation for UUIDs, URLs and request objects in `VoiceClient`
+- Made internal request classes for Voice API package-private
+- Deprecated public-facing usages of `CallModifer` & `ModifyCallPayload`
+- Deprecated setters on classes in Voice API in favour of builders / constructors
+- `com.vonage.client.voice.WebSocketEndpoint` now uses Map for headers
+
+# [7.2.0] - 2023-03-08
+- Updates to Messages v1:
+  - Added `InboundMessage` webhook class
+  - Fixed timestamp format deserialization for MessageStatus (now returns an Instant)
+  - Added Viber file and video message types
+  - Added Action button support to Viber image and text messages 
+  - Added WhatsApp Sticker message type
+  - Added WhatsApp Location custom message type
+  - Added WhatsApp Product custom message types
+  - `client_ref` character limit increased to 100
+  - Expanded valid message types to accommodate webhooks (MMS text, WhatsApp order, reply & unsupported)
+- Deprecated Pay NCCO action (removed in 8.x)
+- Deprecated WAPPush SMS (removed in 8.x)
+- Bumped dependency versions
 
 # [7.1.1] - 2022-11-16
 - Bumped Jackson version to 2.14

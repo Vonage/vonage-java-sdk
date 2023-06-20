@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -22,9 +22,9 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 import java.net.URI;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.Instant;
 import java.util.Currency;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -36,8 +36,6 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class MessageStatus {
-	static final String ISO_8601_PATTERN = "yyyy-MM-dd HH:mm:ss Z";
-	protected static final DateTimeFormatter ISO_8601 = DateTimeFormatter.ofPattern(ISO_8601_PATTERN);
 
 	public enum Status {
 		SUBMITTED,
@@ -68,10 +66,6 @@ public class MessageStatus {
 		@JsonProperty("title") String title;
 		@JsonProperty("detail") String detail;
 		@JsonProperty("instance") String instance;
-
-		void setType(String type) {
-			this.type = URI.create(type);
-		}
 
 		/**
 		 * The type of error encountered. Follow this URL for more details.
@@ -143,6 +137,7 @@ public class MessageStatus {
 	 * Describes the charge incurred for sending the message.
 	 */
 	@JsonInclude(value = JsonInclude.Include.NON_NULL)
+	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static final class Usage {
 		@JsonProperty("price") double price;
 		@JsonProperty("currency") Currency currency;
@@ -152,7 +147,7 @@ public class MessageStatus {
 		}
 
 		/**
-		 * The charge currency in ISO 4217 format. Usually will be <code>EUR</code> (Euros).
+		 * The charge currency in ISO 4217 format. Usually will be {@code EUR} (Euros).
 		 *
 		 * @return The Currency.
 		 */
@@ -198,8 +193,8 @@ public class MessageStatus {
 	protected MessageStatus() {
 	}
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = ISO_8601_PATTERN)
-	@JsonProperty("timestamp") protected ZonedDateTime timestamp;
+	@JsonAnySetter protected Map<String, Object> unknownProperties;
+	@JsonProperty("timestamp") protected Instant timestamp;
 	@JsonProperty("message_uuid") protected UUID messageUuid;
 	@JsonProperty("to") protected String to;
 	@JsonProperty("from") protected String from;
@@ -237,21 +232,13 @@ public class MessageStatus {
 		return from;
 	}
 
-	protected void setTimestamp(String timestamp) {
-		this.timestamp = ISO_8601.parse(timestamp, ZonedDateTime::from);
-	}
-
 	/**
 	 * The datetime of when the event occurred.
 	 *
-	 * @return The timestamp as a ZonedDateTime.
+	 * @return The timestamp as an Instant.
 	 */
-	public ZonedDateTime getTimestamp() {
+	public Instant getTimestamp() {
 		return timestamp;
-	}
-
-	protected void setStatus(String status) {
-		this.status = Status.fromString(status);
 	}
 
 	/**
@@ -261,10 +248,6 @@ public class MessageStatus {
 	 */
 	public Status getStatus() {
 		return status;
-	}
-
-	protected void setChannel(String channel) {
-		this.channel = Channel.fromString(channel);
 	}
 
 	/**
@@ -280,7 +263,7 @@ public class MessageStatus {
 	 * Client reference of up to 40 characters. The reference will be present if set
 	 * in the original outbound {@link MessageRequest}.
 	 *
-	 * @return The client reference, or <code>null</code> if unset.
+	 * @return The client reference, or {@code null} if unset.
 	 */
 	public String getClientRef() {
 		return clientRef;
@@ -289,7 +272,7 @@ public class MessageStatus {
 	/**
 	 * If the message encountered a problem a descriptive error will be supplied in this object.
 	 *
-	 * @return The error object, or <code>null</code> if there was no problem to report.
+	 * @return The error object, or {@code null} if there was no problem to report.
 	 */
 	public Error getError() {
 		return error;
@@ -298,21 +281,32 @@ public class MessageStatus {
 	/**
 	 * Describes the cost of the message that was sent.
 	 *
-	 * @return The usage object, or <code>null</code> if absent.
+	 * @return The usage object, or {@code null} if absent.
 	 */
 	public Usage getUsage() {
 		return usage;
 	}
 
 	/**
+	 * Catch-all for properties which are not mapped by this class during deserialization.
+	 *
+	 * @return Additional (unknown) properties as a Map, or {@code null} if absent.
+	 */
+	public Map<String, ?> getAdditionalProperties() {
+		return unknownProperties;
+	}
+
+	/**
 	 * Creates an instance of this class from a JSON payload.
 	 *
 	 * @param json The JSON string to parse.
+	 *
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static MessageStatus fromJson(String json) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
+			mapper.registerModule(new JavaTimeModule());
 			return mapper.readValue(json, MessageStatus.class);
 		}
 		catch (IOException ex) {

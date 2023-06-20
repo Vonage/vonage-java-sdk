@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -18,21 +18,24 @@ package com.vonage.client.numbers;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
+import static com.vonage.client.TestUtils.test429;
+import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
-import static com.vonage.client.TestUtils.test429;
-import static org.junit.Assert.assertEquals;
 
 
 public class ListNumbersEndpointTest {
@@ -40,7 +43,9 @@ public class ListNumbersEndpointTest {
 
     @Before
     public void setUp() throws Exception {
-        endpoint = new ListNumbersEndpoint(new HttpWrapper());
+        endpoint = new ListNumbersEndpoint(new HttpWrapper(
+                new TokenAuthMethod("abc123", "a2cd5f789")
+        ));
     }
 
     @Test
@@ -59,6 +64,13 @@ public class ListNumbersEndpointTest {
         assertEquals("10", params.get("index"));
         assertEquals("20", params.get("size"));
         assertEquals(ContentType.APPLICATION_JSON.getMimeType(), request.getFirstHeader("Accept").getValue());
+    }
+
+    @Test
+    public void applyAuth() throws Exception {
+        RequestBuilder builder = endpoint.applyAuth(endpoint.makeRequest(new ListNumbersFilter()));
+        List<NameValuePair> params = builder.getParameters();
+        assertEquals(0, params.size());
     }
 
     @Test

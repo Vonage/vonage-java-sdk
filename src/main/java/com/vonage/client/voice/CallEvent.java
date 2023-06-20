@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -23,26 +23,13 @@ import java.io.IOException;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CallEvent {
-    private String uuid;
-    private String conversationUuid;
+    private String uuid, conversationUuid;
     private CallStatus status;
     private CallDirection direction;
 
-    public static CallEvent fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, CallEvent.class);
-        } catch (IOException jpe) {
-            throw new VonageUnexpectedException("Failed to produce json from Call object.", jpe);
-        }
-    }
-
+    @JsonProperty("uuid")
     public String getUuid() {
         return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
     }
 
     @JsonProperty("conversation_uuid")
@@ -50,23 +37,49 @@ public class CallEvent {
         return conversationUuid;
     }
 
-    public void setConversationUuid(String conversationUuid) {
-        this.conversationUuid = conversationUuid;
-    }
-
+    @JsonProperty("status")
     public CallStatus getStatus() {
         return status;
     }
 
-    public void setStatus(CallStatus status) {
-        this.status = status;
-    }
-
+    @JsonProperty("direction")
     public CallDirection getDirection() {
         return direction;
     }
 
+    @Deprecated
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    @Deprecated
+    public void setConversationUuid(String conversationUuid) {
+        this.conversationUuid = conversationUuid;
+    }
+
+    @Deprecated
+    public void setStatus(CallStatus status) {
+        this.status = status;
+    }
+
+    @Deprecated
     public void setDirection(CallDirection direction) {
         this.direction = direction;
+    }
+
+    /**
+     * Creates an instance of this class from a JSON payload.
+     *
+     * @param json The JSON string to parse.
+     *
+     * @return An instance of this class with the fields populated, if present.
+     */
+    public static CallEvent fromJson(String json) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(json, CallEvent.class);
+        } catch (IOException jpe) {
+            throw new VonageUnexpectedException("Failed to produce json from Call object.", jpe);
+        }
     }
 }

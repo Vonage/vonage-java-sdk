@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ public class VonageUnacceptableAuthException extends VonageAuthException {
     private static final Map<Class<?>, String> AUTH_DESCRIPTION_MAP = new HashMap<>();
 
     private final Iterable<AuthMethod> availableAuths;
-    private final Iterable<Class<?>> acceptableAuthClasses;
+    private final Iterable<Class<? extends AuthMethod>> acceptableAuthClasses;
 
     static {
         AUTH_DESCRIPTION_MAP.put(TokenAuthMethod.class, "API Key and Secret");
@@ -29,7 +29,7 @@ public class VonageUnacceptableAuthException extends VonageAuthException {
         AUTH_DESCRIPTION_MAP.put(JWTAuthMethod.class, "Application ID and Private Key");
     }
 
-    public VonageUnacceptableAuthException(Collection<AuthMethod> availableAuths, Collection<Class<?>> acceptableAuthClasses) {
+    public VonageUnacceptableAuthException(Collection<AuthMethod> availableAuths, Collection<Class<? extends AuthMethod>> acceptableAuthClasses) {
         this.availableAuths = new ArrayList<>(availableAuths);
         this.acceptableAuthClasses = new ArrayList<>(acceptableAuthClasses);
     }

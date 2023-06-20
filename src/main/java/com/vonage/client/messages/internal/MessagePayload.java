@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -18,8 +18,9 @@ package com.vonage.client.messages.internal;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.net.URI;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Container object for audio, video, image and file message payload contents.
@@ -42,8 +43,8 @@ public class MessagePayload {
 	}
 
 	@JsonProperty("url")
-	public String getUrl() {
-		return url.toString();
+	public URI getUrl() {
+		return url;
 	}
 
 	@JsonProperty("caption")
@@ -51,15 +52,20 @@ public class MessagePayload {
 		return caption;
 	}
 
-	public void validateUrlExtension(String... allowed) {
-		String path = url.getPath();
+	public static void validateExtension(String path, String... allowed) {
 		int lastDot = path.lastIndexOf('.');
 		if (lastDot < 1) return;
 		String ext = path.substring(lastDot+1);
-		Collection<String> extensions = Arrays.asList(allowed);
+		Collection<String> extensions = Stream.of(allowed)
+				.map(s -> s.startsWith(".") ? s.substring(1) : s)
+				.collect(Collectors.toSet());
 		if (!extensions.contains(ext)) {
 			throw new IllegalArgumentException("Invalid extension: '"+ext+"'. Should be one of "+extensions);
 		}
+	}
+
+	public void validateUrlExtension(String... allowed) {
+		validateExtension(url.getPath(), allowed);
 	}
 
 	public void validateCaptionLength(int max) {
@@ -71,7 +77,7 @@ public class MessagePayload {
 
 	public void validateUrlLength(int min, int max) {
 		if (url == null) return;
-		int length = getUrl().length();
+		int length = getUrl().toString().length();
 		if (length < min) {
 			throw new IllegalArgumentException("URL must be longer than "+min+" characters");
 		}

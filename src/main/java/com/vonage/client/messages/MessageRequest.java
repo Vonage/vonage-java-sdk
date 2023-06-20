@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
-import com.vonage.client.messages.internal.E164;
+import com.vonage.client.common.E164;
 import java.util.Objects;
 
 /**
@@ -53,7 +53,7 @@ public abstract class MessageRequest {
 	protected MessageRequest(Builder<?, ?> builder, Channel channel, MessageType messageType) {
 		this.messageType = Objects.requireNonNull(messageType, "Message type cannot be null");
 		this.channel = Objects.requireNonNull(channel, "Channel cannot be null");
-		if (!this.channel.getSupportedMessageTypes().contains(this.messageType)) {
+		if (!this.channel.getSupportedOutboundMessageTypes().contains(this.messageType)) {
 			throw new IllegalArgumentException(this.messageType +" cannot be sent via "+ this.channel);
 		}
 		clientRef = validateClientReference(builder.clientRef);
@@ -69,8 +69,9 @@ public abstract class MessageRequest {
 	 * @return The clientRef to use; usually the same as the argument.
 	 */
 	protected String validateClientReference(String clientRef) {
-		if (clientRef != null && clientRef.length() > 40) {
-			throw new IllegalArgumentException("Client reference cannot be longer than 40 characters");
+		int limit = 100;
+		if (clientRef != null && clientRef.length() > limit) {
+			throw new IllegalArgumentException("Client reference cannot be longer than "+limit+" characters");
 		}
 		return clientRef;
 	}
@@ -152,7 +153,7 @@ public abstract class MessageRequest {
 
 		/**
 		 * Protected constructor to prevent users from explicitly creating this object.
-		 * This should only be called by the static <code>builder()</code> method in
+		 * This should only be called by the static {@code builder()} method in
 		 * the non-abstract subclasses of this builder's parent (declaring) class.
 		 */
 		protected Builder() {

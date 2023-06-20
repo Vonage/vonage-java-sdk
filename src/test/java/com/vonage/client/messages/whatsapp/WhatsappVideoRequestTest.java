@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -79,9 +79,9 @@ public class WhatsappVideoRequestTest {
 
 		String baseUrl = "file:///path/to/resource", url;
 		for (String imageType : new String[]{"mp4", "3gpp"}) {
-			url = baseUrl + imageType;
+			url = baseUrl+'.'+imageType;
 			builder.url(url);
-			assertEquals(url, builder.build().getVideo().getUrl());
+			assertEquals(url, builder.build().getVideo().getUrl().toString());
 		}
 	}
 }

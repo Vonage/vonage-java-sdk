@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -56,9 +56,9 @@ public class WhatsappAudioRequestTest {
 
 		String baseUrl = "file:///path/to/resource", url;
 		for (String imageType : new String[]{"aac", "m4a", "amr", "mp3", "opus"}) {
-			url = baseUrl + imageType;
+			url = baseUrl+'.'+imageType;
 			builder.url(url);
-			assertEquals(url, builder.build().getAudio().getUrl());
+			assertEquals(url, builder.build().getAudio().getUrl().toString());
 		}
 	}
 
@@ -74,7 +74,7 @@ public class WhatsappAudioRequestTest {
 			fail("Expected exception for short URL");
 		}
 		catch (IllegalArgumentException ex) {
-			assertEquals(22, builder.url(baseUrl).build().getAudio().getUrl().length());
+			assertEquals(22, builder.url(baseUrl).build().getAudio().getUrl().toString().length());
 		}
 
 		StringBuilder sb = new StringBuilder(limit + 1);

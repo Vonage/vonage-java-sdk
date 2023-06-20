@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.MessageRequest;
 import com.vonage.client.messages.Channel;
 import com.vonage.client.messages.MessageType;
-import com.vonage.client.messages.internal.E164;
+import com.vonage.client.common.E164;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class ViberRequest extends MessageRequest {
@@ -28,7 +28,11 @@ public abstract class ViberRequest extends MessageRequest {
 
 	protected ViberRequest(Builder<?, ?> builder, MessageType messageType) {
 		super(builder, Channel.VIBER, messageType);
-		viberService = ViberService.construct(builder.category, builder.ttl, builder.viberType);
+		viberService = ViberService.construct(
+				builder.category, builder.ttl, builder.viberType,
+				Action.construct(builder.actionUrl, builder.actionText),
+				builder.duration, builder.fileSize
+		);
 	}
 
 	@Override
@@ -50,8 +54,8 @@ public abstract class ViberRequest extends MessageRequest {
 	@SuppressWarnings("unchecked")
 	protected abstract static class Builder<M extends ViberRequest, B extends Builder<? extends M, ? extends B>> extends MessageRequest.Builder<M, B> {
 		protected Category category;
-		protected Integer ttl;
-		protected String viberType;
+		protected Integer ttl, duration, fileSize;
+		protected String viberType, actionUrl, actionText;
 
 		/**
 		 * (OPTIONAL)
@@ -90,6 +94,32 @@ public abstract class ViberRequest extends MessageRequest {
 		 */
 		public B viberType(String type) {
 			this.viberType = type;
+			return (B) this;
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * A URL which is requested when the action button is clicked.
+		 *
+		 * @param actionUrl The URL as a string.
+		 * @return This builder.
+		 * @since 7.2.0
+		 */
+		protected B actionUrl(String actionUrl) {
+			this.actionUrl = actionUrl;
+			return (B) this;
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * Text which is rendered on the action button.
+		 *
+		 * @param actionText The action button description.
+		 * @return This builder.
+		 * @since 7.2.0
+		 */
+		protected B actionText(String actionText) {
+			this.actionText = actionText;
 			return (B) this;
 		}
 	}

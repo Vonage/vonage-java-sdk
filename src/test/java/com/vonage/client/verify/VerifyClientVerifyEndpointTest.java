@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -133,6 +133,19 @@ public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
                 .locale(Locale.US)
                 .build());
 
+        assertEquals(VerifyStatus.INTERNAL_ERROR, response.getStatus());
+        assertEquals("error", response.getErrorText());
+        assertEquals("not-really-a-request-id", response.getRequestId());
+    }
+
+    @Test
+    public void testVerifyWithWorkflow() throws Exception {
+        wrapper.setHttpClient(stubHttpClient(200,
+                "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": \"test\",\n"
+                        + "  \"error_text\": \"error\"\n" + "}"
+        ));
+
+        VerifyResponse response = client.verify("447900000000", "testBrand", VerifyRequest.Workflow.SMS);
         assertEquals(VerifyStatus.INTERNAL_ERROR, response.getStatus());
         assertEquals("error", response.getErrorText());
         assertEquals("not-really-a-request-id", response.getRequestId());

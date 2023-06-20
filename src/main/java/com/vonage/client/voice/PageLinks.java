@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -16,11 +16,7 @@
 package com.vonage.client.voice;
 
 public class PageLinks {
-    private PageLink self;
-    private PageLink next;
-    private PageLink prev;
-    private PageLink first;
-    private PageLink last;
+    private PageLink self, next, prev, first, last;
 
     public PageLink getSelf() {
         return self;

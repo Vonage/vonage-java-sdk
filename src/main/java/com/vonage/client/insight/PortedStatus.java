@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 /**
  * Enum representing whether the user has changed carrier for the number.
  * The assumed status means that the information supplier has replied to the request but has not
- * explicitly reported that the number is ported. Note that this enum may be <code>null</code>.
+ * explicitly reported that the number is ported. Note that this enum may be {@code null}.
  */
 public enum PortedStatus {
 	UNKNOWN, PORTED, NOT_PORTED, ASSUMED_NOT_PORTED, ASSUMED_PORTED;

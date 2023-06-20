@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ public class StreamPayloadTest {
 
     @Before
     public void setUp() throws Exception {
-        payload = new StreamPayload("https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3", 1);
+        payload = new StreamPayload("https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3", 2, 0.4);
     }
 
     @Test
@@ -35,12 +35,19 @@ public class StreamPayloadTest {
 
     @Test
     public void getLoop() throws Exception {
-        assertEquals(1, payload.getLoop());
+        assertEquals(2, payload.getLoop().intValue());
+    }
+
+    @Test
+    public void getLevel() throws Exception {
+        assertEquals(0.4, payload.getLevel(), 0.01);
     }
 
     @Test
     public void toJson() throws Exception {
-        String jsonString = "{\"loop\":1,\"stream_url\":[\"https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3\"]}";
+        String jsonString = "{\"stream_url\":[" +
+                "\"https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3\"" +
+                "],\"loop\":2,\"level\":0.4}";
         assertEquals(jsonString, payload.toJson());
     }
 

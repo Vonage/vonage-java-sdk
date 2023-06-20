@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ package com.vonage.client.numbers;
 
 import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
+import com.vonage.client.VonageClientException;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
@@ -48,5 +49,10 @@ class SearchNumbersEndpoint extends AbstractMethod<SearchNumbersFilter, SearchNu
     @Override
     public SearchNumbersResponse parseResponse(HttpResponse response) throws IOException {
         return SearchNumbersResponse.fromJson(basicResponseHandler.handleResponse(response));
+    }
+
+    @Override
+    protected RequestBuilder applyAuth(RequestBuilder request) throws VonageClientException {
+        return getAuthMethod(getAcceptableAuthMethods()).applyAsBasicAuth(request);
     }
 }

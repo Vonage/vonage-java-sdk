@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -15,20 +15,27 @@
  */
 package com.vonage.client.messages;
 
+import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
 import com.vonage.client.common.HttpMethod;
+import com.vonage.client.messages.mms.MmsVcardRequest;
 import com.vonage.client.messages.sms.SmsTextRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import org.apache.http.util.EntityUtils;
+import static org.junit.Assert.*;
+import org.junit.Before;
 import org.junit.Test;
-import java.io.ByteArrayOutputStream;
 import java.util.UUID;
 
 public class SendMessageEndpointTest {
-	final SendMessageEndpoint endpoint = new SendMessageEndpoint(new HttpWrapper());
+	SendMessageEndpoint endpoint;
+
+	@Before
+	public void setUp() {
+		endpoint = new SendMessageEndpoint(new HttpWrapper());
+	}
 
 	@Test
 	public void testConstructPayloadSms() throws Exception {
@@ -45,14 +52,11 @@ public class SendMessageEndpointTest {
 		final String expected = "{\"message_type\":\"text\",\"channel\":\"sms\",\"from\":" +
 				"\"447700900001\",\"to\":\"447700900000\",\"text\":\"Hello, World!\"}";
 
-		try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-			builder.getEntity().writeTo(baos);
-			assertEquals(expected, baos.toString());
-		}
+		assertEquals(expected, EntityUtils.toString(builder.getEntity()));
 	}
 
 	@Test
-	public void testParseResponse202() throws Exception {
+	public void testParseResponseSuccess() throws Exception {
 		UUID uuid = UUID.randomUUID();
 		String json = "{\"message_uuid\":\""+uuid+"\"}";
 		MessageResponse response = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(202, json));
@@ -60,7 +64,7 @@ public class SendMessageEndpointTest {
 	}
 
 	@Test
-	public void testParseResponseFull() throws Exception {
+	public void testParseResponseFailureAllParams() throws Exception {
 		final int statusCode = 422;
 		final String json = "{\n" +
 				"  \"type\": \"https://developer.nexmo.com/api-errors/messages-olympus#1120\",\n" +
@@ -75,23 +79,45 @@ public class SendMessageEndpointTest {
 		}
 		catch (MessageResponseException mrx) {
 			MessageResponseException expected = MessageResponseException.fromJson(json);
-			expected.statusCode = statusCode;
+			expected.setStatusCode(statusCode);
 			assertEquals(expected, mrx);
+			assertEquals(statusCode, mrx.getStatusCode());
+			assertNotNull(mrx.getType());
+			assertNotNull(mrx.getTitle());
+			assertNotNull(mrx.getDetail());
+			assertNotNull(mrx.getInstance());
 		}
 	}
 
 	@Test
-	public void testParseResponseNoBody() throws Exception {
+	public void testParseResponseFailureNoBody() throws Exception {
 		final int statusCode = 429;
 		try {
 			endpoint.parseResponse(TestUtils.makeJsonHttpResponse(statusCode, ""));
 			fail("Expected "+MessageResponseException.class.getName());
 		}
 		catch (MessageResponseException mrx) {
-			MessageResponseException expected = MessageResponseException.fromJson("");
-			expected.title = "OK";  // This is what TestUtils.makeJsonHttpResponse sets it to
-			expected.statusCode = statusCode;
+			// The mock returns "OK"
+			MessageResponseException expected = MessageResponseException.fromJson("{\"title\":\"OK\"}");
+			expected.setStatusCode(statusCode);
 			assertEquals(expected, mrx);
 		}
+	}
+
+	@Test
+	public void testCustomUri() throws Exception {
+		String baseUri = "http://example.com";
+		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().apiBaseUri(baseUri).build());
+		endpoint = new SendMessageEndpoint(wrapper);
+
+		MessageRequest request = MmsVcardRequest.builder()
+				.url("https://www.example.org/path/to/contacts.vcf")
+				.from("447700900001").to("447700900000").build();
+
+		RequestBuilder builder = endpoint.makeRequest(request);
+		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
+		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		assertEquals("POST", builder.getMethod());
+		assertEquals(baseUri+"/v1/messages", builder.getUri().toString());
 	}
 }

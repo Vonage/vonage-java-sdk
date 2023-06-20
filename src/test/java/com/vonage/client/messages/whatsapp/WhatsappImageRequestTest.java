@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -100,9 +100,9 @@ public class WhatsappImageRequestTest {
 
 		String baseUrl = "file:///path/to/resource", url;
 		for (String imageType : new String[]{"jpeg", "jpg", "png"}) {
-			url = baseUrl + imageType;
+			url = baseUrl+'.'+imageType;
 			builder.url(url);
-			assertEquals(url, builder.build().getImage().getUrl());
+			assertEquals(url, builder.build().getImage().getUrl().toString());
 		}
 	}
 

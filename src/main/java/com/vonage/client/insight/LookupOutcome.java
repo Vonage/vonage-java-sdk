@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -20,10 +20,10 @@ import java.util.Arrays;
 
 /**
  * Enum representing whether all information about a phone number has been returned.
- *
- * <code>0</code> is success,
- * <code>1</code> is a partial success (some fields populated),
- * <code>2</code> is failure.
+ * <p>
+ * {@code 0} is success,
+ * {@code 1} is a partial success (some fields populated),
+ * {@code 2} is failure.
  */
 public enum LookupOutcome {
 	UNKNOWN(Integer.MAX_VALUE),

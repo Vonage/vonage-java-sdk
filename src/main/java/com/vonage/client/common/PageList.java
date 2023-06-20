@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -20,13 +20,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PageList {
-    @JsonProperty("page_size")
-    private long pageSize;
-    private long page;
-    @JsonProperty("total_pages")
-    private long totalPages;
-    @JsonProperty("total_items")
-    private long totalItems;
+    @JsonProperty("page_size") private long pageSize;
+    @JsonProperty("page") private long page;
+    @JsonProperty("total_pages") private long totalPages;
+    @JsonProperty("total_items") private long totalItems;
 
     public long getPageSize() {
         return pageSize;

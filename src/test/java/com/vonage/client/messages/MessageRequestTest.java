@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -15,8 +15,10 @@
  */
 package com.vonage.client.messages;
 
-import org.junit.Test;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.VonageUnexpectedException;
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class MessageRequestTest {
 
@@ -150,7 +152,7 @@ public class MessageRequestTest {
 	@Test
 	public void testConstructLongClientRef() {
 		StringBuilder clientRef = new StringBuilder(41);
-		for (int i = 0; i < 39; i++) {
+		for (int i = 0; i < 99; i++) {
 			clientRef.append('c');
 		}
 
@@ -158,15 +160,15 @@ public class MessageRequestTest {
 				.builder(MessageType.TEXT, Channel.SMS)
 				.from("447900000009").to("12002009000");
 
-		assertEquals(39, builder.clientRef(clientRef.toString()).build().getClientRef().length());
+		assertEquals(99, builder.clientRef(clientRef.toString()).build().getClientRef().length());
 
 		clientRef.append("0f");
 		try {
 			builder.clientRef(clientRef.toString()).build();
-			fail("Expected exception for clientRef > 40 characters");
+			fail("Expected exception for clientRef > 100 characters");
 		}
 		catch (IllegalArgumentException ex) {
-			assertEquals(41, clientRef.length());
+			assertEquals(101, clientRef.length());
 		}
 	}
 
@@ -178,5 +180,17 @@ public class MessageRequestTest {
 
 		String expected = "ConcreteMessageRequest {\"message_type\":\"custom\",\"channel\":\"whatsapp\",\"from\":\"447900000009\",\"to\":\"12002009000\"}";
 		assertEquals(expected, request.toString());
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void triggerJsonProcessingException() {
+		class SelfRefrencing extends ConcreteMessageRequest {
+			@JsonProperty("self") SelfRefrencing self = this;
+
+			SelfRefrencing() {
+				super(builder(MessageType.TEXT, Channel.SMS).from("447900000009").to("12002009000"));
+			}
+		}
+		new SelfRefrencing().toJson();
 	}
 }

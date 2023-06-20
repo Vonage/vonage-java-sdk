@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -18,10 +18,8 @@ package com.vonage.client.verify;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageResponseParseException;
-import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -35,7 +33,7 @@ public class VerifyResponse {
     }
 
     /**
-     * @return The unique ID of the Verify request. You need this <code>request_id</code> for the Verify check.
+     * @return The unique ID of the Verify request. You need this {@code request_id} for the Verify check.
      * Note that this may not be present when {@link #getNetwork()} returns a non-null / non-empty value.
      */
     @JsonProperty("request_id")
@@ -44,7 +42,7 @@ public class VerifyResponse {
     }
 
     /**
-     * @return The outcome of the request; <code>0</code> (i.e. {@link VerifyStatus#OK}) indicates success.
+     * @return The outcome of the request; {@code 0} (i.e. {@link VerifyStatus#OK}) indicates success.
      */
     public VerifyStatus getStatus() {
         return status;
@@ -60,6 +58,7 @@ public class VerifyResponse {
 
     /**
      * @return The network ID, if {@link #getStatus()} returns {@link VerifyStatus#NUMBER_BARRED}.
+     *
      * @since 7.1.0
      */
     @JsonProperty("network")
@@ -71,10 +70,9 @@ public class VerifyResponse {
         try {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(json, VerifyResponse.class);
-        } catch (JsonMappingException jme) {
+        }
+        catch (IOException jme) {
             throw new VonageResponseParseException("Failed to produce VerifyResponse from json.", jme);
-        } catch (IOException jpe) {
-            throw new VonageUnexpectedException("Failed to produce VerifyResponse from json.", jpe);
         }
     }
 }

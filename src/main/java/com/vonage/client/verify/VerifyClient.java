@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@ import java.util.Locale;
  * Send a verification request with a call to {@link #verify}, confirm the code entered by the user with {@link #check},
  * and search in-progress or completed verification requests with {@link #search}
  * <p>
- * More information on method parameters can be found at Vonage website:
- * <a href="https://developer.nexmo.com/verify/overview">https://developer.nexmo.com/verify/overview</a>
+ * More information on method parameters can be found on the
+ * <a href="https://developer.vonage.com/verify/overview">Vonage developer portal</a>.
  */
 public class VerifyClient {
     final CheckEndpoint check;
@@ -72,7 +72,7 @@ public class VerifyClient {
      *               format.
      * @param brand  (required) The name of the company or app to be verified for. Must not be longer than 18
      *               characters.
-     * @param workflow <a href="https://developer.nexmo.com/verify/guides/workflows-and-events">workflow</a>
+     * @param workflow <a href="https://developer.vonage.com/verify/guides/workflows-and-events">workflow</a>
      *                 to use for sending verification pin
      *
      * @return a VerifyResponse representing the response received from the Verify API call.
@@ -83,10 +83,7 @@ public class VerifyClient {
      */
     public VerifyResponse verify(final String number, final String brand, VerifyRequest.Workflow workflow)
             throws VonageResponseParseException, VonageClientException {
-        return verify(new VerifyRequest.Builder(number, brand)
-                .workflow(workflow)
-                .build()
-        );
+        return verify(new VerifyRequest.Builder(number, brand).workflow(workflow).build());
     }
 
     /**
@@ -158,7 +155,7 @@ public class VerifyClient {
      * @param locale (optional) Override the default locale used for verification. By default the locale is determined
      *               from the country code included in {@code number}
      * @param type   (optional) If provided, restrict the verification to the specified network type. Contact
-     *               support@nexmo.com to enable this feature.
+     *               support@vonage.com to enable this feature.
      *
      * @return a VerifyResponse representing the response received from the Verify API call.
      *
@@ -233,7 +230,7 @@ public class VerifyClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      *
-     * @deprecated <code>ipAddress</code> is no longer used and will be removed in the next major release.
+     * @deprecated {@code ipAddress} is no longer used and will be removed in the next major release.
      * Please use {@link #check(String, String)}
      */
     @Deprecated
@@ -325,7 +322,7 @@ public class VerifyClient {
      * @param number   telephone number to verify, in <a href="https://en.wikipedia.org/wiki/E.164">E.164</a> format
      * @param amount   payment amount
      * @param payee    name of the person the payment is for. Name will be included in the message
-     * @param workflow <a href="https://developer.nexmo.com/verify/guides/workflows-and-events">workflow</a>
+     * @param workflow <a href="https://developer.vonage.com/verify/guides/workflows-and-events">workflow</a>
      *                 to use for sending verification pin
      *
      * @return A {@link VerifyResponse} representing the response from the API.

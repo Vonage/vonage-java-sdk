@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -20,19 +20,23 @@ import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
 import com.vonage.client.auth.TokenAuthMethod;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import java.util.List;
 import java.util.Map;
-import static org.junit.Assert.*;
 
 public class UpdateNumberEndpointTest {
     private UpdateNumberEndpoint endpoint;
 
     @Before
     public void setUp() throws Exception {
-        endpoint = new UpdateNumberEndpoint(new HttpWrapper());
+        endpoint = new UpdateNumberEndpoint(new HttpWrapper(
+                new TokenAuthMethod("abc123", "a2cd5f789")
+        ));
     }
 
     @Test
@@ -80,6 +84,15 @@ public class UpdateNumberEndpointTest {
         assertEquals("https://api.example.com/callback", params.get("voiceStatusCallback"));
         assertEquals("MESSAGES-APPLICATION-ID", params.get("messagesCallbackValue"));
         assertEquals(UpdateNumberRequest.CallbackType.APP.paramValue(), params.get("messagesCallbackType"));
+    }
+
+    @Test
+    public void testApplyAuth() throws Exception {
+        RequestBuilder builder = endpoint.applyAuth(endpoint.makeRequest(
+                new UpdateNumberRequest("447700900015", "UK")
+        ));
+        List<NameValuePair> params = builder.getParameters();
+        assertEquals(2, params.size());
     }
 
     @Test

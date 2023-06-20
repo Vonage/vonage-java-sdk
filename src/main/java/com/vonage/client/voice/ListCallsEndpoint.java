@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -29,7 +29,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 class ListCallsEndpoint extends AbstractMethod<CallsFilter, CallInfoPage> {
-
     private static final String PATH = "/calls";
     private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 

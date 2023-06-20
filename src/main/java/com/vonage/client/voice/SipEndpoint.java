@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -15,28 +15,37 @@
  */
 package com.vonage.client.voice;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SipEndpoint implements Endpoint {
+    private static final String TYPE = "sip";
     private String uri;
-    private String type = "sip";
+
+    protected SipEndpoint() {
+    }
 
     public SipEndpoint(String uri) {
         this.uri = uri;
     }
 
+    @Deprecated
     public void setUri(String uri) {
         this.uri = uri;
     }
 
+    @JsonProperty("uri")
     public String getUri() {
         return uri;
     }
 
+    @JsonProperty("type")
     @Override
     public String getType() {
-        return type;
+        return TYPE;
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -17,8 +17,7 @@ package com.vonage.client.verify;
 
 import com.vonage.client.ClientTest;
 import com.vonage.client.VonageResponseParseException;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import java.math.BigDecimal;
@@ -49,6 +48,7 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
         for (CheckResponse response : responses) {
             assertEquals("a-request-id", response.getRequestId());
             assertEquals(VerifyStatus.OK, response.getStatus());
+            assertFalse(response.getStatus().isTemporaryError());
             assertEquals("an-event-id", response.getEventId());
             assertEquals(new BigDecimal("0.10000000"), response.getPrice());
             assertEquals("EUR", response.getCurrency());

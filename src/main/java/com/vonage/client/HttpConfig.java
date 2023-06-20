@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@ package com.vonage.client;
 
 public class HttpConfig {
     private static final String
-          DEFAULT_API_BASE_URI = "https://api.nexmo.com",
-          DEFAULT_REST_BASE_URI = "https://rest.nexmo.com",
-          DEFAULT_SNS_BASE_URI = "https://sns.nexmo.com",
-          DEFAULT_API_EU_BASE_URI = "https://api-eu.vonage.com";
+            DEFAULT_API_BASE_URI = "https://api.nexmo.com",
+            DEFAULT_REST_BASE_URI = "https://rest.nexmo.com",
+            DEFAULT_SNS_BASE_URI = "https://sns.nexmo.com",
+            DEFAULT_API_EU_BASE_URI = "https://api-eu.vonage.com";
 
     private final String apiBaseUri, restBaseUri, snsBaseUri, apiEuBaseUri;
 
@@ -96,10 +96,10 @@ public class HttpConfig {
 
     public static class Builder {
         private String
-              apiBaseUri = DEFAULT_API_BASE_URI,
-              restBaseUri = DEFAULT_REST_BASE_URI,
-              snsBaseUri = DEFAULT_SNS_BASE_URI,
-              apiEuBaseUri = DEFAULT_API_EU_BASE_URI;
+                apiBaseUri = DEFAULT_API_BASE_URI,
+                restBaseUri = DEFAULT_REST_BASE_URI,
+                snsBaseUri = DEFAULT_SNS_BASE_URI,
+                apiEuBaseUri = DEFAULT_API_EU_BASE_URI;
 
         /**
          * @param apiBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_API_BASE_URI}

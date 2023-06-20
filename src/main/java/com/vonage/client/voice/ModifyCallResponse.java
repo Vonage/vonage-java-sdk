@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -34,6 +34,13 @@ public class ModifyCallResponse {
         return message;
     }
 
+    /**
+     * Creates an instance of this class from a JSON payload.
+     *
+     * @param json The JSON string to parse.
+     *
+     * @return An instance of this class with the fields populated, if present.
+     */
     public static ModifyCallResponse fromJson(String json) {
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -42,5 +49,4 @@ public class ModifyCallResponse {
             throw new VonageUnexpectedException("Failed to produce ModifyCallResponse from json.", jpe);
         }
     }
-
 }

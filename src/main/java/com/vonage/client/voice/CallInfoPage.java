@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ public class CallInfoPage implements Iterable<CallInfo> {
     private PageLinks links;
     private EmbeddedCalls embedded;
 
+    @JsonProperty("count")
     public int getCount() {
         return count;
     }
@@ -59,6 +60,13 @@ public class CallInfoPage implements Iterable<CallInfo> {
         return new ArrayIterator<>(embedded.getCallInfos());
     }
 
+    /**
+     * Creates an instance of this class from a JSON payload.
+     *
+     * @param json The JSON string to parse.
+     *
+     * @return An instance of this class with the fields populated, if present.
+     */
     public static CallInfoPage fromJson(String json) {
         try {
             ObjectMapper mapper = new ObjectMapper();

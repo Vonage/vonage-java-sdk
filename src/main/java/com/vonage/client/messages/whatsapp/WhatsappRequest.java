@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vonage.client.messages.Channel;
 import com.vonage.client.messages.MessageRequest;
 import com.vonage.client.messages.MessageType;
-import com.vonage.client.messages.internal.E164;
+import com.vonage.client.common.E164;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class WhatsappRequest extends MessageRequest {

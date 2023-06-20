@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import com.vonage.client.sns.response.SnsPublishResponse;
 import com.vonage.client.sns.response.SnsSubscribeResponse;
 
 /**
- * A client for talking to the Vonage Voice API. The standard way to obtain an instance of this class is to use {@link
+ * A client for talking to the Vonage SNS API. The standard way to obtain an instance of this class is to use {@link
  * VonageClient#getSnsClient()}.
  */
 public class SnsClient {

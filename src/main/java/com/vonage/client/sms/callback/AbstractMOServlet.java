@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -40,10 +40,11 @@ import java.util.concurrent.Executors;
  * Note: This servlet will immediately ack the callback as soon as it is validated. Your subclass will
  * consume the callback object asynchronously. This is because it is important to keep latency of
  * the acknowledgement to a minimum in order to maintain throughput when operating at any sort of volume.
- * You are responsible for persisting this object in the event of any failure whilst processing
+ * You are responsible for persisting this object in the event of any failure whilst processing.
  *
- *
+ * @deprecated This class is no longer maintained and may be removed in a future release.
  */
+@Deprecated
 public abstract class AbstractMOServlet extends HttpServlet {
 
     private static final long serialVersionUID = 8745764381059238419L;

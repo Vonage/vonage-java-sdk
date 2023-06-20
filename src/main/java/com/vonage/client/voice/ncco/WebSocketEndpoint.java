@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -39,8 +39,15 @@ public class WebSocketEndpoint implements Endpoint {
         headers = builder.headers;
     }
 
+    @JsonProperty("uri")
     public URI getUri() {
         return uri;
+    }
+
+    @JsonProperty("type")
+    @Override
+    public String getType() {
+        return TYPE;
     }
 
     @JsonProperty("content-type")
@@ -48,13 +55,9 @@ public class WebSocketEndpoint implements Endpoint {
         return contentType;
     }
 
+    @JsonProperty("headers")
     public Map<String, ?> getHeaders() {
         return headers;
-    }
-
-    @Override
-    public String getType() {
-        return TYPE;
     }
 
     public static Builder builder(String uri, String contentType) {

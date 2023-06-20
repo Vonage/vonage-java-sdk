@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -15,6 +15,6 @@
  */
 
 /**
- * Provides access to the Vonage Voice API.
+ * Implementation of the <a href=https://developer.vonage.com/en/voice/voice-api/overview>Vonage Voice API</a>.
  */
 package com.vonage.client.voice;

@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.Date;
 
 /**
- * CallInfo holds the information related to a call. It is obtained using {@link VoiceClient#listCalls}.
+ * CallInfo holds the information related to a call. It is obtained using {@link VoiceClient#listCalls()}.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(value = { "_links" }, ignoreUnknown = true)
@@ -37,39 +37,33 @@ public class CallInfo {
     private Date startTime, endTime;
     private CallStatus status;
 
+    @Deprecated
     public CallInfo() {}
 
+    @Deprecated
     public CallInfo(String to, String from) {
         this(new PhoneEndpoint(to), new PhoneEndpoint(from));
     }
 
+    @Deprecated
     public CallInfo(Endpoint to, Endpoint from) {
         this.to = to;
         this.from = from;
     }
 
+    @JsonProperty("to")
     public Endpoint getTo() {
         return to;
     }
 
-    public void setTo(Endpoint to) {
-        this.to = to;
-    }
-
+    @JsonProperty("from")
     public Endpoint getFrom() {
         return from;
     }
 
-    public void setFrom(Endpoint from) {
-        this.from = from;
-    }
-
+    @JsonProperty("uuid")
     public String getUuid() {
         return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
     }
 
     @JsonProperty("conversation_uuid")
@@ -77,16 +71,9 @@ public class CallInfo {
         return conversationUuid;
     }
 
-    public void setConversationUuid(String conversationUuid) {
-        this.conversationUuid = conversationUuid;
-    }
-
+    @JsonProperty("duration")
     public Integer getDuration() {
         return duration;
-    }
-
-    public void setDuration(Integer duration) {
-        this.duration = duration;
     }
 
     @JsonProperty("end_time")
@@ -94,24 +81,14 @@ public class CallInfo {
         return endTime;
     }
 
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
-
+    @JsonProperty("price")
     public String getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
+    @JsonProperty("rate")
     public String getRate() {
         return rate;
-    }
-
-    public void setRate(String rate) {
-        this.rate = rate;
     }
 
     @JsonProperty("start_time")
@@ -119,34 +96,82 @@ public class CallInfo {
         return this.startTime;
     }
 
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
-
+    @JsonProperty("status")
     public CallStatus getStatus() {
         return status;
     }
 
-    public void setStatus(CallStatus status) {
-        this.status = status;
-    }
-
+    @JsonProperty("direction")
     public CallDirection getDirection() {
         return direction;
     }
 
-    public void setDirection(CallDirection direction) {
-        this.direction = direction;
-    }
-
+    @JsonProperty("network")
     public String getNetwork() {
         return network;
     }
 
+    @Deprecated
+    public void setTo(Endpoint to) {
+        this.to = to;
+    }
+
+    @Deprecated
+    public void setFrom(Endpoint from) {
+        this.from = from;
+    }
+
+    @Deprecated
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    @Deprecated
+    public void setConversationUuid(String conversationUuid) {
+        this.conversationUuid = conversationUuid;
+    }
+
+    @Deprecated
+    public void setDuration(Integer duration) {
+        this.duration = duration;
+    }
+
+    @Deprecated
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    @Deprecated
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    @Deprecated
+    public void setRate(String rate) {
+        this.rate = rate;
+    }
+
+    @Deprecated
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    @Deprecated
     public void setNetwork(String network) {
         this.network = network;
     }
 
+    @Deprecated
+    public void setDirection(CallDirection direction) {
+        this.direction = direction;
+    }
+
+    @Deprecated
+    public void setStatus(CallStatus status) {
+        this.status = status;
+    }
+
+    @Override
     public String toString() {
         return "<CallInfo " +
                 "ID: " + this.getUuid() + ", " +
@@ -156,6 +181,13 @@ public class CallInfo {
                 ">";
     }
 
+    /**
+     * Creates an instance of this class from a JSON payload.
+     *
+     * @param json The JSON string to parse.
+     *
+     * @return An instance of this class with the fields populated, if present.
+     */
     public static CallInfo fromJson(String json) {
         try {
             ObjectMapper mapper = new ObjectMapper();

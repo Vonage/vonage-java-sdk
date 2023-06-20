@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -333,13 +333,16 @@ public class VonageClientTest {
         assertNotNull(client.getConversionClient());
         assertNotNull(client.getVoiceClient());
         assertNotNull(client.getInsightClient());
-        assertNotNull(client.getMessagesClient());
         assertNotNull(client.getMeetingsClient());
+        assertNotNull(client.getMessagesClient());
         assertNotNull(client.getNumbersClient());
+        assertNotNull(client.getProactiveConnectClient());
         assertNotNull(client.getRedactClient());
         assertNotNull(client.getSmsClient());
         assertNotNull(client.getSnsClient());
+        assertNotNull(client.getSubaccountsClient());
         assertNotNull(client.getVerifyClient());
+        assertNotNull(client.getVerify2Client());
     }
 
     private void assertContainsParam(List<NameValuePair> params, String key, String value) {

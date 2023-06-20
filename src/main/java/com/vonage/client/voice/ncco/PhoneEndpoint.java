@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Represents a phone endpoint used in a {@link ConnectAction}. See
@@ -35,18 +36,34 @@ public class PhoneEndpoint implements Endpoint {
         this.onAnswer = (builder.onAnswerUrl != null) ? new OnAnswer(builder.onAnswerUrl, builder.onAnswerRingback) : null;
     }
 
+    @JsonProperty("type")
+    @Override
     public String getType() {
         return TYPE;
     }
 
+    /**
+     * The phone number to connect to in E.164 format.
+     *
+     * @return The phone number as a string.
+     */
+    @JsonProperty("number")
     public String getNumber() {
         return number;
     }
 
+    /**
+     * Set the digits that are sent to the user as soon as the Call is answered.
+     * The * and # digits are respected. You create pauses using p. Each pause is 500ms.
+     *
+     * @return The DTMF digits as a string.
+     */
+    @JsonProperty("dtmfAnswer")
     public String getDtmfAnswer() {
         return dtmfAnswer;
     }
 
+    @JsonProperty("onAnswer")
     public OnAnswer getOnAnswer() {
         return onAnswer;
     }
@@ -88,6 +105,13 @@ public class PhoneEndpoint implements Endpoint {
         }
     }
 
+    /**
+     * An object containing a required url key. The URL serves an NCCO to execute in the number being connected to,
+     * before that call is joined to your existing conversation. Optionally, the ringbackTone key can be specified
+     * with a URL value that points to a ringbackTone to be played back on repeat to the caller, so they do not hear
+     * just silence. The ringbackTone will automatically stop playing when the call is fully connected. Please note,
+     * the key ringback is still supported.
+     */
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
     public static class OnAnswer {
         private final String url, ringback;
@@ -97,10 +121,12 @@ public class PhoneEndpoint implements Endpoint {
             this.ringback = ringback;
         }
 
+        @JsonProperty("url")
         public String getUrl() {
             return url;
         }
 
+        @JsonProperty("ringback")
         public String getRingback() {
             return ringback;
         }

@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -15,11 +15,10 @@
  */
 package com.vonage.client.messages;
 
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.VonageResponseParseException;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import java.util.UUID;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class MessageResponseTest {
 
@@ -33,8 +32,19 @@ public class MessageResponseTest {
 		assertTrue(toString.contains(uuid.toString()));
 	}
 
-	@Test(expected = VonageUnexpectedException.class)
+	@Test
+	public void testConstructFromEmptyJson() {
+		MessageResponse response = MessageResponse.fromJson("{}");
+		assertNull(response.getMessageUuid());
+	}
+
+	@Test(expected = VonageResponseParseException.class)
 	public void testConstructFromInvalidJson() {
 		MessageResponse.fromJson("{_malformed_}");
+	}
+
+	@Test(expected = VonageResponseParseException.class)
+	public void testConstructFromEmptyString() {
+		MessageResponse.fromJson("");
 	}
 }

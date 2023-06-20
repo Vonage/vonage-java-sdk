@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -17,9 +17,5 @@
 /**
  * Provides useful NCCO classes which can be serialized using Jackson when
  * implementing webhooks to drive the Vonage Voice API.
- * <p>
- * The simplest way to use these classes is to subclass {@link com.vonage.client.voice.servlet.AbstractAnswerServlet}
- * and implement <code>handleRequest(javax.servlet.http.HttpServletRequest)</code>.
- * the returned NCCOResponse will automatically be serialized correctly.
  */
 package com.vonage.client.voice.ncco;

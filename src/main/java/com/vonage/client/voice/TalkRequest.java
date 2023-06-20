@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -15,58 +15,15 @@
  */
 package com.vonage.client.voice;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
-
 /**
- * The request object to send synthesized audio.
- * <p>
- * Contains the {@code uuid} of the {@link Call} and the {@link TalkPayload} to be sent in the request.
+ * Wrapper for {@linkplain StartTalkEndpoint} request parameter.
  */
+final class TalkRequest {
+    TalkPayload payload;
+    String uuid;
 
-public class TalkRequest {
-    private TalkPayload talkPayload;
-    private String uuid;
-
-    public TalkRequest(String uuid, String text, TextToSpeechLanguage language, int style, int loop) {
-        talkPayload = new TalkPayload(text, language, style, loop);
+    TalkRequest(String uuid, TalkPayload payload) {
         this.uuid = uuid;
-    }
-
-    public TalkRequest(String uuid, String text, TextToSpeechLanguage language, int style) {
-        talkPayload = new TalkPayload(text, language, style, 1);
-        this.uuid = uuid;
-    }
-
-    public TalkRequest(String uuid, String text, TextToSpeechLanguage language) {
-        talkPayload = new TalkPayload(text, language, 1);
-        this.uuid = uuid;
-    }
-
-
-    public TalkRequest(String uuid, String text, int loop) {
-        this(uuid, text, TextToSpeechLanguage.AMERICAN_ENGLISH, 3, loop);
-    }
-
-    public TalkRequest(String uuid, String text) {
-        this(uuid, text, TextToSpeechLanguage.AMERICAN_ENGLISH, 3, 1);
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    public String toJson() {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(talkPayload);
-        } catch (JsonProcessingException jpe) {
-            throw new VonageUnexpectedException("Failed to produce json from TalkRequest object.", jpe);
-        }
+        this.payload = payload;
     }
 }

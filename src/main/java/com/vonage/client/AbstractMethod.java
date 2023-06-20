@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -16,6 +16,9 @@
 package com.vonage.client;
 
 import com.vonage.client.auth.AuthMethod;
+import com.vonage.client.auth.JWTAuthMethod;
+import com.vonage.client.auth.SignatureAuthMethod;
+import com.vonage.client.auth.TokenAuthMethod;
 import com.vonage.client.logging.LoggingUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,9 +32,9 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Abstract class to assist in implementing a call against a REST endpoint.
@@ -51,7 +54,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
     protected static final BasicResponseHandler basicResponseHandler = new BasicResponseHandler();
 
     protected final HttpWrapper httpWrapper;
-    private Set<Class<?>> acceptable;
+    private Set<Class<? extends AuthMethod>> acceptable;
 
     public AbstractMethod(HttpWrapper httpWrapper) {
         this.httpWrapper = httpWrapper;
@@ -121,13 +124,47 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      *
      * @throws VonageClientException If no AuthMethod is available from the provided array of acceptableAuthMethods.
      */
+    @SuppressWarnings("unchecked")
     protected AuthMethod getAuthMethod(Class<?>[] acceptableAuthMethods) throws VonageClientException {
         if (acceptable == null) {
-            acceptable = new HashSet<>();
-            Collections.addAll(acceptable, acceptableAuthMethods);
+            acceptable = Arrays.stream(acceptableAuthMethods)
+                    .filter(AuthMethod.class::isAssignableFrom)
+                    .map(c -> (Class<? extends AuthMethod>) c)
+                    .collect(Collectors.toSet());
         }
 
         return httpWrapper.getAuthCollection().getAcceptableAuthMethod(acceptable);
+    }
+
+    /**
+     * Call {@linkplain #getAuthMethod(Class[])} with {@linkplain #getAcceptableAuthMethods()}.
+     *
+     * @return An AuthMethod created from the accepted auth methods.
+     * @throws VonageUnexpectedException If no AuthMethod is available.
+     */
+    protected AuthMethod getAuthMethod() throws VonageUnexpectedException {
+        return getAuthMethod(getAcceptableAuthMethods());
+    }
+
+    /**
+     * Utility method for obtaining the Application ID or API key from the auth method.
+     *
+     * @return The Application ID or API key.
+     * @throws VonageUnexpectedException If no AuthMethod is available.
+     * @throws IllegalStateException If the AuthMethod does not have an Application ID or API key.
+     */
+    protected String getApplicationIdOrApiKey() throws VonageUnexpectedException {
+        AuthMethod am = getAuthMethod();
+        if (am instanceof JWTAuthMethod) {
+            return ((JWTAuthMethod) am).getApplicationId();
+        }
+        if (am instanceof TokenAuthMethod) {
+            return ((TokenAuthMethod) am).getApiKey();
+        }
+        if (am instanceof SignatureAuthMethod) {
+            return ((SignatureAuthMethod) am).getApiKey();
+        }
+        throw new IllegalStateException(am.getClass().getSimpleName() + " does not have API key.");
     }
 
     public void setHttpClient(HttpClient client) {

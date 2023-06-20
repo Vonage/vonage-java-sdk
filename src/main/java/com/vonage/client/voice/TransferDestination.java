@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -20,21 +20,31 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.vonage.client.voice.ncco.Ncco;
 
-@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+/**
+ * @deprecated Will be made package-private in next major release.
+ */
+@Deprecated
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class TransferDestination {
-    private Type type;
-    private String[] urls;
-    private Ncco ncco;
+    private final Type type;
+    private final String[] urls;
+    private final Ncco ncco;
+
+    TransferDestination(String url) {
+        this(Type.NCCO, url, null);
+    }
+
+    TransferDestination(Ncco ncco) {
+        this(Type.NCCO, null, ncco);
+    }
 
     public TransferDestination(Type type, String url) {
-        this.type = type;
-        if (url != null) {
-            this.urls = new String[]{url};
-        }
+        this(type, url, null);
     }
 
     public TransferDestination(Type type, String url, Ncco ncco) {
-        this(type, url);
+        this.type = type;
+        this.urls = url != null ? new String[]{url} : null;
         this.ncco = ncco;
     }
 
@@ -50,7 +60,7 @@ public class TransferDestination {
 
     @JsonProperty("ncco")
     public Ncco getNcco() {
-        return this.ncco;
+        return ncco;
     }
 
     enum Type {

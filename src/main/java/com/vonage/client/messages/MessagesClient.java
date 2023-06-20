@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -25,7 +25,8 @@ public class MessagesClient {
 
 	/**
 	 * Create a new MessagesClient.
-	 * @param httpWrapper Http Wrapper used to create a Message requests
+	 *
+	 * @param httpWrapper Http Wrapper used to create message requests.
 	 */
 	public MessagesClient(HttpWrapper httpWrapper) {
 		sendMessage = new SendMessageEndpoint(httpWrapper);

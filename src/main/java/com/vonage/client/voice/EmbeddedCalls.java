@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -20,14 +20,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EmbeddedCalls {
-    private CallInfo[] callInfos;
+    @JsonProperty("calls") private CallInfo[] callInfos;
 
-    @JsonProperty("calls")
-    private void setCallInfos(CallInfo[] callInfos) {
-        this.callInfos = callInfos;
-    }
-
-    @JsonProperty("calls")
     public CallInfo[] getCallInfos() {
         return callInfos;
     }

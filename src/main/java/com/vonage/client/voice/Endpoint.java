@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -26,9 +26,23 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = PhoneEndpoint.class, name = "phone"),
         @JsonSubTypes.Type(value = SipEndpoint.class, name = "sip"),
-        @JsonSubTypes.Type(value = WebSocketEndpoint.class, name = "websocket")
+        @JsonSubTypes.Type(value = WebSocketEndpoint.class, name = "websocket"),
+        @JsonSubTypes.Type(value = VbcEndpoint.class, name = "vbc"),
+        @JsonSubTypes.Type(value = AppEndpoint.class, name = "app")
 })
 public interface Endpoint {
+
+    /**
+     * Endpoint type name.
+     *
+     * @return The type of endpoint as a string.
+     */
     String getType();
+
+    /**
+     * Description of the endpoint.
+     *
+     * @return String representation of the object.
+     */
     String toLog();
 }

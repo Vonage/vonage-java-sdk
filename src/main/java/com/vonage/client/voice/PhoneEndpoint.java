@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -15,29 +15,47 @@
  */
 package com.vonage.client.voice;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PhoneEndpoint implements Endpoint {
-    private final String type = "phone";
+    private static final String TYPE = "phone";
     private String number, dtmfAnswer;
 
+    @Deprecated
     public PhoneEndpoint() {
     }
 
+    /**
+     * Constructor.
+     *
+     * @param number The phone number to connect to in E.164 format.
+     */
     public PhoneEndpoint(String number) {
         this.number = number;
     }
 
+    /**
+     * Constructor.
+     *
+     * @param number The phone number to connect to in E.164 format.
+     *
+     * @param dtmfAnswer Set the digits that are sent to the user as soon as the Call is answered.
+     * The * and # digits are respected. You create pauses using p. Each pause is 500ms.
+     */
     public PhoneEndpoint(String number, String dtmfAnswer) {
         this.number = number;
         this.dtmfAnswer = dtmfAnswer;
     }
 
+    @JsonProperty("type")
     @Override
     public String getType() {
-        return type;
+        return TYPE;
     }
 
     @Override
@@ -45,20 +63,25 @@ public class PhoneEndpoint implements Endpoint {
         return number;
     }
 
+    /**
+     * The phone number to connect to in E.164 format.
+     *
+     * @return The phone number as a string.
+     */
+    @JsonProperty("number")
     public String getNumber() {
         return number;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
+    /**
+     * Set the digits that are sent to the user as soon as the Call is answered.
+     * The * and # digits are respected. You create pauses using p. Each pause is 500ms.
+     *
+     * @return The DTMF digits as a string.
+     */
+    @JsonProperty("dtmfAnswer")
     public String getDtmfAnswer() {
         return dtmfAnswer;
-    }
-
-    public void setDtmfAnswer(String dtmfAnswer) {
-        this.dtmfAnswer = dtmfAnswer;
     }
 
     @Override
@@ -66,13 +89,22 @@ public class PhoneEndpoint implements Endpoint {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PhoneEndpoint that = (PhoneEndpoint) o;
-        return Objects.equals(type, that.type) &&
-                Objects.equals(number, that.number) &&
+        return Objects.equals(number, that.number) &&
                 Objects.equals(dtmfAnswer, that.dtmfAnswer);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, number, dtmfAnswer);
+        return Objects.hash(TYPE, number, dtmfAnswer);
+    }
+
+    @Deprecated
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    @Deprecated
+    public void setDtmfAnswer(String dtmfAnswer) {
+        this.dtmfAnswer = dtmfAnswer;
     }
 }

@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -56,5 +56,10 @@ class UpdateNumberEndpoint extends AbstractMethod<UpdateNumberRequest, Void> {
             throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
         }
         return null;
+    }
+
+    @Override
+    protected RequestBuilder applyAuth(RequestBuilder request) throws VonageClientException {
+        return getAuthMethod(getAcceptableAuthMethods()).applyAsBasicAuth(request);
     }
 }

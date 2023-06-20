@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Represents the media type of the message.
  */
 public enum MessageType {
-	TEXT, IMAGE, AUDIO, VIDEO, FILE, VCARD, TEMPLATE, CUSTOM, LOCATION, UNSUPPORTED, REPLY, ORDER;
+	TEXT, IMAGE, AUDIO, VIDEO, FILE, VCARD, TEMPLATE, CUSTOM, LOCATION, STICKER, UNSUPPORTED, REPLY, ORDER;
 
 	@JsonCreator
 	public static MessageType fromString(String value) {

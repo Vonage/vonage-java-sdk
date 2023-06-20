@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -55,6 +55,17 @@ public final class ViberTextRequest extends ViberRequest {
 			return this;
 		}
 
+		@Override
+		public Builder actionUrl(String actionUrl) {
+			return super.actionUrl(actionUrl);
+		}
+
+		@Override
+		public Builder actionText(String actionText) {
+			return super.actionText(actionText);
+		}
+
+		@Override
 		public ViberTextRequest build() {
 			return new ViberTextRequest(this);
 		}

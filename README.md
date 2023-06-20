@@ -34,7 +34,7 @@ For Gradle 3.4 or Higher:
 
 ```groovy
 dependencies {
-    implementation 'com.vonage:client:7.1.1'
+    implementation 'com.vonage:client:7.6.0'
 }
 ```
 
@@ -42,7 +42,7 @@ For older versions:
 
 ```groovy
 dependencies {
-    compile 'com.vonage:client:7.1.1'
+    compile 'com.vonage:client:7.6.0'
 }
 ```
 
@@ -54,7 +54,7 @@ Add the following to the correct place in your project's POM file:
 <dependency>
     <groupId>com.vonage</groupId>
     <artifactId>client</artifactId>
-    <version>7.1.1</version>
+    <version>7.6.0</version>
 </dependency>
 ```
 
@@ -88,7 +88,7 @@ to your project's classpath.
 * There are also **many useful code samples** in our [nexmo-community/nexmo-java-quickstart](https://github.com/nexmo-community/nexmo-java-quickstart) repository.
 
 ### Customize the Base URI
-By default, the client will use https://api.nexmo.com, https://rest.nexmo.com, https://sns.nexmo.com, https://api-eu.vonage.com as base URIs for the various endpoints. To customize these you can instantiate `VonageClient` with an `HttpConfig` object.
+By default, the client will use https://api.nexmo.com, https://rest.nexmo.com, https://sns.nexmo.com and https://api-eu.vonage.com as base URIs for the various endpoints. To customize these you can instantiate `VonageClient` with an `HttpConfig` object.
 
 `HttpConfig.Builder` has been created to assist in building this object. Usage is as follows:
 
@@ -97,7 +97,7 @@ HttpConfig httpConfig = HttpConfig.builder()
 		.apiBaseUri("https://api.example.com")
 		.restBaseUri("https://rest.example.com")
 		.snsBaseUri("https://sns.example.com")
-        .apiEuBaseUri("https://api-eu.example.com")
+		.apiEuBaseUri("https://api-eu.example.com")
 		.build();
 
 VonageClient client = VonageClient.builder()
@@ -235,7 +235,7 @@ System.out.println("This cost: " + info.getPrice() + " EUR");
 You can modify an existing call in progress, for example by hanging up on the current call:
 
 ```java
-ModifyCallResponse modifyResponse = client.getVoiceClient().modifyCall(event.getUuid(), "hangup");
+ModifyCallResponse modifyResponse = client.getVoiceClient().modifyCall(event.getUuid(), ModifyCallAction.HANGUP);
 System.out.println(modifyResponse.getMessage());
 ```
 
@@ -262,7 +262,10 @@ System.out.println("Alright. " + stopStreamResponse.getMessage());
 To send a synthesized speech message to an active call, just use the following method:
 
 ```java
-TalkResponse startTalkResponse = client.getVoiceClient().startTalk(event.getUuid(), "Hello World");
+TalkResponse startTalkResponse = client.getVoiceClient().startTalk(
+		event.getUuid(), 
+        TalkPayload.builder("Hello, world!").language(TextToSpeechLanguage.SWEDISH).build()
+);
 System.out.println("Success! " + startTalkResponse.getMessage());
 ```
 
@@ -322,7 +325,7 @@ CallEvent event = client.getVoiceClient().createCall(call);
 Send a 2FA code to a phone number with:
 
 ```java
-VerifyResponse ongoingVerify = client.getVerifyClient().verify(TO_NUMBER, "NEXMO");
+VerifyResponse ongoingVerify = client.getVerifyClient().verify(TO_NUMBER, "Vonage");
 ```
 
 ### Check the 2FA Code
@@ -340,6 +343,32 @@ Send a PSD2 code to a phone number with:
 ````java
 VerifyResponse verifyPayment = client.getVerifyClient().psd2Verify(TO_NUMBER, 103.33, "Michelle");
 ````
+
+### Prompt a WhatsApp user for verification, with Voice call and e-mail as fallback
+
+```java
+VerificationResponse ongoingVerify = client.getVerify2Client().sendVerification(
+    VerificationRequest.builder()
+        .addWorkflow(new WhatsappCodelessWorkflow(TO_NUMBER))
+        .addWorkflow(new EmailWorkflow(TO_EMAIL))
+        .addWorkflow(new VoiceWorkflow(TO_NUMBER))
+        .codeLength(6).brand("ACME Inc.").build()
+);
+```
+
+If the codeless verification fails, you can check the user-entered code (sent via backup contact methods) like this:
+
+```java
+client.getVerify2Client().checkVerificationCode(ongoingVerify.getRequestId(), CODE);
+```
+
+### Cancel a pending verification
+
+Abort a verification workflow like this:
+
+```java
+client.getVerify2Client().cancelVerification(ongoingVerify.getRequestId());
+```
 
 ### Get a List of SMS Prices for a Country
 
@@ -424,6 +453,57 @@ Get information about a specific secret associated with your account id:
 SecretResponse response = client.getAccountClient().getSecret(API_KEY, SECRET_ID);
 ```
 
+### Create a Subaccount
+
+Create a subaccount for separate usage tracking:
+```java
+Account subaccount = client.getSubaccountsClient().createSubaccount(
+		CreateSubaccountRequest.builder().name("Department A").build());
+```
+
+### Suspend a Subaccount
+
+Deactivate a subaccount:
+```java
+Account updated = client.getSubaccountsClient().updateSubaccount(
+		UpdateSubaccountRequest.builder(SUB_API_KEY).suspended(true).build());
+```
+
+### List subaccounts
+
+```java
+List<Account> subaccounts = client.getSubaccountsClient().listSubaccounts().getSubaccounts();
+```
+### Transfer a number between your accounts
+
+Change the (sub)account a number is associated with.
+```java
+NumberTransfer transfer = NumberTransfer.builder()
+        .from(SOURCE_API_KEY).to(TARGET_API_KEY)
+        .number(NUMBER).country(COUNTRY_CODE).build();
+client.getSubaccountsClient().transferNumber(transfer);
+```
+
+### Transfer balance to a subaccount
+
+If a subaccount does not share its balance with the primary account, you can transfer funds to it like so:
+```java
+MoneyTransfer transfer = MoneyTransfer.builder()
+        .from(VONAGE_API_KEY).to(SUB_API_KEY)
+        .amount(BigDecimal.valueOf(12.34))
+        .reference("Top up").build();
+client.getSubaccountsClient().transferBalance(transfer);
+```
+
+### List balance transfers to a subaccount since last week
+
+```java
+ListTransfersFilter filter = ListTransfersFilter.builder()
+        .startDate(Instant.now().minus(Duration.ofDays(7)))
+        .subaccount(SUB_API_KEY).build();
+List<MoneyTransfer> balanceTransfers =  client.getSubaccountsClient().listBalanceTransfers(filter);
+```
+
 ### Video API
 
 The Vonage Video API (formerly OpenTok) is currently in beta. You can try it out by using a beta version.
@@ -455,7 +535,7 @@ A: Currently no, but it is on the roadmap.
 
 The following is a list of Vonage APIs and whether the Java SDK provides support for them:
 
-| API               |  API Release Status  | Supported? |
+| API               |    Release Status    | Supported? |
 |-------------------|:--------------------:|:----------:|
 | Account           | General Availability |     ✅      |
 | Alerts            | General Availability |     ✅      |
@@ -463,16 +543,18 @@ The following is a list of Vonage APIs and whether the Java SDK provides support
 | Audit             |         Beta         |     ❌      |
 | Conversation      |         Beta         |     ❌      |
 | Dispatch          |         Beta         |     ❌      |
-| External Accounts |         Beta         |     ❌      |
+| External Accounts |  Developer Preview   |     ❌      |
 | Media             |         Beta         |     ❌      |
 | Meetings          | General Availability |     ✅      |
 | Messages          | General Availability |     ✅      |
 | Number Insight    | General Availability |     ✅      |
 | Number Management | General Availability |     ✅      |
 | Pricing           | General Availability |     ✅      |
+| Proactive Connect | General Availability |     ✅      |
 | Redact            |  Developer Preview   |     ✅      |
 | Reports           |         Beta         |     ❌      |
 | SMS               | General Availability |     ✅      |
+| Subaccounts       | General Availability |     ✅      |
 | Verify            | General Availability |     ✅      |
 | Voice             | General Availability |     ✅      |
 | Video             |         Beta         |     ☑️     |

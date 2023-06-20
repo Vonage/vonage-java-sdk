@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import java.nio.charset.StandardCharsets;
  */
 public class HttpWrapper {
     private static final String CLIENT_NAME = "vonage-java-sdk";
-    private static final String CLIENT_VERSION = "7.1.1";
+    private static final String CLIENT_VERSION = "7.6.0";
     private static final String JAVA_VERSION = System.getProperty("java.version");
     private static final String USER_AGENT = String.format("%s/%s java/%s", CLIENT_NAME, CLIENT_VERSION, JAVA_VERSION);
 

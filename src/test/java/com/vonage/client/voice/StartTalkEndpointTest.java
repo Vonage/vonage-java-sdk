@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -22,21 +22,23 @@ import org.apache.http.entity.ContentType;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+import java.util.UUID;
 
 public class StartTalkEndpointTest {
-    private StartTalkEndpoint method;
+    private StartTalkEndpoint endpoint;
 
     @Before
     public void setUp() throws Exception {
-        method = new StartTalkEndpoint(new HttpWrapper());
+        endpoint = new StartTalkEndpoint(new HttpWrapper());
     }
 
     @Test
     public void testDefaultUri() throws Exception {
-        TalkRequest request = new TalkRequest("uuid", "text", 0);
-        RequestBuilder builder = method.makeRequest(request);
+        String uuid = UUID.randomUUID().toString();
+        TalkRequest request = new TalkRequest(uuid, TalkPayload.builder("Hey up").style(0).build());
+        RequestBuilder builder = endpoint.makeRequest(request);
         assertEquals("PUT", builder.getMethod());
-        assertEquals("https://api.nexmo.com/v1/calls/uuid/talk", builder.build().getURI().toString());
+        assertEquals("https://api.nexmo.com/v1/calls/"+uuid+"/talk", builder.build().getURI().toString());
         assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
         assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
     }
@@ -44,11 +46,11 @@ public class StartTalkEndpointTest {
     @Test
     public void testCustomUri() throws Exception {
         HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri("https://example.com").build());
-        StartTalkEndpoint method = new StartTalkEndpoint(wrapper);
-        TalkRequest request = new TalkRequest("uuid", "text", 0);
-
-        RequestBuilder builder = method.makeRequest(request);
+        endpoint = new StartTalkEndpoint(wrapper);
+        String uuid = UUID.randomUUID().toString();
+        TalkRequest request = new TalkRequest(uuid, TalkPayload.builder("Sample text").build());
+        RequestBuilder builder = endpoint.makeRequest(request);
         assertEquals("PUT", builder.getMethod());
-        assertEquals("https://example.com/v1/calls/uuid/talk", builder.build().getURI().toString());
+        assertEquals("https://example.com/v1/calls/"+uuid+"/talk", builder.build().getURI().toString());
     }
 }

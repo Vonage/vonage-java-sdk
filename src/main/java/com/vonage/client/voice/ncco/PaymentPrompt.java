@@ -1,5 +1,5 @@
 /*
- *   Copyright 2022 Vonage
+ *   Copyright 2023 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -25,7 +25,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * the documentation</a> for details.
  *
  * @since 7.0.0
+ * @deprecated Will be removed in the next major release.
  */
+@Deprecated
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class PaymentPrompt {
 	private final Type type;
