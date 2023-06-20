@@ -534,7 +534,7 @@ A: Currently no, but it is on the roadmap.
 
 The following is a list of Vonage APIs and whether the Java SDK provides support for them:
 
-| API               |  API Release Status  | Supported? |
+| API               |    Release Status    | Supported? |
 |-------------------|:--------------------:|:----------:|
 | Account           | General Availability |     ✅      |
 | Alerts            | General Availability |     ✅      |
@@ -542,12 +542,13 @@ The following is a list of Vonage APIs and whether the Java SDK provides support
 | Audit             |         Beta         |     ❌      |
 | Conversation      |         Beta         |     ❌      |
 | Dispatch          |         Beta         |     ❌      |
-| External Accounts |         Beta         |     ❌      |
+| External Accounts |  Developer Preview   |     ❌      |
 | Media             |         Beta         |     ❌      |
 | Messages          | General Availability |     ✅      |
 | Number Insight    | General Availability |     ✅      |
 | Number Management | General Availability |     ✅      |
 | Pricing           | General Availability |     ✅      |
+| Proactive Connect | General Availability |     ✅      |
 | Redact            |  Developer Preview   |     ✅      |
 | Reports           |         Beta         |     ❌      |
 | SMS               | General Availability |     ✅      |
