@@ -36,13 +36,13 @@ class ListRoomsRequest {
 
 	RequestBuilder addParameters(RequestBuilder builder) {
 		if (startId != null) {
-			builder.addParameter("start_id", startId + "");
+			builder.addParameter("start_id", String.valueOf(startId));
 		}
 		if (endId != null) {
-			builder.addParameter("end_id", endId + "");
+			builder.addParameter("end_id", String.valueOf(endId));
 		}
 		if (pageSize != null) {
-			builder.addParameter("page_size", pageSize + "");
+			builder.addParameter("page_size", String.valueOf(pageSize));
 		}
 		return builder;
 	}

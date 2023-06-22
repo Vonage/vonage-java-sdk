@@ -59,10 +59,10 @@ public class SearchThemeRoomsEndpointTest {
 		assertEquals(request.pageSize, parsed.getPageSize());
 		assertEquals(5, parsed.getMeetingRooms().size());
 		assertEquals(RoomType.INSTANT, parsed.getMeetingRooms().get(3).getType());
-		assertNull(parsed.getLinks().getNext());
-		assertNull(parsed.getLinks().getPrev());
-		assertNull(parsed.getLinks().getFirst());
-		assertEquals("https://vonage.com", parsed.getLinks().getSelf().toString());
+		assertNull(parsed.getLinks().getNextUrl());
+		assertNull(parsed.getLinks().getPrevUrl());
+		assertNull(parsed.getLinks().getFirstUrl());
+		assertEquals("https://vonage.com", parsed.getLinks().getSelfUrl().toString());
 	}
 
 	@Test

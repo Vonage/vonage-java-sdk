@@ -15,6 +15,7 @@
  */
 package com.vonage.client.meetings;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.VonageUnexpectedException;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -173,5 +174,13 @@ public class ThemeTest {
 		assertThrows(IllegalArgumentException.class, () -> Theme.builder().mainColor("").build());
 		assertThrows(IllegalArgumentException.class, () -> Theme.builder().mainColor("#######").build());
 		assertThrows(IllegalArgumentException.class, () -> Theme.builder().mainColor("#gggggg").build());
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void triggerJsonProcessingException() {
+		class SelfRefrencing extends Theme {
+			@JsonProperty("self") SelfRefrencing self = this;
+		}
+		new SelfRefrencing().toJson();
 	}
 }

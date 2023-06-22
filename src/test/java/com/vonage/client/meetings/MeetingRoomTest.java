@@ -15,6 +15,7 @@
  */
 package com.vonage.client.meetings;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.VonageUnexpectedException;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -89,8 +90,8 @@ public class MeetingRoomTest {
 		assertTrue(json.contains("\"callback_urls\":"+callbackUrls.toJson()));
 		assertTrue(json.contains("\"available_features\":"+availableFeatures.toJson()));
 		assertTrue(json.contains("\"theme_id\":\""+themeId+"\""));
-		assertTrue(json.contains("\"joinApprovalLevel\":\""+joinApprovalLevel+"\""));
-		assertTrue(json.contains("\"expires_at\":\""+request.getExpiresAtAsString()+"\""));
+		assertTrue(json.contains("\"join_approval_level\":\""+joinApprovalLevel+"\""));
+		assertTrue(json.contains("\"expires_at\":\""+request.getExpiresAt()+"\""));
 		assertTrue(json.contains("\"ui_settings\":"+uiSettings.toJson()));
 
 		MeetingRoom response = MeetingRoom.fromJson(json);
@@ -172,7 +173,7 @@ public class MeetingRoomTest {
 				MeetingRoom.builder("My Room")
 						.expiresAt(Instant.now().plusSeconds(601))
 						.build()
-						.getExpiresAtAsString()
+						.getExpiresAt()
 		);
 	}
 
@@ -263,5 +264,13 @@ public class MeetingRoomTest {
 		assertNull(response.getLinks());
 		assertNull(response.getMeetingCode());
 		assertNull(response.getUiSettings());
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void triggerJsonProcessingException() {
+		class SelfRefrencing extends MeetingRoom {
+			@JsonProperty("self") SelfRefrencing self = this;
+		}
+		new SelfRefrencing().toJson();
 	}
 }

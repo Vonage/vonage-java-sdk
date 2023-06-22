@@ -76,7 +76,7 @@ public class CreateRoomEndpointTest {
 				"\"theme_id\":\"ef2b46f3-8ebb-437e-a671-272e4990fbc8\"," +
 				"\"display_name\":\"Srs bzns meeting\",\"metadata\":\"code=1123\"," +
 				"\"is_available\":false,\"expire_after_use\":true,\"type\":\"long_term\"," +
-				"\"joinApprovalLevel\":\"explicit_approval\",\"recording_options\":" +
+				"\"join_approval_level\":\"explicit_approval\",\"recording_options\":" +
 				"{\"auto_record\":true,\"record_only_owner\":false}," +
 				"\"initial_join_options\":{\"microphone_state\":\"off\"}," +
 				"\"ui_settings\":{\"language\":\"it\"},\"callback_urls\":" +
@@ -105,11 +105,9 @@ public class CreateRoomEndpointTest {
 		assertNull(parsed.getCallbackUrls());
 		assertNull(parsed.getMetadata());
 		assertNull(parsed.getExpiresAt());
-		assertNull(parsed.getExpiresAtAsString());
 		assertNull(parsed.getType());
 		assertNull(parsed.getThemeId());
 		assertNull(parsed.getCreatedAt());
-		assertNull(parsed.getCreatedAtAsString());
 		assertNull(parsed.getId());
 	}
 

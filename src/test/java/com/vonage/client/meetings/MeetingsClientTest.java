@@ -17,6 +17,7 @@ package com.vonage.client.meetings;
 
 import com.vonage.client.ClientTest;
 import com.vonage.client.VonageBadRequestException;
+import com.vonage.client.common.HalLinks;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.nio.file.Path;
@@ -60,7 +61,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 			"            \"initial_join_options\": {\n" +
 			"                \"microphone_state\": \"off\"\n" +
 			"            },\n" +
-			"            \"joinApprovalLevel\": \"none\",\n" +
+			"            \"join_approval_level\": \"none\",\n" +
 			"            \"callback_urls\": {\n" +
 			"                \"rooms_callback_url\": \"https://example.com/rooms\",\n" +
 			"                \"sessions_callback_url\": \"https://example.com/sessions\",\n" +
@@ -105,7 +106,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 			"            \"initial_join_options\": {\n" +
 			"                \"microphone_state\": \"default\"\n" +
 			"            },\n" +
-			"            \"joinApprovalLevel\": \"none\",\n" +
+			"            \"join_approval_level\": \"none\",\n" +
 			"            \"ui_settings\": {\n" +
 			"                \"language\": \"default\"\n" +
 			"            },\n" +
@@ -181,7 +182,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 				377_000_000, ZoneId.of("UTC")
 		).truncatedTo(ChronoUnit.MILLIS).toInstant();
 		assertEquals(expiresAt, parsed.getExpiresAt());
-		assertEquals("3000-01-17T15:53:03.377Z", parsed.getExpiresAtAsString());
+		assertEquals(Instant.parse("3000-01-17T15:53:03.377Z"), parsed.getExpiresAt());
 		RecordingOptions recordingOptions = parsed.getRecordingOptions();
 		assertNotNull(recordingOptions);
 		assertFalse(recordingOptions.getAutoRecord());
@@ -197,7 +198,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 				518_000_000, ZoneId.of("UTC")
 		).truncatedTo(ChronoUnit.MILLIS).toInstant();
 		assertEquals(createdAt, parsed.getCreatedAt());
-		assertEquals("2023-01-17T16:19:13.518Z", parsed.getCreatedAtAsString());
+		assertEquals(Instant.parse("2023-01-17T16:19:13.518Z"), parsed.getCreatedAt());
 		assertTrue(parsed.getIsAvailable());
 		assertFalse(parsed.getExpireAfterUse());
 		assertNull(parsed.getThemeId());
@@ -244,11 +245,11 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 	static void assertEqualsGetAvailableRooms(ListRoomsResponse parsed) {
 		assertEqualsGetAvailableRooms(parsed.getMeetingRooms());
-		NavigationLinks links = parsed.getLinks();
-		assertEquals("api-us.vonage.com/meetings/rooms?page_size=3", links.getFirst().toString());
-		assertEquals("api-us.vonage.com/meetings/rooms?page_size=3&start_id=1991085", links.getSelf().toString());
-		assertEquals("api-us.vonage.com/meetings/rooms?page_size=3&end_id=1991084", links.getPrev().toString());
-		assertEquals("api-us.vonage.com/meetings/rooms?page_size=3&start_id=1994609", links.getNext().toString());
+		HalLinks links = parsed.getLinks();
+		assertEquals("api-us.vonage.com/meetings/rooms?page_size=3", links.getFirstUrl().toString());
+		assertEquals("api-us.vonage.com/meetings/rooms?page_size=3&start_id=1991085", links.getSelfUrl().toString());
+		assertEquals("api-us.vonage.com/meetings/rooms?page_size=3&end_id=1991084", links.getPrevUrl().toString());
+		assertEquals("api-us.vonage.com/meetings/rooms?page_size=3&start_id=1994609", links.getNextUrl().toString());
 	}
 
 	static void assertEqualsSampleTheme(Theme parsed) {

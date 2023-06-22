@@ -53,7 +53,7 @@ public class ListRoomsEndpointTest {
 		assertNull(parsed.getLinks());
 		assertEquals(1, parsed.getMeetingRooms().size());
 		assertNotNull(parsed.getMeetingRooms().get(0));
-		assertEquals(3, parsed.getTotal().intValue());
+		assertEquals(3, parsed.getTotalItems().intValue());
 	}
 
 	@Test

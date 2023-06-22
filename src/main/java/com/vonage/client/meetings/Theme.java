@@ -33,9 +33,9 @@ public class Theme {
 
 	UUID themeId;
 	private UUID applicationId;
-	private String themeName, mainColor, accountId;
 	private ThemeDomain domain;
-	private String shortCompanyUrl, brandText, brandImageColored, brandImageWhite, brandedFavicon;
+	private String themeName, mainColor, accountId, shortCompanyUrl,
+			brandText, brandImageColored, brandImageWhite, brandedFavicon;
 	private URI brandImageColoredUrl, brandImageWhiteUrl, brandedFaviconUrl;
 
 	protected Theme() {
@@ -75,6 +75,8 @@ public class Theme {
 	}
 
 	/**
+	 * Unique theme ID.
+	 *
 	 * @return The theme ID.
 	 */
 	@JsonProperty("theme_id")
@@ -83,6 +85,8 @@ public class Theme {
 	}
 
 	/**
+	 * Theme name.
+	 *
 	 * @return Name of the theme.
 	 */
 	@JsonProperty("theme_name")
@@ -99,6 +103,8 @@ public class Theme {
 	}
 
 	/**
+	 * Account ID.
+	 *
 	 * @return The account ID (API key).
 	 */
 	@JsonProperty("account_id")
@@ -107,6 +113,8 @@ public class Theme {
 	}
 
 	/**
+	 * Unique application ID.
+	 *
 	 * @return The application ID.
 	 */
 	@JsonProperty("application_id")
@@ -115,6 +123,8 @@ public class Theme {
 	}
 
 	/**
+	 * Main colour hex code.
+	 *
 	 * @return The main theme colour (hex value).
 	 */
 	@JsonProperty("main_color")
@@ -123,6 +133,8 @@ public class Theme {
 	}
 
 	/**
+	 * Company name to include in the URL.
+	 *
 	 * @return The company's short URL.
 	 */
 	@JsonProperty("short_company_url")
@@ -131,6 +143,8 @@ public class Theme {
 	}
 
 	/**
+	 * Brand text that will appear in the application.
+	 *
 	 * @return The branding text.
 	 */
 	@JsonProperty("brand_text")

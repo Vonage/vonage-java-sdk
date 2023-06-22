@@ -42,8 +42,7 @@ class ListThemesEndpoint extends AbstractMethod<Void, List<Theme>> {
 	@Override
 	public RequestBuilder makeRequest(Void request) {
 		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + PATH;
-		return RequestBuilder.get(uri)
-				.setHeader("Accept", "application/json");
+		return RequestBuilder.get(uri).setHeader("Accept", "application/json");
 	}
 
 	@Override

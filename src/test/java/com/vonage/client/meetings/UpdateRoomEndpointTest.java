@@ -19,7 +19,6 @@ import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
 import com.vonage.client.auth.JWTAuthMethod;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
@@ -61,13 +60,10 @@ public class UpdateRoomEndpointTest {
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		String expectedRequest = "{\"expire_after_use\":false,\"initial_join_options\":{\"microphone_state\":\"on\"}," +
 				"\"callback_urls\":{},\"available_features\":{},\"join_approval_level\":\"after_owner_only\"," +
-				"\"theme_id\":\"5af77e5e-410d-489c-a30e-21aaf8482715\",\"expires_at\":\"+1000000000-12-30T23:59:59Z\"}";
+				"\"theme_id\":\"5af77e5e-410d-489c-a30e-21aaf8482715\",\"expires_at\":\"+1000000000-12-30T23:59:59.999Z\"}";
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
-
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		String expectedResponse = "{}";
-		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
-		MeetingRoom parsed = endpoint.parseResponse(mockResponse);
+		MeetingRoom parsed = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, "{}"));
 		assertNotNull(parsed);
 	}
 

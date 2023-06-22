@@ -15,9 +15,13 @@
  */
 package com.vonage.client.meetings;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 import java.time.Instant;
@@ -200,7 +204,7 @@ public class MeetingRoom {
 	 *
 	 * @return The approval level, as an enum.
 	 */
-	@JsonProperty("joinApprovalLevel")
+	@JsonProperty("join_approval_level")
 	public JoinApprovalLevel getJoinApprovalLevel() {
 		return joinApprovalLevel;
 	}
@@ -210,29 +214,9 @@ public class MeetingRoom {
 	 *
 	 * @return The room creation time.
 	 */
+	@JsonProperty("created_at")
 	public Instant getCreatedAt() {
 		return createdAt;
-	}
-
-	/**
-	 * Formats the {@link #createdAt} field.
-	 *
-	 * @return {@linkplain #getCreatedAt()} as a String for serialization.
-	 */
-	@JsonGetter("created_at")
-	protected String getCreatedAtAsString() {
-		if (createdAt == null) return null;
-		return createdAt.truncatedTo(ChronoUnit.MILLIS).toString();
-	}
-
-	/**
-	 * Sets the {@link #createdAt} field from a String.
-	 *
-	 * @param createdAt The expiration time as a String.
-	 */
-	@JsonSetter("created_at")
-	protected void setCreatedAt(String createdAt) {
-		this.createdAt = Instant.parse(createdAt);
 	}
 
 	/**
@@ -240,29 +224,9 @@ public class MeetingRoom {
 	 *
 	 * @return The room expiration time.
 	 */
+	@JsonProperty("expires_at")
 	public Instant getExpiresAt() {
 		return expiresAt;
-	}
-
-	/**
-	 * Formats the {@link #expiresAt} field.
-	 *
-	 * @return {@linkplain #getExpiresAt()} as a String for serialization.
-	 */
-	@JsonGetter("expires_at")
-	protected String getExpiresAtAsString() {
-		if (expiresAt == null) return null;
-		return expiresAt.truncatedTo(ChronoUnit.MILLIS).toString();
-	}
-
-	/**
-	 * Sets the {@link #expiresAt} field from a String.
-	 *
-	 * @param expiresAt The expiration time as a String.
-	 */
-	@JsonSetter("expires_at")
-	protected void setExpiresAt(String expiresAt) {
-		this.expiresAt = Instant.parse(expiresAt);
 	}
 
 	/**
@@ -277,6 +241,7 @@ public class MeetingRoom {
 
 	/**
 	 * Useful links.
+	 *
 	 * @return The nested links object.
 	 */
 	@JsonProperty("_links")
@@ -293,6 +258,7 @@ public class MeetingRoom {
 	public static MeetingRoom fromJson(String json) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
+			mapper.registerModule(new JavaTimeModule());
 			return mapper.readValue(json, MeetingRoom.class);
 		}
 		catch (IOException ex) {
@@ -308,6 +274,8 @@ public class MeetingRoom {
 	public String toJson() {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
+			mapper.registerModule(new JavaTimeModule());
+			mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 			return mapper.writeValueAsString(this);
 		}
 		catch (JsonProcessingException jpe) {

@@ -98,7 +98,7 @@ public class MeetingsClient {
 
 
 	/**
-	 * Get all available rooms in the application.
+	 * Get all listed rooms in the application.
 	 *
 	 * @param startId The ID to start returning events at (inclusive).
 	 * @param endId The ID to end returning events at (exclusive).

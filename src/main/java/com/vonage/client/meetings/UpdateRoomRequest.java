@@ -15,12 +15,13 @@
  */
 package com.vonage.client.meetings;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.vonage.client.VonageUnexpectedException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -113,19 +114,9 @@ public class UpdateRoomRequest {
 	 *
 	 * @return The room expiration time.
 	 */
+	@JsonProperty("expires_at")
 	public Instant getExpiresAt() {
 		return expiresAt;
-	}
-
-	/**
-	 * Formats the {@link #expiresAt} field.
-	 *
-	 * @return {@linkplain #getExpiresAt()} as a String for serialization.
-	 */
-	@JsonGetter("expires_at")
-	protected String getExpiresAtAsString() {
-		if (expiresAt == null) return null;
-		return expiresAt.truncatedTo(ChronoUnit.SECONDS).toString();
 	}
 	
 	/**
@@ -136,6 +127,8 @@ public class UpdateRoomRequest {
 	public String toJson() {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
+			mapper.registerModule(new JavaTimeModule());
+			mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 			return mapper.writeValueAsString(this);
 		}
 		catch (JsonProcessingException jpe) {
@@ -236,7 +229,7 @@ public class UpdateRoomRequest {
 		 * @return This builder.
 		 */
 		public Builder expiresAt(Instant expiresAt) {
-			this.expiresAt = expiresAt;
+			this.expiresAt = expiresAt.truncatedTo(ChronoUnit.MILLIS);
 			return this;
 		}
 

@@ -18,51 +18,26 @@ package com.vonage.client.meetings;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.common.HalPageResponse;
 import java.io.IOException;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ListRoomsResponse {
+public class ListRoomsResponse extends HalPageResponse {
 	@JsonProperty("_embedded") private List<MeetingRoom> rooms;
-
-	private Integer pageSize, total;
-	private NavigationLinks links;
 
 	protected ListRoomsResponse() {
 	}
 
 	/**
-	 * @return The number of results returned on this page.
-	 */
-	@JsonProperty("page_size")
-	public Integer getPageSize() {
-		return pageSize;
-	}
-
-	/**
-	 * @return The overall number of available rooms.
-	 */
-	@JsonProperty("total_items")
-	public Integer getTotal() {
-		return total;
-	}
-
-	/**
+	 * The embedded response containing the list of meeting rooms.
+	 *
 	 * @return The list of rooms.
 	 */
 	public List<MeetingRoom> getMeetingRooms() {
 		return rooms;
-	}
-
-	/**
-	 * Links to other pages.
-	 *
-	 * @return The navigation links object.
-	 */
-	@JsonProperty("_links")
-	public NavigationLinks getLinks() {
-		return links;
 	}
 	
 	/**
@@ -74,6 +49,7 @@ public class ListRoomsResponse {
 	public static ListRoomsResponse fromJson(String json) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
+			mapper.registerModule(new JavaTimeModule());
 			return mapper.readValue(json, ListRoomsResponse.class);
 		}
 		catch (IOException ex) {
