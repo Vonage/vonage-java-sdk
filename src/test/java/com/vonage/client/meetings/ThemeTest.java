@@ -127,6 +127,12 @@ public class ThemeTest {
 	}
 
 	@Test
+	public void testInvalidDomain() {
+		Theme parsed = Theme.fromJson("{\"domain\":\"Nexmo Business Meetings\"}");
+		assertNull(parsed.getDomain());
+	}
+
+	@Test
 	public void testSerializeEmpty() {
 		String json = Theme.builder().build().toJson();
 		assertEquals("{}", json);

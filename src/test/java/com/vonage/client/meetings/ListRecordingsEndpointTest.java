@@ -18,6 +18,7 @@ package com.vonage.client.meetings;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
+import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpResponseException;
@@ -47,16 +48,15 @@ public class ListRecordingsEndpointTest {
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedPayload);
 		ListRecordingsResponse parsed = endpoint.parseResponse(mockResponse);
 		assertEquals(2, parsed.getRecordings().size());
-		assertNotNull(parsed.getRecordings().get(1).getLinks());
+		assertNull(parsed.getRecordings().get(1).getUrl());
 		assertEquals(RecordingStatus.UPLOADED, parsed.getRecordings().get(1).getStatus());
+		assertEquals("uploaded", RecordingStatus.UPLOADED.toString());
 		Recording empty = parsed.getRecordings().get(0);
 		assertNotNull(empty);
 		assertNull(empty.getId());
-		assertNull(empty.getLinks());
+		assertNull(empty.getUrl());
 		assertNull(empty.getEndedAt());
-		assertNull(empty.getEndedAtAsString());
 		assertNull(empty.getStartedAt());
-		assertNull(empty.getStartedAtAsString());
 		assertNull(empty.getStatus());
 		assertNull(empty.getSessionId());
 	}
@@ -107,5 +107,20 @@ public class ListRecordingsEndpointTest {
 		assertNotNull(parsed.getRecordings());
 		assertEquals(1, parsed.getRecordings().size());
 		assertNotNull(parsed.getRecordings().get(0));
+	}
+
+	@Test
+	public void testInvalidRecordingStatus() throws Exception {
+		String expectedPayload = "{\"_embedded\":{\"recordings\":[{\"status\":\"You're on camera!\"}]}}";
+		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedPayload);
+		ListRecordingsResponse parsed = endpoint.parseResponse(mockResponse);
+		assertNotNull(parsed);
+		assertEquals(1, parsed.getRecordings().size());
+		assertNull(parsed.getRecordings().get(0).getStatus());
+	}
+
+	@Test(expected = VonageResponseParseException.class)
+	public void testParseMalformedResponse() throws Exception {
+		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, "{malformed]"));
 	}
 }

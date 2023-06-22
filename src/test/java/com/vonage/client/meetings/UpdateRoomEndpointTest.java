@@ -15,9 +15,11 @@
  */
 package com.vonage.client.meetings;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
+import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
@@ -87,5 +89,16 @@ public class UpdateRoomEndpointTest {
 	@Test(expected = HttpResponseException.class)
 	public void testUnsuccessfulResponse() throws Exception {
 		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, ""));
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void triggerJsonProcessingException() {
+		class SelfRefrencing extends UpdateRoomRequest {
+			@JsonProperty("self") SelfRefrencing self = this;
+			SelfRefrencing() {
+				super(UpdateRoomRequest.builder());
+			}
+		}
+		new SelfRefrencing().toJson();
 	}
 }

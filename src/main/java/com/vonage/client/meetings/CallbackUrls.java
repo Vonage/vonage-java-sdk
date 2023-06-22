@@ -18,9 +18,6 @@ package com.vonage.client.meetings;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
 import java.net.URI;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -71,21 +68,6 @@ public class CallbackUrls {
 	@JsonProperty("recordings_callback_url")
 	public URI getRecordingsCallbackUrl() {
 		return recordingsCallbackUrl;
-	}
-	
-	/**
-	 * Generates a JSON payload from this request.
-	 *
-	 * @return JSON representation of this CallbackUrls object.
-	 */
-	public String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.writeValueAsString(this);
-		}
-		catch (JsonProcessingException jpe) {
-			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
-		}
 	}
 	
 	/**

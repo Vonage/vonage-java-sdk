@@ -18,12 +18,12 @@ package com.vonage.client.meetings;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
+import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.List;
@@ -80,5 +80,26 @@ public class GetLogoUploadUrlsEndpointTest {
 		parsed = endpoint.parseResponse(mockResponse);
 		assertNotNull(parsed);
 		assertEquals(0, parsed.size());
+	}
+
+	@Test(expected = VonageResponseParseException.class)
+	public void testParseMalformedResponse() throws Exception {
+		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, "{malformed]"));
+	}
+
+	@Test(expected = VonageResponseParseException.class)
+	public void testInvalidContentType() throws Exception {
+		String json = "[{\"fields\":{\"Content-Type\":\"not-a-mime\"}}]";
+		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, json));
+	}
+
+	@Test
+	public void testInvalidLogoType() throws Exception {
+		String json = "[{\"fields\":{\"logoType\":\"smoll\"}}]";
+		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, json);
+		List<LogoUploadsUrlResponse> parsed = endpoint.parseResponse(mockResponse);
+		assertNotNull(parsed);
+		assertEquals(1, parsed.size());
+		assertNull(parsed.get(0).getFields().getLogoType());
 	}
 }

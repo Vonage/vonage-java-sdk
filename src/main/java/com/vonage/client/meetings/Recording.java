@@ -15,15 +15,15 @@
  */
 package com.vonage.client.meetings;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.vonage.client.VonageResponseParseException;
 import java.io.IOException;
+import java.net.URI;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -32,7 +32,7 @@ public class Recording {
 	private String sessionId;
 	private Instant startedAt, endedAt;
 	private RecordingStatus status;
-	private RecordingLinks links;
+	@JsonProperty("_links") private RecordingLinks links;
 
 	protected Recording() {
 	}
@@ -62,29 +62,9 @@ public class Recording {
 	 *
 	 * @return The recording start time.
 	 */
+	@JsonProperty("started_at")
 	public Instant getStartedAt() {
 		return startedAt;
-	}
-
-	/**
-	 * Formats the {@link #startedAt} field.
-	 *
-	 * @return {@linkplain #getStartedAt()} as a String for serialization.
-	 */
-	@JsonGetter("started_at")
-	protected String getStartedAtAsString() {
-		if (startedAt == null) return null;
-		return startedAt.truncatedTo(ChronoUnit.SECONDS).toString();
-	}
-
-	/**
-	 * Sets the {@link #startedAt} field from a String.
-	 *
-	 * @param startedAt The start time as a String.
-	 */
-	@JsonSetter("started_at")
-	protected void setStartedAt(String startedAt) {
-		this.startedAt = Instant.parse(startedAt);
 	}
 
 	/**
@@ -92,29 +72,9 @@ public class Recording {
 	 *
 	 * @return The recording end time.
 	 */
+	@JsonProperty("ended_at")
 	public Instant getEndedAt() {
 		return endedAt;
-	}
-
-	/**
-	 * Formats the {@link #endedAt} field.
-	 *
-	 * @return {@linkplain #getEndedAt()} as a String for serialization.
-	 */
-	@JsonGetter("ended_at")
-	protected String getEndedAtAsString() {
-		if (endedAt == null) return null;
-		return endedAt.truncatedTo(ChronoUnit.SECONDS).toString();
-	}
-
-	/**
-	 * Sets the {@link #endedAt} field from a String.
-	 *
-	 * @param endedAt The end time as a String.
-	 */
-	@JsonSetter("ended_at")
-	protected void setEndedAt(String endedAt) {
-		this.endedAt = Instant.parse(endedAt);
 	}
 
 	/**
@@ -127,9 +87,14 @@ public class Recording {
 		return status;
 	}
 
-	@JsonProperty("_links")
-	public RecordingLinks getLinks() {
-		return links;
+	/**
+	 * The URL property of the {@code _links} response.
+	 *
+	 * @return The recording URL or {@code null} if not available.
+	 */
+	@JsonIgnore
+	public URI getUrl() {
+		return links != null ? links.getUrl() : null;
 	}
 	
 	/**
@@ -141,10 +106,11 @@ public class Recording {
 	public static Recording fromJson(String json) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
+			mapper.registerModule(new JavaTimeModule());
 			return mapper.readValue(json, Recording.class);
 		}
 		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to produce Recording from json.", ex);
+			throw new VonageResponseParseException("Failed to produce Recording from json.", ex);
 		}
 	}
 }

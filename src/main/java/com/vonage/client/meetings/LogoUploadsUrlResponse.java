@@ -15,15 +15,13 @@
  */
 package com.vonage.client.meetings;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageResponseParseException;
-import com.vonage.client.VonageUnexpectedException;
 import javax.activation.MimeType;
 import javax.activation.MimeTypeParseException;
-import java.io.IOException;
 import java.net.URI;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -53,22 +51,6 @@ public class LogoUploadsUrlResponse {
 	public Fields getFields() {
 		return fields;
 	}
-	
-	/**
-	 * Creates an instance of this class from a JSON payload.
-	 *
-	 * @param json The JSON string to parse.
-	 * @return An instance of this class with the fields populated, if present.
-	 */
-	public static LogoUploadsUrlResponse fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readValue(json, LogoUploadsUrlResponse.class);
-		}
-		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to produce LogoUploadsUrlResponse from json.", ex);
-		}
-	}
 
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class Fields {
@@ -84,6 +66,7 @@ public class LogoUploadsUrlResponse {
 		 *
 		 * @return The image type.
 		 */
+		@JsonGetter("Content-Type")
 		public MimeType getContentType() {
 			return contentType;
 		}
@@ -91,7 +74,7 @@ public class LogoUploadsUrlResponse {
 		@JsonSetter("Content-Type")
 		protected void setContentType(String contentType) {
 			try {
-				this.contentType = new MimeType(contentType);
+				this.contentType = contentType != null ? new MimeType(contentType) : null;
 			}
 			catch (MimeTypeParseException ex) {
 				throw new VonageResponseParseException("Invalid MIME type: "+contentType, ex);

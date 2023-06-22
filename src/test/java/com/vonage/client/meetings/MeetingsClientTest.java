@@ -15,11 +15,17 @@
  */
 package com.vonage.client.meetings;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.ClientTest;
 import com.vonage.client.VonageBadRequestException;
+import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.common.HalLinks;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
@@ -276,12 +282,12 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 	static void assertEqualsSampleRecording(Recording parsed) {
 		assertNotNull(parsed);
-		assertEquals("497f6eca-6276-4993-bfeb-53cbbbba6f08", parsed.getId().toString());
+		assertEquals(UUID.fromString("497f6eca-6276-4993-bfeb-53cbbbba6f08"), parsed.getId());
 		assertEquals("2_MX40NjMwODczMn5-MTU3NTgyODEwNzQ2MH5OZDJrVmdBRUNDbG5MUzNqNXgya20yQ1Z-fg", parsed.getSessionId());
 		assertEquals(RecordingStatus.STARTED, parsed.getStatus());
-		assertEquals("http://example.com/recording.mp4", parsed.getLinks().getUrl().toString());
+		assertEquals(URI.create("http://example.com/recording.mp4"), parsed.getUrl());
 
-		assertEquals("2019-08-24T14:15:22Z", parsed.getStartedAtAsString());
+		assertEquals(Instant.parse("2019-08-24T14:15:22Z"), parsed.getStartedAt());
 		Instant startedAt = ZonedDateTime.of(
 				2019, 8, 24,
 				14, 15, 22,
@@ -289,7 +295,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		).truncatedTo(ChronoUnit.MILLIS).toInstant();
 		assertEquals(startedAt, parsed.getStartedAt());
 
-		assertEquals("2019-11-30T00:59:06Z", parsed.getEndedAtAsString());
+		assertEquals(Instant.parse("2019-11-30T00:59:06Z"), parsed.getEndedAt());
 		Instant endedAt = ZonedDateTime.of(
 				2019, 11, 30,
 				0, 59, 6,
@@ -325,6 +331,9 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 		stubResponseAndAssertThrows(200, LIST_ROOMS_RESPONSE,
 			() -> client.listRooms(7, 6, 9), IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(200, LIST_ROOMS_RESPONSE,
+				() -> client.listRooms(5, 7, 0), IllegalArgumentException.class
 		);
 	}
 
@@ -600,14 +609,14 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 	@Test
 	public void testUploadLogo() throws Exception {
-		LogoUploadsUrlResponse details = LogoUploadsUrlResponse.fromJson("{\"url\":\"" +
-				"https://s3.amazonaws.com/roomservice-whitelabel-logos-prod\",\"fields\":{" +
+		LogoUploadsUrlResponse details = new ObjectMapper().readerFor(LogoUploadsUrlResponse.class).readValue((
+				"{\"url\":\"https://s3.amazonaws.com/roomservice-whitelabel-logos-prod\",\"fields\":{" +
 				"\"Content-Type\":\"image/png\",\"key\":\"auto-expiring-temp/logos/colored/REDACTED\"," +
 				"\"logoType\":\"colored\",\"bucket\":\"roomservice-whitelabel-logos-prod\"," +
 				"\"X-Amz-Algorithm\":\"AWS4-HMAC-SHA256\",\"X-Amz-Credential\":" +
 				"\"REDACTED/20230130/us-east-1/s3/aws4_request\",\"X-Amz-Date\":\"20230130T113037Z\"," +
 				"\"X-Amz-Security-Token\":\"REDACTED\",\"Policy\":\"REDACTED\",\"X-Amz-Signature\":\"REDACTED\"}}"
-		);
+		));
 		Path image = Paths.get("/path/to/logo.png");
 
 		client.httpClient = stubHttpClient(204);
@@ -615,6 +624,10 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 		client.httpClient = stubHttpClient(400);
 		assertThrows(VonageBadRequestException.class, () -> client.uploadLogo(image, details));
+
+		client.httpClient = stubHttpClient(200);
+		when(client.httpClient.execute(any())).thenThrow(IOException.class);
+		assertThrows(VonageUnexpectedException.class, () -> client.uploadLogo(image, details));
 	}
 
 	@Test

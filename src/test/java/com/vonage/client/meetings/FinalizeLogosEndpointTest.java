@@ -15,10 +15,8 @@
  */
 package com.vonage.client.meetings;
 
-import com.vonage.client.HttpConfig;
-import com.vonage.client.HttpWrapper;
-import com.vonage.client.TestUtils;
-import com.vonage.client.VonageBadRequestException;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.*;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
@@ -64,5 +62,16 @@ public class FinalizeLogosEndpointTest {
 	@Test(expected = VonageBadRequestException.class)
 	public void testUnsuccessfulResponse() throws Exception {
 		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, ""));
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void triggerJsonProcessingException() {
+		class SelfRefrencing extends FinalizeLogosRequest {
+			@JsonProperty("self") SelfRefrencing self = this;
+			SelfRefrencing() {
+				super(null, null);
+			}
+		}
+		new SelfRefrencing().toJson();
 	}
 }

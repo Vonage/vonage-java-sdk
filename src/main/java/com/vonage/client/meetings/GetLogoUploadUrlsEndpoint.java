@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
+import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
@@ -42,8 +43,7 @@ class GetLogoUploadUrlsEndpoint extends AbstractMethod<Void, List<LogoUploadsUrl
 	@Override
 	public RequestBuilder makeRequest(Void request) {
 		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + PATH;
-		return RequestBuilder.get(uri)
-				.setHeader("Accept", "application/json");
+		return RequestBuilder.get(uri).setHeader("Accept", "application/json");
 	}
 
 	@Override
@@ -52,7 +52,12 @@ class GetLogoUploadUrlsEndpoint extends AbstractMethod<Void, List<LogoUploadsUrl
 		if (json == null || json.isEmpty()) {
 			return Collections.emptyList();
 		}
-		ObjectMapper mapper = new ObjectMapper();
-		return mapper.readValue(json, new TypeReference<List<LogoUploadsUrlResponse>>() {});
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			return mapper.readValue(json, new TypeReference<List<LogoUploadsUrlResponse>>() {});
+		}
+		catch (IOException ex) {
+			throw new VonageResponseParseException("Failed to produce List<LogoUploadsUrlResponse> from json.", ex);
+		}
 	}
 }

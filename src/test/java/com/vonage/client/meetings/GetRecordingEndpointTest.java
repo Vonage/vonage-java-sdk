@@ -18,6 +18,7 @@ package com.vonage.client.meetings;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
+import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpResponseException;
@@ -48,14 +49,11 @@ public class GetRecordingEndpointTest {
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
 		Recording parsed = endpoint.parseResponse(mockResponse);
 		assertNotNull(parsed);
-		assertNotNull(parsed.getLinks());
-		assertNull(parsed.getLinks().getUrl());
+		assertNull(parsed.getUrl());
 		assertNull(parsed.getStatus());
 		assertNull(parsed.getSessionId());
 		assertNull(parsed.getStartedAt());
-		assertNull(parsed.getStartedAtAsString());
 		assertNull(parsed.getEndedAt());
-		assertNull(parsed.getEndedAtAsString());
 		assertNull(parsed.getId());
 	}
 
@@ -75,5 +73,10 @@ public class GetRecordingEndpointTest {
 	@Test(expected = HttpResponseException.class)
 	public void testUnsuccessfulResponse() throws Exception {
 		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, ""));
+	}
+
+	@Test(expected = VonageResponseParseException.class)
+	public void testParseMalformedResponse() throws Exception {
+		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, "{malformed]"));
 	}
 }

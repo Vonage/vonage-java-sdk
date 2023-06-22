@@ -85,14 +85,26 @@ public class MeetingRoomTest {
 		assertTrue(json.contains("\"type\":\""+type+"\""));
 		assertTrue(json.contains("\"is_available\":"+isAvailable));
 		assertTrue(json.contains("\"expire_after_use\":"+expireAfterUse));
-		assertTrue(json.contains("\"recording_options\":"+recordingOptions.toJson()));
-		assertTrue(json.contains("\"initial_join_options\":"+initialJoinOptions.toJson()));
-		assertTrue(json.contains("\"callback_urls\":"+callbackUrls.toJson()));
-		assertTrue(json.contains("\"available_features\":"+availableFeatures.toJson()));
+		assertTrue(json.contains("\"recording_options\":{" +
+				"\"auto_record\":"+autoRecord +
+				",\"record_only_owner\":"+recordOnlyOwner+"}"
+		));
+		assertTrue(json.contains("\"callback_urls\":{" +
+				"\"rooms_callback_url\":\""+roomsCallbackUrl +
+				"\",\"sessions_callback_url\":\""+sessionsCallbackUrl +
+				"\",\"recordings_callback_url\":\""+recordingsCallbackUrl+"\"}"
+		));
+		assertTrue(json.contains("\"available_features\":{" +
+				"\"is_recording_available\":"+isRecordingAvailable +
+				",\"is_chat_available\":"+isChatAvailable +
+				",\"is_whiteboard_available\":"+isWhiteboardAvailable +
+				",\"is_locale_switcher_available\":"+isLocaleSwitcherAvailable+"}"
+		));
+		assertTrue(json.contains("\"initial_join_options\":{\"microphone_state\":\""+microphoneState+"\"}"));
+		assertTrue(json.contains("\"ui_settings\":{\"language\":\""+language+"\"}"));
 		assertTrue(json.contains("\"theme_id\":\""+themeId+"\""));
 		assertTrue(json.contains("\"join_approval_level\":\""+joinApprovalLevel+"\""));
 		assertTrue(json.contains("\"expires_at\":\""+request.getExpiresAt()+"\""));
-		assertTrue(json.contains("\"ui_settings\":"+uiSettings.toJson()));
 
 		MeetingRoom response = MeetingRoom.fromJson(json);
 		assertEquals(request.getDisplayName(), response.getDisplayName());
@@ -264,6 +276,20 @@ public class MeetingRoomTest {
 		assertNull(response.getLinks());
 		assertNull(response.getMeetingCode());
 		assertNull(response.getUiSettings());
+	}
+
+	@Test
+	public void testInvalidEnums() {
+		MeetingRoom room = MeetingRoom.fromJson(
+				"{\"join_approval_level\":\"bar\"," +
+				"\"initial_join_options\":{\"microphone_state\":\"bombastic\"}," +
+				"\"type\":\"casual\"," +
+				"\"ui_settings\":{\"language\":\"yoda\"}}"
+		);
+		assertNull(room.getJoinApprovalLevel());
+		assertNull(room.getInitialJoinOptions().getMicrophoneState());
+		assertNull(room.getType());
+		assertNull(room.getUiSettings().getLanguage());
 	}
 
 	@Test(expected = VonageUnexpectedException.class)

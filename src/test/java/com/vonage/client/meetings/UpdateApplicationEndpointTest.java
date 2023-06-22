@@ -15,9 +15,8 @@
  */
 package com.vonage.client.meetings;
 
-import com.vonage.client.HttpConfig;
-import com.vonage.client.HttpWrapper;
-import com.vonage.client.TestUtils;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.*;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpResponseException;
@@ -80,5 +79,21 @@ public class UpdateApplicationEndpointTest {
 	@Test(expected = HttpResponseException.class)
 	public void testUnsuccessfulResponse() throws Exception {
 		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, ""));
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void triggerJsonProcessingException() {
+		class SelfRefrencing extends UpdateApplicationRequest {
+			@JsonProperty("self") SelfRefrencing self = this;
+			SelfRefrencing() {
+				super(UpdateApplicationRequest.builder().defaultThemeId(UUID.randomUUID()));
+			}
+		}
+		new SelfRefrencing().toJson();
+	}
+
+	@Test(expected = VonageResponseParseException.class)
+	public void testParseMalformedResponse() throws Exception {
+		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, "{malformed]"));
 	}
 }

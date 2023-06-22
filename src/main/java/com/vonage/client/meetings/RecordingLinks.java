@@ -20,15 +20,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.net.URI;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RecordingLinks {
-	@JsonProperty("url") private UrlContainer url;
-
-	protected RecordingLinks() {
-	}
+class RecordingLinks {
+	private UrlContainer url;
 
 	/**
+	 * Recording URL.
+	 *
 	 * @return The recording URL.
 	 */
+	@JsonProperty("url")
 	public URI getUrl() {
 		return url != null ? url.getHref() : null;
 	}

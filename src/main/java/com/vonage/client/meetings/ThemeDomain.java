@@ -18,7 +18,7 @@ package com.vonage.client.meetings;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
- * Represents the spplivsyion domain for a theme.
+ * Represents the application domain for a theme.
  */
 public enum ThemeDomain {
 	VCP,
