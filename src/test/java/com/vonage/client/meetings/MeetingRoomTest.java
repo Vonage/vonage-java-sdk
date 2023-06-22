@@ -20,7 +20,6 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import java.net.URI;
 import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
@@ -183,7 +182,7 @@ public class MeetingRoomTest {
 		String meetingCode = "9876543201";
 		String guestUrl = "https://meetings.vonage.com/"+meetingCode;
 		String hostUrl = guestUrl + "?participant_token=xyz";
-		ZonedDateTime createdAt = ZonedDateTime.now().withFixedOffsetZone();
+		Instant createdAt = Instant.now();
 		RoomLinks links = new RoomLinks();
 		(links.guestUrl = new UrlContainer()).href = URI.create(guestUrl);
 		(links.hostUrl = new UrlContainer()).href = URI.create(hostUrl);
