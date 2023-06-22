@@ -25,22 +25,21 @@ package com.vonage.client;
  * Convenience class for debugging / live testing.
  */
 public class BugRepro {
-	static final String
-			VONAGE_API_KEY = System.getenv("VONAGE_API_KEY"),
-			VONAGE_API_SECRET = System.getenv("VONAGE_API_SECRET"),
-			VONAGE_APPLICATION_ID = System.getenv("VONAGE_APPLICATION_ID"),
-			VONAGE_PRIVATE_KEY_PATH = System.getenv("VONAGE_PRIVATE_KEY_PATH");
-
 	public static void main(String[] args) throws Throwable {
 		VonageClient client = VonageClient.builder()
-				.apiKey(VONAGE_API_KEY)
-				.apiSecret(VONAGE_API_SECRET)
-				.privateKeyPath(VONAGE_PRIVATE_KEY_PATH)
-				.applicationId(VONAGE_APPLICATION_ID)
+				.apiKey(System.getenv("VONAGE_API_KEY"))
+				.apiSecret(System.getenv("VONAGE_API_SECRET"))
+				.privateKeyPath(System.getenv("VONAGE_APPLICATION_ID"))
+				.applicationId(System.getenv("VONAGE_PRIVATE_KEY_PATH"))
 				.build();
 
-		// Debug code here
+		try {
+			// Debug code here
 
-		System.out.println("Success");
+			System.out.println("Success");
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 }

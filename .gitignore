@@ -1,4 +1,3 @@
-src/test/java/com/vonage/client/BugRepro.java
 *.groovy
 .classpath
 .gradle
