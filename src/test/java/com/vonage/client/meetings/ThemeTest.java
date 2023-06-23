@@ -185,7 +185,7 @@ public class ThemeTest {
 	@Test(expected = VonageUnexpectedException.class)
 	public void triggerJsonProcessingException() {
 		class SelfRefrencing extends Theme {
-			@JsonProperty("self") SelfRefrencing self = this;
+			@JsonProperty("self") final SelfRefrencing self = this;
 		}
 		new SelfRefrencing().toJson();
 	}

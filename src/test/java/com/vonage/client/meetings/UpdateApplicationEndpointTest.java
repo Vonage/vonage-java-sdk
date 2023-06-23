@@ -83,7 +83,7 @@ public class UpdateApplicationEndpointTest {
 	@Test(expected = VonageUnexpectedException.class)
 	public void triggerJsonProcessingException() {
 		class SelfRefrencing extends UpdateApplicationRequest {
-			@JsonProperty("self") SelfRefrencing self = this;
+			@JsonProperty("self") final SelfRefrencing self = this;
 			SelfRefrencing() {
 				super(UpdateApplicationRequest.builder().defaultThemeId(UUID.randomUUID()));
 			}
