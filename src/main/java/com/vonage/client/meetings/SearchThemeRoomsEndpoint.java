@@ -24,7 +24,7 @@ import java.io.IOException;
 
 class SearchThemeRoomsEndpoint extends AbstractMethod<ListRoomsRequest, ListRoomsResponse> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
-	private static final String PATH = "/beta/meetings/themes/%s/rooms";
+	private static final String PATH = "/meetings/themes/%s/rooms";
 
 	SearchThemeRoomsEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);

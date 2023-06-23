@@ -42,7 +42,7 @@ public class GetRecordingEndpointTest {
 		UUID recordingId = UUID.randomUUID();
 		RequestBuilder builder = endpoint.makeRequest(recordingId);
 		assertEquals("GET", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/beta/meetings/recordings/"+recordingId;
+		String expectedUri = "https://api-eu.vonage.com/meetings/recordings/"+recordingId;
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		String expectedResponse = "{\"nonsense\":0,\"_links\":{\"url\":{}}}";
@@ -63,7 +63,7 @@ public class GetRecordingEndpointTest {
 		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
 		endpoint = new GetRecordingEndpoint(wrapper);
-		String expectedUri = baseUri + "/beta/meetings/recordings/"+recordingId;
+		String expectedUri = baseUri + "/meetings/recordings/"+recordingId;
 		RequestBuilder builder = endpoint.makeRequest(recordingId);
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());

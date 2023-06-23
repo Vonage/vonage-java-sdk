@@ -42,7 +42,7 @@ public class ListRoomsEndpointTest {
 		ListRoomsRequest request = new ListRoomsRequest(null, null, null, null);
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("GET", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/beta/meetings/rooms";
+		String expectedUri = "https://api-eu.vonage.com/meetings/rooms";
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
 		assertEquals(0, params.size());
@@ -63,7 +63,7 @@ public class ListRoomsEndpointTest {
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
 		endpoint = new ListRoomsEndpoint(wrapper);
 		ListRoomsRequest request = new ListRoomsRequest(51, 150, 25, null);
-		String expectedUri = baseUri + "/beta/meetings/rooms?" +
+		String expectedUri = baseUri + "/meetings/rooms?" +
 				"start_id="+request.startId+"&end_id="+request.endId+"&page_size="+request.pageSize;
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(expectedUri, builder.build().getURI().toString());

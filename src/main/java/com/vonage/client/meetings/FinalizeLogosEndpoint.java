@@ -28,7 +28,7 @@ import java.io.IOException;
 
 class FinalizeLogosEndpoint extends AbstractMethod<FinalizeLogosRequest, Void> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
-	private static final String PATH = "/beta/meetings/themes/%s/finalizeLogos";
+	private static final String PATH = "/meetings/themes/%s/finalizeLogos";
 
 	FinalizeLogosEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);

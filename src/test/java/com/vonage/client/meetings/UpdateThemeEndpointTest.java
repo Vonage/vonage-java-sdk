@@ -50,7 +50,7 @@ public class UpdateThemeEndpointTest {
 		request.themeId = UUID.fromString(themeId);
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("PATCH", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/beta/meetings/themes/"+themeId;
+		String expectedUri = "https://api-eu.vonage.com/meetings/themes/"+themeId;
 		assertEquals(expectedUri, builder.build().getURI().toString());
 
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
@@ -74,7 +74,7 @@ public class UpdateThemeEndpointTest {
 		endpoint = new UpdateThemeEndpoint(wrapper);
 		Theme request = Theme.builder().build();
 		request.themeId = UUID.randomUUID();
-		String expectedUri = baseUri + "/beta/meetings/themes/"+request.themeId;
+		String expectedUri = baseUri + "/meetings/themes/"+request.themeId;
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());

@@ -40,7 +40,7 @@ public class DeleteThemeEndpointTest {
 		UUID themeId = UUID.randomUUID();
 		RequestBuilder builder = endpoint.makeRequest(new DeleteThemeRequest(themeId, false));
 		assertEquals("DELETE", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/beta/meetings/themes/"+themeId+"?force=false";
+		String expectedUri = "https://api-eu.vonage.com/meetings/themes/"+themeId+"?force=false";
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(204, "");
 		endpoint.parseResponse(mockResponse);
@@ -52,7 +52,7 @@ public class DeleteThemeEndpointTest {
 		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
 		endpoint = new DeleteThemeEndpoint(wrapper);
-		String expectedUri = baseUri + "/beta/meetings/themes/"+themeId+"?force=true";
+		String expectedUri = baseUri + "/meetings/themes/"+themeId+"?force=true";
 		RequestBuilder builder = endpoint.makeRequest(new DeleteThemeRequest(themeId, true));
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals("DELETE", builder.getMethod());

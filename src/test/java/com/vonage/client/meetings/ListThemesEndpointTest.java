@@ -40,7 +40,7 @@ public class ListThemesEndpointTest {
 		Void request = null;
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("GET", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/beta/meetings/themes";
+		String expectedUri = "https://api-eu.vonage.com/meetings/themes";
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, "[{}]");
 		List<Theme> parsed = endpoint.parseResponse(mockResponse);
@@ -53,7 +53,7 @@ public class ListThemesEndpointTest {
 		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
 		endpoint = new ListThemesEndpoint(wrapper);
-		String expectedUri = baseUri + "/beta/meetings/themes";
+		String expectedUri = baseUri + "/meetings/themes";
 		RequestBuilder builder = endpoint.makeRequest(null);
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals("GET", builder.getMethod());

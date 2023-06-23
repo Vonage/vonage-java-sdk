@@ -43,7 +43,7 @@ public class SearchThemeRoomsEndpointTest {
 		ListRoomsRequest request = new ListRoomsRequest(21, 33, 50, UUID.randomUUID());
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("GET", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/beta/meetings/themes/"+request.themeId+
+		String expectedUri = "https://api-eu.vonage.com/meetings/themes/"+request.themeId+
 				"/rooms?start_id="+request.startId+"&end_id="+request.endId+"&page_size="+request.pageSize;
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
@@ -71,7 +71,7 @@ public class SearchThemeRoomsEndpointTest {
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
 		endpoint = new SearchThemeRoomsEndpoint(wrapper);
 		ListRoomsRequest request = new ListRoomsRequest(1, null, null, UUID.randomUUID());
-		String expectedUri = baseUri + "/beta/meetings/themes/"+request.themeId+"/rooms?start_id="+request.startId;
+		String expectedUri = baseUri + "/meetings/themes/"+request.themeId+"/rooms?start_id="+request.startId;
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());

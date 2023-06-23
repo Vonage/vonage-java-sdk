@@ -26,7 +26,7 @@ import java.io.IOException;
 
 class UpdateApplicationEndpoint extends AbstractMethod<UpdateApplicationRequest, Application> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
-	private static final String PATH = "/beta/meetings/applications";
+	private static final String PATH = "/meetings/applications";
 
 	UpdateApplicationEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);

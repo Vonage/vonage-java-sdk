@@ -26,7 +26,7 @@ import java.io.IOException;
 
 class CreateRoomEndpoint extends AbstractMethod<MeetingRoom, MeetingRoom> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
-	private static final String PATH = "/beta/meetings/rooms";
+	private static final String PATH = "/meetings/rooms";
 
 	CreateRoomEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);

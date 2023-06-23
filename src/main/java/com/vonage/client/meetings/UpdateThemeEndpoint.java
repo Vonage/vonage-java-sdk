@@ -26,7 +26,7 @@ import java.io.IOException;
 
 class UpdateThemeEndpoint extends AbstractMethod<Theme, Theme> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
-	private static final String PATH = "/beta/meetings/themes/%s";
+	private static final String PATH = "/meetings/themes/%s";
 
 	UpdateThemeEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);

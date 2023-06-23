@@ -41,7 +41,7 @@ public class ListRecordingsEndpointTest {
 		String sessionId = "2_MX40NjMwODczMn5-MTU3NTgyODEwNzQ2M...";
 		RequestBuilder builder = endpoint.makeRequest(sessionId);
 		assertEquals("GET", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/beta/meetings/sessions/"+sessionId+"/recordings";
+		String expectedUri = "https://api-eu.vonage.com/meetings/sessions/"+sessionId+"/recordings";
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		String expectedPayload = "{\"_embedded\":{\"recordings\":[{},{\"_links\":{},\"status\":\"uploaded\"}]}}";
@@ -66,7 +66,7 @@ public class ListRecordingsEndpointTest {
 		String sessionId = "2_MX40NjMwODczMn5-MTU3NTgyODEwNzQ2Jk.." , baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
 		endpoint = new ListRecordingsEndpoint(wrapper);
-		String expectedUri = baseUri + "/beta/meetings/sessions/"+sessionId+"/recordings";
+		String expectedUri = baseUri + "/meetings/sessions/"+sessionId+"/recordings";
 		RequestBuilder builder = endpoint.makeRequest(sessionId);
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());

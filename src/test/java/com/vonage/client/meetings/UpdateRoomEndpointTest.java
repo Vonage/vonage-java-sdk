@@ -56,7 +56,7 @@ public class UpdateRoomEndpointTest {
 		request.roomId = roomId;
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("PATCH", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/beta/meetings/rooms/"+roomId;
+		String expectedUri = "https://api-eu.vonage.com/meetings/rooms/"+roomId;
 		assertEquals(expectedUri, builder.build().getURI().toString());
 
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
@@ -74,7 +74,7 @@ public class UpdateRoomEndpointTest {
 		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
 		endpoint = new UpdateRoomEndpoint(wrapper);
-		String expectedUri = baseUri + "/beta/meetings/rooms/"+MeetingsClientTest.RANDOM_ID;
+		String expectedUri = baseUri + "/meetings/rooms/"+MeetingsClientTest.RANDOM_ID;
 		UpdateRoomRequest request = UpdateRoomRequest.builder().build();
 		request.roomId = MeetingsClientTest.RANDOM_ID;
 		RequestBuilder builder = endpoint.makeRequest(request);

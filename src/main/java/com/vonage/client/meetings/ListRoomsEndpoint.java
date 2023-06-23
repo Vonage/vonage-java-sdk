@@ -24,7 +24,7 @@ import java.io.IOException;
 
 class ListRoomsEndpoint extends AbstractMethod<ListRoomsRequest, ListRoomsResponse> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
-	private static final String PATH = "/beta/meetings/rooms";
+	private static final String PATH = "/meetings/rooms";
 
 	ListRoomsEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);

@@ -25,7 +25,7 @@ import java.util.UUID;
 
 class GetRoomEndpoint extends AbstractMethod<UUID, MeetingRoom> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
-	private static final String PATH = "/beta/meetings/rooms/%s";
+	private static final String PATH = "/meetings/rooms/%s";
 
 	GetRoomEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);

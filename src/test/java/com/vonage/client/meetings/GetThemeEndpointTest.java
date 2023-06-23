@@ -42,7 +42,7 @@ public class GetThemeEndpointTest {
 		UUID themeId = UUID.randomUUID();
 		RequestBuilder builder = endpoint.makeRequest(themeId);
 		assertEquals("GET", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/beta/meetings/themes/"+themeId;
+		String expectedUri = "https://api-eu.vonage.com/meetings/themes/"+themeId;
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		String expectedResponse = "{\"nonsense\":true}";
@@ -57,7 +57,7 @@ public class GetThemeEndpointTest {
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
 		endpoint = new GetThemeEndpoint(wrapper);
 		UUID themeId = UUID.randomUUID();
-		String expectedUri = baseUri + "/beta/meetings/themes/"+themeId;
+		String expectedUri = baseUri + "/meetings/themes/"+themeId;
 		RequestBuilder builder = endpoint.makeRequest(themeId);
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());

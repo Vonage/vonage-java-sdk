@@ -40,7 +40,7 @@ public class DeleteRecordingEndpointTest {
 		UUID recordingId = UUID.randomUUID();
 		RequestBuilder builder = endpoint.makeRequest(recordingId);
 		assertEquals("DELETE", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/beta/meetings/recordings/"+recordingId;
+		String expectedUri = "https://api-eu.vonage.com/meetings/recordings/"+recordingId;
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(204, "");
 		endpoint.parseResponse(mockResponse);
@@ -52,7 +52,7 @@ public class DeleteRecordingEndpointTest {
 		UUID recordingId = UUID.randomUUID();
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
 		endpoint = new DeleteRecordingEndpoint(wrapper);
-		String expectedUri = baseUri + "/beta/meetings/recordings/"+recordingId;
+		String expectedUri = baseUri + "/meetings/recordings/"+recordingId;
 		RequestBuilder builder = endpoint.makeRequest(recordingId);
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals("DELETE", builder.getMethod());

@@ -40,7 +40,7 @@ public class GetLogoUploadUrlsEndpointTest {
 	public void testDefaultUri() throws Exception {
 		RequestBuilder builder = endpoint.makeRequest(null);
 		assertEquals("GET", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/beta/meetings/themes/logos-upload-urls";
+		String expectedUri = "https://api-eu.vonage.com/meetings/themes/logos-upload-urls";
 		assertEquals(expectedUri, builder.build().getURI().toString());
 	}
 
@@ -49,7 +49,7 @@ public class GetLogoUploadUrlsEndpointTest {
 		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
 		endpoint = new GetLogoUploadUrlsEndpoint(wrapper);
-		String expectedUri = baseUri + "/beta/meetings/themes/logos-upload-urls";
+		String expectedUri = baseUri + "/meetings/themes/logos-upload-urls";
 		RequestBuilder builder = endpoint.makeRequest(null);
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals("GET", builder.getMethod());
