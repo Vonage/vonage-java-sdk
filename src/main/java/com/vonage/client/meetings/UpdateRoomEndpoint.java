@@ -49,6 +49,12 @@ class UpdateRoomEndpoint extends AbstractMethod<UpdateRoomRequest, MeetingRoom> 
 
 	@Override
 	public MeetingRoom parseResponse(HttpResponse response) throws IOException {
-		return MeetingRoom.fromJson(basicResponseHandler.handleResponse(response));
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode >= 200 && statusCode < 300) {
+			return MeetingRoom.fromJson(basicResponseHandler.handleResponse(response));
+		}
+		else {
+			throw MeetingsResponseException.fromHttpResponse(response);
+		}
 	}
 }

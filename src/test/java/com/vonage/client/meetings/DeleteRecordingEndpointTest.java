@@ -18,11 +18,10 @@ package com.vonage.client.meetings;
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
-import com.vonage.client.VonageBadRequestException;
 import com.vonage.client.auth.JWTAuthMethod;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.UUID;
@@ -42,8 +41,7 @@ public class DeleteRecordingEndpointTest {
 		assertEquals("DELETE", builder.getMethod());
 		String expectedUri = "https://api-eu.vonage.com/meetings/recordings/"+recordingId;
 		assertEquals(expectedUri, builder.build().getURI().toString());
-		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(204, "");
-		endpoint.parseResponse(mockResponse);
+		assertNull(endpoint.parseResponse(TestUtils.makeJsonHttpResponse(204, "")));
 	}
 
 	@Test
@@ -58,8 +56,8 @@ public class DeleteRecordingEndpointTest {
 		assertEquals("DELETE", builder.getMethod());
 	}
 
-	@Test(expected = VonageBadRequestException.class)
+	@Test(expected = MeetingsResponseException.class)
 	public void testUnsuccessfulResponse() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, ""));
+		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, "{}"));
 	}
 }

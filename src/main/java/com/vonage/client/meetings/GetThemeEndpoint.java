@@ -38,14 +38,18 @@ class GetThemeEndpoint extends AbstractMethod<UUID, Theme> {
 
 	@Override
 	public RequestBuilder makeRequest(UUID request) {
-		String path = String.format(PATH, request);
-		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + path;
-		return RequestBuilder.get(uri)
-				.setHeader("Accept", "application/json");
+		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + String.format(PATH, request);
+		return RequestBuilder.get(uri).setHeader("Accept", "application/json");
 	}
 
 	@Override
 	public Theme parseResponse(HttpResponse response) throws IOException {
-		return Theme.fromJson(basicResponseHandler.handleResponse(response));
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode >= 200 && statusCode < 300) {
+			return Theme.fromJson(basicResponseHandler.handleResponse(response));
+		}
+		else {
+			throw MeetingsResponseException.fromHttpResponse(response);
+		}
 	}
 }

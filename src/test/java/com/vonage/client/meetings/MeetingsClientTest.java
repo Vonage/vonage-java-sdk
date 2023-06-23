@@ -22,6 +22,7 @@ import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.common.HalLinks;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.junit.function.ThrowingRunnable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import java.io.IOException;
@@ -308,6 +309,75 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		assertEqualsSampleRecording(stubResponseAndGet(200, SAMPLE_RECORDING_RESPONSE, call));
 	}
 
+	void assert401ResponseException(ThrowingRunnable invocation) throws Exception {
+		int statusCode = 401;
+		MeetingsResponseException expectedResponse = MeetingsResponseException.fromJson(
+				"{\n" +
+				"   \"title\": \"Missing Auth\",\n" +
+				"   \"detail\": \"Auth header is required\"\n" +
+				"}"
+		);
+
+		expectedResponse.setStatusCode(statusCode);
+		String expectedJson = expectedResponse.toJson();
+		wrapper.setHttpClient(stubHttpClient(statusCode, expectedJson));
+		String failPrefix = "Expected "+expectedResponse.getClass().getSimpleName()+", but got ";
+
+		try {
+			invocation.run();
+			fail(failPrefix + "nothing.");
+		}
+		catch (MeetingsResponseException ex) {
+			assertEquals(expectedResponse, ex);
+			assertEquals(expectedJson, ex.toJson());
+			assertEquals("Missing Auth", ex.getTitle());
+			assertEquals("Auth header is required", ex.getDetail());
+			assertNull(ex.getType());
+			assertNull(ex.getInstance());
+			assertNull(ex.getName());
+			assertNotNull(ex.getMessage());
+		}
+		catch (Throwable ex) {
+			fail(failPrefix + ex);
+		}
+	}
+
+	void assert400ResponseException(ThrowingRunnable invocation) throws Exception {
+		int statusCode = 400;
+		MeetingsResponseException expectedResponse = MeetingsResponseException.fromJson(
+				"{\n" +
+				"   \"message\": \"Explanation about why validation failed.\",\n" +
+				"   \"name\": \"InputValidationError\",\n" +
+				"   \"status\": "+statusCode+"\n" +
+				"}"
+		);
+
+		String expectedJson = expectedResponse.toJson();
+		wrapper.setHttpClient(stubHttpClient(statusCode, expectedJson));
+		String failPrefix = "Expected "+expectedResponse.getClass().getSimpleName()+", but got ";
+
+		try {
+			invocation.run();
+			fail(failPrefix + "nothing.");
+		}
+		catch (MeetingsResponseException ex) {
+			assertEquals(statusCode, ex.getStatusCode());
+			assertEquals(statusCode, expectedResponse.getStatusCode());
+			assertEquals("InputValidationError", ex.getName());
+			assertEquals("Explanation about why validation failed.", ex.getMessage());
+			assertEquals(expectedResponse.getName(), ex.getName());
+			assertEquals(expectedResponse.getMessage(), ex.getMessage());
+			assertNull(ex.getType());
+			assertNull(ex.getInstance());
+			assertNull(expectedResponse.getTitle());
+			assertEquals("Test reason", ex.getTitle());
+			assertNull(ex.getDetail());
+		}
+		catch (Throwable ex) {
+			fail(failPrefix + ex);
+		}
+	}
+
 	@Test
 	public void testListRooms() throws Exception {
 		assertEqualsGetAvailableRooms(stubResponseAndGet(200, LIST_ROOMS_RESPONSE,
@@ -335,6 +405,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		stubResponseAndAssertThrows(200, LIST_ROOMS_RESPONSE,
 				() -> client.listRooms(5, 7, 0), IllegalArgumentException.class
 		);
+		assert401ResponseException(client::listRooms);
 	}
 
 	@Test
@@ -344,6 +415,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		stubResponseAndAssertThrows(200, SAMPLE_ROOM_RESPONSE,
 			() -> client.getRoom(null), NullPointerException.class
 		);
+		assert401ResponseException(() -> client.getRoom(ROOM_ID));
 	}
 
 	@Test
@@ -357,6 +429,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		stubResponseAndAssertThrows(200, SAMPLE_ROOM_RESPONSE,
 			() -> client.updateRoom(null, request), NullPointerException.class
 		);
+		assert401ResponseException(() -> client.updateRoom(ROOM_ID, request));
 	}
 
 	@Test
@@ -367,6 +440,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		stubResponseAndAssertThrows(201, SAMPLE_ROOM_RESPONSE,
 			() -> client.createRoom(null), NullPointerException.class
 		);
+		assert400ResponseException(() -> client.createRoom(request));
 	}
 
 	@Test
@@ -390,15 +464,17 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		stubResponseAndAssertThrows(200, LIST_ROOMS_RESPONSE,
 			() -> client.searchRoomsByTheme(null), NullPointerException.class
 		);
+		assert401ResponseException(() -> client.searchRoomsByTheme(RANDOM_ID));
 	}
 
 	@Test
 	public void testListThemes() throws Exception {
 		String responseJson = "["+SAMPLE_THEME_RESPONSE+",{\"theme_id\":\""+RANDOM_ID+"\"}]";
-		List<Theme> parsed = stubResponseAndGet(200, responseJson, () -> client.listThemes());
+		List<Theme> parsed = stubResponseAndGet(200, responseJson, client::listThemes);
 		assertEquals(2, parsed.size());
 		assertEqualsSampleTheme(parsed.get(0));
 		assertEquals(RANDOM_ID, parsed.get(1).getThemeId());
+		assert401ResponseException(client::listThemes);
 	}
 
 	@Test
@@ -408,6 +484,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		stubResponseAndAssertThrows(200, SAMPLE_THEME_RESPONSE,
 			() -> client.getTheme(null), NullPointerException.class
 		);
+		assert401ResponseException(() -> client.getTheme(RANDOM_ID));
 	}
 
 	@Test
@@ -418,6 +495,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		stubResponseAndAssertThrows(200, SAMPLE_THEME_RESPONSE,
 			() -> client.createTheme(null), NullPointerException.class
 		);
+		assert400ResponseException(() -> client.createTheme(request));
 	}
 
 	@Test
@@ -431,6 +509,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		stubResponseAndAssertThrows(200, SAMPLE_THEME_RESPONSE,
 			() -> client.updateTheme(null, request), NullPointerException.class
 		);
+		assert400ResponseException(() -> client.updateTheme(RANDOM_ID, request));
 	}
 
 	@Test
@@ -440,6 +519,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		stubResponseAndAssertThrows(204,
 			() -> client.deleteTheme(null, true), NullPointerException.class
 		);
+		assert401ResponseException(() -> client.deleteTheme(RANDOM_ID, true));
 	}
 
 	@Test
@@ -467,6 +547,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		stubResponseAndAssertThrows(200,
 			() -> client.listRecordings(null), IllegalArgumentException.class
 		);
+		assert401ResponseException(() -> client.listRecordings(sessionId));
 	}
 
 	@Test
@@ -476,6 +557,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		stubResponseAndAssertThrows(200,
 			() -> client.getRecording(null), NullPointerException.class
 		);
+		assert401ResponseException(() -> client.getRecording(RANDOM_ID));
 	}
 
 	@Test
@@ -485,6 +567,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		stubResponseAndAssertThrows(204,
 			() -> client.deleteRecording(null), NullPointerException.class
 		);
+		assert401ResponseException(() -> client.deleteRecording(RANDOM_ID));
 	}
 
 	@Test
@@ -494,7 +577,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 				"{\"number\":\"48123964788\",\"displayName\":\"Poland\",\"locale\":\"pl_PL\"},\n" +
 				"{\"number\":\"827047844377\",\"displayName\":\"South Korea\",\"locale\":\"ko_KR\"}\n" +
 			"]";
-		List<DialInNumber> parsed = stubResponseAndGet(200, responseJson, () -> client.listDialNumbers());
+		List<DialInNumber> parsed = stubResponseAndGet(200, responseJson, client::listDialNumbers);
 		assertEquals(3, parsed.size());
 		assertEquals("17329672755", parsed.get(0).getNumber());
 		assertEquals("United States", parsed.get(0).getDisplayName());
@@ -505,6 +588,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		assertEquals("827047844377", parsed.get(2).getNumber());
 		assertEquals("South Korea", parsed.get(2).getDisplayName());
 		assertEquals(Locale.KOREA, parsed.get(2).getLocale());
+		assert401ResponseException(client::listDialNumbers);
 	}
 
 	@Test
@@ -525,6 +609,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		stubResponseAndAssertThrows(200, responseJson,
 				() -> client.updateApplication(null), NullPointerException.class
 		);
+		assert400ResponseException(() -> client.updateApplication(request));
 	}
 
 	@Test
@@ -541,6 +626,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		stubResponseAndAssertThrows(200,
 			() -> client.finalizeLogos(RANDOM_ID, Collections.emptyList()), IllegalArgumentException.class
 		);
+		// TODO
 	}
 
 	@Test
@@ -581,6 +667,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		assertEquals("stringT", fields.getAmzSecurityToken());
 		assertEquals("stringP", fields.getPolicy());
 		assertEquals("stringS", fields.getAmzSignature());
+		assert401ResponseException(client::listLogoUploadUrls);
 	}
 
 	@Test

@@ -48,16 +48,22 @@ class GetLogoUploadUrlsEndpoint extends AbstractMethod<Void, List<LogoUploadsUrl
 
 	@Override
 	public List<LogoUploadsUrlResponse> parseResponse(HttpResponse response) throws IOException {
-		String json = basicResponseHandler.handleResponse(response);
-		if (json == null || json.isEmpty()) {
-			return Collections.emptyList();
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode >= 200 && statusCode < 300) {
+			String json = basicResponseHandler.handleResponse(response);
+			if (json == null || json.isEmpty()) {
+				return Collections.emptyList();
+			}
+			try {
+				ObjectMapper mapper = new ObjectMapper();
+				return mapper.readValue(json, new TypeReference<List<LogoUploadsUrlResponse>>() {});
+			}
+			catch (IOException ex) {
+				throw new VonageResponseParseException("Failed to produce List<LogoUploadsUrlResponse> from json.", ex);
+			}
 		}
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readValue(json, new TypeReference<List<LogoUploadsUrlResponse>>() {});
-		}
-		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to produce List<LogoUploadsUrlResponse> from json.", ex);
+		else {
+			throw MeetingsResponseException.fromHttpResponse(response);
 		}
 	}
 }

@@ -44,6 +44,12 @@ class ListRoomsEndpoint extends AbstractMethod<ListRoomsRequest, ListRoomsRespon
 
 	@Override
 	public ListRoomsResponse parseResponse(HttpResponse response) throws IOException {
-		return ListRoomsResponse.fromJson(basicResponseHandler.handleResponse(response));
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode >= 200 && statusCode < 300) {
+			return ListRoomsResponse.fromJson(basicResponseHandler.handleResponse(response));
+		}
+		else {
+			throw MeetingsResponseException.fromHttpResponse(response);
+		}
 	}
 }

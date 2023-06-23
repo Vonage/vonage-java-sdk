@@ -41,14 +41,19 @@ class ListDialNumbersEndpoint extends AbstractMethod<Void, List<DialInNumber>> {
 	@Override
 	public RequestBuilder makeRequest(Void request) {
 		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + PATH;
-		return RequestBuilder.get(uri)
-				.setHeader("Accept", "application/json");
+		return RequestBuilder.get(uri).setHeader("Accept", "application/json");
 	}
 
 	@Override
 	public List<DialInNumber> parseResponse(HttpResponse response) throws IOException {
-		String json = basicResponseHandler.handleResponse(response);
-		ObjectMapper mapper = new ObjectMapper();
-		return mapper.readValue(json, new TypeReference<List<DialInNumber>>() {});
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode >= 200 && statusCode < 300) {
+			String json = basicResponseHandler.handleResponse(response);
+			ObjectMapper mapper = new ObjectMapper();
+			return mapper.readValue(json, new TypeReference<List<DialInNumber>>() {});
+		}
+		else {
+			throw MeetingsResponseException.fromHttpResponse(response);
+		}
 	}
 }

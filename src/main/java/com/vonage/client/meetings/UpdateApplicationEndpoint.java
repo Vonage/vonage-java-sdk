@@ -48,6 +48,12 @@ class UpdateApplicationEndpoint extends AbstractMethod<UpdateApplicationRequest,
 
 	@Override
 	public Application parseResponse(HttpResponse response) throws IOException {
-		return Application.fromJson(basicResponseHandler.handleResponse(response));
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode >= 200 && statusCode < 300) {
+			return Application.fromJson(basicResponseHandler.handleResponse(response));
+		}
+		else {
+			throw MeetingsResponseException.fromHttpResponse(response);
+		}
 	}
 }

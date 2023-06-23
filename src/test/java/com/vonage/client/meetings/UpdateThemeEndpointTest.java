@@ -83,8 +83,8 @@ public class UpdateThemeEndpointTest {
 		assertEquals("PATCH", builder.getMethod());
 	}
 
-	@Test(expected = HttpResponseException.class)
+	@Test(expected = MeetingsResponseException.class)
 	public void testUnsuccessfulResponse() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, ""));
+		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, "{}"));
 	}
 }

@@ -48,6 +48,12 @@ class CreateThemeEndpoint extends AbstractMethod<Theme, Theme> {
 
 	@Override
 	public Theme parseResponse(HttpResponse response) throws IOException {
-		return Theme.fromJson(basicResponseHandler.handleResponse(response));
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode >= 200 && statusCode < 300) {
+			return Theme.fromJson(basicResponseHandler.handleResponse(response));
+		}
+		else {
+			throw MeetingsResponseException.fromHttpResponse(response);
+		}
 	}
 }

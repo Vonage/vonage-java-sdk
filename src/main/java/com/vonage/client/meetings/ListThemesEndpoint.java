@@ -47,11 +47,17 @@ class ListThemesEndpoint extends AbstractMethod<Void, List<Theme>> {
 
 	@Override
 	public List<Theme> parseResponse(HttpResponse response) throws IOException {
-		String json = basicResponseHandler.handleResponse(response);
-		if (json == null || json.isEmpty()) {
-			return Collections.emptyList();
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode >= 200 && statusCode < 300) {
+			String json = basicResponseHandler.handleResponse(response);
+			if (json == null || json.isEmpty()) {
+				return Collections.emptyList();
+			}
+			ObjectMapper mapper = new ObjectMapper();
+			return mapper.readValue(json, new TypeReference<List<Theme>>() {});
 		}
-		ObjectMapper mapper = new ObjectMapper();
-		return mapper.readValue(json, new TypeReference<List<Theme>>() {});
+		else {
+			throw MeetingsResponseException.fromHttpResponse(response);
+		}
 	}
 }

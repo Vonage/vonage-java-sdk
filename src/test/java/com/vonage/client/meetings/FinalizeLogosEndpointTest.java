@@ -16,11 +16,14 @@
 package com.vonage.client.meetings;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.*;
+import com.vonage.client.HttpConfig;
+import com.vonage.client.HttpWrapper;
+import com.vonage.client.TestUtils;
+import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.auth.JWTAuthMethod;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.Arrays;
@@ -42,8 +45,7 @@ public class FinalizeLogosEndpointTest {
 		assertEquals("PUT", builder.getMethod());
 		String expectedUri = "https://api-eu.vonage.com/meetings/themes/"+themeId+"/finalizeLogos";
 		assertEquals(expectedUri, builder.build().getURI().toString());
-		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, "");
-		endpoint.parseResponse(mockResponse);
+		assertNull(endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, "")));
 	}
 
 	@Test
@@ -59,9 +61,9 @@ public class FinalizeLogosEndpointTest {
 		assertEquals("PUT", builder.getMethod());
 	}
 
-	@Test(expected = VonageBadRequestException.class)
+	@Test(expected = MeetingsResponseException.class)
 	public void testUnsuccessfulResponse() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, ""));
+		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, "{}"));
 	}
 
 	@Test(expected = VonageUnexpectedException.class)

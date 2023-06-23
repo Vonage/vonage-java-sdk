@@ -37,18 +37,22 @@ class ListRecordingsEndpoint extends AbstractMethod<String, ListRecordingsRespon
 
 	@Override
 	public RequestBuilder makeRequest(String request) {
-		String path = String.format(PATH, request);
-		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + path;
-		return RequestBuilder.get(uri)
-				.setHeader("Accept", "application/json");
+		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + String.format(PATH, request);
+		return RequestBuilder.get(uri).setHeader("Accept", "application/json");
 	}
 
 	@Override
 	public ListRecordingsResponse parseResponse(HttpResponse response) throws IOException {
-		String json = basicResponseHandler.handleResponse(response);
-		if (json == null || json.isEmpty()) {
-			return new ListRecordingsResponse();
+		int statusCode = response.getStatusLine().getStatusCode();
+		if (statusCode >= 200 && statusCode < 300) {
+			String json = basicResponseHandler.handleResponse(response);
+			if (json == null || json.isEmpty()) {
+				return new ListRecordingsResponse();
+			}
+			return ListRecordingsResponse.fromJson(json);
 		}
-		return ListRecordingsResponse.fromJson(json);
+		else {
+			throw MeetingsResponseException.fromHttpResponse(response);
+		}
 	}
 }

@@ -20,7 +20,6 @@ import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import static org.junit.Assert.assertEquals;
@@ -64,8 +63,8 @@ public class GetThemeEndpointTest {
 		assertEquals("GET", builder.getMethod());
 	}
 
-	@Test(expected = HttpResponseException.class)
+	@Test(expected = MeetingsResponseException.class)
 	public void testUnsuccessfulResponse() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, ""));
+		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, "{}"));
 	}
 }
