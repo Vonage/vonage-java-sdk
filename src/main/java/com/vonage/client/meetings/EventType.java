@@ -15,37 +15,55 @@
  */
 package com.vonage.client.meetings;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Represents the type of meeting room.
+ * Represents the event type in {@link MeetingsEventCallback#getEvent()}.
  */
-public enum RoomType {
+public enum EventType {
 	/**
-	 * "Instant" is active for 10 minutes until the first participant joins the room
-	 * and remains active for 10 minutes after the last participant leaves.
+	 * Room expired.
 	 */
-	INSTANT,
+	ROOM_EXPIRED,
 
 	/**
-	 * "Long term" expires after a specific date-time.
+	 * Session started.
 	 */
-	LONG_TERM;
+	SESSION_STARTED,
 
-	@JsonCreator
-	public static RoomType fromString(String value) {
-		try {
-			return valueOf(value.toUpperCase());
-		}
-		catch (NullPointerException | IllegalArgumentException ex) {
-			return null;
-		}
-	}
+	/**
+	 * Session ended.
+	 */
+	SESSION_ENDED,
+
+	/**
+	 * Recording started.
+	 */
+	RECORDING_STARTED,
+
+	/**
+	 * Recording ended.
+	 */
+	RECORDING_ENDED,
+
+	/**
+	 * Recording uploaded.
+	 */
+	RECORDING_UPLOADED,
+
+	/**
+	 * Participant joined.
+	 */
+	SESSION_PARTICIPANT_JOINED,
+
+	/**
+	 * Participant left.
+	 */
+	SESSION_PARTICIPANT_LEFT;
 
 	@JsonValue
 	@Override
 	public String toString() {
-		return name().toLowerCase();
-	}	
+		return name().toLowerCase().replace('_', ':');
+	}
 }

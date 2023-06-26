@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.vonage.client.VonageResponseParseException;
-import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 import java.net.URI;
 import java.time.Instant;
@@ -179,7 +178,7 @@ public class VerificationCallback {
 	 * @param json The webhook response JSON string.
 	 *
 	 * @return The deserialized webhook response object.
-	 * @throws VonageUnexpectedException If the response could not be deserialized.
+	 * @throws VonageResponseParseException If the response could not be deserialized.
 	 */
 	public static VerificationCallback fromJson(String json) {
 		try {

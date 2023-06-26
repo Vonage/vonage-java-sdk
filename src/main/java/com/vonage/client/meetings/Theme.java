@@ -95,7 +95,9 @@ public class Theme {
 	}
 
 	/**
-	 * @return The domain.
+	 * The theme's application domain.
+	 *
+	 * @return The domain as an enum.
 	 */
 	@JsonProperty("domain")
 	public ThemeDomain getDomain() {
