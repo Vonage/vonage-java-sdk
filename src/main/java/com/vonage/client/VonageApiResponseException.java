@@ -27,6 +27,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -38,6 +39,7 @@ import java.util.Objects;
 public abstract class VonageApiResponseException extends VonageClientException {
 	protected URI type;
 	protected String title, detail, instance;
+	protected List<?> errors;
 	@JsonIgnore protected int statusCode;
 
 	/**
@@ -78,6 +80,18 @@ public abstract class VonageApiResponseException extends VonageClientException {
 	@JsonProperty("instance")
 	public String getInstance() {
 		return instance;
+	}
+
+	/**
+	 * Additional description of problems encountered with the request.
+	 * This is typically only applicable to 400 or 409 error codes.
+	 *
+	 * @return The list of errors returned from the server (could be a Map or String),
+	 * or {@code null} if none / not applicable.
+	 */
+	@JsonProperty("errors")
+	public List<?> getErrors() {
+		return errors;
 	}
 
 	/**

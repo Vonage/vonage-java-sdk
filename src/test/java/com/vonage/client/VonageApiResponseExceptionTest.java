@@ -21,6 +21,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.net.URI;
+import java.util.Collections;
+import java.util.List;
 
 public class VonageApiResponseExceptionTest {
 
@@ -61,13 +63,19 @@ public class VonageApiResponseExceptionTest {
 			"  \"type\": \""+type+"\",\n" +
 			"  \"title\": \""+title+"\",\n" +
 			"  \"detail\": \""+detail+"\",\n" +
-			"  \"instance\": \""+instance+"\"\n" +
+			"  \"instance\": \""+instance+"\",\n" +
+			"  \"errors\": [\"Bad name\", {\"errorKey\": \"errorValue\"}]\n" +
 			"}"
 		);
 		actual.statusCode = status;
 		assertEquals(expected, actual);
 		assertEquals(expected.hashCode(), actual.hashCode());
 		assertEquals(expected.toString(), actual.toString());
+		List<?> errors = actual.getErrors();
+		assertNotNull(errors);
+		assertEquals(2, errors.size());
+		assertEquals("Bad name", errors.get(0));
+		assertEquals(Collections.singletonMap("errorKey", "errorValue"), errors.get(1));
 	}
 
 	@Test
@@ -112,5 +120,28 @@ public class VonageApiResponseExceptionTest {
 		assertNotNull(crx);
 		assertTrue(crx.dummy);
 		assertEquals(json, crx.toJson());
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void triggerJsonProcessingException() throws Exception {
+		class SelfReferencing extends VonageApiResponseException {
+			@JsonProperty("self") final SelfReferencing self = this;
+		}
+		SelfReferencing selfReferencing = new SelfReferencing();
+		selfReferencing.toJson();
+		try {
+			throw selfReferencing;
+		}
+		catch (Exception ex) {
+			fail();
+		}
+	}
+
+	@Test(expected = VonageUnexpectedException.class)
+	public void testFromJsonWithBadConstructorDefinition() throws Exception {
+		class MissingNoArgs extends VonageApiResponseException {
+			public MissingNoArgs(boolean dummy) {}
+		}
+		VonageApiResponseException.fromJson(MissingNoArgs.class, "");
 	}
 }

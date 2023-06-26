@@ -614,11 +614,12 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 	@Test
 	public void testFinalizeLogos() throws Exception {
+		final String logoKey = "greyscale-logo-key0";
 		stubResponseAndRun(200,() -> client.finalizeLogos(RANDOM_ID, Arrays.asList("key1", "l-k-2", "k3")));
 		stubResponseAndRun(200, () -> client.finalizeLogos(RANDOM_ID, Collections.singletonList("a")));
 
 		stubResponseAndAssertThrows(200,
-			() -> client.finalizeLogos(null, Arrays.asList("logo_key0")), NullPointerException.class
+			() -> client.finalizeLogos(null, Arrays.asList(logoKey)), NullPointerException.class
 		);
 		stubResponseAndAssertThrows(200,
 			() -> client.finalizeLogos(RANDOM_ID, null), IllegalArgumentException.class
@@ -626,7 +627,54 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		stubResponseAndAssertThrows(200,
 			() -> client.finalizeLogos(RANDOM_ID, Collections.emptyList()), IllegalArgumentException.class
 		);
-		// TODO
+
+		MeetingsResponseException expectedResponse = MeetingsResponseException.fromJson(
+				"{\n" +
+				"   \"status\": 400,\n" +
+				"   \"name\": \"BadRequestError\",\n" +
+				"   \"message\": \"could not finalize logos\",\n" +
+				"   \"errors\": [\n" +
+				"      {\n" +
+				"         \"logoKey\": \""+logoKey+"\",\n" +
+				"         \"code\": \"invalid_logo_properties\",\n" +
+				"         \"invalidProperty\": \"exceeds_size\"\n" +
+				"      }\n" +
+				"   ]\n" +
+				"}"
+		);
+
+		String expectedJson = expectedResponse.toJson();
+		wrapper.setHttpClient(stubHttpClient(400, expectedJson));
+
+		try {
+			client.finalizeLogos(RANDOM_ID, Collections.singletonList(logoKey));
+			fail("Expected "+expectedResponse.getClass().getSimpleName());
+		}
+		catch (MeetingsResponseException ex) {
+			assertEquals(400, ex.getStatusCode());
+			assertEquals(ex.getStatusCode(), expectedResponse.getStatusCode());
+			assertEquals("BadRequestError", ex.getName());
+			assertEquals("could not finalize logos", ex.getMessage());
+			assertEquals(expectedResponse.getName(), ex.getName());
+			assertEquals(expectedResponse.getMessage(), ex.getMessage());
+			assertNull(ex.getType());
+			assertNull(ex.getInstance());
+			assertNull(expectedResponse.getTitle());
+			assertEquals("Test reason", ex.getTitle());
+			assertNull(ex.getDetail());
+
+			List<?> errors = ex.getErrors();
+			assertNotNull(errors);
+			assertEquals(1, errors.size());
+			@SuppressWarnings("unchecked")
+			Map<String, String> firstError = (Map<String, String>) errors.get(0);
+			assertNotNull(firstError);
+			assertEquals(3, firstError.size());
+			assertEquals(firstError.get("logoKey"), logoKey);
+			assertEquals(firstError.get("code"), "invalid_logo_properties");
+			assertEquals(firstError.get("invalidProperty"), "exceeds_size");
+			assertEquals(expectedResponse.getErrors(), errors);
+		}
 	}
 
 	@Test
