@@ -37,8 +37,8 @@ class GetRoomEndpoint extends AbstractMethod<UUID, MeetingRoom> {
 	}
 
 	@Override
-	public RequestBuilder makeRequest(UUID request) {
-		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + String.format(PATH, request);
+	public RequestBuilder makeRequest(UUID roomId) {
+		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + String.format(PATH, roomId);
 		return RequestBuilder.get(uri).setHeader("Accept", "application/json");
 	}
 

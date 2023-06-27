@@ -37,8 +37,8 @@ class GetThemeEndpoint extends AbstractMethod<UUID, Theme> {
 	}
 
 	@Override
-	public RequestBuilder makeRequest(UUID request) {
-		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + String.format(PATH, request);
+	public RequestBuilder makeRequest(UUID themeId) {
+		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + String.format(PATH, themeId);
 		return RequestBuilder.get(uri).setHeader("Accept", "application/json");
 	}
 

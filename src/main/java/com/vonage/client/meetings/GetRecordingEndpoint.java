@@ -37,8 +37,8 @@ class GetRecordingEndpoint extends AbstractMethod<UUID, Recording> {
 	}
 
 	@Override
-	public RequestBuilder makeRequest(UUID request) {
-		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + String.format(PATH, request);
+	public RequestBuilder makeRequest(UUID recordingId) {
+		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + String.format(PATH, recordingId);
 		return RequestBuilder.get(uri).setHeader("Accept", "application/json");
 	}
 

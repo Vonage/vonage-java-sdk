@@ -36,8 +36,8 @@ class ListRecordingsEndpoint extends AbstractMethod<String, ListRecordingsRespon
 	}
 
 	@Override
-	public RequestBuilder makeRequest(String request) {
-		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + String.format(PATH, request);
+	public RequestBuilder makeRequest(String sessionId) {
+		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + String.format(PATH, sessionId);
 		return RequestBuilder.get(uri).setHeader("Accept", "application/json");
 	}
 

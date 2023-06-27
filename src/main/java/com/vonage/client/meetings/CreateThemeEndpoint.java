@@ -27,6 +27,7 @@ import java.io.IOException;
 class CreateThemeEndpoint extends AbstractMethod<Theme, Theme> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/meetings/themes";
+	private Theme cachedTheme;
 
 	CreateThemeEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
@@ -43,17 +44,29 @@ class CreateThemeEndpoint extends AbstractMethod<Theme, Theme> {
 		return RequestBuilder.post(uri)
 				.setHeader("Content-Type", "application/json")
 				.setHeader("Accept", "application/json")
-				.setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
+				.setEntity(new StringEntity((cachedTheme = request).toJson(), ContentType.APPLICATION_JSON));
 	}
 
 	@Override
 	public Theme parseResponse(HttpResponse response) throws IOException {
-		int statusCode = response.getStatusLine().getStatusCode();
-		if (statusCode >= 200 && statusCode < 300) {
-			return Theme.fromJson(basicResponseHandler.handleResponse(response));
+		try {
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode >= 200 && statusCode < 300) {
+				String json = basicResponseHandler.handleResponse(response);
+				if (cachedTheme != null) {
+					cachedTheme.updateFromJson(json);
+					return cachedTheme;
+				}
+				else {
+					return Theme.fromJson(json);
+				}
+			}
+			else {
+				throw MeetingsResponseException.fromHttpResponse(response);
+			}
 		}
-		else {
-			throw MeetingsResponseException.fromHttpResponse(response);
+		finally {
+			cachedTheme = null;
 		}
 	}
 }

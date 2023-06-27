@@ -19,12 +19,10 @@ import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
 import com.vonage.client.auth.JWTAuthMethod;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,41 +37,28 @@ public class CreateThemeEndpointTest {
 	@Test
 	public void testMakeRequestAllParameters() throws Exception {
 		Theme request = Theme.builder()
-				.mainColor("#AB34C1")
-				.brandText("Vonage")
-				.themeName("Test theme")
-				.shortCompanyUrl("https://developer.vonage.com")
-				.build();
+				.themeName("Test theme").shortCompanyUrl("https://developer.vonage.com")
+				.mainColor("#AB34C1").brandText("Vonage").build();
 
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("POST", builder.getMethod());
 		String expectedUri = "https://api-eu.vonage.com/meetings/themes";
 		assertEquals(expectedUri, builder.build().getURI().toString());
-
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		String expectedRequest = "{" +
-				"\"theme_name\":\"Test theme\"," +
+		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+
+		String expectedRequest = "{\"theme_name\":\"Test theme\"," +
 				"\"main_color\":\"#AB34C1\"," +
 				"\"short_company_url\":\"https://developer.vonage.com\"," +
-				"\"brand_text\":\"Vonage\"" +
-				"}";
+				"\"brand_text\":\"Vonage\"}";
+
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		String expectedResponse = "{\"theme_name\":\"fancy\",\"nonsense\":false}";
-		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
-		Theme parsed = endpoint.parseResponse(mockResponse);
+		String expectedResponse = "{\"theme_name\":\"fancy\",\"nonsense\":false,\"branded_favicon\":\"AWS-fav\"}";
+		Theme parsed = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(201, expectedResponse));
+		assertEquals(request, parsed);
 		assertEquals("fancy", parsed.getThemeName());
-		assertNull(parsed.getBrandText());
-		assertNull(parsed.getThemeId());
-		assertNull(parsed.getAccountId());
-		assertNull(parsed.getApplicationId());
-		assertNull(parsed.getBrandedFavicon());
-		assertNull(parsed.getBrandImageColored());
-		assertNull(parsed.getBrandImageWhite());
-		assertNull(parsed.getBrandedFaviconUrl());
-		assertNull(parsed.getBrandImageColoredUrl());
-		assertNull(parsed.getBrandImageWhiteUrl());
+		assertEquals("AWS-fav", parsed.getBrandedFavicon());
 	}
 
 	@Test
@@ -90,6 +75,12 @@ public class CreateThemeEndpointTest {
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("POST", builder.getMethod());
+	}
+
+	@Test
+	public void testParseResponseWithoutRequest() throws Exception {
+		Theme parsed = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(201, "{}"));
+		assertNotNull(parsed);
 	}
 
 	@Test(expected = MeetingsResponseException.class)

@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 import java.net.URI;
@@ -213,7 +214,22 @@ public class Theme {
 	public URI getBrandedFaviconUrl() {
 		return brandedFaviconUrl;
 	}
-	
+
+	/**
+	 * Updates (hydrates) this object's fields from additional JSON data.
+	 *
+	 * @param json The JSON payload.
+	 */
+	public void updateFromJson(String json) {
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.readerForUpdating(this).readValue(json, getClass());
+		}
+		catch (IOException ex) {
+			throw new VonageResponseParseException("Failed to update "+getClass().getSimpleName()+" from json.", ex);
+		}
+	}
+
 	/**
 	 * Creates an instance of this class from a JSON payload.
 	 *
@@ -226,7 +242,7 @@ public class Theme {
 			return mapper.readValue(json, Theme.class);
 		}
 		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to produce Theme from json.", ex);
+			throw new VonageResponseParseException("Failed to produce Theme from json.", ex);
 		}
 	}
 	

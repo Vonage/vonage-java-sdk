@@ -16,6 +16,7 @@
 package com.vonage.client.meetings;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.VonageUnexpectedException;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -139,7 +140,7 @@ public class MeetingRoomTest {
 	}
 
 	@Test
-	public void testUpdateOverwritesExistingValue() {
+	public void testUpdateFromJson() {
 		MeetingRoom room = MeetingRoom.builder("Room name 0")
 				.expiresAt(Instant.now().plusSeconds(7200))
 				.type(RoomType.LONG_TERM).expireAfterUse(true)
@@ -174,6 +175,8 @@ public class MeetingRoomTest {
 		assertFalse(room.getAvailableFeatures().getIsChatAvailable());
 		assertNull(room.getAvailableFeatures().getIsRecordingAvailable());
 		assertNull(room.getAvailableFeatures().getIsWhiteboardAvailable());
+
+		assertThrows(VonageResponseParseException.class, () -> room.updateFromJson("{malformed]"));
 	}
 
 	@Test

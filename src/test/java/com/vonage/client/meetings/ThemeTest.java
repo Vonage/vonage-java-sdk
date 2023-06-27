@@ -16,6 +16,7 @@
 package com.vonage.client.meetings;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.VonageUnexpectedException;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -100,6 +101,24 @@ public class ThemeTest {
 		assertEquals(brandImageColoredUrl, response.getBrandImageColoredUrl());
 		assertEquals(brandImageWhiteUrl, response.getBrandImageWhiteUrl());
 		assertEquals(brandedFaviconUrl, response.getBrandedFaviconUrl());
+	}
+
+	@Test
+	public void testUpdateFromJson() {
+		Theme theme = Theme.builder().brandText("Initial text").mainColor("#a1b2c3").build();
+		assertEquals("Initial text", theme.getBrandText());
+		assertNull(theme.getThemeName());
+		assertNull(theme.getThemeId());
+
+		theme.updateFromJson("{\"theme_id\":\""+UUID.randomUUID()+"\"," +
+				"\"brand_text\":\"Nexmo\",\"theme_name\":\"test Theme\"}"
+		);
+		assertNotNull(theme.getThemeId());
+		assertEquals("#a1b2c3", theme.getMainColor());
+		assertEquals("Nexmo", theme.getBrandText());
+		assertNotNull(theme.getThemeName());
+
+		assertThrows(VonageResponseParseException.class, () -> theme.updateFromJson("{malformed]"));
 	}
 	
 	@Test(expected = VonageUnexpectedException.class)
