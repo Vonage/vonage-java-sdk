@@ -19,10 +19,48 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Represents the language in {@link UISettings}.
+ * Represents the language in {@link UISettings}. Default is English.
  */
 public enum RoomLanguage {
-	DEFAULT, EN, HE, ES, PT, IT;
+	/**
+	 * English
+	 */
+	EN,
+
+	/**
+	 * Hebrew
+	 */
+	HE,
+
+	/**
+	 * Spanish
+	 */
+	ES,
+
+	/**
+	 * Portuguese
+	 */
+	PT,
+
+	/**
+	 * Italian
+	 */
+	IT,
+
+	/**
+	 * Catalan
+	 */
+	CA,
+
+	/**
+	 * French
+	 */
+	FR,
+
+	/**
+	 * German
+	 */
+	DE;
 
 	@JsonCreator
 	public static RoomLanguage fromString(String value) {

@@ -19,14 +19,15 @@ import com.vonage.client.AbstractMethod;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 
 class CreateRoomEndpoint extends AbstractMethod<MeetingRoom, MeetingRoom> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/meetings/rooms";
+	private MeetingRoom cachedRoom;
 
 	CreateRoomEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
@@ -43,17 +44,29 @@ class CreateRoomEndpoint extends AbstractMethod<MeetingRoom, MeetingRoom> {
 		return RequestBuilder.post(uri)
 				.setHeader("Content-Type", "application/json")
 				.setHeader("Accept", "application/json")
-				.setEntity(new StringEntity(request.toJson(), ContentType.APPLICATION_JSON));
+				.setEntity(new StringEntity((cachedRoom = request).toJson(), ContentType.APPLICATION_JSON));
 	}
 
 	@Override
 	public MeetingRoom parseResponse(HttpResponse response) throws IOException {
-		int statusCode = response.getStatusLine().getStatusCode();
-		if (statusCode >= 200 && statusCode < 300) {
-			return MeetingRoom.fromJson(basicResponseHandler.handleResponse(response));
+		try {
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode >= 200 && statusCode < 300) {
+				String json = basicResponseHandler.handleResponse(response);
+				if (cachedRoom != null) {
+					cachedRoom.updateFromJson(json);
+					return cachedRoom;
+				}
+				else {
+					return MeetingRoom.fromJson(json);
+				}
+			}
+			else {
+				throw MeetingsResponseException.fromHttpResponse(response);
+			}
 		}
-		else {
-			throw MeetingsResponseException.fromHttpResponse(response);
+		finally {
+			cachedRoom = null;
 		}
 	}
 }

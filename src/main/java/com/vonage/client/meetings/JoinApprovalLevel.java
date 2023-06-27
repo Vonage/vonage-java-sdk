@@ -19,13 +19,22 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * The level of approval needed to join the meeting in the room.
- * When set to "after_owner_only" the participants will join the meeting only after the host joined.
- * When set to "explicit_approval" the participants will join the waiting room and the host will deny/approve them.
+ * Represents the level of approval needed to join the meeting in the room.
  */
 public enum JoinApprovalLevel {
+	/**
+	 * Participants can join the meeting at any time without approval.
+	 */
 	NONE,
+
+	/**
+	 * Participants will join the meeting only after the host joined.
+	 */
 	AFTER_OWNER_ONLY,
+
+	/**
+	 * Participants will join the waiting room and the host will deny/approve them.
+	 */
 	EXPLICIT_APPROVAL;
 
 	@JsonCreator

@@ -139,6 +139,44 @@ public class MeetingRoomTest {
 	}
 
 	@Test
+	public void testUpdateOverwritesExistingValue() {
+		MeetingRoom room = MeetingRoom.builder("Room name 0")
+				.expiresAt(Instant.now().plusSeconds(7200))
+				.type(RoomType.LONG_TERM).expireAfterUse(true)
+				.availableFeatures(AvailableFeatures.builder()
+						.isChatAvailable(false).isRecordingAvailable(true).build()
+				)
+				.joinApprovalLevel(JoinApprovalLevel.NONE).build();
+
+		assertNull(room.getInitialJoinOptions());
+		assertNull(room.getUiSettings());
+		assertNull(room.getIsAvailable());
+		assertNull(room.getCallbackUrls());
+		assertFalse(room.getAvailableFeatures().getIsChatAvailable());
+		assertTrue(room.getAvailableFeatures().getIsRecordingAvailable());
+		assertNull(room.getAvailableFeatures().getIsLocaleSwitcherAvailable());
+		assertNull(room.getAvailableFeatures().getIsWhiteboardAvailable());
+
+		room.updateFromJson("{\"name\":\"Updated name 1\",\"join_approval_level\":\"after_owner_only\"," +
+				"\"is_available\":true,\"type\":\"instant\",\"ui_settings\":{\"language\":\"ca\"}," +
+				"\"expire_after_use\":false,\"initial_join_options\":{},\"callback_urls\":{}," +
+				"\"available_features\":{\"is_locale_switcher_available\":false,\"is_chat_available\":false}}"
+		);
+
+		assertTrue(room.getIsAvailable());
+		assertFalse(room.getExpireAfterUse());
+		assertNotNull(room.getInitialJoinOptions());
+		assertNotNull(room.getCallbackUrls());
+		assertEquals(RoomLanguage.CA, room.getUiSettings().getLanguage());
+		assertEquals(RoomType.INSTANT, room.getType());
+		assertEquals(JoinApprovalLevel.AFTER_OWNER_ONLY, room.getJoinApprovalLevel());
+		assertFalse(room.getAvailableFeatures().getIsLocaleSwitcherAvailable());
+		assertFalse(room.getAvailableFeatures().getIsChatAvailable());
+		assertNull(room.getAvailableFeatures().getIsRecordingAvailable());
+		assertNull(room.getAvailableFeatures().getIsWhiteboardAvailable());
+	}
+
+	@Test
 	public void testNullOrEmptyDisplayName() {
 		assertThrows(IllegalArgumentException.class, () -> MeetingRoom.builder(null).build());
 		assertThrows(IllegalArgumentException.class, () -> MeetingRoom.builder(" ").build());

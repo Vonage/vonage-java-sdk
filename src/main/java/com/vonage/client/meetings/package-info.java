@@ -21,6 +21,6 @@
  * Please refer to <a href=https://developer.vonage.com/en/meetings/overview>
  * the developer documentation</a> for an overview of the concepts.
  *
- * @since 7.2.0
+ * @since 7.6.0
  */
 package com.vonage.client.meetings;

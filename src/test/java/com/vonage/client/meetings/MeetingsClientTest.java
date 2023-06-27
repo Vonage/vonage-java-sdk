@@ -75,7 +75,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 			"                \"recordings_callback_url\": \"https://example.com/recordings\"\n" +
 			"            },\n" +
 			"            \"ui_settings\": {\n" +
-			"                \"language\": \"default\"\n" +
+			"                \"language\": \"de\"\n" +
 			"            },\n" +
 			"            \"available_features\": {\n" +
 			"                \"is_recording_available\": true,\n" +
@@ -115,7 +115,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 			"            },\n" +
 			"            \"join_approval_level\": \"none\",\n" +
 			"            \"ui_settings\": {\n" +
-			"                \"language\": \"default\"\n" +
+			"                \"language\": \"de\"\n" +
 			"            },\n" +
 			"            \"available_features\": {\n" +
 			"                \"is_recording_available\": true,\n" +
@@ -220,7 +220,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		assertEquals("https://example.com/rooms", callbackUrls.getRoomsCallbackUrl().toString());
 		assertEquals("https://example.com/sessions", callbackUrls.getSessionsCallbackUrl().toString());
 		assertEquals("https://example.com/recordings", callbackUrls.getRecordingsCallbackUrl().toString());
-		assertEquals(RoomLanguage.DEFAULT, uiSettings.getLanguage());
+		assertEquals(RoomLanguage.DE, uiSettings.getLanguage());
 		AvailableFeatures availableFeatures = parsed.getAvailableFeatures();
 		assertNotNull(availableFeatures);
 		assertTrue(availableFeatures.getIsRecordingAvailable());
@@ -247,7 +247,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		assertTrue(otherRoom.getAvailableFeatures().getIsChatAvailable());
 		assertFalse(otherRoom.getAvailableFeatures().getIsLocaleSwitcherAvailable());
 		assertEquals(JoinApprovalLevel.NONE, otherRoom.getJoinApprovalLevel());
-		assertEquals(RoomLanguage.DEFAULT, otherRoom.getUiSettings().getLanguage());
+		assertEquals(RoomLanguage.DE, otherRoom.getUiSettings().getLanguage());
 	}
 
 	static void assertEqualsGetAvailableRooms(ListRoomsResponse parsed) {
@@ -643,8 +643,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 				"}"
 		);
 
-		String expectedJson = expectedResponse.toJson();
-		wrapper.setHttpClient(stubHttpClient(400, expectedJson));
+		wrapper.setHttpClient(stubHttpClient(400, expectedResponse.toJson()));
 
 		try {
 			client.finalizeLogos(RANDOM_ID, Collections.singletonList(logoKey));

@@ -22,6 +22,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 import java.time.Instant;
@@ -250,6 +251,22 @@ public class MeetingRoom {
 	}
 
 	/**
+	 * Updates (hydrates) this object's fields from additional JSON data.
+	 *
+	 * @param json The JSON payload.
+	 */
+	public void updateFromJson(String json) {
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.registerModule(new JavaTimeModule());
+			mapper.readerForUpdating(this).readValue(json, getClass());
+		}
+		catch (IOException ex) {
+			throw new VonageResponseParseException("Failed to update "+getClass().getSimpleName()+" from json.", ex);
+		}
+	}
+
+	/**
 	 * Creates an instance of this class from a JSON payload.
 	 *
 	 * @param json The JSON string to parse.
@@ -262,7 +279,7 @@ public class MeetingRoom {
 			return mapper.readValue(json, MeetingRoom.class);
 		}
 		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to produce MeetingRoom from json.", ex);
+			throw new VonageResponseParseException("Failed to produce MeetingRoom from json.", ex);
 		}
 	}
 
@@ -313,8 +330,10 @@ public class MeetingRoom {
 		}
 
 		/**
+		 * Free text that can be attached to a room. This will be passed in the form of a header
+		 * in events related to this room.
 		 *
-		 * @param metadata Free text that can be attached to a room. This will be passed in the form of a header in events related to this room.
+		 * @param metadata Additional text / data to be associated with this room.
 		 *
 		 * @return This builder.
 		 */
@@ -324,8 +343,9 @@ public class MeetingRoom {
 		}
 
 		/**
+		 * Type of room.
 		 *
-		 * @param type Type of room.
+		 * @param type The room type.
 		 *
 		 * @return This builder.
 		 */
@@ -335,8 +355,9 @@ public class MeetingRoom {
 		}
 
 		/**
+		 * Once a room becomes unavailable, no new sessions can be created under it.
 		 *
-		 * @param isAvailable Once a room becomes unavailable, no new sessions can be created under it
+		 * @param isAvailable Whether the room is available.
 		 *
 		 * @return This builder.
 		 */
@@ -346,8 +367,9 @@ public class MeetingRoom {
 		}
 
 		/**
+		 * Close the room after a session ends. Only relevant for long term rooms.
 		 *
-		 * @param expireAfterUse Close the room after a session ends. Only relevant for long_term rooms.
+		 * @param expireAfterUse Whether the room should close after use.
 		 *
 		 * @return This builder.
 		 */
@@ -357,8 +379,9 @@ public class MeetingRoom {
 		}
 
 		/**
+		 * Options for recording.
 		 *
-		 * @param recordingOptions Options for recording.
+		 * @param recordingOptions The recording options.
 		 *
 		 * @return This builder.
 		 */
@@ -368,8 +391,9 @@ public class MeetingRoom {
 		}
 
 		/**
+		 * Options for when a participant joins a meeting.
 		 *
-		 * @param initialJoinOptions Options for when a participant joins a meeting.
+		 * @param initialJoinOptions The initial join options for each participant.
 		 *
 		 * @return This builder.
 		 */
@@ -379,8 +403,9 @@ public class MeetingRoom {
 		}
 
 		/**
+		 * Settings for the user interface of this meeting.
 		 *
-		 * @param uiSettings Settings for the user interface of this meeting.
+		 * @param uiSettings The user interface settings.
 		 *
 		 * @return This builder.
 		 */
@@ -390,8 +415,9 @@ public class MeetingRoom {
 		}
 
 		/**
+		 * Callback URLs for this meeting.
 		 *
-		 * @param callbackUrls The callback URLs for this meeting.
+		 * @param callbackUrls The additional URLs for this meeting.
 		 *
 		 * @return This builder.
 		 */
@@ -401,8 +427,9 @@ public class MeetingRoom {
 		}
 
 		/**
+		 * Available features for this meeting.
 		 *
-		 * @param availableFeatures The available features for this meeting.
+		 * @param availableFeatures The features available for this room.
 		 *
 		 * @return This builder.
 		 */
@@ -412,8 +439,9 @@ public class MeetingRoom {
 		}
 
 		/**
+		 * ID of the theme for this room.
 		 *
-		 * @param themeId ID of the theme for this room.
+		 * @param themeId Unique theme identifier.
 		 *
 		 * @return This builder.
 		 */
@@ -423,8 +451,9 @@ public class MeetingRoom {
 		}
 
 		/**
+		 * Level of approval needed to join the meeting in the room.
 		 *
-		 * @param joinApprovalLevel The level of approval needed to join the meeting in the room.
+		 * @param joinApprovalLevel The permission setting for joining this room.
 		 *
 		 * @return This builder.
 		 */
@@ -437,7 +466,7 @@ public class MeetingRoom {
 		 * NOTE: This parameter is REQUIRED if the room type is {@link RoomType#LONG_TERM},
 		 * but should not be present if the room type is {@link RoomType#INSTANT}.
 		 *
-		 * @param expiresAt The time for when the room will be expired, expressed in ISO 8601 format.
+		 * @param expiresAt The time for when the room will expire, expressed in ISO 8601 format.
 		 *
 		 * @return This builder.
 		 */

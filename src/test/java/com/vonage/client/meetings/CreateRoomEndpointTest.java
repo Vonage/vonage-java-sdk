@@ -38,7 +38,7 @@ public class CreateRoomEndpointTest {
 	}
 	
 	@Test
-	public void testMakeRequestAllParameters() throws Exception {
+	public void testDefaultUriAllParameters() throws Exception {
 		MeetingRoom request = MeetingRoom.builder("Srs bzns meeting")
 			.metadata("code=1123")
 			.type(RoomType.LONG_TERM)
@@ -70,8 +70,8 @@ public class CreateRoomEndpointTest {
 		String expectedUri = "https://api-eu.vonage.com/meetings/rooms";
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		String expectedRequest = "{" +
-				"\"expires_at\":\"+1000000000-12-31T23:59:59.999Z\"," +
+
+		String expectedRequest = "{\"expires_at\":\"+1000000000-12-31T23:59:59.999Z\"," +
 				"\"theme_id\":\"ef2b46f3-8ebb-437e-a671-272e4990fbc8\"," +
 				"\"display_name\":\"Srs bzns meeting\",\"metadata\":\"code=1123\"," +
 				"\"is_available\":false,\"expire_after_use\":true,\"type\":\"long_term\"," +
@@ -84,13 +84,15 @@ public class CreateRoomEndpointTest {
 				"\"recordings_callback_url\":\"example.com/re\"}," +
 				"\"available_features\":{" +
 				"\"is_recording_available\":true,\"is_chat_available\":false," +
-				"\"is_whiteboard_available\":false,\"is_locale_switcher_available\":false}" +
-				"}";
+				"\"is_whiteboard_available\":false,\"is_locale_switcher_available\":false}}";
+
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		String expectedResponse = "{\"meeting_code\":\"1234567890\",\"nonsense\":true,\"available_features\":{}}";
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
 		MeetingRoom parsed = endpoint.parseResponse(mockResponse);
+		assertEquals(request, parsed);
+
 		assertEquals("1234567890", parsed.getMeetingCode());
 		AvailableFeatures availableFeatures = parsed.getAvailableFeatures();
 		assertNotNull(availableFeatures);
@@ -98,16 +100,6 @@ public class CreateRoomEndpointTest {
 		assertNull(availableFeatures.getIsRecordingAvailable());
 		assertNull(availableFeatures.getIsWhiteboardAvailable());
 		assertNull(availableFeatures.getIsLocaleSwitcherAvailable());
-		assertNull(parsed.getInitialJoinOptions());
-		assertNull(parsed.getLinks());
-		assertNull(parsed.getIsAvailable());
-		assertNull(parsed.getCallbackUrls());
-		assertNull(parsed.getMetadata());
-		assertNull(parsed.getExpiresAt());
-		assertNull(parsed.getType());
-		assertNull(parsed.getThemeId());
-		assertNull(parsed.getCreatedAt());
-		assertNull(parsed.getId());
 	}
 
 	@Test
@@ -125,6 +117,12 @@ public class CreateRoomEndpointTest {
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("POST", builder.getMethod());
+	}
+
+	@Test
+	public void testParseResponseWithoutRequest() throws Exception {
+		MeetingRoom parsed = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(201, "{}"));
+		assertNotNull(parsed);
 	}
 
 	@Test(expected = MeetingsResponseException.class)
