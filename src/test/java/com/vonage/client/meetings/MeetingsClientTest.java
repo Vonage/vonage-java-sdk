@@ -20,6 +20,7 @@ import com.vonage.client.ClientTest;
 import com.vonage.client.VonageBadRequestException;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.common.HalLinks;
+import org.apache.http.client.HttpClient;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.function.ThrowingRunnable;
@@ -233,7 +234,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		assertEqualsSampleRoom(stubResponseAndGet(200, SAMPLE_ROOM_RESPONSE, call));
 	}
 
-	static void assertEqualsGetAvailableRooms(List<MeetingRoom> rooms) {
+	static void assertEqualsAvailableRooms(List<MeetingRoom> rooms) {
 		assertEquals(2, rooms.size());
 		assertEqualsSampleRoom(rooms.get(0));
 		MeetingRoom otherRoom = rooms.get(1);
@@ -250,8 +251,8 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		assertEquals(RoomLanguage.DE, otherRoom.getUiSettings().getLanguage());
 	}
 
-	static void assertEqualsGetAvailableRooms(ListRoomsResponse parsed) {
-		assertEqualsGetAvailableRooms(parsed.getMeetingRooms());
+	static void assertEqualsAvailableRooms(ListRoomsResponse parsed) {
+		assertEqualsAvailableRooms(parsed.getMeetingRooms());
 		HalLinks links = parsed.getLinks();
 		assertEquals("api-us.vonage.com/meetings/rooms?page_size=3", links.getFirstUrl().toString());
 		assertEquals("api-us.vonage.com/meetings/rooms?page_size=3&start_id=1991085", links.getSelfUrl().toString());
@@ -307,6 +308,45 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 	void stubResponseAndAssertEqualsSampleRecording(Supplier<? extends Recording> call) throws Exception {
 		assertEqualsSampleRecording(stubResponseAndGet(200, SAMPLE_RECORDING_RESPONSE, call));
+	}
+
+	void testPaginatedMeetingRoomsResponse(Supplier<List<MeetingRoom>> call) throws Exception {
+		String firstJson = "{\n" +
+				"   \"page_size\": 1000,\n" +
+				"   \"total_items\": 1080,\n" +
+				"   \"_embedded\": [{\"theme_id\":\""+RANDOM_ID+"\"},{}],\n" +
+				"   \"_links\": {\n" +
+				"      \"first\": {\n" +
+				"         \"href\": \"https://api-eu.vonage.com/meetings/rooms?page_size=50\"\n" +
+				"      },\n" +
+				"      \"self\": {\n" +
+				"         \"href\": \"https://api-eu.vonage.com/meetings/rooms?page_size=50&start_id=2293905\"\n" +
+				"      },\n" +
+				"      \"next\": {\n" +
+				"         \"href\": \"https://api-eu.vonage.com/meetings/rooms?page_size=50&start_id=2293906\"\n" +
+				"      },\n" +
+				"      \"prev\": {\n" +
+				"         \"href\": \"https://api-eu.vonage.com/meetings/rooms?page_size=50&start_id=2293904\"\n" +
+				"      }\n" +
+				"   }\n" +
+				"}",
+				secondJson = "{\n" +
+						"   \"page_size\": 80,\n" +
+						"   \"total_items\": 1080,\n" +
+						"   \"_embedded\": [{},{},{},{},{},{},{\"id\":\""+ROOM_ID+"\"},{}],\n" +
+						"   \"_links\": {\n" +
+						"      \"next\": {\n" +
+						"         \"href\": \"https://api-eu.vonage.com/meetings/rooms?page_size=50&start_id=2235997\"\n" +
+						"      }\n" +
+						"   }\n" +
+						"}";
+
+		HttpClient httpClient = stubHttpClient(200, firstJson, secondJson);
+		wrapper.setHttpClient(httpClient);
+		List<MeetingRoom> rooms = call.get();
+		assertEquals(10, rooms.size());
+		assertEquals(RANDOM_ID, rooms.get(0).getThemeId());
+		assertEquals(ROOM_ID, rooms.get(8).getId());
 	}
 
 	void assert401ResponseException(ThrowingRunnable invocation) throws Exception {
@@ -380,32 +420,9 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 	@Test
 	public void testListRooms() throws Exception {
-		assertEqualsGetAvailableRooms(stubResponseAndGet(200, LIST_ROOMS_RESPONSE,
-				() -> client.listRooms(1991085, 1994609, 3))
-		);
-		assertEqualsGetAvailableRooms(stubResponseAndGet(200, LIST_ROOMS_RESPONSE,
-				() -> client.listRooms(1, 2, 1))
-		);
-		assertEqualsGetAvailableRooms(stubResponseAndGet(200, LIST_ROOMS_RESPONSE,
-				() -> client.listRooms(null, null, null))
-		);
-		assertEqualsGetAvailableRooms(stubResponseAndGet(200, LIST_ROOMS_RESPONSE,
-				() -> client.listRooms(null, null, 20))
-		);
-		assertEqualsGetAvailableRooms(stubResponseAndGet(200, LIST_ROOMS_RESPONSE,
-				() -> client.listRooms(29, 31, null))
-		);
-		assertEqualsGetAvailableRooms(stubResponseAndGet(200, LIST_ROOMS_RESPONSE,
-				() -> client.listRooms())
-		);
-
-		stubResponseAndAssertThrows(200, LIST_ROOMS_RESPONSE,
-			() -> client.listRooms(7, 6, 9), IllegalArgumentException.class
-		);
-		stubResponseAndAssertThrows(200, LIST_ROOMS_RESPONSE,
-				() -> client.listRooms(5, 7, 0), IllegalArgumentException.class
-		);
+		assertEqualsAvailableRooms(stubResponseAndGet(200, LIST_ROOMS_RESPONSE, client::listRooms));
 		assert401ResponseException(client::listRooms);
+		testPaginatedMeetingRoomsResponse(client::listRooms);
 	}
 
 	@Test
@@ -445,26 +462,14 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 	@Test
 	public void testSearchRoomsByTheme() throws Exception {
-		assertEqualsGetAvailableRooms(stubResponseAndGet(200, LIST_ROOMS_RESPONSE,
-				() -> client.searchRoomsByTheme(RANDOM_ID, null, null, null))
-		);
-		assertEqualsGetAvailableRooms(stubResponseAndGet(200, LIST_ROOMS_RESPONSE,
-				() -> client.searchRoomsByTheme(RANDOM_ID, 1, 12, 3))
-		);
-		assertEqualsGetAvailableRooms(stubResponseAndGet(200, LIST_ROOMS_RESPONSE,
+		assertEqualsAvailableRooms(stubResponseAndGet(200, LIST_ROOMS_RESPONSE,
 				() -> client.searchRoomsByTheme(RANDOM_ID))
-		);
-
-		stubResponseAndAssertThrows(200, LIST_ROOMS_RESPONSE,
-			() -> client.searchRoomsByTheme(null, 3, 9, 1), NullPointerException.class
-		);
-		stubResponseAndAssertThrows(200, LIST_ROOMS_RESPONSE,
-			() -> client.searchRoomsByTheme(RANDOM_ID, 2, 1, 30), IllegalArgumentException.class
 		);
 		stubResponseAndAssertThrows(200, LIST_ROOMS_RESPONSE,
 			() -> client.searchRoomsByTheme(null), NullPointerException.class
 		);
 		assert401ResponseException(() -> client.searchRoomsByTheme(RANDOM_ID));
+		testPaginatedMeetingRoomsResponse(() -> client.searchRoomsByTheme(RANDOM_ID));
 	}
 
 	@Test

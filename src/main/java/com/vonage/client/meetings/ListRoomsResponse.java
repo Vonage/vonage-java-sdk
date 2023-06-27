@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ListRoomsResponse extends HalPageResponse {
+class ListRoomsResponse extends HalPageResponse {
 	@JsonProperty("_embedded") private List<MeetingRoom> rooms;
 
 	protected ListRoomsResponse() {

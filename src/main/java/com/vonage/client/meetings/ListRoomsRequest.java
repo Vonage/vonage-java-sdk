@@ -26,12 +26,7 @@ class ListRoomsRequest {
 		this.themeId = themeId;
 		this.startId = startId;
 		this.endId = endId;
-		if ((this.pageSize = pageSize) != null && pageSize < 1) {
-			throw new IllegalArgumentException("page_size must be positive.");
-		}
-		if (startId != null && endId != null && startId > endId) {
-			throw new IllegalArgumentException("start_id cannot be greater than end_id.");
-		}
+		this.pageSize = pageSize;
 	}
 
 	RequestBuilder addParameters(RequestBuilder builder) {

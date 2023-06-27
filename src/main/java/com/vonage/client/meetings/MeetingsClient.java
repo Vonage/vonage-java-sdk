@@ -15,21 +15,20 @@
  */
 package com.vonage.client.meetings;
 
-import com.vonage.client.HttpWrapper;
-import com.vonage.client.VonageBadRequestException;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.*;
+import com.vonage.client.common.HalPageResponse;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import java.io.IOException;
+import java.net.URI;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class MeetingsClient {
 	HttpClient httpClient;
@@ -96,27 +95,50 @@ public class MeetingsClient {
 		return sessionId;
 	}
 
+	private int parseNextFromHalResponse(HalPageResponse response) {
+		final URI nextUrl = response.getLinks().getNextUrl();
+		return URLEncodedUtils.parse(nextUrl, Charset.defaultCharset())
+				.stream().filter(nvp -> "start_id".equals(nvp.getName()))
+				.findFirst().map(nvp -> Integer.parseInt(nvp.getValue()))
+				.orElseThrow(() -> new VonageClientException("Couldn't navigate to next page: "+nextUrl));
+
+	}
+
+	private List<MeetingRoom> getAllRoomsFromResponseRecursively(
+			AbstractMethod<ListRoomsRequest, ListRoomsResponse> endpoint, ListRoomsRequest initialRequest) {
+
+		final int initialPageSize = initialRequest.pageSize != null ? initialRequest.pageSize : 1000;
+		ListRoomsRequest request = new ListRoomsRequest(
+				initialRequest.startId, initialRequest.endId, initialPageSize, initialRequest.themeId
+		);
+		ListRoomsResponse response = endpoint.execute(request);
+
+		if (response.getTotalItems() < initialPageSize) {
+			return response.getMeetingRooms();
+		}
+		else {
+			List<MeetingRoom> rooms = new ArrayList<>(response.getMeetingRooms());
+			do {
+				request = new ListRoomsRequest(
+						parseNextFromHalResponse(response), null, initialPageSize, request.themeId
+				);
+				response = endpoint.execute(request);
+				rooms.addAll(response.getMeetingRooms());
+			}
+			while (response.getTotalItems() < initialPageSize);
+			return rooms;
+		}
+	}
 
 	/**
 	 * Get all listed rooms in the application.
 	 *
-	 * @param startId The ID to start returning events at (inclusive).
-	 * @param endId The ID to end returning events at (exclusive).
-	 * @param pageSize Number of results per page.
-	 *
-	 * @return The HAL response.
-	 */
-	public ListRoomsResponse listRooms(Integer startId, Integer endId, Integer pageSize) {
-		return listRooms.execute(new ListRoomsRequest(startId, endId, pageSize, null));
-	}
-
-	/**
-	 * Get all available rooms in the application.
-	 *
 	 * @return The list of all meeting rooms.
 	 */
 	public List<MeetingRoom> listRooms() {
-		return listRooms(null, null, Integer.MAX_VALUE).getMeetingRooms();
+		return getAllRoomsFromResponseRecursively(listRooms,
+				new ListRoomsRequest(null, null, null, null)
+		);
 	}
 
 	/**
@@ -159,25 +181,13 @@ public class MeetingsClient {
 	 * Get rooms that are associated with a theme ID.
 	 *
 	 * @param themeId The theme ID to filter by.
-	 * @param startId The ID to start returning events at (inclusive).
-	 * @param endId The ID to end returning events at (exclusive).
-	 * @param pageSize The number of results per page.
-	 *
-	 * @return The HAL response.
-	 */
-	public ListRoomsResponse searchRoomsByTheme(UUID themeId, Integer startId, Integer endId, Integer pageSize) {
-		return searchThemeRooms.execute(new ListRoomsRequest(startId, endId, pageSize, validateThemeId(themeId)));
-	}
-
-	/**
-	 * Get rooms that are associated with a theme ID.
-	 *
-	 * @param themeId The theme ID to filter by.
 	 *
 	 * @return The list of rooms which use the theme.
 	 */
 	public List<MeetingRoom> searchRoomsByTheme(UUID themeId) {
-		return searchRoomsByTheme(themeId, null, null, Integer.MAX_VALUE).getMeetingRooms();
+		return getAllRoomsFromResponseRecursively(searchThemeRooms,
+				new ListRoomsRequest(null, null, null, validateThemeId(themeId))
+		);
 	}
 
 	/**
