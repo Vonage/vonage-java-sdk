@@ -286,7 +286,7 @@ public class VerificationRequestTest {
 	@Test(expected = VonageUnexpectedException.class)
 	public void triggerJsonProcessingException() {
 		class SelfRefrencing extends VerificationRequest {
-			@JsonProperty("self") SelfRefrencing self = this;
+			@JsonProperty("self") final SelfRefrencing self = this;
 
 			SelfRefrencing(Builder builder) {
 				super(builder);

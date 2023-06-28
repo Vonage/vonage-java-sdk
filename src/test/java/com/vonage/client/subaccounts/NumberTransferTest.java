@@ -99,7 +99,7 @@ public class NumberTransferTest {
 	@Test(expected = VonageUnexpectedException.class)
 	public void triggerJsonProcessingException() {
 		class SelfRefrencing extends AbstractTransfer {
-			@JsonProperty("self") SelfRefrencing self = this;
+			@JsonProperty("self") final SelfRefrencing self = this;
 		}
 		new SelfRefrencing().toJson();
 	}

@@ -171,7 +171,7 @@ public class MessageStatusTest {
 	@Test(expected = VonageUnexpectedException.class)
 	public void triggerJsonProcessingException() {
 		class SelfRefrencing extends MessageStatus {
-			@JsonProperty("self") SelfRefrencing self = this;
+			@JsonProperty("self") final SelfRefrencing self = this;
 		}
 		new SelfRefrencing().toJson();
 	}

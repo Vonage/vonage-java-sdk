@@ -74,7 +74,7 @@ public class CreateSubaccountRequestTest {
 	@Test(expected = VonageUnexpectedException.class)
 	public void triggerJsonProcessingException() {
 		class SelfRefrencing extends CreateSubaccountRequest {
-			@JsonProperty("self") SelfRefrencing self = this;
+			@JsonProperty("self") final SelfRefrencing self = this;
 
 			SelfRefrencing(Builder builder) {
 				super(builder);

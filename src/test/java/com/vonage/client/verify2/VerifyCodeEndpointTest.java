@@ -117,7 +117,7 @@ public class VerifyCodeEndpointTest {
 	@Test(expected = VonageUnexpectedException.class)
 	public void triggerJsonProcessingException() {
 		class SelfRefrencing extends VerifyCodeRequestWrapper {
-			@JsonProperty("self") SelfRefrencing self = this;
+			@JsonProperty("self") final SelfRefrencing self = this;
 			SelfRefrencing() {
 				super(null, null);
 			}

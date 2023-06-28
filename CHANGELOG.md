@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 # [7.6.0] - 2023-06-29
 - Added Proactive Connect API implementation
+- Added Meetings API implementation
 - Updated Subaccounts name & secret validation logic
 
 # [7.5.0] - 2023-06-14

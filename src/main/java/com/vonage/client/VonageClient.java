@@ -21,6 +21,7 @@ import com.vonage.client.auth.*;
 import com.vonage.client.auth.hashutils.HashUtil;
 import com.vonage.client.conversion.ConversionClient;
 import com.vonage.client.insight.InsightClient;
+import com.vonage.client.meetings.MeetingsClient;
 import com.vonage.client.messages.MessagesClient;
 import com.vonage.client.numbers.NumbersClient;
 import com.vonage.client.proactiveconnect.ProactiveConnectClient;
@@ -62,6 +63,7 @@ public class VonageClient {
     private final Verify2Client verify2;
     private final SubaccountsClient subaccounts;
     private final ProactiveConnectClient proactiveConnect;
+    private final MeetingsClient meetings;
 
     private VonageClient(Builder builder) {
         httpWrapper = new HttpWrapper(builder.httpConfig, builder.authCollection);
@@ -81,6 +83,7 @@ public class VonageClient {
         verify2 = new Verify2Client(httpWrapper);
         subaccounts = new SubaccountsClient(httpWrapper);
         proactiveConnect = new ProactiveConnectClient(httpWrapper);
+        meetings = new MeetingsClient(httpWrapper);
     }
 
     public AccountClient getAccountClient() {
@@ -145,6 +148,15 @@ public class VonageClient {
      */
     public ProactiveConnectClient getProactiveConnectClient() {
         return proactiveConnect;
+    }
+
+    /**
+     *
+     * @return The Meetings client.
+     * @since 7.6.0
+     */
+    public MeetingsClient getMeetingsClient() {
+        return meetings;
     }
 
     /**

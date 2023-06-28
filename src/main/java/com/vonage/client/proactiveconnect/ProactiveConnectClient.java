@@ -296,7 +296,7 @@ public class ProactiveConnectClient {
 	 *
 	 * @param listId Unique ID of the list.
 	 *
-	 * @return The list items CSV file contents as a String.
+	 * @return The list items contents as a CSV-formatted String.
 	 * @see #downloadListItems(UUID, Path)
 	 *
 	 * @throws ProactiveConnectResponseException If the list does not exist or couldn't be retrieved.
@@ -309,7 +309,7 @@ public class ProactiveConnectClient {
 
 	/**
 	 * Download all items in a list in CSV format.
-	 * Use {@link #downloadListItems(UUID)} to get the results as a raw binary.
+	 * Use {@link #downloadListItems(UUID)} to get the results as a String.
 	 *
 	 * @param listId Unique ID of the list.
 	 * @param file Path of the file to write the downloaded results to.

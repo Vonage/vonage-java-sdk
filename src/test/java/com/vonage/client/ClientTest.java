@@ -23,12 +23,15 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
-import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertThrows;
 import org.junit.function.ThrowingRunnable;
+import static org.mockito.Mockito.*;
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public abstract class ClientTest<T> {
@@ -48,7 +51,7 @@ public abstract class ClientTest<T> {
         return stubHttpClient(statusCode, "");
     }
 
-    protected HttpClient stubHttpClient(int statusCode, String content) throws Exception {
+    protected HttpClient stubHttpClient(int statusCode, String content, String... additionalReturns) throws Exception {
         HttpClient result = mock(HttpClient.class);
 
         HttpResponse response = mock(HttpResponse.class);
@@ -57,7 +60,9 @@ public abstract class ClientTest<T> {
 
         when(result.execute(any(HttpUriRequest.class))).thenReturn(response);
         when(LoggingUtils.logResponse(any(HttpResponse.class))).thenReturn("response logged");
-        when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
+        Function<String, InputStream> transformation = c -> new ByteArrayInputStream(c.getBytes(StandardCharsets.UTF_8));
+        InputStream[] contentsEncoded = Arrays.stream(additionalReturns).map(transformation).toArray(InputStream[]::new);
+        when(entity.getContent()).thenReturn(transformation.apply(content), contentsEncoded);
         when(sl.getStatusCode()).thenReturn(statusCode);
         when(sl.getReasonPhrase()).thenReturn("Test reason");
         when(response.getStatusLine()).thenReturn(sl);

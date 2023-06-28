@@ -70,7 +70,7 @@ public class UpdateSubaccountRequestTest {
 	@Test(expected = VonageUnexpectedException.class)
 	public void triggerJsonProcessingException() {
 		class SelfRefrencing extends UpdateSubaccountRequest {
-			@JsonProperty("self") SelfRefrencing self = this;
+			@JsonProperty("self") final SelfRefrencing self = this;
 
 			SelfRefrencing(Builder builder) {
 				super(builder);

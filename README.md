@@ -88,7 +88,7 @@ to your project's classpath.
 * There are also **many useful code samples** in our [nexmo-community/nexmo-java-quickstart](https://github.com/nexmo-community/nexmo-java-quickstart) repository.
 
 ### Customize the Base URI
-By default, the client will use https://api.nexmo.com, https://rest.nexmo.com, and https://sns.nexmo.com as base URIs for the various endpoints. To customize these you can instantiate `VonageClient` with an `HttpConfig` object.
+By default, the client will use https://api.nexmo.com, https://rest.nexmo.com, https://sns.nexmo.com and https://api-eu.vonage.com as base URIs for the various endpoints. To customize these you can instantiate `VonageClient` with an `HttpConfig` object.
 
 `HttpConfig.Builder` has been created to assist in building this object. Usage is as follows:
 
@@ -97,6 +97,7 @@ HttpConfig httpConfig = HttpConfig.builder()
 		.apiBaseUri("https://api.example.com")
 		.restBaseUri("https://rest.example.com")
 		.snsBaseUri("https://sns.example.com")
+		.apiEuBaseUri("https://api-eu.example.com")
 		.build();
 
 VonageClient client = VonageClient.builder()
@@ -524,8 +525,11 @@ Our [Voice API](https://developer.vonage.com/voice/voice-api/overview) can conne
 
 ## Frequently Asked Questions
 
-Q: Does this SDK support thread safety?
-A: No, it currently does not.
+Q: What is your policy on thread safety?
+
+A: The current architecture of the SDK means that only one thread should use the client at a time.
+If you would like to use the SDK in a multithreaded environment, create a separate instance of
+`VonageClient` for each thread.
 
 Q: Does this SDK support asynchronous request / response processing?
 A: Currently no, but it is on the roadmap.
@@ -544,6 +548,7 @@ The following is a list of Vonage APIs and whether the Java SDK provides support
 | Dispatch          |         Beta         |     ❌      |
 | External Accounts |  Developer Preview   |     ❌      |
 | Media             |         Beta         |     ❌      |
+| Meetings          | General Availability |     ✅      |
 | Messages          | General Availability |     ✅      |
 | Number Insight    | General Availability |     ✅      |
 | Number Management | General Availability |     ✅      |

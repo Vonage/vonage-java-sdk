@@ -18,11 +18,9 @@ package com.vonage.client.proactiveconnect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.VonageApiResponseException;
 import org.apache.http.HttpResponse;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Response returned when an error is encountered (i.e. the API returns a non-2xx status code).
@@ -30,21 +28,9 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class ProactiveConnectResponseException extends VonageApiResponseException {
-	List<?> errors;
 
 	void setStatusCode(int statusCode) {
 		this.statusCode = statusCode;
-	}
-
-	/**
-	 * Additional description of problems encountered with the request.
-	 * This is typically only applicable to 400 or 409 error codes.
-	 *
-	 * @return The list of errors returned from the server (could be a Map or String), or {@code null} if none.
-	 */
-	@JsonProperty("errors")
-	public List<?> getErrors() {
-		return errors;
 	}
 
 	/**

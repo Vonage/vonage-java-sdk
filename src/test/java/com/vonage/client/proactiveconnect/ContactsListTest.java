@@ -144,7 +144,7 @@ public class ContactsListTest {
 	@Test(expected = VonageUnexpectedException.class)
 	public void triggerJsonProcessingException() {
 		class SelfRefrencing extends ContactsList {
-			@JsonProperty("self") SelfRefrencing self = this;
+			@JsonProperty("self") final SelfRefrencing self = this;
 		}
 		new SelfRefrencing().toJson();
 	}

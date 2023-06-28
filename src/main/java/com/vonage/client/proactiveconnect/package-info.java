@@ -17,7 +17,7 @@
 /**
  * This package contains classes and sub-packages to support usage of the
  * <a href=https://developer.vonage.com/en/proactive-connect/overview>Vonage Proactive Connect API</a>.
- * <br><br>
+ * <br>
  *
  * @since 7.6.0
  */
