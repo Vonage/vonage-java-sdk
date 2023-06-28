@@ -17,7 +17,6 @@ package com.vonage.client.meetings;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.ClientTest;
-import com.vonage.client.VonageBadRequestException;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.common.HalLinks;
 import org.apache.http.client.HttpClient;
@@ -762,7 +761,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		client.uploadLogo(image, details);
 
 		client.httpClient = stubHttpClient(400);
-		assertThrows(VonageBadRequestException.class, () -> client.uploadLogo(image, details));
+		assertThrows(MeetingsResponseException.class, () -> client.uploadLogo(image, details));
 
 		client.httpClient = stubHttpClient(200);
 		when(client.httpClient.execute(any())).thenThrow(IOException.class);

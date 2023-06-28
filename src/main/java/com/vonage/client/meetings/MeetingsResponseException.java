@@ -30,6 +30,14 @@ public final class MeetingsResponseException extends VonageApiResponseException 
 	@JsonProperty("name") private String name;
 	@JsonProperty("message") private String message;
 
+	public MeetingsResponseException() {
+		super();
+	}
+
+	MeetingsResponseException(String message) {
+		super(message);
+	}
+
 	void setStatusCode(Integer status) {
 		this.status = statusCode = status;
 	}

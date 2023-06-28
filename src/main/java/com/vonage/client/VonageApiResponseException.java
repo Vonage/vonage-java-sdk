@@ -42,6 +42,21 @@ public abstract class VonageApiResponseException extends VonageClientException {
 	protected List<?> errors;
 	@JsonIgnore protected int statusCode;
 
+	protected VonageApiResponseException() {
+	}
+
+	protected VonageApiResponseException(String message) {
+		super(message);
+	}
+
+	protected VonageApiResponseException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	protected VonageApiResponseException(Throwable cause) {
+		super(cause);
+	}
+
 	/**
 	 * Link to the <a href=https://developer.vonage.com/en/api-errors>API error type</a>.
 	 *
@@ -159,9 +174,9 @@ public abstract class VonageApiResponseException extends VonageClientException {
 	protected static <E extends VonageApiResponseException> E fromJson(Class<E> clazz, String json) {
 		if (json == null || json.length() < 2) {
 			try {
-				return clazz.newInstance();
+				return clazz.getConstructor().newInstance();
 			}
-			catch (InstantiationException | IllegalAccessException ex) {
+			catch (Exception ex) {
 				throw new VonageUnexpectedException(ex);
 			}
 		}
@@ -170,7 +185,7 @@ public abstract class VonageApiResponseException extends VonageClientException {
 			return mapper.readValue(json, clazz);
 		}
 		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to produce "+clazz.getSimpleName()+" from json.", ex);
+			throw new VonageResponseParseException("Failed to produce "+clazz.getSimpleName()+" from json.", ex);
 		}
 	}
 

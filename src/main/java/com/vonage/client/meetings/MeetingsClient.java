@@ -134,6 +134,8 @@ public class MeetingsClient {
 	 * Get all listed rooms in the application.
 	 *
 	 * @return The list of all meeting rooms.
+	 *
+	 * @throws MeetingsResponseException If there is an error encountered when processing the request.
 	 */
 	public List<MeetingRoom> listRooms() {
 		return getAllRoomsFromResponseRecursively(listRooms,
@@ -147,6 +149,8 @@ public class MeetingsClient {
 	 * @param roomId ID of the room to retrieve.
 	 *
 	 * @return The meeting room associated with the ID.
+	 *
+	 * @throws MeetingsResponseException If there is an error encountered when processing the request.
 	 */
 	public MeetingRoom getRoom(UUID roomId) {
 		return getRoom.execute(validateRoomId(roomId));
@@ -158,6 +162,8 @@ public class MeetingsClient {
 	 * @param room Properties of the meeting room.
 	 *
 	 * @return Details of the created meeting room.
+	 *
+	 * @throws MeetingsResponseException If there is an error encountered when processing the request.
 	 */
 	public MeetingRoom createRoom(MeetingRoom room) {
 		return createRoom.execute(Objects.requireNonNull(room, "Meeting room is required."));
@@ -170,6 +176,8 @@ public class MeetingsClient {
 	 * @param roomUpdate Properties of the meeting room to change.
 	 *
 	 * @return Details of the updated meeting room.
+	 *
+	 * @throws MeetingsResponseException If there is an error encountered when processing the request.
 	 */
 	public MeetingRoom updateRoom(UUID roomId, UpdateRoomRequest roomUpdate) {
 		Objects.requireNonNull(roomUpdate, "Room update request properties is required.");
@@ -183,6 +191,8 @@ public class MeetingsClient {
 	 * @param themeId The theme ID to filter by.
 	 *
 	 * @return The list of rooms which use the theme.
+	 *
+	 * @throws MeetingsResponseException If there is an error encountered when processing the request.
 	 */
 	public List<MeetingRoom> searchRoomsByTheme(UUID themeId) {
 		return getAllRoomsFromResponseRecursively(searchThemeRooms,
@@ -194,6 +204,8 @@ public class MeetingsClient {
 	 * Get all application themes.
 	 *
 	 * @return The list of themes.
+	 *
+	 * @throws MeetingsResponseException If there is an error encountered when processing the request.
 	 */
 	public List<Theme> listThemes() {
 		return listThemes.execute(null);
@@ -205,6 +217,8 @@ public class MeetingsClient {
 	 * @param themeId The theme ID.
 	 *
 	 * @return The theme associated with the ID.
+	 *
+	 * @throws MeetingsResponseException If there is an error encountered when processing the request.
 	 */
 	public Theme getTheme(UUID themeId) {
 		return getTheme.execute(validateThemeId(themeId));
@@ -216,6 +230,8 @@ public class MeetingsClient {
 	 * @param theme The partial theme properties.
 	 *
 	 * @return The full created theme details.
+	 *
+	 * @throws MeetingsResponseException If there is an error encountered when processing the request.
 	 */
 	public Theme createTheme(Theme theme) {
 		Objects.requireNonNull(theme, "Theme creation properties are required.");
@@ -231,6 +247,8 @@ public class MeetingsClient {
 	 * @param theme The partial theme properties to update.
 	 *
 	 * @return The full updated theme details.
+	 *
+	 * @throws MeetingsResponseException If there is an error encountered when processing the request.
 	 */
 	public Theme updateTheme(UUID themeId, Theme theme) {
 		Objects.requireNonNull(theme, "Theme update properties are required.");
@@ -243,6 +261,8 @@ public class MeetingsClient {
 	 *
 	 * @param themeId ID of the theme to delete.
 	 * @param force Whether to delete the theme even if theme is used by rooms or as application default theme.
+	 *
+	 * @throws MeetingsResponseException If there is an error encountered when processing the request.
 	 */
 	public void deleteTheme(UUID themeId, boolean force) {
 		deleteTheme.execute(new DeleteThemeRequest(validateThemeId(themeId), force));
@@ -254,6 +274,8 @@ public class MeetingsClient {
 	 * @param sessionId The session ID to filter recordings by.
 	 *
 	 * @return The list of recordings for the session.
+	 *
+	 * @throws MeetingsResponseException If there is an error encountered when processing the request.
 	 */
 	public List<Recording> listRecordings(String sessionId) {
 		ListRecordingsResponse response = listRecordings.execute(validateSessionId(sessionId));
@@ -267,6 +289,8 @@ public class MeetingsClient {
 	 * @param recordingId ID of the recording to retrieve.
 	 *
 	 * @return The recording properties.
+	 *
+	 * @throws MeetingsResponseException If there is an error encountered when processing the request.
 	 */
 	public Recording getRecording(UUID recordingId) {
 		return getRecording.execute(validateRecordingId(recordingId));
@@ -276,6 +300,8 @@ public class MeetingsClient {
 	 * Delete a recording.
 	 *
 	 * @param recordingId ID of the recording to delete.
+	 *
+	 * @throws MeetingsResponseException If there is an error encountered when processing the request.
 	 */
 	public void deleteRecording(UUID recordingId) {
 		deleteRecording.execute(validateRecordingId(recordingId));
@@ -285,6 +311,8 @@ public class MeetingsClient {
 	 * Get numbers that can be used to dial into a meeting.
 	 *
 	 * @return The list of dial-in numbers, along with their country code.
+	 *
+	 * @throws MeetingsResponseException If there is an error encountered when processing the request.
 	 */
 	public List<DialInNumber> listDialNumbers() {
 		return listDialNumbers.execute(null);
@@ -296,6 +324,8 @@ public class MeetingsClient {
 	 * @param updateRequest Properties of the application to update.
 	 *
 	 * @return The updated application details.
+	 *
+	 * @throws MeetingsResponseException If there is an error encountered when processing the request.
 	 */
 	public Application updateApplication(UpdateApplicationRequest updateRequest) {
 		return updateApplication.execute(Objects.requireNonNull(
@@ -364,10 +394,13 @@ public class MeetingsClient {
 					RequestBuilder.post(details.getUrl()).setEntity(entity).build()
 			);
 			StatusLine status = response.getStatusLine();
-			if (status.getStatusCode() != 204) {
-				throw new VonageBadRequestException(
-						"Logo upload failed ("+status.getStatusCode()+"): "+status.getReasonPhrase()
+			int statusCode = status.getStatusCode();
+			if (statusCode != 204) {
+				MeetingsResponseException mrx = new MeetingsResponseException(
+						"Logo upload failed ("+statusCode+"): "+status.getReasonPhrase()
 				);
+				mrx.setStatusCode(statusCode);
+				throw mrx;
 			}
 		}
 		catch (IOException ex) {
@@ -384,6 +417,8 @@ public class MeetingsClient {
 	 * <a href=https://developer.vonage.com/en/meetings/code-snippets/theme-management#uploading-icons-and-logos>
 	 * the documentation</a>. Generally, the image must be a PNG under 1MB, square, under 300x300 pixels and
 	 * have a transparent background.
+	 *
+	 * @throws MeetingsResponseException If there is an error encountered when processing the request.
 	 */
 	public void setThemeLogo(UUID themeId, LogoType logoType, Path pngFile) {
 		LogoUploadsUrlResponse target = getUploadDetailsForLogoType(
