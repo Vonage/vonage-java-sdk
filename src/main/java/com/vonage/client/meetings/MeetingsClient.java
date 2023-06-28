@@ -420,7 +420,7 @@ public class MeetingsClient {
 	 *
 	 * @throws MeetingsResponseException If there is an error encountered when processing the request.
 	 */
-	public void setThemeLogo(UUID themeId, LogoType logoType, Path pngFile) {
+	public void updateThemeLogo(UUID themeId, LogoType logoType, Path pngFile) {
 		LogoUploadsUrlResponse target = getUploadDetailsForLogoType(
 				Objects.requireNonNull(logoType, "Logo type cannot be null.")
 		);

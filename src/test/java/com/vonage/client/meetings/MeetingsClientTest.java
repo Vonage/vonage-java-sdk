@@ -769,7 +769,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 	}
 
 	@Test
-	public void testSetThemeLogo() throws Exception {
+	public void testUpdateThemeLogo() throws Exception {
 		String responseJson = "[{\"url\":\"" +
 				"https://s3.amazonaws.com/roomservice-whitelabel-logos-prod\",\"fields\":{" +
 				"\"Content-Type\":\"image/png\",\"key\":\"auto-expiring-temp/logos/favicon/REDACTED\"," +
@@ -781,6 +781,6 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		Path image = Paths.get("/path/to/logo.png");
 		stubResponse(200, responseJson);
 		client.httpClient = stubHttpClient(204);
-		client.setThemeLogo(RANDOM_ID, LogoType.FAVICON, image);
+		client.updateThemeLogo(RANDOM_ID, LogoType.FAVICON, image);
 	}
 }
