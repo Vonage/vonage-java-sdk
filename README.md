@@ -525,8 +525,11 @@ Our [Voice API](https://developer.vonage.com/voice/voice-api/overview) can conne
 
 ## Frequently Asked Questions
 
-Q: Does this SDK support thread safety?
-A: No, it currently does not.
+Q: What is your policy on thread safety?
+
+A: The current architecture of the SDK means that only one thread should use the client at a time.
+If you would like to use the SDK in a multithreaded environment, create a separate instance of
+`VonageClient` for each thread.
 
 Q: Does this SDK support asynchronous request / response processing?
 A: Currently no, but it is on the roadmap.
