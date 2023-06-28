@@ -577,9 +577,9 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 	@Test
 	public void testListDialNumbers() throws Exception {
 		String responseJson = "[\n" +
-				"{\"number\":\"17329672755\",\"displayName\":\"United States\",\"locale\":\"en_US\"},\n" +
-				"{\"number\":\"48123964788\",\"displayName\":\"Poland\",\"locale\":\"pl_PL\"},\n" +
-				"{\"number\":\"827047844377\",\"displayName\":\"South Korea\",\"locale\":\"ko_KR\"}\n" +
+				"{\"number\":\"17329672755\",\"display_name\":\"United States\",\"locale\":\"en_US\"},\n" +
+				"{\"number\":\"48123964788\",\"display_name\":\"Poland\",\"locale\":\"pl_PL\"},\n" +
+				"{\"number\":\"827047844377\",\"display_name\":\"South Korea\",\"locale\":\"ko_KR\"}\n" +
 			"]";
 		List<DialInNumber> parsed = stubResponseAndGet(200, responseJson, client::listDialNumbers);
 		assertEquals(3, parsed.size());

@@ -29,8 +29,8 @@ public class BugRepro {
 		VonageClient client = VonageClient.builder()
 				.apiKey(System.getenv("VONAGE_API_KEY"))
 				.apiSecret(System.getenv("VONAGE_API_SECRET"))
-				.privateKeyPath(System.getenv("VONAGE_APPLICATION_ID"))
-				.applicationId(System.getenv("VONAGE_PRIVATE_KEY_PATH"))
+				.applicationId(System.getenv("VONAGE_APPLICATION_ID"))
+				.privateKeyPath(System.getenv("VONAGE_PRIVATE_KEY_PATH"))
 				.build();
 
 		try {

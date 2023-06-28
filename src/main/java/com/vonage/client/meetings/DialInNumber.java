@@ -19,6 +19,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Locale;
 
+/**
+ * Details about a number that that can be used to dial into a meeting.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DialInNumber {
 	private String number, displayName;
@@ -52,7 +55,7 @@ public class DialInNumber {
 	 *
 	 * @return The country's name.
 	 */
-	@JsonProperty("displayName")
+	@JsonProperty("display_name")
 	public String getDisplayName() {
 		return displayName;
 	}

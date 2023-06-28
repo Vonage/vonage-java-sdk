@@ -21,7 +21,6 @@ import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.auth.JWTAuthMethod;
-import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
@@ -60,9 +59,9 @@ public class UpdateRoomEndpointTest {
 		assertEquals(expectedUri, builder.build().getURI().toString());
 
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		String expectedRequest = "{\"expire_after_use\":false,\"initial_join_options\":{\"microphone_state\":\"on\"}," +
+		String expectedRequest = "{\"update_details\":{\"expire_after_use\":false,\"initial_join_options\":{\"microphone_state\":\"on\"}," +
 				"\"callback_urls\":{},\"available_features\":{},\"join_approval_level\":\"after_owner_only\"," +
-				"\"theme_id\":\"5af77e5e-410d-489c-a30e-21aaf8482715\",\"expires_at\":\"+1000000000-12-30T23:59:59.999Z\"}";
+				"\"theme_id\":\"5af77e5e-410d-489c-a30e-21aaf8482715\",\"expires_at\":\"+1000000000-12-30T23:59:59.999Z\"}}";
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		MeetingRoom parsed = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, "{}"));
@@ -80,8 +79,7 @@ public class UpdateRoomEndpointTest {
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		String expectedRequest = "{}";
-		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
+		assertEquals("{\"update_details\":{}}", EntityUtils.toString(builder.getEntity()));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("PATCH", builder.getMethod());
 	}

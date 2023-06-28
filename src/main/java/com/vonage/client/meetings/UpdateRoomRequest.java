@@ -129,7 +129,7 @@ public class UpdateRoomRequest {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.registerModule(new JavaTimeModule());
 			mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-			return mapper.writeValueAsString(this);
+			return "{\"update_details\":"+mapper.writeValueAsString(this)+"}";
 		}
 		catch (JsonProcessingException jpe) {
 			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);

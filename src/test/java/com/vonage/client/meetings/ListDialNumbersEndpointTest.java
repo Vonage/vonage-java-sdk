@@ -45,7 +45,7 @@ public class ListDialNumbersEndpointTest {
 				"{},   {\n" +
 				"      \"number\": \"17323338801\",\n" +
 				"      \"locale\": \"en-US\",\n" +
-				"      \"displayName\": \"United States\"\n" +
+				"      \"display_name\": \"United States\"\n" +
 				"   }," +
 				"  {\"locale\": \"de-DE\",\"unknown property\":0}\n" +
 				"]";
