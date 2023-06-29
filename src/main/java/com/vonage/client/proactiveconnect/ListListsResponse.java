@@ -29,10 +29,10 @@ import java.util.List;
  * HAL response for {@link ProactiveConnectClient#listLists(int, int, SortOrder)}.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class ListsResponse extends HalPageResponse {
+public final class ListListsResponse extends HalPageResponse {
 	@JsonProperty("_embedded") private Embedded _embedded;
 
-	ListsResponse() {}
+	ListListsResponse() {}
 
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	static final class Embedded {
@@ -60,14 +60,14 @@ public final class ListsResponse extends HalPageResponse {
 	 * @param json The JSON string to parse.
 	 * @return An instance of this class with the fields populated, if present.
 	 */
-	public static ListsResponse fromJson(String json) {
+	public static ListListsResponse fromJson(String json) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.registerModule(new JavaTimeModule());
-			return mapper.readValue(json, ListsResponse.class);
+			return mapper.readValue(json, ListListsResponse.class);
 		}
 		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to produce ListsResponse from json.", ex);
+			throw new VonageResponseParseException("Failed to produce ListListsResponse from json.", ex);
 		}
 	}
 }

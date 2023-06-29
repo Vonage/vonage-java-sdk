@@ -84,7 +84,7 @@ public class ListListsEndpointTest {
 	@Test
 	public void testEmptyResponse() throws Exception {
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, "{}");
-		ListsResponse parsed = endpoint.parseResponse(mockResponse);
+		ListListsResponse parsed = endpoint.parseResponse(mockResponse);
 		assertNotNull(parsed);
 		assertNull(parsed.getLists());
 		assertNull(parsed.getLinks());
@@ -122,7 +122,7 @@ public class ListListsEndpointTest {
 				"   }\n" +
 				"}";
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
-		ListsResponse parsed = endpoint.parseResponse(mockResponse);
+		ListListsResponse parsed = endpoint.parseResponse(mockResponse);
 		assertNotNull(parsed);
 		HalLinks links = parsed.getLinks();
 		assertNotNull(links);
@@ -142,7 +142,7 @@ public class ListListsEndpointTest {
 
 	@Test(expected = VonageResponseParseException.class)
 	public void testInvalidResponse() {
-		ListsResponse.fromJson("{malformed]");
+		ListListsResponse.fromJson("{malformed]");
 	}
 
 	@Test(expected = ProactiveConnectResponseException.class)

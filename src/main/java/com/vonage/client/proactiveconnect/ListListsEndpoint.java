@@ -22,7 +22,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 
-class ListListsEndpoint extends AbstractMethod<HalRequestWrapper, ListsResponse> {
+class ListListsEndpoint extends AbstractMethod<HalRequestWrapper, ListListsResponse> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/v0.1/bulk/lists";
 
@@ -43,10 +43,10 @@ class ListListsEndpoint extends AbstractMethod<HalRequestWrapper, ListsResponse>
 	}
 
 	@Override
-	public ListsResponse parseResponse(HttpResponse response) throws IOException {
+	public ListListsResponse parseResponse(HttpResponse response) throws IOException {
 		int statusCode = response.getStatusLine().getStatusCode();
 		if (statusCode >= 200 && statusCode < 300) {
-			return ListsResponse.fromJson(basicResponseHandler.handleResponse(response));
+			return ListListsResponse.fromJson(basicResponseHandler.handleResponse(response));
 		}
 		else {
 			throw ProactiveConnectResponseException.fromHttpResponse(response);

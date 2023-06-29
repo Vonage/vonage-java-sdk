@@ -361,7 +361,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 	@Test
 	public void testListLists() throws Exception {
 		stubResponse(HAL_TEMPLATE_RESPONSE + "  \"lists\": [{},"+SAMPLE_LIST_RESPONSE+",{}]\n}  \n}");
-		ListsResponse parsed = client.listLists(2, 10, SortOrder.ASC);
+		ListListsResponse parsed = client.listLists(2, 10, SortOrder.ASC);
 		assertEqualsSampleHal(parsed);
 		List<ContactsList> lists = parsed.getLists();
 		assertNotNull(lists);

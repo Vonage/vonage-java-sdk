@@ -197,7 +197,7 @@ public class ProactiveConnectClient {
 	 *
 	 * @throws ProactiveConnectResponseException If there was an error in retrieving the lists.
 	 */
-	public ListsResponse listLists(int page, int pageSize, SortOrder order) {
+	public ListListsResponse listLists(int page, int pageSize, SortOrder order) {
 		return halRequest(listLists, null, page, pageSize, order);
 	}
 
