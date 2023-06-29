@@ -48,20 +48,21 @@ public class ListListsEndpointTest {
 	
 	@Test
 	public void testMakeRequestAllParams() throws Exception {
-		HalRequestWrapper request = new HalRequestWrapper(3, 12, null);
+		HalRequestWrapper request = new HalRequestWrapper(3, 12, SortOrder.DESC, null);
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("GET", builder.getMethod());
 		String expectedUri = "https://api-eu.vonage.com/v0.1/bulk/lists" +
-				"?page=" + request.page + "&page_size=" + request.pageSize;
+				"?page=" + request.page + "&page_size=" + request.pageSize + "&order=" + request.order;
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
-		assertEquals(2, params.size());
+		assertEquals(3, params.size());
 	}
 
 	@Test
 	public void testDefaultUri() throws Exception {
-		RequestBuilder builder = endpoint.makeRequest(new HalRequestWrapper(null, null, null));
+		HalRequestWrapper request = new HalRequestWrapper(null, null, null, null);
+		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("GET", builder.getMethod());
 		String expectedUri = "https://api-eu.vonage.com/v0.1/bulk/lists";
 		assertEquals(expectedUri, builder.build().getURI().toString());
@@ -72,7 +73,7 @@ public class ListListsEndpointTest {
 		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
 		endpoint = new ListListsEndpoint(wrapper);
-		HalRequestWrapper request = new HalRequestWrapper(5, null, null);
+		HalRequestWrapper request = new HalRequestWrapper(5, null, null, null);
 		String expectedUri = baseUri + "/v0.1/bulk/lists?page=" + request.page;
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(expectedUri, builder.build().getURI().toString());

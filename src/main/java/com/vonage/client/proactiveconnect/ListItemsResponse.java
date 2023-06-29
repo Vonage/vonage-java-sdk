@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * HAL response for {@link ProactiveConnectClient#listItems(UUID, int, int)}.
+ * HAL response for {@link ProactiveConnectClient#listItems(UUID, int, int, SortOrder)}.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class ListItemsResponse extends HalPageResponse {

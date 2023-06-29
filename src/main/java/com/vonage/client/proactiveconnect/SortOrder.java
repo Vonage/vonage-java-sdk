@@ -15,30 +15,25 @@
  */
 package com.vonage.client.proactiveconnect;
 
-import org.apache.http.client.methods.RequestBuilder;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-class HalRequestWrapper {
-	final Integer page, pageSize;
-	final SortOrder order;
-	final String id;
+/**
+ * Represents the sort order for events.
+ */
+public enum SortOrder {
+	/**
+	 * Ascending
+	 */
+	ASC,
 
-	HalRequestWrapper(Integer page, Integer pageSize, SortOrder order, String id) {
-		this.page = page;
-		this.pageSize = pageSize;
-		this.order = order;
-		this.id = id;
-	}
+	/**
+	 * Descending
+	 */
+	DESC;
 
-	RequestBuilder addParams(RequestBuilder builder) {
-		if (page != null) {
-			builder.addParameter("page", page.toString());
-		}
-		if (pageSize != null) {
-			builder.addParameter("page_size", pageSize.toString());
-		}
-		if (order != null) {
-			builder.addParameter("order", order.toString());
-		}
-		return builder;
-	}
+	@JsonValue
+	@Override
+	public String toString() {
+		return name().toLowerCase();
+	}	
 }

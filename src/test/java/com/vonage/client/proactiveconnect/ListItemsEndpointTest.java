@@ -50,24 +50,24 @@ public class ListItemsEndpointTest {
 	
 	@Test
 	public void testMakeRequestAllParams() throws Exception {
-		HalRequestWrapper request = new HalRequestWrapper(7, 30, listId);
+		HalRequestWrapper request = new HalRequestWrapper(7, 30, SortOrder.DESC, listId);
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("GET", builder.getMethod());
 		String expectedUri = "https://api-eu.vonage.com/v0.1/bulk/lists/"+request.id+"/items" +
-				"?page=" + request.page + "&page_size=" +request.pageSize;
+				"?page="+request.page+"&page_size="+request.pageSize+"&order="+request.order;
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
-		assertEquals(2, params.size());
-		String expectedResponse = "{}";
-		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
+		assertEquals(3, params.size());
+		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, "{}");
 		ListItemsResponse parsed = endpoint.parseResponse(mockResponse);
 		assertNotNull(parsed);
 	}
 
 	@Test
 	public void testDefaultUri() throws Exception {
-		RequestBuilder builder = endpoint.makeRequest(new HalRequestWrapper(null, null, listId));
+		HalRequestWrapper request = new HalRequestWrapper(null, null, null, listId);
+		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("GET", builder.getMethod());
 		String expectedUri = "https://api-eu.vonage.com/v0.1/bulk/lists/"+listId+"/items";
 		assertEquals(expectedUri, builder.build().getURI().toString());
@@ -78,7 +78,7 @@ public class ListItemsEndpointTest {
 		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
 		endpoint = new ListItemsEndpoint(wrapper);
-		HalRequestWrapper request = new HalRequestWrapper(2, null, listId);
+		HalRequestWrapper request = new HalRequestWrapper(2, null, null, listId);
 		String expectedUri = baseUri + "/v0.1/bulk/lists/"+request.id+"/items?page="+request.page;
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(expectedUri, builder.build().getURI().toString());

@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * HAL response for {@link ProactiveConnectClient#listLists(int, int)}.
+ * HAL response for {@link ProactiveConnectClient#listLists(int, int, SortOrder)}.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class ListsResponse extends HalPageResponse {

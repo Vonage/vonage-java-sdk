@@ -22,7 +22,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 
-class ListEventsEndpoint extends AbstractMethod<HalRequestWrapper, ListEventsResponse> {
+class ListEventsEndpoint extends AbstractMethod<ListEventsFilter, ListEventsResponse> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/v0.1/bulk/events";
 
@@ -36,10 +36,9 @@ class ListEventsEndpoint extends AbstractMethod<HalRequestWrapper, ListEventsRes
 	}
 
 	@Override
-	public RequestBuilder makeRequest(HalRequestWrapper request) {
+	public RequestBuilder makeRequest(ListEventsFilter request) {
 		String uri = httpWrapper.getHttpConfig().getApiEuBaseUri() + PATH;
-		return request.addParams(RequestBuilder.get(uri))
-				.setHeader("Accept", "application/json");
+		return request.addParams(RequestBuilder.get(uri)).setHeader("Accept", "application/json");
 	}
 
 	@Override
