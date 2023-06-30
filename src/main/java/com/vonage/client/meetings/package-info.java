@@ -16,10 +16,9 @@
 
 /**
  * This package contains classes and sub-packages to support usage of the
- * <a href=https://developer.vonage.com/api/meetings>Meetings API</a>.
- * <br>
- * Please refer to <a href=https://developer.vonage.com/en/meetings/overview>
- * the developer documentation</a> for an overview of the concepts.
+ * <a href=https://developer.vonage.com/api/meetings>Meetings API</a>. Please refer to
+ * <a href=https://developer.vonage.com/en/meetings/overview>the developer documentation</a>
+ * for an overview of the concepts.
  *
  * @since 7.6.0
  */

@@ -76,14 +76,15 @@ public class ProactiveConnectClient {
 		return Objects.requireNonNull(uuid, name+" is required.").toString();
 	}
 
-	private <R extends HalPageResponse> R halRequest(AbstractMethod<HalRequestWrapper, R> endpoint, String id, Integer page, Integer pageSize) {
+	private <R extends HalPageResponse> R halRequest(AbstractMethod<HalRequestWrapper, R> endpoint,
+			String id, Integer page, Integer pageSize, SortOrder order) {
 		if (page != null && page < 1) {
 			throw new IllegalArgumentException("Page number must be positive.");
 		}
 		if (pageSize != null && pageSize < 1) {
 			throw new IllegalArgumentException("Page size must be positive.");
 		}
-		return endpoint.execute(new HalRequestWrapper(page, pageSize, id));
+		return endpoint.execute(new HalRequestWrapper(page, pageSize, order, id));
 	}
 
 	/**
@@ -182,21 +183,7 @@ public class ProactiveConnectClient {
 	 * @throws ProactiveConnectResponseException If there was an error in retrieving the lists.
 	 */
 	public List<ContactsList> listLists() {
-		return halRequest(listLists, null, 1, 1000).getLists();
-	}
-
-	/**
-	 * Get all lists on a particular page (with the default number of lists per page).
-	 *
-	 * @param page The page number of the HAL response to parse results.
-	 *
-	 * @return The lists page.
-	 * @see #listLists(int, int)
-	 *
-	 * @throws ProactiveConnectResponseException If there was an error in retrieving the lists.
-	 */
-	public ListsResponse listLists(int page) {
-		return halRequest(listLists, null,page, null);
+		return halRequest(listLists, null, 1, 1000, null).getLists();
 	}
 
 	/**
@@ -204,13 +191,14 @@ public class ProactiveConnectClient {
 	 *
 	 * @param page The page number of the HAL response to parse results.
 	 * @param pageSize Number of results per page in the HAL response.
+	 * @param order The order to sort results by (ascending or descending).
 	 *
 	 * @return The lists page.
 	 *
 	 * @throws ProactiveConnectResponseException If there was an error in retrieving the lists.
 	 */
-	public ListsResponse listLists(int page, int pageSize) {
-		return halRequest(listLists, null, page, pageSize);
+	public ListListsResponse listLists(int page, int pageSize, SortOrder order) {
+		return halRequest(listLists, null, page, pageSize, order);
 	}
 
 	/**
@@ -360,22 +348,7 @@ public class ProactiveConnectClient {
 	 * @throws ProactiveConnectResponseException If the list does not exist or the items couldn't be retrieved.
 	 */
 	public List<ListItem> listItems(UUID listId) {
-		return halRequest(listItems, validateUuid("List ID", listId), 1, 1000).getItems();
-	}
-
-	/**
-	 * Get all items on a particular page (with the default number of items per page).
-	 *
-	 * @param listId Unique ID of the list to retrieve items from.
-	 * @param page The page number of the HAL response to parse results.
-	 *
-	 * @return The items page.
-	 * @see #listItems(UUID, int, int)
-	 *
-	 * @throws ProactiveConnectResponseException If the list does not exist or the items couldn't be retrieved.
-	 */
-	public ListItemsResponse listItems(UUID listId, int page) {
-		return halRequest(listItems, validateUuid("List ID", listId), page, null);
+		return halRequest(listItems, validateUuid("List ID", listId), 1, 1000, null).getItems();
 	}
 
 	/**
@@ -384,51 +357,26 @@ public class ProactiveConnectClient {
 	 * @param listId Unique ID of the list to retrieve items from.
 	 * @param page The page number of the HAL response to parse results.
 	 * @param pageSize Number of results per page in the HAL response.
+	 * @param order The order to sort results by (ascending or descending).
 	 *
 	 * @return The items page.
 	 *
 	 * @throws ProactiveConnectResponseException If the list does not exist or the items couldn't be retrieved.
 	 */
-	public ListItemsResponse listItems(UUID listId, int page, int pageSize) {
-		return halRequest(listItems, validateUuid("List ID", listId), page, pageSize);
+	public ListItemsResponse listItems(UUID listId, int page, int pageSize, SortOrder order) {
+		return halRequest(listItems, validateUuid("List ID", listId), page, pageSize, order);
 	}
 
 	/**
-	 * Gets the first 1000 events in the application.
+	 * Gets all events in the application matching the criteria.
 	 *
-	 * @return The events in order of creation.
+	 * @param filter Optional attributes to narrow down the results.
 	 *
-	 * @throws ProactiveConnectResponseException If the events couldn't be retrieved.
-	 */
-	public List<Event> listEvents() {
-		return halRequest(listEvents, null, 1, 1000).getEvents();
-	}
-
-	/**
-	 * Get all events on a particular page (with the default number of events per page).
-	 *
-	 * @param page The page number of the HAL response to parse results.
-	 *
-	 * @return The events page.
-	 * @see #listEvents(int, int)
+	 * @return The list of events applicable to the request criteria, in order of creation.
 	 *
 	 * @throws ProactiveConnectResponseException If the events couldn't be retrieved.
 	 */
-	public ListEventsResponse listEvents(int page) {
-		return halRequest(listEvents, null, page, null);
-	}
-
-	/**
-	 * Get all events on a particular page.
-	 *
-	 * @param page The page number of the HAL response to parse results.
-	 * @param pageSize Number of results per page in the HAL response.
-	 *
-	 * @return The events page.
-	 *
-	 * @throws ProactiveConnectResponseException If the events couldn't be retrieved.
-	 */
-	public ListEventsResponse listEvents(int page, int pageSize) {
-		return halRequest(listEvents, null, page, pageSize);
+	public List<Event> listEvents(ListEventsFilter filter) {
+		return listEvents.execute(filter != null ? filter : ListEventsFilter.builder().build()).getEvents();
 	}
 }

@@ -22,15 +22,54 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * Represents values for {@link Event#getType()}.
  */
 public enum EventType {
+	/**
+	 * Action call succeeded
+	 */
 	ACTION_CALL_SUCCEEDED,
+
+	/**
+	 * Action call failed
+	 */
 	ACTION_CALL_FAILED,
+
+	/**
+	 * Action call info
+	 */
 	ACTION_CALL_INFO,
+
+	/**
+	 * Recipient response
+	 */
 	RECIPIENT_RESPONSE,
+
+	/**
+	 * Run item skipped
+	 */
 	RUN_ITEM_SKIPPED,
+
+	/**
+	 * Run item failed
+	 */
 	RUN_ITEM_FAILED,
+
+	/**
+	 * Run item submitted
+	 */
 	RUN_ITEM_SUBMITTED,
+
+	/**
+	 * Run items total
+	 */
 	RUN_ITEMS_TOTAL,
+
+	/**
+	 * Run items ready
+	 */
 	RUN_ITEMS_READY,
+
+	/**
+	 * Run items excluded
+	 */
 	RUN_ITEMS_EXCLUDED;
 
 	@JsonCreator

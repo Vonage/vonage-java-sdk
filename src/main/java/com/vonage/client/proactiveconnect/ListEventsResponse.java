@@ -26,10 +26,10 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * HAL response for {@link ProactiveConnectClient#listEvents(int, int)}.
+ * HAL response for {@link ProactiveConnectClient#listEvents(ListEventsFilter)}.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class ListEventsResponse extends HalPageResponse {
+final class ListEventsResponse extends HalPageResponse {
 	@JsonProperty("_embedded") private Embedded _embedded;
 
 	ListEventsResponse() {

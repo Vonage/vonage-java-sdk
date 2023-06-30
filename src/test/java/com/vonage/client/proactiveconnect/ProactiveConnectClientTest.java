@@ -27,6 +27,7 @@ import org.junit.function.ThrowingRunnable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 
@@ -287,19 +288,10 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 	@Test
 	public void testCreateList() throws Exception {
 		ContactsList request = ContactsList.builder("my list").build();
-		assertNull(request.getDatasource());
-		assertNull(request.getCreatedAt());
-		assertNull(request.getUpdatedAt());
-		assertNull(request.getTags());
-		assertNull(request.getAttributes());
-		assertNull(request.getDescription());
-		assertNull(request.getId());
-		assertNull(request.getSyncStatus());
-		assertNull(request.getItemsCount());
-		assertNotNull(request.getName());
 		assert409ResponseException(() -> client.createList(request));
-		stubResponseAndRun(SAMPLE_LIST_RESPONSE, () -> client.createList(request));
-		assertEqualsSampleList(request);
+		ContactsList response = stubResponseAndGet(SAMPLE_LIST_RESPONSE, () -> client.createList(request));
+		assertEquals(request, response);
+		assertEqualsSampleList(response);
 		stubResponseAndAssertThrows(201, () -> client.createList(null), NullPointerException.class);
 		stubResponseAndAssertThrows(201, () ->
 				client.createList(ContactsList.builder(null).build()),
@@ -369,7 +361,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 	@Test
 	public void testListLists() throws Exception {
 		stubResponse(HAL_TEMPLATE_RESPONSE + "  \"lists\": [{},"+SAMPLE_LIST_RESPONSE+",{}]\n}  \n}");
-		ListsResponse parsed = client.listLists(2, 10);
+		ListListsResponse parsed = client.listLists(2, 10, SortOrder.ASC);
 		assertEqualsSampleHal(parsed);
 		List<ContactsList> lists = parsed.getLists();
 		assertNotNull(lists);
@@ -377,12 +369,12 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 		assertNullList(lists.get(0));
 		assertEqualsSampleList(lists.get(1));
 		assertNullList(lists.get(2));
-		assertNull(stubResponseAndGet("{}", () -> client.listLists(1, 1)).getLists());
+		assertNull(stubResponseAndGet("{}", () -> client.listLists(1, 1, null)).getLists());
 		stubResponseAndAssertThrows("{}", () ->
-				client.listLists(0), IllegalArgumentException.class
+				client.listLists(1, 0, SortOrder.ASC), IllegalArgumentException.class
 		);
 		stubResponseAndAssertThrows("{}", () ->
-				client.listLists(1, 0), IllegalArgumentException.class
+				client.listLists(0, 25, SortOrder.DESC), IllegalArgumentException.class
 		);
 		assertNull(stubResponseAndGet("{}", client::listLists));
 		String emptyListsResponse = "{\"_embedded\":{\"lists\":[]}}";
@@ -393,9 +385,9 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 	@Test
 	public void testCreateListItem() throws Exception {
 		Map<String, ?> data = Collections.emptyMap();
-		stubResponseAndRun(SAMPLE_LIST_ITEM_RESPONSE, () ->
+		assertEqualsSampleListItem(stubResponseAndGet(SAMPLE_LIST_ITEM_RESPONSE, () ->
 				client.createListItem(SAMPLE_LIST_ID, data)
-		);
+		));
 		stubResponseAndAssertThrows(200, () ->
 				client.createListItem(null, data), NullPointerException.class
 		);
@@ -504,7 +496,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 	@Test
 	public void testListItems() throws Exception {
 		stubResponse(HAL_TEMPLATE_RESPONSE + "  \"items\": [{},"+ SAMPLE_LIST_ITEM_RESPONSE +",{}]\n}  \n}");
-		ListItemsResponse parsed = client.listItems(SAMPLE_LIST_ID, 2, 10);
+		ListItemsResponse parsed = client.listItems(SAMPLE_LIST_ID, 2, 10, SortOrder.ASC);
 		assertEqualsSampleHal(parsed);
 		List<ListItem> items = parsed.getItems();
 		assertNotNull(items);
@@ -512,21 +504,20 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 		assertNullListItem(items.get(0));
 		assertEqualsSampleListItem(items.get(1));
 		assertNullListItem(items.get(2));
-		assertNull(stubResponseAndGet("{}", () -> client.listItems(SAMPLE_LIST_ID, 1, 1).getItems()));
+		assertNull(stubResponseAndGet("{}", () ->
+				client.listItems(SAMPLE_LIST_ID, 1, 1, null).getItems()
+		));
 		stubResponseAndAssertThrows("{}", () ->
-				client.listItems(SAMPLE_LIST_ID, 1, 0), IllegalArgumentException.class
+				client.listItems(SAMPLE_LIST_ID, 1, 0, SortOrder.DESC), IllegalArgumentException.class
 		);
 		stubResponseAndAssertThrows("{}", () ->
-				client.listItems(SAMPLE_LIST_ID, 0), IllegalArgumentException.class
+				client.listItems(SAMPLE_LIST_ID, 0, 25, SortOrder.DESC), IllegalArgumentException.class
 		);
 		stubResponseAndAssertThrows("{}", () ->
 				client.listItems(null), NullPointerException.class
 		);
 		stubResponseAndAssertThrows("{}", () ->
-				client.listItems(null, 3, 25), NullPointerException.class
-		);
-		stubResponseAndAssertThrows("{}", () ->
-				client.listItems(null, 2), NullPointerException.class
+				client.listItems(null, 3, 25, SortOrder.ASC), NullPointerException.class
 		);
 		assertNull(stubResponseAndGet("{}", () -> client.listItems(SAMPLE_LIST_ID)));
 		String emptyListsResponse = "{\"_embedded\":{\"items\":[]}}";
@@ -537,22 +528,23 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 	@Test
 	public void testListEvents() throws Exception {
 		stubResponse(HAL_TEMPLATE_RESPONSE + "  \"events\": [{},"+ SAMPLE_EVENT_RESPONSE +",{}]\n}  \n}");
-		ListEventsResponse parsed = client.listEvents(2, 10);
-		assertEqualsSampleHal(parsed);
-		List<Event> events = parsed.getEvents();
+		List<Event> events = client.listEvents(null);
 		assertNotNull(events);
 		assertEquals(3, events.size());
 		assertNullEvent(events.get(0));
 		assertEqualsSampleEvent(events.get(1));
 		assertNullEvent(events.get(2));
-		assertNull(stubResponseAndGet("{}", () -> client.listEvents(1, 1)).getEvents());
+		assertNull(stubResponseAndGet("{}", () -> client.listEvents(null)));
 		stubResponseAndAssertThrows("{}", () ->
-				client.listEvents(1, 0), IllegalArgumentException.class
+				client.listEvents(ListEventsFilter.builder()
+						.startDate(Instant.now())
+						.endDate(Instant.now().minus(Duration.ofHours(3)))
+						.build()
+				),
+				IllegalStateException.class
 		);
-		stubResponseAndAssertThrows("{}", () -> client.listEvents(0), IllegalArgumentException.class);
-		assertNull(stubResponseAndGet("{}", client::listEvents));
 		String emptyListsResponse = "{\"_embedded\":{\"events\":[]}}";
-		assertEquals(0, stubResponseAndGet(emptyListsResponse, client::listEvents).size());
-		assert409ResponseException(client::listEvents);
+		assertEquals(0, stubResponseAndGet(emptyListsResponse, () -> client.listEvents(null)).size());
+		assert409ResponseException(() -> client.listEvents(ListEventsFilter.builder().build()));
 	}
 }

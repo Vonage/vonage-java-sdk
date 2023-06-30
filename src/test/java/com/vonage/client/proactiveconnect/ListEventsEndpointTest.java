@@ -28,6 +28,7 @@ import org.junit.Assert;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -47,24 +48,54 @@ public class ListEventsEndpointTest {
 	}
 	
 	@Test
-	public void testMakeRequestAllParams() throws Exception {
-		HalRequestWrapper request = new HalRequestWrapper(6, 50, null);
+	public void testDefaultUriAllParams() throws Exception {
+		ListEventsFilter request = ListEventsFilter.builder()
+				.order(SortOrder.ASC)
+				.runId("51aca838-2cf6-4100-b0d2-e74ac0e95c88")
+				.runItemId("d6f1d012-227e-4025-a388-3d1aaa05bc29")
+				.invocationId("29bab76c-156e-42e4-ab38-f6a465f0048e")
+				.actionId("99ea10e0-1f14-4f55-b976-3c88ea8ec4cd")
+				.traceId("a3c7472d-495a-4f6f-b29a-1646ffe70643")
+				.recipientId("15551584817")
+				.sourceContext("uk-customers")
+				.sourceType(SourceType.EVENT_HANDLER)
+				.startDate(Instant.EPOCH)
+				.endDate(Instant.parse("2023-06-29T12:39:34.319723Z"))
+				.build();
+
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("GET", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/v0.1/bulk/events" +
-				"?page=" + request.page + "&page_size=" + request.pageSize;
-		assertEquals(expectedUri, builder.build().getURI().toString());
+		String expectedUri = "https://api-eu.vonage.com/v0.1/bulk/events?";
+		assertTrue(builder.build().getURI().toString().startsWith(expectedUri));
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
-		assertEquals(2, params.size());
-	}
 
-	@Test
-	public void testDefaultUri() throws Exception {
-		RequestBuilder builder = endpoint.makeRequest(new HalRequestWrapper(null, null, null));
-		assertEquals("GET", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/v0.1/bulk/events";
-		assertEquals(expectedUri, builder.build().getURI().toString());
+		Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
+		assertEquals(13, params.size());
+		assertEquals("1", params.get("page"));
+		assertEquals("1000", params.get("page_size"));
+		assertEquals("asc", params.get("order"));
+		assertEquals("51aca838-2cf6-4100-b0d2-e74ac0e95c88", params.get("run_id"));
+		assertEquals("d6f1d012-227e-4025-a388-3d1aaa05bc29", params.get("run_item_id"));
+		assertEquals("29bab76c-156e-42e4-ab38-f6a465f0048e", params.get("invocation_id"));
+		assertEquals("99ea10e0-1f14-4f55-b976-3c88ea8ec4cd", params.get("action_id"));
+		assertEquals("a3c7472d-495a-4f6f-b29a-1646ffe70643", params.get("trace_id"));
+		assertEquals("15551584817", params.get("recipient_id"));
+		assertEquals("uk-customers", params.get("src_ctx"));
+		assertEquals("event-handler", params.get("src_type"));
+		assertEquals("1970-01-01T00:00:00Z", params.get("date_start"));
+		assertEquals("2023-06-29T12:39:34Z", params.get("date_end"));
+
+		assertNotNull(request.getOrder());
+		assertNotNull(request.getActionId());
+		assertNotNull(request.getInvocationId());
+		assertNotNull(request.getRecipientId());
+		assertNotNull(request.getRunItemId());
+		assertNotNull(request.getRunId());
+		assertNotNull(request.getTraceId());
+		assertNotNull(request.getSourceContext());
+		assertNotNull(request.getSourceType());
+		assertNotNull(request.getStartDate());
+		assertNotNull(request.getEndDate());
 	}
 
 	@Test
@@ -72,9 +103,8 @@ public class ListEventsEndpointTest {
 		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
 		endpoint = new ListEventsEndpoint(wrapper);
-		HalRequestWrapper request = new HalRequestWrapper(3, null, null);
-		String expectedUri = baseUri + "/v0.1/bulk/events?page="+ request.page;
-		RequestBuilder builder = endpoint.makeRequest(request);
+		String expectedUri = baseUri + "/v0.1/bulk/events?page=1&page_size=1000";
+		RequestBuilder builder = endpoint.makeRequest(ListEventsFilter.builder().build());
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		assertEquals("GET", builder.getMethod());

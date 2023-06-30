@@ -121,7 +121,7 @@ public class Event {
 	}
 
 	/**
-	 * {@code src_ctx} field.
+	 * The name of the segment or matcher.
 	 *
 	 * @return The source context or {@code null} if unknown.
 	 */
