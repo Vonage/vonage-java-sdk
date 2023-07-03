@@ -164,10 +164,6 @@ Usage instructions can be found on the [8.x-beta branch](https://github.com/Vona
 See the [Releases page](https://github.com/Vonage/vonage-java-sdk/releases) for more information.
 In the meantime, you can continue using the [OpenTok Java SDK](https://github.com/opentok/Opentok-Java-SDK).
 
-**Q: What is the license for this SDK?**
-
-**A:** This library is released under the [Apache 2.0 License](LICENSE.txt).
-
 ## Contribute!
 
 _We :heart: contributions to this library!_
