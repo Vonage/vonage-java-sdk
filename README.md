@@ -4,14 +4,15 @@
 [![Build Status](https://github.com/Vonage/vonage-java-sdk/actions/workflows/build.yml/badge.svg)](https://github.com/Vonage/vonage-java-sdk/actions/workflows/build.yml?query=workflow%3A"Build+Java+CI")
 [![codecov](https://codecov.io/gh/vonage/vonage-java-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/vonage/vonage-java-sdk)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)][license]
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE.txt)
 
 <img src="https://developer.nexmo.com/assets/images/Vonage_Nexmo.svg" height="48px" alt="Nexmo is now known as Vonage" />
 
 You can use this Java Server SDK to add [Vonage APIs](https://developer.vonage.com/api) to your application. To use this, you'll
-need a Vonage account. You'll need to have [created a Vonage account][signup].
+need a Vonage account. You'll need to have [created a Vonage account](https://dashboard.nexmo.com/sign-up?utm_source=DEV_REL&utm_medium=github&utm_campaign=java-client-library).
 
 * [Supported APIs](#supported-apis)
+* [Other SDKs](#other-sdks)
 * [Installation](#installation)
 * [Usage](#usage)
 * [Configuration](#configuration)
@@ -33,13 +34,25 @@ need a Vonage account. You'll need to have [created a Vonage account][signup].
 - [Verify](https://developer.vonage.com/en/verify/overview)
 - [Voice](https://developer.vonage.com/en/voice/overview)
 
+## Other SDKs
+
+We also provide server SDKs in other languages:
+
+- [.NET](https://github.com/Vonage/vonage-dotnet-sdk)
+- [PHP](https://github.com/Vonage/vonage-php-sdk)
+- [Python](https://github.com/Vonage/vonage-python-sdk)
+- [Ruby](https://github.com/Vonage/vonage-ruby-sdk)
+- [NodeJS](https://github.com/Vonage/vonage-node-sdk)
+
+We also offer [client-side SDKs](https://developer.vonage.com/en/vonage-client-sdk/overview) for iOS, Android and JavaScript.
+See all of our SDKs and integrations on the [Vonage Developer portal](https://developer.vonage.com/en/tools).
 
 ## Installation
 
 Releases are published to [Maven Central](https://central.sonatype.com/artifact/com.vonage/client/7.6.0/snippets).
 Instructions for your build system can be found in the snippets section.
 They're also available from [here](https://mvnrepository.com/artifact/com.vonage/client/7.6.0).
-Release notes can be found in the [changelog][changelog].
+Release notes can be found in the [changelog](CHANGELOG.md).
 
 ### Build It Yourself
 
@@ -133,17 +146,17 @@ can be useful, for example, if you must use an HTTP proxy to make requests or to
 
 ## Frequently Asked Questions
 
-**Q:** What is your policy on thread safety?
+**Q: What is your policy on thread safety?**
 
 **A:** The current architecture of the SDK means that only one thread should use the client at a time.
 If you would like to use the SDK in a multithreaded environment, create a separate instance of
 `VonageClient` for each thread.
 
-**Q:** Does this SDK support asynchronous request / response processing?
+**Q: Does this SDK support asynchronous request / response processing?**
 
 **A:** Currently no, but it is on the roadmap.
 
-**Q:** Does this SDK support the Video API?
+**Q: Does this SDK support the Video API?**
 
 **A:**
 The Vonage Video API (formerly OpenTok) is currently in beta. You can try it out by using a beta version.
@@ -151,9 +164,9 @@ Usage instructions can be found on the [8.x-beta branch](https://github.com/Vona
 See the [Releases page](https://github.com/Vonage/vonage-java-sdk/releases) for more information.
 In the meantime, you can continue using the [OpenTok Java SDK](https://github.com/opentok/Opentok-Java-SDK).
 
-**Q:** What is the license for this SDK?
+**Q: What is the license for this SDK?**
 
-**A:** This library is released under the [Apache 2.0 License][license].
+**A:** This library is released under the [Apache 2.0 License](LICENSE.txt).
 
 ## Contribute!
 
@@ -164,9 +177,3 @@ first if you plan to add any new functionality.
 Otherwise, [bug reports](https://github.com/Vonage/vonage-java-sdk/issues),
 [bug fixes](https://github.com/Vonage/vonage-java-sdk/pulls) and feedback on the
 library are always appreciated.
-
-[create_account]: https://developer.vonage.com/account/overview
-[signup]: https://dashboard.nexmo.com/sign-up?utm_source=DEV_REL&utm_medium=github&utm_campaign=[LANGUAGE]-client-library
-[doc_sms]: https://developer.vonage.com/messaging/sms/overview
-[license]: LICENSE.txt
-[changelog]: CHANGELOG.md
