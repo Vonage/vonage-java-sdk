@@ -91,9 +91,11 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
             catch (IOException io) {
                 throw new VonageResponseParseException("Unable to parse response.", io);
             }
-        } catch (UnsupportedEncodingException uee) {
+        }
+        catch (UnsupportedEncodingException uee) {
             throw new VonageUnexpectedException("UTF-8 encoding is not supported by this JVM.", uee);
-        } catch (IOException io) {
+        }
+        catch (IOException io) {
             throw new VonageMethodFailedException("Something went wrong while executing the HTTP request: " +
                     io.getMessage() + ".", io);
         }
@@ -153,7 +155,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      * @throws VonageUnexpectedException If no AuthMethod is available.
      * @throws IllegalStateException If the AuthMethod does not have an Application ID or API key.
      */
-    protected String getApplicationIdOrApiKey() throws VonageUnexpectedException {
+    public String getApplicationIdOrApiKey() throws VonageUnexpectedException {
         AuthMethod am = getAuthMethod();
         if (am instanceof JWTAuthMethod) {
             return ((JWTAuthMethod) am).getApplicationId();

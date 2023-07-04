@@ -36,7 +36,7 @@ import java.util.Objects;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public abstract class VonageApiResponseException extends VonageClientException {
+public class VonageApiResponseException extends VonageClientException implements Jsonable {
 	protected URI type;
 	protected String title, detail, instance;
 	protected List<?> errors;
@@ -160,6 +160,7 @@ public abstract class VonageApiResponseException extends VonageClientException {
 	 *
 	 * @return The JSON representation of this response object.
 	 */
+	@Override
 	public String toJson() {
 		try {
 			ObjectMapper mapper = new ObjectMapper();

@@ -17,10 +17,7 @@ package com.vonage.client.subaccounts;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.vonage.client.VonageResponseParseException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 import java.math.BigDecimal;
 import java.time.Instant;
 
@@ -28,7 +25,7 @@ import java.time.Instant;
  * Represents a subaccount.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Account {
+public class Account implements Jsonable {
 	private String apiKey, primaryAccountApiKey, name, secret;
 	private Boolean usePrimaryAccountBalance, suspended;
 	private Instant createdAt;
@@ -134,13 +131,8 @@ public class Account {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static Account fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.registerModule(new JavaTimeModule());
-			return mapper.readValue(json, Account.class);
-		}
-		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to produce Account from json.", ex);
-		}
+		Account account = new Account();
+		account.updateFromJson(json);
+		return account;
 	}
 }
