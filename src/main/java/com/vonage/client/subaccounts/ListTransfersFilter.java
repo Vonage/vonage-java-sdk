@@ -15,11 +15,14 @@
  */
 package com.vonage.client.subaccounts;
 
+import com.vonage.client.QueryParams;
 import org.apache.http.client.methods.RequestBuilder;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-public class ListTransfersFilter {
+public class ListTransfersFilter implements QueryParams {
 	private final Instant startDate, endDate;
 	private final String subaccount;
 
@@ -36,14 +39,21 @@ public class ListTransfersFilter {
 	}
 
 	RequestBuilder addParams(RequestBuilder request) {
-        request.addParameter("start_date", formatTime(startDate));
-		if (endDate != null) {
-            request.addParameter("end_date", formatTime(endDate));
-        }
-		if (subaccount != null) {
-			request.addParameter("subaccount", subaccount);
-        }
+		makeParams().forEach(request::addParameter);
 		return request;
+	}
+
+	@Override
+	public Map<String, String> makeParams() {
+		Map<String, String> params = new LinkedHashMap<>(4);
+		params.put("start_date", formatTime(startDate));
+		if (endDate != null) {
+			params.put("end_date", formatTime(endDate));
+		}
+		if (subaccount != null) {
+			params.put("subaccount", subaccount);
+		}
+		return params;
 	}
 
 	/**
@@ -81,7 +91,7 @@ public class ListTransfersFilter {
 	public static Builder builder() {
 		return new Builder();
 	}
-	
+
 	public static class Builder {
 		private Instant startDate, endDate;
 		private String subaccount;

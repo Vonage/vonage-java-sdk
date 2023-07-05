@@ -150,6 +150,9 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		if (accept != null) {
 			rqb.setHeader("Accept", accept);
 		}
+		if (requestBody instanceof QueryParams) {
+			((QueryParams) requestBody).makeParams().forEach(rqb::addParameter);
+		}
 		if (requestBody instanceof Jsonable) {
 			rqb.setEntity(new StringEntity(((Jsonable) requestBody).toJson(), contentType));
 		}
