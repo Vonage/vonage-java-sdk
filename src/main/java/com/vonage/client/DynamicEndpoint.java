@@ -154,7 +154,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			((QueryParams) requestBody).makeParams().forEach(rqb::addParameter);
 		}
 		if (requestBody instanceof Jsonable) {
-			rqb.setEntity(new StringEntity(((Jsonable) requestBody).toJson(), contentType));
+			rqb.setEntity(new StringEntity(((Jsonable) requestBody).toJson(), ContentType.getByMimeType(contentType)));
 		}
 		else if (requestBody instanceof byte[]) {
 			rqb.setEntity(new ByteArrayEntity((byte[]) requestBody));

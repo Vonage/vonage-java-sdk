@@ -19,6 +19,7 @@ import com.vonage.client.HttpWrapper;
 import com.vonage.client.common.HttpMethod;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 
 public class SubaccountsClient {
 	final SubaccountsEndpoint<CreateSubaccountRequest, Account> createSubaccount;
@@ -35,32 +36,48 @@ public class SubaccountsClient {
 	 * @param httpWrapper (REQUIRED) shared HTTP wrapper object used for making REST calls.
 	 */
 	public SubaccountsClient(HttpWrapper httpWrapper) {
-		createSubaccount = new SubaccountsEndpoint<>(httpWrapper, req ->
-				"subaccounts", HttpMethod.POST
+		final HttpWrapper wrapper = httpWrapper;
+		class Endpoint<T, R> extends SubaccountsEndpoint<T, R> {
+			Endpoint(Class<T> requestType, Class<R> responseType, Function<T, String> pathGetter, HttpMethod method) {
+				super(requestType, responseType, wrapper, pathGetter, method);
+			}
+		}
+
+		createSubaccount = new Endpoint<>(
+				CreateSubaccountRequest.class, Account.class,
+				req -> "subaccounts", HttpMethod.POST
 		);
-		updateSubaccount = new SubaccountsEndpoint<>(httpWrapper, req ->
-				"subaccounts/"+req.subaccountApiKey, HttpMethod.PATCH
+		updateSubaccount = new Endpoint<>(
+				UpdateSubaccountRequest.class, Account.class,
+				req -> "subaccounts/"+req.subaccountApiKey, HttpMethod.PATCH
 		);
-		listSubaccounts = new SubaccountsEndpoint<>(httpWrapper, req ->
-				"subaccounts", HttpMethod.GET
+		listSubaccounts = new Endpoint<>(
+				Void.class, ListSubaccountsResponse.class,
+				req -> "subaccounts", HttpMethod.GET
 		);
-		getSubaccount = new SubaccountsEndpoint<>(httpWrapper, req ->
-				"subaccounts/"+req, HttpMethod.GET
+		getSubaccount = new Endpoint<>(
+				String.class, Account.class,
+				req -> "subaccounts/"+req, HttpMethod.GET
 		);
-		listBalanceTransfers = new SubaccountsEndpoint<>(httpWrapper, req ->
-				"balance-transfers", HttpMethod.GET
+		listBalanceTransfers = new Endpoint<>(
+				ListTransfersFilter.class, ListTransfersResponseWrapper.class,
+				req -> "balance-transfers", HttpMethod.GET
 		);
-		listCreditTransfers = new SubaccountsEndpoint<>(httpWrapper, req ->
-				"credit-transfers", HttpMethod.GET
+		listCreditTransfers = new Endpoint<>(
+				ListTransfersFilter.class, ListTransfersResponseWrapper.class,
+				req -> "credit-transfers", HttpMethod.GET
 		);
-		transferBalance = new SubaccountsEndpoint<>(httpWrapper, req ->
-				"balance-transfers", HttpMethod.POST
+		transferBalance = new Endpoint<>(
+				MoneyTransfer.class, MoneyTransfer.class,
+				req -> "balance-transfers", HttpMethod.POST
 		);
-		transferCredit = new SubaccountsEndpoint<>(httpWrapper, req ->
-				"credit-transfers", HttpMethod.POST
+		transferCredit = new Endpoint<>(
+				MoneyTransfer.class, MoneyTransfer.class,
+				req -> "credit-transfers", HttpMethod.POST
 		);
-		transferNumber = new SubaccountsEndpoint<>(httpWrapper, req ->
-				"transfer-number", HttpMethod.POST
+		transferNumber = new Endpoint<>(
+				NumberTransfer.class, NumberTransfer.class,
+				req -> "transfer-number", HttpMethod.POST
 		);
 	}
 

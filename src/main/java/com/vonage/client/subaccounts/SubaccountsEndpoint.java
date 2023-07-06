@@ -15,22 +15,19 @@
  */
 package com.vonage.client.subaccounts;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.vonage.client.DynamicEndpoint;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.auth.TokenAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import java.util.function.Function;
 
-@SuppressWarnings("unchecked")
 class SubaccountsEndpoint<T, R> extends DynamicEndpoint<T, R> {
 
-	protected SubaccountsEndpoint(HttpWrapper httpWrapper, Function<T, String> pathGetter, HttpMethod method) {
-		super(builder(
-				(Class<T>) TypeFactory.defaultInstance().constructType(new TypeReference<T>(){}.getType()).containedType(0).getRawClass(),
-				(Class<R>) TypeFactory.defaultInstance().constructType(new TypeReference<R>(){}.getType()).containedType(0).getRawClass()
-			)
+	protected SubaccountsEndpoint(
+			Class<T> requestType, Class<R> responseType, HttpWrapper httpWrapper,
+			Function<T, String> pathGetter, HttpMethod method) {
+
+		super(builder(requestType, responseType)
 			.wrapper(httpWrapper)
 			.addAuthMethod(TokenAuthMethod.class)
 			.pathGetter((de, req) -> {
