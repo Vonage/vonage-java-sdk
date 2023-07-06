@@ -30,6 +30,7 @@ class SubaccountsEndpoint<T, R> extends DynamicEndpoint<T, R> {
 		super(builder(requestType, responseType)
 			.wrapper(httpWrapper)
 			.addAuthMethod(TokenAuthMethod.class)
+			.requestMethod(method)
 			.pathGetter((de, req) -> {
 					if (req instanceof CreateSubaccountRequest) {
 						((CreateSubaccountRequest) req).primaryAccountApiKey = de.getApplicationIdOrApiKey();
@@ -41,7 +42,6 @@ class SubaccountsEndpoint<T, R> extends DynamicEndpoint<T, R> {
 				}
 			)
 			.responseExceptionType(SubaccountsResponseException.class)
-			.requestMethod(method)
 		);
 	}
 }

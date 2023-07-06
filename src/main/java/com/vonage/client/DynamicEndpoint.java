@@ -154,7 +154,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			((QueryParams) requestBody).makeParams().forEach(rqb::addParameter);
 		}
 		if (requestBody instanceof Jsonable) {
-			rqb.setEntity(new StringEntity(((Jsonable) requestBody).toJson(), ContentType.getByMimeType(contentType)));
+			rqb.setEntity(new StringEntity(((Jsonable) requestBody).toJson(), ContentType.APPLICATION_JSON));
 		}
 		else if (requestBody instanceof byte[]) {
 			rqb.setEntity(new ByteArrayEntity((byte[]) requestBody));
@@ -195,7 +195,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 						return responseBody;
 					}
 					else {
-						throw new IllegalStateException("Unhandled return type.");
+						throw new IllegalStateException("Unhandled return type: "+responseType);
 					}
 				}
 			}

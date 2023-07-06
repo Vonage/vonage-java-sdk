@@ -33,50 +33,40 @@ public class SubaccountsClient {
 	/**
 	 * Constructor.
 	 *
-	 * @param httpWrapper (REQUIRED) shared HTTP wrapper object used for making REST calls.
+	 * @param wrapper (REQUIRED) shared HTTP wrapper object used for making REST calls.
 	 */
-	public SubaccountsClient(HttpWrapper httpWrapper) {
-		final HttpWrapper wrapper = httpWrapper;
+	public SubaccountsClient(HttpWrapper wrapper) {
 		class Endpoint<T, R> extends SubaccountsEndpoint<T, R> {
 			Endpoint(Class<T> requestType, Class<R> responseType, Function<T, String> pathGetter, HttpMethod method) {
 				super(requestType, responseType, wrapper, pathGetter, method);
 			}
 		}
 
-		createSubaccount = new Endpoint<>(
-				CreateSubaccountRequest.class, Account.class,
+		createSubaccount = new Endpoint<>(CreateSubaccountRequest.class, Account.class,
 				req -> "subaccounts", HttpMethod.POST
 		);
-		updateSubaccount = new Endpoint<>(
-				UpdateSubaccountRequest.class, Account.class,
+		updateSubaccount = new Endpoint<>(UpdateSubaccountRequest.class, Account.class,
 				req -> "subaccounts/"+req.subaccountApiKey, HttpMethod.PATCH
 		);
-		listSubaccounts = new Endpoint<>(
-				Void.class, ListSubaccountsResponse.class,
+		listSubaccounts = new Endpoint<>(Void.class, ListSubaccountsResponse.class,
 				req -> "subaccounts", HttpMethod.GET
 		);
-		getSubaccount = new Endpoint<>(
-				String.class, Account.class,
+		getSubaccount = new Endpoint<>(String.class, Account.class,
 				req -> "subaccounts/"+req, HttpMethod.GET
 		);
-		listBalanceTransfers = new Endpoint<>(
-				ListTransfersFilter.class, ListTransfersResponseWrapper.class,
+		listBalanceTransfers = new Endpoint<>(ListTransfersFilter.class, ListTransfersResponseWrapper.class,
 				req -> "balance-transfers", HttpMethod.GET
 		);
-		listCreditTransfers = new Endpoint<>(
-				ListTransfersFilter.class, ListTransfersResponseWrapper.class,
+		listCreditTransfers = new Endpoint<>(ListTransfersFilter.class, ListTransfersResponseWrapper.class,
 				req -> "credit-transfers", HttpMethod.GET
 		);
-		transferBalance = new Endpoint<>(
-				MoneyTransfer.class, MoneyTransfer.class,
+		transferBalance = new Endpoint<>(MoneyTransfer.class, MoneyTransfer.class,
 				req -> "balance-transfers", HttpMethod.POST
 		);
-		transferCredit = new Endpoint<>(
-				MoneyTransfer.class, MoneyTransfer.class,
+		transferCredit = new Endpoint<>(MoneyTransfer.class, MoneyTransfer.class,
 				req -> "credit-transfers", HttpMethod.POST
 		);
-		transferNumber = new Endpoint<>(
-				NumberTransfer.class, NumberTransfer.class,
+		transferNumber = new Endpoint<>(NumberTransfer.class, NumberTransfer.class,
 				req -> "transfer-number", HttpMethod.POST
 		);
 	}
