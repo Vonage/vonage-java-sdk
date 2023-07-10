@@ -15,14 +15,14 @@
  */
 package com.vonage.client.subaccounts;
 
-import com.vonage.client.QueryParams;
+import com.vonage.client.QueryParamsRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ListTransfersFilter implements QueryParams {
+public class ListTransfersFilter implements QueryParamsRequest {
 	private final Instant startDate, endDate;
 	private final String subaccount;
 

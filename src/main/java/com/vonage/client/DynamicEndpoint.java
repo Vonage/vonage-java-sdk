@@ -43,7 +43,6 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 	protected HttpMethod requestMethod;
 	protected BiFunction<DynamicEndpoint<T, R>, ? super T, String> pathGetter;
 	protected Class<? extends VonageApiResponseException> responseExceptionType;
-	protected Class<T> requestType;
 	protected Class<R> responseType;
 	protected T cachedRequestBody;
 
@@ -53,22 +52,18 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		requestMethod = builder.requestMethod;
 		pathGetter = builder.pathGetter;
 		responseExceptionType = builder.responseExceptionType;
-		requestType = builder.requestType;
 		responseType = builder.responseType;
-		if ((contentType = builder.contentType) == null && Jsonable.class.isAssignableFrom(requestType)) {
-			contentType = ContentType.APPLICATION_JSON.getMimeType();
-		}
+		contentType = builder.contentType;
 		if ((accept = builder.accept) == null && Jsonable.class.isAssignableFrom(responseType)) {
 			accept = ContentType.APPLICATION_JSON.getMimeType();
 		}
 	}
 
-	public static <T, R> Builder<T, R> builder(Class<T> requestType, Class<R> responseType) {
-		return new Builder<>(requestType, responseType);
+	public static <T, R> Builder<T, R> builder(Class<R> responseType) {
+		return new Builder<>(responseType);
 	}
 
 	public static final class Builder<T, R> {
-		private final Class<T> requestType;
 		private final Class<R> responseType;
 		private final Collection<Class<? extends AuthMethod>> authMethods = new ArrayList<>(2);
 		private HttpWrapper wrapper;
@@ -77,8 +72,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		private BiFunction<DynamicEndpoint<T, R>, ? super T, String> pathGetter;
 		private Class<? extends VonageApiResponseException> responseExceptionType;
 
-		Builder(Class<T> requestType, Class<R> responseType) {
-			this.requestType = requestType;
+		Builder(Class<R> responseType) {
 			this.responseType = responseType;
 		}
 
@@ -147,11 +141,14 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		if (contentType != null) {
 			rqb.setHeader("Content-Type", contentType);
 		}
+		else if (requestBody instanceof Jsonable) {
+			rqb.setHeader("Content-Type", "application/json");
+		}
 		if (accept != null) {
 			rqb.setHeader("Accept", accept);
 		}
-		if (requestBody instanceof QueryParams) {
-			((QueryParams) requestBody).makeParams().forEach(rqb::addParameter);
+		if (requestBody instanceof QueryParamsRequest) {
+			((QueryParamsRequest) requestBody).makeParams().forEach(rqb::addParameter);
 		}
 		if (requestBody instanceof Jsonable) {
 			rqb.setEntity(new StringEntity(((Jsonable) requestBody).toJson(), ContentType.APPLICATION_JSON));

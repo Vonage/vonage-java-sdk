@@ -15,20 +15,22 @@
  */
 package com.vonage.client.subaccounts;
 
+import com.vonage.client.DynamicEndpoint;
 import com.vonage.client.HttpWrapper;
+import com.vonage.client.auth.TokenAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
 public class SubaccountsClient {
-	final SubaccountsEndpoint<CreateSubaccountRequest, Account> createSubaccount;
-	final SubaccountsEndpoint<UpdateSubaccountRequest, Account> updateSubaccount;
-	final SubaccountsEndpoint<Void, ListSubaccountsResponse> listSubaccounts;
-	final SubaccountsEndpoint<String, Account> getSubaccount;
-	final SubaccountsEndpoint<ListTransfersFilter, ListTransfersResponseWrapper> listBalanceTransfers, listCreditTransfers;
-	final SubaccountsEndpoint<MoneyTransfer, MoneyTransfer> transferBalance, transferCredit;
-	final SubaccountsEndpoint<NumberTransfer, NumberTransfer> transferNumber;
+	final DynamicEndpoint<CreateSubaccountRequest, Account> createSubaccount;
+	final DynamicEndpoint<UpdateSubaccountRequest, Account> updateSubaccount;
+	final DynamicEndpoint<Void, ListSubaccountsResponse> listSubaccounts;
+	final DynamicEndpoint<String, Account> getSubaccount;
+	final DynamicEndpoint<ListTransfersFilter, ListTransfersResponseWrapper> listBalanceTransfers, listCreditTransfers;
+	final DynamicEndpoint<MoneyTransfer, MoneyTransfer> transferBalance, transferCredit;
+	final DynamicEndpoint<NumberTransfer, NumberTransfer> transferNumber;
 
 	/**
 	 * Constructor.
@@ -36,39 +38,35 @@ public class SubaccountsClient {
 	 * @param wrapper (REQUIRED) shared HTTP wrapper object used for making REST calls.
 	 */
 	public SubaccountsClient(HttpWrapper wrapper) {
-		class Endpoint<T, R> extends SubaccountsEndpoint<T, R> {
-			Endpoint(Class<T> requestType, Class<R> responseType, Function<T, String> pathGetter, HttpMethod method) {
-				super(requestType, responseType, wrapper, pathGetter, method);
+		@SuppressWarnings("unchecked")
+		final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
+			Endpoint(Function<T, String> pathGetter, HttpMethod method, R... type) {
+				super(DynamicEndpoint.<T, R> builder((Class<R>) type.getClass().getComponentType())
+						.responseExceptionType(SubaccountsResponseException.class)
+						.wrapper(wrapper).requestMethod(method).addAuthMethod(TokenAuthMethod.class)
+						.pathGetter((de, req) -> {
+								if (req instanceof CreateSubaccountRequest) {
+									CreateSubaccountRequest csr = (CreateSubaccountRequest) req;
+									csr.primaryAccountApiKey = de.getApplicationIdOrApiKey();
+								}
+								return String.format(
+										wrapper.getHttpConfig().getApiBaseUri() + "/accounts/%s/",
+										de.getApplicationIdOrApiKey()
+								) + pathGetter.apply(req);
+						})
+				);
 			}
 		}
 
-		createSubaccount = new Endpoint<>(CreateSubaccountRequest.class, Account.class,
-				req -> "subaccounts", HttpMethod.POST
-		);
-		updateSubaccount = new Endpoint<>(UpdateSubaccountRequest.class, Account.class,
-				req -> "subaccounts/"+req.subaccountApiKey, HttpMethod.PATCH
-		);
-		listSubaccounts = new Endpoint<>(Void.class, ListSubaccountsResponse.class,
-				req -> "subaccounts", HttpMethod.GET
-		);
-		getSubaccount = new Endpoint<>(String.class, Account.class,
-				req -> "subaccounts/"+req, HttpMethod.GET
-		);
-		listBalanceTransfers = new Endpoint<>(ListTransfersFilter.class, ListTransfersResponseWrapper.class,
-				req -> "balance-transfers", HttpMethod.GET
-		);
-		listCreditTransfers = new Endpoint<>(ListTransfersFilter.class, ListTransfersResponseWrapper.class,
-				req -> "credit-transfers", HttpMethod.GET
-		);
-		transferBalance = new Endpoint<>(MoneyTransfer.class, MoneyTransfer.class,
-				req -> "balance-transfers", HttpMethod.POST
-		);
-		transferCredit = new Endpoint<>(MoneyTransfer.class, MoneyTransfer.class,
-				req -> "credit-transfers", HttpMethod.POST
-		);
-		transferNumber = new Endpoint<>(NumberTransfer.class, NumberTransfer.class,
-				req -> "transfer-number", HttpMethod.POST
-		);
+		createSubaccount = new Endpoint<>(req -> "subaccounts", HttpMethod.POST);
+		updateSubaccount = new Endpoint<>(req -> "subaccounts/"+req.subaccountApiKey, HttpMethod.PATCH);
+		listSubaccounts = new Endpoint<>(req -> "subaccounts", HttpMethod.GET);
+		getSubaccount = new Endpoint<>(req -> "subaccounts/"+req, HttpMethod.GET);
+		listBalanceTransfers = new Endpoint<>(req -> "balance-transfers", HttpMethod.GET);
+		listCreditTransfers = new Endpoint<>(req -> "credit-transfers", HttpMethod.GET);
+		transferBalance = new Endpoint<>(req -> "balance-transfers", HttpMethod.POST);
+		transferCredit = new Endpoint<>(req -> "credit-transfers", HttpMethod.POST);
+		transferNumber = new Endpoint<>(req -> "transfer-number", HttpMethod.POST);
 	}
 
 	private <T> T requireRequest(T request) {

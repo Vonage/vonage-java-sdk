@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * Indicates that a request object has query parameters.
  */
-public interface QueryParams {
+public interface QueryParamsRequest {
 
 	Map<String, String> makeParams();
 }
