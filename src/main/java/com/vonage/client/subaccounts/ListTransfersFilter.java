@@ -16,7 +16,6 @@
 package com.vonage.client.subaccounts;
 
 import com.vonage.client.QueryParamsRequest;
-import org.apache.http.client.methods.RequestBuilder;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashMap;
@@ -36,11 +35,6 @@ public class ListTransfersFilter implements QueryParamsRequest {
 
 	private static String formatTime(Instant timestamp) {
 		return timestamp.truncatedTo(ChronoUnit.SECONDS).toString();
-	}
-
-	RequestBuilder addParams(RequestBuilder request) {
-		makeParams().forEach(request::addParameter);
-		return request;
 	}
 
 	@Override

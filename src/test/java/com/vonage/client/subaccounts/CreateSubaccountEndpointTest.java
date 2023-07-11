@@ -15,72 +15,50 @@
  */
 package com.vonage.client.subaccounts;
 
-import com.vonage.client.*;
-import com.vonage.client.auth.AuthMethod;
-import com.vonage.client.auth.TokenAuthMethod;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.entity.ContentType;
-import org.apache.http.util.EntityUtils;
+import com.vonage.client.common.HttpMethod;
 import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
 
-public class CreateSubaccountEndpointTest {
-	final String apiKey = "a1b2c3d4", apiSecret = "1234567890abcdef";
-	final AuthMethod authMethod = new TokenAuthMethod(apiKey, apiSecret);
-	CreateSubaccountEndpoint endpoint;
-	
-	@Before
-	public void setUp() {
-		endpoint = new CreateSubaccountEndpoint(new HttpWrapper(authMethod));
+abstract class CreateSubaccountEndpointTest extends SubaccountsEndpointTestSpec<CreateSubaccountRequest, Account> {
+
+	@Override
+	protected Class<Account> expectedResponseType() {
+		return Account.class;
 	}
-	
-	@Test
-	public void testAuthMethod() {
-		Class<?>[] authMethods = endpoint.getAcceptableAuthMethods();
-		assertEquals(1, authMethods.length);
-		assertEquals(authMethod.getClass(), authMethods[0]);
+
+	@Override
+	protected HttpMethod expectedHttpMethod() {
+		return HttpMethod.POST;
 	}
-	
-	@Test
-	public void testDefaultUri() throws Exception {
+
+	@Override
+	protected String expectedEndpointUri() {
+		return "/accounts/"+endpoint().getApplicationIdOrApiKey()+"/subaccounts";
+	}
+
+	@Override
+	protected CreateSubaccountRequest sampleRequest() {
 		CreateSubaccountRequest request = CreateSubaccountRequest.builder()
 				.name("Subaccount department A")
 				.usePrimaryAccountBalance(false)
-				.secret("ab12cx340987ucvjklf").build();
+				.secret("Ab12cx340987ucvjklf").build();
 		request.primaryAccountApiKey = "acc6111f";
-
-		RequestBuilder builder = endpoint.makeRequest(request);
-		assertEquals("POST", builder.getMethod());
-		String expectedUri = "https://api.nexmo.com/accounts/"+apiKey+"/subaccounts";
-		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		String expectedRequest = "{\"primary_account_api_key\":\""+request.getPrimaryAccountApiKey() +
-				"\",\"name\":\"" + request.getName() + "\",\"secret\":\"" + request.getSecret() +
-				"\",\"use_primary_account_balance\":" + request.getUsePrimaryAccountBalance() + "}";
-		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		return request;
 	}
 
-	@Test
-	public void testCustomUri() throws Exception {
-		String baseUri = "http://example.com";
-		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build(), authMethod);
-		endpoint = new CreateSubaccountEndpoint(wrapper);
-		CreateSubaccountRequest request = CreateSubaccountRequest.builder().name("Test sub").build();
-		String expectedUri = baseUri + "/accounts/"+apiKey+"/subaccounts";
-		RequestBuilder builder = endpoint.makeRequest(request);
-		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		String expectedRequest = "{\"primary_account_api_key\":\""+apiKey+"\",\"name\":\""+request.getName()+"\"}";
-		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		assertEquals("POST", builder.getMethod());
+	@Override
+	protected String sampleRequestString() {
+		return "{\"primary_account_api_key\":\"acc6111f\",\"name\":\"Subaccount department A\",\"secret\":" +
+				"\"Ab12cx340987ucvjklf\",\"use_primary_account_balance\":false}";
 	}
 
-	@Test
-	public void testFullResponse() throws Exception {
+	@Override
+	public void runTests() throws Exception {
+		super.runTests();
+		testFullResponse();
+		testEmptyResponse();
+	}
+
+	void testFullResponse() throws Exception {
 		String expectedResponse = "{\n" +
 				"   \"api_key\": \"bbe6222f\",\n" +
 				"   \"name\": \"Subaccount department A\",\n" +
@@ -92,8 +70,8 @@ public class CreateSubaccountEndpointTest {
 				"   \"balance\": 100.25,\n" +
 				"   \"credit_limit\": -99.33\n" +
 				"}";
-		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
-		Account parsed = endpoint.parseResponse(mockResponse);
+
+		Account parsed = parseResponse(expectedResponse);
 		assertNotNull(parsed);
 		assertEquals("bbe6222f", parsed.getApiKey());
 		assertEquals("Subaccount department A", parsed.getName());
@@ -104,11 +82,9 @@ public class CreateSubaccountEndpointTest {
 		assertEquals(100.25, parsed.getBalance().doubleValue(), 0.001);
 		assertEquals(-99.33, parsed.getCreditLimit().doubleValue(), 0.001);
 	}
-	
-	@Test
-	public void testEmptyResponse() throws Exception {
-		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, "{}");
-		Account parsed = endpoint.parseResponse(mockResponse);
+
+	void testEmptyResponse() throws Exception {
+		Account parsed = parseResponse("{}");
 		assertNotNull(parsed);
 		assertNull(parsed.getApiKey());
 		assertNull(parsed.getSecret());
@@ -119,20 +95,5 @@ public class CreateSubaccountEndpointTest {
 		assertNull(parsed.getCreatedAt());
 		assertNull(parsed.getBalance());
 		assertNull(parsed.getCreditLimit());
-	}
-	
-	@Test(expected = VonageResponseParseException.class)
-	public void testInvalidResponse() {
-		Account.fromJson("{malformed]");
-	}
-
-	@Test(expected = SubaccountsResponseException.class)
-	public void test400Response() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, "{}"));
-	}
-	
-	@Test(expected = SubaccountsResponseException.class)
-	public void test500Response() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, "{}"));
 	}
 }

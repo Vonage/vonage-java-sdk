@@ -138,11 +138,8 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			cachedRequestBody = requestBody;
 		}
 		RequestBuilder rqb = createRequestBuilderFromRequestMethod(requestMethod);
-		if (contentType != null) {
-			rqb.setHeader("Content-Type", contentType);
-		}
-		else if (requestBody instanceof Jsonable) {
-			rqb.setHeader("Content-Type", "application/json");
+		if (contentType != null || requestBody instanceof Jsonable) {
+			rqb.setHeader("Content-Type", contentType != null ? contentType : "application/json");
 		}
 		if (accept != null) {
 			rqb.setHeader("Accept", accept);

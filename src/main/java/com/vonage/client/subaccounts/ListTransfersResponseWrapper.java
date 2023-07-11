@@ -43,10 +43,4 @@ class ListTransfersResponseWrapper implements Jsonable {
 	public List<MoneyTransfer> getCreditTransfers() {
 		return embedded != null ? embedded.creditTransfers : null;
 	}
-
-	public static ListTransfersResponseWrapper fromJson(String json) {
-		ListTransfersResponseWrapper ltrw = new ListTransfersResponseWrapper();
-		ltrw.updateFromJson(json);
-		return ltrw;
-	}
 }
