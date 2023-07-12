@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
  * @param <ResultT>  The type of method-specific response object which will be constructed from the returned HTTP
  *                   response
  */
-public abstract class AbstractMethod<RequestT, ResultT> implements Method<RequestT, ResultT> {
+public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<RequestT, ResultT> {
     private static final Log LOG = LogFactory.getLog(AbstractMethod.class);
     protected static final BasicResponseHandler basicResponseHandler = new BasicResponseHandler();
 
@@ -69,6 +69,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      *
      * @throws VonageClientException if there is a problem parsing the HTTP response
      */
+    @Override
     public ResultT execute(RequestT request) throws VonageResponseParseException, VonageClientException {
         try {
             HttpUriRequest httpRequest = applyAuth(makeRequest(request))

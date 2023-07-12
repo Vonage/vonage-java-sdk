@@ -19,9 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.Jsonable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -40,7 +38,7 @@ import java.util.regex.Pattern;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class VerificationRequest {
+public class VerificationRequest implements Jsonable {
 	static final Pattern CODE_REGEX = Pattern.compile("[a-zA-Z0-9]{4,10}");
 
 	protected final Locale locale;
@@ -176,21 +174,6 @@ public class VerificationRequest {
 				type instanceof WhatsappCodelessWorkflow ||
 				type instanceof SilentAuthWorkflow
 		);
-	}
-
-	/**
-	 * Generates a JSON payload from this request.
-	 *
-	 * @return JSON representation of this VerificationRequest object.
-	 */
-	public String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.writeValueAsString(this);
-		}
-		catch (JsonProcessingException jpe) {
-			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
-		}
 	}
 
 	/**

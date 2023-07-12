@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.vonage.client.Jsonable;
 import com.vonage.client.VonageResponseParseException;
 import java.io.IOException;
 import java.net.URI;
@@ -32,7 +33,7 @@ import java.util.UUID;
  * <a href=https://developer.vonage.com/en/api/verify.v2#websockets>API reference</a> for details.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class VerificationCallback {
+public class VerificationCallback implements Jsonable {
 	protected Channel channel;
 	protected UUID requestId;
 	protected Instant triggeredAt, finalizedAt, submittedAt;

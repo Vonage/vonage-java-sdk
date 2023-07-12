@@ -16,6 +16,7 @@
 package com.vonage.client.subaccounts;
 
 import com.vonage.client.DynamicEndpoint;
+import com.vonage.client.RestEndpoint;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.auth.TokenAuthMethod;
 import com.vonage.client.common.HttpMethod;
@@ -24,13 +25,13 @@ import java.util.Objects;
 import java.util.function.Function;
 
 public class SubaccountsClient {
-	final DynamicEndpoint<CreateSubaccountRequest, Account> createSubaccount;
-	final DynamicEndpoint<UpdateSubaccountRequest, Account> updateSubaccount;
-	final DynamicEndpoint<Void, ListSubaccountsResponse> listSubaccounts;
-	final DynamicEndpoint<String, Account> getSubaccount;
-	final DynamicEndpoint<ListTransfersFilter, ListTransfersResponseWrapper> listBalanceTransfers, listCreditTransfers;
-	final DynamicEndpoint<MoneyTransfer, MoneyTransfer> transferBalance, transferCredit;
-	final DynamicEndpoint<NumberTransfer, NumberTransfer> transferNumber;
+	final RestEndpoint<CreateSubaccountRequest, Account> createSubaccount;
+	final RestEndpoint<UpdateSubaccountRequest, Account> updateSubaccount;
+	final RestEndpoint<Void, ListSubaccountsResponse> listSubaccounts;
+	final RestEndpoint<String, Account> getSubaccount;
+	final RestEndpoint<ListTransfersFilter, ListTransfersResponseWrapper> listBalanceTransfers, listCreditTransfers;
+	final RestEndpoint<MoneyTransfer, MoneyTransfer> transferBalance, transferCredit;
+	final RestEndpoint<NumberTransfer, NumberTransfer> transferNumber;
 
 	/**
 	 * Constructor.

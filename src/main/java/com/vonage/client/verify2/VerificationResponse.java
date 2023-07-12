@@ -18,6 +18,7 @@ package com.vonage.client.verify2;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vonage.client.Jsonable;
 import com.vonage.client.VonageResponseParseException;
 import java.io.IOException;
 import java.util.UUID;
@@ -26,7 +27,7 @@ import java.util.UUID;
  * Metadata about an outbound verification request.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class VerificationResponse {
+public class VerificationResponse implements Jsonable {
 	protected UUID requestId;
 
 	/**

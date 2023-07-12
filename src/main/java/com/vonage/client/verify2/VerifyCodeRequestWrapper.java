@@ -18,27 +18,15 @@ package com.vonage.client.verify2;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.Jsonable;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-class VerifyCodeRequestWrapper {
+class VerifyCodeRequestWrapper implements Jsonable {
 	@JsonIgnore final String requestId;
 	@JsonProperty("code") final String code;
 
 	public VerifyCodeRequestWrapper(String requestId, String code) {
 		this.requestId = requestId;
 		this.code = code;
-	}
-
-	public String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.writeValueAsString(this);
-		}
-		catch (JsonProcessingException jpe) {
-			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
-		}
 	}
 }

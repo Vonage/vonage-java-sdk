@@ -15,7 +15,7 @@
  */
 package com.vonage.client.subaccounts;
 
-import com.vonage.client.AbstractMethod;
+import com.vonage.client.RestEndpoint;
 import com.vonage.client.ClientTest;
 import com.vonage.client.common.HttpMethod;
 import static org.junit.Assert.*;
@@ -111,10 +111,87 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 		stubResponseAndAssertThrows(401, () -> client.createSubaccount(request), SubaccountsResponseException.class);
 		assert403ResponseException(() -> client.createSubaccount(request));
 
-		new CreateSubaccountEndpointTest() {
+		new SubaccountsEndpointTestSpec<CreateSubaccountRequest, Account>() {
 			@Override
-			protected AbstractMethod<CreateSubaccountRequest, Account> endpoint() {
+			protected RestEndpoint<CreateSubaccountRequest, Account> endpoint() {
 				return client.createSubaccount;
+			}
+
+			@Override
+			protected Class<Account> expectedResponseType() {
+				return Account.class;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.POST;
+			}
+
+			@Override
+			protected String expectedEndpointUri(CreateSubaccountRequest request) {
+				return "/accounts/"+request.getPrimaryAccountApiKey()+"/subaccounts";
+			}
+
+			@Override
+			protected CreateSubaccountRequest sampleRequest() {
+				CreateSubaccountRequest request = CreateSubaccountRequest.builder()
+						.name("Subaccount department A")
+						.usePrimaryAccountBalance(false)
+						.secret("Ab12cx340987ucvjklf").build();
+				request.primaryAccountApiKey = "acc6111f";
+				return request;
+			}
+
+			@Override
+			protected String sampleRequestString() {
+				return "{\"primary_account_api_key\":\"acc6111f\",\"name\":\"Subaccount department A\",\"secret\":" +
+						"\"Ab12cx340987ucvjklf\",\"use_primary_account_balance\":false}";
+			}
+
+			@Override
+			public void runTests() throws Exception {
+				super.runTests();
+				testFullResponse();
+				testEmptyResponse();
+			}
+
+			void testFullResponse() throws Exception {
+				String expectedResponse = "{\n" +
+						"   \"api_key\": \"bbe6222f\",\n" +
+						"   \"name\": \"Subaccount department A\",\n" +
+						"   \"secret\": \"Password123\",\n" +
+						"   \"primary_account_api_key\": \"acc6111f\",\n" +
+						"   \"use_primary_account_balance\": true,\n" +
+						"   \"created_at\": \"2018-03-02T16:34:49Z\",\n" +
+						"   \"suspended\": false,\n" +
+						"   \"balance\": 100.25,\n" +
+						"   \"credit_limit\": -99.33\n" +
+						"}";
+
+				Account parsed = parseResponse(expectedResponse);
+				assertNotNull(parsed);
+				assertEquals("bbe6222f", parsed.getApiKey());
+				assertEquals("Subaccount department A", parsed.getName());
+				assertEquals("Password123", parsed.getSecret());
+				assertTrue(parsed.getUsePrimaryAccountBalance());
+				assertEquals(1520008489L, parsed.getCreatedAt().getEpochSecond());
+				assertFalse(parsed.getSuspended());
+				assertEquals(100.25, parsed.getBalance().doubleValue(), 0.001);
+				assertEquals(-99.33, parsed.getCreditLimit().doubleValue(), 0.001);
+			}
+
+			void testEmptyResponse() throws Exception {
+				Account parsed = parseResponse("{}");
+				assertNotNull(parsed);
+				assertNull(parsed.getApiKey());
+				assertNull(parsed.getSecret());
+				assertNull(parsed.getPrimaryAccountApiKey());
+				assertNull(parsed.getName());
+				assertNull(parsed.getUsePrimaryAccountBalance());
+				assertNull(parsed.getSuspended());
+				assertNull(parsed.getCreatedAt());
+				assertNull(parsed.getBalance());
+				assertNull(parsed.getCreditLimit());
 			}
 		}
 		.runTests();
@@ -132,7 +209,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 		new SubaccountsEndpointTestSpec<UpdateSubaccountRequest, Account>() {
 
 			@Override
-			protected AbstractMethod<UpdateSubaccountRequest, Account> endpoint() {
+			protected RestEndpoint<UpdateSubaccountRequest, Account> endpoint() {
 				return client.updateSubaccount;
 			}
 
@@ -142,8 +219,8 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 			}
 
 			@Override
-			protected String expectedEndpointUri() {
-				return "/accounts/"+apiKey+"/subaccounts/"+SUB_API_KEY;
+			protected String expectedEndpointUri(UpdateSubaccountRequest request) {
+				return "/accounts/"+apiKey+"/subaccounts/"+request.subaccountApiKey;
 			}
 
 			@Override
@@ -181,7 +258,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 		new SubaccountsEndpointTestSpec<Void, ListSubaccountsResponse>() {
 
 			@Override
-			protected AbstractMethod<Void, ListSubaccountsResponse> endpoint() {
+			protected RestEndpoint<Void, ListSubaccountsResponse> endpoint() {
 				return client.listSubaccounts;
 			}
 
@@ -191,7 +268,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 			}
 
 			@Override
-			protected String expectedEndpointUri() {
+			protected String expectedEndpointUri(Void request) {
 				return "/accounts/"+apiKey+"/subaccounts";
 			}
 
@@ -218,7 +295,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 		new SubaccountsEndpointTestSpec<String, Account>() {
 
 			@Override
-			protected AbstractMethod<String, Account> endpoint() {
+			protected RestEndpoint<String, Account> endpoint() {
 				return client.getSubaccount;
 			}
 
@@ -228,8 +305,8 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 			}
 
 			@Override
-			protected String expectedEndpointUri() {
-				return "/accounts/"+apiKey+"/subaccounts/"+sampleRequest();
+			protected String expectedEndpointUri(String request) {
+				return "/accounts/"+apiKey+"/subaccounts/"+request;
 			}
 
 			@Override
@@ -268,7 +345,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 		new SubaccountsEndpointTestSpec<ListTransfersFilter, ListTransfersResponseWrapper>() {
 
 			@Override
-			protected AbstractMethod<ListTransfersFilter, ListTransfersResponseWrapper> endpoint() {
+			protected RestEndpoint<ListTransfersFilter, ListTransfersResponseWrapper> endpoint() {
 				return client.listCreditTransfers;
 			}
 
@@ -278,7 +355,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 			}
 
 			@Override
-			protected String expectedEndpointUri() {
+			protected String expectedEndpointUri(ListTransfersFilter request) {
 				return "/accounts/"+apiKey+"/credit-transfers?start_date=2022-06-01T08%3A00%3A00Z" +
 						"&end_date=2023-06-08T09%3A01%3A40Z&subaccount=" + SUB_API_KEY;
 			}
@@ -315,7 +392,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 		new SubaccountsEndpointTestSpec<ListTransfersFilter, ListTransfersResponseWrapper>() {
 
 			@Override
-			protected AbstractMethod<ListTransfersFilter, ListTransfersResponseWrapper> endpoint() {
+			protected RestEndpoint<ListTransfersFilter, ListTransfersResponseWrapper> endpoint() {
 				return client.listBalanceTransfers;
 			}
 
@@ -325,7 +402,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 			}
 
 			@Override
-			protected String expectedEndpointUri() {
+			protected String expectedEndpointUri(ListTransfersFilter request) {
 				return "/accounts/"+apiKey+"/balance-transfers?start_date=1970-01-01T00%3A00%3A00Z";
 			}
 
@@ -352,7 +429,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 		}
 
 		@Override
-		protected String expectedEndpointUri() {
+		protected String expectedEndpointUri(MoneyTransfer request) {
 			return "/accounts/"+apiKey+"/"+name()+"-transfers";
 		}
 
@@ -390,7 +467,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 			}
 
 			@Override
-			protected AbstractMethod<MoneyTransfer, MoneyTransfer> endpoint() {
+			protected RestEndpoint<MoneyTransfer, MoneyTransfer> endpoint() {
 				return client.transferCredit;
 			}
 		}
@@ -415,7 +492,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 			}
 
 			@Override
-			protected AbstractMethod<MoneyTransfer, MoneyTransfer> endpoint() {
+			protected RestEndpoint<MoneyTransfer, MoneyTransfer> endpoint() {
 				return client.transferBalance;
 			}
 		}
@@ -444,7 +521,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 		new SubaccountsEndpointTestSpec<NumberTransfer, NumberTransfer>() {
 
 			@Override
-			protected AbstractMethod<NumberTransfer, NumberTransfer> endpoint() {
+			protected RestEndpoint<NumberTransfer, NumberTransfer> endpoint() {
 				return client.transferNumber;
 			}
 
@@ -454,7 +531,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 			}
 
 			@Override
-			protected String expectedEndpointUri() {
+			protected String expectedEndpointUri(NumberTransfer request) {
 				return "/accounts/"+apiKey+"/transfer-number";
 			}
 

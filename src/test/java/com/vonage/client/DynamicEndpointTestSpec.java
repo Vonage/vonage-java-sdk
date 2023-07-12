@@ -37,12 +37,16 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 		return inferResponseType();
 	}
 
-	protected abstract AbstractMethod<T, R> endpoint();
+	protected AbstractMethod<T, R> endpointAsAbstractMethod() {
+		return (AbstractMethod<T, R>) endpoint();
+	}
+
+	protected abstract RestEndpoint<T, R> endpoint();
 	protected abstract HttpMethod expectedHttpMethod();
 	protected abstract Collection<Class<? extends AuthMethod>> expectedAuthMethods();
 	protected abstract Class<? extends VonageApiResponseException> expectedResponseExceptionType();
 	protected abstract String expectedDefaultBaseUri();
-	protected abstract String expectedEndpointUri();
+	protected abstract String expectedEndpointUri(T request);
 	protected abstract T sampleRequest();
 	protected abstract String sampleRequestString();
 
@@ -70,20 +74,22 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 	}
 
 	protected R parseResponse(String expectedResponse) throws IOException {
-		return endpoint().parseResponse(TestUtils.makeJsonHttpResponse(200, expectedResponse));
+		return parseResponse(expectedResponse, 200);
+	}
+
+	protected R parseResponse(String expectedResponse, int statusCode) throws IOException {
+		return endpointAsAbstractMethod().parseResponse(TestUtils.makeJsonHttpResponse(statusCode, expectedResponse));
 	}
 
 	private RequestBuilder assertRequest(String expectedRequest, T request) throws Exception {
-		RequestBuilder builder = endpoint().makeRequest(request);
+		RequestBuilder builder = endpointAsAbstractMethod().makeRequest(request);
 		assertEquals(expectedHttpMethod().toString(), builder.getMethod());
-		if (expectedRequest != null) {
-			assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
-		}
 		if (request instanceof Jsonable) {
 			assertEquals(
 					ContentType.APPLICATION_JSON.getMimeType(),
 					builder.getFirstHeader("Content-Type").getValue()
 			);
+			assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		}
 		if (Jsonable.class.isAssignableFrom(expectedResponseType())) {
 			assertEquals(
@@ -96,25 +102,32 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 
 	protected void assertDefaultUri(String expectedRequest, T request) throws Exception {
 		RequestBuilder builder = assertRequest(expectedRequest, request);
-		String expectedUri = expectedDefaultBaseUri() + expectedEndpointUri();
+		String expectedUri = expectedDefaultBaseUri() + expectedEndpointUri(request);
 		assertEquals(expectedUri, builder.build().getURI().toString());
 	}
 
 	protected void assertCustomUri(String expectedRequest, T request) throws Exception {
-		String baseUri = "http://example.com";
-		endpoint().httpWrapper.setHttpConfig(HttpConfig.builder().baseUri(baseUri).build());
-		RequestBuilder builder = assertRequest(expectedRequest, request);
-		String expectedUri = baseUri + expectedEndpointUri();
-		assertEquals(expectedUri, builder.build().getURI().toString());
+		AbstractMethod<T, R> endpoint = endpointAsAbstractMethod();
+		HttpConfig originalConfig = endpoint.httpWrapper.getHttpConfig();
+		try {
+			String baseUri = "http://example.com";
+			endpoint.httpWrapper.setHttpConfig(HttpConfig.builder().baseUri(baseUri).build());
+			RequestBuilder builder = assertRequest(expectedRequest, request);
+			String expectedUri = baseUri + expectedEndpointUri(request);
+			assertEquals(expectedUri, builder.build().getURI().toString());
+		}
+		finally {
+			endpoint.httpWrapper.setHttpConfig(originalConfig);
+		}
 	}
 
 	protected void assertAcceptableAuthMethods() {
-		assertArrayEquals(expectedAuthMethods().toArray(), endpoint().getAcceptableAuthMethods());
+		assertArrayEquals(expectedAuthMethods().toArray(), endpointAsAbstractMethod().getAcceptableAuthMethods());
 	}
 
 	protected void assertErrorResponse(int statusCode) {
 		assertThrows(expectedResponseExceptionType(), () ->
-				endpoint().parseResponse(TestUtils.makeJsonHttpResponse(statusCode, "{}"))
+				endpointAsAbstractMethod().parseResponse(TestUtils.makeJsonHttpResponse(statusCode, "{}"))
 		);
 	}
 
