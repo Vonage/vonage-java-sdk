@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -173,7 +174,23 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 					if (responseType.equals(String.class)) {
 						return (R) deser;
 					}
-					else if (Jsonable.class.isAssignableFrom(responseType)) {
+
+					for (java.lang.reflect.Method method : responseType.getDeclaredMethods()) {
+						boolean matching = Modifier.isStatic(method.getModifiers()) &&
+								method.getName().equals("fromJson") &&
+								responseType.isAssignableFrom(method.getReturnType());
+						if (matching) {
+							Class<?>[] params = method.getParameterTypes();
+							if (params.length == 1 && params[0].equals(String.class)) {
+								if (!method.isAccessible()) {
+									method.setAccessible(true);
+								}
+								return (R) method.invoke(responseType, deser);
+							}
+						}
+					}
+
+					if (Jsonable.class.isAssignableFrom(responseType)) {
 						R responseBody;
 						if (cachedRequestBody instanceof Jsonable) {
 							responseBody = (R) cachedRequestBody;
@@ -189,7 +206,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 						return responseBody;
 					}
 					else {
-						throw new IllegalStateException("Unhandled return type: "+responseType);
+						throw new IllegalStateException("Unhandled return type: " + responseType);
 					}
 				}
 			}
