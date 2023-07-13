@@ -48,7 +48,7 @@ public class Verify2Client {
 						.addAuthMethod(JWTAuthMethod.class)
 						.addAuthMethod(TokenAuthMethod.class)
 						.pathGetter((de, req) -> {
-							String base = wrapper.getHttpConfig().getVersionedApiBaseUri("v2") + "/verify";
+							String base = de.getHttpWrapper().getHttpConfig().getVersionedApiBaseUri("v2") + "/verify";
 							return pathGetter != null ? base + "/" + pathGetter.apply(req) : base;
 						})
 				);

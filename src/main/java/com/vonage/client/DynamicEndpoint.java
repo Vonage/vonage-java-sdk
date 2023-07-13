@@ -209,7 +209,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 					}
 				}
 			}
-			else {
+			else if (responseExceptionType != null) {
 				Constructor<? extends VonageApiResponseException> constructor = responseExceptionType.getConstructor();
 				if (!constructor.isAccessible()) {
 					constructor.setAccessible(true);
@@ -221,6 +221,9 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 				}
 				exception.statusCode = response.getStatusLine().getStatusCode();
 				throw exception;
+			}
+			else {
+				throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
 			}
 		}
 		catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException ex) {

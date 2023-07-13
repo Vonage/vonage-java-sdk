@@ -17,19 +17,13 @@ package com.vonage.client.redact;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents a request to the Redact API.
- *
- * @deprecated This API will be removed in the next major release.
  */
-@Deprecated
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class RedactRequest {
-
+public class RedactRequest implements Jsonable {
     private String id;
     private Product product;
     private Type type;
@@ -67,15 +61,6 @@ public class RedactRequest {
 
     public void setType(Type type) {
         this.type = type;
-    }
-
-    public String toJson() {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(this);
-        } catch (JsonProcessingException jpe) {
-            throw new VonageUnexpectedException("Failed to produce json from RedactRequest object.", jpe);
-        }
     }
 
     public enum Product {

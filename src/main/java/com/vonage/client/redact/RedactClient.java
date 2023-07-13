@@ -16,6 +16,9 @@
 package com.vonage.client.redact;
 
 import com.vonage.client.*;
+import com.vonage.client.auth.SignatureAuthMethod;
+import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.common.HttpMethod;
 
 /**
  * A client for talking to the Vonage Redact API. The standard way to obtain an instance of this class is to use {@link
@@ -25,11 +28,24 @@ import com.vonage.client.*;
  */
 @Deprecated
 public class RedactClient {
-    final RedactEndpoint redactEndpoint;
+    final RestEndpoint<RedactRequest, Void> redactTransaction;
 
-    @Deprecated
-    public RedactClient(HttpWrapper httpWrapper) {
-        redactEndpoint = new RedactEndpoint(httpWrapper);
+    public RedactClient(HttpWrapper wrapper) {
+        @SuppressWarnings("unchecked")
+        final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
+            Endpoint(String path, HttpMethod method, R... type) {
+                super(DynamicEndpoint.<T, R> builder((Class<R>) type.getClass().getComponentType())
+                        .wrapper(wrapper).requestMethod(method)
+                        .addAuthMethod(SignatureAuthMethod.class)
+                        .addAuthMethod(TokenAuthMethod.class)
+                        .pathGetter((de, req) -> {
+                            String base = de.getHttpWrapper().getHttpConfig().getVersionedApiBaseUri("v1");
+                            return base + path;
+                        })
+                );
+            }
+        }
+        redactTransaction = new Endpoint<>("/redact/transaction", HttpMethod.POST);
     }
 
     /**
@@ -41,7 +57,6 @@ public class RedactClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    @Deprecated
     public void redactTransaction(String id, RedactRequest.Product product) throws VonageResponseParseException, VonageClientException {
         redactTransaction(new RedactRequest(id, product));
     }
@@ -56,11 +71,9 @@ public class RedactClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    @Deprecated
     public void redactTransaction(String id, RedactRequest.Product product, RedactRequest.Type type) throws VonageResponseParseException, VonageClientException {
         RedactRequest request = new RedactRequest(id, product);
         request.setType(type);
-
         redactTransaction(request);
     }
 
@@ -72,8 +85,13 @@ public class RedactClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    @Deprecated
     public void redactTransaction(RedactRequest redactRequest) throws VonageResponseParseException, VonageClientException {
-        redactEndpoint.execute(redactRequest);
+        if (redactRequest.getId() == null || redactRequest.getProduct() == null) {
+            throw new IllegalArgumentException("Redact transaction id and product are required.");
+        }
+        if (redactRequest.getProduct() == RedactRequest.Product.SMS && redactRequest.getType() == null) {
+            throw new IllegalArgumentException("Redacting SMS requires a type.");
+        }
+        redactTransaction.execute(redactRequest);
     }
 }

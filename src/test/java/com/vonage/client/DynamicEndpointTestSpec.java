@@ -44,7 +44,7 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 	protected abstract RestEndpoint<T, R> endpoint();
 	protected abstract HttpMethod expectedHttpMethod();
 	protected abstract Collection<Class<? extends AuthMethod>> expectedAuthMethods();
-	protected abstract Class<? extends VonageApiResponseException> expectedResponseExceptionType();
+	protected abstract Class<? extends Exception> expectedResponseExceptionType();
 	protected abstract String expectedDefaultBaseUri();
 	protected abstract String expectedEndpointUri(T request);
 	protected abstract T sampleRequest();
