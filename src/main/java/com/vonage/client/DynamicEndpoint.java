@@ -175,6 +175,11 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 						return (R) deser;
 					}
 
+					if (cachedRequestBody instanceof Jsonable) {
+						((Jsonable) cachedRequestBody).updateFromJson(deser);
+						return (R) cachedRequestBody;
+					}
+
 					for (java.lang.reflect.Method method : responseType.getDeclaredMethods()) {
 						boolean matching = Modifier.isStatic(method.getModifiers()) &&
 								method.getName().equals("fromJson") &&
@@ -191,17 +196,11 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 					}
 
 					if (Jsonable.class.isAssignableFrom(responseType)) {
-						R responseBody;
-						if (cachedRequestBody instanceof Jsonable) {
-							responseBody = (R) cachedRequestBody;
+						Constructor<R> constructor = responseType.getDeclaredConstructor();
+						if (!constructor.isAccessible()) {
+							constructor.setAccessible(true);
 						}
-						else {
-							Constructor<R> constructor = responseType.getDeclaredConstructor();
-							if (!constructor.isAccessible()) {
-								constructor.setAccessible(true);
-							}
-							responseBody = constructor.newInstance();
-						}
+						R responseBody = constructor.newInstance();
 						((Jsonable) responseBody).updateFromJson(deser);
 						return responseBody;
 					}
