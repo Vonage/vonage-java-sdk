@@ -15,21 +15,26 @@
  */
 package com.vonage.client.sns;
 
-import com.vonage.client.HttpConfig;
+import com.vonage.client.DynamicEndpointTestSpec;
 import com.vonage.client.HttpWrapper;
+import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageResponseParseException;
+import com.vonage.client.auth.AuthMethod;
+import com.vonage.client.auth.SignatureAuthMethod;
+import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.common.HttpMethod;
 import com.vonage.client.sns.request.SnsPublishRequest;
 import com.vonage.client.sns.request.SnsRequest;
 import com.vonage.client.sns.response.SnsPublishResponse;
 import com.vonage.client.sns.response.SnsResponse;
 import com.vonage.client.sns.response.SnsSubscribeResponse;
-import org.apache.http.client.methods.RequestBuilder;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import java.util.Arrays;
+import java.util.Collection;
 
-public class SnsEndpointTest {
+public class SnsEndpointTest extends DynamicEndpointTestSpec<SnsRequest, SnsResponse> {
     private SnsEndpoint endpoint;
 
     @Before
@@ -39,7 +44,7 @@ public class SnsEndpointTest {
 
     @Test
     public void testParseSubscribeResponse() throws Exception {
-        SnsResponse result = endpoint.parseSubmitResponse(
+        SnsResponse result = endpoint.parseResponseFromString(
                 "<nexmo-sns>\n" + "   <command>subscribe</command>\n" + "   <resultCode>0</resultCode>\n"
                         + "   <resultMessage>a result message</resultMessage>\n"
                         + "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n" + "</nexmo-sns>");
@@ -53,7 +58,7 @@ public class SnsEndpointTest {
 
     @Test
     public void testParsePublishResponse() throws Exception {
-        SnsResponse result = endpoint.parseSubmitResponse(
+        SnsResponse result = endpoint.parseResponseFromString(
                 "<nexmo-sns>\n" + "   <command>publish</command>\n" + "   <resultCode>0</resultCode>\n"
                         + "   <resultMessage>a result message</resultMessage>\n"
                         + "   <transactionId>1234</transactionId>\n" + "</nexmo-sns>");
@@ -67,7 +72,7 @@ public class SnsEndpointTest {
 
     @Test
     public void testParseResponseInvalidResultCode() throws Exception {
-        SnsResponse result = endpoint.parseSubmitResponse(
+        SnsResponse result = endpoint.parseResponseFromString(
                 "<nexmo-sns>\n" + "   <command>subscribe</command>\n" + "   <resultCode>non-numeric</resultCode>\n"
                         + "   <resultMessage>a result message</resultMessage>\n"
                         + "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n" + "</nexmo-sns>");
@@ -78,7 +83,7 @@ public class SnsEndpointTest {
 
     @Test
     public void testParseResponseNullResultCode() throws Exception {
-        SnsResponse result = endpoint.parseSubmitResponse(
+        SnsResponse result = endpoint.parseResponseFromString(
                 "<nexmo-sns>\n" + "   <command>subscribe</command>\n" + "   <resultCode/>\n"
                         + "   <resultMessage>a result message</resultMessage>\n"
                         + "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n"
@@ -88,22 +93,17 @@ public class SnsEndpointTest {
         assertEquals("a result message", result.getResultMessage());
     }
 
-    @Test
+    @Test(expected = VonageResponseParseException.class)
     public void testParseResponseMissingResultCode() throws Exception {
-        try {
-            endpoint.parseSubmitResponse("<nexmo-sns>\n" + "   <command>subscribe</command>\n"
-                    + "   <resultMessage>a result message</resultMessage>\n"
-                    + "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n"
-                    + "   <transactionId>1234</transactionId>\n" + "</nexmo-sns>");
-            fail("A missing <resultCode> tag should raise VonageResponseParseException");
-        } catch (VonageResponseParseException e) {
-            // this is expected
-        }
+        endpoint.parseResponseFromString("<nexmo-sns>\n" + "   <command>subscribe</command>\n"
+                + "   <resultMessage>a result message</resultMessage>\n"
+                + "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n"
+                + "   <transactionId>1234</transactionId>\n" + "</nexmo-sns>");
     }
 
     @Test
     public void testParseResponseInvalidTagIsIgnored() throws Exception {
-        SnsResponse result = endpoint.parseSubmitResponse(
+        SnsResponse result = endpoint.parseResponseFromString(
                 "<nexmo-sns>\n" + "   <command>subscribe</command>\n" + "   <resultCode>0</resultCode>\n"
                         + "   <resultMessage>a result message</resultMessage>\n"
                         + "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n"
@@ -113,50 +113,58 @@ public class SnsEndpointTest {
         assertEquals("a result message", result.getResultMessage());
     }
 
-    @Test
+    @Test(expected = VonageResponseParseException.class)
     public void testParseResponseUnparseable() throws Exception {
-        try {
-            endpoint.parseSubmitResponse("not-xml");
-            fail("Attempting to parse non-xml should throw VonageResponseParseException");
-        } catch (VonageResponseParseException e) {
-            // this is expected
-        }
+        endpoint.parseResponseFromString("not-xml");
     }
 
-    @Test
-    public void testParseDummyCommand() throws Exception {
-        try {
-            endpoint.parseSubmitResponse(
-                    "<nexmo-sns>\n" + "   <command>dummy command</command>\n" + "   <resultCode>0</resultCode>\n"
-                            + "   <resultMessage>a result message</resultMessage>\n"
-                            + "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n"
-                            + "   <transactionId>1234</transactionId>\n" + "   <whatOnEarthIsThis/>\n"
-                            + "</nexmo-sns>");
-            fail("An invalid command should throw VonageResponseParseException");
-        } catch (VonageResponseParseException e) {
-            // this is expected
-        }
+    @Test(expected = VonageResponseParseException.class)
+    public void testParseDummyCommand() {
+        endpoint.parseResponseFromString(
+                "<nexmo-sns>\n" + "   <command>dummy command</command>\n" + "   <resultCode>0</resultCode>\n"
+                        + "   <resultMessage>a result message</resultMessage>\n"
+                        + "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n"
+                        + "   <transactionId>1234</transactionId>\n" + "   <whatOnEarthIsThis/>\n"
+                        + "</nexmo-sns>");
     }
 
-    @Test
-    public void testDefaultUri() throws Exception {
-        SnsRequest request = new SnsPublishRequest("to", "arn", "from", "message");
-
-        RequestBuilder builder = endpoint.makeRequest(request);
-        assertEquals("POST", builder.getMethod());
-        assertEquals("https://sns.nexmo.com/sns/xml",
-                builder.build().getURI().toString()
-        );
+    @Override
+    protected RestEndpoint<SnsRequest, SnsResponse> endpoint() {
+        return endpoint;
     }
 
-    @Test
-    public void testCustomUri() throws Exception {
-        HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri("https://example.com").build());
-        SnsEndpoint endpoint = new SnsEndpoint(wrapper);
-        SnsRequest request = new SnsPublishRequest("to", "arn", "from", "message");
+    @Override
+    protected HttpMethod expectedHttpMethod() {
+        return HttpMethod.POST;
+    }
 
-        RequestBuilder builder = endpoint.makeRequest(request);
-        assertEquals("POST", builder.getMethod());
-        assertEquals("https://example.com/sns/xml", builder.build().getURI().toString());
+    @Override
+    protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
+        return Arrays.asList(SignatureAuthMethod.class, TokenAuthMethod.class);
+    }
+
+    @Override
+    protected Class<? extends Exception> expectedResponseExceptionType() {
+        return null;
+    }
+
+    @Override
+    protected String expectedDefaultBaseUri() {
+        return "https://sns.nexmo.com";
+    }
+
+    @Override
+    protected String expectedEndpointUri(SnsRequest request) {
+        return "/sns/xml";
+    }
+
+    @Override
+    protected SnsRequest sampleRequest() {
+        return new SnsPublishRequest("to", "arn", "from", "message");
+    }
+
+    @Override
+    protected String sampleRequestString() {
+        return null;
     }
 }

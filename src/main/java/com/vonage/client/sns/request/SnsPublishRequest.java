@@ -25,7 +25,7 @@ public class SnsPublishRequest extends SnsRequest {
     public SnsPublishRequest(final String to,
                              final String topicArn,
                              final String from,
-                             final String message) throws Exception {
+                             final String message) {
         super("publish", to, topicArn);
         this.from = from;
         this.message = message;

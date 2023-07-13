@@ -43,7 +43,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 	protected String contentType, accept;
 	protected HttpMethod requestMethod;
 	protected BiFunction<DynamicEndpoint<T, R>, ? super T, String> pathGetter;
-	protected Class<? extends VonageApiResponseException> responseExceptionType;
+	protected Class<? extends RuntimeException> responseExceptionType;
 	protected Class<R> responseType;
 	protected T cachedRequestBody;
 
@@ -71,7 +71,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		private String contentType, accept;
 		private HttpMethod requestMethod;
 		private BiFunction<DynamicEndpoint<T, R>, ? super T, String> pathGetter;
-		private Class<? extends VonageApiResponseException> responseExceptionType;
+		private Class<? extends RuntimeException> responseExceptionType;
 
 		Builder(Class<R> responseType) {
 			this.responseType = responseType;
@@ -97,7 +97,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			return this;
 		}
 
-		public Builder<T, R> responseExceptionType(Class<? extends VonageApiResponseException> responseExceptionType) {
+		public Builder<T, R> responseExceptionType(Class<? extends RuntimeException> responseExceptionType) {
 			this.responseExceptionType = responseExceptionType;
 			return this;
 		}
@@ -157,6 +157,10 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		return rqb.setUri(URI.create(pathGetter.apply(this, requestBody)));
 	}
 
+	protected R parseResponseFromString(String response) {
+		return null;
+	}
+
 	@Override
 	public R parseResponse(HttpResponse response) throws IOException {
 		int statusCode = response.getStatusLine().getStatusCode();
@@ -205,25 +209,51 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 						return responseBody;
 					}
 					else {
-						throw new IllegalStateException("Unhandled return type: " + responseType);
+						R customParsedResponse = parseResponseFromString(deser);
+						if (customParsedResponse == null) {
+							throw new IllegalStateException("Unhandled return type: " + responseType);
+						}
+						else {
+							return customParsedResponse;
+						}
 					}
 				}
 			}
-			else if (responseExceptionType != null) {
-				Constructor<? extends VonageApiResponseException> constructor = responseExceptionType.getConstructor();
-				if (!constructor.isAccessible()) {
-					constructor.setAccessible(true);
-				}
-				VonageApiResponseException exception = constructor.newInstance();
-				exception.updateFromJson(EntityUtils.toString(response.getEntity()));
-				if (exception.title == null) {
-					exception.title = response.getStatusLine().getReasonPhrase();
-				}
-				exception.statusCode = response.getStatusLine().getStatusCode();
-				throw exception;
-			}
 			else {
-				throw new VonageBadRequestException(EntityUtils.toString(response.getEntity()));
+				String exMessage = EntityUtils.toString(response.getEntity());
+				if (responseExceptionType != null) {
+					if (VonageApiResponseException.class.isAssignableFrom(responseExceptionType)) {
+						Constructor<? extends Exception> constructor = responseExceptionType.getDeclaredConstructor();
+						if (!constructor.isAccessible()) {
+							constructor.setAccessible(true);
+						}
+						VonageApiResponseException varex = (VonageApiResponseException) constructor.newInstance();
+						varex.updateFromJson(exMessage);
+						if (varex.title == null) {
+							varex.title = response.getStatusLine().getReasonPhrase();
+						}
+						varex.statusCode = response.getStatusLine().getStatusCode();
+						throw varex;
+					}
+					else {
+						for (Constructor<?> constructor : responseExceptionType.getDeclaredConstructors()) {
+							Class<?>[] params = constructor.getParameterTypes();
+							if (params.length == 1 && String.class.equals(params[0])) {
+								if (!constructor.isAccessible()) {
+									constructor.setAccessible(true);
+								}
+								throw (RuntimeException) constructor.newInstance(exMessage);
+							}
+						}
+					}
+				}
+				R customParsedResponse = parseResponseFromString(exMessage);
+				if (customParsedResponse == null) {
+					throw new VonageBadRequestException(exMessage);
+				}
+				else {
+					return customParsedResponse;
+				}
 			}
 		}
 		catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException ex) {
