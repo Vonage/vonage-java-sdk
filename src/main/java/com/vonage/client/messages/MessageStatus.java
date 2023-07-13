@@ -16,9 +16,9 @@
 package com.vonage.client.messages;
 
 import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.vonage.client.Jsonable;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 import java.net.URI;
@@ -35,7 +35,7 @@ import java.util.UUID;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class MessageStatus {
+public class MessageStatus implements Jsonable {
 
 	public enum Status {
 		SUBMITTED,
@@ -311,22 +311,6 @@ public class MessageStatus {
 		}
 		catch (IOException ex) {
 			throw new VonageUnexpectedException("Failed to produce MessageStatus from json.", ex);
-		}
-	}
-
-	/**
-	 * Generates a JSON string from this status object.
-	 *
-	 * @return JSON representation of this MessageStatus object.
-	 */
-	public String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.registerModule(new JavaTimeModule());
-			return mapper.writeValueAsString(this);
-		}
-		catch (JsonProcessingException jpe) {
-			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
 		}
 	}
 

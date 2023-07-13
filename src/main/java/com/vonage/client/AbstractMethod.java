@@ -23,7 +23,6 @@ import com.vonage.client.logging.LoggingUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
@@ -58,6 +57,10 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
 
     public AbstractMethod(HttpWrapper httpWrapper) {
         this.httpWrapper = httpWrapper;
+    }
+
+    public HttpWrapper getHttpWrapper() {
+        return httpWrapper;
     }
 
     /**
@@ -168,10 +171,6 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
             return ((SignatureAuthMethod) am).getApiKey();
         }
         throw new IllegalStateException(am.getClass().getSimpleName() + " does not have API key.");
-    }
-
-    public void setHttpClient(HttpClient client) {
-        httpWrapper.setHttpClient(client);
     }
 
     protected abstract Class<?>[] getAcceptableAuthMethods();
