@@ -17,6 +17,7 @@ package com.vonage.client;
 
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.common.HttpMethod;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
@@ -24,6 +25,8 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public abstract class DynamicEndpointTestSpec<T, R> {
 
@@ -79,6 +82,15 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 
 	protected R parseResponse(String expectedResponse, int statusCode) throws IOException {
 		return endpointAsAbstractMethod().parseResponse(TestUtils.makeJsonHttpResponse(statusCode, expectedResponse));
+	}
+
+	protected void assertRequestParams(Map<String, String> expectedParams, T request) throws Exception {
+		RequestBuilder builder = endpointAsAbstractMethod().makeRequest(request);
+		List<NameValuePair> actualParams = builder.getParameters();
+		assertEquals(expectedParams.size(), actualParams.size());
+		for (NameValuePair nvp : actualParams) {
+			assertEquals(nvp.getValue(), expectedParams.get(nvp.getName()));
+		}
 	}
 
 	private RequestBuilder assertRequest(String expectedRequest, T request) throws Exception {

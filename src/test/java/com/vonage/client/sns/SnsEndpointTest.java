@@ -15,10 +15,7 @@
  */
 package com.vonage.client.sns;
 
-import com.vonage.client.DynamicEndpointTestSpec;
-import com.vonage.client.HttpWrapper;
-import com.vonage.client.RestEndpoint;
-import com.vonage.client.VonageResponseParseException;
+import com.vonage.client.*;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.SignatureAuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
@@ -29,6 +26,7 @@ import com.vonage.client.sns.response.SnsPublishResponse;
 import com.vonage.client.sns.response.SnsResponse;
 import com.vonage.client.sns.response.SnsSubscribeResponse;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.Arrays;
@@ -129,6 +127,19 @@ public class SnsEndpointTest extends DynamicEndpointTestSpec<SnsRequest, SnsResp
     }
 
     @Override
+    protected void assertErrorResponse(int statusCode) {
+        assertThrows(expectedResponseExceptionType(), () -> endpointAsAbstractMethod().parseResponse(
+                TestUtils.makeJsonHttpResponse(statusCode, "<nexmo-sns/>")
+        ));
+    }
+
+    @Test
+    @Override
+    public void runTests() throws Exception {
+        super.runTests();
+    }
+
+    @Override
     protected RestEndpoint<SnsRequest, SnsResponse> endpoint() {
         return endpoint;
     }
@@ -145,7 +156,7 @@ public class SnsEndpointTest extends DynamicEndpointTestSpec<SnsRequest, SnsResp
 
     @Override
     protected Class<? extends Exception> expectedResponseExceptionType() {
-        return null;
+        return VonageResponseParseException.class;
     }
 
     @Override

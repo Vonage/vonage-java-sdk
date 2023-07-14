@@ -15,10 +15,7 @@
  */
 package com.vonage.client.sms;
 
-import com.vonage.client.HttpWrapper;
-import com.vonage.client.VonageClient;
-import com.vonage.client.VonageClientException;
-import com.vonage.client.VonageResponseParseException;
+import com.vonage.client.*;
 import com.vonage.client.sms.messages.Message;
 
 
@@ -27,14 +24,29 @@ import com.vonage.client.sms.messages.Message;
  * VonageClient#getSmsClient()}.
  */
 public class SmsClient {
-    final SendMessageEndpoint message;
+    final RestEndpoint<Message, SmsSubmissionResponse> sendMessage;
 
     /**
      * Create a new SmsClient.
-     * @param httpWrapper Http Wrapper used to create a Sms Request
+     *
+     * @param wrapper Http Wrapper used to create a Sms Request
      */
-    public SmsClient(HttpWrapper httpWrapper) {
-        message = new SendMessageEndpoint(httpWrapper);
+    public SmsClient(HttpWrapper wrapper) {
+        /*class Endpoint extends DynamicEndpoint<Message, SmsSubmissionResponse> {
+            Endpoint() {
+                super(DynamicEndpoint.<Message, SmsSubmissionResponse> builder(SmsSubmissionResponse.class)
+                        .wrapper(wrapper).requestMethod(HttpMethod.POST)
+                        .addAuthMethod(SignatureAuthMethod.class)
+                        .addAuthMethod(TokenAuthMethod.class)
+                        .contentTypeHeader("application/x-www-form-urlencoded")
+                        .acceptHeader("application/json")
+                        .pathGetter((de, req) ->
+                                de.getHttpWrapper().getHttpConfig().getRestBaseUri() + "/sms/json"
+                        )
+                );
+            }
+        }*/
+        sendMessage = new SendMessageEndpoint(wrapper);//Endpoint();
     }
 
     /**
@@ -59,7 +71,6 @@ public class SmsClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public SmsSubmissionResponse submitMessage(Message message) throws VonageResponseParseException, VonageClientException {
-        return this.message.execute(message);
+        return sendMessage.execute(message);
     }
-
 }

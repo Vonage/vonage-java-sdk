@@ -45,8 +45,7 @@ public class Verify2Client {
 				super(DynamicEndpoint.<T, R> builder((Class<R>) type.getClass().getComponentType())
 						.responseExceptionType(VerifyResponseException.class)
 						.wrapper(wrapper).requestMethod(method)
-						.addAuthMethod(JWTAuthMethod.class)
-						.addAuthMethod(TokenAuthMethod.class)
+						.authMethod(JWTAuthMethod.class, TokenAuthMethod.class)
 						.pathGetter((de, req) -> {
 							String base = de.getHttpWrapper().getHttpConfig().getVersionedApiBaseUri("v2") + "/verify";
 							return pathGetter != null ? base + "/" + pathGetter.apply(req) : base;

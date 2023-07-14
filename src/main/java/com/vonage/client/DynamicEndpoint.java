@@ -30,6 +30,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.BiFunction;
 
@@ -39,6 +40,7 @@ import java.util.function.BiFunction;
  */
 @SuppressWarnings("unchecked")
 public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
+	protected boolean applyBasicAuth;
 	protected Collection<Class<? extends AuthMethod>> authMethods;
 	protected String contentType, accept;
 	protected HttpMethod requestMethod;
@@ -49,6 +51,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 
 	protected DynamicEndpoint(Builder<T, R> builder) {
 		super(builder.wrapper);
+		applyBasicAuth = builder.applyBasicAuth;
 		authMethods = builder.authMethods;
 		requestMethod = builder.requestMethod;
 		pathGetter = builder.pathGetter;
@@ -66,8 +69,9 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 
 	public static final class Builder<T, R> {
 		private final Class<R> responseType;
-		private final Collection<Class<? extends AuthMethod>> authMethods = new ArrayList<>(2);
+		private Collection<Class<? extends AuthMethod>> authMethods;
 		private HttpWrapper wrapper;
+		private boolean applyBasicAuth = false;
 		private String contentType, accept;
 		private HttpMethod requestMethod;
 		private BiFunction<DynamicEndpoint<T, R>, ? super T, String> pathGetter;
@@ -92,8 +96,12 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			return this;
 		}
 
-		public Builder<T, R> addAuthMethod(Class<? extends AuthMethod> authMethod) {
-			this.authMethods.add(authMethod);
+		public Builder<T, R> authMethod(Class<? extends AuthMethod> primary, Class<? extends AuthMethod>... others) {
+			authMethods = new ArrayList<>(2);
+			authMethods.add(primary);
+			if (others != null && others.length > 0) {
+				authMethods.addAll(Arrays.asList(others));
+			}
 			return this;
 		}
 
@@ -109,6 +117,11 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 
 		public Builder<T, R> acceptHeader(String accept) {
 			this.accept = accept;
+			return this;
+		}
+
+		public Builder<T, R> applyAsBasicAuth() {
+			applyBasicAuth = true;
 			return this;
 		}
 
@@ -131,6 +144,13 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 	@Override
 	protected Class<?>[] getAcceptableAuthMethods() {
 		return authMethods.toArray(new Class<?>[0]);
+	}
+
+	@Override
+	protected RequestBuilder applyAuth(RequestBuilder request) throws VonageClientException {
+		return applyBasicAuth ?
+				getAuthMethod(getAcceptableAuthMethods()).applyAsBasicAuth(request) :
+				super.applyAuth(request);
 	}
 
 	@Override
@@ -249,7 +269,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 				}
 				R customParsedResponse = parseResponseFromString(exMessage);
 				if (customParsedResponse == null) {
-					throw new VonageBadRequestException(exMessage);
+					throw new VonageApiResponseException(exMessage);
 				}
 				else {
 					return customParsedResponse;

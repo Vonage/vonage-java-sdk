@@ -16,7 +16,7 @@
 package com.vonage.client.sms.messages;
 
 import com.vonage.client.sms.HexUtil;
-import org.apache.http.client.methods.RequestBuilder;
+import java.util.Map;
 
 /**
  * A binary message to be submitted via the Vonage SMS API.
@@ -82,10 +82,11 @@ public class BinaryMessage extends Message {
     }
 
     @Override
-    public void addParams(RequestBuilder request) {
-        super.addParams(request);
-        request.addParameter("udh", HexUtil.bytesToHex(getUdh()))
-                .addParameter("body", HexUtil.bytesToHex(getMessageBody()))
-                .addParameter("protocol-id", Integer.toString(protocolId));
+    public Map<String, String> makeParams() {
+        Map<String, String> params = super.makeParams();
+        params.put("udh", HexUtil.bytesToHex(getUdh()));
+        params.put("body", HexUtil.bytesToHex(getMessageBody()));
+        params.put("protocol-id", Integer.toString(protocolId));
+        return params;
     }
 }

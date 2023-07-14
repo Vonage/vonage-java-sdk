@@ -36,11 +36,11 @@ import org.w3c.dom.NodeList;
 class SnsEndpoint extends DynamicEndpoint<SnsRequest, SnsResponse> {
     private static final Log LOG = LogFactory.getLog(SnsClient.class);
 
+    @SuppressWarnings("unchecked")
     protected SnsEndpoint(HttpWrapper wrapper) {
         super(DynamicEndpoint.<SnsRequest, SnsResponse> builder(SnsResponse.class)
                 .wrapper(wrapper).requestMethod(HttpMethod.POST)
-                .addAuthMethod(SignatureAuthMethod.class)
-                .addAuthMethod(TokenAuthMethod.class)
+                .authMethod(SignatureAuthMethod.class, TokenAuthMethod.class)
                 .pathGetter((de, req) -> de.getHttpWrapper().getHttpConfig().getSnsBaseUri() + "/sns/xml")
         );
     }

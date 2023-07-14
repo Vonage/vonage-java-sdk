@@ -37,8 +37,7 @@ public class MessagesClient {
 				super(DynamicEndpoint.<T, R> builder((Class<R>) type.getClass().getComponentType())
 						.responseExceptionType(MessageResponseException.class)
 						.wrapper(wrapper).requestMethod(HttpMethod.POST)
-						.addAuthMethod(JWTAuthMethod.class)
-						.addAuthMethod(TokenAuthMethod.class)
+						.authMethod(JWTAuthMethod.class, TokenAuthMethod.class)
 						.pathGetter((de, req) -> basePathGetter.apply(de.getHttpWrapper()) + "/v1/messages")
 				);
 			}

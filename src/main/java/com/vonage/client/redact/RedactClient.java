@@ -35,9 +35,9 @@ public class RedactClient {
         final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
             Endpoint(String path, HttpMethod method, R... type) {
                 super(DynamicEndpoint.<T, R> builder((Class<R>) type.getClass().getComponentType())
-                        .wrapper(wrapper).requestMethod(method)
-                        .addAuthMethod(SignatureAuthMethod.class)
-                        .addAuthMethod(TokenAuthMethod.class)
+                        .wrapper(wrapper).requestMethod(method).applyAsBasicAuth()
+                        .responseExceptionType(VonageBadRequestException.class)
+                        .authMethod(SignatureAuthMethod.class, TokenAuthMethod.class)
                         .pathGetter((de, req) -> {
                             String base = de.getHttpWrapper().getHttpConfig().getVersionedApiBaseUri("v1");
                             return base + path;

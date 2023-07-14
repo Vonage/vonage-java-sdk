@@ -15,78 +15,46 @@
  */
 package com.vonage.client.sms;
 
+import com.vonage.client.ClientTest;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.auth.TokenAuthMethod;
-import com.vonage.client.logging.LoggingUtils;
 import com.vonage.client.sms.messages.Message;
 import com.vonage.client.sms.messages.TextMessage;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.junit.Before;
-import org.junit.Test;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.*;
+import org.junit.Test;
 
-public class SmsClientTest {
-    private HttpWrapper wrapper;
-    private SmsClient client;
+public class SmsClientTest extends ClientTest<SmsClient> {
 
-    @Before
-    public void setUp() throws ParserConfigurationException {
+    public SmsClientTest() {
         wrapper = new HttpWrapper(new TokenAuthMethod("not-an-api-key", "secret"));
         client = new SmsClient(wrapper);
     }
 
-    private HttpClient stubHttpClient(int statusCode, String content) throws Exception {
-        HttpClient result = mock(HttpClient.class);
-
-        HttpResponse response = mock(HttpResponse.class);
-        StatusLine sl = mock(StatusLine.class);
-        HttpEntity entity = mock(HttpEntity.class);
-
-        when(result.execute(any(HttpUriRequest.class))).thenReturn(response);
-        when(LoggingUtils.logResponse(any(HttpResponse.class))).thenReturn("response logged");
-        when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
-        when(sl.getStatusCode()).thenReturn(statusCode);
-        when(response.getStatusLine()).thenReturn(sl);
-        when(response.getEntity()).thenReturn(entity);
-
-        return result;
-    }
-
     @Test
     public void testSubmitMessage() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(
-                200,
-                "{\n" +
-                        "  \"message-count\":2,\n" +
-                        "  \"messages\":[\n" +
-                        "    {\n" +
-                        "      \"to\":\"not-a-number\",\n" +
-                        "      \"message-id\":\"message-id-1\",\n" +
-                        "      \"status\":\"0\",\n" +
-                        "      \"remaining-balance\":\"26.43133450\",\n" +
-                        "      \"message-price\":\"0.03330000\",\n" +
-                        "      \"network\":\"12345\"\n" +
-                        "    },\n" +
-                        "    {\n" +
-                        "      \"to\":\"not-a-number\",\n" +
-                        "      \"message-id\":\"message-id-2\",\n" +
-                        "      \"status\":\"0\",\n" +
-                        "      \"remaining-balance\":\"26.43133450\",\n" +
-                        "      \"message-price\":\"0.03330000\",\n" +
-                        "      \"network\":\"12345\"\n" +
-                        "    }\n" +
-                        "  ]\n" +
-                        "}"));
+        stubResponse("{\n" +
+                "  \"message-count\":2,\n" +
+                "  \"messages\":[\n" +
+                "    {\n" +
+                "      \"to\":\"not-a-number\",\n" +
+                "      \"message-id\":\"message-id-1\",\n" +
+                "      \"status\":\"0\",\n" +
+                "      \"remaining-balance\":\"26.43133450\",\n" +
+                "      \"message-price\":\"0.03330000\",\n" +
+                "      \"network\":\"12345\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"to\":\"not-a-number\",\n" +
+                "      \"message-id\":\"message-id-2\",\n" +
+                "      \"status\":\"0\",\n" +
+                "      \"remaining-balance\":\"26.43133450\",\n" +
+                "      \"message-price\":\"0.03330000\",\n" +
+                "      \"network\":\"12345\"\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}"
+        );
 
         Message message = new TextMessage("TestSender", "not-a-number", "Test");
 
@@ -95,16 +63,57 @@ public class SmsClientTest {
         assertEquals(r.getMessages().size(), 2);
     }
 
-    @Test
+    @Test(expected = VonageResponseParseException.class)
     public void testSubmitMessageHttpError() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(500, ""));
-
+        stubResponse(500, "");
         Message message = new TextMessage("TestSender", "not-a-number", "Test");
-        try {
-            client.submitMessage(message);
-            fail("A VonageResponseParseException should be thrown if an HTTP 500 response is received.");
-        } catch (VonageResponseParseException nrp) {
-            // This is expected
-        }
+        client.submitMessage(message);
     }
+
+    /*@Test
+    public void testSendMessageEndpoint() throws Exception {
+        new DynamicEndpointTestSpec<Message, SmsSubmissionResponse>() {
+
+            @Override
+            protected RestEndpoint<Message, SmsSubmissionResponse> endpoint() {
+                return client.sendMessage;
+            }
+
+            @Override
+            protected HttpMethod expectedHttpMethod() {
+                return HttpMethod.POST;
+            }
+
+            @Override
+            protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
+                return Arrays.asList(SignatureAuthMethod.class, TokenAuthMethod.class);
+            }
+
+            @Override
+            protected Class<? extends Exception> expectedResponseExceptionType() {
+                return VonageApiResponseException.class;
+            }
+
+            @Override
+            protected String expectedDefaultBaseUri() {
+                return "https://rest.nexmo.com";
+            }
+
+            @Override
+            protected String expectedEndpointUri(Message request) {
+                return "/sms/json";
+            }
+
+            @Override
+            protected Message sampleRequest() {
+                return new TextMessage("TestSender", "447900000001", "Test msg");
+            }
+
+            @Override
+            protected String sampleRequestString() {
+                return null;
+            }
+        }
+        .runTests();
+    }*/
 }

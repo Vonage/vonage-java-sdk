@@ -44,7 +44,7 @@ public class SubaccountsClient {
 			Endpoint(Function<T, String> pathGetter, HttpMethod method, R... type) {
 				super(DynamicEndpoint.<T, R> builder((Class<R>) type.getClass().getComponentType())
 						.responseExceptionType(SubaccountsResponseException.class)
-						.wrapper(wrapper).requestMethod(method).addAuthMethod(TokenAuthMethod.class)
+						.wrapper(wrapper).requestMethod(method).authMethod(TokenAuthMethod.class)
 						.pathGetter((de, req) -> {
 								if (req instanceof CreateSubaccountRequest) {
 									CreateSubaccountRequest csr = (CreateSubaccountRequest) req;
