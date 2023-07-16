@@ -143,7 +143,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 			}
 
 			@Override
-			protected String sampleRequestString() {
+			protected String sampleRequestBodyString() {
 				return "{\"primary_account_api_key\":\"acc6111f\",\"name\":\"Subaccount department A\",\"secret\":" +
 						"\"Ab12cx340987ucvjklf\",\"use_primary_account_balance\":false}";
 			}
@@ -229,7 +229,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 			}
 
 			@Override
-			protected String sampleRequestString() {
+			protected String sampleRequestBodyString() {
 				return "{\"name\":\""+request.getName() +
 						"\",\"use_primary_account_balance\":" +
 						request.getUsePrimaryAccountBalance()+",\"suspended\":true}";
@@ -278,7 +278,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 			}
 
 			@Override
-			protected String sampleRequestString() {
+			protected String sampleRequestBodyString() {
 				return null;
 			}
 		}
@@ -315,7 +315,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 			}
 
 			@Override
-			protected String sampleRequestString() {
+			protected String sampleRequestBodyString() {
 				return null;
 			}
 		}
@@ -355,6 +355,11 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 			}
 
 			@Override
+			protected String expectedContentTypeHeader(ListTransfersFilter request) {
+				return null;
+			}
+
+			@Override
 			protected String expectedEndpointUri(ListTransfersFilter request) {
 				return "/accounts/"+apiKey+"/credit-transfers?start_date=2022-06-01T08%3A00%3A00Z" +
 						"&end_date=2023-06-08T09%3A01%3A40Z&subaccount=" + SUB_API_KEY;
@@ -366,7 +371,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 			}
 
 			@Override
-			protected String sampleRequestString() {
+			protected String sampleRequestBodyString() {
 				return null;
 			}
 		}
@@ -412,7 +417,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 			}
 
 			@Override
-			protected String sampleRequestString() {
+			protected String sampleRequestBodyString() {
 				return null;
 			}
 		}
@@ -442,7 +447,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 		}
 
 		@Override
-		protected String sampleRequestString() {
+		protected String sampleRequestBodyString() {
 			MoneyTransfer request = sampleRequest();
 			return "{\"from\":\""+request.getFrom()+"\",\"to\":\""+request.getTo() +
 					"\",\"amount\":"+request.getAmount()+",\"reference\":\""+request.getReference()+"\"}";
@@ -542,7 +547,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 			}
 
 			@Override
-			protected String sampleRequestString() {
+			protected String sampleRequestBodyString() {
 				return "{\"from\":\"7c9738e6\",\"to\":\"ad6dc56f\",\"number\":\"23507703696\",\"country\":\"GB\"}";
 			}
 		}

@@ -161,6 +161,11 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 			}
 
 			@Override
+			protected String customBaseUri() {
+				return sandbox ? expectedDefaultBaseUri() : super.customBaseUri();
+			}
+
+			@Override
 			protected HttpMethod expectedHttpMethod() {
 				return HttpMethod.POST;
 			}
@@ -193,7 +198,7 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 			}
 
 			@Override
-			protected String sampleRequestString() {
+			protected String sampleRequestBodyString() {
 				return "{\"message_type\":\"text\",\"channel\":\"sms\",\"from\":" +
 						"\"447700900001\",\"to\":\"447700900000\",\"text\":\"Hello, World!\"}";
 			}
@@ -216,10 +221,10 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 			void testSandboxEndpoint() throws Exception {
 				sandbox = true;
 				assertEquals(client, client.useSandboxEndpoint());
-				assertDefaultUri(sampleRequestString(), sampleRequest());
+				assertRequestUriAndBody();
 				sandbox = false;
 				assertEquals(client, client.useRegularEndpoint());
-				assertDefaultUri(sampleRequestString(), sampleRequest());
+				assertRequestUriAndBody();
 			}
 
 			void testParseResponseFailureAllParams() throws Exception {

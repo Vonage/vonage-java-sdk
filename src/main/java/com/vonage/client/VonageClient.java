@@ -215,7 +215,7 @@ public class VonageClient {
         /**
          * @param httpConfig Configuration options for the {@link HttpWrapper}
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder httpConfig(HttpConfig httpConfig) {
             this.httpConfig = httpConfig;
@@ -225,7 +225,7 @@ public class VonageClient {
         /**
          * @param httpClient Custom implementation of {@link HttpClient}.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder httpClient(HttpClient httpClient) {
             this.httpClient = httpClient;
@@ -237,7 +237,7 @@ public class VonageClient {
          *
          * @param applicationId Used to identify each application.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder applicationId(String applicationId) {
             this.applicationId = applicationId;
@@ -250,7 +250,7 @@ public class VonageClient {
          *
          * @param apiKey The API Key found in the dashboard for your account.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder apiKey(String apiKey) {
             this.apiKey = apiKey;
@@ -262,7 +262,7 @@ public class VonageClient {
          *
          * @param apiSecret The API Secret found in the dashboard for your account.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder apiSecret(String apiSecret) {
             this.apiSecret = apiSecret;
@@ -274,7 +274,7 @@ public class VonageClient {
          *
          * @param signatureSecret The Signature Secret found in the dashboard for your account.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder signatureSecret(String signatureSecret) {
             this.signatureSecret = signatureSecret;
@@ -285,7 +285,7 @@ public class VonageClient {
          *
          * @param hashType The hashing strategy for signature keys.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder hashType(HashUtil.HashType hashType) {
             this.hashType = hashType;
@@ -298,7 +298,7 @@ public class VonageClient {
          *
          * @param privateKeyContents The contents of your private key used for JWT generation.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder privateKeyContents(byte[] privateKeyContents) {
             this.privateKeyContents = privateKeyContents;
@@ -311,7 +311,7 @@ public class VonageClient {
          *
          * @param privateKeyContents The contents of your private key used for JWT generation.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder privateKeyContents(String privateKeyContents) {
             return privateKeyContents(privateKeyContents.getBytes());
@@ -323,7 +323,7 @@ public class VonageClient {
          *
          * @param privateKeyPath The path to your private key used for JWT generation.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          *
          * @throws VonageUnableToReadPrivateKeyException if the private key could not be read from the file system.
          */
@@ -341,7 +341,7 @@ public class VonageClient {
          *
          * @param privateKeyPath The path to your private key used for JWT generation.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          *
          * @throws VonageUnableToReadPrivateKeyException if the private key could not be read from the file system.
          */

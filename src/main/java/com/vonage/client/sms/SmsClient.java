@@ -16,12 +16,15 @@
 package com.vonage.client.sms;
 
 import com.vonage.client.*;
+import com.vonage.client.auth.SignatureAuthMethod;
+import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.common.HttpMethod;
 import com.vonage.client.sms.messages.Message;
 
 
 /**
- * A client for talking to the Vonage Voice API. The standard way to obtain an instance of this class is to use {@link
- * VonageClient#getSmsClient()}.
+ * A client for talking to the Vonage Voice API. The standard way to obtain an instance of this class
+ * is to use {@link VonageClient#getSmsClient()}.
  */
 public class SmsClient {
     final RestEndpoint<Message, SmsSubmissionResponse> sendMessage;
@@ -32,12 +35,12 @@ public class SmsClient {
      * @param wrapper Http Wrapper used to create a Sms Request
      */
     public SmsClient(HttpWrapper wrapper) {
-        /*class Endpoint extends DynamicEndpoint<Message, SmsSubmissionResponse> {
+        @SuppressWarnings("unchecked")
+        class Endpoint extends DynamicEndpoint<Message, SmsSubmissionResponse> {
             Endpoint() {
                 super(DynamicEndpoint.<Message, SmsSubmissionResponse> builder(SmsSubmissionResponse.class)
                         .wrapper(wrapper).requestMethod(HttpMethod.POST)
-                        .addAuthMethod(SignatureAuthMethod.class)
-                        .addAuthMethod(TokenAuthMethod.class)
+                        .authMethod(SignatureAuthMethod.class, TokenAuthMethod.class)
                         .contentTypeHeader("application/x-www-form-urlencoded")
                         .acceptHeader("application/json")
                         .pathGetter((de, req) ->
@@ -45,8 +48,8 @@ public class SmsClient {
                         )
                 );
             }
-        }*/
-        sendMessage = new SendMessageEndpoint(wrapper);//Endpoint();
+        }
+        sendMessage = new Endpoint();
     }
 
     /**

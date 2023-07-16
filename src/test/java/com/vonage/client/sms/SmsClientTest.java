@@ -15,14 +15,17 @@
  */
 package com.vonage.client.sms;
 
-import com.vonage.client.ClientTest;
-import com.vonage.client.HttpWrapper;
-import com.vonage.client.VonageResponseParseException;
+import com.vonage.client.*;
+import com.vonage.client.auth.AuthMethod;
+import com.vonage.client.auth.SignatureAuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.common.HttpMethod;
 import com.vonage.client.sms.messages.Message;
 import com.vonage.client.sms.messages.TextMessage;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+import java.util.Arrays;
+import java.util.Collection;
 
 public class SmsClientTest extends ClientTest<SmsClient> {
 
@@ -63,14 +66,14 @@ public class SmsClientTest extends ClientTest<SmsClient> {
         assertEquals(r.getMessages().size(), 2);
     }
 
-    @Test(expected = VonageResponseParseException.class)
+    @Test(expected = VonageApiResponseException.class)
     public void testSubmitMessageHttpError() throws Exception {
         stubResponse(500, "");
         Message message = new TextMessage("TestSender", "not-a-number", "Test");
         client.submitMessage(message);
     }
 
-    /*@Test
+    @Test
     public void testSendMessageEndpoint() throws Exception {
         new DynamicEndpointTestSpec<Message, SmsSubmissionResponse>() {
 
@@ -95,6 +98,11 @@ public class SmsClientTest extends ClientTest<SmsClient> {
             }
 
             @Override
+            protected String expectedContentTypeHeader(Message request) {
+                return "application/x-www-form-urlencoded";
+            }
+
+            @Override
             protected String expectedDefaultBaseUri() {
                 return "https://rest.nexmo.com";
             }
@@ -110,10 +118,24 @@ public class SmsClientTest extends ClientTest<SmsClient> {
             }
 
             @Override
-            protected String sampleRequestString() {
+            protected String sampleRequestBodyString() {
                 return null;
             }
+
+            @Override
+            public void runTests() throws Exception {
+                super.runTests();
+            }
+
+            /*
+             * Map<String, String> params = new LinkedHashMap<>();
+             *                 params.put("from", "TestSender");
+             *                 params.put("to", "not-a-number");
+             *                 params.put("type", "text");
+             *                 params.put("text", "Test");
+             *                 return params;
+             */
         }
         .runTests();
-    }*/
+    }
 }

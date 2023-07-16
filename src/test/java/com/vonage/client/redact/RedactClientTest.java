@@ -142,7 +142,7 @@ public class RedactClientTest extends ClientTest<RedactClient> {
             }
 
             @Override
-            protected String sampleRequestString() {
+            protected String sampleRequestBodyString() {
                 return "{\"id\":\"test-id\",\"product\":\"sms\",\"type\":\"inbound\"}";
             }
         }

@@ -131,7 +131,7 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 			}
 
 			@Override
-			protected String sampleRequestString() {
+			protected String sampleRequestBodyString() {
 				return "{\"locale\":\"en-gb\",\"channel_timeout\":320,\"code_length\":6," +
 						"\"brand\":\"ACME, Inc\",\"client_ref\":\"my-personal-reference\",\"workflow\":" +
 						"[{\"channel\":\"sms\",\"to\":\"447700900001\",\"app_hash\":\"FA+9qCX9VSu\"}]}";
@@ -154,7 +154,7 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 				String expectedJson = "{\"brand\":\""+request.getBrand() +
 						"\",\"workflow\":[{\"channel\":\"silent_auth\",\"to\":\"447700900001\"}]}";
 
-				assertDefaultUri(expectedJson, request);
+				assertRequestUriAndBody(request, expectedJson);
 			}
 
 			void testParseResponseFailureNoBody() throws Exception {
@@ -250,7 +250,7 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 			}
 
 			@Override
-			protected String sampleRequestString() {
+			protected String sampleRequestBodyString() {
 				return "{\"code\":\"54321\"}";
 			}
 
@@ -348,7 +348,7 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 			}
 
 			@Override
-			protected String sampleRequestString() {
+			protected String sampleRequestBodyString() {
 				return null;
 			}
 

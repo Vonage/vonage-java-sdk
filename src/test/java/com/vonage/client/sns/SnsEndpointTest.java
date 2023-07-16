@@ -175,7 +175,7 @@ public class SnsEndpointTest extends DynamicEndpointTestSpec<SnsRequest, SnsResp
     }
 
     @Override
-    protected String sampleRequestString() {
+    protected String sampleRequestBodyString() {
         return null;
     }
 }
