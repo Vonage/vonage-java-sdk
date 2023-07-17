@@ -18,12 +18,10 @@ package com.vonage.client.subaccounts;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.Jsonable;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class UpdateSubaccountRequest {
+public class UpdateSubaccountRequest implements Jsonable {
 	@JsonIgnore final String subaccountApiKey;
 	private final String name;
 	private final Boolean usePrimaryAccountBalance, suspended;
@@ -68,21 +66,6 @@ public class UpdateSubaccountRequest {
 	@JsonProperty("suspended")
 	public Boolean getSuspended() {
 		return suspended;
-	}
-	
-	/**
-	 * Generates a JSON payload from this request.
-	 *
-	 * @return JSON representation of this UpdateSubaccountRequest object.
-	 */
-	public String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.writeValueAsString(this);
-		}
-		catch (JsonProcessingException jpe) {
-			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
-		}
 	}
 	
 	/**

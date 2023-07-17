@@ -17,12 +17,10 @@ package com.vonage.client.subaccounts;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.Jsonable;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class CreateSubaccountRequest {
+public class CreateSubaccountRequest implements Jsonable {
 	String primaryAccountApiKey;
 	private final String name, secret;
 	private final Boolean usePrimaryAccountBalance;
@@ -75,21 +73,6 @@ public class CreateSubaccountRequest {
 	@JsonProperty("secret")
 	public String getSecret() {
 		return secret;
-	}
-	
-	/**
-	 * Generates a JSON payload from this request.
-	 *
-	 * @return JSON representation of this CreateSubaccountRequest object.
-	 */
-	public String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.writeValueAsString(this);
-		}
-		catch (JsonProcessingException jpe) {
-			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
-		}
 	}
 	
 	/**

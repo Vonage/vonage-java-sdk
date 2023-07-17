@@ -18,17 +18,14 @@ package com.vonage.client.subaccounts;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.vonage.client.VonageResponseParseException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 import java.util.List;
 
 /**
  * Response container for {@link SubaccountsClient#listSubaccounts()}.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ListSubaccountsResponse {
+public class ListSubaccountsResponse implements Jsonable {
 	@JsonProperty("_embedded") private Embedded embedded;
 
 	@JsonIgnoreProperties(ignoreUnknown = true)
@@ -67,13 +64,8 @@ public class ListSubaccountsResponse {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static ListSubaccountsResponse fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.registerModule(new JavaTimeModule());
-			return mapper.readValue(json, ListSubaccountsResponse.class);
-		}
-		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to produce ListSubaccountsResponse from json.", ex);
-		}
+		ListSubaccountsResponse lsr = new ListSubaccountsResponse();
+		lsr.updateFromJson(json);
+		return lsr;
 	}
 }

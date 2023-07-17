@@ -15,7 +15,11 @@
  */
 package com.vonage.client.messages;
 
-import com.vonage.client.ClientTest;
+import com.vonage.client.*;
+import com.vonage.client.auth.AuthMethod;
+import com.vonage.client.auth.JWTAuthMethod;
+import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.common.HttpMethod;
 import com.vonage.client.messages.messenger.*;
 import com.vonage.client.messages.mms.MmsAudioRequest;
 import com.vonage.client.messages.mms.MmsImageRequest;
@@ -26,11 +30,10 @@ import com.vonage.client.messages.viber.ViberImageRequest;
 import com.vonage.client.messages.viber.ViberTextRequest;
 import com.vonage.client.messages.viber.ViberVideoRequest;
 import com.vonage.client.messages.whatsapp.*;
-import org.apache.http.client.methods.RequestBuilder;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -148,23 +151,107 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 	}
 
 	@Test
-	public void testSandboxUriToggle() {
-		final String defaultUri = "https://api.nexmo.com/v1/messages";
-		final String sandboxUri = "https://messages-sandbox.nexmo.com/v1/messages";
-		SendMessageEndpoint endpoint = client.sendMessage;
+	public void testSendMessageEndpoint() throws Exception {
+		new DynamicEndpointTestSpec<MessageRequest, MessageResponse>() {
+			boolean sandbox;
 
-		MessageRequest sms = SmsTextRequest.builder()
-				.from("447700900001").to("447700900000")
-				.text("Hello, World!").build();
+			@Override
+			protected RestEndpoint<MessageRequest, MessageResponse> endpoint() {
+				return sandbox ? client.sendMessageSandbox : client.sendMessage;
+			}
 
-		RequestBuilder builder = endpoint.makeRequest(sms);
-		assertEquals("POST", builder.getMethod());
-		assertEquals(defaultUri, builder.build().getURI().toString());
-		client.useSandboxEndpoint();
-		builder = endpoint.makeRequest(sms);
-		assertEquals(sandboxUri, builder.build().getURI().toString());
-		client.useRegularEndpoint();
-		builder = endpoint.makeRequest(sms);
-		assertEquals(defaultUri, builder.build().getURI().toString());
+			@Override
+			protected String customBaseUri() {
+				return sandbox ? expectedDefaultBaseUri() : super.customBaseUri();
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.POST;
+			}
+
+			@Override
+			protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
+				return Arrays.asList(JWTAuthMethod.class, TokenAuthMethod.class);
+			}
+
+			@Override
+			protected Class<? extends VonageApiResponseException> expectedResponseExceptionType() {
+				return MessageResponseException.class;
+			}
+
+			@Override
+			protected String expectedDefaultBaseUri() {
+				return sandbox ? "https://messages-sandbox.nexmo.com" : "https://api.nexmo.com";
+			}
+
+			@Override
+			protected String expectedEndpointUri(MessageRequest request) {
+				return "/v1/messages";
+			}
+
+			@Override
+			protected MessageRequest sampleRequest() {
+				return SmsTextRequest.builder()
+						.from("447700900001").to("447700900000")
+						.text("Hello, World!").build();
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"message_type\":\"text\",\"channel\":\"sms\",\"from\":" +
+						"\"447700900001\",\"to\":\"447700900000\",\"text\":\"Hello, World!\"}";
+			}
+
+			@Override
+			public void runTests() throws Exception {
+				super.runTests();
+				testParseResponseSuccess();
+				testSandboxEndpoint();
+				testParseResponseFailureAllParams();
+			}
+
+			void testParseResponseSuccess() throws Exception {
+				UUID uuid = UUID.randomUUID();
+				String json = "{\"message_uuid\":\""+uuid+"\"}";
+				MessageResponse response = parseResponse(json, 202);
+				assertEquals(uuid, response.getMessageUuid());
+			}
+
+			void testSandboxEndpoint() throws Exception {
+				sandbox = true;
+				assertEquals(client, client.useSandboxEndpoint());
+				assertRequestUriAndBody();
+				sandbox = false;
+				assertEquals(client, client.useRegularEndpoint());
+				assertRequestUriAndBody();
+			}
+
+			void testParseResponseFailureAllParams() throws Exception {
+				final int statusCode = 422;
+				final String json = "{\n" +
+						"  \"type\": \"https://developer.nexmo.com/api-errors/messages-olympus#1120\",\n" +
+						"  \"title\": \"Invalid sender\",\n" +
+						"  \"detail\": \"The `from` parameter is invalid for the given channel.\",\n" +
+						"  \"instance\": \"bf0ca0bf927b3b52e3cb03217e1a1ddf\"\n" +
+						"}";
+
+				try {
+					parseResponse(json, statusCode);
+					fail("Expected "+MessageResponseException.class.getName());
+				}
+				catch (MessageResponseException mrx) {
+					MessageResponseException expected = MessageResponseException.fromJson(json);
+					expected.setStatusCode(statusCode);
+					assertEquals(expected, mrx);
+					assertEquals(statusCode, mrx.getStatusCode());
+					assertNotNull(mrx.getType());
+					assertNotNull(mrx.getTitle());
+					assertNotNull(mrx.getDetail());
+					assertNotNull(mrx.getInstance());
+				}
+			}
+		}
+		.runTests();
 	}
 }

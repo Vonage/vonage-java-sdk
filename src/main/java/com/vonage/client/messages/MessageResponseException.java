@@ -19,8 +19,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vonage.client.VonageApiResponseException;
-import org.apache.http.HttpResponse;
-import java.io.IOException;
 
 /**
  * Response returned when sending a message fails (i.e. returns a non-2xx status code).
@@ -44,9 +42,5 @@ public final class MessageResponseException extends VonageApiResponseException {
 	@JsonCreator
 	public static MessageResponseException fromJson(String json) {
 		return fromJson(MessageResponseException.class, json);
-	}
-
-	static MessageResponseException fromHttpResponse(HttpResponse response) throws IOException {
-		return fromHttpResponse(MessageResponseException.class, response);
 	}
 }

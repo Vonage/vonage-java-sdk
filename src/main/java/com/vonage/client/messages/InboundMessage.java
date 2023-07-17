@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.vonage.client.Jsonable;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.messages.sms.SmsInboundMetadata;
 import com.vonage.client.messages.whatsapp.*;
@@ -40,7 +41,7 @@ import java.util.UUID;
  * @since 7.2.0
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class InboundMessage {
+public class InboundMessage implements Jsonable {
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	protected static class UrlWrapper {
 		@JsonProperty("url") protected URI url;

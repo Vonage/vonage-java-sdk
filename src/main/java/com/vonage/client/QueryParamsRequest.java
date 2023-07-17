@@ -15,17 +15,12 @@
  */
 package com.vonage.client;
 
-import java.io.IOException;
+import java.util.Map;
 
 /**
- * Internal interface for defining endpoints.
- *
- * @param <RequestT> The request type.
- * @param <ResponseT> The response type.
- *
- * @deprecated Please use Will be removed in a future release. Please use {@link RestEndpoint}.
+ * Indicates that a request object has query parameters.
  */
-@Deprecated
-public interface Method<RequestT, ResponseT> {
-    ResponseT execute(RequestT request) throws IOException, VonageClientException;
+public interface QueryParamsRequest {
+
+	Map<String, String> makeParams();
 }

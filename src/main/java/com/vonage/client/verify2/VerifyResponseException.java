@@ -20,8 +20,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.VonageApiResponseException;
-import org.apache.http.HttpResponse;
-import java.io.IOException;
 import java.util.UUID;
 
 /**
@@ -55,9 +53,5 @@ public final class VerifyResponseException extends VonageApiResponseException {
 	@JsonCreator
 	public static VerifyResponseException fromJson(String json) {
 		return fromJson(VerifyResponseException.class, json);
-	}
-
-	static VerifyResponseException fromHttpResponse(HttpResponse response) throws IOException {
-		return fromHttpResponse(VerifyResponseException.class, response);
 	}
 }

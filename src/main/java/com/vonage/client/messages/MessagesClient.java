@@ -15,21 +15,36 @@
  */
 package com.vonage.client.messages;
 
-import com.vonage.client.HttpConfig;
-import com.vonage.client.HttpWrapper;
-import com.vonage.client.VonageClientException;
-import com.vonage.client.VonageResponseParseException;
+import com.vonage.client.*;
+import com.vonage.client.auth.JWTAuthMethod;
+import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.common.HttpMethod;
+import java.util.function.Function;
 
 public class MessagesClient {
-	final SendMessageEndpoint sendMessage;
+	private boolean sandbox = false;
+	final RestEndpoint<MessageRequest, MessageResponse> sendMessage, sendMessageSandbox;
 
 	/**
 	 * Create a new MessagesClient.
 	 *
-	 * @param httpWrapper Http Wrapper used to create message requests.
+	 * @param wrapper Http Wrapper used to create message requests.
 	 */
-	public MessagesClient(HttpWrapper httpWrapper) {
-		sendMessage = new SendMessageEndpoint(httpWrapper);
+	public MessagesClient(HttpWrapper wrapper) {
+		@SuppressWarnings("unchecked")
+		final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
+			Endpoint(Function<HttpWrapper, String> basePathGetter, R... type) {
+				super(DynamicEndpoint.<T, R> builder((Class<R>) type.getClass().getComponentType())
+						.responseExceptionType(MessageResponseException.class)
+						.wrapper(wrapper).requestMethod(HttpMethod.POST)
+						.authMethod(JWTAuthMethod.class, TokenAuthMethod.class)
+						.pathGetter((de, req) -> basePathGetter.apply(de.getHttpWrapper()) + "/v1/messages")
+				);
+			}
+		}
+
+		sendMessage = new Endpoint<>(hw -> hw.getHttpConfig().getApiBaseUri());
+		sendMessageSandbox = new Endpoint<>(hw -> "https://messages-sandbox.nexmo.com");
 	}
 
 	/**
@@ -56,12 +71,7 @@ public class MessagesClient {
 	 * @throws MessageResponseException     if the request was unsuccessful (a 4xx or 500 status code was returned).
 	 */
 	public MessageResponse sendMessage(MessageRequest request) throws VonageClientException, VonageResponseParseException {
-		return sendMessage.execute(request);
-	}
-
-	private MessagesClient sandbox(boolean sandbox) {
-		sendMessage.setSandboxed(sandbox);
-		return this;
+		return (sandbox ? sendMessageSandbox : sendMessage).execute(request);
 	}
 
 	/**
@@ -72,7 +82,8 @@ public class MessagesClient {
 	 * @since 7.1.0
 	 */
 	public MessagesClient useSandboxEndpoint() {
-		return sandbox(true);
+		sandbox = true;
+		return this;
 	}
 
 	/**
@@ -85,6 +96,7 @@ public class MessagesClient {
 	 * @since 7.1.0
 	 */
 	public MessagesClient useRegularEndpoint() {
-		return sandbox(false);
+		sandbox = false;
+		return this;
 	}
 }

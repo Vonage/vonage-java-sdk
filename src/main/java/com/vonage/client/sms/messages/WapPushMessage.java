@@ -15,7 +15,7 @@
  */
 package com.vonage.client.sms.messages;
 
-import org.apache.http.client.methods.RequestBuilder;
+import java.util.Map;
 
 /**
  * Represents the details of a wap-push message that is to be submitted via the Vonage REST api.
@@ -74,11 +74,13 @@ public class WapPushMessage extends Message {
     }
 
     @Override
-    public void addParams(RequestBuilder request) {
-        super.addParams(request);
-        request.addParameter("title", title).addParameter("url", url);
+    public Map<String, String> makeParams() {
+        Map<String, String> params = super.makeParams();
+        params.put("title", title);
+        params.put("url", url);
         if (validity != null) {
-            request.addParameter("validity", validity.toString());
+            params.put("validity", validity.toString());
         }
+        return params;
     }
 }

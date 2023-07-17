@@ -67,6 +67,10 @@ public class HttpWrapper {
         this.httpClient = httpClient;
     }
 
+    public void setHttpConfig(HttpConfig httpConfig) {
+        this.httpConfig = httpConfig;
+    }
+
     public AuthCollection getAuthCollection() {
         return authCollection;
     }

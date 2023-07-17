@@ -28,13 +28,12 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
+import static org.mockito.Mockito.*;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.*;
 
 public class SnsClientTest {
     private HttpWrapper httpWrapper;
@@ -97,19 +96,12 @@ public class SnsClientTest {
         assertEquals("a result message", result.getResultMessage());
     }
 
-    @Test
+    @Test(expected = VonageResponseParseException.class)
     public void testSubmitWithInvalidResponse() throws Exception {
-        try {
-            httpWrapper.setHttpClient(stubHttpClient(500, "<nexmo-sms/>"));
-            client.subscribe(new SnsSubscribeRequest(
-                    "arn:aws:sns:region:num:id",
-                    "447777111222"
-            ));
-            fail("An error Http response should raise IOException");
-        } catch (VonageResponseParseException nrp) {
-            // This is expected
-        }
+        httpWrapper.setHttpClient(stubHttpClient(500, "<nexmo-sns/>"));
+        client.subscribe(new SnsSubscribeRequest(
+                "arn:aws:sns:region:num:id",
+                "447777111222"
+        ));
     }
-
-
 }

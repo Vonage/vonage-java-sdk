@@ -36,8 +36,8 @@ dependencies {
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-inline:4.11.0'
-    testImplementation 'org.springframework:spring-test:5.3.28'
-    testImplementation 'org.springframework:spring-web:5.3.28'
+    testImplementation 'org.springframework:spring-test:5.3.29'
+    testImplementation 'org.springframework:spring-web:5.3.29'
     testImplementation 'jakarta.servlet:jakarta.servlet-api:4.0.4'
 }
 

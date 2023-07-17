@@ -15,11 +15,12 @@
  */
 package com.vonage.client.sns.request;
 
+import com.vonage.client.QueryParamsRequest;
 import java.util.HashMap;
 import java.util.Map;
 
 
-public abstract class SnsRequest {
+public abstract class SnsRequest implements QueryParamsRequest {
     private final String command;
     private String to;
     private String topicArn;
@@ -34,6 +35,11 @@ public abstract class SnsRequest {
 
     public String getCommand() {
         return command;
+    }
+
+    @Override
+    public final Map<String, String> makeParams() {
+        return getQueryParameters();
     }
 
     public Map<String, String> getQueryParameters() {

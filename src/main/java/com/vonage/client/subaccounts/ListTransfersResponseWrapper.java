@@ -18,14 +18,11 @@ package com.vonage.client.subaccounts;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.vonage.client.VonageResponseParseException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class ListTransfersResponseWrapper {
+class ListTransfersResponseWrapper implements Jsonable {
 
 	ListTransfersResponseWrapper() {}
 
@@ -45,16 +42,5 @@ class ListTransfersResponseWrapper {
 	@JsonIgnore
 	public List<MoneyTransfer> getCreditTransfers() {
 		return embedded != null ? embedded.creditTransfers : null;
-	}
-
-	public static ListTransfersResponseWrapper fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.registerModule(new JavaTimeModule());
-			return mapper.readValue(json, ListTransfersResponseWrapper.class);
-		}
-		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to produce ListTransfersResponseWrapper from json.", ex);
-		}
 	}
 }

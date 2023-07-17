@@ -19,8 +19,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vonage.client.VonageApiResponseException;
-import org.apache.http.HttpResponse;
-import java.io.IOException;
 
 /**
  * Response returned when an error is encountered (i.e. the API returns a non-2xx status code).
@@ -42,9 +40,5 @@ public final class SubaccountsResponseException extends VonageApiResponseExcepti
 	@JsonCreator
 	public static SubaccountsResponseException fromJson(String json) {
 		return fromJson(SubaccountsResponseException.class, json);
-	}
-
-	static SubaccountsResponseException fromHttpResponse(HttpResponse response) throws IOException {
-		return fromHttpResponse(SubaccountsResponseException.class, response);
 	}
 }

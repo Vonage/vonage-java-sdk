@@ -15,7 +15,7 @@
  */
 package com.vonage.client.sms.messages;
 
-import org.apache.http.client.methods.RequestBuilder;
+import java.util.Map;
 
 /**
  * Represents the details of a plain-text message that is to be submitted via the Vonage REST api.
@@ -87,14 +87,10 @@ public class TextMessage extends Message {
         return unicode ? MessageType.UNICODE : MessageType.TEXT;
     }
 
-    /**
-     * Adds the text as a parameter to the request.
-     *
-     * @param request The request builder to add parameters to.
-     */
     @Override
-    public void addParams(RequestBuilder request) {
-        super.addParams(request);
-        request.addParameter("text", messageBody);
+    public Map<String, String> makeParams() {
+        Map<String, String> params = super.makeParams();
+        params.put("text", messageBody);
+        return params;
     }
 }

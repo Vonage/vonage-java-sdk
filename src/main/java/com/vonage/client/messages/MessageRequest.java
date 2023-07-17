@@ -17,9 +17,7 @@ package com.vonage.client.messages;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.Jsonable;
 import com.vonage.client.common.E164;
 import java.util.Objects;
 
@@ -34,7 +32,7 @@ import java.util.Objects;
  * being thrown. The documentation on each parameter should provide clarity on parameter restrictions.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public abstract class MessageRequest {
+public abstract class MessageRequest implements Jsonable {
 	final MessageType messageType;
 	final Channel channel;
 	final String clientRef;
@@ -115,21 +113,6 @@ public abstract class MessageRequest {
 	@JsonProperty("client_ref")
 	public String getClientRef() {
 		return clientRef;
-	}
-
-	/**
-	 * Generates a JSON payload from this request.
-	 *
-	 * @return JSON representation of this MessageRequest object.
-	 */
-	public String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.writeValueAsString(this);
-		}
-		catch (JsonProcessingException jpe) {
-			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
-		}
 	}
 
 	@Override

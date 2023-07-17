@@ -15,24 +15,48 @@
  */
 package com.vonage.client.verify2;
 
+import com.vonage.client.DynamicEndpoint;
 import com.vonage.client.HttpWrapper;
+import com.vonage.client.RestEndpoint;
+import com.vonage.client.auth.JWTAuthMethod;
+import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.common.HttpMethod;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Function;
 
 public class Verify2Client {
-	final VerifyUserEndpoint verifyUser;
-	final VerifyCodeEndpoint verifyRequest;
-	final CancelEndpoint cancel;
+	final boolean hasJwtAuthMethod;
+	final RestEndpoint<VerificationRequest, VerificationResponse> verifyUser;
+	final RestEndpoint<VerifyCodeRequestWrapper, Void> verifyRequest;
+	final RestEndpoint<UUID, Void> cancel;
 
 	/**
 	 * Create a new Verify2Client.
 	 *
-	 * @param httpWrapper Http Wrapper used to create verification requests.
+	 * @param wrapper Http Wrapper used to create verification requests.
 	 */
-	public Verify2Client(HttpWrapper httpWrapper) {
-		verifyUser = new VerifyUserEndpoint(httpWrapper);
-		verifyRequest = new VerifyCodeEndpoint(httpWrapper);
-		cancel = new CancelEndpoint(httpWrapper);
+	public Verify2Client(HttpWrapper wrapper) {
+		hasJwtAuthMethod = wrapper.getAuthCollection().hasAuthMethod(JWTAuthMethod.class);
+
+		@SuppressWarnings("unchecked")
+		final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
+			Endpoint(Function<T, String> pathGetter, HttpMethod method, R... type) {
+				super(DynamicEndpoint.<T, R> builder((Class<R>) type.getClass().getComponentType())
+						.responseExceptionType(VerifyResponseException.class)
+						.wrapper(wrapper).requestMethod(method)
+						.authMethod(JWTAuthMethod.class, TokenAuthMethod.class)
+						.pathGetter((de, req) -> {
+							String base = de.getHttpWrapper().getHttpConfig().getVersionedApiBaseUri("v2") + "/verify";
+							return pathGetter != null ? base + "/" + pathGetter.apply(req) : base;
+						})
+				);
+			}
+		}
+
+		verifyUser = new Endpoint<>(null, HttpMethod.POST);
+		verifyRequest = new Endpoint<>(req -> req.requestId, HttpMethod.POST);
+		cancel = new Endpoint<>(UUID::toString, HttpMethod.DELETE);
 	}
 
 	/**
@@ -61,6 +85,11 @@ public class Verify2Client {
 	 * </ul>
 	 */
 	public VerificationResponse sendVerification(VerificationRequest request) {
+		if (request.isCodeless() && !hasJwtAuthMethod) {
+			throw new IllegalStateException(
+					"Codeless verification requires an application ID to be set in order to use webhooks."
+			);
+		}
 		return verifyUser.execute(Objects.requireNonNull(request));
 	}
 
@@ -99,6 +128,6 @@ public class Verify2Client {
 	 */
 	public void cancelVerification(UUID requestId) {
 		Objects.requireNonNull(requestId, "Request ID is required.");
-		cancel.execute(requestId.toString());
+		cancel.execute(requestId);
 	}
 }

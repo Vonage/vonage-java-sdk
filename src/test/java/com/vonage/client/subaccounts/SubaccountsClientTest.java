@@ -15,7 +15,9 @@
  */
 package com.vonage.client.subaccounts;
 
+import com.vonage.client.RestEndpoint;
 import com.vonage.client.ClientTest;
+import com.vonage.client.common.HttpMethod;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.function.ThrowingRunnable;
@@ -25,7 +27,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
-	static final String FROM_API_KEY = "cde3214b", TO_API_KEY = "12c4d5e6",
+	static final String FROM_API_KEY = "cde3214b", TO_API_KEY = "12c4d5e6", SUB_API_KEY = "def123ab",
 		ACCOUNT_RESPONSE_JSON = "{\n" +
 				"   \"secret\": \"Password123\",\n" +
 				"   \"api_key\": \"bbe6222f\",\n" +
@@ -108,23 +110,140 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 		stubResponseAndAssertThrows(200, () -> client.createSubaccount(null), NullPointerException.class);
 		stubResponseAndAssertThrows(401, () -> client.createSubaccount(request), SubaccountsResponseException.class);
 		assert403ResponseException(() -> client.createSubaccount(request));
+
+		new SubaccountsEndpointTestSpec<CreateSubaccountRequest, Account>() {
+			@Override
+			protected RestEndpoint<CreateSubaccountRequest, Account> endpoint() {
+				return client.createSubaccount;
+			}
+
+			@Override
+			protected Class<Account> expectedResponseType() {
+				return Account.class;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.POST;
+			}
+
+			@Override
+			protected String expectedEndpointUri(CreateSubaccountRequest request) {
+				return "/accounts/"+request.getPrimaryAccountApiKey()+"/subaccounts";
+			}
+
+			@Override
+			protected CreateSubaccountRequest sampleRequest() {
+				CreateSubaccountRequest request = CreateSubaccountRequest.builder()
+						.name("Subaccount department A")
+						.usePrimaryAccountBalance(false)
+						.secret("Ab12cx340987ucvjklf").build();
+				request.primaryAccountApiKey = "acc6111f";
+				return request;
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"primary_account_api_key\":\"acc6111f\",\"name\":\"Subaccount department A\",\"secret\":" +
+						"\"Ab12cx340987ucvjklf\",\"use_primary_account_balance\":false}";
+			}
+
+			@Override
+			public void runTests() throws Exception {
+				super.runTests();
+				testFullResponse();
+				testEmptyResponse();
+			}
+
+			void testFullResponse() throws Exception {
+				String expectedResponse = "{\n" +
+						"   \"api_key\": \"bbe6222f\",\n" +
+						"   \"name\": \"Subaccount department A\",\n" +
+						"   \"secret\": \"Password123\",\n" +
+						"   \"primary_account_api_key\": \"acc6111f\",\n" +
+						"   \"use_primary_account_balance\": true,\n" +
+						"   \"created_at\": \"2018-03-02T16:34:49Z\",\n" +
+						"   \"suspended\": false,\n" +
+						"   \"balance\": 100.25,\n" +
+						"   \"credit_limit\": -99.33\n" +
+						"}";
+
+				Account parsed = parseResponse(expectedResponse);
+				assertNotNull(parsed);
+				assertEquals("bbe6222f", parsed.getApiKey());
+				assertEquals("Subaccount department A", parsed.getName());
+				assertEquals("Password123", parsed.getSecret());
+				assertTrue(parsed.getUsePrimaryAccountBalance());
+				assertEquals(1520008489L, parsed.getCreatedAt().getEpochSecond());
+				assertFalse(parsed.getSuspended());
+				assertEquals(100.25, parsed.getBalance().doubleValue(), 0.001);
+				assertEquals(-99.33, parsed.getCreditLimit().doubleValue(), 0.001);
+			}
+
+			void testEmptyResponse() throws Exception {
+				Account parsed = parseResponse("{}");
+				assertNotNull(parsed);
+				assertNull(parsed.getApiKey());
+				assertNull(parsed.getSecret());
+				assertNull(parsed.getPrimaryAccountApiKey());
+				assertNull(parsed.getName());
+				assertNull(parsed.getUsePrimaryAccountBalance());
+				assertNull(parsed.getSuspended());
+				assertNull(parsed.getCreatedAt());
+				assertNull(parsed.getBalance());
+				assertNull(parsed.getCreditLimit());
+			}
+		}
+		.runTests();
 	}
 
 	@Test
 	public void testUpdateSubaccount() throws Exception {
-		UpdateSubaccountRequest request = UpdateSubaccountRequest.builder(FROM_API_KEY).name("New name").build();
+		UpdateSubaccountRequest request = UpdateSubaccountRequest.builder(SUB_API_KEY)
+				.name("Renamed A").usePrimaryAccountBalance(false).suspended(true).build();
 		assertEqualsExpectedAccount(stubResponseAndGet(ACCOUNT_RESPONSE_JSON, () -> client.updateSubaccount(request)));
 		stubResponseAndAssertThrows(200, () -> client.updateSubaccount(null), NullPointerException.class);
 		stubResponseAndAssertThrows(401, () -> client.updateSubaccount(request), SubaccountsResponseException.class);
 		assert403ResponseException(() -> client.updateSubaccount(request));
+
+		new SubaccountsEndpointTestSpec<UpdateSubaccountRequest, Account>() {
+
+			@Override
+			protected RestEndpoint<UpdateSubaccountRequest, Account> endpoint() {
+				return client.updateSubaccount;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.PATCH;
+			}
+
+			@Override
+			protected String expectedEndpointUri(UpdateSubaccountRequest request) {
+				return "/accounts/"+apiKey+"/subaccounts/"+request.subaccountApiKey;
+			}
+
+			@Override
+			protected UpdateSubaccountRequest sampleRequest() {
+				return request;
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"name\":\""+request.getName() +
+						"\",\"use_primary_account_balance\":" +
+						request.getUsePrimaryAccountBalance()+",\"suspended\":true}";
+			}
+		}
+		.runTests();
 	}
 
 	@Test
 	public void testListSubaccounts() throws Exception {
-		stubResponse("{\"_embedded\":{\"primary_account\":" +
-				ACCOUNT_RESPONSE_JSON + ",\"subaccounts\":[{}," + ACCOUNT_RESPONSE_JSON +",{}]}}"
-		);
-		ListSubaccountsResponse response = client.listSubaccounts();
+		String expectedResponse = "{\"_embedded\":{\"primary_account\":" +
+				ACCOUNT_RESPONSE_JSON + ",\"subaccounts\":[{}," + ACCOUNT_RESPONSE_JSON +",{}]}}";
+
+		ListSubaccountsResponse response = stubResponseAndGet(expectedResponse, client::listSubaccounts);
 		assertNotNull(response);
 		assertEqualsExpectedAccount(response.getPrimaryAccount());
 		List<Account> subaccounts = response.getSubaccounts();
@@ -135,6 +254,35 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 		assertNotNull(subaccounts.get(2));
 		stubResponseAndAssertThrows(401, client::listSubaccounts, SubaccountsResponseException.class);
 		assert403ResponseException(client::listSubaccounts);
+
+		new SubaccountsEndpointTestSpec<Void, ListSubaccountsResponse>() {
+
+			@Override
+			protected RestEndpoint<Void, ListSubaccountsResponse> endpoint() {
+				return client.listSubaccounts;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedEndpointUri(Void request) {
+				return "/accounts/"+apiKey+"/subaccounts";
+			}
+
+			@Override
+			protected Void sampleRequest() {
+				return null;
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return null;
+			}
+		}
+		.runTests();
 	}
 
 	@Test
@@ -143,12 +291,45 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 		stubResponseAndAssertThrows(200, () -> client.getSubaccount(null), NullPointerException.class);
 		stubResponseAndAssertThrows(401, () -> client.getSubaccount(FROM_API_KEY), SubaccountsResponseException.class);
 		assert403ResponseException(() -> client.getSubaccount(FROM_API_KEY));
+
+		new SubaccountsEndpointTestSpec<String, Account>() {
+
+			@Override
+			protected RestEndpoint<String, Account> endpoint() {
+				return client.getSubaccount;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedEndpointUri(String request) {
+				return "/accounts/"+apiKey+"/subaccounts/"+request;
+			}
+
+			@Override
+			protected String sampleRequest() {
+				return SUB_API_KEY;
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return null;
+			}
+		}
+		.runTests();
 	}
 
 	@Test
 	public void testListCreditTransfers() throws Exception {
+		String startDate = "2022-06-01T08:00:00Z", endDate = "2023-06-08T09:01:40Z";
 		ListTransfersFilter request = ListTransfersFilter.builder()
-				.endDate(Instant.now()).subaccount(FROM_API_KEY).build();
+				.startDate(Instant.parse(startDate))
+				.endDate(Instant.parse(endDate))
+				.subaccount(SUB_API_KEY).build();
+
 		String responseJson = "{\"_embedded\":{\"credit_transfers\":[{},"+MONEY_TRANSFER_RESPONSE_JSON+",{}]}}";
 		List<MoneyTransfer> response = stubResponseAndGet(responseJson, () -> client.listCreditTransfers(request));
 		assertNotNull(response);
@@ -160,6 +341,41 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 		stubResponseAndAssertThrows(200, () -> client.listCreditTransfers(null), NullPointerException.class);
 		stubResponseAndAssertThrows(401, () -> client.listCreditTransfers(request), SubaccountsResponseException.class);
 		assert403ResponseException(client::listCreditTransfers);
+
+		new SubaccountsEndpointTestSpec<ListTransfersFilter, ListTransfersResponseWrapper>() {
+
+			@Override
+			protected RestEndpoint<ListTransfersFilter, ListTransfersResponseWrapper> endpoint() {
+				return client.listCreditTransfers;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedContentTypeHeader(ListTransfersFilter request) {
+				return null;
+			}
+
+			@Override
+			protected String expectedEndpointUri(ListTransfersFilter request) {
+				return "/accounts/"+apiKey+"/credit-transfers?start_date=2022-06-01T08%3A00%3A00Z" +
+						"&end_date=2023-06-08T09%3A01%3A40Z&subaccount=" + SUB_API_KEY;
+			}
+
+			@Override
+			protected ListTransfersFilter sampleRequest() {
+				return request;
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return null;
+			}
+		}
+		.runTests();
 	}
 
 	@Test
@@ -177,6 +393,65 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 		stubResponseAndAssertThrows(200, () -> client.listBalanceTransfers(null), NullPointerException.class);
 		stubResponseAndAssertThrows(401, () -> client.listBalanceTransfers(request), SubaccountsResponseException.class);
 		assert403ResponseException(client::listBalanceTransfers);
+
+		new SubaccountsEndpointTestSpec<ListTransfersFilter, ListTransfersResponseWrapper>() {
+
+			@Override
+			protected RestEndpoint<ListTransfersFilter, ListTransfersResponseWrapper> endpoint() {
+				return client.listBalanceTransfers;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedEndpointUri(ListTransfersFilter request) {
+				return "/accounts/"+apiKey+"/balance-transfers?start_date=1970-01-01T00%3A00%3A00Z";
+			}
+
+			@Override
+			protected ListTransfersFilter sampleRequest() {
+				return ListTransfersFilter.builder().build();
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return null;
+			}
+		}
+		.runTests();
+	}
+
+	abstract class MoneyTransferEndpointTestSpec extends SubaccountsEndpointTestSpec<MoneyTransfer, MoneyTransfer> {
+
+		abstract String name();
+
+		@Override
+		protected HttpMethod expectedHttpMethod() {
+			return HttpMethod.POST;
+		}
+
+		@Override
+		protected String expectedEndpointUri(MoneyTransfer request) {
+			return "/accounts/"+apiKey+"/"+name()+"-transfers";
+		}
+
+		@Override
+		protected MoneyTransfer sampleRequest() {
+			return MoneyTransfer.builder()
+					.from("7c9738e6").to("ad6dc56f")
+					.reference("This gets added to the audit log")
+					.amount(BigDecimal.valueOf(123.45)).build();
+		}
+
+		@Override
+		protected String sampleRequestBodyString() {
+			MoneyTransfer request = sampleRequest();
+			return "{\"from\":\""+request.getFrom()+"\",\"to\":\""+request.getTo() +
+					"\",\"amount\":"+request.getAmount()+",\"reference\":\""+request.getReference()+"\"}";
+		}
 	}
 
 	@Test
@@ -188,6 +463,20 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 		stubResponseAndAssertThrows(200, () -> client.transferCredit(null), NullPointerException.class);
 		stubResponseAndAssertThrows(401, () -> client.transferCredit(request), SubaccountsResponseException.class);
 		assert403ResponseException(() -> client.transferCredit(request));
+
+		new MoneyTransferEndpointTestSpec() {
+
+			@Override
+			String name() {
+				return "credit";
+			}
+
+			@Override
+			protected RestEndpoint<MoneyTransfer, MoneyTransfer> endpoint() {
+				return client.transferCredit;
+			}
+		}
+		.runTests();
 	}
 
 	@Test
@@ -199,6 +488,20 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 		stubResponseAndAssertThrows(200, () -> client.transferBalance(null), NullPointerException.class);
 		stubResponseAndAssertThrows(401, () -> client.transferBalance(request), SubaccountsResponseException.class);
 		assert403ResponseException(() -> client.transferBalance(request));
+
+		new MoneyTransferEndpointTestSpec() {
+
+			@Override
+			String name() {
+				return "balance";
+			}
+
+			@Override
+			protected RestEndpoint<MoneyTransfer, MoneyTransfer> endpoint() {
+				return client.transferBalance;
+			}
+		}
+		.runTests();
 	}
 
 	@Test
@@ -219,5 +522,35 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 		stubResponseAndAssertThrows(200, () -> client.transferNumber(null), NullPointerException.class);
 		stubResponseAndAssertThrows(401, () -> client.transferNumber(request), SubaccountsResponseException.class);
 		assert403ResponseException(() -> client.transferNumber(request));
+
+		new SubaccountsEndpointTestSpec<NumberTransfer, NumberTransfer>() {
+
+			@Override
+			protected RestEndpoint<NumberTransfer, NumberTransfer> endpoint() {
+				return client.transferNumber;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.POST;
+			}
+
+			@Override
+			protected String expectedEndpointUri(NumberTransfer request) {
+				return "/accounts/"+apiKey+"/transfer-number";
+			}
+
+			@Override
+			protected NumberTransfer sampleRequest() {
+				return NumberTransfer.builder()
+						.from("7c9738e6").to("ad6dc56f").country("GB").number("23507703696").build();
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"from\":\"7c9738e6\",\"to\":\"ad6dc56f\",\"number\":\"23507703696\",\"country\":\"GB\"}";
+			}
+		}
+		.runTests();
 	}
 }

@@ -17,26 +17,23 @@ package com.vonage.client.sms;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageResponseParseException;
+import com.vonage.client.Jsonable;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SmsSubmissionResponse {
+public class SmsSubmissionResponse implements Jsonable {
     private int messageCount;
     private List<SmsSubmissionResponseMessage> messages;
 
     public static SmsSubmissionResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, SmsSubmissionResponse.class);
-        } catch (JsonProcessingException jme) {
-            throw new VonageResponseParseException("Failed to produce SmsSubmissionResponse from json.", jme);
-        }
+        SmsSubmissionResponse response = new SmsSubmissionResponse();
+        response.updateFromJson(json);
+        return response;
     }
 
     /**
+     * Message count.
+     *
      * @return The number of messages in the request.
      */
     @JsonProperty("message-count")
@@ -45,7 +42,9 @@ public class SmsSubmissionResponse {
     }
 
     /**
-     * @return Responses for each of the messages.
+     * Responses for each of the messages.
+     *
+     * @return The list of message responses in order of submission.
      */
     @JsonProperty("messages")
     public List<SmsSubmissionResponseMessage> getMessages() {

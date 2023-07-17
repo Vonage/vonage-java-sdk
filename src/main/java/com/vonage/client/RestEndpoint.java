@@ -15,17 +15,14 @@
  */
 package com.vonage.client;
 
-import java.io.IOException;
-
 /**
  * Internal interface for defining endpoints.
  *
- * @param <RequestT> The request type.
- * @param <ResponseT> The response type.
- *
- * @deprecated Please use Will be removed in a future release. Please use {@link RestEndpoint}.
+ * @param <T> The request type.
+ * @param <R> The response type.
  */
-@Deprecated
-public interface Method<RequestT, ResponseT> {
-    ResponseT execute(RequestT request) throws IOException, VonageClientException;
+public interface RestEndpoint<T, R> extends Method<T, R> {
+
+    @Override
+    R execute(T request) throws VonageClientException;
 }

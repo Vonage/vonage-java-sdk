@@ -17,8 +17,10 @@ package com.vonage.client.sns;
 
 import com.vonage.client.*;
 import com.vonage.client.sns.request.SnsPublishRequest;
+import com.vonage.client.sns.request.SnsRequest;
 import com.vonage.client.sns.request.SnsSubscribeRequest;
 import com.vonage.client.sns.response.SnsPublishResponse;
+import com.vonage.client.sns.response.SnsResponse;
 import com.vonage.client.sns.response.SnsSubscribeResponse;
 
 /**
@@ -26,7 +28,7 @@ import com.vonage.client.sns.response.SnsSubscribeResponse;
  * VonageClient#getSnsClient()}.
  */
 public class SnsClient {
-    final SnsEndpoint endpoint;
+    final RestEndpoint<SnsRequest, SnsResponse> endpoint;
 
     /**
      * Constructor.

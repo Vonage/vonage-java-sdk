@@ -15,11 +15,12 @@
  */
 package com.vonage.client.sns;
 
-import com.vonage.client.AbstractMethod;
+import com.vonage.client.DynamicEndpoint;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.auth.SignatureAuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.common.HttpMethod;
 import com.vonage.client.legacyutils.XmlParser;
 import com.vonage.client.legacyutils.XmlUtil;
 import com.vonage.client.sns.request.SnsRequest;
@@ -28,48 +29,24 @@ import com.vonage.client.sns.response.SnsResponse;
 import com.vonage.client.sns.response.SnsSubscribeResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.RequestBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.Map;
 
-class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
-    private static final Log log = LogFactory.getLog(SnsClient.class);
-    private static final Class<?>[] ALLOWED_AUTH_METHODS = {SignatureAuthMethod.class, TokenAuthMethod.class};
-    private static final String PATH = "/sns/xml";
+class SnsEndpoint extends DynamicEndpoint<SnsRequest, SnsResponse> {
+    private static final Log LOG = LogFactory.getLog(SnsClient.class);
 
-    private final XmlParser xmlParser = new XmlParser();
-
-    SnsEndpoint(HttpWrapper httpWrapper) {
-        super(httpWrapper);
+    @SuppressWarnings("unchecked")
+    protected SnsEndpoint(HttpWrapper wrapper) {
+        super(DynamicEndpoint.<SnsRequest, SnsResponse> builder(SnsResponse.class)
+                .wrapper(wrapper).requestMethod(HttpMethod.POST)
+                .authMethod(SignatureAuthMethod.class, TokenAuthMethod.class)
+                .pathGetter((de, req) -> de.getHttpWrapper().getHttpConfig().getSnsBaseUri() + "/sns/xml")
+        );
     }
 
     @Override
-    protected Class<?>[] getAcceptableAuthMethods() {
-        return ALLOWED_AUTH_METHODS;
-    }
-
-    @Override
-    public RequestBuilder makeRequest(SnsRequest snsRequest) throws UnsupportedEncodingException {
-        String uri = httpWrapper.getHttpConfig().getSnsBaseUri() + PATH;
-        RequestBuilder requestBuilder = RequestBuilder.post(uri)
-                .addParameter("cmd", snsRequest.getCommand());
-        for (Map.Entry<String, String> entry : snsRequest.getQueryParameters().entrySet()) {
-            requestBuilder.addParameter(entry.getKey(), entry.getValue());
-        }
-        return requestBuilder;
-    }
-
-    @Override
-    public SnsResponse parseResponse(HttpResponse response) throws IOException {
-        return parseSubmitResponse(basicResponseHandler.handleResponse(response));
-    }
-
-    protected SnsResponse parseSubmitResponse(String response) {
+    protected SnsResponse parseResponseFromString(String response) {
         // parse the response doc ...
 
         /*
@@ -86,13 +63,10 @@ class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
 
         */
 
-        Document doc = xmlParser.parseXml(response);
+        Document doc = new XmlParser().parseXml(response);
 
-        String command = null;
         int resultCode = -1;
-        String resultMessage = null;
-        String transactionId = null;
-        String subscriberArn = null;
+        String command = null, resultMessage = null, transactionId = null, subscriberArn = null;
 
         NodeList replies = doc.getElementsByTagName("nexmo-sns");
         Node reply = replies.item(0);   // If there's more than one reply, we ignore the extras.
@@ -110,7 +84,7 @@ class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
                             resultCode = XmlUtil.intValue(node);
                         }
                         catch (Exception e) {
-                            log.error("xml parser .. invalid value in <resultCode> node [ " + XmlUtil.stringValue(node)
+                            LOG.error("xml parser .. invalid value in <resultCode> node [ " + XmlUtil.stringValue(node)
                                     + " ] ");
                             resultCode = SnsResponse.STATUS_INTERNAL_ERROR;
                         }
@@ -125,7 +99,7 @@ class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
                         subscriberArn = XmlUtil.stringValue(node);
                         break;
                     default:
-                        log.error("xml parser .. unknown node found in nexmo-sns [ " + node.getNodeName() + " ] ");
+                        LOG.error("xml parser .. unknown node found in nexmo-sns [ " + node.getNodeName() + " ] ");
                         break;
                 }
             }
@@ -134,12 +108,13 @@ class SnsEndpoint extends AbstractMethod<SnsRequest, SnsResponse> {
         if (resultCode == -1) {
             throw new VonageResponseParseException("Xml Parser - did not find a <resultCode> node");
         }
-
         if ("publish".equals(command)) {
             return new SnsPublishResponse(resultCode, resultMessage, transactionId);
-        } else if ("subscribe".equals(command)) {
+        }
+        else if ("subscribe".equals(command)) {
             return new SnsSubscribeResponse(resultCode, resultMessage, subscriberArn);
-        } else {
+        }
+        else {
             throw new VonageResponseParseException("Unknown command value: " + command);
         }
     }
