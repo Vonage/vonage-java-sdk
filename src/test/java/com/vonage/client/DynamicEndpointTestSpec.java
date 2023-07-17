@@ -106,6 +106,13 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 		return endpointAsAbstractMethod().parseResponse(TestUtils.makeJsonHttpResponse(statusCode, expectedResponse));
 	}
 
+	protected void assertRequestContainsParams(Map<String, String> expectedParams, T request) throws Exception {
+		RequestBuilder builder = endpointAsAbstractMethod().makeRequest(request);
+		Map<String, String> actualParams = builder.getParameters().stream()
+				.collect(Collectors.toMap(NameValuePair::getName, NameValuePair::getValue));
+		assertTrue(actualParams.entrySet().containsAll(expectedParams.entrySet()));
+	}
+
 	protected void assertRequestParams(Map<String, String> expectedParams, T request) throws Exception {
 		RequestBuilder builder = endpointAsAbstractMethod().makeRequest(request);
 		List<NameValuePair> actualParams = builder.getParameters();
