@@ -18,6 +18,7 @@ package com.vonage.client.application;
 import com.vonage.client.*;
 import com.vonage.client.auth.TokenAuthMethod;
 import com.vonage.client.common.HttpMethod;
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -113,15 +114,26 @@ public class ApplicationClient {
     }
 
     /**
-     * List the first 1000 available applications.
+     * Lists the first 1000 available applications.
      *
      * @return The list of available applications.
+     *
+     * @since 7.7.0
+     */
+    public List<Application> listAllApplications() {
+        return listApplications(ListApplicationRequest.builder().pageSize(1000).build()).getApplications();
+    }
+
+    /**
+     * Lists the first page of available applications.
+     *
+     * @return The ApplicationList HAL response.
      *
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      * @throws VonageClientException        if there was a problem with the Vonage request.
      */
     public ApplicationList listApplications() throws VonageResponseParseException, VonageClientException {
-        return listApplications(ListApplicationRequest.builder().pageSize(1000).build());
+        return listApplications(ListApplicationRequest.builder().build());
     }
 
     /**
@@ -129,7 +141,7 @@ public class ApplicationClient {
      *
      * @param listApplicationRequest The page and number of applications per page to list.
      *
-     * @return The list of available applications.
+     * @return The ApplicationList HAL response.
      *
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      * @throws VonageClientException        if there was a problem with the Vonage request.

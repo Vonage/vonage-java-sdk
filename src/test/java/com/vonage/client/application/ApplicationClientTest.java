@@ -340,7 +340,7 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
 
     @Test
     public void testListApplicationWithMultipleResults() throws Exception {
-        stubResponse("{\n" +
+        String json = "{\n" +
                 "  \"page_size\": 10,\n" +
                 "  \"page\": 1,\n" +
                 "  \"total_items\": 12,\n" +
@@ -385,10 +385,9 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
                 "      }\n" +
                 "    ]\n" +
                 "  }\n" +
-                "}"
-        );
+                "}";
 
-        ApplicationList response = client.listApplications();
+        ApplicationList response = stubResponseAndGet(json, client::listApplications);
 
         assertEquals((Object) 10, response.getPageSize());
         assertEquals((Object) 1, response.getPage());
@@ -401,6 +400,20 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
 
         assertEquals("My Application", applications.get(0).getName());
         assertEquals("My Second Application", applications.get(1).getName());
+
+        applications = stubResponseAndGet(json, client::listAllApplications);
+        assertEquals(2, applications.size());
+    }
+
+    @Test
+    public void testListApplicationWithNoResults() throws Exception {
+        String json = "{\"page\":1,\"_embedded\":{\"applications\":[]}}";
+        ApplicationList hal = stubResponseAndGet(json, () ->
+                client.listApplications(ListApplicationRequest.builder().page(1).build())
+        );
+        assertEquals(0, hal.getApplications().size());
+        assertEquals(1, hal.getPage().intValue());
+        assertEquals(0, stubResponseAndGet(json, client::listAllApplications).size());
     }
 
     static abstract class ApplicationEndpointTestSpec<T, R> extends DynamicEndpointTestSpec<T, R> {
