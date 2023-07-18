@@ -106,7 +106,7 @@ public class TalkAction implements Action {
          *             <p>
          *             To use SSML tags, you must enclose the text in a speak element.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder text(String text) {
             this.text = text;
@@ -119,7 +119,7 @@ public class TalkAction implements Action {
          *                message in your Interactive Voice Response (IVR). If you set bargeIn to true the next
          *                action in the NCCO stack must be an input action. The default value is false.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder bargeIn(Boolean bargeIn) {
             this.bargeIn = bargeIn;
@@ -130,7 +130,7 @@ public class TalkAction implements Action {
          * @param loop The number of times text is repeated before the Call is closed.
          *             The default value is 1. Set to 0 to loop infinitely.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder loop(Integer loop) {
             this.loop = loop;
@@ -141,7 +141,7 @@ public class TalkAction implements Action {
          * @param level The volume level that the speech is played. This can be any value between -1 to 1 with 0
          *              being the default.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder level(Float level) {
             this.level = level;
@@ -151,7 +151,7 @@ public class TalkAction implements Action {
         /**
          * @param language The Language to use when converting the text to speech.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder language(TextToSpeechLanguage language) {
             this.language = language;
@@ -161,7 +161,7 @@ public class TalkAction implements Action {
         /**
          * @param style The vocal style to use.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder style(Integer style) {
             this.style = style;
@@ -172,7 +172,7 @@ public class TalkAction implements Action {
          * @param premium Whether to use Premium text-to-speech. Set to {@code true} to use the premium version
          *                of the specified style if available, otherwise the standard version will be used.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder premium(Boolean premium) {
             this.premium = premium;

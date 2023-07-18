@@ -101,7 +101,7 @@ public class VoiceTest {
         assertThrows(IllegalArgumentException.class, () -> whBuilder.connectionTimeout(connMax+1).build());
         whBuilder.connectionTimeout(500);
 
-        Integer sockMin = 1000, sockMax = 5000;
+        Integer sockMin = 1000, sockMax = 10000;
         assertEquals(sockMin, whBuilder.socketTimeout(sockMin).build().getSocketTimeout());
         assertThrows(IllegalArgumentException.class, () -> whBuilder.socketTimeout(sockMin-1).build());
         assertEquals(sockMax, whBuilder.socketTimeout(sockMax).build().getSocketTimeout());

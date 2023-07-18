@@ -47,7 +47,7 @@ public class Webhook {
             }
         }
         if ((socketTimeout = builder.socketTimeout) != null) {
-            int min = 1000, max = 5000;
+            int min = 1000, max = 10000;
             if (socketTimeout < min || socketTimeout > max) {
                 throw new IllegalArgumentException(
                         "Socket timeout must be between "+min+" and "+max+" milliseconds."
