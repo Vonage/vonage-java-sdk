@@ -18,15 +18,12 @@ package com.vonage.client.application;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.Jsonable;
 import com.vonage.client.application.capabilities.*;
-import java.io.IOException;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Application {
+public class Application implements Jsonable {
     private String id, name;
     private Keys keys;
     private Capabilities capabilities;
@@ -57,16 +54,16 @@ public class Application {
         return capabilities;
     }
 
-    public String toJson() {
-        try {
-            return new ObjectMapper().writeValueAsString(this);
-        } catch (JsonProcessingException jpe) {
-            throw new VonageUnexpectedException("Failed to produce json from Application object.", jpe);
-        }
+    public static Application fromJson(String json) {
+        Application application = new Application();
+        application.updateFromJson(json);
+        return application;
     }
 
     /**
-     * @return A new Builder to start building.
+     * Entry point for creating an instance of this class.
+     * 
+     * @return A new Builder.
      */
     public static Builder builder() {
         return new Builder();
@@ -81,14 +78,6 @@ public class Application {
      */
     public static Builder builder(Application application) {
         return new Builder(application);
-    }
-
-    public static Application fromJson(String json) {
-        try {
-            return new ObjectMapper().readValue(json, Application.class);
-        } catch (IOException e) {
-            throw new VonageUnexpectedException("Failed to produce Application from json.", e);
-        }
     }
 
     public static class Builder {
@@ -108,7 +97,7 @@ public class Application {
         /**
          * @param name The name of the application.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder name(String name) {
             this.name = name;
@@ -118,7 +107,7 @@ public class Application {
         /**
          * @param publicKey The public key for use with the application.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder publicKey(String publicKey) {
             keys = new Keys();
@@ -132,15 +121,13 @@ public class Application {
          *
          * @param capability The capability to add to it.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder addCapability(Capability capability) {
             if (capabilities == null) {
                 capabilities = new Capabilities();
             }
-
             capabilities.setCapability(capability);
-
             return this;
         }
 
@@ -149,15 +136,13 @@ public class Application {
          *
          * @param type The type of capability to remove.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder removeCapability(Capability.Type type) {
-            if (capabilities == null) {
-                capabilities = new Capabilities();
+            if (capabilities != null) {
+                capabilities.setCapability(type, null);
+                capabilities = shouldBeDeleted(capabilities) ? null : capabilities;
             }
-
-            capabilities.setCapability(type, null);
-            capabilities = shouldBeDeleted(capabilities) ? null : capabilities;
             return this;
         }
 
@@ -173,6 +158,29 @@ public class Application {
                     && capabilities.rtc == null
                     && capabilities.messages == null
                     && capabilities.vbc == null);
+        }
+    }
+
+    /**
+     * Application privacy configuration settings.
+     *
+     * @since 7.7.0
+     */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class Privacy {
+        private Boolean improveAi;
+
+        /**
+         * Whether Vonage may store and use your content and data for the improvement of
+         * Vonage's AI based services and technologies.
+         *
+         * @return {@code true} if Vonage may use the data for improving its AI services,
+         * or {@code null} if unspecified.
+         */
+        @JsonProperty("improve_ai")
+        public Boolean getImproveAi() {
+            return improveAi;
         }
     }
 

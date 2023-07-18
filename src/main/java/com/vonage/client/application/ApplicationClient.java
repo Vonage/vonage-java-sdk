@@ -16,24 +16,46 @@
 package com.vonage.client.application;
 
 import com.vonage.client.*;
+import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.common.HttpMethod;
+import java.util.function.Function;
 
 /**
- * A client for talking to the Vonage Application API. The standard way to obtain an instance of this class is to use
- * {@link VonageClient#getApplicationClient()}
+ * A client for talking to the Vonage Application API. The standard way to obtain an instance of
+ * this class is to use {@link VonageClient#getApplicationClient()}
  */
 public class ApplicationClient {
-    final CreateApplicationEndpoint createApplicationEndpoint;
-    final UpdateApplicationEndpoint updateApplicationEndpoint;
-    final GetApplicationEndpoint getApplicationEndpoint;
-    final DeleteApplicationEndpoint deleteApplicationEndpoint;
-    final ListApplicationsEndpoint listApplicationsEndpoint;
+    final RestEndpoint<ListApplicationRequest, ApplicationList> listApplications;
+    final RestEndpoint<Application, Application> createApplication;
+    final RestEndpoint<String, Application> getApplication;
+    final RestEndpoint<Application, Application> updateApplication;
+    final RestEndpoint<String, Void> deleteApplication;
 
-    public ApplicationClient(HttpWrapper httpWrapper) {
-        createApplicationEndpoint = new CreateApplicationEndpoint(httpWrapper);
-        updateApplicationEndpoint = new UpdateApplicationEndpoint(httpWrapper);
-        getApplicationEndpoint = new GetApplicationEndpoint(httpWrapper);
-        deleteApplicationEndpoint = new DeleteApplicationEndpoint(httpWrapper);
-        listApplicationsEndpoint = new ListApplicationsEndpoint(httpWrapper);
+    public ApplicationClient(HttpWrapper wrapper) {
+        @SuppressWarnings("unchecked")
+        final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
+            Endpoint(Function<T, String> pathGetter, HttpMethod method, R... type) {
+                super(DynamicEndpoint.<T, R>builder((Class<R>) type.getClass().getComponentType())
+                        .responseExceptionType(VonageApiResponseException.class)
+                        .wrapper(wrapper).requestMethod(method)
+                        .authMethod(TokenAuthMethod.class).applyAsBasicAuth()
+                        .pathGetter((de, req) -> {
+                            String base = de.getHttpWrapper().getHttpConfig().getVersionedApiBaseUri("v2");
+                            String path = base + "/applications";
+                            if (pathGetter != null) {
+                                path += "/" + pathGetter.apply(req);
+                            }
+                            return path;
+                        })
+                );
+            }
+        }
+
+        listApplications = new Endpoint<>(null, HttpMethod.GET);
+        createApplication = new Endpoint<>(null, HttpMethod.POST);
+        getApplication = new Endpoint<>(id -> id, HttpMethod.GET);
+        updateApplication = new Endpoint<>(Application::getId, HttpMethod.PUT);
+        deleteApplication = new Endpoint<>(id -> id, HttpMethod.DELETE);
     }
 
     /**
@@ -47,7 +69,7 @@ public class ApplicationClient {
      * @throws VonageClientException        if there was a problem with the Vonage request.
      */
     public Application createApplication(Application application) throws VonageResponseParseException, VonageClientException {
-        return createApplicationEndpoint.execute(application);
+        return createApplication.execute(application);
     }
 
     /**
@@ -61,7 +83,7 @@ public class ApplicationClient {
      * @throws VonageClientException        if there was a problem with the Vonage request.
      */
     public Application updateApplication(Application application) throws VonageResponseParseException, VonageClientException {
-        return updateApplicationEndpoint.execute(application);
+        return updateApplication.execute(application);
     }
 
     /**
@@ -75,7 +97,7 @@ public class ApplicationClient {
      * @throws VonageClientException        if there was a problem with the Vonage request.
      */
     public Application getApplication(String id) throws VonageResponseParseException, VonageClientException {
-        return getApplicationEndpoint.execute(id);
+        return getApplication.execute(id);
     }
 
     /**
@@ -87,11 +109,11 @@ public class ApplicationClient {
      * @throws VonageClientException        if there was a problem with the Vonage request.
      */
     public void deleteApplication(String id) throws VonageResponseParseException, VonageClientException {
-        deleteApplicationEndpoint.execute(id);
+        deleteApplication.execute(id);
     }
 
     /**
-     * List the first page of available applications.
+     * List the first 1000 available applications.
      *
      * @return The list of available applications.
      *
@@ -99,7 +121,7 @@ public class ApplicationClient {
      * @throws VonageClientException        if there was a problem with the Vonage request.
      */
     public ApplicationList listApplications() throws VonageResponseParseException, VonageClientException {
-        return listApplications(null);
+        return listApplications(ListApplicationRequest.builder().pageSize(1000).build());
     }
 
     /**
@@ -113,6 +135,6 @@ public class ApplicationClient {
      * @throws VonageClientException        if there was a problem with the Vonage request.
      */
     public ApplicationList listApplications(ListApplicationRequest listApplicationRequest) throws VonageResponseParseException, VonageClientException {
-        return listApplicationsEndpoint.execute(listApplicationRequest);
+        return listApplications.execute(listApplicationRequest);
     }
 }

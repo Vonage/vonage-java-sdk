@@ -50,6 +50,7 @@ public class Webhook {
 
     public enum Type {
         ANSWER("answer_url"),
+        FALLBACK_ANSWER("fallback_answer_url"),
         EVENT("event_url"),
         INBOUND("inbound_url"),
         STATUS("status_url"),

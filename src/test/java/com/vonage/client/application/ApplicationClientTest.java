@@ -16,12 +16,17 @@
 package com.vonage.client.application;
 
 import com.vonage.client.ClientTest;
+import com.vonage.client.DynamicEndpointTestSpec;
+import com.vonage.client.RestEndpoint;
+import com.vonage.client.VonageApiResponseException;
 import com.vonage.client.application.capabilities.*;
+import com.vonage.client.auth.AuthMethod;
+import com.vonage.client.auth.TokenAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.common.Webhook;
+import static org.junit.Assert.*;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import java.util.*;
 
 public class ApplicationClientTest extends ClientTest<ApplicationClient> {
 
@@ -31,7 +36,7 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
 
     @Test
     public void testCreateApplication() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(201, "{\n" +
+        stubResponse(201, "{\n" +
                 "  \"id\": \"78d335fa323d01149c3dd6f0d48968cf\",\n" +
                 "  \"name\": \"My Application\",\n" +
                 "  \"capabilities\": {\n" +
@@ -73,7 +78,8 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
                 "    \"public_key\": \"-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCA\\nKOxjsU4pf/sMFi9N0jqcSLcjxu33G\\nd/vynKnlw9SENi+UZR44GdjGdmfm1\\ntL1eA7IBh2HNnkYXnAwYzKJoa4eO3\\n0kYWekeIZawIwe/g9faFgkev+1xsO\\nOUNhPx2LhuLmgwWSRS4L5W851Xe3f\\nUQIDAQAB\\n-----END PUBLIC KEY-----\\n\",\n" +
                 "    \"private_key\": \"-----BEGIN PRIVATE KEY-----\\nMIIEvQIBADANBgkqhkiG9w0BAQEFA\\nASCBKcwggSjAgEAAoIBAQDEPpvi+3\\nRH1efQ\\\\nkveWzZDrNNoEXmBw61w+O\\n0u/N36tJnN5XnYecU64yHzu2ByEr0\\n7iIvYbavFnADwl\\\\nHMTJwqDQakpa3\\n8/SFRnTDq3zronvNZ6nOp7S6K7pcZ\\nrw/CvrL6hXT1x7cGBZ4jPx\\\\nqhjqY\\nuJPgZD7OVB69oYOV92vIIJ7JLYwqb\\n-----END PRIVATE KEY-----\\n\"\n" +
                 "  }\n" +
-                "}"));
+                "}"
+        );
 
         Application response = client.createApplication(Application.builder().build());
 
@@ -108,7 +114,7 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
 
     @Test
     public void testUpdateApplication() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(200, "{\n" +
+        stubResponse( "{\n" +
                 "  \"id\": \"78d335fa323d01149c3dd6f0d48968cf\",\n" +
                 "  \"name\": \"My Application\",\n" +
                 "  \"capabilities\": {\n" +
@@ -150,7 +156,8 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
                 "    \"public_key\": \"-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCA\\nKOxjsU4pf/sMFi9N0jqcSLcjxu33G\\nd/vynKnlw9SENi+UZR44GdjGdmfm1\\ntL1eA7IBh2HNnkYXnAwYzKJoa4eO3\\n0kYWekeIZawIwe/g9faFgkev+1xsO\\nOUNhPx2LhuLmgwWSRS4L5W851Xe3f\\nUQIDAQAB\\n-----END PUBLIC KEY-----\\n\",\n" +
                 "    \"private_key\": \"-----BEGIN PRIVATE KEY-----\\nMIIEvQIBADANBgkqhkiG9w0BAQEFA\\nASCBKcwggSjAgEAAoIBAQDEPpvi+3\\nRH1efQ\\\\nkveWzZDrNNoEXmBw61w+O\\n0u/N36tJnN5XnYecU64yHzu2ByEr0\\n7iIvYbavFnADwl\\\\nHMTJwqDQakpa3\\n8/SFRnTDq3zronvNZ6nOp7S6K7pcZ\\nrw/CvrL6hXT1x7cGBZ4jPx\\\\nqhjqY\\nuJPgZD7OVB69oYOV92vIIJ7JLYwqb\\n-----END PRIVATE KEY-----\\n\"\n" +
                 "  }\n" +
-                "}"));
+                "}"
+        );
 
         Application response = client.updateApplication(Application.builder().build());
 
@@ -185,7 +192,7 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
 
     @Test
     public void testGetApplication() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(200, "{\n" +
+        stubResponse( "{\n" +
                 "  \"id\": \"78d335fa323d01149c3dd6f0d48968cf\",\n" +
                 "  \"name\": \"My Application\",\n" +
                 "  \"capabilities\": {\n" +
@@ -227,7 +234,8 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
                 "    \"public_key\": \"-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCA\\nKOxjsU4pf/sMFi9N0jqcSLcjxu33G\\nd/vynKnlw9SENi+UZR44GdjGdmfm1\\ntL1eA7IBh2HNnkYXnAwYzKJoa4eO3\\n0kYWekeIZawIwe/g9faFgkev+1xsO\\nOUNhPx2LhuLmgwWSRS4L5W851Xe3f\\nUQIDAQAB\\n-----END PUBLIC KEY-----\\n\",\n" +
                 "    \"private_key\": \"-----BEGIN PRIVATE KEY-----\\nMIIEvQIBADANBgkqhkiG9w0BAQEFA\\nASCBKcwggSjAgEAAoIBAQDEPpvi+3\\nRH1efQ\\\\nkveWzZDrNNoEXmBw61w+O\\n0u/N36tJnN5XnYecU64yHzu2ByEr0\\n7iIvYbavFnADwl\\\\nHMTJwqDQakpa3\\n8/SFRnTDq3zronvNZ6nOp7S6K7pcZ\\nrw/CvrL6hXT1x7cGBZ4jPx\\\\nqhjqY\\nuJPgZD7OVB69oYOV92vIIJ7JLYwqb\\n-----END PRIVATE KEY-----\\n\"\n" +
                 "  }\n" +
-                "}"));
+                "}"
+        );
 
         Application response = client.getApplication("78d335fa323d01149c3dd6f0d48968cf");
 
@@ -262,18 +270,16 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
 
     @Test
     public void testDeleteApplication() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(204, ""));
-
-        client.deleteApplication("78d335fa323d01149c3dd6f0d48968cf");
+        stubResponseAndRun(204, () -> client.deleteApplication("78d335fa323d01149c3dd6f0d48968cf"));
     }
 
     @Test
     public void testListApplicationWithOneResult() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(200, "{\n" +
+        stubResponse("{\n" +
                 "  \"page_size\": 10,\n" +
-                "  \"page\": 1,\n" +
-                "  \"total_items\": 1,\n" +
-                "  \"total_pages\": 1,\n" +
+                "  \"page\": 5,\n" +
+                "  \"total_items\": 6,\n" +
+                "  \"total_pages\": 7,\n" +
                 "  \"_embedded\": {\n" +
                 "    \"applications\": [\n" +
                 "      {\n" +
@@ -317,25 +323,24 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
                 "      }\n" +
                 "    ]\n" +
                 "  }\n" +
-                "}"));
+                "}"
+        );
 
         ApplicationList response = client.listApplications();
-
-        assertEquals(10, response.getPageSize());
-        assertEquals(1, response.getPage());
-        assertEquals(1, response.getTotalItems());
-        assertEquals(1, response.getTotalPages());
-
+        assertEquals((Object) 10, response.getPageSize());
+        assertEquals((Object) 5, response.getPage());
+        assertEquals((Object) 6, response.getTotalItems());
+        assertEquals((Object) 7, response.getTotalPages());
         assertEquals(1, response.getApplications().size());
     }
 
     @Test
     public void testListApplicationWithMultipleResults() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(200, "{\n" +
+        stubResponse("{\n" +
                 "  \"page_size\": 10,\n" +
                 "  \"page\": 1,\n" +
-                "  \"total_items\": 2,\n" +
-                "  \"total_pages\": 1,\n" +
+                "  \"total_items\": 12,\n" +
+                "  \"total_pages\": 3,\n" +
                 "  \"_embedded\": {\n" +
                 "    \"applications\": [\n" +
                 "      {\n" +
@@ -376,15 +381,189 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
                 "      }\n" +
                 "    ]\n" +
                 "  }\n" +
-                "}"));
+                "}"
+        );
 
         ApplicationList response = client.listApplications();
 
-        assertEquals(10, response.getPageSize());
-        assertEquals(1, response.getPage());
-        assertEquals(2, response.getTotalItems());
-        assertEquals(1, response.getTotalPages());
+        assertEquals((Object) 10, response.getPageSize());
+        assertEquals((Object) 1, response.getPage());
+        assertEquals((Object) 12, response.getTotalItems());
+        assertEquals((Object) 3, response.getTotalPages());
 
-        assertEquals(2, response.getApplications().size());
+        List<Application> applications = response.getApplications();
+        assertNotNull(applications);
+        assertEquals(2, applications.size());
+
+        assertEquals("My Application", applications.get(0).getName());
+        assertEquals("My Second Application", applications.get(1).getName());
+    }
+
+    static abstract class ApplicationEndpointTestSpec<T, R> extends DynamicEndpointTestSpec<T, R> {
+
+        @Override
+        protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
+            return Collections.singletonList(TokenAuthMethod.class);
+        }
+
+        @Override
+        protected Class<? extends Exception> expectedResponseExceptionType() {
+            return VonageApiResponseException.class;
+        }
+
+        @Override
+        protected String expectedDefaultBaseUri() {
+            return "https://api.nexmo.com";
+        }
+
+        @Override
+        protected String expectedEndpointUri(T request) {
+            String base = "/v2/applications", suffix;
+            if (request instanceof String) {
+                suffix = (String) request;
+            }
+            else if (request instanceof Application && HttpMethod.PUT.equals(expectedHttpMethod())) {
+                suffix = ((Application) request).getId();
+            }
+            else {
+                suffix = null;
+            }
+            return suffix != null ? base + "/" + suffix : base;
+        }
+
+        @Override
+        protected String sampleRequestBodyString() {
+            return null;
+        }
+    }
+
+    @Test
+    public void testListApplicationsEndpoint() throws Exception {
+        new ApplicationEndpointTestSpec<ListApplicationRequest, ApplicationList>() {
+
+            @Override
+            protected RestEndpoint<ListApplicationRequest, ApplicationList> endpoint() {
+                return client.listApplications;
+            }
+
+            @Override
+            protected HttpMethod expectedHttpMethod() {
+                return HttpMethod.GET;
+            }
+
+            @Override
+            protected ListApplicationRequest sampleRequest() {
+                return ListApplicationRequest.builder().page(14).pageSize(25).build();
+            }
+
+            @Override
+            protected Map<String, String> sampleQueryParams() {
+                ListApplicationRequest request = sampleRequest();
+                Map<String, String> params = new LinkedHashMap<>();
+                params.put("page", String.valueOf(request.getPage()));
+                params.put("page_size", String.valueOf(request.getPageSize()));
+                return params;
+            }
+        }
+        .runTests();
+    }
+
+    @Test
+    public void testCreateApplicationEndpoint() throws Exception {
+        new ApplicationEndpointTestSpec<Application, Application>() {
+
+            @Override
+            protected RestEndpoint<Application, Application> endpoint() {
+                return client.createApplication;
+            }
+
+            @Override
+            protected HttpMethod expectedHttpMethod() {
+                return HttpMethod.POST;
+            }
+
+            @Override
+            protected Application sampleRequest() {
+                return Application.builder().name("Test app").build();
+            }
+
+            @Override
+            protected String sampleRequestBodyString() {
+                return "{\"name\":\"Test app\"}";
+            }
+        }
+        .runTests();
+    }
+
+    @Test
+    public void testGetApplicationEndpoint() throws Exception {
+        new ApplicationEndpointTestSpec<String, Application>() {
+
+            @Override
+            protected RestEndpoint<String, Application> endpoint() {
+                return client.getApplication;
+            }
+
+            @Override
+            protected HttpMethod expectedHttpMethod() {
+                return HttpMethod.GET;
+            }
+
+            @Override
+            protected String sampleRequest() {
+                return UUID.randomUUID().toString();
+            }
+        }
+        .runTests();
+    }
+
+    @Test
+    public void testUpdateApplicationEndpoint() throws Exception {
+        new ApplicationEndpointTestSpec<Application, Application>() {
+            final String APP_ID = UUID.randomUUID().toString();
+
+            @Override
+            protected RestEndpoint<Application, Application> endpoint() {
+                return client.updateApplication;
+            }
+
+            @Override
+            protected HttpMethod expectedHttpMethod() {
+                return HttpMethod.PUT;
+            }
+
+            @Override
+            protected Application sampleRequest() {
+                return Application.fromJson(sampleRequestBodyString());
+            }
+
+            @Override
+            protected String sampleRequestBodyString() {
+                return "{\"id\":\""+APP_ID+"\"}";
+            }
+        }
+        .runTests();
+    }
+
+    @Test
+    public void testDeleteApplicationEndpoint() throws Exception {
+        new ApplicationEndpointTestSpec<String, Void>() {
+
+            @Override
+            protected RestEndpoint<String, Void> endpoint() {
+                return client.deleteApplication;
+            }
+
+            @Override
+            protected HttpMethod expectedHttpMethod() {
+                return HttpMethod.DELETE;
+            }
+
+            @Override
+            protected String sampleRequest() {
+                return UUID.randomUUID().toString();
+            }
+        }
+        .runTests();
     }
 }
