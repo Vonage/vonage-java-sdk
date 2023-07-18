@@ -27,6 +27,7 @@ public class Application implements Jsonable {
     private String id, name;
     private Keys keys;
     private Capabilities capabilities;
+    private Privacy privacy;
 
     private Application() {
     }
@@ -36,6 +37,7 @@ public class Application implements Jsonable {
         name = builder.name;
         keys = builder.keys;
         capabilities = builder.capabilities;
+        privacy = builder.privacy;
     }
 
     public String getId() {
@@ -52,6 +54,10 @@ public class Application implements Jsonable {
 
     public Capabilities getCapabilities() {
         return capabilities;
+    }
+
+    public Privacy getPrivacy() {
+        return privacy;
     }
 
     public static Application fromJson(String json) {
@@ -81,6 +87,7 @@ public class Application implements Jsonable {
     }
 
     public static class Builder {
+        private Privacy privacy;
         private String id, name;
         private Keys keys;
         private Capabilities capabilities;
@@ -95,6 +102,27 @@ public class Application implements Jsonable {
         }
 
         /**
+         * Whether Vonage may store and use your content and data for the improvement of
+         * Vonage's AI based services and technologies. Default is {@code true}.
+         *
+         * @param improveAi {@code true} if you consent to data being used for AI improvement,
+         * or {@code false} to opt out.
+         *
+         * @return This builder.
+         *
+         * @since 7.7.0
+         */
+        public Builder improveAi(boolean improveAi) {
+            if (privacy == null) {
+                privacy = new Privacy();
+            }
+            privacy.improveAi = improveAi;
+            return this;
+        }
+
+        /**
+         * Sets the application name.
+         *
          * @param name The name of the application.
          *
          * @return This builder.
@@ -105,7 +133,9 @@ public class Application implements Jsonable {
         }
 
         /**
-         * @param publicKey The public key for use with the application.
+         * Sets the application's public key.
+         *
+         * @param publicKey The public key for use with the application as a string.
          *
          * @return This builder.
          */
@@ -141,23 +171,22 @@ public class Application implements Jsonable {
         public Builder removeCapability(Capability.Type type) {
             if (capabilities != null) {
                 capabilities.setCapability(type, null);
-                capabilities = shouldBeDeleted(capabilities) ? null : capabilities;
+                boolean noCapabilities =  capabilities.voice == null &&
+                        capabilities.rtc == null && capabilities.messages == null && capabilities.vbc == null;
+                if (noCapabilities) {
+                    capabilities = null;
+                }
             }
             return this;
         }
 
         /**
+         * Builds the Application object.
+         *
          * @return A new Application containing the configured properties.
          */
         public Application build() {
             return new Application(this);
-        }
-
-        private boolean shouldBeDeleted(Capabilities capabilities) {
-            return (capabilities.voice == null
-                    && capabilities.rtc == null
-                    && capabilities.messages == null
-                    && capabilities.vbc == null);
         }
     }
 

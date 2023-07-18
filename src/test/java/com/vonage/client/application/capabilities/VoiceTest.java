@@ -17,9 +17,8 @@ package com.vonage.client.application.capabilities;
 
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.common.Webhook;
+import static org.junit.Assert.*;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 public class VoiceTest {
     @Test
@@ -84,5 +83,33 @@ public class VoiceTest {
 
         assertEquals(Capability.Type.VOICE, voice.getType());
         assertNull(voice.getWebhooks());
+    }
+
+    @Test
+    public void testWebhookProperties() {
+        Webhook.Builder whBuilder = Webhook.builder().method(HttpMethod.GET);
+        assertThrows(IllegalStateException.class, whBuilder::build);
+        whBuilder.address("https://fallback.example.com/webhooks/answer");
+        assertEquals(HttpMethod.GET, whBuilder.build().getMethod());
+        assertThrows(IllegalStateException.class, () -> whBuilder.method(null).build());
+        assertNotNull(whBuilder.method(HttpMethod.GET).build().getAddress());
+
+        Integer connMin = 300, connMax = 1000;
+        assertEquals(connMin, whBuilder.connectionTimeout(connMin).build().getConnectionTimeout());
+        assertThrows(IllegalArgumentException.class, () -> whBuilder.connectionTimeout(connMin-1).build());
+        assertEquals(connMax, whBuilder.connectionTimeout(connMax).build().getConnectionTimeout());
+        assertThrows(IllegalArgumentException.class, () -> whBuilder.connectionTimeout(connMax+1).build());
+        whBuilder.connectionTimeout(500);
+
+        Integer sockMin = 1000, sockMax = 5000;
+        assertEquals(sockMin, whBuilder.socketTimeout(sockMin).build().getSocketTimeout());
+        assertThrows(IllegalArgumentException.class, () -> whBuilder.socketTimeout(sockMin-1).build());
+        assertEquals(sockMax, whBuilder.socketTimeout(sockMax).build().getSocketTimeout());
+        assertThrows(IllegalArgumentException.class, () -> whBuilder.socketTimeout(sockMax+1).build());
+
+        Webhook webhook = whBuilder.socketTimeout(3000).build();
+        Voice fallback = Voice.builder().addWebhook(Webhook.Type.FALLBACK_ANSWER, webhook).build();
+        assertEquals(1, fallback.getWebhooks().size());
+        assertEquals(webhook, fallback.getWebhooks().get(Webhook.Type.FALLBACK_ANSWER));
     }
 }

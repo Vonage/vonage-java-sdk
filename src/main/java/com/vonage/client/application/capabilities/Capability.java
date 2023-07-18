@@ -18,6 +18,7 @@ package com.vonage.client.application.capabilities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.common.Webhook;
 import java.util.LinkedHashMap;
@@ -47,6 +48,7 @@ public abstract class Capability {
      *
      * @return The webhooks as a Map, or {@code null} if there are none.
      */
+    @JsonProperty("webhooks")
     public Map<Webhook.Type, Webhook> getWebhooks() {
         return webhooks;
     }
