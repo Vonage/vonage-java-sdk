@@ -92,6 +92,7 @@ public class Webhook {
      * @return The connection timeout in milliseconds as an integer, or {@code null}
      * if unspecified (the default) / not applicable.
      */
+    @JsonProperty("connection_timeout")
     public Integer getConnectionTimeout() {
         return connectionTimeout;
     }
@@ -104,6 +105,7 @@ public class Webhook {
      * @return The socket timeout in milliseconds as an integer, or {@code null}
      * if unspecified (the default) / not applicable.
      */
+    @JsonProperty("socket_timeout")
     public Integer getSocketTimeout() {
         return socketTimeout;
     }

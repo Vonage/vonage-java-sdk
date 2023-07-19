@@ -60,9 +60,9 @@ public class ApplicationTest {
 
     @Test
     public void testAddMultipleCapabilitiesOfSameType() {
-        String expectedJson = "{\"capabilities\":{\"voice\":{\"webhooks\":{" +
-                "\"fallback_answer_url\":{\"connectionTimeout\":500,\"socketTimeout\":3600," +
-                "\"address\":\"https://fallback.example.com/webhooks/answer\",\"http_method\":\"GET\"}}}}}";
+        String expectedJson = "{\"capabilities\":{\"voice\":{\"webhooks\":{\"fallback_answer_url\":" +
+                "{\"address\":\"https://fallback.example.com/webhooks/answer\",\"http_method\":\"GET\"," +
+                "\"connection_timeout\":500,\"socket_timeout\":3600}}}}}";
 
         Application application = Application.builder()
                 .addCapability(Voice.builder().addWebhook(Webhook.Type.EVENT, Webhook.builder()

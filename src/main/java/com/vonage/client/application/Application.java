@@ -40,22 +40,54 @@ public class Application implements Jsonable {
         privacy = builder.privacy;
     }
 
+    /**
+     * Unique application ID.
+     *
+     * @return The application ID as a string, or {@code null} if unknown.
+     */
+    @JsonProperty("id")
     public String getId() {
         return id;
     }
 
+    /**
+     * Friendly identifier for your application. This is not unique.
+     *
+     * @return The application name.
+     */
+    @JsonProperty("name")
     public String getName() {
         return name;
     }
 
+    /**
+     * Cryptographic keys associated with this application.
+     *
+     * @return The keys for this application, or {@code null} if unknown / not applicable for this object.
+     */
+    @JsonProperty("keys")
     public Keys getKeys() {
         return keys;
     }
 
+    /**
+     * Your application can use multiple products. This contains the configuration for each product.
+     *
+     * @return The capabilities of this application, or {@code null} if unknown / not applicable for this object.
+     */
+    @JsonProperty("capabilities")
     public Capabilities getCapabilities() {
         return capabilities;
     }
 
+    /**
+     * Application privacy configuration.
+     *
+     * @return The privacy preferences, or {@code null} if unknown / not applicable for this object.
+     *
+     * @since 7.7.0
+     */
+    @JsonProperty("privacy")
     public Privacy getPrivacy() {
         return privacy;
     }
@@ -121,7 +153,7 @@ public class Application implements Jsonable {
         }
 
         /**
-         * Sets the application name.
+         * Set the friendly identifier for your application. This is not unique.
          *
          * @param name The name of the application.
          *

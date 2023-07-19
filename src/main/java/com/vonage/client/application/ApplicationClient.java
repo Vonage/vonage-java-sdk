@@ -19,6 +19,8 @@ import com.vonage.client.*;
 import com.vonage.client.auth.TokenAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.function.Function;
 
 /**
@@ -28,9 +30,9 @@ import java.util.function.Function;
 public class ApplicationClient {
     final RestEndpoint<ListApplicationRequest, ApplicationList> listApplications;
     final RestEndpoint<Application, Application> createApplication;
-    final RestEndpoint<String, Application> getApplication;
+    final RestEndpoint<UUID, Application> getApplication;
     final RestEndpoint<Application, Application> updateApplication;
-    final RestEndpoint<String, Void> deleteApplication;
+    final RestEndpoint<UUID, Void> deleteApplication;
 
     public ApplicationClient(HttpWrapper wrapper) {
         @SuppressWarnings("unchecked")
@@ -54,9 +56,17 @@ public class ApplicationClient {
 
         listApplications = new Endpoint<>(null, HttpMethod.GET);
         createApplication = new Endpoint<>(null, HttpMethod.POST);
-        getApplication = new Endpoint<>(id -> id, HttpMethod.GET);
+        getApplication = new Endpoint<>(UUID::toString, HttpMethod.GET);
         updateApplication = new Endpoint<>(Application::getId, HttpMethod.PUT);
-        deleteApplication = new Endpoint<>(id -> id, HttpMethod.DELETE);
+        deleteApplication = new Endpoint<>(UUID::toString, HttpMethod.DELETE);
+    }
+
+    private Application validateApplication(Application request) {
+        return Objects.requireNonNull(request, "Application request is required.");
+    }
+
+    private UUID validateApplicationId(String id) {
+        return UUID.fromString(Objects.requireNonNull(id, "Application ID is required."));
     }
 
     /**
@@ -66,11 +76,10 @@ public class ApplicationClient {
      *
      * @return The application which has been created.
      *
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     * @throws VonageClientException        if there was a problem with the Vonage request.
+     * @throws ApplicationResponseException If there was an error processing the request.
      */
-    public Application createApplication(Application application) throws VonageResponseParseException, VonageClientException {
-        return createApplication.execute(application);
+    public Application createApplication(Application application) throws ApplicationResponseException {
+        return createApplication.execute(validateApplication(application));
     }
 
     /**
@@ -80,37 +89,36 @@ public class ApplicationClient {
      *
      * @return The application which has been updated.
      *
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     * @throws VonageClientException        if there was a problem with the Vonage request.
+     * @throws ApplicationResponseException If there was an error processing the request.
      */
-    public Application updateApplication(Application application) throws VonageResponseParseException, VonageClientException {
-        return updateApplication.execute(application);
+    public Application updateApplication(Application application) throws ApplicationResponseException {
+        return updateApplication.execute(validateApplication(application));
     }
 
     /**
      * Retrieve an application.
      *
-     * @param id The id of the application to retrieve.
+     * @param applicationId The UUID of the application to retrieve as a string.
      *
      * @return The corresponding application.
      *
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      * @throws VonageClientException        if there was a problem with the Vonage request.
      */
-    public Application getApplication(String id) throws VonageResponseParseException, VonageClientException {
-        return getApplication.execute(id);
+    public Application getApplication(String applicationId) throws VonageResponseParseException, VonageClientException {
+        return getApplication.execute(validateApplicationId(applicationId));
     }
 
     /**
      * Delete an application.
      *
-     * @param id The id of the application to delete.
+     * @param applicationId The UUID of the application to delete as a string.
      *
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      * @throws VonageClientException        if there was a problem with the Vonage request.
      */
-    public void deleteApplication(String id) throws VonageResponseParseException, VonageClientException {
-        deleteApplication.execute(id);
+    public void deleteApplication(String applicationId) throws VonageResponseParseException, VonageClientException {
+        deleteApplication.execute(validateApplicationId(applicationId));
     }
 
     /**

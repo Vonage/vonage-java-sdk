@@ -132,7 +132,7 @@ public abstract class ClientTest<T> {
         String expectedJson = expectedResponse.toJson();
         assertTrue(expectedJson.length() > 1 && expectedJson.length() <= response.length());
         wrapper.setHttpClient(stubHttpClient(statusCode, expectedJson));
-        java.lang.reflect.Method setStatusCode = exClass.getMethod("setStatusCode", int.class);
+        java.lang.reflect.Method setStatusCode = exClass.getDeclaredMethod("setStatusCode", int.class);
         setStatusCode.setAccessible(true);
         setStatusCode.invoke(expectedResponse, statusCode);
         String failPrefix = "Expected "+exClass.getSimpleName()+", but got ";

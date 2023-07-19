@@ -22,6 +22,8 @@ import com.vonage.client.VonageApiResponseException;
 
 /**
  * Response returned when an error is encountered (i.e. the API returns a non-2xx status code).
+ *
+ * @since 7.7.0
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
