@@ -37,7 +37,7 @@ public class ApplicationClient {
         final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
             Endpoint(Function<T, String> pathGetter, HttpMethod method, R... type) {
                 super(DynamicEndpoint.<T, R>builder((Class<R>) type.getClass().getComponentType())
-                        .responseExceptionType(VonageApiResponseException.class)
+                        .responseExceptionType(ApplicationResponseException.class)
                         .wrapper(wrapper).requestMethod(method)
                         .authMethod(TokenAuthMethod.class).applyAsBasicAuth()
                         .pathGetter((de, req) -> {

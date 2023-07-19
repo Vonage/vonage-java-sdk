@@ -18,7 +18,6 @@ package com.vonage.client.application;
 import com.vonage.client.ClientTest;
 import com.vonage.client.DynamicEndpointTestSpec;
 import com.vonage.client.RestEndpoint;
-import com.vonage.client.VonageApiResponseException;
 import com.vonage.client.application.capabilities.*;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
@@ -192,6 +191,7 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
         Vbc vbc = capabilities.getVbc();
         assertEquals(Capability.Type.VBC, vbc.getType());
         assertNull(vbc.getWebhooks());
+
     }
 
     @Test
@@ -425,7 +425,7 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
 
         @Override
         protected Class<? extends Exception> expectedResponseExceptionType() {
-            return VonageApiResponseException.class;
+            return ApplicationResponseException.class;
         }
 
         @Override

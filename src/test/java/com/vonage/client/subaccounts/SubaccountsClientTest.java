@@ -51,33 +51,13 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 	}
 
 	void assert403ResponseException(ThrowingRunnable invocation) throws Exception {
-		int statusCode = 403;
-		SubaccountsResponseException expectedResponse = SubaccountsResponseException.fromJson(
-				"{\n" +
+		String response = "{\n" +
 				"   \"type\": \"https://developer.nexmo.com/api-errors#unprovisioned\",\n" +
 				"   \"title\": \"Authorisation error\",\n" +
 				"   \"detail\": \"Account acc6111f is not provisioned to access Subaccount Provisioning API\",\n" +
 				"   \"instance\": \"158b8f199c45014ab7b08bfe9cc1c12c\"\n" +
-				"}"
-		);
-
-		String expectedJson = expectedResponse.toJson();
-		assertEquals(224, expectedJson.length());
-		wrapper.setHttpClient(stubHttpClient(statusCode, expectedJson));
-		expectedResponse.setStatusCode(statusCode);
-		String failPrefix = "Expected "+expectedResponse.getClass().getSimpleName()+", but got ";
-
-		try {
-			invocation.run();
-			fail(failPrefix + "nothing.");
-		}
-		catch (SubaccountsResponseException ex) {
-			assertEquals(expectedResponse, ex);
-			assertEquals(expectedJson, ex.toJson());
-		}
-		catch (Throwable ex) {
-			fail(failPrefix + ex);
-		}
+				"}";
+		assertApiResponseException(403, response, SubaccountsResponseException.class, invocation);
 	}
 
 	static void assertEqualsExpectedAccount(Account response) {
@@ -355,14 +335,11 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 			}
 
 			@Override
-			protected String expectedContentTypeHeader(ListTransfersFilter request) {
-				return null;
-			}
-
-			@Override
 			protected String expectedEndpointUri(ListTransfersFilter request) {
+				assertNotNull(request.getStartDate());
+				assertNotNull(request.getEndDate());
 				return "/accounts/"+apiKey+"/credit-transfers?start_date=2022-06-01T08%3A00%3A00Z" +
-						"&end_date=2023-06-08T09%3A01%3A40Z&subaccount=" + SUB_API_KEY;
+						"&end_date=2023-06-08T09%3A01%3A40Z&subaccount=" + request.getSubaccount();
 			}
 
 			@Override
@@ -408,6 +385,9 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 
 			@Override
 			protected String expectedEndpointUri(ListTransfersFilter request) {
+				assertNotNull(request.getStartDate());
+				assertNull(request.getEndDate());
+				assertNull(request.getSubaccount());
 				return "/accounts/"+apiKey+"/balance-transfers?start_date=1970-01-01T00%3A00%3A00Z";
 			}
 
@@ -449,6 +429,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 		@Override
 		protected String sampleRequestBodyString() {
 			MoneyTransfer request = sampleRequest();
+			assertNotNull(request.toString());
 			return "{\"from\":\""+request.getFrom()+"\",\"to\":\""+request.getTo() +
 					"\",\"amount\":"+request.getAmount()+",\"reference\":\""+request.getReference()+"\"}";
 		}
