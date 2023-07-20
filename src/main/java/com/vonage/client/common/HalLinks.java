@@ -15,17 +15,20 @@
  */
 package com.vonage.client.common;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.net.URI;
 
 /**
  * Represents the {@code _links} section of a HAL response.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class HalLinks {
 	@JsonProperty("first") UrlContainer first;
 	@JsonProperty("self") UrlContainer self;
 	@JsonProperty("prev") UrlContainer prev;
 	@JsonProperty("next") UrlContainer next;
+	@JsonProperty("last") UrlContainer last;
 
 	protected HalLinks() {
 	}
@@ -64,5 +67,14 @@ public class HalLinks {
 	 */
 	public URI getNextUrl() {
 		return next != null ? next.getHref() : null;
+	}
+
+	/**
+	 * The {@code href} property of {@code last}.
+	 *
+	 * @return URL of the last page, or {@code null} if absent.
+	 */
+	public URI getLastUrl() {
+		return last != null ? last.getHref() : null;
 	}
 }

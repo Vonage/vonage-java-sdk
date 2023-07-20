@@ -29,6 +29,7 @@ import java.util.List;
 public class ApplicationList extends HalPageResponse {
     @JsonProperty("_embedded") private Embedded embedded;
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     static class Embedded {
         @JsonProperty("applications") List<Application> applications;
     }
