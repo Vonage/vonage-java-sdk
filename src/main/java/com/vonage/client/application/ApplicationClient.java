@@ -25,7 +25,7 @@ import java.util.function.Function;
 
 /**
  * A client for talking to the Vonage Application API. The standard way to obtain an instance of
- * this class is to use {@link VonageClient#getApplicationClient()}
+ * this class is to use {@link VonageClient#getApplicationClient()}.
  */
 public class ApplicationClient {
     final RestEndpoint<ListApplicationRequest, ApplicationList> listApplications;
@@ -102,10 +102,9 @@ public class ApplicationClient {
      *
      * @return The corresponding application.
      *
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     * @throws VonageClientException        if there was a problem with the Vonage request.
+     * @throws ApplicationResponseException If there was an error processing the request.
      */
-    public Application getApplication(String applicationId) throws VonageResponseParseException, VonageClientException {
+    public Application getApplication(String applicationId) throws ApplicationResponseException {
         return getApplication.execute(validateApplicationId(applicationId));
     }
 
@@ -114,10 +113,9 @@ public class ApplicationClient {
      *
      * @param applicationId The UUID of the application to delete as a string.
      *
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     * @throws VonageClientException        if there was a problem with the Vonage request.
+     * @throws ApplicationResponseException If there was an error processing the request.
      */
-    public void deleteApplication(String applicationId) throws VonageResponseParseException, VonageClientException {
+    public void deleteApplication(String applicationId) throws ApplicationResponseException {
         deleteApplication.execute(validateApplicationId(applicationId));
     }
 
@@ -126,9 +124,11 @@ public class ApplicationClient {
      *
      * @return The list of available applications.
      *
+     * @throws ApplicationResponseException If there was an error processing the request.
+     *
      * @since 7.7.0
      */
-    public List<Application> listAllApplications() {
+    public List<Application> listAllApplications() throws ApplicationResponseException {
         return listApplications(ListApplicationRequest.builder().pageSize(1000).build()).getApplications();
     }
 
@@ -137,10 +137,9 @@ public class ApplicationClient {
      *
      * @return The ApplicationList HAL response.
      *
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     * @throws VonageClientException        if there was a problem with the Vonage request.
+     * @throws ApplicationResponseException If there was an error processing the request.
      */
-    public ApplicationList listApplications() throws VonageResponseParseException, VonageClientException {
+    public ApplicationList listApplications() throws ApplicationResponseException {
         return listApplications(ListApplicationRequest.builder().build());
     }
 
@@ -151,10 +150,9 @@ public class ApplicationClient {
      *
      * @return The ApplicationList HAL response.
      *
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     * @throws VonageClientException        if there was a problem with the Vonage request.
+     * @throws ApplicationResponseException If there was an error processing the request.
      */
-    public ApplicationList listApplications(ListApplicationRequest listApplicationRequest) throws VonageResponseParseException, VonageClientException {
+    public ApplicationList listApplications(ListApplicationRequest listApplicationRequest) throws ApplicationResponseException {
         return listApplications.execute(listApplicationRequest);
     }
 }

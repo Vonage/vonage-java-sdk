@@ -19,6 +19,9 @@ import com.vonage.client.QueryParamsRequest;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Query parameters for {@link ApplicationClient#listApplications(ListApplicationRequest)}.
+ */
 public class ListApplicationRequest implements QueryParamsRequest {
     private final long pageSize, page;
 

@@ -21,6 +21,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import com.vonage.client.application.capabilities.*;
 
+/**
+ * Represents a Vonage Application (both request and response).
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Application implements Jsonable {
@@ -245,16 +248,29 @@ public class Application implements Jsonable {
         }
     }
 
+    /**
+     * Represents the cryptographic keys of an Application.
+     */
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Keys {
         private String publicKey, privateKey;
 
+        /**
+         * The application's public key.
+         *
+         * @return The public key as a string, or {@code null} if absent.
+         */
         @JsonProperty("public_key")
         public String getPublicKey() {
             return publicKey;
         }
 
+        /**
+         * The application's private key.
+         *
+         * @return The private key as a string, or {@code null} if absent (the default).
+         */
         @JsonProperty("private_key")
         public String getPrivateKey() {
             return privateKey;
@@ -269,21 +285,41 @@ public class Application implements Jsonable {
         private Rtc rtc;
         private Vbc vbc;
 
+        /**
+         * Voice capability.
+         *
+         * @return The Voice capability, or {@code null} if absent.
+         */
         @JsonProperty("voice")
         public Voice getVoice() {
             return voice;
         }
 
+        /**
+         * Messages capability.
+         *
+         * @return The Messages capability, or {@code null} if absent.
+         */
         @JsonProperty("messages")
         public Messages getMessages() {
             return messages;
         }
 
+        /**
+         * RTC capability.
+         *
+         * @return The RTC capability, or {@code null} if absent.
+         */
         @JsonProperty("rtc")
         public Rtc getRtc() {
             return rtc;
         }
 
+        /**
+         * VBC capability.
+         *
+         * @return The VBC capability, or {@code null} if absent.
+         */
         @JsonProperty("vbc")
         public Vbc getVbc() {
             return vbc;

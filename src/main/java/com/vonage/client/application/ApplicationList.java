@@ -21,6 +21,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.common.HalPageResponse;
 import java.util.List;
 
+/**
+ * HAL response returned from {@link ApplicationClient#listApplications(ListApplicationRequest)}.
+ */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ApplicationList extends HalPageResponse {
