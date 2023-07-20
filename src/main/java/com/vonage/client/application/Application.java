@@ -248,15 +248,14 @@ public class Application implements Jsonable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Keys {
-        @JsonProperty("public_key")
-        private String publicKey;
-        @JsonProperty("private_key")
-        private String privateKey;
+        private String publicKey, privateKey;
 
+        @JsonProperty("public_key")
         public String getPublicKey() {
             return publicKey;
         }
 
+        @JsonProperty("private_key")
         public String getPrivateKey() {
             return privateKey;
         }
@@ -270,18 +269,22 @@ public class Application implements Jsonable {
         private Rtc rtc;
         private Vbc vbc;
 
+        @JsonProperty("voice")
         public Voice getVoice() {
             return voice;
         }
 
+        @JsonProperty("messages")
         public Messages getMessages() {
             return messages;
         }
 
+        @JsonProperty("rtc")
         public Rtc getRtc() {
             return rtc;
         }
 
+        @JsonProperty("vbc")
         public Vbc getVbc() {
             return vbc;
         }

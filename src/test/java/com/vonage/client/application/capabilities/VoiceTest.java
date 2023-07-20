@@ -15,12 +15,15 @@
  */
 package com.vonage.client.application.capabilities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.Jsonable;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.common.Webhook;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class VoiceTest {
+
     @Test
     public void testEmpty() {
         Voice voice = Voice.builder().build();
@@ -111,5 +114,27 @@ public class VoiceTest {
         Voice fallback = Voice.builder().addWebhook(Webhook.Type.FALLBACK_ANSWER, webhook).build();
         assertEquals(1, fallback.getWebhooks().size());
         assertEquals(webhook, fallback.getWebhooks().get(Webhook.Type.FALLBACK_ANSWER));
+    }
+
+    @Test
+    public void testSerializeAdditionalFields() {
+        Voice request = Voice.builder()
+                .conversationsTtl(51).signedCallbacks(false).region(Region.APAC_SNG).build();
+
+        class Internal implements Jsonable {
+            @JsonProperty final Voice voice = request;
+        }
+        String expectedJson = "{\"voice\":{" +
+                "\"region\":\"apac-sng\",\"signed_callbacks\":false,\"conversations_ttl\":51}}";
+        assertEquals(expectedJson, new Internal().toJson());
+    }
+
+    @Test
+    public void testConversationsTtlBounds() {
+        Integer min = 0, max = 744;
+        assertEquals(min, Voice.builder().conversationsTtl(min).build().getConversationsTtl());
+        assertEquals(max, Voice.builder().conversationsTtl(max).build().getConversationsTtl());
+        assertThrows(IllegalArgumentException.class, () -> Voice.builder().conversationsTtl(min-1).build());
+        assertThrows(IllegalArgumentException.class, () -> Voice.builder().conversationsTtl(max+1).build());
     }
 }

@@ -180,6 +180,51 @@ public class ApplicationTest {
         assertNotNull(request.getId());
         assertNotNull(request.getPrivacy());
         assertNull(request.getPrivacy().getImproveAi());
+    }
 
+    @Test
+    public void testParseUnknownVoiceFields() {
+        String json = "{\n" +
+                "    \"id\": \"968331b7-db66-421d-bbb1-ea04c238b52f\",\n" +
+                "    \"name\": \"neru_vapi_chatgpt\",\n" +
+                "    \"keys\": {\n" +
+                "    },\n" +
+                "    \"privacy\": {\n" +
+                "        \"improve_ai\": false\n" +
+                "    },\n" +
+                "    \"capabilities\": {\n" +
+                "        \"voice\": {\n" +
+                "            \"webhooks\": {\n" +
+                "            },\n" +
+                "            \"payment_enabled\": false,\n" +
+                "            \"signed_callbacks\": false,\n" +
+                "            \"conversations_ttl\": 0,\n" +
+                "            \"region\": \"jupiter\",\n" +
+                "            \"payments\": {\n" +
+                "                \"gateways\": []\n" +
+                "            }\n" +
+                "        }\n" +
+                "    },\n" +
+                "    \"_links\": {\n" +
+                "        \"self\": {\n" +
+                "            \"href\": \"/v2/applications/968331b7-db66-421d-bbb1-ea04c238b52f\"\n" +
+                "        }\n" +
+                "    }\n" +
+                "}";
+
+        Application parsed = Application.fromJson(json);
+
+        assertNotNull(UUID.fromString(parsed.getId()));
+        assertNotNull(parsed.getName());
+        assertNotNull(parsed.getPrivacy());
+        assertNotNull(parsed.getKeys());
+        assertNotNull(parsed.getCapabilities());
+        Voice voice = parsed.getCapabilities().getVoice();
+        assertNotNull(voice);
+        assertNotNull(voice.getWebhooks());
+        assertEquals(0, voice.getWebhooks().size());
+        assertEquals(0, voice.getConversationsTtl().intValue());
+        assertFalse(voice.getSignedCallbacks());
+        assertNull(voice.getRegion());
     }
 }

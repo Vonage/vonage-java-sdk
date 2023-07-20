@@ -51,6 +51,13 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
             "          \"address\": \"https://example.com/webhooks/event\",\n" +
             "          \"http_method\": \"POST\"\n" +
             "        }\n" +
+            "      },\n" +
+            "      \"payment_enabled\": false,\n" +
+            "      \"signed_callbacks\": true,\n" +
+            "      \"conversations_ttl\": 24,\n" +
+            "      \"region\": \"eu-west\",\n" +
+            "      \"payments\": {\n" +
+            "        \"gateways\": []\n" +
             "      }\n" +
             "    },\n" +
             "    \"messages\": {\n" +
@@ -104,6 +111,9 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
         assertEquals(HttpMethod.POST, fallback.getMethod());
         assertEquals(500, fallback.getConnectionTimeout().intValue());
         assertEquals(3000, fallback.getSocketTimeout().intValue());
+        assertEquals(Region.EU_WEST, voice.getRegion());
+        assertEquals(24, voice.getConversationsTtl().intValue());
+        assertTrue(voice.getSignedCallbacks());
 
         Messages message = capabilities.getMessages();
         assertEquals(Capability.Type.MESSAGES, message.getType());
