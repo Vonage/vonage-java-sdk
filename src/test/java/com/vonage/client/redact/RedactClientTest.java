@@ -15,13 +15,15 @@
  */
 package com.vonage.client.redact;
 
-import com.vonage.client.*;
+import com.vonage.client.ClientTest;
+import com.vonage.client.DynamicEndpointTestSpec;
+import com.vonage.client.RestEndpoint;
+import com.vonage.client.VonageBadRequestException;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.SignatureAuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.fail;
 import org.junit.Test;
 import java.util.Arrays;
 import java.util.Collection;
@@ -33,18 +35,12 @@ public class RedactClientTest extends ClientTest<RedactClient> {
     }
 
     @Test
-    public void testSuccessfulResponse() {
-        try {
-            wrapper.setHttpClient(stubHttpClient(204, ""));
-            RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.SMS);
-            redactRequest.setType(RedactRequest.Type.INBOUND);
-
-            client.redactTransaction(redactRequest);
-            client.redactTransaction(redactRequest.getId(), redactRequest.getProduct(), redactRequest.getType());
-        }
-        catch (Exception e) {
-            fail("No exceptions should be thrown.");
-        }
+    public void testSuccessfulResponse() throws Exception {
+        RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.SMS);
+        redactRequest.setType(RedactRequest.Type.INBOUND);
+        stubResponseAndRun(204, () -> client.redactTransaction(redactRequest));
+        stubResponse(204);
+        client.redactTransaction(redactRequest.getId(), redactRequest.getProduct(), redactRequest.getType());
     }
 
     @Test
@@ -62,41 +58,41 @@ public class RedactClientTest extends ClientTest<RedactClient> {
 
     @Test(expected = VonageBadRequestException.class)
     public void testWrongCredentials() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(401, ""));
         RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
-        client.redactTransaction(redactRequest);
+        stubResponseAndRun(401, () -> client.redactTransaction(redactRequest));
+        stubResponse(401);
         client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
     }
 
     @Test(expected = VonageBadRequestException.class)
     public void testPrematureRedactionOrUnauthorized() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(403, ""));
         RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
-        client.redactTransaction(redactRequest);
+        stubResponseAndRun(403, () -> client.redactTransaction(redactRequest));
+        stubResponse(403);
         client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
     }
 
     @Test(expected = VonageBadRequestException.class)
     public void testInvalidId() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(404, ""));
         RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
-        client.redactTransaction(redactRequest);
+        stubResponseAndRun(404, () -> client.redactTransaction(redactRequest));
+        stubResponse(404);
         client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
     }
 
     @Test(expected = VonageBadRequestException.class)
     public void testInvalidJsonInvalidProduct() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(422, ""));
         RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
-        client.redactTransaction(redactRequest);
+        stubResponseAndRun(422, () -> client.redactTransaction(redactRequest));
+        stubResponse(422);
         client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
     }
 
     @Test(expected = VonageBadRequestException.class)
     public void testRateLimit() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(429, ""));
         RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
-        client.redactTransaction(redactRequest);
+        stubResponseAndRun(429, () -> client.redactTransaction(redactRequest));
+        stubResponse(429);
         client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
     }
 
