@@ -83,7 +83,7 @@ public class StandardInsightRequest extends BaseInsightRequest {
         /**
          * @param number A single phone number that you need insight about in national or international format.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder number(String number) {
             this.number = number;
@@ -93,7 +93,7 @@ public class StandardInsightRequest extends BaseInsightRequest {
         /**
          * @param country If a number does not have a country code or it is uncertain, set the two-character country code.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder country(String country) {
             this.country = country;
@@ -105,7 +105,7 @@ public class StandardInsightRequest extends BaseInsightRequest {
          *             Set to true to receive phone number owner name in the response. This is only available for US numbers
          *             and incurs an additional charge.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder cnam(Boolean cnam) {
             this.cnam = cnam;

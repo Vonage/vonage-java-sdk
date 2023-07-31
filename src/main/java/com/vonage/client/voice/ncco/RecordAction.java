@@ -119,7 +119,7 @@ public class RecordAction implements Action {
          *               The default value is {@link RecordingFormat#MP3}, or {@link RecordingFormat#WAV} when recording
          *               more than 2 channels.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder format(RecordingFormat format) {
             this.format = format;
@@ -130,7 +130,7 @@ public class RecordAction implements Action {
          * @param endOnSilence Stop recording after n seconds of silence. Once the recording is stopped the recording
          *                     data is sent to event_url. The range of possible values is between 3 and 10 inclusively.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder endOnSilence(Integer endOnSilence) {
             this.endOnSilence = endOnSilence;
@@ -141,7 +141,7 @@ public class RecordAction implements Action {
          * @param endOnKey Stop recording when a digit is pressed on the handset. Possible values are: *, # or any
          *                 single digit e.g. 9
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder endOnKey(Character endOnKey) {
             this.endOnKey = endOnKey;
@@ -153,7 +153,7 @@ public class RecordAction implements Action {
          *                is sent to event_url. The range of possible values is between 3 seconds and 7200 seconds (2
          *                hours)
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder timeOut(Integer timeOut) {
             this.timeOut = timeOut;
@@ -163,7 +163,7 @@ public class RecordAction implements Action {
         /**
          * @param beepStart Set to true to play a beep when a recording starts
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder beepStart(Boolean beepStart) {
             this.beepStart = beepStart;
@@ -175,7 +175,7 @@ public class RecordAction implements Action {
          *                 If the message recording is hosted by Vonage, this webhook contains the URL you need to
          *                 download the recording and other meta data.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder eventUrl(Collection<String> eventUrl) {
             this.eventUrl = eventUrl;
@@ -187,7 +187,7 @@ public class RecordAction implements Action {
          *                 If the message recording is hosted by Vonage, this webhook contains the URL you need to
          *                 download the recording and other meta data.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder eventUrl(String... eventUrl) {
             return eventUrl(Arrays.asList(eventUrl));
@@ -196,7 +196,7 @@ public class RecordAction implements Action {
         /**
          * @param eventMethod The HTTP method used to make the request to eventUrl. The default value is POST.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder eventMethod(EventMethod eventMethod) {
             this.eventMethod = eventMethod;
@@ -207,7 +207,7 @@ public class RecordAction implements Action {
          * @param split Record the sent and received audio in separate channels of a stereo recording-set to {@link
          *              SplitRecording#CONVERSATION} to enable this.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder split(SplitRecording split) {
             this.split = split;
@@ -220,7 +220,7 @@ public class RecordAction implements Action {
          *                 set to {@link SplitRecording#CONVERSATION} during the build process if channels is greater
          *                 than 1.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder channels(Integer channels) {
             this.channels = channels;

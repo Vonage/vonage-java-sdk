@@ -15,7 +15,14 @@
  */
 package com.vonage.client.application;
 
-public class ListApplicationRequest {
+import com.vonage.client.QueryParamsRequest;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+/**
+ * Query parameters for {@link ApplicationClient#listApplications(ListApplicationRequest)}.
+ */
+public class ListApplicationRequest implements QueryParamsRequest {
     private final long pageSize, page;
 
     private ListApplicationRequest(Builder builder) {
@@ -31,6 +38,18 @@ public class ListApplicationRequest {
         return page;
     }
 
+    @Override
+    public Map<String, String> makeParams() {
+        LinkedHashMap<String, String> params = new LinkedHashMap<>(4);
+        if (page > 0) {
+            params.put("page", String.valueOf(page));
+        }
+        if (pageSize > 0) {
+            params.put("page_size", String.valueOf(pageSize));
+        }
+        return params;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -42,7 +61,7 @@ public class ListApplicationRequest {
         /**
          * @param pageSize The number of applications per page.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder pageSize(long pageSize) {
             this.pageSize = pageSize;
@@ -52,7 +71,7 @@ public class ListApplicationRequest {
         /**
          * @param page The current page number, starts at 1.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder page(long page) {
             this.page = page;

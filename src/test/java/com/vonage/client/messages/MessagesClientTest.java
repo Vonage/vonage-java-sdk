@@ -65,19 +65,12 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 	}
 
 	void assertException(int statusCode, String json) throws Exception {
-		wrapper.setHttpClient(stubHttpClient(statusCode, json));
-		MessageResponseException expectedResponse = MessageResponseException.fromJson(json);
-		expectedResponse.setStatusCode(statusCode);
-		try {
-			client.sendMessage(SmsTextRequest.builder()
+		assertApiResponseException(statusCode, json, MessageResponseException.class, () ->
+				client.sendMessage(SmsTextRequest.builder()
 					.from("447700900001").to("447700900000")
 					.text("Hello").build()
-			);
-			fail("Expected "+expectedResponse.getClass().getSimpleName());
-		}
-		catch (MessageResponseException mrx) {
-			assertEquals(expectedResponse, mrx);
-		}
+				)
+		);
 	}
 
 	@Test

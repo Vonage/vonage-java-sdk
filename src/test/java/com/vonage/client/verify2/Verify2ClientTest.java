@@ -37,33 +37,13 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 	}
 
 	void assert429ResponseException(ThrowingRunnable invocation) throws Exception {
-		int statusCode = 429;
-		VerifyResponseException expectedResponse = VerifyResponseException.fromJson(
-				"{\n" +
+		String response = "{\n" +
 				"   \"title\": \"Rate Limit Hit\",\n" +
 				"   \"type\": \"https://www.developer.vonage.com/api-errors#throttled\",\n" +
 				"   \"detail\": \"Please wait, then retry your request\",\n" +
 				"   \"instance\": \"bf0ca0bf927b3b52e3cb03217e1a1ddf\"\n" +
-				"}"
-		);
-
-		String expectedJson = expectedResponse.toJson();
-		assertEquals(183, expectedJson.length());
-		wrapper.setHttpClient(stubHttpClient(statusCode, expectedJson));
-		expectedResponse.setStatusCode(statusCode);
-		String failPrefix = "Expected "+expectedResponse.getClass().getSimpleName()+", but got ";
-
-		try {
-			invocation.run();
-			fail(failPrefix + "nothing.");
-		}
-		catch (VerifyResponseException ex) {
-			assertEquals(expectedResponse, ex);
-			assertEquals(expectedJson, ex.toJson());
-		}
-		catch (Throwable ex) {
-			fail(failPrefix + ex);
-		}
+				"}";
+		assertApiResponseException(429, response, VerifyResponseException.class, invocation);
 	}
 
 	VerificationRequest newVerificationRequestWithAllParamsAndWorkflows() {

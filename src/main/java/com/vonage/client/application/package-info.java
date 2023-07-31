@@ -13,7 +13,10 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.application;
 
-public class ApplicationListTest {
-}
+/**
+ * Implementation of the <a href=https://developer.vonage.com/en/api/application.v2>Application API</a>.
+ * See the <a href=https://developer.vonage.com/en/application/overview>Vonage developer portal</a>
+ * for an overview and documentation.
+ */
+package com.vonage.client.application;

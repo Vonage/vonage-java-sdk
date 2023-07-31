@@ -16,24 +16,57 @@
 package com.vonage.client.application;
 
 import com.vonage.client.*;
+import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.common.HttpMethod;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.function.Function;
 
 /**
- * A client for talking to the Vonage Application API. The standard way to obtain an instance of this class is to use
- * {@link VonageClient#getApplicationClient()}
+ * A client for talking to the Vonage Application API. The standard way to obtain an instance of
+ * this class is to use {@link VonageClient#getApplicationClient()}.
  */
 public class ApplicationClient {
-    final CreateApplicationEndpoint createApplicationEndpoint;
-    final UpdateApplicationEndpoint updateApplicationEndpoint;
-    final GetApplicationEndpoint getApplicationEndpoint;
-    final DeleteApplicationEndpoint deleteApplicationEndpoint;
-    final ListApplicationsEndpoint listApplicationsEndpoint;
+    final RestEndpoint<ListApplicationRequest, ApplicationList> listApplications;
+    final RestEndpoint<Application, Application> createApplication;
+    final RestEndpoint<UUID, Application> getApplication;
+    final RestEndpoint<Application, Application> updateApplication;
+    final RestEndpoint<UUID, Void> deleteApplication;
 
-    public ApplicationClient(HttpWrapper httpWrapper) {
-        createApplicationEndpoint = new CreateApplicationEndpoint(httpWrapper);
-        updateApplicationEndpoint = new UpdateApplicationEndpoint(httpWrapper);
-        getApplicationEndpoint = new GetApplicationEndpoint(httpWrapper);
-        deleteApplicationEndpoint = new DeleteApplicationEndpoint(httpWrapper);
-        listApplicationsEndpoint = new ListApplicationsEndpoint(httpWrapper);
+    public ApplicationClient(HttpWrapper wrapper) {
+        @SuppressWarnings("unchecked")
+        final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
+            Endpoint(Function<T, String> pathGetter, HttpMethod method, R... type) {
+                super(DynamicEndpoint.<T, R>builder((Class<R>) type.getClass().getComponentType())
+                        .responseExceptionType(ApplicationResponseException.class)
+                        .wrapper(wrapper).requestMethod(method)
+                        .authMethod(TokenAuthMethod.class).applyAsBasicAuth()
+                        .pathGetter((de, req) -> {
+                            String base = de.getHttpWrapper().getHttpConfig().getVersionedApiBaseUri("v2");
+                            String path = base + "/applications";
+                            if (pathGetter != null) {
+                                path += "/" + pathGetter.apply(req);
+                            }
+                            return path;
+                        })
+                );
+            }
+        }
+
+        listApplications = new Endpoint<>(null, HttpMethod.GET);
+        createApplication = new Endpoint<>(null, HttpMethod.POST);
+        getApplication = new Endpoint<>(UUID::toString, HttpMethod.GET);
+        updateApplication = new Endpoint<>(Application::getId, HttpMethod.PUT);
+        deleteApplication = new Endpoint<>(UUID::toString, HttpMethod.DELETE);
+    }
+
+    private Application validateApplication(Application request) {
+        return Objects.requireNonNull(request, "Application request is required.");
+    }
+
+    private UUID validateApplicationId(String id) {
+        return UUID.fromString(Objects.requireNonNull(id, "Application ID is required."));
     }
 
     /**
@@ -43,11 +76,10 @@ public class ApplicationClient {
      *
      * @return The application which has been created.
      *
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     * @throws VonageClientException        if there was a problem with the Vonage request.
+     * @throws ApplicationResponseException If there was an error processing the request.
      */
-    public Application createApplication(Application application) throws VonageResponseParseException, VonageClientException {
-        return createApplicationEndpoint.execute(application);
+    public Application createApplication(Application application) throws ApplicationResponseException {
+        return createApplication.execute(validateApplication(application));
     }
 
     /**
@@ -57,49 +89,58 @@ public class ApplicationClient {
      *
      * @return The application which has been updated.
      *
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     * @throws VonageClientException        if there was a problem with the Vonage request.
+     * @throws ApplicationResponseException If there was an error processing the request.
      */
-    public Application updateApplication(Application application) throws VonageResponseParseException, VonageClientException {
-        return updateApplicationEndpoint.execute(application);
+    public Application updateApplication(Application application) throws ApplicationResponseException {
+        return updateApplication.execute(validateApplication(application));
     }
 
     /**
      * Retrieve an application.
      *
-     * @param id The id of the application to retrieve.
+     * @param applicationId The UUID of the application to retrieve as a string.
      *
      * @return The corresponding application.
      *
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     * @throws VonageClientException        if there was a problem with the Vonage request.
+     * @throws ApplicationResponseException If there was an error processing the request.
      */
-    public Application getApplication(String id) throws VonageResponseParseException, VonageClientException {
-        return getApplicationEndpoint.execute(id);
+    public Application getApplication(String applicationId) throws ApplicationResponseException {
+        return getApplication.execute(validateApplicationId(applicationId));
     }
 
     /**
      * Delete an application.
      *
-     * @param id The id of the application to delete.
+     * @param applicationId The UUID of the application to delete as a string.
      *
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     * @throws VonageClientException        if there was a problem with the Vonage request.
+     * @throws ApplicationResponseException If there was an error processing the request.
      */
-    public void deleteApplication(String id) throws VonageResponseParseException, VonageClientException {
-        deleteApplicationEndpoint.execute(id);
+    public void deleteApplication(String applicationId) throws ApplicationResponseException {
+        deleteApplication.execute(validateApplicationId(applicationId));
     }
 
     /**
-     * List the first page of available applications.
+     * Lists the first 1000 available applications.
      *
      * @return The list of available applications.
      *
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     * @throws VonageClientException        if there was a problem with the Vonage request.
+     * @throws ApplicationResponseException If there was an error processing the request.
+     *
+     * @since 7.7.0
      */
-    public ApplicationList listApplications() throws VonageResponseParseException, VonageClientException {
-        return listApplications(null);
+    public List<Application> listAllApplications() throws ApplicationResponseException {
+        return listApplications(ListApplicationRequest.builder().pageSize(1000).build()).getApplications();
+    }
+
+    /**
+     * Lists the first page of available applications.
+     *
+     * @return The ApplicationList HAL response.
+     *
+     * @throws ApplicationResponseException If there was an error processing the request.
+     */
+    public ApplicationList listApplications() throws ApplicationResponseException {
+        return listApplications(ListApplicationRequest.builder().build());
     }
 
     /**
@@ -107,12 +148,11 @@ public class ApplicationClient {
      *
      * @param listApplicationRequest The page and number of applications per page to list.
      *
-     * @return The list of available applications.
+     * @return The ApplicationList HAL response.
      *
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     * @throws VonageClientException        if there was a problem with the Vonage request.
+     * @throws ApplicationResponseException If there was an error processing the request.
      */
-    public ApplicationList listApplications(ListApplicationRequest listApplicationRequest) throws VonageResponseParseException, VonageClientException {
-        return listApplicationsEndpoint.execute(listApplicationRequest);
+    public ApplicationList listApplications(ListApplicationRequest listApplicationRequest) throws ApplicationResponseException {
+        return listApplications.execute(listApplicationRequest);
     }
 }

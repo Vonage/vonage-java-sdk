@@ -18,11 +18,14 @@ package com.vonage.client.application.capabilities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+/**
+ * VBC capability configuration settings.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 public class Vbc extends Capability {
-    private Vbc() {
 
+    private Vbc() {
     }
 
     private Vbc(Builder builder) {
@@ -35,16 +38,22 @@ public class Vbc extends Capability {
     }
 
     /**
-     * @return A new Builder to start building.
+     * Entry point for constructing an instance of this class.
+     *
+     * @return A new Builder.
      */
     public static Builder builder() {
         return new Builder();
     }
 
-    public static class Builder {
+    public static class Builder extends Capability.Builder<Vbc, Builder> {
+
         /**
+         * Builds the Vbc object.
+         *
          * @return A new VBC capability.
          */
+        @Override
         public Vbc build() {
             return new Vbc(this);
         }

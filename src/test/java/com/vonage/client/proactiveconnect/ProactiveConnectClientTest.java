@@ -135,9 +135,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 	}
 
 	void assert409ResponseException(ThrowingRunnable invocation) throws Exception {
-		int statusCode = 409;
-		ProactiveConnectResponseException expectedResponse = ProactiveConnectResponseException.fromJson(
-				"{\n" +
+		String response = "{\n" +
 				"   \"type\": \"https://developer.vonage.com/en/api-errors\",\n" +
 				"   \"title\": \"Request data did not validate\",\n" +
 				"   \"detail\": \"Bad Request\",\n" +
@@ -146,26 +144,8 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 				"      \"First problem\",\n" +
 				"      \"another problem.\"\n" +
 				"   ]\n" +
-				"}"
-		);
-
-		String expectedJson = expectedResponse.toJson();
-		assertEquals(212, expectedJson.length());
-		wrapper.setHttpClient(stubHttpClient(statusCode, expectedJson));
-		expectedResponse.setStatusCode(statusCode);
-		String failPrefix = "Expected "+expectedResponse.getClass().getSimpleName()+", but got ";
-
-		try {
-			invocation.run();
-			fail(failPrefix + "nothing.");
-		}
-		catch (ProactiveConnectResponseException ex) {
-			assertEquals(expectedResponse, ex);
-			assertEquals(expectedJson, ex.toJson());
-		}
-		catch (Throwable ex) {
-			fail(failPrefix + ex);
-		}
+				"}";
+		assertApiResponseException(409, response, ProactiveConnectResponseException.class, invocation);
 	}
 
 	static void assertEqualsSampleHal(HalPageResponse response) {

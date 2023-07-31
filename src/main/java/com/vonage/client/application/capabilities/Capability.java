@@ -18,7 +18,10 @@ package com.vonage.client.application.capabilities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.common.HttpMethod;
 import com.vonage.client.common.Webhook;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -30,12 +33,22 @@ public abstract class Capability {
     protected Map<Webhook.Type, Webhook> webhooks;
 
     protected Capability() {
-        // Needed for Reflection
     }
 
+    /**
+     * The capability's type.
+     *
+     * @return This capability's type as an enum.
+     */
     @JsonIgnore
     abstract public Type getType();
 
+    /**
+     * Webhooks grouped by type.
+     *
+     * @return The webhooks as a Map, or {@code null} if there are none.
+     */
+    @JsonProperty("webhooks")
     public Map<Webhook.Type, Webhook> getWebhooks() {
         return webhooks;
     }
@@ -45,5 +58,51 @@ public abstract class Capability {
         RTC,
         MESSAGES,
         VBC
+    }
+
+    @SuppressWarnings("unchecked")
+    static abstract class Builder<C extends Capability, B extends Builder<C, B>> {
+        Map<Webhook.Type, Webhook> webhooks;
+
+        /**
+         * Add a webhook for the Vonage API to use. Each Capability can only have a single webhook of each type.
+         * See <a href="https://developer.nexmo.com/concepts/guides/webhooks"> the webhooks guide</a> for details.
+         *
+         * @param type    The {@link Webhook.Type} of webhook to add.
+         * @param webhook The webhook containing the URL and {@link HttpMethod}.
+         *
+         * @return This builder.
+         */
+        B addWebhook(Webhook.Type type, Webhook webhook) {
+            if (webhooks == null) {
+                webhooks = new LinkedHashMap<>();
+            }
+            webhooks.put(type, webhook);
+            return (B) this;
+        }
+
+        /**
+         * Remove a webhook.
+         *
+         * @param type The {@link Webhook.Type} to remove.
+         *
+         * @return This builder.
+         */
+        B removeWebhook(Webhook.Type type) {
+            if (webhooks != null) {
+                webhooks.remove(type);
+                if (webhooks.isEmpty()) {
+                    webhooks = null;
+                }
+            }
+            return (B) this;
+        }
+
+        /**
+         * Constructs the capability with this builder's properties.
+         *
+         * @return A new instance of the capability.
+         */
+        public abstract C build();
     }
 }

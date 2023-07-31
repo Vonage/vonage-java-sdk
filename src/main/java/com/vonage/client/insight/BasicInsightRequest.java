@@ -77,7 +77,7 @@ public class BasicInsightRequest extends BaseInsightRequest {
         /**
          * @param number A single phone number that you need insight about in national or international format.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder number(String number) {
             this.number = number;
@@ -87,7 +87,7 @@ public class BasicInsightRequest extends BaseInsightRequest {
         /**
          * @param country If a number does not have a country code, or it is uncertain, set the two-character country code.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder country(String country) {
             this.country = country;

@@ -359,7 +359,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 		expectedResponse.setStatusCode(statusCode);
 		String expectedJson = expectedResponse.toJson();
-		wrapper.setHttpClient(stubHttpClient(statusCode, expectedJson));
+		stubResponse(statusCode, expectedJson);
 		String failPrefix = "Expected "+expectedResponse.getClass().getSimpleName()+", but got ";
 
 		try {
@@ -391,8 +391,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 				"}"
 		);
 
-		String expectedJson = expectedResponse.toJson();
-		wrapper.setHttpClient(stubHttpClient(statusCode, expectedJson));
+		stubResponse(statusCode, expectedResponse.toJson());
 		String failPrefix = "Expected "+expectedResponse.getClass().getSimpleName()+", but got ";
 
 		try {

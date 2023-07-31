@@ -95,7 +95,7 @@ public class StreamAction implements Action {
          * @param streamUrl An array containing a single URL to an mp3 or wav (16-bit) audio file to stream to the
          *                  Call or Conversation.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder streamUrl(Collection<String> streamUrl) {
             this.streamUrl = streamUrl;
@@ -106,7 +106,7 @@ public class StreamAction implements Action {
          * @param streamUrl An array containing a single URL to an mp3 or wav (16-bit) audio file to stream to the
          *                  Call or Conversation.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder streamUrl(String... streamUrl) {
             return streamUrl(Arrays.asList(streamUrl));
@@ -116,7 +116,7 @@ public class StreamAction implements Action {
          * @param level Set the audio level of the stream in the range between -1 and 1 inclusively with a precision
          *              of 0.1. The default value is 0.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder level(Float level) {
             this.level = level;
@@ -131,7 +131,7 @@ public class StreamAction implements Action {
          *                <p>
          *                The default value is false.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder bargeIn(Boolean bargeIn) {
             this.bargeIn = bargeIn;
@@ -142,7 +142,7 @@ public class StreamAction implements Action {
          * @param loop The number of times audio is repeated before the Call is closed.
          *             The default value is 1. Set to 0 to loop infinitely.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder loop(Integer loop) {
             this.loop = loop;

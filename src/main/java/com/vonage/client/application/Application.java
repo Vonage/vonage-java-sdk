@@ -18,18 +18,19 @@ package com.vonage.client.application;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.Jsonable;
 import com.vonage.client.application.capabilities.*;
-import java.io.IOException;
 
+/**
+ * Represents a Vonage Application (both request and response).
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Application {
+public class Application implements Jsonable {
     private String id, name;
     private Keys keys;
     private Capabilities capabilities;
+    private Privacy privacy;
 
     private Application() {
     }
@@ -39,34 +40,71 @@ public class Application {
         name = builder.name;
         keys = builder.keys;
         capabilities = builder.capabilities;
+        privacy = builder.privacy;
     }
 
+    /**
+     * Unique application ID.
+     *
+     * @return The application ID as a string, or {@code null} if unknown.
+     */
+    @JsonProperty("id")
     public String getId() {
         return id;
     }
 
+    /**
+     * Friendly identifier for your application. This is not unique.
+     *
+     * @return The application name.
+     */
+    @JsonProperty("name")
     public String getName() {
         return name;
     }
 
+    /**
+     * Cryptographic keys associated with this application.
+     *
+     * @return The keys for this application, or {@code null} if unknown / not applicable for this object.
+     */
+    @JsonProperty("keys")
     public Keys getKeys() {
         return keys;
     }
 
+    /**
+     * Your application can use multiple products. This contains the configuration for each product.
+     *
+     * @return The capabilities of this application, or {@code null} if unknown / not applicable for this object.
+     */
+    @JsonProperty("capabilities")
     public Capabilities getCapabilities() {
         return capabilities;
     }
 
-    public String toJson() {
-        try {
-            return new ObjectMapper().writeValueAsString(this);
-        } catch (JsonProcessingException jpe) {
-            throw new VonageUnexpectedException("Failed to produce json from Application object.", jpe);
-        }
+    /**
+     * Application privacy configuration.
+     *
+     * @return The privacy preferences, or {@code null} if unknown / not applicable for this object.
+     *
+     * @since 7.7.0
+     */
+    @JsonProperty("privacy")
+    public Privacy getPrivacy() {
+        return privacy;
+    }
+
+    public static Application fromJson(String json) {
+        Application application = new Application();
+        application.updateFromJson(json);
+        return application;
     }
 
     /**
-     * @return A new Builder to start building.
+     * Entry point for creating an instance of this class.
+     * 
+     * @return A new Builder.
      */
     public static Builder builder() {
         return new Builder();
@@ -83,15 +121,8 @@ public class Application {
         return new Builder(application);
     }
 
-    public static Application fromJson(String json) {
-        try {
-            return new ObjectMapper().readValue(json, Application.class);
-        } catch (IOException e) {
-            throw new VonageUnexpectedException("Failed to produce Application from json.", e);
-        }
-    }
-
     public static class Builder {
+        private Privacy privacy;
         private String id, name;
         private Keys keys;
         private Capabilities capabilities;
@@ -106,9 +137,30 @@ public class Application {
         }
 
         /**
+         * Whether Vonage may store and use your content and data for the improvement of
+         * Vonage's AI based services and technologies. Default is {@code true}.
+         *
+         * @param improveAi {@code true} if you consent to data being used for AI improvement,
+         * or {@code false} to opt out.
+         *
+         * @return This builder.
+         *
+         * @since 7.7.0
+         */
+        public Builder improveAi(boolean improveAi) {
+            if (privacy == null) {
+                privacy = new Privacy();
+            }
+            privacy.improveAi = improveAi;
+            return this;
+        }
+
+        /**
+         * Set the friendly identifier for your application. This is not unique.
+         *
          * @param name The name of the application.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder name(String name) {
             this.name = name;
@@ -116,9 +168,11 @@ public class Application {
         }
 
         /**
-         * @param publicKey The public key for use with the application.
+         * Sets the application's public key.
          *
-         * @return The {@link Builder} to keep building.
+         * @param publicKey The public key for use with the application as a string.
+         *
+         * @return This builder.
          */
         public Builder publicKey(String publicKey) {
             keys = new Keys();
@@ -132,15 +186,13 @@ public class Application {
          *
          * @param capability The capability to add to it.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder addCapability(Capability capability) {
             if (capabilities == null) {
                 capabilities = new Capabilities();
             }
-
             capabilities.setCapability(capability);
-
             return this;
         }
 
@@ -149,45 +201,77 @@ public class Application {
          *
          * @param type The type of capability to remove.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder removeCapability(Capability.Type type) {
-            if (capabilities == null) {
-                capabilities = new Capabilities();
+            if (capabilities != null) {
+                capabilities.setCapability(type, null);
+                boolean noCapabilities =  capabilities.voice == null &&
+                        capabilities.rtc == null && capabilities.messages == null && capabilities.vbc == null;
+                if (noCapabilities) {
+                    capabilities = null;
+                }
             }
-
-            capabilities.setCapability(type, null);
-            capabilities = shouldBeDeleted(capabilities) ? null : capabilities;
             return this;
         }
 
         /**
+         * Builds the Application object.
+         *
          * @return A new Application containing the configured properties.
          */
         public Application build() {
             return new Application(this);
         }
+    }
 
-        private boolean shouldBeDeleted(Capabilities capabilities) {
-            return (capabilities.voice == null
-                    && capabilities.rtc == null
-                    && capabilities.messages == null
-                    && capabilities.vbc == null);
+    /**
+     * Application privacy configuration settings.
+     *
+     * @since 7.7.0
+     */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class Privacy {
+        private Boolean improveAi;
+
+        /**
+         * Whether Vonage may store and use your content and data for the improvement of
+         * Vonage's AI based services and technologies.
+         *
+         * @return {@code true} if Vonage may use the data for improving its AI services,
+         * or {@code null} if unspecified.
+         */
+        @JsonProperty("improve_ai")
+        public Boolean getImproveAi() {
+            return improveAi;
         }
     }
 
+    /**
+     * Represents the cryptographic keys of an Application.
+     */
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class Keys {
-        @JsonProperty("public_key")
-        private String publicKey;
-        @JsonProperty("private_key")
-        private String privateKey;
+        private String publicKey, privateKey;
 
+        /**
+         * The application's public key.
+         *
+         * @return The public key as a string, or {@code null} if absent.
+         */
+        @JsonProperty("public_key")
         public String getPublicKey() {
             return publicKey;
         }
 
+        /**
+         * The application's private key.
+         *
+         * @return The private key as a string, or {@code null} if absent (the default).
+         */
+        @JsonProperty("private_key")
         public String getPrivateKey() {
             return privateKey;
         }
@@ -201,18 +285,42 @@ public class Application {
         private Rtc rtc;
         private Vbc vbc;
 
+        /**
+         * Voice capability.
+         *
+         * @return The Voice capability, or {@code null} if absent.
+         */
+        @JsonProperty("voice")
         public Voice getVoice() {
             return voice;
         }
 
+        /**
+         * Messages capability.
+         *
+         * @return The Messages capability, or {@code null} if absent.
+         */
+        @JsonProperty("messages")
         public Messages getMessages() {
             return messages;
         }
 
+        /**
+         * RTC capability.
+         *
+         * @return The RTC capability, or {@code null} if absent.
+         */
+        @JsonProperty("rtc")
         public Rtc getRtc() {
             return rtc;
         }
 
+        /**
+         * VBC capability.
+         *
+         * @return The VBC capability, or {@code null} if absent.
+         */
+        @JsonProperty("vbc")
         public Vbc getVbc() {
             return vbc;
         }

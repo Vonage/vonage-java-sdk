@@ -23,7 +23,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
-import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.*;
 import org.junit.function.ThrowingRunnable;
 import static org.mockito.Mockito.*;
 import java.io.ByteArrayInputStream;
@@ -123,5 +123,28 @@ public abstract class ClientTest<T> {
     protected <R> R stubResponseAndGet(int statusCode, String response, Supplier<? extends R> invocation) throws Exception {
         stubResponse(statusCode, response);
         return invocation.get();
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <E extends VonageApiResponseException> void assertApiResponseException(
+            int statusCode, String response, Class<E> exClass, ThrowingRunnable invocation) throws Exception {
+        E expectedResponse = (E) exClass.getDeclaredMethod("fromJson", String.class).invoke(exClass, response);
+        String expectedJson = expectedResponse.toJson();
+        assertTrue(expectedJson.length() > 1 && expectedJson.length() <= response.length());
+        wrapper.setHttpClient(stubHttpClient(statusCode, expectedJson));
+        java.lang.reflect.Method setStatusCode = exClass.getDeclaredMethod("setStatusCode", int.class);
+        setStatusCode.setAccessible(true);
+        setStatusCode.invoke(expectedResponse, statusCode);
+        String failPrefix = "Expected "+exClass.getSimpleName()+", but got ";
+
+        try {
+            invocation.run();
+            fail(failPrefix + "nothing.");
+        }
+        catch (Throwable ex) {
+            assertEquals(failPrefix + ex.getClass(), exClass, ex.getClass());
+            assertEquals(expectedResponse, ex);
+            assertEquals(expectedJson, ((E) ex).toJson());
+        }
     }
 }

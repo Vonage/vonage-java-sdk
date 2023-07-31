@@ -24,8 +24,7 @@ import java.util.Date;
  * <p>
  * Allows you to tell Vonage about the reliability of your 2FA communications.
  * <p>
- * More information on method parameters can be found at Vonage website:
- * <a href="https://developer.nexmo.com/messaging/conversion-api/overview">https://developer.nexmo.com/messaging/conversion-api/overview</a>
+ * See the <a href="https://developer.vonage.com/messaging/conversion-api/overview">Conversion API documentation</a>.
  */
 public class ConversionClient {
     final ConversionEndpoint conversionEndpoint;

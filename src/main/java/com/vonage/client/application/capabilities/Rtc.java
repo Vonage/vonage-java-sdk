@@ -17,16 +17,16 @@ package com.vonage.client.application.capabilities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.vonage.client.common.HttpMethod;
 import com.vonage.client.common.Webhook;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
+/**
+ * Rtc capability configuration settings.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 public class Rtc extends Capability {
-    private Rtc() {
 
+    private Rtc() {
     }
 
     private Rtc(Builder builder) {
@@ -39,58 +39,32 @@ public class Rtc extends Capability {
     }
 
     /**
-     * @return A new Builder to start building.
+     * Entry point for constructing an instance of this class.
+     *
+     * @return A new Builder.
      */
     public static Builder builder() {
         return new Builder();
     }
 
-    public static class Builder {
-        private Map<Webhook.Type, Webhook> webhooks;
+    public static class Builder extends Capability.Builder<Rtc, Builder> {
 
-        /**
-         * Add a webhook for the Vonage API to use. See <a href="https://developer.nexmo.com/concepts/guides/webhooks">https://developer.nexmo.com/concepts/guides/webhooks</a>. Each
-         * Capability can only have a single webhook of each type. Any futher adding of webhooks will override an
-         * already existing one of that type.
-         *
-         * @param type    The {@link Webhook.Type} of webhook to add.
-         * @param webhook The webhook containing the URL and {@link HttpMethod}.
-         *
-         * @return The {@link Builder} to keep building.
-         */
+        @Override
         public Builder addWebhook(Webhook.Type type, Webhook webhook) {
-            if (webhooks == null) {
-                webhooks = new LinkedHashMap<>();
-            }
-
-            webhooks.put(type, webhook);
-            return this;
+            return super.addWebhook(type, webhook);
         }
 
-        /**
-         * Remove a webhook.
-         *
-         * @param type The {@link Webhook.Type} to remove.
-         *
-         * @return The {@link Builder} to keep building.
-         */
+        @Override
         public Builder removeWebhook(Webhook.Type type) {
-            if (webhooks == null) {
-                webhooks = new LinkedHashMap<>();
-            }
-
-            webhooks.remove(type);
-
-            if (webhooks.isEmpty()) {
-                webhooks = null;
-            }
-
-            return this;
+            return super.removeWebhook(type);
         }
 
         /**
-         * @return A new Rtc capability containing the configured properties.
+         * Builds the Rtc object.
+         *
+         * @return A new RTC capability containing the configured properties.
          */
+        @Override
         public Rtc build() {
             return new Rtc(this);
         }

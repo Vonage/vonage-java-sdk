@@ -21,8 +21,9 @@ import com.vonage.client.application.capabilities.Rtc;
 import com.vonage.client.application.capabilities.Voice;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.common.Webhook;
+import static org.junit.Assert.*;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import java.util.UUID;
 
 public class ApplicationTest {
     @Test
@@ -59,13 +60,22 @@ public class ApplicationTest {
 
     @Test
     public void testAddMultipleCapabilitiesOfSameType() {
-        String json = "{\"capabilities\":{\"voice\":{}}}";
+        String expectedJson = "{\"capabilities\":{\"voice\":{\"webhooks\":{\"fallback_answer_url\":" +
+                "{\"address\":\"https://fallback.example.com/webhooks/answer\",\"http_method\":\"GET\"," +
+                "\"connection_timeout\":500,\"socket_timeout\":3600}}}}}";
+
         Application application = Application.builder()
-                .addCapability(Voice.builder().build())
-                .addCapability(Voice.builder().build())
+                .addCapability(Voice.builder().addWebhook(Webhook.Type.EVENT, Webhook.builder()
+                        .address("https://example.com/webhooks/event").method(HttpMethod.POST).build()
+                ).build())
+                .addCapability(Voice.builder().addWebhook(Webhook.Type.FALLBACK_ANSWER,
+                        Webhook.builder().method(HttpMethod.GET)
+                                .address("https://fallback.example.com/webhooks/answer")
+                                .connectionTimeout(500).socketTimeout(3600).build()
+                ).build())
                 .build();
 
-        assertEquals(json, application.toJson());
+        assertEquals(expectedJson, application.toJson());
     }
 
     @Test
@@ -150,5 +160,71 @@ public class ApplicationTest {
         Application updated = Application.builder(initial).name("updated").build();
 
         assertEquals(json, updated.toJson());
+    }
+
+    @Test
+    public void testPrivacy() {
+        String json = "{\"privacy\":{";
+
+        Application request = Application.builder().improveAi(true).build();
+        assertEquals(json + "\"improve_ai\":"+request.getPrivacy().getImproveAi()+"}}", request.toJson());
+        Application parsed = Application.fromJson(json + "}}");
+        assertNotNull(parsed.getPrivacy());
+        assertNull(parsed.getPrivacy().getImproveAi());
+
+        parsed.updateFromJson(request.toJson());
+        assertTrue(parsed.getPrivacy().getImproveAi());
+
+        assertNull(request.getId());
+        request.updateFromJson(json + "}, \"id\": \""+ UUID.randomUUID()+"\"}");
+        assertNotNull(request.getId());
+        assertNotNull(request.getPrivacy());
+        assertNull(request.getPrivacy().getImproveAi());
+    }
+
+    @Test
+    public void testParseUnknownVoiceFields() {
+        String json = "{\n" +
+                "    \"id\": \"968331b7-db66-421d-bbb1-ea04c238b52f\",\n" +
+                "    \"name\": \"neru_vapi_chatgpt\",\n" +
+                "    \"keys\": {\n" +
+                "    },\n" +
+                "    \"privacy\": {\n" +
+                "        \"improve_ai\": false\n" +
+                "    },\n" +
+                "    \"capabilities\": {\n" +
+                "        \"voice\": {\n" +
+                "            \"webhooks\": {\n" +
+                "            },\n" +
+                "            \"payment_enabled\": false,\n" +
+                "            \"signed_callbacks\": false,\n" +
+                "            \"conversations_ttl\": 0,\n" +
+                "            \"region\": \"jupiter\",\n" +
+                "            \"payments\": {\n" +
+                "                \"gateways\": []\n" +
+                "            }\n" +
+                "        }\n" +
+                "    },\n" +
+                "    \"_links\": {\n" +
+                "        \"self\": {\n" +
+                "            \"href\": \"/v2/applications/968331b7-db66-421d-bbb1-ea04c238b52f\"\n" +
+                "        }\n" +
+                "    }\n" +
+                "}";
+
+        Application parsed = Application.fromJson(json);
+
+        assertNotNull(UUID.fromString(parsed.getId()));
+        assertNotNull(parsed.getName());
+        assertNotNull(parsed.getPrivacy());
+        assertNotNull(parsed.getKeys());
+        assertNotNull(parsed.getCapabilities());
+        Voice voice = parsed.getCapabilities().getVoice();
+        assertNotNull(voice);
+        assertNotNull(voice.getWebhooks());
+        assertEquals(0, voice.getWebhooks().size());
+        assertEquals(0, voice.getConversationsTtl().intValue());
+        assertFalse(voice.getSignedCallbacks());
+        assertNull(voice.getRegion());
     }
 }

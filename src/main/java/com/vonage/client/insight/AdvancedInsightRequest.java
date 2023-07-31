@@ -115,7 +115,7 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
         /**
          * @param number A single phone number that you need insight about in national or international format.
          *              This field is REQUIRED.
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder number(String number) {
             this.number = number;
@@ -126,7 +126,7 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
          * @param country If a number does not have a country code, or it is uncertain, set the two-character country
          *                code.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder country(String country) {
             this.country = country;
@@ -138,7 +138,7 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
          *             returned. Set to true to receive phone number owner name in the response. This is only available
          *             for US numbers and incurs an additional charge.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder cnam(boolean cnam) {
             this.cnam = cnam;
@@ -152,7 +152,7 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
          * @param ipAddress The IP address of the user. If supplied, we will compare this to the country the user's
          *                  phone is located in and return an error if it does not match.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         @Deprecated
         public Builder ipAddress(String ipAddress) {
@@ -164,7 +164,7 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
          * @param async True if the call should be done asynchronously. When setting this value to true, the {@link
          *              Builder#callback(String)} parameter must also be set.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder async(boolean async) {
             this.async = async;
@@ -175,7 +175,7 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
          * @param url The URL that Vonage will send a request to when the insight lookup is finished.
          *            This only takes effect when {@link #async(boolean)} is {@code true}.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder callback(String url) {
             this.callback = url;
@@ -186,7 +186,7 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
          * @param realTimeData A boolean to choose whether to get real time data back in the response.
          *                     This only applies when {@link #async(boolean)} is {@code false}.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder realTimeData(boolean realTimeData) {
             this.realTimeData = realTimeData;

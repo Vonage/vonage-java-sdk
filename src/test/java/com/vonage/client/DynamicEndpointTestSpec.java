@@ -24,8 +24,6 @@ import org.apache.http.util.EntityUtils;
 import static org.junit.Assert.*;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -141,7 +139,7 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 			String paramsStr = expectedQueryParams.entrySet().stream()
 					.map(entry -> entry.getKey() + "=" + entry.getValue())
 					.collect(Collectors.joining("&"));
-			queryParams = "?" + URLEncoder.encode(paramsStr, Charset.defaultCharset().name());
+			queryParams = "?" + paramsStr;//URLEncoder.encode(paramsStr, Charset.defaultCharset().name());
 		}
 
 		RequestBuilder builder = makeTestRequest(request);
