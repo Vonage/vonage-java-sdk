@@ -29,6 +29,7 @@ import com.vonage.client.redact.RedactClient;
 import com.vonage.client.sms.SmsClient;
 import com.vonage.client.sns.SnsClient;
 import com.vonage.client.subaccounts.SubaccountsClient;
+import com.vonage.client.users.UsersClient;
 import com.vonage.client.verify.VerifyClient;
 import com.vonage.client.verify2.Verify2Client;
 import com.vonage.client.voice.VoiceClient;
@@ -64,6 +65,7 @@ public class VonageClient {
     private final SubaccountsClient subaccounts;
     private final ProactiveConnectClient proactiveConnect;
     private final MeetingsClient meetings;
+    private final UsersClient users;
 
     private VonageClient(Builder builder) {
         httpWrapper = new HttpWrapper(builder.httpConfig, builder.authCollection);
@@ -84,6 +86,7 @@ public class VonageClient {
         subaccounts = new SubaccountsClient(httpWrapper);
         proactiveConnect = new ProactiveConnectClient(httpWrapper);
         meetings = new MeetingsClient(httpWrapper);
+        users = new UsersClient(httpWrapper);
     }
 
     public AccountClient getAccountClient() {
@@ -176,6 +179,16 @@ public class VonageClient {
      */
     public SubaccountsClient getSubaccountsClient() {
         return subaccounts;
+    }
+
+    /**
+     *
+     *
+     * @return The Users client.
+     * @since 7.7.0
+     */
+    public UsersClient getUsersClient() {
+        return users;
     }
 
     /**
