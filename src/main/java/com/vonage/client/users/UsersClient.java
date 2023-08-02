@@ -134,6 +134,17 @@ public class UsersClient {
      * @throws UsersResponseException If there was an error processing the request.
      */
     public List<User> listUsers() throws UsersResponseException {
-        return listUsers.execute(new ListUsersRequest()).getUsers();
+        return listUsers(ListUsersRequest.builder().build()).getUsers();
+    }
+
+    /**
+     * Lists the first 100 users in the application.
+     *
+     * @return The HAL response containing the users.
+     *
+     * @throws UsersResponseException If there was an error processing the request.
+     */
+    public ListUsersResponse listUsers(ListUsersRequest request) throws UsersResponseException {
+        return listUsers.execute(ListUsersRequest.builder().build());
     }
 }

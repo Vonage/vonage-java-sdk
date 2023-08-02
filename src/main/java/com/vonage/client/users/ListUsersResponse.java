@@ -21,9 +21,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.common.HalPageResponse;
 import java.util.List;
 
+/**
+ * Paginated HAL response for {@link UsersClient#listUsers(ListUsersRequest)}.
+ */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-class ListUsersResponse extends HalPageResponse {
+public class ListUsersResponse extends HalPageResponse {
     @JsonProperty("_embedded") private Embedded embedded;
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -34,7 +37,7 @@ class ListUsersResponse extends HalPageResponse {
     /**
      * Retrieves the embedded resource contents.
      *
-     * @return The list of users.
+     * @return The list of users, or {@code null} if absent.
      */
     public List<User> getUsers() {
         return embedded != null ? embedded.users : null;

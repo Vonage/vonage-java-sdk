@@ -19,12 +19,73 @@ import com.vonage.client.QueryParamsRequest;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-class ListUsersRequest implements QueryParamsRequest {
+/**
+ * Query parameters for {@link UsersClient#listUsers(ListUsersRequest)}.
+ */
+public final class ListUsersRequest implements QueryParamsRequest {
+    private final int pageSize;
+    private final SortOrder order;
+    private final String name;
+
+    private ListUsersRequest(Builder builder) {
+        if ((pageSize = builder.pageSize) < 1 || pageSize > 100) {
+            throw new IllegalArgumentException("Page size must be between 1 and 100.");
+        }
+        order = builder.order;
+        name = builder.name;
+    }
 
     @Override
     public Map<String, String> makeParams() {
-        LinkedHashMap<String, String> params = new LinkedHashMap<>(2);
-        params.put("page_size", "100");
+        LinkedHashMap<String, String> params = new LinkedHashMap<>(4);
+        params.put("page_size", String.valueOf(pageSize));
+        if (order != null) {
+            params.put("order", order.toString());
+        }
+        if (name != null) {
+            params.put("name", name);
+        }
         return params;
+    }
+
+    /**
+     * Entry point for constructing an instance of this class.
+     *
+     * @return A new Builder.
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private int pageSize = 100;
+        private SortOrder order;
+        private String name;
+
+        Builder() {}
+
+        public Builder pageSize(int pageSize) {
+            this.pageSize = pageSize;
+            return this;
+        }
+
+        public Builder order(SortOrder order) {
+            this.order = order;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        /**
+         * Builds the request.
+         *
+         * @return A new ListUsersRequest with this builder's properties.
+         */
+        public ListUsersRequest build() {
+            return new ListUsersRequest(this);
+        }
     }
 }

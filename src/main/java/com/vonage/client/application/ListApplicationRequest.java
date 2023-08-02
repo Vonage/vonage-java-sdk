@@ -23,18 +23,18 @@ import java.util.Map;
  * Query parameters for {@link ApplicationClient#listApplications(ListApplicationRequest)}.
  */
 public class ListApplicationRequest implements QueryParamsRequest {
-    private final long pageSize, page;
+    private final int pageSize, page;
 
     private ListApplicationRequest(Builder builder) {
         pageSize = builder.pageSize;
         page = builder.page;
     }
 
-    public long getPageSize() {
+    public int getPageSize() {
         return pageSize;
     }
 
-    public long getPage() {
+    public int getPage() {
         return page;
     }
 
@@ -50,13 +50,17 @@ public class ListApplicationRequest implements QueryParamsRequest {
         return params;
     }
 
+    /**
+     * Entry point for constructing an instance of this class.
+     *
+     * @return A new Builder.
+     */
     public static Builder builder() {
         return new Builder();
     }
 
     public static class Builder {
-        private long pageSize;
-        private long page;
+        private int pageSize, page;
 
         /**
          * @param pageSize The number of applications per page.
@@ -64,7 +68,7 @@ public class ListApplicationRequest implements QueryParamsRequest {
          * @return This builder.
          */
         public Builder pageSize(long pageSize) {
-            this.pageSize = pageSize;
+            this.pageSize = (int) pageSize;
             return this;
         }
 
@@ -74,7 +78,7 @@ public class ListApplicationRequest implements QueryParamsRequest {
          * @return This builder.
          */
         public Builder page(long page) {
-            this.page = page;
+            this.page = (int) page;
             return this;
         }
 

@@ -34,13 +34,14 @@ public class User implements Jsonable {
     private Properties properties;
     private Channels channels;
 
-    private User() {
+    User() {
     }
 
-    private User(Builder builder) {
+    User(Builder builder) {
         name = builder.name;
         displayName = builder.displayName;
         imageUrl = builder.imageUrl;
+        channels = builder.channels;
         if (builder.customData != null) {
             properties = new Properties();
             properties.customData = builder.customData;
@@ -120,9 +121,9 @@ public class User implements Jsonable {
         private String name, displayName;
         private URI imageUrl;
         private Map<String, Object> customData;
+        private final Channels channels = new Channels();
 
-        public Builder() {}
-
+        Builder() {}
 
         /**
          * Unique name for a user.
@@ -145,6 +146,18 @@ public class User implements Jsonable {
          */
         public Builder displayName(String displayName) {
             this.displayName = displayName;
+            return this;
+        }
+
+        /**
+         * An image URL to associate with the user.
+         *
+         * @param imageUrl The image URL as a string.
+         *
+         * @return This builder.
+         */
+        public Builder imageUrl(String imageUrl) {
+            this.imageUrl = URI.create(imageUrl);
             return this;
         }
 
