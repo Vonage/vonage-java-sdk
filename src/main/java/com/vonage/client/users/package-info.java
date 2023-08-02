@@ -16,7 +16,10 @@
 
 /**
  * This package contains classes and sub-packages to support usage of the
- * <a href=https://developer.vonage.com/en/api/application.v2#User>Vonage Users API</a>.
+ * <a href=https://developer.vonage.com/en/api/application.v2#User>Vonage Users API</a>.<br><br><p>
+ * The concept of a user exists in Vonage APIs, you can associate one with a user in your own application
+ * if you choose. A user can have multiple memberships to conversations and can communicate with other users
+ * through various different mediums, called "channels".</p>
  *
  * @since 7.7.0
  */

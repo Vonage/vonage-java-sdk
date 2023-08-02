@@ -58,9 +58,9 @@ public class UsersClient {
 
         listUsers = new Endpoint<>(null, HttpMethod.GET);
         createUser = new Endpoint<>(null, HttpMethod.POST);
-        getUser = new Endpoint<>(id -> id, HttpMethod.GET);
-        updateUser = new Endpoint<>(User::getId, HttpMethod.PUT);
-        deleteUser = new Endpoint<>(id -> id, HttpMethod.DELETE);
+        getUser = new Endpoint<>(Function.identity(), HttpMethod.GET);
+        updateUser = new Endpoint<>(User::getId, HttpMethod.PATCH);
+        deleteUser = new Endpoint<>(Function.identity(), HttpMethod.DELETE);
     }
 
     private User validateUser(User request) {
