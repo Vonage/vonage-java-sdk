@@ -15,12 +15,16 @@
  */
 package com.vonage.client.users.channels;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.common.E164;
 
 /**
  * Represents a Short Messaging Service (SMS) channel.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Sms {
 	private String number;
 

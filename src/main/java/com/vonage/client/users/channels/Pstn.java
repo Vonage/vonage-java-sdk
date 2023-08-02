@@ -15,12 +15,15 @@
  */
 package com.vonage.client.users.channels;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.common.E164;
 
 /**
  * Represents a Public Switched Telephone Network (PSTN) channel.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Pstn {
 	private String number;
 
@@ -29,16 +32,16 @@ public class Pstn {
 	/**
 	 * Creates a new PSTN channel.
 	 *
-	 * @param number The phone number in E.164 format.
+	 * @param number The telephone number as a String.
 	 */
 	public Pstn(String number) {
-		this.number = new E164(number).toString();
+		this.number = number;
 	}
 
 	/**
 	 * Phone number for this channel.
 	 *
-	 * @return The number in E.164 format.
+	 * @return The telephone number as a String.
 	 */
 	@JsonProperty("number")
 	public String getNumber() {

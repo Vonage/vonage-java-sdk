@@ -15,9 +15,14 @@
  */
 package com.vonage.client.users.channels;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  * Represents a Websocket channel.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Websocket {
 
 	Websocket() {}

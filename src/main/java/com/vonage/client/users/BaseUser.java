@@ -13,19 +13,41 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.users.channels;
+package com.vonage.client.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.Jsonable;
 
 /**
- * Represents a Session Initiation Protocol (SIP) channel.
+ * Represents the main attributes of a User.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Sip {
+public class BaseUser implements Jsonable {
+    String id, name;
 
-	Sip() {}
+    BaseUser() {
+    }
 
+    /**
+     * Unique user ID.
+     *
+     * @return The user ID as a string, or {@code null} if unknown.
+     */
+    @JsonProperty("id")
+    public String getId() {
+        return id;
+    }
 
+    /**
+     * Unique name of the user.
+     *
+     * @return The user's name.
+     */
+    @JsonProperty("name")
+    public String getName() {
+        return name;
+    }
 }

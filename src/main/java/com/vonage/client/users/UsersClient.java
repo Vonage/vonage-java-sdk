@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * A client for talking to the Vonage Users API. The standard way to obtain an instance of
@@ -63,8 +64,8 @@ public class UsersClient {
         deleteUser = new Endpoint<>(Function.identity(), HttpMethod.DELETE);
     }
 
-    private User validateUser(User request) {
-        return Objects.requireNonNull(request, "User request is required.");
+    private <U extends BaseUser> U validateUser(U request) {
+        return Objects.requireNonNull(request, "User is required.");
     }
 
     private String validateUserId(String id) {
@@ -127,19 +128,6 @@ public class UsersClient {
     }
 
     /**
-     * Lists the first 100 users in the application, from newest to oldest.
-     *
-     * @return The list of available users in creation order.
-     *
-     * @throws UsersResponseException If there was an error processing the request.
-     * 
-     * @see #listUsers(ListUsersRequest)
-     */
-    public List<User> listUsers() throws UsersResponseException {
-        return listUsers(ListUsersRequest.builder().pageSize(100).build()).getUsers();
-    }
-
-    /**
      * Lists users in the application based on the filter criteria.
      *
      * @param request Optional parameters to customise the search results.
@@ -150,5 +138,44 @@ public class UsersClient {
      */
     public ListUsersResponse listUsers(ListUsersRequest request) throws UsersResponseException {
         return listUsers.execute(request != null ? request : ListUsersRequest.builder().build());
+    }
+
+    /**
+     * Lists the first 100 users in the application, from newest to oldest. <br>
+     * <b>NOTE: The users returned from this method will only contain the name and ID, not the full record.</b>
+     *
+     * @return The list of available users in creation order.
+     *
+     * @throws UsersResponseException If there was an error processing the request.
+     *
+     * @see #listUsers(ListUsersRequest)
+     */
+    public List<BaseUser> listUsers() throws UsersResponseException {
+        return listUsers(ListUsersRequest.builder().pageSize(100).build()).getUsers();
+    }
+
+    /**
+     * Convenience method that uses the metadata from the base user object to obtain all known fields about the user.
+     *
+     * @param minimalUser The user metadata.
+     *
+     * @return A new {@linkplain User} object with all known fields populated.
+     */
+    public User getUserDetails(BaseUser minimalUser) {
+        return getUser(validateUser(minimalUser).getId());
+    }
+
+    /**
+     * Convenience method that uses the metadata from the base users list to obtain all known fields about the users.
+     * You may use this method to convert the minimal data returned from {@link #listUsers()} or
+     * {@link ListUsersResponse#getUsers()} into fully populated records.
+     *
+     * @param minimalUsers The list of users' metadata.
+     *
+     * @return A list of users with all known fields populated in the same encounter order.
+     */
+    public List<User> getUserDetails(List<BaseUser> minimalUsers) {
+        return Objects.requireNonNull(minimalUsers, "Users list is required")
+                .stream().map(this::getUserDetails).collect(Collectors.toList());
     }
 }

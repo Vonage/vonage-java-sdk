@@ -31,15 +31,16 @@ public class ListUsersResponse extends HalPageResponse {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     static class Embedded {
-        @JsonProperty("users") List<User> users;
+        @JsonProperty("users") List<BaseUser> users;
     }
 
     /**
-     * Retrieves the embedded resource contents.
+     * Retrieves the embedded resource contents. <br>
+     * <b>NOTE: The users returned from this method will only contain the name and ID, not the full record.</b>
      *
      * @return The list of users, or {@code null} if absent.
      */
-    public List<User> getUsers() {
+    public List<BaseUser> getUsers() {
         return embedded != null ? embedded.users : null;
     }
 }

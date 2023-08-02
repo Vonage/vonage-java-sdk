@@ -18,7 +18,6 @@ package com.vonage.client.users;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.users.channels.Channels;
 import java.net.URI;
 import java.util.Map;
@@ -28,8 +27,8 @@ import java.util.Map;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class User implements Jsonable {
-    private String id, name, displayName;
+public class User extends BaseUser {
+    private String displayName;
     private URI imageUrl;
     private Properties properties;
     private Channels channels;
@@ -46,26 +45,6 @@ public class User implements Jsonable {
             properties = new Properties();
             properties.customData = builder.customData;
         }
-    }
-
-    /**
-     * Unique user ID.
-     *
-     * @return The user ID as a string, or {@code null} if unknown.
-     */
-    @JsonProperty("id")
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * Unique name of the user.
-     *
-     * @return The user's name.
-     */
-    @JsonProperty("name")
-    public String getName() {
-        return name;
     }
 
     /**
