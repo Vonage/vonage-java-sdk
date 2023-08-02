@@ -121,7 +121,7 @@ public class User implements Jsonable {
         private String name, displayName;
         private URI imageUrl;
         private Map<String, Object> customData;
-        private final Channels channels = new Channels();
+        private Channels channels;
 
         Builder() {}
 

@@ -127,24 +127,28 @@ public class UsersClient {
     }
 
     /**
-     * Lists the first 100 users in the application.
+     * Lists the first 100 users in the application, from newest to oldest.
      *
-     * @return The list of available users.
+     * @return The list of available users in creation order.
      *
      * @throws UsersResponseException If there was an error processing the request.
+     * 
+     * @see #listUsers(ListUsersRequest)
      */
     public List<User> listUsers() throws UsersResponseException {
         return listUsers(ListUsersRequest.builder().pageSize(100).build()).getUsers();
     }
 
     /**
-     * Lists the first 100 users in the application.
+     * Lists users in the application based on the filter criteria.
+     *
+     * @param request Optional parameters to customise the search results.
      *
      * @return The HAL response containing the users.
      *
      * @throws UsersResponseException If there was an error processing the request.
      */
     public ListUsersResponse listUsers(ListUsersRequest request) throws UsersResponseException {
-        return listUsers.execute(request);
+        return listUsers.execute(request != null ? request : ListUsersRequest.builder().build());
     }
 }
