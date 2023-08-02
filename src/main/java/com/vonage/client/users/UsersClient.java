@@ -134,7 +134,7 @@ public class UsersClient {
      * @throws UsersResponseException If there was an error processing the request.
      */
     public List<User> listUsers() throws UsersResponseException {
-        return listUsers(ListUsersRequest.builder().build()).getUsers();
+        return listUsers(ListUsersRequest.builder().pageSize(100).build()).getUsers();
     }
 
     /**
@@ -145,6 +145,6 @@ public class UsersClient {
      * @throws UsersResponseException If there was an error processing the request.
      */
     public ListUsersResponse listUsers(ListUsersRequest request) throws UsersResponseException {
-        return listUsers.execute(ListUsersRequest.builder().build());
+        return listUsers.execute(request);
     }
 }

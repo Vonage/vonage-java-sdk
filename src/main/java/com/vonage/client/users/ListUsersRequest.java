@@ -16,6 +16,8 @@
 package com.vonage.client.users;
 
 import com.vonage.client.QueryParamsRequest;
+import com.vonage.client.common.HalLinks;
+import java.net.URI;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -25,7 +27,7 @@ import java.util.Map;
 public final class ListUsersRequest implements QueryParamsRequest {
     private final int pageSize;
     private final SortOrder order;
-    private final String name;
+    private final String name, cursor;
 
     private ListUsersRequest(Builder builder) {
         if ((pageSize = builder.pageSize) < 1 || pageSize > 100) {
@@ -33,6 +35,13 @@ public final class ListUsersRequest implements QueryParamsRequest {
         }
         order = builder.order;
         name = builder.name;
+        cursor = parseCursor(builder.cursor);
+    }
+
+    static String parseCursor(URI cursor) {
+        if (cursor == null) return null;
+        String query = cursor.getRawQuery();
+        return query.substring(query.indexOf("cursor=") + 7);
     }
 
     @Override
@@ -44,6 +53,9 @@ public final class ListUsersRequest implements QueryParamsRequest {
         }
         if (name != null) {
             params.put("name", name);
+        }
+        if (cursor != null) {
+            params.put("cursor", cursor);
         }
         return params;
     }
@@ -58,24 +70,63 @@ public final class ListUsersRequest implements QueryParamsRequest {
     }
 
     public static class Builder {
-        private int pageSize = 100;
+        private int pageSize = 10;
         private SortOrder order;
         private String name;
+        private URI cursor;
 
         Builder() {}
 
+        /**
+         * Number of records to return in the response. Maximum is 100, default is 10.
+         *
+         * @param pageSize Number of results to return.
+         *
+         * @return This builder.
+         */
         public Builder pageSize(int pageSize) {
             this.pageSize = pageSize;
             return this;
         }
 
+        /**
+         * The order to return the results in. Default is ascending.
+         *
+         * @param order The sort order for results as an enum.
+         *
+         * @return This builder.
+         */
         public Builder order(SortOrder order) {
             this.order = order;
             return this;
         }
 
+        /**
+         * Find user by their name.
+         *
+         * @param name Unique user name.
+         *
+         * @return This builder.
+         */
         public Builder name(String name) {
             this.name = name;
+            return this;
+        }
+
+        /**
+         * The cursor to start returning results from.<br>
+         *
+         * You are not expected to provide this manually. Instead, this will be parsed from the response
+         * page's links. You need to provide the URL of the page. This can be obtained from
+         * {@link ListUsersResponse#getLinks()}, on which you would then call either
+         * {@linkplain HalLinks#getNextUrl()} or {@linkplain HalLinks#getPrevUrl()} and pass it to this method.
+         *
+         * @param cursor Page link URL containing the "cursor" query parameter.
+         *
+         * @return This builder.
+         */
+        public Builder cursor(URI cursor) {
+            this.cursor = cursor;
             return this;
         }
 
