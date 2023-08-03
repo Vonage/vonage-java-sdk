@@ -18,33 +18,34 @@ package com.vonage.client.users.channels;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.common.E164;
 
 /**
- * Represents a Facebook Messenger channel.
+ * Base class for channels with an E.164 phone number.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Messenger extends Channel {
-	private String id;
+public abstract class NumberChannel extends Channel {
+	private String number;
 
-	protected Messenger() {}
+	protected NumberChannel() {}
 
 	/**
-	 * Creates a new Messenger channel.
+	 * Creates a new channel with the specified number.
 	 *
-	 * @param id The Facebook Messenger user ID.
+	 * @param number The phone number in E.164 format.
 	 */
-	public Messenger(String id) {
-		this.id = id;
+	protected NumberChannel(String number) {
+		this.number = new E164(number).toString();
 	}
 
 	/**
-	 * Facebook Messenger ID.
-	 * 
-	 * @return The Facebook user ID.
+	 * Phone number for this channel.
+	 *
+	 * @return The number in E.164 format.
 	 */
-	@JsonProperty("id")
-	public String getId() {
-		return id;
+	@JsonProperty("number")
+	public String getNumber() {
+		return number;
 	}
 }

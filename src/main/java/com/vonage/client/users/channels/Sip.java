@@ -17,15 +17,47 @@ package com.vonage.client.users.channels;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.net.URI;
 
 /**
  * Represents a Session Initiation Protocol (SIP) channel.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Sip {
+public class Sip extends Channel {
+	private URI uri;
+	private String username, password;
 
-	Sip() {}
+	protected Sip() {}
 
+	/**
+	 * Full SIP URI, including number, domain and (optionally) whether TLS is used.
+	 *
+	 * @return The SIP URI, or {@code null} if not specified.
+	 */
+	@JsonProperty("uri")
+	public URI getUri() {
+		return uri;
+	}
 
+	/**
+	 * SIP username.
+	 *
+	 * @return The username, or {@code null} if not specified.
+	 */
+	@JsonProperty("username")
+	public String getUsername() {
+		return username;
+	}
+
+	/**
+	 * SIP user password.
+	 *
+	 * @return The password, or {@code null} if not specified.
+	 */
+	@JsonProperty("password")
+	public String getPassword() {
+		return password;
+	}
 }

@@ -25,7 +25,7 @@ import java.util.List;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Channels {
+public final class Channels {
 	@JsonProperty("pstn") private List<Pstn> pstn;
 	@JsonProperty("sip") private List<Sip> sip;
 	@JsonProperty("vbc") private List<Vbc> vbc;
@@ -37,41 +37,85 @@ public class Channels {
 	@JsonProperty("messenger") private List<Messenger> messenger;
 
 	Channels() {
-
 	}
 
+	/**
+	 * PSTN channels.
+	 *
+	 * @return The list of PSTN channels, or {@code null} if not set.
+	 */
 	public List<Pstn> getPstn() {
 		return pstn;
 	}
 
+	/**
+	 * SIP channels.
+	 *
+	 * @return The list of SIP channels, or {@code null} if not set.
+	 */
 	public List<Sip> getSip() {
 		return sip;
 	}
 
+	/**
+	 * VBC channels.
+	 *
+	 * @return The list of VBC channels, or {@code null} if not set.
+	 */
 	public List<Vbc> getVbc() {
 		return vbc;
 	}
 
+	/**
+	 * Websocket channels.
+	 *
+	 * @return The list of Websocket channels, or {@code null} if not set.
+	 */
 	public List<Websocket> getWebsocket() {
 		return websocket;
 	}
 
+	/**
+	 * SMS channels.
+	 *
+	 * @return The list of SMS channels, or {@code null} if not set.
+	 */
 	public List<Sms> getSms() {
 		return sms;
 	}
 
+	/**
+	 * MMS channels.
+	 *
+	 * @return The list of MMS channels, or {@code null} if not set.
+	 */
 	public List<Mms> getMms() {
 		return mms;
 	}
 
+	/**
+	 * WhatsApp channels.
+	 *
+	 * @return The list of WhatsApp channels, or {@code null} if not set.
+	 */
 	public List<Whatsapp> getWhatsapp() {
 		return whatsapp;
 	}
 
+	/**
+	 * Viber channels.
+	 *
+	 * @return The list of Viber channels, or {@code null} if not set.
+	 */
 	public List<Viber> getViber() {
 		return viber;
 	}
 
+	/**
+	 * Messenger channels.
+	 *
+	 * @return The list of Messenger channels, or {@code null} if not set.
+	 */
 	public List<Messenger> getMessenger() {
 		return messenger;
 	}

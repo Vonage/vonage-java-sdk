@@ -15,24 +15,10 @@
  */
 package com.vonage.client.users.channels;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.vonage.client.Jsonable;
 
 /**
- * Represents a Viber channel.
+ * Base class for channels.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class Viber extends NumberChannel {
-
-	protected Viber() {}
-
-	/**
-	 * Creates a new Viber channel.
-	 *
-	 * @param number The phone number in E.164 format.
-	 */
-	public Viber(String number) {
-		super(number);
-	}
+public abstract class Channel implements Jsonable {
 }

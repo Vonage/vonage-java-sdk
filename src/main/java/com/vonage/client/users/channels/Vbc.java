@@ -24,10 +24,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Vbc {
+public class Vbc extends Channel {
 	private String extension;
 
-	Vbc() {}
+	protected Vbc() {}
 
 	/**
 	 * Creates a new VBC channel.

@@ -17,18 +17,15 @@ package com.vonage.client.users.channels;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.common.E164;
 
 /**
  * Represents a Multimedia Messaging Service (MMS) channel.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Mms {
-	private String number;
+public class Mms extends NumberChannel {
 
-	Mms() {}
+	protected Mms() {}
 
 	/**
 	 * Creates a new MMS channel.
@@ -36,16 +33,6 @@ public class Mms {
 	 * @param number The phone number in E.164 format.
 	 */
 	public Mms(String number) {
-		this.number = new E164(number).toString();
-	}
-
-	/**
-	 * Phone number for this channel.
-	 * 
-	 * @return The number in E.164 format.
-	 */
-	@JsonProperty("number")
-	public String getNumber() {
-		return number;
+		super(number);
 	}
 }
