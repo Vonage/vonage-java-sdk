@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.net.URI;
+import java.util.Objects;
 
 /**
  * Represents a Session Initiation Protocol (SIP) channel.
@@ -30,6 +31,18 @@ public class Sip extends Channel {
 	private String username, password;
 
 	protected Sip() {}
+
+	public Sip(String uri) {
+		this.uri = URI.create(Objects.requireNonNull(uri, "SIP URI is required"));
+	}
+
+	public Sip(String uri, String username, String password) {
+		this(uri);
+		this.username = username;
+		if ((this.password = password) != null && !password.isEmpty() && username != null) {
+			throw new IllegalArgumentException("Username should be provided along with password.");
+		}
+	}
 
 	/**
 	 * Full SIP URI, including number, domain and (optionally) whether TLS is used.

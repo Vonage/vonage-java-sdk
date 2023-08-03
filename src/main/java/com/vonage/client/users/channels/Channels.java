@@ -18,6 +18,8 @@ package com.vonage.client.users.channels;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -37,6 +39,49 @@ public final class Channels {
 	@JsonProperty("messenger") private List<Messenger> messenger;
 
 	Channels() {
+	}
+
+	private <C extends Channel> List<C> initChannelList(List<C> channelList) {
+		return channelList != null ? channelList : new ArrayList<>(2);
+	}
+
+	/**
+	 * Creates a new Channels object and assigns the specified channels to the
+	 * appropriate fields based on their type.
+	 *
+	 * @param channels The contact methods to associate with this user.
+	 */
+	public Channels(Collection<? extends Channel> channels) {
+		if (channels == null || channels.isEmpty()) return;
+		for (Channel channel : channels) {
+			if (channel instanceof Pstn) {
+				initChannelList(pstn).add((Pstn) channel);
+			}
+			else if (channel instanceof Sip) {
+				initChannelList(sip).add((Sip) channel);
+			}
+			else if (channel instanceof Vbc) {
+				initChannelList(vbc).add((Vbc) channel);
+			}
+			else if (channel instanceof Websocket) {
+				initChannelList(websocket).add((Websocket) channel);
+			}
+			else if (channel instanceof Sms) {
+				initChannelList(sms).add((Sms) channel);
+			}
+			else if (channel instanceof Mms) {
+				initChannelList(mms).add((Mms) channel);
+			}
+			else if (channel instanceof Whatsapp) {
+				initChannelList(whatsapp).add((Whatsapp) channel);
+			}
+			else if (channel instanceof Viber) {
+				initChannelList(viber).add((Viber) channel);
+			}
+			else if (channel instanceof Messenger) {
+				initChannelList(messenger).add((Messenger) channel);
+			}
+		}
 	}
 
 	/**

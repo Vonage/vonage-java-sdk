@@ -18,8 +18,11 @@ package com.vonage.client.users;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.users.channels.Channel;
 import com.vonage.client.users.channels.Channels;
 import java.net.URI;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -149,6 +152,29 @@ public class User extends BaseUser {
          */
         public Builder customData(Map<String, Object> customData) {
             this.customData = customData;
+            return this;
+        }
+
+        /**
+         * Sets the communication channels for this user.
+         *
+         * @param channels The channels to associate with the user.
+         *
+         * @return This builder.
+         */
+        public Builder channels(Channel... channels) {
+            return channels(Arrays.asList(channels));
+        }
+
+        /**
+         * Sets the communication channels for this user.
+         *
+         * @param channels The collection of channels to associate with the user.
+         *
+         * @return This builder.
+         */
+        public Builder channels(Collection<? extends Channel> channels) {
+            this.channels = new Channels(channels);
             return this;
         }
 

@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Sms extends NumberChannel {
+
 	protected Sms() {}
 
 	/**

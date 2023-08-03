@@ -18,6 +18,7 @@ package com.vonage.client.users.channels;
 import com.fasterxml.jackson.annotation.*;
 import java.net.URI;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Represents a Websocket channel.
@@ -27,9 +28,19 @@ import java.util.Map;
 public class Websocket extends Channel {
 	private URI uri;
 	private ContentType contentType;
-	private Map<String, Object> headers;
+	private Map<String, ?> headers;
 
 	protected Websocket() {}
+
+	public Websocket(String uri) {
+		this.uri = URI.create(Objects.requireNonNull(uri, "Websocket URI is required"));
+	}
+
+	public Websocket(String uri, ContentType contentType, Map<String, ?> headers) {
+		this(uri);
+		this.contentType = contentType;
+		this.headers = headers;
+	}
 
 	/**
 	 * Full URI of the websocket.
