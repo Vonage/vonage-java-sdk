@@ -31,6 +31,10 @@ public class BaseUser implements Jsonable {
     BaseUser() {
     }
 
+    void setId(String id) {
+        this.id = id;
+    }
+
     /**
      * Unique user ID.
      *

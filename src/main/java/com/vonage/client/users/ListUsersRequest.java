@@ -15,6 +15,7 @@
  */
 package com.vonage.client.users;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.vonage.client.QueryParamsRequest;
 import com.vonage.client.common.HalLinks;
 import java.net.URI;
@@ -25,12 +26,12 @@ import java.util.Map;
  * Query parameters for {@link UsersClient#listUsers(ListUsersRequest)}.
  */
 public final class ListUsersRequest implements QueryParamsRequest {
-    private final int pageSize;
+    private final Integer pageSize;
     private final SortOrder order;
     private final String name, cursor;
 
     private ListUsersRequest(Builder builder) {
-        if ((pageSize = builder.pageSize) < 1 || pageSize > 100) {
+        if ((pageSize = builder.pageSize) != null && (pageSize < 1 || pageSize > 100)) {
             throw new IllegalArgumentException("Page size must be between 1 and 100.");
         }
         order = builder.order;
@@ -47,7 +48,9 @@ public final class ListUsersRequest implements QueryParamsRequest {
     @Override
     public Map<String, String> makeParams() {
         LinkedHashMap<String, String> params = new LinkedHashMap<>(4);
-        params.put("page_size", String.valueOf(pageSize));
+        if (pageSize != null) {
+            params.put("page_size", pageSize.toString());
+        }
         if (order != null) {
             params.put("order", order.toString());
         }
@@ -61,6 +64,42 @@ public final class ListUsersRequest implements QueryParamsRequest {
     }
 
     /**
+     *
+     *
+     * @return
+     */
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    /**
+     *
+     *
+     * @return
+     */
+    public SortOrder getOrder() {
+        return order;
+    }
+
+    /**
+     *
+     *
+     * @return
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     *
+     *
+     * @return
+     */
+    public String getCursor() {
+        return cursor;
+    }
+
+    /**
      * Entry point for constructing an instance of this class.
      *
      * @return A new Builder.
@@ -70,7 +109,7 @@ public final class ListUsersRequest implements QueryParamsRequest {
     }
 
     public static class Builder {
-        private int pageSize = 10;
+        private Integer pageSize;
         private SortOrder order;
         private String name;
         private URI cursor;
@@ -139,6 +178,27 @@ public final class ListUsersRequest implements QueryParamsRequest {
          */
         public ListUsersRequest build() {
             return new ListUsersRequest(this);
+        }
+    }
+
+    /**
+     * Represents the sort order for events.
+     */
+    public enum SortOrder {
+        /**
+         * Ascending
+         */
+        ASC,
+
+        /**
+         * Descending
+         */
+        DESC;
+
+        @JsonValue
+        @Override
+        public String toString() {
+            return name().toLowerCase();
         }
     }
 }

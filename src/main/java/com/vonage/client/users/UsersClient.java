@@ -93,20 +93,22 @@ public class UsersClient {
     /**
      * Update an existing user.
      *
-     * @param user The application properties for the user to be updated with.
+     * @param userId Unique ID of the user to update.
+     * @param user The properties for the user to be updated with.
      *
      * @return The user which has been updated.
      *
      * @throws UsersResponseException If there was an error processing the request.
      */
-    public User updateUser(User user) throws UsersResponseException {
-        return updateUser.execute(validateUser(user));
+    public User updateUser(String userId, User user) throws UsersResponseException {
+        validateUser(user).setId(validateUserId(userId));
+        return updateUser.execute(user);
     }
 
     /**
      * Retrieve a user.
      *
-     * @param userId The unique ID of the user to retrieve.
+     * @param userId Unique ID of the user to retrieve.
      *
      * @return The corresponding user.
      *
@@ -119,7 +121,7 @@ public class UsersClient {
     /**
      * Delete a user.
      *
-     * @param userId Unique ID of the user to delete as a string.
+     * @param userId Unique ID of the user to delete.
      *
      * @throws UsersResponseException If there was an error processing the request.
      */

@@ -90,6 +90,13 @@ public class User extends BaseUser {
         return channels;
     }
 
+
+    public static User fromJson(String json) {
+        User user = new User();
+        user.updateFromJson(json);
+        return user;
+    }
+
     /**
      * Entry point for creating an instance of this class.
      * 

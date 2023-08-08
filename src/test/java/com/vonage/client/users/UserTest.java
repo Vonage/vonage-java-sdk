@@ -15,25 +15,6 @@
  */
 package com.vonage.client.users;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+public class UserTest {
 
-/**
- * Represents the sort order for events.
- */
-public enum SortOrder {
-	/**
-	 * Ascending
-	 */
-	ASC,
-
-	/**
-	 * Descending
-	 */
-	DESC;
-
-	@JsonValue
-	@Override
-	public String toString() {
-		return name().toLowerCase();
-	}	
 }
