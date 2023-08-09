@@ -39,7 +39,7 @@ public class Sip extends Channel {
 	public Sip(String uri, String username, String password) {
 		this(uri);
 		this.username = username;
-		if ((this.password = password) != null && !password.isEmpty() && username != null) {
+		if ((this.password = password) != null && !password.isEmpty() && username == null) {
 			throw new IllegalArgumentException("Username should be provided along with password.");
 		}
 	}
@@ -72,5 +72,20 @@ public class Sip extends Channel {
 	@JsonProperty("password")
 	public String getPassword() {
 		return password;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Sip sip = (Sip) o;
+		return Objects.equals(uri, sip.uri) &&
+				Objects.equals(username, sip.username) &&
+				Objects.equals(password, sip.password);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(uri, username, password);
 	}
 }

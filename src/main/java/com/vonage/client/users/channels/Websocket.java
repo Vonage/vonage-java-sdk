@@ -72,6 +72,21 @@ public class Websocket extends Channel {
 		return headers;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Websocket websocket = (Websocket) o;
+		return Objects.equals(uri, websocket.uri) &&
+				contentType == websocket.contentType &&
+				Objects.equals(headers, websocket.headers);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(uri, contentType, headers);
+	}
+
 	/**
 	 * Represents the possible content types for a Websocket.
 	 */

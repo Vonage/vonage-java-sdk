@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents the "channels" field on {@link com.vonage.client.users.User}.
@@ -55,31 +56,31 @@ public final class Channels {
 		if (channels == null || channels.isEmpty()) return;
 		for (Channel channel : channels) {
 			if (channel instanceof Pstn) {
-				initChannelList(pstn).add((Pstn) channel);
+				(pstn = initChannelList(pstn)).add((Pstn) channel);
 			}
 			else if (channel instanceof Sip) {
-				initChannelList(sip).add((Sip) channel);
+				(sip = initChannelList(sip)).add((Sip) channel);
 			}
 			else if (channel instanceof Vbc) {
-				initChannelList(vbc).add((Vbc) channel);
+				(vbc = initChannelList(vbc)).add((Vbc) channel);
 			}
 			else if (channel instanceof Websocket) {
-				initChannelList(websocket).add((Websocket) channel);
+				(websocket = initChannelList(websocket)).add((Websocket) channel);
 			}
 			else if (channel instanceof Sms) {
-				initChannelList(sms).add((Sms) channel);
+				(sms = initChannelList(sms)).add((Sms) channel);
 			}
 			else if (channel instanceof Mms) {
-				initChannelList(mms).add((Mms) channel);
+				(mms = initChannelList(mms)).add((Mms) channel);
 			}
 			else if (channel instanceof Whatsapp) {
-				initChannelList(whatsapp).add((Whatsapp) channel);
+				(whatsapp = initChannelList(whatsapp)).add((Whatsapp) channel);
 			}
 			else if (channel instanceof Viber) {
-				initChannelList(viber).add((Viber) channel);
+				(viber = initChannelList(viber)).add((Viber) channel);
 			}
 			else if (channel instanceof Messenger) {
-				initChannelList(messenger).add((Messenger) channel);
+				(messenger = initChannelList(messenger)).add((Messenger) channel);
 			}
 		}
 	}
@@ -163,5 +164,26 @@ public final class Channels {
 	 */
 	public List<Messenger> getMessenger() {
 		return messenger;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Channels channels = (Channels) o;
+		return Objects.equals(pstn, channels.pstn) &&
+				Objects.equals(sip, channels.sip) &&
+				Objects.equals(vbc, channels.vbc) &&
+				Objects.equals(websocket, channels.websocket) &&
+				Objects.equals(sms, channels.sms) &&
+				Objects.equals(mms, channels.mms) &&
+				Objects.equals(whatsapp, channels.whatsapp) &&
+				Objects.equals(viber, channels.viber) &&
+				Objects.equals(messenger, channels.messenger);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(pstn, sip, vbc, websocket, sms, mms, whatsapp, viber, messenger);
 	}
 }

@@ -19,23 +19,24 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.common.E164;
+import java.util.Objects;
 
 /**
  * Base class for channels with an E.164 phone number.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public abstract class NumberChannel extends Channel {
+abstract class NumberChannel extends Channel {
 	private String number;
 
-	protected NumberChannel() {}
+	NumberChannel() {}
 
 	/**
 	 * Creates a new channel with the specified number.
 	 *
 	 * @param number The phone number in E.164 format.
 	 */
-	protected NumberChannel(String number) {
+	NumberChannel(String number) {
 		this.number = new E164(number).toString();
 	}
 
@@ -47,5 +48,18 @@ public abstract class NumberChannel extends Channel {
 	@JsonProperty("number")
 	public String getNumber() {
 		return number;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		NumberChannel that = (NumberChannel) o;
+		return Objects.equals(number, that.number);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(number);
 	}
 }

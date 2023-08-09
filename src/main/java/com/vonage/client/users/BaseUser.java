@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import java.util.Objects;
 
 /**
  * Represents the main attributes of a User.
@@ -53,5 +54,18 @@ public class BaseUser implements Jsonable {
     @JsonProperty("name")
     public String getName() {
         return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BaseUser baseUser = (BaseUser) o;
+        return Objects.equals(id, baseUser.id) && Objects.equals(name, baseUser.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
     }
 }

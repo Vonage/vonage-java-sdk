@@ -15,15 +15,14 @@
  */
 package com.vonage.client.users;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.vonage.client.users.channels.Channel;
 import com.vonage.client.users.channels.Channels;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Represents a Vonage User (both request and response).
@@ -33,8 +32,8 @@ import java.util.Map;
 public class User extends BaseUser {
     private String displayName;
     private URI imageUrl;
-    private Properties properties;
     private Channels channels;
+    private Properties properties;
 
     User() {
     }
@@ -76,8 +75,18 @@ public class User extends BaseUser {
      * @return The properties object, or {@code null} if not applicable.
      */
     @JsonProperty("properties")
-    public Properties getProperties() {
+    private Properties getProperties() {
         return properties;
+    }
+
+    /**
+     * Custom key/value pairs to associate with the user.
+     *
+     * @return The custom data as a Map, or {@code null} if not specified.
+     */
+    @JsonIgnore
+    public Map<String, ?> getCustomData() {
+        return getProperties() != null ? properties.getCustomData() : null;
     }
 
     /**
@@ -90,7 +99,26 @@ public class User extends BaseUser {
         return channels;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        User user = (User) o;
+        return Objects.equals(displayName, user.displayName) &&
+                Objects.equals(imageUrl, user.imageUrl) &&
+                Objects.equals(channels, user.channels) &&
+                Objects.equals(getCustomData(), user.getCustomData());
+    }
 
+    /**
+     * Constructs a user from the JSON payload.
+     *
+     * @param json The JSON structure containing the fields of this class.
+     *
+     * @return A new User instance.
+     */
+    @JsonCreator
     public static User fromJson(String json) {
         User user = new User();
         user.updateFromJson(json);
@@ -109,7 +137,7 @@ public class User extends BaseUser {
     public static class Builder {
         private String name, displayName;
         private URI imageUrl;
-        private Map<String, Object> customData;
+        private Map<String, ?> customData;
         private Channels channels;
 
         Builder() {}
@@ -157,7 +185,7 @@ public class User extends BaseUser {
          *
          * @return This builder.
          */
-        public Builder customData(Map<String, Object> customData) {
+        public Builder customData(Map<String, ?> customData) {
             this.customData = customData;
             return this;
         }
@@ -199,7 +227,7 @@ public class User extends BaseUser {
      * Represents the "properties" field of a User object.
      */
     public static class Properties {
-        private Map<String, Object> customData;
+        private Map<String, ?> customData;
 
         /**
          * Custom key/value pairs to associate with the user.

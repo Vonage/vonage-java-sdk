@@ -18,6 +18,7 @@ package com.vonage.client.users.channels;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Objects;
 
 /**
  * Represents a Facebook Messenger channel.
@@ -46,5 +47,18 @@ public class Messenger extends Channel {
 	@JsonProperty("id")
 	public String getId() {
 		return id;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Messenger messenger = (Messenger) o;
+		return Objects.equals(id, messenger.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
 	}
 }

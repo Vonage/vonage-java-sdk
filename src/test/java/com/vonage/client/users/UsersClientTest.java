@@ -122,9 +122,7 @@ public class UsersClientTest extends ClientTest<UsersClient> {
         assertEquals("my_user_name", response.getName());
         assertEquals("My User Name", response.getDisplayName());
         assertEquals(URI.create("https://example.com/image.png"), response.getImageUrl());
-        User.Properties properties = response.getProperties();
-        assertNotNull(properties);
-        Map<String, ?> customData = properties.getCustomData();
+        Map<String, ?> customData = response.getCustomData();
         assertNotNull(customData);
         assertEquals(2, customData.size());
         assertEquals("custom_value", customData.get("custom_key"));
@@ -218,23 +216,18 @@ public class UsersClientTest extends ClientTest<UsersClient> {
         assertThrows(IllegalArgumentException.class, () -> method.accept(UUID.randomUUID().toString()));
         assertThrows(IllegalArgumentException.class, () -> method.accept("abc123"));
         assertThrows(IllegalArgumentException.class, () -> method.accept("USR-a1b2c3d4e5"));
-        assert400ResponseException(() -> method.accept(SAMPLE_USER_ID));
+        assert429ResponseException(() -> method.accept(SAMPLE_USER_ID));
     }
 
-    void assert400ResponseException(ThrowingRunnable invocation) throws Exception {
+    void assert429ResponseException(ThrowingRunnable invocation) throws Exception {
         String response = "{\n" +
-                "   \"type\": \"https://developer.nexmo.com/api-errors/application#payload-validation\",\n" +
-                "   \"title\": \"Bad Request\",\n" +
-                "   \"detail\": \"The request failed due to validation errors\",\n" +
-                "   \"invalid_parameters\": [\n" +
-                "      {\n" +
-                "         \"name\": \"capabilities.voice.webhooks.answer_url.http_method\",\n" +
-                "         \"reason\": \"must be one of: GET, POST\"\n" +
-                "      }\n" +
-                "   ],\n" +
-                "   \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" +
+                "   \"title\": \"Too Many Requests.\",\n" +
+                "   \"type\": \"https://developer.nexmo.com/api/conversation#http:error:too-many-request\",\n" +
+                "   \"code\": \"http:error:too-many-request\",\n" +
+                "   \"detail\": \"You have exceeded your request limit. You can try again shortly.\",\n" +
+                "   \"instance\": \"00a5916655d650e920ccf0daf40ef4ee\"\n" +
                 "}";
-        assertApiResponseException(400, response, UsersResponseException.class, invocation);
+        assertApiResponseException(429, response, UsersResponseException.class, invocation);
     }
 
     @Test
@@ -243,7 +236,7 @@ public class UsersClientTest extends ClientTest<UsersClient> {
         User request = User.builder().name("Test user").build();
         assertEqualsSampleUser(client.createUser(request));
         assertThrows(NullPointerException.class, () -> client.createUser(null));
-        assert400ResponseException(() -> client.createUser(request));
+        assert429ResponseException(() -> client.createUser(request));
     }
 
     @Test
@@ -253,7 +246,7 @@ public class UsersClientTest extends ClientTest<UsersClient> {
         assertEqualsSampleUser(client.updateUser(SAMPLE_USER_ID, request));
         assertUserIdValidation(id -> client.updateUser(id, request));
         assertThrows(NullPointerException.class, () -> client.updateUser(SAMPLE_USER_ID, null));
-        assert400ResponseException(() -> client.updateUser(SAMPLE_USER_ID, request));
+        assert429ResponseException(() -> client.updateUser(SAMPLE_USER_ID, request));
     }
 
     @Test
@@ -389,7 +382,7 @@ public class UsersClientTest extends ClientTest<UsersClient> {
         assertEquals(3, hal.getPageSize().intValue());
         assertEquals(0, stubResponseAndGet(json, client::listUsers).size());
         assertNotNull(stubResponseAndGet(json, () -> client.listUsers(null)));
-        assert400ResponseException(client::listUsers);
+        assert429ResponseException(client::listUsers);
     }
 
     @Test
@@ -492,8 +485,7 @@ public class UsersClientTest extends ClientTest<UsersClient> {
             User user = fullUsers.get(0);
             assertEquals("USR-cf43cfdb-0322-41f4-84ed-0d2b816f030c", user.getId());
             assertEquals("Test user", user.getName());
-            assertNotNull(user.getProperties());
-            assertNull(user.getProperties().getCustomData());
+            assertNull(user.getCustomData());
             Channels channels = user.getChannels();
             assertNotNull(channels);
             List<Websocket> websocket = channels.getWebsocket();
