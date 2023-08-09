@@ -26,12 +26,12 @@ import java.util.Map;
  * Query parameters for {@link UsersClient#listUsers(ListUsersRequest)}.
  */
 public final class ListUsersRequest implements QueryParamsRequest {
-    private final Integer pageSize;
+    private final int pageSize;
     private final SortOrder order;
     private final String name, cursor;
 
     private ListUsersRequest(Builder builder) {
-        if ((pageSize = builder.pageSize) != null && (pageSize < 1 || pageSize > 100)) {
+        if ((pageSize = builder.pageSize) < 1 || pageSize > 100) {
             throw new IllegalArgumentException("Page size must be between 1 and 100.");
         }
         order = builder.order;
@@ -48,9 +48,7 @@ public final class ListUsersRequest implements QueryParamsRequest {
     @Override
     public Map<String, String> makeParams() {
         LinkedHashMap<String, String> params = new LinkedHashMap<>(4);
-        if (pageSize != null) {
-            params.put("page_size", pageSize.toString());
-        }
+        params.put("page_size", String.valueOf(pageSize));
         if (order != null) {
             params.put("order", order.toString());
         }
@@ -64,36 +62,36 @@ public final class ListUsersRequest implements QueryParamsRequest {
     }
 
     /**
+     * Number of records to return in the response. Default is 10.
      *
-     *
-     * @return
+     * @return The number of results to return.
      */
-    public Integer getPageSize() {
+    public int getPageSize() {
         return pageSize;
     }
 
     /**
+     * The time order to return results in. Default is ascending.
      *
-     *
-     * @return
+     * @return The order to return results in as an enum.
      */
     public SortOrder getOrder() {
         return order;
     }
 
     /**
+     * Unique name for a user to filter by.
      *
-     *
-     * @return
+     * @return The username to search for, or {@code null} if not specified.
      */
     public String getName() {
         return name;
     }
 
     /**
+     * The cursor to start returning results from, as derived from the {@code _links} section of a response.
      *
-     *
-     * @return
+     * @return The cursor key to search from, or {@code null} if not specified.
      */
     public String getCursor() {
         return cursor;
@@ -109,8 +107,8 @@ public final class ListUsersRequest implements QueryParamsRequest {
     }
 
     public static class Builder {
-        private Integer pageSize;
-        private SortOrder order;
+        private int pageSize = 10;
+        private SortOrder order = SortOrder.ASC;
         private String name;
         private URI cursor;
 

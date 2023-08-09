@@ -20,10 +20,13 @@ import com.vonage.client.DynamicEndpointTestSpec;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.JWTAuthMethod;
+import com.vonage.client.common.HalLinks;
 import com.vonage.client.common.HttpMethod;
+import com.vonage.client.users.channels.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.function.ThrowingRunnable;
+import java.net.URI;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -36,7 +39,8 @@ public class UsersClientTest extends ClientTest<UsersClient> {
                     "   \"image_url\": \"https://example.com/image.png\",\n" +
                     "   \"properties\": {\n" +
                     "      \"custom_data\": {\n" +
-                    "         \"custom_key\": \"custom_value\"\n" +
+                    "         \"custom_key\": \"custom_value\",\n" +
+                    "         \"K2\": \"value 2\"\n" +
                     "      }\n" +
                     "   },\n" +
                     "   \"channels\": {\n" +
@@ -54,7 +58,7 @@ public class UsersClientTest extends ClientTest<UsersClient> {
                     "      ],\n" +
                     "      \"vbc\": [\n" +
                     "         {\n" +
-                    "            \"extension\": \"403\"\n" +
+                    "            \"extension\": \"991\"\n" +
                     "         }\n" +
                     "      ],\n" +
                     "      \"websocket\": [\n" +
@@ -69,6 +73,9 @@ public class UsersClientTest extends ClientTest<UsersClient> {
                     "      \"sms\": [\n" +
                     "         {\n" +
                     "            \"number\": \"447700900001\"\n" +
+                    "         },\n" +
+                    "         {\n" +
+                    "            \"number\": \"447700900002\"\n" +
                     "         }\n" +
                     "      ],\n" +
                     "      \"mms\": [\n" +
@@ -79,16 +86,22 @@ public class UsersClientTest extends ClientTest<UsersClient> {
                     "      \"whatsapp\": [\n" +
                     "         {\n" +
                     "            \"number\": \"447700900003\"\n" +
+                    "         },\n" +
+                    "         {\n" +
+                    "            \"number\": \"447700900001\"\n" +
+                    "         },\n" +
+                    "         {\n" +
+                    "            \"number\": \"447700900002\"\n" +
                     "         }\n" +
                     "      ],\n" +
                     "      \"viber\": [\n" +
                     "         {\n" +
-                    "            \"number\": \"447700900004\"\n" +
+                    "            \"number\": \"12017000000\"\n" +
                     "         }\n" +
                     "      ],\n" +
                     "      \"messenger\": [\n" +
                     "         {\n" +
-                    "            \"id\": \"12345abcd\"\n" +
+                    "            \"id\": \"1234abcd5\"\n" +
                     "         }\n" +
                     "      ]\n" +
                     "   },\n" +
@@ -103,9 +116,100 @@ public class UsersClientTest extends ClientTest<UsersClient> {
         client = new UsersClient(wrapper);
     }
 
-    static void assertEqualsSampleUser(User response) {
+    static void assertEqualsSampleUser(User response) throws Exception {
         assertNotNull(response);
         assertEquals(SAMPLE_USER_ID, response.getId());
+        assertEquals("my_user_name", response.getName());
+        assertEquals("My User Name", response.getDisplayName());
+        assertEquals(URI.create("https://example.com/image.png"), response.getImageUrl());
+        User.Properties properties = response.getProperties();
+        assertNotNull(properties);
+        Map<String, ?> customData = properties.getCustomData();
+        assertNotNull(customData);
+        assertEquals(2, customData.size());
+        assertEquals("custom_value", customData.get("custom_key"));
+        assertEquals("value 2", customData.get("K2"));
+        Channels channels = response.getChannels();
+        assertNotNull(channels);
+
+        List<Pstn> pstn = channels.getPstn();
+        assertNotNull(pstn);
+        assertEquals(1, pstn.size());
+        Pstn pstn0 = pstn.get(0);
+        assertNotNull(pstn0);
+        assertEquals("123457", pstn0.getNumber());
+
+        List<Sip> sip = channels.getSip();
+        assertNotNull(sip);
+        assertEquals(1, sip.size());
+        Sip sip0 = sip.get(0);
+        assertNotNull(sip0);
+        assertEquals(URI.create("sip:4442138907@sip.example.com;transport=tls"), sip0.getUri());
+        assertEquals("New SIP", sip0.getUsername());
+        assertEquals("P4s5w0rd", sip0.getPassword());
+
+        List<Vbc> vbc = channels.getVbc();
+        assertNotNull(vbc);
+        assertEquals(1, vbc.size());
+        Vbc vbc0 = vbc.get(0);
+        assertNotNull(vbc0);
+        assertEquals("991", vbc0.getExtension());
+
+        List<Websocket> websocket = channels.getWebsocket();
+        assertNotNull(websocket);
+        assertEquals(1, websocket.size());
+        Websocket websocket0 = websocket.get(0);
+        assertNotNull(websocket0);
+        assertEquals(URI.create("wss://example.com/socket"), websocket0.getUri());
+        assertEquals(Websocket.ContentType.AUDIO_L16_16K, websocket0.getContentType());
+        Map<String, ?> headers = websocket0.getHeaders();
+        assertNotNull(headers);
+        assertEquals(1, headers.size());
+        assertEquals("ABC123", headers.get("customer_id"));
+
+        List<Sms> sms = channels.getSms();
+        assertNotNull(sms);
+        assertEquals(2, sms.size());
+        Sms sms0 = sms.get(0);
+        assertNotNull(sms0);
+        assertEquals("447700900001", sms0.getNumber());
+        Sms sms1 = sms.get(1);
+        assertNotNull(sms1);
+        assertEquals("447700900002", sms1.getNumber());
+
+        List<Mms> mms = channels.getMms();
+        assertNotNull(mms);
+        assertEquals(1, mms.size());
+        Mms mms0 = mms.get(0);
+        assertNotNull(mms0);
+        assertEquals("447700900002", mms0.getNumber());
+
+        List<Whatsapp> whatsapp = channels.getWhatsapp();
+        assertNotNull(whatsapp);
+        assertEquals(3, whatsapp.size());
+        Whatsapp whatsapp0 = whatsapp.get(0);
+        assertNotNull(whatsapp0);
+        assertEquals("447700900003", whatsapp0.getNumber());
+        Whatsapp whatsapp1 = whatsapp.get(1);
+        assertNotNull(whatsapp1);
+        assertEquals("447700900001", whatsapp1.getNumber());
+        Whatsapp whatsapp2 = whatsapp.get(2);
+        assertNotNull(whatsapp2);
+        assertEquals("447700900002", whatsapp2.getNumber());
+
+        List<Viber> viber = channels.getViber();
+        assertNotNull(viber);
+        assertEquals(1, viber.size());
+        Viber viber0 = viber.get(0);
+        assertNotNull(viber0);
+        assertEquals("12017000000", viber0.getNumber());
+
+        List<Messenger> messengers = channels.getMessenger();
+        assertNotNull(messengers);
+        assertEquals(1, messengers.size());
+        Messenger messenger0 = messengers.get(0);
+        assertNotNull(messenger0);
+        assertEquals("1234abcd5", messenger0.getId());
     }
 
     void assertUserIdValidation(final Consumer<? super String> method) throws Exception {
@@ -167,25 +271,269 @@ public class UsersClientTest extends ClientTest<UsersClient> {
 
     @Test
     public void testListUsersWithOneResult() throws Exception {
+        String id = "USR-a98271b1-c5ea-4193-88a0-00af324b4a7a";
+        String name = "NAM-234eeb31-a031-4e5e-8fa1-d5488eef4293";
+        String cursor = "0LBW2B0hv78cfsYpdYVtRpwrm00oh6S7DFibiYBMFUknvLduVQJzLlk%3D";
+        String self = "https://api-us-3.vonage.com/v1/users?page_size=10&cursor="+cursor;
+        stubResponse(200, "{\n" +
+                "    \"page_size\": 10,\n" +
+                "    \"_embedded\": {\n" +
+                "        \"users\": [\n" +
+                "            {\n" +
+                "                \"id\": \""+id+"\",\n" +
+                "                \"name\": \""+name+"\",\n" +
+                "                \"_links\": {\n" +
+                "                    \"self\": {\n" +
+                "                        \"href\": \"https://api-us-3.vonage.com/v1/users/"+id+"\"\n" +
+                "                    }\n" +
+                "                }\n" +
+                "            }\n" +
+                "        ]\n" +
+                "    },\n" +
+                "    \"_links\": {\n" +
+                "        \"first\": {\n" +
+                "            \"href\": \"https://api-us-3.vonage.com/v1/users?page_size=10\"\n" +
+                "        },\n" +
+                "        \"self\": {\n" +
+                "            \"href\": \""+self+"\"\n" +
+                "        },\n" +
+                "        \"next\": {\n" +
+                "            \"href\": \"https://api-us-3.vonage.com/v1/users?page_size=10&cursor=HSgXW9q9rSCNJNpLGbzbmxTugq3ur7nqg4edAXdXR%2FZ07gGM1yXlrDIRaDz1YG5YY8QJ0tut4Sp8P8CrtZRy8uDnD68Brb9KTvMdcnPspkhd2h5TFQuNIFzEcZw%3D\"\n" +
+                "        }\n" +
+                "    }\n" +
+                "}");
+        ListUsersRequest request = ListUsersRequest.builder()
+                .name(name).pageSize(10).cursor(URI.create(self))
+                .order(ListUsersRequest.SortOrder.DESC).build();
 
+        assertEquals(name, request.getName());
+        assertEquals(10, request.getPageSize());
+        assertEquals(cursor, request.getCursor());
+        assertEquals("desc", request.getOrder().toString());
+
+        ListUsersResponse parsed = client.listUsers(request);
+        assertNotNull(parsed);
+        List<BaseUser> users = parsed.getUsers();
+        assertNotNull(users);
+        assertEquals(1, users.size());
+        BaseUser user = users.get(0);
+        assertNotNull(user);
+        assertEquals(id, user.getId());
+        assertEquals(name, user.getName());
+        HalLinks links = parsed.getLinks();
+        assertNotNull(links);
+        assertEquals("page_size=10", links.getFirstUrl().getQuery());
+        String startsWith = links.getFirstUrl() + "&cursor=";
+        assertTrue(links.getSelfUrl().toString().startsWith(startsWith));
+        assertTrue(links.getNextUrl().toString().startsWith(startsWith));
     }
 
     @Test
     public void testListUsersWithMultipleResults() throws Exception {
+        String id = "USR-"+UUID.randomUUID();
+        String name = "Unique_t3s7_u5eR";
+        stubResponse(200, "{\n" +
+                "    \"_embedded\": {\n" +
+                "        \"users\": [\n" +
+                "            {},{},{},\n" +
+                "            {\n" +
+                "                \"id\": \""+id+"\",\n" +
+                "                \"name\": \""+name+"\",\n" +
+                "                \"_links\": {\n" +
+                "                    \"self\": {\n" +
+                "                        \"href\": \"https://api-us-3.vonage.com/v1/users/"+id+"\"\n" +
+                "                    }\n" +
+                "                }\n" +
+                "            },{}\n" +
+                "        ]\n" +
+                "    },\n" +
+                "    \"_links\": {\n" +
+                "    }\n" +
+                "}");
+        ListUsersResponse parsed = client.listUsers(ListUsersRequest.builder().build());
+        assertNotNull(parsed);
+        assertNull(parsed.getPageSize());
 
+        HalLinks links = parsed.getLinks();
+        assertNotNull(links);
+        assertNull(links.getSelfUrl());
+        assertNull(links.getNextUrl());
+        assertNull(links.getPrevUrl());
+        assertNull(links.getFirstUrl());
+        assertNull(links.getLastUrl());
+
+        List<BaseUser> users = parsed.getUsers();
+        assertNotNull(users);
+        assertEquals(5, users.size());
+        for (int i = 0; i < 3 || i == 4; i++) {
+            BaseUser user = users.get(i);
+            assertNotNull(user);
+            assertNull(user.getId());
+            assertNull(user.getName());
+            if (i == 2) i = 4;
+        }
+        BaseUser user3 = users.get(3);
+        assertNotNull(user3);
+        assertEquals(id, user3.getId());
+        assertEquals(name, user3.getName());
     }
 
     @Test
     public void testListUsersWithNoResults() throws Exception {
-        String json = "{\"page\":1,\"_embedded\":{\"users\":[]}}";
+        String json = "{\"page_size\":3,\"_embedded\":{\"users\":[]}}";
         ListUsersResponse hal = stubResponseAndGet(json, () ->
                 client.listUsers(ListUsersRequest.builder().build())
         );
+        assertNotNull(hal.getUsers());
         assertEquals(0, hal.getUsers().size());
-        assertEquals(1, hal.getPage().intValue());
+        assertEquals(3, hal.getPageSize().intValue());
         assertEquals(0, stubResponseAndGet(json, client::listUsers).size());
         assertNotNull(stubResponseAndGet(json, () -> client.listUsers(null)));
         assert400ResponseException(client::listUsers);
+    }
+
+    @Test
+    public void testListUsersRequestPageSizeBoundaries() throws Exception {
+        ListUsersRequest.Builder builder = ListUsersRequest.builder();
+        assertThrows(IllegalArgumentException.class, () -> builder.pageSize(101).build());
+        assertThrows(IllegalArgumentException.class, () -> builder.pageSize(0).build());
+        assertEquals(100, builder.pageSize(100).build().getPageSize());
+        assertEquals(1, builder.pageSize(1).build().getPageSize());
+    }
+
+    @Test
+    public void testGetUserDetails() throws Exception {
+        stubResponse(200, "{\n" +
+                "    \"page_size\": 10,\n" +
+                "    \"_embedded\": {\n" +
+                "        \"users\": [\n" +
+                "            {\n" +
+                "                \"id\": \"USR-ff93b026-7371-4892-b8da-17bfc87e43a2\",\n" +
+                "                \"name\": \"NAM-329bf330-f5e7-4a11-b82f-8303fe88fac4\",\n" +
+                "                \"_links\": {\n" +
+                "                    \"self\": {\n" +
+                "                        \"href\": \"https://api-us-3.vonage.com/v1/users/USR-ff93b026-7371-4892-b8da-17bfc87e43a2\"\n" +
+                "                    }\n" +
+                "                }\n" +
+                "            },\n" +
+                "            {\n" +
+                "                \"id\": \"USR-fff5b42c-908a-412d-9d87-c2e9a7f812e7\",\n" +
+                "                \"name\": \"NAM-40f31e28-534c-4c8e-a654-c1e34ce4122c\",\n" +
+                "                \"_links\": {\n" +
+                "                    \"self\": {\n" +
+                "                        \"href\": \"https://api-us-3.vonage.com/v1/users/USR-fff5b42c-908a-412d-9d87-c2e9a7f812e7\"\n" +
+                "                    }\n" +
+                "                }\n" +
+                "            },\n" +
+                "            {\n" +
+                "                \"id\": \"USR-641919c2-e17f-495f-b2cf-1790dadfce38\",\n" +
+                "                \"name\": \"NAM-9ea69e6d-770e-4c2f-91e8-9b36751abb44\",\n" +
+                "                \"_links\": {\n" +
+                "                    \"self\": {\n" +
+                "                        \"href\": \"https://api-us-3.vonage.com/v1/users/USR-641919c2-e17f-495f-b2cf-1790dadfce38\"\n" +
+                "                    }\n" +
+                "                }\n" +
+                "            }\n" +
+                "        ]\n" +
+                "    },\n" +
+                "    \"_links\": {\n" +
+                "        \"first\": {\n" +
+                "            \"href\": \"https://api-us-3.vonage.com/v1/users?page_size=10\"\n" +
+                "        },\n" +
+                "        \"self\": {\n" +
+                "            \"href\": \"https://api-us-3.vonage.com/v1/users?page_size=10&cursor=uCcjZijcWuVGhMQGXSzDeSlHvNyZ9MVGm%2BQ3h9l%2B%2Bt%2B2ddz1oGnBwWg%3D\"\n" +
+                "        },\n" +
+                "        \"next\": {\n" +
+                "            \"href\": \"https://api-us-3.vonage.com/v1/users?page_size=10&cursor=%2FHMGlXiJOiG%2BEOkdGWEWEkP%2BBcKIHzphsbn3C44FU8SiJsfRpAF3TzglF%2BdZUnydcnWOMFZv2ibcQr5aYcFdRImqT0Iq7K0VRd1DoBpyC1W%2FECn4qwWcm7Ts2RQ%3D\"\n" +
+                "        }\n" +
+                "    }\n" +
+                "}");
+
+        List<BaseUser> baseUsers = client.listUsers(null).getUsers();
+        assertNotNull(baseUsers);
+        assertEquals(3, baseUsers.size());
+
+        stubResponse(200, "{\n" +
+                "    \"id\": \"USR-cf43cfdb-0322-41f4-84ed-0d2b816f030c\",\n" +
+                "    \"name\": \"Test user\",\n" +
+                "    \"properties\": {},\n" +
+                "    \"_links\": {\n" +
+                "        \"self\": {\n" +
+                "            \"href\": \"https://api-us-3.vonage.com/v1/users/USR-cf43cfdb-0322-41f4-84ed-0d2b816f030c\"\n" +
+                "        }\n" +
+                "    },\n" +
+                "    \"channels\": {\n" +
+                "        \"websocket\": [\n" +
+                "            {}\n" +
+                "        ],\n" +
+                "        \"sip\": [\n" +
+                "            {\n" +
+                "                \"uri\": \"invalid\",\n" +
+                "                \"foo\": \"bar\",\n" +
+                "                \"nonsense\": true\n" +
+                "            }\n" +
+                "        ],\n" +
+                "       \"pstn\": [\n" +
+                "            {},{\n" +
+                "                \"number\": 1800555555\n" +
+                "            }\n" +
+                "       ],\n" +
+                "       \"vbc\": [],\n" +
+                "       \"sms\":[{}],\n" +
+                "       \"mms\": null\n" +
+                "    }\n" +
+                "}");
+
+            List<User> fullUsers = client.getUserDetails(baseUsers);
+            assertNotNull(fullUsers);
+            assertEquals(baseUsers.size(), fullUsers.size());
+
+            // Assertions will only work for the first user due to the way mocking is done.
+            User user = fullUsers.get(0);
+            assertEquals("USR-cf43cfdb-0322-41f4-84ed-0d2b816f030c", user.getId());
+            assertEquals("Test user", user.getName());
+            assertNotNull(user.getProperties());
+            assertNull(user.getProperties().getCustomData());
+            Channels channels = user.getChannels();
+            assertNotNull(channels);
+            List<Websocket> websocket = channels.getWebsocket();
+            assertNotNull(websocket);
+            assertEquals(1, websocket.size());
+            Websocket websocket0 = websocket.get(0);
+            assertNotNull(websocket0);
+            assertNull(websocket0.getContentType());
+            assertNull(websocket0.getUri());
+            assertNull(websocket0.getHeaders());
+            List<Sip> sip = channels.getSip();
+            assertNotNull(sip);
+            assertEquals(1, sip.size());
+            Sip sip0 = sip.get(0);
+            assertNotNull(sip0);
+            assertEquals(URI.create("invalid"), sip0.getUri());
+            assertNull(sip0.getUsername());
+            assertNull(sip0.getPassword());
+            List<Pstn> pstn = channels.getPstn();
+            assertNotNull(pstn);
+            assertEquals(2, pstn.size());
+            Pstn pstn0 = pstn.get(0);
+            assertNotNull(pstn0);
+            assertNull(pstn0.getNumber());
+            Pstn pstn1 = pstn.get(1);
+            assertNotNull(pstn1);
+            assertEquals("1800555555", pstn1.getNumber());
+            List<Vbc> vbc = channels.getVbc();
+            assertNotNull(vbc);
+            assertEquals(0, vbc.size());
+            List<Sms> sms = channels.getSms();
+            assertNotNull(sms);
+            assertEquals(1, sms.size());
+            Sms sms0 = sms.get(0);
+            assertNotNull(sms0);
+            assertNull(sms0.getNumber());
+            assertNull(channels.getMessenger());
+            assertNull(channels.getViber());
+            assertNull(channels.getMms());
+            assertNull(channels.getWhatsapp());
     }
 
     static abstract class UserEndpointTestSpec<T, R> extends DynamicEndpointTestSpec<T, R> {
@@ -250,6 +598,7 @@ public class UsersClientTest extends ClientTest<UsersClient> {
                 ListUsersRequest request = sampleRequest();
                 Map<String, String> params = new LinkedHashMap<>();
                 params.put("page_size", String.valueOf(request.getPageSize()));
+                params.put("order", "asc");
                 return params;
             }
         }
