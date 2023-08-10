@@ -23,7 +23,6 @@ import com.vonage.client.voice.ncco.Ncco;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Objects;
-import java.util.UUID;
 
 /**
  * A client for talking to the Vonage Voice API. The standard way to obtain an instance of this class is to use {@link
@@ -60,7 +59,7 @@ public class VoiceClient {
     }
 
     private String validateUuid(String uuid) {
-        return UUID.fromString(Objects.requireNonNull(uuid, "UUID is required.")).toString();
+        return Objects.requireNonNull(uuid, "UUID is required.");
     }
 
     private String validateUrl(String url) {

@@ -136,9 +136,7 @@ public class VoiceClientTest {
         assertThrows(IllegalArgumentException.class, () ->
                 client.sendDtmf("944dd293-ca13-4a58-bc37-6252e11474be", null)
         );
-        assertThrows(IllegalArgumentException.class, () ->
-                client.sendDtmf("invalid", "1234")
-        );
+        assertThrows(NullPointerException.class, () -> client.sendDtmf(null, "1234"));
     }
 
     @Test
@@ -146,7 +144,7 @@ public class VoiceClientTest {
         VoiceClient client = new VoiceClient(stubHttpWrapper(200, "{\"message\":\"Received\"}"));
         ModifyCallResponse call = client.modifyCall("93137ee3-580e-45f7-a61a-e0b5716000ef", ModifyCallAction.HANGUP);
         assertEquals("Received", call.getMessage());
-        assertThrows(IllegalArgumentException.class, () -> client.modifyCall("invalid", ModifyCallAction.HANGUP));
+        assertThrows(NullPointerException.class, () -> client.modifyCall(null, ModifyCallAction.HANGUP));
         assertThrows(NullPointerException.class, () ->
                 client.modifyCall("93137ee3-580e-45f7-a61a-e0b5716000ef", null)
         );
@@ -352,7 +350,7 @@ public class VoiceClientTest {
         TalkResponse response = client.stopTalk("944dd293-ca13-4a58-bc37-6252e11474be");
         assertEquals("Talk stopped", response.getMessage());
         assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
-        assertThrows(IllegalArgumentException.class, () -> client.stopTalk("Blah"));
+        assertThrows(NullPointerException.class, () -> client.stopTalk(null));
     }
 
     @Test
