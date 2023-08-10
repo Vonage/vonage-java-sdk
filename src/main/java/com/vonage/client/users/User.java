@@ -179,7 +179,8 @@ public class User extends BaseUser {
         }
 
         /**
-         * Additional freeform data to associate with the user.
+         * Arbitrary freeform data to associate with the user. Note that this is
+         * not additive: the value set here will replace any existing custom data when updating a user.
          *
          * @param customData Custom key/value pairs map.
          *
