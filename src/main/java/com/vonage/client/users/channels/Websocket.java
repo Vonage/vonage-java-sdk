@@ -33,7 +33,11 @@ public class Websocket extends Channel {
 	protected Websocket() {}
 
 	public Websocket(String uri) {
-		this.uri = URI.create(Objects.requireNonNull(uri, "Websocket URI is required"));
+		Objects.requireNonNull(uri, "Websocket URI is required");
+		if (!(uri.startsWith("ws://") || uri.startsWith("wss://"))) {
+			throw new IllegalArgumentException("Invalid websocket URI protocol.");
+		}
+		this.uri = URI.create(uri);
 	}
 
 	public Websocket(String uri, ContentType contentType, Map<String, ?> headers) {

@@ -234,24 +234,32 @@ public class UserTest {
 	}
 
 	@Test
-	public void testSipMisc() {
-		String validUri = "sup";
-		Sip sip = new Sip(validUri);
-		assertEquals(URI.create(validUri), sip.getUri());
-		assertNull(sip.getUsername());
-		assertNull(sip.getPassword());
-		assertThrows(IllegalArgumentException.class, () -> new Sip(validUri, null, "pas5WD"));
-		assertEquals(sip, new Sip(validUri, null, null));
+	public void testSipInvalidUri() {
+		String[] validUris = {"sips:1234@api.example.org;transport=tls", "sip:a.b@127.0.0.1"};
+		for (final String validUri : validUris) {
+			Sip sip = new Sip(validUri);
+			assertEquals(URI.create(validUri), sip.getUri());
+			assertNull(sip.getUsername());
+			assertNull(sip.getPassword());
+			assertThrows(IllegalArgumentException.class, () -> new Sip(validUri, null, "pas5WD"));
+			assertEquals(sip, new Sip(validUri, null, null));
+		}
+		assertThrows(IllegalArgumentException.class, () -> new Sip("http://sip.example.com/endpoint"));
+		assertThrows(NullPointerException.class, () -> new Sip(null));
 	}
 
 	@Test
-	public void testWebsocketMisc() {
-		String validUri = "sup";
-		Websocket websocket = new Websocket(validUri);
-		assertEquals(URI.create(validUri), websocket.getUri());
-		assertNull(websocket.getHeaders());
-		assertNull(websocket.getContentType());
-		assertEquals(websocket, new Websocket(validUri, null, null));
+	public void testWebsocketInvalidUri() {
+		String[] validUris = {"ws://domain.tld/path/to/sock", "wss://example.com"};
+		for (final String validUri : validUris) {
+			Websocket websocket = new Websocket(validUri);
+			assertEquals(URI.create(validUri), websocket.getUri());
+			assertNull(websocket.getHeaders());
+			assertNull(websocket.getContentType());
+			assertEquals(websocket, new Websocket(validUri, null, null));
+		}
+		assertThrows(IllegalArgumentException.class, () -> new Websocket("http://example.com/socket"));
+		assertThrows(NullPointerException.class, () -> new Websocket(null));
 	}
 
 	@Test

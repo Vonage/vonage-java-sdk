@@ -33,7 +33,11 @@ public class Sip extends Channel {
 	protected Sip() {}
 
 	public Sip(String uri) {
-		this.uri = URI.create(Objects.requireNonNull(uri, "SIP URI is required"));
+		Objects.requireNonNull(uri, "SIP URI is required");
+		if (!(uri.startsWith("sip:") || uri.startsWith("sips:"))) {
+			throw new IllegalArgumentException("Invalid protocol for SIP URI.");
+		}
+		this.uri = URI.create(uri);
 	}
 
 	public Sip(String uri, String username, String password) {
