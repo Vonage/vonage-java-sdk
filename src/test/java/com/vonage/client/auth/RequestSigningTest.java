@@ -20,10 +20,13 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.mockito.Mockito;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import org.springframework.mock.web.MockHttpServletRequest;
+import javax.servlet.ReadListener;
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -231,11 +234,40 @@ public class RequestSigningTest {
     }
 
 
-    private HttpServletRequest constructDummyRequestJson() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
+    private HttpServletRequest constructDummyRequestJson() throws Exception  {
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
         String dummyJson = "{\"a\":\"alphabet\",\"b\":\"bananas\",\"timestamp\":\"2100\",\"sig\":\"b7f749de27b4adcf736cc95c9a7e059a16c85127\"}";
-        request.setContent(dummyJson.getBytes());
-        request.setContentType("application/json");
+        Mockito.when(request.getContentType()).thenReturn("application/json");
+        final byte[] contentBytes = dummyJson.getBytes(StandardCharsets.UTF_8);
+        ServletInputStream servletInputStream = new ServletInputStream() {
+            private int index = 0;
+
+            @Override
+            public int read() {
+                if (index < contentBytes.length) {
+                    return contentBytes[index++] & 0xFF;
+                }
+                return -1;
+            }
+
+            @Override
+            public boolean isFinished() {
+                return index >= contentBytes.length;
+            }
+
+            @Override
+            public boolean isReady() {
+                return true;
+            }
+
+            @Override
+            public void setReadListener(ReadListener readListener) {
+                // No need to implement for this example
+            }
+        };
+
+        when(request.getInputStream()).thenReturn(servletInputStream);
+
         return request;
     }
 
