@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added missing fields to Application, capabilities and webhooks
 - Removed `PageList` (replaced by `HalPageResponse`)
 - Improved documentation for Application API implementation
+- Relaxed UUID validation in `VoiceClient`
 
 # [7.6.0] - 2023-06-30
 - Added Proactive Connect API implementation
