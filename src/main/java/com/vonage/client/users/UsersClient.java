@@ -162,6 +162,8 @@ public class UsersClient {
      * @param minimalUser The user metadata.
      *
      * @return A new {@linkplain User} object with all known fields populated.
+     *
+     * @throws UsersResponseException If there was an error processing the request.
      */
     public User getUserDetails(BaseUser minimalUser) {
         return getUser(validateUser(minimalUser).getId());
@@ -175,6 +177,8 @@ public class UsersClient {
      * @param minimalUsers The list of users' metadata.
      *
      * @return A list of users with all known fields populated in the same encounter order.
+     *
+     * @throws UsersResponseException If there was an error processing the request.
      */
     public List<User> getUserDetails(List<BaseUser> minimalUsers) {
         return Objects.requireNonNull(minimalUsers, "Users list is required")

@@ -38,7 +38,7 @@ import java.util.Objects;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class VonageApiResponseException extends VonageClientException implements Jsonable {
 	protected URI type;
-	protected String title, detail, instance;
+	protected String title, detail, instance, code;
 	protected List<?> errors, invalidParameters;
 	@JsonIgnore protected int statusCode;
 
@@ -120,6 +120,16 @@ public class VonageApiResponseException extends VonageClientException implements
 	@JsonProperty("invalid_parameters")
 	public List<?> getInvalidParameters() {
 		return invalidParameters;
+	}
+
+	/**
+	 * Name of the error code.
+	 *
+	 * @return The Vonage error code as a string, or {@code null} if unknown / not applicable.
+	 */
+	@JsonProperty("code")
+	public String getCode() {
+		return code;
 	}
 
 	/**

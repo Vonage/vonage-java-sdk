@@ -116,7 +116,7 @@ public class UsersClientTest extends ClientTest<UsersClient> {
         client = new UsersClient(wrapper);
     }
 
-    static void assertEqualsSampleUser(User response) throws Exception {
+    static void assertEqualsSampleUser(User response) {
         assertNotNull(response);
         assertEquals(SAMPLE_USER_ID, response.getId());
         assertEquals("my_user_name", response.getName());
@@ -220,14 +220,25 @@ public class UsersClientTest extends ClientTest<UsersClient> {
     }
 
     void assert429ResponseException(ThrowingRunnable invocation) throws Exception {
+        String title = "Too Many Requests.",
+                type = "https://developer.nexmo.com/api/conversation#http:error:too-many-request",
+                code = "http:error:too-many-request",
+                detail = "You have exceeded your request limit. You can try again shortly.",
+                instance = "00a5916655d650e920ccf0daf40ef4ee";
+
         String response = "{\n" +
-                "   \"title\": \"Too Many Requests.\",\n" +
-                "   \"type\": \"https://developer.nexmo.com/api/conversation#http:error:too-many-request\",\n" +
-                "   \"code\": \"http:error:too-many-request\",\n" +
-                "   \"detail\": \"You have exceeded your request limit. You can try again shortly.\",\n" +
-                "   \"instance\": \"00a5916655d650e920ccf0daf40ef4ee\"\n" +
+                "   \"title\": \""+title+"\",\n" +
+                "   \"type\": \""+type+"\",\n" +
+                "   \"code\": \""+code+"\",\n" +
+                "   \"detail\": \""+detail+"\",\n" +
+                "   \"instance\": \""+instance+"\"\n" +
                 "}";
-        assertApiResponseException(429, response, UsersResponseException.class, invocation);
+        UsersResponseException ex = assertApiResponseException(429, response, UsersResponseException.class, invocation);
+        assertEquals(title, ex.getTitle());
+        assertEquals(URI.create(type), ex.getType());
+        assertEquals(code, ex.getCode());
+        assertEquals(detail, ex.getDetail());
+        assertEquals(instance, ex.getInstance());
     }
 
     @Test
@@ -386,7 +397,7 @@ public class UsersClientTest extends ClientTest<UsersClient> {
     }
 
     @Test
-    public void testListUsersRequestPageSizeBoundaries() throws Exception {
+    public void testListUsersRequestPageSizeBoundaries() {
         ListUsersRequest.Builder builder = ListUsersRequest.builder();
         assertThrows(IllegalArgumentException.class, () -> builder.pageSize(101).build());
         assertThrows(IllegalArgumentException.class, () -> builder.pageSize(0).build());
