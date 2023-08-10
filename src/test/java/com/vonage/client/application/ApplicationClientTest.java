@@ -184,13 +184,13 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
     public void testDeleteApplication() throws Exception {
         String request = SAMPLE_APPLICATION_ID.toString();
         stubResponseAndRun(204, () -> client.deleteApplication(request));
-        assertThrows(NullPointerException.class, () -> client.getApplication(null));
-        assertThrows(IllegalArgumentException.class, () -> client.getApplication("abc123"));
+        assertThrows(NullPointerException.class, () -> client.deleteApplication(null));
+        assertThrows(IllegalArgumentException.class, () -> client.deleteApplication("abc123"));
         assert400ResponseException(() -> client.deleteApplication(request));
     }
 
     @Test
-    public void testListApplicationWithOneResult() throws Exception {
+    public void testListApplicationsWithOneResult() throws Exception {
         stubResponse(200, "{\n" +
                 "  \"page_size\": 10,\n" +
                 "  \"page\": 5,\n" +
@@ -251,7 +251,7 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
     }
 
     @Test
-    public void testListApplicationWithMultipleResults() throws Exception {
+    public void testListApplicationsWithMultipleResults() throws Exception {
         String json = "{\n" +
                 "  \"page_size\": 10,\n" +
                 "  \"page\": 1,\n" +
@@ -318,7 +318,7 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
     }
 
     @Test
-    public void testListApplicationWithNoResults() throws Exception {
+    public void testListApplicationsWithNoResults() throws Exception {
         String json = "{\"page\":1,\"_embedded\":{\"applications\":[]}}";
         ApplicationList hal = stubResponseAndGet(json, () ->
                 client.listApplications(ListApplicationRequest.builder().page(1).build())

@@ -4,14 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-# [7.7.0] - 2023-08
+# [7.7.0] - 2023-08-10
+- Added Users API implementation
 - Major refactoring of how endpoints are implemented internally
   - SMS, SNS, Redact, Verify v2, Subaccounts, Messages, Application have been refactored
 - Introduced `Jsonable` and `QueryParams` in addition to `DynamicEndpoint` to reduce boilerplate
 - Added missing fields to Application, capabilities and webhooks
 - Removed `PageList` (replaced by `HalPageResponse`)
 - Improved documentation for Application API implementation
-- Added Users endpoints to Application API implementation
 
 # [7.6.0] - 2023-06-30
 - Added Proactive Connect API implementation

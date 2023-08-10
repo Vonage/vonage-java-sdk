@@ -126,7 +126,7 @@ public abstract class ClientTest<T> {
     }
 
     @SuppressWarnings("unchecked")
-    protected <E extends VonageApiResponseException> void assertApiResponseException(
+    protected <E extends VonageApiResponseException> E assertApiResponseException(
             int statusCode, String response, Class<E> exClass, ThrowingRunnable invocation) throws Exception {
         E expectedResponse = (E) exClass.getDeclaredMethod("fromJson", String.class).invoke(exClass, response);
         String expectedJson = expectedResponse.toJson();
@@ -146,5 +146,6 @@ public abstract class ClientTest<T> {
             assertEquals(expectedResponse, ex);
             assertEquals(expectedJson, ((E) ex).toJson());
         }
+        return expectedResponse;
     }
 }
