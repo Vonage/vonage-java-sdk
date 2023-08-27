@@ -16,9 +16,10 @@
 package com.vonage.client.numbers;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.vonage.client.Jsonable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OwnedNumber {
+public class OwnedNumber implements Jsonable {
     private String country, msisdn, moHttpUrl, type, voiceCallbackType, voiceCallbackValue;
     private String[] features;
 

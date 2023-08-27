@@ -15,7 +15,6 @@
  */
 package com.vonage.client.numbers;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.http.client.methods.RequestBuilder;
 
 public class ListNumbersFilter {
@@ -28,10 +27,10 @@ public class ListNumbersFilter {
     }
 
     public ListNumbersFilter(
-            @JsonProperty Integer index,
-            @JsonProperty Integer size,
-            @JsonProperty String pattern,
-            @JsonProperty SearchPattern searchPattern) {
+            Integer index,
+            Integer size,
+            String pattern,
+            SearchPattern searchPattern) {
         this.index = index;
         this.size = size;
         this.pattern = pattern;

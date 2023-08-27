@@ -15,25 +15,9 @@
  */
 package com.vonage.client.numbers;
 
-import org.apache.http.client.methods.RequestBuilder;
-
-public class BuyNumberRequest {
-    private final String country, msisdn;
+public class BuyNumberRequest extends BaseNumberRequest {
 
     public BuyNumberRequest(String country, String msisdn) {
-        this.country = country;
-        this.msisdn = msisdn;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public String getMsisdn() {
-        return msisdn;
-    }
-
-    public void addParams(RequestBuilder request) {
-        request.addParameter("country", country).addParameter("msisdn", msisdn);
+        super(country, msisdn);
     }
 }

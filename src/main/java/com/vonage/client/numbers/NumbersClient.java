@@ -15,28 +15,40 @@
  */
 package com.vonage.client.numbers;
 
-import com.vonage.client.HttpWrapper;
-import com.vonage.client.VonageClient;
-import com.vonage.client.VonageClientException;
-import com.vonage.client.VonageResponseParseException;
+import com.vonage.client.*;
+import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.common.HttpMethod;
 
 /**
  * A client for accessing the Vonage API calls that manage phone numbers. The standard way to obtain an instance of
  * this class is to use {@link VonageClient#getNumbersClient()}.
  */
 public class NumbersClient {
-    final ListNumbersEndpoint listNumbers;
-    final SearchNumbersEndpoint searchNumbers;
-    final CancelNumberEndpoint cancelNumber;
-    final BuyNumberEndpoint buyNumber;
-    final UpdateNumberEndpoint updateNumber;
+    final RestEndpoint<ListNumbersFilter, ListNumbersResponse> listNumbers;
+    final RestEndpoint<SearchNumbersFilter, SearchNumbersResponse> searchNumbers;
+    final RestEndpoint<CancelNumberRequest, Void> cancelNumber;
+    final RestEndpoint<BuyNumberRequest, Void> buyNumber;
+    final RestEndpoint<UpdateNumberRequest, Void> updateNumber;
 
-    public NumbersClient(HttpWrapper httpWrapper) {
-        listNumbers = new ListNumbersEndpoint(httpWrapper);
-        searchNumbers = new SearchNumbersEndpoint(httpWrapper);
-        cancelNumber = new CancelNumberEndpoint(httpWrapper);
-        buyNumber = new BuyNumberEndpoint(httpWrapper);
-        updateNumber = new UpdateNumberEndpoint(httpWrapper);
+    public NumbersClient(HttpWrapper wrapper) {
+        @SuppressWarnings("unchecked")
+        final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
+            Endpoint(final String path, HttpMethod method, R... type) {
+                super(DynamicEndpoint.<T, R> builder((Class<R>) type.getClass().getComponentType())
+                        .responseExceptionType(NumbersResponseException.class)
+                        .wrapper(wrapper).requestMethod(method)
+                        .authMethod(TokenAuthMethod.class).applyAsBasicAuth()
+                        .contentTypeHeader(method == HttpMethod.POST ? "application/x-www-form-urlencoded" : null)
+                        .pathGetter((de, req) -> de.getHttpWrapper().getHttpConfig().getRestBaseUri()+ "/" + path)
+                );
+            }
+        }
+
+        listNumbers = new Endpoint<>("account/numbers", HttpMethod.GET);
+        searchNumbers = new Endpoint<>("number/search", HttpMethod.GET);
+        cancelNumber = new Endpoint<>("number/cancel", HttpMethod.POST);
+        buyNumber = new Endpoint<>("number/buy", HttpMethod.POST);
+        updateNumber = new Endpoint<>("number/update", HttpMethod.POST);
     }
 
     /**

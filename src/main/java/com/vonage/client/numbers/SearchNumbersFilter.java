@@ -15,12 +15,15 @@
  */
 package com.vonage.client.numbers;
 
+import com.vonage.client.QueryParamsRequest;
 import org.apache.http.client.methods.RequestBuilder;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * This class encapsulates a request to search for available Vonage Virtual Numbers.
  */
-public class SearchNumbersFilter {
+public class SearchNumbersFilter implements QueryParamsRequest {
     private final String country;
 
     private String pattern;
@@ -101,24 +104,31 @@ public class SearchNumbersFilter {
     }
 
     public void addParams(RequestBuilder request) {
-        request.addParameter("country", country);
+        makeParams().forEach(request::addParameter);
+    }
+
+    @Override
+    public Map<String, String> makeParams() {
+        LinkedHashMap<String, String> params = new LinkedHashMap<>(8);
+        params.put("country", country);
         if (features != null && features.length > 0) {
-            request.addParameter("features", String.join(",", features));
+            params.put("features", String.join(",", features));
         }
         if (index != null) {
-            request.addParameter("index", index.toString());
+            params.put("index", index.toString());
         }
         if (size != null) {
-            request.addParameter("size", size.toString());
+            params.put("size", size.toString());
         }
         if (pattern != null) {
-            request.addParameter("pattern", pattern);
+            params.put("pattern", pattern);
         }
         if (searchPattern != null) {
-            request.addParameter("search_pattern", Integer.toString(searchPattern.getValue()));
+            params.put("search_pattern", Integer.toString(searchPattern.getValue()));
         }
         if (type != null) {
-            request.addParameter("type", type.getType());
+            params.put("type", type.getType());
         }
+        return params;
     }
 }
