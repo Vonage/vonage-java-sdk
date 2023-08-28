@@ -338,8 +338,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 			protected String expectedEndpointUri(ListTransfersFilter request) {
 				assertNotNull(request.getStartDate());
 				assertNotNull(request.getEndDate());
-				return "/accounts/"+apiKey+"/credit-transfers?start_date=2022-06-01T08%3A00%3A00Z" +
-						"&end_date=2023-06-08T09%3A01%3A40Z&subaccount=" + request.getSubaccount();
+				return "/accounts/"+apiKey+"/credit-transfers";
 			}
 
 			@Override
@@ -388,7 +387,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 				assertNotNull(request.getStartDate());
 				assertNull(request.getEndDate());
 				assertNull(request.getSubaccount());
-				return "/accounts/"+apiKey+"/balance-transfers?start_date=1970-01-01T00%3A00%3A00Z";
+				return "/accounts/"+apiKey+"/balance-transfers";
 			}
 
 			@Override

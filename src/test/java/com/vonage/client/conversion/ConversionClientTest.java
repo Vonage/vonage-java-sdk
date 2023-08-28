@@ -15,67 +15,155 @@
  */
 package com.vonage.client.conversion;
 
-import com.vonage.client.ClientTest;
-import com.vonage.client.VonageBadRequestException;
-import org.junit.Before;
+import com.vonage.client.*;
+import com.vonage.client.auth.AuthMethod;
+import com.vonage.client.auth.SignatureAuthMethod;
+import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.common.HttpMethod;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import static org.junit.Assert.fail;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class ConversionClientTest extends ClientTest<ConversionClient> {
-    @Before
-    public void setUp() {
+
+    public ConversionClientTest() {
         client = new ConversionClient(wrapper);
     }
 
     @Test
-    public void testSuccessfulResponse() {
-        try {
-            wrapper.setHttpClient(stubHttpClient(200, ""));
-            client.submitConversion(ConversionRequest.Type.VOICE,
-                                         "MESSAGE-ID",
-                                         true,
-                                         new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
-        } catch (Exception e) {
-            fail("No exceptions should be thrown.");
-        }
+    public void testSuccessfulResponse() throws Exception {
+        stubResponse(200);
+        client.submitConversion(ConversionRequest.Type.VOICE,
+                             "MESSAGE-ID",
+                             true,
+                             new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
     }
 
-    @Test(expected = VonageBadRequestException.class)
+    @Test(expected = VonageApiResponseException.class)
     public void testWrongCredentials() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(401, ""));
+        stubResponse(401);
         client.submitConversion(ConversionRequest.Type.SMS,
                                      "MESSAGE-ID",
                                      true,
                                      new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
     }
 
-    @Test(expected = VonageBadRequestException.class)
+    @Test(expected = VonageApiResponseException.class)
     public void testConversionNotEnabled() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(402, ""));
+        stubResponse(402);
         client.submitConversion(ConversionRequest.Type.SMS,
                                      "MESSAGE-ID",
                                      true,
                                      new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
     }
 
-    @Test(expected = VonageBadRequestException.class)
+    @Test(expected = VonageApiResponseException.class)
     public void testInvalidParameters() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(423, ""));
+        stubResponse(423);
         client.submitConversion(ConversionRequest.Type.SMS,
                                      "MESSAGE-ID",
                                      true,
                                      new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
     }
 
-    @Test(expected = VonageBadRequestException.class)
+    @Test(expected = VonageApiResponseException.class)
     public void testInvalidParametersEnhanceCalm() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(420, ""));
+        stubResponse(420);
         client.submitConversion(ConversionRequest.Type.SMS,
                                      "MESSAGE-ID",
                                      true,
                                      new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
     }
 
+    @Test
+    public void testConversionEndpoint() throws Exception {
+        new DynamicEndpointTestSpec<ConversionRequest, Void>() {
 
+            @Override
+            protected RestEndpoint<ConversionRequest, Void> endpoint() {
+                return client.conversionEndpoint;
+            }
+
+            @Override
+            protected HttpMethod expectedHttpMethod() {
+                return HttpMethod.POST;
+            }
+
+            @Override
+            protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
+                return Arrays.asList(SignatureAuthMethod.class, TokenAuthMethod.class);
+            }
+
+            @Override
+            protected Class<? extends Exception> expectedResponseExceptionType() {
+                return VonageApiResponseException.class;
+            }
+
+            @Override
+            protected String expectedDefaultBaseUri() {
+                return "https://api.nexmo.com";
+            }
+
+            @Override
+            protected String expectedEndpointUri(ConversionRequest request) {
+                return "/conversions/" + request.getType().name().toLowerCase();
+            }
+
+            @Override
+            protected ConversionRequest sampleRequest() {
+                try {
+                    return new ConversionRequest(ConversionRequest.Type.SMS,
+                            "MESSAGE-ID",
+                            true,
+                            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12")
+                    );
+                }
+                catch (ParseException px) {
+                    throw new IllegalStateException(px);
+                }
+            }
+
+            @Override
+            protected String sampleRequestBodyString() {
+                return null;
+            }
+
+            @Override
+            protected Map<String, String> sampleQueryParams() {
+                LinkedHashMap<String, String> params = new LinkedHashMap<>(4);
+                params.put("message-id", "MESSAGE-ID");
+                params.put("delivered", "true");
+                params.put("timestamp", "2014-03-04 10:11:12");
+                return params;
+            }
+
+            @Override
+            public void runTests() throws Exception {
+                super.runTests();
+                testVoice();
+            }
+
+            void testVoice() throws Exception {
+                String timestamp = "2023-08-28 10:48:12";
+                ConversionRequest request = new ConversionRequest(ConversionRequest.Type.VOICE,
+                        "messAG3-1D",
+                        false,
+                        new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(timestamp)
+                );
+
+                assertNotNull(request.getTimestamp());
+                LinkedHashMap<String, String> expectedParams = new LinkedHashMap<>(4);
+                expectedParams.put("message-id", request.getMessageId());
+                expectedParams.put("delivered", String.valueOf(request.isDelivered()));
+                expectedParams.put("timestamp", timestamp);
+                assertRequestUriAndBody(request, null, expectedParams);
+            }
+        }
+        .runTests();
+    }
 }
