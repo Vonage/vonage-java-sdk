@@ -36,6 +36,7 @@ class BaseNumberRequest implements QueryParamsRequest {
         return msisdn;
     }
 
+    @Deprecated
     public void addParams(RequestBuilder request) {
         makeParams().forEach(request::addParameter);
     }

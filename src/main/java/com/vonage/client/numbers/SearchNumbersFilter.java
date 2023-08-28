@@ -103,6 +103,7 @@ public class SearchNumbersFilter implements QueryParamsRequest {
         this.searchPattern = searchPattern;
     }
 
+    @Deprecated
     public void addParams(RequestBuilder request) {
         makeParams().forEach(request::addParameter);
     }
