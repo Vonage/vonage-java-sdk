@@ -191,11 +191,12 @@ public class NumbersClientTest extends ClientTest<NumbersClient> {
 
             @Override
             protected Map<String, String> sampleQueryParams() {
+                ListNumbersFilter request = sampleRequest();
                 Map<String, String> params = new LinkedHashMap<>(8);
-                params.put("pattern", "234");
-                params.put("search_pattern", "0");
-                params.put("index", "10");
-                params.put("size", "20");
+                params.put("pattern", request.getPattern());
+                params.put("search_pattern", String.valueOf(request.getSearchPattern().getValue()));
+                params.put("index", String.valueOf(request.getIndex()));
+                params.put("size", String.valueOf(request.getSize()));
                 return params;
             }
         }
@@ -224,8 +225,8 @@ public class NumbersClientTest extends ClientTest<NumbersClient> {
             @Override
             protected SearchNumbersFilter sampleRequest() {
                 SearchNumbersFilter filter = new SearchNumbersFilter("BB");
-                filter.setIndex(10);
-                filter.setSize(20);
+                filter.setIndex(11);
+                filter.setSize(25);
                 filter.setPattern("234");
                 filter.setFeatures(new String[]{"SMS", "VOICE"});
                 filter.setSearchPattern(SearchPattern.STARTS_WITH);
@@ -235,14 +236,15 @@ public class NumbersClientTest extends ClientTest<NumbersClient> {
 
             @Override
             protected Map<String, String> sampleQueryParams() {
+                SearchNumbersFilter filter = sampleRequest();
                 Map<String, String> params = new LinkedHashMap<>(8);
-                params.put("country", "BB");
-                params.put("features", "SMS,VOICE");
-                params.put("pattern", "234");
-                params.put("search_pattern", "0");
-                params.put("index", "10");
-                params.put("size", "20");
-                params.put("type", "landline-toll-free");
+                params.put("country", filter.getCountry());
+                params.put("features", String.join(",", filter.getFeatures()));
+                params.put("pattern", filter.getPattern());
+                params.put("search_pattern", String.valueOf(filter.getSearchPattern().getValue()));
+                params.put("index", String.valueOf(filter.getIndex()));
+                params.put("size", String.valueOf(filter.getSize()));
+                params.put("type", filter.getType().getType());
                 return params;
             }
         }
@@ -280,9 +282,10 @@ public class NumbersClientTest extends ClientTest<NumbersClient> {
 
             @Override
             protected Map<String, String> sampleQueryParams() {
+                BuyNumberRequest request = sampleRequest();
                 Map<String, String> params = new LinkedHashMap<>(4);
-                params.put("country", "DE");
-                params.put("msisdn", "4930901820");
+                params.put("country", request.getCountry());
+                params.put("msisdn", request.getMsisdn());
                 return params;
             }
         }
@@ -367,15 +370,16 @@ public class NumbersClientTest extends ClientTest<NumbersClient> {
 
             @Override
             protected Map<String, String> sampleQueryParams() {
-                Map<String, String> params = new LinkedHashMap<>(4);
-                params.put("country", "UK");
-                params.put("msisdn", "447700900013");
-                params.put("moHttpUrl", "https://api.example.com/mo");
-                params.put("moSmppSysType", "inbound");
-                params.put("voiceCallbackValue", "1234-5678-9123-4567");
-                params.put("voiceCallbackType", "app");
-                params.put("voiceStatusCallback", "https://api.example.com/callback");
-                params.put("messagesCallbackValue", "MESSAGES-APPLICATION-ID");
+                UpdateNumberRequest request = sampleRequest();
+                Map<String, String> params = new LinkedHashMap<>();
+                params.put("country", request.getCountry());
+                params.put("msisdn", request.getMsisdn());
+                params.put("moHttpUrl", request.getMoHttpUrl());
+                params.put("moSmppSysType", request.getMoSmppSysType());
+                params.put("voiceCallbackValue", request.getVoiceCallbackValue());
+                params.put("voiceCallbackType", request.getVoiceCallbackType().paramValue());
+                params.put("voiceStatusCallback", request.getVoiceStatusCallback());
+                params.put("messagesCallbackValue", request.getMessagesCallbackValue());
                 params.put("messagesCallbackType", "app");
                 return params;
             }
