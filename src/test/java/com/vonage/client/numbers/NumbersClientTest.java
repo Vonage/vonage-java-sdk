@@ -20,6 +20,7 @@ import com.vonage.client.RestEndpoint;
 import com.vonage.client.common.HttpMethod;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+import org.junit.function.ThrowingRunnable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -27,6 +28,18 @@ public class NumbersClientTest extends ClientTest<NumbersClient> {
 
     public NumbersClientTest() {
         client = new NumbersClient(wrapper);
+    }
+
+    void assert401ResponseException(ThrowingRunnable invocation) throws Exception {
+        String response = "{\n" +
+                "   \"title\": \"Test reason\",\n" +
+                "   \"error-code\": \"401\",\n" +
+                "   \"error-code-label\": \"authentication failed\"\n" +
+                "}";
+        NumbersResponseException ex = assertApiResponseException(
+                401, response, NumbersResponseException.class, invocation
+        );
+        assertEquals("authentication failed", ex.getErrorCodeLabel());
     }
 
     @Test
@@ -50,6 +63,7 @@ public class NumbersClientTest extends ClientTest<NumbersClient> {
                 "}");
         ListNumbersResponse response = client.listNumbers();
         assertEquals(1, response.getCount());
+        assert401ResponseException(client::listNumbers);
     }
 
     @Test
@@ -79,6 +93,7 @@ public class NumbersClientTest extends ClientTest<NumbersClient> {
         filter.setSearchPattern(SearchPattern.ENDS_WITH);
         ListNumbersResponse response = client.listNumbers(filter);
         assertEquals(1, response.getCount());
+        assert401ResponseException(() -> client.listNumbers(filter));
     }
 
     @Test
@@ -100,7 +115,7 @@ public class NumbersClientTest extends ClientTest<NumbersClient> {
                 "}");
         SearchNumbersResponse response = client.searchNumbers("YY");
         assertEquals(4, response.getCount());
-
+        assert401ResponseException(() -> client.searchNumbers(new SearchNumbersFilter("FR")));
     }
 
     @Test
@@ -110,6 +125,7 @@ public class NumbersClientTest extends ClientTest<NumbersClient> {
                 "  \"error-code-label\":\"success\"\n" +
                 "}");
         client.cancelNumber("AA", "447700900000");
+        assert401ResponseException(() -> client.cancelNumber("UK", "447700900000"));
     }
 
     @Test
@@ -119,6 +135,7 @@ public class NumbersClientTest extends ClientTest<NumbersClient> {
                 "  \"error-code-label\":\"success\"\n" +
                 "}");
         client.buyNumber("AA", "447700900000");
+        assert401ResponseException(() -> client.buyNumber("UK", "447700900000"));
     }
 
     @Test
@@ -127,7 +144,9 @@ public class NumbersClientTest extends ClientTest<NumbersClient> {
                 "  \"error-code\":\"200\",\n" +
                 "  \"error-code-label\":\"success\"\n" +
                 "}");
-        client.updateNumber(new UpdateNumberRequest("447700900328", "UK"));
+        UpdateNumberRequest request = new UpdateNumberRequest("447700900328", "UK");
+        client.updateNumber(request);
+        assert401ResponseException(() -> client.updateNumber(request));
     }
 
     @Test
