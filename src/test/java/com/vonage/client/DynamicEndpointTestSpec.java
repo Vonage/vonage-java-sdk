@@ -131,23 +131,17 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 	protected final void assertRequestUriAndBody(T request, String expectedRequestBody,
 	                                               Map<String, String> expectedQueryParams) throws Exception {
 
-		String queryParams;
-		if (expectedQueryParams == null || expectedQueryParams.isEmpty()) {
-			queryParams = "";
-		}
-		else {
-			String paramsStr = expectedQueryParams.entrySet().stream()
-					.map(entry -> entry.getKey() + "=" + entry.getValue())
-					.collect(Collectors.joining("&"));
-			queryParams = "?" + paramsStr;//URLEncoder.encode(paramsStr, Charset.defaultCharset().name());
-		}
-
 		RequestBuilder builder = makeTestRequest(request);
 		if (expectedRequestBody != null) {
 			assertEquals(expectedRequestBody, EntityUtils.toString(builder.getEntity()));
 		}
-		String expectedUri = expectedDefaultBaseUri() + expectedEndpointUri(request) + queryParams;
-		assertEquals(expectedUri, builder.build().getURI().toString());
+		if (expectedQueryParams != null) {
+			Map<String, String> paramsMap = builder.getParameters().stream()
+							.collect(Collectors.toMap(NameValuePair::getName, NameValuePair::getValue));
+			assertEquals(expectedQueryParams, paramsMap);
+		}
+		String expectedUri = expectedDefaultBaseUri() + expectedEndpointUri(request);
+		assertEquals(expectedUri, builder.build().getURI().toString().split("\\?")[0]);
 
 		AbstractMethod<T, R> endpoint = endpointAsAbstractMethod();
 		HttpConfig originalConfig = endpoint.httpWrapper.getHttpConfig();
@@ -155,8 +149,8 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 			String baseUri = customBaseUri();
 			endpoint.httpWrapper.setHttpConfig(HttpConfig.builder().baseUri(baseUri).build());
 			builder = makeTestRequest(request);
-			expectedUri = baseUri + expectedEndpointUri(request) + queryParams;
-			assertEquals(expectedUri, builder.build().getURI().toString());
+			expectedUri = baseUri + expectedEndpointUri(request);
+			assertEquals(expectedUri, builder.build().getURI().toString().split("\\?")[0]);
 		}
 		finally {
 			endpoint.httpWrapper.setHttpConfig(originalConfig);

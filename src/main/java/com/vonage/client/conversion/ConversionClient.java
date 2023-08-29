@@ -16,6 +16,9 @@
 package com.vonage.client.conversion;
 
 import com.vonage.client.*;
+import com.vonage.client.auth.SignatureAuthMethod;
+import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.common.HttpMethod;
 import java.util.Date;
 
 /**
@@ -27,10 +30,16 @@ import java.util.Date;
  * See the <a href="https://developer.vonage.com/messaging/conversion-api/overview">Conversion API documentation</a>.
  */
 public class ConversionClient {
-    final ConversionEndpoint conversionEndpoint;
+    final RestEndpoint<ConversionRequest, Void> conversionEndpoint;
 
-    public ConversionClient(HttpWrapper httpWrapper) {
-        conversionEndpoint = new ConversionEndpoint(httpWrapper);
+    @SuppressWarnings("unchecked")
+    public ConversionClient(HttpWrapper wrapper) {
+        conversionEndpoint = DynamicEndpoint.<ConversionRequest, Void> builder(Void.class)
+                .pathGetter((de, req) -> de.getHttpWrapper().getHttpConfig().getApiBaseUri() +
+                        "/conversions/" + req.getType().name().toLowerCase()
+                )
+                .authMethod(SignatureAuthMethod.class, TokenAuthMethod.class)
+                .requestMethod(HttpMethod.POST).wrapper(wrapper).build();
     }
 
     /**

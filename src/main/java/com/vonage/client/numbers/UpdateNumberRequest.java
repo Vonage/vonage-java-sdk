@@ -15,29 +15,14 @@
  */
 package com.vonage.client.numbers;
 
-import org.apache.http.client.methods.RequestBuilder;
+import java.util.Map;
 
-public class UpdateNumberRequest {
-    private final String country;
-    private final String msisdn;
-    private String moHttpUrl;
-    private String moSmppSysType;
+public class UpdateNumberRequest extends BaseNumberRequest {
     private CallbackType voiceCallbackType;
-    private String voiceCallbackValue;
-    private String voiceStatusCallback;
-    private String messagesCallbackValue;
+    private String moHttpUrl, moSmppSysType, voiceCallbackValue, voiceStatusCallback,  messagesCallbackValue;
 
     public UpdateNumberRequest(String msisdn, String country) {
-        this.country = country;
-        this.msisdn = msisdn;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public String getMsisdn() {
-        return msisdn;
+        super(country, msisdn);
     }
 
     public String getMoHttpUrl() {
@@ -88,27 +73,29 @@ public class UpdateNumberRequest {
         this.messagesCallbackValue = messagesCallbackValue;
     }
 
-    public void addParams(RequestBuilder request) {
-        request.addParameter("country", country).addParameter("msisdn", msisdn);
+    @Override
+    public Map<String, String> makeParams() {
+        Map<String, String> params = super.makeParams();
         if (moHttpUrl != null) {
-            request.addParameter("moHttpUrl", moHttpUrl);
+            params.put("moHttpUrl", moHttpUrl);
         }
         if (moSmppSysType != null) {
-            request.addParameter("moSmppSysType", moSmppSysType);
+            params.put("moSmppSysType", moSmppSysType);
         }
         if (voiceCallbackType != null) {
-            request.addParameter("voiceCallbackType", voiceCallbackType.paramValue());
+            params.put("voiceCallbackType", voiceCallbackType.paramValue());
         }
         if (voiceCallbackValue != null) {
-            request.addParameter("voiceCallbackValue", voiceCallbackValue);
+            params.put("voiceCallbackValue", voiceCallbackValue);
         }
         if (voiceStatusCallback != null) {
-            request.addParameter("voiceStatusCallback", voiceStatusCallback);
+            params.put("voiceStatusCallback", voiceStatusCallback);
         }
         if (messagesCallbackValue != null) {
-            request.addParameter("messagesCallbackValue", messagesCallbackValue);
-            request.addParameter("messagesCallbackType", CallbackType.APP.paramValue());
+            params.put("messagesCallbackValue", messagesCallbackValue);
+            params.put("messagesCallbackType", CallbackType.APP.paramValue());
         }
+        return params;
     }
 
     public enum CallbackType {
