@@ -15,6 +15,8 @@
  */
 package com.vonage.client.insight;
 
+import java.util.Map;
+
 public class AdvancedInsightRequest extends BaseInsightRequest {
     private final boolean async;
     private final String callback, ipAddress;
@@ -37,7 +39,7 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
     }
 
     /**
-     * This method is the starting point for constructing an Advanced Insight request.
+     * This method is the starting point for constructing an Advanced Insight 
      *
      * @param number A single phone number that you need insight about in national or international format.
      *
@@ -48,7 +50,7 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
     }
 
     /**
-     * This method is the starting point for constructing an Advanced Insight request.
+     * This method is the starting point for constructing an Advanced Insight 
      * Note that the number field must be set.
      *
      * @return A new {@link Builder} instance.
@@ -76,6 +78,21 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
 
     public String getCallback() {
         return callback;
+    }
+
+    @Override
+    public Map<String, String> makeParams() {
+        Map<String, String> params = super.makeParams();
+        if (ipAddress != null) {
+            params.put("ip", ipAddress);
+        }
+        if (callback != null) {
+            params.put("callback", callback);
+        }
+        if (realTimeData != null) {
+            params.put("real_time_data", realTimeData.toString());
+        }
+        return params;
     }
 
     /**

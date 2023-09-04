@@ -17,9 +17,6 @@ package com.vonage.client.insight;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
 
 /**
  * Response object constructed from the JSON payload returned for Advanced number insight requests.
@@ -35,12 +32,9 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
     private String errorText;
 
     public static AdvancedInsightResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, AdvancedInsightResponse.class);
-        } catch (IOException jpe) {
-            throw new VonageUnexpectedException("Failed to produce AdvancedInsightResponse from json.", jpe);
-        }
+        AdvancedInsightResponse response = new AdvancedInsightResponse();
+        response.updateFromJson(json);
+        return response;
     }
 
     /**

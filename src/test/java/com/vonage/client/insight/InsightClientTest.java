@@ -16,10 +16,12 @@
 package com.vonage.client.insight;
 
 import com.vonage.client.ClientTest;
-import org.junit.Before;
+import com.vonage.client.RestEndpoint;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import java.math.BigDecimal;
-import static org.junit.Assert.assertEquals;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class InsightClientTest extends ClientTest<InsightClient> {
 
@@ -87,35 +89,34 @@ public class InsightClientTest extends ClientTest<InsightClient> {
             "  \"status\": 0\n" +
             "}";
 
-    @Before
-    public void setUp() {
+    public InsightClientTest() {
         client = new InsightClient(wrapper);
     }
 
     @Test
     public void testBasicInsightWithNumber() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(200, BASIC_RESPOSE_JSON));
+        stubResponse(200, BASIC_RESPOSE_JSON);
         BasicInsightResponse response = client.getBasicNumberInsight("1234");
         assertBasicResponse(response);
     }
 
     @Test
     public void testBasicInsightWithNumberAndCountry() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(200, BASIC_RESPOSE_JSON));
+        stubResponse(200, BASIC_RESPOSE_JSON);
         BasicInsightResponse response = client.getBasicNumberInsight("1234", "GB");
         assertBasicResponse(response);
     }
 
     @Test
     public void testStandardInsightWithNumber() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(200, STANDARD_RESPONSE_JSON));
+        stubResponse(200, STANDARD_RESPONSE_JSON);
         StandardInsightResponse response = client.getStandardNumberInsight("1234");
         assertBasicResponse(response);
     }
 
     @Test
     public void testStandardInsightWithNumberAndCountry() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(200, STANDARD_RESPONSE_JSON));
+        stubResponse(200, STANDARD_RESPONSE_JSON);
         StandardInsightResponse response = client.getStandardNumberInsight("1234", "GB");
         assertStandardResponse(response);
     }
@@ -123,14 +124,14 @@ public class InsightClientTest extends ClientTest<InsightClient> {
 
     @Test
     public void testAdvancedInsightWithNumber() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(200, ADVANCED_RESPONSE_JSON));
+        stubResponse(200, ADVANCED_RESPONSE_JSON);
         AdvancedInsightResponse response = client.getAdvancedNumberInsight("1234");
         assertAdvancedInsightResponse(response);
     }
 
     @Test
     public void testAdvancedInsightWithNumberAndCountry() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(200, ADVANCED_RESPONSE_JSON));
+        stubResponse(200, ADVANCED_RESPONSE_JSON);
 
         AdvancedInsightResponse response = client.getAdvancedNumberInsight("1234", "GB");
 
@@ -141,7 +142,7 @@ public class InsightClientTest extends ClientTest<InsightClient> {
 
     @Test
     public void testAsyncAdvancedInsight() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(200, ASYNC_ADVANCED_RESPONSE_JSON));
+        stubResponse(200, ASYNC_ADVANCED_RESPONSE_JSON);
 
         AdvancedInsightResponse response = client.getAdvancedNumberInsight(AdvancedInsightRequest.builder("1234")
                 .async(true)
@@ -201,5 +202,126 @@ public class InsightClientTest extends ClientTest<InsightClient> {
         assertEquals("US", response.getRoaming().getRoamingCountryCode());
         assertEquals("12345", response.getRoaming().getRoamingNetworkCode());
         assertEquals("Acme Inc", response.getRoaming().getRoamingNetworkName());
+    }
+
+    // ENDPOINT TESTS
+
+    @Test
+    public void testBasicInsightEndpoint() throws Exception {
+        new InsightEndpointTestSpec<BasicInsightRequest, BasicInsightResponse>() {
+
+            @Override
+            protected Map<String, String> sampleQueryParams() {
+                BasicInsightRequest request = sampleRequest();
+                Map<String, String> params = new LinkedHashMap<>(4);
+                params.put("number", request.getNumber());
+                params.put("country", request.getCountry());
+                return params;
+            }
+
+            @Override
+            protected RestEndpoint<BasicInsightRequest, BasicInsightResponse> endpoint() {
+                return client.basic;
+            }
+
+            @Override
+            protected String expectedEndpointUri(BasicInsightRequest request) {
+                return "/ni/basic/json";
+            }
+
+            @Override
+            protected BasicInsightRequest sampleRequest() {
+                return BasicInsightRequest.builder("447900000001").country("GB").build();
+            }
+        }
+        .runTests();
+    }
+
+    @Test
+    public void testStandardInsightEndpoint() throws Exception {
+        new InsightEndpointTestSpec<StandardInsightRequest, StandardInsightResponse>() {
+
+            @Override
+            protected Map<String, String> sampleQueryParams() {
+                StandardInsightRequest request = sampleRequest();
+                Map<String, String> params = new LinkedHashMap<>(4);
+                params.put("number", request.getNumber());
+                params.put("country", request.getCountry());
+                params.put("cnam", String.valueOf(request.getCnam()));
+                return params;
+            }
+
+            @Override
+            protected RestEndpoint<StandardInsightRequest, StandardInsightResponse> endpoint() {
+                return client.standard;
+            }
+
+            @Override
+            protected String expectedEndpointUri(StandardInsightRequest request) {
+                return "/ni/standard/json";
+            }
+
+            @Override
+            protected StandardInsightRequest sampleRequest() {
+                return StandardInsightRequest.builder("447900000002")
+                        .cnam(true).country("UK").build();
+            }
+        }
+        .runTests();
+    }
+
+    @Test
+    public void testAdvancedInsightEndpoint() throws Exception {
+        new InsightEndpointTestSpec<AdvancedInsightRequest, AdvancedInsightResponse>() {
+
+            @Override
+            protected Map<String, String> sampleQueryParams() {
+                AdvancedInsightRequest request = sampleRequest();
+                Map<String, String> params = new LinkedHashMap<>(8);
+                params.put("number", request.getNumber());
+                params.put("country", request.getCountry());
+                params.put("cnam", String.valueOf(request.getCnam()));
+                params.put("callback", request.getCallback());
+                params.put("ip", request.getIpAddress());
+                return params;
+            }
+
+            @Override
+            protected RestEndpoint<AdvancedInsightRequest, AdvancedInsightResponse> endpoint() {
+                return client.advanced;
+            }
+
+            @Override
+            protected String expectedEndpointUri(AdvancedInsightRequest request) {
+                return request.isAsync() ? "/ni/advanced/async/json" : "/ni/advanced/json";
+            }
+
+            @Override
+            protected AdvancedInsightRequest sampleRequest() {
+                return AdvancedInsightRequest.builder("15555551234")
+                        .cnam(false).country("US")
+                        .async(true).realTimeData(false)
+                        .callback("https://example.com/cb")
+                        .ipAddress("192.168.0.1").build();
+            }
+
+            @Override
+            public void runTests() throws Exception {
+                super.runTests();
+                testSyncRealTimeDataParams();
+            }
+
+            void testSyncRealTimeDataParams() throws Exception {
+                AdvancedInsightRequest request = AdvancedInsightRequest.builder()
+                        .number("1234").realTimeData(true).build();
+                Map<String, String> params = new LinkedHashMap<>(2);
+                params.put("number", "1234");
+                params.put("real_time_data", "true");
+                assertFalse(request.isAsync());
+                assertTrue(request.getRealTimeData());
+                assertRequestUriAndBody(request, params);
+            }
+        }
+        .runTests();
     }
 }

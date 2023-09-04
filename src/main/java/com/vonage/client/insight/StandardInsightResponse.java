@@ -17,9 +17,6 @@ package com.vonage.client.insight;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
 import java.math.BigDecimal;
 
 /**
@@ -35,12 +32,9 @@ public class StandardInsightResponse extends BasicInsightResponse {
     private CallerType callerType;
 
     public static StandardInsightResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, StandardInsightResponse.class);
-        } catch (IOException jpe) {
-            throw new VonageUnexpectedException("Failed to produce StandardInsightResponse from json.", jpe);
-        }
+        StandardInsightResponse response = new StandardInsightResponse();
+        response.updateFromJson(json);
+        return response;
     }
 
     /**

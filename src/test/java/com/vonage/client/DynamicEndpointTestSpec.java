@@ -128,7 +128,11 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 		assertRequestUriAndBody(request, expectedRequestBody, null);
 	}
 
-	protected final void assertRequestUriAndBody(T request, String expectedRequestBody,
+	protected final void assertRequestUriAndBody(T request, Map<String, String> expectedQueryParams) throws Exception {
+		assertRequestUriAndBody(request, null, expectedQueryParams);
+	}
+
+	private final void assertRequestUriAndBody(T request, String expectedRequestBody,
 	                                               Map<String, String> expectedQueryParams) throws Exception {
 
 		RequestBuilder builder = makeTestRequest(request);

@@ -17,26 +17,21 @@ package com.vonage.client.insight;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 
 /**
  * Response object constructed from the JSON payload returned for Basic number insight requests.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BasicInsightResponse {
+public class BasicInsightResponse implements Jsonable {
     private InsightStatus status;
     private String statusMessage, requestId, internationalFormatNumber, nationalFormatNumber,
             countryCode, countryCodeIso3, countryName, countryPrefix;
 
     public static BasicInsightResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, BasicInsightResponse.class);
-        } catch (IOException jpe) {
-            throw new VonageUnexpectedException("Failed to produce BasicInsightResponse from json.", jpe);
-        }
+        BasicInsightResponse response = new BasicInsightResponse();
+        response.updateFromJson(json);
+        return response;
     }
 
     /**

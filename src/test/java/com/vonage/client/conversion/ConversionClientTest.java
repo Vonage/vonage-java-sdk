@@ -161,7 +161,7 @@ public class ConversionClientTest extends ClientTest<ConversionClient> {
                 expectedParams.put("message-id", request.getMessageId());
                 expectedParams.put("delivered", String.valueOf(request.isDelivered()));
                 expectedParams.put("timestamp", timestamp);
-                assertRequestUriAndBody(request, null, expectedParams);
+                assertRequestUriAndBody(request, expectedParams);
             }
         }
         .runTests();
