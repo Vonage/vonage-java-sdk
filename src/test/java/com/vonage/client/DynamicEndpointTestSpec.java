@@ -21,13 +21,13 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
-import static org.junit.Assert.*;
+
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static org.junit.Assert.*;
 
 public abstract class DynamicEndpointTestSpec<T, R> {
 
@@ -52,13 +52,16 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 	protected abstract String expectedDefaultBaseUri();
 	protected abstract String expectedEndpointUri(T request);
 	protected abstract T sampleRequest();
-	protected abstract String sampleRequestBodyString();
 
 	protected String customBaseUri() {
 		return "http://example.com";
 	}
 
-	protected Map<String, String> sampleQueryParams() {
+	protected Map<String, ?> sampleQueryParams() {
+		return null;
+	}
+
+	protected String sampleRequestBodyString() {
 		return null;
 	}
 
@@ -69,7 +72,7 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 
 	protected String expectedContentTypeHeader(T request) {
 		if (request instanceof Jsonable) {
-			return ContentType.APPLICATION_JSON.getMimeType();
+			return "application/json";
 		}
 		else return null;
 	}
@@ -132,17 +135,39 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 		assertRequestUriAndBody(request, null, expectedQueryParams);
 	}
 
-	private final void assertRequestUriAndBody(T request, String expectedRequestBody,
-	                                               Map<String, String> expectedQueryParams) throws Exception {
+	@SuppressWarnings("unchecked")
+	private void assertRequestUriAndBody(T request, String expectedRequestBody,
+	                                               Map<String, ?> expectedQueryParams) throws Exception {
 
 		RequestBuilder builder = makeTestRequest(request);
 		if (expectedRequestBody != null) {
 			assertEquals(expectedRequestBody, EntityUtils.toString(builder.getEntity()));
 		}
 		if (expectedQueryParams != null) {
-			Map<String, String> paramsMap = builder.getParameters().stream()
-							.collect(Collectors.toMap(NameValuePair::getName, NameValuePair::getValue));
-			assertEquals(expectedQueryParams, paramsMap);
+			List<NameValuePair> paramsList = builder.getParameters();
+			Map<String, Object> paramsMap = new LinkedHashMap<>(paramsList.size());
+			for (NameValuePair nvp : paramsList) {
+				String key = nvp.getName();
+				String valueToAdd = nvp.getValue();
+				Object currentValue = paramsMap.get(key);
+				if (currentValue instanceof String) {
+					List<String> multivalue = new ArrayList<>();
+					multivalue.add((String) currentValue);
+					paramsMap.put(key, currentValue = multivalue);
+				}
+				if (currentValue instanceof Collection) {
+					((Collection<String>) currentValue).add(valueToAdd);
+				}
+				else {
+					paramsMap.put(key, valueToAdd);
+				}
+			}
+			Map<String, ?> normalExpectedParams = expectedQueryParams.entrySet().stream()
+					.collect(Collectors.toMap(Map.Entry::getKey, entry -> {
+							Object value = entry.getValue();
+							return value instanceof Object[] ? Arrays.asList((Object[]) value) : value;
+					}));
+			assertEquals(normalExpectedParams, paramsMap);
 		}
 		String expectedUri = expectedDefaultBaseUri() + expectedEndpointUri(request);
 		assertEquals(expectedUri, builder.build().getURI().toString().split("\\?")[0]);

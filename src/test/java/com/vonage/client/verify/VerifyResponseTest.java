@@ -22,6 +22,12 @@ import org.junit.Test;
 public class VerifyResponseTest {
 
 	@Test
+	public void testConstructor() {
+		VerifyResponse response = new VerifyResponse(VerifyStatus.PARTNER_QUOTA_EXCEEDED);
+		assertEquals(9, response.getStatus().getVerifyStatus());
+	}
+
+	@Test
 	public void testFromJsonAllFields() {
 		String
 			errorText = "The number you are trying to verify is blacklisted for verification",
@@ -47,5 +53,4 @@ public class VerifyResponseTest {
 		assertEquals(VerifyStatus.INVALID_CREDENTIALS, response.getStatus());
 		assertEquals(4, response.getStatus().getVerifyStatus());
 	}
-
 }

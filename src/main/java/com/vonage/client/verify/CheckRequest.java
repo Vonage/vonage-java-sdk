@@ -15,7 +15,11 @@
  */
 package com.vonage.client.verify;
 
-public class CheckRequest {
+import com.vonage.client.QueryParamsRequest;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+public class CheckRequest implements QueryParamsRequest {
     private final String requestId, code, ipAddress;
 
     /**
@@ -75,5 +79,16 @@ public class CheckRequest {
     @Deprecated
     public String getIpAddress() {
         return ipAddress;
+    }
+
+    @Override
+    public Map<String, String> makeParams() {
+        Map<String, String> params = new LinkedHashMap<>(4);
+        params.put("request_id", requestId);
+        params.put("code", code);
+        if (ipAddress != null) {
+            params.put("ip_address", ipAddress);
+        }
+        return params;
     }
 }

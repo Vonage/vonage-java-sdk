@@ -16,9 +16,8 @@
 package com.vonage.client.verify;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.message.BasicNameValuePair;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Describes a Verify request when passed to {@link VerifyEndpoint}.
@@ -97,33 +96,22 @@ public class VerifyRequest extends BaseRequest {
         return pinCode;
     }
 
-    protected void addParams(RequestBuilder result) {
-        result.addParameter("number", getNumber()).addParameter("brand", getBrand());
-
-        if (getFrom() != null) {
-            result.addParameter("sender_id", getFrom());
+    @Override
+    public Map<String, String> makeParams() {
+        Map<String, String> params = super.makeParams();
+        if (brand != null) {
+            params.put("brand", brand);
         }
-        if (getLength() != null && getLength() > 0) {
-            result.addParameter("code_length", Integer.toString(getLength()));
+        if (from != null) {
+            params.put("sender_id", from);
         }
-        if (getLocale() != null) {
-            result.addParameter(new BasicNameValuePair("lg", getDashedLocale()));
+        if (pinCode != null) {
+            params.put("pin_code", pinCode);
         }
-        if (getCountry() != null) {
-            result.addParameter("country", getCountry());
+        if (workflow != null) {
+            params.put("workflow_id", String.valueOf(workflow.id));
         }
-        if (getPinExpiry() != null) {
-            result.addParameter("pin_expiry", getPinExpiry().toString());
-        }
-        if (getPinCode() != null) {
-            result.addParameter("pin_code", getPinCode());
-        }
-        if (getNextEventWait() != null) {
-            result.addParameter("next_event_wait", getNextEventWait().toString());
-        }
-        if (getWorkflow() != null) {
-            result.addParameter("workflow_id", String.valueOf(getWorkflow().getId()));
-        }
+        return params;
     }
 
     /**

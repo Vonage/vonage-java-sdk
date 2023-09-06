@@ -23,6 +23,7 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
@@ -32,11 +33,15 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 /**
  * Enables convenient declaration of endpoints without directly implementing {@link AbstractMethod}.
  * This decouples the endpoint's implementation from the underlying HTTP library.
+ *
+ * @since 7.7.0
  */
 @SuppressWarnings("unchecked")
 public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
@@ -166,7 +171,23 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			rqb.setHeader("Accept", accept);
 		}
 		if (requestBody instanceof QueryParamsRequest) {
-			((QueryParamsRequest) requestBody).makeParams().forEach(rqb::addParameter);
+			Map<String, ?> params = ((QueryParamsRequest) requestBody).makeParams();
+			params.forEach((k, v) -> {
+				Consumer<Object> logic = obj -> rqb.addParameter(k, String.valueOf(obj));
+				if (v instanceof Object[]) {
+					for (Object nested : (Object[]) v) {
+						logic.accept(nested);
+					}
+				}
+				else if (v instanceof Iterable<?>) {
+					for (Object nested : (Iterable<?>) v) {
+						logic.accept(nested);
+					}
+				}
+				else {
+					logic.accept(v);
+				}
+			});
 		}
 		if (requestBody instanceof Jsonable) {
 			rqb.setEntity(new StringEntity(((Jsonable) requestBody).toJson(), ContentType.APPLICATION_JSON));
@@ -276,7 +297,16 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 				}
 			}
 		}
-		catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException ex) {
+		catch (InvocationTargetException ex) {
+			Throwable wrapped = ex.getTargetException();
+			if (wrapped instanceof RuntimeException) {
+				throw (RuntimeException) wrapped;
+			}
+			else {
+				throw new VonageUnexpectedException(wrapped);
+			}
+		}
+		catch (InstantiationException | IllegalAccessException | NoSuchMethodException ex) {
 			throw new VonageUnexpectedException(ex);
 		}
 		finally {

@@ -23,9 +23,11 @@ package com.vonage.client.verify;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Locale;
+import java.util.Map;
 
 /**
- * Describes a PSD2 verify request when passed to {@link Psd2Endpoint}.
+ * Describes a PSD2 verify request.
+ *
  * @since 5.5.0
  */
 public class Psd2Request extends BaseRequest {
@@ -34,14 +36,16 @@ public class Psd2Request extends BaseRequest {
     private final Workflow workflow;
 
     private Psd2Request(Builder builder) {
-        super(builder.number,builder.length, builder.locale, builder.country, builder.pinExpiry, builder.nextEventWait);
-        amount = builder.amount;
-        payee = builder.payee;
+        super(builder.number, builder.length, builder.locale, builder.country, builder.pinExpiry, builder.nextEventWait);
+        if ((payee = builder.payee) == null || payee.isEmpty() || payee.length() > 18) {
+            throw new IllegalArgumentException("Payee is required and cannot exceed 18 characters.");
+        }
         workflow = builder.workflow;
+        amount = builder.amount;
     }
 
     /**
-     * @return The decimal amount of the payment to be confirmed, in Euros
+     * @return The decimal amount of the payment to be confirmed, in Euros.
      */
     public Double getAmount() {
         return amount;
@@ -92,6 +96,18 @@ public class Psd2Request extends BaseRequest {
     }
 
     /**
+     * Entry point for constructing an instance of this class.
+     *
+     * @return A new Builder.
+     * @since 7.9.0
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    /**
+     * Entry point for constructing an instance of this class, with the required parameters.
+     *
      * @param number The recipient's phone number in <a href="https://en.wikipedia.org/wiki/E.164">E.164</a>
      *               format.
      * @param amount The decimal amount of the payment to be confirmed, in Euros.
@@ -113,8 +129,19 @@ public class Psd2Request extends BaseRequest {
                 '}';
     }
 
+    @Override
+    public Map<String, String> makeParams() {
+        Map<String, String> params = super.makeParams();
+        params.put("payee", payee);
+        params.put("amount", Double.toString(amount));
+        if (workflow != null) {
+            params.put("workflow_id", Integer.toString(workflow.id));
+        }
+        return params;
+    }
+
     public static class Builder {
-        private Double amount;
+        private double amount;
         private String payee, number, country;
         private Workflow workflow;
         private Locale locale;
@@ -133,13 +160,55 @@ public class Psd2Request extends BaseRequest {
             this.amount = amount;
         }
 
+        private Builder() {
+        }
+
+        /**
+         * (REQUIRED)
+         * @param payee Username of the payment recipient.
+         *
+         * @return This builder.
+         *
+         * @since 7.9.0
+         */
+        public Builder payee(String payee) {
+            this.payee = payee;
+            return this;
+        }
+
+        /**
+         * (REQUIRED)
+         * @param number The recipient's phone number in E.164 format.
+         *
+         * @return This builder.
+         *
+         * @since 7.9.0
+         */
+        public Builder number(String number) {
+            this.number = number;
+            return this;
+        }
+
+        /**
+         * (REQUIRED)
+         * @param amount The decimal amount of the payment to be confirmed, in Euros.
+         *
+         * @return This builder.
+         *
+         * @since 7.9.0
+         */
+        public Builder amount(double amount) {
+            this.amount = amount;
+            return this;
+        }
+
         /**
          * @param workflow Selects the predefined sequence of SMS and TTS (Text To Speech) actions to use
          *                 in order to convey the PIN to your user. For example, an id of 1 identifies the
          *                 workflow SMS - TTS - TTS. For a list of all workflows and their associated ids,
          *                 please visit the
          *                 <a href="https://developer.nexmo.com/verify/guides/workflows-and-events">developer portal.</a>
-         * @return {@link Builder}
+         * @return This builder.
          */
         public Builder workflow(Workflow workflow){
             this.workflow = workflow;
@@ -149,7 +218,7 @@ public class Psd2Request extends BaseRequest {
         /**
          * @param locale (optional) Override the default locale used for verification. By default the locale is determined
          *        from the country code included in {@code number}
-         * @return {@link Builder}
+         * @return This builder.
          */
         public Builder locale(Locale locale) {
             this.locale = locale;
@@ -159,7 +228,7 @@ public class Psd2Request extends BaseRequest {
         /**
          * @param length (optional) The length of the verification code to be sent to the user. Must be either 4 or 6. Use
          *               -1 to use the default value.
-         * @return {@link Builder}
+         * @return This builder.
          */
         public Builder length(Integer length) {
             this.length = length;
@@ -168,7 +237,7 @@ public class Psd2Request extends BaseRequest {
 
         /**
          * @param pinExpiry (optional) the PIN validity time from generation, in seconds. Default is 300 seconds
-         * @return {@link Builder}
+         * @return This builder.
          */
         public Builder pinExpiry(Integer pinExpiry) {
             this.pinExpiry = pinExpiry;
@@ -177,7 +246,7 @@ public class Psd2Request extends BaseRequest {
 
         /**
          * @param nextEventWait (optional) the wait time between attempts to deliver the PIN. A number between 600-900.
-         * @return {@link Builder}
+         * @return This builder.
          */
         public Builder nextEventWait(Integer nextEventWait) {
             this.nextEventWait = nextEventWait;
@@ -192,7 +261,7 @@ public class Psd2Request extends BaseRequest {
          * </p>
          *
          * @param country  a String containing a 2-character country code
-         * @return {@link Builder}
+         * @return This builder.
          */
         public Builder country(String country) {
             this.country = country;

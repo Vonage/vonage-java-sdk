@@ -85,7 +85,7 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 
 	@Test
 	public void testVerifyUserEndpoint() throws Exception {
-		new VerifyEndpointTestSpec<VerificationRequest, VerificationResponse>() {
+		new Verify2EndpointTestSpec<VerificationRequest, VerificationResponse>() {
 
 			@Override
 			protected RestEndpoint<VerificationRequest, VerificationResponse> endpoint() {
@@ -207,7 +207,7 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 
 	@Test
 	public void testVerifyCodeEndpoint() throws Exception {
-		new VerifyEndpointTestSpec<VerifyCodeRequestWrapper, Void>() {
+		new Verify2EndpointTestSpec<VerifyCodeRequestWrapper, Void>() {
 
 			@Override
 			protected RestEndpoint<VerifyCodeRequestWrapper, Void> endpoint() {
@@ -305,7 +305,7 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 
 	@Test
 	public void testCancelVerificationEndpoint() throws Exception {
-		new VerifyEndpointTestSpec<UUID, Void>() {
+		new Verify2EndpointTestSpec<UUID, Void>() {
 
 			@Override
 			protected RestEndpoint<UUID, Void> endpoint() {
@@ -325,11 +325,6 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 			@Override
 			protected UUID sampleRequest() {
 				return REQUEST_ID;
-			}
-
-			@Override
-			protected String sampleRequestBodyString() {
-				return null;
 			}
 
 			@Override

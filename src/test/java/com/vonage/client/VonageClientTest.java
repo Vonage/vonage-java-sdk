@@ -348,6 +348,6 @@ public class VonageClientTest {
 
     private void assertContainsParam(List<NameValuePair> params, String key, String value) {
         NameValuePair item = new BasicNameValuePair(key, value);
-        assertTrue("" + params + " should contain " + item, params.contains(item));
+        assertTrue(params + " should contain " + item, params.contains(item));
     }
 }

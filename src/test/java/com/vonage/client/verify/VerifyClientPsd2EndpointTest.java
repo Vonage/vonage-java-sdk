@@ -16,22 +16,26 @@
 package com.vonage.client.verify;
 
 import com.vonage.client.ClientTest;
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
+import com.vonage.client.RestEndpoint;
 import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
 
 public class VerifyClientPsd2EndpointTest extends ClientTest<VerifyClient> {
 
-    @Before
-    public void setUp() {
+    public VerifyClientPsd2EndpointTest() {
         client = new VerifyClient(wrapper);
     }
 
     @Test
     public void testPsd2Verify() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(200,
+        stubResponse(200,
                 "{" + "\"request_id\": \"abcdef0123456789abcdef0123456789\"," + " \"status\": 0" + "}"
-        ));
+        );
 
         VerifyResponse response = client.psd2Verify("447700900999", 10.31, "Ebony");
 
@@ -41,9 +45,9 @@ public class VerifyClientPsd2EndpointTest extends ClientTest<VerifyClient> {
 
     @Test
     public void testPsd2VerifyWithWorkflow() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(200,
+        stubResponse(200,
                 "{" + "\"request_id\": \"abcdef0123456789abcdef0123456789\"," + " \"status\": 0" + "}"
-        ));
+        );
 
         VerifyResponse response = client.psd2Verify("447700900999", 10.31, "Ebony", Psd2Request.Workflow.SMS);
 
@@ -53,15 +57,64 @@ public class VerifyClientPsd2EndpointTest extends ClientTest<VerifyClient> {
 
     @Test
     public void testPsd2VerifyWithRequestObject() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(200,
+        stubResponse(200,
                 "{" + "\"request_id\": \"abcdef0123456789abcdef0123456789\"," + " \"status\": 0" + "}"
-        ));
-
+        );
         Psd2Request request = new Psd2Request.Builder("447700900999", 10.31, "Ebony").build();
-
         VerifyResponse response = client.psd2Verify(request);
-
         assertEquals(VerifyStatus.OK, response.getStatus());
         assertEquals("abcdef0123456789abcdef0123456789", response.getRequestId());
+    }
+
+    @Test
+    public void testEndpoint() throws Exception {
+        new VerifyEndpointTestSpec<Psd2Request, VerifyResponse>() {
+
+            @Override
+            protected RestEndpoint<Psd2Request, VerifyResponse> endpoint() {
+                return client.psd2;
+            }
+
+            @Override
+            protected String expectedEndpointUri(Psd2Request request) {
+                return "/verify/psd2/json";
+            }
+
+            @Override
+            protected Psd2Request sampleRequest() {
+                return Psd2Request.builder("4477990090090", 43.21, "Ebony")
+                        .workflow(Psd2Request.Workflow.SMS).length(4).locale(Locale.UK)
+                        .country("GB").pinExpiry(60).nextEventWait(90).build();
+            }
+
+            @Override
+            protected Map<String, String> sampleQueryParams() {
+                Psd2Request request = sampleRequest();
+                Map<String, String> params = new HashMap<>();
+
+                params.put("number", request.getNumber());
+                params.put("amount", request.getAmount().toString());
+                params.put("payee", request.getPayee());
+                params.put("code_length", request.getLength().toString());
+                params.put("lg", request.getDashedLocale());
+                params.put("country", request.getCountry());
+                params.put("pin_expiry", request.getPinExpiry().toString());
+                params.put("next_event_wait", request.getNextEventWait().toString());
+                params.put("workflow_id", String.valueOf(request.getWorkflow().getId()));
+
+                assertEquals(params.get("number"), "4477990090090");
+                assertEquals(params.get("amount"), "43.21");
+                assertEquals(params.get("payee"), "Ebony");
+                assertEquals(params.get("code_length"), "4");
+                assertEquals(params.get("lg"), "en-gb");
+                assertEquals(params.get("country"), "GB");
+                assertEquals(params.get("pin_expiry"), "60");
+                assertEquals(params.get("next_event_wait"), "90");
+                assertEquals(params.get("workflow_id"), "6");
+
+                return params;
+            }
+        }
+        .runTests();
     }
 }

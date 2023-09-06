@@ -257,10 +257,6 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 				return null;
 			}
 
-			@Override
-			protected String sampleRequestBodyString() {
-				return null;
-			}
 		}
 		.runTests();
 	}
@@ -294,10 +290,6 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 				return SUB_API_KEY;
 			}
 
-			@Override
-			protected String sampleRequestBodyString() {
-				return null;
-			}
 		}
 		.runTests();
 	}
@@ -346,10 +338,6 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 				return request;
 			}
 
-			@Override
-			protected String sampleRequestBodyString() {
-				return null;
-			}
 		}
 		.runTests();
 	}
@@ -395,10 +383,6 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 				return ListTransfersFilter.builder().build();
 			}
 
-			@Override
-			protected String sampleRequestBodyString() {
-				return null;
-			}
 		}
 		.runTests();
 	}

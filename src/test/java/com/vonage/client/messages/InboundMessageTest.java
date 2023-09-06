@@ -82,7 +82,7 @@ public class InboundMessageTest {
 		MessageStatus.Usage usage = im.getUsage();
 		assertNotNull(usage);
 		assertEquals(currency, usage.getCurrency().getCurrencyCode());
-		assertEquals(price, ""+usage.getPrice());
+		assertEquals(price, String.valueOf(usage.getPrice()));
 		SmsInboundMetadata metadata = im.getSmsMetadata();
 		assertNotNull(metadata);
 		assertEquals(2, metadata.getNumMessages().intValue());

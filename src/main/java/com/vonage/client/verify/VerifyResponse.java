@@ -15,20 +15,20 @@
  */
 package com.vonage.client.verify;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vonage.client.Jsonable;
 import com.vonage.client.VonageResponseParseException;
-import java.io.IOException;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class VerifyResponse {
-    private final VerifyStatus status;
+public class VerifyResponse implements Jsonable {
+    private VerifyStatus status;
     private String requestId, errorText, network;
 
-    @JsonCreator
-    public VerifyResponse(@JsonProperty(value = "status", required = true) VerifyStatus status) {
+    private VerifyResponse() {
+    }
+
+    public VerifyResponse(VerifyStatus status) {
         this.status = status;
     }
 
@@ -44,6 +44,7 @@ public class VerifyResponse {
     /**
      * @return The outcome of the request; {@code 0} (i.e. {@link VerifyStatus#OK}) indicates success.
      */
+    @JsonProperty("status")
     public VerifyStatus getStatus() {
         return status;
     }
@@ -67,12 +68,11 @@ public class VerifyResponse {
     }
 
     public static VerifyResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, VerifyResponse.class);
+        VerifyResponse response = new VerifyResponse();
+        response.updateFromJson(json);
+        if (response.status == null) {
+            throw new VonageResponseParseException("Response status is missing.");
         }
-        catch (IOException jme) {
-            throw new VonageResponseParseException("Failed to produce VerifyResponse from json.", jme);
-        }
+        return response;
     }
 }

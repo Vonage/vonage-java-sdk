@@ -51,8 +51,8 @@ public class SubaccountsClient {
 									csr.primaryAccountApiKey = de.getApplicationIdOrApiKey();
 								}
 								return String.format(
-										wrapper.getHttpConfig().getApiBaseUri() + "/accounts/%s/",
-										de.getApplicationIdOrApiKey()
+										de.getHttpWrapper().getHttpConfig().getApiBaseUri()
+										+ "/accounts/%s/", de.getApplicationIdOrApiKey()
 								) + pathGetter.apply(req);
 						})
 				);

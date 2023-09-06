@@ -30,7 +30,7 @@ need a Vonage account. You'll need to have [created a Vonage account](https://da
 - [Proactive Connect](https://developer.vonage.com/en/proactive-connect/overview)
 - [Redact](https://developer.vonage.com/en/redact/overview)
 - [SMS](https://developer.vonage.com/en/sms/overview)
-- [Subaccounts](https://developer.vonage.com/en/subaccounts/overview)
+- [Subaccounts](https://developer.vonage.com/en/account/subaccounts/overview)
 - [Verify](https://developer.vonage.com/en/verify/overview)
 - [Voice](https://developer.vonage.com/en/voice/overview)
 

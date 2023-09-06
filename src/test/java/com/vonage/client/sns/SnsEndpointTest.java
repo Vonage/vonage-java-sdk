@@ -25,12 +25,14 @@ import com.vonage.client.sns.request.SnsRequest;
 import com.vonage.client.sns.response.SnsPublishResponse;
 import com.vonage.client.sns.response.SnsResponse;
 import com.vonage.client.sns.response.SnsSubscribeResponse;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
 import org.junit.Before;
 import org.junit.Test;
+
 import java.util.Arrays;
 import java.util.Collection;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 
 public class SnsEndpointTest extends DynamicEndpointTestSpec<SnsRequest, SnsResponse> {
     private SnsEndpoint endpoint;
@@ -174,8 +176,4 @@ public class SnsEndpointTest extends DynamicEndpointTestSpec<SnsRequest, SnsResp
         return new SnsPublishRequest("to", "arn", "from", "message");
     }
 
-    @Override
-    protected String sampleRequestBodyString() {
-        return null;
-    }
 }

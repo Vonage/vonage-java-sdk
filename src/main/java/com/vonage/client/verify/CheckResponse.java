@@ -15,22 +15,23 @@
  */
 package com.vonage.client.verify;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vonage.client.Jsonable;
 import com.vonage.client.VonageResponseParseException;
-import java.io.IOException;
+
 import java.math.BigDecimal;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CheckResponse {
+public class CheckResponse implements Jsonable {
+    private VerifyStatus status;
     private String requestId, eventId, currency, errorText;
-    private final VerifyStatus status;
     private BigDecimal price, estimatedPriceMessagesSent;
 
-    @JsonCreator
-    public CheckResponse(@JsonProperty(value = "status", required = true) VerifyStatus status) {
+    private CheckResponse() {
+    }
+
+    public CheckResponse(VerifyStatus status) {
         this.status = status;
     }
 
@@ -55,6 +56,7 @@ public class CheckResponse {
      * @return A value of {@link VerifyStatus#OK} indicates that your user entered the correct code.
      * Otherwise, check {@link #getErrorText()}.
      */
+    @JsonProperty("status")
     public VerifyStatus getStatus() {
         return status;
     }
@@ -62,6 +64,7 @@ public class CheckResponse {
     /**
      * @return The cost incurred for this request.
      */
+    @JsonProperty("price")
     public BigDecimal getPrice() {
         return price;
     }
@@ -69,6 +72,7 @@ public class CheckResponse {
     /**
      * @return The currency code.
      */
+    @JsonProperty("currency")
     public String getCurrency() {
         return currency;
     }
@@ -95,12 +99,19 @@ public class CheckResponse {
         return estimatedPriceMessagesSent;
     }
 
+    /**
+     * Constructs a CheckResponse with the fields populated from the JSON payload.
+     *
+     * @param json The JSON string.
+     *
+     * @return A new instance of this class.
+     */
     public static CheckResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, CheckResponse.class);
-        } catch (IOException jme) {
-            throw new VonageResponseParseException("Failed to produce CheckResponse from json.", jme);
+        CheckResponse response = new CheckResponse();
+        response.updateFromJson(json);
+        if (response.status == null) {
+            throw new VonageResponseParseException("Response status is missing.");
         }
+        return response;
     }
 }
