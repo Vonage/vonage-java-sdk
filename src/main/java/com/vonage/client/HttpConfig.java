@@ -22,13 +22,27 @@ public class HttpConfig {
             DEFAULT_SNS_BASE_URI = "https://sns.nexmo.com",
             DEFAULT_API_EU_BASE_URI = "https://api-eu.vonage.com";
 
+    private final int timeoutMillis;
     private final String apiBaseUri, restBaseUri, snsBaseUri, apiEuBaseUri;
 
     private HttpConfig(Builder builder) {
+        if ((timeoutMillis = builder.timeoutMillis) < 10) {
+            throw new IllegalArgumentException("Timeout must be greater than 10ms.");
+        }
         apiBaseUri = builder.apiBaseUri;
         restBaseUri = builder.restBaseUri;
         snsBaseUri = builder.snsBaseUri;
         apiEuBaseUri = builder.apiEuBaseUri;
+    }
+
+    /**
+     * Gets the timeout setting for the underlying HTTP client configuration.
+     *
+     * @return The request timeout in milliseconds.
+     * @since 7.8.0
+     */
+    public int getTimeoutMillis() {
+        return timeoutMillis;
     }
 
     public String getApiBaseUri() {
@@ -95,11 +109,30 @@ public class HttpConfig {
     }
 
     public static class Builder {
+        private int timeoutMillis = 60_000;
         private String
                 apiBaseUri = DEFAULT_API_BASE_URI,
                 restBaseUri = DEFAULT_REST_BASE_URI,
                 snsBaseUri = DEFAULT_SNS_BASE_URI,
                 apiEuBaseUri = DEFAULT_API_EU_BASE_URI;
+
+        /**
+         * Sets the socket timeout for requests. By default, this is one minute (60000 ms).
+         * <br>
+         * Note that this timeout applies to both the connection and socket; therefore, it defines
+         * the maximum time for each stage of the request. For example, if set to 30 seconds, then
+         * establishing a connection may take 29 seconds and receiving a response may take 29 seconds
+         * without timing out (therefore a total of 58 seconds for the request).
+         *
+         * @param timeoutMillis The timeout in milliseconds.
+         *
+         * @return The Builder to keep building.
+         * @since 7.8.0
+         */
+        public Builder timeoutMillis(int timeoutMillis) {
+            this.timeoutMillis = timeoutMillis;
+            return this;
+        }
 
         /**
          * @param apiBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_API_BASE_URI}
@@ -166,7 +199,6 @@ public class HttpConfig {
             if (uri != null && uri.endsWith("/")) {
                 return uri.substring(0, uri.length() - 1);
             }
-
             return uri;
         }
     }

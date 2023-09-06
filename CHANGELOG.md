@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+# [7.8.0] - 2023-09-07
+- Added capability to configure request timeouts (default is 60 seconds)
+- Deprecated custom HTTP client implementation setting
+- Internal refactoring of Numbers, Conversion and Number Insight implementations
+
 # [7.7.0] - 2023-08-10
 - Added Users API implementation
 - Major refactoring of how endpoints are implemented internally

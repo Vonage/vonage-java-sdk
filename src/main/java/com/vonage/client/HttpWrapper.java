@@ -93,7 +93,11 @@ public class HttpWrapper {
         // Need to work out a good value for the following:
         // threadSafeClientConnManager.setValidateAfterInactivity();
 
-        RequestConfig requestConfig = RequestConfig.custom().build();
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectTimeout(httpConfig.getTimeoutMillis())
+                .setConnectionRequestTimeout(httpConfig.getTimeoutMillis())
+                .setSocketTimeout(httpConfig.getTimeoutMillis())
+                .build();
 
         return HttpClientBuilder.create()
                 .setConnectionManager(connectionManager)

@@ -20,7 +20,6 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import static org.junit.Assert.*;
 import org.junit.Test;
-import org.mockito.Mockito;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import javax.servlet.ReadListener;
@@ -235,9 +234,9 @@ public class RequestSigningTest {
 
 
     private HttpServletRequest constructDummyRequestJson() throws Exception  {
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpServletRequest request = mock(HttpServletRequest.class);
         String dummyJson = "{\"a\":\"alphabet\",\"b\":\"bananas\",\"timestamp\":\"2100\",\"sig\":\"b7f749de27b4adcf736cc95c9a7e059a16c85127\"}";
-        Mockito.when(request.getContentType()).thenReturn("application/json");
+        when(request.getContentType()).thenReturn("application/json");
         final byte[] contentBytes = dummyJson.getBytes(StandardCharsets.UTF_8);
         ServletInputStream servletInputStream = new ServletInputStream() {
             private int index = 0;
