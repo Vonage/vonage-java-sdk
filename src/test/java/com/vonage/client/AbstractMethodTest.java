@@ -226,10 +226,14 @@ public class AbstractMethodTest {
         }
     }
 
-    ConcreteMethod mockServerAndMethod(int clientTimeout, int serverTimeout) throws Exception {
+    private ConcreteMethod mockServerAndMethod(int clientTimeout, int serverTimeout) throws Exception {
+        if (httpServer != null) {
+            httpServer.stop(0);
+            httpServer = null;
+        }
         mockWrapper = new HttpWrapper();
         mockWrapper.setHttpConfig(HttpConfig.builder().timeoutMillis(clientTimeout).build());
-        final int port = 8888;
+        final int port = 8049;
         String endpointPath = "/test";
         httpServer = HttpServer.create(new InetSocketAddress(port), 0);
         httpServer.createContext(endpointPath, exchange -> {
@@ -279,16 +283,11 @@ public class AbstractMethodTest {
 
     @Test
     public void testSocketTimeout() throws Exception {
-        ConcreteMethod method = mockServerAndMethod(3000, 0);
+        ConcreteMethod method = mockServerAndMethod(9000, 0);
         String requestBody = "Hello, World!";
-        try {
-            assertEquals(requestBody, method.execute(requestBody));
-        }
-        finally {
-            httpServer.stop(0);
-        }
+        assertEquals(requestBody, method.execute(requestBody));
 
-        method = mockServerAndMethod(97, 110);
+        method = mockServerAndMethod(970, 1200);
         try {
             method.execute(requestBody);
             fail("Expected VonageClientException");
@@ -296,18 +295,9 @@ public class AbstractMethodTest {
         catch (VonageClientException ex) {
             assertEquals(SocketTimeoutException.class, ex.getCause().getClass());
         }
-        finally {
-            httpServer.stop(0);
-        }
-
-        method = mockServerAndMethod(500, 82);
-        try {
-            requestBody = "Hello again...";
-            assertEquals(requestBody, method.execute(requestBody));
-        }
-        finally {
-            httpServer.stop(0);
-        }
+        method = mockServerAndMethod(3000, 144);
+        requestBody = "Hello again...";
+        assertEquals(requestBody, method.execute(requestBody));
 
         assertThrows(IllegalArgumentException.class, () -> mockServerAndMethod(0, 1));
     }
