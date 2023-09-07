@@ -2,6 +2,20 @@ name: Publish to Nexus
 on:
   release:
     types: [published]
+
+permissions:
+  actions: write
+  checks: write
+  contents: write
+  deployments: read
+  issues: write
+  discussions: write
+  packages: write
+  pages: write
+  pull-requests: write
+  security-events: write
+  statuses: write
+
 jobs:
   build:
     runs-on: ubuntu-latest

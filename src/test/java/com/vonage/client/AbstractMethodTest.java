@@ -15,6 +15,7 @@
  */
 package com.vonage.client;
 
+import com.sun.net.httpserver.HttpServer;
 import com.vonage.client.auth.AuthCollection;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.JWTAuthMethod;
@@ -31,17 +32,19 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import static org.mockito.Mockito.*;
+import java.io.*;
+import java.net.InetSocketAddress;
+import java.net.SocketTimeoutException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Scanner;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
 
 public class AbstractMethodTest {
 
@@ -60,7 +63,7 @@ public class AbstractMethodTest {
         }
 
         @Override
-        public RequestBuilder makeRequest(String request) {
+        public RequestBuilder makeRequest(String request) throws UnsupportedEncodingException {
             return RequestBuilder.get(request);
         }
 
@@ -87,6 +90,7 @@ public class AbstractMethodTest {
         }
     }
 
+    private HttpServer httpServer;
     private HttpWrapper mockWrapper;
     private HttpClient mockHttpClient;
     private AuthCollection mockAuthMethods;
@@ -112,6 +116,20 @@ public class AbstractMethodTest {
         when(mockWrapper.getHttpClient()).thenReturn(mockHttpClient);
         when(mockHttpClient.execute(any(HttpUriRequest.class))).thenReturn(basicResponse);
         when(mockWrapper.getAuthCollection()).thenReturn(mockAuthMethods);
+    }
+
+    ConcreteMethod mockJsonResponse(String json, boolean failing) throws Exception {
+        ConcreteMethod method = spy(failing ?
+                new ConcreteMethodFailingParse(mockWrapper) : new ConcreteMethod(mockWrapper)
+        );
+        RequestBuilder builder = RequestBuilder.put("")
+                .setHeader("Content-Type", "application/json")
+                .setHeader("Accept", "application/json")
+                .setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
+
+        when(method.makeRequest(any(String.class))).thenReturn(builder);
+        when(mockAuthMethod.apply(any(RequestBuilder.class))).thenReturn(builder);
+        return method;
     }
 
     @Test
@@ -155,15 +173,7 @@ public class AbstractMethodTest {
     @Test
     public void testUsingUtf8Encoding() throws Exception {
         String json = "{\"text\":\"Questo è un test di chiamata\",\"loop\":0,\"voice_name\":\"Kimberly\"}";
-        RequestBuilder builder = RequestBuilder
-                .put("")
-                .setHeader("Content-Type", "application/json")
-                .setHeader("Accept", "application/json")
-                .setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
-
-        ConcreteMethod method = spy(new ConcreteMethod(mockWrapper));
-        when(method.makeRequest(any(String.class))).thenReturn(builder);
-        when(mockAuthMethod.apply(any(RequestBuilder.class))).thenReturn(builder);
+        ConcreteMethod method = mockJsonResponse(json, false);
 
         method.execute("");
 
@@ -177,14 +187,7 @@ public class AbstractMethodTest {
     @Test
     public void testUsingUtf8EncodingChinese() throws Exception {
         String json = "{\"text\":\"您的纳控猫设备异常，请登录查看。\",\"loop\":0,\"voice_name\":\"Kimberly\"}";
-        RequestBuilder builder = RequestBuilder
-                .put("")
-                .setCharset(StandardCharsets.UTF_8)
-                .setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
-
-        ConcreteMethod method = spy(new ConcreteMethod(mockWrapper));
-        when(method.makeRequest(any(String.class))).thenReturn(builder);
-        when(mockAuthMethod.apply(any(RequestBuilder.class))).thenReturn(builder);
+        ConcreteMethod method = mockJsonResponse(json, false);
 
         method.execute("");
 
@@ -197,16 +200,9 @@ public class AbstractMethodTest {
 
     @Test
     public void rse() throws Exception {
-        ConcreteMethodFailingParse method = spy(new ConcreteMethodFailingParse(mockWrapper));
         String json = "{\"text\":\"Hello World\",\"loop\":0,\"voice_name\":\"Kimberly\"}";
-        RequestBuilder builder = RequestBuilder
-                .put("")
-                .setCharset(StandardCharsets.UTF_8)
-                .setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
-        when(method.makeRequest(any(String.class))).thenReturn(builder);
-        when(mockAuthMethod.apply(any(RequestBuilder.class))).thenReturn(builder);
-        try{
-
+        ConcreteMethod method = mockJsonResponse(json, true);
+        try {
             method.execute("");
             Assert.isTrue(false,"Should have gotten a Parsing exception");
         }
@@ -217,14 +213,8 @@ public class AbstractMethodTest {
 
     @Test
     public void testFailedHttpExecute() throws Exception {
-        ConcreteMethodFailingParse method = spy(new ConcreteMethodFailingParse(mockWrapper));
         String json = "{\"text\":\"Hello World\",\"loop\":0,\"voice_name\":\"Kimberly\"}";
-        RequestBuilder builder = RequestBuilder
-                .put("")
-                .setCharset(StandardCharsets.UTF_8)
-                .setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
-        when(method.makeRequest(any(String.class))).thenReturn(builder);
-        when(mockAuthMethod.apply(any(RequestBuilder.class))).thenReturn(builder);
+        ConcreteMethod method = mockJsonResponse(json, true);
         IOException ex = new IOException("This is a test exception thrown from the HttpClient Execute method");
         when(mockHttpClient.execute(any(HttpUriRequest.class))).thenThrow(ex);
         try {
@@ -234,5 +224,81 @@ public class AbstractMethodTest {
         catch (VonageMethodFailedException e) {
             Assert.isTrue(e.getCause() instanceof IOException, "The cause of the exception was not correct");
         }
+    }
+
+    private ConcreteMethod mockServerAndMethod(int clientTimeout, int serverTimeout) throws Exception {
+        if (httpServer != null) {
+            httpServer.stop(0);
+            httpServer = null;
+        }
+        mockWrapper = new HttpWrapper();
+        mockWrapper.setHttpConfig(HttpConfig.builder().timeoutMillis(clientTimeout).build());
+        final int port = 8049;
+        String endpointPath = "/test";
+        httpServer = HttpServer.create(new InetSocketAddress(port), 0);
+        httpServer.createContext(endpointPath, exchange -> {
+            if (serverTimeout > 0) {
+                try {
+                    Thread.sleep(serverTimeout);
+                }
+                catch (InterruptedException ex) {
+                    fail(ex.getMessage());
+                }
+            }
+
+            String response = new Scanner(exchange.getRequestBody()).useDelimiter("\\A").next();
+            exchange.sendResponseHeaders(200, response.length());
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(response.getBytes());
+            }
+        });
+        httpServer.setExecutor(Executors.newSingleThreadExecutor());
+        httpServer.start();
+
+        RequestBuilder builder = RequestBuilder.get("http://localhost:" + port + endpointPath);
+        class LocalMethod extends ConcreteMethod {
+            LocalMethod() {
+                super(mockWrapper);
+            }
+
+            @Override
+            protected AuthMethod getAuthMethod() throws VonageUnexpectedException {
+                return mockAuthMethod;
+            }
+
+            @Override
+            protected AuthMethod getAuthMethod(Class<?>[] acceptableAuthMethods) throws VonageClientException {
+                return getAuthMethod();
+            }
+
+            @Override
+            public RequestBuilder makeRequest(String request) throws UnsupportedEncodingException {
+                return builder.setEntity(new StringEntity(request));
+            }
+        }
+        LocalMethod method = new LocalMethod();
+        when(mockAuthMethod.apply(any(RequestBuilder.class))).thenReturn(builder);
+        return method;
+    }
+
+    @Test
+    public void testSocketTimeout() throws Exception {
+        ConcreteMethod method = mockServerAndMethod(9000, 0);
+        String requestBody = "Hello, World!";
+        assertEquals(requestBody, method.execute(requestBody));
+
+        method = mockServerAndMethod(970, 1200);
+        try {
+            method.execute(requestBody);
+            fail("Expected VonageClientException");
+        }
+        catch (VonageClientException ex) {
+            assertEquals(SocketTimeoutException.class, ex.getCause().getClass());
+        }
+        method = mockServerAndMethod(3000, 144);
+        requestBody = "Hello again...";
+        assertEquals(requestBody, method.execute(requestBody));
+
+        assertThrows(IllegalArgumentException.class, () -> mockServerAndMethod(0, 1));
     }
 }

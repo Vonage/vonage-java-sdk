@@ -49,9 +49,9 @@ See all of our SDKs and integrations on the [Vonage Developer portal](https://de
 
 ## Installation
 
-Releases are published to [Maven Central](https://central.sonatype.com/artifact/com.vonage/client/7.7.0/snippets).
+Releases are published to [Maven Central](https://central.sonatype.com/artifact/com.vonage/client/7.8.0/snippets).
 Instructions for your build system can be found in the snippets section.
-They're also available from [here](https://mvnrepository.com/artifact/com.vonage/client/7.7.0).
+They're also available from [here](https://mvnrepository.com/artifact/com.vonage/client/7.8.0).
 Release notes can be found in the [changelog](CHANGELOG.md).
 
 ### Build It Yourself
@@ -85,6 +85,20 @@ to your project's classpath.
 
 ## Configuration
 
+## Typical Instantiation
+For default configuration, you just need to specify your Vonage account credentials using API key and secret, private
+key and application ID or both. For maximum compatibility with all APIs, it is recommended that you specify both
+authentication methods, like so:
+
+```java
+VonageClient client = VonageClient.builder()
+        .applicationId(APPLICATION_ID)
+        .privateKeyPath(PRIVATE_KEY_PATH)
+        .apiKey(API_KEY)
+        .apiSecret(API_SECRET)
+        .build();
+```
+
 ### Customize the Base URI
 By default, the client will use https://api.nexmo.com, https://rest.nexmo.com, https://sns.nexmo.com and https://api-eu.vonage.com as base URIs for the various endpoints. To customize these you can instantiate `VonageClient` with an `HttpConfig` object.
 
@@ -92,15 +106,14 @@ By default, the client will use https://api.nexmo.com, https://rest.nexmo.com, h
 
 ```java
 HttpConfig httpConfig = HttpConfig.builder()
-		.apiBaseUri("https://api.example.com")
-		.restBaseUri("https://rest.example.com")
-		.snsBaseUri("https://sns.example.com")
-		.apiEuBaseUri("https://api-eu.example.com")
-		.build();
+        .apiBaseUri("https://api.example.com")
+        .restBaseUri("https://rest.example.com")
+        .snsBaseUri("https://sns.example.com")
+        .apiEuBaseUri("https://api-eu.example.com")
+        .build();
 
 VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
+        .apiKey(API_KEY).apiSecret(API_SECRET)
         .httpConfig(httpConfig)
         .build();
 ```
@@ -111,38 +124,23 @@ If you do not specify a property, it will take on whatever the default value is.
 HttpConfig httpConfig = HttpConfig.builder().baseUri("http://example.com").build();
 
 VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
+        .apiKey(API_KEY).apiSecret(API_SECRET)
         .httpConfig(httpConfig)
         .build();
 ```
 
-To keep the default values, you can use `HttpConfig.defaultConfig()`:
+### Custom Timeout
 
-```java
-HttpConfig httpConfig = HttpConfig.defaultConfig();
-
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .httpConfig(httpConfig)
-        .build();
-```
-
-You can also instantiate without the parameter:
+By default, the SDK has a 1-minute timeout for requests.
+You can change this to be longer or shorter using `HttpConfig`. The following example sets this to 12 seconds:
 
 ```java
 VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
+        .applicationId(APPLICATION_ID)
+        .privateKeyPath(PRIVATE_KEY_PATH)
+        .httpConfig(HttpConfig.builder().timeoutMillis(12_000).build())
         .build();
 ```
-
-### Custom HTTP Configuration
-
-If you need to configure the Apache HttpClient used for making requests, you can
-call `VonageClient.Builder.httpClient()` to supply your custom configured object. This
-can be useful, for example, if you must use an HTTP proxy to make requests or to configure SSL Certificates.
 
 ## Frequently Asked Questions
 

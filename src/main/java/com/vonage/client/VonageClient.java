@@ -210,6 +210,11 @@ public class VonageClient {
         return httpWrapper;
     }
 
+    /**
+     * Entry point for constructing an instance of this class.
+     *
+     * @return A new Builder with default initial configuration.
+     */
     public static Builder builder() {
         return new Builder();
     }
@@ -218,15 +223,12 @@ public class VonageClient {
         private AuthCollection authCollection;
         private HttpConfig httpConfig = HttpConfig.defaultConfig();
         private HttpClient httpClient;
-        private String applicationId;
-        private String apiKey;
-        private String apiSecret;
-        private String signatureSecret;
+        private String applicationId, apiKey, apiSecret, signatureSecret;
         private byte[] privateKeyContents;
         private HashUtil.HashType hashType = HashUtil.HashType.MD5;
 
         /**
-         * @param httpConfig Configuration options for the {@link HttpWrapper}
+         * @param httpConfig Configuration options for the {@link HttpWrapper}.
          *
          * @return This builder.
          */
@@ -239,7 +241,10 @@ public class VonageClient {
          * @param httpClient Custom implementation of {@link HttpClient}.
          *
          * @return This builder.
+         *
+         * @deprecated This method will be removed in the next major release.
          */
+        @Deprecated
         public Builder httpClient(HttpClient httpClient) {
             this.httpClient = httpClient;
             return this;
