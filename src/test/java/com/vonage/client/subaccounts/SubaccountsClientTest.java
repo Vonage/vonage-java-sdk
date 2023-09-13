@@ -257,10 +257,6 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 				return null;
 			}
 
-			@Override
-			protected String sampleRequestBodyString() {
-				return null;
-			}
 		}
 		.runTests();
 	}
@@ -294,10 +290,6 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 				return SUB_API_KEY;
 			}
 
-			@Override
-			protected String sampleRequestBodyString() {
-				return null;
-			}
 		}
 		.runTests();
 	}
@@ -346,10 +338,6 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 				return request;
 			}
 
-			@Override
-			protected String sampleRequestBodyString() {
-				return null;
-			}
 		}
 		.runTests();
 	}
@@ -395,10 +383,6 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 				return ListTransfersFilter.builder().build();
 			}
 
-			@Override
-			protected String sampleRequestBodyString() {
-				return null;
-			}
 		}
 		.runTests();
 	}
@@ -462,12 +446,17 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 	@Test
 	public void testTransferBalance() throws Exception {
 		MoneyTransfer request = MoneyTransfer.builder().amount(0.04).from(FROM_API_KEY).to(TO_API_KEY).build();
+		String requestJson = request.toJson();
 		assertEqualsExpectedMoneyTransfer(stubResponseAndGet(
 				MONEY_TRANSFER_RESPONSE_JSON, () -> client.transferBalance(request)
 		));
 		stubResponseAndAssertThrows(200, () -> client.transferBalance(null), NullPointerException.class);
 		stubResponseAndAssertThrows(401, () -> client.transferBalance(request), SubaccountsResponseException.class);
 		assert403ResponseException(() -> client.transferBalance(request));
+		assertEquals(requestJson, MoneyTransfer.fromJson(requestJson).toJson());
+		assertThrows(NullPointerException.class, () -> MoneyTransfer.builder()
+				.from(FROM_API_KEY).to(TO_API_KEY).build()
+		);
 
 		new MoneyTransferEndpointTestSpec() {
 
@@ -488,7 +477,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 	public void testTransferNumber() throws Exception {
 		NumberTransfer request = NumberTransfer.builder()
 				.from(FROM_API_KEY).to(TO_API_KEY).number("447900000001").country("GB").build();
-		String responseJson = "{\n" +
+		String requestJson = request.toJson(), responseJson = "{\n" +
 				"   \"number\": \"235077036\",\n" +
 				"   \"country\": \"DE\",\n" +
 				"   \"from\": \"7c9738e6\",\n" +
@@ -502,6 +491,11 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 		stubResponseAndAssertThrows(200, () -> client.transferNumber(null), NullPointerException.class);
 		stubResponseAndAssertThrows(401, () -> client.transferNumber(request), SubaccountsResponseException.class);
 		assert403ResponseException(() -> client.transferNumber(request));
+		assertEquals(requestJson, NumberTransfer.fromJson(requestJson).toJson());
+		assertThrows(IllegalArgumentException.class, () -> NumberTransfer.builder()
+				.from(request.getFrom()).to(request.getTo()).number(request.getNumber())
+				.country("United Kingdom").build()
+		);
 
 		new SubaccountsEndpointTestSpec<NumberTransfer, NumberTransfer>() {
 

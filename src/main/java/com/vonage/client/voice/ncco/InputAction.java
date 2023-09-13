@@ -89,7 +89,7 @@ public class InputAction implements Action {
 
         /**
          * @param dtmf DTMF settings object to enable DTMF input.
-         * @return The {@link Builder} to keep building the input action.
+         * @return This builder to keep building the input action.
          * @since 6.0.0
          */
         public Builder dtmf(DtmfSettings dtmf) {
@@ -101,7 +101,7 @@ public class InputAction implements Action {
          * @param eventUrl Vonage sends the digits pressed by the callee to this URL after timeOut pause in activity or
          *                 when # is pressed.
          *
-         * @return The {@link Builder} to keep building the input action.
+         * @return This builder to keep building the input action.
          */
         public Builder eventUrl(Collection<String> eventUrl) {
             this.eventUrl = eventUrl;
@@ -112,7 +112,7 @@ public class InputAction implements Action {
          * @param eventUrl Vonage sends the digits pressed by the callee to this URL after timeOut pause in activity or
          *                 when # is pressed.
          *
-         * @return The {@link Builder} to keep building the input action.
+         * @return This builder to keep building the input action.
          */
         public Builder eventUrl(String... eventUrl) {
             return eventUrl(Arrays.asList(eventUrl));
@@ -121,7 +121,7 @@ public class InputAction implements Action {
         /**
          * @param eventMethod The HTTP method used to send event information to event_url The default value is POST.
          *
-         * @return The {@link Builder} to keep building the input action.
+         * @return This builder to keep building the input action.
          */
         public Builder eventMethod(EventMethod eventMethod) {
             this.eventMethod = eventMethod;
@@ -130,7 +130,7 @@ public class InputAction implements Action {
 
         /**
          * @param speech Automatic speech recognition settings object to enable speech input. Required if dtmf is not provided.
-         * @return The {@link Builder} to keep building the input action.
+         * @return This builder to keep building the input action.
          * @since 6.0.0
          */
         public Builder speech(SpeechSettings speech){
@@ -141,7 +141,7 @@ public class InputAction implements Action {
         /**
          * @param type Acceptable input type, can be set as [ "dtmf" ] for DTMF input only, [ "speech" ] for ASR only,
          *            or [ "dtmf", "speech" ] for both.
-         * @return The {@link Builder} to keep building the input action.
+         * @return This builder to keep building the input action.
          */
         public Builder type(Collection<String> type){
             this.type = type;

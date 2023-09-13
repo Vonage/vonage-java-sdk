@@ -16,10 +16,7 @@
 package com.vonage.client.users;
 
 import com.vonage.client.ClientTest;
-import com.vonage.client.DynamicEndpointTestSpec;
 import com.vonage.client.RestEndpoint;
-import com.vonage.client.auth.AuthMethod;
-import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.common.HalLinks;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.users.channels.*;
@@ -537,44 +534,6 @@ public class UsersClientTest extends ClientTest<UsersClient> {
             assertNull(channels.getViber());
             assertNull(channels.getMms());
             assertNull(channels.getWhatsapp());
-    }
-
-    static abstract class UserEndpointTestSpec<T, R> extends DynamicEndpointTestSpec<T, R> {
-
-        @Override
-        protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
-            return Collections.singletonList(JWTAuthMethod.class);
-        }
-
-        @Override
-        protected Class<? extends Exception> expectedResponseExceptionType() {
-            return UsersResponseException.class;
-        }
-
-        @Override
-        protected String expectedDefaultBaseUri() {
-            return "https://api.nexmo.com";
-        }
-
-        @Override
-        protected String expectedEndpointUri(T request) {
-            String base = "/v1/users", suffix;
-            if (request instanceof String) {
-                suffix = (String) request;
-            }
-            else if (request instanceof User && HttpMethod.PATCH.equals(expectedHttpMethod())) {
-                suffix = ((User) request).getId();
-            }
-            else {
-                suffix = null;
-            }
-            return suffix != null ? base + "/" + suffix : base;
-        }
-
-        @Override
-        protected String sampleRequestBodyString() {
-            return null;
-        }
     }
 
     @Test

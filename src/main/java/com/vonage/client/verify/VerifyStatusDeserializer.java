@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
-public class VerifyStatusDeserializer extends JsonDeserializer<VerifyStatus> {
+class VerifyStatusDeserializer extends JsonDeserializer<VerifyStatus> {
 
     @Override
     public VerifyStatus deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {

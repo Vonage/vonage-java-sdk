@@ -68,7 +68,7 @@ public enum InsightStatus {
     }
 
     /**
-     * Look up the {@link InsightStatus} based on the int value.
+     * Look up the InsightStatus based on the int value.
      *
      * @param insightStatus the integer value of the insight status.
      * @return InsightStatus based on the int value given.

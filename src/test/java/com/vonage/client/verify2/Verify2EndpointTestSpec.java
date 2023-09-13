@@ -13,30 +13,30 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.numbers;
+package com.vonage.client.verify2;
 
 import com.vonage.client.DynamicEndpointTestSpec;
 import com.vonage.client.VonageApiResponseException;
 import com.vonage.client.auth.AuthMethod;
+import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
 import java.util.Arrays;
 import java.util.Collection;
 
-abstract class NumbersEndpointTestSpec<T, R> extends DynamicEndpointTestSpec<T, R> {
+abstract class Verify2EndpointTestSpec<T, R> extends DynamicEndpointTestSpec<T, R> {
 
 	@Override
 	protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
-		return Arrays.asList(TokenAuthMethod.class);
+		return Arrays.asList(JWTAuthMethod.class, TokenAuthMethod.class);
 	}
 
 	@Override
 	protected Class<? extends VonageApiResponseException> expectedResponseExceptionType() {
-		return NumbersResponseException.class;
+		return VerifyResponseException.class;
 	}
 
 	@Override
 	protected String expectedDefaultBaseUri() {
-		return "https://rest.nexmo.com";
+		return "https://api.nexmo.com";
 	}
-
 }

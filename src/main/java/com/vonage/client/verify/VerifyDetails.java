@@ -51,6 +51,7 @@ public class VerifyDetails {
     /**
      * @return The phone number this verification request was used for.
      */
+    @JsonProperty("number")
     public String getNumber() {
         return number;
     }
@@ -98,6 +99,7 @@ public class VerifyDetails {
     /**
      * @return The status.
      */
+    @JsonProperty("status")
     public Status getStatus() {
         return status;
     }
@@ -105,6 +107,7 @@ public class VerifyDetails {
     /**
      * @return The cost incurred for this verification request.
      */
+    @JsonProperty("price")
     public BigDecimal getPrice() {
         return price;
     }
@@ -112,6 +115,7 @@ public class VerifyDetails {
     /**
      * @return The currency code.
      */
+    @JsonProperty("currency")
     public String getCurrency() {
         return currency;
     }
@@ -119,6 +123,7 @@ public class VerifyDetails {
     /**
      * @return The list of checks made for this verification and their outcomes.
      */
+    @JsonProperty("checks")
     public List<VerifyCheck> getChecks() {
         return checks;
     }
@@ -173,7 +178,7 @@ public class VerifyDetails {
             ));
 
         /**
-         * Look up the {@link Status} based on the string value.
+         * Look up the Status enum based on the string value.
          *
          * @param status the status value to lookup.
          * @return VerifyStatus based on the int value given.

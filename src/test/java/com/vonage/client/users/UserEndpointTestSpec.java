@@ -13,30 +13,45 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.numbers;
+package com.vonage.client.users;
 
 import com.vonage.client.DynamicEndpointTestSpec;
-import com.vonage.client.VonageApiResponseException;
 import com.vonage.client.auth.AuthMethod;
-import com.vonage.client.auth.TokenAuthMethod;
-import java.util.Arrays;
+import com.vonage.client.auth.JWTAuthMethod;
+import com.vonage.client.common.HttpMethod;
 import java.util.Collection;
+import java.util.Collections;
 
-abstract class NumbersEndpointTestSpec<T, R> extends DynamicEndpointTestSpec<T, R> {
+abstract class UserEndpointTestSpec<T, R> extends DynamicEndpointTestSpec<T, R> {
 
 	@Override
 	protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
-		return Arrays.asList(TokenAuthMethod.class);
+		return Collections.singletonList(JWTAuthMethod.class);
 	}
 
 	@Override
-	protected Class<? extends VonageApiResponseException> expectedResponseExceptionType() {
-		return NumbersResponseException.class;
+	protected Class<? extends Exception> expectedResponseExceptionType() {
+		return UsersResponseException.class;
 	}
 
 	@Override
 	protected String expectedDefaultBaseUri() {
-		return "https://rest.nexmo.com";
+		return "https://api.nexmo.com";
+	}
+
+	@Override
+	protected String expectedEndpointUri(T request) {
+		String base = "/v1/users", suffix;
+		if (request instanceof String) {
+			suffix = (String) request;
+		}
+		else if (request instanceof User && HttpMethod.PATCH.equals(expectedHttpMethod())) {
+			suffix = ((User) request).getId();
+		}
+		else {
+			suffix = null;
+		}
+		return suffix != null ? base + "/" + suffix : base;
 	}
 
 }

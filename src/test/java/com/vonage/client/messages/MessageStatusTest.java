@@ -42,7 +42,7 @@ public class MessageStatusTest {
 		double price = 0.0333;
 		MessageStatus.Error error = new MessageStatus.Error();
 		error.type = type;
-		error.title = title+"";
+		error.title = String.valueOf(title);
 		error.detail = detail;
 		error.instance = instance;
 		MessageStatus.Usage usage = new MessageStatus.Usage();

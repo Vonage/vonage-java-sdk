@@ -13,18 +13,23 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client;
+package com.vonage.client.verify;
 
-/**
- * Internal interface for defining endpoints.
- *
- * @param <T> The request type.
- * @param <R> The response type.
- *
- * @since 7.7.0
- */
-public interface RestEndpoint<T, R> extends Method<T, R> {
+import com.vonage.client.VonageUnexpectedException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
+import org.junit.Test;
 
-    @Override
-    R execute(T request) throws VonageClientException;
+public class CheckResponseTest {
+
+    @Test
+    public void testConstructor() {
+        CheckResponse response = new CheckResponse(VerifyStatus.ALREADY_REQUESTED);
+        assertEquals(10, response.getStatus().getVerifyStatus());
+    }
+
+    @Test
+    public void testBadJson() {
+        assertThrows(VonageUnexpectedException.class, () -> CheckResponse.fromJson("blarg"));
+    }
 }

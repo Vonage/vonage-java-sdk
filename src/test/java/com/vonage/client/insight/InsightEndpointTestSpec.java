@@ -42,12 +42,7 @@ abstract class InsightEndpointTestSpec<T, R> extends DynamicEndpointTestSpec<T, 
 		return "https://api.nexmo.com";
 	}
 
-	@Override
-	protected String sampleRequestBodyString() {
-		return null;
-	}
-
-	@Override
+    @Override
 	protected HttpMethod expectedHttpMethod() {
 		return HttpMethod.POST;
 	}

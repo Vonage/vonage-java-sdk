@@ -146,7 +146,7 @@ public class PaymentPrompt {
 	}
 
 	/**
-	 * Entry point for constructing a {@linkplain PaymentPrompt}.
+	 * Entry point for constructing a PaymentPrompt.
 	 *
 	 * @param type The prompt type.
 	 * @return A new {@linkplain Builder} instance.

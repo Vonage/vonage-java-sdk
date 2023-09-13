@@ -15,7 +15,11 @@
  */
 package com.vonage.client.verify;
 
-public class SearchRequest {
+import com.vonage.client.QueryParamsRequest;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+public class SearchRequest implements QueryParamsRequest {
     /**
      * Number of maximum request IDs that can be searched for.
      */
@@ -28,12 +32,24 @@ public class SearchRequest {
             throw new IllegalArgumentException("At least one request ID must be provided in a SearchRequest");
         }
         else if (requestIds.length > MAX_SEARCH_REQUESTS) {
-            throw new IllegalArgumentException("too many request IDs. Max is " + MAX_SEARCH_REQUESTS);
+            throw new IllegalArgumentException("Too many request IDs. Max is " + MAX_SEARCH_REQUESTS);
         }
         this.requestIds = requestIds;
     }
 
     public String[] getRequestIds() {
         return requestIds;
+    }
+
+    @Override
+    public Map<String, ?> makeParams() {
+        Map<String, Object> params = new LinkedHashMap<>(requestIds.length);
+        if (requestIds.length == 1) {
+            params.put("request_id", requestIds[0]);
+        }
+        else {
+            params.put("request_ids", requestIds);
+        }
+        return params;
     }
 }

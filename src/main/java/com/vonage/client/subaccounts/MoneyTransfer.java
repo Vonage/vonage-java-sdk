@@ -89,7 +89,7 @@ public class MoneyTransfer extends AbstractTransfer {
 	 * @param json The JSON string to parse.
 	 * @return An instance of this class with the fields populated, if present.
 	 */
-	protected static MoneyTransfer fromJson(String json) {
+	public static MoneyTransfer fromJson(String json) {
 		MoneyTransfer transfer = new MoneyTransfer();
 		transfer.updateFromJson(json);
 		return transfer;

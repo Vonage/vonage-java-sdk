@@ -129,11 +129,6 @@ public class ConversionClientTest extends ClientTest<ConversionClient> {
             }
 
             @Override
-            protected String sampleRequestBodyString() {
-                return null;
-            }
-
-            @Override
             protected Map<String, String> sampleQueryParams() {
                 LinkedHashMap<String, String> params = new LinkedHashMap<>(4);
                 params.put("message-id", "MESSAGE-ID");

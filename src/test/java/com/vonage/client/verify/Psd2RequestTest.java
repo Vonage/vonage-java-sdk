@@ -65,4 +65,21 @@ public class Psd2RequestTest {
 		builder.nextEventWait(900).build();
 		builder.nextEventWait(60).build();
 	}
+
+	@Test(expected = NullPointerException.class)
+	public void testConstructMissingRequiredParams() {
+		Psd2Request.builder().build();
+	}
+
+	@Test
+	public void testConstructRequiredParams() {
+		Psd2Request request = Psd2Request.builder().number("447700900001").amount(0.87).payee("Nexmo").build();
+		assertNotNull(request);
+		assertNull(request.getDashedLocale());
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testLongPayee() {
+		Psd2Request.builder("447700900001", 1.23, "1234567890abcedfghi").build();
+	}
 }

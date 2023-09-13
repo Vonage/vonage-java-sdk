@@ -23,6 +23,8 @@ import java.io.IOException;
 
 /**
  * Indicates that a class can be serialized to and parsed from JSON.
+ *
+ * @since 7.7.0
  */
 public interface Jsonable {
 

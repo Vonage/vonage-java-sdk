@@ -22,7 +22,14 @@ import org.junit.Test;
 public class ControlResponseTest {
 
     @Test
-    public void testParseError() throws Exception {
+    public void testConstructor() {
+        ControlResponse response = new ControlResponse("1", VerifyControlCommand.CANCEL);
+        assertEquals("1", response.getStatus());
+        assertEquals(VerifyControlCommand.CANCEL, response.getCommand());
+    }
+
+    @Test
+    public void testParseError() {
         ControlResponse response = ControlResponse.fromJson("{\n" +
                 "    \"error_text\": \"Missing username\",\n" +
                 "    \"status\": \"2\"\n" +

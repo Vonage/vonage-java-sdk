@@ -124,11 +124,6 @@ public class SmsClientTest extends ClientTest<SmsClient> {
             }
 
             @Override
-            protected String sampleRequestBodyString() {
-                return null;
-            }
-
-            @Override
             public void runTests() throws Exception {
                 super.runTests();
                 testConstructParamsText();

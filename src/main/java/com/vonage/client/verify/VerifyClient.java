@@ -16,6 +16,10 @@
 package com.vonage.client.verify;
 
 import com.vonage.client.*;
+import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.common.HttpMethod;
+import org.apache.http.HttpResponse;
+import java.io.IOException;
 import java.util.Locale;
 
 /**
@@ -29,23 +33,48 @@ import java.util.Locale;
  * <a href="https://developer.vonage.com/verify/overview">Vonage developer portal</a>.
  */
 public class VerifyClient {
-    final CheckEndpoint check;
-    final VerifyEndpoint verify;
-    final SearchEndpoint search;
-    final ControlEndpoint control;
-    final Psd2Endpoint psd2;
+    final RestEndpoint<CheckRequest, CheckResponse> check;
+    final RestEndpoint<VerifyRequest, VerifyResponse> verify;
+    final RestEndpoint<SearchRequest, SearchVerifyResponse> search;
+    final RestEndpoint<ControlRequest, ControlResponse> control;
+    final RestEndpoint<Psd2Request, VerifyResponse> psd2;
 
     /**
      * Constructor.
      *
-     * @param httpWrapper (required) shared HTTP wrapper object used for making REST calls.
+     * @param wrapper (required) shared HTTP wrapper object used for making REST calls.
      */
-    public VerifyClient(HttpWrapper httpWrapper) {
-        this.check = new CheckEndpoint(httpWrapper);
-        this.search = new SearchEndpoint(httpWrapper);
-        this.verify = new VerifyEndpoint(httpWrapper);
-        this.control = new ControlEndpoint(httpWrapper);
-        this.psd2 = new Psd2Endpoint(httpWrapper);
+    public VerifyClient(HttpWrapper wrapper) {
+        @SuppressWarnings("unchecked")
+        class Endpoint<T, R> extends DynamicEndpoint<T, R> {
+            Endpoint(String path, boolean formEncoded, R... type) {
+                super(DynamicEndpoint.<T, R> builder((Class<R>) type.getClass().getComponentType())
+                        .wrapper(wrapper).requestMethod(HttpMethod.POST)
+                        .authMethod(TokenAuthMethod.class)
+                        .contentTypeHeader(formEncoded ? "application/x-www-form-urlencoded" : null)
+                        .pathGetter((de, req) -> de.getHttpWrapper().getHttpConfig()
+                                .getApiBaseUri() + "/verify" + path + "/json"
+                        )
+                );
+            }
+        }
+
+        verify = new Endpoint<>("", true);
+        check = new Endpoint<>("/check", true);
+        search = new Endpoint<>("/search", false);
+        psd2 = new Endpoint<>("/psd2", true);
+        control = new Endpoint<ControlRequest, ControlResponse>("/control", true) {
+            @Override
+            public ControlResponse parseResponse(HttpResponse response) throws IOException {
+                ControlResponse parsed = super.parseResponse(response);
+                if (parsed.getStatus().equals("0")) {
+                    return parsed;
+                }
+                else {
+                    throw new VerifyException(parsed.getStatus(), parsed.getErrorText());
+                }
+            }
+        };
     }
 
     /**
@@ -187,7 +216,7 @@ public class VerifyClient {
      *
      */
     public VerifyResponse verify(VerifyRequest request) throws VonageClientException, VonageResponseParseException {
-        return this.verify.execute(request);
+        return verify.execute(request);
     }
 
     /**
@@ -200,7 +229,7 @@ public class VerifyClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public CheckResponse check(CheckRequest request) throws VonageClientException, VonageResponseParseException {
-        return this.check.execute(request);
+        return check.execute(request);
     }
 
     /**
@@ -253,7 +282,7 @@ public class VerifyClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public SearchVerifyResponse search(String requestId) throws VonageClientException, VonageResponseParseException {
-        return this.search.execute(new SearchRequest(requestId));
+        return search.execute(new SearchRequest(requestId));
     }
 
     /**
@@ -267,7 +296,7 @@ public class VerifyClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public SearchVerifyResponse search(String... requestIds) throws VonageClientException, VonageResponseParseException {
-        return this.search.execute(new SearchRequest(requestIds));
+        return search.execute(new SearchRequest(requestIds));
     }
 
     /**
@@ -281,7 +310,7 @@ public class VerifyClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public ControlResponse advanceVerification(String requestId) throws VonageClientException, VonageResponseParseException {
-        return this.control.execute(new ControlRequest(requestId, VerifyControlCommand.TRIGGER_NEXT_EVENT));
+        return control.execute(new ControlRequest(requestId, VerifyControlCommand.TRIGGER_NEXT_EVENT));
     }
 
     /**
@@ -295,7 +324,7 @@ public class VerifyClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public ControlResponse cancelVerification(String requestId) throws VonageClientException, VonageResponseParseException {
-        return this.control.execute(new ControlRequest(requestId, VerifyControlCommand.CANCEL));
+        return control.execute(new ControlRequest(requestId, VerifyControlCommand.CANCEL));
     }
 
     /**
@@ -350,7 +379,7 @@ public class VerifyClient {
      * @since 5.5.0
      */
     public VerifyResponse psd2Verify(Psd2Request psd2Request) throws VonageClientException, VonageResponseParseException {
-        return this.psd2.execute(psd2Request);
+        return psd2.execute(psd2Request);
     }
 
 }

@@ -57,7 +57,7 @@ public class Network {
         return name;
     }
 
-    enum Type {
+    public enum Type {
         MOBILE, LANDLINE, PAGER, LANDLINE_TOLLFREE, UNKNOWN;
 
         @Override
