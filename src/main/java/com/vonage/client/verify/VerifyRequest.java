@@ -20,7 +20,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Describes a Verify request when passed to {@link VerifyEndpoint}.
+ * Describes a Verify request.
  */
 public class VerifyRequest extends BaseRequest {
     private final LineType type;

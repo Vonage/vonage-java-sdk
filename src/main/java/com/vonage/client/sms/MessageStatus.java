@@ -178,7 +178,7 @@ public enum MessageStatus {
         ));
 
     /**
-     * Look up the {@link MessageStatus} based on the int value.
+     * Look up the MessageStatus based on the int value.
      *
      * @param messageStatus the int value of the message status.
      *

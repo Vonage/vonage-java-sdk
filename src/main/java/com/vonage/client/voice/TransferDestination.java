@@ -63,7 +63,7 @@ public class TransferDestination {
         return ncco;
     }
 
-    enum Type {
+    public enum Type {
         NCCO;
 
         @JsonValue

@@ -23,13 +23,11 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -195,7 +193,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		else if (requestBody instanceof byte[]) {
 			rqb.setEntity(new ByteArrayEntity((byte[]) requestBody));
 		}
-		return rqb.setUri(URI.create(pathGetter.apply(this, requestBody)));
+		return rqb.setUri(pathGetter.apply(this, requestBody));
 	}
 
 	protected R parseResponseFromString(String response) {

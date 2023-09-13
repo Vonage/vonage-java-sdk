@@ -73,7 +73,9 @@ public class Psd2RequestTest {
 
 	@Test
 	public void testConstructRequiredParams() {
-		assertNotNull(Psd2Request.builder().number("447700900001").amount(0.87).payee("Nexmo").build());
+		Psd2Request request = Psd2Request.builder().number("447700900001").amount(0.87).payee("Nexmo").build();
+		assertNotNull(request);
+		assertNull(request.getDashedLocale());
 	}
 
 	@Test(expected = IllegalArgumentException.class)

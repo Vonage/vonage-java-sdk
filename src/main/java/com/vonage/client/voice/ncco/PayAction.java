@@ -84,7 +84,7 @@ public class PayAction implements Action {
 	}
 
 	/**
-	 * Entry point for constructing a {@linkplain PayAction}.
+	 * Entry point for constructing a PayAction.
 	 *
 	 * @return A new {@linkplain Builder} instance.
 	 */

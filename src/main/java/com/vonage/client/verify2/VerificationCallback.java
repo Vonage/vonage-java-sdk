@@ -18,11 +18,8 @@ package com.vonage.client.verify2;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.vonage.client.Jsonable;
 import com.vonage.client.VonageResponseParseException;
-import java.io.IOException;
 import java.net.URI;
 import java.time.Instant;
 import java.util.List;
@@ -182,13 +179,8 @@ public class VerificationCallback implements Jsonable {
 	 * @throws VonageResponseParseException If the response could not be deserialized.
 	 */
 	public static VerificationCallback fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.registerModule(new JavaTimeModule());
-			return mapper.readValue(json, VerificationCallback.class);
-		}
-		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to produce VerificationCallback from json.", ex);
-		}
+		VerificationCallback callback = new VerificationCallback();
+		callback.updateFromJson(json);
+		return callback;
 	}
 }

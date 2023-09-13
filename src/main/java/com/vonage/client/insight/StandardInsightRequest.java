@@ -31,7 +31,7 @@ public class StandardInsightRequest extends BaseInsightRequest {
      *
      * @param number A single phone number that you need insight about in national or international format.
      *
-     * @return A new {@link StandardInsightRequest} object.
+     * @return A new StandardInsightRequest object.
      */
     public static StandardInsightRequest withNumber(String number) {
         return new Builder(number).build();
@@ -43,7 +43,7 @@ public class StandardInsightRequest extends BaseInsightRequest {
      * @param number  A single phone number that you need insight about in national or international format.
      * @param country If a number does not have a country code or it is uncertain, set the two-character country code.
      *
-     * @return A new {@link StandardInsightRequest} object.
+     * @return A new StandardInsightRequest object.
      */
     public static StandardInsightRequest withNumberAndCountry(String number, String country) {
         return new Builder(number).country(country).build();

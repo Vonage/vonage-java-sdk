@@ -23,6 +23,7 @@ need a Vonage account. You'll need to have [created a Vonage account](https://da
 
 - [Account](https://developer.vonage.com/en/account/overview)
 - [Application](https://developer.vonage.com/en/application/overview)
+- [Conversion](https://developer.vonage.com/messaging/conversion-api/overview)
 - [Meetings](https://developer.vonage.com/en/meetings/overview)
 - [Messages](https://developer.vonage.com/en/messages/overview)
 - [Number Insight](https://developer.vonage.com/en/number-insight/overview)
