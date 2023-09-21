@@ -16,41 +16,75 @@
 package com.vonage.client.account;
 
 import com.vonage.client.*;
+import com.vonage.client.auth.SignatureAuthMethod;
+import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.common.HttpMethod;
+import java.util.function.Function;
 
 /**
  * A client for talking to the Vonage Account API. The standard way to obtain an instance of this class is to use {@link
  * VonageClient#getAccountClient()}.
  */
 public class AccountClient {
-    final BalanceEndpoint balance;
-    final PricingEndpoint pricing;
-    final PrefixPricingEndpoint prefixPricing;
-    final TopUpEndpoint topUp;
-    final SettingsEndpoint settings;
-    final ListSecretsEndpoint listSecrets;
-    final GetSecretEndpoint getSecret;
-    final CreateSecretEndpoint createSecret;
-    final RevokeSecretEndpoint revokeSecret;
+    final RestEndpoint<Void, BalanceResponse> balance;
+    final RestEndpoint<PricingRequest, PricingResponse> pricing;
+    final RestEndpoint<FullPricingRequest, PricingResponse> fullPricing;
+    final RestEndpoint<PrefixPricingRequest, PrefixPricingResponse> prefixPricing;
+    final RestEndpoint<TopUpRequest, Void> topUp;
+    final RestEndpoint<SettingsRequest, SettingsResponse> settings;
+    final RestEndpoint<String, ListSecretsResponse> listSecrets;
+    final RestEndpoint<SecretRequest, SecretResponse> getSecret;
+    final RestEndpoint<CreateSecretRequest, SecretResponse> createSecret;
+    final RestEndpoint<SecretRequest, Void> revokeSecret;
 
     /**
      * Constructor.
      *
-     * @param httpWrapper (required) shared HTTP wrapper object used for making REST calls.
+     * @param wrapper (required) shared HTTP wrapper object used for making REST calls.
      */
-    public AccountClient(HttpWrapper httpWrapper) {
-        balance = new BalanceEndpoint(httpWrapper);
-        pricing = new PricingEndpoint(httpWrapper);
-        prefixPricing = new PrefixPricingEndpoint(httpWrapper);
-        topUp = new TopUpEndpoint(httpWrapper);
-        settings = new SettingsEndpoint(httpWrapper);
-        listSecrets = new ListSecretsEndpoint(httpWrapper);
-        getSecret = new GetSecretEndpoint(httpWrapper);
-        createSecret = new CreateSecretEndpoint(httpWrapper);
-        revokeSecret = new RevokeSecretEndpoint(httpWrapper);
+    public AccountClient(HttpWrapper wrapper) {
+        @SuppressWarnings("unchecked")
+        class Endpoint<T, R> extends DynamicEndpoint<T, R> {
+            Endpoint(Function<T, String> pathGetter) {
+                this(pathGetter, HttpMethod.GET, false);
+            }
+            Endpoint(Function<T, String> pathGetter, HttpMethod method) {
+                this(pathGetter, method, false);
+            }
+            Endpoint(Function<T, String> pathGetter, HttpMethod method, boolean signatureAuth, R... type) {
+                super(DynamicEndpoint.<T, R> builder((Class<R>) type.getClass().getComponentType())
+                        .wrapper(wrapper).requestMethod(method)
+                        .authMethod(TokenAuthMethod.class, signatureAuth ? SignatureAuthMethod.class : null)
+                        .pathGetter((de, req) -> {
+                            HttpConfig config = de.getHttpWrapper().getHttpConfig();
+                            String base = signatureAuth ? config.getApiBaseUri() : config.getRestBaseUri();
+                            return base + "/account" + pathGetter.apply(req);
+                        })
+                );
+            }
+        }
+
+        @SuppressWarnings("unchecked")
+        class SecretsEndpoint<T, R> extends Endpoint<T, R> {
+            SecretsEndpoint(Function<T, String> pathGetter, HttpMethod method) {
+                super(pathGetter, method, true);
+            }
+        }
+
+        balance = new Endpoint<>(req -> "/get-balance");
+        pricing = new Endpoint<>(req -> "/get-pricing/outbound/" + req.getServiceType());
+        fullPricing = new Endpoint<>(req -> "/get-full-pricing/outbound/" + req.getServiceType());
+        prefixPricing = new Endpoint<>(req -> "/get-prefix-pricing/outbound/");
+        topUp = new Endpoint<>(req -> "/top-up");
+        settings = new Endpoint<>(req -> "/settings", HttpMethod.POST);
+        listSecrets = new SecretsEndpoint<>(req -> "s/" + req + "/secrets", HttpMethod.GET);
+        getSecret = new SecretsEndpoint<>(req -> "s/" + req.getApiKey() + "/secrets/" + req.getSecretId(), HttpMethod.GET);
+        createSecret = new SecretsEndpoint<>(req -> "s/" + req.getApiKey() + "/secrets", HttpMethod.POST);
+        revokeSecret = new SecretsEndpoint<>(req -> "s/" + req.getApiKey() + "/secrets/" + req.getSecretId(), HttpMethod.DELETE);
     }
 
     public BalanceResponse getBalance() throws VonageResponseParseException, VonageClientException {
-        return balance.execute();
+        return balance.execute(null);
     }
 
     /**

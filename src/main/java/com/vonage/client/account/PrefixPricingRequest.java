@@ -15,9 +15,12 @@
  */
 package com.vonage.client.account;
 
+import com.vonage.client.QueryParamsRequest;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 
-public class PrefixPricingRequest {
+class PrefixPricingRequest implements QueryParamsRequest {
     private final ServiceType serviceType;
     private final String prefix;
 
@@ -32,5 +35,12 @@ public class PrefixPricingRequest {
 
     public String getPrefix() {
         return prefix;
+    }
+
+    @Override
+    public Map<String, String> makeParams() {
+        Map<String, String> params = new LinkedHashMap<>(2);
+        params.put("prefix", prefix);
+        return params;
     }
 }

@@ -17,14 +17,14 @@ package com.vonage.client.account;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BalanceResponse {
+public class BalanceResponse implements Jsonable {
     private double value;
     private boolean autoReload;
+
+    BalanceResponse() {}
 
     public BalanceResponse(@JsonProperty("value") double value, @JsonProperty("autoReload") boolean autoReload) {
         this.value = value;
@@ -42,11 +42,8 @@ public class BalanceResponse {
     }
 
     public static BalanceResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, BalanceResponse.class);
-        } catch (IOException jpe) {
-            throw new VonageUnexpectedException("Failed to produce BalanceResponse from json.", jpe);
-        }
+        BalanceResponse response = new BalanceResponse();
+        response.updateFromJson(json);
+        return response;
     }
 }

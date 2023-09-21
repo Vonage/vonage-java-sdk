@@ -15,7 +15,10 @@
  */
 package com.vonage.client.account;
 
-public class PricingRequest {
+import com.vonage.client.QueryParamsRequest;
+import java.util.LinkedHashMap;
+import java.util.Map;
+public class PricingRequest implements QueryParamsRequest {
     private final String countryCode;
     private final ServiceType serviceType;
 
@@ -30,5 +33,12 @@ public class PricingRequest {
 
     public String getServiceType() {
         return serviceType.name().replace('_', '-').toLowerCase();
+    }
+
+    @Override
+    public Map<String, String> makeParams() {
+        Map<String, String> params = new LinkedHashMap<>(2);
+        params.put("country", countryCode);
+        return params;
     }
 }

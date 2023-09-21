@@ -28,10 +28,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
@@ -101,9 +98,13 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 
 		public Builder<T, R> authMethod(Class<? extends AuthMethod> primary, Class<? extends AuthMethod>... others) {
 			authMethods = new ArrayList<>(2);
-			authMethods.add(primary);
-			if (others != null && others.length > 0) {
-				authMethods.addAll(Arrays.asList(others));
+			authMethods.add(Objects.requireNonNull(primary, "Primary auth method cannot be null"));
+			if (others != null) {
+				for (Class<? extends AuthMethod> amc : others) {
+					if (amc != null) {
+						authMethods.add(amc);
+					}
+				}
 			}
 			return this;
 		}
