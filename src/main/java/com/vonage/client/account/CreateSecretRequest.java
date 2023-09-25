@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 
+@Deprecated
 public class CreateSecretRequest implements Jsonable {
     @JsonIgnore private final String apiKey;
     private final String secret;

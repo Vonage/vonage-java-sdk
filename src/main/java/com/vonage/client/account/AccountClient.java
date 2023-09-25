@@ -42,18 +42,20 @@ public class AccountClient {
      *
      * @param wrapper (required) shared HTTP wrapper object used for making REST calls.
      */
+    @SuppressWarnings("unchecked")
     public AccountClient(HttpWrapper wrapper) {
-        @SuppressWarnings("unchecked")
         class Endpoint<T, R> extends DynamicEndpoint<T, R> {
+            static final String SECRETS_PATH = "s/%s/secrets";
+
             Endpoint(Function<T, String> pathGetter) {
-                this(pathGetter, HttpMethod.GET, false);
+                this(pathGetter, HttpMethod.GET);
             }
             Endpoint(Function<T, String> pathGetter, HttpMethod method) {
                 this(pathGetter, method, false);
             }
             Endpoint(Function<T, String> pathGetter, HttpMethod method, boolean signatureAuth, R... type) {
                 super(DynamicEndpoint.<T, R> builder((Class<R>) type.getClass().getComponentType())
-                        .wrapper(wrapper).requestMethod(method)
+                        .wrapper(wrapper).requestMethod(method).applyAsBasicAuth(signatureAuth)
                         .authMethod(TokenAuthMethod.class, signatureAuth ? SignatureAuthMethod.class : null)
                         .pathGetter((de, req) -> {
                             HttpConfig config = de.getHttpWrapper().getHttpConfig();
@@ -64,10 +66,17 @@ public class AccountClient {
             }
         }
 
-        @SuppressWarnings("unchecked")
         class SecretsEndpoint<T, R> extends Endpoint<T, R> {
-            SecretsEndpoint(Function<T, String> pathGetter, HttpMethod method) {
-                super(pathGetter, method, true);
+            SecretsEndpoint(Function<T, String> apiKeyGetter, HttpMethod method) {
+                super(req -> String.format(SECRETS_PATH, apiKeyGetter.apply(req)), method, true);
+            }
+        }
+
+        class SecretRequestEndpoint<R> extends Endpoint<SecretRequest, R> {
+            SecretRequestEndpoint(HttpMethod method) {
+                super(req -> String.format(SECRETS_PATH, req.getApiKey()) + "/" + req.getSecretId(),
+                        method, true
+                );
             }
         }
 
@@ -77,10 +86,10 @@ public class AccountClient {
         prefixPricing = new Endpoint<>(req -> "/get-prefix-pricing/outbound/");
         topUp = new Endpoint<>(req -> "/top-up");
         settings = new Endpoint<>(req -> "/settings", HttpMethod.POST);
-        listSecrets = new SecretsEndpoint<>(req -> "s/" + req + "/secrets", HttpMethod.GET);
-        getSecret = new SecretsEndpoint<>(req -> "s/" + req.getApiKey() + "/secrets/" + req.getSecretId(), HttpMethod.GET);
-        createSecret = new SecretsEndpoint<>(req -> "s/" + req.getApiKey() + "/secrets", HttpMethod.POST);
-        revokeSecret = new SecretsEndpoint<>(req -> "s/" + req.getApiKey() + "/secrets/" + req.getSecretId(), HttpMethod.DELETE);
+        listSecrets = new SecretsEndpoint<>(Function.identity(), HttpMethod.GET);
+        createSecret = new SecretsEndpoint<>(CreateSecretRequest::getApiKey, HttpMethod.POST);
+        getSecret = new SecretRequestEndpoint<>(HttpMethod.GET);
+        revokeSecret = new SecretRequestEndpoint<>(HttpMethod.DELETE);
     }
 
     public BalanceResponse getBalance() throws VonageResponseParseException, VonageClientException {

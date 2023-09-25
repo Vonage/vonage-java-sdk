@@ -125,7 +125,11 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		}
 
 		public Builder<T, R> applyAsBasicAuth() {
-			applyBasicAuth = true;
+			return applyAsBasicAuth(true);
+		}
+
+		public Builder<T, R> applyAsBasicAuth(boolean applyBasicAuth) {
+			this.applyBasicAuth = applyBasicAuth;
 			return this;
 		}
 

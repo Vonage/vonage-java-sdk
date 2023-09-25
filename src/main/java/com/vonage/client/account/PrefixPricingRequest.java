@@ -20,7 +20,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
-class PrefixPricingRequest implements QueryParamsRequest {
+@Deprecated
+public class PrefixPricingRequest implements QueryParamsRequest {
     private final ServiceType serviceType;
     private final String prefix;
 

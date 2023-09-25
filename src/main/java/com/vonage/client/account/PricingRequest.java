@@ -18,6 +18,8 @@ package com.vonage.client.account;
 import com.vonage.client.QueryParamsRequest;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+@Deprecated
 public class PricingRequest implements QueryParamsRequest {
     private final String countryCode;
     private final ServiceType serviceType;
