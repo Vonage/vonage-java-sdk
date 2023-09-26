@@ -17,7 +17,7 @@ package com.vonage.client.account;
 
 import com.vonage.client.ClientTest;
 import com.vonage.client.RestEndpoint;
-import com.vonage.client.VonageClientException;
+import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.common.HttpMethod;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -34,10 +34,12 @@ public class AccountClientTest extends ClientTest<AccountClient> {
     public void testGetBalance() throws Exception {
         String json = "{\"value\": 10.28, \"autoReload\": true}";
         stubResponse(200, json);
-        
         BalanceResponse response = client.getBalance();
         assertEquals(10.28, response.getValue(), 0.0001);
         assertTrue(response.isAutoReload());
+        BalanceResponse br = new BalanceResponse(3.1459, false);
+        assertEquals(3.1459, br.getValue(), 0.00000001);
+        assertFalse(br.isAutoReload());
     }
 
     @Test
@@ -65,6 +67,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         assertEquals(2, response.getNetworks().size());
         Network first = response.getNetworks().get(0);
         assertEquals(Network.Type.MOBILE, first.getType());
+        assertEquals("mobile", first.getType().toString());
         assertEquals(new BigDecimal("0.00570000"), first.getPrice());
         assertEquals("EUR", first.getCurrency());
         assertEquals("987", first.getMcc());
@@ -74,13 +77,15 @@ public class AccountClientTest extends ClientTest<AccountClient> {
 
 
         Network second = response.getNetworks().get(1);
-        assertEquals(Network.Type.LANDLINE, second.getType());
+        assertEquals(Network.Type.fromString("landline"), second.getType());
         assertEquals(new BigDecimal("0.00330000"), second.getPrice());
         assertEquals("EUR", second.getCurrency());
         assertEquals("123", second.getMcc());
         assertEquals("456", second.getMnc());
         assertEquals("networkcode", second.getCode());
         assertEquals("Test Landline", second.getName());
+
+        assertEquals(Network.Type.UNKNOWN, Network.Type.fromString(";invalid>"));
     }
 
     @Test
@@ -244,18 +249,20 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         client.topUp("ABC123");
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testTopUpNoTransactionId() throws Exception {
+        stubResponse(200);
+        client.topUp(" ");
+    }
+
     @Test
     public void testTopUpFailed() throws Exception {
-        String json = "{\"error-code\":\"420\",\"error-code-label\":\"topup failed\"}";
-        stubResponse(401, json);
-        try {
-            client.topUp("ABC123");
-            fail("Expected AccountResponseException");
-        }
-        catch (AccountResponseException ex) {
-            assertEquals(401, ex.getStatusCode());
-            assertEquals("topup failed", ex.getErrorCodeLabel());
-        }
+        String json = "{\"error-code\":\"420\",\"error-code-label\":\"topup failed\",\"title\":\"Test reason\"}";
+        AccountResponseException ex = assertApiResponseException(401, json, AccountResponseException.class,
+                () -> client.topUp("ABC123")
+        );
+        assertEquals(401, ex.getStatusCode());
+        assertEquals("topup failed", ex.getErrorCodeLabel());
     }
 
     @Test
@@ -275,6 +282,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         stubResponse(200, json);
 
         ListSecretsResponse response = client.listSecrets("abcd1234");
+        assertNotNull(response.getSelf());
         SecretResponse[] responses = response.getSecrets().toArray(new SecretResponse[0]);
 
         Calendar calendar = new GregorianCalendar(2017, Calendar.MARCH, 2, 16, 34, 49);
@@ -289,24 +297,41 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         assertEquals("/accounts/abcd1234/secrets/secret-id-two", responses[1].getSelf().getHref());
     }
 
-    @Test(expected = VonageClientException.class)
+    @Test(expected = VonageResponseParseException.class)
+    public void testParseListSecretsMalformed() throws Exception {
+        stubResponse(200, "{malformed]");
+        client.listSecrets(apiKey);
+    }
+
+    @Test
     public void testListSecretFailedAuth() throws Exception {
         String json = "{\n" + "  \"type\": \"https://developer.nexmo.com/api-errors#unauthorized\",\n"
                 + "  \"title\": \"Invalid credentials supplied\",\n"
                 + "  \"detail\": \"You did not provide correct credentials.\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        stubResponse(401, json);
-        client.listSecrets("ABC123");
+        AccountResponseException ex = assertApiResponseException(401, json, AccountResponseException.class,
+                () -> client.listSecrets("ABC123")
+        );
+        assertNotNull(ex.getType());
+        assertNotNull(ex.getTitle());
+        assertNotNull(ex.getDetail());
+        assertNotNull(ex.getInstance());
+        assertEquals(
+                "401 (Invalid credentials supplied): You did not provide correct credentials.",
+                ex.getMessage()
+        );
     }
 
-    @Test(expected = VonageClientException.class)
-    public void testListSecretNotFound() throws Exception {
-        String json = "{\n" + "  \"type\": \"https://developer.nexmo.com/api-errors#invalid-api-key\",\n"
-                + "  \"title\": \"Invalid API Key\",\n"
-                + "  \"detail\": \"API key 'ABC123' does not exist, or you do not have access\",\n"
-                + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        stubResponse(404, json);
-        client.listSecrets("ABC123");
+    @Test(expected = IllegalArgumentException.class)
+    public void testListSecretNoApiKey() throws Exception {
+        stubResponse(200, "{}");
+        client.listSecrets("  ");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateSecretNoApiKey() throws Exception {
+        stubResponse(200, "{}");
+        client.createSecret("  ", apiSecret);
     }
 
     @Test
@@ -325,7 +350,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         assertEquals("/accounts/abcd1234/secrets/secret-id-one", response.getSelf().getHref());
     }
 
-    @Test(expected = VonageClientException.class)
+    @Test(expected = AccountResponseException.class)
     public void testCreateSecretBadRequest() throws Exception {
         String json =
                 "{\n" + "  \"type\": \"https://developer.nexmo.com/api-errors/account/secret-management#validation\",\n"
@@ -338,7 +363,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         client.createSecret("key", "secret");
     }
 
-    @Test(expected = VonageClientException.class)
+    @Test(expected = AccountResponseException.class)
     public void testCreateSecretFailedAuth() throws Exception {
         String json = "{\n" + "  \"type\": \"https://developer.nexmo.com/api-errors#unauthorized\",\n"
                 + "  \"title\": \"Invalid credentials supplied\",\n"
@@ -348,7 +373,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         client.createSecret("key", "secret");
     }
 
-    @Test(expected = VonageClientException.class)
+    @Test(expected = AccountResponseException.class)
     public void testCreateSecretMaxSecrets() throws Exception {
         String json = "{\n"
                 + "  \"type\": \"https://developer.nexmo.com/api-errors/account/secret-management#maximum-secrets-allowed\",\n"
@@ -359,7 +384,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         client.createSecret("key", "secret");
     }
 
-    @Test(expected = VonageClientException.class)
+    @Test(expected = AccountResponseException.class)
     public void testCreateSecretAccountNotFound() throws Exception {
         String json = "{\n" + "  \"type\": \"https://developer.nexmo.com/api-errors#invalid-api-key\",\n"
                 + "  \"title\": \"Invalid API Key\",\n"
@@ -385,7 +410,25 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         assertEquals("/accounts/abcd1234/secrets/secret-id-one", response.getSelf().getHref());
     }
 
-    @Test(expected = VonageClientException.class)
+    @Test(expected = VonageResponseParseException.class)
+    public void testGetSecretMalformed() throws Exception {
+        stubResponse(200, "{malformed]");
+        client.getSecret(apiKey, apiSecret);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetSecretNoSecretId() throws Exception {
+        stubResponse(200, "{}");
+        client.getSecret(apiKey, "  ");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetSecretNoApiKey() throws Exception {
+        stubResponse(200, "{}");
+        client.getSecret(null, apiSecret);
+    }
+
+    @Test(expected = AccountResponseException.class)
     public void testGetSecretFailedAuth() throws Exception {
         String json = "{\n" + "  \"type\": \"https://developer.nexmo.com/api-errors#unauthorized\",\n"
                 + "  \"title\": \"Invalid credentials supplied\",\n"
@@ -395,7 +438,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         client.getSecret("apiKey", "secret-id-one");
     }
 
-    @Test(expected = VonageClientException.class)
+    @Test(expected = AccountResponseException.class)
     public void testGetSecretNotFound() throws Exception {
         String json = "{\n" + "  \"type\": \"https://developer.nexmo.com/api-errors#invalid-api-key\",\n"
                 + "  \"title\": \"Invalid API Key\",\n"
@@ -412,7 +455,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         client.revokeSecret("apiKey", "secretId");
     }
 
-    @Test(expected = VonageClientException.class)
+    @Test(expected = AccountResponseException.class)
     public void testRevokeSecretFailedAuth() throws Exception {
         String json = "{\n" + "  \"type\": \"https://developer.nexmo.com/api-errors#unauthorized\",\n"
                 + "  \"title\": \"Invalid credentials supplied\",\n"
@@ -422,7 +465,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         client.revokeSecret("apiKey", "secret-id-one");
     }
 
-    @Test(expected = VonageClientException.class)
+    @Test(expected = AccountResponseException.class)
     public void testRevokeSecretForbidden() throws Exception {
         String json = "{\n"
                 + "  \"type\": \"https://developer.nexmo.com/api-errors/account/secret-management#delete-last-secret\",\n"

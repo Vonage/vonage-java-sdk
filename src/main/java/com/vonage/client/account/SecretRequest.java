@@ -20,10 +20,10 @@ public class SecretRequest {
     private final String apiKey, secretId;
 
     public SecretRequest(String apiKey, String secretId) {
-        if ((this.apiKey = apiKey) == null || apiKey.isEmpty()) {
+        if ((this.apiKey = apiKey) == null || apiKey.trim().isEmpty()) {
             throw new IllegalArgumentException("API key is required.");
         }
-        if ((this.secretId = secretId) == null || secretId.isEmpty()) {
+        if ((this.secretId = secretId) == null || secretId.trim().isEmpty()) {
             throw new IllegalArgumentException("Secret id is required.");
         }
     }
