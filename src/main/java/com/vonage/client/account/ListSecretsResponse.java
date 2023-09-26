@@ -16,7 +16,7 @@
 package com.vonage.client.account;
 
 import com.vonage.client.Jsonable;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.VonageResponseParseException;
 import io.openapitools.jackson.dataformat.hal.HALLink;
 import io.openapitools.jackson.dataformat.hal.HALMapper;
 import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
@@ -50,7 +50,7 @@ public class ListSecretsResponse implements Jsonable {
             secrets = parsed.secrets;
         }
         catch (IOException ex) {
-            throw new VonageUnexpectedException("Failed to produce ListSecretsResponse from json.", ex);
+            throw new VonageResponseParseException("Failed to produce ListSecretsResponse from json.", ex);
         }
     }
 

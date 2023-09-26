@@ -24,9 +24,10 @@ public class BalanceResponse implements Jsonable {
     private double value;
     private boolean autoReload;
 
-    BalanceResponse() {}
+    protected BalanceResponse() {}
 
-    public BalanceResponse(@JsonProperty("value") double value, @JsonProperty("autoReload") boolean autoReload) {
+    @Deprecated
+    public BalanceResponse(double value, boolean autoReload) {
         this.value = value;
         this.autoReload = autoReload;
     }
