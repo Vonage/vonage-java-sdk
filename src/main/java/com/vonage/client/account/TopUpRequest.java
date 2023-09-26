@@ -24,7 +24,9 @@ public class TopUpRequest implements QueryParamsRequest {
     private final String trx;
 
     public TopUpRequest(String trx) {
-        this.trx = trx;
+        if ((this.trx = trx) == null || trx.trim().isEmpty()) {
+            throw new IllegalArgumentException("Transaction ID is required.");
+        }
     }
 
     public String getTrx() {

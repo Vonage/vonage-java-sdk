@@ -19,6 +19,7 @@ import com.vonage.client.*;
 import com.vonage.client.auth.SignatureAuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
 import com.vonage.client.common.HttpMethod;
+import java.util.Objects;
 import java.util.function.Function;
 
 /**
@@ -47,16 +48,17 @@ public class AccountClient {
         class Endpoint<T, R> extends DynamicEndpoint<T, R> {
             static final String SECRETS_PATH = "s/%s/secrets";
 
-            Endpoint(Function<T, String> pathGetter) {
-                this(pathGetter, HttpMethod.GET);
+            Endpoint(Function<T, String> pathGetter, R... type) {
+                this(pathGetter, HttpMethod.GET, type);
             }
-            Endpoint(Function<T, String> pathGetter, HttpMethod method) {
-                this(pathGetter, method, false);
+            Endpoint(Function<T, String> pathGetter, HttpMethod method, R... type) {
+                this(pathGetter, method, false, type);
             }
             Endpoint(Function<T, String> pathGetter, HttpMethod method, boolean signatureAuth, R... type) {
                 super(DynamicEndpoint.<T, R> builder((Class<R>) type.getClass().getComponentType())
                         .wrapper(wrapper).requestMethod(method).applyAsBasicAuth(signatureAuth)
                         .authMethod(TokenAuthMethod.class, signatureAuth ? SignatureAuthMethod.class : null)
+                        .responseExceptionType(AccountResponseException.class)
                         .pathGetter((de, req) -> {
                             HttpConfig config = de.getHttpWrapper().getHttpConfig();
                             String base = signatureAuth ? config.getApiBaseUri() : config.getRestBaseUri();
@@ -67,15 +69,15 @@ public class AccountClient {
         }
 
         class SecretsEndpoint<T, R> extends Endpoint<T, R> {
-            SecretsEndpoint(Function<T, String> apiKeyGetter, HttpMethod method) {
-                super(req -> String.format(SECRETS_PATH, apiKeyGetter.apply(req)), method, true);
+            SecretsEndpoint(Function<T, String> apiKeyGetter, HttpMethod method, R... type) {
+                super(req -> String.format(SECRETS_PATH, apiKeyGetter.apply(req)), method, true, type);
             }
         }
 
         class SecretRequestEndpoint<R> extends Endpoint<SecretRequest, R> {
-            SecretRequestEndpoint(HttpMethod method) {
+            SecretRequestEndpoint(HttpMethod method, R... type) {
                 super(req -> String.format(SECRETS_PATH, req.getApiKey()) + "/" + req.getSecretId(),
-                        method, true
+                        method, true, type
                 );
             }
         }
@@ -83,7 +85,7 @@ public class AccountClient {
         balance = new Endpoint<>(req -> "/get-balance");
         pricing = new Endpoint<>(req -> "/get-pricing/outbound/" + req.getServiceType());
         fullPricing = new Endpoint<>(req -> "/get-full-pricing/outbound/" + req.getServiceType());
-        prefixPricing = new Endpoint<>(req -> "/get-prefix-pricing/outbound/");
+        prefixPricing = new Endpoint<>(req -> "/get-prefix-pricing/outbound/" + req.getServiceType());
         topUp = new Endpoint<>(req -> "/top-up");
         settings = new Endpoint<>(req -> "/settings", HttpMethod.POST);
         listSecrets = new SecretsEndpoint<>(Function.identity(), HttpMethod.GET);
@@ -92,7 +94,7 @@ public class AccountClient {
         revokeSecret = new SecretRequestEndpoint<>(HttpMethod.DELETE);
     }
 
-    public BalanceResponse getBalance() throws VonageResponseParseException, VonageClientException {
+    public BalanceResponse getBalance() throws AccountResponseException {
         return balance.execute(null);
     }
 
@@ -106,7 +108,7 @@ public class AccountClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      */
-    public PricingResponse getVoicePrice(String country) throws VonageResponseParseException, VonageClientException {
+    public PricingResponse getVoicePrice(String country) throws AccountResponseException {
         return pricing.execute(new PricingRequest(country, ServiceType.VOICE));
     }
 
@@ -120,7 +122,7 @@ public class AccountClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      */
-    public PricingResponse getSmsPrice(String country) throws VonageResponseParseException, VonageClientException {
+    public PricingResponse getSmsPrice(String country) throws AccountResponseException {
         return pricing.execute(new PricingRequest(country, ServiceType.SMS));
     }
 
@@ -135,7 +137,7 @@ public class AccountClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      */
-    public PrefixPricingResponse getPrefixPrice(ServiceType type, String prefix) throws VonageResponseParseException, VonageClientException {
+    public PrefixPricingResponse getPrefixPrice(ServiceType type, String prefix) throws AccountResponseException {
         return prefixPricing.execute(new PrefixPricingRequest(type, prefix));
     }
 
@@ -149,7 +151,7 @@ public class AccountClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response object indicating
      *                                     that the request was unsuccessful.
      */
-    public void topUp(String transaction) throws VonageResponseParseException, VonageClientException {
+    public void topUp(String transaction) throws AccountResponseException {
         topUp.execute(new TopUpRequest(transaction));
     }
 
@@ -164,7 +166,10 @@ public class AccountClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response object indicating
      *                                     that the request was unsuccessful.
      */
-    public ListSecretsResponse listSecrets(String apiKey) throws VonageResponseParseException, VonageClientException {
+    public ListSecretsResponse listSecrets(String apiKey) throws AccountResponseException {
+        if (apiKey == null || apiKey.trim().isEmpty()) {
+            throw new IllegalArgumentException("API key is required.");
+        }
         return listSecrets.execute(apiKey);
     }
 
@@ -180,7 +185,7 @@ public class AccountClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response object indicating
      *                                     that the request was unsuccessful.
      */
-    public SecretResponse getSecret(String apiKey, String secretId) throws VonageResponseParseException, VonageClientException {
+    public SecretResponse getSecret(String apiKey, String secretId) throws AccountResponseException {
         return getSecret.execute(new SecretRequest(apiKey, secretId));
     }
 
@@ -196,7 +201,7 @@ public class AccountClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response object indicating
      *                                     that the request was unsuccessful.
      */
-    public SecretResponse createSecret(String apiKey, String secret) throws VonageResponseParseException, VonageClientException {
+    public SecretResponse createSecret(String apiKey, String secret) throws AccountResponseException {
         return createSecret.execute(new CreateSecretRequest(apiKey, secret));
     }
 
@@ -210,7 +215,7 @@ public class AccountClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response object indicating
      *                                     that the request was unsuccessful.
      */
-    public void revokeSecret(String apiKey, String secretId) throws VonageResponseParseException, VonageClientException {
+    public void revokeSecret(String apiKey, String secretId) throws AccountResponseException {
         revokeSecret.execute(new SecretRequest(apiKey, secretId));
     }
 
@@ -223,7 +228,7 @@ public class AccountClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response object indicating
      *                                     that the request was unsuccessful.
      */
-    public SettingsResponse updateSmsIncomingUrl(String url) throws VonageResponseParseException, VonageClientException {
+    public SettingsResponse updateSmsIncomingUrl(String url) throws AccountResponseException {
         return updateSettings(SettingsRequest.withIncomingSmsUrl(url));
     }
 
@@ -236,7 +241,7 @@ public class AccountClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response object indicating
      *                                     that the request was unsuccessful.
      */
-    public SettingsResponse updateDeliveryReceiptUrl(String url) throws VonageResponseParseException, VonageClientException {
+    public SettingsResponse updateDeliveryReceiptUrl(String url) throws AccountResponseException {
         return updateSettings(SettingsRequest.withDeliveryReceiptUrl(url));
     }
 
@@ -249,7 +254,7 @@ public class AccountClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response object indicating
      *                                     that the request was unsuccessful.
      */
-    public SettingsResponse updateSettings(SettingsRequest request) throws VonageResponseParseException, VonageClientException {
-        return settings.execute(request);
+    public SettingsResponse updateSettings(SettingsRequest request) throws AccountResponseException {
+        return settings.execute(Objects.requireNonNull(request, "Settings request cannot be null."));
     }
 }

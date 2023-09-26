@@ -34,7 +34,7 @@ public class PricingRequest implements QueryParamsRequest {
     }
 
     public String getServiceType() {
-        return serviceType.name().replace('_', '-').toLowerCase();
+        return serviceType.toString();
     }
 
     @Override

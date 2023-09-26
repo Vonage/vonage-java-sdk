@@ -16,30 +16,27 @@
 package com.vonage.client.account;
 
 import com.vonage.client.ClientTest;
-import com.vonage.client.HttpWrapper;
+import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageClientException;
-import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.common.HttpMethod;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import java.util.*;
 
 public class AccountClientTest extends ClientTest<AccountClient> {
 
     public AccountClientTest() {
-        wrapper = new HttpWrapper(new TokenAuthMethod("not-an-api-key", "secret"));
         client = new AccountClient(wrapper);
     }
 
     @Test
     public void testGetBalance() throws Exception {
         String json = "{\"value\": 10.28, \"autoReload\": true}";
-        wrapper.setHttpClient(stubHttpClient(200, json));
+        stubResponse(200, json);
+        
         BalanceResponse response = client.getBalance();
-        assertEquals(10.28, response.getValue(), 0.001);
+        assertEquals(10.28, response.getValue(), 0.0001);
         assertTrue(response.isAutoReload());
     }
 
@@ -55,7 +52,8 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "      \"currency\": \"EUR\",\n" + "      \"mcc\": \"123\",\n" + "      \"mnc\": \"456\",\n"
                 + "      \"networkCode\": \"networkcode\",\n" + "      \"networkName\": \"Test Landline\"\n"
                 + "    }  \n" + "  ]\n" + "}\n";
-        wrapper.setHttpClient(stubHttpClient(200, json));
+        stubResponse(200, json);
+
         PricingResponse response = client.getSmsPrice("US");
         assertEquals("1", response.getDialingPrefix());
         assertEquals(new BigDecimal("0.00570000"), response.getDefaultPrice());
@@ -97,7 +95,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "      \"currency\": \"EUR\",\n" + "      \"mcc\": \"123\",\n" + "      \"mnc\": \"456\",\n"
                 + "      \"networkCode\": \"networkcode\",\n" + "      \"networkName\": \"Test Landline\"\n"
                 + "    }  \n" + "  ]\n" + "}\n";
-        wrapper.setHttpClient(stubHttpClient(200, json));
+        stubResponse(200, json);
         PricingResponse response = client.getVoicePrice("US");
         assertEquals("1", response.getDialingPrefix());
         assertEquals(new BigDecimal("0.00570000"), response.getDefaultPrice());
@@ -150,7 +148,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "            \"countryCode\": \"UM\",\n"
                 + "            \"countryName\": \"United States Minor Outlying Islands\"\n" + "        }\n" + "    ]\n"
                 + "}";
-        wrapper.setHttpClient(stubHttpClient(200, json));
+        stubResponse(200, json);
         PrefixPricingResponse response = client.getPrefixPrice(ServiceType.VOICE, "1");
         assertEquals(2, response.getCount());
         assertEquals(2, response.getCountries().size());
@@ -208,7 +206,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "            \"countryCode\": \"UM\",\n"
                 + "            \"countryName\": \"United States Minor Outlying Islands\"\n" + "        }\n" + "    ]\n"
                 + "}";
-        wrapper.setHttpClient(stubHttpClient(200, json));
+        stubResponse(200, json);
         PrefixPricingResponse response = client.getPrefixPrice(ServiceType.SMS, "1");
         assertEquals(2, response.getCount());
         assertEquals(2, response.getCountries().size());
@@ -241,23 +239,23 @@ public class AccountClientTest extends ClientTest<AccountClient> {
 
     @Test
     public void testTopUpSuccessful() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(200, ""));
+        stubResponse(200);
         // No assertions as an exception will be thrown if failure occurs.
         client.topUp("ABC123");
     }
 
-    @Test(expected = VonageClientException.class)
-    public void testTopUpFailedAuth() throws Exception {
-        String json = "{\"error-code\":\"401\",\"error-code-label\":\"authentication failed\"}";
-        wrapper.setHttpClient(stubHttpClient(401, json));
-        client.topUp("ABC123");
-    }
-
-    @Test(expected = VonageClientException.class)
+    @Test
     public void testTopUpFailed() throws Exception {
         String json = "{\"error-code\":\"420\",\"error-code-label\":\"topup failed\"}";
-        wrapper.setHttpClient(stubHttpClient(401, json));
-        client.topUp("ABC123");
+        stubResponse(401, json);
+        try {
+            client.topUp("ABC123");
+            fail("Expected AccountResponseException");
+        }
+        catch (AccountResponseException ex) {
+            assertEquals(401, ex.getStatusCode());
+            assertEquals("topup failed", ex.getErrorCodeLabel());
+        }
     }
 
     @Test
@@ -274,7 +272,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "                    }\n" + "                },\n" + "                \"id\": \"secret-id-two\",\n"
                 + "                \"created_at\": \"2016-01-20T16:34:49Z\"\n" + "            }\n" + "        ]\n"
                 + "    }\n" + "}";
-        wrapper.setHttpClient(stubHttpClient(200, json));
+        stubResponse(200, json);
 
         ListSecretsResponse response = client.listSecrets("abcd1234");
         SecretResponse[] responses = response.getSecrets().toArray(new SecretResponse[0]);
@@ -297,7 +295,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"title\": \"Invalid credentials supplied\",\n"
                 + "  \"detail\": \"You did not provide correct credentials.\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        wrapper.setHttpClient(stubHttpClient(401, json));
+        stubResponse(401, json);
         client.listSecrets("ABC123");
     }
 
@@ -307,7 +305,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"title\": \"Invalid API Key\",\n"
                 + "  \"detail\": \"API key 'ABC123' does not exist, or you do not have access\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        wrapper.setHttpClient(stubHttpClient(404, json));
+        stubResponse(404, json);
         client.listSecrets("ABC123");
     }
 
@@ -316,7 +314,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         String json = "{\n" + "  \"_links\": {\n" + "    \"self\": {\n"
                 + "      \"href\": \"/accounts/abcd1234/secrets/secret-id-one\"\n" + "    }\n" + "  },\n"
                 + "  \"id\": \"secret-id-one\",\n" + "  \"created_at\": \"2017-03-02T16:34:49Z\"\n" + "}";
-        wrapper.setHttpClient(stubHttpClient(201, json));
+        stubResponse(201, json);
 
         SecretResponse response = client.createSecret("apiKey", "secret");
 
@@ -336,7 +334,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                         + "  \"invalid_parameters\": [\n" + "    {\n" + "      \"name\": \"secret\",\n"
                         + "      \"reason\": \"Does not meet complexity requirements\"\n" + "    }\n" + "  ],\n"
                         + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        wrapper.setHttpClient(stubHttpClient(400, json));
+        stubResponse(400, json);
         client.createSecret("key", "secret");
     }
 
@@ -346,7 +344,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"title\": \"Invalid credentials supplied\",\n"
                 + "  \"detail\": \"You did not provide correct credentials.\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        wrapper.setHttpClient(stubHttpClient(401, json));
+        stubResponse(401, json);
         client.createSecret("key", "secret");
     }
 
@@ -357,7 +355,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"title\": \"Maxmimum number of secrets already met\",\n"
                 + "  \"detail\": \"This account has reached maximum number of '2' allowed secrets\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        wrapper.setHttpClient(stubHttpClient(403, json));
+        stubResponse(403, json);
         client.createSecret("key", "secret");
     }
 
@@ -367,7 +365,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"title\": \"Invalid API Key\",\n"
                 + "  \"detail\": \"API key 'ABC123' does not exist, or you do not have access\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        wrapper.setHttpClient(stubHttpClient(404, json));
+        stubResponse(404, json);
         client.createSecret("key", "secret");
     }
 
@@ -376,7 +374,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         String json = "{\n" + "  \"_links\": {\n" + "    \"self\": {\n"
                 + "      \"href\": \"/accounts/abcd1234/secrets/secret-id-one\"\n" + "    }\n" + "  },\n"
                 + "  \"id\": \"secret-id-one\",\n" + "  \"created_at\": \"2017-03-02T16:34:49Z\"\n" + "}";
-        wrapper.setHttpClient(stubHttpClient(200, json));
+        stubResponse(200, json);
 
         SecretResponse response = client.getSecret("apiKey", "secret-id-one");
 
@@ -393,7 +391,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"title\": \"Invalid credentials supplied\",\n"
                 + "  \"detail\": \"You did not provide correct credentials.\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        wrapper.setHttpClient(stubHttpClient(401, json));
+        stubResponse(401, json);
         client.getSecret("apiKey", "secret-id-one");
     }
 
@@ -403,13 +401,13 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"title\": \"Invalid API Key\",\n"
                 + "  \"detail\": \"API key 'ABC123' does not exist, or you do not have access\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        wrapper.setHttpClient(stubHttpClient(404, json));
+        stubResponse(404, json);
         client.getSecret("apiKey", "secret-id-one");
     }
 
     @Test
     public void testRevokeSecretSuccessful() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(204, ""));
+        stubResponse(204);
         // No assertions as an exception will be thrown if failure occurs.
         client.revokeSecret("apiKey", "secretId");
     }
@@ -420,7 +418,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"title\": \"Invalid credentials supplied\",\n"
                 + "  \"detail\": \"You did not provide correct credentials.\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        wrapper.setHttpClient(stubHttpClient(401, json));
+        stubResponse(401, json);
         client.revokeSecret("apiKey", "secret-id-one");
     }
 
@@ -431,7 +429,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"title\": \"Secret Deletion Forbidden\",\n"
                 + "  \"detail\": \"Can not delete the last secret. The account must always have at least 1 secret active at any time\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        wrapper.setHttpClient(stubHttpClient(403, json));
+        stubResponse(403, json);
         client.revokeSecret("apiKey", "secret-id-one");
     }
 
@@ -444,7 +442,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 "  \"max-inbound-request\": 20,\n" +
                 "  \"max-calls-per-second\": 30\n" +
                 "}";
-        wrapper.setHttpClient(stubHttpClient(200, json));
+        stubResponse(200, json);
         SettingsResponse response = client.updateSmsIncomingUrl("https://example.com/webhooks/inbound-sms");
 
         assertEquals("https://example.com/webhooks/inbound-sms", response.getIncomingSmsUrl());
@@ -463,7 +461,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 "  \"max-inbound-request\": 20,\n" +
                 "  \"max-calls-per-second\": 30\n" +
                 "}";
-        wrapper.setHttpClient(stubHttpClient(200, json));
+        stubResponse(200, json);
         SettingsResponse response = client.updateDeliveryReceiptUrl("https://example.com/webhooks/delivery-receipt");
 
         assertEquals("https://example.com/webhooks/inbound-sms", response.getIncomingSmsUrl());
@@ -483,7 +481,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 "  \"max-calls-per-second\": 30\n" +
                 "}";
 
-        wrapper.setHttpClient(stubHttpClient(200, json));
+        stubResponse(200, json);
         SettingsResponse response = client.updateSettings(new SettingsRequest("https://example.com/webhooks/inbound-sms", "https://example.com/webhooks/delivery-receipt"));
 
         assertEquals("https://example.com/webhooks/inbound-sms", response.getIncomingSmsUrl());
@@ -491,5 +489,281 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         assertEquals(Integer.valueOf(30), response.getMaxApiCallsPerSecond());
         assertEquals(Integer.valueOf(20), response.getMaxInboundMessagesPerSecond());
         assertEquals(Integer.valueOf(10), response.getMaxOutboundMessagesPerSecond());
+    }
+
+    // ENDPOINT TESTS
+
+    // BALANCE ENDPOINTS
+
+    @Test
+    public void testBalanceEndpoint() throws Exception {
+        new AccountEndpointTestSpec<Void, BalanceResponse>() {
+
+            @Override
+            protected RestEndpoint<Void, BalanceResponse> endpoint() {
+                return client.balance;
+            }
+
+            @Override
+            protected String expectedEndpointUri(Void request) {
+                return "/account/get-balance";
+            }
+
+            @Override
+            protected Void sampleRequest() {
+                return null;
+            }
+        }
+        .runTests();
+    }
+
+    @Test
+    public void testTopUpEndpoint() throws Exception {
+        new AccountEndpointTestSpec<TopUpRequest, Void>() {
+
+            @Override
+            protected RestEndpoint<TopUpRequest, Void> endpoint() {
+                return client.topUp;
+            }
+
+            @Override
+            protected String expectedEndpointUri(TopUpRequest request) {
+                return "/account/top-up";
+            }
+
+            @Override
+            protected String expectedContentTypeHeader(TopUpRequest request) {
+                return "application/x-www-form-urlencoded";
+            }
+
+            @Override
+            protected TopUpRequest sampleRequest() {
+                return new TopUpRequest("8ef2447e69604f642ae59363aa5f781b");
+            }
+
+            @Override
+            protected Map<String, String> sampleQueryParams() {
+                return Collections.singletonMap("trx", sampleRequest().getTrx());
+            }
+        }
+        .runTests();
+    }
+
+    // PRICING ENDPOINTS
+
+    @Test
+    public void testPricingEndpoint() throws Exception {
+        new AccountEndpointTestSpec<PricingRequest, PricingResponse>() {
+
+            @Override
+            protected RestEndpoint<PricingRequest, PricingResponse> endpoint() {
+                return client.pricing;
+            }
+
+            @Override
+            protected String expectedEndpointUri(PricingRequest request) {
+                return "/account/get-pricing/outbound/" + request.getServiceType();
+            }
+
+            @Override
+            protected PricingRequest sampleRequest() {
+                return new PricingRequest("de", ServiceType.SMS);
+            }
+
+            @Override
+            protected Map<String, String> sampleQueryParams() {
+                PricingRequest request = sampleRequest();
+                assertEquals("de", request.getCountryCode());
+                assertEquals("sms", request.getServiceType());
+
+                Map<String, String> params = new LinkedHashMap<>();
+                params.put("country", request.getCountryCode());
+                return params;
+            }
+        }
+        .runTests();
+    }
+
+    @Test
+    public void testFullPricingEndpoint() throws Exception {
+        new AccountEndpointTestSpec<FullPricingRequest, PricingResponse>() {
+
+            @Override
+            protected RestEndpoint<FullPricingRequest, PricingResponse> endpoint() {
+                return client.fullPricing;
+            }
+
+            @Override
+            protected String expectedEndpointUri(FullPricingRequest request) {
+                return "/account/get-full-pricing/outbound/" + request.getServiceType();
+            }
+
+            @Override
+            protected FullPricingRequest sampleRequest() {
+                FullPricingRequest request = new FullPricingRequest(ServiceType.SMS_TRANSIT);
+                assertEquals("sms-transit", request.getServiceType().toString());
+                return request;
+            }
+        }
+        .runTests();
+    }
+
+    @Test
+    public void testPrefixPricingEndpoint() throws Exception {
+        new AccountEndpointTestSpec<PrefixPricingRequest, PrefixPricingResponse>() {
+
+            @Override
+            protected RestEndpoint<PrefixPricingRequest, PrefixPricingResponse> endpoint() {
+                return client.prefixPricing;
+            }
+
+            @Override
+            protected String expectedEndpointUri(PrefixPricingRequest request) {
+                return "/account/get-prefix-pricing/outbound/" + request.getServiceType();
+            }
+
+            @Override
+            protected PrefixPricingRequest sampleRequest() {
+                return new PrefixPricingRequest(ServiceType.VOICE, "44");
+            }
+
+            @Override
+            protected Map<String, String> sampleQueryParams() {
+                PrefixPricingRequest request = sampleRequest();
+                assertEquals("voice", request.getServiceType().toString());
+                assertEquals("44", request.getPrefix());
+
+                Map<String, String> params = new LinkedHashMap<>();
+                params.put("prefix", request.getPrefix());
+                return params;
+            }
+        }
+        .runTests();
+    }
+
+    // CONFIGURATION ENDPOINT
+
+    @Test
+    public void testSettingsEndpoint() throws Exception {
+        new AccountEndpointTestSpec<SettingsRequest, SettingsResponse>() {
+
+            @Override
+            protected RestEndpoint<SettingsRequest, SettingsResponse> endpoint() {
+                return client.settings;
+            }
+
+            @Override
+            protected String expectedEndpointUri(SettingsRequest request) {
+                return "/account/settings";
+            }
+
+            @Override
+            protected HttpMethod expectedHttpMethod() {
+                return HttpMethod.POST;
+            }
+
+            @Override
+            protected SettingsRequest sampleRequest() {
+                return new SettingsRequest(
+                        "https://example.com/inbound-sms",
+                        "https://example.com/delivery-receipt"
+                );
+            }
+
+            @Override
+            protected Map<String, String> sampleQueryParams() {
+                SettingsRequest request = sampleRequest();
+                String smsUrl = request.getIncomingSmsUrl();
+                String drUrl = request.getDeliveryReceiptUrl();
+                assertEquals("https://example.com/inbound-sms", smsUrl);
+                assertEquals("https://example.com/delivery-receipt", drUrl);
+
+                Map<String, String> params = new LinkedHashMap<>();
+                params.put("moCallBackUrl", smsUrl);
+                params.put("drCallBackUrl", drUrl);
+                return params;
+            }
+        }
+        .runTests();
+    }
+
+    // SECRET ENDPOINTS
+
+    @Test
+    public void testCreateSecretEndpoint() throws Exception {
+        new AccountSecretsEndpointTestSpec<CreateSecretRequest, SecretResponse>() {
+
+            @Override
+            protected RestEndpoint<CreateSecretRequest, SecretResponse> endpoint() {
+                return client.createSecret;
+            }
+
+            @Override
+            protected HttpMethod expectedHttpMethod() {
+                return HttpMethod.POST;
+            }
+
+            @Override
+            protected CreateSecretRequest sampleRequest() {
+                return new CreateSecretRequest(apiKey, apiSecret);
+            }
+        }
+        .runTests();
+    }
+
+    @Test
+    public void testGetSecretEndpoint() throws Exception {
+        new AccountSecretsEndpointTestSpec<SecretRequest, SecretResponse>() {
+
+            @Override
+            protected RestEndpoint<SecretRequest, SecretResponse> endpoint() {
+                return client.getSecret;
+            }
+
+            @Override
+            protected SecretRequest sampleRequest() {
+                return new SecretRequest(apiKey, apiSecret);
+            }
+        }
+        .runTests();
+    }
+
+    @Test
+    public void testListSecretsEndpoint() throws Exception {
+        new AccountSecretsEndpointTestSpec<String, ListSecretsResponse>() {
+
+            @Override
+            protected RestEndpoint<String, ListSecretsResponse> endpoint() {
+                return client.listSecrets;
+            }
+
+            @Override
+            protected String sampleRequest() {
+                return apiKey;
+            }
+        }
+        .runTests();
+    }
+
+    @Test
+    public void testRevokeSecretEndpoint() throws Exception {
+        new AccountSecretsEndpointTestSpec<SecretRequest, Void>() {
+
+            @Override
+            protected RestEndpoint<SecretRequest, Void> endpoint() {
+                return client.revokeSecret;
+            }
+
+            @Override
+            protected HttpMethod expectedHttpMethod() {
+                return HttpMethod.DELETE;
+            }
+
+            @Override
+            protected SecretRequest sampleRequest() {
+                return new SecretRequest(apiKey, apiSecret);
+            }
+        }
+        .runTests();
     }
 }

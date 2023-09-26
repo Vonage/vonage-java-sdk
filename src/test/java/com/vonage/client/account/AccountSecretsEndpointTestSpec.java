@@ -13,26 +13,19 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.application;
+package com.vonage.client.account;
 
-import com.vonage.client.DynamicEndpointTestSpec;
 import com.vonage.client.auth.AuthMethod;
-import com.vonage.client.auth.TokenAuthMethod;
-import com.vonage.client.common.HttpMethod;
+import com.vonage.client.auth.SignatureAuthMethod;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.UUID;
 
-abstract class ApplicationEndpointTestSpec<T, R> extends DynamicEndpointTestSpec<T, R> {
+abstract class AccountSecretsEndpointTestSpec<T, R> extends AccountEndpointTestSpec<T, R> {
 
 	@Override
 	protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
-		return Collections.singletonList(TokenAuthMethod.class);
-	}
-
-	@Override
-	protected Class<? extends Exception> expectedResponseExceptionType() {
-		return ApplicationResponseException.class;
+		Collection<Class<? extends AuthMethod>> authMethods = super.expectedAuthMethods();
+		authMethods.add(SignatureAuthMethod.class);
+		return authMethods;
 	}
 
 	@Override
@@ -42,17 +35,24 @@ abstract class ApplicationEndpointTestSpec<T, R> extends DynamicEndpointTestSpec
 
 	@Override
 	protected String expectedEndpointUri(T request) {
-		String base = "/v2/applications", suffix;
-		if (request instanceof UUID) {
-			suffix = request.toString();
+		String uri = "/accounts/%s/secrets";
+		if (request instanceof SecretRequest) {
+			String apiKey = ((SecretRequest) request).getApiKey();
+			String secretId = ((SecretRequest) request).getSecretId();
+			uri = String.format(uri, apiKey);
+			if (secretId != null) {
+				uri += "/" + secretId;
+			}
 		}
-		else if (request instanceof Application && HttpMethod.PUT.equals(expectedHttpMethod())) {
-			suffix = ((Application) request).getId();
+		else if (request instanceof CreateSecretRequest) {
+			uri = String.format(uri, ((CreateSecretRequest) request).getApiKey());
+		}
+		else if (request instanceof String) {
+			uri = String.format(uri, request);
 		}
 		else {
-			suffix = null;
+			throw new IllegalStateException();
 		}
-		return suffix != null ? base + "/" + suffix : base;
+		return uri;
 	}
-
 }

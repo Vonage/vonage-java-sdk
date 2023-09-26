@@ -45,8 +45,11 @@ public class ListSecretsResponse implements Jsonable {
     @Override
     public void updateFromJson(String json) {
         try {
-            new HALMapper().readerForUpdating(this).readValue(json);
-        } catch (IOException ex) {
+            ListSecretsResponse parsed = new HALMapper().readValue(json, ListSecretsResponse.class);
+            self = parsed.self;
+            secrets = parsed.secrets;
+        }
+        catch (IOException ex) {
             throw new VonageUnexpectedException("Failed to produce ListSecretsResponse from json.", ex);
         }
     }
