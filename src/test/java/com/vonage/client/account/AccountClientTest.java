@@ -43,6 +43,75 @@ public class AccountClientTest extends ClientTest<AccountClient> {
     }
 
     @Test
+    public void testGetFullPricing() throws Exception {
+        String json = "{\n" +
+                "   \"count\": \"243\",\n" +
+                "   \"countries\": [{},\n" +
+                "      {\n" +
+                "         \"countryName\": \"Canada\",\n" +
+                "         \"countryDisplayName\": \"Canada\",\n" +
+                "         \"currency\": \"EUR\",\n" +
+                "         \"defaultPrice\": \"0.00620000\",\n" +
+                "         \"dialingPrefix\": \"1\",\n" +
+                "         \"networks\": [\n" +
+                "            {\n" +
+                "               \"type\": \"mobile\",\n" +
+                "               \"price\": \"0.00590000\",\n" +
+                "               \"currency\": \"EUR\",\n" +
+                "               \"mcc\": \"302\",\n" +
+                "               \"mnc\": \"530\",\n" +
+                "               \"networkCode\": \"302530\",\n" +
+                "               \"networkName\": \"Keewaytinook Okimakanak\"\n" +
+                "            },{}\n" +
+                "         ]\n" +
+                "      },{}\n" +
+                "   ]\n" +
+                "}";
+        stubResponse(200, json);
+        List<PricingResponse> countries = client.listPriceAllCountries(ServiceType.SMS);
+        assertNotNull(countries);
+        assertEquals(3, countries.size());
+        PricingResponse canada = countries.get(1);
+        assertNotNull(canada);
+        assertEquals("Canada", canada.getCountry().getName());
+        assertEquals("Canada", canada.getCountry().getDisplayName());
+        assertEquals("EUR", canada.getCurrency());
+        assertEquals(0.0062, canada.getDefaultPrice().doubleValue(), 0.000000001);
+        assertEquals("1", canada.getDialingPrefix());
+        List<Network> canadaNetworks = canada.getNetworks();
+        assertNotNull(canadaNetworks);
+        assertEquals(2, canadaNetworks.size());
+        Network canadaNetwork = canadaNetworks.get(0);
+        assertNotNull(canadaNetwork);
+        assertEquals(Network.Type.MOBILE, canadaNetwork.getType());
+        assertEquals(0.0059, canadaNetwork.getPrice().doubleValue(), 0.000000001);
+        assertEquals("302", canadaNetwork.getMcc());
+        assertEquals("530", canadaNetwork.getMnc());
+        assertEquals("302530", canadaNetwork.getCode());
+        assertEquals("Keewaytinook Okimakanak", canadaNetwork.getName());
+    }
+
+    @Test
+    public void testGetFullPricingEmptyCountries() throws Exception {
+        stubResponse(200, "{\"count\":0,\"countries\":[]}");
+        List<PricingResponse> response = client.listPriceAllCountries(ServiceType.VOICE);
+        assertNotNull(response);
+        assertTrue(response.isEmpty());
+    }
+
+    @Test
+    public void testGetFullPricingNoCountries() throws Exception {
+        stubResponse(200, "{}");
+        assertNull(client.listPriceAllCountries(ServiceType.VOICE));
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testGetFullPricingNoService() throws Exception {
+        stubResponse(200, "{}");
+        client.listPriceAllCountries(null);
+    }
+
+    @Test
     public void testGetSmsPrice() throws Exception {
         String json = "{\n" + "  \"dialingPrefix\": \"1\",\n" + "  \"defaultPrice\": \"0.00570000\",\n"
                 + "  \"currency\": \"EUR\",\n" + "  \"countryDisplayName\": \"United States of America\",\n"
@@ -632,12 +701,12 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         .runTests();
     }
 
-    /*@Test
+    @Test
     public void testFullPricingEndpoint() throws Exception {
-        new AccountEndpointTestSpec<FullPricingRequest, PricingResponse>() {
+        new AccountEndpointTestSpec<FullPricingRequest, FullPricingResponse>() {
 
             @Override
-            protected RestEndpoint<FullPricingRequest, PricingResponse> endpoint() {
+            protected RestEndpoint<FullPricingRequest, FullPricingResponse> endpoint() {
                 return client.fullPricing;
             }
 
@@ -654,7 +723,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
             }
         }
         .runTests();
-    }*/
+    }
 
     @Test
     public void testPrefixPricingEndpoint() throws Exception {

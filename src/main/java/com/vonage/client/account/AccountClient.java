@@ -19,6 +19,7 @@ import com.vonage.client.*;
 import com.vonage.client.auth.SignatureAuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
 import com.vonage.client.common.HttpMethod;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -29,7 +30,7 @@ import java.util.function.Function;
 public class AccountClient {
     final RestEndpoint<Void, BalanceResponse> balance;
     final RestEndpoint<PricingRequest, PricingResponse> pricing;
-    //final RestEndpoint<FullPricingRequest, PricingResponse> fullPricing;
+    final RestEndpoint<FullPricingRequest, FullPricingResponse> fullPricing;
     final RestEndpoint<PrefixPricingRequest, PrefixPricingResponse> prefixPricing;
     final RestEndpoint<TopUpRequest, Void> topUp;
     final RestEndpoint<SettingsRequest, SettingsResponse> settings;
@@ -45,6 +46,7 @@ public class AccountClient {
      */
     @SuppressWarnings("unchecked")
     public AccountClient(HttpWrapper wrapper) {
+
         class Endpoint<T, R> extends DynamicEndpoint<T, R> {
             static final String SECRETS_PATH = "s/%s/secrets";
 
@@ -87,7 +89,7 @@ public class AccountClient {
 
         balance = new Endpoint<>(req -> "/get-balance");
         pricing = new Endpoint<>(req -> "/get-pricing/outbound/" + req.getServiceType());
-        //fullPricing = new Endpoint<>(req -> "/get-full-pricing/outbound/" + req.getServiceType());
+        fullPricing = new Endpoint<>(req -> "/get-full-pricing/outbound/" + req.getServiceType());
         prefixPricing = new Endpoint<>(req -> "/get-prefix-pricing/outbound/" + req.getServiceType());
         topUp = new Endpoint<>(req -> "/top-up", HttpMethod.POST);
         settings = new Endpoint<>(req -> "/settings", HttpMethod.POST);
@@ -106,6 +108,17 @@ public class AccountClient {
      */
     public BalanceResponse getBalance() throws AccountResponseException {
         return balance.execute(null);
+    }
+
+    /**
+     *
+     * @param service The service type to retrieve pricing and network information for.
+     *
+     * @return The
+     */
+    public List<PricingResponse> listPriceAllCountries(ServiceType service) {
+        Objects.requireNonNull(service, "Service type is required.");
+        return fullPricing.execute(new FullPricingRequest(service)).getCountries();
     }
 
     /**
