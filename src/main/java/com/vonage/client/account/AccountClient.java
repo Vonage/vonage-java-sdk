@@ -52,13 +52,16 @@ public class AccountClient {
                 this(pathGetter, HttpMethod.GET, type);
             }
             Endpoint(Function<T, String> pathGetter, HttpMethod method, R... type) {
-                this(pathGetter, method, false, type);
+                this(pathGetter, method, false, method == HttpMethod.POST, type);
             }
-            Endpoint(Function<T, String> pathGetter, HttpMethod method, boolean signatureAuth, R... type) {
+            Endpoint(Function<T, String> pathGetter, HttpMethod method,
+                     boolean signatureAuth, boolean formEncoded, R... type
+            ) {
                 super(DynamicEndpoint.<T, R> builder((Class<R>) type.getClass().getComponentType())
                         .wrapper(wrapper).requestMethod(method).applyAsBasicAuth(signatureAuth)
                         .authMethod(TokenAuthMethod.class, signatureAuth ? SignatureAuthMethod.class : null)
                         .responseExceptionType(AccountResponseException.class)
+                        .contentTypeHeader(formEncoded ? "application/x-www-form-urlencoded" : null)
                         .pathGetter((de, req) -> {
                             HttpConfig config = de.getHttpWrapper().getHttpConfig();
                             String base = signatureAuth ? config.getApiBaseUri() : config.getRestBaseUri();
@@ -70,14 +73,14 @@ public class AccountClient {
 
         class SecretsEndpoint<T, R> extends Endpoint<T, R> {
             SecretsEndpoint(Function<T, String> apiKeyGetter, HttpMethod method, R... type) {
-                super(req -> String.format(SECRETS_PATH, apiKeyGetter.apply(req)), method, true, type);
+                super(req -> String.format(SECRETS_PATH, apiKeyGetter.apply(req)), method, true, false, type);
             }
         }
 
         class SecretRequestEndpoint<R> extends Endpoint<SecretRequest, R> {
             SecretRequestEndpoint(HttpMethod method, R... type) {
                 super(req -> String.format(SECRETS_PATH, req.getApiKey()) + "/" + req.getSecretId(),
-                        method, true, type
+                        method, true, false, type
                 );
             }
         }
@@ -86,7 +89,7 @@ public class AccountClient {
         pricing = new Endpoint<>(req -> "/get-pricing/outbound/" + req.getServiceType());
         fullPricing = new Endpoint<>(req -> "/get-full-pricing/outbound/" + req.getServiceType());
         prefixPricing = new Endpoint<>(req -> "/get-prefix-pricing/outbound/" + req.getServiceType());
-        topUp = new Endpoint<>(req -> "/top-up");
+        topUp = new Endpoint<>(req -> "/top-up", HttpMethod.POST);
         settings = new Endpoint<>(req -> "/settings", HttpMethod.POST);
         listSecrets = new SecretsEndpoint<>(Function.identity(), HttpMethod.GET);
         createSecret = new SecretsEndpoint<>(CreateSecretRequest::getApiKey, HttpMethod.POST);

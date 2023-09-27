@@ -575,6 +575,11 @@ public class AccountClientTest extends ClientTest<AccountClient> {
             }
 
             @Override
+            protected HttpMethod expectedHttpMethod() {
+                return HttpMethod.POST;
+            }
+
+            @Override
             protected String expectedContentTypeHeader(TopUpRequest request) {
                 return "application/x-www-form-urlencoded";
             }
@@ -703,6 +708,11 @@ public class AccountClientTest extends ClientTest<AccountClient> {
             @Override
             protected HttpMethod expectedHttpMethod() {
                 return HttpMethod.POST;
+            }
+
+            @Override
+            protected String expectedContentTypeHeader(SettingsRequest request) {
+                return "application/x-www-form-urlencoded";
             }
 
             @Override
