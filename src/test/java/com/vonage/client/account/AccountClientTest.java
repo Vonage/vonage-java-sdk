@@ -331,7 +331,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
     @Test(expected = IllegalArgumentException.class)
     public void testCreateSecretNoApiKey() throws Exception {
         stubResponse(200, "{}");
-        client.createSecret("  ", apiSecret);
+        client.createSecret("  ", UUID.randomUUID().toString());
     }
 
     @Test
@@ -413,7 +413,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
     @Test(expected = VonageResponseParseException.class)
     public void testGetSecretMalformed() throws Exception {
         stubResponse(200, "{malformed]");
-        client.getSecret(apiKey, apiSecret);
+        client.getSecret(apiKey, UUID.randomUUID().toString());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -425,7 +425,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
     @Test(expected = IllegalArgumentException.class)
     public void testGetSecretNoApiKey() throws Exception {
         stubResponse(200, "{}");
-        client.getSecret(null, apiSecret);
+        client.getSecret(null, UUID.randomUUID().toString());
     }
 
     @Test(expected = AccountResponseException.class)
@@ -632,7 +632,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         .runTests();
     }
 
-    @Test
+    /*@Test
     public void testFullPricingEndpoint() throws Exception {
         new AccountEndpointTestSpec<FullPricingRequest, PricingResponse>() {
 
@@ -654,7 +654,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
             }
         }
         .runTests();
-    }
+    }*/
 
     @Test
     public void testPrefixPricingEndpoint() throws Exception {
@@ -745,6 +745,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
     @Test
     public void testCreateSecretEndpoint() throws Exception {
         new AccountSecretsEndpointTestSpec<CreateSecretRequest, SecretResponse>() {
+            final String secretId = UUID.randomUUID().toString();
 
             @Override
             protected RestEndpoint<CreateSecretRequest, SecretResponse> endpoint() {
@@ -758,7 +759,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
 
             @Override
             protected CreateSecretRequest sampleRequest() {
-                return new CreateSecretRequest(apiKey, apiSecret);
+                return new CreateSecretRequest(apiKey, secretId);
             }
         }
         .runTests();
@@ -767,6 +768,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
     @Test
     public void testGetSecretEndpoint() throws Exception {
         new AccountSecretsEndpointTestSpec<SecretRequest, SecretResponse>() {
+            final String secretId = UUID.randomUUID().toString();
 
             @Override
             protected RestEndpoint<SecretRequest, SecretResponse> endpoint() {
@@ -775,7 +777,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
 
             @Override
             protected SecretRequest sampleRequest() {
-                return new SecretRequest(apiKey, apiSecret);
+                return new SecretRequest(apiKey, secretId);
             }
         }
         .runTests();
@@ -801,6 +803,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
     @Test
     public void testRevokeSecretEndpoint() throws Exception {
         new AccountSecretsEndpointTestSpec<SecretRequest, Void>() {
+            final String secretId = UUID.randomUUID().toString();
 
             @Override
             protected RestEndpoint<SecretRequest, Void> endpoint() {
@@ -814,7 +817,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
 
             @Override
             protected SecretRequest sampleRequest() {
-                return new SecretRequest(apiKey, apiSecret);
+                return new SecretRequest(apiKey, secretId);
             }
         }
         .runTests();

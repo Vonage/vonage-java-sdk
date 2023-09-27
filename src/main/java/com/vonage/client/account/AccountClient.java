@@ -29,7 +29,7 @@ import java.util.function.Function;
 public class AccountClient {
     final RestEndpoint<Void, BalanceResponse> balance;
     final RestEndpoint<PricingRequest, PricingResponse> pricing;
-    final RestEndpoint<FullPricingRequest, PricingResponse> fullPricing;
+    //final RestEndpoint<FullPricingRequest, PricingResponse> fullPricing;
     final RestEndpoint<PrefixPricingRequest, PrefixPricingResponse> prefixPricing;
     final RestEndpoint<TopUpRequest, Void> topUp;
     final RestEndpoint<SettingsRequest, SettingsResponse> settings;
@@ -87,7 +87,7 @@ public class AccountClient {
 
         balance = new Endpoint<>(req -> "/get-balance");
         pricing = new Endpoint<>(req -> "/get-pricing/outbound/" + req.getServiceType());
-        fullPricing = new Endpoint<>(req -> "/get-full-pricing/outbound/" + req.getServiceType());
+        //fullPricing = new Endpoint<>(req -> "/get-full-pricing/outbound/" + req.getServiceType());
         prefixPricing = new Endpoint<>(req -> "/get-prefix-pricing/outbound/" + req.getServiceType());
         topUp = new Endpoint<>(req -> "/top-up", HttpMethod.POST);
         settings = new Endpoint<>(req -> "/settings", HttpMethod.POST);
@@ -97,6 +97,13 @@ public class AccountClient {
         revokeSecret = new SecretRequestEndpoint<>(HttpMethod.DELETE);
     }
 
+    /**
+     * Obtains the current account remaining balance.
+     *
+     * @return The account balance along with other metadata.
+     *
+     * @throws AccountResponseException If the balance could not be retrieved.
+     */
     public BalanceResponse getBalance() throws AccountResponseException {
         return balance.execute(null);
     }
