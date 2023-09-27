@@ -27,22 +27,27 @@ public class Network {
     private BigDecimal price;
     private String currency, mcc, mnc, code, name;
 
+    @JsonProperty("type")
     public Type getType() {
         return type;
     }
 
+    @JsonProperty("price")
     public BigDecimal getPrice() {
         return price;
     }
 
+    @JsonProperty("currency")
     public String getCurrency() {
         return currency;
     }
 
+    @JsonProperty("mcc")
     public String getMcc() {
         return mcc;
     }
 
+    @JsonProperty("mnc")
     public String getMnc() {
         return mnc;
     }

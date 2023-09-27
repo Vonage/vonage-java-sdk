@@ -39,7 +39,7 @@ public class InsightClient {
         @SuppressWarnings("unchecked")
         final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
             Endpoint(Function<T, String> pathGetter, R... type) {
-                super(DynamicEndpoint.<T, R>builder((Class<R>) type.getClass().getComponentType())
+                super(DynamicEndpoint.<T, R> builder(type)
                         .wrapper(wrapper).requestMethod(HttpMethod.POST)
                         .authMethod(SignatureAuthMethod.class, TokenAuthMethod.class)
                         .pathGetter((de, req) -> {

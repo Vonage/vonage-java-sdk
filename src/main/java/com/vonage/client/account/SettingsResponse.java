@@ -18,28 +18,19 @@ package com.vonage.client.account;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SettingsResponse {
-    @JsonProperty("mo-callback-url")
-    private String incomingSmsUrl;
-    @JsonProperty("dr-callback-url")
-    private String deliveryReceiptUrl;
-    @JsonProperty("max-outbound-request")
-    private Integer maxOutboundMessagesPerSecond;
-    @JsonProperty("max-inbound-request")
-    private Integer maxInboundMessagesPerSecond;
-    @JsonProperty("max-calls-per-second")
-    private Integer maxApiCallsPerSecond;
+public class SettingsResponse implements Jsonable {
+    private String incomingSmsUrl,deliveryReceiptUrl;
+    private Integer maxOutboundMessagesPerSecond, maxInboundMessagesPerSecond, maxApiCallsPerSecond;
 
     /**
      * @return The URL where Vonage will send a webhook when an incoming SMS is received when a number-specific URL is
      * not configured.
      */
+    @JsonProperty("mo-callback-url")
     public String getIncomingSmsUrl() {
         return incomingSmsUrl;
     }
@@ -48,6 +39,7 @@ public class SettingsResponse {
      * @return The URL where Vonage will send a webhook when a delivery receipt is received when a number-specific URL is
      * not configured.
      */
+    @JsonProperty("dr-callback-url")
     public String getDeliveryReceiptUrl() {
         return deliveryReceiptUrl;
     }
@@ -55,6 +47,7 @@ public class SettingsResponse {
     /**
      * @return The maximum number of outbound messages per second.
      */
+    @JsonProperty("max-outbound-request")
     public Integer getMaxOutboundMessagesPerSecond() {
         return maxOutboundMessagesPerSecond;
     }
@@ -62,6 +55,7 @@ public class SettingsResponse {
     /**
      * @return The maximum number of inbound messages per second.
      */
+    @JsonProperty("max-inbound-request")
     public Integer getMaxInboundMessagesPerSecond() {
         return maxInboundMessagesPerSecond;
     }
@@ -69,16 +63,14 @@ public class SettingsResponse {
     /**
      * @return The maximum number of API calls per second.
      */
+    @JsonProperty("max-calls-per-second")
     public Integer getMaxApiCallsPerSecond() {
         return maxApiCallsPerSecond;
     }
 
     public static SettingsResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, SettingsResponse.class);
-        } catch (IOException e) {
-            throw new VonageUnexpectedException("Failed to produce SettingsResponse from json.", e);
-        }
+        SettingsResponse response = new SettingsResponse();
+        response.updateFromJson(json);
+        return response;
     }
 }

@@ -15,7 +15,8 @@
  */
 package com.vonage.client.account;
 
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.Jsonable;
+import com.vonage.client.VonageResponseParseException;
 import io.openapitools.jackson.dataformat.hal.HALLink;
 import io.openapitools.jackson.dataformat.hal.HALMapper;
 import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
@@ -25,13 +26,14 @@ import java.io.IOException;
 import java.util.Collection;
 
 @Resource
-public class ListSecretsResponse {
+public class ListSecretsResponse implements Jsonable {
     @Link
     private HALLink self;
 
     @EmbeddedResource
     private Collection<SecretResponse> secrets;
 
+    @Deprecated
     public HALLink getSelf() {
         return self;
     }
@@ -40,11 +42,21 @@ public class ListSecretsResponse {
         return secrets;
     }
 
-    public static ListSecretsResponse fromJson(String json) {
+    @Override
+    public void updateFromJson(String json) {
         try {
-            return new HALMapper().readValue(json, ListSecretsResponse.class);
-        } catch (IOException e) {
-            throw new VonageUnexpectedException("Failed to produce ListSecretsResponse from json.", e);
+            ListSecretsResponse parsed = new HALMapper().readValue(json, ListSecretsResponse.class);
+            self = parsed.self;
+            secrets = parsed.secrets;
         }
+        catch (IOException ex) {
+            throw new VonageResponseParseException("Failed to produce ListSecretsResponse from json.", ex);
+        }
+    }
+
+    public static ListSecretsResponse fromJson(String json) {
+        ListSecretsResponse response = new ListSecretsResponse();
+        response.updateFromJson(json);
+        return response;
     }
 }

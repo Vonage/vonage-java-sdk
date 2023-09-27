@@ -34,7 +34,7 @@ public class NumbersClient {
         @SuppressWarnings("unchecked")
         final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
             Endpoint(final String path, HttpMethod method, R... type) {
-                super(DynamicEndpoint.<T, R> builder((Class<R>) type.getClass().getComponentType())
+                super(DynamicEndpoint.<T, R> builder(type)
                         .responseExceptionType(NumbersResponseException.class)
                         .wrapper(wrapper).requestMethod(method)
                         .authMethod(TokenAuthMethod.class).applyAsBasicAuth()

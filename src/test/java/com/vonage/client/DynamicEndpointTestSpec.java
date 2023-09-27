@@ -17,17 +17,16 @@ package com.vonage.client;
 
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.common.HttpMethod;
+import org.apache.http.Header;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
-
+import static org.junit.Assert.*;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static org.junit.Assert.*;
 
 public abstract class DynamicEndpointTestSpec<T, R> {
 
@@ -191,11 +190,15 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 		assertEquals(expectedHttpMethod().toString(), builder.getMethod());
 		String expectedContentTypeHeader = expectedContentTypeHeader(request);
 		if (expectedContentTypeHeader != null) {
-			assertEquals(expectedContentTypeHeader, builder.getFirstHeader("Content-Type").getValue());
+			Header contentTypeHeader = builder.getFirstHeader("Content-Type");
+			assertNotNull("Content-Type header is null", contentTypeHeader);
+			assertEquals(expectedContentTypeHeader, contentTypeHeader.getValue());
 		}
 		String expectedAcceptHeader = expectedAcceptHeader();
 		if (expectedAcceptHeader != null) {
-			assertEquals(expectedAcceptHeader, builder.getFirstHeader("Accept").getValue());
+			Header acceptHeader = builder.getFirstHeader("Accept");
+			assertNotNull("Accept header is null", acceptHeader);
+			assertEquals(expectedAcceptHeader, acceptHeader.getValue());
 		}
 		return builder;
 	}

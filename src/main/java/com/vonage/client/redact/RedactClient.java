@@ -34,7 +34,7 @@ public class RedactClient {
         @SuppressWarnings("unchecked")
         final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
             Endpoint(String path, HttpMethod method, R... type) {
-                super(DynamicEndpoint.<T, R> builder((Class<R>) type.getClass().getComponentType())
+                super(DynamicEndpoint.<T, R> builder(type)
                         .wrapper(wrapper).requestMethod(method).applyAsBasicAuth()
                         .responseExceptionType(VonageBadRequestException.class)
                         .authMethod(SignatureAuthMethod.class, TokenAuthMethod.class)

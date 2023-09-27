@@ -16,29 +16,28 @@
 package com.vonage.client.account;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.Jsonable;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PrefixPricingResponse {
+public class PrefixPricingResponse implements Jsonable {
     private int count;
     private List<PricingResponse> countries;
 
+    @JsonProperty("count")
     public int getCount() {
         return count;
     }
 
+    @JsonProperty("countries")
     public List<PricingResponse> getCountries() {
         return countries;
     }
 
     public static PrefixPricingResponse fromJson(String json) {
-        try {
-            return new ObjectMapper().readValue(json, PrefixPricingResponse.class);
-        } catch (IOException jpe) {
-            throw new VonageUnexpectedException("Failed to produce PrefixPricingResponse from json.", jpe);
-        }
+        PrefixPricingResponse response = new PrefixPricingResponse();
+        response.updateFromJson(json);
+        return response;
     }
 }

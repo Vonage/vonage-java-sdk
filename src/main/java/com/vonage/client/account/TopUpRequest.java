@@ -15,14 +15,28 @@
  */
 package com.vonage.client.account;
 
-public class TopUpRequest {
+import com.vonage.client.QueryParamsRequest;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+@Deprecated
+public class TopUpRequest implements QueryParamsRequest {
     private final String trx;
 
     public TopUpRequest(String trx) {
-        this.trx = trx;
+        if ((this.trx = trx) == null || trx.trim().isEmpty()) {
+            throw new IllegalArgumentException("Transaction ID is required.");
+        }
     }
 
     public String getTrx() {
         return trx;
+    }
+
+    @Override
+    public Map<String, String> makeParams() {
+        Map<String, String> params = new LinkedHashMap<>(2);
+        params.put("trx", trx);
+        return params;
     }
 }

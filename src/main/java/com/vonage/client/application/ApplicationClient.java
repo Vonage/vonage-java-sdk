@@ -38,7 +38,7 @@ public class ApplicationClient {
         @SuppressWarnings("unchecked")
         final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
             Endpoint(Function<T, String> pathGetter, HttpMethod method, R... type) {
-                super(DynamicEndpoint.<T, R>builder((Class<R>) type.getClass().getComponentType())
+                super(DynamicEndpoint.<T, R> builder(type)
                         .responseExceptionType(ApplicationResponseException.class)
                         .wrapper(wrapper).requestMethod(method)
                         .authMethod(TokenAuthMethod.class).applyAsBasicAuth()

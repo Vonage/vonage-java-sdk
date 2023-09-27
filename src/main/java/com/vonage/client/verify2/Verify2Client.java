@@ -42,7 +42,7 @@ public class Verify2Client {
 		@SuppressWarnings("unchecked")
 		final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
 			Endpoint(Function<T, String> pathGetter, HttpMethod method, R... type) {
-				super(DynamicEndpoint.<T, R> builder((Class<R>) type.getClass().getComponentType())
+				super(DynamicEndpoint.<T, R> builder(type)
 						.responseExceptionType(VerifyResponseException.class)
 						.wrapper(wrapper).requestMethod(method)
 						.authMethod(JWTAuthMethod.class, TokenAuthMethod.class)

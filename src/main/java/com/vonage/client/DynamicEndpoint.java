@@ -28,10 +28,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
@@ -64,6 +61,22 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		if ((accept = builder.accept) == null && Jsonable.class.isAssignableFrom(responseType)) {
 			accept = ContentType.APPLICATION_JSON.getMimeType();
 		}
+	}
+
+	/**
+	 * This trick enables initialisation of the builder whilst inferring the response type {@code <R>}
+	 * without directly providing the class by using varargs as a parameter. See usages for examples.
+	 *
+	 * @param responseType The response type array, not provided directly but via a varargs parameter.
+	 *
+	 * @return A new Builder.
+	 *
+	 * @param <T> The request type.
+	 * @param <R> The response type.
+	 * @since 7.9.0
+	 */
+	public static <T, R> Builder<T, R> builder(R[] responseType) {
+		return builder((Class<R>) responseType.getClass().getComponentType());
 	}
 
 	public static <T, R> Builder<T, R> builder(Class<R> responseType) {
@@ -101,9 +114,13 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 
 		public Builder<T, R> authMethod(Class<? extends AuthMethod> primary, Class<? extends AuthMethod>... others) {
 			authMethods = new ArrayList<>(2);
-			authMethods.add(primary);
-			if (others != null && others.length > 0) {
-				authMethods.addAll(Arrays.asList(others));
+			authMethods.add(Objects.requireNonNull(primary, "Primary auth method cannot be null"));
+			if (others != null) {
+				for (Class<? extends AuthMethod> amc : others) {
+					if (amc != null) {
+						authMethods.add(amc);
+					}
+				}
 			}
 			return this;
 		}
@@ -124,7 +141,11 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		}
 
 		public Builder<T, R> applyAsBasicAuth() {
-			applyBasicAuth = true;
+			return applyAsBasicAuth(true);
+		}
+
+		public Builder<T, R> applyAsBasicAuth(boolean applyBasicAuth) {
+			this.applyBasicAuth = applyBasicAuth;
 			return this;
 		}
 

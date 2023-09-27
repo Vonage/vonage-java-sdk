@@ -17,14 +17,12 @@ package com.vonage.client.account;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 import java.math.BigDecimal;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PricingResponse {
+public class PricingResponse implements Jsonable {
     private String dialingPrefix;
     private BigDecimal defaultPrice;
     private String currency;
@@ -53,10 +51,8 @@ public class PricingResponse {
     }
 
     public static PricingResponse fromJson(String json) {
-        try {
-            return new ObjectMapper().readValue(json, PricingResponse.class);
-        } catch (IOException jpe) {
-            throw new VonageUnexpectedException("Failed to produce PricingResponse from json.", jpe);
-        }
+        PricingResponse response = new PricingResponse();
+        response.updateFromJson(json);
+        return response;
     }
 }

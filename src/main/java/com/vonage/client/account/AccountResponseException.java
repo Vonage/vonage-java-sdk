@@ -13,19 +13,21 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.numbers;
+package com.vonage.client.account;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vonage.client.VonageApiResponseException;
 
 /**
  * Response returned when an error is encountered (i.e. the API returns a non-2xx status code).
  *
- * @since 7.8.0
+ * @since 7.9.0
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public final class NumbersResponseException extends VonageApiResponseException {
+public final class AccountResponseException extends VonageApiResponseException {
 
 	void setStatusCode(int statusCode) {
 		this.statusCode = statusCode;
@@ -38,7 +40,7 @@ public final class NumbersResponseException extends VonageApiResponseException {
 	 * @return An instance of this class with all known fields populated from the JSON payload, if present.
 	 */
 	@JsonCreator
-	public static NumbersResponseException fromJson(String json) {
-		return fromJson(NumbersResponseException.class, json);
+	public static AccountResponseException fromJson(String json) {
+		return fromJson(AccountResponseException.class, json);
 	}
 }

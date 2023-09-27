@@ -48,7 +48,7 @@ public class VerifyClient {
         @SuppressWarnings("unchecked")
         class Endpoint<T, R> extends DynamicEndpoint<T, R> {
             Endpoint(String path, boolean formEncoded, R... type) {
-                super(DynamicEndpoint.<T, R> builder((Class<R>) type.getClass().getComponentType())
+                super(DynamicEndpoint.<T, R> builder(type)
                         .wrapper(wrapper).requestMethod(HttpMethod.POST)
                         .authMethod(TokenAuthMethod.class)
                         .contentTypeHeader(formEncoded ? "application/x-www-form-urlencoded" : null)

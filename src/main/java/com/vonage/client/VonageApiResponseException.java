@@ -15,10 +15,7 @@
  */
 package com.vonage.client;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
@@ -38,7 +35,7 @@ import java.util.Objects;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class VonageApiResponseException extends VonageClientException implements Jsonable {
 	protected URI type;
-	protected String title, detail, instance, code;
+	protected String title, detail, instance, code, errorCodeLabel, errorCode;
 	protected List<?> errors, invalidParameters;
 	@JsonIgnore protected int statusCode;
 
@@ -55,6 +52,23 @@ public class VonageApiResponseException extends VonageClientException implements
 
 	protected VonageApiResponseException(Throwable cause) {
 		super(cause);
+	}
+
+	@JsonSetter("error-code")
+	private void setErrorCode(String errorCode) {
+		if (errorCode != null && !errorCode.trim().isEmpty()) {
+			statusCode = Integer.parseInt(errorCode);
+		}
+	}
+
+	/**
+	 * The status code description.
+	 *
+	 * @return The error code label, or {@code null} if unknown.
+	 */
+	@JsonProperty("error-code-label")
+	public String getErrorCodeLabel() {
+		return errorCodeLabel;
 	}
 
 	/**
