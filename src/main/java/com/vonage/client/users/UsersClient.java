@@ -42,7 +42,7 @@ public class UsersClient {
         @SuppressWarnings("unchecked")
         final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
             Endpoint(Function<T, String> pathGetter, HttpMethod method, R... type) {
-                super(DynamicEndpoint.<T, R> builder((Class<R>) type.getClass().getComponentType())
+                super(DynamicEndpoint.<T, R> builder(type)
                         .responseExceptionType(UsersResponseException.class)
                         .wrapper(wrapper).requestMethod(method).authMethod(JWTAuthMethod.class)
                         .pathGetter((de, req) -> {

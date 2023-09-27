@@ -57,7 +57,7 @@ public class AccountClient {
             Endpoint(Function<T, String> pathGetter, HttpMethod method,
                      boolean signatureAuth, boolean formEncoded, R... type
             ) {
-                super(DynamicEndpoint.<T, R> builder((Class<R>) type.getClass().getComponentType())
+                super(DynamicEndpoint.<T, R> builder(type)
                         .wrapper(wrapper).requestMethod(method).applyAsBasicAuth(signatureAuth)
                         .authMethod(TokenAuthMethod.class, signatureAuth ? SignatureAuthMethod.class : null)
                         .responseExceptionType(AccountResponseException.class)

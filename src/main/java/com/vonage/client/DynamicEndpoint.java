@@ -63,6 +63,22 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		}
 	}
 
+	/**
+	 * This trick enables initialisation of the builder whilst inferring the response type {@code <R>}
+	 * without directly providing the class by using varargs as a parameter. See usages for examples.
+	 *
+	 * @param responseType The response type array, not provided directly but via a varargs parameter.
+	 *
+	 * @return A new Builder.
+	 *
+	 * @param <T> The request type.
+	 * @param <R> The response type.
+	 * @since 7.9.0
+	 */
+	public static <T, R> Builder<T, R> builder(R[] responseType) {
+		return builder((Class<R>) responseType.getClass().getComponentType());
+	}
+
 	public static <T, R> Builder<T, R> builder(Class<R> responseType) {
 		return new Builder<>(responseType);
 	}
