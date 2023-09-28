@@ -40,7 +40,7 @@ public class GetRoomEndpointTest {
 		UUID roomId = UUID.randomUUID();
 		RequestBuilder builder = endpoint.makeRequest(roomId);
 		assertEquals("GET", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/meetings/rooms/"+roomId;
+		String expectedUri = "https://api-eu.vonage.com/v1/meetings/rooms/"+roomId;
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, MeetingsClientTest.SAMPLE_ROOM_RESPONSE);
@@ -54,7 +54,7 @@ public class GetRoomEndpointTest {
 		String baseUri = "https://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
 		endpoint = new GetRoomEndpoint(wrapper);
-		String expectedUri = baseUri + "/meetings/rooms/"+roomId;
+		String expectedUri = baseUri + "/v1/meetings/rooms/"+roomId;
 		RequestBuilder builder = endpoint.makeRequest(roomId);
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());

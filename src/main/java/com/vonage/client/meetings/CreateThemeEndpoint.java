@@ -26,7 +26,7 @@ import java.io.IOException;
 
 class CreateThemeEndpoint extends AbstractMethod<Theme, Theme> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
-	private static final String PATH = "/meetings/themes";
+	private static final String PATH = "/v1/meetings/themes";
 	private Theme cachedTheme;
 
 	CreateThemeEndpoint(HttpWrapper httpWrapper) {

@@ -26,7 +26,7 @@ import java.io.IOException;
 
 class UpdateRoomEndpoint extends AbstractMethod<UpdateRoomRequest, MeetingRoom> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
-	private static final String PATH = "/meetings/rooms/%s";
+	private static final String PATH = "/v1/meetings/rooms/%s";
 
 	UpdateRoomEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);

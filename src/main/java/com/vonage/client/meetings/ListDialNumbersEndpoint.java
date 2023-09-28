@@ -27,7 +27,7 @@ import java.util.List;
 
 class ListDialNumbersEndpoint extends AbstractMethod<Void, List<DialInNumber>> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
-	private static final String PATH = "/meetings/dial-in-numbers";
+	private static final String PATH = "/v1/meetings/dial-in-numbers";
 
 	ListDialNumbersEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);

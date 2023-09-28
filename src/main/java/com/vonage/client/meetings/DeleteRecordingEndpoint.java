@@ -25,7 +25,7 @@ import java.util.UUID;
 
 class DeleteRecordingEndpoint extends AbstractMethod<UUID, Void> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
-	private static final String PATH = "/meetings/recordings/%s";
+	private static final String PATH = "/v1/meetings/recordings/%s";
 
 	DeleteRecordingEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);

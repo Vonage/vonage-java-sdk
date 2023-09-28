@@ -4,11 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-# [7.9.0] - 2023-??-??
+# [7.9.0] - 2023-09-28
 - Added `get-full-pricing` implementation of Pricing API in `AccountClient`
 - Added master API key default overloads for secret management in Account API
 - Deprecated public internal request classes in Account API
 - Internal refactoring of Verify v1 and Account API implementations
+- Added `/v1` to Meetings API endpoint URL paths
 
 # [7.8.0] - 2023-09-07
 - Added capability to configure request timeouts (default is 60 seconds)

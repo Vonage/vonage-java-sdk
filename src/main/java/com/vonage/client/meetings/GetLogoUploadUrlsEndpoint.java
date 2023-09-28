@@ -29,7 +29,7 @@ import java.util.List;
 
 class GetLogoUploadUrlsEndpoint extends AbstractMethod<Void, List<LogoUploadsUrlResponse>> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
-	private static final String PATH = "/meetings/themes/logos-upload-urls";
+	private static final String PATH = "/v1/meetings/themes/logos-upload-urls";
 
 	GetLogoUploadUrlsEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
