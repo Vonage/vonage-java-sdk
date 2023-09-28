@@ -17,13 +17,13 @@ package com.vonage.client.verify;
 
 import com.vonage.client.ClientTest;
 import com.vonage.client.RestEndpoint;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class VerifyClientPsd2EndpointTest extends ClientTest<VerifyClient> {
 

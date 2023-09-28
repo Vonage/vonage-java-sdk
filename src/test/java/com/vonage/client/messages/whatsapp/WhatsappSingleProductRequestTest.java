@@ -15,8 +15,8 @@
  */
 package com.vonage.client.messages.whatsapp;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.util.UUID;
 
 public class WhatsappSingleProductRequestTest {

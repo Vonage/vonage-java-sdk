@@ -18,9 +18,8 @@ package com.vonage.client.voice;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.TestUtils;
 import org.apache.http.client.methods.RequestBuilder;
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
@@ -28,7 +27,7 @@ import java.util.UUID;
 public class DownloadRecordingEndpointTest {
     private DownloadRecordingEndpoint endpoint;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         endpoint = new DownloadRecordingEndpoint(new HttpWrapper());
     }

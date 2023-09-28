@@ -15,8 +15,8 @@
  */
 package com.vonage.client.voice.ncco;
 
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.util.Collections;
 
 public class WebSocketEndpointTest {

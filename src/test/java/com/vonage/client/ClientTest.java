@@ -23,8 +23,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
-import static org.junit.Assert.*;
-import org.junit.function.ThrowingRunnable;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.function.Executable;
 import static org.mockito.Mockito.*;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -35,8 +35,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public abstract class ClientTest<T> {
-    protected String applicationId = UUID.randomUUID().toString();
-    protected String apiKey = "a1b2c3d4", apiSecret = "1234567890abcdef";
+    protected final String applicationId = UUID.randomUUID().toString();
+    protected final String apiKey = "a1b2c3d4";
+    protected final String apiSecret = "1234567890abcdef";
     protected HttpWrapper wrapper;
     protected T client;
 
@@ -83,24 +84,24 @@ public abstract class ClientTest<T> {
         wrapper.setHttpClient(stubHttpClient(code));
     }
 
-    protected void stubResponseAndAssertThrows(ThrowingRunnable invocation,
+    protected void stubResponseAndAssertThrows(Executable invocation,
                                                Class<? extends Exception> exceptionClass) throws Exception {
         stubResponseAndAssertThrows(200, invocation, exceptionClass);
     }
 
-    protected void stubResponseAndAssertThrows(int statusCode, ThrowingRunnable invocation,
+    protected void stubResponseAndAssertThrows(int statusCode, Executable invocation,
                                                Class<? extends Exception> exceptionClass) throws Exception {
         stubResponse(statusCode);
         assertThrows(exceptionClass, invocation);
     }
 
-    protected void stubResponseAndAssertThrows(String response, ThrowingRunnable invocation,
+    protected void stubResponseAndAssertThrows(String response, Executable invocation,
                                                Class<? extends Exception> exceptionClass) throws Exception {
         stubResponse(200, response);
         assertThrows(exceptionClass, invocation);
     }
 
-    protected void stubResponseAndAssertThrows(int statusCode, String response, ThrowingRunnable invocation,
+    protected void stubResponseAndAssertThrows(int statusCode, String response, Executable invocation,
                                                Class<? extends Exception> exceptionClass) throws Exception {
         stubResponse(statusCode, response);
         assertThrows(exceptionClass, invocation);
@@ -127,7 +128,7 @@ public abstract class ClientTest<T> {
 
     @SuppressWarnings("unchecked")
     protected <E extends VonageApiResponseException> E assertApiResponseException(
-            int statusCode, String response, Class<E> exClass, ThrowingRunnable invocation) throws Exception {
+            int statusCode, String response, Class<E> exClass, Executable invocation) throws Exception {
         E expectedResponse = (E) exClass.getDeclaredMethod("fromJson", String.class).invoke(exClass, response);
         String expectedJson = expectedResponse.toJson();
         assertTrue(expectedJson.length() > 1 && expectedJson.length() <= response.length());
@@ -138,11 +139,11 @@ public abstract class ClientTest<T> {
         String failPrefix = "Expected "+exClass.getSimpleName()+", but got ";
 
         try {
-            invocation.run();
+            invocation.execute();
             fail(failPrefix + "nothing.");
         }
         catch (Throwable ex) {
-            assertEquals(failPrefix + ex.getClass(), exClass, ex.getClass());
+            assertEquals(exClass, ex.getClass(), failPrefix + ex.getClass());
             assertEquals(expectedResponse, ex);
             assertEquals(expectedJson, ((E) ex).toJson());
         }

@@ -24,10 +24,10 @@ import com.vonage.client.common.HalLinks;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
-import org.junit.Assert;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import java.util.Map;
 
@@ -137,7 +137,7 @@ public class ListListsEndpointTest {
 		List<ContactsList> lists = parsed.getLists();
 		assertNotNull(lists);
 		assertEquals(3, lists.size());
-		lists.forEach(Assert::assertNotNull);
+		lists.forEach(Assertions::assertNotNull);
 	}
 
 	@Test(expected = VonageResponseParseException.class)

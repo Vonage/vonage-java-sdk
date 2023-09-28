@@ -15,8 +15,8 @@
  */
 package com.vonage.client.voice.ncco;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.Collections;
 
 public class SipEndpointTest {
@@ -32,6 +32,6 @@ public class SipEndpointTest {
 
         String expectedJson = "[{\"endpoint\":[{\"uri\":\"sip:test@example.com\"," +
                 "\"headers\":{\"k1\":\"v1\"},\"type\":\"sip\"}],\"action\":\"connect\"}]";
-        Assert.assertEquals(expectedJson, new Ncco(connect).toJson());
+        assertEquals(expectedJson, new Ncco(connect).toJson());
     }
 }

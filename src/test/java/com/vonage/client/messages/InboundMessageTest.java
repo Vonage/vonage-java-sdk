@@ -18,7 +18,7 @@ package com.vonage.client.messages;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.messages.sms.SmsInboundMetadata;
 import com.vonage.client.messages.whatsapp.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.Test;
 import java.net.URI;
 import java.time.Instant;
@@ -28,13 +28,14 @@ import java.util.Map;
 import java.util.UUID;
 
 public class InboundMessageTest {
-	UUID messageUuid = UUID.randomUUID();
-	String to = "447700900000", from = "447700900001";
-	String timestamp = "2020-01-01T15:43:21Z";
-	String clientRef = UUID.randomUUID().toString();
-	String text = "Hello, world!";
-	String price = "0.0333";
-	String currency = "EUR";
+	final UUID messageUuid = UUID.randomUUID();
+	final String to = "447700900000";
+    final String from = "447700900001";
+	final String timestamp = "2020-01-01T15:43:21Z";
+	final String clientRef = UUID.randomUUID().toString();
+	final String text = "Hello, world!";
+	final String price = "0.0333";
+	final String currency = "EUR";
 
 	String getCommonPartialJsonStub(Channel channel, MessageType messageType) {
 		return "{\n" +

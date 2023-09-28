@@ -15,12 +15,12 @@
  */
 package com.vonage.client.subaccounts;
 
-import com.vonage.client.RestEndpoint;
 import com.vonage.client.ClientTest;
+import com.vonage.client.RestEndpoint;
 import com.vonage.client.common.HttpMethod;
-import static org.junit.Assert.*;
-import org.junit.Test;
-import org.junit.function.ThrowingRunnable;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.function.Executable;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
@@ -50,7 +50,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 		client = new SubaccountsClient(wrapper);
 	}
 
-	void assert403ResponseException(ThrowingRunnable invocation) throws Exception {
+	void assert403ResponseException(Executable invocation) throws Exception {
 		String response = "{\n" +
 				"   \"type\": \"https://developer.nexmo.com/api-errors#unprovisioned\",\n" +
 				"   \"title\": \"Authorisation error\",\n" +

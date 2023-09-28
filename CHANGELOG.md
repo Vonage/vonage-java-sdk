@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Deprecated public internal request classes in Account API
 - Internal refactoring of Verify v1 and Account API implementations
 - Added `/v1` to Meetings API endpoint URL paths
+- Migrated assertions and test dependencies to JUnit 5
 
 # [7.8.0] - 2023-09-07
 - Added capability to configure request timeouts (default is 60 seconds)

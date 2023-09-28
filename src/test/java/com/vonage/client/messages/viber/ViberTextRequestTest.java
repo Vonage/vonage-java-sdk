@@ -16,7 +16,7 @@
 package com.vonage.client.messages.viber;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import java.net.URI;
 
 public class ViberTextRequestTest {

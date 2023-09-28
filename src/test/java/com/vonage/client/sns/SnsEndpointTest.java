@@ -31,8 +31,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SnsEndpointTest extends DynamicEndpointTestSpec<SnsRequest, SnsResponse> {
     private SnsEndpoint endpoint;

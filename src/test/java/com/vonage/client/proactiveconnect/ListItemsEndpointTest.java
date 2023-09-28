@@ -24,17 +24,17 @@ import com.vonage.client.common.HalLinks;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
-import org.junit.Assert;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 public class ListItemsEndpointTest {
 	ListItemsEndpoint endpoint;
-	String listId = UUID.randomUUID().toString();
+	final String listId = UUID.randomUUID().toString();
 
 	@Before
 	public void setUp() {
@@ -142,7 +142,7 @@ public class ListItemsEndpointTest {
 		List<ListItem> items = parsed.getItems();
 		assertNotNull(items);
 		assertEquals(3, items.size());
-		items.forEach(Assert::assertNotNull);
+		items.forEach(Assertions::assertNotNull);
 	}
 
 	@Test(expected = VonageResponseParseException.class)

@@ -22,7 +22,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.*;
@@ -191,13 +191,13 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 		String expectedContentTypeHeader = expectedContentTypeHeader(request);
 		if (expectedContentTypeHeader != null) {
 			Header contentTypeHeader = builder.getFirstHeader("Content-Type");
-			assertNotNull("Content-Type header is null", contentTypeHeader);
+			assertNotNull(contentTypeHeader, "Content-Type header is null");
 			assertEquals(expectedContentTypeHeader, contentTypeHeader.getValue());
 		}
 		String expectedAcceptHeader = expectedAcceptHeader();
 		if (expectedAcceptHeader != null) {
 			Header acceptHeader = builder.getFirstHeader("Accept");
-			assertNotNull("Accept header is null", acceptHeader);
+			assertNotNull(acceptHeader, "Accept header is null");
 			assertEquals(expectedAcceptHeader, acceptHeader.getValue());
 		}
 		return builder;

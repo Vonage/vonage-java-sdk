@@ -15,15 +15,13 @@
  */
 package com.vonage.client.voice;
 
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 
 public class StreamPayloadTest {
     private StreamPayload payload;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         payload = new StreamPayload("https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3", 2, 0.4);
     }

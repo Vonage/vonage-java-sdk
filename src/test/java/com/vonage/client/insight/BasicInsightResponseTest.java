@@ -17,7 +17,7 @@ package com.vonage.client.insight;
 
 import com.vonage.client.VonageUnexpectedException;
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BasicInsightResponseTest {
 

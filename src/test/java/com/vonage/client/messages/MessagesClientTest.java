@@ -30,8 +30,8 @@ import com.vonage.client.messages.viber.ViberImageRequest;
 import com.vonage.client.messages.viber.ViberTextRequest;
 import com.vonage.client.messages.viber.ViberVideoRequest;
 import com.vonage.client.messages.whatsapp.*;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -231,7 +231,7 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 
 				try {
 					parseResponse(json, statusCode);
-					fail("Expected "+MessageResponseException.class.getName());
+					fail("Expected "+ MessageResponseException.class.getName());
 				}
 				catch (MessageResponseException mrx) {
 					MessageResponseException expected = MessageResponseException.fromJson(json);

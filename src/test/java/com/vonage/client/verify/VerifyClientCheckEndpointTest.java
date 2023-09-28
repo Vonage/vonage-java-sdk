@@ -18,7 +18,7 @@ package com.vonage.client.verify;
 import com.vonage.client.ClientTest;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageResponseParseException;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.HashMap;

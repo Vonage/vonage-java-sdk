@@ -15,7 +15,7 @@
  */
 package com.vonage.client.messages.viber;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.Test;
 
 public class ViberFileRequestTest {

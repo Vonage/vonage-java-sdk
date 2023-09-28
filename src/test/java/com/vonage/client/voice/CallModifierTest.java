@@ -15,15 +15,14 @@
  */
 package com.vonage.client.voice;
 
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class CallModifierTest {
     private CallModifier callModifier;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         callModifier = new CallModifier("abc-123", ModifyCallAction.HANGUP);
     }

@@ -15,8 +15,8 @@
  */
 package com.vonage.client;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class HttpConfigTest {
     static final String EXPECTED_DEFAULT_API_BASE_URI = "https://api.nexmo.com";

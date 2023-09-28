@@ -25,7 +25,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.Before;
 import org.junit.Test;
 import java.time.Instant;
@@ -36,8 +36,8 @@ import java.util.UUID;
 
 public class UpdateListItemEndpointTest {
 	UpdateListItemEndpoint endpoint;
-	String listId = UUID.randomUUID().toString();
-	String itemId = UUID.randomUUID().toString();
+	final String listId = UUID.randomUUID().toString();
+	final String itemId = UUID.randomUUID().toString();
 	
 	@Before
 	public void setUp() {

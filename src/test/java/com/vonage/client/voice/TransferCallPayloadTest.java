@@ -31,8 +31,8 @@ package com.vonage.client.voice;/*
 import com.vonage.client.voice.ncco.Ncco;
 import com.vonage.client.voice.ncco.RecordAction;
 import com.vonage.client.voice.ncco.TalkAction;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 
 public class TransferCallPayloadTest {
     @Test

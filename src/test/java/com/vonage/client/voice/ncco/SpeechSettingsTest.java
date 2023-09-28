@@ -17,9 +17,9 @@ package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
-import static org.junit.Assert.*;
 
 public class SpeechSettingsTest {
 

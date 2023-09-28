@@ -18,7 +18,7 @@ package com.vonage.client.voice;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.voice.ncco.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.Test;
 import java.util.*;
 

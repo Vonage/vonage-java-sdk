@@ -22,15 +22,14 @@ import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.Before;
 import org.junit.Test;
 import java.util.UUID;
 
 public class GetListEndpointTest {
 	GetListEndpoint endpoint;
-	String listId = UUID.randomUUID().toString();
+	final String listId = UUID.randomUUID().toString();
 	
 	@Before
 	public void setUp() {

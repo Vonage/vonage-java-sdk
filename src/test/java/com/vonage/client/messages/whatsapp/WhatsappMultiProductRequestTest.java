@@ -17,8 +17,8 @@ package com.vonage.client.messages.whatsapp;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;

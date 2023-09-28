@@ -16,8 +16,7 @@
 package com.vonage.client.proactiveconnect;
 
 import com.vonage.client.VonageResponseParseException;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.Test;
 
 public class SyncStatusTest {

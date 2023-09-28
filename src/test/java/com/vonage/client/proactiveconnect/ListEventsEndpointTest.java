@@ -24,10 +24,10 @@ import com.vonage.client.common.HalLinks;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
-import org.junit.Assert;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -166,7 +166,7 @@ public class ListEventsEndpointTest {
 		List<Event> events = parsed.getEvents();
 		assertNotNull(events);
 		assertEquals(3, events.size());
-		events.forEach(Assert::assertNotNull);
+		events.forEach(Assertions::assertNotNull);
 	}
 
 	@Test(expected = VonageResponseParseException.class)

@@ -16,7 +16,9 @@
 package com.vonage.client.sms.callback;
 
 import com.vonage.client.sms.callback.messages.MO;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
+import static org.mockito.Mockito.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,8 +28,6 @@ import java.io.StringWriter;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.concurrent.Executor;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 
 class SynchronousExecutor implements Executor {
@@ -63,7 +63,7 @@ class TestMOServlet extends AbstractMOServlet {
 
 public class AbstractMOServletTest {
     @Test
-    public void testHandleEmptyRequest() throws IOException, ServletException {
+    public void testHandleEmptyRequest() throws Exception {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
 
@@ -72,7 +72,7 @@ public class AbstractMOServletTest {
     }
 
     @Test
-    public void testHandleValidTextRequest() throws IOException, ServletException {
+    public void testHandleValidTextRequest() throws Exception {
         HttpServletRequest request = dummyTextRequest();
         HttpServletResponse response = mock(HttpServletResponse.class);
         StringWriter dummyResponseWriter = new StringWriter();
@@ -97,7 +97,7 @@ public class AbstractMOServletTest {
     }
 
     @Test
-    public void testHandleValidUnicodeRequest() throws IOException, ServletException {
+    public void testHandleValidUnicodeRequest() throws Exception {
         HttpServletRequest request = dummyTextRequest();
         HttpServletResponse response = mock(HttpServletResponse.class);
         StringWriter dummyResponseWriter = new StringWriter();
@@ -122,7 +122,7 @@ public class AbstractMOServletTest {
     }
 
     @Test
-    public void testHandleValidBinaryRequest() throws IOException, ServletException {
+    public void testHandleValidBinaryRequest() throws Exception {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
         StringWriter dummyResponseWriter = new StringWriter();
@@ -154,7 +154,7 @@ public class AbstractMOServletTest {
     }
 
     @Test
-    public void testHandleBinaryRequestMissingData() throws IOException, ServletException {
+    public void testHandleBinaryRequestMissingData() throws Exception {
         HttpServletRequest request = mock(HttpServletRequest.class);
         HttpServletResponse response = mock(HttpServletResponse.class);
         StringWriter dummyResponseWriter = new StringWriter();
@@ -178,7 +178,7 @@ public class AbstractMOServletTest {
     }
 
     @Test
-    public void testHandleBadPrice() throws IOException, ServletException {
+    public void testHandleBadPrice() throws Exception {
         HttpServletRequest request = dummyTextRequest();
         HttpServletResponse response = mock(HttpServletResponse.class);
         StringWriter dummyResponseWriter = new StringWriter();
@@ -192,7 +192,7 @@ public class AbstractMOServletTest {
     }
 
     @Test
-    public void testHandleBadMessageType() throws IOException, ServletException {
+    public void testHandleBadMessageType() throws Exception {
         HttpServletRequest request = dummyTextRequest();
         HttpServletResponse response = mock(HttpServletResponse.class);
         StringWriter dummyResponseWriter = new StringWriter();
@@ -206,7 +206,7 @@ public class AbstractMOServletTest {
     }
 
     @Test
-    public void testHandleMissingTextField() throws IOException, ServletException {
+    public void testHandleMissingTextField() throws Exception {
         HttpServletRequest request = dummyTextRequest();
         HttpServletResponse response = mock(HttpServletResponse.class);
         StringWriter dummyResponseWriter = new StringWriter();
@@ -220,7 +220,7 @@ public class AbstractMOServletTest {
     }
 
     @Test
-    public void testHandleBadTimestamp() throws IOException, ServletException {
+    public void testHandleBadTimestamp() throws Exception {
         HttpServletRequest request = dummyTextRequest();
         HttpServletResponse response = mock(HttpServletResponse.class);
         StringWriter dummyResponseWriter = new StringWriter();
@@ -234,7 +234,7 @@ public class AbstractMOServletTest {
     }
 
     @Test
-    public void testHandleValidateUsernamePassword() throws IOException, ServletException {
+    public void testHandleValidateUsernamePassword() throws Exception {
         HttpServletRequest request = dummyTextRequest();
         HttpServletResponse response = mock(HttpServletResponse.class);
         StringWriter dummyResponseWriter = new StringWriter();
@@ -260,7 +260,7 @@ public class AbstractMOServletTest {
     }
 
     @Test
-    public void testHandleMissingUsername() throws IOException, ServletException {
+    public void testHandleMissingUsername() throws Exception {
         HttpServletRequest request = dummyTextRequest();
         HttpServletResponse response = mock(HttpServletResponse.class);
         StringWriter dummyResponseWriter = new StringWriter();
@@ -275,7 +275,7 @@ public class AbstractMOServletTest {
     }
 
     @Test
-    public void testHandleIncorrectUsername() throws IOException, ServletException {
+    public void testHandleIncorrectUsername() throws Exception {
         HttpServletRequest request = dummyTextRequest();
         HttpServletResponse response = mock(HttpServletResponse.class);
         StringWriter dummyResponseWriter = new StringWriter();
@@ -290,7 +290,7 @@ public class AbstractMOServletTest {
     }
 
     @Test
-    public void testHandleMissingPassword() throws IOException, ServletException {
+    public void testHandleMissingPassword() throws Exception {
         HttpServletRequest request = dummyTextRequest();
         HttpServletResponse response = mock(HttpServletResponse.class);
         StringWriter dummyResponseWriter = new StringWriter();
@@ -305,7 +305,7 @@ public class AbstractMOServletTest {
     }
 
     @Test
-    public void testHandleIncorrectPassword() throws IOException, ServletException {
+    public void testHandleIncorrectPassword() throws Exception {
         HttpServletRequest request = dummyTextRequest();
         HttpServletResponse response = mock(HttpServletResponse.class);
         StringWriter dummyResponseWriter = new StringWriter();
@@ -324,7 +324,7 @@ public class AbstractMOServletTest {
      * no validation is actually done.
      */
     @Test
-    public void testHandleValidateNullCredentials() throws IOException, ServletException {
+    public void testHandleValidateNullCredentials() throws Exception {
         HttpServletRequest request = dummyTextRequest();
         HttpServletResponse response = mock(HttpServletResponse.class);
         StringWriter dummyResponseWriter = new StringWriter();

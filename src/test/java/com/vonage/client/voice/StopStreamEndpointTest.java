@@ -24,21 +24,19 @@ import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class StopStreamEndpointTest {
     private StopStreamEndpoint method;
     String httpMethod;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         method = new StopStreamEndpoint(new HttpWrapper());
         httpMethod = "DELETE";

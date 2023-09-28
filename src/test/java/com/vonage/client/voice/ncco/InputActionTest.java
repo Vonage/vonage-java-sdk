@@ -15,11 +15,10 @@
  */
 package com.vonage.client.voice.ncco;
 
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import java.util.Arrays;
 import java.util.Collections;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class InputActionTest {
 

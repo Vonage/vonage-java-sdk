@@ -15,9 +15,8 @@
  */
 package com.vonage.client.voice;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 
 
 public class PhoneEndpointTest {
@@ -48,23 +47,23 @@ public class PhoneEndpointTest {
 
         PhoneEndpoint e1 = new PhoneEndpoint("number");
         PhoneEndpoint e2 = new PhoneEndpoint("number");
-        assertEquals("Endpoints with the same values should be equal", e1, e2);
-        assertEquals("Endpoints with the same values should have the same hash", e1.hashCode(), e2.hashCode());
+        assertEquals(e1, e2, "Endpoints with the same values should be equal");
+        assertEquals(e1.hashCode(), e2.hashCode(), "Endpoints with the same values should have the same hash");
 
         e1 = new PhoneEndpoint("number");
         e2 = new PhoneEndpoint("number1");
-        assertNotEquals("Endpoints with different numbers should not be equal", e1, e2);
-        assertNotEquals("Endpoints with different numbers should have different hashes", e1.hashCode(), e2.hashCode());
+        assertNotEquals(e1, e2, "Endpoints with different numbers should not be equal");
+        assertNotEquals(e1.hashCode(), e2.hashCode(), "Endpoints with different numbers should have different hashes");
 
         e1 = new PhoneEndpoint("number", "dtmf");
         e2 = new PhoneEndpoint("number", "dtmf1");
-        assertNotEquals("Endpoints with different dtmfAnswers should not be equal", e1, e2);
+        assertNotEquals(e1, e2, "Endpoints with different dtmfAnswers should not be equal");
 
         e1 = new PhoneEndpoint("number", "dtmf");
         e2 = null;
-        assertNotEquals("An instance is not equal to null", e2, e1);
+        assertNotEquals(e2, e1, "An instance is not equal to null");
 
         e1 = new PhoneEndpoint("number", "dtmf");
-        assertNotEquals("An instance is not equal to a different type.", new Object(), e1);
+        assertNotEquals(new Object(), e1, "An instance is not equal to a different type.");
     }
 }

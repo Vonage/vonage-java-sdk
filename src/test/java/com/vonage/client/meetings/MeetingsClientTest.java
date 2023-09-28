@@ -20,9 +20,9 @@ import com.vonage.client.ClientTest;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.common.HalLinks;
 import org.apache.http.client.HttpClient;
-import static org.junit.Assert.*;
-import org.junit.Test;
-import org.junit.function.ThrowingRunnable;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.function.Executable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import java.io.IOException;
@@ -348,7 +348,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		assertEquals(ROOM_ID, rooms.get(8).getId());
 	}
 
-	void assert401ResponseException(ThrowingRunnable invocation) throws Exception {
+	void assert401ResponseException(Executable invocation) throws Exception {
 		int statusCode = 401;
 		MeetingsResponseException expectedResponse = MeetingsResponseException.fromJson(
 				"{\n" +
@@ -363,7 +363,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		String failPrefix = "Expected "+expectedResponse.getClass().getSimpleName()+", but got ";
 
 		try {
-			invocation.run();
+			invocation.execute();
 			fail(failPrefix + "nothing.");
 		}
 		catch (MeetingsResponseException ex) {
@@ -381,7 +381,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		}
 	}
 
-	void assert400ResponseException(ThrowingRunnable invocation) throws Exception {
+	void assert400ResponseException(Executable invocation) throws Exception {
 		int statusCode = 400;
 		MeetingsResponseException expectedResponse = MeetingsResponseException.fromJson(
 				"{\n" +
@@ -395,7 +395,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		String failPrefix = "Expected "+expectedResponse.getClass().getSimpleName()+", but got ";
 
 		try {
-			invocation.run();
+			invocation.execute();
 			fail(failPrefix + "nothing.");
 		}
 		catch (MeetingsResponseException ex) {

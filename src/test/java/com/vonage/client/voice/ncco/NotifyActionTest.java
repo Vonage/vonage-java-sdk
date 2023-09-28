@@ -15,11 +15,10 @@
  */
 package com.vonage.client.voice.ncco;
 
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import java.util.HashMap;
 import java.util.Map;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class NotifyActionTest {
 
@@ -41,10 +40,7 @@ public class NotifyActionTest {
                 .eventMethod(EventMethod.GET)
                 .build();
 
-        assertEquals(
-                "[{\"payload\":{\"key2\":\"value2\",\"key\":\"value\"},\"eventUrl\":[\"http://example.com/webhooks/event\"],\"eventMethod\":\"GET\",\"action\":\"notify\"}]",
-                new Ncco(notify).toJson()
-        );
+        assertEquals("[{\"payload\":{\"key2\":\"value2\",\"key\":\"value\"},\"eventUrl\":[\"http://example.com/webhooks/event\"],\"eventMethod\":\"GET\",\"action\":\"notify\"}]", new Ncco(notify).toJson());
     }
 
     @Test

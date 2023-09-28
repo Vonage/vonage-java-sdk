@@ -16,15 +16,13 @@
 package com.vonage.client.voice;
 
 import com.vonage.client.VonageUnexpectedException;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CallInfoPageTest {
     private CallInfoPage page;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         page = CallInfoPage.fromJson("{\n" +
                 "  \"page_size\": 10,\n" +

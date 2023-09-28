@@ -23,7 +23,7 @@ import org.apache.http.client.HttpResponseException;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.*;
 import org.mockito.MockedStatic;
 import static org.mockito.Mockito.mockStatic;
 import java.io.ByteArrayInputStream;
@@ -37,6 +37,10 @@ import java.util.List;
 import java.util.Map;
 
 public class TestUtils {
+
+    static {
+        mockStaticLoggingUtils();
+    }
 
     private static MockedStatic<LoggingUtils> staticMockLoggingUtils;
 

@@ -31,7 +31,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.message.BasicNameValuePair;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.Test;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -165,7 +165,7 @@ public class VonageClientTest {
     }
 
     @Test
-    public void testApiKeyWithSignatureSecret() throws VonageUnacceptableAuthException, NoSuchAlgorithmException, InvalidKeyException {
+    public void testApiKeyWithSignatureSecret() throws Exception {
         VonageClient vonageClient = VonageClient.builder().apiKey("api-key").signatureSecret("api-secret").build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
 
@@ -190,7 +190,7 @@ public class VonageClientTest {
     }
 
     @Test
-    public void testApiKeyWithSignatureSecretAsHMACSHA256() throws VonageUnacceptableAuthException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
+    public void testApiKeyWithSignatureSecretAsHMACSHA256() throws Exception {
         VonageClient vonageClient = VonageClient.builder().hashType(HashUtil.HashType.HMAC_SHA256).apiKey("api-key").signatureSecret("api-secret").build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
 
@@ -215,7 +215,7 @@ public class VonageClientTest {
     }
 
     @Test
-    public void testApiKeyWithSignatureSecretAsHmacSHA256() throws VonageUnacceptableAuthException, NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
+    public void testApiKeyWithSignatureSecretAsHmacSHA256() throws Exception {
         VonageClient vonageClient = VonageClient.builder().hashType(HashUtil.HashType.HMAC_SHA256).apiKey("api-key").signatureSecret("api-secret").build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
 
@@ -348,6 +348,6 @@ public class VonageClientTest {
 
     private void assertContainsParam(List<NameValuePair> params, String key, String value) {
         NameValuePair item = new BasicNameValuePair(key, value);
-        assertTrue(params + " should contain " + item, params.contains(item));
+        assertTrue(params.contains(item), params + " should contain " + item);
     }
 }

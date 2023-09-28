@@ -18,8 +18,8 @@ package com.vonage.client.users;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.users.channels.*;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.net.URI;
 import java.util.*;
 
