@@ -19,17 +19,21 @@ import com.vonage.client.*;
 import com.vonage.client.auth.SignatureAuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
 import com.vonage.client.common.HttpMethod;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * A client for talking to the Vonage Account API. The standard way to obtain an instance of this class is to use {@link
  * VonageClient#getAccountClient()}.
  */
 public class AccountClient {
+    final Supplier<String> apiKeyGetter;
+
     final RestEndpoint<Void, BalanceResponse> balance;
     final RestEndpoint<PricingRequest, PricingResponse> pricing;
-    //final RestEndpoint<FullPricingRequest, PricingResponse> fullPricing;
+    final RestEndpoint<FullPricingRequest, FullPricingResponse> fullPricing;
     final RestEndpoint<PrefixPricingRequest, PrefixPricingResponse> prefixPricing;
     final RestEndpoint<TopUpRequest, Void> topUp;
     final RestEndpoint<SettingsRequest, SettingsResponse> settings;
@@ -45,6 +49,8 @@ public class AccountClient {
      */
     @SuppressWarnings("unchecked")
     public AccountClient(HttpWrapper wrapper) {
+        apiKeyGetter = () -> wrapper.getAuthCollection().getAuth(TokenAuthMethod.class).getApiKey();
+
         class Endpoint<T, R> extends DynamicEndpoint<T, R> {
             static final String SECRETS_PATH = "s/%s/secrets";
 
@@ -87,7 +93,7 @@ public class AccountClient {
 
         balance = new Endpoint<>(req -> "/get-balance");
         pricing = new Endpoint<>(req -> "/get-pricing/outbound/" + req.getServiceType());
-        //fullPricing = new Endpoint<>(req -> "/get-full-pricing/outbound/" + req.getServiceType());
+        fullPricing = new Endpoint<>(req -> "/get-full-pricing/outbound/" + req.getServiceType());
         prefixPricing = new Endpoint<>(req -> "/get-prefix-pricing/outbound/" + req.getServiceType());
         topUp = new Endpoint<>(req -> "/top-up", HttpMethod.POST);
         settings = new Endpoint<>(req -> "/settings", HttpMethod.POST);
@@ -106,6 +112,17 @@ public class AccountClient {
      */
     public BalanceResponse getBalance() throws AccountResponseException {
         return balance.execute(null);
+    }
+
+    /**
+     *
+     * @param service The service type to retrieve pricing and network information for.
+     *
+     * @return The
+     */
+    public List<PricingResponse> listPriceAllCountries(ServiceType service) {
+        Objects.requireNonNull(service, "Service type is required.");
+        return fullPricing.execute(new FullPricingRequest(service)).getCountries();
     }
 
     /**
@@ -166,6 +183,19 @@ public class AccountClient {
     }
 
     /**
+     * List the ID of each secret associated with this account's main API key.
+     *
+     * @return ListSecretsResponse object which contains the results from the API.
+     *
+     * @throws AccountResponseException If there was an error making the request or retrieving the response.
+     *
+     * @since 7.9.0
+     */
+    public ListSecretsResponse listSecrets() throws AccountResponseException {
+        return listSecrets(apiKeyGetter.get());
+    }
+
+    /**
      * List the ID of each secret associated to the given API key.
      *
      * @param apiKey The API key to look up secrets for.
@@ -181,6 +211,19 @@ public class AccountClient {
             throw new IllegalArgumentException("API key is required.");
         }
         return listSecrets.execute(apiKey);
+    }
+
+    /**
+     * Get information for a specific secret id associated with this account's main API key.
+     *
+     * @param secretId The id of the secret to get information on.
+     *
+     * @return SecretResponse object which contains the results from the API.
+     *
+     * @throws AccountResponseException If there was an error making the request or retrieving the response.
+     */
+    public SecretResponse getSecret(String secretId) throws AccountResponseException {
+        return getSecret(apiKeyGetter.get(), secretId);
     }
 
     /**
@@ -200,6 +243,19 @@ public class AccountClient {
     }
 
     /**
+     * Create a secret to be used with this account's main API key.
+     *
+     * @param secret The contents of the secret.
+     *
+     * @return SecretResponse object which contains the created secret from the API.
+     *
+     * @throws AccountResponseException If there was an error making the request or retrieving the response.
+     */
+    public SecretResponse createSecret(String secret) throws AccountResponseException {
+        return createSecret(apiKeyGetter.get(), secret);
+    }
+
+    /**
      * Create a secret to be used with a specific API key.
      *
      * @param apiKey The API key that the secret is to be used with.
@@ -213,6 +269,17 @@ public class AccountClient {
      */
     public SecretResponse createSecret(String apiKey, String secret) throws AccountResponseException {
         return createSecret.execute(new CreateSecretRequest(apiKey, secret));
+    }
+
+    /**
+     * Revoke a secret associated with this account's main API key.
+     *
+     * @param secretId The id of the secret to revoke.
+     *
+     * @throws AccountResponseException If there was an error making the request or retrieving the response.
+     */
+    public void revokeSecret(String secretId) throws AccountResponseException {
+        revokeSecret(apiKeyGetter.get(), secretId);
     }
 
     /**

@@ -4,6 +4,6 @@ then
   exit 1
 fi
 
-python -m pip install --upgrade pip
-pip install bump2version
+python3 -m pip install --upgrade pip
+pip3 install bump2version
 bump2version --new-version "$1" patch

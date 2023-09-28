@@ -4,10 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+# [7.9.0] - 2023-??-??
+- Added `get-full-pricing` implementation of Pricing API in `AccountClient`
+- Added master API key default overloads for secret management in Account API
+- Deprecated public internal request classes in Account API
+- Internal refactoring of Verify v1 and Account API implementations
+
 # [7.8.0] - 2023-09-07
 - Added capability to configure request timeouts (default is 60 seconds)
 - Deprecated custom HTTP client implementation setting
-- Internal refactoring of Numbers, Conversion and Number Insight implementations
+- Internal refactoring of Numbers, Conversion and Number Insight API implementations
 
 # [7.7.0] - 2023-08-10
 - Added Users API implementation
@@ -68,8 +74,39 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Deprecated WAPPush SMS (removed in 8.x)
 - Bumped dependency versions
 
+## [8.0.0-beta4] - 2023-02-24
+- Removed Payments over the Phone NCCO
+- Added SIP functionality to video API
+- Added Broadcast functionality to video API
+- Refactored Archives for consistency with Broadcast
+- Use UUID as return type for IDs where applicable
+
+## [8.0.0-beta3] - 2023-01-11
+- Removed `WAPPush` SMS message type
+- Fixed token generation (added missing claim & role as string)
+- Fixed incorrect responses for `muteSession` and `muteStream` (they don't return anything)
+- Improved handling of 200 / 204 responses for video endpoints which don't return anything
+
+## [8.0.0-beta2] - 2022-12-15
+- Added token generation capability to `VideoClient`
+- Added varargs for `SetStreamLayoutRequest`
+- `listArchives` endpoint takes as input `ListArchivesRequest` using builder pattern
+- Simplified `muteSession` and `muteStream` invocation
+
 # [7.1.1] - 2022-11-16
 - Bumped Jackson version to 2.14
+
+## [8.0.0-beta1] - 2022-11-15
+- Maven artifact moved to `com.vonage:server-sdk`
+- Initial implementation of [Vonage Video API](https://developer.vonage.com/api/video), with following functionality:
+  - Create sessions
+  - Retrieve or update stream layouts in a session
+  - Create, retrieve, delete archives
+  - Add / remove streams from archive
+  - Change archive layout
+  - Mute streams or individual participants in a session
+  - Disconnect participants from a session
+  - Send signal to participants in a session
 
 ## [7.1.0] - 2022-08-25
 - Fixed parsing `MessageResponseException` when entity body is empty
