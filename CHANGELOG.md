@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 # [7.9.0] - 2023-??-??
 - Added `get-full-pricing` implementation of Pricing API in `AccountClient`
+- Added master API key default overloads for secret management in Account API
+- Deprecated public internal request classes in Account API
 - Internal refactoring of Verify v1 and Account API implementations
 
 # [7.8.0] - 2023-09-07

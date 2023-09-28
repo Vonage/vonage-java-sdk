@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 public class AccountClientTest extends ClientTest<AccountClient> {
+    static final String SECRET_ID = UUID.randomUUID().toString();
 
     public AccountClientTest() {
         client = new AccountClient(wrapper);
@@ -350,7 +351,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "    }\n" + "}";
         stubResponse(200, json);
 
-        ListSecretsResponse response = client.listSecrets("abcd1234");
+        ListSecretsResponse response = client.listSecrets();
         assertNotNull(response.getSelf());
         SecretResponse[] responses = response.getSecrets().toArray(new SecretResponse[0]);
 
@@ -373,7 +374,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
     }
 
     @Test
-    public void testListSecretFailedAuth() throws Exception {
+    public void testListSecretFailed() throws Exception {
         String json = "{\n" + "  \"type\": \"https://developer.nexmo.com/api-errors#unauthorized\",\n"
                 + "  \"title\": \"Invalid credentials supplied\",\n"
                 + "  \"detail\": \"You did not provide correct credentials.\",\n"
@@ -400,7 +401,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
     @Test(expected = IllegalArgumentException.class)
     public void testCreateSecretNoApiKey() throws Exception {
         stubResponse(200, "{}");
-        client.createSecret("  ", UUID.randomUUID().toString());
+        client.createSecret("  ", SECRET_ID);
     }
 
     @Test
@@ -410,7 +411,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"id\": \"secret-id-one\",\n" + "  \"created_at\": \"2017-03-02T16:34:49Z\"\n" + "}";
         stubResponse(201, json);
 
-        SecretResponse response = client.createSecret("apiKey", "secret");
+        SecretResponse response = client.createSecret( SECRET_ID);
 
         Calendar calendar = new GregorianCalendar(2017, Calendar.MARCH, 2, 16, 34, 49);
         calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -420,7 +421,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
     }
 
     @Test(expected = AccountResponseException.class)
-    public void testCreateSecretBadRequest() throws Exception {
+    public void testCreateSecretFailed() throws Exception {
         String json =
                 "{\n" + "  \"type\": \"https://developer.nexmo.com/api-errors/account/secret-management#validation\",\n"
                         + "  \"title\": \"Bad Request\",\n"
@@ -429,38 +430,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                         + "      \"reason\": \"Does not meet complexity requirements\"\n" + "    }\n" + "  ],\n"
                         + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
         stubResponse(400, json);
-        client.createSecret("key", "secret");
-    }
-
-    @Test(expected = AccountResponseException.class)
-    public void testCreateSecretFailedAuth() throws Exception {
-        String json = "{\n" + "  \"type\": \"https://developer.nexmo.com/api-errors#unauthorized\",\n"
-                + "  \"title\": \"Invalid credentials supplied\",\n"
-                + "  \"detail\": \"You did not provide correct credentials.\",\n"
-                + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        stubResponse(401, json);
-        client.createSecret("key", "secret");
-    }
-
-    @Test(expected = AccountResponseException.class)
-    public void testCreateSecretMaxSecrets() throws Exception {
-        String json = "{\n"
-                + "  \"type\": \"https://developer.nexmo.com/api-errors/account/secret-management#maximum-secrets-allowed\",\n"
-                + "  \"title\": \"Maxmimum number of secrets already met\",\n"
-                + "  \"detail\": \"This account has reached maximum number of '2' allowed secrets\",\n"
-                + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        stubResponse(403, json);
-        client.createSecret("key", "secret");
-    }
-
-    @Test(expected = AccountResponseException.class)
-    public void testCreateSecretAccountNotFound() throws Exception {
-        String json = "{\n" + "  \"type\": \"https://developer.nexmo.com/api-errors#invalid-api-key\",\n"
-                + "  \"title\": \"Invalid API Key\",\n"
-                + "  \"detail\": \"API key 'ABC123' does not exist, or you do not have access\",\n"
-                + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        stubResponse(404, json);
-        client.createSecret("key", "secret");
+        client.createSecret(apiKey, "secret");
     }
 
     @Test
@@ -470,7 +440,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"id\": \"secret-id-one\",\n" + "  \"created_at\": \"2017-03-02T16:34:49Z\"\n" + "}";
         stubResponse(200, json);
 
-        SecretResponse response = client.getSecret("apiKey", "secret-id-one");
+        SecretResponse response = client.getSecret(SECRET_ID);
 
         Calendar calendar = new GregorianCalendar(2017, Calendar.MARCH, 2, 16, 34, 49);
         calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -482,7 +452,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
     @Test(expected = VonageResponseParseException.class)
     public void testGetSecretMalformed() throws Exception {
         stubResponse(200, "{malformed]");
-        client.getSecret(apiKey, UUID.randomUUID().toString());
+        client.getSecret(apiKey, SECRET_ID);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -494,21 +464,11 @@ public class AccountClientTest extends ClientTest<AccountClient> {
     @Test(expected = IllegalArgumentException.class)
     public void testGetSecretNoApiKey() throws Exception {
         stubResponse(200, "{}");
-        client.getSecret(null, UUID.randomUUID().toString());
+        client.getSecret(null, SECRET_ID);
     }
 
     @Test(expected = AccountResponseException.class)
-    public void testGetSecretFailedAuth() throws Exception {
-        String json = "{\n" + "  \"type\": \"https://developer.nexmo.com/api-errors#unauthorized\",\n"
-                + "  \"title\": \"Invalid credentials supplied\",\n"
-                + "  \"detail\": \"You did not provide correct credentials.\",\n"
-                + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        stubResponse(401, json);
-        client.getSecret("apiKey", "secret-id-one");
-    }
-
-    @Test(expected = AccountResponseException.class)
-    public void testGetSecretNotFound() throws Exception {
+    public void testGetSecretFailed() throws Exception {
         String json = "{\n" + "  \"type\": \"https://developer.nexmo.com/api-errors#invalid-api-key\",\n"
                 + "  \"title\": \"Invalid API Key\",\n"
                 + "  \"detail\": \"API key 'ABC123' does not exist, or you do not have access\",\n"
@@ -521,28 +481,18 @@ public class AccountClientTest extends ClientTest<AccountClient> {
     public void testRevokeSecretSuccessful() throws Exception {
         stubResponse(204);
         // No assertions as an exception will be thrown if failure occurs.
-        client.revokeSecret("apiKey", "secretId");
+        client.revokeSecret(SECRET_ID);
     }
 
     @Test(expected = AccountResponseException.class)
-    public void testRevokeSecretFailedAuth() throws Exception {
-        String json = "{\n" + "  \"type\": \"https://developer.nexmo.com/api-errors#unauthorized\",\n"
-                + "  \"title\": \"Invalid credentials supplied\",\n"
-                + "  \"detail\": \"You did not provide correct credentials.\",\n"
-                + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
-        stubResponse(401, json);
-        client.revokeSecret("apiKey", "secret-id-one");
-    }
-
-    @Test(expected = AccountResponseException.class)
-    public void testRevokeSecretForbidden() throws Exception {
+    public void testRevokeSecretFailed() throws Exception {
         String json = "{\n"
                 + "  \"type\": \"https://developer.nexmo.com/api-errors/account/secret-management#delete-last-secret\",\n"
                 + "  \"title\": \"Secret Deletion Forbidden\",\n"
                 + "  \"detail\": \"Can not delete the last secret. The account must always have at least 1 secret active at any time\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
         stubResponse(403, json);
-        client.revokeSecret("apiKey", "secret-id-one");
+        client.revokeSecret(apiKey, SECRET_ID);
     }
 
     @Test
@@ -814,7 +764,6 @@ public class AccountClientTest extends ClientTest<AccountClient> {
     @Test
     public void testCreateSecretEndpoint() throws Exception {
         new AccountSecretsEndpointTestSpec<CreateSecretRequest, SecretResponse>() {
-            final String secretId = UUID.randomUUID().toString();
 
             @Override
             protected RestEndpoint<CreateSecretRequest, SecretResponse> endpoint() {
@@ -828,7 +777,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
 
             @Override
             protected CreateSecretRequest sampleRequest() {
-                return new CreateSecretRequest(apiKey, secretId);
+                return new CreateSecretRequest(apiKey, SECRET_ID);
             }
         }
         .runTests();
@@ -837,7 +786,6 @@ public class AccountClientTest extends ClientTest<AccountClient> {
     @Test
     public void testGetSecretEndpoint() throws Exception {
         new AccountSecretsEndpointTestSpec<SecretRequest, SecretResponse>() {
-            final String secretId = UUID.randomUUID().toString();
 
             @Override
             protected RestEndpoint<SecretRequest, SecretResponse> endpoint() {
@@ -846,7 +794,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
 
             @Override
             protected SecretRequest sampleRequest() {
-                return new SecretRequest(apiKey, secretId);
+                return new SecretRequest(apiKey, SECRET_ID);
             }
         }
         .runTests();
@@ -872,7 +820,6 @@ public class AccountClientTest extends ClientTest<AccountClient> {
     @Test
     public void testRevokeSecretEndpoint() throws Exception {
         new AccountSecretsEndpointTestSpec<SecretRequest, Void>() {
-            final String secretId = UUID.randomUUID().toString();
 
             @Override
             protected RestEndpoint<SecretRequest, Void> endpoint() {
@@ -886,7 +833,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
 
             @Override
             protected SecretRequest sampleRequest() {
-                return new SecretRequest(apiKey, secretId);
+                return new SecretRequest(apiKey, SECRET_ID);
             }
         }
         .runTests();
