@@ -23,15 +23,15 @@ public class AdvancedInsightRequestTest {
     @Test
     public void testWithNumber() {
         AdvancedInsightRequest request = AdvancedInsightRequest.withNumber("12345");
-        assertEquals(request.getNumber(), "12345");
+        assertEquals("12345", request.getNumber());
         assertNull(request.getCountry());
     }
 
     @Test
     public void testWithNumberAndCountry() {
         AdvancedInsightRequest request = AdvancedInsightRequest.withNumberAndCountry("12345", "GB");
-        assertEquals(request.getNumber(), "12345");
-        assertEquals(request.getCountry(), "GB");
+        assertEquals("12345", request.getNumber());
+        assertEquals("GB", request.getCountry());
     }
 
     @Test
@@ -90,9 +90,9 @@ public class AdvancedInsightRequestTest {
                 .callback("https://example.com")
                 .realTimeData(false)
                 .build();
-        assertEquals(request.getNumber(), "12345");
-        assertEquals(request.getCountry(), "GB");
-        assertEquals(request.getIpAddress(), "123.123.123.123");
+        assertEquals("12345", request.getNumber());
+        assertEquals("GB", request.getCountry());
+        assertEquals("123.123.123.123", request.getIpAddress());
         assertTrue(request.getCnam());
         Boolean realTimeData = request.getRealTimeData();
         assertTrue(realTimeData == null || !realTimeData);
@@ -106,9 +106,9 @@ public class AdvancedInsightRequestTest {
                 .callback("https://example.com")
                 .realTimeData(true)
                 .build();
-        assertEquals(request.getNumber(), "98765");
-        assertEquals(request.getCountry(), "GB");
-        assertEquals(request.getIpAddress(), "123.123.123.123");
+        assertEquals("98765", request.getNumber());
+        assertEquals("GB", request.getCountry());
+        assertEquals("123.123.123.123", request.getIpAddress());
         assertFalse(request.getCnam());
         assertFalse(request.isAsync());
         assertTrue(request.getRealTimeData());

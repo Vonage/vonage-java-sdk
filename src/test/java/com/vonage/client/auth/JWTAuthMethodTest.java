@@ -17,20 +17,17 @@ package com.vonage.client.auth;
 
 import com.vonage.client.TestUtils;
 import org.apache.http.client.methods.RequestBuilder;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import java.nio.file.Paths;
-import static org.junit.Assert.assertEquals;
 
 public class JWTAuthMethodTest {
-    private TestUtils testUtils;
     private JWTAuthMethod auth;
 
     @Before
     public void setUp() throws Exception {
-        testUtils = new TestUtils();
-
-        byte[] keyBytes = testUtils.loadKey("test/keys/application_key");
+        byte[] keyBytes = new TestUtils().loadKey("test/keys/application_key");
         auth = new JWTAuthMethod("application-id", keyBytes);
     }
 

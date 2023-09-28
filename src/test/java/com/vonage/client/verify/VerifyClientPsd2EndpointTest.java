@@ -102,15 +102,15 @@ public class VerifyClientPsd2EndpointTest extends ClientTest<VerifyClient> {
                 params.put("next_event_wait", request.getNextEventWait().toString());
                 params.put("workflow_id", String.valueOf(request.getWorkflow().getId()));
 
-                assertEquals(params.get("number"), "4477990090090");
-                assertEquals(params.get("amount"), "43.21");
-                assertEquals(params.get("payee"), "Ebony");
-                assertEquals(params.get("code_length"), "4");
-                assertEquals(params.get("lg"), "en-gb");
-                assertEquals(params.get("country"), "GB");
-                assertEquals(params.get("pin_expiry"), "60");
-                assertEquals(params.get("next_event_wait"), "90");
-                assertEquals(params.get("workflow_id"), "6");
+                assertEquals("4477990090090", params.get("number"));
+                assertEquals("43.21", params.get("amount"));
+                assertEquals("Ebony", params.get("payee"));
+                assertEquals("4", params.get("code_length"));
+                assertEquals("en-gb", params.get("lg"));
+                assertEquals("GB", params.get("country"));
+                assertEquals("60", params.get("pin_expiry"));
+                assertEquals("90", params.get("next_event_wait"));
+                assertEquals("6", params.get("workflow_id"));
 
                 return params;
             }

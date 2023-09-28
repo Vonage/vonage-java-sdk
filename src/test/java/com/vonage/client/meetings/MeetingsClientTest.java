@@ -672,9 +672,9 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 			Map<String, String> firstError = (Map<String, String>) errors.get(0);
 			assertNotNull(firstError);
 			assertEquals(3, firstError.size());
-			assertEquals(firstError.get("logoKey"), logoKey);
-			assertEquals(firstError.get("code"), "invalid_logo_properties");
-			assertEquals(firstError.get("invalidProperty"), "exceeds_size");
+			assertEquals(logoKey, firstError.get("logoKey"));
+			assertEquals("invalid_logo_properties", firstError.get("code"));
+			assertEquals("exceeds_size", firstError.get("invalidProperty"));
 			assertEquals(expectedResponse.getErrors(), errors);
 		}
 	}

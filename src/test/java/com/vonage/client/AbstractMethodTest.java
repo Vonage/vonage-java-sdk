@@ -95,7 +95,7 @@ public class AbstractMethodTest {
     private HttpClient mockHttpClient;
     private AuthCollection mockAuthMethods;
     private AuthMethod mockAuthMethod;
-    private HttpResponse basicResponse = new BasicHttpResponse(
+    private final HttpResponse basicResponse = new BasicHttpResponse(
             new BasicStatusLine(
                     new ProtocolVersion("1.1", 1, 1),
                     200,

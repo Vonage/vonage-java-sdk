@@ -15,9 +15,7 @@
  */
 package com.vonage.client.voice;
 
-import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class TalkPayloadTest {
