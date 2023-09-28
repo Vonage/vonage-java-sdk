@@ -48,20 +48,19 @@ import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import static com.vonage.client.TestUtils.test429;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CreateCallEndpointTest {
     private static final Log LOG = LogFactory.getLog(CreateCallEndpointTest.class);
 
     private CreateCallEndpoint method;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         method = new CreateCallEndpoint(new HttpWrapper());
     }
@@ -118,9 +117,7 @@ public class CreateCallEndpointTest {
 
         RequestBuilder builder = method.makeRequest(request);
         assertEquals("POST", builder.getMethod());
-        assertEquals("https://api.nexmo.com/v1/calls",
-                builder.build().getURI().toString()
-        );
+        assertEquals("https://api.nexmo.com/v1/calls", builder.build().getURI().toString());
     }
 
     @Test

@@ -16,7 +16,7 @@
 package com.vonage.client.verify;
 
 import com.vonage.client.VonageResponseParseException;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.Test;
 
 public class VerifyResponseTest {

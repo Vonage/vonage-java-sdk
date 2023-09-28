@@ -27,8 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class VerifyClientSearchEndpointTest extends ClientTest<VerifyClient> {
 
@@ -250,9 +249,9 @@ public class VerifyClientSearchEndpointTest extends ClientTest<VerifyClient> {
         SearchVerifyResponse response = client.search("request-id-1", "request-id-2", "request-id-3");
         List<VerifyDetails> requests = response.getVerificationRequests();
         assertEquals(3, requests.size());
-        assertEquals(requests.get(0).getAccountId(), accountId+"1");
-        assertEquals(requests.get(1).getAccountId(), accountId+"2");
-        assertEquals(requests.get(2).getAccountId(), accountId+"3");
+        assertEquals(accountId+"1", requests.get(0).getAccountId());
+        assertEquals(accountId+"2", requests.get(1).getAccountId());
+        assertEquals(accountId+"3", requests.get(2).getAccountId());
     }
 
     @Test(expected = IllegalArgumentException.class)

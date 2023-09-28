@@ -32,9 +32,8 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import static org.mockito.Mockito.*;
 import java.io.*;
@@ -47,10 +46,6 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class AbstractMethodTest {
-
-    static {
-        TestUtils.mockStaticLoggingUtils();
-    }
 
     private static class ConcreteMethod extends AbstractMethod<String, String> {
         public ConcreteMethod(HttpWrapper httpWrapper) {
@@ -95,7 +90,7 @@ public class AbstractMethodTest {
     private HttpClient mockHttpClient;
     private AuthCollection mockAuthMethods;
     private AuthMethod mockAuthMethod;
-    private HttpResponse basicResponse = new BasicHttpResponse(
+    private final HttpResponse basicResponse = new BasicHttpResponse(
             new BasicStatusLine(
                     new ProtocolVersion("1.1", 1, 1),
                     200,
@@ -103,7 +98,7 @@ public class AbstractMethodTest {
             )
     );
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         mockWrapper = mock(HttpWrapper.class);
         mockAuthMethods = mock(AuthCollection.class);

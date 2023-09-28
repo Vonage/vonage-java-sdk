@@ -34,7 +34,8 @@ dependencies {
     implementation 'io.openapitools.jackson.dataformat:jackson-dataformat-hal:1.0.9'
     implementation 'com.vonage:jwt:1.0.2'
 
-    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+    testImplementation 'org.junit.vintage:junit-vintage-engine:5.10.0'
     testImplementation 'org.mockito:mockito-inline:4.11.0'
     testImplementation 'jakarta.servlet:jakarta.servlet-api:4.0.4'
 }

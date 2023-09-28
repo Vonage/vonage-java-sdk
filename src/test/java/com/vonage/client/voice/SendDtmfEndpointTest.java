@@ -27,9 +27,8 @@ import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -39,7 +38,7 @@ public class SendDtmfEndpointTest {
     private SendDtmfEndpoint endpoint;
     private final String uuid = UUID.randomUUID().toString();
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         endpoint = new SendDtmfEndpoint(new HttpWrapper());
     }

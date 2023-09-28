@@ -17,16 +17,16 @@ package com.vonage.client.incoming;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import org.junit.jupiter.api.*;
 import java.io.IOException;
-import static org.junit.Assert.*;
 
 public class SpeechResultsTest {
 
     ObjectMapper mapper;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         mapper = new ObjectMapper();
 
@@ -35,7 +35,7 @@ public class SpeechResultsTest {
     @Test
     public void TimeoutReasonDeserializationTest() throws IOException {
         SpeechResults.TimeoutReason timeoutReason = mapper.readValue("\"start_timeout\"", SpeechResults.TimeoutReason.class);
-        assertEquals("Value should be START_TIMEOUT", SpeechResults.TimeoutReason.START_TIMEOUT, timeoutReason);
+        assertEquals(SpeechResults.TimeoutReason.START_TIMEOUT, timeoutReason, "Value should be START_TIMEOUT");
     }
 
     @Test
@@ -43,7 +43,7 @@ public class SpeechResultsTest {
         String expectedJsonStr = "\"start_timeout\"";
         String actualJsonStr = mapper.writeValueAsString(SpeechResults.TimeoutReason.START_TIMEOUT);
 
-        assertEquals("Value should be start_timeout", expectedJsonStr, actualJsonStr);
+        assertEquals(expectedJsonStr, actualJsonStr, "Value should be start_timeout");
 
     }
 
@@ -51,7 +51,7 @@ public class SpeechResultsTest {
     public void ErrorPropertyTest() throws IOException {
         String expectedMessage = "ERR1: Failed to analyze audio";
         SpeechResults speechResults = mapper.readValue("{\"error\": \"ERR1: Failed to analyze audio\"}", SpeechResults.class);
-        assertEquals("Should contain speech error message",expectedMessage, speechResults.getError());
+        assertEquals(expectedMessage, speechResults.getError(), "Should contain speech error message");
         assertNull(speechResults.getResults());
         assertNull(speechResults.getTimeoutReason());
     }

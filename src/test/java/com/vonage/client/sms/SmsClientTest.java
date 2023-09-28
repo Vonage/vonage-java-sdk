@@ -24,8 +24,7 @@ import com.vonage.client.sms.messages.BinaryMessage;
 import com.vonage.client.sms.messages.Message;
 import com.vonage.client.sms.messages.TextMessage;
 import com.vonage.client.sms.messages.WapPushMessage;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -68,8 +67,8 @@ public class SmsClientTest extends ClientTest<SmsClient> {
         Message message = new TextMessage("TestSender", "not-a-number", "Test");
 
         SmsSubmissionResponse r = client.submitMessage(message);
-        assertEquals(r.getMessageCount(), 2);
-        assertEquals(r.getMessages().size(), 2);
+        assertEquals(2, r.getMessageCount());
+        assertEquals(2, r.getMessages().size());
     }
 
     @Test(expected = VonageApiResponseException.class)
@@ -242,8 +241,8 @@ public class SmsClientTest extends ClientTest<SmsClient> {
                             + "      \"message-price\":\"0.03430000\",\n" + "      \"network\":\"98765\",\n"
                             + "      \"client-ref\": \"second ref\"\n" + "    }\n" + "  ]\n" + "}"
                 );
-                assertEquals(rs.getMessageCount(), 2);
-                assertEquals(rs.getMessages().size(), 2);
+                assertEquals(2, rs.getMessageCount());
+                assertEquals(2, rs.getMessages().size());
 
                 SmsSubmissionResponseMessage firstMessage = rs.getMessages().get(0);
                 SmsSubmissionResponseMessage secondMessage = rs.getMessages().get(1);

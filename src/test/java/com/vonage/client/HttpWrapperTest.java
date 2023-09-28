@@ -16,15 +16,13 @@
 package com.vonage.client;
 
 import com.vonage.client.auth.AuthCollection;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class HttpWrapperTest {
     private HttpWrapper wrapper;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         wrapper = new HttpWrapper(new AuthCollection());
     }

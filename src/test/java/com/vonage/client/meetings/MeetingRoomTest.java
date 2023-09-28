@@ -18,7 +18,7 @@ package com.vonage.client.meetings;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.VonageUnexpectedException;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.Test;
 import java.net.URI;
 import java.time.Instant;

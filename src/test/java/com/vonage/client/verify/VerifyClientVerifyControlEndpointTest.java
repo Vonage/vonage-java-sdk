@@ -17,19 +17,17 @@ package com.vonage.client.verify;
 
 import com.vonage.client.ClientTest;
 import com.vonage.client.RestEndpoint;
-import org.junit.Before;
-import org.junit.Test;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 
 public class VerifyClientVerifyControlEndpointTest extends ClientTest<VerifyClient> {
 
-    @Before
+    @BeforeEach
     public void setUp() {
         client = new VerifyClient(wrapper);
     }

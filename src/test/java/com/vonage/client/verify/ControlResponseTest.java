@@ -16,8 +16,8 @@
 package com.vonage.client.verify;
 
 import com.vonage.client.VonageUnexpectedException;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 
 public class ControlResponseTest {
 

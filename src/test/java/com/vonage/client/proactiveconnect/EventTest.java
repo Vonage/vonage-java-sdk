@@ -17,7 +17,7 @@ package com.vonage.client.proactiveconnect;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageResponseParseException;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.Test;
 import java.time.Instant;
 import java.util.LinkedHashMap;

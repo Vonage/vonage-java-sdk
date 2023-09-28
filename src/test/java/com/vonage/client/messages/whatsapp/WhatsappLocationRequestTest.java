@@ -15,7 +15,7 @@
  */
 package com.vonage.client.messages.whatsapp;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.Test;
 
 public class WhatsappLocationRequestTest {

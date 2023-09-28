@@ -18,7 +18,7 @@ package com.vonage.client.verify2;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.verify2.VerificationRequest.Builder;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.Test;
 import java.util.Collections;
 

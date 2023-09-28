@@ -19,9 +19,9 @@ import com.vonage.client.ClientTest;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.common.HttpMethod;
-import static org.junit.Assert.*;
-import org.junit.Test;
-import org.junit.function.ThrowingRunnable;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.function.Executable;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
@@ -36,7 +36,7 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 		client = new Verify2Client(wrapper);
 	}
 
-	void assert429ResponseException(ThrowingRunnable invocation) throws Exception {
+	void assert429ResponseException(Executable invocation) throws Exception {
 		String response = "{\n" +
 				"   \"title\": \"Rate Limit Hit\",\n" +
 				"   \"type\": \"https://www.developer.vonage.com/api-errors#throttled\",\n" +
@@ -141,7 +141,7 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 				final int statusCode = 500;
 				try {
 					parseResponse("", statusCode);
-					fail("Expected "+VerifyResponseException.class.getName());
+					fail("Expected "+ VerifyResponseException.class.getName());
 				}
 				catch (VerifyResponseException mrx) {
 					// The mock returns "OK"
@@ -277,7 +277,7 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 				final int statusCode = 500;
 				try {
 					parseResponse("", statusCode);
-					fail("Expected "+VerifyResponseException.class.getName());
+					fail("Expected "+ VerifyResponseException.class.getName());
 				}
 				catch (VerifyResponseException mrx) {
 					// The mock returns "OK"

@@ -20,10 +20,13 @@ import com.vonage.client.RestEndpoint;
 import com.vonage.client.application.capabilities.*;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.common.Webhook;
-import static org.junit.Assert.*;
-import org.junit.Test;
-import org.junit.function.ThrowingRunnable;
-import java.util.*;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.function.Executable;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class ApplicationClientTest extends ClientTest<ApplicationClient> {
     static final UUID SAMPLE_APPLICATION_ID = UUID.randomUUID();
@@ -133,7 +136,7 @@ public class ApplicationClientTest extends ClientTest<ApplicationClient> {
         assertTrue(privacy.getImproveAi());
     }
 
-    void assert400ResponseException(ThrowingRunnable invocation) throws Exception {
+    void assert400ResponseException(Executable invocation) throws Exception {
         String response = "{\n" +
                 "   \"type\": \"https://developer.nexmo.com/api-errors/application#payload-validation\",\n" +
                 "   \"title\": \"Bad Request\",\n" +

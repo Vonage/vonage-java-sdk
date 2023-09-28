@@ -15,8 +15,8 @@
  */
 package com.vonage.client.voice.ncco;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RecordingFormatTest {
     @Test

@@ -19,11 +19,9 @@ import com.vonage.client.ClientTest;
 import com.vonage.client.VonageClientException;
 import com.vonage.client.common.HalLinks;
 import com.vonage.client.common.HalPageResponse;
-import org.junit.AfterClass;
-import static org.junit.Assert.*;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.function.ThrowingRunnable;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.function.Executable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -120,12 +118,12 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 				"   \"invocation_id\": \"a09aea78-69a4-4b5b-8e53-0d6b1b02c235\"\n" +
 				"}";
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUpBeforeClass() throws Exception {
 		SAMPLE_CSV_PATH = Files.createTempFile("ProactiveConnectClientTest_list", "csv");
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void setUpAfterClass() throws Exception {
 		Files.deleteIfExists(SAMPLE_CSV_PATH);
 	}
@@ -134,7 +132,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 		client = new ProactiveConnectClient(wrapper);
 	}
 
-	void assert409ResponseException(ThrowingRunnable invocation) throws Exception {
+	void assert409ResponseException(Executable invocation) throws Exception {
 		String response = "{\n" +
 				"   \"type\": \"https://developer.vonage.com/en/api-errors\",\n" +
 				"   \"title\": \"Request data did not validate\",\n" +

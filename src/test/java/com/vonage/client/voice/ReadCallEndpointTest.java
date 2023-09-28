@@ -22,16 +22,14 @@ import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
-import org.junit.Before;
-import org.junit.Test;
 import static com.vonage.client.TestUtils.test429;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 
 public class ReadCallEndpointTest {
     private ReadCallEndpoint method;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         method = new ReadCallEndpoint(new HttpWrapper());
     }

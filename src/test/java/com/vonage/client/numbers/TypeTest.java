@@ -15,8 +15,8 @@
  */
 package com.vonage.client.numbers;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TypeTest {
     @Test

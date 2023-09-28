@@ -16,18 +16,14 @@
 package com.vonage.client.voice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.voice.CallDirection;
-import com.vonage.client.voice.CallInfo;
-import com.vonage.client.voice.CallStatus;
-import com.vonage.client.voice.PhoneEndpoint;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CallInfoTest {
-    String jsonWithPlaceholder = "{\n" +
+    final String jsonWithPlaceholder = "{\n" +
             "  \"uuid\": \"93137ee3-580e-45f7-a61a-e0b5716000ef\",\n" +
             "  \"status\": \"PLACEHOLDER\",\n" +
             "  \"direction\": \"outbound\",\n" +
@@ -93,16 +89,12 @@ public class CallInfoTest {
         Calendar expectedStart = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
         expectedStart.set(2017, Calendar.JANUARY, 13, 13, 55, 2);
         expectedStart.set(Calendar.MILLISECOND, 0);
-        assertEquals(
-                expectedStart.getTime(),
-                record.getStartTime());
+        assertEquals(expectedStart.getTime(), record.getStartTime());
         // 2017-01-13T13:55:09.000Z
         Calendar expectedEnd = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
         expectedEnd.set(2017, Calendar.JANUARY, 13, 13, 55, 9);
         expectedEnd.set(Calendar.MILLISECOND, 0);
-        assertEquals(
-                expectedEnd.getTime(),
-                record.getEndTime());
+        assertEquals(expectedEnd.getTime(), record.getEndTime());
         assertEquals(new PhoneEndpoint("447700900104"), record.getTo());
         assertEquals(new PhoneEndpoint("447700900105"), record.getFrom());
     }
@@ -202,8 +194,6 @@ public class CallInfoTest {
         CallInfo record = new CallInfo(new PhoneEndpoint("447700900104"), new PhoneEndpoint("447700900105"));
         record.setUuid("93137ee3-580e-45f7-a61a-e0b5716000ef");
         record.setStatus(CallStatus.COMPLETED);
-        assertEquals(
-                "<CallInfo ID: 93137ee3-580e-45f7-a61a-e0b5716000ef, From: 447700900105, To: 447700900104, Status: completed>",
-                record.toString());
+        assertEquals("<CallInfo ID: 93137ee3-580e-45f7-a61a-e0b5716000ef, From: 447700900105, To: 447700900104, Status: completed>", record.toString());
     }
 }

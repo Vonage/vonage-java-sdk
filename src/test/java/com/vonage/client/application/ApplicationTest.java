@@ -21,8 +21,8 @@ import com.vonage.client.application.capabilities.Rtc;
 import com.vonage.client.application.capabilities.Voice;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.common.Webhook;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.UUID;
 
 public class ApplicationTest {

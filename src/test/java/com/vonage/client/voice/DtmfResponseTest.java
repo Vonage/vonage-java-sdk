@@ -16,18 +16,16 @@
 package com.vonage.client.voice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import org.junit.jupiter.api.*;
 import java.io.IOException;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
 
 
 public class DtmfResponseTest {
     private DtmfResponse response;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         response = DtmfResponse.fromJson("{\n" +
                 "  \"message\": \"DTMF sent\",\n" +

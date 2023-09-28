@@ -20,11 +20,14 @@ import com.vonage.client.RestEndpoint;
 import com.vonage.client.common.HalLinks;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.users.channels.*;
-import static org.junit.Assert.*;
-import org.junit.Test;
-import org.junit.function.ThrowingRunnable;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.function.Executable;
 import java.net.URI;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 public class UsersClientTest extends ClientTest<UsersClient> {
@@ -216,7 +219,7 @@ public class UsersClientTest extends ClientTest<UsersClient> {
         assert429ResponseException(() -> method.accept(SAMPLE_USER_ID));
     }
 
-    void assert429ResponseException(ThrowingRunnable invocation) throws Exception {
+    void assert429ResponseException(Executable invocation) throws Exception {
         String title = "Too Many Requests.",
                 type = "https://developer.nexmo.com/api/conversation#http:error:too-many-request",
                 code = "http:error:too-many-request",

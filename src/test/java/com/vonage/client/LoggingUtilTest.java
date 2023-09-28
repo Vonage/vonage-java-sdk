@@ -21,20 +21,17 @@ import org.apache.http.ProtocolVersion;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 
 public class LoggingUtilTest {
 
-  @BeforeClass
+  @BeforeAll
   public static void setupBeforeClass() {
     TestUtils.unmockStaticLoggingUtils();
   }
 
-  @AfterClass
+  @AfterAll
   public static void cleanupAfterClass() {
     TestUtils.mockStaticLoggingUtils();
   }

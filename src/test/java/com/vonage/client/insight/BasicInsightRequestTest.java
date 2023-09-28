@@ -16,23 +16,22 @@
 package com.vonage.client.insight;
 
 import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BasicInsightRequestTest {
 
     @Test
     public void testWithNumber() {
         BasicInsightRequest request = BasicInsightRequest.withNumber("12345");
-        assertEquals(request.getNumber(), "12345");
+        assertEquals("12345", request.getNumber());
         assertNull(request.getCountry());
     }
 
     @Test
     public void testWithNumberAndCountry() {
         BasicInsightRequest request = BasicInsightRequest.withNumberAndCountry("12345", "GB");
-        assertEquals(request.getNumber(), "12345");
-        assertEquals(request.getCountry(), "GB");
+        assertEquals("12345", request.getNumber());
+        assertEquals("GB", request.getCountry());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -58,12 +57,12 @@ public class BasicInsightRequestTest {
     @Test
     public void testBuildWithAllFields() {
         BasicInsightRequest request = BasicInsightRequest.builder("12345").country("GB").build();
-        assertEquals(request.getNumber(), "12345");
-        assertEquals(request.getCountry(), "GB");
+        assertEquals("12345", request.getNumber());
+        assertEquals("GB", request.getCountry());
 
         request = BasicInsightRequest.builder("12345").number("98765").country("GB").build();
-        assertEquals(request.getNumber(), "98765");
-        assertEquals(request.getCountry(), "GB");
+        assertEquals("98765", request.getNumber());
+        assertEquals("GB", request.getCountry());
     }
 
     @Test(expected = IllegalArgumentException.class)

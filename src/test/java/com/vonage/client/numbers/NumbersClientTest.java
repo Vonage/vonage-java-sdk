@@ -18,9 +18,9 @@ package com.vonage.client.numbers;
 import com.vonage.client.ClientTest;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.common.HttpMethod;
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
-import org.junit.function.ThrowingRunnable;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.function.Executable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -30,7 +30,7 @@ public class NumbersClientTest extends ClientTest<NumbersClient> {
         client = new NumbersClient(wrapper);
     }
 
-    void assert401ResponseException(ThrowingRunnable invocation) throws Exception {
+    void assert401ResponseException(Executable invocation) throws Exception {
         String response = "{\n" +
                 "   \"title\": \"Test reason\",\n" +
                 "   \"error-code\": \"401\",\n" +

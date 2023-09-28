@@ -16,9 +16,9 @@
 package com.vonage.client.auth;
 
 import com.vonage.client.TestUtils;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.jupiter.api.*;
 import java.util.Collections;
 import java.util.Set;
 
@@ -53,9 +53,7 @@ public class AuthCollectionTest {
             auths.getAcceptableAuthMethod(JWT_AUTH_CLASS_SET);
             fail("No acceptable auth method should throw a VonageClientException");
         } catch (VonageUnacceptableAuthException ex) {
-            assertEquals(
-                    "No acceptable authentication type could be found. Acceptable types are: Application ID and Private Key. Supplied types were: ",
-                    ex.getMessage());
+            assertEquals("No acceptable authentication type could be found. Acceptable types are: Application ID and Private Key. Supplied types were: ", ex.getMessage());
         }
     }
 

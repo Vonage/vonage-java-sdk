@@ -17,9 +17,8 @@ package com.vonage.client.application.capabilities;
 
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.common.Webhook;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MessagesTest {
     @Test

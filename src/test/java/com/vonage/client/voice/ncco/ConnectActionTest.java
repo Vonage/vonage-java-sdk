@@ -17,9 +17,8 @@ package com.vonage.client.voice.ncco;
 
 import com.vonage.client.voice.AdvancedMachineDetection;
 import com.vonage.client.voice.MachineDetection;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 
 public class ConnectActionTest {
     @Test
