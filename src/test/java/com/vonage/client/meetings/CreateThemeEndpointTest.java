@@ -42,7 +42,7 @@ public class CreateThemeEndpointTest {
 
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("POST", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/meetings/themes";
+		String expectedUri = "https://api-eu.vonage.com/v1/meetings/themes";
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
@@ -66,7 +66,7 @@ public class CreateThemeEndpointTest {
 		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
 		endpoint = new CreateThemeEndpoint(wrapper);
-		String expectedUri = baseUri + "/meetings/themes";
+		String expectedUri = baseUri + "/v1/meetings/themes";
 		Theme request = Theme.builder().build();
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(expectedUri, builder.build().getURI().toString());

@@ -32,23 +32,21 @@ import java.util.*;
 
 public class MeetingsClient {
 	HttpClient httpClient;
-	final ListRoomsEndpoint listRooms;
-	final GetRoomEndpoint getRoom;
-	final CreateRoomEndpoint createRoom;
-	final UpdateRoomEndpoint updateRoom;
-	final SearchThemeRoomsEndpoint searchThemeRooms;
-	final ListThemesEndpoint listThemes;
-	final GetThemeEndpoint getTheme;
-	final CreateThemeEndpoint createTheme;
-	final UpdateThemeEndpoint updateTheme;
-	final DeleteThemeEndpoint deleteTheme;
-	final ListRecordingsEndpoint listRecordings;
-	final GetRecordingEndpoint getRecording;
-	final DeleteRecordingEndpoint deleteRecording;
-	final ListDialNumbersEndpoint listDialNumbers;
-	final UpdateApplicationEndpoint updateApplication;
-	final FinalizeLogosEndpoint finalizeLogos;
-	final GetLogoUploadUrlsEndpoint getLogoUploadUrls;
+	final RestEndpoint<ListRoomsRequest, ListRoomsResponse> listRooms, searchThemeRooms;
+	final RestEndpoint<UUID, MeetingRoom> getRoom;
+	final RestEndpoint<MeetingRoom, MeetingRoom> createRoom;
+	final RestEndpoint<UpdateRoomRequest, MeetingRoom> updateRoom;
+	final RestEndpoint<Void, List<Theme>> listThemes;
+	final RestEndpoint<UUID, Theme> getTheme;
+	final RestEndpoint<Theme, Theme> createTheme, updateTheme;
+	final RestEndpoint<DeleteThemeRequest, Void> deleteTheme;
+	final RestEndpoint<String, ListRecordingsResponse> listRecordings;
+	final RestEndpoint<UUID, Recording> getRecording;
+	final RestEndpoint<UUID, Void> deleteRecording;
+	final RestEndpoint<Void, List<DialInNumber>> listDialNumbers;
+	final RestEndpoint<UpdateApplicationRequest, Application> updateApplication;
+	final RestEndpoint<FinalizeLogosRequest, Void> finalizeLogos;
+	final RestEndpoint<Void, List<LogoUploadsUrlResponse>> getLogoUploadUrls;
 
 	/**
 	 * Constructor.
@@ -105,7 +103,7 @@ public class MeetingsClient {
 	}
 
 	private List<MeetingRoom> getAllRoomsFromResponseRecursively(
-			AbstractMethod<ListRoomsRequest, ListRoomsResponse> endpoint, ListRoomsRequest initialRequest) {
+			RestEndpoint<ListRoomsRequest, ListRoomsResponse> endpoint, ListRoomsRequest initialRequest) {
 
 		final int initialPageSize = initialRequest.pageSize != null ? initialRequest.pageSize : 1000;
 		ListRoomsRequest request = new ListRoomsRequest(

@@ -28,7 +28,7 @@ import java.util.List;
 
 class ListThemesEndpoint extends AbstractMethod<Void, List<Theme>> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
-	private static final String PATH = "/meetings/themes";
+	private static final String PATH = "/v1/meetings/themes";
 
 	ListThemesEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);

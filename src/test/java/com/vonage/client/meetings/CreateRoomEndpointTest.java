@@ -67,7 +67,7 @@ public class CreateRoomEndpointTest {
 
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("POST", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/meetings/rooms";
+		String expectedUri = "https://api-eu.vonage.com/v1/meetings/rooms";
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 
@@ -107,7 +107,7 @@ public class CreateRoomEndpointTest {
 		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
 		endpoint = new CreateRoomEndpoint(wrapper);
-		String expectedUri = baseUri + "/meetings/rooms";
+		String expectedUri = baseUri + "/v1/meetings/rooms";
 		String displayName = "My custom room";
 		MeetingRoom request = MeetingRoom.builder(displayName).build();
 		RequestBuilder builder = endpoint.makeRequest(request);

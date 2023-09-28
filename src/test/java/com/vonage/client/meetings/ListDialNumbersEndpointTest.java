@@ -39,7 +39,7 @@ public class ListDialNumbersEndpointTest {
 	public void testDefaultUri() throws Exception {
 		RequestBuilder builder = endpoint.makeRequest(null);
 		assertEquals("GET", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/meetings/dial-in-numbers";
+		String expectedUri = "https://api-eu.vonage.com/v1/meetings/dial-in-numbers";
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		String expectedPayload = "[\n" +
 				"{},   {\n" +
@@ -75,7 +75,7 @@ public class ListDialNumbersEndpointTest {
 		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
 		endpoint = new ListDialNumbersEndpoint(wrapper);
-		String expectedUri = baseUri + "/meetings/dial-in-numbers";
+		String expectedUri = baseUri + "/v1/meetings/dial-in-numbers";
 		RequestBuilder builder = endpoint.makeRequest(null);
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals("GET", builder.getMethod());

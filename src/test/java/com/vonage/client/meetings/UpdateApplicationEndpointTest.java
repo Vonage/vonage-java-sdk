@@ -43,7 +43,7 @@ public class UpdateApplicationEndpointTest {
 			.build();
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("PATCH", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/meetings/applications";
+		String expectedUri = "https://api-eu.vonage.com/v1/meetings/applications";
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
@@ -66,7 +66,7 @@ public class UpdateApplicationEndpointTest {
 		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
 		endpoint = new UpdateApplicationEndpoint(wrapper);
-		String expectedUri = baseUri + "/meetings/applications";
+		String expectedUri = baseUri + "/v1/meetings/applications";
 		UpdateApplicationRequest request = UpdateApplicationRequest.builder().defaultThemeId(UUID.randomUUID()).build();
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(expectedUri, builder.build().getURI().toString());

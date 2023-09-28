@@ -43,7 +43,7 @@ public class FinalizeLogosEndpointTest {
 		FinalizeLogosRequest request = new FinalizeLogosRequest(themeId, Arrays.asList("col", "fff"));
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("PUT", builder.getMethod());
-		String expectedUri = "https://api-eu.vonage.com/meetings/themes/"+themeId+"/finalizeLogos";
+		String expectedUri = "https://api-eu.vonage.com/v1/meetings/themes/"+themeId+"/finalizeLogos";
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertNull(endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, "")));
 	}
@@ -54,7 +54,7 @@ public class FinalizeLogosEndpointTest {
 		String baseUri = "http://example.com";
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
 		endpoint = new FinalizeLogosEndpoint(wrapper);
-		String expectedUri = baseUri + "/meetings/themes/"+themeId+"/finalizeLogos";
+		String expectedUri = baseUri + "/v1/meetings/themes/"+themeId+"/finalizeLogos";
 		FinalizeLogosRequest request = new FinalizeLogosRequest(themeId, Arrays.asList("lk1", "lk2"));
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(expectedUri, builder.build().getURI().toString());

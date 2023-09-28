@@ -25,7 +25,7 @@ import java.util.UUID;
 
 class GetRecordingEndpoint extends AbstractMethod<UUID, Recording> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
-	private static final String PATH = "/meetings/recordings/%s";
+	private static final String PATH = "/v1/meetings/recordings/%s";
 
 	GetRecordingEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);

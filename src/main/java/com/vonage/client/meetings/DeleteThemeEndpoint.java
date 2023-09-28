@@ -24,7 +24,7 @@ import java.io.IOException;
 
 class DeleteThemeEndpoint extends AbstractMethod<DeleteThemeRequest, Void> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
-	private static final String PATH = "/meetings/themes/%s";
+	private static final String PATH = "/v1/meetings/themes/%s";
 
 	DeleteThemeEndpoint(HttpWrapper httpWrapper) {
 		super(httpWrapper);
