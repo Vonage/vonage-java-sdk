@@ -87,7 +87,7 @@ public class Verify2Client {
 	public VerificationResponse sendVerification(VerificationRequest request) {
 		if (request.isCodeless() && !hasJwtAuthMethod) {
 			throw new IllegalStateException(
-					"Codeless verification requires an application ID to be set in order to use webhooks."
+				"Codeless verification requires an application ID to be set in order to use webhooks."
 			);
 		}
 		return verifyUser.execute(Objects.requireNonNull(request));

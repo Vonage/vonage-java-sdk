@@ -50,12 +50,12 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 		String toNumber = "447100000009", fromNumber = "447900000001",
 				toEmail = "email@domain.tld", fromEmail = "hello@example.com";
 		List<Workflow> workflows = Arrays.asList(
+				new SilentAuthWorkflow(toNumber),
 				new SmsWorkflow(toNumber),
 				new EmailWorkflow(toEmail, fromEmail),
 				new VoiceWorkflow(toNumber),
 				new WhatsappWorkflow(toNumber, fromNumber),
-				new WhatsappCodelessWorkflow(toNumber),
-				new SilentAuthWorkflow(toNumber)
+				new WhatsappCodelessWorkflow(toNumber)
 		);
 		return VerificationRequest.builder()
 				.brand("Nexmo").fraudCheck(false)

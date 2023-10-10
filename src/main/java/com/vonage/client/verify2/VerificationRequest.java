@@ -77,6 +77,11 @@ public class VerificationRequest implements Jsonable {
 		if (code != null && codeLength != null && code.length() != codeLength) {
 			throw new IllegalStateException("Code '"+code+"' is not "+codeLength+" characters.");
 		}
+		if (workflows.stream().anyMatch(SilentAuthWorkflow.class::isInstance)) {
+			if (!(workflows.get(0) instanceof SilentAuthWorkflow)) {
+				throw new IllegalStateException("Silent Auth must be the first workflow.");
+			}
+		}
 	}
 
 	/**

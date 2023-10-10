@@ -18,8 +18,9 @@ package com.vonage.client.verify2;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.verify2.VerificationRequest.Builder;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class VerificationRequestTest {
@@ -283,7 +284,20 @@ public class VerificationRequestTest {
 		}
 	}
 
-	@Test(expected = VonageUnexpectedException.class)
+	@Test
+	public void testSilentAuthMustBeFirstWorkflow() {
+		VerificationRequest.Builder builder = VerificationRequest.builder().brand("Test");
+		assertThrows(IllegalStateException.class, builder::build);
+		SilentAuthWorkflow saw = new SilentAuthWorkflow("447900000001");
+		assertEquals(saw, builder.addWorkflow(saw).build().getWorkflows().get(0));
+		WhatsappWorkflow waw = new WhatsappWorkflow(saw.getTo());
+		assertEquals(waw, builder.addWorkflow(waw).build().getWorkflows().get(1));
+		builder.workflows(Arrays.asList(waw, saw));
+		assertEquals(2, builder.workflows.size());
+		assertThrows(IllegalStateException.class, builder::build);
+	}
+
+	@Test
 	public void triggerJsonProcessingException() {
 		class SelfRefrencing extends VerificationRequest {
 			@JsonProperty("self") final SelfRefrencing self = this;
@@ -292,8 +306,8 @@ public class VerificationRequestTest {
 				super(builder);
 			}
 		}
-		new SelfRefrencing(VerificationRequest.builder()
-				.addWorkflow(new SmsWorkflow("447900000000")).brand("Test")
-		).toJson();
+		assertThrows(VonageUnexpectedException.class, () -> new SelfRefrencing(VerificationRequest.builder()
+				.addWorkflow(new SmsWorkflow("447900000000")).brand("Test")).toJson()
+		);
 	}
 }
