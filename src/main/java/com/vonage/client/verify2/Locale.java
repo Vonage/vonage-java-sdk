@@ -34,7 +34,8 @@ public enum Locale {
 	HINDI_INDIA("hi-in"),
 	PORTUGUESE_BRAZIL("pt-br"),
 	PORTUGUESE_PORTUGAL("pt-pt"),
-	INDONESIAN_INDONESIA("id-id");
+	INDONESIAN_INDONESIA("id-id"),
+	JAPANESE_JAPAN("ja-jp");
 
 	private final String code;
 
