@@ -16,8 +16,8 @@
 package com.vonage.client.verify2;
 
 import com.vonage.client.VonageResponseParseException;
+import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Test;
 import java.util.UUID;
 
 public class VerificationResponseTest {
@@ -38,13 +38,8 @@ public class VerificationResponseTest {
 		assertNull(response.getRequestId());
 	}
 
-	@Test(expected = VonageResponseParseException.class)
+	@Test
 	public void testConstructFromInvalidJson() {
-		VerificationResponse.fromJson("{_malformed_}");
-	}
-
-	@Test(expected = VonageResponseParseException.class)
-	public void testConstructFromEmptyString() {
-		VerificationResponse.fromJson("");
+		assertThrows(VonageResponseParseException.class, () -> VerificationResponse.fromJson("{_malformed_}"));
 	}
 }

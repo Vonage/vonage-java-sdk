@@ -21,20 +21,23 @@ import com.vonage.client.Jsonable;
 import java.util.UUID;
 
 /**
- * Metadata about an outbound verification request.
+ * Response from following the redirects when attempting to synchronously process a Silent Authentication workflow.
+ *
+ * @since 7.10.0
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class VerificationResponse implements Jsonable {
+class SilentAuthResponse implements Jsonable {
 	protected UUID requestId;
+	protected String code;
 
 	/**
 	 * Protected to prevent users from explicitly creating this object.
 	 */
-	protected VerificationResponse() {
+	protected SilentAuthResponse() {
 	}
 
 	/**
-	 * Returns the UUID of the request that was sent.
+	 * UUID of the request with the Silent Auth workflow.
 	 *
 	 * @return The unique request ID.
 	 */
@@ -43,9 +46,14 @@ public class VerificationResponse implements Jsonable {
 		return requestId;
 	}
 
-	@Override
-	public String toString() {
-		return getClass().getSimpleName()+" {requestId='"+requestId+"'}";
+	/**
+	 * Code to use for completing the workflow by calling {@link Verify2Client#checkVerificationCode(UUID, String)}.
+	 *
+	 * @return The verification code.
+	 */
+	@JsonProperty("code")
+	public String getCode() {
+		return code;
 	}
 
 	/**
@@ -54,8 +62,8 @@ public class VerificationResponse implements Jsonable {
 	 * @param json The JSON string to parse.
 	 * @return An instance of this class with the fields populated, if present.
 	 */
-	public static VerificationResponse fromJson(String json) {
-		VerificationResponse response = new VerificationResponse();
+	public static SilentAuthResponse fromJson(String json) {
+		SilentAuthResponse response = new SilentAuthResponse();
 		response.updateFromJson(json);
 		return response;
 	}

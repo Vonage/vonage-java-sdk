@@ -30,6 +30,7 @@ public class Verify2Client {
 	final RestEndpoint<VerificationRequest, VerificationResponse> verifyUser;
 	final RestEndpoint<VerifyCodeRequestWrapper, Void> verifyRequest;
 	final RestEndpoint<UUID, Void> cancel;
+	final RestEndpoint<UUID, SilentAuthResponse> silentAuthCheck;
 
 	/**
 	 * Create a new Verify2Client.
@@ -57,6 +58,11 @@ public class Verify2Client {
 		verifyUser = new Endpoint<>(null, HttpMethod.POST);
 		verifyRequest = new Endpoint<>(req -> req.requestId, HttpMethod.POST);
 		cancel = new Endpoint<>(UUID::toString, HttpMethod.DELETE);
+		silentAuthCheck = new Endpoint<>(reqId -> reqId + "/silent-auth/redirect", HttpMethod.GET);
+	}
+
+	private UUID validateRequestId(UUID requestId) {
+		return Objects.requireNonNull(requestId, "Request ID is required.");
 	}
 
 	/**
@@ -112,9 +118,10 @@ public class Verify2Client {
 	 * @throws VerifyResponseException If the code was invalid, or any other error.
 	 */
 	public void checkVerificationCode(UUID requestId, String code) {
-		Objects.requireNonNull(requestId, "Request ID is required.");
-		Objects.requireNonNull(code, "Code is required.");
-		verifyRequest.execute(new VerifyCodeRequestWrapper(requestId.toString(), code));
+		verifyRequest.execute(new VerifyCodeRequestWrapper(
+				validateRequestId(requestId).toString(),
+				Objects.requireNonNull(code, "Code is required.")
+		));
 	}
 
 	/**
@@ -127,7 +134,26 @@ public class Verify2Client {
 	 * @throws VerifyResponseException If the request ID was not found or it has been verified already.
 	 */
 	public void cancelVerification(UUID requestId) {
-		Objects.requireNonNull(requestId, "Request ID is required.");
-		cancel.execute(requestId);
+		cancel.execute(validateRequestId(requestId));
+	}
+
+	/**
+	 * Final step of Silent Authentication workflow. Once the {@linkplain #sendVerification(VerificationRequest)}
+	 * has been called, use the response to obtain the request ID and pass it to this method to complete
+	 * the verification workflow. This method uses the {@linkplain #cancelVerification(UUID)} under the hood
+	 * with a code obtained from the API after following the `check_url` redirect. Refer to the
+	 * <a href=https://developer.vonage.com/en/verify/guides/silent-authentication>
+	 * Silent Authentication documentation</a> for more details.
+	 *
+	 * @param requestId ID of the request, as obtained from {@link VerificationResponse#getRequestId()}.
+	 *
+	 * @throws VerifyResponseException If the Silent Authentication workflow failed due
+	 * to a network error (409 HTTP status response).
+	 *
+	 * @since v7.10.0
+	 */
+	public void checkSilentAuth(UUID requestId) {
+		SilentAuthResponse response = silentAuthCheck.execute(validateRequestId(requestId));
+		checkVerificationCode(response.getRequestId(), response.getCode());
 	}
 }

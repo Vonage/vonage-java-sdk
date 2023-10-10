@@ -199,8 +199,8 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 				client.checkVerificationCode(null, CODE),
 				NullPointerException.class
 		);
-		stubResponseAndAssertThrows(204, () ->
-				client.checkVerificationCode(REQUEST_ID, null),
+		stubResponseAndAssertThrows(204,
+				() -> client.checkVerificationCode(REQUEST_ID, null),
 				NullPointerException.class
 		);
 	}
@@ -359,6 +359,75 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 					assertEquals(detail, vrx.getDetail());
 					assertEquals(instance, vrx.getInstance());
 				}
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testVerifySilentAuth() throws Exception {
+		String successJson = "{\"request_id\":\""+REQUEST_ID+"\",\"code\":\""+CODE+"\"}";
+		stubResponseAndRun(successJson, () -> client.checkSilentAuth(REQUEST_ID));
+		stubResponseAndAssertThrows(200, successJson,
+				() -> client.checkSilentAuth(null),
+				NullPointerException.class
+		);
+
+		String title = "Network error", detail =
+				"The Silent Auth request could not be completed due to formatting or the carrier is not supported";
+
+		stubResponse(409, "{\"title\":\""+title+"\",\"detail\":\""+detail+"\"}");
+		try {
+			client.checkSilentAuth(REQUEST_ID);
+			fail("Expected " + VerifyResponseException.class.getName());
+		}
+		catch (VerifyResponseException ex) {
+			assertEquals(409, ex.getStatusCode());
+			assertEquals(title, ex.getTitle());
+			assertEquals(detail, ex.getDetail());
+		}
+	}
+
+	@Test
+	public void testSilentAuthCheckEndpoint() throws Exception {
+		new Verify2EndpointTestSpec<UUID, SilentAuthResponse>() {
+
+			@Override
+			protected RestEndpoint<UUID, SilentAuthResponse> endpoint() {
+				return client.silentAuthCheck;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedEndpointUri(UUID request) {
+				return "/v2/verify/"+request+"/silent-auth/redirect";
+			}
+
+			@Override
+			protected UUID sampleRequest() {
+				return REQUEST_ID;
+			}
+
+			@Override
+			public void runTests() throws Exception {
+				super.runTests();
+				testParseResponse();
+			}
+
+			void testParseResponse() throws Exception {
+				UUID requestId = sampleRequest();
+				stubResponse(200, "{\n" +
+						"   \"request_id\": \""+requestId+"\",\n" +
+						"   \"code\": \"si9sfG\"\n" +
+						"}"
+				);
+				SilentAuthResponse response = endpoint().execute(requestId);
+				assertEquals(requestId, response.getRequestId());
+				assertEquals("si9sfG", response.getCode());
 			}
 		}
 		.runTests();
