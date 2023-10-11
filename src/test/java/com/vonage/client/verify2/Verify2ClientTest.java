@@ -50,7 +50,7 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 		String toNumber = "447100000009", fromNumber = "447900000001",
 				toEmail = "email@domain.tld", fromEmail = "hello@example.com";
 		List<Workflow> workflows = Arrays.asList(
-				new SilentAuthWorkflow(toNumber),
+				new SilentAuthWorkflow(toNumber, true),
 				new SmsWorkflow(toNumber),
 				new EmailWorkflow(toEmail, fromEmail),
 				new VoiceWorkflow(toNumber),
@@ -71,6 +71,7 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 		VerificationResponse response = client.sendVerification(request);
 		assertNotNull(response);
 		assertEquals(REQUEST_ID, response.getRequestId());
+		assertNull(response.getCheckUrl());
 	}
 
 	@Test

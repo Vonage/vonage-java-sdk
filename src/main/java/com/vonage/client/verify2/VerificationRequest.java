@@ -317,6 +317,7 @@ public class VerificationRequest implements Jsonable {
 		}
 
 		/**
+		 * (OPTIONAL)
 		 * Set this parameter to {@code false} to force through the request even if it's
 		 * blocked by the network's fraud protection. Refer to
 		 * <a href=https://developer.vonage.com/en/verify/verify-v2/guides/v2-anti-fraud>

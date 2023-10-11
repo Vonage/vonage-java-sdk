@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class VerificationRequestTest {
+	static final boolean SANDBOX = true;
 	static final Locale LOCALE = Locale.PORTUGUESE_PORTUGAL;
 	static final int CODE_LENGTH = 8, CHANNEL_TIMEOUT = 120;
 	static final String
@@ -64,6 +65,8 @@ public class VerificationRequestTest {
 
 	Workflow getWorkflowAllParamsForChannel(Channel channel) {
 		switch (channel) {
+			case SILENT_AUTH:
+				return new SilentAuthWorkflow(TO_NUMBER, SANDBOX);
 			case SMS:
 				return new SmsWorkflow(TO_NUMBER, APP_HASH);
 			case WHATSAPP:
@@ -96,22 +99,30 @@ public class VerificationRequestTest {
 
 	String getExpectedAllParamsForSingleWorkflowJson(Channel channel) {
 		String expectedJson = getExpectedRequiredParamsForSingleWorkflowJson(channel), prefix, replacement;
+
 		if (channel == Channel.SMS) {
-			prefix = TO_NUMBER + "\"";
+			prefix = TO_NUMBER + '"';
 			replacement = prefix + ",\"app_hash\":\""+APP_HASH+"\"";
 			expectedJson = expectedJson.replace(prefix, replacement);
 		}
 		if (channel == Channel.WHATSAPP) {
-			prefix = TO_NUMBER + "\"";
+			prefix = TO_NUMBER + '"';
 			replacement = prefix + ",\"from\":\""+FROM_NUMBER+"\"";
 			expectedJson = expectedJson.replace(prefix, replacement);
 		}
 		if (channel == Channel.EMAIL) {
-			prefix = TO_EMAIL + "\"";
+			prefix = TO_EMAIL + '"';
 			replacement = prefix + ",\"from\":\""+FROM_EMAIL+"\"";
 			expectedJson = expectedJson.replace(prefix, replacement);
 		}
+		if (channel == Channel.SILENT_AUTH) {
+			prefix = TO_NUMBER + '"';
+			replacement = prefix + ",\"sandbox\":" + SANDBOX;
+			expectedJson = expectedJson.replace(prefix, replacement);
+		}
+
 		prefix = "{\"locale\":\"pt-pt\",\"channel_timeout\":"+ CHANNEL_TIMEOUT;
+
 		if (channel != Channel.SILENT_AUTH && channel != Channel.WHATSAPP_INTERACTIVE) {
 			prefix += ",\"code_length\":"+CODE_LENGTH;
 		}

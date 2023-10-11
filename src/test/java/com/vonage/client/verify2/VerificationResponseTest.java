@@ -16,8 +16,9 @@
 package com.vonage.client.verify2;
 
 import com.vonage.client.VonageResponseParseException;
-import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
+import java.net.URI;
 import java.util.UUID;
 
 public class VerificationResponseTest {
@@ -25,8 +26,12 @@ public class VerificationResponseTest {
 	@Test
 	public void testConstructFromValidJson() {
 		UUID rqid = UUID.randomUUID();
-		VerificationResponse response = VerificationResponse.fromJson("{\"request_id\":\""+rqid+"\"}");
+		String checkUrl = "https://example.com/v2/"+rqid+"/silent-auth/redirect";
+		VerificationResponse response = VerificationResponse.fromJson(
+				"{\"request_id\":\""+rqid+"\",\"check_url\":\""+checkUrl+"\"}"
+		);
 		assertEquals(rqid, response.getRequestId());
+		assertEquals(URI.create(checkUrl), response.getCheckUrl());
 		String toString = response.toString();
 		assertTrue(toString.contains("VerificationResponse"));
 		assertTrue(toString.contains(rqid.toString()));
