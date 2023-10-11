@@ -178,12 +178,12 @@ public class VerificationRequestTest {
 	@Test
 	public void testAllWorkflowsWithoutRecipient() {
 		for (String invalid : new String[]{"", " ", null}) {
-			assertThrows(IllegalArgumentException.class, () -> new SilentAuthWorkflow(invalid));
-			assertThrows(IllegalArgumentException.class, () -> new SmsWorkflow(invalid));
-			assertThrows(IllegalArgumentException.class, () -> new VoiceWorkflow(invalid));
-			assertThrows(IllegalArgumentException.class, () -> new WhatsappWorkflow(invalid));
-			assertThrows(IllegalArgumentException.class, () -> new WhatsappCodelessWorkflow(invalid));
-			assertThrows(IllegalArgumentException.class, () -> new EmailWorkflow(invalid));
+			assertThrows(RuntimeException.class, () -> new SilentAuthWorkflow(invalid));
+			assertThrows(RuntimeException.class, () -> new SmsWorkflow(invalid));
+			assertThrows(RuntimeException.class, () -> new VoiceWorkflow(invalid));
+			assertThrows(RuntimeException.class, () -> new WhatsappWorkflow(invalid));
+			assertThrows(RuntimeException.class, () -> new WhatsappCodelessWorkflow(invalid));
+			assertThrows(RuntimeException.class, () -> new EmailWorkflow(invalid));
 		}
 	}
 

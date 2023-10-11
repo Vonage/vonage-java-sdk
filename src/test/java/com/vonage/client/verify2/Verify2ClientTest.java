@@ -18,14 +18,13 @@ package com.vonage.client.verify2;
 import com.vonage.client.ClientTest;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.RestEndpoint;
+import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.common.HttpMethod;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
 import java.net.URI;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class Verify2ClientTest extends ClientTest<Verify2Client> {
 	static final UUID REQUEST_ID = UUID.randomUUID();
@@ -367,8 +366,11 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 
 	@Test
 	public void testVerifySilentAuth() throws Exception {
+		VerificationResponse verificationResponse = VerificationResponse.fromJson(
+				"{\"request_id\":\""+REQUEST_ID+"\",\"check_url\":\"https://example.com/verify2/redirect\"}"
+		);
 		String successJson = "{\"request_id\":\""+REQUEST_ID+"\",\"code\":\""+CODE+"\"}";
-		stubResponseAndRun(successJson, () -> client.checkSilentAuth(REQUEST_ID));
+		stubResponseAndRun(successJson, () -> client.checkSilentAuth(verificationResponse));
 		stubResponseAndAssertThrows(200, successJson,
 				() -> client.checkSilentAuth(null),
 				NullPointerException.class
@@ -379,7 +381,7 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 
 		stubResponse(409, "{\"title\":\""+title+"\",\"detail\":\""+detail+"\"}");
 		try {
-			client.checkSilentAuth(REQUEST_ID);
+			client.checkSilentAuth(verificationResponse);
 			fail("Expected " + VerifyResponseException.class.getName());
 		}
 		catch (VerifyResponseException ex) {
@@ -387,14 +389,22 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 			assertEquals(title, ex.getTitle());
 			assertEquals(detail, ex.getDetail());
 		}
+
+		VerificationResponse missingCheckUrlResponse = VerificationResponse.fromJson(
+				"{\"request_id\":\""+REQUEST_ID+"\"}"
+		);
+		stubResponseAndAssertThrows(200, successJson,
+				() -> client.checkSilentAuth(missingCheckUrlResponse),
+				IllegalStateException.class
+		);
 	}
 
 	@Test
 	public void testSilentAuthCheckEndpoint() throws Exception {
-		new Verify2EndpointTestSpec<UUID, SilentAuthResponse>() {
+		new Verify2EndpointTestSpec<URI, SilentAuthResponse>() {
 
 			@Override
-			protected RestEndpoint<UUID, SilentAuthResponse> endpoint() {
+			protected RestEndpoint<URI, SilentAuthResponse> endpoint() {
 				return client.silentAuthCheck;
 			}
 
@@ -404,13 +414,28 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 			}
 
 			@Override
-			protected String expectedEndpointUri(UUID request) {
-				return "/v2/verify/"+request+"/silent-auth/redirect";
+			protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
+				return Collections.emptyList();
 			}
 
 			@Override
-			protected UUID sampleRequest() {
-				return REQUEST_ID;
+			protected String expectedDefaultBaseUri() {
+				return "";
+			}
+
+			@Override
+			protected String customBaseUri() {
+				return expectedDefaultBaseUri();
+			}
+
+			@Override
+			protected String expectedEndpointUri(URI request) {
+				return request.toString();
+			}
+
+			@Override
+			protected URI sampleRequest() {
+				return URI.create("https://api-eu-3.vonage.com/v2/verify/"+REQUEST_ID+"/silent-auth/redirect");
 			}
 
 			@Override
@@ -419,15 +444,14 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 				testParseResponse();
 			}
 
-			void testParseResponse() throws Exception {
-				UUID requestId = sampleRequest();
+			private void testParseResponse() throws Exception {
 				stubResponse(200, "{\n" +
-						"   \"request_id\": \""+requestId+"\",\n" +
+						"   \"request_id\": \""+REQUEST_ID+"\",\n" +
 						"   \"code\": \"si9sfG\"\n" +
 						"}"
 				);
-				SilentAuthResponse response = endpoint().execute(requestId);
-				assertEquals(requestId, response.getRequestId());
+				SilentAuthResponse response = endpoint().execute(sampleRequest());
+				assertEquals(REQUEST_ID, response.getRequestId());
 				assertEquals("si9sfG", response.getCode());
 			}
 		}

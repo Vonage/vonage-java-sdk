@@ -16,6 +16,7 @@
 package com.vonage.client.verify2;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.vonage.client.common.E164;
 
 /**
  * Defines properties for sending a verification code to a user over WhatsApp
@@ -35,6 +36,6 @@ public final class WhatsappCodelessWorkflow extends Workflow {
 	 * @param to The number to send the verification prompt to, in E.164 format.
 	 */
 	public WhatsappCodelessWorkflow(String to) {
-		super(Channel.WHATSAPP_INTERACTIVE, to);
+		super(Channel.WHATSAPP_INTERACTIVE, new E164(to).toString());
 	}
 }

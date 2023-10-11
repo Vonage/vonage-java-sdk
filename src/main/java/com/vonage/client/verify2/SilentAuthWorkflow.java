@@ -17,6 +17,7 @@ package com.vonage.client.verify2;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.common.E164;
 
 /**
  * Defines properties for mobile network-based authentication. See the
@@ -33,13 +34,16 @@ public final class SilentAuthWorkflow extends Workflow {
 	 * @param to The number to registered to the device on the network to authenticate.
 	 */
 	public SilentAuthWorkflow(String to) {
-		super(Channel.SILENT_AUTH, to);
+		super(Channel.SILENT_AUTH, new E164(to).toString());
 	}
 
 	/**
 	 * Constructs a new Silent Auth verification workflow.
 	 *
 	 * @param to The number to registered to the device on the network to authenticate.
+	 * @param sandbox Whether the Vonage Sandbox should be used (for testing purposes).
+	 *
+	 * @since 7.10.0
 	 */
 	public SilentAuthWorkflow(String to, boolean sandbox) {
 		this(to);
