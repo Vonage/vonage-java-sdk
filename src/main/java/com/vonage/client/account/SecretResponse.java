@@ -64,8 +64,6 @@ public class SecretResponse implements Jsonable {
     }
 
     public static SecretResponse fromJson(String json) {
-        SecretResponse response = new SecretResponse();
-        response.updateFromJson(json);
-        return response;
+        return Jsonable.fromJson(json, SecretResponse.class);
     }
 }

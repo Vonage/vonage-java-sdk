@@ -17,13 +17,11 @@ package com.vonage.client.meetings;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageResponseParseException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Application {
+public class Application implements Jsonable {
 	private String accountId;
 	private UUID applicationId, defaultThemeId;
 
@@ -67,12 +65,6 @@ public class Application {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static Application fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readValue(json, Application.class);
-		}
-		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to produce Application from json.", ex);
-		}
+		return Jsonable.fromJson(json, Application.class);
 	}
 }

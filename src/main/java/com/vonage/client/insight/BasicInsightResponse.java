@@ -29,9 +29,7 @@ public class BasicInsightResponse implements Jsonable {
             countryCode, countryCodeIso3, countryName, countryPrefix;
 
     public static BasicInsightResponse fromJson(String json) {
-        BasicInsightResponse response = new BasicInsightResponse();
-        response.updateFromJson(json);
-        return response;
+        return Jsonable.fromJson(json, BasicInsightResponse.class);
     }
 
     /**

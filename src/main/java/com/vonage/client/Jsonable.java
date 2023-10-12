@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 
 /**
  * Indicates that a class can be serialized to and parsed from JSON.
@@ -51,6 +52,21 @@ public interface Jsonable {
 		}
 		catch (IOException ex) {
 			throw new VonageResponseParseException("Failed to produce "+getClass().getSimpleName()+" from json.", ex);
+		}
+	}
+
+	static <J extends Jsonable> J fromJson(String json, Class<? extends J> jsonable) {
+		try {
+			Constructor<? extends J> constructor = jsonable.getDeclaredConstructor();
+			if (!(constructor.isAccessible())) {
+				constructor.setAccessible(true);
+			}
+			J instance = constructor.newInstance();
+			instance.updateFromJson(json);
+			return instance;
+		}
+		catch (ReflectiveOperationException ex) {
+			throw new VonageUnexpectedException(ex);
 		}
 	}
 }

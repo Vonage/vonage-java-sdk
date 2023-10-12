@@ -18,6 +18,7 @@ package com.vonage.client.subaccounts;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.Jsonable;
 import com.vonage.client.common.E164;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -63,9 +64,7 @@ public class NumberTransfer extends AbstractTransfer {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static NumberTransfer fromJson(String json) {
-		NumberTransfer transfer = new NumberTransfer();
-		transfer.updateFromJson(json);
-		return transfer;
+		return Jsonable.fromJson(json, NumberTransfer.class);
 	}
 	
 	/**

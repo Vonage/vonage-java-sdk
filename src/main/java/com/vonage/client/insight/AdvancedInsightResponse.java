@@ -17,6 +17,7 @@ package com.vonage.client.insight;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.Jsonable;
 
 /**
  * Response object constructed from the JSON payload returned for Advanced number insight requests.
@@ -32,9 +33,7 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
     private String errorText;
 
     public static AdvancedInsightResponse fromJson(String json) {
-        AdvancedInsightResponse response = new AdvancedInsightResponse();
-        response.updateFromJson(json);
-        return response;
+        return Jsonable.fromJson(json, AdvancedInsightResponse.class);
     }
 
     /**

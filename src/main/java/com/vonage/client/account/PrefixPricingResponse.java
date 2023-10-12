@@ -36,8 +36,6 @@ public class PrefixPricingResponse implements Jsonable {
     }
 
     public static PrefixPricingResponse fromJson(String json) {
-        PrefixPricingResponse response = new PrefixPricingResponse();
-        response.updateFromJson(json);
-        return response;
+        return Jsonable.fromJson(json, PrefixPricingResponse.class);
     }
 }

@@ -17,8 +17,8 @@ package com.vonage.client.messages;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.VonageUnexpectedException;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Test;
 
 public class MessageRequestTest {
 
@@ -90,34 +90,43 @@ public class MessageRequestTest {
 		assertTrue(generatedJson.contains("sms"));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructInvalidMessageType() {
-		ConcreteMessageRequest.builder(MessageType.IMAGE, Channel.SMS)
-				.from("447900000001").to("447900000009").build();
+		assertThrows(IllegalArgumentException.class, () ->
+				ConcreteMessageRequest.builder(MessageType.IMAGE, Channel.SMS)
+						.from("447900000001").to("447900000009").build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructEmptyNumber() {
-		ConcreteMessageRequest.builder(MessageType.FILE, Channel.MESSENGER)
-				.from("447900000009").to("").build();
+		assertThrows(IllegalArgumentException.class, () ->
+				ConcreteMessageRequest.builder(MessageType.FILE, Channel.MESSENGER)
+					.from("447900000009").to("").build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructNullNumber() {
-		ConcreteMessageRequest.builder(MessageType.CUSTOM, Channel.WHATSAPP)
-				.to("447900000009").from(null).build();
+		assertThrows(IllegalArgumentException.class, () ->
+				ConcreteMessageRequest.builder(MessageType.CUSTOM, Channel.WHATSAPP)
+					.to("447900000009").from(null).build()
+		);
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructNoNumber() {
-		ConcreteMessageRequest.builder(MessageType.CUSTOM, Channel.WHATSAPP)
-				.from("447900000009").build();
+		assertThrows(NullPointerException.class, () ->
+				ConcreteMessageRequest.builder(MessageType.CUSTOM, Channel.WHATSAPP).from("447900000009").build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructInvalidNumber() {
-		ConcreteMessageRequest.builder(MessageType.FILE, Channel.MESSENGER)
-				.from("447900000001").to("+0 NaN").build();
+		assertThrows(IllegalArgumentException.class, () ->
+				ConcreteMessageRequest.builder(MessageType.FILE, Channel.MESSENGER)
+					.from("447900000001").to("+0 NaN").build()
+		);
 	}
 
 	@Test
@@ -131,22 +140,28 @@ public class MessageRequestTest {
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructTooLongNumber() {
-		ConcreteMessageRequest.builder(MessageType.TEXT, Channel.MESSENGER)
-				.from("+447900090000").to("19009000000447900090000").build();
+		assertThrows(IllegalArgumentException.class, () ->
+				ConcreteMessageRequest.builder(MessageType.TEXT, Channel.MESSENGER)
+					.from("+447900090000").to("19009000000447900090000").build()
+		);
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructNoMessageType() {
-		ConcreteMessageRequest.builder(null, Channel.MMS)
-				.from("447900000001").to("447900000009").build();
+		assertThrows(NullPointerException.class, () ->
+				ConcreteMessageRequest.builder(null, Channel.MMS)
+					.from("447900000001").to("447900000009").build()
+		);
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructNoChannel() {
-		ConcreteMessageRequest.builder(MessageType.IMAGE, null)
-				.from("447900000001").to("447900000009").build();
+		assertThrows(NullPointerException.class, () ->
+				ConcreteMessageRequest.builder(MessageType.IMAGE, null)
+					.from("447900000001").to("447900000009").build()
+		);
 	}
 
 	@Test
@@ -182,7 +197,7 @@ public class MessageRequestTest {
 		assertEquals(expected, request.toString());
 	}
 
-	@Test(expected = VonageUnexpectedException.class)
+	@Test
 	public void triggerJsonProcessingException() {
 		class SelfRefrencing extends ConcreteMessageRequest {
 			@JsonProperty("self") final SelfRefrencing self = this;
@@ -191,6 +206,6 @@ public class MessageRequestTest {
 				super(builder(MessageType.TEXT, Channel.SMS).from("447900000009").to("12002009000"));
 			}
 		}
-		new SelfRefrencing().toJson();
+		assertThrows(VonageUnexpectedException.class, () -> new SelfRefrencing().toJson());
 	}
 }

@@ -54,8 +54,6 @@ public class ControlResponse implements Jsonable {
     }
 
     public static ControlResponse fromJson(String json) {
-        ControlResponse response = new ControlResponse();
-        response.updateFromJson(json);
-        return response;
+        return Jsonable.fromJson(json, ControlResponse.class);
     }
 }

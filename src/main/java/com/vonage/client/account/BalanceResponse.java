@@ -43,8 +43,6 @@ public class BalanceResponse implements Jsonable {
     }
 
     public static BalanceResponse fromJson(String json) {
-        BalanceResponse response = new BalanceResponse();
-        response.updateFromJson(json);
-        return response;
+        return Jsonable.fromJson(json, BalanceResponse.class);
     }
 }

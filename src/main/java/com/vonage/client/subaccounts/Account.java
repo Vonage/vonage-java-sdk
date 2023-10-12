@@ -131,8 +131,6 @@ public class Account implements Jsonable {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static Account fromJson(String json) {
-		Account account = new Account();
-		account.updateFromJson(json);
-		return account;
+		return Jsonable.fromJson(json, Account.class);
 	}
 }

@@ -18,6 +18,7 @@ package com.vonage.client.application;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.Jsonable;
 import com.vonage.client.common.HalPageResponse;
 import java.util.List;
 
@@ -44,8 +45,6 @@ public class ApplicationList extends HalPageResponse {
     }
 
     public static ApplicationList fromJson(String json) {
-        ApplicationList al = new ApplicationList();
-        al.updateFromJson(json);
-        return al;
+        return Jsonable.fromJson(json, ApplicationList.class);
     }
 }

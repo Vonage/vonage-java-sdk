@@ -35,8 +35,6 @@ public class ListNumbersResponse implements Jsonable {
     }
 
     public static ListNumbersResponse fromJson(String json) {
-        ListNumbersResponse response = new ListNumbersResponse();
-        response.updateFromJson(json);
-        return response;
+        return Jsonable.fromJson(json, ListNumbersResponse.class);
     }
 }

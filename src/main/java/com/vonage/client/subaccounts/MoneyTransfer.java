@@ -18,6 +18,7 @@ package com.vonage.client.subaccounts;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.Jsonable;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Objects;
@@ -90,9 +91,7 @@ public class MoneyTransfer extends AbstractTransfer {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static MoneyTransfer fromJson(String json) {
-		MoneyTransfer transfer = new MoneyTransfer();
-		transfer.updateFromJson(json);
-		return transfer;
+		return Jsonable.fromJson(json, MoneyTransfer.class);
 	}
 
 	/**
