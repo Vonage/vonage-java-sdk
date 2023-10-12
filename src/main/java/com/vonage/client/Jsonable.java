@@ -29,12 +29,16 @@ import java.lang.reflect.Constructor;
  */
 public interface Jsonable {
 
+	static ObjectMapper createDefaultObjectMapper() {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.registerModule(new JavaTimeModule());
+		mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+		return mapper;
+	}
+
 	default String toJson() {
 		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.registerModule(new JavaTimeModule());
-			mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-			return mapper.writeValueAsString(this);
+			return createDefaultObjectMapper().writeValueAsString(this);
 		}
 		catch (JsonProcessingException jpe) {
 			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
@@ -46,9 +50,7 @@ public interface Jsonable {
 			return;
 		}
 		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.registerModule(new JavaTimeModule());
-			mapper.readerForUpdating(this).readValue(json);
+			createDefaultObjectMapper().readerForUpdating(this).readValue(json);
 		}
 		catch (IOException ex) {
 			throw new VonageResponseParseException("Failed to produce "+getClass().getSimpleName()+" from json.", ex);

@@ -15,14 +15,24 @@
  */
 package com.vonage.client.meetings;
 
+import com.vonage.client.QueryParamsRequest;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.UUID;
 
-class DeleteThemeRequest {
+class DeleteThemeRequest implements QueryParamsRequest {
 	final UUID themeId;
 	final boolean force;
 
 	DeleteThemeRequest(UUID themeId, boolean force) {
 		this.themeId = themeId;
 		this.force = force;
+	}
+
+	@Override
+	public Map<String, String> makeParams() {
+		Map<String, String> params = new LinkedHashMap<>(2);
+		params.put("force", String.valueOf(force));
+		return params;
 	}
 }

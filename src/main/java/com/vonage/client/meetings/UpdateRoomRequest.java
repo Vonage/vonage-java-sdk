@@ -18,17 +18,13 @@ package com.vonage.client.meetings;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.Jsonable;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class UpdateRoomRequest {
+public class UpdateRoomRequest implements Jsonable {
 	@JsonIgnore UUID roomId;
 
 	private final Boolean expireAfterUse;
@@ -124,16 +120,9 @@ public class UpdateRoomRequest {
 	 *
 	 * @return JSON representation of this UpdateRoomRequest object.
 	 */
+	@Override
 	public String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.registerModule(new JavaTimeModule());
-			mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-			return "{\"update_details\":"+mapper.writeValueAsString(this)+"}";
-		}
-		catch (JsonProcessingException jpe) {
-			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
-		}
+		return "{\"update_details\":" + Jsonable.super.toJson() + "}";
 	}
 	
 	/**

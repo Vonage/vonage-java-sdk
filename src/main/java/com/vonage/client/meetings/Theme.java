@@ -18,18 +18,14 @@ package com.vonage.client.meetings;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageResponseParseException;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 import java.net.URI;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true, value = "theme_id", allowSetters = true)
-public class Theme {
+public class Theme implements Jsonable {
 	static final Pattern COLOR_PATTERN = Pattern.compile("(#[a-fA-F0-9]{6}|[a-fA-F0-9]{3})");
 
 	UUID themeId;
@@ -216,49 +212,13 @@ public class Theme {
 	}
 
 	/**
-	 * Updates (hydrates) this object's fields from additional JSON data.
-	 *
-	 * @param json The JSON payload.
-	 */
-	public void updateFromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.readerForUpdating(this).readValue(json, getClass());
-		}
-		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to update "+getClass().getSimpleName()+" from json.", ex);
-		}
-	}
-
-	/**
 	 * Creates an instance of this class from a JSON payload.
 	 *
 	 * @param json The JSON string to parse.
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static Theme fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readValue(json, Theme.class);
-		}
-		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to produce Theme from json.", ex);
-		}
-	}
-	
-	/**
-	 * Generates a JSON payload from this request.
-	 *
-	 * @return JSON representation of this Theme object.
-	 */
-	public String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.writeValueAsString(this);
-		}
-		catch (JsonProcessingException jpe) {
-			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
-		}
+		return Jsonable.fromJson(json, Theme.class);
 	}
 	
 	/**

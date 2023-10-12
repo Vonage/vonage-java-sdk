@@ -16,23 +16,8 @@
 package com.vonage.client.meetings;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
-import java.util.List;
+import java.util.ArrayList;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class ListRecordingsResponse implements Jsonable {
-	@JsonProperty("_embedded") private Embedded embedded;
-
-	static class Embedded {
-		@JsonProperty("recordings") List<Recording> recordings;
-	}
-
-	public List<Recording> getRecordings() {
-		return embedded != null ? embedded.recordings : null;
-	}
-
-	public static ListRecordingsResponse fromJson(String json) {
-		return Jsonable.fromJson(json, ListRecordingsResponse.class);
-	}
+final class GetLogoUploadUrlsResponse extends ArrayList<LogoUploadsUrlResponse> {
 }

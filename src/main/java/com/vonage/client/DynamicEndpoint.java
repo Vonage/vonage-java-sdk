@@ -268,6 +268,9 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 						((Jsonable) responseBody).updateFromJson(deser);
 						return responseBody;
 					}
+					else if (Collection.class.isAssignableFrom(responseType)) {
+						return Jsonable.createDefaultObjectMapper().readValue(deser, responseType);
+					}
 					else {
 						R customParsedResponse = parseResponseFromString(deser);
 						if (customParsedResponse == null) {
