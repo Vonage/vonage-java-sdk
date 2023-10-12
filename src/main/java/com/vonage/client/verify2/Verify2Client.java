@@ -21,17 +21,15 @@ import com.vonage.client.RestEndpoint;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
 import com.vonage.client.common.HttpMethod;
-import java.net.URI;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class Verify2Client {
 	final boolean hasJwtAuthMethod;
 	final RestEndpoint<VerificationRequest, VerificationResponse> verifyUser;
 	final RestEndpoint<VerifyCodeRequestWrapper, Void> verifyRequest;
 	final RestEndpoint<UUID, Void> cancel;
-	final RestEndpoint<URI, SilentAuthResponse> silentAuthCheck;
 
 	/**
 	 * Create a new Verify2Client.
@@ -43,23 +41,22 @@ public class Verify2Client {
 
 		@SuppressWarnings("unchecked")
 		final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
-			Endpoint(BiFunction<String, T, String> pathGetter, HttpMethod method, R... type) {
+			Endpoint(Function<T, String> pathGetter, HttpMethod method, R... type) {
 				super(DynamicEndpoint.<T, R> builder(type)
 						.responseExceptionType(VerifyResponseException.class)
 						.wrapper(wrapper).requestMethod(method)
 						.addAuthMethodIfTrue(method != HttpMethod.GET, JWTAuthMethod.class, TokenAuthMethod.class)
 						.pathGetter((de, req) -> {
 							String base = de.getHttpWrapper().getHttpConfig().getVersionedApiBaseUri("v2") + "/verify";
-							return pathGetter.apply(base, req);
+							return pathGetter != null ? base + "/" + pathGetter.apply(req) : base;
 						})
 				);
 			}
 		}
 
-		verifyUser = new Endpoint<>((base, req) -> base, HttpMethod.POST);
-		verifyRequest = new Endpoint<>((base, req) -> base + '/' + req.requestId, HttpMethod.POST);
-		cancel = new Endpoint<>((base, req) -> base + '/' + req, HttpMethod.DELETE);
-		silentAuthCheck = new Endpoint<>((base, req) -> req.toString(), HttpMethod.GET);
+		verifyUser = new Endpoint<>(null, HttpMethod.POST);
+		verifyRequest = new Endpoint<>(req -> req.requestId, HttpMethod.POST);
+		cancel = new Endpoint<>(UUID::toString, HttpMethod.DELETE);
 	}
 
 	private UUID validateRequestId(UUID requestId) {
@@ -137,57 +134,4 @@ public class Verify2Client {
 	public void cancelVerification(UUID requestId) {
 		cancel.execute(validateRequestId(requestId));
 	}
-
-	/**
-	 * Final step of Silent Authentication workflow. Once the {@linkplain #sendVerification(VerificationRequest)}
-	 * has been called, pass the response to this method to complete the verification workflow. This method uses
-	 * the {@linkplain #checkVerificationCode(UUID, String)}  under the hood with a code obtained from the API
-	 * after following the `check_url` redirect. Refer to the
-	 * <a href=https://developer.vonage.com/en/verify/guides/silent-authentication>
-	 * Silent Authentication documentation</a> for more details.
-	 *
-	 * @param verifyResponse The VerificationResponse, as obtained from {@link #sendVerification(VerificationRequest)}.
-	 *
-	 * @throws VerifyResponseException If the Silent Authentication workflow failed due
-	 * to a network error (409 HTTP status response).
-	 *
-	 * @since v7.10.0
-	 */
-	public void checkSilentAuth(VerificationResponse verifyResponse) {
-		Objects.requireNonNull(verifyResponse, "Response object cannot be null.");
-		URI checkUrl = verifyResponse.getCheckUrl();
-		if (checkUrl == null) {
-			throw new IllegalStateException("'check_url' is missing in the response.");
-		}
-		SilentAuthResponse response = silentAuthCheck.execute(checkUrl);
-		checkVerificationCode(response.getRequestId(), response.getCode());
-	}
-
-	/*/**
-	 * A fully declarative, automated utility method for performing Silent Authentication using
-	 * a device's mobile network connection. If the authentication failed due to a network error,
-	 * this method will return {@code false}. If a failure occurs for any other reason, a
-	 * {@linkplain VerifyResponseException} will be thrown.
-	 *
-	 * @param number The device's SIM (phone) number in E.164 format.
-	 *
-	 * @return {@code true} if the authentication was successful.
-	 *
-	 * @throws VerifyResponseException If the workflow fails for any reason other than a 409 Network error.
-	 *
-	 * @since v7.10.0
-
-	public boolean doSilentAuthWorkflow(String number) {
-		VerificationRequest request = VerificationRequest.builder()
-				.addWorkflow(new SilentAuthWorkflow(number))
-				.brand("Vonage Java SDK").build();
-		VerificationResponse response = sendVerification(request);
-		try {
-			checkSilentAuth(response);
-			return true;
-		}
-		catch (VerifyResponseException ex) {
-			return false;
-		}
-	}*/
 }
