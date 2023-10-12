@@ -42,7 +42,7 @@ public class UpdateThemeEndpointTest {
 				.shortCompanyUrl("developer.vonage.com").brandText("Vonage (purple)")
 				.themeName("Vonage theme").mainColor("#8a1278").build();
 
-		request.themeId = UUID.fromString(themeId);
+		request.setThemeIdAndFlagUpdate(UUID.fromString(themeId));
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("PATCH", builder.getMethod());
 		String expectedUri = "https://api-eu.vonage.com/v1/meetings/themes/"+themeId;
@@ -66,8 +66,8 @@ public class UpdateThemeEndpointTest {
 		HttpWrapper wrapper = new HttpWrapper(HttpConfig.builder().baseUri(baseUri).build());
 		endpoint = new UpdateThemeEndpoint(wrapper);
 		Theme request = Theme.builder().build();
-		request.themeId = UUID.randomUUID();
-		String expectedUri = baseUri + "/v1/meetings/themes/"+request.themeId;
+		request.setThemeIdAndFlagUpdate(UUID.randomUUID());
+		String expectedUri = baseUri + "/v1/meetings/themes/"+request.getThemeId();
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());

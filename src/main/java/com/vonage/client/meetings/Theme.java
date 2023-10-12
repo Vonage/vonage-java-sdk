@@ -15,6 +15,7 @@
  */
 package com.vonage.client.meetings;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -28,8 +29,8 @@ import java.util.regex.Pattern;
 public class Theme implements Jsonable {
 	static final Pattern COLOR_PATTERN = Pattern.compile("(#[a-fA-F0-9]{6}|[a-fA-F0-9]{3})");
 
-	UUID themeId;
-	private UUID applicationId;
+	@JsonIgnore private boolean update = false;
+	private UUID themeId, applicationId;
 	private ThemeDomain domain;
 	private String themeName, mainColor, accountId, shortCompanyUrl,
 			brandText, brandImageColored, brandImageWhite, brandedFavicon;
@@ -69,6 +70,12 @@ public class Theme implements Jsonable {
 				throw new IllegalArgumentException("Short company URL cannot be blank.");
 			}
 		}
+	}
+
+	@JsonIgnore
+	void setThemeIdAndFlagUpdate(UUID themeId) {
+		this.themeId = themeId;
+		update = true;
 	}
 
 	/**
@@ -209,6 +216,16 @@ public class Theme implements Jsonable {
 	@JsonProperty("branded_favicon_url")
 	public URI getBrandedFaviconUrl() {
 		return brandedFaviconUrl;
+	}
+
+	@Override
+	public String toJson() {
+		String json = Jsonable.super.toJson();
+		if (update) {
+			json = "{\"update_details\":" + json + "}";
+			update = false;
+		}
+		return json;
 	}
 
 	/**

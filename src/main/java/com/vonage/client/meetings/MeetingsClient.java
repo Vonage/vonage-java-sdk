@@ -61,7 +61,7 @@ public class MeetingsClient {
 	public MeetingsClient(HttpWrapper wrapper) {
 		httpClient = wrapper.getHttpClient();
 
-		final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
+		class Endpoint<T, R> extends DynamicEndpoint<T, R> {
 			Endpoint(Function<T, String> pathGetter, HttpMethod method, R... type) {
 				super(DynamicEndpoint.<T, R> builder(type)
 					.authMethod(JWTAuthMethod.class).requestMethod(method)
@@ -263,13 +263,13 @@ public class MeetingsClient {
 	 * @param themeId ID of the theme to update.
 	 * @param theme The partial theme properties to update.
 	 *
-	 * @return The full updated theme details.
+	 * @return The fully updated theme details.
 	 *
 	 * @throws MeetingsResponseException If there is an error encountered when processing the request.
 	 */
 	public Theme updateTheme(UUID themeId, Theme theme) {
 		Objects.requireNonNull(theme, "Theme update properties are required.");
-		theme.themeId = validateThemeId(themeId);
+		theme.setThemeIdAndFlagUpdate(validateThemeId(themeId));
 		return updateTheme.execute(theme);
 	}
 
