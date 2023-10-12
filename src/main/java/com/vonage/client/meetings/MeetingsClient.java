@@ -16,7 +16,9 @@
 package com.vonage.client.meetings;
 
 import com.vonage.client.*;
+import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.common.HalPageResponse;
+import com.vonage.client.common.HttpMethod;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -29,6 +31,7 @@ import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.Function;
 
 public class MeetingsClient {
 	HttpClient httpClient;
@@ -51,27 +54,42 @@ public class MeetingsClient {
 	/**
 	 * Constructor.
 	 *
-	 * @param httpWrapper (REQUIRED) shared HTTP wrapper object used for making REST calls.
+	 * @param wrapper (REQUIRED) shared HTTP wrapper object used for making REST calls.
 	 */
-	public MeetingsClient(HttpWrapper httpWrapper) {
-		httpClient = httpWrapper.getHttpClient();
-		listRooms = new ListRoomsEndpoint(httpWrapper);
-		getRoom = new GetRoomEndpoint(httpWrapper);
-		createRoom = new CreateRoomEndpoint(httpWrapper);
-		updateRoom = new UpdateRoomEndpoint(httpWrapper);
-		searchThemeRooms = new SearchThemeRoomsEndpoint(httpWrapper);
-		listThemes = new ListThemesEndpoint(httpWrapper);
-		getTheme = new GetThemeEndpoint(httpWrapper);
-		createTheme = new CreateThemeEndpoint(httpWrapper);
-		updateTheme = new UpdateThemeEndpoint(httpWrapper);
-		deleteTheme = new DeleteThemeEndpoint(httpWrapper);
-		listRecordings = new ListRecordingsEndpoint(httpWrapper);
-		getRecording = new GetRecordingEndpoint(httpWrapper);
-		deleteRecording = new DeleteRecordingEndpoint(httpWrapper);
-		listDialNumbers = new ListDialNumbersEndpoint(httpWrapper);
-		updateApplication = new UpdateApplicationEndpoint(httpWrapper);
-		finalizeLogos = new FinalizeLogosEndpoint(httpWrapper);
-		getLogoUploadUrls = new GetLogoUploadUrlsEndpoint(httpWrapper);
+	@SuppressWarnings("unchecked")
+	public MeetingsClient(HttpWrapper wrapper) {
+		httpClient = wrapper.getHttpClient();
+
+		final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
+			Endpoint(Function<T, String> pathGetter, HttpMethod method, R... type) {
+				super(DynamicEndpoint.<T, R> builder(type)
+					.authMethod(JWTAuthMethod.class).requestMethod(method)
+					.responseExceptionType(MeetingsResponseException.class)
+					.wrapper(wrapper).pathGetter((de, req) -> {
+						String base = de.getHttpWrapper().getHttpConfig().getApiEuBaseUri() + "/v1/meetings/";
+						return base + pathGetter.apply(req);
+					})
+				);
+			}
+		}
+
+		listRooms = new Endpoint<>(req -> "rooms", HttpMethod.GET);
+		getRoom = new Endpoint<>(roomId -> "rooms/" + roomId, HttpMethod.GET);
+		createRoom = new Endpoint<>(req -> "rooms", HttpMethod.POST);
+		updateRoom = new Endpoint<>(roomId -> "rooms/" + roomId, HttpMethod.PATCH);
+		searchThemeRooms = new Endpoint<>(req -> "themes/" + req.themeId + "/rooms", HttpMethod.GET);
+		listThemes = new Endpoint<>(req -> "themes", HttpMethod.GET);
+		getTheme = new Endpoint<>(themeId -> "themes/" + themeId, HttpMethod.GET);
+		createTheme = new Endpoint<>(req -> "themes", HttpMethod.POST);
+		updateTheme = new Endpoint<>(theme -> "themes/" + theme.getThemeId(), HttpMethod.PATCH);
+		deleteTheme = new Endpoint<>(req -> "themes/" + req.themeId, HttpMethod.DELETE);
+		listRecordings = new Endpoint<>(sid -> "sessions/" + sid + "/recordings", HttpMethod.GET);
+		getRecording = new Endpoint<>(rid -> "recordings/" + rid, HttpMethod.GET);
+		deleteRecording = new Endpoint<>(rid -> "recordings/" + rid, HttpMethod.DELETE);
+		listDialNumbers = new Endpoint<>(req -> "dial-in-numbers", HttpMethod.GET);
+		updateApplication = new Endpoint<>(req -> "applications", HttpMethod.PATCH);
+		finalizeLogos = new Endpoint<>(req -> "themes/" + req.themeId + "/finalizeLogos", HttpMethod.PUT);
+		getLogoUploadUrls = new Endpoint<>(req -> "themes/logos-upload-urls", HttpMethod.GET);
 	}
 
 	static UUID validateThemeId(UUID themeId) {
