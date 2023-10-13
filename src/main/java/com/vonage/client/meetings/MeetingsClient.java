@@ -77,7 +77,7 @@ public class MeetingsClient {
 		listRooms = new Endpoint<>(req -> "rooms", HttpMethod.GET);
 		getRoom = new Endpoint<>(roomId -> "rooms/" + roomId, HttpMethod.GET);
 		createRoom = new Endpoint<>(req -> "rooms", HttpMethod.POST);
-		updateRoom = new Endpoint<>(roomId -> "rooms/" + roomId, HttpMethod.PATCH);
+		updateRoom = new Endpoint<>(req -> "rooms/" + req.roomId, HttpMethod.PATCH);
 		searchThemeRooms = new Endpoint<>(req -> "themes/" + req.themeId + "/rooms", HttpMethod.GET);
 		listThemes = new Endpoint<>(req -> "themes", HttpMethod.GET);
 		getTheme = new Endpoint<>(themeId -> "themes/" + themeId, HttpMethod.GET);

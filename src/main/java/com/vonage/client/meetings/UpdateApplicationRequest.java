@@ -42,8 +42,9 @@ public class UpdateApplicationRequest implements Jsonable {
 	 *
 	 * @return JSON representation of this UpdateApplicationRequest object.
 	 */
+	@Override
 	public String toJson() {
-		return "{\"update_details\": "+ Jsonable.super.toJson() + "}";
+		return "{\"update_details\":" + Jsonable.super.toJson() + "}";
 	}
 
 	/**

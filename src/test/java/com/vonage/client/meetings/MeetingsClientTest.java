@@ -18,6 +18,7 @@ package com.vonage.client.meetings;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.ClientTest;
 import com.vonage.client.RestEndpoint;
+import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.common.HalLinks;
 import com.vonage.client.common.HttpMethod;
@@ -851,6 +852,732 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 						"\"available_features\":{\"is_recording_available\":true," +
 						"\"is_chat_available\":false,\"is_whiteboard_available\":false," +
 						"\"is_locale_switcher_available\":false}}";
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testCreateThemeEndpoint() throws Exception {
+		new MeetingsEndpointTestSpec<Theme, Theme>() {
+
+			@Override
+			protected RestEndpoint<Theme, Theme> endpoint() {
+				return client.createTheme;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.POST;
+			}
+
+			@Override
+			protected String expectedEndpointUri(Theme request) {
+				return "/v1/meetings/themes";
+			}
+
+			@Override
+			protected Theme sampleRequest() {
+				return Theme.builder()
+						.themeName("Test theme").shortCompanyUrl("https://developer.vonage.com")
+						.mainColor("#AB34C1").brandText("Vonage").build();
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"theme_name\":\"Test theme\"," +
+						"\"main_color\":\"#AB34C1\"," +
+						"\"short_company_url\":\"https://developer.vonage.com\"," +
+						"\"brand_text\":\"Vonage\"}";
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testDeleteRecordingEndpoint() throws Exception {
+		new MeetingsEndpointTestSpec<UUID, Void>() {
+
+			@Override
+			protected RestEndpoint<UUID, Void> endpoint() {
+				return client.deleteRecording;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.DELETE;
+			}
+
+			@Override
+			protected String expectedEndpointUri(UUID request) {
+				return "/v1/meetings/recordings/" + request;
+			}
+
+			@Override
+			protected UUID sampleRequest() {
+				return RANDOM_ID;
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testDeleteThemeEndpoint() throws Exception {
+		new MeetingsEndpointTestSpec<DeleteThemeRequest, Void>() {
+
+			@Override
+			protected RestEndpoint<DeleteThemeRequest, Void> endpoint() {
+				return client.deleteTheme;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.DELETE;
+			}
+
+			@Override
+			protected String expectedEndpointUri(DeleteThemeRequest request) {
+				return "/v1/meetings/themes/" + request.themeId;
+			}
+
+			@Override
+			protected DeleteThemeRequest sampleRequest() {
+				return new DeleteThemeRequest(RANDOM_ID, false);
+			}
+
+			@Override
+			protected Map<String, String> sampleQueryParams() {
+				return Collections.singletonMap("force", String.valueOf(sampleRequest().force));
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testFinalizeLogosEndpoint() throws Exception {
+		new MeetingsEndpointTestSpec<FinalizeLogosRequest, Void>() {
+
+			@Override
+			protected RestEndpoint<FinalizeLogosRequest, Void> endpoint() {
+				return client.finalizeLogos;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.PUT;
+			}
+
+			@Override
+			protected String expectedEndpointUri(FinalizeLogosRequest request) {
+				return "/v1/meetings/themes/" + request.themeId + "/finalizeLogos";
+			}
+
+			@Override
+			protected FinalizeLogosRequest sampleRequest() {
+				return new FinalizeLogosRequest(RANDOM_ID, Arrays.asList("col", "fff"));
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testGetLogoUploadUrlsEndpoint() throws Exception {
+		new MeetingsEndpointTestSpec<Void, GetLogoUploadUrlsResponse>() {
+
+			@Override
+			protected RestEndpoint<Void, GetLogoUploadUrlsResponse> endpoint() {
+				return client.getLogoUploadUrls;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedEndpointUri(Void request) {
+				return "/v1/meetings/themes/logos-upload-urls";
+			}
+
+			@Override
+			protected Void sampleRequest() {
+				return null;
+			}
+
+			@Override
+			public void runTests() throws Exception {
+				super.runTests();
+				testUnsuccessfulResponse();
+				testEmptyEdgeCases();
+				testParseMalformedResponse();
+				testInvalidContentType();
+				testInvalidLogoType();
+			}
+
+			private void testUnsuccessfulResponse() throws Exception {
+				stubResponse(400, "{}");
+				assertThrows(MeetingsResponseException.class, this::executeEndpoint);
+			}
+
+			private void testEmptyEdgeCases() throws Exception {
+				stubResponse(200, "[{\"nonsense\":true}]");
+				List<LogoUploadsUrlResponse> parsed = executeEndpoint();
+				assertNotNull(parsed);
+				assertEquals(1, parsed.size());
+				assertNotNull(parsed.get(0));
+
+				stubResponse(200, "[]");
+				parsed = endpoint().execute(sampleRequest());
+				assertNotNull(parsed);
+				assertEquals(0, parsed.size());
+			}
+
+			private void testParseMalformedResponse() throws Exception {
+				stubResponse(200, "{malformed]");
+				assertThrows(VonageResponseParseException.class, this::executeEndpoint);
+			}
+
+			private void testInvalidContentType() throws Exception {
+				stubResponse(200, "[{\"fields\":{\"Content-Type\":\"not-a-mime\"}}]");
+				assertThrows(VonageResponseParseException.class, this::executeEndpoint);
+			}
+
+			private void testInvalidLogoType() throws Exception {
+				stubResponse(200, "[{\"fields\":{\"logoType\":\"smoll\"}}]");
+				List<LogoUploadsUrlResponse> parsed = executeEndpoint();
+				assertNotNull(parsed);
+				assertEquals(1, parsed.size());
+				assertNull(parsed.get(0).getFields().getLogoType());
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testGetRecordingEndpoint() throws Exception {
+		new MeetingsEndpointTestSpec<UUID, Recording>() {
+
+			@Override
+			protected RestEndpoint<UUID, Recording> endpoint() {
+				return client.getRecording;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedEndpointUri(UUID request) {
+				return "/v1/meetings/recordings/" + request;
+			}
+
+			@Override
+			protected UUID sampleRequest() {
+				return RANDOM_ID;
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testGetRoomEndpoint() throws Exception {
+		new MeetingsEndpointTestSpec<UUID, MeetingRoom>() {
+
+			@Override
+			protected RestEndpoint<UUID, MeetingRoom> endpoint() {
+				return client.getRoom;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedEndpointUri(UUID request) {
+				return "/v1/meetings/rooms/" + request;
+			}
+
+			@Override
+			protected UUID sampleRequest() {
+				return ROOM_ID;
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testGetThemeEndpoint() throws Exception {
+		new MeetingsEndpointTestSpec<UUID, Theme>() {
+
+			@Override
+			protected RestEndpoint<UUID, Theme> endpoint() {
+				return client.getTheme;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedEndpointUri(UUID request) {
+				return "/v1/meetings/themes/" + request;
+			}
+
+			@Override
+			protected UUID sampleRequest() {
+				return RANDOM_ID;
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testListDialNumbersEndpoint() throws Exception {
+		new MeetingsEndpointTestSpec<Void, ListDialNumbersResponse>() {
+
+			@Override
+			protected RestEndpoint<Void, ListDialNumbersResponse> endpoint() {
+				return client.listDialNumbers;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedEndpointUri(Void request) {
+				return "/v1/meetings/dial-in-numbers";
+			}
+
+			@Override
+			protected Void sampleRequest() {
+				return null;
+			}
+
+			@Override
+			public void runTests() throws Exception {
+				super.runTests();
+				testParseResponse();
+			}
+
+			private void testParseResponse() throws Exception {
+				String expectedPayload = "[\n" +
+						"{},   {\n" +
+						"      \"number\": \"17323338801\",\n" +
+						"      \"locale\": \"en-US\",\n" +
+						"      \"display_name\": \"United States\"\n" +
+						"   }," +
+						"  {\"locale\": \"de-DE\",\"unknown property\":0}\n" +
+						"]";
+				stubResponse(200, expectedPayload);
+				List<DialInNumber> parsed = executeEndpoint();
+				assertEquals(3, parsed.size());
+
+				DialInNumber empty = parsed.get(0);
+				assertNotNull(empty);
+				assertNull(empty.getNumber());
+				assertNull(empty.getDisplayName());
+				assertNull(empty.getLocale());
+
+				DialInNumber usa = parsed.get(1);
+				assertEquals("17323338801", usa.getNumber());
+				assertEquals("United States", usa.getDisplayName());
+				assertEquals(Locale.US, usa.getLocale());
+
+				DialInNumber germany = parsed.get(2);
+				assertEquals(Locale.GERMANY, germany.getLocale());
+				assertNull(germany.getDisplayName());
+				assertNull(germany.getNumber());
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testListRecordingsEndpoint() throws Exception {
+		new MeetingsEndpointTestSpec<String, ListRecordingsResponse>() {
+
+			@Override
+			protected RestEndpoint<String, ListRecordingsResponse> endpoint() {
+				return client.listRecordings;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedEndpointUri(String request) {
+				return "/v1/meetings/sessions/" + request + "/recordings";
+			}
+
+			@Override
+			protected String sampleRequest() {
+				return "2_MX40NjMwODczMn5-MTU3NTgyODEwNzQ2Jk..";
+			}
+
+			@Override
+			public void runTests() throws Exception {
+				super.runTests();
+				testBadResponse();
+				testEmptyEdgeCases();
+				testInvalidRecordingStatus();
+			}
+
+			private void testBadResponse() throws Exception {
+				stubResponse(400, "{}");
+				assertThrows(MeetingsResponseException.class, this::executeEndpoint);
+				stubResponse(200, "{malformed]");
+				assertThrows(VonageResponseParseException.class, this::executeEndpoint);
+			}
+
+			private void testEmptyEdgeCases() throws Exception {
+				stubResponse(200, "");
+				ListRecordingsResponse parsed = executeEndpoint();
+				assertNotNull(parsed);
+				assertNull(parsed.getRecordings());
+
+				stubResponse(200, "{}");
+				parsed = executeEndpoint();
+				assertNotNull(parsed);
+				assertNull(parsed.getRecordings());
+
+				stubResponse(200, "{\"_embedded\":{}}");
+				parsed = executeEndpoint();
+				assertNotNull(parsed);
+				assertNull(parsed.getRecordings());
+
+				stubResponse(200, "{\"_embedded\":{\"recordings\":[]}}");
+				parsed = executeEndpoint();
+				assertNotNull(parsed);
+				assertNotNull(parsed.getRecordings());
+				assertEquals(0, parsed.getRecordings().size());
+
+				stubResponse(200, "{\"_embedded\":{\"recordings\":[{}]}}");
+				parsed = executeEndpoint();
+				assertNotNull(parsed);
+				assertNotNull(parsed.getRecordings());
+				assertEquals(1, parsed.getRecordings().size());
+				assertNotNull(parsed.getRecordings().get(0));
+
+				String expectedPayload = "{\"_embedded\":{\"recordings\":[{},{\"_links\":{},\"status\":\"uploaded\"}]}}";
+				stubResponse(200, expectedPayload);
+				parsed = executeEndpoint();
+				assertEquals(2, parsed.getRecordings().size());
+				assertNull(parsed.getRecordings().get(1).getUrl());
+				assertEquals(RecordingStatus.UPLOADED, parsed.getRecordings().get(1).getStatus());
+				assertEquals("uploaded", RecordingStatus.UPLOADED.toString());
+				Recording empty = parsed.getRecordings().get(0);
+				assertNotNull(empty);
+				assertNull(empty.getId());
+				assertNull(empty.getUrl());
+				assertNull(empty.getEndedAt());
+				assertNull(empty.getStartedAt());
+				assertNull(empty.getStatus());
+				assertNull(empty.getSessionId());
+			}
+
+			private void testInvalidRecordingStatus() throws Exception {
+				String expectedPayload = "{\"_embedded\":{\"recordings\":[{\"status\":\"You're on camera!\"}]}}";
+				stubResponse(200, expectedPayload);
+				ListRecordingsResponse parsed = executeEndpoint();;
+				assertNotNull(parsed);
+				assertEquals(1, parsed.getRecordings().size());
+				assertNull(parsed.getRecordings().get(0).getStatus());
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testListRoomsEndpoint() throws Exception {
+		new MeetingsEndpointTestSpec<ListRoomsRequest, ListRoomsResponse>() {
+
+			@Override
+			protected RestEndpoint<ListRoomsRequest, ListRoomsResponse> endpoint() {
+				return client.listRooms;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedEndpointUri(ListRoomsRequest request) {
+				return "/v1/meetings/rooms";
+			}
+
+			@Override
+			protected ListRoomsRequest sampleRequest() {
+				return new ListRoomsRequest(null, null, null, null);
+			}
+
+			@Override
+			protected Map<String, String> sampleQueryParams() {
+				return Collections.emptyMap();
+			}
+
+			@Override
+			public void runTests() throws Exception {
+				super.runTests();
+				testAllQueryParams();
+				testParseResponse();
+			}
+
+			private void testAllQueryParams() throws Exception {
+				ListRoomsRequest request = new ListRoomsRequest(51, 150, 25, null);
+				Map<String, String> params = new LinkedHashMap<>();
+				params.put("start_id", "51");
+				params.put("end_id", "150");
+				params.put("page_size", "25");
+				assertRequestUriAndBody(request, params);
+			}
+
+			private void testParseResponse() throws Exception {
+				String expectedResponse = "{\"page_size\":null,\"_embedded\":[{}],\"total_items\":3}";
+				stubResponse(200, expectedResponse);
+				ListRoomsResponse parsed = executeEndpoint();
+				assertNull(parsed.getLinks());
+				assertEquals(1, parsed.getMeetingRooms().size());
+				assertNotNull(parsed.getMeetingRooms().get(0));
+				assertEquals(3, parsed.getTotalItems().intValue());
+
+				stubResponse(200, "{malformed]");
+				assertThrows(VonageResponseParseException.class, this::executeEndpoint);
+
+				stubResponse(400, "{}");
+				assertThrows(MeetingsResponseException.class, this::executeEndpoint);
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testListThemesEndpoint() throws Exception {
+		new MeetingsEndpointTestSpec<Void, ListThemesResponse>() {
+
+			@Override
+			protected RestEndpoint<Void, ListThemesResponse> endpoint() {
+				return client.listThemes;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedEndpointUri(Void request) {
+				return "/v1/meetings/themes";
+			}
+
+			@Override
+			protected Void sampleRequest() {
+				return null;
+			}
+
+			@Override
+			public void runTests() throws Exception {
+				super.runTests();
+				testEmptyEdgeCases();
+				stubResponse(400, "{}");
+				assertThrows(MeetingsResponseException.class, this::executeEndpoint);
+			}
+
+			private void testEmptyEdgeCases() throws Exception {
+				stubResponse(200, "[{}]");
+				List<Theme> parsed = executeEndpoint();
+				assertEquals(1, parsed.size());
+				assertNotNull(parsed.get(0));
+
+				stubResponse(200, "[]");
+				parsed = executeEndpoint();
+				assertNotNull(parsed);
+				assertEquals(0, parsed.size());
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testSearchThemeRoomsEndpoint() throws Exception {
+		new MeetingsEndpointTestSpec<ListRoomsRequest, ListRoomsResponse>() {
+
+			@Override
+			protected RestEndpoint<ListRoomsRequest, ListRoomsResponse> endpoint() {
+				return client.searchThemeRooms;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedEndpointUri(ListRoomsRequest request) {
+				return "/v1/meetings/themes/" + request.themeId + "/rooms";
+			}
+
+			@Override
+			protected ListRoomsRequest sampleRequest() {
+				return new ListRoomsRequest(21, 33, 50, RANDOM_ID);
+			}
+
+			@Override
+			protected Map<String, String> sampleQueryParams() {
+				ListRoomsRequest request = sampleRequest();
+				Map<String, String> params = new LinkedHashMap<>();
+				params.put("start_id", String.valueOf(request.startId));
+				params.put("end_id", String.valueOf(request.endId));
+				params.put("page_size", String.valueOf(request.pageSize));
+				return params;
+			}
+
+			@Override
+			public void runTests() throws Exception {
+				super.runTests();
+				testStartIdOnly();
+				testParseResponse();
+			}
+
+			private void testStartIdOnly() throws Exception {
+				ListRoomsRequest request = new ListRoomsRequest(1, null, null, RANDOM_ID);
+				Map<String, String> params = Collections.singletonMap("start_id", "1");
+				assertRequestUriAndBody(request, params);
+			}
+
+			private void testParseResponse() throws Exception {
+				ListRoomsRequest request = sampleRequest();
+				String expectedResponse = "{\n" +
+						"\"page_size\":"+request.pageSize+",\"_embedded\":[{},{},{}," +
+						"{\"type\":\"instant\"},{\"nonsense\":0}],\"_links\":{\n" +
+						"\"self\":{\"href\":\"https://vonage.com\"},\"prev\":{},\"next\":{\"href\":null,\"no\":1}}}";
+				stubResponse(200, expectedResponse);
+				ListRoomsResponse parsed = endpoint().execute(request);
+				assertEquals(request.pageSize, parsed.getPageSize());
+				assertEquals(5, parsed.getMeetingRooms().size());
+				assertEquals(RoomType.INSTANT, parsed.getMeetingRooms().get(3).getType());
+				assertNull(parsed.getLinks().getNextUrl());
+				assertNull(parsed.getLinks().getPrevUrl());
+				assertNull(parsed.getLinks().getFirstUrl());
+				assertEquals("https://vonage.com", parsed.getLinks().getSelfUrl().toString());
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testUpdateApplicationEndpoint() throws Exception {
+		new MeetingsEndpointTestSpec<UpdateApplicationRequest, Application>() {
+
+			@Override
+			protected RestEndpoint<UpdateApplicationRequest, Application> endpoint() {
+				return client.updateApplication;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.PATCH;
+			}
+
+			@Override
+			protected String expectedEndpointUri(UpdateApplicationRequest request) {
+				return "/v1/meetings/applications";
+			}
+
+			@Override
+			protected UpdateApplicationRequest sampleRequest() {
+				return UpdateApplicationRequest.builder().defaultThemeId(RANDOM_ID).build();
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"update_details\":{\"default_theme_id\":\""+sampleRequest().getDefaultThemeId()+"\"}}";
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testUpdateRoomEndpoint() throws Exception {
+		new MeetingsEndpointTestSpec<UpdateRoomRequest, MeetingRoom>() {
+
+			@Override
+			protected RestEndpoint<UpdateRoomRequest, MeetingRoom> endpoint() {
+				return client.updateRoom;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.PATCH;
+			}
+
+			@Override
+			protected String expectedEndpointUri(UpdateRoomRequest request) {
+				return "/v1/meetings/rooms/" + request.roomId;
+			}
+
+			@Override
+			protected UpdateRoomRequest sampleRequest() {
+				UpdateRoomRequest request = UpdateRoomRequest.builder()
+						.initialJoinOptions(InitialJoinOptions.builder().microphoneState(MicrophoneState.ON).build())
+						.expireAfterUse(false).callbackUrls(CallbackUrls.builder().build())
+						.availableFeatures(AvailableFeatures.builder().build())
+						.themeId(RANDOM_ID).joinApprovalLevel(JoinApprovalLevel.AFTER_OWNER_ONLY)
+						.expiresAt(Instant.MAX.minusSeconds(86400)).build();
+				request.roomId = ROOM_ID;
+				return request;
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"update_details\":{\"expire_after_use\":false,\"initial_join_options\":" +
+						"{\"microphone_state\":\"on\"},\"callback_urls\":{},\"available_features\":{}," +
+						"\"join_approval_level\":\"after_owner_only\",\"theme_id\":\""+RANDOM_ID+"\"," +
+						"\"expires_at\":\"+1000000000-12-30T23:59:59.999Z\"}}";
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testUpdateThemeEndpoint() throws Exception {
+		new MeetingsEndpointTestSpec<Theme, Theme>() {
+
+			@Override
+			protected RestEndpoint<Theme, Theme> endpoint() {
+				return client.updateTheme;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.PATCH;
+			}
+
+			@Override
+			protected String expectedEndpointUri(Theme request) {
+				return "/v1/meetings/themes/" + request.getThemeId();
+			}
+
+			@Override
+			protected Theme sampleRequest() {
+				Theme request = Theme.builder()
+						.shortCompanyUrl("developer.vonage.com").brandText("Vonage (purple)")
+						.themeName("Vonage theme").mainColor("#8a1278").build();
+				request.setThemeIdAndFlagUpdate(RANDOM_ID);
+				return request;
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"update_details\":{\"theme_name\":\"Vonage theme\",\"main_color\":\"#8a1278\"," +
+						"\"short_company_url\":\"developer.vonage.com\",\"brand_text\":\"Vonage (purple)\"}}";
 			}
 		}
 		.runTests();

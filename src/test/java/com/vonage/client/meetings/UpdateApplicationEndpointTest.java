@@ -47,7 +47,7 @@ public class UpdateApplicationEndpointTest {
 		assertEquals(expectedUri, builder.build().getURI().toString());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		String expectedRequest = "{\"update_details\": {\"default_theme_id\":\""+themeId+"\"}}";
+		String expectedRequest = "{\"update_details\":{\"default_theme_id\":\""+themeId+"\"}}";
 		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 		String expectedResponse = "{\n" +
 				"   \"application_id\": \"48ac72d0-a829-4896-a067-dcb1c2b0f30c\",\n" +

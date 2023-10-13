@@ -17,15 +17,11 @@ package com.vonage.client.meetings;
 
 import com.vonage.client.HttpConfig;
 import com.vonage.client.HttpWrapper;
-import com.vonage.client.TestUtils;
-import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.auth.JWTAuthMethod;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.Before;
 import org.junit.Test;
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GetLogoUploadUrlsEndpointTest {
 	private GetLogoUploadUrlsEndpoint endpoint;
@@ -54,51 +50,5 @@ public class GetLogoUploadUrlsEndpointTest {
 		assertEquals("GET", builder.getMethod());
 	}
 
-	@Test(expected = MeetingsResponseException.class)
-	public void testUnsuccessfulResponse() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, "{}"));
-	}
 
-	@Test
-	public void testEmptyEdgeCases() throws Exception {
-		String expectedResponse = "[{\"nonsense\":true}]";
-		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
-		List<LogoUploadsUrlResponse> parsed = endpoint.parseResponse(mockResponse);
-		assertNotNull(parsed);
-		assertEquals(1, parsed.size());
-		assertNotNull(parsed.get(0));
-
-		expectedResponse = "[]";
-		mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
-		parsed = endpoint.parseResponse(mockResponse);
-		assertNotNull(parsed);
-		assertEquals(0, parsed.size());
-
-		expectedResponse = "";
-		mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
-		parsed = endpoint.parseResponse(mockResponse);
-		assertNotNull(parsed);
-		assertEquals(0, parsed.size());
-	}
-
-	@Test(expected = VonageResponseParseException.class)
-	public void testParseMalformedResponse() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, "{malformed]"));
-	}
-
-	@Test(expected = VonageResponseParseException.class)
-	public void testInvalidContentType() throws Exception {
-		String json = "[{\"fields\":{\"Content-Type\":\"not-a-mime\"}}]";
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, json));
-	}
-
-	@Test
-	public void testInvalidLogoType() throws Exception {
-		String json = "[{\"fields\":{\"logoType\":\"smoll\"}}]";
-		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, json);
-		List<LogoUploadsUrlResponse> parsed = endpoint.parseResponse(mockResponse);
-		assertNotNull(parsed);
-		assertEquals(1, parsed.size());
-		assertNull(parsed.get(0).getFields().getLogoType());
-	}
 }

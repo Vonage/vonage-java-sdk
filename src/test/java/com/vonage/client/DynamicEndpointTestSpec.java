@@ -76,6 +76,10 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 		else return null;
 	}
 
+	protected R executeEndpoint() {
+		return endpoint().execute(sampleRequest());
+	}
+
 	public void runTests() throws Exception {
 		if (Jsonable.class.isAssignableFrom(expectedResponseType())) {
 			assertInvalidJsonResponse();
