@@ -18,8 +18,6 @@ package com.vonage.client.verify;
 import com.vonage.client.*;
 import com.vonage.client.auth.TokenAuthMethod;
 import com.vonage.client.common.HttpMethod;
-import org.apache.http.HttpResponse;
-import java.io.IOException;
 import java.util.Locale;
 
 /**
@@ -65,8 +63,7 @@ public class VerifyClient {
         psd2 = new Endpoint<>("/psd2", true);
         control = new Endpoint<ControlRequest, ControlResponse>("/control", true) {
             @Override
-            public ControlResponse parseResponse(HttpResponse response) throws IOException {
-                ControlResponse parsed = super.parseResponse(response);
+            public ControlResponse postProcessParsedResponse(ControlResponse parsed) {
                 if (parsed.getStatus().equals("0")) {
                     return parsed;
                 }

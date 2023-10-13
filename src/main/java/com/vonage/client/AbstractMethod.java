@@ -63,6 +63,10 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
         return httpWrapper;
     }
 
+    protected ResultT postProcessParsedResponse(ResultT response) {
+        return response;
+    }
+
     /**
      * Execute the REST call represented by this method object.
      *
@@ -90,7 +94,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
             LOG.debug("Response: " + LoggingUtils.logResponse(response));
 
             try {
-                return parseResponse(response);
+                return postProcessParsedResponse(parseResponse(response));
             }
             catch (IOException io) {
                 throw new VonageResponseParseException("Unable to parse response.", io);
