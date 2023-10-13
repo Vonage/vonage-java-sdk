@@ -51,8 +51,6 @@ public class PricingResponse implements Jsonable {
     }
 
     public static PricingResponse fromJson(String json) {
-        PricingResponse response = new PricingResponse();
-        response.updateFromJson(json);
-        return response;
+        return Jsonable.fromJson(json, PricingResponse.class);
     }
 }

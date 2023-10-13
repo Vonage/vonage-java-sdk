@@ -18,29 +18,17 @@ package com.vonage.client.meetings;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.Jsonable;
 import java.util.List;
 import java.util.UUID;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-class FinalizeLogosRequest {
+class FinalizeLogosRequest implements Jsonable {
 	@JsonProperty("keys") List<String> keys;
 	@JsonIgnore UUID themeId;
 
 	FinalizeLogosRequest(UUID themeId, List<String> keys) {
 		this.keys = keys;
 		this.themeId = themeId;
-	}
-
-	String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.writeValueAsString(this);
-		}
-		catch (JsonProcessingException jpe) {
-			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
-		}
 	}
 }

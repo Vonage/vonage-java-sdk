@@ -16,10 +16,8 @@
 package com.vonage.client.meetings;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.vonage.client.Jsonable;
 import com.vonage.client.VonageResponseParseException;
-import java.io.IOException;
 import java.net.URI;
 import java.time.Instant;
 import java.util.UUID;
@@ -27,7 +25,7 @@ import java.util.UUID;
 /**
  * Represents a deserialized callback response webhook for event updates from the Meetings API.
  */
-public class MeetingsEventCallback {
+public class MeetingsEventCallback implements Jsonable {
 	private EventType event;
 	private String sessionId, participantName, participantType;
 	private UUID roomId, recordingId, participantId;
@@ -199,13 +197,6 @@ public class MeetingsEventCallback {
 	 * @throws VonageResponseParseException If the response could not be deserialized.
 	 */
 	public static MeetingsEventCallback fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.registerModule(new JavaTimeModule());
-			return mapper.readValue(json, MeetingsEventCallback.class);
-		}
-		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to produce MeetingsEventCallback from json.", ex);
-		}
+		return Jsonable.fromJson(json, MeetingsEventCallback.class);
 	}
 }

@@ -84,8 +84,6 @@ public class SearchVerifyResponse implements Jsonable {
     }
 
     public static SearchVerifyResponse fromJson(String json) {
-        SearchVerifyResponse response = new SearchVerifyResponse();
-        response.updateFromJson(json);
-        return response;
+        return Jsonable.fromJson(json, SearchVerifyResponse.class);
     }
 }

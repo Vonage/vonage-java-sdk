@@ -15,25 +15,22 @@
  */
 package com.vonage.client.meetings;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageResponseParseException;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 import java.net.URI;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true, value = "theme_id", allowSetters = true)
-public class Theme {
+public class Theme implements Jsonable {
 	static final Pattern COLOR_PATTERN = Pattern.compile("(#[a-fA-F0-9]{6}|[a-fA-F0-9]{3})");
 
-	UUID themeId;
-	private UUID applicationId;
+	@JsonIgnore private boolean update = false;
+	private UUID themeId, applicationId;
 	private ThemeDomain domain;
 	private String themeName, mainColor, accountId, shortCompanyUrl,
 			brandText, brandImageColored, brandImageWhite, brandedFavicon;
@@ -73,6 +70,12 @@ public class Theme {
 				throw new IllegalArgumentException("Short company URL cannot be blank.");
 			}
 		}
+	}
+
+	@JsonIgnore
+	void setThemeIdAndFlagUpdate(UUID themeId) {
+		this.themeId = themeId;
+		update = true;
 	}
 
 	/**
@@ -215,19 +218,14 @@ public class Theme {
 		return brandedFaviconUrl;
 	}
 
-	/**
-	 * Updates (hydrates) this object's fields from additional JSON data.
-	 *
-	 * @param json The JSON payload.
-	 */
-	public void updateFromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.readerForUpdating(this).readValue(json, getClass());
+	@Override
+	public String toJson() {
+		String json = Jsonable.super.toJson();
+		if (update) {
+			json = "{\"update_details\":" + json + "}";
+			update = false;
 		}
-		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to update "+getClass().getSimpleName()+" from json.", ex);
-		}
+		return json;
 	}
 
 	/**
@@ -237,28 +235,7 @@ public class Theme {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static Theme fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readValue(json, Theme.class);
-		}
-		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to produce Theme from json.", ex);
-		}
-	}
-	
-	/**
-	 * Generates a JSON payload from this request.
-	 *
-	 * @return JSON representation of this Theme object.
-	 */
-	public String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.writeValueAsString(this);
-		}
-		catch (JsonProcessingException jpe) {
-			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
-		}
+		return Jsonable.fromJson(json, Theme.class);
 	}
 	
 	/**

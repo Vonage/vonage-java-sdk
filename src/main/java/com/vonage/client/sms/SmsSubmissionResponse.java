@@ -26,9 +26,7 @@ public class SmsSubmissionResponse implements Jsonable {
     private List<SmsSubmissionResponseMessage> messages;
 
     public static SmsSubmissionResponse fromJson(String json) {
-        SmsSubmissionResponse response = new SmsSubmissionResponse();
-        response.updateFromJson(json);
-        return response;
+        return Jsonable.fromJson(json, SmsSubmissionResponse.class);
     }
 
     /**

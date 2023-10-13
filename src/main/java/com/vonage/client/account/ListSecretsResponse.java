@@ -55,8 +55,6 @@ public class ListSecretsResponse implements Jsonable {
     }
 
     public static ListSecretsResponse fromJson(String json) {
-        ListSecretsResponse response = new ListSecretsResponse();
-        response.updateFromJson(json);
-        return response;
+        return Jsonable.fromJson(json, ListSecretsResponse.class);
     }
 }

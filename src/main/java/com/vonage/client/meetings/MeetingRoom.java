@@ -18,20 +18,14 @@ package com.vonage.client.meetings;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.vonage.client.VonageResponseParseException;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MeetingRoom {
+public class MeetingRoom implements Jsonable {
 	private Instant createdAt, expiresAt;
 	private UUID id, themeId;
 	private String displayName, metadata, meetingCode;
@@ -251,53 +245,13 @@ public class MeetingRoom {
 	}
 
 	/**
-	 * Updates (hydrates) this object's fields from additional JSON data.
-	 *
-	 * @param json The JSON payload.
-	 */
-	public void updateFromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.registerModule(new JavaTimeModule());
-			mapper.readerForUpdating(this).readValue(json, getClass());
-		}
-		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to update "+getClass().getSimpleName()+" from json.", ex);
-		}
-	}
-
-	/**
 	 * Creates an instance of this class from a JSON payload.
 	 *
 	 * @param json The JSON string to parse.
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static MeetingRoom fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.registerModule(new JavaTimeModule());
-			return mapper.readValue(json, MeetingRoom.class);
-		}
-		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to produce MeetingRoom from json.", ex);
-		}
-	}
-
-	/**
-	 * Generates a JSON payload from this request.
-	 *
-	 * @return JSON representation of this MeetingRoom object.
-	 */
-	public String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.registerModule(new JavaTimeModule());
-			mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-			return mapper.writeValueAsString(this);
-		}
-		catch (JsonProcessingException jpe) {
-			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
-		}
+		return Jsonable.fromJson(json, MeetingRoom.class);
 	}
 	
 	/**

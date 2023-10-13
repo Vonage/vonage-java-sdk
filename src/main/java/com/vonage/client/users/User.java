@@ -16,6 +16,7 @@
 package com.vonage.client.users;
 
 import com.fasterxml.jackson.annotation.*;
+import com.vonage.client.Jsonable;
 import com.vonage.client.users.channels.Channel;
 import com.vonage.client.users.channels.Channels;
 import java.net.URI;
@@ -120,9 +121,7 @@ public class User extends BaseUser {
      */
     @JsonCreator
     public static User fromJson(String json) {
-        User user = new User();
-        user.updateFromJson(json);
-        return user;
+        return Jsonable.fromJson(json, User.class);
     }
 
     /**

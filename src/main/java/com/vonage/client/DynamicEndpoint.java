@@ -166,19 +166,19 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 	}
 
 	@Override
-	protected Class<?>[] getAcceptableAuthMethods() {
+	protected final Class<?>[] getAcceptableAuthMethods() {
 		return authMethods.toArray(new Class<?>[0]);
 	}
 
 	@Override
-	protected RequestBuilder applyAuth(RequestBuilder request) throws VonageClientException {
+	protected final RequestBuilder applyAuth(RequestBuilder request) throws VonageClientException {
 		return applyBasicAuth ?
 				getAuthMethod(getAcceptableAuthMethods()).applyAsBasicAuth(request) :
 				super.applyAuth(request);
 	}
 
 	@Override
-	public RequestBuilder makeRequest(T requestBody) throws UnsupportedEncodingException {
+	public final RequestBuilder makeRequest(T requestBody) throws UnsupportedEncodingException {
 		if (requestBody instanceof Jsonable && requestBody.getClass().equals(responseType)) {
 			cachedRequestBody = requestBody;
 		}
@@ -222,7 +222,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 	}
 
 	@Override
-	public R parseResponse(HttpResponse response) throws IOException {
+	public final R parseResponse(HttpResponse response) throws IOException {
 		int statusCode = response.getStatusLine().getStatusCode();
 		try {
 			if (statusCode >= 200 && statusCode < 300) {
@@ -267,6 +267,9 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 						R responseBody = constructor.newInstance();
 						((Jsonable) responseBody).updateFromJson(deser);
 						return responseBody;
+					}
+					else if (Collection.class.isAssignableFrom(responseType)) {
+						return Jsonable.createDefaultObjectMapper().readValue(deser, responseType);
 					}
 					else {
 						R customParsedResponse = parseResponseFromString(deser);

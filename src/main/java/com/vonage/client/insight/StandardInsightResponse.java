@@ -17,6 +17,7 @@ package com.vonage.client.insight;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.Jsonable;
 import java.math.BigDecimal;
 
 /**
@@ -32,9 +33,7 @@ public class StandardInsightResponse extends BasicInsightResponse {
     private CallerType callerType;
 
     public static StandardInsightResponse fromJson(String json) {
-        StandardInsightResponse response = new StandardInsightResponse();
-        response.updateFromJson(json);
-        return response;
+        return Jsonable.fromJson(json, StandardInsightResponse.class);
     }
 
     /**

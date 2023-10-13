@@ -16,8 +16,8 @@
 package com.vonage.client.meetings;
 
 import com.vonage.client.VonageResponseParseException;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Test;
 import java.net.URI;
 import java.time.Instant;
 import java.util.UUID;
@@ -286,8 +286,8 @@ public class MeetingsEventCallbackTest {
 		assertNull(event.getDuration());
 	}
 
-	@Test(expected = VonageResponseParseException.class)
+	@Test
 	public void testFromJsonInvalid() {
-		MeetingsEventCallback.fromJson("{malformed]");
+		assertThrows(VonageResponseParseException.class, () -> MeetingsEventCallback.fromJson("{malformed]"));
 	}
 }

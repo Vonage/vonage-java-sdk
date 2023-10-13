@@ -17,10 +17,7 @@ package com.vonage.client.messages;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.Jsonable;
-import com.vonage.client.VonageResponseParseException;
-import java.io.IOException;
 import java.util.UUID;
 
 /**
@@ -59,12 +56,6 @@ public class MessageResponse implements Jsonable {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static MessageResponse fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readValue(json, MessageResponse.class);
-		}
-		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to produce MessageResponse from json.", ex);
-		}
+		return Jsonable.fromJson(json, MessageResponse.class);
 	}
 }

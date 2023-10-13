@@ -15,10 +15,12 @@
  */
 package com.vonage.client.meetings;
 
-import org.apache.http.client.methods.RequestBuilder;
+import com.vonage.client.QueryParamsRequest;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.UUID;
 
-class ListRoomsRequest {
+class ListRoomsRequest implements QueryParamsRequest {
 	final UUID themeId;
 	final Integer pageSize, startId, endId;
 
@@ -29,16 +31,18 @@ class ListRoomsRequest {
 		this.pageSize = pageSize;
 	}
 
-	RequestBuilder addParameters(RequestBuilder builder) {
+	@Override
+	public Map<String, String> makeParams() {
+		Map<String, String> params = new LinkedHashMap<>(4);
 		if (startId != null) {
-			builder.addParameter("start_id", String.valueOf(startId));
+			params.put("start_id", String.valueOf(startId));
 		}
 		if (endId != null) {
-			builder.addParameter("end_id", String.valueOf(endId));
+			params.put("end_id", String.valueOf(endId));
 		}
 		if (pageSize != null) {
-			builder.addParameter("page_size", String.valueOf(pageSize));
+			params.put("page_size", String.valueOf(pageSize));
 		}
-		return builder;
+		return params;
 	}
 }

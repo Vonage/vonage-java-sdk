@@ -17,14 +17,12 @@ package com.vonage.client.meetings;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.Jsonable;
 import java.util.Objects;
 import java.util.UUID;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class UpdateApplicationRequest {
+public class UpdateApplicationRequest implements Jsonable {
 	private final UUID defaultThemeId;
 
 	UpdateApplicationRequest(Builder builder) {
@@ -44,17 +42,9 @@ public class UpdateApplicationRequest {
 	 *
 	 * @return JSON representation of this UpdateApplicationRequest object.
 	 */
+	@Override
 	public String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			String nested = mapper.writeValueAsString(this);
-			return "{\"update_details\": "+nested+"}";
-		}
-		catch (JsonProcessingException jpe) {
-			throw new VonageUnexpectedException(
-				  "Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe
-			);
-		}
+		return "{\"update_details\":" + Jsonable.super.toJson() + "}";
 	}
 
 	/**
