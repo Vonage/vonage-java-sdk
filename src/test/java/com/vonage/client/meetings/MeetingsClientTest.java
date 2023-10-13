@@ -17,8 +17,10 @@ package com.vonage.client.meetings;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.ClientTest;
+import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.common.HalLinks;
+import com.vonage.client.common.HttpMethod;
 import org.apache.http.client.HttpClient;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
@@ -781,5 +783,76 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		stubResponse(200, responseJson);
 		client.httpClient = stubHttpClient(204);
 		client.updateThemeLogo(RANDOM_ID, LogoType.FAVICON, image);
+	}
+
+	// ENDPOINT TESTS
+
+	@Test
+	public void testCreateRoomEndpoint() throws Exception {
+		new MeetingsEndpointTestSpec<MeetingRoom, MeetingRoom>() {
+
+			@Override
+			protected RestEndpoint<MeetingRoom, MeetingRoom> endpoint() {
+				return client.createRoom;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.POST;
+			}
+
+			@Override
+			protected String expectedEndpointUri(MeetingRoom request) {
+				return "/v1/meetings/rooms";
+			}
+
+			@Override
+			protected MeetingRoom sampleRequest() {
+				return MeetingRoom.builder("Srs bzns meeting")
+						.metadata("code=1123")
+						.type(RoomType.LONG_TERM)
+						.isAvailable(false)
+						.expireAfterUse(true)
+						.recordingOptions(RecordingOptions.builder().autoRecord(true).recordOnlyOwner(false).build())
+						.initialJoinOptions(InitialJoinOptions.builder().microphoneState(MicrophoneState.OFF).build())
+						.callbackUrls(CallbackUrls.builder()
+								.recordingsCallbackUrl("example.com/re")
+								.roomsCallbackUrl("example.com/ro")
+								.sessionsCallbackUrl("example.com/se")
+								.build()
+						)
+						.availableFeatures(AvailableFeatures.builder()
+								.isChatAvailable(false)
+								.isLocaleSwitcherAvailable(false)
+								.isRecordingAvailable(true)
+								.isWhiteboardAvailable(false)
+								.build()
+						)
+						.themeId(UUID.fromString("ef2b46f3-8ebb-437e-a671-272e4990fbc8"))
+						.joinApprovalLevel(JoinApprovalLevel.EXPLICIT_APPROVAL)
+						.expiresAt(Instant.MAX)
+						.uiSettings(UISettings.builder().language(RoomLanguage.IT).build())
+						.build();
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"expires_at\":\"+1000000000-12-31T23:59:59.999Z\"," +
+						"\"theme_id\":\"ef2b46f3-8ebb-437e-a671-272e4990fbc8\"," +
+						"\"display_name\":\"Srs bzns meeting\",\"metadata\":\"code=1123\"," +
+						"\"is_available\":false,\"expire_after_use\":true,\"type\":\"long_term\"," +
+						"\"join_approval_level\":\"explicit_approval\",\"recording_options\":" +
+						"{\"auto_record\":true,\"record_only_owner\":false}," +
+						"\"initial_join_options\":{\"microphone_state\":\"off\"}," +
+						"\"ui_settings\":{\"language\":\"it\"},\"callback_urls\":" +
+						"{\"rooms_callback_url\":\"example.com/ro\"," +
+						"\"sessions_callback_url\":\"example.com/se\"," +
+						"\"recordings_callback_url\":\"example.com/re\"}," +
+						"\"available_features\":{\"is_recording_available\":true," +
+						"\"is_chat_available\":false,\"is_whiteboard_available\":false," +
+						"\"is_locale_switcher_available\":false}}";
+			}
+		}
+		.runTests();
 	}
 }
