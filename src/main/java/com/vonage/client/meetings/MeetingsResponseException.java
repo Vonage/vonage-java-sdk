@@ -17,8 +17,6 @@ package com.vonage.client.meetings;
 
 import com.fasterxml.jackson.annotation.*;
 import com.vonage.client.VonageApiResponseException;
-import org.apache.http.HttpResponse;
-import java.io.IOException;
 
 /**
  * Response returned when an error is encountered (i.e. the API returns a non-2xx status code).
@@ -71,9 +69,5 @@ public final class MeetingsResponseException extends VonageApiResponseException 
 	@JsonCreator
 	public static MeetingsResponseException fromJson(String json) {
 		return setStatus(fromJson(MeetingsResponseException.class, json));
-	}
-
-	static MeetingsResponseException fromHttpResponse(HttpResponse response) throws IOException {
-		return setStatus(fromHttpResponse(MeetingsResponseException.class, response));
 	}
 }

@@ -16,7 +16,6 @@
 package com.vonage.client.meetings;
 
 import com.vonage.client.QueryParamsRequest;
-import org.apache.http.client.methods.RequestBuilder;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -30,12 +29,6 @@ class ListRoomsRequest implements QueryParamsRequest {
 		this.startId = startId;
 		this.endId = endId;
 		this.pageSize = pageSize;
-	}
-
-	@Deprecated
-	RequestBuilder addParameters(RequestBuilder builder) {
-		makeParams().forEach(builder::addParameter);
-		return builder;
 	}
 
 	@Override
