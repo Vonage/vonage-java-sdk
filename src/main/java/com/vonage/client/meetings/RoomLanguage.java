@@ -39,8 +39,18 @@ public enum RoomLanguage {
 
 	/**
 	 * Portuguese
+	 *
+	 * @deprecated Replaced by {@link #PT_BR}.
 	 */
+	@Deprecated
 	PT,
+
+	/**
+	 * Brazilian Portuguese
+	 *
+	 * @since 7.10.0
+	 */
+	PT_BR,
 
 	/**
 	 * Italian
@@ -60,12 +70,33 @@ public enum RoomLanguage {
 	/**
 	 * German
 	 */
-	DE;
+	DE,
+
+	/**
+	 * Arabic
+	 *
+	 * @since 7.10.0
+	 */
+	AR,
+
+	/**
+	 * Chinese (Taiwan)
+	 *
+	 * @since 7.10.0
+	 */
+	ZH_TW,
+
+	/**
+	 * Chinese (Mainland)
+	 *
+	 * @since 7.10.0
+	 */
+	ZH_CN;
 
 	@JsonCreator
 	public static RoomLanguage fromString(String value) {
 		try {
-			return valueOf(value.toUpperCase());
+			return valueOf(value.toUpperCase().replace('-', '_'));
 		}
 		catch (NullPointerException | IllegalArgumentException ex) {
 			return null;
@@ -75,6 +106,6 @@ public enum RoomLanguage {
 	@JsonValue
 	@Override
 	public String toString() {
-		return name().toLowerCase();
+		return name().replace('_', '-');
 	}	
 }
