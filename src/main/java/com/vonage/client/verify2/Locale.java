@@ -34,7 +34,31 @@ public enum Locale {
 	HINDI_INDIA("hi-in"),
 	PORTUGUESE_BRAZIL("pt-br"),
 	PORTUGUESE_PORTUGAL("pt-pt"),
-	INDONESIAN_INDONESIA("id-id");
+	INDONESIAN_INDONESIA("id-id"),
+	JAPANESE_JAPAN("ja-jp"),
+	HEBREW_ISRAEL("he-il"),
+	YUE_CHINESE_CHINA("yue-cn"),
+	ARABIC_ARABIAN_PENINSULA("ar-xa"),
+	CZECH_CZECH_REPUBLIC("cs-cz"),
+	WELSH_UK("cy-gb"),
+	GREEK_GREECE("el-gr"),
+	ENGLISH_AUSTRALIA("en-au"),
+	ENGLISH_INDIA("en-in"),
+	FINNISH_FINLAND("fi-fi"),
+	FILIPINO_PHILIPPINES("fil-ph"),
+	FRENCH_CANADA("fr-ca"),
+	HUNGARIAN_HUNGARY("hu-hu"),
+	ICELANDIC_ICELAND("is-is"),
+	NORWEGIAN_BOKMAL_NORWAY("nb-no"),
+	DUTCH_NETHERLANDS("nl-nl"),
+	POLISH_POLAND("pl-pl"),
+	ROMANIAN_ROMANIA("ro-ro"),
+	SWEDISH_SWEDEN("sv-se"),
+	THAI_THAILAND("th-th"),
+	TURKISH_TURKEY("tr-tr"),
+	VIETNAMESE_VIETNAM("vi-vn"),
+	CHINESE_CHINA("zh-cn"),
+	CHINESE_TAIWAN("zh-tw");
 
 	private final String code;
 

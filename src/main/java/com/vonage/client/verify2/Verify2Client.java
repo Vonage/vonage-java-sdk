@@ -45,7 +45,7 @@ public class Verify2Client {
 				super(DynamicEndpoint.<T, R> builder(type)
 						.responseExceptionType(VerifyResponseException.class)
 						.wrapper(wrapper).requestMethod(method)
-						.authMethod(JWTAuthMethod.class, TokenAuthMethod.class)
+						.addAuthMethodIfTrue(method != HttpMethod.GET, JWTAuthMethod.class, TokenAuthMethod.class)
 						.pathGetter((de, req) -> {
 							String base = de.getHttpWrapper().getHttpConfig().getVersionedApiBaseUri("v2") + "/verify";
 							return pathGetter != null ? base + "/" + pathGetter.apply(req) : base;
@@ -57,6 +57,10 @@ public class Verify2Client {
 		verifyUser = new Endpoint<>(null, HttpMethod.POST);
 		verifyRequest = new Endpoint<>(req -> req.requestId, HttpMethod.POST);
 		cancel = new Endpoint<>(UUID::toString, HttpMethod.DELETE);
+	}
+
+	private UUID validateRequestId(UUID requestId) {
+		return Objects.requireNonNull(requestId, "Request ID is required.");
 	}
 
 	/**
@@ -87,7 +91,7 @@ public class Verify2Client {
 	public VerificationResponse sendVerification(VerificationRequest request) {
 		if (request.isCodeless() && !hasJwtAuthMethod) {
 			throw new IllegalStateException(
-					"Codeless verification requires an application ID to be set in order to use webhooks."
+				"Codeless verification requires an application ID to be set in order to use webhooks."
 			);
 		}
 		return verifyUser.execute(Objects.requireNonNull(request));
@@ -112,9 +116,10 @@ public class Verify2Client {
 	 * @throws VerifyResponseException If the code was invalid, or any other error.
 	 */
 	public void checkVerificationCode(UUID requestId, String code) {
-		Objects.requireNonNull(requestId, "Request ID is required.");
-		Objects.requireNonNull(code, "Code is required.");
-		verifyRequest.execute(new VerifyCodeRequestWrapper(requestId.toString(), code));
+		verifyRequest.execute(new VerifyCodeRequestWrapper(
+				validateRequestId(requestId).toString(),
+				Objects.requireNonNull(code, "Code is required.")
+		));
 	}
 
 	/**
@@ -127,7 +132,6 @@ public class Verify2Client {
 	 * @throws VerifyResponseException If the request ID was not found or it has been verified already.
 	 */
 	public void cancelVerification(UUID requestId) {
-		Objects.requireNonNull(requestId, "Request ID is required.");
-		cancel.execute(requestId);
+		cancel.execute(validateRequestId(requestId));
 	}
 }

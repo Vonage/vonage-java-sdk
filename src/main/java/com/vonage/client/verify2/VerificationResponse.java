@@ -17,10 +17,8 @@ package com.vonage.client.verify2;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.Jsonable;
-import com.vonage.client.VonageResponseParseException;
-import java.io.IOException;
+import java.net.URI;
 import java.util.UUID;
 
 /**
@@ -29,6 +27,7 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class VerificationResponse implements Jsonable {
 	protected UUID requestId;
+	protected URI checkUrl;
 
 	/**
 	 * Protected to prevent users from explicitly creating this object.
@@ -46,9 +45,21 @@ public class VerificationResponse implements Jsonable {
 		return requestId;
 	}
 
+	/**
+	 * URL for Silent Auth Verify workflow completion (only present if using Silent Auth).
+	 *
+	 * @return The URL to check for Silent Authentication, or {@code null} if not applicable.
+	 *
+	 * @since 7.10.0
+	 */
+	@JsonProperty("check_url")
+	public URI getCheckUrl() {
+		return checkUrl;
+	}
+
 	@Override
 	public String toString() {
-		return getClass().getSimpleName()+" {requestId='"+requestId+"'}";
+		return getClass().getSimpleName() + "{requestId=" + requestId + ", checkUrl=" + checkUrl + '}';
 	}
 
 	/**
@@ -58,12 +69,8 @@ public class VerificationResponse implements Jsonable {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static VerificationResponse fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readValue(json, VerificationResponse.class);
-		}
-		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to produce VerificationResponse from json.", ex);
-		}
+		VerificationResponse response = new VerificationResponse();
+		response.updateFromJson(json);
+		return response;
 	}
 }

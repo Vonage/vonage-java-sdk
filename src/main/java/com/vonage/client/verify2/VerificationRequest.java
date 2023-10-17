@@ -77,6 +77,11 @@ public class VerificationRequest implements Jsonable {
 		if (code != null && codeLength != null && code.length() != codeLength) {
 			throw new IllegalStateException("Code '"+code+"' is not "+codeLength+" characters.");
 		}
+		if (workflows.stream().anyMatch(SilentAuthWorkflow.class::isInstance)) {
+			if (!(workflows.get(0) instanceof SilentAuthWorkflow)) {
+				throw new IllegalStateException("Silent Auth must be the first workflow.");
+			}
+		}
 	}
 
 	/**
@@ -312,6 +317,7 @@ public class VerificationRequest implements Jsonable {
 		}
 
 		/**
+		 * (OPTIONAL)
 		 * Set this parameter to {@code false} to force through the request even if it's
 		 * blocked by the network's fraud protection. Refer to
 		 * <a href=https://developer.vonage.com/en/verify/verify-v2/guides/v2-anti-fraud>

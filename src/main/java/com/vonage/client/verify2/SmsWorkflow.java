@@ -17,6 +17,7 @@ package com.vonage.client.verify2;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.common.E164;
 
 /**
  * Defines workflow properties for sending a verification code to a user via SMS.
@@ -42,7 +43,7 @@ public final class SmsWorkflow extends Workflow {
 	 * @param appHash Android Application Hash Key for automatic code detection on a user's device.
 	 */
 	public SmsWorkflow(String to, String appHash) {
-		super(Channel.SMS, to);
+		super(Channel.SMS, new E164(to).toString());
 		if ((this.appHash = appHash) != null && appHash.length() != 11) {
 			throw new IllegalArgumentException("Android app hash must be 11 characters.");
 		}

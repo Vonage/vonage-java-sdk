@@ -26,6 +26,8 @@ package com.vonage.client;
  */
 public class BugRepro {
 	public static void main(String[] args) throws Throwable {
+		String TO_NUMBER = System.getenv("TO_NUMBER");
+
 		VonageClient client = VonageClient.builder()
 				.httpConfig(HttpConfig.builder().timeoutMillis(12_000).build())
 				.apiKey(System.getenv("VONAGE_API_KEY"))

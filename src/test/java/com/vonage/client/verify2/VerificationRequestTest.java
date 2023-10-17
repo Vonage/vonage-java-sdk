@@ -18,11 +18,13 @@ package com.vonage.client.verify2;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.verify2.VerificationRequest.Builder;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Test;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class VerificationRequestTest {
+	static final boolean SANDBOX = true;
 	static final Locale LOCALE = Locale.PORTUGUESE_PORTUGAL;
 	static final int CODE_LENGTH = 8, CHANNEL_TIMEOUT = 120;
 	static final String
@@ -63,6 +65,8 @@ public class VerificationRequestTest {
 
 	Workflow getWorkflowAllParamsForChannel(Channel channel) {
 		switch (channel) {
+			case SILENT_AUTH:
+				return new SilentAuthWorkflow(TO_NUMBER, SANDBOX);
 			case SMS:
 				return new SmsWorkflow(TO_NUMBER, APP_HASH);
 			case WHATSAPP:
@@ -95,22 +99,30 @@ public class VerificationRequestTest {
 
 	String getExpectedAllParamsForSingleWorkflowJson(Channel channel) {
 		String expectedJson = getExpectedRequiredParamsForSingleWorkflowJson(channel), prefix, replacement;
+
 		if (channel == Channel.SMS) {
-			prefix = TO_NUMBER + "\"";
+			prefix = TO_NUMBER + '"';
 			replacement = prefix + ",\"app_hash\":\""+APP_HASH+"\"";
 			expectedJson = expectedJson.replace(prefix, replacement);
 		}
 		if (channel == Channel.WHATSAPP) {
-			prefix = TO_NUMBER + "\"";
+			prefix = TO_NUMBER + '"';
 			replacement = prefix + ",\"from\":\""+FROM_NUMBER+"\"";
 			expectedJson = expectedJson.replace(prefix, replacement);
 		}
 		if (channel == Channel.EMAIL) {
-			prefix = TO_EMAIL + "\"";
+			prefix = TO_EMAIL + '"';
 			replacement = prefix + ",\"from\":\""+FROM_EMAIL+"\"";
 			expectedJson = expectedJson.replace(prefix, replacement);
 		}
+		if (channel == Channel.SILENT_AUTH) {
+			prefix = TO_NUMBER + '"';
+			replacement = prefix + ",\"sandbox\":" + SANDBOX;
+			expectedJson = expectedJson.replace(prefix, replacement);
+		}
+
 		prefix = "{\"locale\":\"pt-pt\",\"channel_timeout\":"+ CHANNEL_TIMEOUT;
+
 		if (channel != Channel.SILENT_AUTH && channel != Channel.WHATSAPP_INTERACTIVE) {
 			prefix += ",\"code_length\":"+CODE_LENGTH;
 		}
@@ -166,12 +178,12 @@ public class VerificationRequestTest {
 	@Test
 	public void testAllWorkflowsWithoutRecipient() {
 		for (String invalid : new String[]{"", " ", null}) {
-			assertThrows(IllegalArgumentException.class, () -> new SilentAuthWorkflow(invalid));
-			assertThrows(IllegalArgumentException.class, () -> new SmsWorkflow(invalid));
-			assertThrows(IllegalArgumentException.class, () -> new VoiceWorkflow(invalid));
-			assertThrows(IllegalArgumentException.class, () -> new WhatsappWorkflow(invalid));
-			assertThrows(IllegalArgumentException.class, () -> new WhatsappCodelessWorkflow(invalid));
-			assertThrows(IllegalArgumentException.class, () -> new EmailWorkflow(invalid));
+			assertThrows(RuntimeException.class, () -> new SilentAuthWorkflow(invalid));
+			assertThrows(RuntimeException.class, () -> new SmsWorkflow(invalid));
+			assertThrows(RuntimeException.class, () -> new VoiceWorkflow(invalid));
+			assertThrows(RuntimeException.class, () -> new WhatsappWorkflow(invalid));
+			assertThrows(RuntimeException.class, () -> new WhatsappCodelessWorkflow(invalid));
+			assertThrows(RuntimeException.class, () -> new EmailWorkflow(invalid));
 		}
 	}
 
@@ -283,7 +295,20 @@ public class VerificationRequestTest {
 		}
 	}
 
-	@Test(expected = VonageUnexpectedException.class)
+	@Test
+	public void testSilentAuthMustBeFirstWorkflow() {
+		VerificationRequest.Builder builder = VerificationRequest.builder().brand("Test");
+		assertThrows(IllegalStateException.class, builder::build);
+		SilentAuthWorkflow saw = new SilentAuthWorkflow("447900000001");
+		assertEquals(saw, builder.addWorkflow(saw).build().getWorkflows().get(0));
+		WhatsappWorkflow waw = new WhatsappWorkflow(saw.getTo());
+		assertEquals(waw, builder.addWorkflow(waw).build().getWorkflows().get(1));
+		builder.workflows(Arrays.asList(waw, saw));
+		assertEquals(2, builder.workflows.size());
+		assertThrows(IllegalStateException.class, builder::build);
+	}
+
+	@Test
 	public void triggerJsonProcessingException() {
 		class SelfRefrencing extends VerificationRequest {
 			@JsonProperty("self") final SelfRefrencing self = this;
@@ -292,8 +317,8 @@ public class VerificationRequestTest {
 				super(builder);
 			}
 		}
-		new SelfRefrencing(VerificationRequest.builder()
-				.addWorkflow(new SmsWorkflow("447900000000")).brand("Test")
-		).toJson();
+		assertThrows(VonageUnexpectedException.class, () -> new SelfRefrencing(VerificationRequest.builder()
+				.addWorkflow(new SmsWorkflow("447900000000")).brand("Test")).toJson()
+		);
 	}
 }

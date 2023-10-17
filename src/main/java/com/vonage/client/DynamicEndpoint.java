@@ -112,6 +112,13 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			return this;
 		}
 
+		public Builder<T, R> addAuthMethodIfTrue(boolean condition, Class<? extends AuthMethod> primary, Class<? extends AuthMethod>... others) {
+			if (condition) {
+				authMethod(primary, others);
+			}
+			return this;
+		}
+
 		public Builder<T, R> authMethod(Class<? extends AuthMethod> primary, Class<? extends AuthMethod>... others) {
 			authMethods = new ArrayList<>(2);
 			authMethods.add(Objects.requireNonNull(primary, "Primary auth method cannot be null"));
@@ -167,14 +174,21 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 
 	@Override
 	protected final Class<?>[] getAcceptableAuthMethods() {
-		return authMethods.toArray(new Class<?>[0]);
+		Class<?>[] emptyArray = new Class<?>[0];
+		return authMethods != null ? authMethods.toArray(emptyArray) : emptyArray;
 	}
 
 	@Override
 	protected final RequestBuilder applyAuth(RequestBuilder request) throws VonageClientException {
-		return applyBasicAuth ?
-				getAuthMethod(getAcceptableAuthMethods()).applyAsBasicAuth(request) :
-				super.applyAuth(request);
+		if (authMethods == null || authMethods.isEmpty()) {
+			return request;
+		}
+		else if (applyBasicAuth) {
+			return getAuthMethod(getAcceptableAuthMethods()).applyAsBasicAuth(request);
+		}
+		else {
+			return super.applyAuth(request);
+		}
 	}
 
 	@Override

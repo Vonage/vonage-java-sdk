@@ -16,6 +16,7 @@
 package com.vonage.client.verify2;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.vonage.client.common.E164;
 
 /**
  * Defines workflow properties for sending a verification code to a user over a voice call.
@@ -29,6 +30,6 @@ public final class VoiceWorkflow extends Workflow {
 	 * @param to The number to call, in E.164 format.
 	 */
 	public VoiceWorkflow(String to) {
-		super(Channel.VOICE, to);
+		super(Channel.VOICE, new E164(to).toString());
 	}
 }
