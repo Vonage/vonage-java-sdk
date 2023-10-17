@@ -845,7 +845,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 						"\"join_approval_level\":\"explicit_approval\",\"recording_options\":" +
 						"{\"auto_record\":true,\"record_only_owner\":false}," +
 						"\"initial_join_options\":{\"microphone_state\":\"off\"}," +
-						"\"ui_settings\":{\"language\":\"it\"},\"callback_urls\":" +
+						"\"ui_settings\":{\"language\":\"IT\"},\"callback_urls\":" +
 						"{\"rooms_callback_url\":\"example.com/ro\"," +
 						"\"sessions_callback_url\":\"example.com/se\"," +
 						"\"recordings_callback_url\":\"example.com/re\"}," +

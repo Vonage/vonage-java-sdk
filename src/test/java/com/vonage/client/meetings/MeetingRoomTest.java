@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.VonageUnexpectedException;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import java.net.URI;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -292,9 +292,9 @@ public class MeetingRoomTest {
 		assertNull(response.getLinks().getHostUrl());
 	}
 	
-	@Test(expected = VonageUnexpectedException.class)
+	@Test
 	public void testFromJsonInvalid() {
-		MeetingRoom.fromJson("{malformed]");
+		assertThrows(VonageResponseParseException.class, () -> MeetingRoom.fromJson("{malformed]"));
 	}
 
 	@Test
@@ -324,8 +324,7 @@ public class MeetingRoomTest {
 		MeetingRoom room = MeetingRoom.fromJson(
 				"{\"join_approval_level\":\"bar\"," +
 				"\"initial_join_options\":{\"microphone_state\":\"bombastic\"}," +
-				"\"type\":\"casual\"," +
-				"\"ui_settings\":{\"language\":\"yoda\"}}"
+				"\"type\":\"casual\",\"ui_settings\":{\"language\":\"yoda\"}}"
 		);
 		assertNull(room.getJoinApprovalLevel());
 		assertNull(room.getInitialJoinOptions().getMicrophoneState());
@@ -333,11 +332,20 @@ public class MeetingRoomTest {
 		assertNull(room.getUiSettings().getLanguage());
 	}
 
-	@Test(expected = VonageUnexpectedException.class)
+	@Test
+	public void testRoomLanguageEnum() {
+		assertEquals(RoomLanguage.DE, RoomLanguage.fromString("de"));
+		assertEquals(RoomLanguage.AR, RoomLanguage.fromString("AR"));
+		assertEquals(RoomLanguage.ZH_CN, RoomLanguage.fromString("zh-CN"));
+		assertEquals("PT-BR", RoomLanguage.PT_BR.toString());
+		assertEquals("ZH-TW", RoomLanguage.ZH_TW.toString());
+	}
+
+	@Test
 	public void triggerJsonProcessingException() {
 		class SelfRefrencing extends MeetingRoom {
 			@JsonProperty("self") final SelfRefrencing self = this;
 		}
-		new SelfRefrencing().toJson();
+		assertThrows(VonageUnexpectedException.class, () -> new SelfRefrencing().toJson());
 	}
 }
