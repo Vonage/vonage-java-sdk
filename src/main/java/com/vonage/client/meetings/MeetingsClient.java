@@ -130,7 +130,7 @@ public class MeetingsClient {
 		);
 		ListRoomsResponse response = endpoint.execute(request);
 
-		if (response.getTotalItems() < initialPageSize) {
+		if (response.getTotalItems() <= response.getPageSize()) {
 			return response.getMeetingRooms();
 		}
 		else {
@@ -142,7 +142,7 @@ public class MeetingsClient {
 				response = endpoint.execute(request);
 				rooms.addAll(response.getMeetingRooms());
 			}
-			while (response.getTotalItems() < initialPageSize);
+			while (response.getPageSize() >= initialPageSize);
 			return rooms;
 		}
 	}

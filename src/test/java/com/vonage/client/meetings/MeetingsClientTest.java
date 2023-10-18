@@ -90,6 +90,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 			LIST_ROOMS_RESPONSE = "{\n" +
 			"    \"page_size\": \"3\",\n" +
+			"    \"total_items\": 3,\n" +
 			"    \"_embedded\": [\n" + SAMPLE_ROOM_RESPONSE +",\n" +
 			"        {\n" +
 			"            \"id\": \"2f63e54b-adc1-4dda-a27c-24f04c0f1233\",\n" +
@@ -126,7 +127,8 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 			"                \"is_whiteboard_available\": true,\n" +
 			"                \"is_locale_switcher_available\": false\n" +
 			"            }\n" +
-			"        }\n" +
+			"        },\n" +
+			"        {}\n" +
 			"    ],\n" +
 			"    \"_links\": {\n" +
 			"        \"first\": {\n" +
@@ -141,8 +143,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 			"        \"next\": {\n" +
 			"            \"href\": \"api-us.vonage.com/meetings/rooms?page_size=3&start_id=1994609\"\n" +
 			"        }\n" +
-			"    },\n" +
-			"    \"total_items\": 5\n" +
+			"    }\n" +
 			"}",
 
 			SAMPLE_THEME_RESPONSE = "{\n" +
@@ -237,7 +238,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 	}
 
 	static void assertEqualsAvailableRooms(List<MeetingRoom> rooms) {
-		assertEquals(2, rooms.size());
+		assertEquals(3, rooms.size());
 		assertEqualsSampleRoom(rooms.get(0));
 		MeetingRoom otherRoom = rooms.get(1);
 		assertEquals("2f63e54b-adc1-4dda-a27c-24f04c0f1233", otherRoom.getId().toString());
