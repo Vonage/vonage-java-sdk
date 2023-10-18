@@ -18,8 +18,8 @@ package com.vonage.client.proactiveconnect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.VonageUnexpectedException;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Test;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -121,9 +121,9 @@ public class ContactsListTest {
 		assertTrue(syncStatus.getDirty());
 	}
 	
-	@Test(expected = VonageUnexpectedException.class)
+	@Test
 	public void testFromJsonInvalid() {
-		ContactsList.fromJson("{malformed]");
+		assertThrows(VonageUnexpectedException.class, () -> ContactsList.fromJson("{malformed]"));
 	}
 
 	@Test
@@ -141,17 +141,17 @@ public class ContactsListTest {
 		assertNull(response.getSyncStatus());
 	}
 
-	@Test(expected = VonageUnexpectedException.class)
+	@Test
 	public void triggerJsonProcessingException() {
 		class SelfRefrencing extends ContactsList {
 			@JsonProperty("self") final SelfRefrencing self = this;
 		}
-		new SelfRefrencing().toJson();
+		assertThrows(VonageUnexpectedException.class, () -> new SelfRefrencing().toJson());
 	}
 
-	@Test(expected = VonageResponseParseException.class)
+	@Test
 	public void testMalformedUpdateFromJson() {
-		new ContactsList().updateFromJson("{malformed]");
+		assertThrows(VonageResponseParseException.class, () -> new ContactsList().updateFromJson("{malformed]"));
 	}
 
 	@Test

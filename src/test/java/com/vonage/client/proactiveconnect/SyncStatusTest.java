@@ -17,7 +17,7 @@ package com.vonage.client.proactiveconnect;
 
 import com.vonage.client.VonageResponseParseException;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SyncStatusTest {
 	
@@ -42,9 +42,9 @@ public class SyncStatusTest {
 		assertEquals(dirty, response.getDirty());
 	}
 	
-	@Test(expected = VonageResponseParseException.class)
+	@Test
 	public void testFromJsonInvalid() {
-		SyncStatus.fromJson("{malformed]");
+		assertThrows(VonageResponseParseException.class, () -> SyncStatus.fromJson("{malformed]"));
 	}
 
 	@Test

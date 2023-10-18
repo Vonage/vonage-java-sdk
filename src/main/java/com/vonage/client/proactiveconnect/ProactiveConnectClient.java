@@ -35,14 +35,10 @@ import java.util.function.Function;
 public class ProactiveConnectClient {
 	final RestEndpoint<ContactsList, ContactsList> createList, updateList;
 	final RestEndpoint<UUID, ContactsList> getList;
-	final RestEndpoint<UUID, Void> deleteList;
-	final RestEndpoint<UUID, Void> clearList;
-	final RestEndpoint<UUID, Void> fetchList;
+	final RestEndpoint<UUID, Void> deleteList, clearList, fetchList;
 	final RestEndpoint<HalRequestWrapper, ListListsResponse> listLists;
 	final RestEndpoint<HalRequestWrapper, ListItemsResponse> listItems;
-	final RestEndpoint<ListItemRequestWrapper, ListItem> createListItem;
-	final RestEndpoint<ListItemRequestWrapper, ListItem> getListItem;
-	final RestEndpoint<ListItemRequestWrapper, ListItem> updateListItem;
+	final RestEndpoint<ListItemRequestWrapper, ListItem> createListItem, getListItem, updateListItem;
 	final RestEndpoint<ListItemRequestWrapper, Void> deleteListItem;
 	final RestEndpoint<UUID, byte[]> downloadListItems;
 	final RestEndpoint<UploadListItemsRequestWrapper, UploadListItemsResponse> uploadListItems;
@@ -364,8 +360,9 @@ public class ProactiveConnectClient {
 	 * @throws ProactiveConnectResponseException If the list does not exist or the items couldn't be retrieved.
 	 */
 	public List<ListItem> listItems(UUID listId) {
-		return halRequest(listItems, validateUuid(
-				"List ID", listId).toString(), 1, 1000, null
+		return halRequest(listItems,
+				validateUuid("List ID", listId).toString(),
+				1, 1000, null
 		).getItems();
 	}
 

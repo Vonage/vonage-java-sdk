@@ -242,7 +242,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 				return parseResponseSuccess(response);
 			}
 			else {
-				return parsedResponseFailure(response);
+				return parseResponseFailure(response);
 			}
 		}
 		catch (InvocationTargetException ex) {
@@ -267,7 +267,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 	}
 
 	private R parseResponseSuccess(HttpResponse response) throws IOException, ReflectiveOperationException {
-		if (responseType.equals(Void.class)) {
+		if (responseType == null || responseType.equals(Void.class)) {
 			return null;
 		}
 		else if (byte[].class.equals(responseType)) {
@@ -324,7 +324,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		}
 	}
 
-	private R parsedResponseFailure(HttpResponse response) throws IOException, ReflectiveOperationException {
+	private R parseResponseFailure(HttpResponse response) throws IOException, ReflectiveOperationException {
 		String exMessage = EntityUtils.toString(response.getEntity());
 		if (responseExceptionType != null) {
 			if (VonageApiResponseException.class.isAssignableFrom(responseExceptionType)) {

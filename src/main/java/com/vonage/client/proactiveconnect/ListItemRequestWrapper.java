@@ -17,11 +17,12 @@ package com.vonage.client.proactiveconnect;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vonage.client.Jsonable;
 import com.vonage.client.VonageUnexpectedException;
 import java.util.Map;
 import java.util.UUID;
 
-class ListItemRequestWrapper {
+final class ListItemRequestWrapper implements Jsonable {
 	final UUID listId, itemId;
 	final Map<String, ?> data;
 
@@ -31,7 +32,8 @@ class ListItemRequestWrapper {
 		this.data = data;
 	}
 
-	String toJson() {
+	@Override
+	public String toJson() {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			return "{\"data\":" + mapper.writeValueAsString(data) + "}";

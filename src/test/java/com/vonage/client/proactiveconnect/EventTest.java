@@ -17,8 +17,8 @@ package com.vonage.client.proactiveconnect;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageResponseParseException;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Test;
 import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -69,9 +69,9 @@ public class EventTest {
 		assertEquals(type, response.getType());
 	}
 	
-	@Test(expected = VonageResponseParseException.class)
+	@Test
 	public void testFromJsonInvalid() {
-		Event.fromJson("{malformed]");
+		assertThrows(VonageResponseParseException.class, () -> Event.fromJson("{malformed]"));
 	}
 
 	@Test
