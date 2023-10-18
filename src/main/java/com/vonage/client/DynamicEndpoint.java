@@ -28,7 +28,10 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
@@ -231,6 +234,34 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		return rqb.setUri(pathGetter.apply(this, requestBody));
 	}
 
+	@Override
+	public final R parseResponse(HttpResponse response) throws IOException {
+		int statusCode = response.getStatusLine().getStatusCode();
+		try {
+			if (statusCode >= 200 && statusCode < 300) {
+				return parseResponseSuccess(response);
+			}
+			else {
+				return parsedResponseFailure(response);
+			}
+		}
+		catch (InvocationTargetException ex) {
+			Throwable wrapped = ex.getTargetException();
+			if (wrapped instanceof RuntimeException) {
+				throw (RuntimeException) wrapped;
+			}
+			else {
+				throw new VonageUnexpectedException(wrapped);
+			}
+		}
+		catch (ReflectiveOperationException ex) {
+			throw new VonageUnexpectedException(ex);
+		}
+		finally {
+			cachedRequestBody = null;
+		}
+	}
+
 	protected R parseResponseFromString(String response) {
 		return null;
 	}
@@ -332,34 +363,6 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		}
 		else {
 			return customParsedResponse;
-		}
-	}
-
-	@Override
-	public final R parseResponse(HttpResponse response) throws IOException {
-		int statusCode = response.getStatusLine().getStatusCode();
-		try {
-			if (statusCode >= 200 && statusCode < 300) {
-				return parseResponseSuccess(response);
-			}
-			else {
-				return parsedResponseFailure(response);
-			}
-		}
-		catch (InvocationTargetException ex) {
-			Throwable wrapped = ex.getTargetException();
-			if (wrapped instanceof RuntimeException) {
-				throw (RuntimeException) wrapped;
-			}
-			else {
-				throw new VonageUnexpectedException(wrapped);
-			}
-		}
-		catch (ReflectiveOperationException ex) {
-			throw new VonageUnexpectedException(ex);
-		}
-		finally {
-			cachedRequestBody = null;
 		}
 	}
 }

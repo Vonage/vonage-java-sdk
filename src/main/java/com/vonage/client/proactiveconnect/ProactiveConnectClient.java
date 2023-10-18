@@ -44,7 +44,7 @@ public class ProactiveConnectClient {
 	final RestEndpoint<ListItemRequestWrapper, ListItem> getListItem;
 	final RestEndpoint<ListItemRequestWrapper, ListItem> updateListItem;
 	final RestEndpoint<ListItemRequestWrapper, Void> deleteListItem;
-	final RestEndpoint<DownloadListItemsRequestWrapper, byte[]> downloadListItems;
+	final RestEndpoint<UUID, byte[]> downloadListItems;
 	final RestEndpoint<UploadListItemsRequestWrapper, UploadListItemsResponse> uploadListItems;
 	final RestEndpoint<ListEventsFilter, ListEventsResponse> listEvents;
 
@@ -81,7 +81,7 @@ public class ProactiveConnectClient {
 		getListItem = new Endpoint<>(req -> "lists/"+req.listId+"/items/"+req.itemId, HttpMethod.GET);
 		updateListItem = new Endpoint<>(req -> "lists/"+req.listId+"/items/"+req.itemId, HttpMethod.PUT);
 		deleteListItem = new Endpoint<>(req -> "lists/"+req.listId+"/items/"+req.itemId, HttpMethod.DELETE);
-		downloadListItems = new Endpoint<>(req -> "lists/"+req.listId+"/items/download", HttpMethod.GET);
+		downloadListItems = new Endpoint<>(listId -> "lists/"+listId+"/items/download", HttpMethod.GET);
 		uploadListItems = new Endpoint<>(req -> "lists/"+req.listId+"/items/import", HttpMethod.POST);
 		listEvents = new Endpoint<>(req -> "events", HttpMethod.GET);
 	}
@@ -303,9 +303,7 @@ public class ProactiveConnectClient {
 	 * @throws ProactiveConnectResponseException If the list does not exist or couldn't be retrieved.
 	 */
 	public String downloadListItems(UUID listId) {
-		return new String(downloadListItems.execute(new DownloadListItemsRequestWrapper(
-				validateUuid("List ID", listId), null
-		)));
+		return new String(downloadListItems.execute(validateUuid("List ID", listId)));
 	}
 
 	/**
@@ -318,10 +316,15 @@ public class ProactiveConnectClient {
 	 * @throws ProactiveConnectResponseException If the list does not exist or couldn't be retrieved.
 	 */
 	public void downloadListItems(UUID listId, Path file) {
-		downloadListItems.execute(new DownloadListItemsRequestWrapper(
-				validateUuid("List ID", listId),
-				Objects.requireNonNull(file, "CSV file is required.")
-		));
+		try {
+			Files.write(
+					Objects.requireNonNull(file, "CSV file is required."),
+					downloadListItems.execute(validateUuid("List ID", listId))
+			);
+		}
+		catch (IOException ex) {
+			throw new VonageUnexpectedException("Couldn't write list '"+listId+"' to file '"+file+"'", ex);
+		}
 	}
 
 	/**

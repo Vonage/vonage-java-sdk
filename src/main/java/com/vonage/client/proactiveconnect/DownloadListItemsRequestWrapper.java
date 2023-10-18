@@ -18,6 +18,7 @@ package com.vonage.client.proactiveconnect;
 import java.nio.file.Path;
 import java.util.UUID;
 
+@Deprecated
 class DownloadListItemsRequestWrapper {
 	final UUID listId;
 	final Path file;
