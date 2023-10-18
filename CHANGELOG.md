@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+# [7.10.0] - 2023-10-??
+- Added more locales for Verify v2 and Meetings APIs
+- Added `check_url` to `VerificationResponse` to support synchronous Silent Authentication
+- Internal refactoring of Proactive Connect and Meetings API implementations
+
 # [7.9.0] - 2023-09-28
 - Added `get-full-pricing` implementation of Pricing API in `AccountClient`
 - Added master API key default overloads for secret management in Account API
