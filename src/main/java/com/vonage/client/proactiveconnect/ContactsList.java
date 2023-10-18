@@ -18,12 +18,7 @@ package com.vonage.client.proactiveconnect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.vonage.client.VonageResponseParseException;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
@@ -34,8 +29,8 @@ import java.util.UUID;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ContactsList {
-	private UUID id;
+public class ContactsList implements Jsonable {
+	UUID id;
 	private String name, description;
 	private List<String> tags;
 	private List<ListAttribute> attributes;
@@ -170,51 +165,13 @@ public class ContactsList {
 	}
 
 	/**
-	 * Updates (hydrates) this object's fields from additional JSON data.
-	 *
-	 * @param json The JSON payload.
-	 */
-	public void updateFromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.registerModule(new JavaTimeModule());
-			mapper.readerForUpdating(this).readValue(json, getClass());
-		}
-		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to update "+getClass().getSimpleName()+" from json.", ex);
-		}
-	}
-
-	/**
 	 * Creates an instance of this class from a JSON payload.
 	 *
 	 * @param json The JSON string to parse.
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static ContactsList fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.registerModule(new JavaTimeModule());
-			return mapper.readValue(json, ContactsList.class);
-		}
-		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to produce ContactsList from json.", ex);
-		}
-	}
-
-	/**
-	 * Generates a JSON payload from this request.
-	 *
-	 * @return JSON representation of this ContactsList object.
-	 */
-	public String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.writeValueAsString(this);
-		}
-		catch (JsonProcessingException jpe) {
-			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
-		}
+		return Jsonable.fromJson(json, ContactsList.class);
 	}
 	
 	/**

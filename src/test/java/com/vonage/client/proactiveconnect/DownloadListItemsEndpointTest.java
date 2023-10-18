@@ -30,7 +30,7 @@ import java.util.UUID;
 
 public class DownloadListItemsEndpointTest {
 	DownloadListItemsEndpoint endpoint;
-	final String listId = UUID.randomUUID().toString();
+	final UUID listId = UUID.randomUUID();
 	
 	@Before
 	public void setUp() {

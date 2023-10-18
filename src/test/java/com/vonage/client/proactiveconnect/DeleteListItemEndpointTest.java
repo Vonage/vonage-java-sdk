@@ -28,8 +28,7 @@ import java.util.UUID;
 
 public class DeleteListItemEndpointTest {
 	DeleteListItemEndpoint endpoint;
-	final String listId = UUID.randomUUID().toString();
-	final String itemId = UUID.randomUUID().toString();
+	final UUID listId = UUID.randomUUID(), itemId = UUID.randomUUID();
 	
 	@Before
 	public void setUp() {

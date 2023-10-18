@@ -16,12 +16,13 @@
 package com.vonage.client.proactiveconnect;
 
 import java.nio.file.Path;
+import java.util.UUID;
 
 class DownloadListItemsRequestWrapper {
-	final String listId;
+	final UUID listId;
 	final Path file;
 
-	DownloadListItemsRequestWrapper(String listId, Path file) {
+	DownloadListItemsRequestWrapper(UUID listId, Path file) {
 		this.listId = listId;
 		this.file = file;
 	}

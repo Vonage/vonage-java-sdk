@@ -36,8 +36,7 @@ import java.util.UUID;
 
 public class UpdateListItemEndpointTest {
 	UpdateListItemEndpoint endpoint;
-	final String listId = UUID.randomUUID().toString();
-	final String itemId = UUID.randomUUID().toString();
+	final UUID listId = UUID.randomUUID(), itemId = UUID.randomUUID();
 	
 	@Before
 	public void setUp() {

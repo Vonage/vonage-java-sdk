@@ -44,6 +44,7 @@ public final class ProactiveConnectResponseException extends VonageApiResponseEx
 		return fromJson(ProactiveConnectResponseException.class, json);
 	}
 
+	@Deprecated
 	static ProactiveConnectResponseException fromHttpResponse(HttpResponse response) throws IOException {
 		return fromHttpResponse(ProactiveConnectResponseException.class, response);
 	}

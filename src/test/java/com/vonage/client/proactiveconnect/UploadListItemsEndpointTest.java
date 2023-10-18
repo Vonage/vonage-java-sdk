@@ -31,7 +31,7 @@ import java.util.UUID;
 
 public class UploadListItemsEndpointTest {
 	UploadListItemsEndpoint endpoint;
-	final String listId = UUID.randomUUID().toString();
+	final UUID listId = UUID.randomUUID();
 	
 	@Before
 	public void setUp() {

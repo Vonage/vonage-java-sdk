@@ -35,7 +35,7 @@ import java.util.UUID;
 
 public class CreateListItemEndpointTest {
 	CreateListItemEndpoint endpoint;
-	final String listId = UUID.randomUUID().toString();
+	final UUID listId = UUID.randomUUID();
 
 	@Before
 	public void setUp() {
@@ -71,7 +71,7 @@ public class CreateListItemEndpointTest {
 		assertNotNull(parsed);
 		assertEquals(1, parsed.getData().size());
 		assertEquals("Value", parsed.getData().get("Property"));
-		assertEquals(listId, parsed.getListId().toString());
+		assertEquals(listId, parsed.getListId());
 		assertEquals(itemId, parsed.getId());
 		assertTrue(parsed.getCreatedAt().isBefore(Instant.now()));
 		assertNull(parsed.getUpdatedAt());

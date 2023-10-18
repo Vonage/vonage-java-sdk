@@ -15,11 +15,12 @@
  */
 package com.vonage.client.proactiveconnect;
 
+import java.util.UUID;
 class UploadListItemsRequestWrapper {
-	final String listId;
+	final UUID listId;
 	final byte[] data;
 
-	UploadListItemsRequestWrapper(String listId, byte[] data) {
+	UploadListItemsRequestWrapper(UUID listId, byte[] data) {
 		this.listId = listId;
 		this.data = data;
 	}

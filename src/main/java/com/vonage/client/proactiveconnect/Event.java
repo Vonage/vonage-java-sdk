@@ -16,11 +16,9 @@
 package com.vonage.client.proactiveconnect;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.vonage.client.VonageResponseParseException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
@@ -28,8 +26,9 @@ import java.util.UUID;
 /**
  * Represents an event in the Proactive Connect API.
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Event {
+public class Event implements Jsonable {
 	private UUID id, actionId, invocationId, runItemId, runId, jobId;
 	private String recipientId, sourceContext;
 	private EventType type;
@@ -157,13 +156,6 @@ public class Event {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static Event fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.registerModule(new JavaTimeModule());
-			return mapper.readValue(json, Event.class);
-		}
-		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to produce Event from json.", ex);
-		}
+		return Jsonable.fromJson(json, Event.class);
 	}
 }

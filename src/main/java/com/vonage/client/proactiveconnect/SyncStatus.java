@@ -16,16 +16,16 @@
 package com.vonage.client.proactiveconnect;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageResponseParseException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 
 /**
  * Provides info on list changes compared to the latest sync.
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SyncStatus {
+public class SyncStatus implements Jsonable {
 	private SyncStatusValue value;
 	private String details;
 	private Boolean metadataModified, dataModified, dirty;
@@ -90,12 +90,6 @@ public class SyncStatus {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static SyncStatus fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readValue(json, SyncStatus.class);
-		}
-		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to produce SyncStatus from json.", ex);
-		}
+		return Jsonable.fromJson(json, SyncStatus.class);
 	}
 }

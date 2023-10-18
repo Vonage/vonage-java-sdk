@@ -15,6 +15,7 @@
  */
 package com.vonage.client.proactiveconnect;
 
+@Deprecated
 class UpdateListRequestWrapper {
 	final String listId;
 	final ContactsList request;

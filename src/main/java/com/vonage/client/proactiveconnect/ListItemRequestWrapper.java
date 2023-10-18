@@ -19,12 +19,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.VonageUnexpectedException;
 import java.util.Map;
+import java.util.UUID;
 
 class ListItemRequestWrapper {
-	final String listId, itemId;
+	final UUID listId, itemId;
 	final Map<String, ?> data;
 
-	ListItemRequestWrapper(String listId, String itemId, Map<String, ?> data) {
+	ListItemRequestWrapper(UUID listId, UUID itemId, Map<String, ?> data) {
 		this.listId = listId;
 		this.itemId = itemId;
 		this.data = data;

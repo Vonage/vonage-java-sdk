@@ -18,11 +18,8 @@ package com.vonage.client.proactiveconnect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.vonage.client.VonageResponseParseException;
+import com.vonage.client.Jsonable;
 import com.vonage.client.common.HalPageResponse;
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,14 +60,6 @@ public final class ListItemsResponse extends HalPageResponse {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static ListItemsResponse fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.registerModule(new JavaTimeModule());
-			return mapper.readValue(json, ListItemsResponse.class);
-		}
-		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to produce ListItemsResponse from json.", ex);
-		}
+		return Jsonable.fromJson(json, ListItemsResponse.class);
 	}
-
 }
