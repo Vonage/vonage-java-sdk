@@ -16,7 +16,6 @@
 package com.vonage.client.proactiveconnect;
 
 import com.vonage.client.QueryParamsRequest;
-import org.apache.http.client.methods.RequestBuilder;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.LinkedHashMap;
@@ -88,12 +87,6 @@ public class ListEventsFilter implements QueryParamsRequest {
 			params.put("date_end", endDate.truncatedTo(ChronoUnit.SECONDS).toString());
 		}
 		return params;
-	}
-
-	@Deprecated
-	RequestBuilder addParams(RequestBuilder request) {
-		makeParams().forEach(request::addParameter);
-		return request;
 	}
 
 	/**

@@ -19,8 +19,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vonage.client.VonageApiResponseException;
-import org.apache.http.HttpResponse;
-import java.io.IOException;
 
 /**
  * Response returned when an error is encountered (i.e. the API returns a non-2xx status code).
@@ -42,10 +40,5 @@ public final class ProactiveConnectResponseException extends VonageApiResponseEx
 	@JsonCreator
 	public static ProactiveConnectResponseException fromJson(String json) {
 		return fromJson(ProactiveConnectResponseException.class, json);
-	}
-
-	@Deprecated
-	static ProactiveConnectResponseException fromHttpResponse(HttpResponse response) throws IOException {
-		return fromHttpResponse(ProactiveConnectResponseException.class, response);
 	}
 }

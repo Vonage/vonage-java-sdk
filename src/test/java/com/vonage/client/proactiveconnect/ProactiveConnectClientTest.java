@@ -15,6 +15,7 @@
  */
 package com.vonage.client.proactiveconnect;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.ClientTest;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageClientException;
@@ -29,6 +30,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClient> {
@@ -839,6 +841,53 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 			protected String sampleRequestBodyString() {
 				return "{\"data\":{\"foo\":\"bar\",\"bar\":2,\"BAZ\":false,\"quX\":null}}";
 			}
+
+			@Override
+			public void runTests() throws Exception {
+				super.runTests();
+				testEmptyResponse();
+				testFullResponse();
+			}
+
+			private void testEmptyResponse() throws Exception {
+				ListItem parsed = stubResponseAndGet("{}", this::executeEndpoint);
+				assertNotNull(parsed);
+				assertNull(parsed.getData());
+				assertNull(parsed.getCreatedAt());
+				assertNull(parsed.getUpdatedAt());
+				assertNull(parsed.getId());
+				assertNull(parsed.getListId());
+			}
+
+			private void testFullResponse() throws Exception {
+				LinkedHashMap<String, Object> data = new LinkedHashMap<>(8);
+				data.put("firstName", "Alice");
+				data.put("registered", true);
+				data.put("number", 15550067383L);
+				data.put("props", Collections.emptyMap());
+				data.put("keywords", Collections.singleton("Test"));
+				Instant createdAt = Instant.now();
+				Instant updatedAt = createdAt.plusSeconds(3600);
+				UUID id = UUID.fromString("29192c4a-4058-49da-86c2-3e349d1065b7");
+				UUID listId = UUID.fromString("4cb98f71-a879-49f7-b5cf-2314353eb52c");
+				stubResponse(200, "{\n" +
+						"\"data\":"+new ObjectMapper().writeValueAsString(data)+",\n" +
+						"\"created_at\":\""+createdAt+"\",\n" +
+						"\"updated_at\":\""+updatedAt+"\",\n" +
+						"\"id\":\""+id+"\",\n" +
+						"\"list_id\":\""+listId+"\"\n}"
+				);
+				ListItem parsed = executeEndpoint();
+				assertNotNull(parsed);
+				assertNotNull(parsed.getData());
+				assertEquals(data.size(), parsed.getData().size());
+				assertEquals(data.keySet(), parsed.getData().keySet());
+				assertEquals(data.values().toString(), parsed.getData().values().toString());
+				assertEquals(createdAt, parsed.getCreatedAt());
+				assertEquals(updatedAt, parsed.getUpdatedAt());
+				assertEquals(id, parsed.getId());
+				assertEquals(listId, parsed.getListId());
+			}
 		}
 		.runTests();
 	}
@@ -930,6 +979,31 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 			protected byte[] sampleRequestBodyBinary() {
 				return sampleRequest().data;
 			}
+
+			@Override
+			public void runTests() throws Exception {
+				super.runTests();
+				testEmptyResponse();
+				testFullResponse();
+			}
+
+			private void testEmptyResponse() throws Exception {
+				UploadListItemsResponse parsed = stubResponseAndGet("{}", this::executeEndpoint);
+				assertNotNull(parsed);
+				assertNull(parsed.getInserted());
+				assertNull(parsed.getUpdated());
+				assertNull(parsed.getDeleted());
+			}
+
+			private void testFullResponse() throws Exception {
+				String expectedResponse = "{\"inserted\":21,\"updated\":3,\"deleted\":0}";
+				stubResponse(200, expectedResponse);
+				UploadListItemsResponse parsed = executeEndpoint();
+				assertNotNull(parsed);
+				assertEquals(21, parsed.getInserted().intValue());
+				assertEquals(3, parsed.getUpdated().intValue());
+				assertEquals(0, parsed.getDeleted().intValue());
+			}
 		}
 		.runTests();
 	}
@@ -1019,9 +1093,87 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 				params.put("src_type", "event-handler");
 				params.put("date_start", "1970-01-01T00:00:00Z");
 				params.put("date_end", "2023-06-29T12:39:34Z");
+
+				ListEventsFilter request = sampleRequest();
+				Iterator<String> values = params.values().iterator();
+				values.next(); values.next();
+				assertEquals(values.next(), request.getOrder().toString());
+				assertEquals(values.next(), request.getRunId().toString());
+				assertEquals(values.next(), request.getRunItemId().toString());
+				assertEquals(values.next(), request.getInvocationId().toString());
+				assertEquals(values.next(), request.getActionId().toString());
+				assertEquals(values.next(), request.getTraceId().toString());
+				assertEquals(values.next(), request.getRecipientId());
+				assertEquals(values.next(), request.getSourceContext());
+				assertEquals(values.next(), request.getSourceType().toString());
+				assertEquals(values.next(), request.getStartDate().truncatedTo(ChronoUnit.SECONDS).toString());
+				assertEquals(values.next(), request.getEndDate().truncatedTo(ChronoUnit.SECONDS).toString());
+
 				return params;
 			}
 
+			@Override
+			public void runTests() throws Exception {
+				super.runTests();
+				testEmptyResponse();
+				testFullResponse();
+			}
+
+			private void testEmptyResponse() throws Exception {
+				ListEventsResponse parsed = stubResponseAndGet("{}", this::executeEndpoint);
+				assertNotNull(parsed);
+				assertNull(parsed.getEvents());
+				assertNull(parsed.getLinks());
+				assertNull(parsed.getPage());
+				assertNull(parsed.getPageSize());
+				assertNull(parsed.getTotalItems());
+				assertNull(parsed.getTotalPages());
+			}
+
+			private void testFullResponse() throws Exception {
+				stubResponse(200, "{\n" +
+						"   \"page_size\": 50,\n" +
+						"   \"page\": 7,\n" +
+						"   \"total_pages\": 9,\n" +
+						"   \"total_items\": 42,\n" +
+						"   \"_links\": {\n" +
+						"      \"first\": {\n" +
+						"         \"href\": \"https://api-eu.vonage.com/v0.1/bulk/lists?page=5&page_size=10\"\n" +
+						"      },\n" +
+						"      \"self\": {\n" +
+						"         \"href\": \"https://api-eu.vonage.com/v0.1/bulk/lists?page=5&page_size=10\"\n" +
+						"      },\n" +
+						"      \"prev\": {\n" +
+						"         \"href\": \"https://api-eu.vonage.com/v0.1/bulk/lists?page=5&page_size=10\"\n" +
+						"      },\n" +
+						"      \"next\": {\n" +
+						"         \"href\": \"https://api-eu.vonage.com/v0.1/bulk/lists?page=5&page_size=10\"\n" +
+						"      }\n" +
+						"   },\n" +
+						"   \"_embedded\": {\n" +
+						"      \"events\": [\n" +
+						"         {},{},{}\n" +
+						"      ]\n" +
+						"   }\n" +
+						"}"
+				);
+				ListEventsResponse parsed = executeEndpoint();
+				assertNotNull(parsed);
+				HalLinks links = parsed.getLinks();
+				assertNotNull(links);
+				assertNotNull(links.getSelfUrl());
+				assertNotNull(links.getFirstUrl());
+				assertNotNull(links.getNextUrl());
+				assertNotNull(links.getPrevUrl());
+				assertEquals(7, parsed.getPage().intValue());
+				assertEquals(50, parsed.getPageSize().intValue());
+				assertEquals(9, parsed.getTotalPages().intValue());
+				assertEquals(42, parsed.getTotalItems().intValue());
+				List<Event> events = parsed.getEvents();
+				assertNotNull(events);
+				assertEquals(3, events.size());
+				events.forEach(Assertions::assertNotNull);
+			}
 		}
 		.runTests();
 	}

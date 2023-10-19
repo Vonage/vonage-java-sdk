@@ -16,7 +16,6 @@
 package com.vonage.client.proactiveconnect;
 
 import com.vonage.client.QueryParamsRequest;
-import org.apache.http.client.methods.RequestBuilder;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -30,12 +29,6 @@ class HalRequestWrapper implements QueryParamsRequest {
 		this.pageSize = pageSize;
 		this.order = order;
 		this.id = id;
-	}
-
-	@Deprecated
-	RequestBuilder addParams(RequestBuilder builder) {
-		makeParams().forEach(builder::addParameter);
-		return builder;
 	}
 
 	@Override
