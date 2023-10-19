@@ -115,13 +115,6 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			return this;
 		}
 
-		public Builder<T, R> addAuthMethodIfTrue(boolean condition, Class<? extends AuthMethod> primary, Class<? extends AuthMethod>... others) {
-			if (condition) {
-				authMethod(primary, others);
-			}
-			return this;
-		}
-
 		public Builder<T, R> authMethod(Class<? extends AuthMethod> primary, Class<? extends AuthMethod>... others) {
 			authMethods = new ArrayList<>(2);
 			authMethods.add(Objects.requireNonNull(primary, "Primary auth method cannot be null"));

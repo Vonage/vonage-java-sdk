@@ -54,8 +54,7 @@ public class ProactiveConnectClient {
 		@SuppressWarnings("unchecked")
 		class Endpoint<T, R> extends DynamicEndpoint<T, R> {
 			Endpoint(Function<T, String> pathGetter, HttpMethod method, R... type) {
-				super(DynamicEndpoint.<T, R> builder(type)
-						.authMethod(JWTAuthMethod.class)
+				super(DynamicEndpoint.<T, R> builder(type).authMethod(JWTAuthMethod.class)
 						.responseExceptionType(ProactiveConnectResponseException.class)
 						.requestMethod(method).wrapper(wrapper).pathGetter((de, req) -> {
 							String base = de.getHttpWrapper().getHttpConfig().getApiEuBaseUri();
@@ -72,8 +71,8 @@ public class ProactiveConnectClient {
 		clearList = new Endpoint<>(listId -> "lists/"+listId+"/clear", HttpMethod.POST);
 		fetchList = new Endpoint<>(listId -> "lists/"+listId+"/fetch", HttpMethod.POST);
 		listLists = new Endpoint<>(req -> "lists", HttpMethod.GET);
-		listItems = new Endpoint<>(listId -> "lists/"+listId+"/items", HttpMethod.GET);
-		createListItem = new Endpoint<>(listId -> "lists/"+listId+"/items", HttpMethod.POST);
+		listItems = new Endpoint<>(req -> "lists/"+req.id+"/items", HttpMethod.GET);
+		createListItem = new Endpoint<>(req -> "lists/"+req.listId+"/items", HttpMethod.POST);
 		getListItem = new Endpoint<>(req -> "lists/"+req.listId+"/items/"+req.itemId, HttpMethod.GET);
 		updateListItem = new Endpoint<>(req -> "lists/"+req.listId+"/items/"+req.itemId, HttpMethod.PUT);
 		deleteListItem = new Endpoint<>(req -> "lists/"+req.listId+"/items/"+req.itemId, HttpMethod.DELETE);

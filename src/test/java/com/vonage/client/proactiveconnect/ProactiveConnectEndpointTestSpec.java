@@ -15,14 +15,25 @@
  */
 package com.vonage.client.proactiveconnect;
 
-import java.util.UUID;
+import com.vonage.client.*;
+import com.vonage.client.auth.*;
+import java.util.*;
 
-class UploadListItemsRequestWrapper {
-	final UUID listId;
-	final byte[] data;
+abstract class ProactiveConnectEndpointTestSpec<T, R> extends DynamicEndpointTestSpec<T, R> {
 
-	UploadListItemsRequestWrapper(UUID listId, byte[] data) {
-		this.listId = listId;
-		this.data = data;
+	@Override
+	protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
+		return Arrays.asList(JWTAuthMethod.class);
+	}
+
+	@Override
+	protected Class<? extends VonageApiResponseException> expectedResponseExceptionType() {
+		return ProactiveConnectResponseException.class;
+	}
+
+	@Override
+	protected String expectedDefaultBaseUri() {
+		return "https://api-eu.vonage.com";
 	}
 }
+
