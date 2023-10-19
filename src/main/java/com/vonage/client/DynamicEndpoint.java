@@ -187,14 +187,25 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		}
 	}
 
+	private String getRequestHeader(T requestBody) {
+		if (contentType != null)
+			return contentType;
+		else if (requestBody instanceof Jsonable)
+			return "application/json";
+		else if (requestBody instanceof BinaryRequest)
+			return ((BinaryRequest) requestBody).getContentType();
+		else return null;
+	}
+
 	@Override
 	public final RequestBuilder makeRequest(T requestBody) throws UnsupportedEncodingException {
 		if (requestBody instanceof Jsonable && requestBody.getClass().equals(responseType)) {
 			cachedRequestBody = requestBody;
 		}
 		RequestBuilder rqb = createRequestBuilderFromRequestMethod(requestMethod);
-		if (contentType != null || requestBody instanceof Jsonable) {
-			rqb.setHeader("Content-Type", contentType != null ? contentType : "application/json");
+		String header = getRequestHeader(requestBody);
+		if (header != null) {
+			rqb.setHeader("Content-Type", header);
 		}
 		if (accept != null) {
 			rqb.setHeader("Accept", accept);
@@ -220,6 +231,10 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		}
 		if (requestBody instanceof Jsonable) {
 			rqb.setEntity(new StringEntity(((Jsonable) requestBody).toJson(), ContentType.APPLICATION_JSON));
+		}
+		else if (requestBody instanceof BinaryRequest) {
+			BinaryRequest bin = (BinaryRequest) requestBody;
+			rqb.setEntity(new ByteArrayEntity(bin.toByteArray(), ContentType.getByMimeType(bin.getContentType())));
 		}
 		else if (requestBody instanceof byte[]) {
 			rqb.setEntity(new ByteArrayEntity((byte[]) requestBody));

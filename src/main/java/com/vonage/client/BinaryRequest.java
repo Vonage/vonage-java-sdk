@@ -13,22 +13,28 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.proactiveconnect;
+package com.vonage.client;
 
-import com.vonage.client.BinaryRequest;
-import java.util.UUID;
+/**
+ * Indicates that a class used for request is to be serialised as binary data (e.g. for uploads).
+ *
+ * @since 7.10.0
+ */
+public interface BinaryRequest {
 
-class UploadListItemsRequestWrapper implements BinaryRequest {
-	final UUID listId;
-	final byte[] data;
+	/**
+	 * Serialises this request to a byte array.
+	 *
+	 * @return The binary data for this request.
+	 */
+	byte[] toByteArray();
 
-	UploadListItemsRequestWrapper(UUID listId, byte[] data) {
-		this.listId = listId;
-		this.data = data;
-	}
-
-	@Override
-	public byte[] toByteArray() {
-		return data;
+	/**
+	 * The MIME type header for this request to use as the {@code Content-Type}.
+	 *
+	 * @return The request MIME type as a string.
+	 */
+	default String getContentType() {
+		return "multipart/form-data";
 	}
 }

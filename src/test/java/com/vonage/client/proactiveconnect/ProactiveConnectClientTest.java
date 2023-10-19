@@ -918,7 +918,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 
 			@Override
 			protected UploadListItemsRequestWrapper sampleRequest() {
-				return new UploadListItemsRequestWrapper(SAMPLE_LIST_ID, new byte[0]);
+				return new UploadListItemsRequestWrapper(SAMPLE_LIST_ID, new byte[]{'a', 'b', '-', 1, 'c', 0xF});
 			}
 
 			@Override
@@ -927,8 +927,8 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 			}
 
 			@Override
-			protected String sampleRequestBodyString() {
-				return "";
+			protected byte[] sampleRequestBodyBinary() {
+				return sampleRequest().data;
 			}
 		}
 		.runTests();

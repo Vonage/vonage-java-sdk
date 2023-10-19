@@ -64,6 +64,10 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 		return null;
 	}
 
+	protected byte[] sampleRequestBodyBinary() {
+		return null;
+	}
+
 	protected String expectedAcceptHeader() {
 		return Jsonable.class.isAssignableFrom(expectedResponseType()) ?
 				ContentType.APPLICATION_JSON.getMimeType() : null;
@@ -127,24 +131,34 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 	}
 
 	protected void assertRequestUriAndBody() throws Exception {
-		assertRequestUriAndBody(sampleRequest(), sampleRequestBodyString(), sampleQueryParams());
+		assertRequestUriAndBody(sampleRequest(),
+				sampleRequestBodyString(), sampleQueryParams(), sampleRequestBodyBinary()
+		);
 	}
 
 	protected final void assertRequestUriAndBody(T request, String expectedRequestBody) throws Exception {
-		assertRequestUriAndBody(request, expectedRequestBody, null);
+		assertRequestUriAndBody(request, expectedRequestBody, null, null);
 	}
 
-	protected final void assertRequestUriAndBody(T request, Map<String, String> expectedQueryParams) throws Exception {
-		assertRequestUriAndBody(request, null, expectedQueryParams);
+	protected final void assertRequestUriAndBody(T request, Map<String, ?> expectedQueryParams) throws Exception {
+		assertRequestUriAndBody(request, null, expectedQueryParams, null);
+	}
+
+	protected final void assertRequestUriAndBody(T request, byte[] expectedRequestBody) throws Exception {
+		assertRequestUriAndBody(request, null, null, expectedRequestBody);
 	}
 
 	@SuppressWarnings("unchecked")
-	private void assertRequestUriAndBody(T request, String expectedRequestBody,
-	                                               Map<String, ?> expectedQueryParams) throws Exception {
+	private void assertRequestUriAndBody(T request, String expectedRequestBodyString,
+										 Map<String, ?> expectedQueryParams,
+										 byte[] expectedRequestBodyBinary) throws Exception {
 
 		RequestBuilder builder = makeTestRequest(request);
-		if (expectedRequestBody != null) {
-			assertEquals(expectedRequestBody, EntityUtils.toString(builder.getEntity()));
+		if (expectedRequestBodyString != null) {
+			assertEquals(expectedRequestBodyString, EntityUtils.toString(builder.getEntity()));
+		}
+		if (expectedRequestBodyBinary != null) {
+			assertArrayEquals(expectedRequestBodyBinary, EntityUtils.toByteArray(builder.getEntity()));
 		}
 		if (expectedQueryParams != null) {
 			List<NameValuePair> paramsList = builder.getParameters();
@@ -160,18 +174,18 @@ public abstract class DynamicEndpointTestSpec<T, R> {
 				}
 				if (currentValue instanceof Collection) {
 					((Collection<String>) currentValue).add(valueToAdd);
-				}
-				else {
+				} else {
 					paramsMap.put(key, valueToAdd);
 				}
 			}
 			Map<String, ?> normalExpectedParams = expectedQueryParams.entrySet().stream()
 					.collect(Collectors.toMap(Map.Entry::getKey, entry -> {
-							Object value = entry.getValue();
-							return value instanceof Object[] ? Arrays.asList((Object[]) value) : value;
+						Object value = entry.getValue();
+						return value instanceof Object[] ? Arrays.asList((Object[]) value) : value;
 					}, (v1, v2) -> v1, LinkedHashMap::new));
 			assertEquals(normalExpectedParams, paramsMap);
 		}
+
 		String expectedUri = expectedDefaultBaseUri() + expectedEndpointUri(request);
 		assertEquals(expectedUri, builder.build().getURI().toString().split("\\?")[0]);
 
