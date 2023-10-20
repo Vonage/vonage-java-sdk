@@ -20,7 +20,7 @@ import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.common.HttpMethod;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -106,10 +106,10 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         assertNull(client.listPriceAllCountries(ServiceType.VOICE));
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testGetFullPricingNoService() throws Exception {
         stubResponse(200, "{}");
-        client.listPriceAllCountries(null);
+        assertThrows(NullPointerException.class, () -> client.listPriceAllCountries(null));
     }
 
     @Test
@@ -319,10 +319,10 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         client.topUp("ABC123");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testTopUpNoTransactionId() throws Exception {
         stubResponse(200);
-        client.topUp(" ");
+        assertThrows(IllegalArgumentException.class, () -> client.topUp(" "));
     }
 
     @Test
@@ -367,10 +367,10 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         assertEquals("/accounts/abcd1234/secrets/secret-id-two", responses[1].getSelf().getHref());
     }
 
-    @Test(expected = VonageResponseParseException.class)
+    @Test
     public void testParseListSecretsMalformed() throws Exception {
         stubResponse(200, "{malformed]");
-        client.listSecrets(apiKey);
+        assertThrows(VonageResponseParseException.class, () -> client.listSecrets(apiKey));
     }
 
     @Test
@@ -392,16 +392,16 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         );
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testListSecretNoApiKey() throws Exception {
         stubResponse(200, "{}");
-        client.listSecrets("  ");
+        assertThrows(IllegalArgumentException.class, () -> client.listSecrets("  "));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testCreateSecretNoApiKey() throws Exception {
         stubResponse(200, "{}");
-        client.createSecret("  ", SECRET_ID);
+        assertThrows(IllegalArgumentException.class, () -> client.createSecret("  ", SECRET_ID));
     }
 
     @Test
@@ -420,7 +420,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         assertEquals("/accounts/abcd1234/secrets/secret-id-one", response.getSelf().getHref());
     }
 
-    @Test(expected = AccountResponseException.class)
+    @Test
     public void testCreateSecretFailed() throws Exception {
         String json =
                 "{\n" + "  \"type\": \"https://developer.nexmo.com/api-errors/account/secret-management#validation\",\n"
@@ -430,7 +430,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                         + "      \"reason\": \"Does not meet complexity requirements\"\n" + "    }\n" + "  ],\n"
                         + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
         stubResponse(400, json);
-        client.createSecret(apiKey, "secret");
+        assertThrows(AccountResponseException.class, () -> client.createSecret(apiKey, "secret"));
     }
 
     @Test
@@ -449,32 +449,32 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         assertEquals("/accounts/abcd1234/secrets/secret-id-one", response.getSelf().getHref());
     }
 
-    @Test(expected = VonageResponseParseException.class)
+    @Test
     public void testGetSecretMalformed() throws Exception {
         stubResponse(200, "{malformed]");
-        client.getSecret(apiKey, SECRET_ID);
+        assertThrows(VonageResponseParseException.class, () -> client.getSecret(apiKey, SECRET_ID));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testGetSecretNoSecretId() throws Exception {
         stubResponse(200, "{}");
-        client.getSecret(apiKey, "  ");
+        assertThrows(IllegalArgumentException.class, () -> client.getSecret(apiKey, "  "));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testGetSecretNoApiKey() throws Exception {
         stubResponse(200, "{}");
-        client.getSecret(null, SECRET_ID);
+        assertThrows(IllegalArgumentException.class, () -> client.getSecret(null, SECRET_ID));
     }
 
-    @Test(expected = AccountResponseException.class)
+    @Test
     public void testGetSecretFailed() throws Exception {
         String json = "{\n" + "  \"type\": \"https://developer.nexmo.com/api-errors#invalid-api-key\",\n"
                 + "  \"title\": \"Invalid API Key\",\n"
                 + "  \"detail\": \"API key 'ABC123' does not exist, or you do not have access\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
         stubResponse(404, json);
-        client.getSecret("apiKey", "secret-id-one");
+        assertThrows(AccountResponseException.class, () -> client.getSecret("apiKey", "secret-id-one"));
     }
 
     @Test
@@ -484,7 +484,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         client.revokeSecret(SECRET_ID);
     }
 
-    @Test(expected = AccountResponseException.class)
+    @Test
     public void testRevokeSecretFailed() throws Exception {
         String json = "{\n"
                 + "  \"type\": \"https://developer.nexmo.com/api-errors/account/secret-management#delete-last-secret\",\n"
@@ -492,7 +492,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "  \"detail\": \"Can not delete the last secret. The account must always have at least 1 secret active at any time\",\n"
                 + "  \"instance\": \"797a8f199c45014ab7b08bfe9cc1c12c\"\n" + "}";
         stubResponse(403, json);
-        client.revokeSecret(apiKey, SECRET_ID);
+        assertThrows(AccountResponseException.class, () -> client.revokeSecret(apiKey, SECRET_ID));
     }
 
     @Test

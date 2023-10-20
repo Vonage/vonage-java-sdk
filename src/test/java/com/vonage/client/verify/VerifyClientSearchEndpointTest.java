@@ -18,16 +18,14 @@ package com.vonage.client.verify;
 import com.vonage.client.ClientTest;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageResponseParseException;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class VerifyClientSearchEndpointTest extends ClientTest<VerifyClient> {
 
@@ -254,21 +252,21 @@ public class VerifyClientSearchEndpointTest extends ClientTest<VerifyClient> {
         assertEquals(accountId+"3", requests.get(2).getAccountId());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testNoSearchRequests() throws Exception {
-        client.search();
+        assertThrows(IllegalArgumentException.class, client::search);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testTooManySearchRequests() throws Exception {
         String[] requestIds = new String[11];
         for (int i = 1; i <= requestIds.length; i++) {
             requestIds[i-1] = "request-id-"+i;
         }
-        client.search(requestIds);
+        assertThrows(IllegalArgumentException.class, () -> client.search(requestIds));
     }
 
-    @Test(expected = VonageResponseParseException.class)
+    @Test
     public void testSearchInvalidDates() throws Exception {
         String json = "    { \n" + "      \"request_id\": \"a-random-request-id\",\n"
                 + "      \"account_id\": \"account-id\",\n" + "      \"number\": \"not-a-number\",\n"
@@ -279,7 +277,7 @@ public class VerifyClientSearchEndpointTest extends ClientTest<VerifyClient> {
                 + "      \"status\": \"SUCCESS\"\n" + "    }";
 
         stubResponse(200, json);
-        client.search("a-random-request-id");
+        assertThrows(VonageResponseParseException.class, () -> client.search("a-random-request-id"));
     }
 
     @Test

@@ -16,12 +16,12 @@
 package com.vonage.client.voice.ncco;
 
 import com.vonage.client.voice.TextToSpeechLanguage;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Currency;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class PayActionTest {
 
@@ -106,8 +106,8 @@ public class PayActionTest {
         assertNull(pay.getVoice());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testWithoutAmount() {
-        PayAction.builder().build();
+        assertThrows(IllegalStateException.class, () -> PayAction.builder().build());
     }
 }

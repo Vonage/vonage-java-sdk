@@ -18,8 +18,8 @@ package com.vonage.client.voice;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.voice.ncco.*;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Test;
 import java.util.*;
 
 public class CallTest {
@@ -309,13 +309,14 @@ public class CallTest {
         );
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testInvalidMachineDetectionCombination() {
-        Call.builder().from("447900000001")
+        assertThrows(IllegalStateException.class, () -> Call.builder().from("447900000001")
                 .to(new VbcEndpoint("456"))
                 .machineDetection(MachineDetection.HANGUP)
                 .advancedMachineDetection(AdvancedMachineDetection.builder().build())
-                .build();
+                .build()
+        );
     }
 
     @Test

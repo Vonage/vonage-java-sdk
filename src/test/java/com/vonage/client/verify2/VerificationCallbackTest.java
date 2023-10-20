@@ -16,8 +16,8 @@
 package com.vonage.client.verify2;
 
 import com.vonage.client.VonageResponseParseException;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Test;
 import java.net.URI;
 import java.time.Instant;
 import java.util.List;
@@ -156,9 +156,9 @@ public class VerificationCallbackTest {
 		assertNull(webhook.getSubmittedAt());
 	}
 
-	@Test(expected = VonageResponseParseException.class)
+	@Test
 	public void testFromJsonInvalid() {
-		VerificationCallback.fromJson("{malformed]");
+		assertThrows(VonageResponseParseException.class, () -> VerificationCallback.fromJson("{malformed]"));
 	}
 
 	@Test

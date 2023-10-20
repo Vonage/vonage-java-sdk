@@ -25,18 +25,17 @@ import com.vonage.client.sns.request.SnsRequest;
 import com.vonage.client.sns.response.SnsPublishResponse;
 import com.vonage.client.sns.response.SnsResponse;
 import com.vonage.client.sns.response.SnsSubscribeResponse;
-import org.junit.Before;
-import org.junit.Test;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.Arrays;
 import java.util.Collection;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class SnsEndpointTest extends DynamicEndpointTestSpec<SnsRequest, SnsResponse> {
     private SnsEndpoint endpoint;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         endpoint = new SnsEndpoint(new HttpWrapper());
     }
@@ -92,12 +91,14 @@ public class SnsEndpointTest extends DynamicEndpointTestSpec<SnsRequest, SnsResp
         assertEquals("a result message", result.getResultMessage());
     }
 
-    @Test(expected = VonageResponseParseException.class)
+    @Test
     public void testParseResponseMissingResultCode() throws Exception {
-        endpoint.parseResponseFromString("<nexmo-sns>\n" + "   <command>subscribe</command>\n"
+        assertThrows(VonageResponseParseException.class, () -> endpoint.parseResponseFromString(
+                "<nexmo-sns>\n" + "   <command>subscribe</command>\n"
                 + "   <resultMessage>a result message</resultMessage>\n"
                 + "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n"
-                + "   <transactionId>1234</transactionId>\n" + "</nexmo-sns>");
+                + "   <transactionId>1234</transactionId>\n" + "</nexmo-sns>"
+        ));
     }
 
     @Test
@@ -112,19 +113,20 @@ public class SnsEndpointTest extends DynamicEndpointTestSpec<SnsRequest, SnsResp
         assertEquals("a result message", result.getResultMessage());
     }
 
-    @Test(expected = VonageResponseParseException.class)
+    @Test
     public void testParseResponseUnparseable() throws Exception {
-        endpoint.parseResponseFromString("not-xml");
+        assertThrows(VonageResponseParseException.class, () -> endpoint.parseResponseFromString("not-xml"));
     }
 
-    @Test(expected = VonageResponseParseException.class)
+    @Test
     public void testParseDummyCommand() {
-        endpoint.parseResponseFromString(
+        assertThrows(VonageResponseParseException.class, () -> endpoint.parseResponseFromString(
                 "<nexmo-sns>\n" + "   <command>dummy command</command>\n" + "   <resultCode>0</resultCode>\n"
                         + "   <resultMessage>a result message</resultMessage>\n"
                         + "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n"
                         + "   <transactionId>1234</transactionId>\n" + "   <whatOnEarthIsThis/>\n"
-                        + "</nexmo-sns>");
+                        + "</nexmo-sns>"
+        ));
     }
 
     @Override

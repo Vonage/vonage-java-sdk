@@ -15,7 +15,7 @@
  */
 package com.vonage.client.insight;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BasicInsightRequestTest {
@@ -34,9 +34,9 @@ public class BasicInsightRequestTest {
         assertEquals("GB", request.getCountry());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testBuildWithoutNumberThrowsException() {
-        BasicInsightRequest.builder().build();
+        assertThrows(IllegalStateException.class, () -> BasicInsightRequest.builder().build());
     }
 
     @Test
@@ -65,8 +65,10 @@ public class BasicInsightRequestTest {
         assertEquals("GB", request.getCountry());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testWithInvalidCountryCode() {
-        BasicInsightRequest.builder("12345").country("England").build();
+        assertThrows(IllegalArgumentException.class, () ->
+                BasicInsightRequest.builder("12345").country("England").build()
+        );
     }
 }

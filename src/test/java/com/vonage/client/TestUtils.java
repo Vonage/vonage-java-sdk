@@ -24,8 +24,10 @@ import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import org.mockito.MockedStatic;
 import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.when;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -46,6 +48,12 @@ public class TestUtils {
 
     public static void mockStaticLoggingUtils() {
         staticMockLoggingUtils = mockStatic(LoggingUtils.class);
+        try {
+            when(LoggingUtils.logResponse(any(HttpResponse.class))).thenReturn("response logged");
+        }
+        catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     public static void unmockStaticLoggingUtils() {

@@ -16,8 +16,9 @@
 package com.vonage.client.verify;
 
 import com.vonage.client.VonageResponseParseException;
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class VerifyResponseTest {
 
@@ -42,9 +43,9 @@ public class VerifyResponseTest {
 		assertEquals(network, response.getNetwork());
 	}
 
-	@Test(expected = VonageResponseParseException.class)
+	@Test
 	public void testFromJsonEmptyThrows() {
-		VerifyResponse.fromJson("{}");
+		assertThrows(VonageResponseParseException.class, () -> VerifyResponse.fromJson("{}"));
 	}
 
 	@Test

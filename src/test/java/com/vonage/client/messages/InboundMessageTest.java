@@ -15,11 +15,11 @@
  */
 package com.vonage.client.messages;
 
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.messages.sms.SmsInboundMetadata;
 import com.vonage.client.messages.whatsapp.*;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Test;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Currency;
@@ -314,8 +314,8 @@ public class InboundMessageTest {
 		assertEquals(from, context.getMessageFrom());
 	}
 
-	@Test(expected = VonageUnexpectedException.class)
+	@Test
 	public void testFromJsonInvalid() {
-		InboundMessage.fromJson("{malformed]");
+		assertThrows(VonageResponseParseException.class, () -> InboundMessage.fromJson("{malformed]"));
 	}
 }

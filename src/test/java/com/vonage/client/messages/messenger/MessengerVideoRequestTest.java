@@ -15,7 +15,7 @@
  */
 package com.vonage.client.messages.messenger;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MessengerVideoRequestTest {
@@ -31,20 +31,17 @@ public class MessengerVideoRequestTest {
 		assertTrue(json.contains("\"channel\":\"messenger\""));
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructNoUrl() {
-		MessengerVideoRequest.builder()
-				.from("447900000001")
-				.to("317900000002")
-				.build();
+		assertThrows(NullPointerException.class, () -> MessengerVideoRequest.builder()
+				.from("447900000001").to("317900000002").build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructInvalidExtension() {
-		MessengerVideoRequest.builder()
-				.from("447900000001")
-				.url("ftp://rel/path/to/trailer.bik")
-				.to("317900000002")
-				.build();
+		assertThrows(IllegalArgumentException.class, () -> MessengerVideoRequest.builder()
+				.from("447900000001").url("ftp://rel/path/to/trailer.bik").to("317900000002").build()
+		);
 	}
 }

@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
@@ -103,14 +103,18 @@ public class VonageApiResponseExceptionTest {
 		);
 	}
 
-	@Test(expected = VonageUnexpectedException.class)
+	@Test
 	public void testConstructFromInvalidJson() {
-		throw VonageApiResponseException.fromJson(ConcreteVonageApiResponseException.class, "{_malformed_}");
+		assertThrows(VonageUnexpectedException.class, () ->
+				VonageApiResponseException.fromJson(ConcreteVonageApiResponseException.class, "{_malformed_}")
+		);
 	}
 
-	@Test(expected = VonageUnexpectedException.class)
+	@Test
 	public void testBadConstructor() {
-		VonageApiResponseException.fromJson(VARXWithoutNoArgs.class, "{}");
+		assertThrows(VonageUnexpectedException.class, () ->
+				VonageApiResponseException.fromJson(VARXWithoutNoArgs.class, "{}")
+		);
 	}
 
 	@Test
@@ -122,26 +126,22 @@ public class VonageApiResponseExceptionTest {
 		assertEquals(json, crx.toJson());
 	}
 
-	@Test(expected = VonageUnexpectedException.class)
+	@Test
 	public void triggerJsonProcessingException() throws Exception {
 		class SelfReferencing extends VonageApiResponseException {
 			@JsonProperty("self") final SelfReferencing self = this;
 		}
-		SelfReferencing selfReferencing = new SelfReferencing();
-		selfReferencing.toJson();
-		try {
-			throw selfReferencing;
-		}
-		catch (Exception ex) {
-			fail();
-		}
+		SelfReferencing sr = new SelfReferencing();
+		assertThrows(VonageUnexpectedException.class, sr::toJson);
 	}
 
-	@Test(expected = VonageUnexpectedException.class)
+	@Test
 	public void testFromJsonWithBadConstructorDefinition() throws Exception {
 		class MissingNoArgs extends VonageApiResponseException {
 			public MissingNoArgs(boolean dummy) {}
 		}
-		VonageApiResponseException.fromJson(MissingNoArgs.class, "");
+		assertThrows(VonageUnexpectedException.class, () ->
+				VonageApiResponseException.fromJson(MissingNoArgs.class, "")
+		);
 	}
 }

@@ -16,7 +16,7 @@
 package com.vonage.client.messages.viber;
 
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ViberVideoRequestTest {
 
@@ -56,37 +56,40 @@ public class ViberVideoRequestTest {
 		assertTrue(json.contains("\"to\":\"447900000001\""));
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructNoUrl() {
-		ViberVideoRequest.builder()
+		assertThrows(NullPointerException.class, () -> ViberVideoRequest.builder()
 				.from("447900000001").to("317900000002")
 				.thumbUrl("https://example.com/thumb.jpg")
-				.duration(10).fileSize(10).build();
+				.duration(10).fileSize(10).build()
+		);
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructNoThumbnailUrl() {
-		ViberVideoRequest.builder()
+		assertThrows(NullPointerException.class, () -> ViberVideoRequest.builder()
 				.from("447900000001").to("317900000002")
 				.url("https://example.com/clip.mp4")
-				.duration(10).fileSize(10).build();
+				.duration(10).fileSize(10).build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructInvalidUrlExtension() {
-		ViberVideoRequest.builder()
-				.from("447900000001")
-				.thumbUrl("https://example.com/preview.jpg")
+		assertThrows(IllegalArgumentException.class, () -> ViberVideoRequest.builder()
+				.from("447900000001").thumbUrl("https://example.com/preview.jpg")
 				.url("ftp://rel/path/to/clip.flv").to("317900000002")
-				.duration(10).fileSize(10).build();
+				.duration(10).fileSize(10).build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructInvalidThumbnailExtension() {
-		ViberVideoRequest.builder()
+		assertThrows(IllegalArgumentException.class, () -> ViberVideoRequest.builder()
 				.from("447900000001").thumbUrl("https://example.com/preview.eps")
 				.url("ftp://rel/path/to/clip.mp4").to("317900000002")
-				.duration(10).fileSize(10).build();
+				.duration(10).fileSize(10).build()
+		);
 	}
 
 	@Test

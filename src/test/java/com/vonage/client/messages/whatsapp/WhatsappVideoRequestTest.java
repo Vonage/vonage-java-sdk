@@ -15,7 +15,7 @@
  */
 package com.vonage.client.messages.whatsapp;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class WhatsappVideoRequestTest {
@@ -24,9 +24,7 @@ public class WhatsappVideoRequestTest {
 	public void testSerializeValid() {
 		String url = "file:///path/to/clip.mp4", caption = "Cute kittens";
 		String json = WhatsappVideoRequest.builder()
-				.from("317900000002").to("447900000001")
-				.url(url).caption(caption)
-				.build().toJson();
+				.from("317900000002").to("447900000001").url(url).caption(caption).build().toJson();
 		assertTrue(json.contains("\"video\":{\"url\":\""+url+"\",\"caption\":\""+caption+"\"}"));
 		assertTrue(json.contains("\"message_type\":\"video\""));
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
@@ -43,39 +41,31 @@ public class WhatsappVideoRequestTest {
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructNoUrl() {
-		WhatsappVideoRequest.builder()
-				.caption("Description")
-				.from("447900000001")
-				.to("317900000002")
-				.build();
+		assertThrows(NullPointerException.class, () -> WhatsappVideoRequest.builder()
+				.caption("Description").from("447900000001").to("317900000002").build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructInvalidExtension() {
-		WhatsappVideoRequest.builder()
-				.from("447900000001")
-				.url("ftp://rel/path/to/video.mov")
-				.to("317900000002")
-				.build();
+		assertThrows(IllegalArgumentException.class, () -> WhatsappVideoRequest.builder()
+				.from("447900000001").url("ftp://rel/path/to/video.mov").to("317900000002").build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructEmptyCaption() {
-		WhatsappVideoRequest.builder()
-				.caption("")
-				.from("447900000001")
-				.url("ftp://rel/path/to/video.mp4")
-				.to("317900000002")
-				.build();
+		assertThrows(IllegalArgumentException.class, () -> WhatsappVideoRequest.builder()
+				.caption("").from("447900000001").url("ftp://rel/path/to/video.mp4").to("317900000002").build()
+		);
 	}
 
 	@Test
 	public void testValidExtensions() {
 		WhatsappVideoRequest.Builder builder = WhatsappVideoRequest.builder()
-				.from("447900000001")
-				.to("317900000002");
+				.from("447900000001").to("317900000002");
 
 		String baseUrl = "file:///path/to/resource", url;
 		for (String imageType : new String[]{"mp4", "3gpp"}) {

@@ -15,8 +15,8 @@
  */
 package com.vonage.client.verify;
 
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Test;
 import java.util.Locale;
 import java.util.Map;
 
@@ -57,8 +57,10 @@ public class VerifyRequestTest {
 		assertNull(verifyRequest.getWorkflow());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testInvalidBrand() {
-		VerifyRequest.builder("4477990090090", "A very looooooooooooooong brand name").build();
+		assertThrows(IllegalArgumentException.class, () ->
+				VerifyRequest.builder("4477990090090", "A very looooooooooooooong brand name").build()
+		);
 	}
 }

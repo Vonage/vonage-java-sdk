@@ -25,7 +25,7 @@ import com.vonage.client.sms.messages.Message;
 import com.vonage.client.sms.messages.TextMessage;
 import com.vonage.client.sms.messages.WapPushMessage;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
@@ -71,11 +71,11 @@ public class SmsClientTest extends ClientTest<SmsClient> {
         assertEquals(2, r.getMessages().size());
     }
 
-    @Test(expected = VonageApiResponseException.class)
+    @Test
     public void testSubmitMessageHttpError() throws Exception {
         stubResponse(500, "");
         Message message = new TextMessage("TestSender", "not-a-number", "Test");
-        client.submitMessage(message);
+        assertThrows(VonageApiResponseException.class, () -> client.submitMessage(message));
     }
 
     @Test

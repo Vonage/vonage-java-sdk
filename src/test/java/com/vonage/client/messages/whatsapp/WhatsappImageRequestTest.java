@@ -15,7 +15,7 @@
  */
 package com.vonage.client.messages.whatsapp;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class WhatsappImageRequestTest {
@@ -74,22 +74,18 @@ public class WhatsappImageRequestTest {
 		}
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructNoUrl() {
-		WhatsappImageRequest.builder()
-				.caption("Description")
-				.from("447900000001")
-				.to("317900000002")
-				.build();
+		assertThrows(NullPointerException.class, () -> WhatsappImageRequest.builder()
+				.caption("Description").from("447900000001").to("317900000002").build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructInvalidExtension() {
-		WhatsappImageRequest.builder()
-				.from("447900000001")
-				.url("ftp://rel/path/to/photo.bmp")
-				.to("317900000002")
-				.build();
+		assertThrows(IllegalArgumentException.class, () -> WhatsappImageRequest.builder()
+				.from("447900000001").url("ftp://rel/path/to/photo.bmp").to("317900000002").build()
+		);
 	}
 
 	@Test
@@ -106,13 +102,10 @@ public class WhatsappImageRequestTest {
 		}
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructEmptyCaption() {
-		WhatsappVideoRequest.builder()
-				.from("447900000001")
-				.url("ftp://rel/path/to/picture.jpeg")
-				.to("317900000002")
-				.caption("")
-				.build();
+		assertThrows(IllegalArgumentException.class, () -> WhatsappVideoRequest.builder().caption("")
+				.from("447900000001").url("ftp://rel/path/to/picture.jpeg").to("317900000002").build()
+		);
 	}
 }
