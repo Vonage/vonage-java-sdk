@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.ClientTest;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageClientException;
+import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.common.HalLinks;
 import com.vonage.client.common.HalPageResponse;
 import com.vonage.client.common.HttpMethod;
@@ -432,8 +433,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 	@Test
 	public void testDownloadListItems() throws Exception {
 		String stub = "<BINARY>";
-		String parsed = stubResponseAndGet(stub, () -> client.downloadListItems(SAMPLE_LIST_ID));
-		assertEquals(stub, parsed);
+		assertEquals(stub, stubResponseAndGet(stub, () -> client.downloadListItems(SAMPLE_LIST_ID)));
 		stubResponseAndAssertThrows(stub, () ->
 				client.downloadListItems(null), NullPointerException.class
 		);
@@ -445,6 +445,9 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 		fileContents = Files.readAllBytes(SAMPLE_CSV_PATH);
 		assertEquals(stub, new String(fileContents));
 
+		stubResponseAndAssertThrows(stub, () ->
+				client.downloadListItems(SAMPLE_LIST_ID, Paths.get("/")), VonageUnexpectedException.class
+		);
 		stubResponseAndAssertThrows(stub, () ->
 				client.downloadListItems(SAMPLE_LIST_ID, null), NullPointerException.class
 		);
