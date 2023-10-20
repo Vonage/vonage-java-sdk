@@ -19,8 +19,7 @@ import com.vonage.client.QueryParamsRequest;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@Deprecated
-public class TopUpRequest implements QueryParamsRequest {
+class TopUpRequest implements QueryParamsRequest {
     private final String trx;
 
     public TopUpRequest(String trx) {

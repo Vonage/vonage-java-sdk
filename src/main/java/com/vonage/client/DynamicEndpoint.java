@@ -24,7 +24,6 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
@@ -198,7 +197,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 	}
 
 	@Override
-	public final RequestBuilder makeRequest(T requestBody) throws UnsupportedEncodingException {
+	public final RequestBuilder makeRequest(T requestBody) {
 		if (requestBody instanceof Jsonable && requestBody.getClass().equals(responseType)) {
 			cachedRequestBody = requestBody;
 		}

@@ -23,8 +23,7 @@ package com.vonage.client;
  *
  * @since 7.7.0
  */
-public interface RestEndpoint<T, R> extends Method<T, R> {
+public interface RestEndpoint<T, R> {
 
-    @Override
     R execute(T request) throws VonageClientException;
 }
