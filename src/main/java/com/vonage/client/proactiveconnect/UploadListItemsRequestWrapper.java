@@ -15,12 +15,20 @@
  */
 package com.vonage.client.proactiveconnect;
 
-class UploadListItemsRequestWrapper {
-	final String listId;
+import com.vonage.client.BinaryRequest;
+import java.util.UUID;
+
+class UploadListItemsRequestWrapper implements BinaryRequest {
+	final UUID listId;
 	final byte[] data;
 
-	UploadListItemsRequestWrapper(String listId, byte[] data) {
+	UploadListItemsRequestWrapper(UUID listId, byte[] data) {
 		this.listId = listId;
 		this.data = data;
+	}
+
+	@Override
+	public byte[] toByteArray() {
+		return data;
 	}
 }

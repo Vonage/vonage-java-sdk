@@ -16,7 +16,6 @@
 package com.vonage.client.verify;
 
 import com.vonage.client.QueryParamsRequest;
-import org.apache.http.client.methods.RequestBuilder;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -35,11 +34,6 @@ public class ControlRequest implements QueryParamsRequest {
 
     public VerifyControlCommand getCommand() {
         return command;
-    }
-
-    @Deprecated
-    public void addParams(RequestBuilder request) {
-        makeParams().forEach(request::addParameter);
     }
 
     @Override

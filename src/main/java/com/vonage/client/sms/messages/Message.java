@@ -16,7 +16,6 @@
 package com.vonage.client.sms.messages;
 
 import com.vonage.client.QueryParamsRequest;
-import org.apache.http.client.methods.RequestBuilder;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -216,16 +215,6 @@ public abstract class Message implements QueryParamsRequest {
             params.put("content-id", contentId);
         }
         return params;
-    }
-
-    /**
-     *
-     * @param request The HTTP RequestBuilder.
-     * @deprecated Use {@link #makeParams()}. This will be removed in a future release.
-     */
-    @Deprecated
-    public void addParams(RequestBuilder request) {
-        makeParams().forEach(request::addParameter);
     }
 
     /**

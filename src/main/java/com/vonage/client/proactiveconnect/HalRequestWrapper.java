@@ -15,9 +15,11 @@
  */
 package com.vonage.client.proactiveconnect;
 
-import org.apache.http.client.methods.RequestBuilder;
+import com.vonage.client.QueryParamsRequest;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-class HalRequestWrapper {
+class HalRequestWrapper implements QueryParamsRequest {
 	final Integer page, pageSize;
 	final SortOrder order;
 	final String id;
@@ -29,16 +31,18 @@ class HalRequestWrapper {
 		this.id = id;
 	}
 
-	RequestBuilder addParams(RequestBuilder builder) {
+	@Override
+	public Map<String, String> makeParams() {
+		Map<String, String> params = new LinkedHashMap<>(4);
 		if (page != null) {
-			builder.addParameter("page", page.toString());
+			params.put("page", page.toString());
 		}
 		if (pageSize != null) {
-			builder.addParameter("page_size", pageSize.toString());
+			params.put("page_size", pageSize.toString());
 		}
 		if (order != null) {
-			builder.addParameter("order", order.toString());
+			params.put("order", order.toString());
 		}
-		return builder;
+		return params;
 	}
 }

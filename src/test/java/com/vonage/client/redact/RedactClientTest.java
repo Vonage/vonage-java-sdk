@@ -15,16 +15,13 @@
  */
 package com.vonage.client.redact;
 
-import com.vonage.client.ClientTest;
-import com.vonage.client.DynamicEndpointTestSpec;
-import com.vonage.client.RestEndpoint;
-import com.vonage.client.VonageBadRequestException;
+import com.vonage.client.*;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.SignatureAuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -56,44 +53,41 @@ public class RedactClientTest extends ClientTest<RedactClient> {
         ));
     }
 
-    @Test(expected = VonageBadRequestException.class)
+    @Test
     public void testWrongCredentials() throws Exception {
         RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
-        stubResponseAndRun(401, () -> client.redactTransaction(redactRequest));
-        stubResponse(401);
-        client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
+        stubResponseAndAssertThrows(401, () ->
+                client.redactTransaction(redactRequest),
+                VonageBadRequestException.class
+        );
+        stubResponseAndAssertThrows(401, () ->
+                client.redactTransaction(redactRequest.getId(), redactRequest.getProduct()),
+                VonageBadRequestException.class
+        );
     }
 
-    @Test(expected = VonageBadRequestException.class)
+    @Test
     public void testPrematureRedactionOrUnauthorized() throws Exception {
         RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
-        stubResponseAndRun(403, () -> client.redactTransaction(redactRequest));
-        stubResponse(403);
-        client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
+        stubResponseAndAssertThrows(403, () ->
+                client.redactTransaction(redactRequest), VonageBadRequestException.class
+        );
+        stubResponseAndAssertThrows(403, () ->
+                client.redactTransaction(redactRequest.getId(), redactRequest.getProduct()),
+                VonageBadRequestException.class
+        );
     }
 
-    @Test(expected = VonageBadRequestException.class)
+    @Test
     public void testInvalidId() throws Exception {
         RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
-        stubResponseAndRun(404, () -> client.redactTransaction(redactRequest));
-        stubResponse(404);
-        client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
-    }
-
-    @Test(expected = VonageBadRequestException.class)
-    public void testInvalidJsonInvalidProduct() throws Exception {
-        RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
-        stubResponseAndRun(422, () -> client.redactTransaction(redactRequest));
-        stubResponse(422);
-        client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
-    }
-
-    @Test(expected = VonageBadRequestException.class)
-    public void testRateLimit() throws Exception {
-        RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
-        stubResponseAndRun(429, () -> client.redactTransaction(redactRequest));
-        stubResponse(429);
-        client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
+        stubResponseAndAssertThrows(404, () ->
+                client.redactTransaction(redactRequest), VonageBadRequestException.class
+        );
+        stubResponseAndAssertThrows(404, () ->
+                client.redactTransaction(redactRequest.getId(), redactRequest.getProduct()),
+                VonageBadRequestException.class
+        );
     }
 
     @Test

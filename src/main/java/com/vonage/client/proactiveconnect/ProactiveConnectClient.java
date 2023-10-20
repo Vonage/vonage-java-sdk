@@ -15,11 +15,10 @@
  */
 package com.vonage.client.proactiveconnect;
 
-import com.vonage.client.AbstractMethod;
-import com.vonage.client.HttpWrapper;
-import com.vonage.client.VonageClient;
-import com.vonage.client.VonageClientException;
+import com.vonage.client.*;
+import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.common.HalPageResponse;
+import com.vonage.client.common.HttpMethod;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,56 +26,66 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Function;
 
 /**
  * A client for talking to the Vonage Proactive Connect API. The standard way to obtain an instance
  * of this class is to use {@link VonageClient#getProactiveConnectClient()}.
  */
 public class ProactiveConnectClient {
-	final CreateListEndpoint createList;
-	final GetListEndpoint getList;
-	final UpdateListEndpoint updateList;
-	final DeleteListEndpoint deleteList;
-	final ClearListEndpoint clearList;
-	final FetchListEndpoint fetchList;
-	final ListListsEndpoint listLists;
-	final CreateListItemEndpoint createListItem;
-	final GetListItemEndpoint getListItem;
-	final UpdateListItemEndpoint updateListItem;
-	final DeleteListItemEndpoint deleteListItem;
-	final DownloadListItemsEndpoint downloadListItems;
-	final UploadListItemsEndpoint uploadListItems;
-	final ListItemsEndpoint listItems;
-	final ListEventsEndpoint listEvents;
+	final RestEndpoint<ContactsList, ContactsList> createList, updateList;
+	final RestEndpoint<UUID, ContactsList> getList;
+	final RestEndpoint<UUID, Void> deleteList, clearList, fetchList;
+	final RestEndpoint<HalRequestWrapper, ListListsResponse> listLists;
+	final RestEndpoint<HalRequestWrapper, ListItemsResponse> listItems;
+	final RestEndpoint<ListItemRequestWrapper, ListItem> createListItem, getListItem, updateListItem;
+	final RestEndpoint<ListItemRequestWrapper, Void> deleteListItem;
+	final RestEndpoint<UUID, byte[]> downloadListItems;
+	final RestEndpoint<UploadListItemsRequestWrapper, UploadListItemsResponse> uploadListItems;
+	final RestEndpoint<ListEventsFilter, ListEventsResponse> listEvents;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param httpWrapper (REQUIRED) shared HTTP wrapper object used for making REST calls.
+	 * @param wrapper (REQUIRED) shared HTTP wrapper object used for making REST calls.
 	 */
-	public ProactiveConnectClient(HttpWrapper httpWrapper) {
-		createList = new CreateListEndpoint(httpWrapper);
-		getList = new GetListEndpoint(httpWrapper);
-		updateList = new UpdateListEndpoint(httpWrapper);
-		deleteList = new DeleteListEndpoint(httpWrapper);
-		clearList = new ClearListEndpoint(httpWrapper);
-		fetchList = new FetchListEndpoint(httpWrapper);
-		listLists = new ListListsEndpoint(httpWrapper);
-		createListItem = new CreateListItemEndpoint(httpWrapper);
-		getListItem = new GetListItemEndpoint(httpWrapper);
-		updateListItem = new UpdateListItemEndpoint(httpWrapper);
-		deleteListItem = new DeleteListItemEndpoint(httpWrapper);
-		downloadListItems = new DownloadListItemsEndpoint(httpWrapper);
-		uploadListItems = new UploadListItemsEndpoint(httpWrapper);
-		listItems = new ListItemsEndpoint(httpWrapper);
-		listEvents = new ListEventsEndpoint(httpWrapper);
+	public ProactiveConnectClient(HttpWrapper wrapper) {
+
+		@SuppressWarnings("unchecked")
+		class Endpoint<T, R> extends DynamicEndpoint<T, R> {
+			Endpoint(Function<T, String> pathGetter, HttpMethod method, R... type) {
+				super(DynamicEndpoint.<T, R> builder(type).authMethod(JWTAuthMethod.class)
+						.responseExceptionType(ProactiveConnectResponseException.class)
+						.requestMethod(method).wrapper(wrapper).pathGetter((de, req) -> {
+							String base = de.getHttpWrapper().getHttpConfig().getApiEuBaseUri();
+							return base + "/v0.1/bulk/" + pathGetter.apply(req);
+						})
+				);
+			}
+		}
+
+		createList = new Endpoint<>(req -> "lists", HttpMethod.POST);
+		getList = new Endpoint<>(listId -> "lists/"+listId, HttpMethod.GET);
+		updateList = new Endpoint<>(list -> "lists/"+list.getId(), HttpMethod.PUT);
+		deleteList = new Endpoint<>(listId -> "lists/"+listId, HttpMethod.DELETE);
+		clearList = new Endpoint<>(listId -> "lists/"+listId+"/clear", HttpMethod.POST);
+		fetchList = new Endpoint<>(listId -> "lists/"+listId+"/fetch", HttpMethod.POST);
+		listLists = new Endpoint<>(req -> "lists", HttpMethod.GET);
+		listItems = new Endpoint<>(req -> "lists/"+req.id+"/items", HttpMethod.GET);
+		createListItem = new Endpoint<>(req -> "lists/"+req.listId+"/items", HttpMethod.POST);
+		getListItem = new Endpoint<>(req -> "lists/"+req.listId+"/items/"+req.itemId, HttpMethod.GET);
+		updateListItem = new Endpoint<>(req -> "lists/"+req.listId+"/items/"+req.itemId, HttpMethod.PUT);
+		deleteListItem = new Endpoint<>(req -> "lists/"+req.listId+"/items/"+req.itemId, HttpMethod.DELETE);
+		downloadListItems = new Endpoint<>(listId -> "lists/"+listId+"/items/download", HttpMethod.GET);
+		uploadListItems = new Endpoint<>(req -> "lists/"+req.listId+"/items/import", HttpMethod.POST);
+		listEvents = new Endpoint<>(req -> "events", HttpMethod.GET);
 	}
 
-	private String validateUuid(String name, UUID uuid) {
-		return Objects.requireNonNull(uuid, name+" is required.").toString();
+	private UUID validateUuid(String name, UUID uuid) {
+		return Objects.requireNonNull(uuid, name+" is required.");
 	}
 
-	private <R extends HalPageResponse> R halRequest(AbstractMethod<HalRequestWrapper, R> endpoint,
+	private <R extends HalPageResponse> R halRequest(RestEndpoint<HalRequestWrapper, R> endpoint,
 			String id, Integer page, Integer pageSize, SortOrder order) {
 		if (page != null && page < 1) {
 			throw new IllegalArgumentException("Page number must be positive.");
@@ -136,10 +145,9 @@ public class ProactiveConnectClient {
 	 * </ul>
 	 */
 	public ContactsList updateList(UUID listId, ContactsList updatedList) {
-		return updateList.execute(new UpdateListRequestWrapper(
-				validateUuid("List ID", listId),
-				Objects.requireNonNull(updatedList, "List structure is required.")
-		));
+		Objects.requireNonNull(updatedList, "List structure is required.");
+		updatedList.id = validateUuid("List ID", listId);
+		return updateList.execute(updatedList);
 	}
 
 	/**
@@ -290,9 +298,7 @@ public class ProactiveConnectClient {
 	 * @throws ProactiveConnectResponseException If the list does not exist or couldn't be retrieved.
 	 */
 	public String downloadListItems(UUID listId) {
-		return new String(downloadListItems.execute(new DownloadListItemsRequestWrapper(
-				validateUuid("List ID", listId), null
-		)));
+		return new String(downloadListItems.execute(validateUuid("List ID", listId)));
 	}
 
 	/**
@@ -305,10 +311,15 @@ public class ProactiveConnectClient {
 	 * @throws ProactiveConnectResponseException If the list does not exist or couldn't be retrieved.
 	 */
 	public void downloadListItems(UUID listId, Path file) {
-		downloadListItems.execute(new DownloadListItemsRequestWrapper(
-				validateUuid("List ID", listId),
-				Objects.requireNonNull(file, "CSV file is required.")
-		));
+		try {
+			Files.write(
+					Objects.requireNonNull(file, "CSV file is required."),
+					downloadListItems.execute(validateUuid("List ID", listId))
+			);
+		}
+		catch (IOException ex) {
+			throw new VonageUnexpectedException("Couldn't write list '"+listId+"' to file '"+file+"'", ex);
+		}
 	}
 
 	/**
@@ -348,7 +359,10 @@ public class ProactiveConnectClient {
 	 * @throws ProactiveConnectResponseException If the list does not exist or the items couldn't be retrieved.
 	 */
 	public List<ListItem> listItems(UUID listId) {
-		return halRequest(listItems, validateUuid("List ID", listId), 1, 1000, null).getItems();
+		return halRequest(listItems,
+				validateUuid("List ID", listId).toString(),
+				1, 1000, null
+		).getItems();
 	}
 
 	/**
@@ -364,7 +378,7 @@ public class ProactiveConnectClient {
 	 * @throws ProactiveConnectResponseException If the list does not exist or the items couldn't be retrieved.
 	 */
 	public ListItemsResponse listItems(UUID listId, int page, int pageSize, SortOrder order) {
-		return halRequest(listItems, validateUuid("List ID", listId), page, pageSize, order);
+		return halRequest(listItems, validateUuid("List ID", listId).toString(), page, pageSize, order);
 	}
 
 	/**

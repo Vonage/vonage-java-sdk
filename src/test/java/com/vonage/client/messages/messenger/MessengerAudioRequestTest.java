@@ -15,7 +15,7 @@
  */
 package com.vonage.client.messages.messenger;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MessengerAudioRequestTest {
@@ -31,21 +31,18 @@ public class MessengerAudioRequestTest {
 		assertTrue(json.contains("\"channel\":\"messenger\""));
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructNoUrl() {
-		MessengerAudioRequest.builder()
-				.from("447900000001")
-				.to("317900000002")
-				.build();
+		assertThrows(NullPointerException.class, () -> MessengerAudioRequest.builder()
+				.from("447900000001").to("317900000002").build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructInvalidExtension() {
-		MessengerAudioRequest.builder()
-				.from("447900000001")
-				.url("ftp://rel/path/to/music.wma")
-				.to("317900000002")
-				.build();
+		assertThrows(IllegalArgumentException.class, () -> MessengerAudioRequest.builder()
+				.from("447900000001").url("ftp://rel/path/to/music.wma").to("317900000002").build()
+		);
 	}
 
 	@Test

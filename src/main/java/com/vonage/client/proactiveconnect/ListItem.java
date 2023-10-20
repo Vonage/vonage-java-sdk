@@ -18,10 +18,7 @@ package com.vonage.client.proactiveconnect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.vonage.client.VonageResponseParseException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
@@ -31,7 +28,7 @@ import java.util.UUID;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class ListItem {
+public class ListItem implements Jsonable {
 	private Map<String, ?> data;
 	private Instant createdAt, updatedAt;
 	private UUID id, listId;
@@ -96,13 +93,6 @@ public class ListItem {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static ListItem fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.registerModule(new JavaTimeModule());
-			return mapper.readValue(json, ListItem.class);
-		}
-		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to produce ListItem from json.", ex);
-		}
+		return Jsonable.fromJson(json, ListItem.class);
 	}
 }

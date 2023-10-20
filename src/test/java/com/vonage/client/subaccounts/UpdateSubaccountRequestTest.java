@@ -17,8 +17,9 @@ package com.vonage.client.subaccounts;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.VonageUnexpectedException;
-import org.junit.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class UpdateSubaccountRequestTest {
 	
@@ -67,7 +68,7 @@ public class UpdateSubaccountRequestTest {
 		assertThrows(IllegalArgumentException.class, () -> builder.name(sb.append("0").toString()).build());
 	}
 
-	@Test(expected = VonageUnexpectedException.class)
+	@Test
 	public void triggerJsonProcessingException() {
 		class SelfRefrencing extends UpdateSubaccountRequest {
 			@JsonProperty("self") final SelfRefrencing self = this;
@@ -76,6 +77,8 @@ public class UpdateSubaccountRequestTest {
 				super(builder);
 			}
 		}
-		new SelfRefrencing(UpdateSubaccountRequest.builder("a1b2c3d4").suspended(true)).toJson();
+		assertThrows(VonageUnexpectedException.class, () -> new SelfRefrencing(
+				UpdateSubaccountRequest.builder("a1b2c3d4").suspended(true)).toJson()
+		);
 	}
 }

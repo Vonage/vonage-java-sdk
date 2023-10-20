@@ -15,8 +15,7 @@
  */
 package com.vonage.client.account;
 
-@Deprecated
-public class SecretRequest {
+class SecretRequest {
     private final String apiKey, secretId;
 
     public SecretRequest(String apiKey, String secretId) {

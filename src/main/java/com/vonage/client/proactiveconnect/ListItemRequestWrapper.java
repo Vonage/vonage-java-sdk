@@ -15,28 +15,21 @@
  */
 package com.vonage.client.proactiveconnect;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.Jsonable;
 import java.util.Map;
+import java.util.UUID;
 
-class ListItemRequestWrapper {
-	final String listId, itemId;
-	final Map<String, ?> data;
+@JsonInclude(JsonInclude.Include.NON_NULL)
+final class ListItemRequestWrapper implements Jsonable {
+	@JsonIgnore final UUID listId, itemId;
+	@JsonProperty("data") final Map<String, ?> data;
 
-	ListItemRequestWrapper(String listId, String itemId, Map<String, ?> data) {
+	ListItemRequestWrapper(UUID listId, UUID itemId, Map<String, ?> data) {
 		this.listId = listId;
 		this.itemId = itemId;
 		this.data = data;
-	}
-
-	String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return "{\"data\":" + mapper.writeValueAsString(data) + "}";
-		}
-		catch (JsonProcessingException jpe) {
-			throw new VonageUnexpectedException("Failed to produce JSON from "+data, jpe);
-		}
 	}
 }

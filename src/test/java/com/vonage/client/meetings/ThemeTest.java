@@ -18,8 +18,8 @@ package com.vonage.client.meetings;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.VonageUnexpectedException;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Test;
 import java.net.URI;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -121,9 +121,9 @@ public class ThemeTest {
 		assertThrows(VonageResponseParseException.class, () -> theme.updateFromJson("{malformed]"));
 	}
 	
-	@Test(expected = VonageUnexpectedException.class)
+	@Test
 	public void testFromJsonInvalid() {
-		Theme.fromJson("{malformed]");
+		assertThrows(VonageResponseParseException.class, () -> Theme.fromJson("{malformed]"));
 	}
 
 	@Test
@@ -201,11 +201,11 @@ public class ThemeTest {
 		assertThrows(IllegalArgumentException.class, () -> Theme.builder().mainColor("#gggggg").build());
 	}
 
-	@Test(expected = VonageUnexpectedException.class)
+	@Test
 	public void triggerJsonProcessingException() {
 		class SelfRefrencing extends Theme {
 			@JsonProperty("self") final SelfRefrencing self = this;
 		}
-		new SelfRefrencing().toJson();
+		assertThrows(VonageUnexpectedException.class, () -> new SelfRefrencing().toJson());
 	}
 }

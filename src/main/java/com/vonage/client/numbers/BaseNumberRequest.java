@@ -16,7 +16,6 @@
 package com.vonage.client.numbers;
 
 import com.vonage.client.QueryParamsRequest;
-import org.apache.http.client.methods.RequestBuilder;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -34,11 +33,6 @@ class BaseNumberRequest implements QueryParamsRequest {
 
     public String getMsisdn() {
         return msisdn;
-    }
-
-    @Deprecated
-    public void addParams(RequestBuilder request) {
-        makeParams().forEach(request::addParameter);
     }
 
     @Override

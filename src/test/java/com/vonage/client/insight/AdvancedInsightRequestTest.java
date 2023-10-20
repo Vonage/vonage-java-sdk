@@ -15,7 +15,7 @@
  */
 package com.vonage.client.insight;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AdvancedInsightRequestTest {
@@ -37,32 +37,28 @@ public class AdvancedInsightRequestTest {
     @Test
     public void testAsync() {
         AdvancedInsightRequest request = AdvancedInsightRequest.builder("12345")
-                .async(true)
-                .callback("https://example.com")
-                .build();
-
+                .async(true).callback("https://example.com").build();
         assertTrue(request.isAsync());
         assertEquals("https://example.com", request.getCallback());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testAsyncWithoutCallbackThrowsIllegalStateException() {
-        AdvancedInsightRequest.builder("12345")
-                .async(true)
-                .build();
+        assertThrows(IllegalStateException.class, () ->
+                AdvancedInsightRequest.builder("12345").async(true).build()
+        );
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testAsyncWithBlankCallbackThrowsIllegalStateException() {
-        AdvancedInsightRequest.builder("12345")
-                .async(true)
-                .callback("")
-                .build();
+        assertThrows(IllegalStateException.class, () ->
+                AdvancedInsightRequest.builder("12345").async(true).callback("").build()
+        );
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testBuildWithoutNumberThrowsException() {
-        AdvancedInsightRequest.builder().build();
+        assertThrows(IllegalStateException.class, () -> AdvancedInsightRequest.builder().build());
     }
 
     @Test

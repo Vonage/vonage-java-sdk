@@ -17,8 +17,8 @@ package com.vonage.client.subaccounts;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.VonageUnexpectedException;
+import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Test;
 
 public class CreateSubaccountRequestTest {
 	
@@ -71,7 +71,7 @@ public class CreateSubaccountRequestTest {
 		assertThrows(IllegalArgumentException.class, () -> builder.name(sb.append("0").toString()).build());
 	}
 
-	@Test(expected = VonageUnexpectedException.class)
+	@Test
 	public void triggerJsonProcessingException() {
 		class SelfRefrencing extends CreateSubaccountRequest {
 			@JsonProperty("self") final SelfRefrencing self = this;
@@ -80,6 +80,8 @@ public class CreateSubaccountRequestTest {
 				super(builder);
 			}
 		}
-		new SelfRefrencing(CreateSubaccountRequest.builder().name("Name")).toJson();
+		assertThrows(VonageUnexpectedException.class, () ->
+				new SelfRefrencing(CreateSubaccountRequest.builder().name("Name")).toJson()
+		);
 	}
 }

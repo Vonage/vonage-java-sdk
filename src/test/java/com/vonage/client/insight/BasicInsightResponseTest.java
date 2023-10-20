@@ -15,9 +15,10 @@
  */
 package com.vonage.client.insight;
 
-import com.vonage.client.VonageUnexpectedException;
-import org.junit.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import com.vonage.client.VonageResponseParseException;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BasicInsightResponseTest {
 
@@ -69,8 +70,8 @@ public class BasicInsightResponseTest {
         assertEquals("d79c3d82-e2ee-46ff-972a-97b76be419cb", response.getRequestId());
     }
 
-    @Test(expected = VonageUnexpectedException.class)
+    @Test
     public void testJsonError() {
-        BasicInsightResponse.fromJson("blarg");
+        assertThrows(VonageResponseParseException.class, () -> BasicInsightResponse.fromJson("blarg"));
     }
 }

@@ -57,18 +57,18 @@ public class MeetingsClient {
 	 *
 	 * @param wrapper (REQUIRED) shared HTTP wrapper object used for making REST calls.
 	 */
-	@SuppressWarnings("unchecked")
 	public MeetingsClient(HttpWrapper wrapper) {
 		httpClient = wrapper.getHttpClient();
 
+		@SuppressWarnings("unchecked")
 		class Endpoint<T, R> extends DynamicEndpoint<T, R> {
 			Endpoint(Function<T, String> pathGetter, HttpMethod method, R... type) {
 				super(DynamicEndpoint.<T, R> builder(type)
 					.authMethod(JWTAuthMethod.class).requestMethod(method)
 					.responseExceptionType(MeetingsResponseException.class)
 					.wrapper(wrapper).pathGetter((de, req) -> {
-						String base = de.getHttpWrapper().getHttpConfig().getApiEuBaseUri() + "/v1/meetings/";
-						return base + pathGetter.apply(req);
+						String base = de.getHttpWrapper().getHttpConfig().getApiEuBaseUri();
+						return base + "/v1/meetings/" + pathGetter.apply(req);
 					})
 				);
 			}
@@ -130,7 +130,7 @@ public class MeetingsClient {
 		);
 		ListRoomsResponse response = endpoint.execute(request);
 
-		if (response.getTotalItems() < initialPageSize) {
+		if (response.getTotalItems() <= response.getPageSize()) {
 			return response.getMeetingRooms();
 		}
 		else {
@@ -142,7 +142,7 @@ public class MeetingsClient {
 				response = endpoint.execute(request);
 				rooms.addAll(response.getMeetingRooms());
 			}
-			while (response.getTotalItems() < initialPageSize);
+			while (response.getPageSize() >= initialPageSize);
 			return rooms;
 		}
 	}

@@ -19,7 +19,6 @@ import com.sun.net.httpserver.HttpServer;
 import com.vonage.client.auth.AuthCollection;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.JWTAuthMethod;
-import com.vonage.client.logging.LoggingUtils;
 import io.jsonwebtoken.lang.Assert;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
@@ -106,7 +105,6 @@ public class AbstractMethodTest {
         mockHttpClient = mock(HttpClient.class);
         when(mockAuthMethod.apply(any(RequestBuilder.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0, RequestBuilder.class));
-        when(LoggingUtils.logResponse(any(HttpResponse.class))).thenReturn("response logged");
         when(mockAuthMethods.getAcceptableAuthMethod(any())).thenReturn(mockAuthMethod);
         when(mockWrapper.getHttpClient()).thenReturn(mockHttpClient);
         when(mockHttpClient.execute(any(HttpUriRequest.class))).thenReturn(basicResponse);

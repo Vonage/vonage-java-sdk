@@ -13,19 +13,27 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client;
+package com.vonage.client.proactiveconnect;
 
-import java.io.IOException;
+import com.vonage.client.*;
+import com.vonage.client.auth.*;
+import java.util.*;
 
-/**
- * Internal interface for defining endpoints.
- *
- * @param <RequestT> The request type.
- * @param <ResponseT> The response type.
- *
- * @deprecated Please use Will be removed in a future release. Please use {@link RestEndpoint}.
- */
-@Deprecated
-public interface Method<RequestT, ResponseT> {
-    ResponseT execute(RequestT request) throws IOException, VonageClientException;
+abstract class ProactiveConnectEndpointTestSpec<T, R> extends DynamicEndpointTestSpec<T, R> {
+
+	@Override
+	protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
+		return Arrays.asList(JWTAuthMethod.class);
+	}
+
+	@Override
+	protected Class<? extends VonageApiResponseException> expectedResponseExceptionType() {
+		return ProactiveConnectResponseException.class;
+	}
+
+	@Override
+	protected String expectedDefaultBaseUri() {
+		return "https://api-eu.vonage.com";
+	}
 }
+

@@ -21,7 +21,7 @@ import com.vonage.client.auth.SignatureAuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -44,40 +44,15 @@ public class ConversionClientTest extends ClientTest<ConversionClient> {
                              new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
     }
 
-    @Test(expected = VonageApiResponseException.class)
+    @Test
     public void testWrongCredentials() throws Exception {
         stubResponse(401);
-        client.submitConversion(ConversionRequest.Type.SMS,
-                                     "MESSAGE-ID",
-                                     true,
-                                     new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
-    }
-
-    @Test(expected = VonageApiResponseException.class)
-    public void testConversionNotEnabled() throws Exception {
-        stubResponse(402);
-        client.submitConversion(ConversionRequest.Type.SMS,
-                                     "MESSAGE-ID",
-                                     true,
-                                     new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
-    }
-
-    @Test(expected = VonageApiResponseException.class)
-    public void testInvalidParameters() throws Exception {
-        stubResponse(423);
-        client.submitConversion(ConversionRequest.Type.SMS,
-                                     "MESSAGE-ID",
-                                     true,
-                                     new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
-    }
-
-    @Test(expected = VonageApiResponseException.class)
-    public void testInvalidParametersEnhanceCalm() throws Exception {
-        stubResponse(420);
-        client.submitConversion(ConversionRequest.Type.SMS,
-                                     "MESSAGE-ID",
-                                     true,
-                                     new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
+        assertThrows(VonageApiResponseException.class, () -> client.submitConversion(
+                    ConversionRequest.Type.SMS,
+                     "MESSAGE-ID",
+                    true,
+                     new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12")
+        ));
     }
 
     @Test

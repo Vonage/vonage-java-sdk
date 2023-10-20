@@ -15,15 +15,17 @@
  */
 package com.vonage.client.proactiveconnect;
 
-import org.apache.http.client.methods.RequestBuilder;
+import com.vonage.client.QueryParamsRequest;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
  * Filter options for finding events using {@link ProactiveConnectClient#listEvents(ListEventsFilter)}.
  */
-public class ListEventsFilter {
+public class ListEventsFilter implements QueryParamsRequest {
 	private final SortOrder order;
 	private final UUID runId, runItemId, invocationId, actionId, traceId;
 	private final String recipientId, sourceContext;
@@ -46,42 +48,45 @@ public class ListEventsFilter {
 		}
 	}
 
-	RequestBuilder addParams(RequestBuilder request) {
-		request.addParameter("page", "1").addParameter("page_size", "1000");
+	@Override
+	public Map<String, String> makeParams() {
+		Map<String, String> params = new LinkedHashMap<>();
+		params.put("page", "1");
+		params.put("page_size", "1000");
 		if (order != null) {
-			request.addParameter("order", order.toString());
+			params.put("order", order.toString());
 		}
 		if (runId != null) {
-			request.addParameter("run_id", runId.toString());
+			params.put("run_id", runId.toString());
 		}
 		if (runItemId != null) {
-			request.addParameter("run_item_id", runItemId.toString());
+			params.put("run_item_id", runItemId.toString());
 		}
 		if (invocationId != null) {
-			request.addParameter("invocation_id", invocationId.toString());
+			params.put("invocation_id", invocationId.toString());
 		}
 		if (actionId != null) {
-			request.addParameter("action_id", actionId.toString());
+			params.put("action_id", actionId.toString());
 		}
 		if (traceId != null) {
-			request.addParameter("trace_id", traceId.toString());
+			params.put("trace_id", traceId.toString());
 		}
 		if (recipientId != null) {
-			request.addParameter("recipient_id", recipientId);
+			params.put("recipient_id", recipientId);
 		}
 		if (sourceContext != null) {
-			request.addParameter("src_ctx", sourceContext);
+			params.put("src_ctx", sourceContext);
 		}
 		if (sourceType != null) {
-			request.addParameter("src_type", sourceType.toString());
+			params.put("src_type", sourceType.toString());
 		}
 		if (startDate != null) {
-			request.addParameter("date_start", startDate.truncatedTo(ChronoUnit.SECONDS).toString());
+			params.put("date_start", startDate.truncatedTo(ChronoUnit.SECONDS).toString());
 		}
 		if (endDate != null) {
-			request.addParameter("date_end", endDate.truncatedTo(ChronoUnit.SECONDS).toString());
+			params.put("date_end", endDate.truncatedTo(ChronoUnit.SECONDS).toString());
 		}
-		return request;
+		return params;
 	}
 
 	/**

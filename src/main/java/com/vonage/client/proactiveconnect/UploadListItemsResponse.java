@@ -16,16 +16,16 @@
 package com.vonage.client.proactiveconnect;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageResponseParseException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 
 /**
  * Results from list upload.
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UploadListItemsResponse {
+public class UploadListItemsResponse implements Jsonable {
 	private Integer inserted, updated, deleted;
 
 	protected UploadListItemsResponse() {
@@ -68,12 +68,6 @@ public class UploadListItemsResponse {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static UploadListItemsResponse fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readValue(json, UploadListItemsResponse.class);
-		}
-		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to produce UploadListItemsResponse from json.", ex);
-		}
+		return Jsonable.fromJson(json, UploadListItemsResponse.class);
 	}
 }

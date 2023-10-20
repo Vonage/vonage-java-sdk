@@ -20,40 +20,44 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.voice.TextToSpeechLanguage;
-import org.junit.Test;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
 public class NccoTest {
 
-    @Test(expected = VonageUnexpectedException.class)
+    @Test
     public void testUnableToSerializeJson() throws Exception {
         ObjectWriter writer = mock(ObjectWriter.class);
         when(writer.writeValueAsString(any())).thenThrow(JsonProcessingException.class);
         Ncco ncco = new Ncco(writer);
-        ncco.toJson();
+        assertThrows(VonageUnexpectedException.class, ncco::toJson);
     }
 
     @SuppressWarnings("unchecked")
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testItemListImmutableWhenEmpty() {
         Ncco ncco = new Ncco();
-        ((Collection<Action>) ncco.getActions()).add(TalkAction.builder("Test Message").build());
+        assertThrows(UnsupportedOperationException.class, () ->
+                ((Collection<Action>) ncco.getActions()).add(TalkAction.builder("Test Message").build())
+        );
     }
 
     @SuppressWarnings("unchecked")
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testItemListImmutableWhenNotEmpty() {
         TalkAction.Builder builder = TalkAction.builder("Hello!");
         TalkAction intro = builder.build();
         TalkAction outro = builder.text("Thanks for calling!").build();
         Ncco ncco = new Ncco(intro);
-        ((Collection<Action>) ncco.getActions()).add(outro);
+        assertThrows(UnsupportedOperationException.class, () ->
+                ((Collection<Action>) ncco.getActions()).add(outro)
+        );
     }
 
     @Test

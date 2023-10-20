@@ -19,13 +19,9 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.vonage.client.Jsonable;
-import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.messages.sms.SmsInboundMetadata;
 import com.vonage.client.messages.whatsapp.*;
-import java.io.IOException;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Map;
@@ -301,16 +297,9 @@ public class InboundMessage implements Jsonable {
 	 * @param json The webhook response JSON string.
 	 *
 	 * @return The deserialized webhook response object.
-	 * @throws VonageUnexpectedException If the response could not be deserialized.
+	 * @throws com.vonage.client.VonageResponseParseException If the response could not be deserialized.
 	 */
 	public static InboundMessage fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.registerModule(new JavaTimeModule());
-			return mapper.readValue(json, InboundMessage.class);
-		}
-		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to produce InboundMessage from json.", ex);
-		}
+		return Jsonable.fromJson(json, InboundMessage.class);
 	}
 }

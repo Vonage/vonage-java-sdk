@@ -15,61 +15,31 @@
  */
 package com.vonage.client.sns;
 
-import com.vonage.client.HttpWrapper;
+import com.vonage.client.ClientTest;
 import com.vonage.client.VonageResponseParseException;
-import com.vonage.client.auth.TokenAuthMethod;
-import com.vonage.client.logging.LoggingUtils;
 import com.vonage.client.sns.request.SnsPublishRequest;
 import com.vonage.client.sns.request.SnsSubscribeRequest;
 import com.vonage.client.sns.response.SnsPublishResponse;
 import com.vonage.client.sns.response.SnsSubscribeResponse;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpUriRequest;
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Before;
-import org.junit.Test;
-import static org.mockito.Mockito.*;
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class SnsClientTest {
-    private HttpWrapper httpWrapper;
-    private SnsClient client;
+public class SnsClientTest extends ClientTest<SnsClient> {
 
-    @Before
-    public void setUp() throws Exception {
-        httpWrapper = new HttpWrapper(new TokenAuthMethod("abcd", "efgh"));
-        client = new SnsClient(httpWrapper);
-    }
-
-    private HttpClient stubHttpClient(int statusCode, String content) throws Exception {
-        HttpClient result = mock(HttpClient.class);
-
-        HttpResponse response = mock(HttpResponse.class);
-        StatusLine sl = mock(StatusLine.class);
-        HttpEntity entity = mock(HttpEntity.class);
-
-        when(result.execute(any(HttpUriRequest.class))).thenReturn(response);
-        when(LoggingUtils.logResponse(any(HttpResponse.class))).thenReturn("response logged");
-        when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
-        when(sl.getStatusCode()).thenReturn(statusCode);
-        when(response.getStatusLine()).thenReturn(sl);
-        when(response.getEntity()).thenReturn(entity);
-
-        return result;
+    public SnsClientTest() {
+        client = new SnsClient(wrapper);
     }
 
     @Test
     public void testSubscribe() throws Exception {
-        httpWrapper.setHttpClient(stubHttpClient(200, "<nexmo-sns>\n" +
+        stubResponse(200, "<nexmo-sns>\n" +
                 "   <command>subscribe</command>\n" +
                 "   <resultCode>0</resultCode>\n" +
                 "   <resultMessage>a result message</resultMessage>\n" +
                 "   <subscriberArn>arn:aws:sns:region:num:id</subscriberArn>\n" +
-                "</nexmo-sns>"));
+                "</nexmo-sns>"
+        );
         SnsSubscribeResponse result = client.subscribe(new SnsSubscribeRequest(
                 "arn:aws:sns:region:num:id",
                 "447777111222"
@@ -80,12 +50,13 @@ public class SnsClientTest {
 
     @Test
     public void testPublish() throws Exception {
-        httpWrapper.setHttpClient(stubHttpClient(200, "<nexmo-sns>\n" +
+        stubResponse(200, "<nexmo-sns>\n" +
                 "   <command>publish</command>\n" +
                 "   <resultCode>0</resultCode>\n" +
                 "   <resultMessage>a result message</resultMessage>\n" +
                 "   <transactionId>1234</transactionId>\n" +
-                "</nexmo-sns>"));
+                "</nexmo-sns>"
+        );
         SnsPublishResponse result = client.publish(new SnsPublishRequest(
                 "arn:aws:sns:region:num:id",
                 "447777111222",
@@ -96,12 +67,12 @@ public class SnsClientTest {
         assertEquals("a result message", result.getResultMessage());
     }
 
-    @Test(expected = VonageResponseParseException.class)
+    @Test
     public void testSubmitWithInvalidResponse() throws Exception {
-        httpWrapper.setHttpClient(stubHttpClient(500, "<nexmo-sns/>"));
-        client.subscribe(new SnsSubscribeRequest(
+        stubResponse(500, "<nexmo-sns/>");
+        assertThrows(VonageResponseParseException.class, () -> client.subscribe(new SnsSubscribeRequest(
                 "arn:aws:sns:region:num:id",
                 "447777111222"
-        ));
+        )));
     }
 }

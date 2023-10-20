@@ -15,7 +15,7 @@
  */
 package com.vonage.client.messages.viber;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.net.URI;
 
@@ -113,35 +113,30 @@ public class ViberTextRequestTest {
 		assertEquals(URI.create("http://example.com"), action.getUrl());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructLongSender() {
 		StringBuilder from = new StringBuilder(51);
 		for (int i = 0; i < from.capacity(); i++) {
 			from.append('n');
 		}
 		assertEquals(51, from.length());
-		ViberTextRequest.builder()
-				.text("Bonjour")
-				.from(from.toString())
-				.to("447900000001")
-				.build();
+		assertThrows(IllegalArgumentException.class, () -> ViberTextRequest.builder()
+				.text("Bonjour").from(from.toString()).to("447900000001").build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructEmptySender() {
-		ViberTextRequest.builder()
-				.text("Bonjour")
-				.from("")
-				.to("447900000001")
-				.build();
+		assertThrows(IllegalArgumentException.class, () -> ViberTextRequest.builder()
+				.text("Bonjour").from("").to("447900000001").build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructNoSender() {
-		ViberTextRequest.builder()
-				.text("Bonjour")
-				.to("447900000001")
-				.build();
+		assertThrows(IllegalArgumentException.class, () -> ViberTextRequest.builder()
+				.text("Bonjour").to("447900000001").build()
+		);
 	}
 
 	@Test
@@ -169,33 +164,28 @@ public class ViberTextRequestTest {
 		}
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructIDForRecipient() {
-		ViberTextRequest.builder()
-				.from("447900000001")
-				.text("Bonjour")
-				.to("Grace")
-				.build();
+		assertThrows(IllegalArgumentException.class, () -> ViberTextRequest.builder()
+				.from("447900000001").text("Bonjour").to("Grace").build()
+		);
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructNullText() {
-		ViberTextRequest.builder()
-				.from("317900000002")
-				.to("+447900000001")
-				.build();
+		assertThrows(NullPointerException.class, () -> ViberTextRequest.builder()
+				.from("317900000002").to("+447900000001").build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructEmptyText() {
-		ViberTextRequest.builder()
-				.from("447900000001")
-				.to("317900000002")
-				.text("")
-				.build();
+		assertThrows(IllegalArgumentException.class, () ->
+				ViberTextRequest.builder().from("447900000001").to("317900000002").text("").build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructLongText() {
 		StringBuilder text = new StringBuilder(1002);
 		for (int i = 0; i < 999; i++) {
@@ -204,19 +194,14 @@ public class ViberTextRequestTest {
 		assertEquals(999, text.length());
 
 		ViberTextRequest msg = ViberTextRequest.builder()
-				.from("447900000001")
-				.to("317900000002")
-				.text(text.toString())
-				.build();
+				.from("447900000001").to("317900000002").text(text.toString()).build();
 
 		assertEquals(text.toString(), msg.getText());
 		text.append("xy");
 		assertEquals(1001, text.length());
 
-		ViberTextRequest.builder()
-				.from(msg.getFrom())
-				.to(msg.getTo())
-				.text(text.toString())
-				.build();
+		assertThrows(IllegalArgumentException.class, () -> ViberTextRequest.builder()
+				.from(msg.getFrom()).to(msg.getTo()).text(text.toString()).build()
+		);
 	}
 }

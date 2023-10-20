@@ -18,8 +18,8 @@ package com.vonage.client.subaccounts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.vonage.client.VonageResponseParseException;
+import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Test;
 import java.time.Instant;
 import java.util.List;
 
@@ -90,9 +90,9 @@ public class ListSubaccountsResponseTest {
 		assertNull(thirdSub.getCreditLimit());
 	}
 	
-	@Test(expected = VonageResponseParseException.class)
+	@Test
 	public void testFromJsonInvalid() {
-		ListSubaccountsResponse.fromJson("{malformed]");
+		assertThrows(VonageResponseParseException.class, () -> ListSubaccountsResponse.fromJson("{malformed]"));
 	}
 
 	@Test

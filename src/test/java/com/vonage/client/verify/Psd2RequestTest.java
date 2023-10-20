@@ -16,7 +16,7 @@
 package com.vonage.client.verify;
 
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import java.util.Locale;
 
 public class Psd2RequestTest {
@@ -66,9 +66,9 @@ public class Psd2RequestTest {
 		builder.nextEventWait(60).build();
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructMissingRequiredParams() {
-		Psd2Request.builder().build();
+		assertThrows(NullPointerException.class, () -> Psd2Request.builder().build());
 	}
 
 	@Test
@@ -78,8 +78,10 @@ public class Psd2RequestTest {
 		assertNull(request.getDashedLocale());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testLongPayee() {
-		Psd2Request.builder("447700900001", 1.23, "1234567890abcedfghi").build();
+		assertThrows(IllegalArgumentException.class, () ->
+				Psd2Request.builder("447700900001", 1.23, "1234567890abcedfghi").build()
+		);
 	}
 }

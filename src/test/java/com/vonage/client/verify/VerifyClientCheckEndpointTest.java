@@ -19,7 +19,7 @@ import com.vonage.client.ClientTest;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageResponseParseException;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -68,12 +68,14 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
         assertNull(response.getRequestId());
     }
 
-    @Test(expected = VonageResponseParseException.class)
+    @Test
     public void testCheckWithoutStatusThrowsException() throws Exception {
         String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"event_id\": \"an-event-id\",\n"
                 + "  \"price\": \"0.10000000\",\n" + "  \"currency\": \"EUR\"\n" + "}\n";
         stubResponse(200, json);
-        client.check("a-request-id", "1234", "127.0.0.1");
+        assertThrows(VonageResponseParseException.class, () ->
+                client.check("a-request-id", "1234", "127.0.0.1")
+        );
     }
 
     @Test
@@ -108,13 +110,13 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
         assertNull(response.getPrice());
     }
 
-    @Test(expected = VonageResponseParseException.class)
+    @Test
     public void testCheckWithNonNumericPrice() throws Exception {
         String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"status\": \"0\",\n"
                 + "  \"event_id\": \"an-event-id\",\n" + "  \"price\": \"test\",\n" + "  \"currency\": \"EUR\"\n"
                 + "}\n";
         stubResponse(200, json);
-        client.check("a-request-id", "1234");
+        assertThrows(VonageResponseParseException.class, () -> client.check("a-request-id", "1234"));
     }
 
     @Test
@@ -146,31 +148,33 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
         assertEquals(VerifyStatus.UNKNOWN, response.getStatus());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testNullRequestId() throws Exception {
-        client.check(null, "1234");
+        assertThrows(IllegalArgumentException.class, () -> client.check(null, "1234"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testLongRequestId() throws Exception {
         StringBuilder requestId = new StringBuilder(33);
         for (; requestId.length() < 32; requestId.append("req-"));
-        client.check(requestId.append('0').toString(), "1234");
+        assertThrows(IllegalArgumentException.class, () ->
+                client.check(requestId.append('0').toString(), "1234")
+        );
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testNullCode() throws Exception {
-        client.check("a-request-id", null);
+        assertThrows(IllegalArgumentException.class, () -> client.check("a-request-id", null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testCodeLessThan4Characters() throws Exception {
-        client.check("a-request-id", "012");
+        assertThrows(IllegalArgumentException.class, () -> client.check("a-request-id", "012"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testCodeMoreThan6Characters() throws Exception {
-        client.check("a-request-id", "1234567");
+        assertThrows(IllegalArgumentException.class, () -> client.check("a-request-id", "1234567"));
     }
 
     @Test

@@ -15,7 +15,7 @@
  */
 package com.vonage.client.messages.whatsapp;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class WhatsappAudioRequestTest {
@@ -31,21 +31,18 @@ public class WhatsappAudioRequestTest {
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructNoUrl() {
-		WhatsappAudioRequest.builder()
-				.from("447900000001")
-				.to("317900000002")
-				.build();
+		assertThrows(NullPointerException.class, () -> WhatsappAudioRequest.builder()
+				.from("447900000001").to("317900000002").build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructInvalidExtension() {
-		WhatsappAudioRequest.builder()
-				.from("447900000001")
-				.url("ftp://rel/path/to/track.wav")
-				.to("317900000002")
-				.build();
+		assertThrows(IllegalArgumentException.class, () -> WhatsappAudioRequest.builder()
+				.from("447900000001").url("ftp://rel/path/to/track.wav").to("317900000002").build()
+		);
 	}
 
 	@Test

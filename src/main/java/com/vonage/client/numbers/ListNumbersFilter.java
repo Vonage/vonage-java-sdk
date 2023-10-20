@@ -16,7 +16,6 @@
 package com.vonage.client.numbers;
 
 import com.vonage.client.QueryParamsRequest;
-import org.apache.http.client.methods.RequestBuilder;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -70,11 +69,6 @@ public class ListNumbersFilter implements QueryParamsRequest {
 
     public void setSearchPattern(SearchPattern searchPattern) {
         this.searchPattern = searchPattern;
-    }
-
-    @Deprecated
-    public void addParams(RequestBuilder request) {
-        makeParams().forEach(request::addParameter);
     }
 
     @Override

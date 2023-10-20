@@ -32,17 +32,14 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import java.io.ByteArrayInputStream;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
-import java.security.InvalidKeyException;
 import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.List;
@@ -126,29 +123,39 @@ public class VonageClientTest {
         assertEquals("application-id", claims.get("application_id"));
     }
 
-    @Test(expected = VonageClientCreationException.class)
+    @Test
     public void testSoloApiKeyThrowsException() {
-        VonageClient.builder().apiKey("api-key").build();
+        assertThrows(VonageClientCreationException.class, () ->
+                VonageClient.builder().apiKey("api-key").build()
+        );
     }
 
-    @Test(expected = VonageClientCreationException.class)
+    @Test
     public void testSoloApiSecret() {
-        VonageClient.builder().apiSecret("api-secret").build();
+        assertThrows(VonageClientCreationException.class, () ->
+                VonageClient.builder().apiSecret("api-secret").build()
+        );
     }
 
-    @Test(expected = VonageClientCreationException.class)
+    @Test
     public void testSoloSignatureSecret() {
-        VonageClient.builder().signatureSecret("api-secret").build();
+        assertThrows(VonageClientCreationException.class, () ->
+                VonageClient.builder().signatureSecret("api-secret").build()
+        );
     }
 
-    @Test(expected = VonageClientCreationException.class)
+    @Test
     public void testSoloApplicationId() {
-        VonageClient.builder().applicationId("app-id").build();
+        assertThrows(VonageClientCreationException.class, () ->
+                VonageClient.builder().applicationId("app-id").build()
+        );
     }
 
-    @Test(expected = VonageClientCreationException.class)
+    @Test
     public void testSoloPrivateKeyContents() {
-        VonageClient.builder().privateKeyContents("").build();
+        assertThrows(VonageClientCreationException.class, () ->
+                VonageClient.builder().privateKeyContents("").build()
+        );
     }
 
     @Test
@@ -320,9 +327,11 @@ public class VonageClientTest {
         assertEquals(config, vonageClient.getHttpWrapper().getHttpConfig());
     }
 
-    @Test(expected = VonageUnableToReadPrivateKeyException.class)
+    @Test
     public void testIOExceptionIsWrappedWithUnableToReadPrivateKeyException() {
-        VonageClient.builder().privateKeyPath("this/path/does/not/exist");
+        assertThrows(VonageUnableToReadPrivateKeyException.class, () ->
+                VonageClient.builder().privateKeyPath("this/path/does/not/exist")
+        );
     }
 
     @Test

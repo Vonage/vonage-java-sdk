@@ -24,11 +24,13 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
@@ -112,13 +114,6 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			return this;
 		}
 
-		public Builder<T, R> addAuthMethodIfTrue(boolean condition, Class<? extends AuthMethod> primary, Class<? extends AuthMethod>... others) {
-			if (condition) {
-				authMethod(primary, others);
-			}
-			return this;
-		}
-
 		public Builder<T, R> authMethod(Class<? extends AuthMethod> primary, Class<? extends AuthMethod>... others) {
 			authMethods = new ArrayList<>(2);
 			authMethods.add(Objects.requireNonNull(primary, "Primary auth method cannot be null"));
@@ -191,14 +186,25 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		}
 	}
 
+	private String getRequestHeader(T requestBody) {
+		if (contentType != null)
+			return contentType;
+		else if (requestBody instanceof Jsonable)
+			return "application/json";
+		else if (requestBody instanceof BinaryRequest)
+			return ((BinaryRequest) requestBody).getContentType();
+		else return null;
+	}
+
 	@Override
-	public final RequestBuilder makeRequest(T requestBody) throws UnsupportedEncodingException {
+	public final RequestBuilder makeRequest(T requestBody) {
 		if (requestBody instanceof Jsonable && requestBody.getClass().equals(responseType)) {
 			cachedRequestBody = requestBody;
 		}
 		RequestBuilder rqb = createRequestBuilderFromRequestMethod(requestMethod);
-		if (contentType != null || requestBody instanceof Jsonable) {
-			rqb.setHeader("Content-Type", contentType != null ? contentType : "application/json");
+		String header = getRequestHeader(requestBody);
+		if (header != null) {
+			rqb.setHeader("Content-Type", header);
 		}
 		if (accept != null) {
 			rqb.setHeader("Accept", accept);
@@ -225,14 +231,14 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		if (requestBody instanceof Jsonable) {
 			rqb.setEntity(new StringEntity(((Jsonable) requestBody).toJson(), ContentType.APPLICATION_JSON));
 		}
+		else if (requestBody instanceof BinaryRequest) {
+			BinaryRequest bin = (BinaryRequest) requestBody;
+			rqb.setEntity(new ByteArrayEntity(bin.toByteArray(), ContentType.getByMimeType(bin.getContentType())));
+		}
 		else if (requestBody instanceof byte[]) {
 			rqb.setEntity(new ByteArrayEntity((byte[]) requestBody));
 		}
 		return rqb.setUri(pathGetter.apply(this, requestBody));
-	}
-
-	protected R parseResponseFromString(String response) {
-		return null;
 	}
 
 	@Override
@@ -240,97 +246,10 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		int statusCode = response.getStatusLine().getStatusCode();
 		try {
 			if (statusCode >= 200 && statusCode < 300) {
-				if (responseType.equals(Void.class)) {
-					return null;
-				}
-				else if (byte[].class.equals(responseType)) {
-					return (R) EntityUtils.toByteArray(response.getEntity());
-				}
-				else {
-					String deser = basicResponseHandler.handleResponse(response);
-
-					if (responseType.equals(String.class)) {
-						return (R) deser;
-					}
-
-					if (cachedRequestBody instanceof Jsonable) {
-						((Jsonable) cachedRequestBody).updateFromJson(deser);
-						return (R) cachedRequestBody;
-					}
-
-					for (java.lang.reflect.Method method : responseType.getDeclaredMethods()) {
-						boolean matching = Modifier.isStatic(method.getModifiers()) &&
-								method.getName().equals("fromJson") &&
-								responseType.isAssignableFrom(method.getReturnType());
-						if (matching) {
-							Class<?>[] params = method.getParameterTypes();
-							if (params.length == 1 && params[0].equals(String.class)) {
-								if (!method.isAccessible()) {
-									method.setAccessible(true);
-								}
-								return (R) method.invoke(responseType, deser);
-							}
-						}
-					}
-
-					if (Jsonable.class.isAssignableFrom(responseType)) {
-						Constructor<R> constructor = responseType.getDeclaredConstructor();
-						if (!constructor.isAccessible()) {
-							constructor.setAccessible(true);
-						}
-						R responseBody = constructor.newInstance();
-						((Jsonable) responseBody).updateFromJson(deser);
-						return responseBody;
-					}
-					else if (Collection.class.isAssignableFrom(responseType)) {
-						return Jsonable.createDefaultObjectMapper().readValue(deser, responseType);
-					}
-					else {
-						R customParsedResponse = parseResponseFromString(deser);
-						if (customParsedResponse == null) {
-							throw new IllegalStateException("Unhandled return type: " + responseType);
-						}
-						else {
-							return customParsedResponse;
-						}
-					}
-				}
+				return parseResponseSuccess(response);
 			}
 			else {
-				String exMessage = EntityUtils.toString(response.getEntity());
-				if (responseExceptionType != null) {
-					if (VonageApiResponseException.class.isAssignableFrom(responseExceptionType)) {
-						Constructor<? extends Exception> constructor = responseExceptionType.getDeclaredConstructor();
-						if (!constructor.isAccessible()) {
-							constructor.setAccessible(true);
-						}
-						VonageApiResponseException varex = (VonageApiResponseException) constructor.newInstance();
-						varex.updateFromJson(exMessage);
-						if (varex.title == null) {
-							varex.title = response.getStatusLine().getReasonPhrase();
-						}
-						varex.statusCode = response.getStatusLine().getStatusCode();
-						throw varex;
-					}
-					else {
-						for (Constructor<?> constructor : responseExceptionType.getDeclaredConstructors()) {
-							Class<?>[] params = constructor.getParameterTypes();
-							if (params.length == 1 && String.class.equals(params[0])) {
-								if (!constructor.isAccessible()) {
-									constructor.setAccessible(true);
-								}
-								throw (RuntimeException) constructor.newInstance(exMessage);
-							}
-						}
-					}
-				}
-				R customParsedResponse = parseResponseFromString(exMessage);
-				if (customParsedResponse == null) {
-					throw new VonageApiResponseException(exMessage);
-				}
-				else {
-					return customParsedResponse;
-				}
+				return parseResponseFailure(response);
 			}
 		}
 		catch (InvocationTargetException ex) {
@@ -342,11 +261,115 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 				throw new VonageUnexpectedException(wrapped);
 			}
 		}
-		catch (InstantiationException | IllegalAccessException | NoSuchMethodException ex) {
+		catch (ReflectiveOperationException ex) {
 			throw new VonageUnexpectedException(ex);
 		}
 		finally {
 			cachedRequestBody = null;
+		}
+	}
+
+	protected R parseResponseFromString(String response) {
+		return null;
+	}
+
+	private R parseResponseSuccess(HttpResponse response) throws IOException, ReflectiveOperationException {
+		if (responseType == null || responseType.equals(Void.class)) {
+			return null;
+		}
+		else if (byte[].class.equals(responseType)) {
+			return (R) EntityUtils.toByteArray(response.getEntity());
+		}
+		else {
+			String deser = basicResponseHandler.handleResponse(response);
+
+			if (responseType.equals(String.class)) {
+				return (R) deser;
+			}
+
+			if (cachedRequestBody instanceof Jsonable) {
+				((Jsonable) cachedRequestBody).updateFromJson(deser);
+				return (R) cachedRequestBody;
+			}
+
+			for (java.lang.reflect.Method method : responseType.getDeclaredMethods()) {
+				boolean matching = Modifier.isStatic(method.getModifiers()) &&
+						method.getName().equals("fromJson") &&
+						responseType.isAssignableFrom(method.getReturnType());
+				if (matching) {
+					Class<?>[] params = method.getParameterTypes();
+					if (params.length == 1 && params[0].equals(String.class)) {
+						if (!method.isAccessible()) {
+							method.setAccessible(true);
+						}
+						return (R) method.invoke(responseType, deser);
+					}
+				}
+			}
+
+			if (Jsonable.class.isAssignableFrom(responseType)) {
+				Constructor<R> constructor = responseType.getDeclaredConstructor();
+				if (!constructor.isAccessible()) {
+					constructor.setAccessible(true);
+				}
+				R responseBody = constructor.newInstance();
+				((Jsonable) responseBody).updateFromJson(deser);
+				return responseBody;
+			}
+			else if (Collection.class.isAssignableFrom(responseType)) {
+				return Jsonable.createDefaultObjectMapper().readValue(deser, responseType);
+			}
+			else {
+				R customParsedResponse = parseResponseFromString(deser);
+				if (customParsedResponse == null) {
+					throw new IllegalStateException("Unhandled return type: " + responseType);
+				}
+				else {
+					return customParsedResponse;
+				}
+			}
+		}
+	}
+
+	private R parseResponseFailure(HttpResponse response) throws IOException, ReflectiveOperationException {
+		String exMessage = EntityUtils.toString(response.getEntity());
+		if (responseExceptionType != null) {
+			if (VonageApiResponseException.class.isAssignableFrom(responseExceptionType)) {
+				Constructor<? extends Exception> constructor = responseExceptionType.getDeclaredConstructor();
+				if (!constructor.isAccessible()) {
+					constructor.setAccessible(true);
+				}
+				VonageApiResponseException varex = (VonageApiResponseException) constructor.newInstance();
+				try {
+					varex.updateFromJson(exMessage);
+				}
+				catch (VonageResponseParseException ex) {
+					throw new VonageUnexpectedException(exMessage);
+				}
+				if (varex.title == null) {
+					varex.title = response.getStatusLine().getReasonPhrase();
+				}
+				varex.statusCode = response.getStatusLine().getStatusCode();
+				throw varex;
+			}
+			else {
+				for (Constructor<?> constructor : responseExceptionType.getDeclaredConstructors()) {
+					Class<?>[] params = constructor.getParameterTypes();
+					if (params.length == 1 && String.class.equals(params[0])) {
+						if (!constructor.isAccessible()) {
+							constructor.setAccessible(true);
+						}
+						throw (RuntimeException) constructor.newInstance(exMessage);
+					}
+				}
+			}
+		}
+		R customParsedResponse = parseResponseFromString(exMessage);
+		if (customParsedResponse == null) {
+			throw new VonageApiResponseException(exMessage);
+		}
+		else {
+			return customParsedResponse;
 		}
 	}
 }

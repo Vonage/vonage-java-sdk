@@ -15,10 +15,10 @@
  */
 package com.vonage.client.insight;
 
-import com.vonage.client.VonageUnexpectedException;
-import org.junit.Test;
-import java.math.BigDecimal;
+import com.vonage.client.VonageResponseParseException;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import java.math.BigDecimal;
 
 public class AdvancedInsightResponseTest {
 
@@ -240,9 +240,9 @@ public class AdvancedInsightResponseTest {
         assertEquals("d79c3d82-e2ee-46ff-972a-97b76be419cb", response.getRequestId());
     }
 
-    @Test(expected = VonageUnexpectedException.class)
+    @Test
     public void testJsonError() {
-        AdvancedInsightResponse.fromJson("blarg");
+        assertThrows(VonageResponseParseException.class, () -> AdvancedInsightResponse.fromJson("blarg"));
     }
 
 }
