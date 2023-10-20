@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Removed previously deprecated internal classes & methods
 - Internal refactoring of Proactive Connect and Meetings API implementations
 - Bumped Jackson version to 2.15.3
+- Migrated all remaining tests to JUnit 5 and removed dependency on `vintage-engine`
 
 # [7.9.0] - 2023-09-28
 - Added `get-full-pricing` implementation of Pricing API in `AccountClient`
