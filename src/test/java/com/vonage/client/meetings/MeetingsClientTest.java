@@ -22,7 +22,6 @@ import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.common.HalLinks;
 import com.vonage.client.common.HttpMethod;
-import org.apache.http.client.HttpClient;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
@@ -174,6 +173,40 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 					"         \"href\": \"http://example.com/recording.mp4\"\n" +
 					"      }\n" +
 					"   }\n" +
+					"}",
+
+			SAMPLE_SESSION_RESPONSE = "{\n" +
+					"         \"id\": \"2_MX40NjMwODczMn5-MTU3NTgyODEwNzQ2MH5OZDJrVmdBRUNDbG5MUzNqNX20yQ1Z-fg\",\n" +
+					"         \"room_id\": \"9f6fe8ae-3458-4a72-b532-8276d5533e97\",\n" +
+					"         \"room_display_name\": \"My custom room\",\n" +
+					"         \"start_time\": \"2023-06-06T07:15:13.974Z\",\n" +
+					"         \"end_time\": \"2023-06-06T08:09:10Z\",\n" +
+					"         \"is_recorded\": true,\n" +
+					"         \"participants_number\": 2,\n" +
+					"         \"billed_time\": 0.386666667,\n" +
+					"         \"recordings_time\": 54.78\n" +
+					"      }",
+
+			LIST_SESSIONS_RESPONSE = "{\n" +
+					"   \"page_size\": 25,\n" +
+					"   \"total_items\": 24,\n" +
+					"   \"_embedded\": {\n" +
+					"     \"sessions\": [\n{},\n" + SAMPLE_SESSION_RESPONSE + "\n,{}]\n" +
+					"   },\n" +
+					"   \"_links\": {\n" +
+					"      \"first\": {\n" +
+					"         \"href\": \"https://api-eu.vonage.com/v1/meetings/rooms?page_size=50\"\n" +
+					"      },\n" +
+					"      \"self\": {\n" +
+					"         \"href\": \"https://api-eu.vonage.com/v1/meetings/rooms?page_size=50&start_id=2293905\"\n" +
+					"      },\n" +
+					"      \"next\": {\n" +
+					"         \"href\": \"https://api-eu.vonage.com/v1/meetings/rooms?page_size=50&start_id=2293906\"\n" +
+					"      },\n" +
+					"      \"prev\": {\n" +
+					"         \"href\": \"https://api-eu.vonage.com/v1/meetings/rooms?page_size=50&start_id=2293904\"\n" +
+					"      }\n" +
+					"   }\n" +
 					"}";
 
 
@@ -309,6 +342,19 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		assertEquals(endedAt, parsed.getEndedAt());
 	}
 
+	static void assertEqualsSampleSession(Session parsed) {
+		assertNotNull(parsed);
+		assertEquals("2_MX40NjMwODczMn5-MTU3NTgyODEwNzQ2MH5OZDJrVmdBRUNDbG5MUzNqNX20yQ1Z-fg", parsed.getId());
+		assertEquals(UUID.fromString("9f6fe8ae-3458-4a72-b532-8276d5533e97"), parsed.getRoomId());
+		assertEquals("My custom room", parsed.getRoomDisplayName());
+		assertEquals(Instant.parse("2023-06-06T07:15:13.974Z"), parsed.getStartTime());
+		assertEquals(Instant.parse("2023-06-06T08:09:10.000Z"), parsed.getEndTime());
+		assertEquals(true, parsed.getIsRecorded());
+		assertEquals(2, parsed.getParticipantsNumber());
+		assertEquals(0.386666667, parsed.getBilledTime(), 0.0000000001);
+		assertEquals(54.78, parsed.getRecordingsTime(), 0.0000000001);
+	}
+
 	void stubResponseAndAssertEqualsSampleRecording(Supplier<? extends Recording> call) throws Exception {
 		assertEqualsSampleRecording(stubResponseAndGet(200, SAMPLE_RECORDING_RESPONSE, call));
 	}
@@ -344,8 +390,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 						"   }\n" +
 						"}";
 
-		HttpClient httpClient = stubHttpClient(200, firstJson, secondJson);
-		wrapper.setHttpClient(httpClient);
+		stubResponse(200, firstJson, secondJson);
 		List<MeetingRoom> rooms = call.get();
 		assertEquals(10, rooms.size());
 		assertEquals(RANDOM_ID, rooms.get(0).getThemeId());
@@ -1583,4 +1628,151 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		}
 		.runTests();
 	}
+
+	@Test
+	public void testListAllSessions() throws Exception {
+		String endLinks = "   \"_links\": {\n" +
+				"      \"next\": {\n" +
+				"         \"href\": \"https://api-eu.vonage.com/meetings/rooms?page_size=50&start_id=2235997\"\n" +
+				"      }\n" +
+				"   }\n}",
+			firstJson = "{\n" +
+				"   \"page_size\": 1000,\n" +
+				"   \"total_items\": 5080,\n" +
+				"   \"_embedded\": {\"sessions\":[\n" +
+				SAMPLE_SESSION_RESPONSE + ",{}, {\"room_id\":\""+ROOM_ID+"\"}]},\n" +
+				"   \"_links\": {\n" +
+				"      \"first\": {\n" +
+				"         \"href\": \"https://api-eu.vonage.com/meetings/rooms?page_size=50\"\n" +
+				"      },\n" +
+				"      \"self\": {\n" +
+				"         \"href\": \"https://api-eu.vonage.com/meetings/rooms?page_size=50&start_id=2293905\"\n" +
+				"      },\n" +
+				"      \"next\": {\n" +
+				"         \"href\": \"https://api-eu.vonage.com/meetings/rooms?page_size=50&start_id=2293906\"\n" +
+				"      },\n" +
+				"      \"prev\": {\n" +
+				"         \"href\": \"https://api-eu.vonage.com/meetings/rooms?page_size=50&start_id=2293904\"\n" +
+				"      }\n" +
+				"   }\n" +
+				"}",
+				secondJson = "{\n" +
+						"   \"page_size\": 1000,\n" +
+						"   \"total_items\": 1080,\n" +
+						"   \"_embedded\": {\"sessions\":[{},{},{},{},{},{}," +
+						"	{\"id\":\"2_T134c5d6c7e8AB0\"},{}]},\n" + endLinks,
+				thirdJson = "{\"total_items\":1002,\"page_size\":1001,\"_embedded\":{\"nonsense\":true}," + endLinks,
+				fourthJson = "{\"page_size\": 1000,\"_embedded\":{\"sessions\":[]},\n" + endLinks,
+				fifthJson = "{\"page_size\":999,\"total_items\":999,\"_embedded\":{\"sessions\":[{}]}}";
+
+		stubResponse(200, firstJson, secondJson, thirdJson, fourthJson, fifthJson);
+		List<Session> sessions = client.listAllSessions();
+		assertEquals(12, sessions.size());
+		assertEquals(ROOM_ID, sessions.get(2).getRoomId());
+		assertEquals("2_T134c5d6c7e8AB0", sessions.get(9).getId());
+		assertNotNull(sessions.get(11));
+
+		sessions = stubResponseAndGet(LIST_SESSIONS_RESPONSE, client::listAllSessions);
+		assertEquals(3, sessions.size());
+		assertEqualsSampleSession(sessions.get(1));
+
+		sessions = stubResponseAndGet(thirdJson, client::listAllSessions);
+		assertNotNull(sessions);
+		assertEquals(0, sessions.size());
+
+		sessions = stubResponseAndGet(fifthJson, client::listAllSessions);
+		assertNotNull(sessions);
+		assertEquals(1, sessions.size());
+	}
+
+	@Test
+	public void testListSessions() throws Exception {
+		final ListSessionsRequest request = ListSessionsRequest.builder().build();
+		ListSessionsResponse response = stubResponseAndGet(LIST_SESSIONS_RESPONSE,
+				() -> client.listSessions(request)
+		);
+		assertNotNull(response);
+		HalLinks links = response.getLinks();
+		assertNotNull(links);
+		assertNotNull(links.getSelfUrl());
+		assertNotNull(links.getFirstUrl());
+		assertNotNull(links.getNextUrl());
+		assertNotNull(links.getPrevUrl());
+		assertEquals(25, response.getPageSize().intValue());
+		assertEquals(24, response.getTotalItems().intValue());
+		List<Session> sessions = response.getSessions();
+		assertNotNull(sessions);
+		assertEquals(3, sessions.size());
+		assertEqualsSampleSession(sessions.get(1));
+
+		stubResponseAndAssertThrows(200, () -> client.listSessions(null), NullPointerException.class);
+		stubResponseAndAssertThrows(401, () -> client.listSessions(request), MeetingsResponseException.class);
+		assert401ResponseException(() -> client.listSessions(request));
+
+		assertThrows(IllegalArgumentException.class, () -> ListSessionsRequest.builder()
+				.from(Instant.now().plusSeconds(99)).build()
+		);
+		assertThrows(IllegalArgumentException.class, () -> ListSessionsRequest.builder()
+				.to(Instant.now().plusSeconds(99)).build()
+		);
+		assertThrows(IllegalStateException.class, () -> ListSessionsRequest.builder()
+				.from(Instant.now().minusSeconds(1))
+				.to(Instant.now().minusSeconds(62)).build()
+		);
+	}
+
+	@Test
+	public void testListSessionsEndpoint() throws Exception {
+		new MeetingsEndpointTestSpec<ListSessionsRequest, ListSessionsResponse>() {
+
+			@Override
+			protected RestEndpoint<ListSessionsRequest, ListSessionsResponse> endpoint() {
+				return client.listSessions;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedEndpointUri(ListSessionsRequest request) {
+				return "/v1/meetings/sessions";
+			}
+
+			@Override
+			protected ListSessionsRequest sampleRequest() {
+				return ListSessionsRequest.builder()
+						.from(Instant.parse("2023-06-06T07:15:13.974Z"))
+						.to(Instant.parse("2023-06-07T07:11:12.000Z"))
+						.recorded(false).offset(6).pageSize(20).build();
+			}
+
+			@Override
+			protected Map<String, String> sampleQueryParams() {
+				String from = "2023-06-06T07:15:13.974Z";
+				String to = "2023-06-07T07:11:12Z";
+				String recorded = "false";
+				String offset = "6";
+				String pageSize = "20";
+
+				ListSessionsRequest request = sampleRequest();
+				assertEquals(from, request.getFrom().toString());
+				assertEquals(to, request.getTo().toString());
+				assertEquals(recorded, request.getRecorded().toString());
+				assertEquals(offset, request.getOffset().toString());
+				assertEquals(pageSize, request.getPageSize().toString());
+
+				Map<String, String> params = new LinkedHashMap<>();
+				params.put("from", from);
+				params.put("to", to);
+				params.put("recorded", recorded);
+				params.put("offset", offset);
+				params.put("page_size", pageSize);
+				return params;
+			}
+		}
+		.runTests();
+	}
+
 }

@@ -72,6 +72,10 @@ public abstract class ClientTest<T> {
         return result;
     }
 
+    protected void stubResponse(int code, String firstResponse, String... additionalReturns) throws Exception {
+        wrapper.setHttpClient(stubHttpClient(code, firstResponse, additionalReturns));
+    }
+
     protected void stubResponse(int code, String response) throws Exception {
         wrapper.setHttpClient(stubHttpClient(code, response));
     }

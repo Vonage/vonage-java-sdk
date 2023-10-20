@@ -51,6 +51,7 @@ public class MeetingsClient {
 	final RestEndpoint<UpdateApplicationRequest, Application> updateApplication;
 	final RestEndpoint<FinalizeLogosRequest, Void> finalizeLogos;
 	final RestEndpoint<Void, GetLogoUploadUrlsResponse> getLogoUploadUrls;
+	final RestEndpoint<ListSessionsRequest, ListSessionsResponse> listSessions;
 
 	/**
 	 * Constructor.
@@ -91,6 +92,7 @@ public class MeetingsClient {
 		updateApplication = new Endpoint<>(req -> "applications", HttpMethod.PATCH);
 		finalizeLogos = new Endpoint<>(req -> "themes/" + req.themeId + "/finalizeLogos", HttpMethod.PUT);
 		getLogoUploadUrls = new Endpoint<>(req -> "themes/logos-upload-urls", HttpMethod.GET);
+		listSessions = new Endpoint<>(req -> "sessions", HttpMethod.GET);
 	}
 
 	static UUID validateThemeId(UUID themeId) {
@@ -145,6 +147,61 @@ public class MeetingsClient {
 			while (response.getPageSize() >= initialPageSize);
 			return rooms;
 		}
+	}
+
+	/**
+	 * Recursively retrieves all sessions associated with this account's primary API key.
+	 * To narrow down the results, use {@linkplain #listSessions(ListSessionsRequest)}.
+	 *
+	 * @return List of all sessions associated with this account.
+	 *
+	 * @throws MeetingsResponseException If there is an error encountered when processing the request.
+	 *
+	 * @since 7.11.0
+	 */
+	public List<Session> listAllSessions() {
+		final int initialPageSize = 1000;
+		ListSessionsRequest initialRequest = ListSessionsRequest.builder().pageSize(initialPageSize).build();
+		ListSessionsResponse response = listSessions(initialRequest);
+		List<Session> responseSessions = response.getSessions();
+
+		if (response.getTotalItems() <= response.getPageSize()) {
+			return responseSessions;
+		}
+		else if (responseSessions == null) {
+			return Collections.emptyList();
+		}
+		else {
+			List<Session> sessions = new ArrayList<>(responseSessions);
+			do {
+				ListSessionsRequest request = ListSessionsRequest.builder()
+						.offset(parseNextFromHalResponse(response))
+						.pageSize(initialPageSize).build();
+				response = listSessions(request);
+				responseSessions = response.getSessions();
+				if (responseSessions != null) {
+					sessions.addAll(responseSessions);
+				}
+			}
+			while (response.getPageSize() >= initialPageSize);
+			return sessions;
+		}
+	}
+
+	/**
+	 * Retrieves sessions associated with this API key according to the filter criteria.
+	 * To retrieve all sessions (especially if there are a large number), use {@linkplain #listAllSessions()}.
+	 *
+	 * @param filter Filter options for this request to narrow down the results.
+	 *
+	 * @return The HAL page response containing the sessions and results metadata.
+	 *
+	 * @throws MeetingsResponseException If there is an error encountered when processing the request.
+	 *
+	 * @since 7.11.0
+	 */
+	public ListSessionsResponse listSessions(ListSessionsRequest filter) {
+		return listSessions.execute(Objects.requireNonNull(filter, "Sessions filter cannot be null."));
 	}
 
 	/**

@@ -29,7 +29,7 @@ public class BugRepro {
 		String TO_NUMBER = System.getenv("TO_NUMBER");
 
 		VonageClient client = VonageClient.builder()
-				.httpConfig(HttpConfig.builder().timeoutMillis(12_000).build())
+				.httpConfig(HttpConfig.builder().timeoutMillis(45_000).build())
 				.apiKey(System.getenv("VONAGE_API_KEY"))
 				.apiSecret(System.getenv("VONAGE_API_SECRET"))
 				.applicationId(System.getenv("VONAGE_APPLICATION_ID"))
