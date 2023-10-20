@@ -16,8 +16,7 @@
 package com.vonage.client.incoming;
 
 public class Result {
-    private String text;
-    private String confidence;
+    private String text, confidence;
 
     /**
      * 
