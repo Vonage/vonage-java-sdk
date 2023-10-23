@@ -18,6 +18,7 @@ package com.vonage.client.voice;
 /**
  * Wrapper for {@linkplain StartTalkEndpoint} request parameter.
  */
+@Deprecated
 final class TalkRequest {
     TalkPayload payload;
     String uuid;

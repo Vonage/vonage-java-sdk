@@ -16,23 +16,26 @@
 package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.Jsonable;
 
 /**
  * Response from successfully streaming an audio file or stopping a stream to an active {@link Call}.
  * <p>
  * This would be returned by {@link VoiceClient#startStream(String, String)} or {@link VoiceClient#stopStream(String)}
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class StreamResponse {
+public class StreamResponse implements Jsonable {
     private String uuid, message;
 
+    @JsonProperty("uuid")
     public String getUuid() {
         return uuid;
     }
 
+    @JsonProperty("message")
     public String getMessage() {
         return message;
     }
@@ -45,11 +48,6 @@ public class StreamResponse {
      * @return An instance of this class with the fields populated, if present.
      */
     public static StreamResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, StreamResponse.class);
-        } catch (IOException jpe) {
-            throw new VonageUnexpectedException("Failed to produce json from StreamResponse object.", jpe);
-        }
+        return Jsonable.fromJson(json, StreamResponse.class);
     }
 }

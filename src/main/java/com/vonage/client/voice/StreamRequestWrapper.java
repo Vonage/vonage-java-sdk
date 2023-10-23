@@ -20,6 +20,7 @@ package com.vonage.client.voice;
  * <p>
  * Contains the {@code uuid} of the {@link Call} and the {@link StreamPayload} to be sent in the request.
  */
+@Deprecated
 class StreamRequestWrapper {
     final StreamPayload payload;
     final String uuid;

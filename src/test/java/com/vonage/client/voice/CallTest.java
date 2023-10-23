@@ -15,11 +15,11 @@
  */
 package com.vonage.client.voice;
 
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.voice.ncco.*;
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.util.*;
 
 public class CallTest {
@@ -260,8 +260,8 @@ public class CallTest {
         try {
             Call.fromJson("{\n" + "    \"unknownProperty\": \"unknown\"\n" + "}");
             fail("Expected a VonageUnexpectedException to be thrown");
-        } catch (VonageUnexpectedException e) {
-            assertEquals("Failed to produce json from Call object.", e.getMessage());
+        } catch (VonageResponseParseException e) {
+            assertEquals("Failed to produce Call from json.", e.getMessage());
         }
     }
 

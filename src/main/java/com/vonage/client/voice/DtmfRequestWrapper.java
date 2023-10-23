@@ -20,6 +20,7 @@ package com.vonage.client.voice;
  * <p>
  * Contains the {@code uuid} of the {@link Call} and the {@link DtmfPayload} to be sent in the request.
  */
+@Deprecated
 class DtmfRequestWrapper {
     final String uuid;
     final DtmfPayload payload;

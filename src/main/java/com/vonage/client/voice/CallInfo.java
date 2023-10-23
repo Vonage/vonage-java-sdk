@@ -18,10 +18,7 @@ package com.vonage.client.voice;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 import java.util.Date;
 
 /**
@@ -29,7 +26,7 @@ import java.util.Date;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(value = { "_links" }, ignoreUnknown = true)
-public class CallInfo {
+public class CallInfo implements Jsonable {
     private Endpoint from, to;
     private String conversationUuid, uuid, network, price, rate;
     private CallDirection direction;
@@ -189,12 +186,6 @@ public class CallInfo {
      * @return An instance of this class with the fields populated, if present.
      */
     public static CallInfo fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-            return mapper.readValue(json, CallInfo.class);
-        } catch (IOException jpe) {
-            throw new VonageUnexpectedException("Failed to produce json from CallInfo object.", jpe);
-        }
+        return Jsonable.fromJson(json, CallInfo.class);
     }
 }

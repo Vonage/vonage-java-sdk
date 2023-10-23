@@ -15,18 +15,20 @@
  */
 package com.vonage.client.voice;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.Jsonable;
 
 /**
  * @deprecated Will be made package-private in next major release.
  */
 @Deprecated
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class ModifyCallPayload {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ModifyCallPayload implements Jsonable {
+    @JsonIgnore String uuid;
     private final ModifyCallAction action;
 
     public ModifyCallPayload(ModifyCallAction action) {
@@ -36,14 +38,5 @@ public class ModifyCallPayload {
     @JsonProperty("action")
     public ModifyCallAction getAction() {
         return action;
-    }
-
-    public String toJson() {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(this);
-        } catch (JsonProcessingException jpe) {
-            throw new VonageUnexpectedException("Failed to produce json from "+getClass().getName()+" object.", jpe);
-        }
     }
 }

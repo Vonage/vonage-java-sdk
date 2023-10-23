@@ -15,6 +15,7 @@
  */
 package com.vonage.client.voice;
 
+@Deprecated
 class ModifyCallRequestWrapper {
     final String uuid;
     final ModifyCallPayload payload;

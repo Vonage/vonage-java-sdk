@@ -15,47 +15,62 @@
  */
 package com.vonage.client.voice;
 
-import com.vonage.client.HttpWrapper;
-import com.vonage.client.VonageClient;
-import com.vonage.client.VonageClientException;
-import com.vonage.client.VonageResponseParseException;
+import com.vonage.client.*;
+import com.vonage.client.auth.JWTAuthMethod;
+import com.vonage.client.common.HttpMethod;
 import com.vonage.client.voice.ncco.Ncco;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * A client for talking to the Vonage Voice API. The standard way to obtain an instance of this class is to use {@link
  * VonageClient#getVoiceClient()}.
  */
 public class VoiceClient {
-    final CreateCallEndpoint createCall;
-    final ReadCallEndpoint readCall;
-    final ListCallsEndpoint listCalls;
-    final ModifyCallEndpoint modifyCall;
-    final StartStreamEndpoint startStream;
-    final StopStreamEndpoint stopStream;
-    final StartTalkEndpoint startTalk;
-    final StopTalkEndpoint stopTalk;
-    final SendDtmfEndpoint sendDtmf;
-    final DownloadRecordingEndpoint downloadRecording;
+    final RestEndpoint<Call, CallEvent> createCall;
+    final RestEndpoint<String, CallInfo> readCall;
+    final RestEndpoint<CallsFilter, CallInfoPage> listCalls;
+    final RestEndpoint<ModifyCallPayload, ModifyCallResponse> modifyCall;
+    final RestEndpoint<StreamPayload, StreamResponse> startStream;
+    final RestEndpoint<String, StreamResponse> stopStream;
+    final RestEndpoint<TalkPayload, TalkResponse> startTalk;
+    final RestEndpoint<String, TalkResponse> stopTalk;
+    final RestEndpoint<DtmfPayload, DtmfResponse> sendDtmf;
+    final RestEndpoint<String, Recording> downloadRecording;
 
     /**
      * Constructor.
      *
-     * @param httpWrapper (required) shared HTTP wrapper object used for making REST calls.
+     * @param wrapper (required) shared HTTP wrapper object used for making REST calls.
      */
-    public VoiceClient(HttpWrapper httpWrapper) {
-        createCall = new CreateCallEndpoint(httpWrapper);
-        readCall = new ReadCallEndpoint(httpWrapper);
-        listCalls = new ListCallsEndpoint(httpWrapper);
-        modifyCall = new ModifyCallEndpoint(httpWrapper);
-        startStream = new StartStreamEndpoint(httpWrapper);
-        stopStream = new StopStreamEndpoint(httpWrapper);
-        startTalk = new StartTalkEndpoint(httpWrapper);
-        stopTalk = new StopTalkEndpoint(httpWrapper);
-        sendDtmf = new SendDtmfEndpoint(httpWrapper);
-        downloadRecording = new DownloadRecordingEndpoint(httpWrapper);
+    public VoiceClient(HttpWrapper wrapper) {
+
+        @SuppressWarnings("unchecked")
+        class Endpoint<T, R> extends DynamicEndpoint<T, R> {
+            Endpoint(Function<T, String> pathGetter, HttpMethod method, R... type) {
+                super(DynamicEndpoint.<T, R> builder(type).authMethod(JWTAuthMethod.class)
+                        .responseExceptionType(VoiceResponseException.class)
+                        .requestMethod(method).wrapper(wrapper).pathGetter((de, req) -> {
+                            String base = de.getHttpWrapper().getHttpConfig().getVersionedApiBaseUri("v1");
+                            return base + "/calls/" + pathGetter.apply(req);
+                        })
+                );
+            }
+        }
+
+        createCall = new Endpoint<>(req -> "", HttpMethod.POST);
+        readCall = new Endpoint<>(Function.identity(), HttpMethod.GET);
+        listCalls = new Endpoint<>(req -> "", HttpMethod.GET);
+        modifyCall = new Endpoint<>(req -> req.uuid, HttpMethod.PUT);
+        startStream = new Endpoint<>(req -> req.uuid + "/stream", HttpMethod.PUT);
+        stopStream = new Endpoint<>(uuid -> uuid + "/stream", HttpMethod.DELETE);
+        startTalk = new Endpoint<>(req -> req.uuid + "/talk", HttpMethod.PUT);
+        stopTalk = new Endpoint<>(uuid -> uuid + "/talk", HttpMethod.DELETE);
+        sendDtmf = new Endpoint<>(req -> req.uuid + "/dtmf", HttpMethod.PUT);
+
+        downloadRecording = new DownloadRecordingEndpoint(wrapper);
     }
 
     private String validateUuid(String uuid) {
@@ -148,10 +163,7 @@ public class VoiceClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public DtmfResponse sendDtmf(String uuid, String digits) throws VonageResponseParseException, VonageClientException {
-        if (digits == null || digits.trim().isEmpty()) {
-            throw new IllegalArgumentException("Must include at least one digit to send.");
-        }
-        return sendDtmf.execute(new DtmfRequestWrapper(validateUuid(uuid), new DtmfPayload(digits)));
+        return sendDtmf.execute(new DtmfPayload(digits, validateUuid(uuid)));
     }
 
     /**
@@ -190,7 +202,8 @@ public class VoiceClient {
      * @since 7.3.0
      */
     private ModifyCallResponse modifyCall(String uuid, ModifyCallPayload payload) {
-        return modifyCall.execute(new ModifyCallRequestWrapper(validateUuid(uuid), payload));
+        payload.uuid = validateUuid(uuid);
+        return modifyCall.execute(payload);
     }
 
     /**
@@ -281,10 +294,7 @@ public class VoiceClient {
      * @since 7.3.0
      */
     public StreamResponse startStream(String uuid, String streamUrl, int loop, double level) throws VonageResponseParseException, VonageClientException {
-        return startStream.execute(new StreamRequestWrapper(
-                validateUuid(uuid),
-                new StreamPayload(validateUrl(streamUrl), loop, level)
-        ));
+        return startStream.execute(new StreamPayload(validateUrl(streamUrl), loop, level, validateUuid(uuid)));
     }
 
     /**
@@ -333,10 +343,8 @@ public class VoiceClient {
      * @since 7.3.0
      */
     public TalkResponse startTalk(String uuid, TalkPayload properties) {
-        return startTalk.execute(new TalkRequest(
-                validateUuid(uuid),
-                Objects.requireNonNull(properties, "TalkPayload is required)")
-        ));
+        Objects.requireNonNull(properties, "TalkPayload is required").uuid = validateUuid(uuid);
+        return startTalk.execute(properties);
     }
 
     /**
@@ -357,7 +365,7 @@ public class VoiceClient {
      */
     @Deprecated
     public TalkResponse startTalk(String uuid, String text) throws VonageResponseParseException, VonageClientException {
-        return startTalk.execute(new TalkRequest(uuid, TalkPayload.builder(text).build()));
+        return startTalk(uuid, TalkPayload.builder(text).build());
     }
 
     /**

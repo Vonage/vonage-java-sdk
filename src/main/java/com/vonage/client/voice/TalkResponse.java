@@ -16,23 +16,26 @@
 package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.Jsonable;
 
 /**
  * Response from successfully sending a synthesized speech message or stopping a message to an active {@link Call}.
  * <p>
  * This would be returned by {@link VoiceClient#startTalk(String, TalkPayload)} or {@link VoiceClient#stopTalk(String)}
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TalkResponse {
+public class TalkResponse implements Jsonable {
     private String uuid, message;
 
+    @JsonProperty("uuid")
     public String getUuid() {
         return uuid;
     }
 
+    @JsonProperty("message")
     public String getMessage() {
         return message;
     }
@@ -45,12 +48,6 @@ public class TalkResponse {
      * @return An instance of this class with the fields populated, if present.
      */
     public static TalkResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, TalkResponse.class);
-        }
-        catch (IOException jpe) {
-            throw new VonageUnexpectedException("Failed to parse json for TalkResponse object.", jpe);
-        }
+        return Jsonable.fromJson(json, TalkResponse.class);
     }
 }

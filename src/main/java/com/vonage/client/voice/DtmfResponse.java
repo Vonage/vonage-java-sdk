@@ -16,24 +16,26 @@
 package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.Jsonable;
 
 /**
  * Response if DTMF tones were successfully sent to an active {@link Call}.
  * <p>
  * Returned by {@link VoiceClient#sendDtmf(String, String)}
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DtmfResponse {
-    private String uuid;
-    private String message;
+public class DtmfResponse implements Jsonable {
+    private String uuid, message;
 
+    @JsonProperty("uuid")
     public String getUuid() {
         return uuid;
     }
 
+    @JsonProperty("message")
     public String getMessage() {
         return message;
     }
@@ -46,11 +48,6 @@ public class DtmfResponse {
      * @return An instance of this class with the fields populated, if present.
      */
     public static DtmfResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, DtmfResponse.class);
-        } catch (IOException jpe) {
-            throw new VonageUnexpectedException("Failed to produce json from DtmfResponse object.", jpe);
-        }
+        return Jsonable.fromJson(json, DtmfResponse.class);
     }
 }
