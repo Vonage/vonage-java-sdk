@@ -21,21 +21,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 
-/**
- * The JSON payload that will be sent in a {@link DtmfRequestWrapper}.
- * <p>
- * {@code digits} are the DTMF tones to be sent to a {@link Call}.
- */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 class DtmfPayload implements Jsonable {
     @JsonIgnore final String uuid;
     private final String digits;
-
-    @Deprecated
-    DtmfPayload(String digits) {
-        this(digits, null);
-    }
 
     public DtmfPayload(String digits, String uuid) {
         if ((this.digits = digits) == null || digits.trim().isEmpty()) {

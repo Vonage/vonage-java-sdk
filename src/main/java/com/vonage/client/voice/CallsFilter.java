@@ -16,11 +16,10 @@
 package com.vonage.client.voice;
 
 import com.vonage.client.QueryParamsRequest;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Filter options for {@link VoiceClient#listCalls(CallsFilter)}.
@@ -81,13 +80,6 @@ public class CallsFilter implements QueryParamsRequest {
         conditionalAdd(params, "order", (this.order != null) ? this.order.getCallOrder() : null);
         conditionalAdd(params, "conversation_uuid", this.conversationUuid);
         return params;
-    }
-
-    @Deprecated
-    List<NameValuePair> toUrlParams() {
-        return makeParams().entrySet().stream()
-                .map(e -> new BasicNameValuePair(e.getKey(), e.getValue()))
-                .collect(Collectors.toList());
     }
 
     private void conditionalAdd(Map<String, String> params, String name, String value) {

@@ -20,7 +20,6 @@ import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.voice.ncco.Ncco;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -30,7 +29,7 @@ import java.util.function.Function;
  */
 public class VoiceClient {
     final RestEndpoint<Call, CallEvent> createCall;
-    final RestEndpoint<String, CallInfo> readCall;
+    final RestEndpoint<String, CallInfo> getCall;
     final RestEndpoint<CallsFilter, CallInfoPage> listCalls;
     final RestEndpoint<ModifyCallPayload, ModifyCallResponse> modifyCall;
     final RestEndpoint<StreamPayload, StreamResponse> startStream;
@@ -61,7 +60,7 @@ public class VoiceClient {
         }
 
         createCall = new Endpoint<>(req -> "", HttpMethod.POST);
-        readCall = new Endpoint<>(Function.identity(), HttpMethod.GET);
+        getCall = new Endpoint<>(Function.identity(), HttpMethod.GET);
         listCalls = new Endpoint<>(req -> "", HttpMethod.GET);
         modifyCall = new Endpoint<>(req -> req.uuid, HttpMethod.PUT);
         startStream = new Endpoint<>(req -> req.uuid + "/stream", HttpMethod.PUT);
@@ -81,13 +80,7 @@ public class VoiceClient {
         if (url == null || url.trim().isEmpty()) {
             throw new IllegalArgumentException("URL is required.");
         }
-        try {
-            new URI(url);
-        }
-        catch (URISyntaxException ex) {
-            throw new IllegalArgumentException("Invalid URL provided.", ex);
-        }
-        return url;
+        return URI.create(url).toString();
     }
 
     /**
@@ -145,7 +138,7 @@ public class VoiceClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public CallInfo getCallDetails(String uuid) throws VonageResponseParseException, VonageClientException {
-        return readCall.execute(validateUuid(uuid));
+        return getCall.execute(validateUuid(uuid));
     }
 
     /**
