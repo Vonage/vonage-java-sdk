@@ -39,10 +39,13 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
     public void testCreateCall() throws Exception {
         stubResponse(200,
                 "{\n" + "  \"conversation_uuid\": \"63f61863-4a51-4f6b-86e1-46edebio0391\",\n"
+                        + "  \"uuid\": \"" + SAMPLE_CALL_ID + "\",\n"
                         + "  \"status\": \"started\",\n" + "  \"direction\": \"outbound\"\n" + "}"
         );
         CallEvent evt = client.createCall(new Call("447700900903", "447700900904", "http://api.example.com/answer"));
         assertEquals("63f61863-4a51-4f6b-86e1-46edebio0391", evt.getConversationUuid());
+        assertEquals(SAMPLE_CALL_ID, evt.getUuid());
+        assertEquals(CallDirection.OUTBOUND, evt.getDirection());
     }
 
     @Test
