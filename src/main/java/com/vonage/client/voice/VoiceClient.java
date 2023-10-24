@@ -24,6 +24,7 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.function.Function;
 
 /**
@@ -190,9 +191,33 @@ public class VoiceClient {
      *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
+     *
+     * @deprecated Please use {@link #modifyCall(UUID, ModifyCallAction)} instead.
      */
+    @Deprecated
     public ModifyCallResponse modifyCall(String uuid, ModifyCallAction action) throws VonageResponseParseException, VonageClientException {
         return modifyCall(uuid, new ModifyCallPayload(Objects.requireNonNull(action, "Action is required.")));
+    }
+
+    /**
+     * Modify an ongoing call. You can:
+     *  <ul>
+     *  <li>Terminate the call (hangup)
+     *  <li>Mute a call leg (mute)
+     *  <li>Unmute a call leg (unmute)
+     *  <li>Earmuff a call leg (earmuff)
+     *  <li>Unearmuff a call leg (unearmuff)
+     *  </ul>
+     *
+     * @param callId UUID of the call to modify.
+     * @param action The modification type to perform.
+     *
+     * @throws VoiceResponseException If there was an error modifying the call.
+     *
+     * @since 7.11.0
+     */
+    public void modifyCall(UUID callId, ModifyCallAction action) throws VoiceResponseException {
+        modifyCall(callId.toString(), action);
     }
 
     /**

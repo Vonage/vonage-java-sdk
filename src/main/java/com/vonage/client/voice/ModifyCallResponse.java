@@ -23,10 +23,13 @@ import com.vonage.client.Jsonable;
 /**
  * Response if a {@link Call} was successfully modified.
  * <p>
- * This would be returned by {@link VoiceClient#modifyCall(String, ModifyCallAction)}
+ * This would be returned by {@link VoiceClient#modifyCall(String, ModifyCallAction)}.
+ *
+ * @deprecated This is no longer used and will be removed in a future release.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Deprecated
 public class ModifyCallResponse implements Jsonable {
     private String message;
 

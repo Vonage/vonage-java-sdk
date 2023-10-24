@@ -117,9 +117,10 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
     @Test
     public void testModifyCall() throws Exception {
         stubResponse(200, "{\"message\":\"Received\"}");
-        ModifyCallResponse call = client.modifyCall("93137ee3-580e-45f7-a61a-e0b5716000ef", ModifyCallAction.HANGUP);
+        ModifyCallResponse call = client.modifyCall(SAMPLE_CALL_ID, ModifyCallAction.HANGUP);
         assertEquals("Received", call.getMessage());
-        assertThrows(NullPointerException.class, () -> client.modifyCall(null, ModifyCallAction.HANGUP));
+        stubResponseAndRun(204, () -> client.modifyCall(UUID.fromString(SAMPLE_CALL_ID), ModifyCallAction.MUTE));
+        assertThrows(NullPointerException.class, () -> client.modifyCall((String) null, ModifyCallAction.HANGUP));
         assertThrows(NullPointerException.class, () ->
                 client.modifyCall("93137ee3-580e-45f7-a61a-e0b5716000ef", null)
         );
