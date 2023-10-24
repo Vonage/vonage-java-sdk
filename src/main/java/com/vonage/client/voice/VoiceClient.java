@@ -19,7 +19,10 @@ import com.vonage.client.*;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.voice.ncco.Ncco;
+import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -37,7 +40,7 @@ public class VoiceClient {
     final RestEndpoint<TalkPayload, TalkResponse> startTalk;
     final RestEndpoint<String, TalkResponse> stopTalk;
     final RestEndpoint<DtmfPayload, DtmfResponse> sendDtmf;
-    final RestEndpoint<String, Recording> downloadRecording;
+    final RestEndpoint<String, byte[]> downloadRecording;
 
     /**
      * Constructor.
@@ -53,7 +56,16 @@ public class VoiceClient {
                         .responseExceptionType(VoiceResponseException.class)
                         .requestMethod(method).wrapper(wrapper).pathGetter((de, req) -> {
                             String base = de.getHttpWrapper().getHttpConfig().getVersionedApiBaseUri("v1");
-                            return base + "/calls/" + pathGetter.apply(req);
+                            String path = pathGetter.apply(req);
+                            if (path.isEmpty()) {
+                                return base + "/calls";
+                            }
+                            else if (path.startsWith("http") && method == HttpMethod.GET) {
+                                return path;
+                            }
+                            else {
+                                return base + "/calls/" + pathGetter.apply(req);
+                            }
                         })
                 );
             }
@@ -68,8 +80,7 @@ public class VoiceClient {
         startTalk = new Endpoint<>(req -> req.uuid + "/talk", HttpMethod.PUT);
         stopTalk = new Endpoint<>(uuid -> uuid + "/talk", HttpMethod.DELETE);
         sendDtmf = new Endpoint<>(req -> req.uuid + "/dtmf", HttpMethod.PUT);
-
-        downloadRecording = new DownloadRecordingEndpoint(wrapper);
+        downloadRecording = new Endpoint<>(Function.identity(), HttpMethod.GET);
     }
 
     private String validateUuid(String uuid) {
@@ -472,10 +483,57 @@ public class VoiceClient {
      *
      * @return A Recording object, providing access to the recording's bytes.
      *
+     * @throws IllegalArgumentException     if the recordingUrl is not a valid or recognised Vonage URL.
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
+     *
+     * @deprecated Use {@link #saveRecording(String, Path)} or {@link #downloadRecordingRaw(String)}.
      */
+    @Deprecated
     public Recording downloadRecording(String recordingUrl) throws VonageResponseParseException, VonageClientException {
-        return downloadRecording.execute(validateUrl(recordingUrl));
+        return new Recording(downloadRecordingRaw(recordingUrl));
+    }
+
+    /**
+     * Download a recording.
+     *
+     * @param recordingUrl The recording URL, as obtained from the webhook callback.
+     *
+     * @return The raw contents of the downloaded recording as a byte array.
+     *
+     * @throws IllegalArgumentException If the recordingUrl is invalid.
+     * @throws VoiceResponseException If there was an error downloading the recording from the URL.
+     *
+     * @since 7.11.0
+     */
+    public byte[] downloadRecordingRaw(String recordingUrl) {
+        if (validateUrl(recordingUrl).contains(".nexmo.com/v1/files")) {
+            return downloadRecording.execute(recordingUrl);
+        }
+        else {
+            throw new IllegalArgumentException("Invalid recording URL");
+        }
+    }
+
+    /**
+     * Download a recording and save it to a file.
+     *
+     * @param recordingUrl The recording URL, as obtained from the webhook callback.
+     * @param destination Path to save the recording to.
+     *
+     * @throws IOException If there was an error writing to the file.
+     * @throws VoiceResponseException If there was an error downloading the recording from the URL.
+     * @throws IllegalArgumentException If the recordingUrl is invalid.
+     *
+     * @since 7.11.0
+     */
+    public void saveRecording(String recordingUrl, Path destination) throws IOException {
+        Path path = Objects.requireNonNull(destination, "Save path is required.");
+        byte[] binary = downloadRecordingRaw(recordingUrl);
+        if (Files.isDirectory(destination)) {
+            String fileName = recordingUrl.substring(recordingUrl.lastIndexOf('/') + 1);
+            path = path.resolve(fileName);
+        }
+        Files.write(path, binary);
     }
 }

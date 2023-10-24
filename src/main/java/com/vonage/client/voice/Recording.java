@@ -16,6 +16,7 @@
 package com.vonage.client.voice;
 
 import org.apache.http.HttpResponse;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.FileSystems;
@@ -24,12 +25,25 @@ import java.nio.file.Path;
 
 /**
  * Represents a recording obtained from {@link VoiceClient#downloadRecording(String)}.
+ *
+ * @deprecated Will be removed in the next major release.
  */
+@Deprecated
 public class Recording {
-    private final HttpResponse response;
+    private byte[] content;
 
+    Recording(byte[] content) {
+        this.content = content;
+    }
+
+    /**
+     * DO NOT USE.
+     *
+     * @param response The HTTP response object.
+     * @deprecated Will be removed in the next major release.
+     */
+    @Deprecated
     public Recording(HttpResponse response) {
-        this.response = response;
     }
 
     /**
@@ -40,7 +54,7 @@ public class Recording {
      * @throws IOException If the InputStream could not be created.
      */
     public InputStream getContent() throws IOException {
-        return response.getEntity().getContent();
+        return new ByteArrayInputStream(content);
     }
 
     /**

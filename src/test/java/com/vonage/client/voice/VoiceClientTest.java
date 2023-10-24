@@ -20,9 +20,10 @@ import com.vonage.client.RestEndpoint;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.voice.ncco.Ncco;
 import com.vonage.client.voice.ncco.TalkAction;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -329,16 +330,92 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
 
     @Test
     public void testDownloadRecording() throws Exception {
-        stubResponse(200, "Bleep bloop");
-        Recording recording = client.downloadRecording("http://example.org/sample");
-        String content = new Scanner(recording.getContent()).useDelimiter("\\A").next();
-        assertEquals("Bleep bloop", content);
+        String recordingId = UUID.randomUUID().toString();
+        String content = "<BINARY>";
+        stubResponse(200, content);
+        String url = "https://api.nexmo.com/v1/files/" + recordingId;
+        Recording recording = client.downloadRecording(url);
+
+        String recordingContent = new Scanner(recording.getContent()).useDelimiter("\\A").next();
+        Path temp = Files.createTempFile(null, null);
+        Files.delete(temp);
+        recording.save(temp);
+        assertEquals(recordingContent, new String(Files.readAllBytes(temp)));
+        assertEquals(content, recordingContent);
+
         assertThrows(IllegalArgumentException.class, () -> client.downloadRecording(",,[]}{{}D:sd"));
         assertThrows(IllegalArgumentException.class, () -> client.downloadRecording(null));
         assertThrows(IllegalArgumentException.class, () -> client.downloadRecording(""));
+
+        stubResponse(200, content);
+        client.saveRecording(url, temp);
+        assertArrayEquals(content.getBytes(), Files.readAllBytes(temp));
+        stubResponse(200, content);
+        client.saveRecording(url, temp.getParent());
+        Path recordingPath = temp.resolveSibling(recordingId);
+        assertTrue(Files.exists(recordingPath));
+        assertArrayEquals(content.getBytes(), Files.readAllBytes(recordingPath));
+
+        stubResponseAndAssertThrows(content, () ->
+                client.downloadRecording("ftp:///myserver.co.uk/rec.mp3"),
+                IllegalArgumentException.class
+        );
+        stubResponseAndAssertThrows(content, () ->
+                client.downloadRecording("http://example.org/recording.wav"),
+                IllegalArgumentException.class
+        );
+        stubResponseAndAssertThrows(content, () ->
+                client.downloadRecording("https://example.org/recording.wav"),
+                IllegalArgumentException.class
+        );
+        stubResponseAndAssertThrows(content, () ->
+                client.saveRecording(url, null),
+                NullPointerException.class
+        );
+        stubResponseAndAssertThrows(content, () ->
+                client.saveRecording("not-a-url", recordingPath),
+                IllegalArgumentException.class
+        );
     }
 
     // ENDPOINT TESTS
+
+    @Test
+    public void testDownloadRecordingEndpoint() throws Exception {
+        new VoiceEndpointTestSpec<String, byte[]>() {
+
+            @Override
+            protected RestEndpoint<String, byte[]> endpoint() {
+                return client.downloadRecording;
+            }
+
+            @Override
+            protected HttpMethod expectedHttpMethod() {
+                return HttpMethod.GET;
+            }
+
+            @Override
+            protected String expectedEndpointUri(String request) {
+                return request;
+            }
+
+            @Override
+            protected String expectedDefaultBaseUri() {
+                return "";
+            }
+
+            @Override
+            protected String customBaseUri() {
+                return expectedDefaultBaseUri();
+            }
+
+            @Override
+            protected String sampleRequest() {
+                return "http://example.org/sample";
+            }
+        }
+        .runTests();
+    }
 
     @Test
     public void testCreateCallEndpoint() throws Exception {
@@ -357,7 +434,7 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
 
             @Override
             protected String expectedEndpointUri(Call request) {
-                return "/v1/calls/";
+                return "/v1/calls";
             }
 
             @Override
@@ -418,7 +495,7 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
 
             @Override
             protected String expectedEndpointUri(CallsFilter request) {
-                return "/v1/calls/";
+                return "/v1/calls";
             }
 
             @Override
