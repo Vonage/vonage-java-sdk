@@ -30,7 +30,8 @@ import java.util.Scanner;
 import java.util.UUID;
 
 public class VoiceClientTest extends ClientTest<VoiceClient> {
-    static final String SAMPLE_CALL_ID = UUID.randomUUID().toString();
+    static final UUID SAMPLE_CALL_UUID = UUID.randomUUID();
+    static final String SAMPLE_CALL_ID = SAMPLE_CALL_UUID.toString();
 
     public VoiceClientTest() {
         client = new VoiceClient(wrapper);
@@ -115,22 +116,51 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
     }
 
     @Test
-    public void testModifyCall() throws Exception {
-        stubResponse(200, "{\"message\":\"Received\"}");
-        ModifyCallResponse call = client.modifyCall(SAMPLE_CALL_ID, ModifyCallAction.HANGUP);
-        assertEquals("Received", call.getMessage());
-        stubResponseAndRun(204, () -> client.modifyCall(UUID.fromString(SAMPLE_CALL_ID), ModifyCallAction.MUTE));
-        assertThrows(NullPointerException.class, () -> client.modifyCall((String) null, ModifyCallAction.HANGUP));
-        assertThrows(NullPointerException.class, () ->
-                client.modifyCall("93137ee3-580e-45f7-a61a-e0b5716000ef", null)
-        );
+    public void testTerminateCall() throws Exception {
+        stubResponseAndRun(204, () -> client.terminateCall(SAMPLE_CALL_UUID));
+        stubResponseAndAssertThrows(204, () -> client.terminateCall(null), NullPointerException.class);
+        stubResponseAndAssertThrows(404, () -> client.terminateCall(SAMPLE_CALL_UUID), VoiceResponseException.class);
+    }
+
+    @Test
+    public void testMuteCall() throws Exception {
+        stubResponseAndRun(204, () -> client.muteCall(SAMPLE_CALL_UUID));
+        stubResponseAndAssertThrows(204, () -> client.muteCall(null), NullPointerException.class);
+        stubResponseAndAssertThrows(404, () -> client.muteCall(SAMPLE_CALL_UUID), VoiceResponseException.class);
+    }
+
+    @Test
+    public void testUnmuteCall() throws Exception {
+        stubResponseAndRun(204, () -> client.unmuteCall(SAMPLE_CALL_UUID));
+        stubResponseAndAssertThrows(204, () -> client.unmuteCall(null), NullPointerException.class);
+        stubResponseAndAssertThrows(404, () -> client.unmuteCall(SAMPLE_CALL_UUID), VoiceResponseException.class);
+    }
+
+    @Test
+    public void testEarmuffCall() throws Exception {
+        stubResponseAndRun(204, () -> client.earmuffCall(SAMPLE_CALL_UUID));
+        stubResponseAndAssertThrows(204, () -> client.earmuffCall(null), NullPointerException.class);
+        stubResponseAndAssertThrows(404, () -> client.earmuffCall(SAMPLE_CALL_UUID), VoiceResponseException.class);
+    }
+
+    @Test
+    public void testUnearmuffCall() throws Exception {
+        stubResponseAndRun(204, () -> client.unearmuffCall(SAMPLE_CALL_UUID));
+        stubResponseAndAssertThrows(204, () -> client.unearmuffCall(null), NullPointerException.class);
+        stubResponseAndAssertThrows(404, () -> client.unearmuffCall(SAMPLE_CALL_UUID), VoiceResponseException.class);
     }
 
     @Test
     public void testModifyCallLegacy() throws Exception {
         stubResponse(200, "{\"message\":\"Received\"}");
-        ModifyCallResponse call = client.modifyCall(new CallModifier("93137ee3-580e-45f7-a61a-e0b5716000ef", ModifyCallAction.HANGUP));
+        ModifyCallResponse call = client.modifyCall(new CallModifier(SAMPLE_CALL_ID, ModifyCallAction.HANGUP));
         assertEquals("Received", call.getMessage());
+        stubResponse(200, "{\"message\":\"Received\"}");
+        assertEquals("Received", call.getMessage());
+        assertThrows(NullPointerException.class, () -> client.modifyCall(null, ModifyCallAction.HANGUP));
+        assertThrows(NullPointerException.class, () ->
+                client.modifyCall("93137ee3-580e-45f7-a61a-e0b5716000ef", null)
+        );
     }
 
     @Test

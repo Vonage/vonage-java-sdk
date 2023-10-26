@@ -88,6 +88,10 @@ public class VoiceClient {
         return Objects.requireNonNull(uuid, "UUID is required.");
     }
 
+    private UUID validateUuid(UUID uuid) {
+        return Objects.requireNonNull(uuid, "UUID is required.");
+    }
+
     private String validateUrl(String url) {
         if (url == null || url.trim().isEmpty()) {
             throw new IllegalArgumentException("URL is required.");
@@ -192,32 +196,82 @@ public class VoiceClient {
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      *
-     * @deprecated Please use {@link #modifyCall(UUID, ModifyCallAction)} instead.
+     * @deprecated Please use one of the direct call modification methods instead.
      */
     @Deprecated
     public ModifyCallResponse modifyCall(String uuid, ModifyCallAction action) throws VonageResponseParseException, VonageClientException {
         return modifyCall(uuid, new ModifyCallPayload(Objects.requireNonNull(action, "Action is required.")));
     }
 
+    private void modifyCall(UUID callId, ModifyCallAction action) throws VoiceResponseException {
+        modifyCall(validateUuid(callId).toString(), action);
+    }
+
     /**
-     * Modify an ongoing call. You can:
-     *  <ul>
-     *  <li>Terminate the call (hangup)
-     *  <li>Mute a call leg (mute)
-     *  <li>Unmute a call leg (unmute)
-     *  <li>Earmuff a call leg (earmuff)
-     *  <li>Unearmuff a call leg (unearmuff)
-     *  </ul>
+     * Modify a call with the {@linkplain ModifyCallAction#EARMUFF} action.
+     * This prevents the call from hearing audio.
      *
-     * @param callId UUID of the call to modify.
-     * @param action The modification type to perform.
+     * @param callId UUID of the call.
      *
-     * @throws VoiceResponseException If there was an error modifying the call.
+     * @throws VoiceResponseException If there was an error performing the action.
      *
      * @since 7.11.0
      */
-    public void modifyCall(UUID callId, ModifyCallAction action) throws VoiceResponseException {
-        modifyCall(callId.toString(), action);
+    public void earmuffCall(UUID callId) throws VoiceResponseException {
+        modifyCall(callId, ModifyCallAction.EARMUFF);
+    }
+
+    /**
+     * Modify a call with the {@linkplain ModifyCallAction#UNEARMUFF} action.
+     * This allows the call to hear audio again.
+     *
+     * @param callId UUID of the call.
+     *
+     * @throws VoiceResponseException If there was an error performing the action.
+     *
+     * @since 7.11.0
+     */
+    public void unearmuffCall(UUID callId) throws VoiceResponseException {
+        modifyCall(callId, ModifyCallAction.UNEARMUFF);
+    }
+
+    /**
+     * Modify a call with the {@linkplain ModifyCallAction#MUTE} action.
+     *
+     * @param callId UUID of the call.
+     *
+     * @throws VoiceResponseException If there was an error performing the action.
+     *
+     * @since 7.11.0
+     */
+    public void muteCall(UUID callId) throws VoiceResponseException {
+        modifyCall(callId, ModifyCallAction.MUTE);
+    }
+
+    /**
+     * Modify a call with the {@linkplain ModifyCallAction#UNMUTE} action.
+     *
+     * @param callId UUID of the call.
+     *
+     * @throws VoiceResponseException If there was an error performing the action.
+     *
+     * @since 7.11.0
+     */
+    public void unmuteCall(UUID callId) throws VoiceResponseException {
+        modifyCall(callId, ModifyCallAction.UNMUTE);
+    }
+
+    /**
+     * Modify a call with the {@linkplain ModifyCallAction#HANGUP} action.
+     *
+     * @param callId UUID of the call.
+     *
+     * @throws VoiceResponseException If there was an error performing the action.
+     *
+     * @since 7.11.0
+     */
+    public void terminateCall(UUID callId) throws VoiceResponseException {
+        modifyCall(callId, ModifyCallAction.HANGUP);
     }
 
     /**
