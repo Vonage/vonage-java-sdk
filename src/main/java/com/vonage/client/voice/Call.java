@@ -18,12 +18,9 @@ package com.vonage.client.voice;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.Jsonable;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.voice.ncco.Action;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -33,7 +30,7 @@ import java.util.Collection;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({"_links"})
-public class Call {
+public class Call implements Jsonable {
     private Endpoint[] to;
     private Endpoint from;
     private HttpMethod answerMethod = HttpMethod.GET, eventMethod;
@@ -244,19 +241,6 @@ public class Call {
         return ncco;
     }
 
-    /**
-     * Generates a JSON payload from this request.
-     *
-     * @return JSON representation of this Call object.
-     */
-    public String toJson() {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(this);
-        } catch (JsonProcessingException jpe) {
-            throw new VonageUnexpectedException("Failed to produce json from Call object.", jpe);
-        }
-    }
 
     /**
      * Creates an instance of this class from a JSON payload.
@@ -266,12 +250,7 @@ public class Call {
      * @return An instance of this class with the fields populated, if present.
      */
     public static Call fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, Call.class);
-        } catch (IOException jpe) {
-            throw new VonageUnexpectedException("Failed to produce json from Call object.", jpe);
-        }
+        return Jsonable.fromJson(json, Call.class);
     }
 
     /**

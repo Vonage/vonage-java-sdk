@@ -15,6 +15,7 @@
  */
 package com.vonage.client.voice;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.voice.ncco.Ncco;
@@ -26,6 +27,7 @@ import com.vonage.client.voice.ncco.Ncco;
  */
 @Deprecated
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TransferCallPayload extends ModifyCallPayload {
     private final TransferDestination destination;
 

@@ -17,25 +17,20 @@ package com.vonage.client.incoming;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 import java.util.Date;
 
-
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class InputEvent {
-    private String uuid;
-    private String conversationUuid;
+public class InputEvent implements Jsonable {
+    private String uuid, conversationUuid, to, from;
     private DtmfResult dtmf;
     private Date timestamp;
-    private String to;
-    private String from;
     private SpeechResults speech;
 
     /**
      * @return The unique identifier for this call
      */
+    @JsonProperty("uuid")
     public String getUuid() {
         return uuid;
     }
@@ -49,8 +44,9 @@ public class InputEvent {
     }
 
     /**
-     * @return DTMF capturing retults.
+     * @return DTMF capturing results.
      */
+    @JsonProperty("dtmf")
     public DtmfResult getDtmf() {
         return dtmf;
     }
@@ -58,6 +54,7 @@ public class InputEvent {
     /**
      * @return Timestamp (ISO 8601 format)
      */
+    @JsonProperty("timestamp")
     public Date getTimestamp() {
         return timestamp;
     }
@@ -65,14 +62,16 @@ public class InputEvent {
     /**
      * @return The number the call was made to
      */
-    public String getTo(){
+    @JsonProperty("to")
+    public String getTo() {
         return to;
     }
 
     /**
      * @return The number the call came from
      */
-    public String getFrom(){
+    @JsonProperty("from")
+    public String getFrom() {
         return from;
     }
 
@@ -80,16 +79,12 @@ public class InputEvent {
      * @return Speech recognition results
      * @since 6.0.0
      */
+    @JsonProperty("speech")
     public SpeechResults getSpeech() {
         return speech;
     }
 
     public static InputEvent fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, InputEvent.class);
-        } catch (IOException jpe) {
-            throw new VonageUnexpectedException("Failed to produce InputEvent from json.", jpe);
-        }
+        return Jsonable.fromJson(json, InputEvent.class);
     }
 }

@@ -16,13 +16,13 @@
 package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CallEvent {
+public class CallEvent implements Jsonable {
     private String uuid, conversationUuid;
     private CallStatus status;
     private CallDirection direction;
@@ -75,11 +75,6 @@ public class CallEvent {
      * @return An instance of this class with the fields populated, if present.
      */
     public static CallEvent fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, CallEvent.class);
-        } catch (IOException jpe) {
-            throw new VonageUnexpectedException("Failed to produce json from Call object.", jpe);
-        }
+        return Jsonable.fromJson(json, CallEvent.class);
     }
 }

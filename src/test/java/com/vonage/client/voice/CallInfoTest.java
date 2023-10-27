@@ -16,11 +16,11 @@
 package com.vonage.client.voice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.*;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class CallInfoTest {
     final String jsonWithPlaceholder = "{\n" +
@@ -79,6 +79,7 @@ public class CallInfoTest {
         CallInfo record = new ObjectMapper().readValue(json, CallInfo.class);
 
         assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", record.getUuid());
+        assertEquals("aa17bd11-c895-4225-840d-30dc38c31e50", record.getConversationUuid());
         assertEquals(CallStatus.COMPLETED, record.getStatus());
         assertEquals("outbound", record.getDirection().toString());
         assertEquals("0.02400000", record.getRate());
@@ -191,7 +192,7 @@ public class CallInfoTest {
 
     @Test
     public void testToString() throws Exception {
-        CallInfo record = new CallInfo(new PhoneEndpoint("447700900104"), new PhoneEndpoint("447700900105"));
+        CallInfo record = new CallInfo("447700900104", "447700900105");
         record.setUuid("93137ee3-580e-45f7-a61a-e0b5716000ef");
         record.setStatus(CallStatus.COMPLETED);
         assertEquals("<CallInfo ID: 93137ee3-580e-45f7-a61a-e0b5716000ef, From: 447700900105, To: 447700900104, Status: completed>", record.toString());

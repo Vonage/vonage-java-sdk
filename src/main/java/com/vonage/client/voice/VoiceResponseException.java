@@ -15,27 +15,32 @@
  */
 package com.vonage.client.voice;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
+import com.vonage.client.VonageApiResponseException;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
+/**
+ * Response returned when an error is encountered (i.e. the API returns a non-2xx status code).
+ *
+ * @since 7.11.0
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
-class DtmfPayload implements Jsonable {
-    @JsonIgnore final String uuid;
-    private final String digits;
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public final class VoiceResponseException extends VonageApiResponseException {
 
-    public DtmfPayload(String digits, String uuid) {
-        if ((this.digits = digits) == null || digits.trim().isEmpty()) {
-            throw new IllegalArgumentException("Must include at least one digit to send.");
-        }
-        this.uuid = uuid;
-    }
+	void setStatusCode(int statusCode) {
+		this.statusCode = statusCode;
+	}
 
-    @JsonProperty("digits")
-    public String getDigits() {
-        return digits;
-    }
+	/**
+	 * Creates an instance of this class from a JSON payload.
+	 *
+	 * @param json The JSON string to parse.
+	 * @return An instance of this class with all known fields populated from the JSON payload, if present.
+	 */
+	@JsonCreator
+	public static VoiceResponseException fromJson(String json) {
+		return fromJson(VoiceResponseException.class, json);
+	}
 }

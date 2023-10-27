@@ -15,17 +15,19 @@
  */
 package com.vonage.client.voice;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.Jsonable;
 
 /**
  * Defines the text-to-speech properties.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public final class TalkPayload {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public final class TalkPayload implements Jsonable {
+    @JsonIgnore String uuid;
     private final String text;
     private final Integer loop, style;
     private final Double level;
@@ -108,21 +110,6 @@ public final class TalkPayload {
     @JsonProperty("premium")
     public Boolean getPremium() {
         return premium;
-    }
-
-    /**
-     * Generates a JSON payload from this request.
-     *
-     * @return JSON representation of this TalkPayload object.
-     */
-    public String toJson() {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(this);
-        }
-        catch (JsonProcessingException jpe) {
-            throw new VonageUnexpectedException("Failed to produce json from "+getClass().getSimpleName()+" object.", jpe);
-        }
     }
 
     /**

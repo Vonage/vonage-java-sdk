@@ -15,14 +15,16 @@
  */
 package com.vonage.client.voice;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
+import com.vonage.client.QueryParamsRequest;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-public class CallsFilter {
+/**
+ * Filter options for {@link VoiceClient#listCalls(CallsFilter)}.
+ */
+public class CallsFilter implements QueryParamsRequest {
     private final CallStatus status;
     private final Date dateStart, dateEnd;
     private final Integer pageSize, recordIndex;
@@ -67,33 +69,34 @@ public class CallsFilter {
         return conversationUuid;
     }
 
-    List<NameValuePair> toUrlParams() {
-        List<NameValuePair> result = new ArrayList<>(10);
-        conditionalAdd(result, "status", this.status);
-        conditionalAdd(result, "date_start", this.dateStart);
-        conditionalAdd(result, "date_end", this.dateEnd);
-        conditionalAdd(result, "page_size", this.pageSize);
-        conditionalAdd(result, "record_index", this.recordIndex);
-        conditionalAdd(result, "order", (this.order != null) ? this.order.getCallOrder() : null);
-        conditionalAdd(result, "conversation_uuid", this.conversationUuid);
-        return result;
+    @Override
+    public Map<String, String> makeParams() {
+        Map<String, String> params = new LinkedHashMap<>();
+        conditionalAdd(params, "status", this.status);
+        conditionalAdd(params, "date_start", this.dateStart);
+        conditionalAdd(params, "date_end", this.dateEnd);
+        conditionalAdd(params, "page_size", this.pageSize);
+        conditionalAdd(params, "record_index", this.recordIndex);
+        conditionalAdd(params, "order", (this.order != null) ? this.order.getCallOrder() : null);
+        conditionalAdd(params, "conversation_uuid", this.conversationUuid);
+        return params;
     }
 
-    private void conditionalAdd(List<NameValuePair> params, String name, String value) {
+    private void conditionalAdd(Map<String, String> params, String name, String value) {
         if (value != null) {
-            params.add(new BasicNameValuePair(name, value));
+            params.put(name, value);
         }
     }
 
-    private void conditionalAdd(List<NameValuePair> params, String name, Date value) {
+    private void conditionalAdd(Map<String, String> params, String name, Date value) {
         if (value != null) {
-            params.add(new BasicNameValuePair(name, DateTimeFormatter.ISO_INSTANT.format(value.toInstant())));
+            params.put(name, DateTimeFormatter.ISO_INSTANT.format(value.toInstant()));
         }
     }
 
-    private void conditionalAdd(List<NameValuePair> params, String name, Object value) {
+    private void conditionalAdd(Map<String, String> params, String name, Object value) {
         if (value != null) {
-            params.add(new BasicNameValuePair(name, value.toString()));
+            params.put(name, value.toString());
         }
     }
 
