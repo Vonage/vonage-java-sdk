@@ -72,7 +72,7 @@ public class WebSocketEndpoint implements Endpoint {
 
     /**
      *
-     * @return Thge content type.
+     * @return The content type.
      */
     @JsonProperty("content-type")
     public String getContentType() {

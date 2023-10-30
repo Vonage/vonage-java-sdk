@@ -19,6 +19,7 @@ import com.vonage.client.*;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
 import com.vonage.client.common.HttpMethod;
+import com.vonage.jwt.Jwt;
 import java.util.function.Function;
 
 public class MessagesClient {
@@ -98,5 +99,21 @@ public class MessagesClient {
 	public MessagesClient useRegularEndpoint() {
 		sandbox = false;
 		return this;
+	}
+
+	/**
+	 * Utility method for verifying whether a token was signed by a secret.
+	 * This is mostly useful when using signed callbacks to ensure that the inbound
+	 * data came from Vonage servers. The signature is performed using the SHA-256 HMAC algorithm.
+	 *
+	 * @param jwt The JSON Web Token to verify.
+	 * @param secret The symmetric secret key (HS256) to use for decrypting the token's signature.
+	 *
+	 * @return {@code true} if the token was signed by the secret, {@code false} otherwise.
+	 *
+	 * @since 7.11.0
+	 */
+	public static boolean verifySignature(String jwt, String secret) {
+		return Jwt.verifySignature(jwt, secret);
 	}
 }
