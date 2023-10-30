@@ -32,7 +32,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -43,8 +43,10 @@ import java.security.KeyFactory;
 import java.security.PublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.List;
+import java.util.UUID;
 
 public class VonageClientTest {
+    private static final UUID APPLICATION_ID = UUID.randomUUID();
     private final TestUtils testUtils = new TestUtils();
 
     private HttpClient stubHttpClient(int statusCode, String content) throws Exception {
@@ -107,9 +109,8 @@ public class VonageClientTest {
     public void testGenerateJwt() throws Exception {
         byte[] privateKeyBytes = testUtils.loadKey("test/keys/application_key");
         VonageClient client = VonageClient.builder()
-                .applicationId("application-id")
                 .privateKeyContents(privateKeyBytes)
-                .build();
+                .applicationId(APPLICATION_ID).build();
 
         String constructedToken = client.generateJwt();
 
@@ -118,9 +119,9 @@ public class VonageClientTest {
         KeyFactory kf = KeyFactory.getInstance("RSA");
         PublicKey key = kf.generatePublic(spec);
 
-        Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(constructedToken).getBody();
+        Claims claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(constructedToken).getPayload();
 
-        assertEquals("application-id", claims.get("application_id"));
+        assertEquals(APPLICATION_ID.toString(), claims.get("application_id"));
     }
 
     @Test
@@ -147,7 +148,7 @@ public class VonageClientTest {
     @Test
     public void testSoloApplicationId() {
         assertThrows(VonageClientCreationException.class, () ->
-                VonageClient.builder().applicationId("app-id").build()
+                VonageClient.builder().applicationId(APPLICATION_ID).build()
         );
     }
 
@@ -252,7 +253,7 @@ public class VonageClientTest {
         byte[] keyBytes = testUtils.loadKey("test/keys/application_key");
 
         VonageClient vonageClient = VonageClient.builder()
-                .applicationId("app-id")
+                .applicationId(APPLICATION_ID)
                 .privateKeyContents(keyBytes)
                 .build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
@@ -269,7 +270,7 @@ public class VonageClientTest {
         TestUtils testUtils = new TestUtils();
         String key = new String(testUtils.loadKey("test/keys/application_key"));
 
-        VonageClient vonageClient = VonageClient.builder().applicationId("app-id").privateKeyContents(key).build();
+        VonageClient vonageClient = VonageClient.builder().applicationId(APPLICATION_ID).privateKeyContents(key).build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
 
         RequestBuilder requestBuilder = RequestBuilder.get();
@@ -282,7 +283,7 @@ public class VonageClientTest {
     @Test
     public void testApplicationIdWithCertPath() throws Exception {
         VonageClient vonageClient = VonageClient.builder()
-                .applicationId("app-id")
+                .applicationId(APPLICATION_ID)
                 .privateKeyPath(Paths.get(getClass().getResource("test/keys/application_key").toURI()))
                 .build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();
@@ -297,7 +298,7 @@ public class VonageClientTest {
     @Test
     public void testApplicationIdWithCertPathAsString() throws Exception {
       VonageClient vonageClient = VonageClient.builder()
-                .applicationId("app-id")
+                .applicationId(APPLICATION_ID)
                 .privateKeyPath(Paths.get(getClass().getResource("test/keys/application_key").toURI()).toString())
                 .build();
         AuthCollection authCollection = vonageClient.getHttpWrapper().getAuthCollection();

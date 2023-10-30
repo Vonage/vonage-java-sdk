@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+# [7.11.0] - 2023-11-??
+- Added `verifySignature` utility method to Voice and Messages clients
+- Added `applicationId(UUID)` overload to `VonageClient.Builder`
+- Added direct call modification methods to `VoiceClient`
+- Added `downloadRecordingRaw` and `saveRecording` methods to `VoiceClient`
+- Deprecated `ModifyCallResponse` and `VoiceClient.modifyCall`
+- Deprecated `VoiceClient.downloadRecording` and `Recording` class
+- Internal refactoring of Voice API implementation
+- Bumped `com.vonage:jwt` version to 1.1.0
+
 # [7.10.0] - 2023-10-20
 - Added more locales for Verify v2 and Meetings APIs
 - Added `check_url` to `VerificationResponse` to support synchronous Silent Authentication

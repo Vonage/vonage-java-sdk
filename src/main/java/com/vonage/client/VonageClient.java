@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 /**
  * Top-level Vonage API client object.
@@ -248,6 +249,20 @@ public class VonageClient {
         public Builder httpClient(HttpClient httpClient) {
             this.httpClient = httpClient;
             return this;
+        }
+
+        /**
+         * Set the application ID for this client. This will be used alongside your private key
+         * (se via {@link #privateKeyContents}) for authenticating requests.
+         *
+         * @param applicationId The application UUID.
+         *
+         * @return This builder.
+         *
+         * @since 7.11.0
+         */
+        public Builder applicationId(UUID applicationId) {
+            return applicationId(applicationId.toString());
         }
 
         /**

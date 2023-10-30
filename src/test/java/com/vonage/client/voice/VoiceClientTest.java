@@ -38,6 +38,20 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
     }
 
     @Test
+    public void testVerifySignature() {
+        String secret = "XsA09z2MhUxYcdbXaUX3aTT7TzGmnCLfkdILf0NIyC9hN9criTEUdlI3OZ5hRjR";
+        String header = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
+        String payload = "eyJzdWIiOiJTaW5hIiwibmFtZSI6IkphdmFfU0RLIiwiaWF0IjoxNjk4NjgwMzkyfQ";
+        String signature = "4qJpi46NSYURiLI1xoLIfGRygA8IUI2QSG9P2Kus1Oo";
+        String token = header + '.' + payload + '.' + signature;
+        assertTrue(VoiceClient.verifySignature(token, secret));
+        String badToken = header + '.' + payload + '.' + "XsaXHXqxe2kfIbPy-JH2J6hfbHnEv8jdWsOhEuvzU98";
+        assertFalse(VoiceClient.verifySignature(badToken, secret));
+        assertThrows(NullPointerException.class, () -> VoiceClient.verifySignature(null, secret));
+        assertThrows(NullPointerException.class, () -> VoiceClient.verifySignature(token, null));
+    }
+
+    @Test
     public void testCreateCall() throws Exception {
         stubResponse(200,
                 "{\n" + "  \"conversation_uuid\": \"63f61863-4a51-4f6b-86e1-46edebio0391\",\n"

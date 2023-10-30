@@ -38,15 +38,16 @@ public class RedactClientTest extends ClientTest<RedactClient> {
         stubResponseAndRun(204, () -> client.redactTransaction(redactRequest));
         stubResponse(204);
         client.redactTransaction(redactRequest.getId(), redactRequest.getProduct(), redactRequest.getType());
+        stubResponseAndRun(204, () -> client.redactTransaction("test-id", RedactRequest.Product.VERIFY));
     }
 
     @Test
     public void testInvalidRedactRequests() {
         assertThrows(IllegalArgumentException.class, () -> client.redactTransaction(
-                new RedactRequest("test-id", RedactRequest.Product.SMS)
+                "test-id", RedactRequest.Product.SMS
         ));
         assertThrows(IllegalArgumentException.class, () -> client.redactTransaction(
-                new RedactRequest("test-id", null)
+                "test-id", null
         ));
         assertThrows(IllegalArgumentException.class, () -> client.redactTransaction(
                 new RedactRequest(null, RedactRequest.Product.SMS)

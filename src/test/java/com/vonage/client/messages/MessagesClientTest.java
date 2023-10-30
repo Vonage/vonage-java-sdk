@@ -15,7 +15,10 @@
  */
 package com.vonage.client.messages;
 
-import com.vonage.client.*;
+import com.vonage.client.ClientTest;
+import com.vonage.client.DynamicEndpointTestSpec;
+import com.vonage.client.RestEndpoint;
+import com.vonage.client.VonageApiResponseException;
 import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
@@ -30,8 +33,8 @@ import com.vonage.client.messages.viber.ViberImageRequest;
 import com.vonage.client.messages.viber.ViberTextRequest;
 import com.vonage.client.messages.viber.ViberVideoRequest;
 import com.vonage.client.messages.whatsapp.*;
-import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -71,6 +74,20 @@ public class MessagesClientTest extends ClientTest<MessagesClient> {
 					.text("Hello").build()
 				)
 		);
+	}
+
+	@Test
+	public void testVerifySignature() {
+		String secret = "XsA09z2MhUxYcdbXaUX3aTT7TzGmnCLfkdILf0NIyC9hN9criTEUdlI3OZ5hRjR";
+		String header = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
+		String payload = "eyJzdWIiOiJTaW5hIiwibmFtZSI6IkphdmFfU0RLIiwiaWF0IjoxNjk4NjgwMzkyfQ";
+		String signature = "4qJpi46NSYURiLI1xoLIfGRygA8IUI2QSG9P2Kus1Oo";
+		String token = header + '.' + payload + '.' + signature;
+		assertTrue(MessagesClient.verifySignature(token, secret));
+		String badToken = header + '.' + payload + '.' + "XsaXHXqxe2kfIbPy-JH2J6hfbHnEv8jdWsOhEuvzU98";
+		assertFalse(MessagesClient.verifySignature(badToken, secret));
+		assertThrows(NullPointerException.class, () -> MessagesClient.verifySignature(null, secret));
+		assertThrows(NullPointerException.class, () -> MessagesClient.verifySignature(token, null));
 	}
 
 	@Test
