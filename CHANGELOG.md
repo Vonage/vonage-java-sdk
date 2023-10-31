@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-# [7.11.0] - 2023-11-??
+# [7.11.0] - 2023-10-31
 - Added `verifySignature` utility method to Voice and Messages clients
 - Added `applicationId(UUID)` overload to `VonageClient.Builder`
 - Added direct call modification methods to `VoiceClient`
