@@ -65,6 +65,6 @@ public class Application implements Jsonable {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static Application fromJson(String json) {
-		return Jsonable.fromJson(json, Application.class);
+		return Jsonable.fromJson(json);
 	}
 }

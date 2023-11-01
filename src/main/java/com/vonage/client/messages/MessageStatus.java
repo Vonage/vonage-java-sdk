@@ -16,11 +16,7 @@
 package com.vonage.client.messages;
 
 import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.vonage.client.Jsonable;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Currency;
@@ -304,14 +300,7 @@ public class MessageStatus implements Jsonable {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static MessageStatus fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.registerModule(new JavaTimeModule());
-			return mapper.readValue(json, MessageStatus.class);
-		}
-		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to produce MessageStatus from json.", ex);
-		}
+		return Jsonable.fromJson(json);
 	}
 
 	@Override

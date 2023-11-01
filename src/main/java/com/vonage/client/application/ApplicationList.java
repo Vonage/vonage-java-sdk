@@ -45,6 +45,6 @@ public class ApplicationList extends HalPageResponse {
     }
 
     public static ApplicationList fromJson(String json) {
-        return Jsonable.fromJson(json, ApplicationList.class);
+        return Jsonable.fromJson(json);
     }
 }

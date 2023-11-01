@@ -60,6 +60,6 @@ public final class ListItemsResponse extends HalPageResponse {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static ListItemsResponse fromJson(String json) {
-		return Jsonable.fromJson(json, ListItemsResponse.class);
+		return Jsonable.fromJson(json);
 	}
 }

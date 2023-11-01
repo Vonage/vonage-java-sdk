@@ -75,6 +75,6 @@ public class CallEvent implements Jsonable {
      * @return An instance of this class with the fields populated, if present.
      */
     public static CallEvent fromJson(String json) {
-        return Jsonable.fromJson(json, CallEvent.class);
+        return Jsonable.fromJson(json);
     }
 }

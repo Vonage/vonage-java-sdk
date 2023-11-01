@@ -250,7 +250,7 @@ public class Call implements Jsonable {
      * @return An instance of this class with the fields populated, if present.
      */
     public static Call fromJson(String json) {
-        return Jsonable.fromJson(json, Call.class);
+        return Jsonable.fromJson(json);
     }
 
     /**

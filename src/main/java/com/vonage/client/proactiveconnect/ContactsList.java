@@ -171,7 +171,7 @@ public class ContactsList implements Jsonable {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static ContactsList fromJson(String json) {
-		return Jsonable.fromJson(json, ContactsList.class);
+		return Jsonable.fromJson(json);
 	}
 	
 	/**

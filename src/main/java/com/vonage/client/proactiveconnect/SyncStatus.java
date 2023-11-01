@@ -90,6 +90,6 @@ public class SyncStatus implements Jsonable {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static SyncStatus fromJson(String json) {
-		return Jsonable.fromJson(json, SyncStatus.class);
+		return Jsonable.fromJson(json);
 	}
 }

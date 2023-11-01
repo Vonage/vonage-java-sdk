@@ -300,6 +300,6 @@ public class InboundMessage implements Jsonable {
 	 * @throws com.vonage.client.VonageResponseParseException If the response could not be deserialized.
 	 */
 	public static InboundMessage fromJson(String json) {
-		return Jsonable.fromJson(json, InboundMessage.class);
+		return Jsonable.fromJson(json);
 	}
 }

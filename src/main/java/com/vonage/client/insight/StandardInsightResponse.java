@@ -33,7 +33,7 @@ public class StandardInsightResponse extends BasicInsightResponse {
     private CallerType callerType;
 
     public static StandardInsightResponse fromJson(String json) {
-        return Jsonable.fromJson(json, StandardInsightResponse.class);
+        return Jsonable.fromJson(json);
     }
 
     /**

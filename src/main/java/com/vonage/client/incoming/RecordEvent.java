@@ -62,6 +62,6 @@ public class RecordEvent implements Jsonable {
     }
 
     public static RecordEvent fromJson(String json) {
-        return Jsonable.fromJson(json, RecordEvent.class);
+        return Jsonable.fromJson(json);
     }
 }

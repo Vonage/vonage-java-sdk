@@ -46,6 +46,6 @@ public class ModifyCallResponse implements Jsonable {
      * @return An instance of this class with the fields populated, if present.
      */
     public static ModifyCallResponse fromJson(String json) {
-        return Jsonable.fromJson(json, ModifyCallResponse.class);
+        return Jsonable.fromJson(json);
     }
 }

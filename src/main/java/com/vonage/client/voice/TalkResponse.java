@@ -48,6 +48,6 @@ public class TalkResponse implements Jsonable {
      * @return An instance of this class with the fields populated, if present.
      */
     public static TalkResponse fromJson(String json) {
-        return Jsonable.fromJson(json, TalkResponse.class);
+        return Jsonable.fromJson(json);
     }
 }

@@ -235,7 +235,7 @@ public class Theme implements Jsonable {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static Theme fromJson(String json) {
-		return Jsonable.fromJson(json, Theme.class);
+		return Jsonable.fromJson(json);
 	}
 	
 	/**

@@ -33,7 +33,7 @@ public class AdvancedInsightResponse extends StandardInsightResponse {
     private String errorText;
 
     public static AdvancedInsightResponse fromJson(String json) {
-        return Jsonable.fromJson(json, AdvancedInsightResponse.class);
+        return Jsonable.fromJson(json);
     }
 
     /**

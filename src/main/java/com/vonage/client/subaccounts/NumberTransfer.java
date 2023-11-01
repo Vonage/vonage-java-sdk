@@ -64,7 +64,7 @@ public class NumberTransfer extends AbstractTransfer {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static NumberTransfer fromJson(String json) {
-		return Jsonable.fromJson(json, NumberTransfer.class);
+		return Jsonable.fromJson(json);
 	}
 	
 	/**

@@ -96,7 +96,7 @@ public class Application implements Jsonable {
     }
 
     public static Application fromJson(String json) {
-        return Jsonable.fromJson(json, Application.class);
+        return Jsonable.fromJson(json);
     }
 
     /**

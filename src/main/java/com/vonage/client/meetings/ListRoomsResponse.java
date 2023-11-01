@@ -44,6 +44,6 @@ class ListRoomsResponse extends HalPageResponse {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static ListRoomsResponse fromJson(String json) {
-		return Jsonable.fromJson(json, ListRoomsResponse.class);
+		return Jsonable.fromJson(json);
 	}
 }

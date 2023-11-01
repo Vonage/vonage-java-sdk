@@ -93,6 +93,6 @@ public class ListItem implements Jsonable {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static ListItem fromJson(String json) {
-		return Jsonable.fromJson(json, ListItem.class);
+		return Jsonable.fromJson(json);
 	}
 }

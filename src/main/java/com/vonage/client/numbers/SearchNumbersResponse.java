@@ -42,7 +42,7 @@ public class SearchNumbersResponse implements Jsonable {
     }
 
     public static SearchNumbersResponse fromJson(String json) {
-        return Jsonable.fromJson(json, SearchNumbersResponse.class);
+        return Jsonable.fromJson(json);
     }
 
 }

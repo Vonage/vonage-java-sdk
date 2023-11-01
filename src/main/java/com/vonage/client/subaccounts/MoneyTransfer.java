@@ -91,7 +91,7 @@ public class MoneyTransfer extends AbstractTransfer {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static MoneyTransfer fromJson(String json) {
-		return Jsonable.fromJson(json, MoneyTransfer.class);
+		return Jsonable.fromJson(json);
 	}
 
 	/**

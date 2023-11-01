@@ -64,6 +64,6 @@ public class ListSubaccountsResponse implements Jsonable {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static ListSubaccountsResponse fromJson(String json) {
-		return Jsonable.fromJson(json, ListSubaccountsResponse.class);
+		return Jsonable.fromJson(json);
 	}
 }

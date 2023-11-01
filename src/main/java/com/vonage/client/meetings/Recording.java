@@ -101,6 +101,6 @@ public class Recording implements Jsonable {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static Recording fromJson(String json) {
-		return Jsonable.fromJson(json, Recording.class);
+		return Jsonable.fromJson(json);
 	}
 }

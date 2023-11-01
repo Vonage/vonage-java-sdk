@@ -65,6 +65,6 @@ public class CallInfoPage implements Iterable<CallInfo>, Jsonable {
      * @return An instance of this class with the fields populated, if present.
      */
     public static CallInfoPage fromJson(String json) {
-        return Jsonable.fromJson(json, CallInfoPage.class);
+        return Jsonable.fromJson(json);
     }
 }

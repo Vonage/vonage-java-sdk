@@ -179,6 +179,6 @@ public class VerificationCallback implements Jsonable {
 	 * @throws VonageResponseParseException If the response could not be deserialized.
 	 */
 	public static VerificationCallback fromJson(String json) {
-		return Jsonable.fromJson(json, VerificationCallback.class);
+		return Jsonable.fromJson(json);
 	}
 }
