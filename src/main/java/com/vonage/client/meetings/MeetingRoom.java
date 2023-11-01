@@ -251,7 +251,7 @@ public class MeetingRoom implements Jsonable {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static MeetingRoom fromJson(String json) {
-		return Jsonable.fromJson(json, MeetingRoom.class);
+		return Jsonable.fromJson(json);
 	}
 	
 	/**

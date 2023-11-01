@@ -29,6 +29,11 @@ import java.lang.reflect.Constructor;
  */
 public interface Jsonable {
 
+	/**
+	 * Convenience method for creating an ObjectMapper with standard settings.
+	 *
+	 * @return A new ObjectMapper with appropriate configuration.
+	 */
 	static ObjectMapper createDefaultObjectMapper() {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.registerModule(new JavaTimeModule());
@@ -36,6 +41,11 @@ public interface Jsonable {
 		return mapper;
 	}
 
+	/**
+	 * Serialises this class to a JSON payload.
+	 *
+	 * @return The JSON string representing this class's marked properties.
+	 */
 	default String toJson() {
 		try {
 			return createDefaultObjectMapper().writeValueAsString(this);
@@ -45,6 +55,13 @@ public interface Jsonable {
 		}
 	}
 
+	/**
+	 * Updates this class's fields from the JSON payload.
+	 *
+	 * @param json The JSON string.
+	 *
+	 * @throws VonageResponseParseException If the JSON was invalid or this class couldn't be updated.
+	 */
 	default void updateFromJson(String json) {
 		if (json == null || json.trim().isEmpty()) {
 			return;
@@ -57,6 +74,38 @@ public interface Jsonable {
 		}
 	}
 
+	/**
+	 * Delegates to {@linkplain #fromJson(String, Class)}, using the type varargs for inferring the class.
+	 *
+	 * @param json The JSON string to parse.
+	 * @param type Unused. This is a hack to get the array class's component type.
+	 *
+	 * @return A new instance of the inferred Jsonable.
+	 *
+	 * @param <J> A class which implements this interface.
+	 *
+	 * @throws VonageUnexpectedException If a no-args constructor for the class was not found.
+	 * @throws VonageResponseParseException If the JSON was invalid or this class couldn't be updated.
+	 */
+	@SuppressWarnings("unchecked")
+	static <J extends Jsonable> J fromJson(String json, J... type) {
+		return fromJson(json, (Class<J>) type.getClass().getComponentType());
+	}
+
+	/**
+	 * Creates a new instance of the designated Jsonable class, calling its no-args constructor
+	 * followed by {@link #updateFromJson(String)}.
+	 *
+	 * @param json The JSON string to parse.
+	 * @param jsonable The Jsonable class to construct.
+	 *
+	 * @return A new instance of the Jsonable class.
+	 *
+	 * @param <J> A class which implements this interface.
+	 *
+	 * @throws VonageUnexpectedException If a no-args constructor for the class was not found.
+	 * @throws VonageResponseParseException If the JSON was invalid or this class couldn't be updated.
+	 */
 	static <J extends Jsonable> J fromJson(String json, Class<? extends J> jsonable) {
 		try {
 			Constructor<? extends J> constructor = jsonable.getDeclaredConstructor();

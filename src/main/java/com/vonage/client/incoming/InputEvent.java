@@ -85,6 +85,6 @@ public class InputEvent implements Jsonable {
     }
 
     public static InputEvent fromJson(String json) {
-        return Jsonable.fromJson(json, InputEvent.class);
+        return Jsonable.fromJson(json);
     }
 }

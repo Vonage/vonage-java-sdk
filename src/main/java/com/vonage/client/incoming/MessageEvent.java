@@ -125,6 +125,6 @@ public class MessageEvent implements Jsonable {
     }
 
     public static MessageEvent fromJson(String json) {
-        return Jsonable.fromJson(json, MessageEvent.class);
+        return Jsonable.fromJson(json);
     }
 }

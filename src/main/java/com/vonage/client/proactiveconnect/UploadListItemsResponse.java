@@ -68,6 +68,6 @@ public class UploadListItemsResponse implements Jsonable {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static UploadListItemsResponse fromJson(String json) {
-		return Jsonable.fromJson(json, UploadListItemsResponse.class);
+		return Jsonable.fromJson(json);
 	}
 }

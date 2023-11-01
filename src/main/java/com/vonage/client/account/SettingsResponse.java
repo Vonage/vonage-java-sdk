@@ -69,6 +69,6 @@ public class SettingsResponse implements Jsonable {
     }
 
     public static SettingsResponse fromJson(String json) {
-        return Jsonable.fromJson(json, SettingsResponse.class);
+        return Jsonable.fromJson(json);
     }
 }

@@ -62,6 +62,6 @@ public class NotifyEvent implements Jsonable {
     }
 
     public static NotifyEvent fromJson(String json) {
-        return Jsonable.fromJson(json, NotifyEvent.class);
+        return Jsonable.fromJson(json);
     }
 }

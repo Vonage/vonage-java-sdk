@@ -48,6 +48,6 @@ public class StreamResponse implements Jsonable {
      * @return An instance of this class with the fields populated, if present.
      */
     public static StreamResponse fromJson(String json) {
-        return Jsonable.fromJson(json, StreamResponse.class);
+        return Jsonable.fromJson(json);
     }
 }

@@ -56,6 +56,6 @@ public class MessageResponse implements Jsonable {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static MessageResponse fromJson(String json) {
-		return Jsonable.fromJson(json, MessageResponse.class);
+		return Jsonable.fromJson(json);
 	}
 }

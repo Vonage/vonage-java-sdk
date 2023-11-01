@@ -121,7 +121,7 @@ public class User extends BaseUser {
      */
     @JsonCreator
     public static User fromJson(String json) {
-        return Jsonable.fromJson(json, User.class);
+        return Jsonable.fromJson(json);
     }
 
     /**

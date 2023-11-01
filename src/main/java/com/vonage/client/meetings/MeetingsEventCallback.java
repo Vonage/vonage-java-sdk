@@ -197,6 +197,6 @@ public class MeetingsEventCallback implements Jsonable {
 	 * @throws VonageResponseParseException If the response could not be deserialized.
 	 */
 	public static MeetingsEventCallback fromJson(String json) {
-		return Jsonable.fromJson(json, MeetingsEventCallback.class);
+		return Jsonable.fromJson(json);
 	}
 }

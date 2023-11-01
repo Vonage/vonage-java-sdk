@@ -20,9 +20,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
-import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
@@ -219,21 +216,6 @@ public class VonageApiResponseException extends VonageClientException implements
 				throw new VonageUnexpectedException(ex);
 			}
 		}
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readValue(json, clazz);
-		}
-		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to produce "+clazz.getSimpleName()+" from json.", ex);
-		}
-	}
-
-	protected static <E extends VonageApiResponseException> E fromHttpResponse(Class<E> clazz, HttpResponse response) throws IOException {
-		E crx = fromJson(clazz, EntityUtils.toString(response.getEntity()));
-		if (crx.title == null) {
-			crx.title = response.getStatusLine().getReasonPhrase();
-		}
-		crx.statusCode = response.getStatusLine().getStatusCode();
-		return crx;
+		else return Jsonable.fromJson(json, clazz);
 	}
 }

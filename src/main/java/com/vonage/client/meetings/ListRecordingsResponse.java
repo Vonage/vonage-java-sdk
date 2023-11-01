@@ -33,6 +33,6 @@ class ListRecordingsResponse implements Jsonable {
 	}
 
 	public static ListRecordingsResponse fromJson(String json) {
-		return Jsonable.fromJson(json, ListRecordingsResponse.class);
+		return Jsonable.fromJson(json);
 	}
 }

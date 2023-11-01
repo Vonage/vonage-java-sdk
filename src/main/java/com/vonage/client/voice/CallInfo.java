@@ -186,6 +186,6 @@ public class CallInfo implements Jsonable {
      * @return An instance of this class with the fields populated, if present.
      */
     public static CallInfo fromJson(String json) {
-        return Jsonable.fromJson(json, CallInfo.class);
+        return Jsonable.fromJson(json);
     }
 }

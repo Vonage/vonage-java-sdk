@@ -156,6 +156,6 @@ public class Event implements Jsonable {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static Event fromJson(String json) {
-		return Jsonable.fromJson(json, Event.class);
+		return Jsonable.fromJson(json);
 	}
 }

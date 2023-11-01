@@ -80,6 +80,6 @@ public class CallEvent implements Jsonable {
     }
 
     public static CallEvent fromJson(String json) {
-        return Jsonable.fromJson(json, CallEvent.class);
+        return Jsonable.fromJson(json);
     }
 }
