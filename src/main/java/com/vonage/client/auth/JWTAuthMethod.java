@@ -28,7 +28,8 @@ public class JWTAuthMethod implements AuthMethod {
     private final String applicationId;
 
     public JWTAuthMethod(final String applicationId, final byte[] privateKey) {
-        jwt = Jwt.builder().applicationId(this.applicationId = applicationId)
+        jwt = Jwt.builder()
+                .applicationId(this.applicationId = applicationId)
                 .privateKeyContents(new String(privateKey)).build();
     }
 

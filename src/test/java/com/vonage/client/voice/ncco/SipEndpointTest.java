@@ -15,9 +15,9 @@
  */
 package com.vonage.client.voice.ncco;
 
-import org.junit.Test;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.Collections;
-import static org.junit.Assert.assertEquals;
 
 public class SipEndpointTest {
 

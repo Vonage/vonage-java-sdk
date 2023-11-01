@@ -17,20 +17,14 @@ package com.vonage.client.incoming;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RecordEvent {
-    private Date startTime;
-    private String url;
+public class RecordEvent implements Jsonable {
+    private Date startTime, endTime, timestamp;
+    private String url, uuid, conversationUuid;
     private int size;
-    private String uuid;
-    private Date endTime;
-    private String conversationUuid;
-    private Date timestamp;
 
     @JsonProperty("start_time")
     public Date getStartTime() {
@@ -42,6 +36,7 @@ public class RecordEvent {
         return url;
     }
 
+    @JsonProperty("size")
     public int getSize() {
         return size;
     }
@@ -61,16 +56,12 @@ public class RecordEvent {
         return conversationUuid;
     }
 
+    @JsonProperty("timestamp")
     public Date getTimestamp() {
         return timestamp;
     }
 
     public static RecordEvent fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, RecordEvent.class);
-        } catch (IOException jpe) {
-            throw new VonageUnexpectedException("Failed to produce RecordEvent from json.", jpe);
-        }
+        return Jsonable.fromJson(json);
     }
 }

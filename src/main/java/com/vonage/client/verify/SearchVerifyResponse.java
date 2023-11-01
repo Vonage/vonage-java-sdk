@@ -18,24 +18,23 @@ package com.vonage.client.verify;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.vonage.client.Jsonable;
 import com.vonage.client.VonageResponseParseException;
-import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SearchVerifyResponse {
+public class SearchVerifyResponse implements Jsonable {
     private VerifyStatus status;
     private List<VerifyDetails> verificationRequests;
     private String errorText;
 
     @JsonCreator
     SearchVerifyResponse() {
-        status = VerifyStatus.OK;
+        this(null);
     }
 
     SearchVerifyResponse(List<VerifyDetails> verificationRequests) {
@@ -48,8 +47,9 @@ public class SearchVerifyResponse {
         this.errorText = errorText;
     }
 
+    @JsonProperty("status")
     public VerifyStatus getStatus() {
-        return this.status;
+        return status;
     }
 
     @JsonProperty("verification_requests")
@@ -65,19 +65,25 @@ public class SearchVerifyResponse {
         return errorText;
     }
 
-    public static SearchVerifyResponse fromJson(String json) {
+    @Override
+    public void updateFromJson(String json) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
             SimpleModule module = new SimpleModule();
             module.addDeserializer(SearchVerifyResponse.class, new SearchVerifyResponseDeserializer());
             mapper.registerModule(module);
-
-            return mapper.readValue(json, SearchVerifyResponse.class);
-        } catch (JsonMappingException jme) {
-            throw new VonageResponseParseException("Failed to produce SearchVerifyResponse from json.", jme);
-        } catch (IOException jpe) {
-            throw new VonageUnexpectedException("Failed to produce SearchVerifyResponse from json.", jpe);
+            SearchVerifyResponse parsed = mapper.readValue(json, SearchVerifyResponse.class);
+            status = parsed.status;
+            verificationRequests = parsed.verificationRequests;
+            errorText = parsed.errorText;
         }
+        catch (IOException jme) {
+            throw new VonageResponseParseException("Failed to produce SearchVerifyResponse from json.", jme);
+        }
+    }
+
+    public static SearchVerifyResponse fromJson(String json) {
+        return Jsonable.fromJson(json);
     }
 }

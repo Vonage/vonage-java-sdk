@@ -18,22 +18,15 @@ package com.vonage.client.incoming;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CallEvent {
-    private String conversationUuid;
-    private String callUuid;
+public class CallEvent implements Jsonable {
+    private String conversationUuid, callUuid, from, to, uuid, detail;
     private CallDirection direction;
-    private String from;
     private CallStatus status;
     private Date timestamp;
-    private String to;
-    private String uuid;
-    private String detail;
     private CallStatusDetail detailEnum;
 
     @JsonProperty("conversation_uuid")
@@ -46,30 +39,37 @@ public class CallEvent {
         return callUuid;
     }
 
+    @JsonProperty("direction")
     public CallDirection getDirection() {
         return direction;
     }
 
+    @JsonProperty("from")
     public String getFrom() {
         return from;
     }
 
+    @JsonProperty("status")
     public CallStatus getStatus() {
         return status;
     }
 
+    @JsonProperty("timestamp")
     public Date getTimestamp() {
         return timestamp;
     }
 
+    @JsonProperty("to")
     public String getTo() {
         return to;
     }
 
+    @JsonProperty("uuid")
     public String getUuid() {
         return uuid;
     }
 
+    @JsonProperty("detail")
     public String getDetail() {
         return detail;
     }
@@ -80,11 +80,6 @@ public class CallEvent {
     }
 
     public static CallEvent fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, CallEvent.class);
-        } catch (IOException jpe) {
-            throw new VonageUnexpectedException("Failed to produce CallEvent from json.", jpe);
-        }
+        return Jsonable.fromJson(json);
     }
 }

@@ -15,13 +15,13 @@
  */
 package com.vonage.client.voice;
 
-import org.apache.http.NameValuePair;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import org.junit.jupiter.api.*;
 import java.util.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
 
 public class CallsFilterTest {
+
     @Test
     public void testAllParams() {
         Calendar startCalendar = new GregorianCalendar(TimeZone.getTimeZone("UTC"));
@@ -34,14 +34,9 @@ public class CallsFilterTest {
         Date endDate = endCalendar.getTime();
 
         CallsFilter filter = CallsFilter.builder()
-                .status(CallStatus.COMPLETED)
-                .dateStart(startDate)
-                .dateEnd(endDate)
-                .recordIndex(12)
-                .order(CallOrder.ASCENDING)
-                .pageSize(10)
-                .conversationUuid("this-is-not-a-uuid")
-                .build();
+                .status(CallStatus.COMPLETED).dateStart(startDate).dateEnd(endDate)
+                .recordIndex(12).order(CallOrder.ASCENDING).pageSize(10)
+                .conversationUuid("this-is-not-a-uuid").build();
 
         assertEquals(CallStatus.COMPLETED, filter.getStatus());
         assertEquals(startDate, filter.getDateStart());
@@ -52,12 +47,7 @@ public class CallsFilterTest {
         assertEquals("this-is-not-a-uuid", filter.getConversationUuid());
 
 
-        List<NameValuePair> params = filter.toUrlParams();
-        Map<String, String> paramLookup = new HashMap<>();
-        for (NameValuePair pair : params) {
-            paramLookup.put(pair.getName(), pair.getValue());
-        }
-
+        Map<String, String> paramLookup = filter.makeParams();
         assertEquals("completed", paramLookup.get("status"));
         assertEquals("2016-01-01T07:08:55Z", paramLookup.get("date_end"));
         assertEquals("2016-01-01T07:08:20Z", paramLookup.get("date_start"));
@@ -69,9 +59,7 @@ public class CallsFilterTest {
 
     @Test
     public void testNoParams() throws Exception {
-        CallsFilter filter = CallsFilter.builder().build();
-        List<NameValuePair> params = filter.toUrlParams();
-        assertEquals(0, params.size());
+        assertEquals(0, CallsFilter.builder().build().makeParams().size());
     }
 
     @Test

@@ -15,17 +15,10 @@
  */
 package com.vonage.client.messages;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
-import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
-import com.vonage.client.VonageClientException;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
-import java.util.Objects;
+import com.vonage.client.VonageApiResponseException;
 
 /**
  * Response returned when sending a message fails (i.e. returns a non-2xx status code).
@@ -34,89 +27,10 @@ import java.util.Objects;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public final class MessageResponseException extends VonageClientException {
-	String type, title, detail, instance;
-	int statusCode;
+public final class MessageResponseException extends VonageApiResponseException {
 
-	/**
-	 * Package-private constructor is to prevent users from explicitly creating this object.
-	 */
-	MessageResponseException() {
-	}
-
-	@JsonProperty("type")
-	public String getType() {
-		return type;
-	}
-
-	@JsonProperty("title")
-	public String getTitle() {
-		return title;
-	}
-
-	@JsonProperty("detail")
-	public String getDetail() {
-		return detail;
-	}
-
-	@JsonProperty("instance")
-	public String getInstance() {
-		return instance;
-	}
-
-	public int getStatusCode() {
-		return statusCode;
-	}
-
-	private static class IgnoreInheritedIntrospector extends JacksonAnnotationIntrospector {
-		@Override
-		public boolean hasIgnoreMarker(final AnnotatedMember m) {
-			return m.getDeclaringClass() != MessageResponseException.class || super.hasIgnoreMarker(m);
-		}
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		MessageResponseException response = (MessageResponseException) o;
-		return statusCode == response.statusCode &&
-				Objects.equals(type, response.type) &&
-				Objects.equals(title, response.title) &&
-				Objects.equals(detail, response.detail) &&
-				Objects.equals(instance, response.instance);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(type, title, detail, instance, statusCode);
-	}
-
-
-	@Override
-	public String toString() {
-		return getClass().getSimpleName() +
-				" {type='" + type + '\'' +
-				", title='" + title + '\'' +
-				", detail='" + detail + '\'' +
-				", instance='" + instance + '\'' +
-				", statusCode=" + statusCode + '}';
-	}
-
-	/**
-	 * Generates JSON from this object. Excludes fields inherited from superclasses.
-	 *
-	 * @return The JSON representation of this response object.
-	 */
-	public String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.setAnnotationIntrospector(new IgnoreInheritedIntrospector());
-			return mapper.writeValueAsString(this);
-		}
-		catch (JsonProcessingException e) {
-			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName(), e);
-		}
+	void setStatusCode(int statusCode) {
+		this.statusCode = statusCode;
 	}
 
 	/**
@@ -125,16 +39,8 @@ public final class MessageResponseException extends VonageClientException {
 	 * @param json The JSON string to parse.
 	 * @return An instance of this class with all known fields populated from the JSON payload, if present.
 	 */
+	@JsonCreator
 	public static MessageResponseException fromJson(String json) {
-		if (json == null || json.length() < 2) {
-			return new MessageResponseException();
-		}
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readValue(json, MessageResponseException.class);
-		}
-		catch (IOException e) {
-			throw new VonageUnexpectedException("Failed to produce MessageResponseException from json.", e);
-		}
+		return fromJson(MessageResponseException.class, json);
 	}
 }

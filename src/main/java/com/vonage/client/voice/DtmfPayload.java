@@ -15,24 +15,27 @@
  */
 package com.vonage.client.voice;
 
-/**
- * The JSON payload that will be sent in a {@link DtmfRequest}.
- * <p>
- * {@code digits} are the DTMF tones to be sent to a {@link Call}.
- */
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.Jsonable;
 
-public class DtmfPayload {
-    private String digits;
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+class DtmfPayload implements Jsonable {
+    @JsonIgnore final String uuid;
+    private final String digits;
 
-    public DtmfPayload(String digits) {
-        this.digits = digits;
+    public DtmfPayload(String digits, String uuid) {
+        if ((this.digits = digits) == null || digits.trim().isEmpty()) {
+            throw new IllegalArgumentException("Must include at least one digit to send.");
+        }
+        this.uuid = uuid;
     }
 
+    @JsonProperty("digits")
     public String getDigits() {
         return digits;
-    }
-
-    public void setDigits(String digits) {
-        this.digits = digits;
     }
 }

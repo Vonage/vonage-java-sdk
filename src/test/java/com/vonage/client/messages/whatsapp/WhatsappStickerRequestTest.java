@@ -15,8 +15,8 @@
  */
 package com.vonage.client.messages.whatsapp;
 
-import static org.junit.Assert.assertTrue;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import java.util.UUID;
 
 public class WhatsappStickerRequestTest {
@@ -47,32 +47,33 @@ public class WhatsappStickerRequestTest {
 		assertTrue(json.contains("\"to\":\""+to+"\""));
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testConstructNoUrlOrId() {
-		WhatsappStickerRequest.builder()
-				.from("447900000001").to("317900000002")
-				.build();
+		assertThrows(IllegalStateException.class, () -> WhatsappStickerRequest.builder()
+				.from("447900000001").to("317900000002").build()
+		);
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testConstructBothUrlAndId() {
-		WhatsappStickerRequest.builder()
+		assertThrows(IllegalStateException.class, () -> WhatsappStickerRequest.builder()
 				.from("447900000001").to("317900000002")
 				.url("https://example.com/image.webp")
-				.id(UUID.randomUUID().toString()).build();
+				.id(UUID.randomUUID().toString()).build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructInvalidId() {
-		WhatsappStickerRequest.builder()
-				.from("447900000001").to("317900000002")
-				.id("not-a-guid").build();
+		assertThrows(IllegalArgumentException.class, () -> WhatsappStickerRequest.builder()
+				.from("447900000001").to("317900000002").id("not-a-guid").build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructInvalidUrlExtension() {
-		WhatsappStickerRequest.builder()
-				.from("447900000001").to("317900000002")
-				.url("https://example.com/image.svg").build();
+		assertThrows(IllegalArgumentException.class, () -> WhatsappStickerRequest.builder()
+				.from("447900000001").to("317900000002").url("https://example.com/image.svg").build()
+		);
 	}
 }

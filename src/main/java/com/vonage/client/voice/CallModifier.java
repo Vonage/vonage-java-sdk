@@ -15,11 +15,12 @@
  */
 package com.vonage.client.voice;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.voice.ncco.Ncco;
 
+/**
+ * @deprecated Will be removed in next major release.
+ */
+@Deprecated
 public class CallModifier {
     private final String uuid;
     private final ModifyCallPayload modifyCallPayload;
@@ -51,11 +52,6 @@ public class CallModifier {
     }
 
     public String toJson() {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(modifyCallPayload);
-        } catch (JsonProcessingException jpe) {
-            throw new VonageUnexpectedException("Failed to produce json from CallModifier object.", jpe);
-        }
+        return modifyCallPayload.toJson();
     }
 }

@@ -21,28 +21,32 @@ import com.vonage.client.auth.*;
 import com.vonage.client.auth.hashutils.HashUtil;
 import com.vonage.client.conversion.ConversionClient;
 import com.vonage.client.insight.InsightClient;
+import com.vonage.client.meetings.MeetingsClient;
 import com.vonage.client.messages.MessagesClient;
 import com.vonage.client.numbers.NumbersClient;
+import com.vonage.client.proactiveconnect.ProactiveConnectClient;
 import com.vonage.client.redact.RedactClient;
 import com.vonage.client.sms.SmsClient;
 import com.vonage.client.sns.SnsClient;
+import com.vonage.client.subaccounts.SubaccountsClient;
+import com.vonage.client.users.UsersClient;
 import com.vonage.client.verify.VerifyClient;
 import com.vonage.client.video.VideoClient;
+import com.vonage.client.verify2.Verify2Client;
 import com.vonage.client.voice.VoiceClient;
 import org.apache.http.client.HttpClient;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 /**
  * Top-level Vonage API client object.
  * <p>
  * Construct an instance of this object with one or more {@link AuthMethod}s (providing all the authentication methods
  * for the APIs you wish to use), and then call {@link #getVoiceClient()} to obtain a client for the Vonage Voice API.
- * <p>
- * Currently, this object only constructs and provides access to {@link VoiceClient}. In the future it will manage
- * clients for all Vonage APIs.
+ * <p>.
  */
 public class VonageClient {
     private final HttpWrapper httpWrapper;
@@ -57,6 +61,11 @@ public class VonageClient {
     private final ConversionClient conversion;
     private final RedactClient redact;
     private final MessagesClient messages;
+    private final Verify2Client verify2;
+    private final SubaccountsClient subaccounts;
+    private final ProactiveConnectClient proactiveConnect;
+    private final MeetingsClient meetings;
+    private final UsersClient users;
     private final VideoClient video;
 
     private VonageClient(Builder builder) {
@@ -74,6 +83,11 @@ public class VonageClient {
         conversion = new ConversionClient(httpWrapper);
         redact = new RedactClient(httpWrapper);
         messages = new MessagesClient(httpWrapper);
+        verify2 = new Verify2Client(httpWrapper);
+        subaccounts = new SubaccountsClient(httpWrapper);
+        proactiveConnect = new ProactiveConnectClient(httpWrapper);
+        meetings = new MeetingsClient(httpWrapper);
+        users = new UsersClient(httpWrapper);
         video = new VideoClient(httpWrapper);
     }
 
@@ -124,13 +138,59 @@ public class VonageClient {
     }
 
     /**
-     * Returns the Messages client.
      *
-     * @return The Messages API client.
+     * @return The Messages v1 client.
      * @since 6.5.0
      */
     public MessagesClient getMessagesClient() {
         return messages;
+    }
+
+    /**
+     *
+     * @return The Proactive Connect client.
+     * @since 7.6.0
+     */
+    public ProactiveConnectClient getProactiveConnectClient() {
+        return proactiveConnect;
+    }
+
+    /**
+     *
+     * @return The Meetings client.
+     * @since 7.6.0
+     */
+    public MeetingsClient getMeetingsClient() {
+        return meetings;
+    }
+
+    /**
+     *
+     * @return The Verify v2 client.
+     * @since 7.4.0
+     */
+    public Verify2Client getVerify2Client() {
+        return verify2;
+    }
+
+    /**
+     *
+     *
+     * @return The Subaccounts client.
+     * @since 7.5.0
+     */
+    public SubaccountsClient getSubaccountsClient() {
+        return subaccounts;
+    }
+
+    /**
+     *
+     *
+     * @return The Users client.
+     * @since 7.7.0
+     */
+    public UsersClient getUsersClient() {
+        return users;
     }
 
     /**
@@ -162,6 +222,11 @@ public class VonageClient {
         return httpWrapper;
     }
 
+    /**
+     * Entry point for constructing an instance of this class.
+     *
+     * @return A new Builder with default initial configuration.
+     */
     public static Builder builder() {
         return new Builder();
     }
@@ -170,17 +235,14 @@ public class VonageClient {
         private AuthCollection authCollection;
         private HttpConfig httpConfig = HttpConfig.defaultConfig();
         private HttpClient httpClient;
-        private String applicationId;
-        private String apiKey;
-        private String apiSecret;
-        private String signatureSecret;
+        private String applicationId, apiKey, apiSecret, signatureSecret;
         private byte[] privateKeyContents;
         private HashUtil.HashType hashType = HashUtil.HashType.MD5;
 
         /**
-         * @param httpConfig Configuration options for the {@link HttpWrapper}
+         * @param httpConfig Configuration options for the {@link HttpWrapper}.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder httpConfig(HttpConfig httpConfig) {
             this.httpConfig = httpConfig;
@@ -191,10 +253,27 @@ public class VonageClient {
          * @param httpClient Custom implementation of {@link HttpClient}.
          *
          * @return This builder.
+         *
+         * @deprecated This method will be removed in the next major release.
          */
+        @Deprecated
         public Builder httpClient(HttpClient httpClient) {
             this.httpClient = httpClient;
             return this;
+        }
+
+        /**
+         * Set the application ID for this client. This will be used alongside your private key
+         * (se via {@link #privateKeyContents}) for authenticating requests.
+         *
+         * @param applicationId The application UUID.
+         *
+         * @return This builder.
+         *
+         * @since 7.11.0
+         */
+        public Builder applicationId(UUID applicationId) {
+            return applicationId(applicationId.toString());
         }
 
         /**

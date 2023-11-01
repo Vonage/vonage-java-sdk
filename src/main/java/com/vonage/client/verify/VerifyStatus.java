@@ -128,7 +128,7 @@ public enum VerifyStatus {
         ));
 
     /**
-     * Look up the {@link VerifyStatus} based on the int value.
+     * Look up the VerifyStatus based on the int value.
      *
      * @param verifyStatus the int value of the verify status.
      *

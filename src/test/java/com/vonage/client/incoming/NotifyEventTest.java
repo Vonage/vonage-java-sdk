@@ -16,13 +16,9 @@
 package com.vonage.client.incoming;
 
 import com.vonage.client.VonageUnexpectedException;
-import org.junit.Test;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TimeZone;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.*;
+import java.util.*;
 
 public class NotifyEventTest {
 
@@ -53,7 +49,7 @@ public class NotifyEventTest {
         try {
             NotifyEvent.fromJson(json);
         } catch (VonageUnexpectedException e) {
-            assertEquals("Failed to convert NotifyEvent from json.", e.getMessage());
+            assertEquals("Failed to produce NotifyEvent from json.", e.getMessage());
         }
     }
 

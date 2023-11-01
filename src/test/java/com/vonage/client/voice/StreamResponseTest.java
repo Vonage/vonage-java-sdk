@@ -16,16 +16,14 @@
 package com.vonage.client.voice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
 import java.io.IOException;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 
 public class StreamResponseTest {
     private StreamResponse response;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         response = StreamResponse.fromJson("{\n" +
                 "  \"message\": \"Stream started\",\n" +

@@ -15,9 +15,8 @@
  */
 package com.vonage.client.voice.ncco;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotSame;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RecordActionTest {
     @Test
@@ -39,10 +38,7 @@ public class RecordActionTest {
                 .eventUrl("https://example.com").channels(10)
                 .build();
 
-        assertEquals(
-                "[{\"format\":\"mp3\",\"endOnSilence\":3,\"timeOut\":5,\"channels\":10,\"endOnKey\":\"#\",\"beepStart\":true,\"eventUrl\":[\"https://example.com\"],\"eventMethod\":\"POST\",\"split\":\"conversation\",\"action\":\"record\"}]",
-                new Ncco(record).toJson()
-        );
+        assertEquals("[{\"format\":\"mp3\",\"endOnSilence\":3,\"timeOut\":5,\"channels\":10,\"endOnKey\":\"#\",\"beepStart\":true,\"eventUrl\":[\"https://example.com\"],\"eventMethod\":\"POST\",\"split\":\"conversation\",\"action\":\"record\"}]", new Ncco(record).toJson());
     }
 
     @Test
@@ -132,10 +128,7 @@ public class RecordActionTest {
     @Test
     public void testMultipleBuilderCallWithDifferentChannelsSetsAndUnsetsSplitCorrectly() {
         RecordAction.Builder recordBuilder = RecordAction.builder();
-        assertEquals(
-                "[{\"channels\":2,\"split\":\"conversation\",\"action\":\"record\"}]",
-                new Ncco(recordBuilder.channels(2).build()).toJson()
-        );
+        assertEquals("[{\"channels\":2,\"split\":\"conversation\",\"action\":\"record\"}]", new Ncco(recordBuilder.channels(2).build()).toJson());
         assertEquals("[{\"channels\":1,\"action\":\"record\"}]", new Ncco(recordBuilder.channels(1).build()).toJson());
     }
 }

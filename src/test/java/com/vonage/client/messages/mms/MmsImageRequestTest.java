@@ -15,8 +15,8 @@
  */
 package com.vonage.client.messages.mms;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MmsImageRequestTest {
 
@@ -54,30 +54,23 @@ public class MmsImageRequestTest {
 		assertTrue(json.contains("\"image\":{\"url\":\""+url+"\"}"));
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructNoUrl() {
-		MmsImageRequest.builder()
-				.caption("Description")
-				.from("447900000001")
-				.to("317900000002")
-				.build();
+		assertThrows(NullPointerException.class, () -> MmsImageRequest.builder()
+				.caption("Description").from("447900000001").to("317900000002").build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructInvalidExtension() {
-		MmsImageRequest.builder()
-				.from("447900000001")
-				.to("317900000002")
-				.url("http://foo.tld/path/to/image.bmp")
-				.build();
+		assertThrows(IllegalArgumentException.class, () -> MmsImageRequest.builder()
+				.from("447900000001").to("317900000002").url("http://foo.tld/path/to/image.bmp").build()
+		);
 	}
 
 	@Test
 	public void testValidExtensions() {
-		MmsImageRequest.Builder builder = MmsImageRequest.builder()
-				.from("447900000001")
-				.to("317900000002");
-
+		MmsImageRequest.Builder builder = MmsImageRequest.builder().from("447900000001").to("317900000002");
 		String baseUrl = "file:///path/to/resource", url;
 		for (String imageType : new String[]{".jpeg", ".jpg", ".png", ".gif"}) {
 			url = baseUrl + imageType;

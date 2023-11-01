@@ -15,9 +15,11 @@
  */
 package com.vonage.client.verify;
 
-import org.apache.http.client.methods.RequestBuilder;
+import com.vonage.client.QueryParamsRequest;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-public class ControlRequest {
+public class ControlRequest implements QueryParamsRequest {
     private final String requestId;
     private final VerifyControlCommand command;
 
@@ -34,9 +36,11 @@ public class ControlRequest {
         return command;
     }
 
-    public void addParams(RequestBuilder request) {
-        request.addParameter("request_id", getRequestId())
-                .addParameter("cmd", getCommand().toString());
+    @Override
+    public Map<String, String> makeParams() {
+        Map<String, String> params = new LinkedHashMap<>(2);
+        params.put("request_id", requestId);
+        params.put("cmd", command.toString());
+        return params;
     }
-
 }

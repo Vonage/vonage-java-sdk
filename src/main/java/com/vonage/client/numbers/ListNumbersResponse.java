@@ -16,15 +16,13 @@
 package com.vonage.client.numbers;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 
 /**
  * Response from a request to list the numbers currently being rented buy an account.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ListNumbersResponse {
+public class ListNumbersResponse implements Jsonable {
     private int count = 0;
     private OwnedNumber[] numbers = new OwnedNumber[0];
 
@@ -37,11 +35,6 @@ public class ListNumbersResponse {
     }
 
     public static ListNumbersResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, ListNumbersResponse.class);
-        } catch (IOException jpe) {
-            throw new VonageUnexpectedException("Failed to produce json from ListNumbersResponse object.", jpe);
-        }
+        return Jsonable.fromJson(json);
     }
 }

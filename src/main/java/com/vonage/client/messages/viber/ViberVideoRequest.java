@@ -18,6 +18,7 @@ package com.vonage.client.messages.viber;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.MessageType;
+import java.util.Objects;
 
 /**
  * @since 7.2.0
@@ -28,6 +29,8 @@ public final class ViberVideoRequest extends ViberRequest {
 
 	ViberVideoRequest(Builder builder) {
 		super(builder, MessageType.VIDEO);
+		Objects.requireNonNull(builder.duration, "Duration is required.");
+		Objects.requireNonNull(builder.fileSize, "File size is required.");
 		video = new Video(builder.url, builder.thumbUrl, builder.caption);
 	}
 
@@ -67,6 +70,30 @@ public final class ViberVideoRequest extends ViberRequest {
 		 */
 		public Builder thumbUrl(String thumbUrl) {
 			this.thumbUrl = thumbUrl;
+			return this;
+		}
+
+		/**
+		 * (REQUIRED)
+		 * Length of the video in seconds. Must be between 1 and 600.
+		 *
+		 * @param duration The video duration as an integer.
+		 * @return This builder.
+		 */
+		public Builder duration(int duration) {
+			this.duration = duration;
+			return this;
+		}
+
+		/**
+		 * (REQUIRED)
+		 * The video file size in megabytes. Must be between 1 and 200.
+		 *
+		 * @param fileSize The file size as an integer.
+		 * @return This builder.
+		 */
+		public Builder fileSize(int fileSize) {
+			this.fileSize = fileSize;
 			return this;
 		}
 

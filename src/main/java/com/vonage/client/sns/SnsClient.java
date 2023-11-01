@@ -17,16 +17,18 @@ package com.vonage.client.sns;
 
 import com.vonage.client.*;
 import com.vonage.client.sns.request.SnsPublishRequest;
+import com.vonage.client.sns.request.SnsRequest;
 import com.vonage.client.sns.request.SnsSubscribeRequest;
 import com.vonage.client.sns.response.SnsPublishResponse;
+import com.vonage.client.sns.response.SnsResponse;
 import com.vonage.client.sns.response.SnsSubscribeResponse;
 
 /**
- * A client for talking to the Vonage Voice API. The standard way to obtain an instance of this class is to use {@link
+ * A client for talking to the Vonage SNS API. The standard way to obtain an instance of this class is to use {@link
  * VonageClient#getSnsClient()}.
  */
 public class SnsClient {
-    final SnsEndpoint endpoint;
+    final RestEndpoint<SnsRequest, SnsResponse> endpoint;
 
     /**
      * Constructor.

@@ -16,6 +16,7 @@
 package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.net.URI;
 import java.util.Map;
 
@@ -36,23 +37,40 @@ public class SipEndpoint implements Endpoint {
         this.headers = builder.headers;
     }
 
+    @JsonProperty("type")
     @Override
     public String getType() {
         return TYPE;
     }
 
+    @JsonProperty("uri")
     public URI getUri() {
         return uri;
     }
 
+    @JsonProperty("headers")
     public Map<String, ?> getHeaders() {
         return headers;
     }
 
+    /**
+     * Entry point for constructing an instance of this class.
+     *
+     * @param uri The URI as a string.
+     *
+     * @return A new Builder.
+     */
     public static Builder builder(String uri) {
         return builder(URI.create(uri));
     }
 
+    /**
+     * Entry point for constructing an instance of this class.
+     *
+     * @param uri The URI object.
+     *
+     * @return A new Builder.
+     */
     public static Builder builder(URI uri) {
         return new Builder(uri);
     }

@@ -16,25 +16,43 @@
 package com.vonage.client.insight;
 
 import com.vonage.client.*;
+import com.vonage.client.auth.SignatureAuthMethod;
+import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.common.HttpMethod;
+import java.util.function.Function;
 
 /**
  * A client for talking to the Vonage Number Insight API. The standard way to obtain an instance of this class is to use
  * {@link VonageClient#getInsightClient()}.
  */
 public class InsightClient {
-    final BasicInsightEndpoint basic;
-    final StandardInsightEndpoint standard;
-    final AdvancedInsightEndpoint advanced;
+    final RestEndpoint<BasicInsightRequest, BasicInsightResponse> basic;
+    final RestEndpoint<StandardInsightRequest, StandardInsightResponse> standard;
+    final RestEndpoint<AdvancedInsightRequest, AdvancedInsightResponse> advanced;
 
     /**
      * Constructor.
      *
-     * @param httpWrapper (required) shared HTTP wrapper object used for making REST calls.
+     * @param wrapper (REQUIRED) shared HTTP wrapper object used for making REST calls.
      */
-    public InsightClient(HttpWrapper httpWrapper) {
-        basic = new BasicInsightEndpoint(httpWrapper);
-        standard = new StandardInsightEndpoint(httpWrapper);
-        advanced = new AdvancedInsightEndpoint(httpWrapper);
+    public InsightClient(HttpWrapper wrapper) {
+        @SuppressWarnings("unchecked")
+        final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
+            Endpoint(Function<T, String> pathGetter, R... type) {
+                super(DynamicEndpoint.<T, R> builder(type)
+                        .wrapper(wrapper).requestMethod(HttpMethod.POST)
+                        .authMethod(SignatureAuthMethod.class, TokenAuthMethod.class)
+                        .pathGetter((de, req) -> {
+                            String base = de.getHttpWrapper().getHttpConfig().getApiBaseUri();
+                            return base + "/ni/" + pathGetter.apply(req) + "/json";
+                        })
+                );
+            }
+        }
+
+        basic = new Endpoint<>(req -> "basic");
+        standard = new Endpoint<>(req -> "standard");
+        advanced = new Endpoint<>(req -> "advanced" + (req.isAsync() ? "/async" : ""));
     }
 
     /**

@@ -15,8 +15,8 @@
  */
 package com.vonage.client.messages.mms;
 
-import org.junit.Test;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MmsVcardRequestTest {
 
@@ -25,9 +25,7 @@ public class MmsVcardRequestTest {
 		String from = "447900000001", to = "317900000002",
 				url = "https://foo.tld/path/to/resource.vcf";
 
-		MmsVcardRequest mms = MmsVcardRequest.builder()
-				.url(url).from(from).to(to).build();
-
+		MmsVcardRequest mms = MmsVcardRequest.builder().url(url).from(from).to(to).build();
 		String json = mms.toJson();
 		assertTrue(json.contains("\"from\":\""+from+"\""));
 		assertTrue(json.contains("\"to\":\""+to+"\""));
@@ -36,20 +34,18 @@ public class MmsVcardRequestTest {
 		assertTrue(json.contains("\"vcard\":{\"url\":\""+url+"\"}"));
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructNoUrl() {
-		MmsVcardRequest.builder()
-				.from("447900000001")
-				.to("317900000002")
-				.build();
+		assertThrows(NullPointerException.class, () ->
+				MmsVcardRequest.builder().from("447900000001").to("317900000002").build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructInvalidExtension() {
-		MmsVcardRequest.builder()
-				.to("317900000002")
-				.from("447900000001")
-				.url("http://foo.tld/path/to/file.csv")
-				.build();
+		assertThrows(IllegalArgumentException.class, () -> MmsVcardRequest.builder()
+				.to("317900000002").from("447900000001")
+				.url("http://foo.tld/path/to/file.csv").build()
+		);
 	}
 }

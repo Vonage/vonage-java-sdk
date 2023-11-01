@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class SmsInboundMetadata {
-	private Integer numMessages;
+	private Integer numMessages, totalCount;
 	private String keyword;
 
 	SmsInboundMetadata() {}
@@ -40,6 +40,18 @@ public final class SmsInboundMetadata {
 	@JsonProperty("num_messages")
 	public Integer getNumMessages() {
 		return numMessages;
+	}
+
+	/**
+	 * The number of inbound SMS messages concatenated together to comprise this message. SMS messages are 160
+	 * characters, if an inbound message exceeds that size they are concatenated together to form a single message.
+	 * This number indicates how many messages formed this webhook.
+	 *
+	 * @return The total number of SMS messages used to create the text message.
+	 */
+	@JsonProperty("total_count")
+	public Integer getTotalCount() {
+		return totalCount;
 	}
 
 	/**

@@ -15,26 +15,41 @@
  */
 package com.vonage.client.sms;
 
-import com.vonage.client.HttpWrapper;
-import com.vonage.client.VonageClient;
-import com.vonage.client.VonageClientException;
-import com.vonage.client.VonageResponseParseException;
+import com.vonage.client.*;
+import com.vonage.client.auth.SignatureAuthMethod;
+import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.common.HttpMethod;
 import com.vonage.client.sms.messages.Message;
 
 
 /**
- * A client for talking to the Vonage Voice API. The standard way to obtain an instance of this class is to use {@link
- * VonageClient#getSmsClient()}.
+ * A client for talking to the Vonage Voice API. The standard way to obtain an instance of this class
+ * is to use {@link VonageClient#getSmsClient()}.
  */
 public class SmsClient {
-    final SendMessageEndpoint message;
+    final RestEndpoint<Message, SmsSubmissionResponse> sendMessage;
 
     /**
      * Create a new SmsClient.
-     * @param httpWrapper Http Wrapper used to create a Sms Request
+     *
+     * @param wrapper Http Wrapper used to create a Sms Request
      */
-    public SmsClient(HttpWrapper httpWrapper) {
-        message = new SendMessageEndpoint(httpWrapper);
+    public SmsClient(HttpWrapper wrapper) {
+        @SuppressWarnings("unchecked")
+        class Endpoint extends DynamicEndpoint<Message, SmsSubmissionResponse> {
+            Endpoint() {
+                super(DynamicEndpoint.<Message, SmsSubmissionResponse> builder(SmsSubmissionResponse.class)
+                        .wrapper(wrapper).requestMethod(HttpMethod.POST)
+                        .authMethod(SignatureAuthMethod.class, TokenAuthMethod.class)
+                        .contentTypeHeader("application/x-www-form-urlencoded")
+                        .acceptHeader("application/json")
+                        .pathGetter((de, req) ->
+                                de.getHttpWrapper().getHttpConfig().getRestBaseUri() + "/sms/json"
+                        )
+                );
+            }
+        }
+        sendMessage = new Endpoint();
     }
 
     /**
@@ -59,7 +74,6 @@ public class SmsClient {
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
     public SmsSubmissionResponse submitMessage(Message message) throws VonageResponseParseException, VonageClientException {
-        return this.message.execute(message);
+        return sendMessage.execute(message);
     }
-
 }

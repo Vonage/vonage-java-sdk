@@ -18,7 +18,7 @@ package com.vonage.client.common;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 /**
- * Enumeration representing various HTTP Methods
+ * Enumeration representing various HTTP request methods used in Vonage APIs.
  */
 public enum HttpMethod {
     GET,

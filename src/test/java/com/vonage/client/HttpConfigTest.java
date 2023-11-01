@@ -15,21 +15,24 @@
  */
 package com.vonage.client;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class HttpConfigTest {
-    private static final String EXPECTED_DEFAULT_API_BASE_URI = "https://api.nexmo.com";
-    private static final String EXPECTED_DEFAULT_REST_BASE_URI = "https://rest.nexmo.com";
-    private static final String EXPECTED_DEFAULT_SNS_BASE_URI = "https://sns.nexmo.com";
+    static final String EXPECTED_DEFAULT_API_BASE_URI = "https://api.nexmo.com";
+    static final String EXPECTED_DEFAULT_REST_BASE_URI = "https://rest.nexmo.com";
+    static final String EXPECTED_DEFAULT_SNS_BASE_URI = "https://sns.nexmo.com";
 
-    @Test
-    public void testDefaultFactoryMethod() {
-        HttpConfig config = HttpConfig.defaultConfig();
-
+    static void assertDefaults(HttpConfig config) {
+        assertEquals(60000, config.getTimeoutMillis());
         assertEquals(EXPECTED_DEFAULT_API_BASE_URI, config.getApiBaseUri());
         assertEquals(EXPECTED_DEFAULT_REST_BASE_URI, config.getRestBaseUri());
         assertEquals(EXPECTED_DEFAULT_SNS_BASE_URI, config.getSnsBaseUri());
+    }
+
+    @Test
+    public void testDefaultFactoryMethod() {
+        assertDefaults(HttpConfig.defaultConfig());
     }
 
     @Test

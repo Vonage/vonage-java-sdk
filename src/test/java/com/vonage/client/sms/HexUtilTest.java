@@ -15,8 +15,8 @@
  */
 package com.vonage.client.sms;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class HexUtilTest {
     @Test
@@ -43,6 +43,6 @@ public class HexUtilTest {
 
     @Test
     public void testHexToBytesNull() throws Exception {
-        assertNull(null, HexUtil.hexToBytes(null));
+        assertNull(HexUtil.hexToBytes(null));
     }
 }

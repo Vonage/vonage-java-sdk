@@ -15,9 +15,10 @@
  */
 package com.vonage.client.messages;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.VonageUnexpectedException;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Currency;
@@ -41,7 +42,7 @@ public class MessageStatusTest {
 		double price = 0.0333;
 		MessageStatus.Error error = new MessageStatus.Error();
 		error.type = type;
-		error.title = title+"";
+		error.title = String.valueOf(title);
 		error.detail = detail;
 		error.instance = instance;
 		MessageStatus.Usage usage = new MessageStatus.Usage();
@@ -162,8 +163,16 @@ public class MessageStatusTest {
 		assertEquals("user_initiated", origin.get("type"));
 	}
 
-	@Test(expected = VonageUnexpectedException.class)
+	@Test
 	public void testFromJsonInvalid() {
-		MessageStatus.fromJson("{malformed]");
+		assertThrows(VonageUnexpectedException.class, () -> MessageStatus.fromJson("{malformed]"));
+	}
+
+	@Test
+	public void triggerJsonProcessingException() {
+		class SelfRefrencing extends MessageStatus {
+			@JsonProperty("self") final SelfRefrencing self = this;
+		}
+		assertThrows(VonageUnexpectedException.class, () -> new SelfRefrencing().toJson());
 	}
 }

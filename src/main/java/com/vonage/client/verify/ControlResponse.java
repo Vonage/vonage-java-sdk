@@ -15,33 +15,30 @@
  */
 package com.vonage.client.verify;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ControlResponse {
-    private final String status;
-    private final VerifyControlCommand command;
+public class ControlResponse implements Jsonable {
+    private String status;
+    private VerifyControlCommand command;
     private String errorText;
 
-    @JsonCreator
-    public ControlResponse(
-            @JsonProperty("status") String status,
-            @JsonProperty("command") VerifyControlCommand command) {
+    private ControlResponse() {
+    }
+
+    public ControlResponse(String status, VerifyControlCommand command) {
         this.status = status;
         this.command = command;
     }
 
-    @JsonProperty
+    @JsonProperty("status")
     public String getStatus() {
         return status;
     }
 
-    @JsonProperty
+    @JsonProperty("command")
     public VerifyControlCommand getCommand() {
         return command;
     }
@@ -57,11 +54,6 @@ public class ControlResponse {
     }
 
     public static ControlResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, ControlResponse.class);
-        } catch (IOException jpe) {
-            throw new VonageUnexpectedException("Failed to produce ControlResponse from json.", jpe);
-        }
+        return Jsonable.fromJson(json);
     }
 }

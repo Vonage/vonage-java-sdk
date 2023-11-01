@@ -18,12 +18,14 @@ package com.vonage.client.auth;
 import com.vonage.client.auth.hashutils.HashUtil;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import org.springframework.mock.web.MockHttpServletRequest;
+import javax.servlet.ReadListener;
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -132,8 +134,10 @@ public class RequestSigningTest {
 
     @Test
     public void testVerifyRequestSignature() {
-        HttpServletRequest request = constructDummyRequest();
-        assertTrue(RequestSigning.verifyRequestSignature(request, "abcde", 2100000));
+        assertTrue(RequestSigning.verifyRequestSignature(
+                RequestSigning.APPLICATION_JSON, null, constructDummyParams(),
+                "abcde", 2100000
+        ));
     }
 
     @Test
@@ -141,13 +145,19 @@ public class RequestSigningTest {
         Map<String, String[]> params = constructDummyParams();
         params.put("sig", new String[]{"b7f749de27b4adcf736cc95c9a7e059a16c85127"});
 
-        assertTrue(RequestSigning.verifyRequestSignature(constructDummyRequest(params), "abcde", 2100000, HashUtil.HashType.HMAC_SHA1));
+        assertTrue(RequestSigning.verifyRequestSignature(
+                RequestSigning.APPLICATION_JSON, null, params,
+                "abcde", 2100000, HashUtil.HashType.HMAC_SHA1
+        ));
     }
 
     @Test
-    public void testVerifySignatureRequestJson(){
-        HttpServletRequest request = ConstructDummyRequestJson();
-        assertTrue(RequestSigning.verifyRequestSignature(request,"abcde",2100000, HashUtil.HashType.HMAC_SHA1));
+    public void testVerifySignatureRequestJson() throws Exception {
+        HttpServletRequest request = constructDummyRequestJson();
+        assertTrue(RequestSigning.verifyRequestSignature(
+                RequestSigning.APPLICATION_JSON, request.getInputStream(), constructDummyParams(),
+                "abcde", 2100000, HashUtil.HashType.HMAC_SHA1
+        ));
     }
 
     @Test
@@ -155,15 +165,20 @@ public class RequestSigningTest {
         Map<String, String[]> params = constructDummyParams();
         params.put("sig", new String[]{"8d1b0428276b6a070578225914c3502cc0687a454dfbbbb370c76a14234cb546"});
 
-        assertTrue(RequestSigning.verifyRequestSignature(constructDummyRequest(params), "abcde", 2100000, HashUtil.HashType.HMAC_SHA256));
+        assertTrue(RequestSigning.verifyRequestSignature(
+                RequestSigning.APPLICATION_JSON, null, params,
+                "abcde", 2100000, HashUtil.HashType.HMAC_SHA256
+        ));
     }
 
     @Test
-    public void testVerifyRequestSignatureWithHmacMd5Hash() {
+    public void testVerifyRequestSignatureWithHmacMd5Hash() throws Exception {
         Map<String, String[]> params = constructDummyParams();
         params.put("sig", new String[]{"e0afe267aefd6dd18a848c1681517a19"});
-
-        assertTrue(RequestSigning.verifyRequestSignature(constructDummyRequest(params), "abcde", 2100000, HashUtil.HashType.HMAC_MD5));
+        assertTrue(RequestSigning.verifyRequestSignature(
+                RequestSigning.APPLICATION_JSON, null, params,
+                "abcde", 2100000, HashUtil.HashType.HMAC_MD5
+        ));
     }
 
     @Test
@@ -171,28 +186,34 @@ public class RequestSigningTest {
         Map<String, String[]> params = constructDummyParams();
         params.put("sig", new String[]{"1c834a1f6a377d4473971387b065cb38e2ad6c4869ba77b7b53e207a344e87ba04b456dfc697b371a2d1ce476d01dafd4394aa97525eff23badad39d2389a710"});
 
-        assertTrue(RequestSigning.verifyRequestSignature(constructDummyRequest(params), "abcde", 2100000, HashUtil.HashType.HMAC_SHA512));
+        assertTrue(RequestSigning.verifyRequestSignature(
+                RequestSigning.APPLICATION_JSON, null, params,
+                "abcde", 2100000, HashUtil.HashType.HMAC_SHA512
+        ));
     }
 
     @Test
     public void testVerifyRequestSignatureNoSig() {
-        HttpServletRequest request = constructDummyRequest(constructDummyParamsNoSignature());
-
-        assertFalse(RequestSigning.verifyRequestSignature(request, "abcde", 2100000));
+        assertFalse(RequestSigning.verifyRequestSignature(
+                RequestSigning.APPLICATION_JSON, null, constructDummyParamsNoSignature(),
+                "abcde", 2100000
+        ));
     }
 
     @Test
     public void testVerifyRequestSignatureBadTimestamp() {
-        HttpServletRequest request = constructDummyRequest(constructDummyParamsInvalidTimestamp());
-
-        assertFalse(RequestSigning.verifyRequestSignature(request, "abcde", 2100000));
+        assertFalse(RequestSigning.verifyRequestSignature(
+                RequestSigning.APPLICATION_JSON, null, constructDummyParamsInvalidTimestamp(),
+                "abcde", 2100000
+        ));
     }
 
     @Test
     public void testVerifyRequestSignatureMissingTimestamp() {
-        HttpServletRequest request = constructDummyRequest(constructDummyParamsNoTimestamp());
-
-        assertFalse(RequestSigning.verifyRequestSignature(request, "abcde", 2100000));
+        assertFalse(RequestSigning.verifyRequestSignature(
+                RequestSigning.APPLICATION_JSON, null, constructDummyParamsNoTimestamp(),
+                "abcde", 2100000
+        ));
     }
 
     @Test
@@ -201,9 +222,10 @@ public class RequestSigningTest {
         params.put("b", new String[]{ null });
         params.put("sig", new String[]{"a3368bf718ba104dcb392d8877e8eb2b"});
 
-        HttpServletRequest request = constructDummyRequest(params);
-
-        assertTrue(RequestSigning.verifyRequestSignature(request, "abcde", 2100000));
+        assertTrue(RequestSigning.verifyRequestSignature(
+                RequestSigning.APPLICATION_JSON, null, params,
+                "abcde", 2100000
+        ));
     }
 
     private HttpServletRequest constructDummyRequest() {
@@ -211,11 +233,40 @@ public class RequestSigningTest {
     }
 
 
-    private HttpServletRequest ConstructDummyRequestJson() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
+    private HttpServletRequest constructDummyRequestJson() throws Exception  {
+        HttpServletRequest request = mock(HttpServletRequest.class);
         String dummyJson = "{\"a\":\"alphabet\",\"b\":\"bananas\",\"timestamp\":\"2100\",\"sig\":\"b7f749de27b4adcf736cc95c9a7e059a16c85127\"}";
-        request.setContent(dummyJson.getBytes());
-        request.setContentType("application/json");
+        when(request.getContentType()).thenReturn("application/json");
+        final byte[] contentBytes = dummyJson.getBytes(StandardCharsets.UTF_8);
+        ServletInputStream servletInputStream = new ServletInputStream() {
+            private int index = 0;
+
+            @Override
+            public int read() {
+                if (index < contentBytes.length) {
+                    return contentBytes[index++] & 0xFF;
+                }
+                return -1;
+            }
+
+            @Override
+            public boolean isFinished() {
+                return index >= contentBytes.length;
+            }
+
+            @Override
+            public boolean isReady() {
+                return true;
+            }
+
+            @Override
+            public void setReadListener(ReadListener readListener) {
+                // No need to implement for this example
+            }
+        };
+
+        when(request.getInputStream()).thenReturn(servletInputStream);
+
         return request;
     }
 

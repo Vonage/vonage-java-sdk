@@ -15,10 +15,11 @@
  */
 package com.vonage.client.incoming;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DtmfResult {
-
     private String digits;
     private boolean timedOut;
 
@@ -26,6 +27,7 @@ public class DtmfResult {
      *
      * @return The buttons pressed by the user
      */
+    @JsonProperty("digits")
     public String getDigits() {
         return digits;
     }

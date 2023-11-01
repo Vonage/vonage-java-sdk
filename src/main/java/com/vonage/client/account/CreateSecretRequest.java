@@ -16,11 +16,10 @@
 package com.vonage.client.account;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.Jsonable;
 
-public class CreateSecretRequest {
+class CreateSecretRequest implements Jsonable {
     @JsonIgnore private final String apiKey;
     private final String secret;
 
@@ -33,15 +32,8 @@ public class CreateSecretRequest {
         return apiKey;
     }
 
+    @JsonProperty("secret")
     public String getSecret() {
         return secret;
-    }
-
-    public String toJson() {
-        try {
-            return new ObjectMapper().writeValueAsString(this);
-        } catch (JsonProcessingException jpe) {
-            throw new VonageUnexpectedException("Failed to produce json from CreateSecretRequest object.", jpe);
-        }
     }
 }

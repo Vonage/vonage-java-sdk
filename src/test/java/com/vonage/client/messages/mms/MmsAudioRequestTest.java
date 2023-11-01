@@ -15,8 +15,8 @@
  */
 package com.vonage.client.messages.mms;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MmsAudioRequestTest {
 
@@ -54,13 +54,11 @@ public class MmsAudioRequestTest {
 		assertTrue(json.contains("\"audio\":{\"url\":\""+url+"\"}"));
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructNoUrl() {
-		MmsAudioRequest.builder()
-				.caption("Description")
-				.from("447900000001")
-				.to("317900000002")
-				.build();
+		assertThrows(NullPointerException.class, () -> MmsAudioRequest.builder()
+				.caption("Description").from("447900000001").to("317900000002").build()
+		);
 	}
 
 	@Test

@@ -15,10 +15,11 @@
  */
 package com.vonage.client.numbers;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.apache.http.client.methods.RequestBuilder;
+import com.vonage.client.QueryParamsRequest;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-public class ListNumbersFilter {
+public class ListNumbersFilter implements QueryParamsRequest {
     private Integer index, size;
     private String pattern;
     private SearchPattern searchPattern;
@@ -28,10 +29,10 @@ public class ListNumbersFilter {
     }
 
     public ListNumbersFilter(
-            @JsonProperty Integer index,
-            @JsonProperty Integer size,
-            @JsonProperty String pattern,
-            @JsonProperty SearchPattern searchPattern) {
+            Integer index,
+            Integer size,
+            String pattern,
+            SearchPattern searchPattern) {
         this.index = index;
         this.size = size;
         this.pattern = pattern;
@@ -70,19 +71,21 @@ public class ListNumbersFilter {
         this.searchPattern = searchPattern;
     }
 
-    public void addParams(RequestBuilder request) {
+    @Override
+    public Map<String, String> makeParams() {
+        LinkedHashMap<String, String> params = new LinkedHashMap<>(4);
         if (index != null) {
-            request.addParameter("index", index.toString());
+            params.put("index", index.toString());
         }
         if (size != null) {
-            request.addParameter("size", size.toString());
+            params.put("size", size.toString());
         }
         if (pattern != null) {
-            request.addParameter("pattern", pattern);
+            params.put("pattern", pattern);
         }
         if (searchPattern != null) {
-            request.addParameter("search_pattern", Integer.toString(searchPattern.getValue()));
+            params.put("search_pattern", Integer.toString(searchPattern.getValue()));
         }
+        return params;
     }
-
 }

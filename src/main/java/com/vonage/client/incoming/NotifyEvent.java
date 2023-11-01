@@ -17,14 +17,12 @@ package com.vonage.client.incoming;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 import java.util.Date;
 import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class NotifyEvent {
+public class NotifyEvent implements Jsonable {
     @JsonProperty(value = "conversation_uuid")
     private String conversationUuid;
     private Date timestamp;
@@ -64,11 +62,6 @@ public class NotifyEvent {
     }
 
     public static NotifyEvent fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, NotifyEvent.class);
-        } catch (IOException e) {
-            throw new VonageUnexpectedException("Failed to convert NotifyEvent from json.", e);
-        }
+        return Jsonable.fromJson(json);
     }
 }

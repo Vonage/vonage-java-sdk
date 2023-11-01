@@ -27,22 +27,27 @@ public class Network {
     private BigDecimal price;
     private String currency, mcc, mnc, code, name;
 
+    @JsonProperty("type")
     public Type getType() {
         return type;
     }
 
+    @JsonProperty("price")
     public BigDecimal getPrice() {
         return price;
     }
 
+    @JsonProperty("currency")
     public String getCurrency() {
         return currency;
     }
 
+    @JsonProperty("mcc")
     public String getMcc() {
         return mcc;
     }
 
+    @JsonProperty("mnc")
     public String getMnc() {
         return mnc;
     }
@@ -57,7 +62,7 @@ public class Network {
         return name;
     }
 
-    enum Type {
+    public enum Type {
         MOBILE, LANDLINE, PAGER, LANDLINE_TOLLFREE, UNKNOWN;
 
         @Override

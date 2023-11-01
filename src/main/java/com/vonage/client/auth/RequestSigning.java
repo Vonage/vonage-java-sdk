@@ -25,8 +25,10 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -55,7 +57,7 @@ public class RequestSigning {
      *
      */
     public static void constructSignatureForRequestParameters(List<NameValuePair> params, String secretKey) {
-        constructSignatureForRequestParameters(params, secretKey, System.currentTimeMillis() / 1000);
+        constructSignatureForRequestParameters(params, secretKey, Instant.now().getEpochSecond());
     }
 
     /**
@@ -69,7 +71,7 @@ public class RequestSigning {
      * @param hashType The type of hash that is to be used in construction
      */
     public static void constructSignatureForRequestParameters(List<NameValuePair> params, String secretKey, HashUtil.HashType hashType) {
-        constructSignatureForRequestParameters(params, secretKey, System.currentTimeMillis() / 1000, hashType);
+        constructSignatureForRequestParameters(params, secretKey, Instant.now().getEpochSecond(), hashType);
     }
 
     /**
@@ -153,9 +155,12 @@ public class RequestSigning {
      * @param secretKey The pre-shared secret key used by the sender of the request to create the signature.
      *
      * @return true if the signature is correct for this request and secret key.
+     *
+     * @deprecated This method will be removed in a future release due to the dependency on javax.servlet.
      */
+    @Deprecated
     public static boolean verifyRequestSignature(HttpServletRequest request, String secretKey) {
-        return verifyRequestSignature(request, secretKey, System.currentTimeMillis());
+        return verifyRequestSignature(request, secretKey, HashUtil.HashType.MD5);
     }
 
     /**
@@ -166,52 +171,74 @@ public class RequestSigning {
      * @param hashType Hash type to be used to construct request parameters.
      *
      * @return true if the signature is correct for this request and secret key.
+     *
+     * @deprecated This method will be removed in a future release due to the dependency on javax.servlet.
      */
+    @Deprecated
     public static boolean verifyRequestSignature(HttpServletRequest request, String secretKey, HashUtil.HashType hashType) {
-        return verifyRequestSignature(request, secretKey, System.currentTimeMillis(), hashType);
+        try {
+            return verifyRequestSignature(
+                    request.getContentType(),
+                    request.getInputStream(),
+                    request.getParameterMap(),
+                    secretKey, System.currentTimeMillis(), hashType
+            );
+        }
+        catch (IOException ex) {
+            throw new VonageUnexpectedException("Error encountered when opening input stream for request", ex);
+        }
     }
 
     /**
-     * Verifies the signature in an HttpServletRequest.
-     * Hashing strategy is MD5.
+     * Verifies the signature in an HttpServletRequest. Hashing strategy is MD5.
      *
-     * @param request The HttpServletRequest to be verified.
+     * @param contentType The request Content-Type header.
+     * @param inputStream The request data stream.
+     * @param parameterMap The request parameters.
      * @param secretKey The pre-shared secret key used by the sender of the request to create the signature.
      * @param currentTimeMillis The current time, in milliseconds.
      *
      * @return true if the signature is correct for this request and secret key.
      */
-     protected static boolean verifyRequestSignature(HttpServletRequest request,
+     protected static boolean verifyRequestSignature(String contentType,
+                                                     InputStream inputStream,
+                                                     Map<String, String[]> parameterMap,
                                                      String secretKey,
                                                      long currentTimeMillis) {
-        return verifyRequestSignature(request, secretKey, currentTimeMillis, HashUtil.HashType.MD5);
+        return verifyRequestSignature(contentType, inputStream, parameterMap,
+                secretKey, currentTimeMillis, HashUtil.HashType.MD5
+        );
     }
 
     /**
      * Verifies the signature in an HttpServletRequest.
      *
-     * @param request The HttpServletRequest to be verified.
+     * @param contentType The request Content-Type header.
+     * @param inputStream The request data stream.
+     * @param parameterMap The request parameters.
      * @param secretKey The pre-shared secret key used by the sender of the request to create the signature.
      * @param currentTimeMillis The current time, in milliseconds.
      * @param hashType Hash type to be used to construct request parameters.
      *
      * @return true if the signature is correct for this request and secret key.
      */
-    protected static boolean verifyRequestSignature(HttpServletRequest request,
+    protected static boolean verifyRequestSignature(String contentType,
+                                                    InputStream inputStream,
+                                                    Map<String, String[]> parameterMap,
                                                     String secretKey,
                                                     long currentTimeMillis,
                                                     HashUtil.HashType hashType) {
 
         // Construct a sorted list of the name-value pair parameters supplied in the request, excluding the signature parameter
         Map<String, String> sortedParams = new TreeMap<>();
-        if (request.getContentType() != null && request.getContentType().equals(APPLICATION_JSON)) {
+        if (APPLICATION_JSON.equals(contentType) && inputStream != null) {
             ObjectMapper mapper = new ObjectMapper();
-            try{
-                Map<String,String> params = mapper.readValue(request.getInputStream(), new TypeReference<Map<String,String>>(){});
-                for (Map.Entry<String, String> entry: params.entrySet()) {
+            try {
+                Map<String,String> params = mapper.readValue(inputStream, new TypeReference<Map<String,String>>(){});
+                for (Map.Entry<String, String> entry : params.entrySet()) {
                     String name = entry.getKey();
                     String value = entry.getValue();
-                    log.info("" + name + " = " + value);
+                    log.info(name + " = " + value);
                     if (value == null || value.trim().isEmpty()) {
                         continue;
                     }
@@ -223,11 +250,11 @@ public class RequestSigning {
             }
         }
         else {
-            for (Map.Entry<String, String[]> entry: request.getParameterMap().entrySet()) {
+            for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
                 String name = entry.getKey();
                 String value = entry.getValue()[0];
-                log.info("" + name + " = " + value);
-                if (value == null || value.trim().equals("")) {
+                log.info(name + " = " + value);
+                if (value == null || value.trim().isEmpty()) {
                     continue;
                 }
                 sortedParams.put(name, value);
@@ -236,8 +263,7 @@ public class RequestSigning {
 
         // identify the signature supplied in the request ...
         String suppliedSignature = sortedParams.get(PARAM_SIGNATURE);
-        if (suppliedSignature == null)
-            return false;
+        if (suppliedSignature == null) return false;
 
         // Extract the timestamp parameter and verify that it is within 5 minutes of 'current time'
         String timeString = sortedParams.get(PARAM_TIMESTAMP);
@@ -258,9 +284,8 @@ public class RequestSigning {
 
         // walk this sorted list of parameters and construct a string
         StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, String> param: sortedParams.entrySet()) {
-            if (param.getKey().equals(PARAM_SIGNATURE))
-                continue;
+        for (Map.Entry<String, String> param : sortedParams.entrySet()) {
+            if (param.getKey().equals(PARAM_SIGNATURE)) continue;
             String name = param.getKey();
             String value = param.getValue();
             sb.append("&").append(clean(name)).append("=").append(clean(value));

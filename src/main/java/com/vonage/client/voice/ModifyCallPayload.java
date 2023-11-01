@@ -15,15 +15,28 @@
  */
 package com.vonage.client.voice;
 
-public class ModifyCallPayload {
-    private ModifyCallAction action;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.Jsonable;
+
+/**
+ * @deprecated Will be made package-private in next major release.
+ */
+@Deprecated
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ModifyCallPayload implements Jsonable {
+    @JsonIgnore String uuid;
+    private final ModifyCallAction action;
 
     public ModifyCallPayload(ModifyCallAction action) {
         this.action = action;
     }
 
+    @JsonProperty("action")
     public ModifyCallAction getAction() {
         return action;
     }
-
 }

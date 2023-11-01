@@ -15,12 +15,11 @@
  */
 package com.vonage.client.incoming;
 
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CallEventTest {
     @Test

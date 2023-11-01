@@ -15,8 +15,8 @@
  */
 package com.vonage.client.messages.whatsapp;
 
-import org.junit.Test;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class WhatsappFileRequestTest {
 
@@ -43,12 +43,10 @@ public class WhatsappFileRequestTest {
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructNoUrl() {
-		WhatsappFileRequest.builder()
-				.caption("Description")
-				.from("447900000001")
-				.to("317900000002")
-				.build();
+		assertThrows(NullPointerException.class, () -> WhatsappFileRequest.builder()
+				.caption("Description").from("447900000001").to("317900000002").build()
+		);
 	}
 }

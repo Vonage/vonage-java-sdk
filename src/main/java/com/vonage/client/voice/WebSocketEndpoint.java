@@ -15,27 +15,44 @@
  */
 package com.vonage.client.voice;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class WebSocketEndpoint implements Endpoint {
-    private String uri;
-    private String type = "websocket";
-    private String contentType;
-    private List<NameValuePair> headers;
+    private static final String TYPE = "websocket";
+    private String uri, contentType;
+    @JsonProperty("headers") private Map<String, Object> headers;
 
-    public WebSocketEndpoint(String uri, String contentType, List<NameValuePair> headers) {
+    protected WebSocketEndpoint() {
+    }
+
+    public WebSocketEndpoint(String uri, String contentType, Map<String, Object> headers) {
         this.uri = uri;
         this.contentType = contentType;
         this.headers = headers;
     }
 
+    @Deprecated
+    public WebSocketEndpoint(String uri, String contentType, List<NameValuePair> headers) {
+        this.uri = uri;
+        this.contentType = contentType;
+        setHeaders(headers);
+    }
+
+    @JsonProperty("type")
     @Override
     public String getType() {
-        return type;
+        return TYPE;
     }
 
     @Override
@@ -43,28 +60,54 @@ public class WebSocketEndpoint implements Endpoint {
         return "uri=" + uri + " content-type=" + contentType;
     }
 
+    /**
+     * The URI to the websocket you are streaming to.
+     *
+     * @return The URI as a string.
+     */
+    @JsonProperty("uri")
     public String getUri() {
         return uri;
     }
 
+    /**
+     *
+     * @return The content type.
+     */
     @JsonProperty("content-type")
     public String getContentType() {
         return contentType;
     }
 
+    @Deprecated
+    @JsonIgnore
     public List<NameValuePair> getHeaders() {
+        if (headers == null) return null;
+        return headers.entrySet().stream()
+                .map(e -> new BasicNameValuePair(e.getKey(), Objects.toString(e.getValue())))
+                .collect(Collectors.toList());
+    }
+
+    @JsonProperty("headers")
+    public Map<String, ?> getHeadersMap() {
         return headers;
     }
 
+    @Deprecated
     public void setUri(String uri) {
         this.uri = uri;
     }
 
+    @Deprecated
     public void setContentType(String contentType) {
         this.contentType = contentType;
     }
 
+    @JsonIgnore
+    @Deprecated
     public void setHeaders(List<NameValuePair> headers) {
-        this.headers = headers;
+        this.headers = headers.stream().collect(Collectors.toMap(
+                NameValuePair::getName, NameValuePair::getValue
+        ));
     }
 }

@@ -18,6 +18,7 @@ package com.vonage.client.incoming;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vonage.client.Jsonable;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -26,43 +27,39 @@ import java.util.Date;
 import java.util.TimeZone;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MessageEvent {
-    private String msisdn;
-    private String to;
-    private String messageId;
-    private String text;
+public class MessageEvent implements Jsonable {
+    private String msisdn, to, messageId, text, keyword, timestamp, nonce, data, udh;
     private MessageType type;
-    private String keyword;
     private Date messageTimestamp;
-    private String timestamp;
-    private String nonce;
     private Boolean concat;
-    private int concatRef;
-    private int concatTotal;
-    private int concatPart;
-    private String data;
-    private String udh;
+    private int concatRef, concatTotal, concatPart;
 
+    @JsonProperty("msisdn")
     public String getMsisdn() {
         return msisdn;
     }
 
+    @JsonProperty("to")
     public String getTo() {
         return to;
     }
 
+    @JsonProperty("messageId")
     public String getMessageId() {
         return messageId;
     }
 
+    @JsonProperty("text")
     public String getText() {
         return text;
     }
 
+    @JsonProperty("type")
     public MessageType getType() {
         return type;
     }
 
+    @JsonProperty("keyword")
     public String getKeyword() {
         return keyword;
     }
@@ -72,14 +69,17 @@ public class MessageEvent {
         return messageTimestamp;
     }
 
+    @JsonProperty("timestamp")
     public String getTimestamp() {
         return timestamp;
     }
 
+    @JsonProperty("nonce")
     public String getNonce() {
         return nonce;
     }
 
+    @JsonProperty("concat")
     public Boolean getConcat() {
         return concat;
     }
@@ -99,24 +99,32 @@ public class MessageEvent {
         return concatPart;
     }
 
+    @JsonProperty("data")
     public String getData() {
         return data;
     }
 
+    @JsonProperty("udh")
     public String getUdh() {
         return udh;
     }
 
-    public static MessageEvent fromJson(String json) {
+    @Override
+    public void updateFromJson(String json) {
         try {
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
             ObjectMapper mapper = new ObjectMapper();
             mapper.setDateFormat(dateFormat);
-            return mapper.readValue(json, MessageEvent.class);
-        } catch (IOException jpe) {
+            mapper.readerForUpdating(this).readValue(json, MessageEvent.class);
+        }
+        catch (IOException jpe) {
             throw new VonageUnexpectedException("Failed to produce MessageEvent from json.", jpe);
         }
+    }
+
+    public static MessageEvent fromJson(String json) {
+        return Jsonable.fromJson(json);
     }
 }

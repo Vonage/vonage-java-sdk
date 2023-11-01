@@ -15,15 +15,15 @@
  */
 package com.vonage.client.redact;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RedactRequestTest {
 
     @Test
     public void testRequiredParams() {
         String json = "{\"id\":\"testId\",\"product\":\"voice\"}";
-        assertEquals(new RedactRequest("testId", RedactRequest.Product.VOICE).toJson(), json);
+        assertEquals(json, new RedactRequest("testId", RedactRequest.Product.VOICE).toJson());
     }
 
     @Test
@@ -32,7 +32,7 @@ public class RedactRequestTest {
         RedactRequest request = new RedactRequest("testId", RedactRequest.Product.SMS);
         request.setType(RedactRequest.Type.OUTBOUND);
 
-        assertEquals(request.toJson(), json);
+        assertEquals(json, request.toJson());
     }
 
     @Test
@@ -41,43 +41,43 @@ public class RedactRequestTest {
         RedactRequest request = new RedactRequest("testId", RedactRequest.Product.SMS);
         request.setType(RedactRequest.Type.INBOUND);
 
-        assertEquals(request.toJson(), json);
+        assertEquals(json, request.toJson());
     }
 
     @Test
     public void testProductVoice() {
         String json = "{\"id\":\"testId\",\"product\":\"voice\"}";
-        assertEquals(new RedactRequest("testId", RedactRequest.Product.VOICE).toJson(), json);
+        assertEquals(json, new RedactRequest("testId", RedactRequest.Product.VOICE).toJson());
     }
 
     @Test
     public void testProductNumberInsight() {
         String json = "{\"id\":\"testId\",\"product\":\"number-insight\"}";
-        assertEquals(new RedactRequest("testId", RedactRequest.Product.NUMBER_INSIGHTS).toJson(), json);
+        assertEquals(json, new RedactRequest("testId", RedactRequest.Product.NUMBER_INSIGHTS).toJson());
     }
 
     @Test
     public void testProductVerify() {
         String json = "{\"id\":\"testId\",\"product\":\"verify\"}";
-        assertEquals(new RedactRequest("testId", RedactRequest.Product.VERIFY).toJson(), json);
+        assertEquals(json, new RedactRequest("testId", RedactRequest.Product.VERIFY).toJson());
     }
 
     @Test
     public void testProductVerifySdk() {
         String json = "{\"id\":\"testId\",\"product\":\"verify-sdk\"}";
-        assertEquals(new RedactRequest("testId", RedactRequest.Product.VERIFY_SDK).toJson(), json);
+        assertEquals(json, new RedactRequest("testId", RedactRequest.Product.VERIFY_SDK).toJson());
     }
     
 
     @Test
     public void testProductMessages() {
         String json = "{\"id\":\"testId\",\"product\":\"messages\"}";
-        assertEquals(new RedactRequest("testId", RedactRequest.Product.MESSAGES).toJson(), json);
+        assertEquals(json, new RedactRequest("testId", RedactRequest.Product.MESSAGES).toJson());
     }
 
     @Test
     public void testProductWorkflow() {
         String json = "{\"id\":\"testId\",\"product\":\"workflow\"}";
-        assertEquals(new RedactRequest("testId", RedactRequest.Product.WORKFLOW).toJson(), json);
+        assertEquals(json, new RedactRequest("testId", RedactRequest.Product.WORKFLOW).toJson());
     }
 }

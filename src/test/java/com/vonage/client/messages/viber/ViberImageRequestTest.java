@@ -15,8 +15,8 @@
  */
 package com.vonage.client.messages.viber;
 
-import org.junit.Test;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ViberImageRequestTest {
 
@@ -36,20 +36,17 @@ public class ViberImageRequestTest {
 		));
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructNoUrl() {
-		ViberImageRequest.builder()
-				.from("447900000001")
-				.to("317900000002")
-				.build();
+		assertThrows(NullPointerException.class, () -> ViberImageRequest.builder()
+				.from("447900000001").to("317900000002").build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructInvalidExtension() {
-		ViberImageRequest.builder()
-				.from("447900000001")
-				.url("ftp://rel/path/to/photo.bmp")
-				.to("317900000002")
-				.build();
+		assertThrows(IllegalArgumentException.class, () -> ViberImageRequest.builder()
+				.from("447900000001").url("ftp://rel/path/to/photo.bmp").to("317900000002").build()
+		);
 	}
 }

@@ -17,9 +17,5 @@
 /**
  * Provides useful NCCO classes which can be serialized using Jackson when
  * implementing webhooks to drive the Vonage Voice API.
- * <p>
- * The simplest way to use these classes is to subclass {@link com.vonage.client.voice.servlet.AbstractAnswerServlet}
- * and implement {@code handleRequest(javax.servlet.http.HttpServletRequest)}.
- * the returned NCCOResponse will automatically be serialized correctly.
  */
 package com.vonage.client.voice.ncco;

@@ -15,10 +15,11 @@
  */
 package com.vonage.client.messages.whatsapp;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Arrays;
 import java.util.Collections;
-import static org.junit.Assert.*;
 
 public class WhatsappTemplateRequestTest {
 
@@ -51,16 +52,16 @@ public class WhatsappTemplateRequestTest {
 		assertTrue(json.contains("\"whatsapp\":{\"policy\":\"deterministic\",\"locale\":\"en_GB\"}"));
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructNoName() {
-		WhatsappTemplateRequest.builder().from(FROM).to(TO).build();
+		assertThrows(NullPointerException.class, () -> WhatsappTemplateRequest.builder().from(FROM).to(TO).build());
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructNullLocale() {
-		WhatsappTemplateRequest.builder()
-				.locale(null).name(NAME)
-				.from(FROM).to(TO).build();
+		assertThrows(NullPointerException.class, () -> WhatsappTemplateRequest.builder()
+				.locale(null).name(NAME).from(FROM).to(TO).build()
+		);
 	}
 
 	@Test

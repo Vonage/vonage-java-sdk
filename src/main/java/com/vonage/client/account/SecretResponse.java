@@ -17,7 +17,8 @@ package com.vonage.client.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.Jsonable;
+import com.vonage.client.VonageResponseParseException;
 import io.openapitools.jackson.dataformat.hal.HALLink;
 import io.openapitools.jackson.dataformat.hal.HALMapper;
 import io.openapitools.jackson.dataformat.hal.annotation.Link;
@@ -26,7 +27,7 @@ import java.io.IOException;
 import java.util.Date;
 
 @Resource
-public class SecretResponse {
+public class SecretResponse implements Jsonable {
     @Link
     private HALLink self;
 
@@ -47,13 +48,22 @@ public class SecretResponse {
         return created;
     }
 
-    public static SecretResponse fromJson(String json) {
+    @Override
+    public void updateFromJson(String json) {
         try {
             HALMapper mapper = new HALMapper();
             mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-            return mapper.readValue(json, SecretResponse.class);
-        } catch (IOException e) {
-            throw new VonageUnexpectedException("Failed to produce SecretResponse from json.", e);
+            SecretResponse parsed = mapper.readValue(json, SecretResponse.class);
+            self = parsed.self;
+            id = parsed.id;
+            created = parsed.created;
         }
+        catch (IOException ex) {
+            throw new VonageResponseParseException("Failed to produce SecretResponse from json.", ex);
+        }
+    }
+
+    public static SecretResponse fromJson(String json) {
+        return Jsonable.fromJson(json);
     }
 }

@@ -15,11 +15,10 @@
  */
 package com.vonage.client.messages;
 
-import com.vonage.client.VonageUnexpectedException;
-import org.junit.Test;
+import com.vonage.client.VonageResponseParseException;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.UUID;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class MessageResponseTest {
 
@@ -33,8 +32,14 @@ public class MessageResponseTest {
 		assertTrue(toString.contains(uuid.toString()));
 	}
 
-	@Test(expected = VonageUnexpectedException.class)
+	@Test
+	public void testConstructFromEmptyJson() {
+		MessageResponse response = MessageResponse.fromJson("{}");
+		assertNull(response.getMessageUuid());
+	}
+
+	@Test
 	public void testConstructFromInvalidJson() {
-		MessageResponse.fromJson("{_malformed_}");
+		assertThrows(VonageResponseParseException.class, () -> MessageResponse.fromJson("{_malformed_}"));
 	}
 }

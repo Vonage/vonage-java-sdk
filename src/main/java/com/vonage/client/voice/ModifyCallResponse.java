@@ -16,31 +16,36 @@
 package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.Jsonable;
 
 /**
  * Response if a {@link Call} was successfully modified.
  * <p>
- * This would be returned by {@link VoiceClient#modifyCall(String, ModifyCallAction)}
+ * This would be returned by {@link VoiceClient#modifyCall(String, ModifyCallAction)}.
+ *
+ * @deprecated This is no longer used and will be removed in a future release.
  */
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ModifyCallResponse {
+@Deprecated
+public class ModifyCallResponse implements Jsonable {
     private String message;
 
+    @JsonProperty("message")
     public String getMessage() {
         return message;
     }
 
+    /**
+     * Creates an instance of this class from a JSON payload.
+     *
+     * @param json The JSON string to parse.
+     *
+     * @return An instance of this class with the fields populated, if present.
+     */
     public static ModifyCallResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, ModifyCallResponse.class);
-        } catch (IOException jpe) {
-            throw new VonageUnexpectedException("Failed to produce ModifyCallResponse from json.", jpe);
-        }
+        return Jsonable.fromJson(json);
     }
-
 }

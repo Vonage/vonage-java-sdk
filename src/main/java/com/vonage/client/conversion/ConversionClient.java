@@ -16,6 +16,9 @@
 package com.vonage.client.conversion;
 
 import com.vonage.client.*;
+import com.vonage.client.auth.SignatureAuthMethod;
+import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.common.HttpMethod;
 import java.util.Date;
 
 /**
@@ -24,14 +27,19 @@ import java.util.Date;
  * <p>
  * Allows you to tell Vonage about the reliability of your 2FA communications.
  * <p>
- * More information on method parameters can be found at Vonage website:
- * <a href="https://developer.nexmo.com/messaging/conversion-api/overview">https://developer.nexmo.com/messaging/conversion-api/overview</a>
+ * See the <a href="https://developer.vonage.com/messaging/conversion-api/overview">Conversion API documentation</a>.
  */
 public class ConversionClient {
-    final ConversionEndpoint conversionEndpoint;
+    final RestEndpoint<ConversionRequest, Void> conversionEndpoint;
 
-    public ConversionClient(HttpWrapper httpWrapper) {
-        conversionEndpoint = new ConversionEndpoint(httpWrapper);
+    @SuppressWarnings("unchecked")
+    public ConversionClient(HttpWrapper wrapper) {
+        conversionEndpoint = DynamicEndpoint.<ConversionRequest, Void> builder(Void.class)
+                .pathGetter((de, req) -> de.getHttpWrapper().getHttpConfig().getApiBaseUri() +
+                        "/conversions/" + req.getType().name().toLowerCase()
+                )
+                .authMethod(SignatureAuthMethod.class, TokenAuthMethod.class)
+                .requestMethod(HttpMethod.POST).wrapper(wrapper).build();
     }
 
     /**

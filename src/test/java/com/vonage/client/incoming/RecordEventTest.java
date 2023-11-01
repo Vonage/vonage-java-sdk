@@ -15,11 +15,11 @@
  */
 package com.vonage.client.incoming;
 
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RecordEventTest {
     @Test
@@ -32,9 +32,7 @@ public class RecordEventTest {
                 + "  \"timestamp\": \"2020-01-01T14:00:00.000Z\"\n" + "}";
 
         RecordEvent recordEvent = RecordEvent.fromJson(json);
-        assertEquals("https://api.nexmo.com/media/download?id=aaaaaaaa-bbbb-cccc-dddd-0123456789ab",
-                recordEvent.getUrl()
-        );
+        assertEquals("https://api.nexmo.com/media/download?id=aaaaaaaa-bbbb-cccc-dddd-0123456789ab", recordEvent.getUrl());
         assertEquals(12345, recordEvent.getSize());
         assertEquals("aaaaaaaa-bbbb-cccc-dddd-0123456789ab", recordEvent.getUuid());
         assertEquals("bbbbbbbb-cccc-dddd-eeee-0123456789ab", recordEvent.getConversationUuid());

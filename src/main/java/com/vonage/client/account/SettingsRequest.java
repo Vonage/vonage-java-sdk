@@ -15,7 +15,10 @@
  */
 package com.vonage.client.account;
 
-public class SettingsRequest {
+import com.vonage.client.QueryParamsRequest;
+import java.util.LinkedHashMap;
+import java.util.Map;
+public class SettingsRequest implements QueryParamsRequest {
     private final String incomingSmsUrl, deliveryReceiptUrl;
 
     /**
@@ -63,5 +66,13 @@ public class SettingsRequest {
      */
     public String getDeliveryReceiptUrl() {
         return deliveryReceiptUrl;
+    }
+
+    @Override
+    public Map<String, String> makeParams() {
+        Map<String, String> params = new LinkedHashMap<>(4);
+        params.put("moCallBackUrl", incomingSmsUrl);
+        params.put("drCallBackUrl", deliveryReceiptUrl);
+        return params;
     }
 }

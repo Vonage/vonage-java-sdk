@@ -23,7 +23,6 @@ import com.vonage.client.logging.LoggingUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
@@ -32,9 +31,9 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Abstract class to assist in implementing a call against a REST endpoint.
@@ -49,15 +48,23 @@ import java.util.Set;
  * @param <ResultT>  The type of method-specific response object which will be constructed from the returned HTTP
  *                   response
  */
-public abstract class AbstractMethod<RequestT, ResultT> implements Method<RequestT, ResultT> {
+public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<RequestT, ResultT> {
     private static final Log LOG = LogFactory.getLog(AbstractMethod.class);
     protected static final BasicResponseHandler basicResponseHandler = new BasicResponseHandler();
 
     protected final HttpWrapper httpWrapper;
-    private Set<Class<?>> acceptable;
+    private Set<Class<? extends AuthMethod>> acceptable;
 
     public AbstractMethod(HttpWrapper httpWrapper) {
         this.httpWrapper = httpWrapper;
+    }
+
+    public HttpWrapper getHttpWrapper() {
+        return httpWrapper;
+    }
+
+    protected ResultT postProcessParsedResponse(ResultT response) {
+        return response;
     }
 
     /**
@@ -69,6 +76,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      *
      * @throws VonageClientException if there is a problem parsing the HTTP response
      */
+    @Override
     public ResultT execute(RequestT request) throws VonageResponseParseException, VonageClientException {
         try {
             HttpUriRequest httpRequest = applyAuth(makeRequest(request))
@@ -86,14 +94,16 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
             LOG.debug("Response: " + LoggingUtils.logResponse(response));
 
             try {
-                return parseResponse(response);
+                return postProcessParsedResponse(parseResponse(response));
             }
             catch (IOException io) {
                 throw new VonageResponseParseException("Unable to parse response.", io);
             }
-        } catch (UnsupportedEncodingException uee) {
+        }
+        catch (UnsupportedEncodingException uee) {
             throw new VonageUnexpectedException("UTF-8 encoding is not supported by this JVM.", uee);
-        } catch (IOException io) {
+        }
+        catch (IOException io) {
             throw new VonageMethodFailedException("Something went wrong while executing the HTTP request: " +
                     io.getMessage() + ".", io);
         }
@@ -111,7 +121,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      * @throws VonageClientException If no appropriate {@link AuthMethod} is available
      */
     protected RequestBuilder applyAuth(RequestBuilder request) throws VonageClientException {
-        return getAuthMethod().apply(request);
+        return getAuthMethod(getAcceptableAuthMethods()).apply(request);
     }
 
     /**
@@ -124,10 +134,13 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      *
      * @throws VonageClientException If no AuthMethod is available from the provided array of acceptableAuthMethods.
      */
+    @SuppressWarnings("unchecked")
     protected AuthMethod getAuthMethod(Class<?>[] acceptableAuthMethods) throws VonageClientException {
         if (acceptable == null) {
-            acceptable = new HashSet<>();
-            Collections.addAll(acceptable, acceptableAuthMethods);
+            acceptable = Arrays.stream(acceptableAuthMethods)
+                    .filter(AuthMethod.class::isAssignableFrom)
+                    .map(c -> (Class<? extends AuthMethod>) c)
+                    .collect(Collectors.toSet());
         }
 
         return httpWrapper.getAuthCollection().getAcceptableAuthMethod(acceptable);
@@ -150,7 +163,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
      * @throws VonageUnexpectedException If no AuthMethod is available.
      * @throws IllegalStateException If the AuthMethod does not have an Application ID or API key.
      */
-    protected String getApplicationIdOrApiKey() throws VonageUnexpectedException {
+    public String getApplicationIdOrApiKey() throws VonageUnexpectedException {
         AuthMethod am = getAuthMethod();
         if (am instanceof JWTAuthMethod) {
             return ((JWTAuthMethod) am).getApplicationId();
@@ -162,10 +175,6 @@ public abstract class AbstractMethod<RequestT, ResultT> implements Method<Reques
             return ((SignatureAuthMethod) am).getApiKey();
         }
         throw new IllegalStateException(am.getClass().getSimpleName() + " does not have API key.");
-    }
-
-    public void setHttpClient(HttpClient client) {
-        httpWrapper.setHttpClient(client);
     }
 
     protected abstract Class<?>[] getAcceptableAuthMethods();

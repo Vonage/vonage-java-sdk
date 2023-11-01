@@ -15,7 +15,11 @@
  */
 package com.vonage.client.verify;
 
-public class CheckRequest {
+import com.vonage.client.QueryParamsRequest;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+public class CheckRequest implements QueryParamsRequest {
     private final String requestId, code, ipAddress;
 
     /**
@@ -30,7 +34,9 @@ public class CheckRequest {
 
     /**
      *
-     * @param ipAddress No longer used
+     * @param requestId The Verify request to check.
+     * @param code The verification code entered by your user. Between 4 and 6 characters.
+     * @param ipAddress No longer used.
      * @deprecated Please use {@link CheckRequest#CheckRequest(String, String)}.
      */
     @Deprecated
@@ -51,8 +57,9 @@ public class CheckRequest {
     }
 
     /**
-     * @return The Verify request to check.
      * This is the request_id you received in the response to the Verify request.
+     *
+     * @return The Verify request to check.
      */
     public String getRequestId() {
         return requestId;
@@ -67,9 +74,21 @@ public class CheckRequest {
 
     /**
      * @deprecated This field is no longer used.
+     * @return The IP address.
      */
     @Deprecated
     public String getIpAddress() {
         return ipAddress;
+    }
+
+    @Override
+    public Map<String, String> makeParams() {
+        Map<String, String> params = new LinkedHashMap<>(4);
+        params.put("request_id", requestId);
+        params.put("code", code);
+        if (ipAddress != null) {
+            params.put("ip_address", ipAddress);
+        }
+        return params;
     }
 }

@@ -17,19 +17,17 @@ package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.ArrayIterator;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 import java.util.Iterator;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CallInfoPage implements Iterable<CallInfo> {
+public class CallInfoPage implements Iterable<CallInfo>, Jsonable {
     private int count, pageSize, recordIndex;
     private PageLinks links;
     private EmbeddedCalls embedded;
 
+    @JsonProperty("count")
     public int getCount() {
         return count;
     }
@@ -53,19 +51,20 @@ public class CallInfoPage implements Iterable<CallInfo> {
     public EmbeddedCalls getEmbedded() {
         return embedded;
     }
-
+    
     @Override
     public Iterator<CallInfo> iterator() {
         return new ArrayIterator<>(embedded.getCallInfos());
     }
 
+    /**
+     * Creates an instance of this class from a JSON payload.
+     *
+     * @param json The JSON string to parse.
+     *
+     * @return An instance of this class with the fields populated, if present.
+     */
     public static CallInfoPage fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-            return mapper.readValue(json, CallInfoPage.class);
-        } catch (IOException jpe) {
-            throw new VonageUnexpectedException("Failed to produce json from Call object.", jpe);
-        }
+        return Jsonable.fromJson(json);
     }
 }

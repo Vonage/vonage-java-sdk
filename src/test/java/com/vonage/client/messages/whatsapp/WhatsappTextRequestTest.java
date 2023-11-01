@@ -15,10 +15,9 @@
  */
 package com.vonage.client.messages.whatsapp;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class WhatsappTextRequestTest {
 
@@ -33,41 +32,35 @@ public class WhatsappTextRequestTest {
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructEmptySender() {
-		WhatsappTextRequest.builder()
-				.from("")
-				.to("317900000002")
-				.text("Hello, World!")
-				.build();
+		assertThrows(IllegalArgumentException.class, () -> WhatsappTextRequest.builder()
+				.from("").to("317900000002").text("Hello, World!").build()
+		);
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructNoSender() {
-		WhatsappTextRequest.builder()
-				.to("317900000002")
-				.text("Hello, World!")
-				.build();
+		assertThrows(NullPointerException.class, () -> WhatsappTextRequest.builder()
+				.to("317900000002").text("Hello, World!").build()
+		);
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructNullText() {
-		WhatsappTextRequest.builder()
-				.from("447900000001")
-				.to("317900000002")
-				.build();
+		assertThrows(NullPointerException.class, () -> WhatsappTextRequest.builder()
+				.from("447900000001").to("317900000002").build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructEmptyText() {
-		WhatsappTextRequest.builder()
-				.from("447900000001")
-				.to("317900000002")
-				.text("")
-				.build();
+		assertThrows(IllegalArgumentException.class, () -> WhatsappTextRequest.builder()
+				.from("447900000001").to("317900000002").text("").build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructLongText() {
 		StringBuilder text = new StringBuilder(1002);
 		for (int i = 0; i < 4095; i++) {
@@ -85,10 +78,8 @@ public class WhatsappTextRequestTest {
 		text.append("xy");
 		assertEquals(4097, text.length());
 
-		WhatsappTextRequest.builder()
-				.from(msg.getFrom())
-				.text(text.toString())
-				.to(msg.getTo())
-				.build();
+		assertThrows(IllegalArgumentException.class, () -> WhatsappTextRequest.builder()
+				.from(msg.getFrom()).text(text.toString()).to(msg.getTo()).build()
+		);
 	}
 }

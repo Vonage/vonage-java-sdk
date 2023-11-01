@@ -15,8 +15,8 @@
  */
 package com.vonage.client.messages.whatsapp;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class WhatsappLocationRequestTest {
 
@@ -48,17 +48,17 @@ public class WhatsappLocationRequestTest {
 	}
 
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testConstructNoLatitude() {
-		WhatsappLocationRequest.builder()
-				.from("317900000002").to("447900000001")
-				.longitude(Math.random()).build();
+		assertThrows(IllegalStateException.class, () -> WhatsappLocationRequest.builder()
+				.from("317900000002").to("447900000001").longitude(Math.random()).build()
+		);
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testConstructNoLongitude() {
-		WhatsappLocationRequest.builder()
-				.from("317900000002").to("447900000001")
-				.latitude(Math.random()).build();
+		assertThrows(IllegalStateException.class, () -> WhatsappLocationRequest.builder()
+				.from("317900000002").to("447900000001").latitude(Math.random()).build()
+		);
 	}
 }

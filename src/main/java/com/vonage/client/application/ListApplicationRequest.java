@@ -15,47 +15,70 @@
  */
 package com.vonage.client.application;
 
-public class ListApplicationRequest {
-    private final long pageSize, page;
+import com.vonage.client.QueryParamsRequest;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+/**
+ * Query parameters for {@link ApplicationClient#listApplications(ListApplicationRequest)}.
+ */
+public class ListApplicationRequest implements QueryParamsRequest {
+    private final int pageSize, page;
 
     private ListApplicationRequest(Builder builder) {
         pageSize = builder.pageSize;
         page = builder.page;
     }
 
-    public long getPageSize() {
+    public int getPageSize() {
         return pageSize;
     }
 
-    public long getPage() {
+    public int getPage() {
         return page;
     }
 
+    @Override
+    public Map<String, String> makeParams() {
+        LinkedHashMap<String, String> params = new LinkedHashMap<>(4);
+        if (page > 0) {
+            params.put("page", String.valueOf(page));
+        }
+        if (pageSize > 0) {
+            params.put("page_size", String.valueOf(pageSize));
+        }
+        return params;
+    }
+
+    /**
+     * Entry point for constructing an instance of this class.
+     *
+     * @return A new Builder.
+     */
     public static Builder builder() {
         return new Builder();
     }
 
     public static class Builder {
-        private long pageSize;
-        private long page;
+        private int pageSize, page;
 
         /**
          * @param pageSize The number of applications per page.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder pageSize(long pageSize) {
-            this.pageSize = pageSize;
+            this.pageSize = (int) pageSize;
             return this;
         }
 
         /**
          * @param page The current page number, starts at 1.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder page(long page) {
-            this.page = page;
+            this.page = (int) page;
             return this;
         }
 

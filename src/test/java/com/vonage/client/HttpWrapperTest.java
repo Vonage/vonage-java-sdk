@@ -16,10 +16,8 @@
 package com.vonage.client;
 
 import com.vonage.client.auth.AuthCollection;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class HttpWrapperTest {
     private static final String
@@ -30,7 +28,7 @@ public class HttpWrapperTest {
 
     private HttpWrapper wrapper;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         wrapper = new HttpWrapper(new AuthCollection());
     }
@@ -48,13 +46,10 @@ public class HttpWrapperTest {
     }
 
     @Test
-    public void testHttpConfigAccessor() {
-        assertNotNull(wrapper.getHttpConfig());
-    }
-
-    @Test
     public void testDefaultConstructorSetsDefaultConfigValues() {
         HttpConfig config = wrapper.getHttpConfig();
+        assertNotNull(config);
+        HttpConfigTest.assertDefaults(config);
         assertEquals(EXPECTED_DEFAULT_API_BASE_URI, config.getApiBaseUri());
         assertEquals(EXPECTED_DEFAULT_REST_BASE_URI, config.getRestBaseUri());
         assertEquals(EXPECTED_DEFAULT_SNS_BASE_URI, config.getSnsBaseUri());

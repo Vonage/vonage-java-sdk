@@ -15,8 +15,8 @@
  */
 package com.vonage.client.verify;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import java.util.Locale;
 
 public class Psd2RequestTest {
@@ -64,5 +64,24 @@ public class Psd2RequestTest {
 		assertThrows(IllegalArgumentException.class, () -> builder.nextEventWait(901).build());
 		builder.nextEventWait(900).build();
 		builder.nextEventWait(60).build();
+	}
+
+	@Test
+	public void testConstructMissingRequiredParams() {
+		assertThrows(NullPointerException.class, () -> Psd2Request.builder().build());
+	}
+
+	@Test
+	public void testConstructRequiredParams() {
+		Psd2Request request = Psd2Request.builder().number("447700900001").amount(0.87).payee("Nexmo").build();
+		assertNotNull(request);
+		assertNull(request.getDashedLocale());
+	}
+
+	@Test
+	public void testLongPayee() {
+		assertThrows(IllegalArgumentException.class, () ->
+				Psd2Request.builder("447700900001", 1.23, "1234567890abcedfghi").build()
+		);
 	}
 }

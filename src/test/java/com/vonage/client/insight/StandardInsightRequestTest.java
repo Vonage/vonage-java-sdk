@@ -15,28 +15,28 @@
  */
 package com.vonage.client.insight;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class StandardInsightRequestTest {
 
     @Test
     public void testWithNumber() {
         StandardInsightRequest request = StandardInsightRequest.withNumber("12345");
-        assertEquals(request.getNumber(), "12345");
+        assertEquals("12345", request.getNumber());
         assertNull(request.getCountry());
     }
 
     @Test
     public void testWithNumberAndCountry() {
         StandardInsightRequest request = StandardInsightRequest.withNumberAndCountry("12345", "GB");
-        assertEquals(request.getNumber(), "12345");
-        assertEquals(request.getCountry(), "GB");
+        assertEquals("12345", request.getNumber());
+        assertEquals("GB", request.getCountry());
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testBuildWithoutNumberThrowsException() {
-        StandardInsightRequest.builder().build();
+        assertThrows(IllegalStateException.class, () -> StandardInsightRequest.builder().build());
     }
 
     @Test
@@ -57,13 +57,13 @@ public class StandardInsightRequestTest {
     @Test
     public void testBuildWithAllFields() {
         StandardInsightRequest request = StandardInsightRequest.builder("12345").country("GB").cnam(true).build();
-        assertEquals(request.getNumber(), "12345");
-        assertEquals(request.getCountry(), "GB");
+        assertEquals("12345", request.getNumber());
+        assertEquals("GB", request.getCountry());
         assertTrue(request.getCnam());
 
         request = StandardInsightRequest.builder("12345").number("98765").country("GB").cnam(true).build();
-        assertEquals(request.getNumber(), "98765");
-        assertEquals(request.getCountry(), "GB");
+        assertEquals("98765", request.getNumber());
+        assertEquals("GB", request.getCountry());
         assertTrue(request.getCnam());
     }
 }

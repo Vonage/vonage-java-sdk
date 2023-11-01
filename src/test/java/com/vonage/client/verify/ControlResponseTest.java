@@ -16,13 +16,20 @@
 package com.vonage.client.verify;
 
 import com.vonage.client.VonageUnexpectedException;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 
 public class ControlResponseTest {
 
     @Test
-    public void testParseError() throws Exception {
+    public void testConstructor() {
+        ControlResponse response = new ControlResponse("1", VerifyControlCommand.CANCEL);
+        assertEquals("1", response.getStatus());
+        assertEquals(VerifyControlCommand.CANCEL, response.getCommand());
+    }
+
+    @Test
+    public void testParseError() {
         ControlResponse response = ControlResponse.fromJson("{\n" +
                 "    \"error_text\": \"Missing username\",\n" +
                 "    \"status\": \"2\"\n" +

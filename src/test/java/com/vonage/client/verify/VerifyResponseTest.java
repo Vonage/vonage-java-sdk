@@ -16,10 +16,17 @@
 package com.vonage.client.verify;
 
 import com.vonage.client.VonageResponseParseException;
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class VerifyResponseTest {
+
+	@Test
+	public void testConstructor() {
+		VerifyResponse response = new VerifyResponse(VerifyStatus.PARTNER_QUOTA_EXCEEDED);
+		assertEquals(9, response.getStatus().getVerifyStatus());
+	}
 
 	@Test
 	public void testFromJsonAllFields() {
@@ -36,9 +43,9 @@ public class VerifyResponseTest {
 		assertEquals(network, response.getNetwork());
 	}
 
-	@Test(expected = VonageResponseParseException.class)
+	@Test
 	public void testFromJsonEmptyThrows() {
-		VerifyResponse.fromJson("{}");
+		assertThrows(VonageResponseParseException.class, () -> VerifyResponse.fromJson("{}"));
 	}
 
 	@Test
@@ -47,5 +54,4 @@ public class VerifyResponseTest {
 		assertEquals(VerifyStatus.INVALID_CREDENTIALS, response.getStatus());
 		assertEquals(4, response.getStatus().getVerifyStatus());
 	}
-
 }

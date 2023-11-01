@@ -16,17 +16,18 @@
 package com.vonage.client.verify;
 
 import com.vonage.client.ClientTest;
+import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageResponseParseException;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
-
-    @Before
-    public void setUp() {
+    
+    public VerifyClientCheckEndpointTest() {
         client = new VerifyClient(wrapper);
     }
 
@@ -40,15 +41,16 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
 
         CheckResponse[] responses = new CheckResponse[2];
 
-        wrapper.setHttpClient(stubHttpClient(200, json));
+        stubResponse(200, json);
         responses[0] = client.check("a-request-id", "1234", "127.0.0.1");
 
-        wrapper.setHttpClient(stubHttpClient(200, json));
+        stubResponse(200, json);
         responses[1] = client.check("a-request-id", "1234");
 
         for (CheckResponse response : responses) {
             assertEquals("a-request-id", response.getRequestId());
             assertEquals(VerifyStatus.OK, response.getStatus());
+            assertFalse(response.getStatus().isTemporaryError());
             assertEquals("an-event-id", response.getEventId());
             assertEquals(new BigDecimal("0.10000000"), response.getPrice());
             assertEquals("EUR", response.getCurrency());
@@ -60,18 +62,20 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
     public void testCheckWithoutRequestId() throws Exception {
         String json = "{\n" + "  \"status\": \"0\",\n" + "  \"event_id\": \"an-event-id\",\n"
                 + "  \"price\": \"0.10000000\",\n" + "  \"currency\": \"EUR\"\n" + "}\n";
-        wrapper.setHttpClient(stubHttpClient(200, json));
+        stubResponse(200, json);
         CheckResponse response = client.check("a-request-id", "1234", "127.0.0.1");
 
         assertNull(response.getRequestId());
     }
 
-    @Test(expected = VonageResponseParseException.class)
+    @Test
     public void testCheckWithoutStatusThrowsException() throws Exception {
         String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"event_id\": \"an-event-id\",\n"
                 + "  \"price\": \"0.10000000\",\n" + "  \"currency\": \"EUR\"\n" + "}\n";
-        wrapper.setHttpClient(stubHttpClient(200, json));
-        client.check("a-request-id", "1234", "127.0.0.1");
+        stubResponse(200, json);
+        assertThrows(VonageResponseParseException.class, () ->
+                client.check("a-request-id", "1234", "127.0.0.1")
+        );
     }
 
     @Test
@@ -80,7 +84,7 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
                 + "  \"event_id\": \"an-event-id\",\n" + "  \"price\": \"0.10000000\",\n" +
                 "  \"currency\": \"EUR\",\n" + "  \"estimated_price_messages_sent\": \"0.33001\""
                 + "}\n";
-        wrapper.setHttpClient(stubHttpClient(200, json));
+        stubResponse(200, json);
         CheckResponse response = client.check("a-request-id", "1234");
         assertEquals(VerifyStatus.INTERNAL_ERROR, response.getStatus());
         assertEquals(BigDecimal.valueOf(0.33001), response.getEstimatedPriceMessagesSent());
@@ -90,7 +94,7 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
     public void testCheckWithoutEventId() throws Exception {
         String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"status\": \"0\",\n"
                 + "  \"price\": \"0.10000000\",\n" + "  \"currency\": \"EUR\"\n" + "}\n";
-        wrapper.setHttpClient(stubHttpClient(200, json));
+        stubResponse(200, json);
         CheckResponse response = client.check("a-request-id", "1234", "127.0.0.1");
 
         assertNull(response.getEventId());
@@ -100,26 +104,26 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
     public void testCheckWithoutPrice() throws Exception {
         String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"status\": \"0\",\n"
                 + "  \"event_id\": \"an-event-id\",\n" + "  \"currency\": \"EUR\"\n" + "}\n";
-        wrapper.setHttpClient(stubHttpClient(200, json));
+        stubResponse(200, json);
         CheckResponse response = client.check("a-request-id", "1234", "127.0.0.1");
 
         assertNull(response.getPrice());
     }
 
-    @Test(expected = VonageResponseParseException.class)
+    @Test
     public void testCheckWithNonNumericPrice() throws Exception {
         String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"status\": \"0\",\n"
                 + "  \"event_id\": \"an-event-id\",\n" + "  \"price\": \"test\",\n" + "  \"currency\": \"EUR\"\n"
                 + "}\n";
-        wrapper.setHttpClient(stubHttpClient(200, json));
-        client.check("a-request-id", "1234");
+        stubResponse(200, json);
+        assertThrows(VonageResponseParseException.class, () -> client.check("a-request-id", "1234"));
     }
 
     @Test
     public void testCheckWithoutCurrency() throws Exception {
         String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"status\": \"0\",\n"
                 + "  \"event_id\": \"an-event-id\",\n" + "  \"price\": \"0.10000000\"\n" + "}\n";
-        wrapper.setHttpClient(stubHttpClient(200, json));
+        stubResponse(200, json);
         CheckResponse response = client.check("a-request-id", "1234", "127.0.0.1");
 
         assertNull(response.getCurrency());
@@ -128,7 +132,7 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
     @Test
     public void testCheckWithError() throws Exception {
         String json = "{\n" + "  \"status\": \"2\",\n" + "  \"error_text\": \"There was an error.\"\n" + "}";
-        wrapper.setHttpClient(stubHttpClient(200, json));
+        stubResponse(200, json);
         CheckResponse response = client.check("a-request-id", "1234", "127.0.0.1");
 
         assertEquals(VerifyStatus.MISSING_PARAMS, response.getStatus());
@@ -138,36 +142,75 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
     @Test
     public void testWithInvalidNumericStatus() throws Exception {
         String json = "{\n" + "  \"status\": \"5958\"\n" + "}";
-        wrapper.setHttpClient(stubHttpClient(200, json));
+        stubResponse(200, json);
         CheckResponse response = client.check("a-request-id", "1234", "127.0.0.1");
 
         assertEquals(VerifyStatus.UNKNOWN, response.getStatus());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testNullRequestId() throws Exception {
-        client.check(null, "1234");
+        assertThrows(IllegalArgumentException.class, () -> client.check(null, "1234"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testLongRequestId() throws Exception {
         StringBuilder requestId = new StringBuilder(33);
         for (; requestId.length() < 32; requestId.append("req-"));
-        client.check(requestId.append('0').toString(), "1234");
+        assertThrows(IllegalArgumentException.class, () ->
+                client.check(requestId.append('0').toString(), "1234")
+        );
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testNullCode() throws Exception {
-        client.check("a-request-id", null);
+        assertThrows(IllegalArgumentException.class, () -> client.check("a-request-id", null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testCodeLessThan4Characters() throws Exception {
-        client.check("a-request-id", "012");
+        assertThrows(IllegalArgumentException.class, () -> client.check("a-request-id", "012"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testCodeMoreThan6Characters() throws Exception {
-        client.check("a-request-id", "1234567");
+        assertThrows(IllegalArgumentException.class, () -> client.check("a-request-id", "1234567"));
+    }
+
+    @Test
+    public void testEndpoint() throws Exception {
+        new VerifyEndpointTestSpec<CheckRequest, CheckResponse>() {
+            final String requestId = UUID.randomUUID().toString().replace("-", "");
+
+            @Override
+            protected RestEndpoint<CheckRequest, CheckResponse> endpoint() {
+                return client.check;
+            }
+
+            @Override
+            protected String expectedEndpointUri(CheckRequest request) {
+                return "/verify/check/json";
+            }
+
+            @Override
+            protected CheckRequest sampleRequest() {
+                return new CheckRequest(requestId, "567321");
+            }
+
+            @Override
+            protected Map<String, String> sampleQueryParams() {
+                CheckRequest request = sampleRequest();
+                assertNull(request.getIpAddress());
+
+                Map<String, String> params = new HashMap<>(4);
+                params.put("request_id", request.getRequestId());
+                params.put("code", request.getCode());
+                assertEquals(requestId, params.get("request_id"));
+                assertEquals("567321", params.get("code"));
+
+                return params;
+            }
+        }
+        .runTests();
     }
 }

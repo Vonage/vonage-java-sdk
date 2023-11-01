@@ -15,8 +15,8 @@
  */
 package com.vonage.client.messages.viber;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class ViberFileRequestTest {
 
@@ -41,22 +41,18 @@ public class ViberFileRequestTest {
 		assertTrue(json.contains("\"file\":{\"url\":\""+url+"\"}"));
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructNoUrl() {
-		ViberFileRequest.builder()
-				.name("report.pdf")
-				.from("447900000001")
-				.to("317900000002")
-				.build();
+		assertThrows(NullPointerException.class, () -> ViberFileRequest.builder()
+				.name("report.pdf").from("447900000001").to("317900000002").build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructInvalidExtension() {
-		ViberFileRequest.builder()
-				.from("447900000001")
-				.url("ftp://rel/path/to/hack.js")
-				.to("317900000002")
-				.build();
+		assertThrows(IllegalArgumentException.class, () -> ViberFileRequest.builder()
+				.from("447900000001").url("ftp://rel/path/to/hack.js").to("317900000002").build()
+		);
 	}
 
 	@Test

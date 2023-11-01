@@ -17,7 +17,7 @@ package com.vonage.client.account;
 
 import java.util.Objects;
 
-public class FullPricingRequest {
+class FullPricingRequest {
     private final ServiceType serviceType;
 
     public FullPricingRequest(ServiceType serviceType) {

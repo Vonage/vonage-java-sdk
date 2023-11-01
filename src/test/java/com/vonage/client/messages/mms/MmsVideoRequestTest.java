@@ -15,8 +15,8 @@
  */
 package com.vonage.client.messages.mms;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MmsVideoRequestTest {
 
@@ -26,10 +26,7 @@ public class MmsVideoRequestTest {
 				url = "https://foo.tld/path/to/video.mp4",
 				caption = "Alt text";
 
-		MmsVideoRequest mms = MmsVideoRequest.builder()
-				.from(from).caption(caption).url(url).to(to)
-				.build();
-
+		MmsVideoRequest mms = MmsVideoRequest.builder().from(from).caption(caption).url(url).to(to).build();
 		String json = mms.toJson();
 		assertTrue(json.contains("\"from\":\""+from+"\""));
 		assertTrue(json.contains("\"to\":\""+to+"\""));
@@ -40,12 +37,8 @@ public class MmsVideoRequestTest {
 
 	@Test
 	public void testSerializeNoCaption() {
-		String from = "447900000001", to = "317900000002",
-				url = "https://foo.tld/path/to/video.flv";
-
-		MmsVideoRequest mms = MmsVideoRequest.builder()
-				.from(from).url(url).to(to).build();
-
+		String from = "447900000001", to = "317900000002", url = "https://foo.tld/path/to/video.flv";
+		MmsVideoRequest mms = MmsVideoRequest.builder().from(from).url(url).to(to).build();
 		String json = mms.toJson();
 		assertTrue(json.contains("\"from\":\""+from+"\""));
 		assertTrue(json.contains("\"to\":\""+to+"\""));
@@ -54,13 +47,11 @@ public class MmsVideoRequestTest {
 		assertTrue(json.contains("\"video\":{\"url\":\""+url+"\"}"));
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructNoUrl() {
-		MmsVideoRequest.builder()
-				.caption("Description")
-				.from("447900000001")
-				.to("317900000002")
-				.build();
+		assertThrows(NullPointerException.class, () -> MmsVideoRequest.builder()
+				.caption("Description").from("447900000001").to("317900000002").build()
+		);
 	}
 
 	@Test

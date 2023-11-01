@@ -15,9 +15,8 @@
  */
 package com.vonage.client.messages.sms;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SmsTextRequestTest {
 
@@ -35,24 +34,21 @@ public class SmsTextRequestTest {
 		assertEquals("SmsTextRequest "+json, sms.toString());
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testNullText() {
-		SmsTextRequest.builder()
-				.from("447900000001")
-				.to("317900000002")
-				.build();
+		assertThrows(NullPointerException.class, () -> SmsTextRequest.builder()
+				.from("447900000001").to("317900000002").build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testEmptyText() {
-		SmsTextRequest.builder()
-				.from("447900000001")
-				.to("317900000002")
-				.text("")
-				.build();
+		assertThrows(IllegalArgumentException.class, () -> SmsTextRequest.builder()
+				.from("447900000001").to("317900000002").text("").build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testLongText() {
 		StringBuilder text = new StringBuilder(1002);
 		for (int i = 0; i < 999; i++) {
@@ -70,10 +66,8 @@ public class SmsTextRequestTest {
 		text.append("xy");
 		assertEquals(1001, text.length());
 
-		SmsTextRequest.builder()
-				.from(sms.getFrom())
-				.text(text.toString())
-				.to(sms.getTo())
-				.build();
+		assertThrows(IllegalArgumentException.class, () -> SmsTextRequest.builder()
+				.from(sms.getFrom()).text(text.toString()).to(sms.getTo()).build()
+		);
 	}
 }

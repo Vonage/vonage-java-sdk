@@ -15,20 +15,37 @@
  */
 package com.vonage.client.messages;
 
-import com.vonage.client.HttpConfig;
-import com.vonage.client.HttpWrapper;
-import com.vonage.client.VonageClientException;
-import com.vonage.client.VonageResponseParseException;
+import com.vonage.client.*;
+import com.vonage.client.auth.JWTAuthMethod;
+import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.common.HttpMethod;
+import com.vonage.jwt.Jwt;
+import java.util.function.Function;
 
 public class MessagesClient {
-	final SendMessageEndpoint sendMessage;
+	private boolean sandbox = false;
+	final RestEndpoint<MessageRequest, MessageResponse> sendMessage, sendMessageSandbox;
 
 	/**
 	 * Create a new MessagesClient.
-	 * @param httpWrapper Http Wrapper used to create a Message requests
+	 *
+	 * @param wrapper Http Wrapper used to create message requests.
 	 */
-	public MessagesClient(HttpWrapper httpWrapper) {
-		sendMessage = new SendMessageEndpoint(httpWrapper);
+	public MessagesClient(HttpWrapper wrapper) {
+		@SuppressWarnings("unchecked")
+		final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
+			Endpoint(Function<HttpWrapper, String> basePathGetter, R... type) {
+				super(DynamicEndpoint.<T, R> builder(type)
+						.responseExceptionType(MessageResponseException.class)
+						.wrapper(wrapper).requestMethod(HttpMethod.POST)
+						.authMethod(JWTAuthMethod.class, TokenAuthMethod.class)
+						.pathGetter((de, req) -> basePathGetter.apply(de.getHttpWrapper()) + "/v1/messages")
+				);
+			}
+		}
+
+		sendMessage = new Endpoint<>(hw -> hw.getHttpConfig().getApiBaseUri());
+		sendMessageSandbox = new Endpoint<>(hw -> "https://messages-sandbox.nexmo.com");
 	}
 
 	/**
@@ -55,12 +72,7 @@ public class MessagesClient {
 	 * @throws MessageResponseException     if the request was unsuccessful (a 4xx or 500 status code was returned).
 	 */
 	public MessageResponse sendMessage(MessageRequest request) throws VonageClientException, VonageResponseParseException {
-		return sendMessage.execute(request);
-	}
-
-	private MessagesClient sandbox(boolean sandbox) {
-		sendMessage.setSandboxed(sandbox);
-		return this;
+		return (sandbox ? sendMessageSandbox : sendMessage).execute(request);
 	}
 
 	/**
@@ -71,7 +83,8 @@ public class MessagesClient {
 	 * @since 7.1.0
 	 */
 	public MessagesClient useSandboxEndpoint() {
-		return sandbox(true);
+		sandbox = true;
+		return this;
 	}
 
 	/**
@@ -84,6 +97,23 @@ public class MessagesClient {
 	 * @since 7.1.0
 	 */
 	public MessagesClient useRegularEndpoint() {
-		return sandbox(false);
+		sandbox = false;
+		return this;
+	}
+
+	/**
+	 * Utility method for verifying whether a token was signed by a secret.
+	 * This is mostly useful when using signed callbacks to ensure that the inbound
+	 * data came from Vonage servers. The signature is performed using the SHA-256 HMAC algorithm.
+	 *
+	 * @param jwt The JSON Web Token to verify.
+	 * @param secret The symmetric secret key (HS256) to use for decrypting the token's signature.
+	 *
+	 * @return {@code true} if the token was signed by the secret, {@code false} otherwise.
+	 *
+	 * @since 7.11.0
+	 */
+	public static boolean verifySignature(String jwt, String secret) {
+		return Jwt.verifySignature(jwt, secret);
 	}
 }

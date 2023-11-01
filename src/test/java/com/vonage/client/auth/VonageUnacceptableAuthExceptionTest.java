@@ -16,8 +16,8 @@
 package com.vonage.client.auth;
 
 import com.vonage.client.TestUtils;
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -32,9 +32,6 @@ public class VonageUnacceptableAuthExceptionTest {
                 Arrays.asList(TokenAuthMethod.class, SignatureAuthMethod.class, JWTAuthMethod.class)
         );
 
-        assertEquals(
-                "No acceptable authentication type could be found. Acceptable types are: API Key and Secret, API Key and Signature Secret, Application ID and Private Key. Supplied types were: API Key and Secret, API Key and Signature Secret, Application ID and Private Key",
-                exception.getMessage()
-        );
+        assertEquals("No acceptable authentication type could be found. Acceptable types are: API Key and Secret, API Key and Signature Secret, Application ID and Private Key. Supplied types were: API Key and Secret, API Key and Signature Secret, Application ID and Private Key", exception.getMessage());
     }
 }

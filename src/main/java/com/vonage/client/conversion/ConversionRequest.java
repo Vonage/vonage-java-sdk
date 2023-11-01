@@ -15,9 +15,13 @@
  */
 package com.vonage.client.conversion;
 
+import com.vonage.client.QueryParamsRequest;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-public class ConversionRequest {
+public class ConversionRequest implements QueryParamsRequest {
     private final Type type;
     private final String messageId;
     private final boolean delivered;
@@ -44,6 +48,15 @@ public class ConversionRequest {
 
     public Date getTimestamp() {
         return timestamp;
+    }
+
+    @Override
+    public Map<String, String> makeParams() {
+        LinkedHashMap<String, String> params = new LinkedHashMap<>(4);
+        params.put("message-id", messageId);
+        params.put("delivered", String.valueOf(delivered));
+        params.put("timestamp", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(timestamp));
+        return params;
     }
 
     public enum Type {

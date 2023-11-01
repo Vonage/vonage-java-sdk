@@ -15,12 +15,14 @@
  */
 package com.vonage.client.sms.messages;
 
-import org.apache.http.client.methods.RequestBuilder;
+import com.vonage.client.QueryParamsRequest;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Represents the details common to any message that is to be submitted to the Vonage SMS API.
  */
-public abstract class Message {
+public abstract class Message implements QueryParamsRequest {
     public enum MessageType {
         /**
          * Message is a regular TEXT SMS message
@@ -177,31 +179,34 @@ public abstract class Message {
         this.statusReportRequired = statusReportRequired;
     }
 
-    public void addParams(RequestBuilder request) {
-        request.addParameter("from", getFrom())
-                .addParameter("to", getTo())
-                .addParameter("type", getType().toString());
+    @Override
+    public Map<String, String> makeParams() {
+        LinkedHashMap<String, String> params = new LinkedHashMap<>();
+        params.put("from", getFrom());
+        params.put("to", getTo());
+        params.put("type", getType().toString());
         if (statusReportRequired) {
-            request.addParameter("status-report-req", "1");
+            params.put("status-report-req", "1");
         }
         if (clientReference != null) {
-            request.addParameter("client-ref", clientReference);
+            params.put("client-ref", clientReference);
         }
         if (timeToLive != null) {
-            request.addParameter("ttl", timeToLive.toString());
+            params.put("ttl", timeToLive.toString());
         }
         if (callbackUrl != null) {
-            request.addParameter("callback", callbackUrl);
+            params.put("callback", callbackUrl);
         }
         if (messageClass != null) {
-            request.addParameter("message-class", Integer.toString(messageClass.getMessageClass()));
+            params.put("message-class", Integer.toString(messageClass.getMessageClass()));
         }
         if (entityId != null) {
-            request.addParameter("entity-id", entityId);
+            params.put("entity-id", entityId);
         }
         if (contentId != null) {
-            request.addParameter("content-id", contentId);
+            params.put("content-id", contentId);
         }
+        return params;
     }
 
     /**

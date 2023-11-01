@@ -104,7 +104,7 @@ public class ConversationAction implements Action {
         /**
          * @param name The name of the Conversation room.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder name(String name) {
             this.name = name;
@@ -117,7 +117,7 @@ public class ConversationAction implements Action {
          *                       associated with your Voice app. To stream this mp3 before the moderator joins the
          *                       conversation, set startOnEnter to false for all users other than the moderator.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder musicOnHoldUrl(Collection<String> musicOnHoldUrl) {
             this.musicOnHoldUrl = musicOnHoldUrl;
@@ -130,7 +130,7 @@ public class ConversationAction implements Action {
          *                       associated with your Voice app. To stream this mp3 before the moderator joins the
          *                       conversation, set startOnEnter to false for all users other than the moderator.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder musicOnHoldUrl(String... musicOnHoldUrl) {
             return musicOnHoldUrl(Arrays.asList(musicOnHoldUrl));
@@ -140,7 +140,7 @@ public class ConversationAction implements Action {
          * @param startOnEnter The default value of true ensures that the conversation starts when this caller joins
          *                     conversation name. Set to false for attendees in a moderated conversation.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder startOnEnter(Boolean startOnEnter) {
             this.startOnEnter = startOnEnter;
@@ -153,7 +153,7 @@ public class ConversationAction implements Action {
          *                  is not terminated when a caller hangs up; the conversation ends when the last caller
          *                  hangs up.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder endOnExit(Boolean endOnExit) {
             this.endOnExit = endOnExit;
@@ -169,7 +169,7 @@ public class ConversationAction implements Action {
          *               <p>
          *               By default audio is recorded in MP3 format. See the <a href="https://developer.nexmo.com/voice/voice-api/guides/recordingfile-formats">recording guide</a> for more details
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder record(Boolean record) {
             this.record = record;
@@ -180,7 +180,7 @@ public class ConversationAction implements Action {
          * @param eventUrl Set the URL to the webhook endpoint Vonage calls asynchronously on each of the
          *                 <a href="https://developer.nexmo.com/voice/voice-api/guides/call-flowcall-states">Call States</a>.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder eventUrl(Collection<String> eventUrl) {
             this.eventUrl = eventUrl;
@@ -191,7 +191,7 @@ public class ConversationAction implements Action {
          * @param eventUrl Set the URL to the webhook endpoint Vonage calls asynchronously on each of the
          *                 <a href="https://developer.nexmo.com/voice/voice-api/guides/call-flowcall-states">Call States</a>.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder eventUrl(String... eventUrl) {
             return eventUrl(Arrays.asList(eventUrl));
@@ -200,7 +200,7 @@ public class ConversationAction implements Action {
         /**
          * @param eventMethod Set the HTTP method used to make the request to eventUrl. The default value is POST.
          *
-         * @return The {@link Builder} to keep building.
+         * @return This builder.
          */
         public Builder eventMethod(EventMethod eventMethod) {
             this.eventMethod = eventMethod;

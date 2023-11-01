@@ -2,6 +2,20 @@ name: Publish to Nexus
 on:
   release:
     types: [published]
+
+permissions:
+  actions: write
+  checks: write
+  contents: write
+  deployments: read
+  issues: write
+  discussions: write
+  packages: write
+  pages: write
+  pull-requests: write
+  security-events: write
+  statuses: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -23,7 +37,7 @@ jobs:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
-      - name: Publish with gradle
+      - name: Publish with Gradle
         env:
           signingKey: ${{secrets.SIGNING_KEY}}
           signingPassword: ${{secrets.SIGNING_PASSWORD}}

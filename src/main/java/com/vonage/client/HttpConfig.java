@@ -16,18 +16,35 @@
 package com.vonage.client;
 
 public class HttpConfig {
-    public static final String DEFAULT_API_BASE_URI = "https://api.nexmo.com";
-    public static final String DEFAULT_REST_BASE_URI = "https://rest.nexmo.com";
-    public static final String DEFAULT_SNS_BASE_URI = "https://sns.nexmo.com";
-    public static final String DEFAULT_VIDEO_BASE_URI = "https://video.api.vonage.com";
+    private static final String
+            DEFAULT_API_BASE_URI = "https://api.nexmo.com",
+            DEFAULT_REST_BASE_URI = "https://rest.nexmo.com",
+            DEFAULT_SNS_BASE_URI = "https://sns.nexmo.com",
+            DEFAULT_API_EU_BASE_URI = "https://api-eu.vonage.com",
+            DEFAULT_VIDEO_BASE_URI = "https://video.api.vonage.com";
 
-    private final String apiBaseUri, restBaseUri, snsBaseUri, videoBaseUri;
+    private final int timeoutMillis;
+    private final String apiBaseUri, restBaseUri, snsBaseUri, apiEuBaseUri, videoBaseUri;
 
     private HttpConfig(Builder builder) {
+        if ((timeoutMillis = builder.timeoutMillis) < 10) {
+            throw new IllegalArgumentException("Timeout must be greater than 10ms.");
+        }
         apiBaseUri = builder.apiBaseUri;
         restBaseUri = builder.restBaseUri;
         snsBaseUri = builder.snsBaseUri;
         videoBaseUri = builder.videoBaseUri;
+        apiEuBaseUri = builder.apiEuBaseUri;
+    }
+
+    /**
+     * Gets the timeout setting for the underlying HTTP client configuration.
+     *
+     * @return The request timeout in milliseconds.
+     * @since 7.8.0
+     */
+    public int getTimeoutMillis() {
+        return timeoutMillis;
     }
 
     public String getApiBaseUri() {
@@ -46,6 +63,10 @@ public class HttpConfig {
         return videoBaseUri;
     }
 
+    public String getApiEuBaseUri() {
+        return apiEuBaseUri;
+    }
+
     public boolean isDefaultApiBaseUri() {
         return DEFAULT_API_BASE_URI.equals(apiBaseUri);
     }
@@ -56,6 +77,10 @@ public class HttpConfig {
 
     public boolean isDefaultSnsBaseUri() {
         return DEFAULT_SNS_BASE_URI.equals(snsBaseUri);
+    }
+
+    public boolean isDefaultApiEuBaseUri() {
+        return DEFAULT_API_EU_BASE_URI.equals(apiEuBaseUri);
     }
 
     public boolean isDefaultVideoBaseUri() {
@@ -72,6 +97,10 @@ public class HttpConfig {
 
     public String getVersionedSnsBaseUri(String version) {
         return appendVersionToUri(snsBaseUri, version);
+    }
+
+    public String getVersionedApiEuBaseUri(String version) {
+        return appendVersionToUri(apiEuBaseUri, version);
     }
 
     public String getVersionedVideoBaseUri(String version) {
@@ -94,19 +123,36 @@ public class HttpConfig {
     }
 
     public static class Builder {
-        private String apiBaseUri, restBaseUri, snsBaseUri, videoBaseUri;
+        private int timeoutMillis = 60_000;
+        private String
+                apiBaseUri = DEFAULT_API_BASE_URI,
+                restBaseUri = DEFAULT_REST_BASE_URI,
+                snsBaseUri = DEFAULT_SNS_BASE_URI,
+                apiEuBaseUri = DEFAULT_API_EU_BASE_URI,
+                videoBaseUri = DEFAULT_VIDEO_BASE_URI;
 
-        public Builder() {
-            apiBaseUri = DEFAULT_API_BASE_URI;
-            restBaseUri = DEFAULT_REST_BASE_URI;
-            snsBaseUri = DEFAULT_SNS_BASE_URI;
-            videoBaseUri = DEFAULT_VIDEO_BASE_URI;
+        /**
+         * Sets the socket timeout for requests. By default, this is one minute (60000 ms).
+         * <br>
+         * Note that this timeout applies to both the connection and socket; therefore, it defines
+         * the maximum time for each stage of the request. For example, if set to 30 seconds, then
+         * establishing a connection may take 29 seconds and receiving a response may take 29 seconds
+         * without timing out (therefore a total of 58 seconds for the request).
+         *
+         * @param timeoutMillis The timeout in milliseconds.
+         *
+         * @return The Builder to keep building.
+         * @since 7.8.0
+         */
+        public Builder timeoutMillis(int timeoutMillis) {
+            this.timeoutMillis = timeoutMillis;
+            return this;
         }
 
         /**
          * @param apiBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_API_BASE_URI}.
          *
-         * @return The {@link Builder} to keep building.
+         * @return The Builder to keep building.
          */
         public Builder apiBaseUri(String apiBaseUri) {
             this.apiBaseUri = sanitizeUri(apiBaseUri);
@@ -116,7 +162,7 @@ public class HttpConfig {
         /**
          * @param restBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_REST_BASE_URI}.
          *
-         * @return The {@link Builder} to keep building.
+         * @return The Builder to keep building.
          */
         public Builder restBaseUri(String restBaseUri) {
             this.restBaseUri = sanitizeUri(restBaseUri);
@@ -126,10 +172,20 @@ public class HttpConfig {
         /**
          * @param snsBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_SNS_BASE_URI}.
          *
-         * @return The {@link Builder} to keep building.
+         * @return The Builder to keep building.
          */
         public Builder snsBaseUri(String snsBaseUri) {
             this.snsBaseUri = sanitizeUri(snsBaseUri);
+            return this;
+        }
+
+        /**
+         * @param apiEuBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_API_EU_BASE_URI}
+         *
+         * @return The Builder to keep building.
+         */
+        public Builder apiEuBaseUri(String apiEuBaseUri) {
+            this.apiEuBaseUri = sanitizeUri(apiEuBaseUri);
             return this;
         }
 
@@ -148,13 +204,14 @@ public class HttpConfig {
          * {@link HttpConfig#DEFAULT_API_BASE_URI}, {@link HttpConfig#DEFAULT_SNS_BASE_URI} and
          * {@link HttpConfig#DEFAULT_VIDEO_BASE_URI}.
          *
-         * @return The {@link Builder} to keep building.
+         * @return The Builder to keep building.
          */
         public Builder baseUri(String baseUri) {
             String sanitizedUri = sanitizeUri(baseUri);
             apiBaseUri = sanitizedUri;
             restBaseUri = sanitizedUri;
             snsBaseUri = sanitizedUri;
+            apiEuBaseUri = sanitizedUri;
             videoBaseUri = sanitizedUri;
             return this;
         }
@@ -170,7 +227,6 @@ public class HttpConfig {
             if (uri != null && uri.endsWith("/")) {
                 return uri.substring(0, uri.length() - 1);
             }
-
             return uri;
         }
     }

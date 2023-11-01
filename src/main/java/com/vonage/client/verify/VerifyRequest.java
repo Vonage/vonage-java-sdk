@@ -16,22 +16,24 @@
 package com.vonage.client.verify;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.message.BasicNameValuePair;
 import java.util.Locale;
+import java.util.Map;
 
 /**
- * Describes a Verify request when passed to {@link VerifyEndpoint}.
+ * Describes a Verify request.
  */
 public class VerifyRequest extends BaseRequest {
     private final LineType type;
-    private final String brand, from;
+    private final String brand, from, pinCode;
     private final Workflow workflow;
 
     public VerifyRequest(Builder builder) {
         super(builder.number, builder.length, builder.locale, builder.country, builder.pinExpiry, builder.nextEventWait);
         if ((brand = builder.brand) != null && brand.length() > 18) {
-            throw new IllegalArgumentException("Brand '"+brand+"' is longer than 18 characters");
+            throw new IllegalArgumentException("Brand '"+brand+"' is longer than 18 characters.");
+        }
+        if ((pinCode = builder.pinCode) != null && (pinCode.length() < 4 || pinCode.length() > 10)) {
+            throw new IllegalArgumentException("Pin code must be between 4 and 10 characters.");
         }
         from = builder.senderId;
         type = builder.type;
@@ -39,7 +41,7 @@ public class VerifyRequest extends BaseRequest {
     }
 
     /**
-     * @return the name of the company or app to be verified for.
+     * @return The name of the company or app to be verified for.
      */
     public String getBrand() {
         return this.brand;
@@ -82,30 +84,34 @@ public class VerifyRequest extends BaseRequest {
         return workflow;
     }
 
-    protected void addParams(RequestBuilder result) {
-        result.addParameter("number", getNumber()).addParameter("brand", getBrand());
+    /**
+     * A custom PIN to send to the user. If a PIN is not provided, Verify will generate a random PIN for you.
+     * This feature is not enabled by default - please discuss with your Account Manager if you would like it enabled.
+     *
+     * @return The custom pin code as a string, or {@code null} if not set.
+     *
+     * @since 7.5.0
+     */
+    public String getPinCode() {
+        return pinCode;
+    }
 
-        if (getFrom() != null) {
-            result.addParameter("sender_id", getFrom());
+    @Override
+    public Map<String, String> makeParams() {
+        Map<String, String> params = super.makeParams();
+        if (brand != null) {
+            params.put("brand", brand);
         }
-        if (getLength() != null && getLength() > 0) {
-            result.addParameter("code_length", Integer.toString(getLength()));
+        if (from != null) {
+            params.put("sender_id", from);
         }
-        if (getLocale() != null) {
-            result.addParameter(new BasicNameValuePair("lg", getDashedLocale()));
+        if (pinCode != null) {
+            params.put("pin_code", pinCode);
         }
-        if (getCountry() != null) {
-            result.addParameter("country", getCountry());
+        if (workflow != null) {
+            params.put("workflow_id", String.valueOf(workflow.id));
         }
-        if (getPinExpiry() != null) {
-            result.addParameter("pin_expiry", getPinExpiry().toString());
-        }
-        if (getNextEventWait() != null) {
-            result.addParameter("next_event_wait", getNextEventWait().toString());
-        }
-        if (getWorkflow() != null) {
-            result.addParameter("workflow_id", String.valueOf(getWorkflow().getId()));
-        }
+        return params;
     }
 
     /**
@@ -163,7 +169,7 @@ public class VerifyRequest extends BaseRequest {
      * @since 5.5.0
      */
     public static class Builder {
-        private String brand, senderId, number, country;
+        private String brand, senderId, number, country, pinCode;
         private Integer length, pinExpiry, nextEventWait;
         private LineType type;
         private Workflow workflow;
@@ -182,8 +188,8 @@ public class VerifyRequest extends BaseRequest {
 
         /**
          * @param senderId the short alphanumeric string to specify the SenderID for SMS sent by Verify.
-         * @return {@link Builder}
          *
+         * @return This builder.
          */
         public Builder senderId(String senderId) {
             this.senderId = senderId;
@@ -196,7 +202,7 @@ public class VerifyRequest extends BaseRequest {
          *
          * @deprecated This is no longer used and will be removed in the next major release.
          *
-         * @return {@link Builder}
+         * @return This builder.
          **/
         @Deprecated
         public Builder type(LineType type) {
@@ -209,7 +215,7 @@ public class VerifyRequest extends BaseRequest {
          * user. See <a href="https://developer.vonage.com/verify/guides/workflows-and-events">https://developer.vonage.com/verify/guides/workflows-and-events</a>
          *
          * @param workflow The workflow to use for conveying the PIN to your user.
-         * @return {@link Builder}
+         * @return This builder.
          */
         public Builder workflow(Workflow workflow) {
             this.workflow = workflow;
@@ -219,7 +225,7 @@ public class VerifyRequest extends BaseRequest {
         /**
          * @param locale (optional) Override the default locale used for verification. By default the locale is determined
          *        from the country code included in {@code number}
-         * @return {@link Builder}
+         * @return This builder.
          */
         public Builder locale(Locale locale) {
             this.locale = locale;
@@ -229,7 +235,7 @@ public class VerifyRequest extends BaseRequest {
         /**
          * @param length (optional) The length of the verification code to be sent to the user. Must be either 4 or 6. Use
          *               -1 to use the default value.
-         * @return {@link Builder}
+         * @return This builder.
          */
         public Builder length(Integer length) {
             this.length = length;
@@ -238,7 +244,7 @@ public class VerifyRequest extends BaseRequest {
 
         /**
          * @param pinExpiry (optional) the PIN validity time from generation, in seconds. Default is 300 seconds
-         * @return {@link Builder}
+         * @return This builder.
          */
         public Builder pinExpiry(Integer pinExpiry) {
             this.pinExpiry = pinExpiry;
@@ -247,7 +253,7 @@ public class VerifyRequest extends BaseRequest {
 
         /**
          * @param nextEventWait (optional) the wait time between attempts to deliver the PIN. A number between 600-900.
-         * @return {@link Builder}
+         * @return This builder.
          */
         public Builder nextEventWait(Integer nextEventWait) {
             this.nextEventWait = nextEventWait;
@@ -262,13 +268,32 @@ public class VerifyRequest extends BaseRequest {
          * </p>
          *
          * @param country  a String containing a 2-character country code
-         * @return {@link Builder}
+         * @return This builder.
          */
         public Builder country(String country) {
             this.country = country;
             return this;
         }
 
+        /**
+         * A custom PIN to send to the user. If a PIN is not provided, Verify will generate a random PIN for you. This
+         * feature is not enabled by default - please discuss with your Account Manager if you would like it enabled.
+         *
+         * @param pinCode The custom code as a string.
+         *
+         * @return This builder.
+         * @since 7.5.0
+         */
+        public Builder pinCode(String pinCode) {
+            this.pinCode = pinCode;
+            return this;
+        }
+
+        /**
+         * Builds the VerifyRequest.
+         *
+         * @return A new VerifyRequest with this builder's properties.
+         */
         public VerifyRequest build() {
             return new VerifyRequest(this);
         }

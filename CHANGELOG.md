@@ -4,6 +4,81 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+# [7.11.0] - 2023-10-31
+- Added `verifySignature` utility method to Voice and Messages clients
+- Added `applicationId(UUID)` overload to `VonageClient.Builder`
+- Added direct call modification methods to `VoiceClient`
+- Added `downloadRecordingRaw` and `saveRecording` methods to `VoiceClient`
+- Deprecated `ModifyCallResponse` and `VoiceClient.modifyCall`
+- Deprecated `VoiceClient.downloadRecording` and `Recording` class
+- Internal refactoring of Voice API implementation
+- Bumped `com.vonage:jwt` version to 1.1.0
+
+# [7.10.0] - 2023-10-20
+- Added more locales for Verify v2 and Meetings APIs
+- Added `check_url` to `VerificationResponse` to support synchronous Silent Authentication
+- Removed previously deprecated internal classes & methods
+- Internal refactoring of Proactive Connect and Meetings API implementations
+- Bumped Jackson version to 2.15.3
+- Migrated all remaining tests to JUnit 5 and removed dependency on `vintage-engine`
+
+# [7.9.0] - 2023-09-28
+- Added `get-full-pricing` implementation of Pricing API in `AccountClient`
+- Added master API key default overloads for secret management in Account API
+- Deprecated public internal request classes in Account API
+- Internal refactoring of Verify v1 and Account API implementations
+- Added `/v1` to Meetings API endpoint URL paths
+- Migrated assertions and test dependencies to JUnit 5
+
+# [7.8.0] - 2023-09-07
+- Added capability to configure request timeouts (default is 60 seconds)
+- Deprecated custom HTTP client implementation setting
+- Internal refactoring of Numbers, Conversion and Number Insight API implementations
+
+# [7.7.0] - 2023-08-10
+- Added Users API implementation
+- Major refactoring of how endpoints are implemented internally
+  - SMS, SNS, Redact, Verify v2, Subaccounts, Messages, Application have been refactored
+- Introduced `Jsonable` and `QueryParams` in addition to `DynamicEndpoint` to reduce boilerplate
+- Added missing fields to Application, capabilities and webhooks
+- Removed `PageList` (replaced by `HalPageResponse`)
+- Improved documentation for Application API implementation
+- Relaxed UUID validation in `VoiceClient`
+
+# [7.6.0] - 2023-06-30
+- Added Proactive Connect API implementation
+- Added Meetings API implementation
+- Updated Subaccounts name & secret validation logic
+
+# [7.5.0] - 2023-06-14
+- Added Subaccounts API implementation
+- Added custom PIN functionality to Verify v1
+- Fixed Silent Auth action URL webhook deserialization issue
+
+# [7.4.0] - 2023-05-18
+- Added Verify v2 API implementation
+- Added Advanced Machine Detection to Voice API
+- Fixed VbcEndpoint NCCO
+- Removed dependency on `jakarta.xml.bind`
+- Made `jakarta.servlet` an optional dependency
+- Deprecated all methods and classes that use `javax.servlet.HttpServletRequest`
+
+# [7.3.0] - 2023-04-14
+- Viber video message now requires setting duration and file size
+- Numbers API now uses Basic auth in header rather than query params
+- Made `jakarta.servlet-api` a required dependency (replacing `javax.servlet` as compileOnly)
+- Use `jakarta.xml.bind-api` instead of `javax.xml.bind`
+- Added `premium` and `level` fields to Start Talk request
+- Refactored `TalkPayload` to use Builder pattern
+- Added `vbc` and `app` endpoint types for voice calls
+- Fixed incorrect serialisation of `random_from_number`
+- Added Builder for constructing `Call` request
+- Added validation for UUIDs, URLs and request objects in `VoiceClient`
+- Made internal request classes for Voice API package-private
+- Deprecated public-facing usages of `CallModifer` & `ModifyCallPayload`
+- Deprecated setters on classes in Voice API in favour of builders / constructors
+- `com.vonage.client.voice.WebSocketEndpoint` now uses Map for headers
+
 # [7.2.0] - 2023-03-08
 - Updates to Messages v1:
   - Added `InboundMessage` webhook class
@@ -38,7 +113,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - `listArchives` endpoint takes as input `ListArchivesRequest` using builder pattern
 - Simplified `muteSession` and `muteStream` invocation
 
-## [7.1.1] - 2022-11-16
+# [7.1.1] - 2022-11-16
 - Bumped Jackson version to 2.14
 
 ## [8.0.0-beta1] - 2022-11-15
@@ -71,7 +146,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Ensure `User-Agent` is set in request headers
 - Allow alphanumeric characters for SMS and MMS sender fields in Messages API
 - `WhatsappRequest` sender must now be an E164 number
-- Fixed incorrect restrictions on `WhatsappTemplateRequest` 
+- Fixed incorrect restrictions on `WhatsappTemplateRequest`
   - Policy is now optional
   - Default locale is now `en`
   - Locale is now an enum rather than String

@@ -20,14 +20,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EmbeddedCalls {
-    private CallInfo[] callInfos;
+    @JsonProperty("calls") private CallInfo[] callInfos;
 
-    @JsonProperty("calls")
-    private void setCallInfos(CallInfo[] callInfos) {
-        this.callInfos = callInfos;
-    }
-
-    @JsonProperty("calls")
     public CallInfo[] getCallInfos() {
         return callInfos;
     }

@@ -16,11 +16,7 @@
 package com.vonage.client.messages;
 
 import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Currency;
@@ -35,7 +31,7 @@ import java.util.UUID;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class MessageStatus {
+public class MessageStatus implements Jsonable {
 
 	public enum Status {
 		SUBMITTED,
@@ -300,33 +296,11 @@ public class MessageStatus {
 	 * Creates an instance of this class from a JSON payload.
 	 *
 	 * @param json The JSON string to parse.
+	 *
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static MessageStatus fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.registerModule(new JavaTimeModule());
-			return mapper.readValue(json, MessageStatus.class);
-		}
-		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to produce MessageStatus from json.", ex);
-		}
-	}
-
-	/**
-	 * Generates a JSON string from this status object.
-	 *
-	 * @return JSON representation of this MessageStatus object.
-	 */
-	public String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.registerModule(new JavaTimeModule());
-			return mapper.writeValueAsString(this);
-		}
-		catch (JsonProcessingException jpe) {
-			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
-		}
+		return Jsonable.fromJson(json);
 	}
 
 	@Override

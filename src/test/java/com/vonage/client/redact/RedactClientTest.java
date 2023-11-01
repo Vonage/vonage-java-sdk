@@ -15,70 +15,128 @@
  */
 package com.vonage.client.redact;
 
-import com.vonage.client.ClientTest;
-import com.vonage.client.VonageBadRequestException;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.fail;
+import com.vonage.client.*;
+import com.vonage.client.auth.AuthMethod;
+import com.vonage.client.auth.SignatureAuthMethod;
+import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.common.HttpMethod;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import java.util.Arrays;
+import java.util.Collection;
 
 public class RedactClientTest extends ClientTest<RedactClient> {
-    @Before
-    public void setUp() {
+
+    public RedactClientTest() {
         client = new RedactClient(wrapper);
     }
 
     @Test
-    public void testSuccessfulResponse() {
-        try {
-            wrapper.setHttpClient(stubHttpClient(204, ""));
-            RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.SMS);
-            redactRequest.setType(RedactRequest.Type.INBOUND);
-
-            client.redactTransaction(redactRequest);
-            client.redactTransaction(redactRequest.getId(), redactRequest.getProduct(), redactRequest.getType());
-        } catch (Exception e) {
-            fail("No exceptions should be thrown.");
-        }
+    public void testSuccessfulResponse() throws Exception {
+        RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.SMS);
+        redactRequest.setType(RedactRequest.Type.INBOUND);
+        stubResponseAndRun(204, () -> client.redactTransaction(redactRequest));
+        stubResponse(204);
+        client.redactTransaction(redactRequest.getId(), redactRequest.getProduct(), redactRequest.getType());
+        stubResponseAndRun(204, () -> client.redactTransaction("test-id", RedactRequest.Product.VERIFY));
     }
 
-    @Test(expected = VonageBadRequestException.class)
+    @Test
+    public void testInvalidRedactRequests() {
+        assertThrows(IllegalArgumentException.class, () -> client.redactTransaction(
+                "test-id", RedactRequest.Product.SMS
+        ));
+        assertThrows(IllegalArgumentException.class, () -> client.redactTransaction(
+                "test-id", null
+        ));
+        assertThrows(IllegalArgumentException.class, () -> client.redactTransaction(
+                new RedactRequest(null, RedactRequest.Product.SMS)
+        ));
+    }
+
+    @Test
     public void testWrongCredentials() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(401, ""));
         RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
-        client.redactTransaction(redactRequest);
-        client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
+        stubResponseAndAssertThrows(401, () ->
+                client.redactTransaction(redactRequest),
+                VonageBadRequestException.class
+        );
+        stubResponseAndAssertThrows(401, () ->
+                client.redactTransaction(redactRequest.getId(), redactRequest.getProduct()),
+                VonageBadRequestException.class
+        );
     }
 
-    @Test(expected = VonageBadRequestException.class)
+    @Test
     public void testPrematureRedactionOrUnauthorized() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(403, ""));
         RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
-        client.redactTransaction(redactRequest);
-        client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
+        stubResponseAndAssertThrows(403, () ->
+                client.redactTransaction(redactRequest), VonageBadRequestException.class
+        );
+        stubResponseAndAssertThrows(403, () ->
+                client.redactTransaction(redactRequest.getId(), redactRequest.getProduct()),
+                VonageBadRequestException.class
+        );
     }
 
-    @Test(expected = VonageBadRequestException.class)
+    @Test
     public void testInvalidId() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(404, ""));
         RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
-        client.redactTransaction(redactRequest);
-        client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
+        stubResponseAndAssertThrows(404, () ->
+                client.redactTransaction(redactRequest), VonageBadRequestException.class
+        );
+        stubResponseAndAssertThrows(404, () ->
+                client.redactTransaction(redactRequest.getId(), redactRequest.getProduct()),
+                VonageBadRequestException.class
+        );
     }
 
-    @Test(expected = VonageBadRequestException.class)
-    public void testInvalidJsonInvalidProduct() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(422, ""));
-        RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
-        client.redactTransaction(redactRequest);
-        client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
-    }
+    @Test
+    public void testRedactTransactionEndpoint() throws Exception {
+        new DynamicEndpointTestSpec<RedactRequest, Void>() {
 
-    @Test(expected = VonageBadRequestException.class)
-    public void testRateLimit() throws Exception {
-        wrapper.setHttpClient(stubHttpClient(429, ""));
-        RedactRequest redactRequest = new RedactRequest("test-id", RedactRequest.Product.VOICE);
-        client.redactTransaction(redactRequest);
-        client.redactTransaction(redactRequest.getId(), redactRequest.getProduct());
-    }
+            @Override
+            protected RestEndpoint<RedactRequest, Void> endpoint() {
+                return client.redactTransaction;
+            }
 
+            @Override
+            protected HttpMethod expectedHttpMethod() {
+                return HttpMethod.POST;
+            }
+
+            @Override
+            protected Collection<Class<? extends AuthMethod>> expectedAuthMethods() {
+                return Arrays.asList(SignatureAuthMethod.class, TokenAuthMethod.class);
+            }
+
+            @Override
+            protected Class<? extends Exception> expectedResponseExceptionType() {
+                return VonageBadRequestException.class;
+            }
+
+            @Override
+            protected String expectedDefaultBaseUri() {
+                return "https://api.nexmo.com";
+            }
+
+            @Override
+            protected String expectedEndpointUri(RedactRequest request) {
+                return "/v1/redact/transaction";
+            }
+
+            @Override
+            protected RedactRequest sampleRequest() {
+                RedactRequest request = new RedactRequest("test-id", RedactRequest.Product.SMS);
+                request.setType(RedactRequest.Type.INBOUND);
+                return request;
+            }
+
+            @Override
+            protected String sampleRequestBodyString() {
+                return "{\"id\":\"test-id\",\"product\":\"sms\",\"type\":\"inbound\"}";
+            }
+        }
+        .runTests();
+    }
 }

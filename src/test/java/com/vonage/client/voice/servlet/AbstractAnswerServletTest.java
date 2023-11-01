@@ -16,14 +16,14 @@
 package com.vonage.client.voice.servlet;
 
 import com.vonage.client.voice.ncco.TalkAction;
-import org.junit.Test;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -69,25 +69,19 @@ public class AbstractAnswerServletTest {
     public void doGet() throws Exception {
         HttpServletResponse response = mockResponse();
         servlet.doGet(null, response);
-        assertEquals(
-                "[{\"text\":\"Hello\",\"action\":\"talk\"}]",
-                response.getOutputStream().toString());
+        assertEquals("[{\"text\":\"Hello\",\"action\":\"talk\"}]", response.getOutputStream().toString());
     }
 
     @Test
     public void doPost() throws Exception {
         HttpServletResponse response = mockResponse();
         servlet.doPost(null, response);
-        assertEquals(
-                "[{\"text\":\"Hello\",\"action\":\"talk\"}]",
-                response.getOutputStream().toString());
+        assertEquals("[{\"text\":\"Hello\",\"action\":\"talk\"}]", response.getOutputStream().toString());
     }
 
     @Test
     public void handleRequest() throws Exception {
-        assertEquals(
-                "[{\"text\":\"Hello\",\"action\":\"talk\"}]",
-                servlet.handleRequest(null).toJson());
+        assertEquals("[{\"text\":\"Hello\",\"action\":\"talk\"}]", servlet.handleRequest(null).toJson());
     }
 
 }

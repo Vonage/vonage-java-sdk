@@ -1,69 +1,59 @@
 # Vonage Server SDK for Java
 
-[![Maven Release](https://maven-badges.herokuapp.com/maven-central/com.vonage/server-sdk/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.vonage/server-sdk)
-[![Build Status](https://github.com/vonage/vonage-java-sdk/workflows/build/badge.svg)](https://github.com/Vonage/vonage-java-sdk/actions?query=workflow%3A"Build+Java+CI")
+[![Maven Release](https://maven-badges.herokuapp.com/maven-central/com.vonage/client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.vonage/client)
+[![Build Status](https://github.com/Vonage/vonage-java-sdk/actions/workflows/build.yml/badge.svg)](https://github.com/Vonage/vonage-java-sdk/actions/workflows/build.yml?query=workflow%3A"Build+Java+CI")
 [![codecov](https://codecov.io/gh/vonage/vonage-java-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/vonage/vonage-java-sdk)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)][license]
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE.txt)
 
 <img src="https://developer.nexmo.com/assets/images/Vonage_Nexmo.svg" height="48px" alt="Nexmo is now known as Vonage" />
 
 You can use this Java Server SDK to add [Vonage APIs](https://developer.vonage.com/api) to your application. To use this, you'll
-need a Vonage account. Sign up [for free at developer.vonage.com][signup].
+need a Vonage account. You'll need to have [created a Vonage account](https://dashboard.nexmo.com/sign-up?utm_source=DEV_REL&utm_medium=github&utm_campaign=java-client-library).
 
+* [Supported APIs](#supported-apis)
+* [Other SDKs](#other-sdks)
 * [Installation](#installation)
 * [Usage](#usage)
-* [Tips And Tricks](#tips-and-tricks)
+* [Configuration](#configuration)
+* [FAQ](#frequently-asked-questions)
 * [Contribute!](#contribute)
+
+## Supported APIs
+
+- [Account](https://developer.vonage.com/en/account/overview)
+- [Application](https://developer.vonage.com/en/application/overview)
+- [Conversion](https://developer.vonage.com/messaging/conversion-api/overview)
+- [Meetings](https://developer.vonage.com/en/meetings/overview)
+- [Messages](https://developer.vonage.com/en/messages/overview)
+- [Number Insight](https://developer.vonage.com/en/number-insight/overview)
+- [Number Management](https://developer.vonage.com/en/numbers/overview)
+- [Proactive Connect](https://developer.vonage.com/en/proactive-connect/overview)
+- [Redact](https://developer.vonage.com/en/redact/overview)
+- [SMS](https://developer.vonage.com/en/sms/overview)
+- [Subaccounts](https://developer.vonage.com/en/account/subaccounts/overview)
+- [Verify](https://developer.vonage.com/en/verify/overview)
+- [Voice](https://developer.vonage.com/en/voice/overview)
+
+## Other SDKs
+
+We also provide server SDKs in other languages:
+
+- [.NET](https://github.com/Vonage/vonage-dotnet-sdk)
+- [PHP](https://github.com/Vonage/vonage-php-sdk)
+- [Python](https://github.com/Vonage/vonage-python-sdk)
+- [Ruby](https://github.com/Vonage/vonage-ruby-sdk)
+- [NodeJS](https://github.com/Vonage/vonage-node-sdk)
+
+We also offer [client-side SDKs](https://developer.vonage.com/en/vonage-client-sdk/overview) for iOS, Android and JavaScript.
+See all of our SDKs and integrations on the [Vonage Developer portal](https://developer.vonage.com/en/tools).
 
 ## Installation
 
-To use the Java Server SDK you'll need to have [created a Vonage account][signup].
-The SDK is available from [Maven Central](https://search.maven.org/artifact/com.vonage/server-sdk).
-
-> **Note**
-> :exclamation:
-> 
-> Prior to version 8, this was released under the artifactId `client` as opposed to `server-sdk`.
-If you are using `com.vonage:client`, please migrate to `com.vonage:server-sdk`, as shown below.
-
-### Gradle
-
-To install the Java Server SDK using Gradle, add the following to `build.gradle`:
-
-```groovy
-repositories {
-    mavenCentral()
-}
-```
-
-For Gradle 3.4 or Higher:
-
-```groovy
-dependencies {
-    implementation 'com.vonage:server-sdk:8.0.0-beta4'
-}
-```
-
-For older versions:
-
-```groovy
-dependencies {
-    compile 'com.vonage:server-sdk:8.0.0-beta4'
-}
-```
-
-### Maven
-
-Add the following to the correct place in your project's POM file:
-
-```xml
-<dependency>
-    <groupId>com.vonage</groupId>
-    <artifactId>server-sdk</artifactId>
-    <version>8.0.0-beta4</version>
-</dependency>
-```
+Releases are published to [Maven Central](https://central.sonatype.com/artifact/com.vonage/client/7.11.0/snippets).
+Instructions for your build system can be found in the snippets section.
+They're also available from [here](https://mvnrepository.com/artifact/com.vonage/client/7.11.0).
+Release notes can be found in the [changelog](CHANGELOG.md).
 
 ### Build It Yourself
 
@@ -77,7 +67,7 @@ gradle build
 ### Download everything in a ZIP file
 
 **Note**: We *strongly recommend* that you use a tool that supports dependency management, such as [Gradle], [Maven],
-or [Ivy]
+or [Ivy].
 
 We provide a [ZIP file for each release](https://github.com/Vonage/vonage-java-sdk/releases/),
 containing the Java Server SDK JAR, along with all the dependencies. Download the file, unzip it, and add the JAR files
@@ -90,12 +80,28 @@ to your project's classpath.
 
 ## Usage
 
-* For help understanding our APIs, check out our awesome [developer portal](https://developer.vonage.com/)
-* Check the [Javadoc](https://www.javadoc.io/doc/com.vonage/server-sdk/latest/index.html) for full reference documentation.
-* There are also **many useful code samples** in our [nexmo-community/nexmo-java-quickstart](https://github.com/nexmo-community/nexmo-java-quickstart) repository.
+* For help understanding our APIs, check out our awesome [developer portal](https://developer.vonage.com/).
+* Check the [Javadoc](https://www.javadoc.io/doc/com.vonage/client/latest/index.html) for full reference documentation.
+* There are also **many useful code samples** in our [Vonage/vonage-java-code-snippets](https://github.com/Vonage/vonage-java-code-snippets) repository.
+
+## Configuration
+
+## Typical Instantiation
+For default configuration, you just need to specify your Vonage account credentials using API key and secret, private
+key and application ID or both. For maximum compatibility with all APIs, it is recommended that you specify both
+authentication methods, like so:
+
+```java
+VonageClient client = VonageClient.builder()
+        .applicationId(APPLICATION_ID)
+        .privateKeyPath(PRIVATE_KEY_PATH)
+        .apiKey(API_KEY)
+        .apiSecret(API_SECRET)
+        .build();
+```
 
 ### Customize the Base URI
-By default, the client will use https://api.nexmo.com, https://rest.nexmo.com, https://sns.nexmo.com and https://video.api.vonage.com as base URIs for the various endpoints. To customize these you can instantiate `VonageClient` with an `HttpConfig` object.
+By default, the client will use https://api.nexmo.com, https://rest.nexmo.com, https://sns.nexmo.com and https://api-eu.vonage.com as base URIs for the various endpoints. To customize these you can instantiate `VonageClient` with an `HttpConfig` object.
 
 `HttpConfig.Builder` has been created to assist in building this object. Usage is as follows:
 
@@ -104,12 +110,11 @@ HttpConfig httpConfig = HttpConfig.builder()
         .apiBaseUri("https://api.example.com")
         .restBaseUri("https://rest.example.com")
         .snsBaseUri("https://sns.example.com")
-        .videoBaseUri("https://video.example.com")
+        .apiEuBaseUri("https://api-eu.example.com")
         .build();
 
 VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
+        .apiKey(API_KEY).apiSecret(API_SECRET)
         .httpConfig(httpConfig)
         .build();
 ```
@@ -120,583 +125,43 @@ If you do not specify a property, it will take on whatever the default value is.
 HttpConfig httpConfig = HttpConfig.builder().baseUri("http://example.com").build();
 
 VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
+        .apiKey(API_KEY).apiSecret(API_SECRET)
         .httpConfig(httpConfig)
         .build();
 ```
 
-To keep the default values, you can use `HttpConfig.defaultConfig()`:
+### Custom Timeout
 
-```java
-HttpConfig httpConfig = HttpConfig.defaultConfig();
-
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .httpConfig(httpConfig)
-        .build();
-```
-
-You can also instantiate without the parameter:
+By default, the SDK has a 1-minute timeout for requests.
+You can change this to be longer or shorter using `HttpConfig`. The following example sets this to 12 seconds:
 
 ```java
 VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
+        .applicationId(APPLICATION_ID)
+        .privateKeyPath(PRIVATE_KEY_PATH)
+        .httpConfig(HttpConfig.builder().timeoutMillis(12_000).build())
         .build();
 ```
-
-### Send an SMS
-
-Send an SMS with the Vonage SMS API:
-
-```java
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .build();
-
-SmsSubmissionResponse responses = client.getSmsClient().submitMessage(new TextMessage(
-        FROM_NUMBER,
-        TO_NUMBER,
-        "Hello from Vonage!"));
-for (SmsSubmissionResponseMessage response : responses.getMessages()) {
-    System.out.println(response);
-}
-```
-
-### Send an MMS
-
-Send an MMS with the Vonage Messages API:
-```java
-MessageRequest request = MmsImageRequest.builder()
-        .from(FROM_NUMBER)
-        .to(TO_NUMBER)
-        .url(IMAGE_URL)
-        .caption(IMAGE_CAPTION)
-        .build();
-MessageResponse response = client.getMessagesClient().sendMessage(request);
-```
-
-### Send a file via Messenger
-
-Send a file over Facebook Messenger using the Vonage Messages API:
-```java
-MessageRequest request = MessengerFileRequest.builder()
-        .from(SENDER_ID)
-        .to(RECIPIENT_ID)
-        .url(FILE_URL)
-        .build();
-MessageResponse response = client.getMessagesClient().sendMessage(request);
-```
-
-### Send an image via Viber
-
-Send a picture over Viber using the Vonage Messages API:
-```java
-MessageRequest request = ViberImageRequest.builder()
-        .from(SENDER_ID)
-        .to(TO_NUMBER)
-        .url(IMAGE_URL)
-        .build();
-MessageResponse response = client.getMessagesClient().sendMessage(request);
-```
-
-### Send a video via WhatsApp
-
-Send a video over WhatsApp using the Vonage Messages API:
-```java
-MessageRequest request = WhatsappVideoRequest.builder()
-        .from(FROM_NUMBER)
-        .to(TO_NUMBER)
-        .url(VIDEO_URL)
-        .caption(VIDEO_DESCRIPTION)
-        .build();
-MessageResponse response = client.getMessagesClient().sendMessage(request);
-```
-
-### Make Phone Calls
-
-The following code initiates an outbound call which then reads the user [a message](https://nexmo-community.github.io/ncco-examples/first_call_talk.json):
-
-```java
-VonageClient client = VonageClient.builder()
-        .applicationId(APP_ID)
-        .privateKeyPath("application_key.pem")
-        .build();
-
-Call call = new Call(to, from,
-                     "https://nexmo-community.github.io/ncco-examples/first_call_talk.json");
-CallEvent event = client.getVoiceClient().createCall(call);
-```
-
-After the call is answered, you can get more information about it, including
-the amount it cost with:
-
-```java
-CallInfo info = client.getVoiceClient().getCallDetails(event.getUuid());
-System.out.println("This cost: " + info.getPrice() + " EUR");
-```
-
-You can modify an existing call in progress, for example by hanging up on the current call:
-
-```java
-ModifyCallResponse modifyResponse = client.getVoiceClient().modifyCall(event.getUuid(), "hangup");
-System.out.println(modifyResponse.getMessage());
-```
-
-While a call is in progress, you can send Dual-tone multi-frequency(DTMF) tones like so:
-
-```java
-DtmfResponse dtmfResponse = client.getVoiceClient().sendDtmf(event.getUuid(), "332393");
-System.out.println("Success! " + dtmfResponse.getMessage());
-```
-
-To stream an audio file to an active call, simply use the following method:
-
-```java
-StreamResponse startStreamResponse = client.getVoiceClient().startStream(event.getUuid(), "https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3");
-System.out.println("Success! " + startStreamResponse.getMessage());
-```
-
-If you'd like to stop streaming an audio file to an active call, you can do so with:
-```java
-StreamResponse stopStreamResponse = client.getVoiceClient().stopStream(event.getUuid());
-System.out.println("Alright. " + stopStreamResponse.getMessage());
-```
-
-To send a synthesized speech message to an active call, just use the following method:
-
-```java
-TalkResponse startTalkResponse = client.getVoiceClient().startTalk(event.getUuid(), "Hello World");
-System.out.println("Success! " + startTalkResponse.getMessage());
-```
-
-If you'd like to stop sending a synthesized speech message to an active call, you can do so with:
-
-```java
-TalkResponse stopTalkResponse = client.getVoiceClient().stopTalk(event.getUuid());
-System.out.println("Alright. " + stopTalkResponse.getMessage());
-```
-
-### Generating NCCO Responses
-
-Our library contains a `com.vonage.client.voice.ncco` package, providing JSON-serializable objects for your NCCO webhook endpoints.
-
-Each of the `Action` items contain a `Builder` class that can be used for constructing various actions. These actions are then added to an `Ncco` object for serialization into JSON:
-
-```java
-TalkAction intro = TalkAction.builder("At the tone, record your response and press #.")
-                        .build();
-
-TalkAction outro = TalkAction.builder("Thanks, goodbye!")
-                        .build();
-
-RecordAction record = RecordAction.builder()
-                        .beepStart(true)
-                        .endOnKey('#')
-                        .build()
-                        
-res.type("application/json");
-return new Ncco(intro, record, outro).toJson();
-```
-
-### Make a Phone Call with an NCCO
-
-You can combine the above examples to send an NCCO to the Voice API:
-
-```java
-The following code initiates an outbound call which then reads the user [a message](https://nexmo-community.github.io/ncco-examples/first_call_talk.json):
-
-```java
-VonageClient client = VonageClient.builder()
-        .applicationId(APP_ID)
-        .privateKeyPath("application_key.pem")
-        .build();
-
-Ncco ncco = new Ncco(
-    TalkAction.builder("Hi, this is Russell. You are listening to a text-to-speech Call made with Vonage's Voice API")
-        .build()
-);
-
-Call call = new Call(to, from, ncco);
-CallEvent event = client.getVoiceClient().createCall(call);
-```
-
-### Send a 2FA Code
-
-Send a 2FA code to a phone number with:
-
-```java
-VerifyResponse ongoingVerify = client.getVerifyClient().verify(TO_NUMBER, "NEXMO");
-```
-
-### Check the 2FA Code
-
-When the user enters the code they received, you can check it like this:
-
-```java
-client.getVerifyClient().check(ongoingVerify.getRequestId(), CODE)
-```
-
-### Send a PSD2 Payment Verification Code
-
-Send a PSD2 code to a phone number with:
-
-````java
-VerifyResponse verifyPayment = client.getVerifyClient().psd2Verify(TO_NUMBER, 103.33, "Michelle");
-````
-
-### Get a List of SMS Prices for a Country
-
-Get a list of SMS prices for a country with:
-
-```java
-VonageClient client = VonageClient.builder()
-        .apiKey(API_KEY)
-        .apiSecret(API_SECRET)
-        .build();
-PricingResponse response = client.getAccountClient().getSmsPrice("GB");
-System.out.println(response.getDefaultPrice());
-```
-
-### Get a List of Voice Prices for a Country
-
-Get a list of voice prices for a country with:
-```java
-PricingResponse response = client.getAccountClient().getVoicePrice("US");
-System.out.println(response.getDefaultPrice());
-```
-
-### Get a List of SMS Prices for a Prefix
-
-Get a list of SMS prices for a country with:
-```java
-PrefixPricingResponse response = client.getAccountClient().getPrefixPrice(ServiceType.SMS, "1");
-System.out.println(response.getCountries().get(0).getDefaultPrice());
-```
-
-### Get a List of Voice Prices for a Prefix
-
-Get a list of voice prices for a country with:
-```java
-PrefixPricingResponse response = client.getAccountClient().getPrefixPrice(ServiceType.VOICE, "1");
-System.out.println(response.getCountries().get(0).getDefaultPrice());
-```
-
-### Top-up Account
-
-Top-up your account that has auto-reload enabled with:
-```java
-client.getAccountClient().topUp("TRANSACTION_NUMBER");
-```
-
-### Submit Conversion
-
-Submit a request to the Conversion API when it has been enabled on your account with:
-```java
-client.getConversionClient().submitConversion(ConversionRequest.Type.VOICE,
-                                     "MESSAGE-ID",
-                                     true,
-                                     new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-03-04 10:11:12"));
-```
-
-### Create Secret
-
-Create a secret associated with your account id:
-```java
-SecretResponse response = client.getAccountClient().createSecret(API_KEY, "Foo84RSecret");
-```
-
-### List Secrets
-
-List the secret id (but not content) associated with your account id:
-```java
-ListSecretsResponse response = client.getAccountClient().listSecrets(API_KEY);
-Collection<SecretResponse> secrets = response.getSecrets();
-```
-
-### Revoke Secret
-
-Revoke a secret associated with your account id:
-```java
-client.getAccountClient().revokeSecret(API_KEY, SECRET_ID);
-```
-
-### Retrieve Secret
-
-Get information about a specific secret associated with your account id:
-```java
-SecretResponse response = client.getAccountClient().getSecret(API_KEY, SECRET_ID);
-```
-
-### Video API
-
-The following samples demonstrate usage of the Vonage Video API (formerly OpenTok).
-Note that this is currently in beta. See the [Releases page](https://github.com/Vonage/vonage-java-sdk/releases).
-
-They all use JWT authentication, so you would instantiate a client using
-your application ID and private key, like so:
-```java
-VonageClient client = VonageClient.builder()
-    .applicationId(APPLICATION_ID)
-    .privateKeyPath(PRIVATE_KEY_PATH)
-    .build();
-```
-
-### Generate a token
-
-Generate a signed JWT to pass to the Vonage Video Client:
-```java
-String jwt = client.getVideoClient().generateToken(SESSION_ID,
-    TokenOptions.builder().expiryLength(Duration.ofHours(6)).build()
-);
-```
-
-### Create a new Session
-
-Generate a new video session:
-```java
-CreateSessionResponse session = client.getVideoClient().createSession(
-    CreateSessionRequest.builder()
-        .mediaMode(MediaMode.ROUTED)
-        .archiveMode(ArchiveMode.MANUAL)
-        .build()
-);
-```
-
-### Mute a video stream
-
-Force mute a specific publisher stream:
-```java
-client.getVideoClient().muteStream(SESSION_ID, STREAM_ID);
-```
-
-### Mute multiple participants in a session
-
-Force all streams (except for an optional list of streams) in a session to mute published audio.
-You can also use this method to disable the force mute state of a session:
-
-```java
-client.getVideoClient().muteSession(SESSION_ID, true);
-```
-
-### Disconnect a client from a session
-
-Remove a participant from a video session:
-```java
-client.getVideoClient().forceDisconnect(SESSION_ID, CONNECTION_ID);
-```
-
-### Send signal to participant(s)
-
-Signal to a specific participant:
-```java
-SignalRequest request = SignalRequest.builder()
-        .data("Chat text message")
-        .type("chat")
-        .build();
-client.getVideoClient().signal(SESSION_ID, CONNECTION_ID, request);
-```
-
-### Signal all participants in a session:
-```java
-SignalRequest request = SignalRequest.builder()
-		.type("chat").data("Hello, World!").build();
-client.getVideoClient().signalAll(SESSION_ID, request);
-```
-
-### Get information about a video Stream
-
-```java
-GetStreamResponse streamInfo = client.getVideoClient().getStream(SESSION_ID, STREAM_ID);
-```
-
-### Start an Archive recording
-
-Archive a recording of a Vonage Video session. All properties (except `SESSION_ID`) are optional.
-```java
-Archive archive = client.getVideoClient().createArchive(
-    Archive.builder(SESSION_ID)
-        .name("My_Recording")
-        .outputMode(OutputMode.COMPOSED)
-        .streamMode(StreamMode.AUTO)
-        .resolution(Resolution.HD_LANDSCAPE)
-        .hasAudio(true).hasVideo(true)
-        .layout(
-            StreamCompositionLayout.builder(ScreenLayoutType.BEST_FIT)
-                .screenshareType(ScreenLayoutType.PIP)
-                .build()
-        )
-        .build();
-);
-```
-
-### Stop an Archive recording
-
-```java
-Archive archive = client.getVideoClient().stopArchive(ARCHIVE_ID);
-```
-
-### Delete an Archive recording
-
-```java
-Archive archive = client.getVideoClient().deleteArchive(ARCHIVE_ID);
-```
-
-### Get details about a specific Archive
-
-```java
-Archive archive = client.getVideoClient().getArchive(ARCHIVE_ID);
-```
-
-### List the most recent completed Archives
-
-```java
-List<Archive> archives = client.getVideoClient().listArchives();
-```
-
-### Add or remove stream in an Archive recording
-
-Change the streams included in a composed archive that was started with the streamMode set to "manual":
-```java
-client.getVideoClient().addArchiveStream(ARCHIVE_ID, STREAM_ID);
-```
-```java
-client.getVideoClient().removeArchiveStream(ARCHIVE_ID, STREAM_ID);
-```
-
-### List all live Broadcasts
-
-```java
-List<Broadcast> broadcasts = client.getVideoClient().listBroadcasts();
-```
-
-### Get details about a specific Broadcast
-
-```java
-Broadcast broadcast = client.getVideoClient().getBroadcast(BROADCAST_ID);
-```
-
-### Start a live streaming Broadcast
-To successfully start broadcasting a session, at least one client must be connected to the session.
-The live streaming broadcast can target one HLS endpoint and up to five RTMP servers simultaneously for a session.
-Session ID is required and at least one output stream (RTMP and/or HLS) should be specified.
-
-```java
-Broadcast broadcast = client.getVideoClient().createBroadcast(
-		Broadcast.builder(SESSION_ID)
-            .hls(Hls.builder().lowLatency(true).build())
-            .resolution(Resolution.HD_LANDSCAPE)
-		    .streamMode(StreamMode.MANUAL)
-            .layout(StreamCompositionLayout.builder(ScreenLayoutType.BEST_FIT)
-                    .screenshareType(ScreenLayoutType.PIP)
-                    .build()
-            )
-            .maxDuration(Duration.ofMinutes(45))
-        .build()
-);
-```
-
-### Stop a Broadcast recording
-
-```java
-Broadcast broadcast = client.getVideoClient().stopBroadcast(BROADCAST_ID);
-```
-
-### Dynamically changing the layout type of a live streaming Broadcast
-
-```java
-client.getVideoClient().updateBroadcastLayout(BROADCAST_ID,
-		StreamCompositionLayout.builder(ScreenLayoutType.HORIZONTAL).build()
-);
-```
-
-### Add or remove stream in a live streaming Broadcast
-
-Change the streams included in a broadcast that was started with the streamMode set to "manual":
-```java
-client.getVideoClient().addBroadcastStream(BROADCAST_ID, STREAM_ID);
-```
-```java
-client.getVideoClient().removeBroadcastStream(BROADCAST_ID, STREAM_ID);
-```
-
-### Dial in to a SIP video call
-
-Connect your SIP platform to a Vonage video session:
-```java
-SipDialRequest request = SipDialRequest.builder()
-	.uri(URI.create("sip:user@sip.partner.com"), false)
-	.sessionId(sessionId).token(token).build();
-
-SipDialResponse parsed = client.getVideoClient().sipDial(request);
-```
-
-### Play DTMF tones into a video call
-
-Send DTMF tones to all participants in a call:
-
-```java
-String digits = "*0123456789#";
-client.getVideoClient().sendDtmf(sessionId, digits);
-```
-
-or to a specific participant:
-
-```java
-client.getVideoClient().sendDtmf(sessionId, connectionId, digits);
-```
-
-
-### Custom HTTP Configuration
-
-If you need to configure the Apache HttpClient used for making requests, you can
-call `VonageClient.Builder.httpClient()` to supply your custom configured object. This
-can be useful, for example, if you must use an HTTP proxy to make requests or to configure SSL Certificates.
-
-## Tips And Tricks
-
-### Phone Calls And WebSockets
-Our [Voice API](https://developer.vonage.com/voice/voice-api/overview) can connect a voice call to a websocket! An example using `javax.websocket` for accepting websocket connections can be found on the [Oracle website](http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/HomeWebsocket/WebsocketHome.html#section4).
-[Another  example](http://sparkjava.com/documentation#embedded-web-server) using the Spark framework
 
 ## Frequently Asked Questions
 
-Q: Does this SDK support thread safety?
-A: No, it currently does not.
+**Q: What is your policy on thread safety?**
 
-### Supported APIs
+**A:** The current architecture of the SDK means that only one thread should use the client at a time.
+If you would like to use the SDK in a multithreaded environment, create a separate instance of
+`VonageClient` for each thread.
 
-The following is a list of Vonage APIs and whether the Java SDK provides support for them:
+**Q: Does this SDK support asynchronous request / response processing?**
 
-| API                |  API Release Status  | Supported? |
-|--------------------|:--------------------:|:----------:|
-| Account            | General Availability |     ✅      |
-| Alerts             | General Availability |     ✅      |
-| Application        | General Availability |     ✅      |
-| Audit              |         Beta         |     ❌      |
-| Conversation       |         Beta         |     ❌      |
-| Dispatch           |         Beta         |     ❌      |
-| External Accounts  |         Beta         |     ❌      |
-| Media              |         Beta         |     ❌      |
-| Messages           | General Availability |     ✅      |
-| Number Insight     | General Availability |     ✅      |
-| Number Management  | General Availability |     ✅      |
-| Pricing            | General Availability |     ✅      |
-| Redact             |  Developer Preview   |     ✅      |
-| Reports            |         Beta         |     ❌      |
-| SMS                | General Availability |     ✅      |
-| Verify             | General Availability |     ✅      |
-| Voice              | General Availability |     ✅      |
-| Video              |         Beta         |     ☑️     |
+**A:** Currently no, but it is on the roadmap.
 
+**Q: Does this SDK support the Video API?**
 
-## License
-
-This library is released under the [Apache 2.0 License][license]
-
+**A:**
+The Vonage Video API (formerly OpenTok) is currently in beta. You can try it out by using a beta version.
+Usage instructions can be found on the [8.x-beta branch](https://github.com/Vonage/vonage-java-sdk/tree/8.x-beta#video-api).
+See the [Releases page](https://github.com/Vonage/vonage-java-sdk/releases) for more information.
+In the meantime, you can continue using the [OpenTok Java SDK](https://github.com/opentok/Opentok-Java-SDK).
 
 ## Contribute!
 
@@ -707,9 +172,3 @@ first if you plan to add any new functionality.
 Otherwise, [bug reports](https://github.com/Vonage/vonage-java-sdk/issues),
 [bug fixes](https://github.com/Vonage/vonage-java-sdk/pulls) and feedback on the
 library are always appreciated.
-
-
-[create_account]: https://developer.vonage.com/account/overview
-[signup]: https://dashboard.nexmo.com/sign-up?utm_source=DEV_REL&utm_medium=github&utm_campaign=[LANGUAGE]-client-library
-[doc_sms]: https://developer.vonage.com/messaging/sms/overview
-[license]: LICENSE.txt
