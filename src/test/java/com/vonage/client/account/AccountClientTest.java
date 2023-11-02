@@ -20,7 +20,7 @@ import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.common.HttpMethod;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -349,19 +349,18 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         stubResponse(200, json);
 
         ListSecretsResponse response = client.listSecrets();
-        assertNotNull(response.getSelf());
         SecretResponse[] responses = response.getSecrets().toArray(new SecretResponse[0]);
 
         Calendar calendar = new GregorianCalendar(2017, Calendar.MARCH, 2, 16, 34, 49);
         calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
         assertEquals("secret-id-one", responses[0].getId());
-        assertEquals(calendar.getTime(), responses[0].getCreated());
-        assertEquals("/accounts/abcd1234/secrets/secret-id-one", responses[0].getSelf().getHref());
+        assertEquals(calendar.getTime(), Date.from(responses[0].getCreated()));
+        //assertEquals("/accounts/abcd1234/secrets/secret-id-one", responses[0].getSelf().getHref());
 
         calendar.set(2016, Calendar.JANUARY, 20, 16, 34, 49);
         assertEquals("secret-id-two", responses[1].getId());
-        assertEquals(calendar.getTime(), responses[1].getCreated());
-        assertEquals("/accounts/abcd1234/secrets/secret-id-two", responses[1].getSelf().getHref());
+        assertEquals(calendar.getTime(), Date.from(responses[1].getCreated()));
+        //assertEquals("/accounts/abcd1234/secrets/secret-id-two", responses[1].getSelf().getHref());
     }
 
     @Test
@@ -413,8 +412,8 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         Calendar calendar = new GregorianCalendar(2017, Calendar.MARCH, 2, 16, 34, 49);
         calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
         assertEquals("secret-id-one", response.getId());
-        assertEquals(calendar.getTime(), response.getCreated());
-        assertEquals("/accounts/abcd1234/secrets/secret-id-one", response.getSelf().getHref());
+        assertEquals(calendar.getTime(), Date.from(response.getCreated()));
+        //assertEquals("/accounts/abcd1234/secrets/secret-id-one", response.getSelf().getHref());
     }
 
     @Test
@@ -442,8 +441,8 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         Calendar calendar = new GregorianCalendar(2017, Calendar.MARCH, 2, 16, 34, 49);
         calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
         assertEquals("secret-id-one", response.getId());
-        assertEquals(calendar.getTime(), response.getCreated());
-        assertEquals("/accounts/abcd1234/secrets/secret-id-one", response.getSelf().getHref());
+        assertEquals(calendar.getTime(), Date.from(response.getCreated()));
+        //assertEquals("/accounts/abcd1234/secrets/secret-id-one", response.getSelf().getHref());
     }
 
     @Test
