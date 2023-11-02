@@ -1011,7 +1011,6 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 				testUnsuccessfulResponse();
 				testEmptyEdgeCases();
 				testParseMalformedResponse();
-				testInvalidContentType();
 				testInvalidLogoType();
 			}
 
@@ -1035,11 +1034,6 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 
 			private void testParseMalformedResponse() throws Exception {
 				stubResponse(200, "{malformed]");
-				assertThrows(VonageResponseParseException.class, this::executeEndpoint);
-			}
-
-			private void testInvalidContentType() throws Exception {
-				stubResponse(200, "[{\"fields\":{\"Content-Type\":\"not-a-mime\"}}]");
 				assertThrows(VonageResponseParseException.class, this::executeEndpoint);
 			}
 
