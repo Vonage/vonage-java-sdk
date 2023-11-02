@@ -19,13 +19,12 @@ import java.util.Map;
 
 public class AdvancedInsightRequest extends BaseInsightRequest {
     private final boolean async;
-    private final String callback, ipAddress;
+    private final String callback;
     private final Boolean realTimeData;
 
     private AdvancedInsightRequest(Builder builder) {
         super(builder.number, builder.country);
         cnam = builder.cnam;
-        ipAddress = builder.ipAddress;
         callback = builder.callback;
         if (!(async = builder.async)) {
             realTimeData = builder.realTimeData;
@@ -67,11 +66,6 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
         return cnam;
     }
 
-    @Deprecated
-    public String getIpAddress() {
-        return ipAddress;
-    }
-
     public boolean isAsync() {
         return async;
     }
@@ -83,9 +77,6 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
     @Override
     public Map<String, String> makeParams() {
         Map<String, String> params = super.makeParams();
-        if (ipAddress != null) {
-            params.put("ip", ipAddress);
-        }
         if (callback != null) {
             params.put("callback", callback);
         }
@@ -121,7 +112,7 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
     public static class Builder {
         protected boolean async;
         protected Boolean cnam, realTimeData;
-        protected String number, country, ipAddress, callback;
+        protected String number, country, callback;
 
         protected Builder(String number) {
             this.number = number;
@@ -159,21 +150,6 @@ public class AdvancedInsightRequest extends BaseInsightRequest {
          */
         public Builder cnam(boolean cnam) {
             this.cnam = cnam;
-            return this;
-        }
-
-        /**
-         * @deprecated This parameter is deprecated as we are no longer able to retrieve reliable
-         * IP data globally from carriers.
-         *
-         * @param ipAddress The IP address of the user. If supplied, we will compare this to the country the user's
-         *                  phone is located in and return an error if it does not match.
-         *
-         * @return This builder.
-         */
-        @Deprecated
-        public Builder ipAddress(String ipAddress) {
-            this.ipAddress = ipAddress;
             return this;
         }
 

@@ -170,41 +170,6 @@ public class VerifyClient {
     /**
      * Send a verification request to a phone number.
      *
-     * @param number (required) The recipient's phone number in <a href="https://en.wikipedia.org/wiki/E.164">E.164</a>
-     *               format.
-     * @param brand  (required) The name of the company or app to be verified for. Must not be longer than 18
-     *               characters.
-     * @param from   (optional The Vonage number to use as the sender for the verification SMS message and calls, in
-     *               <a href="https://en.wikipedia.org/wiki/E.164">E.164</a> format.
-     * @param length (optional) The length of the verification code to be sent to the user. Must be either 4 or 6. Use
-     *               -1 to use the default value.
-     * @param locale (optional) Override the default locale used for verification. By default the locale is determined
-     *               from the country code included in {@code number}
-     * @param type   (optional) If provided, restrict the verification to the specified network type. Contact
-     *               support@vonage.com to enable this feature.
-     *
-     * @return a VerifyResponse representing the response received from the Verify API call.
-     *
-     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     */
-    public VerifyResponse verify(final String number,
-                                 final String brand,
-                                 final String from,
-                                 final int length,
-                                 final Locale locale,
-                                 final VerifyRequest.LineType type) throws VonageClientException {
-        return verify(new VerifyRequest.Builder(number, brand)
-                .senderId(from)
-                .locale(locale)
-                .type(type)
-                .build()
-        );
-    }
-
-    /**
-     * Send a verification request to a phone number.
-     *
      * @param request validation request for the 2FA verification.
      * @return a VerifyResponse representing the response received from the Verify API call.
      *
@@ -242,28 +207,6 @@ public class VerifyClient {
      */
     public CheckResponse check(final String requestId, final String code) throws VonageClientException, VonageResponseParseException {
         return check(new CheckRequest(requestId, code));
-    }
-
-    /**
-     * Validate a code provided by a user in response to a call from {@link #verify}.
-     *
-     * @param requestId (required) The requestId returned by the {@code verify} call.
-     * @param code      (required) The code entered by the user.
-     * @param ipAddress (deprecated) This field is no longer used.
-     *
-     * @return a CheckResponse representing the response received from the API call.
-     *
-     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     *
-     * @deprecated {@code ipAddress} is no longer used and will be removed in the next major release.
-     * Please use {@link #check(String, String)}
-     */
-    @Deprecated
-    public CheckResponse check(final String requestId,
-                               final String code,
-                               final String ipAddress) throws VonageClientException, VonageResponseParseException {
-        return check(new CheckRequest(requestId, code, ipAddress));
     }
 
 
@@ -378,5 +321,4 @@ public class VerifyClient {
     public VerifyResponse psd2Verify(Psd2Request psd2Request) throws VonageClientException, VonageResponseParseException {
         return psd2.execute(psd2Request);
     }
-
 }

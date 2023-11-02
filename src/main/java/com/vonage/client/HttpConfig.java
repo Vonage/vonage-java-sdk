@@ -192,7 +192,7 @@ public class HttpConfig {
         /**
          * @param videoBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_VIDEO_BASE_URI}.
          *
-         * @return The {@link Builder} to keep building.
+         * @return The Builder to keep building.
          */
         public Builder videoBaseUri(String videoBaseUri) {
             this.videoBaseUri = sanitizeUri(videoBaseUri);

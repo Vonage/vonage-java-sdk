@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 
 /**
- * The JSON payload that will be sent in a {@link StreamRequestWrapper}.
+ * The JSON payload that will be sent in {@link VoiceClient#startStream}.
  * <p>
  * {@code streamUrl}: An array containing a single URL to an mp3 or wav (16-bit) audio file.
  * {@code loop}: The number of times the audio file at {@code streamUrl} is repeated before the stream ends. Set to 0 to loop infinitely
@@ -34,11 +34,6 @@ class StreamPayload implements Jsonable {
     private final String[] streamUrl;
     private final Integer loop;
     private final Double level;
-
-    @Deprecated
-    StreamPayload(String streamUrl, Integer loop, Double level) {
-        this(streamUrl, loop, level, null);
-    }
 
     public StreamPayload(String streamUrl, Integer loop, Double level, String uuid) {
         this.streamUrl = new String[]{streamUrl};

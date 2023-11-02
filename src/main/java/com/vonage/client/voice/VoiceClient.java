@@ -36,7 +36,7 @@ public class VoiceClient {
     final RestEndpoint<Call, CallEvent> createCall;
     final RestEndpoint<String, CallInfo> getCall;
     final RestEndpoint<CallsFilter, CallInfoPage> listCalls;
-    final RestEndpoint<ModifyCallPayload, ModifyCallResponse> modifyCall;
+    final RestEndpoint<ModifyCallPayload, Void> modifyCall;
     final RestEndpoint<StreamPayload, StreamResponse> startStream;
     final RestEndpoint<String, StreamResponse> stopStream;
     final RestEndpoint<TalkPayload, TalkResponse> startTalk;
@@ -86,10 +86,6 @@ public class VoiceClient {
     }
 
     private String validateUuid(String uuid) {
-        return Objects.requireNonNull(uuid, "UUID is required.");
-    }
-
-    private UUID validateUuid(UUID uuid) {
         return Objects.requireNonNull(uuid, "UUID is required.");
     }
 
@@ -176,36 +172,8 @@ public class VoiceClient {
         return sendDtmf.execute(new DtmfPayload(digits, validateUuid(uuid)));
     }
 
-    /**
-     * Modify an ongoing call.
-     * <p>
-     * This method modifies an ongoing call, identified by "uuid". Modifications to the call can be one of:
-     * <ul>
-     * <li>Terminate the call (hangup)
-     * <li>Mute a call leg (mute)
-     * <li>Unmute a call leg (unmute)
-     * <li>Earmuff a call leg (earmuff)
-     * <li>Unearmuff a call leg (unearmuff)
-     * </ul>
-     *
-     * @param uuid   The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value
-     *               can be obtained with {@link CallEvent#getUuid()}.
-     * @param action The Action to take.
-     *
-     * @return A ModifyCallResponse object, representing the response from the Vonage Voice API.
-     *
-     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     *
-     * @deprecated Please use one of the direct call modification methods instead.
-     */
-    @Deprecated
-    public ModifyCallResponse modifyCall(String uuid, ModifyCallAction action) throws VonageResponseParseException, VonageClientException {
-        return modifyCall(uuid, new ModifyCallPayload(Objects.requireNonNull(action, "Action is required.")));
-    }
-
     private void modifyCall(UUID callId, ModifyCallAction action) throws VoiceResponseException {
-        modifyCall(validateUuid(callId).toString(), action);
+        modifyCall.execute(new ModifyCallPayload(action, callId.toString()));
     }
 
     /**
@@ -276,54 +244,17 @@ public class VoiceClient {
     }
 
     /**
-     * Internal implementation of {@code updateCall}.
-     *
-     * @param uuid The call ID.
-     * @param payload The request body.
-     *
-     * @return The server response.
-     *
-     * @since 7.3.0
-     */
-    private ModifyCallResponse modifyCall(String uuid, ModifyCallPayload payload) {
-        payload.uuid = validateUuid(uuid);
-        return modifyCall.execute(payload);
-    }
-
-    /**
-     * Modify an ongoing call using a CallModifier object.
-     * <p>
-     * In most cases, you will want to use {@link #modifyCall(String, ModifyCallAction)} or {@link #transferCall(String,
-     * String)} instead of this method.
-     *
-     * @param modifier A CallModifier describing the modification to be made.
-     *
-     * @return A ModifyCallResponse object, representing the response from the Vonage Voice API.
-     *
-     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     *
-     * @deprecated Use {@link #modifyCall(String, ModifyCallAction)}. This will be removed in the next major release.
-     */
-    @Deprecated
-    public ModifyCallResponse modifyCall(CallModifier modifier) throws VonageResponseParseException, VonageClientException {
-        return modifyCall(modifier.getUuid(), modifier.getAction());
-    }
-
-    /**
      * Transfer a call to a different NCCO endpoint.
      *
      * @param uuid    The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This value
      *                can be obtained with {@link CallEvent#getUuid()}.
      * @param nccoUrl The URL of the NCCO endpoint the call should be transferred to.
      *
-     * @return A ModifyCallResponse object, representing the response from the Vonage Voice API.
-     *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public ModifyCallResponse transferCall(String uuid, String nccoUrl) throws VonageResponseParseException, VonageClientException {
-        return modifyCall(uuid, new TransferCallPayload(validateUrl(nccoUrl)));
+    public void transferCall(String uuid, String nccoUrl) throws VonageResponseParseException, VonageClientException {
+        modifyCall.execute(new TransferCallPayload(validateUrl(nccoUrl), validateUuid(uuid)));
     }
 
     /**
@@ -333,13 +264,11 @@ public class VoiceClient {
      *             be obtained with {@link CallEvent#getUuid()}.
      * @param ncco The new NCCO that will be used in the call.
      *
-     * @return A ModifyCallResponse object, representing the response from the Vonage Voice API.
-     *
      * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
      * @throws VonageResponseParseException if the response from the API could not be parsed.
      */
-    public ModifyCallResponse transferCall(String uuid, Ncco ncco) throws VonageResponseParseException, VonageClientException {
-        return modifyCall(uuid, new TransferCallPayload(Objects.requireNonNull(ncco, "NCCO is required.")));
+    public void transferCall(String uuid, Ncco ncco) throws VonageResponseParseException, VonageClientException {
+        modifyCall.execute(new TransferCallPayload(ncco, validateUuid(uuid)));
     }
 
     /**
@@ -551,27 +480,6 @@ public class VoiceClient {
      */
     public TalkResponse stopTalk(String uuid) throws VonageResponseParseException, VonageClientException {
         return stopTalk.execute(validateUuid(uuid));
-    }
-
-    /**
-     * Download a recording, given the recordingUrl provided from the webhook callback.
-     * <p>
-     * This returns a {@link Recording} object which can provide an InputStream of the byte data, or can be used to
-     * save directly to file.
-     *
-     * @param recordingUrl The recordingUrl provided by the webhook callback.
-     *
-     * @return A Recording object, providing access to the recording's bytes.
-     *
-     * @throws IllegalArgumentException     if the recordingUrl is not a valid or recognised Vonage URL.
-     * @throws VonageClientException        if there was a problem with the Vonage request or response objects.
-     * @throws VonageResponseParseException if the response from the API could not be parsed.
-     *
-     * @deprecated Use {@link #saveRecording(String, Path)} or {@link #downloadRecordingRaw(String)}.
-     */
-    @Deprecated
-    public Recording downloadRecording(String recordingUrl) throws VonageResponseParseException, VonageClientException {
-        return new Recording(downloadRecordingRaw(recordingUrl));
     }
 
     /**

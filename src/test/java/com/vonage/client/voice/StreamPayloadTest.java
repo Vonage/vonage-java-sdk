@@ -23,7 +23,9 @@ public class StreamPayloadTest {
 
     @BeforeEach
     public void setUp() throws Exception {
-        payload = new StreamPayload("https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3", 2, 0.4);
+        payload = new StreamPayload(
+                "https://nexmo-community.github.io/ncco-examples/assets/voice_api_audio_streaming.mp3",
+                2, 0.4, "8de6af25-5ee4-49ed-8283-de7ed108fb31");
     }
 
     @Test

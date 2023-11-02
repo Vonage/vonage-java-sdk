@@ -38,14 +38,6 @@ public enum RoomLanguage {
 	ES,
 
 	/**
-	 * Portuguese
-	 *
-	 * @deprecated Replaced by {@link #PT_BR}.
-	 */
-	@Deprecated
-	PT,
-
-	/**
 	 * Brazilian Portuguese
 	 *
 	 * @since 7.10.0

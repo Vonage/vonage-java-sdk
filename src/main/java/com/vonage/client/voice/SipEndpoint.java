@@ -32,11 +32,6 @@ public class SipEndpoint implements Endpoint {
         this.uri = uri;
     }
 
-    @Deprecated
-    public void setUri(String uri) {
-        this.uri = uri;
-    }
-
     @JsonProperty("uri")
     public String getUri() {
         return uri;

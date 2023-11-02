@@ -111,12 +111,7 @@ public class CallsFilter implements QueryParamsRequest {
         private CallOrder order;
         private String conversationUuid;
 
-        /**
-         * @deprecated Use {@link #builder()}.
-         */
-        @Deprecated
-        public Builder() {
-        }
+        Builder() {}
 
         /**
          * @param status The status of the calls to lookup.

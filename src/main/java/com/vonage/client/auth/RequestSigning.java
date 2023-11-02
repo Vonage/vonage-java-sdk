@@ -23,7 +23,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -145,48 +144,6 @@ public class RequestSigning {
         log.debug("SECURITY-KEY-GENERATION -- String [ " + str + " ] Signature [ " + hashed + " ] ");
 
         params.add(new BasicNameValuePair(PARAM_SIGNATURE, hashed));
-    }
-
-    /**
-     * Verifies the signature in an HttpServletRequest.
-     * Uses default hashing strategy of MD5.
-     *
-     * @param request The HttpServletRequest to be verified.
-     * @param secretKey The pre-shared secret key used by the sender of the request to create the signature.
-     *
-     * @return true if the signature is correct for this request and secret key.
-     *
-     * @deprecated This method will be removed in a future release due to the dependency on javax.servlet.
-     */
-    @Deprecated
-    public static boolean verifyRequestSignature(HttpServletRequest request, String secretKey) {
-        return verifyRequestSignature(request, secretKey, HashUtil.HashType.MD5);
-    }
-
-    /**
-     * Verifies the signature in an HttpServletRequest.
-     *
-     * @param request The HttpServletRequest to be verified.
-     * @param secretKey The pre-shared secret key used by the sender of the request to create the signature.
-     * @param hashType Hash type to be used to construct request parameters.
-     *
-     * @return true if the signature is correct for this request and secret key.
-     *
-     * @deprecated This method will be removed in a future release due to the dependency on javax.servlet.
-     */
-    @Deprecated
-    public static boolean verifyRequestSignature(HttpServletRequest request, String secretKey, HashUtil.HashType hashType) {
-        try {
-            return verifyRequestSignature(
-                    request.getContentType(),
-                    request.getInputStream(),
-                    request.getParameterMap(),
-                    secretKey, System.currentTimeMillis(), hashType
-            );
-        }
-        catch (IOException ex) {
-            throw new VonageUnexpectedException("Error encountered when opening input stream for request", ex);
-        }
     }
 
     /**

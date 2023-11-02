@@ -26,9 +26,7 @@ public class PhoneEndpoint implements Endpoint {
     private static final String TYPE = "phone";
     private String number, dtmfAnswer;
 
-    @Deprecated
-    public PhoneEndpoint() {
-    }
+    PhoneEndpoint() {}
 
     /**
      * Constructor.
@@ -96,15 +94,5 @@ public class PhoneEndpoint implements Endpoint {
     @Override
     public int hashCode() {
         return Objects.hash(TYPE, number, dtmfAnswer);
-    }
-
-    @Deprecated
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    @Deprecated
-    public void setDtmfAnswer(String dtmfAnswer) {
-        this.dtmfAnswer = dtmfAnswer;
     }
 }

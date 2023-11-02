@@ -86,7 +86,6 @@ public class VerifyClientSearchEndpointTest extends ClientTest<VerifyClient> {
 
         for (VerifyCheck check : checks) {
             assertEquals("code", check.getCode());
-            assertEquals("", check.getIpAddress());
             assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2012-01-02 03:04:05"), check.getDate());
             assertEquals(VerifyCheck.Status.VALID, check.getStatus());
         }

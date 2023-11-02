@@ -18,8 +18,6 @@ package com.vonage.client.sms.callback.messages;
 import java.math.BigDecimal;
 import java.util.Date;
 
-
-
 /**
  * This represents an incoming MO callback request.
  */

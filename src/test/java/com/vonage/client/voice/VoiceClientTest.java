@@ -26,7 +26,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.UUID;
 
 public class VoiceClientTest extends ClientTest<VoiceClient> {
@@ -165,24 +164,10 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
     }
 
     @Test
-    public void testModifyCallLegacy() throws Exception {
-        stubResponse(200, "{\"message\":\"Received\"}");
-        ModifyCallResponse call = client.modifyCall(new CallModifier(SAMPLE_CALL_ID, ModifyCallAction.HANGUP));
-        assertEquals("Received", call.getMessage());
-        stubResponse(200, "{\"message\":\"Received\"}");
-        assertEquals("Received", call.getMessage());
-        assertThrows(NullPointerException.class, () -> client.modifyCall(null, ModifyCallAction.HANGUP));
-        assertThrows(NullPointerException.class, () ->
-                client.modifyCall("93137ee3-580e-45f7-a61a-e0b5716000ef", null)
-        );
-    }
-
-    @Test
     public void testTransferCall() throws Exception {
         stubResponse(200, "{\"message\":\"Received\"}");
         final String url = "https://example.com/ncco2";
-        ModifyCallResponse call = client.transferCall("93137ee3-580e-45f7-a61a-e0b5716000ef", url);
-        assertEquals("Received", call.getMessage());
+        client.transferCall("93137ee3-580e-45f7-a61a-e0b5716000ef", url);
         assertThrows(IllegalArgumentException.class, () ->
                 client.transferCall("93137ee3-580e-45f7-a61a-e0b5716000ef", "';,x^")
         );
@@ -192,10 +177,10 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
     @Test
     public void testTransferCallInlineNcco() throws Exception {
         stubResponse(200, "{\"message\":\"Received\"}");
-        ModifyCallResponse call = client.transferCall("93137ee3-580e-45f7-a61a-e0b5716000ef",
-                new Ncco(TalkAction.builder("Thank you for calling!").build(), TalkAction.builder("Bye!").build())
-        );
-        assertEquals("Received", call.getMessage());
+        client.transferCall("93137ee3-580e-45f7-a61a-e0b5716000ef", new Ncco(
+                TalkAction.builder("Thank you for calling!").build(),
+                TalkAction.builder("Bye!").build()
+        ));
         assertThrows(NullPointerException.class, () ->
                 client.transferCall("93137ee3-580e-45f7-a61a-e0b5716000ef", (Ncco) null)
         );
@@ -379,18 +364,8 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
         String content = "<BINARY>";
         stubResponse(200, content);
         String url = "https://api.nexmo.com/v1/files/" + recordingId;
-        Recording recording = client.downloadRecording(url);
-
-        String recordingContent = new Scanner(recording.getContent()).useDelimiter("\\A").next();
         Path temp = Files.createTempFile(null, null);
         Files.delete(temp);
-        recording.save(temp);
-        assertEquals(recordingContent, new String(Files.readAllBytes(temp)));
-        assertEquals(content, recordingContent);
-
-        assertThrows(IllegalArgumentException.class, () -> client.downloadRecording(",,[]}{{}D:sd"));
-        assertThrows(IllegalArgumentException.class, () -> client.downloadRecording(null));
-        assertThrows(IllegalArgumentException.class, () -> client.downloadRecording(""));
 
         stubResponse(200, content);
         client.saveRecording(url, temp);
@@ -402,15 +377,15 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
         assertArrayEquals(content.getBytes(), Files.readAllBytes(recordingPath));
 
         stubResponseAndAssertThrows(content, () ->
-                client.downloadRecording("ftp:///myserver.co.uk/rec.mp3"),
+                client.saveRecording("ftp:///myserver.co.uk/rec.mp3", recordingPath),
                 IllegalArgumentException.class
         );
         stubResponseAndAssertThrows(content, () ->
-                client.downloadRecording("http://example.org/recording.wav"),
+                client.saveRecording("http://example.org/recording.wav", recordingPath),
                 IllegalArgumentException.class
         );
         stubResponseAndAssertThrows(content, () ->
-                client.downloadRecording("https://example.org/recording.wav"),
+                client.saveRecording("https://example.org/recording.wav", recordingPath),
                 IllegalArgumentException.class
         );
         stubResponseAndAssertThrows(content, () ->
@@ -561,11 +536,11 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
 
     @Test
     public void testModifyCallEndpoint() throws Exception {
-        new VoiceEndpointTestSpec<ModifyCallPayload, ModifyCallResponse>() {
+        new VoiceEndpointTestSpec<ModifyCallPayload, Void>() {
             private ModifyCallAction action;
 
             @Override
-            protected RestEndpoint<ModifyCallPayload, ModifyCallResponse> endpoint() {
+            protected RestEndpoint<ModifyCallPayload, Void> endpoint() {
                 return client.modifyCall;
             }
 
@@ -583,8 +558,7 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
             protected ModifyCallPayload sampleRequest() {
                 ModifyCallAction[] actions = ModifyCallAction.values();
                 action = actions[(int) (Math.random() * actions.length)];
-                ModifyCallPayload request = new ModifyCallPayload(action);
-                request.uuid = SAMPLE_CALL_ID;
+                ModifyCallPayload request = new ModifyCallPayload(action, SAMPLE_CALL_ID);
                 return request;
             }
 
@@ -649,7 +623,7 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
 
             @Override
             protected StreamPayload sampleRequest() {
-                return new StreamPayload("https://example.com/waiting.mp3", 1, 0.4);
+                return new StreamPayload("https://example.com/waiting.mp3", 1, 0.4, SAMPLE_CALL_ID);
             }
 
             @Override

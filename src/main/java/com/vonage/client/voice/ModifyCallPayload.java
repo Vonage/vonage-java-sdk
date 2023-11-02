@@ -20,19 +20,17 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import java.util.Objects;
 
-/**
- * @deprecated Will be made package-private in next major release.
- */
-@Deprecated
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ModifyCallPayload implements Jsonable {
-    @JsonIgnore String uuid;
+class ModifyCallPayload implements Jsonable {
+    @JsonIgnore final String uuid;
     private final ModifyCallAction action;
 
-    public ModifyCallPayload(ModifyCallAction action) {
-        this.action = action;
+    ModifyCallPayload(ModifyCallAction action, String uuid) {
+        this.action = Objects.requireNonNull(action, "Action is required.");
+        this.uuid = Objects.requireNonNull(uuid, "callId is required.");
     }
 
     @JsonProperty("action")

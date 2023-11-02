@@ -37,11 +37,9 @@ public class CallTest {
 
     @Test
     public void testToJsonRandomNumber() throws Exception {
-        Call call = new Call();
-        call.setTo(new Endpoint[]{new PhoneEndpoint("4477999000")});
-        call.setFromRandomNumber(true);
-        call.setAnswerMethod("GET");
-        call.setAnswerUrl("https://callback.example.com/");
+        Call call = Call.builder().to(new PhoneEndpoint("4477999000"))
+                .fromRandomNumber(true).answerMethod(HttpMethod.GET)
+                .answerUrl("https://callback.example.com/").build();
 
         assertEquals("{\"to\":[{\"number\":\"4477999000\",\"type\":\"phone\"}],"
                 + "\"answer_method\":\"GET\",\"answer_url\":[\"https://callback.example.com/\"],\"random_from_number\":true}",
@@ -50,40 +48,18 @@ public class CallTest {
 
     @Test
     public void testToJsonMachineDetection() throws Exception {
-        Call call = new Call("4477999000", "44111222333", "https://callback.example.com/");
-        call.setMachineDetection(MachineDetection.CONTINUE);
+        Call call = Call.builder()
+                .to(new PhoneEndpoint("4477999000"))
+                .from(new PhoneEndpoint("44111222333"))
+                .answerUrl("https://callback.example.com/")
+                .machineDetection(MachineDetection.CONTINUE).build();
+
         assertEquals(
                 "{\"to\":[{\"number\":\"4477999000\",\"type\":\"phone\"}],"
                         + "\"from\":{\"number\":\"44111222333\",\"type\":\"phone\"},"
                         + "\"answer_method\":\"GET\",\"answer_url\":[\"https://callback.example.com/\"],\"machine_detection\":\"continue\"}",
                 call.toJson()
         );
-    }
-
-    @Test
-    public void testSetters() throws Exception {
-        PhoneEndpoint from = new PhoneEndpoint("44-AAA-FROM");
-        PhoneEndpoint to = new PhoneEndpoint("44-BBB-TO");
-        Call call = new Call("", "", "https://callback.example.com/");
-        call.setAnswerMethod("BREW");
-        call.setAnswerUrl("https://answer.example.com/");
-        call.setEventMethod("PUT");
-        call.setEventUrl("https://events.example.com/");
-        call.setFrom(from);
-        call.setLengthTimer(101);
-        call.setMachineDetection(MachineDetection.CONTINUE);
-        call.setRingingTimer(300);
-        call.setTo(new PhoneEndpoint[]{to});
-
-        assertEquals("UNKNOWN", call.getAnswerMethod());
-        assertEquals("https://answer.example.com/", call.getAnswerUrl()[0]);
-        assertEquals("PUT", call.getEventMethod());
-        assertEquals("https://events.example.com/", call.getEventUrl()[0]);
-        assertEquals(from, call.getFrom());
-        assertEquals(101, call.getLengthTimer().intValue());
-        assertEquals(MachineDetection.CONTINUE, call.getMachineDetection());
-        assertEquals(300, call.getRingingTimer().intValue());
-        assertEquals(to, call.getTo()[0]);
     }
 
     @Test

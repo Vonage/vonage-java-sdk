@@ -38,9 +38,6 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         BalanceResponse response = client.getBalance();
         assertEquals(10.28, response.getValue(), 0.0001);
         assertTrue(response.isAutoReload());
-        BalanceResponse br = new BalanceResponse(3.1459, false);
-        assertEquals(3.1459, br.getValue(), 0.00000001);
-        assertFalse(br.isAutoReload());
     }
 
     @Test
