@@ -102,7 +102,7 @@ publishing {
             from components.java
             pom {
                 name = "Vonage Java Server SDK"
-                artifactId = 'client'
+                artifactId = archivesBaseName
                 packaging = 'jar'
                 description = "Java client for Vonage APIs"
                 url = "https://github.com/$githubPath"
