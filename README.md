@@ -33,6 +33,7 @@ need a Vonage account. You'll need to have [created a Vonage account](https://da
 - [SMS](https://developer.vonage.com/en/sms/overview)
 - [Subaccounts](https://developer.vonage.com/en/account/subaccounts/overview)
 - [Verify](https://developer.vonage.com/en/verify/overview)
+- [Video](https://developer.vonage.com/en/video/overview)
 - [Voice](https://developer.vonage.com/en/voice/overview)
 
 ## Other SDKs
@@ -101,7 +102,7 @@ VonageClient client = VonageClient.builder()
 ```
 
 ### Customize the Base URI
-By default, the client will use https://api.nexmo.com, https://rest.nexmo.com, https://sns.nexmo.com and https://api-eu.vonage.com as base URIs for the various endpoints. To customize these you can instantiate `VonageClient` with an `HttpConfig` object.
+By default, the client will use https://api.nexmo.com, https://rest.nexmo.com and https://api-eu.vonage.com as base URIs for the various endpoints. To customize these you can instantiate `VonageClient` with an `HttpConfig` object.
 
 `HttpConfig.Builder` has been created to assist in building this object. Usage is as follows:
 
@@ -109,7 +110,6 @@ By default, the client will use https://api.nexmo.com, https://rest.nexmo.com, h
 HttpConfig httpConfig = HttpConfig.builder()
         .apiBaseUri("https://api.example.com")
         .restBaseUri("https://rest.example.com")
-        .snsBaseUri("https://sns.example.com")
         .apiEuBaseUri("https://api-eu.example.com")
         .build();
 
@@ -154,14 +154,6 @@ If you would like to use the SDK in a multithreaded environment, create a separa
 **Q: Does this SDK support asynchronous request / response processing?**
 
 **A:** Currently no, but it is on the roadmap.
-
-**Q: Does this SDK support the Video API?**
-
-**A:**
-The Vonage Video API (formerly OpenTok) is currently in beta. You can try it out by using a beta version.
-Usage instructions can be found on the [8.x-beta branch](https://github.com/Vonage/vonage-java-sdk/tree/8.x-beta#video-api).
-See the [Releases page](https://github.com/Vonage/vonage-java-sdk/releases) for more information.
-In the meantime, you can continue using the [OpenTok Java SDK](https://github.com/opentok/Opentok-Java-SDK).
 
 ## Contribute!
 

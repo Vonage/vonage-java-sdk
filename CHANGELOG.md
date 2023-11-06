@@ -4,7 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-# [7.11.1] - 2023-11-06
+# [8.0.0-rc2] - 2023-11-07
+- Removed packages:
+  - `com.vonage.client.legacyutils`
+  - `com.vonage.client.logging`
+  - `com.vonage.client.sns`
+- Removed all references to `snsBaseUri`
+- All future releases from v8.0.0 onwards will be to `com.vonage:server-sdk` Maven coordinates
+
+# [7.11.1] - 2023-11-07
 - Deprecated SNS client, `legacyutils` and `LoggingUtils`
 - Un-deprecated Redact client
 - Published relocation information in artifact metadata
