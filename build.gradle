@@ -128,6 +128,12 @@ publishing {
                     system = "GitHub"
                     url = "https://github.com/$githubPath/issues"
                 }
+                distributionManagement {
+                    relocation {
+                        artifactId = "server-sdk"
+                        message = "Moved to avoid confusion with Client SDKs"
+                    }
+                }
             }
         }
     }
