@@ -19,15 +19,12 @@ import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.auth.SignatureAuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
-import com.vonage.client.logging.LoggingUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -84,15 +81,7 @@ public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<
                     .setCharset(StandardCharsets.UTF_8)
                     .build();
 
-            LOG.debug("Request: " + httpRequest);
-            if (LOG.isDebugEnabled() && httpRequest instanceof HttpEntityEnclosingRequestBase) {
-                HttpEntityEnclosingRequestBase enclosingRequest = (HttpEntityEnclosingRequestBase) httpRequest;
-                LOG.debug(EntityUtils.toString(enclosingRequest.getEntity()));
-            }
             HttpResponse response = httpWrapper.getHttpClient().execute(httpRequest);
-
-            LOG.debug("Response: " + LoggingUtils.logResponse(response));
-
             try {
                 return postProcessParsedResponse(parseResponse(response));
             }

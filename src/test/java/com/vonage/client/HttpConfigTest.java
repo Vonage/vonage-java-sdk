@@ -21,13 +21,11 @@ import static org.junit.jupiter.api.Assertions.*;
 public class HttpConfigTest {
     static final String EXPECTED_DEFAULT_API_BASE_URI = "https://api.nexmo.com";
     static final String EXPECTED_DEFAULT_REST_BASE_URI = "https://rest.nexmo.com";
-    static final String EXPECTED_DEFAULT_SNS_BASE_URI = "https://sns.nexmo.com";
 
     static void assertDefaults(HttpConfig config) {
         assertEquals(60000, config.getTimeoutMillis());
         assertEquals(EXPECTED_DEFAULT_API_BASE_URI, config.getApiBaseUri());
         assertEquals(EXPECTED_DEFAULT_REST_BASE_URI, config.getRestBaseUri());
-        assertEquals(EXPECTED_DEFAULT_SNS_BASE_URI, config.getSnsBaseUri());
     }
 
     @Test
@@ -41,7 +39,6 @@ public class HttpConfigTest {
 
         assertEquals("https://example.com", config.getApiBaseUri());
         assertEquals(EXPECTED_DEFAULT_REST_BASE_URI, config.getRestBaseUri());
-        assertEquals(EXPECTED_DEFAULT_SNS_BASE_URI, config.getSnsBaseUri());
     }
 
     @Test
@@ -50,16 +47,6 @@ public class HttpConfigTest {
 
         assertEquals(EXPECTED_DEFAULT_API_BASE_URI, config.getApiBaseUri());
         assertEquals("https://example.com", config.getRestBaseUri());
-        assertEquals(EXPECTED_DEFAULT_SNS_BASE_URI, config.getSnsBaseUri());
-    }
-
-    @Test
-    public void testSnsBaseUriOnly() {
-        HttpConfig config = HttpConfig.builder().snsBaseUri("https://example.com").build();
-
-        assertEquals(EXPECTED_DEFAULT_API_BASE_URI, config.getApiBaseUri());
-        assertEquals(EXPECTED_DEFAULT_REST_BASE_URI, config.getRestBaseUri());
-        assertEquals("https://example.com", config.getSnsBaseUri());
     }
 
     @Test
@@ -68,6 +55,5 @@ public class HttpConfigTest {
 
         assertEquals("https://example.com", config.getApiBaseUri());
         assertEquals("https://example.com", config.getRestBaseUri());
-        assertEquals("https://example.com", config.getSnsBaseUri());
     }
 }

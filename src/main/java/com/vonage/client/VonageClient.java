@@ -27,7 +27,6 @@ import com.vonage.client.numbers.NumbersClient;
 import com.vonage.client.proactiveconnect.ProactiveConnectClient;
 import com.vonage.client.redact.RedactClient;
 import com.vonage.client.sms.SmsClient;
-import com.vonage.client.sns.SnsClient;
 import com.vonage.client.subaccounts.SubaccountsClient;
 import com.vonage.client.users.UsersClient;
 import com.vonage.client.verify.VerifyClient;
@@ -57,7 +56,6 @@ public class VonageClient {
     private final SmsClient sms;
     private final VoiceClient voice;
     private final VerifyClient verify;
-    private final SnsClient sns;
     private final ConversionClient conversion;
     private final RedactClient redact;
     private final MessagesClient messages;
@@ -79,7 +77,6 @@ public class VonageClient {
         verify = new VerifyClient(httpWrapper);
         voice = new VoiceClient(httpWrapper);
         sms = new SmsClient(httpWrapper);
-        sns = new SnsClient(httpWrapper);
         conversion = new ConversionClient(httpWrapper);
         redact = new RedactClient(httpWrapper);
         messages = new MessagesClient(httpWrapper);
@@ -109,16 +106,6 @@ public class VonageClient {
 
     public SmsClient getSmsClient() {
         return sms;
-    }
-
-    /**
-     * @deprecated SNS will be removed in the next major release.
-     *
-     * @return The SNS client.
-     */
-    @Deprecated
-    public SnsClient getSnsClient() {
-        return sns;
     }
 
     public VerifyClient getVerifyClient() {

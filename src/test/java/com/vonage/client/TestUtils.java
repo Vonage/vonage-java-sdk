@@ -18,7 +18,6 @@ package com.vonage.client;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.logging.LoggingUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.ProtocolVersion;
@@ -26,11 +25,7 @@ import org.apache.http.client.HttpResponseException;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import org.mockito.MockedStatic;
-import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.fail;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -39,28 +34,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class TestUtils {
-
-    static {
-        mockStaticLoggingUtils();
-    }
-
-    private static MockedStatic<LoggingUtils> staticMockLoggingUtils;
-
-    public static void mockStaticLoggingUtils() {
-        staticMockLoggingUtils = mockStatic(LoggingUtils.class);
-        try {
-            when(LoggingUtils.logResponse(any(HttpResponse.class))).thenReturn("response logged");
-        }
-        catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    public static void unmockStaticLoggingUtils() {
-        if (staticMockLoggingUtils != null) {
-            staticMockLoggingUtils.closeOnDemand();
-        }
-    }
 
     public byte[] loadKey(String path) throws IOException {
         int size = 1024;

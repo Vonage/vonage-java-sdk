@@ -24,8 +24,8 @@ import com.vonage.client.Jsonable;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RedactRequest implements Jsonable {
-    private String id;
-    private Product product;
+    private final String id;
+    private final Product product;
     private Type type;
 
     /**
@@ -43,18 +43,8 @@ public class RedactRequest implements Jsonable {
         return id;
     }
 
-    @Deprecated
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public Product getProduct() {
         return product;
-    }
-
-    @Deprecated
-    public void setProduct(Product product) {
-        this.product = product;
     }
 
     public Type getType() {
