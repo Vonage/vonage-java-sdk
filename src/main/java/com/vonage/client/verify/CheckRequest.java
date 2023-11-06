@@ -58,6 +58,7 @@ public class CheckRequest implements QueryParamsRequest {
     public String getCode() {
         return code;
     }
+
     @Override
     public Map<String, String> makeParams() {
         Map<String, String> params = new LinkedHashMap<>(4);

@@ -15,7 +15,7 @@
  */
 package com.vonage.client.numbers;
 
-public class BuyNumberRequest extends BaseNumberRequest {
+class BuyNumberRequest extends BaseNumberRequest {
 
     public BuyNumberRequest(String country, String msisdn) {
         super(country, msisdn);

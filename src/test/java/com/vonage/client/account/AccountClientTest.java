@@ -41,6 +41,26 @@ public class AccountClientTest extends ClientTest<AccountClient> {
     }
 
     @Test
+    public void testGetFullPricingEmptyCountries() throws Exception {
+        stubResponse(200, "{\"count\":0,\"countries\":[]}");
+        List<PricingResponse> response = client.listPriceAllCountries(ServiceType.VOICE);
+        assertNotNull(response);
+        assertTrue(response.isEmpty());
+    }
+
+    @Test
+    public void testGetFullPricingNoCountries() throws Exception {
+        stubResponse(200, "{}");
+        assertNull(client.listPriceAllCountries(ServiceType.VOICE));
+    }
+
+    @Test
+    public void testGetFullPricingNoService() throws Exception {
+        stubResponse(200, "{}");
+        assertThrows(NullPointerException.class, () -> client.listPriceAllCountries(null));
+    }
+
+    @Test
     public void testGetFullPricing() throws Exception {
         String json = "{\n" +
                 "   \"count\": \"243\",\n" +
@@ -87,26 +107,6 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         assertEquals("530", canadaNetwork.getMnc());
         assertEquals("302530", canadaNetwork.getCode());
         assertEquals("Keewaytinook Okimakanak", canadaNetwork.getName());
-    }
-
-    @Test
-    public void testGetFullPricingEmptyCountries() throws Exception {
-        stubResponse(200, "{\"count\":0,\"countries\":[]}");
-        List<PricingResponse> response = client.listPriceAllCountries(ServiceType.VOICE);
-        assertNotNull(response);
-        assertTrue(response.isEmpty());
-    }
-
-    @Test
-    public void testGetFullPricingNoCountries() throws Exception {
-        stubResponse(200, "{}");
-        assertNull(client.listPriceAllCountries(ServiceType.VOICE));
-    }
-
-    @Test
-    public void testGetFullPricingNoService() throws Exception {
-        stubResponse(200, "{}");
-        assertThrows(NullPointerException.class, () -> client.listPriceAllCountries(null));
     }
 
     @Test
