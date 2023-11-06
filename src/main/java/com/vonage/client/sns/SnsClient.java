@@ -26,7 +26,10 @@ import com.vonage.client.sns.response.SnsSubscribeResponse;
 /**
  * A client for talking to the Vonage SNS API. The standard way to obtain an instance of this class is to use {@link
  * VonageClient#getSnsClient()}.
+ *
+ * @deprecated SNS will be removed in the next major release.
  */
+@Deprecated
 public class SnsClient {
     final RestEndpoint<SnsRequest, SnsResponse> endpoint;
 

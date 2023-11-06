@@ -43,6 +43,7 @@ public class RedactRequest implements Jsonable {
         return id;
     }
 
+    @Deprecated
     public void setId(String id) {
         this.id = id;
     }
@@ -51,6 +52,7 @@ public class RedactRequest implements Jsonable {
         return product;
     }
 
+    @Deprecated
     public void setProduct(Product product) {
         this.product = product;
     }

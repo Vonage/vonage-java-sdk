@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+# [7.11.1] - 2023-11-06
+- Deprecated SNS client, `legacyutils` and `LoggingUtils`
+- Un-deprecated Redact client
+- Published relocation information in artifact metadata
+
 # [8.0.0-rc1] - 2023-11-02
 - Includes Video API from `8.0.0-beta4`
 - Removed deprecations:

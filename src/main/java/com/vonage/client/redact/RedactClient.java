@@ -23,10 +23,7 @@ import com.vonage.client.common.HttpMethod;
 /**
  * A client for talking to the Vonage Redact API. The standard way to obtain an instance of this class is to use {@link
  * VonageClient#getRedactClient()}.
- *
- * @deprecated This API will be removed in the next major release.
  */
-@Deprecated
 public class RedactClient {
     final RestEndpoint<RedactRequest, Void> redactTransaction;
 
