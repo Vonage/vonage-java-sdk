@@ -22,6 +22,10 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * @deprecated This will be removed in the next major release.
+ */
+@Deprecated
 public class LoggingUtils {
 
     public static String logResponse(HttpResponse response) throws IOException {

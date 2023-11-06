@@ -16,6 +16,10 @@
 package com.vonage.client.sns.response;
 
 
+/**
+ * @deprecated SNS will be removed in the next major release.
+ */
+@Deprecated
 public class SnsResponse {
 
     public static final int STATUS_OK = 0;

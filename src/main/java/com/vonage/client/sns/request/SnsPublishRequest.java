@@ -17,7 +17,10 @@ package com.vonage.client.sns.request;
 
 import java.util.Map;
 
-
+/**
+ * @deprecated SNS will be removed in the next major release.
+ */
+@Deprecated
 public class SnsPublishRequest extends SnsRequest {
     private String from;
     private String message;

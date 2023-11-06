@@ -18,7 +18,10 @@ package com.vonage.client.sns.response;
 
 /**
  * Represents the result of a publish service request to the Vonage SNS Service.
+ *
+ * @deprecated SNS will be removed in the next major release.
  */
+@Deprecated
 public class SnsSubscribeResponse extends SnsResponse {
     private final String subscriberArn;
 

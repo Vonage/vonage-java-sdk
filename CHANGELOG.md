@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+# [7.11.1] - 2023-11-06
+- Deprecated SNS client, `legacyutils` and `LoggingUtils`
+- Un-deprecated Redact client
+- Published relocation information in artifact metadata
+
+# [8.0.0-rc1] - 2023-11-02
+- Includes Video API from `8.0.0-beta4`
+- Removed deprecations:
+  - Removed dependency on `jakarta.servlet` and all methods which use `HttpServletRequest`
+    - Including `com.vonage.client.voice.servlet` and `com.vonage.client.sms.callback.AbstractMOServlet`
+  - Removed dependency `jackson-dataformat-hal`
+    - Refactored `ListSecretsResponse`
+  - Various public classes, methods & constructors have been removed from public view
+    - `ip_address` in `AdvancedInsightRequest` and `CheckRequest`
+    - `LineType` in `VerifyRequest`
+    - `Call` public no-args constructor
+    - Setter methods in Voice API
+    - `ModifyCallResponse` and `Recording` classes
+    - `modifyCall` method in `VoiceClient`
+  - `LogoUploadsUrlResponse` uses String instead of `javax.activation.MimeType`
+
 # [7.11.0] - 2023-10-31
 - Added `verifySignature` utility method to Voice and Messages clients
 - Added `applicationId(UUID)` overload to `VonageClient.Builder`

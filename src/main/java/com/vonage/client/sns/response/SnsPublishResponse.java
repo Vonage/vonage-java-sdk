@@ -15,7 +15,10 @@
  */
 package com.vonage.client.sns.response;
 
-
+/**
+ * @deprecated SNS will be removed in the next major release.
+ */
+@Deprecated
 public class SnsPublishResponse extends SnsResponse {
     private final String transactionId;
 

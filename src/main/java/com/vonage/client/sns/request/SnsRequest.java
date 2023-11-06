@@ -19,7 +19,10 @@ import com.vonage.client.QueryParamsRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * @deprecated SNS will be removed in the next major release.
+ */
+@Deprecated
 public abstract class SnsRequest implements QueryParamsRequest {
     private final String command;
     private String to;

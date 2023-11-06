@@ -111,6 +111,12 @@ public class VonageClient {
         return sms;
     }
 
+    /**
+     * @deprecated SNS will be removed in the next major release.
+     *
+     * @return The SNS client.
+     */
+    @Deprecated
     public SnsClient getSnsClient() {
         return sns;
     }
@@ -127,12 +133,6 @@ public class VonageClient {
         return conversion;
     }
 
-    /**
-     *
-     * @return The Redact API client.
-     * @deprecated This API will be removed in the next major release.
-     */
-    @Deprecated
     public RedactClient getRedactClient() {
         return redact;
     }
