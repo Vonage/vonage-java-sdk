@@ -9,7 +9,7 @@ plugins {
 
 group = "com.vonage"
 archivesBaseName = "server-sdk"
-version = "8.0.0-rc1"
+version = "8.0.0-rc2"
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
