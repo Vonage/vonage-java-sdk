@@ -23,6 +23,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * @deprecated This will be removed in the next major release.
+ */
+@Deprecated
 public class XmlParser {
     /**
      * A lock associated with {@link #documentBuilder}.

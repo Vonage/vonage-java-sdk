@@ -15,6 +15,10 @@
  */
 package com.vonage.client.sns.request;
 
+/**
+ * @deprecated SNS will be removed in the next major release.
+ */
+@Deprecated
 public class SnsSubscribeRequest extends SnsRequest {
     public SnsSubscribeRequest(final String to,
                                final String topicArn) {

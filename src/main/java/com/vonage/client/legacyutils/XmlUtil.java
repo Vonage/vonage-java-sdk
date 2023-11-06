@@ -24,6 +24,10 @@ import javax.xml.parsers.DocumentBuilder;
 import java.io.IOException;
 import java.io.StringReader;
 
+/**
+ * @deprecated This will be removed in the next major release.
+ */
+@Deprecated
 public class XmlUtil {
 
     public static String stringValue(Node node) {

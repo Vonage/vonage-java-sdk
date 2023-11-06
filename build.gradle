@@ -9,7 +9,7 @@ plugins {
 
 group = "com.vonage"
 archivesBaseName = "client"
-version = "7.11.0"
+version = "7.11.1"
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
@@ -127,6 +127,12 @@ publishing {
                 issueManagement {
                     system = "GitHub"
                     url = "https://github.com/$githubPath/issues"
+                }
+                distributionManagement {
+                    relocation {
+                        artifactId = "server-sdk"
+                        message = "Moved to avoid confusion with Client SDKs"
+                    }
                 }
             }
         }
