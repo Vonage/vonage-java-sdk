@@ -15,7 +15,7 @@
  */
 package com.vonage.client.numbers;
 
-public class CancelNumberRequest extends BaseNumberRequest {
+class CancelNumberRequest extends BaseNumberRequest {
 
     public CancelNumberRequest(String country, String msisdn) {
         super(country, msisdn);

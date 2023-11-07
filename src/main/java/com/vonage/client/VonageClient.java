@@ -27,10 +27,10 @@ import com.vonage.client.numbers.NumbersClient;
 import com.vonage.client.proactiveconnect.ProactiveConnectClient;
 import com.vonage.client.redact.RedactClient;
 import com.vonage.client.sms.SmsClient;
-import com.vonage.client.sns.SnsClient;
 import com.vonage.client.subaccounts.SubaccountsClient;
 import com.vonage.client.users.UsersClient;
 import com.vonage.client.verify.VerifyClient;
+import com.vonage.client.video.VideoClient;
 import com.vonage.client.verify2.Verify2Client;
 import com.vonage.client.voice.VoiceClient;
 import org.apache.http.client.HttpClient;
@@ -45,9 +45,7 @@ import java.util.UUID;
  * <p>
  * Construct an instance of this object with one or more {@link AuthMethod}s (providing all the authentication methods
  * for the APIs you wish to use), and then call {@link #getVoiceClient()} to obtain a client for the Vonage Voice API.
- * <p>
- * Currently, this object only constructs and provides access to {@link VoiceClient}. In the future it will manage
- * clients for all the Vonage APIs.
+ * <p>.
  */
 public class VonageClient {
     private final HttpWrapper httpWrapper;
@@ -58,7 +56,6 @@ public class VonageClient {
     private final SmsClient sms;
     private final VoiceClient voice;
     private final VerifyClient verify;
-    private final SnsClient sns;
     private final ConversionClient conversion;
     private final RedactClient redact;
     private final MessagesClient messages;
@@ -67,6 +64,7 @@ public class VonageClient {
     private final ProactiveConnectClient proactiveConnect;
     private final MeetingsClient meetings;
     private final UsersClient users;
+    private final VideoClient video;
 
     private VonageClient(Builder builder) {
         httpWrapper = new HttpWrapper(builder.httpConfig, builder.authCollection);
@@ -79,7 +77,6 @@ public class VonageClient {
         verify = new VerifyClient(httpWrapper);
         voice = new VoiceClient(httpWrapper);
         sms = new SmsClient(httpWrapper);
-        sns = new SnsClient(httpWrapper);
         conversion = new ConversionClient(httpWrapper);
         redact = new RedactClient(httpWrapper);
         messages = new MessagesClient(httpWrapper);
@@ -88,6 +85,7 @@ public class VonageClient {
         proactiveConnect = new ProactiveConnectClient(httpWrapper);
         meetings = new MeetingsClient(httpWrapper);
         users = new UsersClient(httpWrapper);
+        video = new VideoClient(httpWrapper);
     }
 
     public AccountClient getAccountClient() {
@@ -108,16 +106,6 @@ public class VonageClient {
 
     public SmsClient getSmsClient() {
         return sms;
-    }
-
-    /**
-     * @deprecated SNS will be removed in the next major release.
-     *
-     * @return The SNS client.
-     */
-    @Deprecated
-    public SnsClient getSnsClient() {
-        return sns;
     }
 
     public VerifyClient getVerifyClient() {
@@ -190,6 +178,16 @@ public class VonageClient {
      */
     public UsersClient getUsersClient() {
         return users;
+    }
+
+    /**
+     * Returns the Video client.
+     *
+     * @return The Video API client.
+     * @since 8.0.0-beta1
+     */
+    public VideoClient getVideoClient() {
+        return video;
     }
 
     /**

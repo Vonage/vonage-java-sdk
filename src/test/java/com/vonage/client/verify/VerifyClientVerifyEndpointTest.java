@@ -41,8 +41,7 @@ public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
                 "TestBrand",
                 "15555215554",
                 6,
-                Locale.US,
-                VerifyRequest.LineType.MOBILE
+                Locale.US
         );
 
         assertEquals(VerifyStatus.OK, response.getStatus());
@@ -189,9 +188,8 @@ public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
             @Override
             protected VerifyRequest sampleRequest() {
                 return VerifyRequest.builder("4477990090090", "Brand.com")
-                        .senderId("VERIFICATION").length(6)
+                        .senderId("VERIFICATION").length(6).country("GB")
                         .locale(new Locale("en", "gb"))
-                        .type(VerifyRequest.LineType.LANDLINE).country("GB")
                         .pinExpiry(60).pinCode("a1b2C3").nextEventWait(90)
                         .workflow(VerifyRequest.Workflow.TTS_TTS).build();
             }
@@ -212,7 +210,6 @@ public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
 
                 VerifyRequest request = sampleRequest();
                 assertNotNull(request.toString());
-                assertNotNull(request.getType());
                 assertEquals(request.getNumber(), params.get("number"));
                 assertEquals(request.getBrand(), params.get("brand"));
                 assertEquals(request.getPinCode(), params.get("pin_code"));

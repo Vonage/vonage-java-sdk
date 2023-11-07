@@ -42,7 +42,7 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
         CheckResponse[] responses = new CheckResponse[2];
 
         stubResponse(200, json);
-        responses[0] = client.check("a-request-id", "1234", "127.0.0.1");
+        responses[0] = client.check("a-request-id", "1234");
 
         stubResponse(200, json);
         responses[1] = client.check("a-request-id", "1234");
@@ -50,7 +50,6 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
         for (CheckResponse response : responses) {
             assertEquals("a-request-id", response.getRequestId());
             assertEquals(VerifyStatus.OK, response.getStatus());
-            assertFalse(response.getStatus().isTemporaryError());
             assertEquals("an-event-id", response.getEventId());
             assertEquals(new BigDecimal("0.10000000"), response.getPrice());
             assertEquals("EUR", response.getCurrency());
@@ -63,7 +62,7 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
         String json = "{\n" + "  \"status\": \"0\",\n" + "  \"event_id\": \"an-event-id\",\n"
                 + "  \"price\": \"0.10000000\",\n" + "  \"currency\": \"EUR\"\n" + "}\n";
         stubResponse(200, json);
-        CheckResponse response = client.check("a-request-id", "1234", "127.0.0.1");
+        CheckResponse response = client.check("a-request-id", "1234");
 
         assertNull(response.getRequestId());
     }
@@ -74,7 +73,7 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
                 + "  \"price\": \"0.10000000\",\n" + "  \"currency\": \"EUR\"\n" + "}\n";
         stubResponse(200, json);
         assertThrows(VonageResponseParseException.class, () ->
-                client.check("a-request-id", "1234", "127.0.0.1")
+                client.check("a-request-id", "1234")
         );
     }
 
@@ -95,7 +94,7 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
         String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"status\": \"0\",\n"
                 + "  \"price\": \"0.10000000\",\n" + "  \"currency\": \"EUR\"\n" + "}\n";
         stubResponse(200, json);
-        CheckResponse response = client.check("a-request-id", "1234", "127.0.0.1");
+        CheckResponse response = client.check("a-request-id", "1234");
 
         assertNull(response.getEventId());
     }
@@ -105,7 +104,7 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
         String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"status\": \"0\",\n"
                 + "  \"event_id\": \"an-event-id\",\n" + "  \"currency\": \"EUR\"\n" + "}\n";
         stubResponse(200, json);
-        CheckResponse response = client.check("a-request-id", "1234", "127.0.0.1");
+        CheckResponse response = client.check("a-request-id", "1234");
 
         assertNull(response.getPrice());
     }
@@ -124,7 +123,7 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
         String json = "{\n" + "  \"request_id\": \"a-request-id\",\n" + "  \"status\": \"0\",\n"
                 + "  \"event_id\": \"an-event-id\",\n" + "  \"price\": \"0.10000000\"\n" + "}\n";
         stubResponse(200, json);
-        CheckResponse response = client.check("a-request-id", "1234", "127.0.0.1");
+        CheckResponse response = client.check("a-request-id", "1234");
 
         assertNull(response.getCurrency());
     }
@@ -133,7 +132,7 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
     public void testCheckWithError() throws Exception {
         String json = "{\n" + "  \"status\": \"2\",\n" + "  \"error_text\": \"There was an error.\"\n" + "}";
         stubResponse(200, json);
-        CheckResponse response = client.check("a-request-id", "1234", "127.0.0.1");
+        CheckResponse response = client.check("a-request-id", "1234");
 
         assertEquals(VerifyStatus.MISSING_PARAMS, response.getStatus());
         assertEquals("There was an error.", response.getErrorText());
@@ -143,7 +142,7 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
     public void testWithInvalidNumericStatus() throws Exception {
         String json = "{\n" + "  \"status\": \"5958\"\n" + "}";
         stubResponse(200, json);
-        CheckResponse response = client.check("a-request-id", "1234", "127.0.0.1");
+        CheckResponse response = client.check("a-request-id", "1234");
 
         assertEquals(VerifyStatus.UNKNOWN, response.getStatus());
     }
@@ -200,14 +199,11 @@ public class VerifyClientCheckEndpointTest extends ClientTest<VerifyClient> {
             @Override
             protected Map<String, String> sampleQueryParams() {
                 CheckRequest request = sampleRequest();
-                assertNull(request.getIpAddress());
-
                 Map<String, String> params = new HashMap<>(4);
                 params.put("request_id", request.getRequestId());
                 params.put("code", request.getCode());
                 assertEquals(requestId, params.get("request_id"));
                 assertEquals("567321", params.get("code"));
-
                 return params;
             }
         }

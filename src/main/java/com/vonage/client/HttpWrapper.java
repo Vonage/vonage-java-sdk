@@ -30,7 +30,7 @@ import java.nio.charset.StandardCharsets;
  */
 public class HttpWrapper {
     private static final String CLIENT_NAME = "vonage-java-sdk";
-    private static final String CLIENT_VERSION = "7.11.1";
+    private static final String CLIENT_VERSION = "8.0.0-rc2";
     private static final String JAVA_VERSION = System.getProperty("java.version");
     private static final String USER_AGENT = String.format("%s/%s java/%s", CLIENT_NAME, CLIENT_VERSION, JAVA_VERSION);
 

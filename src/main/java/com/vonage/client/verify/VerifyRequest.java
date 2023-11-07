@@ -23,7 +23,6 @@ import java.util.Map;
  * Describes a Verify request.
  */
 public class VerifyRequest extends BaseRequest {
-    private final LineType type;
     private final String brand, from, pinCode;
     private final Workflow workflow;
 
@@ -36,7 +35,6 @@ public class VerifyRequest extends BaseRequest {
             throw new IllegalArgumentException("Pin code must be between 4 and 10 characters.");
         }
         from = builder.senderId;
-        type = builder.type;
         workflow = builder.workflow;
     }
 
@@ -48,17 +46,6 @@ public class VerifyRequest extends BaseRequest {
     }
 
     /**
-     * @return the type of network the verification will be restricted to. This value has no effect unless it has been
-     * enabled by contacting {@code support@nexmo.com}.
-     *
-     * @deprecated This is no longer used and will be removed in the next major release.
-     */
-    @Deprecated
-    public LineType getType() {
-        return type;
-    }
-
-    /**
      * @return the short alphanumeric string to specify the SenderID for SMS sent by Verify, or {@code null} if one was
      * not provided. This value is specified in some {@link BaseRequest}  sub-class constructors.
      * <p>
@@ -66,14 +53,6 @@ public class VerifyRequest extends BaseRequest {
      */
     public String getFrom() {
         return from;
-    }
-
-    /**
-     * Types of phone line to be specified for {@link VerifyRequest#type}. This option is not generally available. It will
-     * cause an error to be returned if your account doesn't have access to use this option.
-     */
-    public enum LineType {
-        ALL, MOBILE, LANDLINE,
     }
 
     /**
@@ -147,7 +126,6 @@ public class VerifyRequest extends BaseRequest {
     public String toString() {
         return "VerifyRequest{" +
                 super.toString() +
-                ", type=" + type +
                 ", brand='" + brand + '\'' +
                 ", workflow=" + workflow +
                 '}';
@@ -171,7 +149,6 @@ public class VerifyRequest extends BaseRequest {
     public static class Builder {
         private String brand, senderId, number, country, pinCode;
         private Integer length, pinExpiry, nextEventWait;
-        private LineType type;
         private Workflow workflow;
         private Locale locale;
 
@@ -193,20 +170,6 @@ public class VerifyRequest extends BaseRequest {
          */
         public Builder senderId(String senderId) {
             this.senderId = senderId;
-            return this;
-        }
-
-        /**
-         * @param type the type of network the verification will be restricted to. This value has no effect unless it has been
-         *        enabled by contacting {@code support@nexmo.com}.
-         *
-         * @deprecated This is no longer used and will be removed in the next major release.
-         *
-         * @return This builder.
-         **/
-        @Deprecated
-        public Builder type(LineType type) {
-            this.type = type;
             return this;
         }
 

@@ -27,23 +27,20 @@ import java.util.Date;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(value = { "_links" }, ignoreUnknown = true)
 public class CallInfo implements Jsonable {
-    private Endpoint from, to;
-    private String conversationUuid, uuid, network, price, rate;
-    private CallDirection direction;
-    private Integer duration;
-    private Date startTime, endTime;
-    private CallStatus status;
+    Endpoint from, to;
+    String conversationUuid, uuid, network, price, rate;
+    CallDirection direction;
+    Integer duration;
+    Date startTime, endTime;
+    CallStatus status;
 
-    @Deprecated
-    public CallInfo() {}
+    CallInfo() {}
 
-    @Deprecated
-    public CallInfo(String to, String from) {
+    CallInfo(String to, String from) {
         this(new PhoneEndpoint(to), new PhoneEndpoint(from));
     }
 
-    @Deprecated
-    public CallInfo(Endpoint to, Endpoint from) {
+    CallInfo(Endpoint to, Endpoint from) {
         this.to = to;
         this.from = from;
     }
@@ -106,66 +103,6 @@ public class CallInfo implements Jsonable {
     @JsonProperty("network")
     public String getNetwork() {
         return network;
-    }
-
-    @Deprecated
-    public void setTo(Endpoint to) {
-        this.to = to;
-    }
-
-    @Deprecated
-    public void setFrom(Endpoint from) {
-        this.from = from;
-    }
-
-    @Deprecated
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    @Deprecated
-    public void setConversationUuid(String conversationUuid) {
-        this.conversationUuid = conversationUuid;
-    }
-
-    @Deprecated
-    public void setDuration(Integer duration) {
-        this.duration = duration;
-    }
-
-    @Deprecated
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
-
-    @Deprecated
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    @Deprecated
-    public void setRate(String rate) {
-        this.rate = rate;
-    }
-
-    @Deprecated
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
-
-    @Deprecated
-    public void setNetwork(String network) {
-        this.network = network;
-    }
-
-    @Deprecated
-    public void setDirection(CallDirection direction) {
-        this.direction = direction;
-    }
-
-    @Deprecated
-    public void setStatus(CallStatus status) {
-        this.status = status;
     }
 
     @Override

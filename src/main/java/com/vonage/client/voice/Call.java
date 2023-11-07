@@ -78,12 +78,7 @@ public class Call implements Jsonable {
         }
     }
 
-    /**
-     * @deprecated Use {@link #builder()}.
-     */
-    @Deprecated
-    public Call() {
-    }
+    Call() {}
 
     public Call(String to, String from, String answerUrl) {
         this(new PhoneEndpoint(to), new PhoneEndpoint(from), answerUrl);
@@ -176,62 +171,6 @@ public class Call implements Jsonable {
         return fromRandomNumber;
     }
 
-    @Deprecated
-    public void setTo(Endpoint[] to) {
-        this.to = to;
-    }
-
-    @Deprecated
-    public void setFrom(Endpoint from) {
-        this.from = from;
-    }
-
-    @Deprecated
-    public void setAnswerUrl(String answerUrl) {
-        this.answerUrl = answerUrl;
-    }
-
-    @Deprecated
-    public void setAnswerMethod(String answerMethod) {
-        this.answerMethod = HttpMethod.fromString(answerMethod);
-    }
-
-    @Deprecated
-    public void setEventUrl(String eventUrl) {
-        this.eventUrl = eventUrl;
-    }
-
-    @Deprecated
-    public void setEventMethod(String eventMethod) {
-        this.eventMethod = HttpMethod.fromString(eventMethod);
-    }
-
-    @Deprecated
-    public void setMachineDetection(MachineDetection machineDetection) {
-        this.machineDetection = machineDetection;
-    }
-
-    @Deprecated
-    public void setLengthTimer(Integer lengthTimer) {
-        this.lengthTimer = lengthTimer;
-    }
-
-    @Deprecated
-    public void setRingingTimer(Integer ringingTimer) {
-        this.ringingTimer = ringingTimer;
-    }
-
-    /**
-     * Set to true to use random phone number as from. The number will be selected from the list of the numbers assigned to the current application. random_from_number: true cannot be used together with from.
-     * @param fromRandomNumber Whether to use random number.
-     *
-     * @deprecated Use {@link Builder#fromRandomNumber(boolean)}.
-     */
-    @Deprecated
-    public void setFromRandomNumber(Boolean fromRandomNumber) {
-        this.fromRandomNumber = fromRandomNumber;
-    }
-
     /**
      *
      * @return The NCCO actions.
@@ -240,7 +179,6 @@ public class Call implements Jsonable {
     public Collection<? extends Action> getNcco() {
         return ncco;
     }
-
 
     /**
      * Creates an instance of this class from a JSON payload.

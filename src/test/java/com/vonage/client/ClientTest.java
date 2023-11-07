@@ -17,7 +17,6 @@ package com.vonage.client;
 
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
-import com.vonage.client.logging.LoggingUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -60,7 +59,6 @@ public abstract class ClientTest<T> {
         HttpEntity entity = mock(HttpEntity.class);
 
         when(result.execute(any(HttpUriRequest.class))).thenReturn(response);
-        when(LoggingUtils.logResponse(any(HttpResponse.class))).thenReturn("response logged");
         Function<String, InputStream> transformation = c -> new ByteArrayInputStream(c.getBytes(StandardCharsets.UTF_8));
         InputStream[] contentsEncoded = Arrays.stream(additionalReturns).map(transformation).toArray(InputStream[]::new);
         when(entity.getContent()).thenReturn(transformation.apply(content), contentsEncoded);

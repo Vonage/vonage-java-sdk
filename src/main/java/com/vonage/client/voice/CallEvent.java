@@ -47,26 +47,6 @@ public class CallEvent implements Jsonable {
         return direction;
     }
 
-    @Deprecated
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    @Deprecated
-    public void setConversationUuid(String conversationUuid) {
-        this.conversationUuid = conversationUuid;
-    }
-
-    @Deprecated
-    public void setStatus(CallStatus status) {
-        this.status = status;
-    }
-
-    @Deprecated
-    public void setDirection(CallDirection direction) {
-        this.direction = direction;
-    }
-
     /**
      * Creates an instance of this class from a JSON payload.
      *

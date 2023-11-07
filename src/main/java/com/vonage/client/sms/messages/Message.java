@@ -33,30 +33,22 @@ public abstract class Message implements QueryParamsRequest {
          */
         BINARY,
         /**
-         * Message is a wap-push message to send a browsable / downloadable url to the handset
-         */
-        WAPPUSH,
-        /**
          * Message is a unicode message, for sending messages in non-latin script to a supported handset
          */
         UNICODE;
 
+        @Override
         public String toString() {
             return super.toString().toLowerCase();
         }
     }
 
     private final MessageType type;
-    private final String from;
-    private final String to;
-
-    private String clientReference;
+    private final String from, to;
     private boolean statusReportRequired;
-    private MessageClass messageClass = null;
-    private Long timeToLive = null;
-    private String callbackUrl = null;
-    private String entityId = null;
-    private String contentId = null;
+    private MessageClass messageClass;
+    private Long timeToLive;
+    private String clientReference, callbackUrl, entityId, contentId;
 
     protected Message(final MessageType type,
                       final String from,

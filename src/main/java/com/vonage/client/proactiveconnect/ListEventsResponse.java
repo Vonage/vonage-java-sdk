@@ -34,12 +34,7 @@ final class ListEventsResponse extends HalPageResponse {
 
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	static final class Embedded {
-		private List<Event> events;
-
-		@JsonProperty("events")
-		public List<Event> getEvents() {
-			return events;
-		}
+		@JsonProperty("events") private List<Event> events;
 	}
 
 	/**
@@ -49,7 +44,7 @@ final class ListEventsResponse extends HalPageResponse {
 	 */
 	@JsonIgnore
 	public List<Event> getEvents() {
-		return _embedded != null ? _embedded.getEvents() : null;
+		return _embedded != null ? _embedded.events : null;
 	}
 	
 	/**

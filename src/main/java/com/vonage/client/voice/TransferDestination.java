@@ -20,12 +20,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.vonage.client.voice.ncco.Ncco;
 
-/**
- * @deprecated Will be made package-private in next major release.
- */
-@Deprecated
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class TransferDestination {
+class TransferDestination {
     private final Type type;
     private final String[] urls;
     private final Ncco ncco;

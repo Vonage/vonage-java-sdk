@@ -15,23 +15,22 @@
  */
 package com.vonage.client.verify;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Date;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class VerifyCheck {
     private final Date date;
     private final String code;
     private final Status status;
-    private final String ipAddress;
 
     public VerifyCheck(@JsonProperty("date_received") Date date,
                        @JsonProperty("code") String code,
-                       @JsonProperty("status") Status status,
-                       @JsonProperty("ip_address") String ipAddress) {
+                       @JsonProperty("status") Status status) {
         this.date = date;
         this.code = code;
         this.status = status;
-        this.ipAddress = ipAddress;
     }
 
     public enum Status {
@@ -54,14 +53,5 @@ public class VerifyCheck {
 
     public Status getStatus() {
         return this.status;
-    }
-
-    /**
-     * @return The IP address, if available.
-     * @deprecated This field is no longer used.
-     */
-    @Deprecated
-    public String getIpAddress() {
-        return this.ipAddress;
     }
 }

@@ -23,7 +23,6 @@ import com.vonage.client.common.HttpMethod;
 import com.vonage.client.sms.messages.BinaryMessage;
 import com.vonage.client.sms.messages.Message;
 import com.vonage.client.sms.messages.TextMessage;
-import com.vonage.client.sms.messages.WapPushMessage;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
@@ -129,7 +128,6 @@ public class SmsClientTest extends ClientTest<SmsClient> {
                 testStatusReportRequiredSetter();
                 testConstructParamsUnicode();
                 testConstructParamsBinary();
-                testConstructParamsWapPush();
                 testConstructParamsValidityPeriodTTL();
                 testConstructParamsContentId();
                 testConstructParamsEntityId();
@@ -183,17 +181,6 @@ public class SmsClientTest extends ClientTest<SmsClient> {
                 params.put("udh", "646566");
                 params.put("body", "616263");
                 params.put("protocol-id", "0");
-                assertRequestParams(params, message);
-            }
-
-            void testConstructParamsWapPush() throws Exception {
-                Message message = new WapPushMessage("TestSender", "not-a-number", "http://the-url", "A Title");
-                Map<String, String> params = new LinkedHashMap<>();
-                params.put("from", "TestSender");
-                params.put("to", "not-a-number");
-                params.put("type", "wappush");
-                params.put("url", "http://the-url");
-                params.put("title", "A Title");
                 assertRequestParams(params, message);
             }
 

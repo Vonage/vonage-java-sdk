@@ -1,6 +1,6 @@
 # Vonage Server SDK for Java
 
-[![Maven Release](https://maven-badges.herokuapp.com/maven-central/com.vonage/client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.vonage/client)
+[![Maven Release](https://maven-badges.herokuapp.com/maven-central/com.vonage/server-sdk/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.vonage/server-sdk)
 [![Build Status](https://github.com/Vonage/vonage-java-sdk/actions/workflows/build.yml/badge.svg)](https://github.com/Vonage/vonage-java-sdk/actions/workflows/build.yml?query=workflow%3A"Build+Java+CI")
 [![codecov](https://codecov.io/gh/vonage/vonage-java-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/vonage/vonage-java-sdk)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
@@ -33,6 +33,7 @@ need a Vonage account. You'll need to have [created a Vonage account](https://da
 - [SMS](https://developer.vonage.com/en/sms/overview)
 - [Subaccounts](https://developer.vonage.com/en/account/subaccounts/overview)
 - [Verify](https://developer.vonage.com/en/verify/overview)
+- [Video](https://developer.vonage.com/en/video/overview)
 - [Voice](https://developer.vonage.com/en/voice/overview)
 
 ## Other SDKs
@@ -50,9 +51,9 @@ See all of our SDKs and integrations on the [Vonage Developer portal](https://de
 
 ## Installation
 
-Releases are published to [Maven Central](https://central.sonatype.com/artifact/com.vonage/client/7.11.1/snippets).
+Releases are published to [Maven Central](https://central.sonatype.com/artifact/com.vonage/server-sdk/8.0.0-rc2/snippets).
 Instructions for your build system can be found in the snippets section.
-They're also available from [here](https://mvnrepository.com/artifact/com.vonage/client/7.11.1).
+They're also available from [here](https://mvnrepository.com/artifact/com.vonage/server-sdk/8.0.0-rc2).
 Release notes can be found in the [changelog](CHANGELOG.md).
 
 ### Build It Yourself
@@ -81,7 +82,7 @@ to your project's classpath.
 ## Usage
 
 * For help understanding our APIs, check out our awesome [developer portal](https://developer.vonage.com/).
-* Check the [Javadoc](https://www.javadoc.io/doc/com.vonage/client/latest/index.html) for full reference documentation.
+* Check the [Javadoc](https://www.javadoc.io/doc/com.vonage/server-sdk/latest/index.html) for full reference documentation.
 * There are also **many useful code samples** in our [Vonage/vonage-java-code-snippets](https://github.com/Vonage/vonage-java-code-snippets) repository.
 
 ## Configuration
@@ -101,7 +102,7 @@ VonageClient client = VonageClient.builder()
 ```
 
 ### Customize the Base URI
-By default, the client will use https://api.nexmo.com, https://rest.nexmo.com, https://sns.nexmo.com and https://api-eu.vonage.com as base URIs for the various endpoints. To customize these you can instantiate `VonageClient` with an `HttpConfig` object.
+By default, the client will use https://api.nexmo.com, https://rest.nexmo.com and https://api-eu.vonage.com as base URIs for the various endpoints. To customize these you can instantiate `VonageClient` with an `HttpConfig` object.
 
 `HttpConfig.Builder` has been created to assist in building this object. Usage is as follows:
 
@@ -109,7 +110,6 @@ By default, the client will use https://api.nexmo.com, https://rest.nexmo.com, h
 HttpConfig httpConfig = HttpConfig.builder()
         .apiBaseUri("https://api.example.com")
         .restBaseUri("https://rest.example.com")
-        .snsBaseUri("https://sns.example.com")
         .apiEuBaseUri("https://api-eu.example.com")
         .build();
 
@@ -145,6 +145,13 @@ VonageClient client = VonageClient.builder()
 
 ## Frequently Asked Questions
 
+**Q: What happened to [`com.vonage:client`](https://search.maven.org/artifact/com.vonage/client)?**
+
+**A:** To avoid confusion with our various client-side SDKs, this server-side SDK has been moved from
+the `com.vonage:client` coordinates to `com.vonage:server-sdk`. The old artifactId (`com.vonage:client`) will
+not receive further updates. All users should migrate to the new artifactId. Please note that the SDK is functionally
+the same, it is just a namespace change on Maven Central.
+
 **Q: What is your policy on thread safety?**
 
 **A:** The current architecture of the SDK means that only one thread should use the client at a time.
@@ -154,14 +161,6 @@ If you would like to use the SDK in a multithreaded environment, create a separa
 **Q: Does this SDK support asynchronous request / response processing?**
 
 **A:** Currently no, but it is on the roadmap.
-
-**Q: Does this SDK support the Video API?**
-
-**A:**
-The Vonage Video API (formerly OpenTok) is currently in beta. You can try it out by using a beta version.
-Usage instructions can be found on the [8.x-beta branch](https://github.com/Vonage/vonage-java-sdk/tree/8.x-beta#video-api).
-See the [Releases page](https://github.com/Vonage/vonage-java-sdk/releases) for more information.
-In the meantime, you can continue using the [OpenTok Java SDK](https://github.com/opentok/Opentok-Java-SDK).
 
 ## Contribute!
 

@@ -20,7 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CheckRequest implements QueryParamsRequest {
-    private final String requestId, code, ipAddress;
+    private final String requestId, code;
 
     /**
      * @param requestId The Verify request to check.
@@ -29,18 +29,6 @@ public class CheckRequest implements QueryParamsRequest {
      * @param code The verification code entered by your user. Between 4 and 6 characters.
      */
     public CheckRequest(String requestId, String code) {
-        this(requestId, code, null);
-    }
-
-    /**
-     *
-     * @param requestId The Verify request to check.
-     * @param code The verification code entered by your user. Between 4 and 6 characters.
-     * @param ipAddress No longer used.
-     * @deprecated Please use {@link CheckRequest#CheckRequest(String, String)}.
-     */
-    @Deprecated
-    public CheckRequest(String requestId, String code, String ipAddress) {
         if ((this.requestId = requestId) == null) {
             throw new IllegalArgumentException("request_id is required");
         }
@@ -53,7 +41,6 @@ public class CheckRequest implements QueryParamsRequest {
         if (code.length() < 4 || code.length() > 6) {
             throw new IllegalArgumentException("code '"+code+"' is not between 4 and 6 characters long");
         }
-        this.ipAddress = ipAddress;
     }
 
     /**
@@ -72,23 +59,11 @@ public class CheckRequest implements QueryParamsRequest {
         return code;
     }
 
-    /**
-     * @deprecated This field is no longer used.
-     * @return The IP address.
-     */
-    @Deprecated
-    public String getIpAddress() {
-        return ipAddress;
-    }
-
     @Override
     public Map<String, String> makeParams() {
         Map<String, String> params = new LinkedHashMap<>(4);
         params.put("request_id", requestId);
         params.put("code", code);
-        if (ipAddress != null) {
-            params.put("ip_address", ipAddress);
-        }
         return params;
     }
 }

@@ -15,52 +15,27 @@
  */
 package com.vonage.client.account;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.vonage.client.Jsonable;
-import com.vonage.client.VonageResponseParseException;
-import io.openapitools.jackson.dataformat.hal.HALLink;
-import io.openapitools.jackson.dataformat.hal.HALMapper;
-import io.openapitools.jackson.dataformat.hal.annotation.Link;
-import io.openapitools.jackson.dataformat.hal.annotation.Resource;
-import java.io.IOException;
-import java.util.Date;
+import java.time.Instant;
 
-@Resource
+/**
+ * Represents metadata about an API account secret.
+ */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SecretResponse implements Jsonable {
-    @Link
-    private HALLink self;
-
     private String id;
+    private Instant created;
 
-    @JsonProperty("created_at")
-    private Date created;
-
-    public HALLink getSelf() {
-        return self;
-    }
-
+    @JsonProperty("id")
     public String getId() {
         return id;
     }
 
-    public Date getCreated() {
+    @JsonProperty("created_at")
+    public Instant getCreated() {
         return created;
-    }
-
-    @Override
-    public void updateFromJson(String json) {
-        try {
-            HALMapper mapper = new HALMapper();
-            mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-            SecretResponse parsed = mapper.readValue(json, SecretResponse.class);
-            self = parsed.self;
-            id = parsed.id;
-            created = parsed.created;
-        }
-        catch (IOException ex) {
-            throw new VonageResponseParseException("Failed to produce SecretResponse from json.", ex);
-        }
     }
 
     public static SecretResponse fromJson(String json) {

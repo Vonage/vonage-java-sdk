@@ -19,11 +19,11 @@ public class HttpConfig {
     private static final String
             DEFAULT_API_BASE_URI = "https://api.nexmo.com",
             DEFAULT_REST_BASE_URI = "https://rest.nexmo.com",
-            DEFAULT_SNS_BASE_URI = "https://sns.nexmo.com",
-            DEFAULT_API_EU_BASE_URI = "https://api-eu.vonage.com";
+            DEFAULT_API_EU_BASE_URI = "https://api-eu.vonage.com",
+            DEFAULT_VIDEO_BASE_URI = "https://video.api.vonage.com";
 
     private final int timeoutMillis;
-    private final String apiBaseUri, restBaseUri, snsBaseUri, apiEuBaseUri;
+    private final String apiBaseUri, restBaseUri, apiEuBaseUri, videoBaseUri;
 
     private HttpConfig(Builder builder) {
         if ((timeoutMillis = builder.timeoutMillis) < 10) {
@@ -31,7 +31,7 @@ public class HttpConfig {
         }
         apiBaseUri = builder.apiBaseUri;
         restBaseUri = builder.restBaseUri;
-        snsBaseUri = builder.snsBaseUri;
+        videoBaseUri = builder.videoBaseUri;
         apiEuBaseUri = builder.apiEuBaseUri;
     }
 
@@ -53,8 +53,8 @@ public class HttpConfig {
         return restBaseUri;
     }
 
-    public String getSnsBaseUri() {
-        return snsBaseUri;
+    public String getVideoBaseUri() {
+        return videoBaseUri;
     }
 
     public String getApiEuBaseUri() {
@@ -69,12 +69,12 @@ public class HttpConfig {
         return DEFAULT_REST_BASE_URI.equals(restBaseUri);
     }
 
-    public boolean isDefaultSnsBaseUri() {
-        return DEFAULT_SNS_BASE_URI.equals(snsBaseUri);
-    }
-
     public boolean isDefaultApiEuBaseUri() {
         return DEFAULT_API_EU_BASE_URI.equals(apiEuBaseUri);
+    }
+
+    public boolean isDefaultVideoBaseUri() {
+        return DEFAULT_VIDEO_BASE_URI.equals(videoBaseUri);
     }
 
     public String getVersionedApiBaseUri(String version) {
@@ -85,12 +85,12 @@ public class HttpConfig {
         return appendVersionToUri(restBaseUri, version);
     }
 
-    public String getVersionedSnsBaseUri(String version) {
-        return appendVersionToUri(snsBaseUri, version);
-    }
-
     public String getVersionedApiEuBaseUri(String version) {
         return appendVersionToUri(apiEuBaseUri, version);
+    }
+
+    public String getVersionedVideoBaseUri(String version) {
+        return appendVersionToUri(videoBaseUri, version);
     }
 
     private String appendVersionToUri(String uri, String version) {
@@ -113,8 +113,8 @@ public class HttpConfig {
         private String
                 apiBaseUri = DEFAULT_API_BASE_URI,
                 restBaseUri = DEFAULT_REST_BASE_URI,
-                snsBaseUri = DEFAULT_SNS_BASE_URI,
-                apiEuBaseUri = DEFAULT_API_EU_BASE_URI;
+                apiEuBaseUri = DEFAULT_API_EU_BASE_URI,
+                videoBaseUri = DEFAULT_VIDEO_BASE_URI;
 
         /**
          * Sets the socket timeout for requests. By default, this is one minute (60000 ms).
@@ -135,7 +135,7 @@ public class HttpConfig {
         }
 
         /**
-         * @param apiBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_API_BASE_URI}
+         * @param apiBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_API_BASE_URI}.
          *
          * @return The Builder to keep building.
          */
@@ -145,22 +145,12 @@ public class HttpConfig {
         }
 
         /**
-         * @param restBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_REST_BASE_URI}
+         * @param restBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_REST_BASE_URI}.
          *
          * @return The Builder to keep building.
          */
         public Builder restBaseUri(String restBaseUri) {
             this.restBaseUri = sanitizeUri(restBaseUri);
-            return this;
-        }
-
-        /**
-         * @param snsBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_SNS_BASE_URI}
-         *
-         * @return The Builder to keep building.
-         */
-        public Builder snsBaseUri(String snsBaseUri) {
-            this.snsBaseUri = sanitizeUri(snsBaseUri);
             return this;
         }
 
@@ -175,7 +165,19 @@ public class HttpConfig {
         }
 
         /**
-         * @param baseUri The base uri to use in place of {@link HttpConfig#DEFAULT_REST_BASE_URI}, {@link HttpConfig#DEFAULT_API_BASE_URI}, and {@link HttpConfig#DEFAULT_SNS_BASE_URI}
+         * @param videoBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_VIDEO_BASE_URI}.
+         *
+         * @return The Builder to keep building.
+         */
+        public Builder videoBaseUri(String videoBaseUri) {
+            this.videoBaseUri = sanitizeUri(videoBaseUri);
+            return this;
+        }
+
+        /**
+         * @param baseUri The base uri to use in place of {@link HttpConfig#DEFAULT_REST_BASE_URI},
+         * {@link HttpConfig#DEFAULT_API_BASE_URI}, {@link HttpConfig#DEFAULT_API_EU_BASE_URI} and
+         * {@link HttpConfig#DEFAULT_VIDEO_BASE_URI}.
          *
          * @return The Builder to keep building.
          */
@@ -183,8 +185,8 @@ public class HttpConfig {
             String sanitizedUri = sanitizeUri(baseUri);
             apiBaseUri = sanitizedUri;
             restBaseUri = sanitizedUri;
-            snsBaseUri = sanitizedUri;
             apiEuBaseUri = sanitizedUri;
+            videoBaseUri = sanitizedUri;
             return this;
         }
 

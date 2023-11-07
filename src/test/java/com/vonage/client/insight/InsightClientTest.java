@@ -282,7 +282,6 @@ public class InsightClientTest extends ClientTest<InsightClient> {
                 params.put("country", request.getCountry());
                 params.put("cnam", String.valueOf(request.getCnam()));
                 params.put("callback", request.getCallback());
-                params.put("ip", request.getIpAddress());
                 return params;
             }
 
@@ -299,10 +298,8 @@ public class InsightClientTest extends ClientTest<InsightClient> {
             @Override
             protected AdvancedInsightRequest sampleRequest() {
                 return AdvancedInsightRequest.builder("15555551234")
-                        .cnam(false).country("US")
-                        .async(true).realTimeData(false)
-                        .callback("https://example.com/cb")
-                        .ipAddress("192.168.0.1").build();
+                        .cnam(false).country("US").async(true).realTimeData(false)
+                        .callback("https://example.com/cb").build();
             }
 
             @Override

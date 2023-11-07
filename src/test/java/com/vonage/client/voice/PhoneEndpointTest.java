@@ -29,20 +29,6 @@ public class PhoneEndpointTest {
     }
 
     @Test
-    public void testSetNumber() throws Exception {
-        PhoneEndpoint e = new PhoneEndpoint("number", "dtmf");
-        e.setNumber("1234");
-        assertEquals("1234", e.getNumber());
-    }
-
-    @Test
-    public void testSetDtmf() throws Exception {
-        PhoneEndpoint e = new PhoneEndpoint("number", "dtmf");
-        e.setDtmfAnswer("#123");
-        assertEquals("#123", e.getDtmfAnswer());
-    }
-
-    @Test
     public void testComparison() throws Exception {
 
         PhoneEndpoint e1 = new PhoneEndpoint("number");

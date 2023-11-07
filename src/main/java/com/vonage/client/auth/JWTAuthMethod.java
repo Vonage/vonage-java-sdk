@@ -23,6 +23,7 @@ import java.nio.file.Path;
 
 public class JWTAuthMethod implements AuthMethod {
     private static final int SORT_KEY = 10;
+
     private final Jwt jwt;
     private final String applicationId;
 
@@ -44,12 +45,19 @@ public class JWTAuthMethod implements AuthMethod {
         return applicationId;
     }
 
+    /**
+     * Convenience method for creating custom JWTs.
+     *
+     * @return A new {@link Jwt.Builder} with the application ID and private key already set.
+     * @since 8.0.0-beta2
+     */
+    public Jwt.Builder newJwt() {
+        return Jwt.builder().applicationId(applicationId).privateKeyContents(jwt.getPrivateKeyContents());
+    }
+
     @Override
     public RequestBuilder apply(RequestBuilder request) {
-        String token = jwt.generate();
-
-        request.setHeader("Authorization", "Bearer " + token);
-        return request;
+        return request.setHeader("Authorization", "Bearer " + generateToken());
     }
 
     @Override

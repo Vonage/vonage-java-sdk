@@ -23,8 +23,6 @@ import java.util.Map;
 public class TextMessage extends Message {
     private final String messageBody;
 
-    private final boolean unicode;
-
     /**
      * Instantiate a new text-message request.<br>
      * This message will be submitted as a regular 8 bit text message
@@ -56,9 +54,8 @@ public class TextMessage extends Message {
                        final String to,
                        final String messageBody,
                        final boolean unicode) {
-        super(null, from, to);
+        super(unicode ? MessageType.UNICODE : MessageType.TEXT, from, to);
         this.messageBody = messageBody;
-        this.unicode = unicode;
     }
 
     /**
@@ -74,17 +71,7 @@ public class TextMessage extends Message {
      * would be messages to be sent in non-western scripts, such as Arabic, Kanji, Chinese, etc.
      */
     public boolean isUnicode() {
-        return unicode;
-    }
-
-    /**
-     * Gets the MessageType.
-     *
-     * @return {@linkplain MessageType#UNICODE} if {@linkplain #isUnicode()}, {@linkplain MessageType#TEXT} otherwise.
-     */
-    @Override
-    public MessageType getType() {
-        return unicode ? MessageType.UNICODE : MessageType.TEXT;
+        return getType() == MessageType.UNICODE;
     }
 
     @Override

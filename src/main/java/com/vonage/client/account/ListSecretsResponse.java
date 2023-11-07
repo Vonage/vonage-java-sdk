@@ -15,43 +15,33 @@
  */
 package com.vonage.client.account;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
-import com.vonage.client.VonageResponseParseException;
-import io.openapitools.jackson.dataformat.hal.HALLink;
-import io.openapitools.jackson.dataformat.hal.HALMapper;
-import io.openapitools.jackson.dataformat.hal.annotation.EmbeddedResource;
-import io.openapitools.jackson.dataformat.hal.annotation.Link;
-import io.openapitools.jackson.dataformat.hal.annotation.Resource;
-import java.io.IOException;
-import java.util.Collection;
+import com.vonage.client.common.HalPageResponse;
+import java.util.List;
 
-@Resource
-public class ListSecretsResponse implements Jsonable {
-    @Link
-    private HALLink self;
+/**
+ * HAL response for {@link AccountClient#listSecrets(String)}.
+ */
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ListSecretsResponse extends HalPageResponse {
+    @JsonProperty("_embedded") private Embedded _embedded;
 
-    @EmbeddedResource
-    private Collection<SecretResponse> secrets;
-
-    @Deprecated
-    public HALLink getSelf() {
-        return self;
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    static final class Embedded {
+        @JsonProperty("secrets") private List<SecretResponse> secrets;
     }
 
-    public Collection<SecretResponse> getSecrets() {
-        return secrets;
-    }
-
-    @Override
-    public void updateFromJson(String json) {
-        try {
-            ListSecretsResponse parsed = new HALMapper().readValue(json, ListSecretsResponse.class);
-            self = parsed.self;
-            secrets = parsed.secrets;
-        }
-        catch (IOException ex) {
-            throw new VonageResponseParseException("Failed to produce ListSecretsResponse from json.", ex);
-        }
+    /**
+     * Gets the secrets contained in the {@code _embedded} resource.
+     *
+     * @return The list of {@linkplain SecretResponse}, or {@code null} if absent from the response.
+     */
+    @JsonIgnore
+    public List<SecretResponse> getSecrets() {
+        return _embedded != null ? _embedded.secrets: null;
     }
 
     public static ListSecretsResponse fromJson(String json) {

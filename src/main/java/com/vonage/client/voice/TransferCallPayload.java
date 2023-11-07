@@ -19,26 +19,25 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.voice.ncco.Ncco;
+import java.util.Objects;
 
 /**
  * Extension of ModifyCallPayload which adds an NCCO destination to the serialized form.
  *
- * @deprecated Will be made package-private in next major release.
  */
-@Deprecated
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TransferCallPayload extends ModifyCallPayload {
+class TransferCallPayload extends ModifyCallPayload {
     private final TransferDestination destination;
 
-    public TransferCallPayload(String nccoUrl) {
-        super(ModifyCallAction.TRANSFER);
+    public TransferCallPayload(String nccoUrl, String uuid) {
+        super(ModifyCallAction.TRANSFER, uuid);
         destination = new TransferDestination(nccoUrl);
     }
 
-    public TransferCallPayload(Ncco ncco) {
-        super(ModifyCallAction.TRANSFER);
-        destination = new TransferDestination(ncco);
+    public TransferCallPayload(Ncco ncco, String uuid) {
+        super(ModifyCallAction.TRANSFER, uuid);
+        destination = new TransferDestination(Objects.requireNonNull(ncco, "NCCO is required."));
     }
 
     @JsonProperty("destination")

@@ -15,13 +15,8 @@
  */
 package com.vonage.client.meetings;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
-import com.vonage.client.VonageResponseParseException;
-import javax.activation.MimeType;
-import javax.activation.MimeTypeParseException;
 import java.net.URI;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -55,8 +50,8 @@ public class LogoUploadsUrlResponse {
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class Fields {
 		private LogoType logoType;
-		private MimeType contentType;
-		private String key, bucket, policy, amzDate, amzAlgorithm, amzCredential, amzSecurityToken, amzSignature;
+		private String contentType, key, bucket, policy,
+				amzDate, amzAlgorithm, amzCredential, amzSecurityToken, amzSignature;
 
 		protected Fields() {
 		}
@@ -64,21 +59,11 @@ public class LogoUploadsUrlResponse {
 		/**
 		 * MIME type of the content.
 		 *
-		 * @return The image type.
+		 * @return The image type as a string.
 		 */
-		@JsonGetter("Content-Type")
-		public MimeType getContentType() {
+		@JsonProperty("Content-Type")
+		public String getContentType() {
 			return contentType;
-		}
-
-		@JsonSetter("Content-Type")
-		protected void setContentType(String contentType) {
-			try {
-				this.contentType = contentType != null ? new MimeType(contentType) : null;
-			}
-			catch (MimeTypeParseException ex) {
-				throw new VonageResponseParseException("Invalid MIME type: "+contentType, ex);
-			}
 		}
 
 		/**

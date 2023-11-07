@@ -49,7 +49,6 @@ public class VerifyRequestTest {
 		assertNull(verifyRequest.getLength());
 		assertNull(verifyRequest.getLocale());
 		assertNull(verifyRequest.getFrom());
-		assertNull(verifyRequest.getType());
 		assertNull(verifyRequest.getCountry());
 		assertNull(verifyRequest.getPinExpiry());
 		assertNull(verifyRequest.getPinCode());

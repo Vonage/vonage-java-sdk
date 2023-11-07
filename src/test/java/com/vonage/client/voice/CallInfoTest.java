@@ -193,8 +193,8 @@ public class CallInfoTest {
     @Test
     public void testToString() throws Exception {
         CallInfo record = new CallInfo("447700900104", "447700900105");
-        record.setUuid("93137ee3-580e-45f7-a61a-e0b5716000ef");
-        record.setStatus(CallStatus.COMPLETED);
+        record.uuid = "93137ee3-580e-45f7-a61a-e0b5716000ef";
+        record.status = CallStatus.COMPLETED;
         assertEquals("<CallInfo ID: 93137ee3-580e-45f7-a61a-e0b5716000ef, From: 447700900105, To: 447700900104, Status: completed>", record.toString());
     }
 }

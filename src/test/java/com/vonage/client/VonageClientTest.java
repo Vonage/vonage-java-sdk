@@ -17,7 +17,6 @@ package com.vonage.client;
 
 import com.vonage.client.auth.*;
 import com.vonage.client.auth.hashutils.HashUtil;
-import com.vonage.client.logging.LoggingUtils;
 import com.vonage.client.voice.Call;
 import com.vonage.client.voice.CallEvent;
 import com.vonage.client.voice.CallStatus;
@@ -57,7 +56,6 @@ public class VonageClientTest {
         HttpEntity entity = mock(HttpEntity.class);
 
         when(result.execute(any(HttpUriRequest.class))).thenReturn(response);
-        when(LoggingUtils.logResponse(any(HttpResponse.class))).thenReturn("response logged");
         when(entity.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
         when(sl.getStatusCode()).thenReturn(statusCode);
         when(response.getStatusLine()).thenReturn(sl);
@@ -317,7 +315,6 @@ public class VonageClientTest {
 
         assertEquals(config.getApiBaseUri(), vonageClient.getHttpWrapper().getHttpConfig().getApiBaseUri());
         assertEquals(config.getRestBaseUri(), vonageClient.getHttpWrapper().getHttpConfig().getRestBaseUri());
-        assertEquals(config.getSnsBaseUri(), vonageClient.getHttpWrapper().getHttpConfig().getSnsBaseUri());
     }
 
     @Test
@@ -349,11 +346,11 @@ public class VonageClientTest {
         assertNotNull(client.getProactiveConnectClient());
         assertNotNull(client.getRedactClient());
         assertNotNull(client.getSmsClient());
-        assertNotNull(client.getSnsClient());
         assertNotNull(client.getSubaccountsClient());
         assertNotNull(client.getUsersClient());
         assertNotNull(client.getVerifyClient());
         assertNotNull(client.getVerify2Client());
+        assertNotNull(client.getVideoClient());
     }
 
     private void assertContainsParam(List<NameValuePair> params, String key, String value) {
