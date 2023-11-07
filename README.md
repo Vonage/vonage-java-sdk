@@ -1,6 +1,6 @@
 # Vonage Server SDK for Java
 
-[![Maven Release](https://maven-badges.herokuapp.com/maven-central/com.vonage/client/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.vonage/client)
+[![Maven Release](https://maven-badges.herokuapp.com/maven-central/com.vonage/server-sdk/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.vonage/server-sdk)
 [![Build Status](https://github.com/Vonage/vonage-java-sdk/actions/workflows/build.yml/badge.svg)](https://github.com/Vonage/vonage-java-sdk/actions/workflows/build.yml?query=workflow%3A"Build+Java+CI")
 [![codecov](https://codecov.io/gh/vonage/vonage-java-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/vonage/vonage-java-sdk)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
@@ -51,9 +51,9 @@ See all of our SDKs and integrations on the [Vonage Developer portal](https://de
 
 ## Installation
 
-Releases are published to [Maven Central](https://central.sonatype.com/artifact/com.vonage/client/8.0.0-rc2/snippets).
+Releases are published to [Maven Central](https://central.sonatype.com/artifact/com.vonage/server-sdk/8.0.0-rc2/snippets).
 Instructions for your build system can be found in the snippets section.
-They're also available from [here](https://mvnrepository.com/artifact/com.vonage/client/8.0.0-rc2).
+They're also available from [here](https://mvnrepository.com/artifact/com.vonage/server-sdk/8.0.0-rc2).
 Release notes can be found in the [changelog](CHANGELOG.md).
 
 ### Build It Yourself
@@ -82,7 +82,7 @@ to your project's classpath.
 ## Usage
 
 * For help understanding our APIs, check out our awesome [developer portal](https://developer.vonage.com/).
-* Check the [Javadoc](https://www.javadoc.io/doc/com.vonage/client/latest/index.html) for full reference documentation.
+* Check the [Javadoc](https://www.javadoc.io/doc/com.vonage/server-sdk/latest/index.html) for full reference documentation.
 * There are also **many useful code samples** in our [Vonage/vonage-java-code-snippets](https://github.com/Vonage/vonage-java-code-snippets) repository.
 
 ## Configuration
@@ -144,6 +144,13 @@ VonageClient client = VonageClient.builder()
 ```
 
 ## Frequently Asked Questions
+
+**Q: What happened to [`com.vonage:client`](https://search.maven.org/artifact/com.vonage/client)?**
+
+**A:** To avoid confusion with our various client-side SDKs, this server-side SDK has been moved from
+the `com.vonage:client` coordinates to `com.vonage:server-sdk`. The old artifactId (`com.vonage:client`) will
+not receive further updates. All users should migrate to the new artifactId. Please note that the SDK is functionally
+the same, it is just a namespace change on Maven Central.
 
 **Q: What is your policy on thread safety?**
 
