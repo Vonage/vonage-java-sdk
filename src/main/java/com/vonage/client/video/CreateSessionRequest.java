@@ -38,7 +38,7 @@ public class CreateSessionRequest {
 		}
 	}
 
-	protected void addParams(RequestBuilder request) {
+	void addParams(RequestBuilder request) {
 		if (location != null) {
 			request.addParameter("location", location.getHostAddress());
 		}
