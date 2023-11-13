@@ -34,7 +34,8 @@ public class VerificationRequestTest {
 			TO_EMAIL = "alice@example.org",
 			FROM_EMAIL = "bob@example.org",
 			CLIENT_REF = "my-personal-reference",
-			APP_HASH = "kkeid8sksd3";
+			APP_HASH = "kkeid8sksd3",
+			REDIRECT_URL = "https://acme-app.com/sa/redirect";
 
 	Builder newBuilder() {
 		return VerificationRequest.builder().brand(BRAND);
@@ -66,7 +67,7 @@ public class VerificationRequestTest {
 	Workflow getWorkflowAllParamsForChannel(Channel channel) {
 		switch (channel) {
 			case SILENT_AUTH:
-				return new SilentAuthWorkflow(TO_NUMBER, SANDBOX);
+				return new SilentAuthWorkflow(TO_NUMBER, SANDBOX, REDIRECT_URL);
 			case SMS:
 				return new SmsWorkflow(TO_NUMBER, APP_HASH);
 			case WHATSAPP:
@@ -117,7 +118,7 @@ public class VerificationRequestTest {
 		}
 		if (channel == Channel.SILENT_AUTH) {
 			prefix = TO_NUMBER + '"';
-			replacement = prefix + ",\"sandbox\":" + SANDBOX;
+			replacement = prefix + ",\"sandbox\":" + SANDBOX + ",\"redirect_url\":\"" + REDIRECT_URL + '"';
 			expectedJson = expectedJson.replace(prefix, replacement);
 		}
 
