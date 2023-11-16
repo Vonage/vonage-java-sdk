@@ -16,13 +16,12 @@
 package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.Jsonable;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class ListStreamsResponse {
+class ListStreamsResponse implements Jsonable {
 	private Integer count;
 	private List<GetStreamResponse> items;
 
@@ -32,6 +31,7 @@ class ListStreamsResponse {
 	/**
 	 * @return Number of items in the list.
 	 */
+	@JsonProperty("count")
 	public Integer getCount() {
 		return count;
 	}
@@ -39,10 +39,11 @@ class ListStreamsResponse {
 	/**
 	 * @return The response object for each video stream.
 	 */
+	@JsonProperty("items")
 	public List<GetStreamResponse> getItems() {
 		return items;
 	}
-	
+
 	/**
 	 * Creates an instance of this class from a JSON payload.
 	 *
@@ -50,12 +51,6 @@ class ListStreamsResponse {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static ListStreamsResponse fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readValue(json, ListStreamsResponse.class);
-		}
-		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to produce ListStreamsResponse from json.", ex);
-		}
+		return Jsonable.fromJson(json);
 	}
 }

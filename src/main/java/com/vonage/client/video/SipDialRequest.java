@@ -18,9 +18,7 @@ package com.vonage.client.video;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.Jsonable;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +28,7 @@ import java.util.Objects;
  * Represents an outbound SIP dial request's properties.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class SipDialRequest {
+public class SipDialRequest implements Jsonable {
 	private final String sessionId, token;
 	@JsonProperty("sip") private final Sip sip = new Sip();
 
@@ -122,21 +120,6 @@ public class SipDialRequest {
 	@JsonIgnore
 	public Boolean getObserveForceMute() {
 		return sip.observeForceMute;
-	}
-
-	/**
-	 * Generates a JSON payload from this request.
-	 *
-	 * @return JSON representation of this SipDialRequest object.
-	 */
-	public String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.writeValueAsString(this);
-		}
-		catch (JsonProcessingException jpe) {
-			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
-		}
 	}
 
 	/**

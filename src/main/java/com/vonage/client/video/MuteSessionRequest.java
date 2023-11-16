@@ -17,13 +17,12 @@ package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.Jsonable;
 import java.util.Collection;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-class MuteSessionRequest {
+class MuteSessionRequest implements Jsonable {
 	final boolean active;
 	final Collection<String> excludedStreamIds;
 	@JsonIgnore final String sessionId;
@@ -34,26 +33,13 @@ class MuteSessionRequest {
 		this.excludedStreamIds = excludedStreamIds;
 	}
 
+	@JsonProperty("active")
 	public boolean isActive() {
 		return active;
 	}
 
+	@JsonProperty("excludedStreamIds")
 	public Collection<String> getExcludedStreamIds() {
 		return excludedStreamIds;
-	}
-
-	/**
-	 * Generates a JSON payload from this request.
-	 *
-	 * @return JSON representation of this MuteSessionRequest object.
-	 */
-	public String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.writeValueAsString(this);
-		}
-		catch (JsonProcessingException jpe) {
-			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
-		}
 	}
 }

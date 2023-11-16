@@ -17,6 +17,8 @@ package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.Jsonable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -27,7 +29,7 @@ import java.util.UUID;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class SessionStream {
+public class SessionStream implements Jsonable {
 	private UUID id;
 	private List<String> layoutClassList;
 
@@ -42,6 +44,7 @@ public class SessionStream {
 	/**
 	 * @return The stream ID.
 	 */
+	@JsonProperty("id")
 	public UUID getId() {
 		return id;
 	}
@@ -49,6 +52,7 @@ public class SessionStream {
 	/**
 	 * @return The layout classes for this stream.
 	 */
+	@JsonProperty("layoutClassList")
 	public List<String> getLayoutClassList() {
 		return layoutClassList;
 	}

@@ -18,13 +18,11 @@ package com.vonage.client.video;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.Jsonable;
 import java.util.regex.Pattern;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-class SendDtmfRequest {
+class SendDtmfRequest implements Jsonable {
 	static final Pattern DTMF_DIGITS_PATTERN = Pattern.compile("[0-9*#p]+");
 
 	@JsonIgnore final String sessionId;
@@ -36,16 +34,6 @@ class SendDtmfRequest {
 		this.connectionId = connectionId;
 		if ((this.digits = digits) == null || !DTMF_DIGITS_PATTERN.matcher(digits).matches()) {
 			throw new IllegalArgumentException("DTMF digits must match pattern: "+DTMF_DIGITS_PATTERN.pattern());
-		}
-	}
-
-	public String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.writeValueAsString(this);
-		}
-		catch (JsonProcessingException jpe) {
-			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
 		}
 	}
 }

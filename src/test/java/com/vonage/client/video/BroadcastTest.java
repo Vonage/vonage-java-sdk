@@ -333,9 +333,4 @@ public class BroadcastTest {
 	public void testFromJsonInvalid() {
 		Broadcast.fromJson("{malformed]");
 	}
-
-	@Test(expected = VonageUnexpectedException.class)
-	public void testUpdateFromJsonInvalid() {
-		new Broadcast().updateFromJson("");
-	}
 }

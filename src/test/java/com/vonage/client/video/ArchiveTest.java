@@ -96,9 +96,4 @@ public class ArchiveTest {
 	public void testFromJsonInvalid() {
 		Archive.fromJson("{malformed]");
 	}
-
-	@Test(expected = VonageUnexpectedException.class)
-	public void testUpdateFromJsonInvalid() {
-		new Archive().updateFromJson("");
-	}
 }

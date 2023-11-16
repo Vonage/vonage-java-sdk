@@ -15,7 +15,6 @@
  */
 package com.vonage.client.video;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.http.client.methods.RequestBuilder;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -23,7 +22,6 @@ import java.net.UnknownHostException;
 /**
  * Defines the properties used to create a new video session.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class CreateSessionRequest {
 	private final InetAddress location;
 	private final MediaMode mediaMode;

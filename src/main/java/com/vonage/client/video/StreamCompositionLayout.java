@@ -17,9 +17,8 @@ package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.Jsonable;
 import java.util.Objects;
 
 /**
@@ -27,7 +26,7 @@ import java.util.Objects;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class StreamCompositionLayout {
+public class StreamCompositionLayout implements Jsonable {
 	private ScreenLayoutType type, screenshareType;
 	private String stylesheet;
 
@@ -59,6 +58,7 @@ public class StreamCompositionLayout {
 	/**
 	 * @return The initial layout.
 	 */
+	@JsonProperty("type")
 	public ScreenLayoutType getType() {
 		return type;
 	}
@@ -66,6 +66,7 @@ public class StreamCompositionLayout {
 	/**
 	 * @return The layout when screen sharing.
 	 */
+	@JsonProperty("screenshareType")
 	public ScreenLayoutType getScreenshareType() {
 		return screenshareType;
 	}
@@ -73,25 +74,10 @@ public class StreamCompositionLayout {
 	/**
 	 * @return The stylesheet if using the {@link ScreenLayoutType#CUSTOM} layout.
 	 */
+	@JsonProperty("stylesheet")
 	public String getStylesheet() {
 		return stylesheet;
 	}
-	
-	/**
-	 * Generates a JSON payload from this request.
-	 *
-	 * @return JSON representation of this SetArchiveLayoutRequest object.
-	 */
-	public String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.writeValueAsString(this);
-		}
-		catch (JsonProcessingException jpe) {
-			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
-		}
-	}
-
 
 	/**
 	 * Entry point for constructing an  object.

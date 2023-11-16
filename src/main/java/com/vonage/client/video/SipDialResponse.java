@@ -17,15 +17,13 @@ package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents a Vonage Video SIP call.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SipDialResponse {
+public class SipDialResponse implements Jsonable {
     private String id, connectionId, streamId;
 
     protected SipDialResponse() {
@@ -69,13 +67,7 @@ public class SipDialResponse {
      * @return An instance of this class with the fields populated, if present.
      */
     public static SipDialResponse fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, SipDialResponse.class);
-        }
-        catch (IOException ex) {
-            throw new VonageUnexpectedException("Failed to produce SipDialResponse from json.", ex);
-        }
+        return Jsonable.fromJson(json);
     }
 }
 

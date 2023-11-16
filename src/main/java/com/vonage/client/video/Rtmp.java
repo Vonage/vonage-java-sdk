@@ -17,6 +17,7 @@ package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.net.URI;
 import java.util.Objects;
 
@@ -46,6 +47,7 @@ public class Rtmp {
     /**
      * @return A unique identifier for the stream.
      */
+    @JsonProperty("id")
     public String getId() {
         return id;
     }
@@ -53,6 +55,7 @@ public class Rtmp {
     /**
      * @return The stream name, such as the YouTube Live stream name or the Facebook stream key.
      */
+    @JsonProperty("streamName")
     public String getStreamName() {
         return streamName;
     }
@@ -60,6 +63,7 @@ public class Rtmp {
     /**
      * @return The RTMP server URL.
      */
+    @JsonProperty("serverUrl")
     public URI getServerUrl() {
         return serverUrl;
     }
@@ -69,6 +73,7 @@ public class Rtmp {
      *
      * @return The status as an enum.
      */
+    @JsonProperty("status")
     public RtmpStatus getStatus() {
         return status;
     }

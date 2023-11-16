@@ -18,12 +18,10 @@ package com.vonage.client.video;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.Jsonable;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-class PatchComposedStreamsRequest {
+class PatchComposedStreamsRequest implements Jsonable {
 	@JsonIgnore String id;
 	private String addStream, removeStream;
 	private Boolean hasAudio, hasVideo;
@@ -41,6 +39,7 @@ class PatchComposedStreamsRequest {
 	/**
 	 * @return Stream ID to remove from the composition.
 	 */
+	@JsonProperty("removeStream")
 	public String getRemoveStream() {
 		return removeStream;
 	}
@@ -48,6 +47,7 @@ class PatchComposedStreamsRequest {
 	/**
 	 * @return Stream ID to add to the composition.
 	 */
+	@JsonProperty("addStream")
 	public String getAddStream() {
 		return addStream;
 	}
@@ -66,20 +66,5 @@ class PatchComposedStreamsRequest {
 	@JsonProperty("hasVideo")
 	public Boolean hasVideo() {
 		return hasVideo;
-	}
-	
-	/**
-	 * Generates a JSON payload from this request.
-	 *
-	 * @return JSON representation of this PatchComposedStreamsRequest object.
-	 */
-	public String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.writeValueAsString(this);
-		}
-		catch (JsonProcessingException jpe) {
-			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
-		}
 	}
 }

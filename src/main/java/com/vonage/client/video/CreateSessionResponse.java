@@ -18,13 +18,14 @@ package com.vonage.client.video;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vonage.client.Jsonable;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 import java.net.URI;
 import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CreateSessionResponse {
+public class CreateSessionResponse implements Jsonable {
 	private String sessionId, createDt;
 	private UUID applicationId;
 	private URI mediaServerUrl;
