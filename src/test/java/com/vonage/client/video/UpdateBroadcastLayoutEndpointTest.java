@@ -42,10 +42,8 @@ public class UpdateBroadcastLayoutEndpointTest {
 	@Test
 	public void testMakeRequestAllParameters() throws Exception {
 		String broadcastId = UUID.randomUUID().toString();
-		UpdateStreamCompositionLayoutRequestWrapper request = new  UpdateStreamCompositionLayoutRequestWrapper(
-				broadcastId,
-				StreamCompositionLayout.builder(ScreenLayoutType.VERTICAL).build()
-		);
+		StreamCompositionLayout request = StreamCompositionLayout.builder(ScreenLayoutType.VERTICAL).build();
+		request.id = broadcastId;
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("PUT", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/"+applicationId +
@@ -65,11 +63,9 @@ public class UpdateBroadcastLayoutEndpointTest {
 		);
 		endpoint = new UpdateBroadcastLayoutEndpoint(wrapper);
 		String broadcastId = UUID.randomUUID().toString();
-		UpdateStreamCompositionLayoutRequestWrapper request = new  UpdateStreamCompositionLayoutRequestWrapper(
-				broadcastId,
-				StreamCompositionLayout.builder(ScreenLayoutType.BEST_FIT)
-						.screenshareType(ScreenLayoutType.PIP).build()
-		);
+		StreamCompositionLayout request = StreamCompositionLayout.builder(ScreenLayoutType.BEST_FIT)
+				.screenshareType(ScreenLayoutType.PIP).build();
+		request.id = broadcastId;
 		String expectedUri = baseUri + "/v2/project/"+applicationId+"/broadcast/"+broadcastId+"/layout";
 		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals(expectedUri, builder.build().getURI().toString());

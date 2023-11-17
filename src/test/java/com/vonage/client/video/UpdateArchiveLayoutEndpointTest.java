@@ -42,9 +42,9 @@ public class UpdateArchiveLayoutEndpointTest {
 	public void testMakeRequest() throws Exception {
 		String archiveId = UUID.randomUUID().toString();
 		StreamCompositionLayout request = StreamCompositionLayout.builder(ScreenLayoutType.VERTICAL).build();
-		UpdateStreamCompositionLayoutRequestWrapper wrapper = new UpdateStreamCompositionLayoutRequestWrapper(archiveId, request);
+		request.id = archiveId;
 
-		RequestBuilder builder = endpoint.makeRequest(wrapper);
+		RequestBuilder builder = endpoint.makeRequest(request);
 		assertEquals("PUT", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/"+applicationId+"/archive/"+archiveId+"/layout";
 		assertEquals(expectedUri, builder.build().getURI().toString());

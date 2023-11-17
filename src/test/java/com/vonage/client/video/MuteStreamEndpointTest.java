@@ -40,7 +40,7 @@ public class MuteStreamEndpointTest {
 	@Test
 	public void testMakeRequest() throws Exception {
 		String sessionId = UUID.randomUUID().toString(), streamId = UUID.randomUUID().toString();
-		MuteStreamRequestWrapper wrapper = new MuteStreamRequestWrapper(sessionId, streamId);
+		SessionResourceRequestWrapper wrapper = new SessionResourceRequestWrapper(sessionId, streamId);
 		
 		RequestBuilder builder = endpoint.makeRequest(wrapper);
 		assertEquals("POST", builder.getMethod());

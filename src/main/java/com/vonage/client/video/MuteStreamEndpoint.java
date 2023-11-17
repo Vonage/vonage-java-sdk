@@ -24,7 +24,7 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 
-class MuteStreamEndpoint extends AbstractMethod<MuteStreamRequestWrapper, Void> {
+class MuteStreamEndpoint extends AbstractMethod<SessionResourceRequestWrapper, Void> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/v2/project/%s/session/%s/stream/%s/mute";
 
@@ -38,8 +38,8 @@ class MuteStreamEndpoint extends AbstractMethod<MuteStreamRequestWrapper, Void> 
 	}
 
 	@Override
-	public RequestBuilder makeRequest(MuteStreamRequestWrapper wrapper) {
-		String path = String.format(PATH, getApplicationIdOrApiKey(), wrapper.sessionId, wrapper.streamId);
+	public RequestBuilder makeRequest(SessionResourceRequestWrapper wrapper) {
+		String path = String.format(PATH, getApplicationIdOrApiKey(), wrapper.sessionId, wrapper.resourceId);
 		String uri = httpWrapper.getHttpConfig().getVideoBaseUri() + path;
 		return RequestBuilder.post(uri)
 				.setHeader("Accept", "application/json");

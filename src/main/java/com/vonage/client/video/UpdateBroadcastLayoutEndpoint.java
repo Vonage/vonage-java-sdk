@@ -26,7 +26,7 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 
-class UpdateBroadcastLayoutEndpoint extends AbstractMethod<UpdateStreamCompositionLayoutRequestWrapper, Void> {
+class UpdateBroadcastLayoutEndpoint extends AbstractMethod<StreamCompositionLayout, Void> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/v2/project/%s/broadcast/%s/layout";
 
@@ -40,12 +40,12 @@ class UpdateBroadcastLayoutEndpoint extends AbstractMethod<UpdateStreamCompositi
 	}
 
 	@Override
-	public RequestBuilder makeRequest(UpdateStreamCompositionLayoutRequestWrapper wrapper) {
+	public RequestBuilder makeRequest(StreamCompositionLayout wrapper) {
 		String path = String.format(PATH, getApplicationIdOrApiKey(), wrapper.id);
 		String uri = httpWrapper.getHttpConfig().getVideoBaseUri() + path;
 		return RequestBuilder.put(uri)
 				.setHeader("Content-Type", "application/json")
-				.setEntity(new StringEntity(wrapper.request.toJson(), ContentType.APPLICATION_JSON));
+				.setEntity(new StringEntity(wrapper.toJson(), ContentType.APPLICATION_JSON));
 	}
 
 	@Override

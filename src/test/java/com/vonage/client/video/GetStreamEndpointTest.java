@@ -46,7 +46,7 @@ public class GetStreamEndpointTest {
 				expectedUri = "https://video.api.vonage.com/v2/project/" +
 					applicationId+"/session/"+sessionId+"/stream/"+streamId;
 
-		GetStreamRequestWrapper wrapper = new GetStreamRequestWrapper(sessionId, streamId.toString());
+		SessionResourceRequestWrapper wrapper = new SessionResourceRequestWrapper(sessionId, streamId.toString());
 		RequestBuilder builder = endpoint.makeRequest(wrapper);
 		assertEquals("GET", builder.getMethod());
 		assertEquals(expectedUri, builder.build().getURI().toString());

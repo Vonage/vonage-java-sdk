@@ -15,11 +15,11 @@
  */
 package com.vonage.client.video;
 
-class GetStreamRequestWrapper {
-	final String sessionId, streamId;
+class SessionResourceRequestWrapper {
+	final String sessionId, resourceId;
 
-	GetStreamRequestWrapper(String sessionId, String streamId) {
+	SessionResourceRequestWrapper(String sessionId, String streamId) {
 		this.sessionId = sessionId;
-		this.streamId = streamId;
+		this.resourceId = streamId;
 	}
 }

@@ -43,7 +43,7 @@ public class ForceDisconnectEndpointTest {
 				expectedUri = "https://video.api.vonage.com/v2/project/" +
 						applicationId+"/session/"+sessionId+"/connection/"+connectionId;
 		
-		RequestBuilder builder = endpoint.makeRequest(new ForceDisconnectRequestWrapper(sessionId, connectionId));
+		RequestBuilder builder = endpoint.makeRequest(new SessionResourceRequestWrapper(sessionId, connectionId));
 		assertEquals("DELETE", builder.getMethod());
 		assertEquals(expectedUri, builder.build().getURI().toString());
 	}

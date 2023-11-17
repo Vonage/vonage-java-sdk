@@ -44,9 +44,9 @@ public class SignalAllEndpointTest {
 				data = "The actual payload as a string",
 				type = "Signal channel";
 		SignalRequest properties = SignalRequest.builder().data(data).type(type).build();
-		SignalRequestWrapper request = new SignalRequestWrapper(properties, sessionId);
+		properties.sessionId = sessionId;
 		
-		RequestBuilder builder = endpoint.makeRequest(request);
+		RequestBuilder builder = endpoint.makeRequest(properties);
 		assertEquals("POST", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/" +
 				applicationId + "/session/" + sessionId + "/signal";

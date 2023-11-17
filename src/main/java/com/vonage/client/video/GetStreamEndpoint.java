@@ -22,7 +22,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import java.io.IOException;
 
-class GetStreamEndpoint extends AbstractMethod<GetStreamRequestWrapper, GetStreamResponse> {
+class GetStreamEndpoint extends AbstractMethod<SessionResourceRequestWrapper, GetStreamResponse> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/v2/project/%s/session/%s/stream/%s";
 
@@ -36,8 +36,8 @@ class GetStreamEndpoint extends AbstractMethod<GetStreamRequestWrapper, GetStrea
 	}
 
 	@Override
-	public RequestBuilder makeRequest(GetStreamRequestWrapper request) {
-		String path = String.format(PATH, getApplicationIdOrApiKey(), request.sessionId, request.streamId);
+	public RequestBuilder makeRequest(SessionResourceRequestWrapper request) {
+		String path = String.format(PATH, getApplicationIdOrApiKey(), request.sessionId, request.resourceId);
 		String uri = httpWrapper.getHttpConfig().getVideoBaseUri() + path;
 		return RequestBuilder.get(uri).setHeader("Accept", "application/json");
 	}

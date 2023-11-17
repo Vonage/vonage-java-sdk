@@ -26,7 +26,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 
-class SignalAllEndpoint extends AbstractMethod<SignalRequestWrapper, Void> {
+class SignalAllEndpoint extends AbstractMethod<SignalRequest, Void> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/v2/project/%s/session/%s/signal";
 
@@ -40,12 +40,12 @@ class SignalAllEndpoint extends AbstractMethod<SignalRequestWrapper, Void> {
 	}
 
 	@Override
-	public RequestBuilder makeRequest(SignalRequestWrapper wrapper) {
+	public RequestBuilder makeRequest(SignalRequest wrapper) {
 		String path = String.format(PATH, getApplicationIdOrApiKey(), wrapper.sessionId);
 		String uri = httpWrapper.getHttpConfig().getVideoBaseUri() + path;
 		return RequestBuilder.post(uri)
 				.setHeader("Content-Type", "application/json")
-				.setEntity(new StringEntity(wrapper.request.toJson(), ContentType.APPLICATION_JSON));
+				.setEntity(new StringEntity(wrapper.toJson(), ContentType.APPLICATION_JSON));
 	}
 
 	@Override
