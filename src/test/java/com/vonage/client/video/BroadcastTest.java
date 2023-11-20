@@ -15,9 +15,9 @@
  */
 package com.vonage.client.video;
 
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.VonageResponseParseException;
 import static org.junit.Assert.*;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import java.net.URI;
 import java.time.Duration;
 import java.time.Instant;
@@ -66,7 +66,7 @@ public class BroadcastTest {
 				rtmp1.getServerUrl()+"\"}],\"hls\":{\"dvr\":"+hls.dvr()+",\"lowLatency\":" +
 				hls.lowLatency()+"}}}", requestJson = request.toJson();
 
-		assertEquals(expectedRequestedJson, requestJson);
+		Assertions.assertEquals(expectedRequestedJson, requestJson);
 
 		String responseJson = "{\"id\":\""+id+"\"," +
 				"\"sessionId\":\""+sessionId+"\"," +
@@ -88,41 +88,41 @@ public class BroadcastTest {
 
 		Broadcast response = Broadcast.fromJson(responseJson);
 
-		assertEquals(id, response.getId());
-		assertEquals(sessionId, response.getSessionId());
-		assertEquals(multiBroadcastTag, response.getMultiBroadcastTag());
-		assertEquals(applicationId, response.getApplicationId());
-		assertEquals(createdAt, response.getCreatedAtMillis());
-		assertEquals(updatedAt, response.getUpdatedAtMillis());
-		assertEquals(maxDuration, response.getMaxDurationSeconds());
-		assertEquals(maxBitrate, response.getMaxBitrate());
-		assertEquals(hasAudio, response.hasAudio());
-		assertEquals(hasVideo, response.hasVideo());
-		assertEquals(resolution, response.getResolution());
-		assertEquals(streamMode, response.getStreamMode());
-		assertEquals(status, response.getStatus());
+		Assertions.assertEquals(id, response.getId());
+		Assertions.assertEquals(sessionId, response.getSessionId());
+		Assertions.assertEquals(multiBroadcastTag, response.getMultiBroadcastTag());
+		Assertions.assertEquals(applicationId, response.getApplicationId());
+		Assertions.assertEquals(createdAt, response.getCreatedAtMillis());
+		Assertions.assertEquals(updatedAt, response.getUpdatedAtMillis());
+		Assertions.assertEquals(maxDuration, response.getMaxDurationSeconds());
+		Assertions.assertEquals(maxBitrate, response.getMaxBitrate());
+		Assertions.assertEquals(hasAudio, response.hasAudio());
+		Assertions.assertEquals(hasVideo, response.hasVideo());
+		Assertions.assertEquals(resolution, response.getResolution());
+		Assertions.assertEquals(streamMode, response.getStreamMode());
+		Assertions.assertEquals(status, response.getStatus());
 		BroadcastUrls responseBroadcastUrls = response.getBroadcastUrls();
-		assertNotNull(responseBroadcastUrls);
-		assertEquals(hlsUrl, responseBroadcastUrls.getHls());
+		Assertions.assertNotNull(responseBroadcastUrls);
+		Assertions.assertEquals(hlsUrl, responseBroadcastUrls.getHls());
 		List<Rtmp> responseRtmps = responseBroadcastUrls.getRtmps();
-		assertNotNull(responseRtmps);
-		assertEquals(1, responseRtmps.size());
+		Assertions.assertNotNull(responseRtmps);
+		Assertions.assertEquals(1, responseRtmps.size());
 		Rtmp responseRtmp1 = responseRtmps.get(0);
-		assertNotNull(responseRtmp1);
-		assertEquals(rtmp1.getServerUrl(), responseRtmp1.getServerUrl());
-		assertEquals(rtmp1.getStreamName(), responseRtmp1.getStreamName());
-		assertEquals(rtmp1Status, responseRtmp1.getStatus());
-		assertNull(response.getLayout());
-		assertNotNull(response.getStreams());
-		assertEquals(1, response.getStreams().size());
+		Assertions.assertNotNull(responseRtmp1);
+		Assertions.assertEquals(rtmp1.getServerUrl(), responseRtmp1.getServerUrl());
+		Assertions.assertEquals(rtmp1.getStreamName(), responseRtmp1.getStreamName());
+		Assertions.assertEquals(rtmp1Status, responseRtmp1.getStatus());
+		Assertions.assertNull(response.getLayout());
+		Assertions.assertNotNull(response.getStreams());
+		Assertions.assertEquals(1, response.getStreams().size());
 		VideoStream stream1 = response.getStreams().get(0);
-		assertNotNull(stream1);
-		assertNull(stream1.getStreamId());
-		assertNull(stream1.hasAudio());
-		assertNull(stream1.hasVideo());
+		Assertions.assertNotNull(stream1);
+		Assertions.assertNull(stream1.getStreamId());
+		Assertions.assertNull(stream1.hasAudio());
+		Assertions.assertNull(stream1.hasVideo());
 
 		Broadcast parsedFromRequestJson = Broadcast.fromJson(requestJson);
-		assertNotNull(parsedFromRequestJson);
+		Assertions.assertNotNull(parsedFromRequestJson);
 
 		String expectedJsonFromRequest = "{" +
 				"\"sessionId\":\"2_MX4xMDBfjE0Mzc2NzY1NDgwMTJ-TjMzfn4\"," +
@@ -144,10 +144,10 @@ public class BroadcastTest {
 					"\"lowLatency\":false" +
 				"}}}",
 				jsonFromRequest = parsedFromRequestJson.toJson();
-		assertEquals(expectedJsonFromRequest, jsonFromRequest);
+		Assertions.assertEquals(expectedJsonFromRequest, jsonFromRequest);
 
 		Broadcast requestFromResponseJson = Broadcast.fromJson(responseJson);
-		assertNotNull(requestFromResponseJson);
+		Assertions.assertNotNull(requestFromResponseJson);
 		String expectedRequestFromResponseJsonToJson = "{" +
 				"\"id\":\""+id+"\"," +
 				"\"applicationId\":\""+applicationId+"\"," +
@@ -168,7 +168,7 @@ public class BroadcastTest {
 				"\"serverUrl\":\""+rtmp1.getServerUrl()+"\",\"status\":\""+rtmp1Status+"\"}]}," +
 				"\"settings\":{\"hls\":{\"dvr\":"+hls.dvr()+",\"lowLatency\":"+hls.lowLatency()+"}}}";
 		String requestFromResponseJsonJson = requestFromResponseJson.toJson();
-		assertEquals(expectedRequestFromResponseJsonToJson, requestFromResponseJsonJson);
+		Assertions.assertEquals(expectedRequestFromResponseJsonToJson, requestFromResponseJsonJson);
 	}
 
 	@Test
@@ -185,28 +185,30 @@ public class BroadcastTest {
 				"{\"streamName\":\"R2\",\"serverUrl\":\"ftp://server2/another.ext\"}" +
 				"]}}", actualJson = request.toJson();
 
-		assertEquals(expectedJson, actualJson);
-		assertNull(request.getSettings());
-		assertNull(request.getId());
-		assertNull(request.getMultiBroadcastTag());
-		assertNull(request.getApplicationId());
-		assertNull(request.getCreatedAt());
-		assertNull(request.getUpdatedAt());
-		assertNull(request.getMaxDuration());
-		assertNull(request.getMaxBitrate());
-		assertNull(request.hasAudio());
-		assertNull(request.hasVideo());
-		assertNull(request.getStatus());
-		assertNull(request.getBroadcastUrls());
-		assertNull(request.getHlsSettings());
-		assertNull(request.getResolution());
-		assertNull(request.getLayout());
-		assertNull(request.getStreamMode());
+		Assertions.assertEquals(expectedJson, actualJson);
+		Assertions.assertNull(request.getSettings());
+		Assertions.assertNull(request.getId());
+		Assertions.assertNull(request.getMultiBroadcastTag());
+		Assertions.assertNull(request.getApplicationId());
+		Assertions.assertNull(request.getCreatedAt());
+		Assertions.assertNull(request.getUpdatedAt());
+		Assertions.assertNull(request.getMaxDuration());
+		Assertions.assertNull(request.getMaxBitrate());
+		Assertions.assertNull(request.hasAudio());
+		Assertions.assertNull(request.hasVideo());
+		Assertions.assertNull(request.getStatus());
+		Assertions.assertNull(request.getBroadcastUrls());
+		Assertions.assertNull(request.getHlsSettings());
+		Assertions.assertNull(request.getResolution());
+		Assertions.assertNull(request.getLayout());
+		Assertions.assertNull(request.getStreamMode());
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructNoSessionId() {
-		Broadcast.builder(null).hls(Hls.builder().lowLatency(false).dvr(false).build()).build();
+		assertThrows(NullPointerException.class, () ->
+				Broadcast.builder(null).hls(Hls.builder().lowLatency(false).dvr(false).build()).build()
+		);
 	}
 
 	@Test
@@ -259,7 +261,7 @@ public class BroadcastTest {
 		String expectedJson = "{\"sessionId\":\"sessionID\",\"outputs\":{\"rtmp\":[{\"streamName\":" +
 				"\"Test Stream\",\"serverUrl\":\"https://vonage.com\"}]}}",
 				actualJson = request.toJson();
-		assertEquals(expectedJson, actualJson);
+		Assertions.assertEquals(expectedJson, actualJson);
 	}
 
 	@Test
@@ -275,25 +277,25 @@ public class BroadcastTest {
 		Broadcast request = Broadcast.builder(sessionId).hls(hls).build();
 		String expectedJson = "{\"sessionId\":\"Test_seshID\",\"outputs\":{\"hls\":{}}}",
 				actualJson = request.toJson();
-		assertEquals(expectedJson, actualJson);
+		Assertions.assertEquals(expectedJson, actualJson);
 
 		hls = Hls.builder().dvr(true).build();
 		request = Broadcast.builder(sessionId).hls(hls).build();
 		expectedJson = "{\"sessionId\":\"Test_seshID\",\"outputs\":{\"hls\":{\"dvr\":true}}}";
 		actualJson = request.toJson();
-		assertEquals(expectedJson, actualJson);
+		Assertions.assertEquals(expectedJson, actualJson);
 
 		hls = Hls.builder().lowLatency(true).build();
 		request = Broadcast.builder(sessionId).hls(hls).build();
 		expectedJson = "{\"sessionId\":\"Test_seshID\",\"outputs\":{\"hls\":{\"lowLatency\":true}}}";
 		actualJson = request.toJson();
-		assertEquals(expectedJson, actualJson);
+		Assertions.assertEquals(expectedJson, actualJson);
 
 		hls = Hls.builder().lowLatency(false).dvr(false).build();
 		request = Broadcast.builder(sessionId).hls(hls).build();
 		expectedJson = "{\"sessionId\":\"Test_seshID\",\"outputs\":{\"hls\":{\"dvr\":false,\"lowLatency\":false}}}";
 		actualJson = request.toJson();
-		assertEquals(expectedJson, actualJson);
+		Assertions.assertEquals(expectedJson, actualJson);
 	}
 
 	@Test
@@ -302,8 +304,8 @@ public class BroadcastTest {
 		Rtmp rtmp = Rtmp.builder().serverUrl("server").streamName("name").build();
 		Broadcast.Builder builder = Broadcast.builder(sessionId).addRtmpStream(rtmp);
 		int min = 60, max = 36000;
-		assertEquals(min, builder.maxDuration(min).build().getMaxDurationSeconds().intValue());
-		assertEquals(max, builder.maxDuration(max).build().getMaxDurationSeconds().intValue());
+		Assertions.assertEquals(min, builder.maxDuration(min).build().getMaxDurationSeconds().intValue());
+		Assertions.assertEquals(max, builder.maxDuration(max).build().getMaxDurationSeconds().intValue());
 		assertThrows(IllegalArgumentException.class, () -> builder.maxDuration(min - 1).build());
 		assertThrows(IllegalArgumentException.class, () -> builder.maxDuration(max + 1).build());
 	}
@@ -311,26 +313,36 @@ public class BroadcastTest {
 	@Test
 	public void testFromJsonEmpty() {
 		Broadcast response = Broadcast.fromJson("{}");
-		assertNull(response.getId());
-		assertNull(response.getSessionId());
-		assertNull(response.getMultiBroadcastTag());
-		assertNull(response.getApplicationId());
-		assertNull(response.getCreatedAt());
-		assertNull(response.getUpdatedAt());
-		assertNull(response.getMaxDuration());
-		assertNull(response.getMaxBitrate());
-		assertNull(response.hasAudio());
-		assertNull(response.hasVideo());
-		assertNull(response.getStatus());
-		assertNull(response.getBroadcastUrls());
-		assertNull(response.getHlsSettings());
-		assertNull(response.getResolution());
-		assertNull(response.getLayout());
-		assertNull(response.getStreamMode());
+		Assertions.assertNull(response.getId());
+		Assertions.assertNull(response.getSessionId());
+		Assertions.assertNull(response.getMultiBroadcastTag());
+		Assertions.assertNull(response.getApplicationId());
+		Assertions.assertNull(response.getCreatedAt());
+		Assertions.assertNull(response.getUpdatedAt());
+		Assertions.assertNull(response.getMaxDuration());
+		Assertions.assertNull(response.getMaxBitrate());
+		Assertions.assertNull(response.hasAudio());
+		Assertions.assertNull(response.hasVideo());
+		Assertions.assertNull(response.getStatus());
+		Assertions.assertNull(response.getBroadcastUrls());
+		Assertions.assertNull(response.getHlsSettings());
+		Assertions.assertNull(response.getResolution());
+		Assertions.assertNull(response.getLayout());
+		Assertions.assertNull(response.getStreamMode());
 	}
 
-	@Test(expected = VonageUnexpectedException.class)
+	@Test
 	public void testFromJsonInvalid() {
-		Broadcast.fromJson("{malformed]");
+		assertThrows(VonageResponseParseException.class, () -> Broadcast.fromJson("{malformed]"));
+	}
+
+	@Test
+	public void testBroadcastStatusUnknownValue() {
+		Assertions.assertNull(BroadcastStatus.fromString("f00"));
+	}
+
+	@Test
+	public void testRtmpStatusUnknownValue() {
+		Assertions.assertNull(RtmpStatus.fromString("f00"));
 	}
 }

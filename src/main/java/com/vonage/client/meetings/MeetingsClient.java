@@ -395,7 +395,7 @@ public class MeetingsClient {
 		try {
 			LogoUploadsUrlResponse.Fields fields = details.getFields();
 			HttpEntity entity = MultipartEntityBuilder.create()
-					.addTextBody("Content-Type", fields.getContentType().toString())
+					.addTextBody("Content-Type", fields.getContentType())
 					.addTextBody("key", fields.getKey())
 					.addTextBody("logoType", fields.getLogoType().toString())
 					.addTextBody("bucket", fields.getBucket())

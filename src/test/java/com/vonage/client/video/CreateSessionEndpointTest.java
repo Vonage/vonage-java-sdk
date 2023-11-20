@@ -26,14 +26,14 @@ import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertThrows;
+import org.junit.jupiter.api.*;
 import java.util.Map;
 
 public class CreateSessionEndpointTest {
 	private CreateSessionEndpoint endpoint;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		endpoint = new CreateSessionEndpoint(new HttpWrapper());
 	}
@@ -46,15 +46,15 @@ public class CreateSessionEndpointTest {
 				.archiveMode(ArchiveMode.ALWAYS).build();
 
 		RequestBuilder builder = endpoint.makeRequest(request);
-		assertEquals("POST", builder.getMethod());
-		assertEquals("https://video.api.vonage.com/session/create", builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_FORM_URLENCODED.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		Assertions.assertEquals("POST", builder.getMethod());
+		Assertions.assertEquals("https://video.api.vonage.com/session/create", builder.build().getURI().toString());
+		Assertions.assertEquals(ContentType.APPLICATION_FORM_URLENCODED.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
+		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
-		assertEquals(3, params.size());
-		assertEquals(ipAddress, params.get("location"));
-		assertEquals("disabled", params.get("p2p.preference"));
-		assertEquals("always", params.get("archiveMode"));
+		Assertions.assertEquals(3, params.size());
+		Assertions.assertEquals(ipAddress, params.get("location"));
+		Assertions.assertEquals("disabled", params.get("p2p.preference"));
+		Assertions.assertEquals("always", params.get("archiveMode"));
 	}
 
 	@Test
@@ -62,11 +62,13 @@ public class CreateSessionEndpointTest {
 		CreateSessionRequest request = CreateSessionRequest.builder().build();
 		RequestBuilder builder = endpoint.makeRequest(request);
 		Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
-		assertEquals(0, params.size());
+		Assertions.assertEquals(0, params.size());
 	}
 
-	@Test(expected = HttpResponseException.class)
+	@Test
 	public void test500Response() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
+		assertThrows(HttpResponseException.class, () ->
+				endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""))
+		);
 	}
 }

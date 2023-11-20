@@ -86,9 +86,11 @@ public class SipDialEndpointTest {
 		assertEquals("POST", builder.getMethod());
 	}
 
-	@Test(expected = HttpResponseException.class)
+	@Test
 	public void test500Response() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
+		assertThrows(HttpResponseException.class, () ->
+				endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""))
+		);
 	}
 
 	@Test(expected = VonageUnexpectedException.class)

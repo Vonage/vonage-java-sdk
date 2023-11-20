@@ -20,11 +20,10 @@
  */
 package com.vonage.client.video;
 
-import org.junit.Test;
+import static org.junit.Assert.*;
+import org.junit.jupiter.api.*;
 import java.net.Inet4Address;
 import java.net.InetAddress;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 public class CreateSessionRequestTest {
 
@@ -33,9 +32,9 @@ public class CreateSessionRequestTest {
 		CreateSessionRequest request = CreateSessionRequest.builder()
 				.mediaMode(MediaMode.ROUTED).archiveMode(ArchiveMode.MANUAL).build();
 
-		assertEquals("manual", request.getArchiveMode().toString());
-		assertEquals("disabled", request.getMediaMode().toString());
-		assertNull(request.getLocation());
+		Assertions.assertEquals("manual", request.getArchiveMode().toString());
+		Assertions.assertEquals("disabled", request.getMediaMode().toString());
+		Assertions.assertNull(request.getLocation());
 	}
 
 	@Test
@@ -43,9 +42,9 @@ public class CreateSessionRequestTest {
 		CreateSessionRequest request = CreateSessionRequest.builder()
 				.mediaMode(MediaMode.RELAYED).archiveMode(ArchiveMode.MANUAL).build();
 
-		assertEquals("manual", request.getArchiveMode().toString());
-		assertEquals("enabled", request.getMediaMode().toString());
-		assertNull(request.getLocation());
+		Assertions.assertEquals("manual", request.getArchiveMode().toString());
+		Assertions.assertEquals("enabled", request.getMediaMode().toString());
+		Assertions.assertNull(request.getLocation());
 	}
 
 	@Test
@@ -53,23 +52,27 @@ public class CreateSessionRequestTest {
 		String ipStr = "188.180.180.180";
 		CreateSessionRequest.Builder builder = CreateSessionRequest.builder();
 		CreateSessionRequest request = builder.location(ipStr).build();
-		assertEquals(ipStr, request.getLocation().getHostAddress());
+		Assertions.assertEquals(ipStr, request.getLocation().getHostAddress());
 		InetAddress localhost = Inet4Address.getLocalHost();
 		request = builder.location(localhost).build();
-		assertEquals(localhost, request.getLocation());
+		Assertions.assertEquals(localhost, request.getLocation());
 		ipStr = "localhost";
 		request = builder.location(ipStr).build();
-		assertEquals("localhost", request.getLocation().getHostName());
-		assertEquals("127.0.0.1", request.getLocation().getHostAddress());
+		Assertions.assertEquals("localhost", request.getLocation().getHostName());
+		Assertions.assertEquals("127.0.0.1", request.getLocation().getHostAddress());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testInvalidLocation() {
-		CreateSessionRequest.builder().location("not an IP").build();
+		assertThrows(IllegalArgumentException.class, () ->
+				CreateSessionRequest.builder().location("not an IP").build()
+		);
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testEnabledAndAlwaysIsInvalid() {
-		CreateSessionRequest.builder().mediaMode(MediaMode.RELAYED).archiveMode(ArchiveMode.ALWAYS).build();
+		assertThrows(IllegalStateException.class, () ->
+				CreateSessionRequest.builder().mediaMode(MediaMode.RELAYED).archiveMode(ArchiveMode.ALWAYS).build()
+		);
 	}
 }

@@ -22,8 +22,7 @@ import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -31,7 +30,7 @@ public class StopArchiveEndpointTest {
 	private StopArchiveEndpoint endpoint;
 	private final String applicationId = UUID.randomUUID().toString();
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		endpoint = new StopArchiveEndpoint(new HttpWrapper(
 			new JWTAuthMethod(applicationId, new byte[0])
@@ -42,11 +41,11 @@ public class StopArchiveEndpointTest {
 	public void testMakeRequest() throws Exception {
 		String archiveId = UUID.randomUUID().toString();
 		RequestBuilder builder = endpoint.makeRequest(archiveId);
-		assertEquals("POST", builder.getMethod());
+		Assertions.assertEquals("POST", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/" +
 				applicationId+"/archive/"+archiveId+"/stop";
-		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		Assertions.assertEquals(expectedUri, builder.build().getURI().toString());
+		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		String expectedPayload = "{\n" +
 				"  \"createdAt\": 1384221730000,\n" +
 				"  \"duration\": 5049,\n" +
@@ -70,23 +69,25 @@ public class StopArchiveEndpointTest {
 				"  \"url\": \"https://tokbox.com.archive2.s3.amazonaws.com/123456/09141e29-8770-439b-b180-337d7e637545/archive.mp4\"\n" +
 				"}";
 		Archive response = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, expectedPayload));
-		assertNotNull(response);
-		assertEquals(5049, response.getDurationSeconds().longValue());
-		assertEquals(ArchiveStatus.AVAILABLE, response.getStatus());
-		assertEquals(1, response.getStreams().size());
-		assertEquals(UUID.fromString("482bce73-f882-40fd-8ca5-cb74ff416036"), response.getStreams().get(0).getStreamId());
-		assertEquals(StreamMode.AUTO, response.getStreamMode());
-		assertEquals(Resolution.HD_PORTRAIT, response.getResolution());
-		assertEquals("", response.getReason());
-		assertEquals("Foo", response.getName());
-		assertTrue(response.hasAudio());
-		assertNull(response.hasVideo());
-		assertEquals(Instant.ofEpochSecond(1384221730L), response.getCreatedAt());
-		assertEquals("flR1ZSBPY3QgMjkgMTI6MTM6MjMgUERUIDIwMTN", response.getSessionId());
+		Assertions.assertNotNull(response);
+		Assertions.assertEquals(5049, response.getDurationSeconds().longValue());
+		Assertions.assertEquals(ArchiveStatus.AVAILABLE, response.getStatus());
+		Assertions.assertEquals(1, response.getStreams().size());
+		Assertions.assertEquals(UUID.fromString("482bce73-f882-40fd-8ca5-cb74ff416036"), response.getStreams().get(0).getStreamId());
+		Assertions.assertEquals(StreamMode.AUTO, response.getStreamMode());
+		Assertions.assertEquals(Resolution.HD_PORTRAIT, response.getResolution());
+		Assertions.assertEquals("", response.getReason());
+		Assertions.assertEquals("Foo", response.getName());
+		Assertions.assertTrue(response.hasAudio());
+		Assertions.assertNull(response.hasVideo());
+		Assertions.assertEquals(Instant.ofEpochSecond(1384221730L), response.getCreatedAt());
+		Assertions.assertEquals("flR1ZSBPY3QgMjkgMTI6MTM6MjMgUERUIDIwMTN", response.getSessionId());
 	}
 
-	@Test(expected = HttpResponseException.class)
+	@Test
 	public void test500Response() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
+		assertThrows(HttpResponseException.class, () ->
+				endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""))
+		);
 	}
 }

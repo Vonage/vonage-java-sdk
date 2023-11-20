@@ -16,7 +16,7 @@
 package com.vonage.client.video;
 
 import static org.junit.Assert.*;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import java.net.URI;
 import java.util.Collections;
 
@@ -44,19 +44,19 @@ public class SipDialRequestTest {
 				uri+";transport=tls\",\"from\":\""+from+"\",\"headers\":{\""+h1k+"\":\""+h1v+"\"},\"auth\":{" +
 				"\"username\":\""+username+"\",\"password\":\""+password+"\"},\"secure\":true,\"video\":true," +
 				"\"observeForceMute\":false}}";
-		assertEquals(expectedJson, request.toJson());
+		Assertions.assertEquals(expectedJson, request.toJson());
 
-		assertEquals(sessionId, request.getSessionId());
-		assertEquals(token, request.getToken());
-		assertEquals(uri+";transport=tls", request.getUri());
-		assertEquals(from, request.getFrom());
-		assertEquals(username, request.getUsername());
-		assertEquals(password, request.getPassword());
-		assertEquals(1, request.getHeaders().size());
-		assertEquals(h1v, request.getHeaders().get(h1k));
-		assertTrue(request.getSecure());
-		assertTrue(request.getVideo());
-		assertFalse(request.getObserveForceMute());
+		Assertions.assertEquals(sessionId, request.getSessionId());
+		Assertions.assertEquals(token, request.getToken());
+		Assertions.assertEquals(uri+";transport=tls", request.getUri());
+		Assertions.assertEquals(from, request.getFrom());
+		Assertions.assertEquals(username, request.getUsername());
+		Assertions.assertEquals(password, request.getPassword());
+		Assertions.assertEquals(1, request.getHeaders().size());
+		Assertions.assertEquals(h1v, request.getHeaders().get(h1k));
+		Assertions.assertTrue(request.getSecure());
+		Assertions.assertTrue(request.getVideo());
+		Assertions.assertFalse(request.getObserveForceMute());
 	}
 
 	@Test
@@ -67,39 +67,45 @@ public class SipDialRequestTest {
 
 		String expectedJson = "{\"sessionId\":\""+sessiondId+"\",\"token\":\""+token+"\"," +
 				"\"sip\":{\"uri\":\""+uri+"\"}}";
-		assertEquals(expectedJson, request.toJson());
+		Assertions.assertEquals(expectedJson, request.toJson());
 
-		assertNull(request.getUsername());
-		assertNull(request.getPassword());
-		assertNull(request.getFrom());
-		assertNull(request.getHeaders());
-		assertNull(request.getVideo());
-		assertNull(request.getSecure());
-		assertNull(request.getObserveForceMute());
+		Assertions.assertNull(request.getUsername());
+		Assertions.assertNull(request.getPassword());
+		Assertions.assertNull(request.getFrom());
+		Assertions.assertNull(request.getHeaders());
+		Assertions.assertNull(request.getVideo());
+		Assertions.assertNull(request.getSecure());
+		Assertions.assertNull(request.getObserveForceMute());
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructMissingUrl() {
-		SipDialRequest.builder().token("TOKEN").sessionId("SESSION_ID").build();
+		assertThrows(NullPointerException.class, () ->
+				SipDialRequest.builder().token("TOKEN").sessionId("SESSION_ID").build()
+		);
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructMissingSessionId() {
-		SipDialRequest.builder().token("TOKEN")
-				.uri(URI.create("sip://user@example.com"), false).build();
+		assertThrows(NullPointerException.class, () -> SipDialRequest.builder().token("TOKEN")
+				.uri(URI.create("sip://user@example.com"), false).build()
+		);
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void testConstructMissingToken() {
-		SipDialRequest.builder().sessionId("SESSION_ID")
-				.uri(URI.create("sip://user@example.com"), false).build();
+		assertThrows(NullPointerException.class, () -> SipDialRequest.builder().sessionId("SESSION_ID")
+				.uri(URI.create("sip://user@example.com"), false).build()
+		);
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testConstructMissingUsernameWhenPasswordProvided() {
-		SipDialRequest.builder().token("TOKEN").sessionId("SESSION_ID")
-				.uri(URI.create("sip://user@example.com"), false)
-				.password("pa55WD").build();
+		assertThrows(IllegalStateException.class, () ->
+				SipDialRequest.builder().token("TOKEN").sessionId("SESSION_ID")
+					.uri(URI.create("sip://user@example.com"), false)
+					.password("pa55WD").build()
+		);
 	}
 
 	@Test
@@ -110,6 +116,6 @@ public class SipDialRequestTest {
 
 		String expectedJson = "{\"sessionId\":\"SESSION_ID\",\"token\":\"TOKEN\"," +
 				"\"sip\":{\"uri\":\"sip://user@example.com\"}}";
-		assertEquals(expectedJson, request.toJson());
+		Assertions.assertEquals(expectedJson, request.toJson());
 	}
 }

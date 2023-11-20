@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Defines values for the <code>options</code> parameter of the
+ * Defines values for the {@code options} parameter of the
  * {@link VideoClient#generateToken(String sessionId, TokenOptions tokenOptions)} method.
  */
 public class TokenOptions {
@@ -124,12 +124,12 @@ public class TokenOptions {
          *
          * @param role The role for the token. Valid values are defined in the Role class:
          * <ul>
-         *   <li> <code>SUBSCRIBER</code> &mdash; A subscriber can only subscribe to streams.</li>
+         *   <li> {@code SUBSCRIBER} &mdash; A subscriber can only subscribe to streams.</li>
          *
-         *   <li> <code>PUBLISHER</code> &mdash; A publisher can publish streams, subscribe to
+         *   <li> {@code PUBLISHER} &mdash; A publisher can publish streams, subscribe to
          *      streams, and signal. (This is the default value if you do not specify a role.)</li>
          *
-         *   <li> <code>MODERATOR</code> &mdash; In addition to the privileges granted to a
+         *   <li> {@code MODERATOR} &mdash; In addition to the privileges granted to a
          *     publisher, a moderator can perform moderation functions, such as forcing clients to
          *     disconnect, to stop publishing streams, or to mute audio in published streams. See the
          *     <a href="https://tokbox.com/developer/guides/moderation/">Moderation developer guide</a>.

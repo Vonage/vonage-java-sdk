@@ -15,10 +15,9 @@
  */
 package com.vonage.client.video;
 
-import com.vonage.client.VonageUnexpectedException;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import org.junit.Test;
+import com.vonage.client.VonageResponseParseException;
+import static org.junit.Assert.*;
+import org.junit.jupiter.api.*;
 import java.util.UUID;
 
 public class ArchiveTest {
@@ -37,15 +36,15 @@ public class ArchiveTest {
 				.multiArchiveTag(multiArchiveTag).build();
 
 		String json = request.toJson();
-		assertTrue(json.contains("\"name\":\""+name+"\""));
-		assertTrue(json.contains("\"multiArchiveTag\":\""+multiArchiveTag+"\""));
-		assertTrue(json.contains("\"sessionId\":\""+sessionId+"\""));
-		assertTrue(json.contains("\"outputMode\":\"composed\""));
-		assertTrue(json.contains("\"streamMode\":\"auto\""));
-		assertTrue(json.contains("\"resolution\":\"1280x720\""));
-		assertTrue(json.contains("\"layout\":{\"type\":\"verticalPresentation\"}"));
-		assertTrue(json.contains("\"hasVideo\":true"));
-		assertTrue(json.contains("\"hasAudio\":true"));
+		Assertions.assertTrue(json.contains("\"name\":\""+name+"\""));
+		Assertions.assertTrue(json.contains("\"multiArchiveTag\":\""+multiArchiveTag+"\""));
+		Assertions.assertTrue(json.contains("\"sessionId\":\""+sessionId+"\""));
+		Assertions.assertTrue(json.contains("\"outputMode\":\"composed\""));
+		Assertions.assertTrue(json.contains("\"streamMode\":\"auto\""));
+		Assertions.assertTrue(json.contains("\"resolution\":\"1280x720\""));
+		Assertions.assertTrue(json.contains("\"layout\":{\"type\":\"verticalPresentation\"}"));
+		Assertions.assertTrue(json.contains("\"hasVideo\":true"));
+		Assertions.assertTrue(json.contains("\"hasAudio\":true"));
 
 	}
 
@@ -60,40 +59,41 @@ public class ArchiveTest {
 				.outputMode(OutputMode.COMPOSED).build();
 
 		String json = request.toJson();
-		assertTrue(json.contains("\"outputMode\":\"composed\""));
-		assertTrue(json.contains("\"streamMode\":\"manual\""));
-		assertTrue(json.contains("\"sessionId\":\"s1\""));
-		assertTrue(json.contains("\"resolution\":\"480x640\""));
-		assertTrue(json.contains("\"hasAudio\":false"));
-		assertTrue(json.contains("\"layout\":{\"type\":\"custom\",\"stylesheet\":\""+style+"\"}"));
+		Assertions.assertTrue(json.contains("\"outputMode\":\"composed\""));
+		Assertions.assertTrue(json.contains("\"streamMode\":\"manual\""));
+		Assertions.assertTrue(json.contains("\"sessionId\":\"s1\""));
+		Assertions.assertTrue(json.contains("\"resolution\":\"480x640\""));
+		Assertions.assertTrue(json.contains("\"hasAudio\":false"));
+		Assertions.assertTrue(json.contains("\"layout\":{\"type\":\"custom\",\"stylesheet\":\""+style+"\"}"));
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testConstructCustomLayoutOnNonComposedArchive() {
-		Archive.builder("sessionId")
+		assertThrows(IllegalStateException.class, () -> Archive.builder("sessionId")
 				.layout(StreamCompositionLayout.builder(ScreenLayoutType.BEST_FIT).build())
-				.outputMode(OutputMode.INDIVIDUAL).build();
+				.outputMode(OutputMode.INDIVIDUAL).build()
+		);
 	}
 
 	@Test
 	public void testConstructSessionIdOnly() {
 		String sessionId = UUID.randomUUID().toString();
 		String expectedJson = "{\"sessionId\":\""+sessionId+"\"}";
-		assertEquals(expectedJson, Archive.builder(sessionId).build().toJson());
+		Assertions.assertEquals(expectedJson, Archive.builder(sessionId).build().toJson());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructNullSessionId() {
-		Archive.builder(null).build();
+		assertThrows(IllegalArgumentException.class, () -> Archive.builder(null).build());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructEmptySessionId() {
-		Archive.builder("").build();
+		assertThrows(IllegalArgumentException.class, () -> Archive.builder("").build());
 	}
 
-	@Test(expected = VonageUnexpectedException.class)
+	@Test
 	public void testFromJsonInvalid() {
-		Archive.fromJson("{malformed]");
+		assertThrows(VonageResponseParseException.class, () -> Archive.fromJson("{malformed]"));
 	}
 }

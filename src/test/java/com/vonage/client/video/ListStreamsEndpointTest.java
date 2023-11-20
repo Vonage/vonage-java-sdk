@@ -23,8 +23,8 @@ import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertThrows;
+import org.junit.jupiter.api.*;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,7 +32,7 @@ public class ListStreamsEndpointTest {
 	private ListStreamsEndpoint endpoint;
 	private final String applicationId = UUID.randomUUID().toString();
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		endpoint = new ListStreamsEndpoint(new HttpWrapper(
 			new JWTAuthMethod(applicationId, new byte[0])
@@ -43,10 +43,10 @@ public class ListStreamsEndpointTest {
 	public void testMakeRequestAllParameters() throws Exception {
 		String sessionId = UUID.randomUUID().toString();
 		RequestBuilder builder = endpoint.makeRequest(sessionId);
-		assertEquals("GET", builder.getMethod());
+		Assertions.assertEquals("GET", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/"+applicationId+"/session/"+sessionId+"/stream";
-		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		Assertions.assertEquals(expectedUri, builder.build().getURI().toString());
+		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 	}
 
 	@Test
@@ -72,20 +72,22 @@ public class ListStreamsEndpointTest {
 
 		HttpResponse mockHttpResponse = TestUtils.makeJsonHttpResponse(200, json);
 		ListStreamsResponse response = endpoint.parseResponse(mockHttpResponse);
-		assertEquals(count, response.getCount());
+		Assertions.assertEquals(count, response.getCount());
 		List<GetStreamResponse> streams = response.getItems();
-		assertEquals(1, streams.size());
+		Assertions.assertEquals(1, streams.size());
 		GetStreamResponse stream0 = streams.get(0);
-		assertEquals(id0, stream0.getId());
-		assertEquals(videoType0, stream0.getVideoType());
-		assertEquals(name0, stream0.getName());
+		Assertions.assertEquals(id0, stream0.getId());
+		Assertions.assertEquals(videoType0, stream0.getVideoType());
+		Assertions.assertEquals(name0, stream0.getName());
 		List<String> layoutClassList0 = stream0.getLayoutClassList();
-		assertEquals(1, layoutClassList0.size());
-		assertEquals(layoutClass0, layoutClassList0.get(0));
+		Assertions.assertEquals(1, layoutClassList0.size());
+		Assertions.assertEquals(layoutClass0, layoutClassList0.get(0));
 	}
 
-	@Test(expected = HttpResponseException.class)
+	@Test
 	public void test500Response() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
+		assertThrows(HttpResponseException.class, () ->
+				endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""))
+		);
 	}
 }

@@ -23,8 +23,8 @@ import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertThrows;
+import org.junit.jupiter.api.*;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,7 +32,7 @@ public class GetStreamEndpointTest {
 	private GetStreamEndpoint endpoint;
 	private final String applicationId = UUID.randomUUID().toString();
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		endpoint = new GetStreamEndpoint(new HttpWrapper(
 			new JWTAuthMethod(applicationId, new byte[0])
@@ -48,9 +48,9 @@ public class GetStreamEndpointTest {
 
 		SessionResourceRequestWrapper wrapper = new SessionResourceRequestWrapper(sessionId, streamId.toString());
 		RequestBuilder builder = endpoint.makeRequest(wrapper);
-		assertEquals("GET", builder.getMethod());
-		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		Assertions.assertEquals("GET", builder.getMethod());
+		Assertions.assertEquals(expectedUri, builder.build().getURI().toString());
+		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 	}
 
 	@Test
@@ -70,16 +70,18 @@ public class GetStreamEndpointTest {
 
 		HttpResponse mockHttpResponse = TestUtils.makeJsonHttpResponse(2, json);
 		GetStreamResponse response = endpoint.parseResponse(mockHttpResponse);
-		assertEquals(id, response.getId());
-		assertEquals(videoType, response.getVideoType());
-		assertEquals(name, response.getName());
+		Assertions.assertEquals(id, response.getId());
+		Assertions.assertEquals(videoType, response.getVideoType());
+		Assertions.assertEquals(name, response.getName());
 		List<String> layoutClassList = response.getLayoutClassList();
-		assertEquals(1, layoutClassList.size());
-		assertEquals(layoutClass, layoutClassList.get(0));
+		Assertions.assertEquals(1, layoutClassList.size());
+		Assertions.assertEquals(layoutClass, layoutClassList.get(0));
 	}
 
-	@Test(expected = HttpResponseException.class)
+	@Test
 	public void test500Response() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
+		assertThrows(HttpResponseException.class, () ->
+				endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""))
+		);
 	}
 }

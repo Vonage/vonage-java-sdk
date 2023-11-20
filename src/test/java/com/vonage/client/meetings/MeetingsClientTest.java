@@ -711,7 +711,7 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 		LogoUploadsUrlResponse.Fields fields = sample.getFields();
 		assertNotNull(fields);
 		assertEquals("https://storage-url.com", sample.getUrl().toString());
-		assertEquals("image/png", fields.getContentType().toString());
+		assertEquals("image/png", fields.getContentType());
 		assertEquals("auto-expiring-temp/logos/white/ca63a155-d", fields.getKey());
 		assertEquals(LogoType.WHITE, fields.getLogoType());
 		assertEquals("s3", fields.getBucket());
@@ -1280,8 +1280,8 @@ public class MeetingsClientTest extends ClientTest<MeetingsClient> {
 			private void testInvalidRecordingStatus() throws Exception {
 				String expectedPayload = "{\"_embedded\":{\"recordings\":[{\"status\":\"You're on camera!\"}]}}";
 				stubResponse(200, expectedPayload);
-				ListRecordingsResponse parsed = executeEndpoint();;
-				assertNotNull(parsed);
+				ListRecordingsResponse parsed = executeEndpoint();
+                assertNotNull(parsed);
 				assertEquals(1, parsed.getRecordings().size());
 				assertNull(parsed.getRecordings().get(0).getStatus());
 			}
