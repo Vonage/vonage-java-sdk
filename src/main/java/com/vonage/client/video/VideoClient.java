@@ -32,28 +32,25 @@ import java.util.function.Supplier;
  */
 public class VideoClient {
 	final Supplier<? extends Jwt.Builder> newJwtSupplier;
-	final CreateSessionEndpoint createSession;
-	final ListStreamsEndpoint listStreams;
+
+	final RestEndpoint<CreateSessionRequest, CreateSessionResponse> createSession;
+	final RestEndpoint<String, ListStreamsResponse> listStreams;
 	final RestEndpoint<SessionResourceRequestWrapper, GetStreamResponse> getStream;
-	final SetStreamLayoutEndpoint setStreamLayout;
+	final RestEndpoint<SetStreamLayoutRequest, Void> setStreamLayout;
 	final RestEndpoint<SignalRequest, Void> signal, signalAll;
 	final RestEndpoint<SessionResourceRequestWrapper, Void> forceDisconnect, muteStream;
-	final MuteSessionEndpoint muteSession;
-	final SipDialEndpoint sipDial;
-	final SendDtmfToSessionEndpoint sendDtmfToSession;
-	final SendDtmfToConnectionEndpoint sendDtmfToConnection;
-	final ListArchivesEndpoint listArchives;
-	final GetArchiveEndpoint getArchive;
-	final CreateArchiveEndpoint createArchive;
+	final RestEndpoint<MuteSessionRequest, Void> muteSession;
+	final RestEndpoint<SipDialRequest, SipDialResponse> sipDial;
+	final RestEndpoint<SendDtmfRequest, Void> sendDtmfToSession, sendDtmfToConnection;
+	final RestEndpoint<ListStreamCompositionsRequest, ListArchivesResponse> listArchives;
+	final RestEndpoint<String, Archive> getArchive, stopArchive;
+	final RestEndpoint<Archive, Archive> createArchive;
 	final RestEndpoint<StreamCompositionLayout, Void> updateArchiveLayout, updateBroadcastLayout;
-	final PatchArchiveStreamEndpoint patchArchiveStream;
-	final StopArchiveEndpoint stopArchive;
-	final DeleteArchiveEndpoint deleteArchive;
-	final ListBroadcastsEndpoint listBroadcasts;
-	final GetBroadcastEndpoint getBroadcast;
-	final CreateBroadcastEndpoint createBroadcast;
-	final PatchBroadcastStreamEndpoint patchBroadcastStream;
-	final StopBroadcastEndpoint stopBroadcast;
+	final RestEndpoint<PatchComposedStreamsRequest, Void> patchArchiveStream, patchBroadcastStream;
+	final RestEndpoint<String, Void> deleteArchive;
+	final RestEndpoint<ListStreamCompositionsRequest, ListBroadcastsResponse> listBroadcasts;
+	final RestEndpoint<String, Broadcast> getBroadcast, stopBroadcast;
+	final RestEndpoint<Broadcast, Broadcast> createBroadcast;
 
 	/**
 	 * Constructor.
