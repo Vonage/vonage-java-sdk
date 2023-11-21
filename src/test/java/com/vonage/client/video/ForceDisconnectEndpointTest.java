@@ -20,16 +20,16 @@ import com.vonage.client.TestUtils;
 import com.vonage.client.VonageBadRequestException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.client.methods.RequestBuilder;
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.*;
 import java.util.UUID;
 
 public class ForceDisconnectEndpointTest {
 	private ForceDisconnectEndpoint endpoint;
 	private final String applicationId = UUID.randomUUID().toString();
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		endpoint = new ForceDisconnectEndpoint(new HttpWrapper(
 			new JWTAuthMethod(applicationId, new byte[0])
@@ -44,12 +44,14 @@ public class ForceDisconnectEndpointTest {
 						applicationId+"/session/"+sessionId+"/connection/"+connectionId;
 		
 		RequestBuilder builder = endpoint.makeRequest(new SessionResourceRequestWrapper(sessionId, connectionId));
-		assertEquals("DELETE", builder.getMethod());
-		assertEquals(expectedUri, builder.build().getURI().toString());
+		Assertions.assertEquals("DELETE", builder.getMethod());
+		Assertions.assertEquals(expectedUri, builder.build().getURI().toString());
 	}
 
-	@Test(expected = VonageBadRequestException.class)
+	@Test
 	public void test500Response() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
+		assertThrows(VonageBadRequestException.class, () ->
+				endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""))
+		);
 	}
 }

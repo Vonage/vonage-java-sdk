@@ -21,7 +21,7 @@
 package com.vonage.client.video;
 
 import com.vonage.client.VonageResponseParseException;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import java.net.URI;
 import java.util.UUID;

@@ -22,16 +22,16 @@ import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.*;
 import java.util.UUID;
 
 public class PatchArchiveStreamEndpointTest {
 	private PatchArchiveStreamEndpoint endpoint;
 	private final String applicationId = UUID.randomUUID().toString();
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		endpoint = new PatchArchiveStreamEndpoint(new HttpWrapper(
 			new JWTAuthMethod(applicationId, new byte[0])
@@ -45,13 +45,13 @@ public class PatchArchiveStreamEndpointTest {
 		PatchComposedStreamsRequest request = new PatchComposedStreamsRequest(streamId, true, false);
 		request.id = archiveId;
 		RequestBuilder builder = endpoint.makeRequest(request);
-		assertEquals("PATCH", builder.getMethod());
+		Assertions.assertEquals("PATCH", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/" +
 				applicationId+"/archive/"+archiveId+"/streams";
-		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
+		Assertions.assertEquals(expectedUri, builder.build().getURI().toString());
+		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		String expectedPayload = "{\"addStream\":\""+streamId+"\",\"hasAudio\":true,\"hasVideo\":false}";
-		assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
+		Assertions.assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
 	}
 
 	@Test
@@ -61,17 +61,19 @@ public class PatchArchiveStreamEndpointTest {
 		PatchComposedStreamsRequest request = new PatchComposedStreamsRequest(streamId);
 		request.id = archiveId;
 		RequestBuilder builder = endpoint.makeRequest(request);
-		assertEquals("PATCH", builder.getMethod());
+		Assertions.assertEquals("PATCH", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/" +
 				applicationId+"/archive/"+archiveId+"/streams";
-		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
+		Assertions.assertEquals(expectedUri, builder.build().getURI().toString());
+		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		String expectedPayload = "{\"removeStream\":\""+streamId+"\"}";
-		assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
+		Assertions.assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
 	}
 
-	@Test(expected = VonageBadRequestException.class)
+	@Test
 	public void test500Response() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
+		assertThrows(VonageBadRequestException.class, () ->
+				endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""))
+		);
 	}
 }

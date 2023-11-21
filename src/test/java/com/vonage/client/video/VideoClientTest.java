@@ -21,7 +21,7 @@ import com.vonage.client.VonageBadRequestException;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.client.HttpResponseException;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
 import java.net.URI;

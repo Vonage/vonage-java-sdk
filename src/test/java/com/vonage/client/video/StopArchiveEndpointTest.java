@@ -21,7 +21,7 @@ import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import java.time.Instant;
 import java.util.UUID;

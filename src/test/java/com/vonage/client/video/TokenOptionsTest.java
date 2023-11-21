@@ -16,7 +16,7 @@
 package com.vonage.client.video;
 
 import com.vonage.jwt.Jwt;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import java.time.Duration;
 import java.time.ZonedDateTime;

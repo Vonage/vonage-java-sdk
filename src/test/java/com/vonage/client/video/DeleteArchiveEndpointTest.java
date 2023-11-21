@@ -20,16 +20,15 @@ import com.vonage.client.TestUtils;
 import com.vonage.client.VonageBadRequestException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.client.methods.RequestBuilder;
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.UUID;
 
 public class DeleteArchiveEndpointTest {
 	private DeleteArchiveEndpoint endpoint;
 	private final String applicationId = UUID.randomUUID().toString();
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		endpoint = new DeleteArchiveEndpoint(new HttpWrapper(
 			new JWTAuthMethod(applicationId, new byte[0])
@@ -40,14 +39,16 @@ public class DeleteArchiveEndpointTest {
 	public void testMakeRequest() throws Exception {
 		String archiveId = UUID.randomUUID().toString();
 		RequestBuilder builder = endpoint.makeRequest(archiveId);
-		assertEquals("DELETE", builder.getMethod());
+		Assertions.assertEquals("DELETE", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/" +
 				applicationId+"/archive/"+archiveId;
-		assertEquals(expectedUri, builder.build().getURI().toString());
+		Assertions.assertEquals(expectedUri, builder.build().getURI().toString());
 	}
 
-	@Test(expected = VonageBadRequestException.class)
+	@Test
 	public void test500Response() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
+		assertThrows(VonageBadRequestException.class, () ->
+				endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""))
+		);
 	}
 }
