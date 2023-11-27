@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    def jacksonVersion = '2.15.3'
+    def jacksonVersion = '2.16.0'
     def httpclientVersion = '4.5.14'
     def junitVersion = '5.10.1'
 
