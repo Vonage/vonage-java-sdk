@@ -18,6 +18,7 @@ package com.vonage.client.verify2;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.common.E164;
+import java.net.URI;
 
 /**
  * Defines properties for mobile network-based authentication. See the
@@ -27,6 +28,7 @@ import com.vonage.client.common.E164;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class SilentAuthWorkflow extends Workflow {
 	private Boolean sandbox;
+	private URI redirectUrl;
 
 	/**
 	 * Constructs a new Silent Auth verification workflow.
@@ -51,6 +53,21 @@ public final class SilentAuthWorkflow extends Workflow {
 	}
 
 	/**
+	 * Constructs a new Silent Auth verification workflow.
+	 *
+	 * @param to The number to registered to the device on the network to authenticate.
+	 * @param sandbox Whether the Vonage Sandbox should be used (for testing purposes).
+	 * @param redirectUrl Optional final redirect added at the end of the check_url request/response lifecycle.
+	 *                    Will contain the request_id and code as a URL fragment after the URL.
+	 *
+	 * @since 8.0.0
+	 */
+	public SilentAuthWorkflow(String to, boolean sandbox, String redirectUrl) {
+		this(to, sandbox);
+		this.redirectUrl = URI.create(redirectUrl);
+	}
+
+	/**
 	 * Optional parameter if using the Vonage Sandbox to test Silent Auth integrations.
 	 *
 	 * @return Whether the Vonage Sandbox will be used, or {@code null} if not specified (the default).
@@ -60,5 +77,16 @@ public final class SilentAuthWorkflow extends Workflow {
 	@JsonProperty("sandbox")
 	public Boolean getSandbox() {
 		return sandbox;
+	}
+
+	/**
+	 * Final redirect after {@link VerificationResponse#getCheckUrl()}. See the documentation for integrations.
+	 *
+	 * @return The optional {@code redirect_url}, or {@code null} if not set (the default).
+	 * @since 8.0.0
+	 */
+	@JsonProperty("redirect_url")
+	public URI getRedirectUrl() {
+		return redirectUrl;
 	}
 }
