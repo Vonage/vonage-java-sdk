@@ -16,7 +16,9 @@
 package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vonage.client.Jsonable;
 import com.vonage.client.VonageUnexpectedException;
 import java.io.IOException;
 
@@ -24,7 +26,7 @@ import java.io.IOException;
  * Represents properties of a video project.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ProjectDetails {
+public class ProjectDetails implements Jsonable {
 	private String applicationId, name;
 	private ProjectStatus status;
 	private ProjectEnvironment environment;
@@ -36,6 +38,7 @@ public class ProjectDetails {
 	/**
 	 * @return The Vonage application ID.
 	 */
+	@JsonProperty("applicationId")
 	public String getApplicationId() {
 		return applicationId;
 	}
@@ -43,6 +46,7 @@ public class ProjectDetails {
 	/**
 	 * @return Whether the project is active or suspended.
 	 */
+	@JsonProperty("status")
 	public ProjectStatus getStatus() {
 		return status;
 	}
@@ -50,6 +54,7 @@ public class ProjectDetails {
 	/**
 	 * @return The project name, if specified when created.
 	 */
+	@JsonProperty("name")
 	public String getName() {
 		return name;
 	}
@@ -57,6 +62,7 @@ public class ProjectDetails {
 	/**
 	 * @return The environment the project is running on.
 	 */
+	@JsonProperty("environment")
 	public ProjectEnvironment getEnvironment() {
 		return environment;
 	}
@@ -64,6 +70,7 @@ public class ProjectDetails {
 	/**
 	 * @return The time at which the project was created (a UNIX timestamp, in milliseconds).
 	 */
+	@JsonProperty("createdAt")
 	public Long getCreatedAt() {
 		return createdAt;
 	}

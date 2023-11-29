@@ -15,8 +15,7 @@
  */
 package com.vonage.client.video;
 
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import java.util.UUID;
 
 public class PatchVideoStreamRequestTest {
@@ -26,20 +25,20 @@ public class PatchVideoStreamRequestTest {
 	public void testSerializeAddStreamAllParams() {
 		PatchComposedStreamsRequest request = new PatchComposedStreamsRequest(streamId, false, true);
 		String expectedJson = "{\"addStream\":\""+streamId+"\",\"hasAudio\":false,\"hasVideo\":true}";
-		assertEquals(expectedJson, request.toJson());
+		Assertions.assertEquals(expectedJson, request.toJson());
 	}
 
 	@Test
 	public void testSerializeAddStreamRequiredParams() {
 		PatchComposedStreamsRequest request = new PatchComposedStreamsRequest(streamId, null, null);
 		String expectedJson = "{\"addStream\":\""+streamId+"\"}";
-		assertEquals(expectedJson, request.toJson());
+		Assertions.assertEquals(expectedJson, request.toJson());
 	}
 
 	@Test
 	public void testSerializeRemoveStream() {
 		PatchComposedStreamsRequest request = new PatchComposedStreamsRequest(streamId);
 		String expectedJson = "{\"removeStream\":\""+streamId+"\"}";
-		assertEquals(expectedJson, request.toJson());
+		Assertions.assertEquals(expectedJson, request.toJson());
 	}
 }

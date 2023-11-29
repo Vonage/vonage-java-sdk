@@ -19,9 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 import java.net.URI;
 import java.time.Duration;
 
@@ -159,13 +157,7 @@ public class Archive extends StreamComposition {
      * @return An instance of this class with the fields populated, if present.
      */
     public static Archive fromJson(String json) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(json, Archive.class);
-        }
-        catch (IOException ex) {
-            throw new VonageUnexpectedException("Failed to produce Archive from json.", ex);
-        }
+        return Jsonable.fromJson(json);
     }
 
 

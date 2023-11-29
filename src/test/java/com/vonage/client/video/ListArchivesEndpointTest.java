@@ -22,10 +22,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.util.Map;
 import java.util.UUID;
 
@@ -33,7 +31,7 @@ public class ListArchivesEndpointTest {
 	private ListArchivesEndpoint endpoint;
 	private final String applicationId = UUID.randomUUID().toString();
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		endpoint = new ListArchivesEndpoint(new HttpWrapper(
 			new JWTAuthMethod(applicationId, new byte[0])
@@ -49,33 +47,35 @@ public class ListArchivesEndpointTest {
 			.build();
 		
 		RequestBuilder builder = endpoint.makeRequest(request);
-		assertEquals("GET", builder.getMethod());
+		Assertions.assertEquals("GET", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/"+applicationId+"/archive?";
-		assertTrue(builder.build().getURI().toString().startsWith(expectedUri));
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		Assertions.assertTrue(builder.build().getURI().toString().startsWith(expectedUri));
+		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
-		assertEquals(3, params.size());
-		assertEquals(sessionId, params.get("sessionId"));
-		assertEquals(offset, Integer.parseInt(params.get("offset")));
-		assertEquals(count, Integer.parseInt(params.get("count")));
+		Assertions.assertEquals(3, params.size());
+		Assertions.assertEquals(sessionId, params.get("sessionId"));
+		Assertions.assertEquals(offset, Integer.parseInt(params.get("offset")));
+		Assertions.assertEquals(count, Integer.parseInt(params.get("count")));
 		String expectedPayload = VideoClientTest.listArchiveJson;
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedPayload);
 		ListArchivesResponse response = endpoint.parseResponse(mockResponse);
 		VideoClientTest.assertArchiveEqualsExpectedJson(response.getItems().get(0));
-		assertEquals(Integer.valueOf(1), response.getCount());
+		Assertions.assertEquals(Integer.valueOf(1), response.getCount());
 	}
 
 	@Test
 	public void testMakeRequestNullParameters() {
 		ListStreamCompositionsRequest wrapper = ListStreamCompositionsRequest.builder().build();
 		RequestBuilder builder = endpoint.makeRequest(wrapper);
-		assertEquals("GET", builder.getMethod());
+		Assertions.assertEquals("GET", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/"+applicationId+"/archive";
-		assertEquals(expectedUri, builder.build().getURI().toString());
+		Assertions.assertEquals(expectedUri, builder.build().getURI().toString());
 	}
 
-	@Test(expected = HttpResponseException.class)
+	@Test
 	public void test500Response() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
+		assertThrows(HttpResponseException.class, () ->
+				endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""))
+		);
 	}
 }

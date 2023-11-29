@@ -21,16 +21,16 @@ import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.*;
 import java.util.UUID;
 
 public class GetArchiveEndpointTest {
 	private GetArchiveEndpoint endpoint;
 	private final String applicationId = UUID.randomUUID().toString();
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		endpoint = new GetArchiveEndpoint(new HttpWrapper(
 			new JWTAuthMethod(applicationId, new byte[0])
@@ -41,14 +41,16 @@ public class GetArchiveEndpointTest {
 	public void testMakeRequest() throws Exception {
 		String archiveId = UUID.randomUUID().toString();
 		RequestBuilder builder = endpoint.makeRequest(archiveId);
-		assertEquals("GET", builder.getMethod());
+		Assertions.assertEquals("GET", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/"+applicationId+"/archive/"+archiveId;
-		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		Assertions.assertEquals(expectedUri, builder.build().getURI().toString());
+		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 	}
 
-	@Test(expected = HttpResponseException.class)
+	@Test
 	public void test500Response() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
+		assertThrows(HttpResponseException.class, () ->
+				endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""))
+		);
 	}
 }

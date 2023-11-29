@@ -16,6 +16,7 @@
 package com.vonage.client.video;
 
 import com.vonage.client.HttpWrapper;
+import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageClient;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.jwt.Jwt;
@@ -31,31 +32,25 @@ import java.util.function.Supplier;
  */
 public class VideoClient {
 	final Supplier<? extends Jwt.Builder> newJwtSupplier;
-	final CreateSessionEndpoint createSession;
-	final ListStreamsEndpoint listStreams;
-	final GetStreamEndpoint getStream;
-	final SetStreamLayoutEndpoint setStreamLayout;
-	final SignalAllEndpoint signalAll;
-	final SignalEndpoint signal;
-	final ForceDisconnectEndpoint forceDisconnect;
-	final MuteStreamEndpoint muteStream;
-	final MuteSessionEndpoint muteSession;
-	final SipDialEndpoint sipDial;
-	final SendDtmfToSessionEndpoint sendDtmfToSession;
-	final SendDtmfToConnectionEndpoint sendDtmfToConnection;
-	final ListArchivesEndpoint listArchives;
-	final GetArchiveEndpoint getArchive;
-	final CreateArchiveEndpoint createArchive;
-	final UpdateArchiveLayoutEndpoint updateArchiveLayout;
-	final PatchArchiveStreamEndpoint patchArchiveStream;
-	final StopArchiveEndpoint stopArchive;
-	final DeleteArchiveEndpoint deleteArchive;
-	final ListBroadcastsEndpoint listBroadcasts;
-	final GetBroadcastEndpoint getBroadcast;
-	final CreateBroadcastEndpoint createBroadcast;
-	final UpdateBroadcastLayoutEndpoint updateBroadcastLayout;
-	final PatchBroadcastStreamEndpoint patchBroadcastStream;
-	final StopBroadcastEndpoint stopBroadcast;
+
+	final RestEndpoint<CreateSessionRequest, CreateSessionResponse> createSession;
+	final RestEndpoint<String, ListStreamsResponse> listStreams;
+	final RestEndpoint<SessionResourceRequestWrapper, GetStreamResponse> getStream;
+	final RestEndpoint<SetStreamLayoutRequest, Void> setStreamLayout;
+	final RestEndpoint<SignalRequest, Void> signal, signalAll;
+	final RestEndpoint<SessionResourceRequestWrapper, Void> forceDisconnect, muteStream;
+	final RestEndpoint<MuteSessionRequest, Void> muteSession;
+	final RestEndpoint<SipDialRequest, SipDialResponse> sipDial;
+	final RestEndpoint<SendDtmfRequest, Void> sendDtmfToSession, sendDtmfToConnection;
+	final RestEndpoint<ListStreamCompositionsRequest, ListArchivesResponse> listArchives;
+	final RestEndpoint<String, Archive> getArchive, stopArchive;
+	final RestEndpoint<Archive, Archive> createArchive;
+	final RestEndpoint<StreamCompositionLayout, Void> updateArchiveLayout, updateBroadcastLayout;
+	final RestEndpoint<PatchComposedStreamsRequest, Void> patchArchiveStream, patchBroadcastStream;
+	final RestEndpoint<String, Void> deleteArchive;
+	final RestEndpoint<ListStreamCompositionsRequest, ListBroadcastsResponse> listBroadcasts;
+	final RestEndpoint<String, Broadcast> getBroadcast, stopBroadcast;
+	final RestEndpoint<Broadcast, Broadcast> createBroadcast;
 
 	/**
 	 * Constructor.
@@ -207,7 +202,7 @@ public class VideoClient {
 	 * @return Details of the requested stream.
 	 */
 	public GetStreamResponse getStream(String sessionId, String streamId) {
-		return getStream.execute(new GetStreamRequestWrapper(
+		return getStream.execute(new SessionResourceRequestWrapper(
 				validateSessionId(sessionId),
 				validateStreamId(streamId)
 		));
@@ -245,10 +240,9 @@ public class VideoClient {
 	 * @param request Signal payload.
 	 */
 	public void signalAll(String sessionId, SignalRequest request) {
-		signalAll.execute(new SignalRequestWrapper(
-				validateRequest(request),
-				validateSessionId(sessionId)
-		));
+		validateRequest(request);
+		request.sessionId = validateSessionId(sessionId);
+		signalAll.execute(request);
 	}
 
 	/**
@@ -259,11 +253,10 @@ public class VideoClient {
 	 * @param request Signal payload.
 	 */
 	public void signal(String sessionId, String connectionId, SignalRequest request) {
-		signal.execute(new SignalRequestWrapper(
-				validateRequest(request),
-				validateSessionId(sessionId),
-				validateConnectionId(connectionId)
-		));
+		validateRequest(request);
+		request.sessionId = validateSessionId(sessionId);
+		request.connectionId = validateConnectionId(connectionId);
+		signal.execute(request);
 	}
 
 	/**
@@ -273,7 +266,7 @@ public class VideoClient {
 	 * @param connectionId Specific publisher connection ID.
 	 */
 	public void forceDisconnect(String sessionId, String connectionId) {
-		forceDisconnect.execute(new ForceDisconnectRequestWrapper(
+		forceDisconnect.execute(new SessionResourceRequestWrapper(
 				validateSessionId(sessionId),
 				validateConnectionId(connectionId)
 		));
@@ -286,7 +279,7 @@ public class VideoClient {
 	 * @param streamId ID of the stream to mute.
 	 */
 	public void muteStream(String sessionId, String streamId) {
-		muteStream.execute(new MuteStreamRequestWrapper(
+		muteStream.execute(new SessionResourceRequestWrapper(
 				validateSessionId(sessionId),
 				validateStreamId(streamId)
 		));
@@ -457,10 +450,9 @@ public class VideoClient {
 	 * @param layout Properties of the layout change request.
 	 */
 	public void updateArchiveLayout(String archiveId, StreamCompositionLayout layout) {
-		updateArchiveLayout.execute(new UpdateStreamCompositionLayoutRequestWrapper(
-				validateArchiveId(archiveId),
-				validateRequest(layout)
-		));
+		validateRequest(layout);
+		layout.id = validateArchiveId(archiveId);
+		updateArchiveLayout.execute(layout);
 	}
 
 	/**
@@ -603,10 +595,9 @@ public class VideoClient {
 	 * @since 8.0.0-beta4
 	 */
 	public void updateBroadcastLayout(String broadcastId, StreamCompositionLayout layout) {
-		updateBroadcastLayout.execute(new UpdateStreamCompositionLayoutRequestWrapper(
-				validateBroadcastId(broadcastId),
-				validateRequest(layout)
-		));
+		validateRequest(layout);
+		layout.id = validateBroadcastId(broadcastId);
+		updateBroadcastLayout.execute(layout);
 	}
 
 	/**

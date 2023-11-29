@@ -16,9 +16,8 @@
 package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.Jsonable;
 
 /**
  * Represents details of a stream, as returned from {@link VideoClient#getStream(String, String)}.
@@ -34,6 +33,7 @@ public class GetStreamResponse extends SessionStream {
 	/**
 	 * @return The video source for the stream.
 	 */
+	@JsonProperty("videoType")
 	public VideoType getVideoType() {
 		return videoType;
 	}
@@ -41,6 +41,7 @@ public class GetStreamResponse extends SessionStream {
 	/**
 	 * @return The name of the stream (if one was set when the client published the stream).
 	 */
+	@JsonProperty("name")
 	public String getName() {
 		return name;
 	}
@@ -52,12 +53,6 @@ public class GetStreamResponse extends SessionStream {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static GetStreamResponse fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readValue(json, GetStreamResponse.class);
-		}
-		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to produce GetStreamResponse from json.", ex);
-		}
+		return Jsonable.fromJson(json);
 	}
 }

@@ -16,40 +16,29 @@
 package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.Jsonable;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class ListArchivesResponse {
+class ListArchivesResponse implements Jsonable {
 	private Integer count;
 	private List<Archive> items;
 
 	protected ListArchivesResponse() {
 	}
 
+	@JsonProperty("count")
 	public Integer getCount() {
 		return count;
 	}
 
+	@JsonProperty("items")
 	public List<Archive> getItems() {
 		return items;
 	}
-	
-	/**
-	 * Creates an instance of this class from a JSON payload.
-	 *
-	 * @param json The JSON string to parse.
-	 * @return An instance of this class with the fields populated, if present.
-	 */
+
 	public static ListArchivesResponse fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readValue(json, ListArchivesResponse.class);
-		}
-		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to produce ListArchivesResponse from json.", ex);
-		}
+		return Jsonable.fromJson(json);
 	}
 }

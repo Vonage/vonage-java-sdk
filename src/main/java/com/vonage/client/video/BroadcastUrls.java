@@ -15,7 +15,6 @@
  */
 package com.vonage.client.video;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.net.URI;
@@ -51,7 +50,7 @@ public class BroadcastUrls {
 	 *
 	 * @return Details of the RTMP streams.
 	 */
-	@JsonIgnore
+	@JsonProperty("rtmp")
 	public List<Rtmp> getRtmps() {
 		return rtmp;
 	}

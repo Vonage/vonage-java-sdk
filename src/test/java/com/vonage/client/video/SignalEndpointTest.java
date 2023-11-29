@@ -22,16 +22,16 @@ import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.*;
 import java.util.UUID;
 
 public class SignalEndpointTest {
 	private SignalEndpoint endpoint;
 	private final String applicationId = UUID.randomUUID().toString();
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		endpoint = new SignalEndpoint(new HttpWrapper(
 			new JWTAuthMethod(applicationId, new byte[0])
@@ -45,20 +45,23 @@ public class SignalEndpointTest {
 				data = "The actual payload as a string",
 				type = "Signal channel";
 		SignalRequest properties = SignalRequest.builder().data(data).type(type).build();
-		SignalRequestWrapper request = new SignalRequestWrapper(properties, sessionId, connectionId);
+		properties.sessionId = sessionId;
+		properties.connectionId = connectionId;
 
-		RequestBuilder builder = endpoint.makeRequest(request);
-		assertEquals("POST", builder.getMethod());
+		RequestBuilder builder = endpoint.makeRequest(properties);
+		Assertions.assertEquals("POST", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/" +
 				applicationId + "/session/" + sessionId + "/connection/" + connectionId + "/signal";
-		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
+		Assertions.assertEquals(expectedUri, builder.build().getURI().toString());
+		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		String expectedPayload = "{\"type\":\""+type+"\",\"data\":\""+data+"\"}";
-		assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
+		Assertions.assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
 	}
 
-	@Test(expected = VonageBadRequestException.class)
-	public void testUnsuccessfulResponse() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
+	@Test
+	public void test500Response() throws Exception {
+		assertThrows(VonageBadRequestException.class, () ->
+				endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""))
+		);
 	}
 }

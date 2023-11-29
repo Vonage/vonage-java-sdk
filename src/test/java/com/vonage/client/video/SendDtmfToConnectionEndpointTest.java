@@ -15,21 +15,23 @@
  */
 package com.vonage.client.video;
 
-import com.vonage.client.*;
+import com.vonage.client.HttpConfig;
+import com.vonage.client.HttpWrapper;
+import com.vonage.client.TestUtils;
+import com.vonage.client.VonageBadRequestException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.*;
 import java.util.UUID;
 
 public class SendDtmfToConnectionEndpointTest {
 	private SendDtmfToConnectionEndpoint endpoint;
 	private final String applicationId = UUID.randomUUID().toString();
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		endpoint = new SendDtmfToConnectionEndpoint(new HttpWrapper(
 			new JWTAuthMethod(applicationId, new byte[0])
@@ -41,13 +43,13 @@ public class SendDtmfToConnectionEndpointTest {
 		String sessionId = "S01", connectionId = "conn23", digits = "*0123456789#";
 		SendDtmfRequest request = new SendDtmfRequest(sessionId, connectionId, digits);
 		RequestBuilder builder = endpoint.makeRequest(request);
-		assertEquals("POST", builder.getMethod());
+		Assertions.assertEquals("POST", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/" +
 				applicationId+"/session/"+sessionId+"/connection/"+connectionId+"/play-dtmf";
-		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
+		Assertions.assertEquals(expectedUri, builder.build().getURI().toString());
+		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		String expectedRequest = "{\"digits\":\""+digits+"\"}";
-		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
+		Assertions.assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 	}
 
 	@Test
@@ -62,15 +64,17 @@ public class SendDtmfToConnectionEndpointTest {
 		String expectedUri = baseUri + "/v2/project/app-id/session/" +
 				request.sessionId+"/connection/"+request.connectionId+"/play-dtmf";
 		RequestBuilder builder = endpoint.makeRequest(request);
-		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
+		Assertions.assertEquals(expectedUri, builder.build().getURI().toString());
+		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		String expectedRequest = "{\"digits\":\""+request.digits+"\"}";
-		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
-		assertEquals("POST", builder.getMethod());
+		Assertions.assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
+		Assertions.assertEquals("POST", builder.getMethod());
 	}
 
-	@Test(expected = VonageBadRequestException.class)
+	@Test
 	public void test400Response() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, ""));
+		assertThrows(VonageBadRequestException.class, () ->
+				endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, ""))
+		);
 	}
 }

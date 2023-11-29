@@ -19,12 +19,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents properties of a live streaming broadcast.
@@ -174,13 +175,7 @@ public class Broadcast extends StreamComposition {
 	 * @return An instance of this class with the fields populated, if present.
 	 */
 	public static Broadcast fromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readValue(json, Broadcast.class);
-		}
-		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to produce Broadcast from json.", ex);
-		}
+		return Jsonable.fromJson(json);
 	}
 
 	/**

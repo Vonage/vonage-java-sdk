@@ -15,30 +15,29 @@
  */
 package com.vonage.client.video;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class SetScreenLayoutTypeRequestTest {
 	
 	@Test
 	public void testSerializeTypeOnly() {
 		StreamCompositionLayout request = StreamCompositionLayout.builder(ScreenLayoutType.HORIZONTAL).build();
-		assertEquals("{\"type\":\"horizontalPresentation\"}", request.toJson());
+		Assertions.assertEquals("{\"type\":\"horizontalPresentation\"}", request.toJson());
 	}
 
 	@Test
 	public void testCustomTypeWithStylesheet() {
 		String style = "layout.css";
 		StreamCompositionLayout request = StreamCompositionLayout.builder(ScreenLayoutType.CUSTOM).stylesheet(style).build();
-		assertEquals("{\"type\":\"custom\",\"stylesheet\":\""+style+"\"}", request.toJson());
+		Assertions.assertEquals("{\"type\":\"custom\",\"stylesheet\":\""+style+"\"}", request.toJson());
 	}
 
 	@Test
 	public void testValidScreenshareType() {
 		StreamCompositionLayout request = StreamCompositionLayout.builder(ScreenLayoutType.BEST_FIT)
 				.screenshareType(ScreenLayoutType.PIP).build();
-		assertEquals("{\"type\":\"bestFit\",\"screenshareType\":\"pip\"}", request.toJson());
+		Assertions.assertEquals("{\"type\":\"bestFit\",\"screenshareType\":\"pip\"}", request.toJson());
 	}
 
 	@Test
@@ -52,31 +51,41 @@ public class SetScreenLayoutTypeRequestTest {
 		);
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testInvalidInitialAndScreenshareType() {
-		StreamCompositionLayout.builder(ScreenLayoutType.VERTICAL).screenshareType(ScreenLayoutType.PIP).build();
+		assertThrows(IllegalStateException.class, () ->
+				StreamCompositionLayout.builder(ScreenLayoutType.VERTICAL)
+						.screenshareType(ScreenLayoutType.PIP).build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testCustomScreenshareType() {
-		StreamCompositionLayout.builder(ScreenLayoutType.BEST_FIT).screenshareType(ScreenLayoutType.CUSTOM).build();
+		assertThrows(IllegalArgumentException.class, () ->
+				StreamCompositionLayout.builder(ScreenLayoutType.BEST_FIT)
+						.screenshareType(ScreenLayoutType.CUSTOM).build()
+		);
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testMissingStylesheetWithCustomLayout() {
-		StreamCompositionLayout.builder(ScreenLayoutType.CUSTOM).build();
+		assertThrows(IllegalStateException.class, () ->
+				StreamCompositionLayout.builder(ScreenLayoutType.CUSTOM).build()
+		);
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testRedundantStylesheet() {
-		StreamCompositionLayout.builder(ScreenLayoutType.BEST_FIT).stylesheet("layout.css").build();
+		assertThrows(IllegalStateException.class, () ->
+				StreamCompositionLayout.builder(ScreenLayoutType.BEST_FIT).stylesheet("layout.css").build()
+		);
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testRedundantStylesheetWithScreenshareType() {
-		StreamCompositionLayout.builder(ScreenLayoutType.BEST_FIT)
-				.stylesheet("layout.css")
-				.screenshareType(ScreenLayoutType.BEST_FIT)
-				.build();
+		assertThrows(IllegalStateException.class, () ->
+				StreamCompositionLayout.builder(ScreenLayoutType.BEST_FIT)
+					.stylesheet("layout.css").screenshareType(ScreenLayoutType.BEST_FIT).build()
+		);
 	}
 }

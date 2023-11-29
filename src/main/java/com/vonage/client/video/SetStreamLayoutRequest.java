@@ -17,13 +17,12 @@ package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.Jsonable;
 import java.util.List;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-class SetStreamLayoutRequest {
+class SetStreamLayoutRequest implements Jsonable {
 	private final List<SessionStream> items;
 	@JsonIgnore final String sessionId;
 
@@ -34,17 +33,8 @@ class SetStreamLayoutRequest {
 		}
 	}
 
+	@JsonProperty("items")
 	public List<SessionStream> getItems() {
 		return items;
-	}
-
-	String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.writeValueAsString(this);
-		}
-		catch (JsonProcessingException jpe) {
-			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
-		}
 	}
 }

@@ -20,9 +20,9 @@
  */
 package com.vonage.client.video;
 
-import com.vonage.client.VonageUnexpectedException;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import com.vonage.client.VonageResponseParseException;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.net.URI;
 import java.util.UUID;
 
@@ -42,30 +42,30 @@ public class CreateSessionResponseTest {
 				"\"media_server_url\":\""+mediaServerUrl+"\"\n" +
 		"}]");
 
-		assertEquals(sessionId, response.getSessionId());
-		assertEquals(applicationId, response.getApplicationId());
-		assertEquals(createDt, response.getCreateDt());
-		assertEquals(mediaServerUrl, response.getMediaServerUrl());
+		Assertions.assertEquals(sessionId, response.getSessionId());
+		Assertions.assertEquals(applicationId, response.getApplicationId());
+		Assertions.assertEquals(createDt, response.getCreateDt());
+		Assertions.assertEquals(mediaServerUrl, response.getMediaServerUrl());
 	}
 
-	@Test(expected = VonageUnexpectedException.class)
+	@Test
 	public void testFromJsonInvalid() {
-		CreateSessionResponse.fromJson("{malformed]");
+		assertThrows(VonageResponseParseException.class, () -> CreateSessionResponse.fromJson("{malformed]"));
 	}
 
 	@Test
 	public void testFromJsonEmptyObject() {
 		CreateSessionResponse response = CreateSessionResponse.fromJson("[{}]");
-		assertNull(response.getApplicationId());
-		assertNull(response.getSessionId());
-		assertNull(response.getMediaServerUrl());
-		assertNull(response.getCreateDt());
+		Assertions.assertNull(response.getApplicationId());
+		Assertions.assertNull(response.getSessionId());
+		Assertions.assertNull(response.getMediaServerUrl());
+		Assertions.assertNull(response.getCreateDt());
 	}
 
 	@Test
 	public void testFromJsonEmptyArray() {
 		CreateSessionResponse response = CreateSessionResponse.fromJson("[]");
-		assertNotNull(response);
+		Assertions.assertNotNull(response);
 	}
 
 	@Test
@@ -73,10 +73,10 @@ public class CreateSessionResponseTest {
 		String sessionId = "TheSessionIdYouWant";
 		String json = "[{\"session_id\":\""+sessionId+"\"},{},{\"session_id\":\"fake\"}]";
 		CreateSessionResponse response = CreateSessionResponse.fromJson(json);
-		assertNotNull(response);
-		assertEquals(sessionId, response.getSessionId());
-		assertNull(response.getApplicationId());
-		assertNull(response.getMediaServerUrl());
-		assertNull(response.getCreateDt());
+		Assertions.assertNotNull(response);
+		Assertions.assertEquals(sessionId, response.getSessionId());
+		Assertions.assertNull(response.getApplicationId());
+		Assertions.assertNull(response.getMediaServerUrl());
+		Assertions.assertNull(response.getCreateDt());
 	}
 }

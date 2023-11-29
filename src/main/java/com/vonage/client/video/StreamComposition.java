@@ -19,10 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
+import com.vonage.client.Jsonable;
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
@@ -33,8 +30,8 @@ import java.util.UUID;
  * Represents the common features of a video call consisting of multiple streams.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-public abstract class StreamComposition {
+@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+public abstract class StreamComposition implements Jsonable {
 	@JsonProperty("id") protected UUID id;
 	@JsonProperty("applicationId") protected UUID applicationId;
 	@JsonProperty("sessionId") protected String sessionId;
@@ -159,37 +156,6 @@ public abstract class StreamComposition {
 	@JsonIgnore
 	public Instant getCreatedAt() {
 		return createdAt != null ? Instant.ofEpochMilli(createdAt) : null;
-	}
-
-	/**
-	 * Updates (hydrates) this object's fields from additional JSON data.
-	 *
-	 * @param json The JSON payload.
-	 */
-	public void updateFromJson(String json) {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.readerForUpdating(this).readValue(json, getClass());
-		}
-		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to update "+getClass().getSimpleName()+" from json.", ex);
-		}
-	}
-
-	/**
-	 * Generates a JSON payload from this request.
-	 *
-	 * @return JSON representation of this object.
-	 */
-	public String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-			return mapper.writeValueAsString(this);
-		}
-		catch (JsonProcessingException jpe) {
-			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
-		}
 	}
 
 	protected static abstract class Builder {

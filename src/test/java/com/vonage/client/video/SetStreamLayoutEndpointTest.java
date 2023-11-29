@@ -23,10 +23,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +34,7 @@ public class SetStreamLayoutEndpointTest {
 	private SetStreamLayoutEndpoint endpoint;
 	private final String applicationId = "8b732909-0a06-46a2-8ea8-074e64d43422";
 	
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		endpoint = new SetStreamLayoutEndpoint(new HttpWrapper(
 			new JWTAuthMethod(applicationId, new byte[0])
@@ -57,14 +55,14 @@ public class SetStreamLayoutEndpointTest {
 		));
 		
 		RequestBuilder builder = endpoint.makeRequest(request);
-		assertEquals("PUT", builder.getMethod());
+		Assertions.assertEquals("PUT", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/"+applicationId+"/session/"+sessionId+"/stream";
-		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
+		Assertions.assertEquals(expectedUri, builder.build().getURI().toString());
+		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		String expectedPayload = "{\"items\":[{\"id\":\""+streamId0+"\"},"+
 				"{\"id\":\""+streamId1+"\",\"layoutClassList\":[\"min\",\"full\"]}," +
 				"{\"id\":\""+streamId2+"\",\"layoutClassList\":[]}]}";
-		assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
+		Assertions.assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
 	}
 	
 	@Test
@@ -74,17 +72,19 @@ public class SetStreamLayoutEndpointTest {
 		SetStreamLayoutRequest request = new SetStreamLayoutRequest("", streams);
 		RequestBuilder builder = endpoint.makeRequest(request);
 		String expectedPayload = "{\"items\":[{\"id\":\""+streamId+"\"}]}";
-		assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
+		Assertions.assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
 	}
 
 	@Test
 	public void testParseValidResponse() throws Exception {
 		HttpResponse mockHttpResponse = TestUtils.makeJsonHttpResponse(200, "");
-		assertNull(endpoint.parseResponse(mockHttpResponse));
+		Assertions.assertNull(endpoint.parseResponse(mockHttpResponse));
 	}
 
-	@Test(expected = VonageBadRequestException.class)
+	@Test
 	public void test500Response() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
+		assertThrows(VonageBadRequestException.class, () ->
+				endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""))
+		);
 	}
 }

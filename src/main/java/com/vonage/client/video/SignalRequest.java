@@ -15,15 +15,17 @@
  */
 package com.vonage.client.video;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.VonageUnexpectedException;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.Jsonable;
 import java.util.Objects;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class SignalRequest {
+public class SignalRequest implements Jsonable {
 	private final String type, data;
+	@JsonIgnore String sessionId;
+	@JsonIgnore String connectionId;
 
 	SignalRequest(Builder builder) {
 		this.type = Objects.requireNonNull(builder.type, "Type is required.");
@@ -33,6 +35,7 @@ public class SignalRequest {
 	/**
 	 * @return The signal type.
 	 */
+	@JsonProperty("type")
 	public String getType() {
 		return type;
 	}
@@ -40,23 +43,9 @@ public class SignalRequest {
 	/**
 	 * @return The signal data.
 	 */
+	@JsonProperty("data")
 	public String getData() {
 		return data;
-	}
-	
-	/**
-	 * Generates a JSON payload from this request.
-	 *
-	 * @return JSON representation of this SignalRequest object.
-	 */
-	public String toJson() {
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.writeValueAsString(this);
-		}
-		catch (JsonProcessingException jpe) {
-			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
-		}
 	}
 
 	/**

@@ -23,16 +23,16 @@ import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.*;
 import java.util.UUID;
 
 public class UpdateBroadcastLayoutEndpointTest {
 	private UpdateBroadcastLayoutEndpoint endpoint;
 	private final String applicationId = UUID.randomUUID().toString();
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		endpoint = new UpdateBroadcastLayoutEndpoint(new HttpWrapper(
 			new JWTAuthMethod(applicationId, new byte[0])
@@ -42,18 +42,16 @@ public class UpdateBroadcastLayoutEndpointTest {
 	@Test
 	public void testMakeRequestAllParameters() throws Exception {
 		String broadcastId = UUID.randomUUID().toString();
-		UpdateStreamCompositionLayoutRequestWrapper request = new  UpdateStreamCompositionLayoutRequestWrapper(
-				broadcastId,
-				StreamCompositionLayout.builder(ScreenLayoutType.VERTICAL).build()
-		);
+		StreamCompositionLayout request = StreamCompositionLayout.builder(ScreenLayoutType.VERTICAL).build();
+		request.id = broadcastId;
 		RequestBuilder builder = endpoint.makeRequest(request);
-		assertEquals("PUT", builder.getMethod());
+		Assertions.assertEquals("PUT", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/"+applicationId +
 				"/broadcast/"+broadcastId+"/layout";
-		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
+		Assertions.assertEquals(expectedUri, builder.build().getURI().toString());
+		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		String expectedRequest = "{\"type\":\"verticalPresentation\"}";
-		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
+		Assertions.assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
 	}
 
 	@Test
@@ -65,22 +63,22 @@ public class UpdateBroadcastLayoutEndpointTest {
 		);
 		endpoint = new UpdateBroadcastLayoutEndpoint(wrapper);
 		String broadcastId = UUID.randomUUID().toString();
-		UpdateStreamCompositionLayoutRequestWrapper request = new  UpdateStreamCompositionLayoutRequestWrapper(
-				broadcastId,
-				StreamCompositionLayout.builder(ScreenLayoutType.BEST_FIT)
-						.screenshareType(ScreenLayoutType.PIP).build()
-		);
+		StreamCompositionLayout request = StreamCompositionLayout.builder(ScreenLayoutType.BEST_FIT)
+				.screenshareType(ScreenLayoutType.PIP).build();
+		request.id = broadcastId;
 		String expectedUri = baseUri + "/v2/project/"+applicationId+"/broadcast/"+broadcastId+"/layout";
 		RequestBuilder builder = endpoint.makeRequest(request);
-		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
+		Assertions.assertEquals(expectedUri, builder.build().getURI().toString());
+		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		String expectedRequest = "{\"type\":\"bestFit\",\"screenshareType\":\"pip\"}";
-		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
-		assertEquals("PUT", builder.getMethod());
+		Assertions.assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
+		Assertions.assertEquals("PUT", builder.getMethod());
 	}
 
-	@Test(expected = VonageBadRequestException.class)
+	@Test
 	public void test400Response() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, ""));
+		assertThrows(VonageBadRequestException.class, () ->
+				endpoint.parseResponse(TestUtils.makeJsonHttpResponse(400, ""))
+		);
 	}
 }

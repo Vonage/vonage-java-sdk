@@ -24,17 +24,15 @@ import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.util.UUID;
 
 public class CreateBroadcastEndpointTest {
 	private CreateBroadcastEndpoint endpoint;
 	private final String applicationId = UUID.randomUUID().toString();
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		endpoint = new CreateBroadcastEndpoint(new HttpWrapper(
 			new JWTAuthMethod(applicationId, new byte[0])
@@ -50,18 +48,18 @@ public class CreateBroadcastEndpointTest {
 						.build()
 				).build();
 		RequestBuilder builder = endpoint.makeRequest(request);
-		assertEquals("POST", builder.getMethod());
+		Assertions.assertEquals("POST", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/"+applicationId+"/broadcast";
-		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
+		Assertions.assertEquals(expectedUri, builder.build().getURI().toString());
+		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		String expectedRequest = "{\"sessionId\":\"SESSION_id123\",\"outputs\":{\"rtmp\":[{" +
 				"\"streamName\":\"My Test Stream\",\"serverUrl\":\"rtmps://mytestserver/mytestapp\"}]}}";
-		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		Assertions.assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
+		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		String expectedResponse = "{}";
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
 		Broadcast parsed = endpoint.parseResponse(mockResponse);
-		assertNotNull(parsed);
+		Assertions.assertNotNull(parsed);
 	}
 
 	@Test
@@ -76,16 +74,18 @@ public class CreateBroadcastEndpointTest {
 		Broadcast request = Broadcast.builder("S").hls(Hls.builder().build()).build();
 		RequestBuilder builder = endpoint.makeRequest(request);
 		String expectedRequest = "{\"sessionId\":\"S\",\"outputs\":{\"hls\":{}}}";
-		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
-		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		assertEquals("POST", builder.getMethod());
+		Assertions.assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
+		Assertions.assertEquals(expectedUri, builder.build().getURI().toString());
+		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
+		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		Assertions.assertEquals("POST", builder.getMethod());
 	}
 	
-	@Test(expected = HttpResponseException.class)
+	@Test
 	public void test500Response() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
+		assertThrows(HttpResponseException.class, () ->
+				endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""))
+		);
 	}
 
 	@Test

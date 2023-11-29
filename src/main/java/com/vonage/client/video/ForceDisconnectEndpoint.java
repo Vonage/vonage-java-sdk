@@ -24,7 +24,7 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 
-class ForceDisconnectEndpoint extends AbstractMethod<ForceDisconnectRequestWrapper, Void> {
+class ForceDisconnectEndpoint extends AbstractMethod<SessionResourceRequestWrapper, Void> {
 	private static final Class<?>[] ALLOWED_AUTH_METHODS = {JWTAuthMethod.class};
 	private static final String PATH = "/v2/project/%s/session/%s/connection/%s";
 
@@ -38,8 +38,8 @@ class ForceDisconnectEndpoint extends AbstractMethod<ForceDisconnectRequestWrapp
 	}
 
 	@Override
-	public RequestBuilder makeRequest(ForceDisconnectRequestWrapper wrapper) {
-		String path = String.format(PATH, getApplicationIdOrApiKey(), wrapper.sessionId, wrapper.connectionId);
+	public RequestBuilder makeRequest(SessionResourceRequestWrapper wrapper) {
+		String path = String.format(PATH, getApplicationIdOrApiKey(), wrapper.sessionId, wrapper.resourceId);
 		String uri = httpWrapper.getHttpConfig().getVideoBaseUri() + path;
 		return RequestBuilder.delete(uri);
 	}

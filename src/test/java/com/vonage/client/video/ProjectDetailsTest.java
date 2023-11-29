@@ -16,8 +16,8 @@
 package com.vonage.client.video;
 
 import com.vonage.client.VonageUnexpectedException;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 
 public class ProjectDetailsTest {
 	
@@ -37,11 +37,11 @@ public class ProjectDetailsTest {
 				"\"createdAt\":\""+createdAt+"\"\n" +
 		"}");
 		
-		assertEquals(applicationId, response.getApplicationId());
-		assertEquals(status, response.getStatus());
-		assertEquals(name, response.getName());
-		assertEquals(environment, response.getEnvironment());
-		assertEquals(createdAt, response.getCreatedAt());
+		Assertions.assertEquals(applicationId, response.getApplicationId());
+		Assertions.assertEquals(status, response.getStatus());
+		Assertions.assertEquals(name, response.getName());
+		Assertions.assertEquals(environment, response.getEnvironment());
+		Assertions.assertEquals(createdAt, response.getCreatedAt());
 	}
 
 	@Test
@@ -52,29 +52,29 @@ public class ProjectDetailsTest {
 				"\"name\":\"\""+
 				"}");
 
-		assertEquals("", response.getName());
-		assertNull(response.getStatus());
-		assertNull(response.getEnvironment());
+		Assertions.assertEquals("", response.getName());
+		Assertions.assertNull(response.getStatus());
+		Assertions.assertNull(response.getEnvironment());
 	}
 	
-	@Test(expected = VonageUnexpectedException.class)
+	@Test
 	public void testFromJsonInvalid() {
-		ProjectDetails.fromJson("{malformed]");
+		assertThrows(VonageUnexpectedException.class, () -> ProjectDetails.fromJson("{malformed]"));
 	}
 
 	@Test
 	public void testFromJsonEmpty() {
 		ProjectDetails response = ProjectDetails.fromJson("{}");
-		assertNull(response.getApplicationId());
-		assertNull(response.getStatus());
-		assertNull(response.getName());
-		assertNull(response.getEnvironment());
-		assertNull(response.getCreatedAt());
+		Assertions.assertNull(response.getApplicationId());
+		Assertions.assertNull(response.getStatus());
+		Assertions.assertNull(response.getName());
+		Assertions.assertNull(response.getEnvironment());
+		Assertions.assertNull(response.getCreatedAt());
 	}
 
 	@Test
 	public void testFromJsonNullAndEmptyString() {
-		assertNotNull(ProjectDetails.fromJson(""));
-		assertNotNull(ProjectDetails.fromJson(null));
+		Assertions.assertNotNull(ProjectDetails.fromJson(""));
+		Assertions.assertNotNull(ProjectDetails.fromJson(null));
 	}
 }

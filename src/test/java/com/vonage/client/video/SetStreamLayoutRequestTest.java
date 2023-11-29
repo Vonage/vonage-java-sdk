@@ -15,8 +15,8 @@
  */
 package com.vonage.client.video;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -48,22 +48,28 @@ public class SetStreamLayoutRequestTest {
 				"{\"id\":\""+id3+"\",\"layoutClassList\":[]}," +
 				"{\"id\":\""+id4+"\",\"layoutClassList\":[\"focus\",\"min\"]}" +
 			"]}";
-		assertEquals(expectedJson, request.toJson());
-		assertEquals(sessionId, request.sessionId);
+		Assertions.assertEquals(expectedJson, request.toJson());
+		Assertions.assertEquals(sessionId, request.sessionId);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testConstructInvalidStreamId() {
-		SessionStream.builder("abc123").build();
+		assertThrows(IllegalArgumentException.class, () ->
+				SessionStream.builder("abc123").build()
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testEmptyStreamList() {
-		new SetStreamLayoutRequest(sessionId, Collections.emptyList());
+		assertThrows(IllegalArgumentException.class, () ->
+				new SetStreamLayoutRequest(sessionId, Collections.emptyList())
+		);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testNullStreamList() {
-		new SetStreamLayoutRequest(sessionId, null);
+		assertThrows(IllegalArgumentException.class, () ->
+				new SetStreamLayoutRequest(sessionId, null)
+		);
 	}
 }

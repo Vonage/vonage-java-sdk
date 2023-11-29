@@ -15,6 +15,7 @@
  */
 package com.vonage.client.video;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 /**
  * Defines values for the role parameter of the {@link TokenOptions.Builder#role(Role role)} method.
  */
@@ -35,6 +36,7 @@ public enum Role {
 	 */
 	MODERATOR;
 
+	@JsonValue
 	@Override
 	public String toString() {
 		return name().toLowerCase();

@@ -23,17 +23,17 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import java.util.UUID;
 
 public class StopBroadcastEndpointTest {
 	private StopBroadcastEndpoint endpoint;
 	private final String applicationId = UUID.randomUUID().toString();
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		endpoint = new StopBroadcastEndpoint(new HttpWrapper(
 			new JWTAuthMethod(applicationId, new byte[0])
@@ -44,15 +44,15 @@ public class StopBroadcastEndpointTest {
 	public void testMakeRequest() throws Exception {
 		String broadcastId = UUID.randomUUID().toString();
 		RequestBuilder builder = endpoint.makeRequest(broadcastId);
-		assertEquals("POST", builder.getMethod());
+		Assertions.assertEquals("POST", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/" + applicationId +
 				"/broadcast/"+broadcastId+"/stop";
-		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		Assertions.assertEquals(expectedUri, builder.build().getURI().toString());
+		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		String expectedResponse = "{}";
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
 		Broadcast parsed = endpoint.parseResponse(mockResponse);
-		assertNotNull(parsed);
+		Assertions.assertNotNull(parsed);
 	}
 
 	@Test
@@ -66,13 +66,15 @@ public class StopBroadcastEndpointTest {
 		endpoint = new StopBroadcastEndpoint(wrapper);
 		String expectedUri = baseUri + "/v2/project/"+applicationId+"/broadcast/"+broadcastId+"/stop";
 		RequestBuilder builder = endpoint.makeRequest(broadcastId);
-		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		assertEquals("POST", builder.getMethod());
+		Assertions.assertEquals(expectedUri, builder.build().getURI().toString());
+		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		Assertions.assertEquals("POST", builder.getMethod());
 	}
 
-	@Test(expected = HttpResponseException.class)
+	@Test
 	public void test500Response() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
+		assertThrows(HttpResponseException.class, () ->
+				endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""))
+		);
 	}
 }

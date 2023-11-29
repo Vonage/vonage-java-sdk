@@ -15,10 +15,9 @@
  */
 package com.vonage.client.video;
 
-import com.vonage.client.VonageUnexpectedException;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import org.junit.Test;
+import com.vonage.client.VonageResponseParseException;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.util.UUID;
 
 public class ListStreamsResponseTest {
@@ -43,27 +42,27 @@ public class ListStreamsResponseTest {
 				"}]}"
 		);
 		
-		assertEquals(count, response.getCount());
-		assertEquals(count.intValue(), response.getItems().size());
+		Assertions.assertEquals(count, response.getCount());
+		Assertions.assertEquals(count.intValue(), response.getItems().size());
 		GetStreamResponse gsr0 = response.getItems().get(0), gsr1 = response.getItems().get(1);
-		assertEquals(VideoType.CAMERA, gsr0.getVideoType());
-		assertEquals(name0, gsr0.getName());
-		assertEquals(1, gsr0.getLayoutClassList().size());
-		assertNull(gsr1.getVideoType());
-		assertNull(gsr1.getName());
-		assertEquals(id1, gsr1.getId());
-		assertEquals(0, gsr1.getLayoutClassList().size());
+		Assertions.assertEquals(VideoType.CAMERA, gsr0.getVideoType());
+		Assertions.assertEquals(name0, gsr0.getName());
+		Assertions.assertEquals(1, gsr0.getLayoutClassList().size());
+		Assertions.assertNull(gsr1.getVideoType());
+		Assertions.assertNull(gsr1.getName());
+		Assertions.assertEquals(id1, gsr1.getId());
+		Assertions.assertEquals(0, gsr1.getLayoutClassList().size());
 	}
 	
-	@Test(expected = VonageUnexpectedException.class)
+	@Test
 	public void testFromJsonInvalid() {
-		ListStreamsResponse.fromJson("{malformed]");
+		assertThrows(VonageResponseParseException.class, () -> ListStreamsResponse.fromJson("{malformed]"));
 	}
 
 	@Test
 	public void testFromJsonEmpty() {
 		ListStreamsResponse response = ListStreamsResponse.fromJson("{}");
-		assertNull(response.getCount());
-		assertNull(response.getItems());
+		Assertions.assertNull(response.getCount());
+		Assertions.assertNull(response.getItems());
 	}
 }

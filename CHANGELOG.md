@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 # [8.0.0] - 2023-11-??
 - Added `redirect_url` parameter to `SilentAuthWorkflow`
+- Bumped Jackson version to 2.16.0
 
 # [8.0.0-rc2] - 2023-11-07
 - Removed packages:

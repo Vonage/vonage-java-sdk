@@ -21,9 +21,8 @@ import com.vonage.client.VonageBadRequestException;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.client.HttpResponseException;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
 import java.net.URI;
 import java.time.Duration;
@@ -167,45 +166,45 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 	void stubListArchiveJsonAndAssertEquals(Supplier<List<Archive>> invocation) throws Exception {
 		stubResponse(listArchiveJson);
 		List<Archive> archives = invocation.get();
-		assertEquals(1, archives.size());
+		Assertions.assertEquals(1, archives.size());
 		assertArchiveEqualsExpectedJson(archives.get(0));
 	}
 
 	static void assertArchiveEqualsExpectedJson(Archive response) {
-		assertNotNull(response);
-		assertEquals("https://tokbox.s3.amazonaws.com/"+connectionId+"/archive.mp4", response.getUrl().toString());
-		assertEquals(Long.valueOf(1384221730000L), response.getCreatedAtMillis());
-		assertEquals(Instant.ofEpochSecond(1384221730L), response.getCreatedAt());
-		assertEquals(Integer.valueOf(5049), response.getDurationSeconds());
-		assertEquals(Duration.ofSeconds(5049), response.getDuration());
-		assertTrue(response.hasAudio());
-		assertTrue(response.hasVideo());
-		assertEquals(archiveId, response.getId().toString());
-		assertEquals("Foo", response.getName());
-		assertEquals("", response.getReason());
-		assertEquals(Resolution.HD_LANDSCAPE, response.getResolution());
-		assertEquals(sessionId, response.getSessionId());
-		assertEquals(applicationId, response.getApplicationId().toString());
-		assertEquals(Long.valueOf(247748791L), response.getSize());
-		assertEquals(ArchiveStatus.AVAILABLE, response.getStatus());
+		Assertions.assertNotNull(response);
+		Assertions.assertEquals("https://tokbox.s3.amazonaws.com/"+connectionId+"/archive.mp4", response.getUrl().toString());
+		Assertions.assertEquals(Long.valueOf(1384221730000L), response.getCreatedAtMillis());
+		Assertions.assertEquals(Instant.ofEpochSecond(1384221730L), response.getCreatedAt());
+		Assertions.assertEquals(Integer.valueOf(5049), response.getDurationSeconds());
+		Assertions.assertEquals(Duration.ofSeconds(5049), response.getDuration());
+		Assertions.assertTrue(response.hasAudio());
+		Assertions.assertTrue(response.hasVideo());
+		Assertions.assertEquals(archiveId, response.getId().toString());
+		Assertions.assertEquals("Foo", response.getName());
+		Assertions.assertEquals("", response.getReason());
+		Assertions.assertEquals(Resolution.HD_LANDSCAPE, response.getResolution());
+		Assertions.assertEquals(sessionId, response.getSessionId());
+		Assertions.assertEquals(applicationId, response.getApplicationId().toString());
+		Assertions.assertEquals(Long.valueOf(247748791L), response.getSize());
+		Assertions.assertEquals(ArchiveStatus.AVAILABLE, response.getStatus());
 		assertVideoStreamsEqualsExpectedJson(response);
 	}
 
 	static void assertVideoStreamsEqualsExpectedJson(StreamComposition response) {
-		assertEquals(StreamMode.MANUAL, response.getStreamMode());
+		Assertions.assertEquals(StreamMode.MANUAL, response.getStreamMode());
 		List<VideoStream> streams = response.getStreams();
-		assertNotNull(streams);
-		assertEquals(2, streams.size());
+		Assertions.assertNotNull(streams);
+		Assertions.assertEquals(2, streams.size());
 		VideoStream stream1 = streams.get(0);
-		assertNotNull(stream1);
-		assertEquals(streamId, stream1.getStreamId().toString());
-		assertTrue(stream1.hasAudio());
-		assertFalse(stream1.hasVideo());
+		Assertions.assertNotNull(stream1);
+		Assertions.assertEquals(streamId, stream1.getStreamId().toString());
+		Assertions.assertTrue(stream1.hasAudio());
+		Assertions.assertFalse(stream1.hasVideo());
 		VideoStream stream2 = streams.get(1);
-		assertNotNull(stream2);
-		assertEquals(UUID.fromString("482bce73-f882-40fd-8ca5-cb74ff416036"), stream2.getStreamId());
-		assertTrue(stream2.hasVideo());
-		assertFalse(stream2.hasAudio());
+		Assertions.assertNotNull(stream2);
+		Assertions.assertEquals(UUID.fromString("482bce73-f882-40fd-8ca5-cb74ff416036"), stream2.getStreamId());
+		Assertions.assertTrue(stream2.hasVideo());
+		Assertions.assertFalse(stream2.hasAudio());
 	}
 
 	void stubBroadcastJsonAndAssertThrows(Executable invocation) throws Exception {
@@ -224,44 +223,44 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 	void stubListBroadcastJsonAndAssertEquals(Supplier<List<Broadcast>> invocation) throws Exception {
 		stubResponse(listBroadcastJson);
 		List<Broadcast> broadcasts = invocation.get();
-		assertEquals(1, broadcasts.size());
+		Assertions.assertEquals(1, broadcasts.size());
 		assertBroadcastEqualsExpectedJson(broadcasts.get(0));
 	}
 
 	static void assertBroadcastEqualsExpectedJson(Broadcast response) {
-		assertNotNull(response);
-		assertEquals(sessionId, response.getSessionId());
-		assertEquals(broadcastId, response.getId().toString());
-		assertEquals(applicationId, response.getApplicationId().toString());
-		assertTrue(response.hasAudio());
-		assertTrue(response.hasVideo());
-		assertEquals(BroadcastStatus.STARTED, response.getStatus());
-		assertEquals(Resolution.HD_PORTRAIT, response.getResolution());
-		assertEquals(1437676551000L, response.getCreatedAtMillis().longValue());
-		assertEquals(1437876551000L, response.getUpdatedAtMillis().longValue());
-		assertEquals("broadcast-1234b", response.getMultiBroadcastTag());
-		assertEquals(Duration.ofSeconds(5400), response.getMaxDuration());
-		assertEquals(2000000, response.getMaxBitrate().intValue());
+		Assertions.assertNotNull(response);
+		Assertions.assertEquals(sessionId, response.getSessionId());
+		Assertions.assertEquals(broadcastId, response.getId().toString());
+		Assertions.assertEquals(applicationId, response.getApplicationId().toString());
+		Assertions.assertTrue(response.hasAudio());
+		Assertions.assertTrue(response.hasVideo());
+		Assertions.assertEquals(BroadcastStatus.STARTED, response.getStatus());
+		Assertions.assertEquals(Resolution.HD_PORTRAIT, response.getResolution());
+		Assertions.assertEquals(1437676551000L, response.getCreatedAtMillis().longValue());
+		Assertions.assertEquals(1437876551000L, response.getUpdatedAtMillis().longValue());
+		Assertions.assertEquals("broadcast-1234b", response.getMultiBroadcastTag());
+		Assertions.assertEquals(Duration.ofSeconds(5400), response.getMaxDuration());
+		Assertions.assertEquals(2000000, response.getMaxBitrate().intValue());
 		BroadcastUrls broadcastUrls = response.getBroadcastUrls();
-		assertNotNull(broadcastUrls);
-		assertEquals("http://server/fakepath/playlist.m3u8", broadcastUrls.getHls().toString());
+		Assertions.assertNotNull(broadcastUrls);
+		Assertions.assertEquals("http://server/fakepath/playlist.m3u8", broadcastUrls.getHls().toString());
 		List<Rtmp> rtmps = broadcastUrls.getRtmps();
-		assertNotNull(rtmps);
-		assertEquals(1, rtmps.size());
+		Assertions.assertNotNull(rtmps);
+		Assertions.assertEquals(1, rtmps.size());
 		Rtmp rtmp = rtmps.get(0);
-		assertNotNull(rtmp);
-		assertEquals("rtmps://myfooserver/myfooapp", rtmp.getServerUrl().toString());
-		assertEquals(RtmpStatus.LIVE, rtmp.getStatus());
-		assertEquals("foo", rtmp.getId());
-		assertEquals("myfoostream", rtmp.getStreamName());
+		Assertions.assertNotNull(rtmp);
+		Assertions.assertEquals("rtmps://myfooserver/myfooapp", rtmp.getServerUrl().toString());
+		Assertions.assertEquals(RtmpStatus.LIVE, rtmp.getStatus());
+		Assertions.assertEquals("foo", rtmp.getId());
+		Assertions.assertEquals("myfoostream", rtmp.getStreamName());
 		Hls hls = response.getHlsSettings();
-		assertNotNull(hls);
-		assertFalse(hls.dvr());
-		assertTrue(hls.lowLatency());
+		Assertions.assertNotNull(hls);
+		Assertions.assertFalse(hls.dvr());
+		Assertions.assertTrue(hls.lowLatency());
 		assertVideoStreamsEqualsExpectedJson(response);
 	}
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		wrapper.getAuthCollection().add(new JWTAuthMethod(applicationId, new byte[0]));
 		client = new VideoClient(wrapper);
@@ -281,18 +280,18 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 		stubResponse(responseJson);
 		CreateSessionResponse response = client.createSession(request);
-		assertEquals(sessionId, response.getSessionId());
-		assertEquals(applicationId, response.getApplicationId().toString());
-		assertEquals(createDt, response.getCreateDt());
-		assertEquals(msUrl, response.getMediaServerUrl().toString());
+		Assertions.assertEquals(sessionId, response.getSessionId());
+		Assertions.assertEquals(applicationId, response.getApplicationId().toString());
+		Assertions.assertEquals(createDt, response.getCreateDt());
+		Assertions.assertEquals(msUrl, response.getMediaServerUrl().toString());
 
 		stubResponse(responseJson);
 		response = client.createSession();
-		assertNotNull(response);
-		assertEquals(sessionId, response.getSessionId());
-		assertEquals(applicationId, response.getApplicationId().toString());
-		assertEquals(createDt, response.getCreateDt());
-		assertEquals(msUrl, response.getMediaServerUrl().toString());
+		Assertions.assertNotNull(response);
+		Assertions.assertEquals(sessionId, response.getSessionId());
+		Assertions.assertEquals(applicationId, response.getApplicationId().toString());
+		Assertions.assertEquals(createDt, response.getCreateDt());
+		Assertions.assertEquals(msUrl, response.getMediaServerUrl().toString());
 
 		responseJson = "{\n" + "  \"code\": 400,\n" + "  \"message\": "+
 				"\"Invalid request. This response may indicate that data in your request data is invalid JSON. "+
@@ -316,9 +315,9 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 		stubResponse(responseJson);
 		List<GetStreamResponse> response = client.listStreams(sessionId);
-		assertEquals(1, response.size());
-		assertEquals(VideoType.SCREEN, response.get(0).getVideoType());
-		assertEquals("", response.get(0).getName());
+		Assertions.assertEquals(1, response.size());
+		Assertions.assertEquals(VideoType.SCREEN, response.get(0).getVideoType());
+		Assertions.assertEquals("", response.get(0).getName());
 		assertThrows(IllegalArgumentException.class, () -> client.listStreams(null));
 
 		responseJson = "{\n" +
@@ -341,10 +340,10 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 		stubResponse(200, responseJson);
 		GetStreamResponse response = client.getStream(sessionId, streamId);
-		assertEquals(streamId, response.getId().toString());
-		assertEquals(VideoType.CUSTOM, response.getVideoType());
-		assertEquals(1, response.getLayoutClassList().size());
-		assertEquals("full", response.getLayoutClassList().get(0));
+		Assertions.assertEquals(streamId, response.getId().toString());
+		Assertions.assertEquals(VideoType.CUSTOM, response.getVideoType());
+		Assertions.assertEquals(1, response.getLayoutClassList().size());
+		Assertions.assertEquals("full", response.getLayoutClassList().get(0));
 
 		stubResponseAndAssertThrowsIAX(() -> client.getStream(null, streamId));
 		stubResponseAndAssertThrowsIAX(() -> client.getStream(sessionId, null));
@@ -693,9 +692,9 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		);
 
 		SipDialResponse parsed = client.sipDial(request);
-		assertEquals(id, parsed.getId());
-		assertEquals(connectionId, parsed.getConnectionId());
-		assertEquals(streamId, parsed.getStreamId());
+		Assertions.assertEquals(id, parsed.getId());
+		Assertions.assertEquals(connectionId, parsed.getConnectionId());
+		Assertions.assertEquals(streamId, parsed.getStreamId());
 
 		stubResponseAndAssertThrowsResponseParseException(409, "{\"code\":409}", () -> client.sipDial(request));
 	}
@@ -721,20 +720,20 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		String token = client.generateToken(sessionId);
 		Map<String, String> claims = TestUtils.decodeTokenBody(token);
 
-		assertEquals("session.connect", claims.get("scope"));
-		assertEquals(sessionId, claims.get("session_id"));
-		assertNotNull(claims.get("application_id"));	// TODO test value
+		Assertions.assertEquals("session.connect", claims.get("scope"));
+		Assertions.assertEquals(sessionId, claims.get("session_id"));
+		Assertions.assertNotNull(claims.get("application_id"));	// TODO test value
 		long exp = Long.parseLong(claims.get("exp"));
 		long iat = Long.parseLong(claims.get("iat"));
 		// One minute less than a day = 86340
-		assertTrue((iat + 86340) < exp);
-		assertTrue((iat + 86401) > exp);
-		assertTrue(token.length() > 100);
+		Assertions.assertTrue((iat + 86340) < exp);
+		Assertions.assertTrue((iat + 86401) > exp);
+		Assertions.assertTrue(token.length() > 100);
 
 		token = client.generateToken(sessionId, TokenOptions.builder().build());
-		assertEquals(claims.keySet(), TestUtils.decodeTokenBody(token).keySet());
+		Assertions.assertEquals(claims.keySet(), TestUtils.decodeTokenBody(token).keySet());
 		token = client.generateToken(sessionId, null);
-		assertEquals(claims.keySet(), TestUtils.decodeTokenBody(token).keySet());
+		Assertions.assertEquals(claims.keySet(), TestUtils.decodeTokenBody(token).keySet());
 		assertThrows(IllegalArgumentException.class, () -> client.generateToken(null));
 
 		token = client.generateToken(sessionId,TokenOptions.builder()
@@ -746,15 +745,15 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		        .build()
 		);
 		claims = TestUtils.decodeTokenBody(token);
-		assertEquals("subscriber", claims.get("role"));
-		assertEquals("foo bar, blah blah", claims.get("connection_data"));
-		assertEquals("c1 c2 min full", claims.get("initial_layout_class_list"));
-		assertEquals("session.connect", claims.get("scope"));
-		assertEquals(sessionId, claims.get("session_id"));
+		Assertions.assertEquals("subscriber", claims.get("role"));
+		Assertions.assertEquals("foo bar, blah blah", claims.get("connection_data"));
+		Assertions.assertEquals("c1 c2 min full", claims.get("initial_layout_class_list"));
+		Assertions.assertEquals("session.connect", claims.get("scope"));
+		Assertions.assertEquals(sessionId, claims.get("session_id"));
 		//assertEquals(applicationId, claims.get("application_id")); TODO test value
 		exp = Long.parseLong(claims.get("exp"));
 		iat = Long.parseLong(claims.get("iat"));
-		assertTrue((iat + 721) > exp);
-		assertTrue((iat + 700) < exp);
+		Assertions.assertTrue((iat + 721) > exp);
+		Assertions.assertTrue((iat + 700) < exp);
 	}
 }

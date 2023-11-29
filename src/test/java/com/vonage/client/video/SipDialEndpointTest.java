@@ -15,18 +15,16 @@
  */
 package com.vonage.client.video;
 
-import com.vonage.client.HttpConfig;
-import com.vonage.client.HttpWrapper;
-import com.vonage.client.TestUtils;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.*;
 import com.vonage.client.auth.JWTAuthMethod;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.util.EntityUtils;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import java.net.URI;
 import java.util.UUID;
 
@@ -34,7 +32,7 @@ public class SipDialEndpointTest {
 	private SipDialEndpoint endpoint;
 	private final String applicationId = UUID.randomUUID().toString();
 	
-	@Before
+	@BeforeEach
 	public void setUp() {
 		endpoint = new SipDialEndpoint(new HttpWrapper(
 			new JWTAuthMethod(applicationId, new byte[0])
@@ -48,20 +46,20 @@ public class SipDialEndpointTest {
 				.uri(URI.create("sip.example.com"), true).build();
 
 		RequestBuilder builder = endpoint.makeRequest(request);
-		assertEquals("POST", builder.getMethod());
+		Assertions.assertEquals("POST", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/"+applicationId+"/dial";
-		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		Assertions.assertEquals(expectedUri, builder.build().getURI().toString());
+		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
+		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		String expectedPayload = "{\"sessionId\":\"=2SessiondID\",\"token\":\"eYjwToken\"," +
 				"\"sip\":{\"uri\":\"sip.example.com;transport=tls\"}}";
-		assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
+		Assertions.assertEquals(expectedPayload, EntityUtils.toString(builder.getEntity()));
 
 		SipDialResponse parsed = endpoint.parseResponse(TestUtils.makeJsonHttpResponse(200, "{}"));
-		assertNotNull(parsed);
-		assertNull(parsed.getConnectionId());
-		assertNull(parsed.getId());
-		assertNull(parsed.getStreamId());
+		Assertions.assertNotNull(parsed);
+		Assertions.assertNull(parsed.getConnectionId());
+		Assertions.assertNull(parsed.getId());
+		Assertions.assertNull(parsed.getStreamId());
 	}
 
 	@Test
@@ -78,21 +76,23 @@ public class SipDialEndpointTest {
 				.uri(URI.create("sip:u@example.com"), false).build();
 
 		RequestBuilder builder = endpoint.makeRequest(request);
-		assertEquals(expectedUri, builder.build().getURI().toString());
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
+		Assertions.assertEquals(expectedUri, builder.build().getURI().toString());
+		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Content-Type").getValue());
 		String expectedRequest = "{\"sessionId\":\"s\",\"token\":\"t\",\"sip\":{\"uri\":\"sip:u@example.com\"}}";
-		assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
-		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		assertEquals("POST", builder.getMethod());
+		Assertions.assertEquals(expectedRequest, EntityUtils.toString(builder.getEntity()));
+		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		Assertions.assertEquals("POST", builder.getMethod());
 	}
 
-	@Test(expected = HttpResponseException.class)
+	@Test
 	public void test500Response() throws Exception {
-		endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""));
+		assertThrows(HttpResponseException.class, () ->
+				endpoint.parseResponse(TestUtils.makeJsonHttpResponse(500, ""))
+		);
 	}
 
-	@Test(expected = VonageUnexpectedException.class)
+	@Test
 	public void testInvalidResponseJson() throws Exception {
-		SipDialResponse.fromJson("{malformed]");
+		assertThrows(VonageResponseParseException.class, () -> SipDialResponse.fromJson("{malformed]"));
 	}
 }

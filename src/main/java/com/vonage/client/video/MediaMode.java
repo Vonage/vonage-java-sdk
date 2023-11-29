@@ -15,6 +15,7 @@
  */
 package com.vonage.client.video;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 /**
  * Defines values for the mediaMode parameter of the
  * {@link CreateSessionRequest.Builder#mediaMode(MediaMode mediaMode)} method.
@@ -37,6 +38,7 @@ public enum MediaMode {
         serialized = s;
     }
 
+    @JsonValue
     @Override
     public String toString() {
         return serialized;
