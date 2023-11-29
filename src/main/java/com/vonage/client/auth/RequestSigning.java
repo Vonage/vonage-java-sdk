@@ -153,6 +153,25 @@ public class RequestSigning {
      * @param inputStream The request data stream.
      * @param parameterMap The request parameters.
      * @param secretKey The pre-shared secret key used by the sender of the request to create the signature.
+     *
+     * @return true if the signature is correct for this request and secret key.
+     *
+     * @since 8.0.0
+     */
+    public static boolean verifyRequestSignature(InputStream inputStream,
+                                                    String contentType,
+                                                    Map<String, String[]> parameterMap,
+                                                    String secretKey) {
+        return verifyRequestSignature(contentType, inputStream, parameterMap, secretKey, System.currentTimeMillis());
+    }
+
+    /**
+     * Verifies the signature in an HttpServletRequest. Hashing strategy is MD5.
+     *
+     * @param contentType The request Content-Type header.
+     * @param inputStream The request data stream.
+     * @param parameterMap The request parameters.
+     * @param secretKey The pre-shared secret key used by the sender of the request to create the signature.
      * @param currentTimeMillis The current time, in milliseconds.
      *
      * @return true if the signature is correct for this request and secret key.

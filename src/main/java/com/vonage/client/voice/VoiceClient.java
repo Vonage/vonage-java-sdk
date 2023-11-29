@@ -25,7 +25,6 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
-import java.util.UUID;
 import java.util.function.Function;
 
 /**
@@ -142,8 +141,8 @@ public class VoiceClient {
     /**
      * Look up the status of a single call initiated by {@link #createCall(Call)}.
      *
-     * @param uuid (required) The UUID of the call, obtained from the object returned by {@link #createCall(Call)}. This
-     *             value can be obtained with {@link CallEvent#getUuid()}.
+     * @param uuid (required) The UUID of the call, obtained from the object returned by {@link #createCall(Call)}.
+     *             This value can be obtained with {@link CallEvent#getUuid()}.
      *
      * @return A CallInfo object, representing the response from the Vonage Voice API.
      *
@@ -172,8 +171,8 @@ public class VoiceClient {
         return sendDtmf.execute(new DtmfPayload(digits, validateUuid(uuid)));
     }
 
-    private void modifyCall(UUID callId, ModifyCallAction action) throws VoiceResponseException {
-        modifyCall.execute(new ModifyCallPayload(action, callId.toString()));
+    private void modifyCall(String callId, ModifyCallAction action) throws VoiceResponseException {
+        modifyCall.execute(new ModifyCallPayload(action, validateUuid(callId)));
     }
 
     /**
@@ -186,7 +185,7 @@ public class VoiceClient {
      *
      * @since 7.11.0
      */
-    public void earmuffCall(UUID callId) throws VoiceResponseException {
+    public void earmuffCall(String callId) throws VoiceResponseException {
         modifyCall(callId, ModifyCallAction.EARMUFF);
     }
 
@@ -200,7 +199,7 @@ public class VoiceClient {
      *
      * @since 7.11.0
      */
-    public void unearmuffCall(UUID callId) throws VoiceResponseException {
+    public void unearmuffCall(String callId) throws VoiceResponseException {
         modifyCall(callId, ModifyCallAction.UNEARMUFF);
     }
 
@@ -213,7 +212,7 @@ public class VoiceClient {
      *
      * @since 7.11.0
      */
-    public void muteCall(UUID callId) throws VoiceResponseException {
+    public void muteCall(String callId) throws VoiceResponseException {
         modifyCall(callId, ModifyCallAction.MUTE);
     }
 
@@ -226,7 +225,7 @@ public class VoiceClient {
      *
      * @since 7.11.0
      */
-    public void unmuteCall(UUID callId) throws VoiceResponseException {
+    public void unmuteCall(String callId) throws VoiceResponseException {
         modifyCall(callId, ModifyCallAction.UNMUTE);
     }
 
@@ -239,7 +238,7 @@ public class VoiceClient {
      *
      * @since 7.11.0
      */
-    public void terminateCall(UUID callId) throws VoiceResponseException {
+    public void terminateCall(String callId) throws VoiceResponseException {
         modifyCall(callId, ModifyCallAction.HANGUP);
     }
 
