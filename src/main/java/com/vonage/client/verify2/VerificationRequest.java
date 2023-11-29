@@ -15,13 +15,11 @@
  */
 package com.vonage.client.verify2;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.vonage.client.Jsonable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -41,7 +39,7 @@ import java.util.regex.Pattern;
 public class VerificationRequest implements Jsonable {
 	static final Pattern CODE_REGEX = Pattern.compile("[a-zA-Z0-9]{4,10}");
 
-	protected final Locale locale;
+	@JsonProperty("locale") protected final Locale locale;
 	protected final Integer channelTimeout, codeLength;
 	protected final Boolean fraudCheck;
 	protected final String brand, code, clientRef;
@@ -98,11 +96,16 @@ public class VerificationRequest implements Jsonable {
 	/**
 	 * Language for the request in ISO_639-1 format.
 	 *
-	 * @return The language as an enum, or {@code null} if not set (the default).
+	 * @return The locale, or {@code null} if not set (the default).
 	 */
-	@JsonProperty("locale")
+	@JsonIgnore
 	public Locale getLocale() {
 		return locale;
+	}
+
+	@JsonGetter("locale")
+	protected String getLocaleAsString() {
+		return locale == null ? null : locale.toString().replace("_", "-").toLowerCase();
 	}
 
 	/**
@@ -292,15 +295,38 @@ public class VerificationRequest implements Jsonable {
 
 		/**
 		 * (OPTIONAL)
-		 * Languages that are available to use.
+		 * Set the language that this request will be delivered in. Refer to
+		 * <a href=https://developer.vonage.com/en/verify/guides/verify-v2-languages>the documentation</a>
+		 * for a list of supported locales.
 		 *
-		 * @param locale The language locale as an enum.
+		 * @param locale The language locale.
 		 *
 		 * @return This builder.
+		 *
+		 * @since 8.0.0
 		 */
 		public Builder locale(Locale locale) {
+			if (locale == null || locale.toString().isEmpty()) {
+				throw new IllegalArgumentException("Invalid locale");
+			}
 			this.locale = locale;
 			return this;
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * Set the language that this request will be delivered in.
+		 *
+		 * @param locale The language locale as a string. This should be a
+		 * <a href=https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes>ISO 639-1 code</a>.
+		 *
+		 * @return This builder.
+		 *
+		 * @since 8.0.0
+		 * @see #locale(Locale)
+		 */
+		public Builder locale(String locale) {
+			return locale(Locale.forLanguageTag(locale));
 		}
 
 		/**

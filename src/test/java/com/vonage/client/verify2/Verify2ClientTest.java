@@ -61,7 +61,7 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 				.brand("Nexmo").fraudCheck(false)
 				.code("ab2c3de5").codeLength(8)
 				.channelTimeout(500)
-				.locale(Locale.GERMAN_GERMANY)
+				.locale("de-de")
 				.clientRef("callback-ref0x1")
 				.workflows(workflows).build();
 	}
@@ -106,14 +106,14 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 			@Override
 			protected VerificationRequest sampleRequest() {
 				return VerificationRequest.builder()
-						.clientRef("my-personal-reference").locale(Locale.ENGLISH_UK)
+						.clientRef("my-personal-reference").locale("ar-XA")
 						.addWorkflow(new SmsWorkflow("447700900001", "FA+9qCX9VSu"))
 						.brand("ACME, Inc").codeLength(6).channelTimeout(320).build();
 			}
 
 			@Override
 			protected String sampleRequestBodyString() {
-				return "{\"locale\":\"en-gb\",\"channel_timeout\":320,\"code_length\":6," +
+				return "{\"locale\":\"ar-xa\",\"channel_timeout\":320,\"code_length\":6," +
 						"\"brand\":\"ACME, Inc\",\"client_ref\":\"my-personal-reference\",\"workflow\":" +
 						"[{\"channel\":\"sms\",\"to\":\"447700900001\",\"app_hash\":\"FA+9qCX9VSu\"}]}";
 			}

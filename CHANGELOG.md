@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Bumped Jackson version to 2.16.0
 - Use String instead of UUID in `VoiceClient` call modification methods
 - Added public `verifyRequestSignature` method to `RequestSigning`
+- Replaced custom `Locale` enum in Verify v2 with `java.util.Locale`
 
 # [8.0.0-rc2] - 2023-11-07
 - Removed packages:
