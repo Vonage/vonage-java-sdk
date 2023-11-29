@@ -34,10 +34,6 @@ class TransferDestination {
         this(Type.NCCO, null, ncco);
     }
 
-    public TransferDestination(Type type, String url) {
-        this(type, url, null);
-    }
-
     public TransferDestination(Type type, String url, Ncco ncco) {
         this.type = type;
         this.urls = url != null ? new String[]{url} : null;

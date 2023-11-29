@@ -130,37 +130,37 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
 
     @Test
     public void testTerminateCall() throws Exception {
-        stubResponseAndRun(204, () -> client.terminateCall(SAMPLE_CALL_UUID));
+        stubResponseAndRun(204, () -> client.terminateCall(SAMPLE_CALL_ID));
         stubResponseAndAssertThrows(204, () -> client.terminateCall(null), NullPointerException.class);
-        stubResponseAndAssertThrows(404, () -> client.terminateCall(SAMPLE_CALL_UUID), VoiceResponseException.class);
+        stubResponseAndAssertThrows(404, () -> client.terminateCall(SAMPLE_CALL_ID), VoiceResponseException.class);
     }
 
     @Test
     public void testMuteCall() throws Exception {
-        stubResponseAndRun(204, () -> client.muteCall(SAMPLE_CALL_UUID));
+        stubResponseAndRun(204, () -> client.muteCall(SAMPLE_CALL_ID));
         stubResponseAndAssertThrows(204, () -> client.muteCall(null), NullPointerException.class);
-        stubResponseAndAssertThrows(404, () -> client.muteCall(SAMPLE_CALL_UUID), VoiceResponseException.class);
+        stubResponseAndAssertThrows(404, () -> client.muteCall(SAMPLE_CALL_ID), VoiceResponseException.class);
     }
 
     @Test
     public void testUnmuteCall() throws Exception {
-        stubResponseAndRun(204, () -> client.unmuteCall(SAMPLE_CALL_UUID));
+        stubResponseAndRun(204, () -> client.unmuteCall(SAMPLE_CALL_ID));
         stubResponseAndAssertThrows(204, () -> client.unmuteCall(null), NullPointerException.class);
-        stubResponseAndAssertThrows(404, () -> client.unmuteCall(SAMPLE_CALL_UUID), VoiceResponseException.class);
+        stubResponseAndAssertThrows(404, () -> client.unmuteCall(SAMPLE_CALL_ID), VoiceResponseException.class);
     }
 
     @Test
     public void testEarmuffCall() throws Exception {
-        stubResponseAndRun(204, () -> client.earmuffCall(SAMPLE_CALL_UUID));
+        stubResponseAndRun(204, () -> client.earmuffCall(SAMPLE_CALL_ID));
         stubResponseAndAssertThrows(204, () -> client.earmuffCall(null), NullPointerException.class);
-        stubResponseAndAssertThrows(404, () -> client.earmuffCall(SAMPLE_CALL_UUID), VoiceResponseException.class);
+        stubResponseAndAssertThrows(404, () -> client.earmuffCall(SAMPLE_CALL_ID), VoiceResponseException.class);
     }
 
     @Test
     public void testUnearmuffCall() throws Exception {
-        stubResponseAndRun(204, () -> client.unearmuffCall(SAMPLE_CALL_UUID));
+        stubResponseAndRun(204, () -> client.unearmuffCall(SAMPLE_CALL_ID));
         stubResponseAndAssertThrows(204, () -> client.unearmuffCall(null), NullPointerException.class);
-        stubResponseAndAssertThrows(404, () -> client.unearmuffCall(SAMPLE_CALL_UUID), VoiceResponseException.class);
+        stubResponseAndAssertThrows(404, () -> client.unearmuffCall(SAMPLE_CALL_ID), VoiceResponseException.class);
     }
 
     @Test

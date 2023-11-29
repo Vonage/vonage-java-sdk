@@ -4,9 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-# [8.0.0] - 2023-11-??
+# [8.0.0] - 2023-11-30
 - Added `redirect_url` parameter to `SilentAuthWorkflow`
 - Bumped Jackson version to 2.16.0
+- Use String instead of UUID in `VoiceClient` call modification methods
+- Added public `verifyRequestSignature` method to `RequestSigning`
 
 # [8.0.0-rc2] - 2023-11-07
 - Removed packages:

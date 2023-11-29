@@ -15,6 +15,7 @@
  */
 package com.vonage.client.auth;
 
+import static com.vonage.client.auth.RequestSigning.*;
 import com.vonage.client.auth.hashutils.HashUtil;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -39,13 +40,13 @@ public class RequestSigningTest {
         params.add(new BasicNameValuePair("a", "alphabet"));
         params.add(new BasicNameValuePair("b", "bananas"));
 
-        RequestSigning.constructSignatureForRequestParameters(params, "abcde", 2100);
+        constructSignatureForRequestParameters(params, "abcde", 2100);
         Map<String, String> paramMap = constructParamMap(params);
         // md5 -s "&a=alphabet&b=bananas&timestamp=2100abcde"
         String expected = "7d43241108912b32cc315b48ce681acf";
 
         assertEquals(expected, paramMap.get(RequestSigning.PARAM_SIGNATURE));
-        RequestSigning.constructSignatureForRequestParameters(params, "abcde");
+        constructSignatureForRequestParameters(params, "abcde");
         paramMap = constructParamMap(params);
         assertNotEquals(expected, paramMap.get(RequestSigning.PARAM_SIGNATURE));
     }
@@ -56,7 +57,7 @@ public class RequestSigningTest {
         params.add(new BasicNameValuePair("a", "alphabet"));
         params.add(new BasicNameValuePair("b", "bananas"));
 
-        RequestSigning.constructSignatureForRequestParameters(params, "abcde", 2100, HashUtil.HashType.HMAC_SHA1);
+        constructSignatureForRequestParameters(params, "abcde", 2100, HashUtil.HashType.HMAC_SHA1);
         Map<String, String> paramMap = constructParamMap(params);
         // md5 -s "&a=alphabet&b=bananas&timestamp=2100"
         assertEquals("b7f749de27b4adcf736cc95c9a7e059a16c85127", paramMap.get(RequestSigning.PARAM_SIGNATURE));
@@ -68,7 +69,7 @@ public class RequestSigningTest {
         params.add(new BasicNameValuePair("a", "alphabet"));
         params.add(new BasicNameValuePair("b", "bananas"));
 
-        RequestSigning.constructSignatureForRequestParameters(params, "abcde", 2100, HashUtil.HashType.HMAC_MD5);
+        constructSignatureForRequestParameters(params, "abcde", 2100, HashUtil.HashType.HMAC_MD5);
         Map<String, String> paramMap = constructParamMap(params);
         // md5 -s "&a=alphabet&b=bananas&timestamp=2100"
         assertEquals("e0afe267aefd6dd18a848c1681517a19", paramMap.get(RequestSigning.PARAM_SIGNATURE));
@@ -80,7 +81,7 @@ public class RequestSigningTest {
         params.add(new BasicNameValuePair("a", "alphabet"));
         params.add(new BasicNameValuePair("b", "bananas"));
 
-        RequestSigning.constructSignatureForRequestParameters(params, "abcde", 2100, HashUtil.HashType.HMAC_SHA256);
+        constructSignatureForRequestParameters(params, "abcde", 2100, HashUtil.HashType.HMAC_SHA256);
         Map<String, String> paramMap = constructParamMap(params);
         // md5 -s "&a=alphabet&b=bananas&timestamp=2100"
         assertEquals("8d1b0428276b6a070578225914c3502cc0687a454dfbbbb370c76a14234cb546", paramMap.get(RequestSigning.PARAM_SIGNATURE));
@@ -92,7 +93,7 @@ public class RequestSigningTest {
         params.add(new BasicNameValuePair("a", "alphabet"));
         params.add(new BasicNameValuePair("b", "bananas"));
 
-        RequestSigning.constructSignatureForRequestParameters(params, "abcde", 2100, HashUtil.HashType.HMAC_SHA512);
+        constructSignatureForRequestParameters(params, "abcde", 2100, HashUtil.HashType.HMAC_SHA512);
         Map<String, String> paramMap = constructParamMap(params);
         // md5 -s "&a=alphabet&b=bananas&timestamp=2100"
         assertEquals("1c834a1f6a377d4473971387b065cb38e2ad6c4869ba77b7b53e207a344e87ba04b456dfc697b371a2d1ce476d01dafd4394aa97525eff23badad39d2389a710", paramMap.get(RequestSigning.PARAM_SIGNATURE));
@@ -106,7 +107,7 @@ public class RequestSigningTest {
         params.add(new BasicNameValuePair("sig", "7d43241108912b32cc315b48ce681acf"));
 
 
-        RequestSigning.constructSignatureForRequestParameters(params, "abcde", 2100);
+        constructSignatureForRequestParameters(params, "abcde", 2100);
         Map<String, String> paramMap = constructParamMap(params);
         // md5 -s "&a=alphabet&b=bananas&timestamp=2100abcde"
         assertEquals("7d43241108912b32cc315b48ce681acf", paramMap.get(RequestSigning.PARAM_SIGNATURE));
@@ -118,7 +119,7 @@ public class RequestSigningTest {
         params.add(new BasicNameValuePair("a", "alphabet"));
         params.add(new BasicNameValuePair("b", null));
 
-        RequestSigning.constructSignatureForRequestParameters(params, "abcde", 2100);
+        constructSignatureForRequestParameters(params, "abcde", 2100);
         Map<String, String> paramMap = constructParamMap(params);
         // md5 -s "&a=alphabet&timestamp=2100abcde"
         assertEquals("a3368bf718ba104dcb392d8877e8eb2b", paramMap.get(RequestSigning.PARAM_SIGNATURE));
@@ -134,10 +135,7 @@ public class RequestSigningTest {
 
     @Test
     public void testVerifyRequestSignature() {
-        assertTrue(RequestSigning.verifyRequestSignature(
-                RequestSigning.APPLICATION_JSON, null, constructDummyParams(),
-                "abcde", 2100000
-        ));
+        assertTrue(verifySignature(constructDummyParams()));
     }
 
     @Test
@@ -145,7 +143,7 @@ public class RequestSigningTest {
         Map<String, String[]> params = constructDummyParams();
         params.put("sig", new String[]{"b7f749de27b4adcf736cc95c9a7e059a16c85127"});
 
-        assertTrue(RequestSigning.verifyRequestSignature(
+        assertTrue(verifyRequestSignature(
                 RequestSigning.APPLICATION_JSON, null, params,
                 "abcde", 2100000, HashUtil.HashType.HMAC_SHA1
         ));
@@ -154,7 +152,7 @@ public class RequestSigningTest {
     @Test
     public void testVerifySignatureRequestJson() throws Exception {
         HttpServletRequest request = constructDummyRequestJson();
-        assertTrue(RequestSigning.verifyRequestSignature(
+        assertTrue(verifyRequestSignature(
                 RequestSigning.APPLICATION_JSON, request.getInputStream(), constructDummyParams(),
                 "abcde", 2100000, HashUtil.HashType.HMAC_SHA1
         ));
@@ -165,7 +163,7 @@ public class RequestSigningTest {
         Map<String, String[]> params = constructDummyParams();
         params.put("sig", new String[]{"8d1b0428276b6a070578225914c3502cc0687a454dfbbbb370c76a14234cb546"});
 
-        assertTrue(RequestSigning.verifyRequestSignature(
+        assertTrue(verifyRequestSignature(
                 RequestSigning.APPLICATION_JSON, null, params,
                 "abcde", 2100000, HashUtil.HashType.HMAC_SHA256
         ));
@@ -175,7 +173,7 @@ public class RequestSigningTest {
     public void testVerifyRequestSignatureWithHmacMd5Hash() throws Exception {
         Map<String, String[]> params = constructDummyParams();
         params.put("sig", new String[]{"e0afe267aefd6dd18a848c1681517a19"});
-        assertTrue(RequestSigning.verifyRequestSignature(
+        assertTrue(verifyRequestSignature(
                 RequestSigning.APPLICATION_JSON, null, params,
                 "abcde", 2100000, HashUtil.HashType.HMAC_MD5
         ));
@@ -186,7 +184,7 @@ public class RequestSigningTest {
         Map<String, String[]> params = constructDummyParams();
         params.put("sig", new String[]{"1c834a1f6a377d4473971387b065cb38e2ad6c4869ba77b7b53e207a344e87ba04b456dfc697b371a2d1ce476d01dafd4394aa97525eff23badad39d2389a710"});
 
-        assertTrue(RequestSigning.verifyRequestSignature(
+        assertTrue(verifyRequestSignature(
                 RequestSigning.APPLICATION_JSON, null, params,
                 "abcde", 2100000, HashUtil.HashType.HMAC_SHA512
         ));
@@ -194,26 +192,17 @@ public class RequestSigningTest {
 
     @Test
     public void testVerifyRequestSignatureNoSig() {
-        assertFalse(RequestSigning.verifyRequestSignature(
-                RequestSigning.APPLICATION_JSON, null, constructDummyParamsNoSignature(),
-                "abcde", 2100000
-        ));
+        assertFalse(verifySignature(constructDummyParamsNoSignature()));
     }
 
     @Test
     public void testVerifyRequestSignatureBadTimestamp() {
-        assertFalse(RequestSigning.verifyRequestSignature(
-                RequestSigning.APPLICATION_JSON, null, constructDummyParamsInvalidTimestamp(),
-                "abcde", 2100000
-        ));
+        assertFalse(verifySignature(constructDummyParamsInvalidTimestamp()));
     }
 
     @Test
     public void testVerifyRequestSignatureMissingTimestamp() {
-        assertFalse(RequestSigning.verifyRequestSignature(
-                RequestSigning.APPLICATION_JSON, null, constructDummyParamsNoTimestamp(),
-                "abcde", 2100000
-        ));
+        assertFalse(verifySignature(constructDummyParamsNoTimestamp()));
     }
 
     @Test
@@ -221,17 +210,17 @@ public class RequestSigningTest {
         Map<String, String[]> params = constructDummyParams();
         params.put("b", new String[]{ null });
         params.put("sig", new String[]{"a3368bf718ba104dcb392d8877e8eb2b"});
+        assertTrue(verifySignature(params));
+    }
 
-        assertTrue(RequestSigning.verifyRequestSignature(
-                RequestSigning.APPLICATION_JSON, null, params,
-                "abcde", 2100000
-        ));
+    @Test
+    public void testVerifyRequestSignatureCurrentTimeMillis() {
+        assertFalse(verifyRequestSignature(null, APPLICATION_JSON, constructDummyParams(), "abcde"));
     }
 
     private HttpServletRequest constructDummyRequest() {
         return constructDummyRequest(null);
     }
-
 
     private HttpServletRequest constructDummyRequestJson() throws Exception  {
         HttpServletRequest request = mock(HttpServletRequest.class);
@@ -324,5 +313,9 @@ public class RequestSigningTest {
         when(request.getParameterMap()).thenReturn(params);
 
         return request;
+    }
+
+    private static boolean verifySignature(Map<String, String[]> params) {
+        return verifyRequestSignature(APPLICATION_JSON, null, params, "abcde", 2100000);
     }
 }

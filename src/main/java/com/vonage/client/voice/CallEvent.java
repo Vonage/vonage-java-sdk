@@ -20,6 +20,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 
+/**
+ * Represents metadata about a call.
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CallEvent implements Jsonable {
@@ -27,21 +30,42 @@ public class CallEvent implements Jsonable {
     private CallStatus status;
     private CallDirection direction;
 
+    /**
+     * The unique identifier for this call leg. The UUID is created when your call request is accepted by Vonage.
+     * You use the UUID in all requests for individual live calls.
+     *
+     * @return The call ID.
+     */
     @JsonProperty("uuid")
     public String getUuid() {
         return uuid;
     }
 
+    /**
+     * The unique identifier for the conversation this call leg is part of.
+     *
+     * @return The conversation ID as a string.
+     */
     @JsonProperty("conversation_uuid")
     public String getConversationUuid() {
         return conversationUuid;
     }
 
+    /**
+     * The status of the call.
+     *
+     * @return The call's status as an enum.
+     */
     @JsonProperty("status")
     public CallStatus getStatus() {
         return status;
     }
 
+    /**
+     * Whether the call is inbound or outbound.
+     *
+     * @return The call direction as an enum.
+     */
     @JsonProperty("direction")
     public CallDirection getDirection() {
         return direction;
