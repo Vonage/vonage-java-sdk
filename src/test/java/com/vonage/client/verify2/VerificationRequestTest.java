@@ -22,10 +22,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Locale;
 
 public class VerificationRequestTest {
 	static final boolean SANDBOX = true;
-	static final Locale LOCALE = Locale.PORTUGUESE_PORTUGAL;
+	static final Locale LOCALE = Locale.forLanguageTag("pt-pt");
 	static final int CODE_LENGTH = 8, CHANNEL_TIMEOUT = 120;
 	static final String
 			BRAND = "Vonage",
@@ -307,6 +308,14 @@ public class VerificationRequestTest {
 		builder.workflows(Arrays.asList(waw, saw));
 		assertEquals(2, builder.workflows.size());
 		assertThrows(IllegalStateException.class, builder::build);
+	}
+
+	@Test
+	public void testInvalidLocale() throws Exception {
+		VerificationRequest.Builder builder = getBuilderRequiredParamsSingleWorkflow(Channel.SMS);
+		assertThrows(IllegalArgumentException.class, () -> builder.locale("--++").build());
+		assertThrows(IllegalArgumentException.class, () -> builder.locale("en_GB").build());
+		assertNotNull(builder.locale("ab-cd").build().getLocale());
 	}
 
 	@Test
