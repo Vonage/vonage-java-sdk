@@ -31,25 +31,6 @@ public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
     }
 
     @Test
-    public void testVerifyWithNumberBrandFromLengthLocaleLineType() throws Exception {
-        stubResponse(200,
-                "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": 0,\n"
-                        + "  \"error_text\": \"error\"\n" + "}"
-        );
-
-        VerifyResponse response = client.verify("447700900999",
-                "TestBrand",
-                "15555215554",
-                6,
-                Locale.US
-        );
-
-        assertEquals(VerifyStatus.OK, response.getStatus());
-        assertEquals("error", response.getErrorText());
-        assertEquals("not-really-a-request-id", response.getRequestId());
-    }
-
-    @Test
     public void testVerifyWithNumberBrandFromLengthLocale() throws Exception {
         stubResponse(200,
                 "{\n" + "  \"request_id\": \"not-really-a-request-id\",\n" + "  \"status\": 0,\n"
@@ -131,7 +112,8 @@ public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
                 .senderId("15555215554")
                 .length(6)
                 .locale(Locale.US)
-                .build());
+                .build()
+        );
 
         assertEquals(VerifyStatus.INTERNAL_ERROR, response.getStatus());
         assertEquals("error", response.getErrorText());
@@ -195,7 +177,7 @@ public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
             }
 
             @Override
-            protected Map<String, ?> sampleQueryParams() {
+            protected Map<String, String> sampleQueryParams() {
                 Map<String, String> params = new LinkedHashMap<>();
                 params.put("number", "4477990090090");
                 params.put("brand", "Brand.com");
@@ -207,7 +189,17 @@ public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
                 params.put("pin_expiry", "60");
                 params.put("next_event_wait", "90");
                 params.put("workflow_id", "3");
+                return params;
+            }
 
+            @Override
+            public void runTests() throws Exception {
+                super.runTests();
+                assertQueryParamsMatchRequest();
+            }
+
+            private void assertQueryParamsMatchRequest() {
+                Map<String, String> params = sampleQueryParams();
                 VerifyRequest request = sampleRequest();
                 assertNotNull(request.toString());
                 assertEquals(request.getNumber(), params.get("number"));
@@ -220,8 +212,6 @@ public class VerifyClientVerifyEndpointTest extends ClientTest<VerifyClient> {
                 assertEquals(request.getPinExpiry().toString(), params.get("pin_expiry"));
                 assertEquals(request.getNextEventWait().toString(), params.get("next_event_wait"));
                 assertEquals(String.valueOf(request.getWorkflow().getId()), params.get("workflow_id"));
-                
-                return params;
             }
         }
         .runTests();

@@ -221,6 +221,8 @@ public class AccountClient {
      * @return SecretResponse object which contains the results from the API.
      *
      * @throws AccountResponseException If there was an error making the request or retrieving the response.
+     *
+     * @since 7.9.0
      */
     public SecretResponse getSecret(String secretId) throws AccountResponseException {
         return getSecret(apiKeyGetter.get(), secretId);
@@ -250,6 +252,8 @@ public class AccountClient {
      * @return SecretResponse object which contains the created secret from the API.
      *
      * @throws AccountResponseException If there was an error making the request or retrieving the response.
+     *
+     * @since 7.9.0
      */
     public SecretResponse createSecret(String secret) throws AccountResponseException {
         return createSecret(apiKeyGetter.get(), secret);
@@ -277,6 +281,8 @@ public class AccountClient {
      * @param secretId The id of the secret to revoke.
      *
      * @throws AccountResponseException If there was an error making the request or retrieving the response.
+     *
+     * @since 7.9.0
      */
     public void revokeSecret(String secretId) throws AccountResponseException {
         revokeSecret(apiKeyGetter.get(), secretId);
