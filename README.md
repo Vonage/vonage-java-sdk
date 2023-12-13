@@ -67,23 +67,19 @@ gradle build
 
 ### Download everything in a ZIP file
 
-**Note**: We *strongly recommend* that you use a tool that supports dependency management, such as [Gradle], [Maven],
-or [Ivy].
+**Note**: We *strongly recommend* that you use a tool that supports dependency management,
+such as [Gradle](https://gradle.org/), [Maven](https://maven.apache.org/) or [Ivy](http://ant.apache.org/ivy/).
 
 We provide a [ZIP file for each release](https://github.com/Vonage/vonage-java-sdk/releases/),
 containing the Java Server SDK JAR, along with all the dependencies. Download the file, unzip it, and add the JAR files
 to your project's classpath.
-
-[Gradle]: https://gradle.org/
-[Maven]: https://maven.apache.org/
-[Ivy]: http://ant.apache.org/ivy/
-
 
 ## Usage
 
 * For help understanding our APIs, check out our awesome [developer portal](https://developer.vonage.com/).
 * Check the [Javadoc](https://www.javadoc.io/doc/com.vonage/server-sdk/latest/index.html) for full reference documentation.
 * There are also **many useful code samples** in our [Vonage/vonage-java-code-snippets](https://github.com/Vonage/vonage-java-code-snippets) repository.
+* For Video API usage instructions, see [the guide on our developer portal](https://developer.vonage.com/en/video/server-sdks/java).
 
 ## Configuration
 
@@ -102,7 +98,7 @@ VonageClient client = VonageClient.builder()
 ```
 
 ### Customize the Base URI
-By default, the client will use https://api.nexmo.com, https://rest.nexmo.com and https://api-eu.vonage.com as base URIs for the various endpoints. To customize these you can instantiate `VonageClient` with an `HttpConfig` object.
+By default, the client will use https://api.nexmo.com, https://rest.nexmo.com,  https://api-eu.vonage.com and https://video.api.vonage.com as base URIs for the various endpoints. To customize these you can instantiate `VonageClient` with an `HttpConfig` object.
 
 `HttpConfig.Builder` has been created to assist in building this object. Usage is as follows:
 
@@ -111,6 +107,7 @@ HttpConfig httpConfig = HttpConfig.builder()
         .apiBaseUri("https://api.example.com")
         .restBaseUri("https://rest.example.com")
         .apiEuBaseUri("https://api-eu.example.com")
+        .videoBaseUri("https://video.example.com")
         .build();
 
 VonageClient client = VonageClient.builder()

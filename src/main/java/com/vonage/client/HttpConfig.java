@@ -126,7 +126,7 @@ public class HttpConfig {
          *
          * @param timeoutMillis The timeout in milliseconds.
          *
-         * @return The Builder to keep building.
+         * @return This builder.
          * @since 7.8.0
          */
         public Builder timeoutMillis(int timeoutMillis) {
@@ -137,7 +137,7 @@ public class HttpConfig {
         /**
          * @param apiBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_API_BASE_URI}.
          *
-         * @return The Builder to keep building.
+         * @return This builder.
          */
         public Builder apiBaseUri(String apiBaseUri) {
             this.apiBaseUri = sanitizeUri(apiBaseUri);
@@ -147,7 +147,7 @@ public class HttpConfig {
         /**
          * @param restBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_REST_BASE_URI}.
          *
-         * @return The Builder to keep building.
+         * @return This builder.
          */
         public Builder restBaseUri(String restBaseUri) {
             this.restBaseUri = sanitizeUri(restBaseUri);
@@ -157,7 +157,7 @@ public class HttpConfig {
         /**
          * @param apiEuBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_API_EU_BASE_URI}
          *
-         * @return The Builder to keep building.
+         * @return This builder.
          */
         public Builder apiEuBaseUri(String apiEuBaseUri) {
             this.apiEuBaseUri = sanitizeUri(apiEuBaseUri);
@@ -167,7 +167,7 @@ public class HttpConfig {
         /**
          * @param videoBaseUri The base uri to use in place of {@link HttpConfig#DEFAULT_VIDEO_BASE_URI}.
          *
-         * @return The Builder to keep building.
+         * @return This builder.
          */
         public Builder videoBaseUri(String videoBaseUri) {
             this.videoBaseUri = sanitizeUri(videoBaseUri);
@@ -179,7 +179,7 @@ public class HttpConfig {
          * {@link HttpConfig#DEFAULT_API_BASE_URI}, {@link HttpConfig#DEFAULT_API_EU_BASE_URI} and
          * {@link HttpConfig#DEFAULT_VIDEO_BASE_URI}.
          *
-         * @return The Builder to keep building.
+         * @return This builder.
          */
         public Builder baseUri(String baseUri) {
             String sanitizedUri = sanitizeUri(baseUri);
