@@ -107,15 +107,16 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 			protected VerificationRequest sampleRequest() {
 				return VerificationRequest.builder()
 						.clientRef("my-personal-reference").locale("ar-XA")
-						.addWorkflow(new SmsWorkflow("447700900001", "FA+9qCX9VSu"))
+						.addWorkflow(new SmsWorkflow("447700900001", "447900000002", "FA+9qCX9VSu"))
 						.brand("ACME, Inc").codeLength(6).channelTimeout(320).build();
 			}
 
 			@Override
 			protected String sampleRequestBodyString() {
 				return "{\"locale\":\"ar-xa\",\"channel_timeout\":320,\"code_length\":6," +
-						"\"brand\":\"ACME, Inc\",\"client_ref\":\"my-personal-reference\",\"workflow\":" +
-						"[{\"channel\":\"sms\",\"to\":\"447700900001\",\"app_hash\":\"FA+9qCX9VSu\"}]}";
+						"\"brand\":\"ACME, Inc\",\"client_ref\":\"my-personal-reference\"," +
+						"\"workflow\":[{\"channel\":\"sms\",\"to\":\"447700900001\"," +
+						"\"from\":\"447900000002\",\"app_hash\":\"FA+9qCX9VSu\"}]}";
 			}
 
 			@Override
