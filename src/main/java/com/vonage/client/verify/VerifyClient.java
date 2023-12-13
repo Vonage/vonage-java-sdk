@@ -160,11 +160,7 @@ public class VerifyClient {
                                  final String from,
                                  final int length,
                                  final Locale locale) throws VonageClientException, VonageResponseParseException {
-        return verify(new VerifyRequest.Builder(number, brand)
-                .senderId(from)
-                .locale(locale)
-                .build()
-        );
+        return verify(VerifyRequest.builder(number, brand).length(length).senderId(from).locale(locale).build());
     }
 
     /**
@@ -208,7 +204,6 @@ public class VerifyClient {
     public CheckResponse check(final String requestId, final String code) throws VonageClientException, VonageResponseParseException {
         return check(new CheckRequest(requestId, code));
     }
-
 
     /**
      * Search for a previous verification request.
