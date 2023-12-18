@@ -70,7 +70,7 @@ public class VerificationRequestTest {
 			case SILENT_AUTH:
 				return new SilentAuthWorkflow(TO_NUMBER, SANDBOX, REDIRECT_URL);
 			case SMS:
-				return new SmsWorkflow(TO_NUMBER, APP_HASH);
+				return new SmsWorkflow(TO_NUMBER, FROM_NUMBER, APP_HASH);
 			case WHATSAPP:
 				return new WhatsappWorkflow(TO_NUMBER, FROM_NUMBER);
 			case EMAIL:
@@ -107,7 +107,7 @@ public class VerificationRequestTest {
 			replacement = prefix + ",\"app_hash\":\""+APP_HASH+"\"";
 			expectedJson = expectedJson.replace(prefix, replacement);
 		}
-		if (channel == Channel.WHATSAPP) {
+		if (channel == Channel.WHATSAPP || channel == Channel.SMS) {
 			prefix = TO_NUMBER + '"';
 			replacement = prefix + ",\"from\":\""+FROM_NUMBER+"\"";
 			expectedJson = expectedJson.replace(prefix, replacement);

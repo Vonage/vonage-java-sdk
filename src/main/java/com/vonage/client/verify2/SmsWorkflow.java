@@ -39,11 +39,26 @@ public final class SmsWorkflow extends Workflow {
 	 * Constructs a new SMS verification workflow.
 	 *
 	 * @param to The number to send the message to, in E.164 format.
-	 *
 	 * @param appHash Android Application Hash Key for automatic code detection on a user's device.
+	 *
+	 * @deprecated Use {@linkplain #SmsWorkflow(String, String, String)}.
 	 */
+	@Deprecated
 	public SmsWorkflow(String to, String appHash) {
-		super(Channel.SMS, new E164(to).toString());
+		this(to, null, appHash);
+	}
+
+	/**
+	 * Constructs a new SMS verification workflow.
+	 *
+	 * @param to The number to send the message to, in E.164 format.
+	 * @param from The number or sender ID to send the SMS from.
+	 * @param appHash Android Application Hash Key for automatic code detection on a user's device.
+	 *
+	 * @since 8.1.0
+	 */
+	public SmsWorkflow(String to, String from, String appHash) {
+		super(Channel.SMS, new E164(to).toString(), from);
 		if ((this.appHash = appHash) != null && appHash.length() != 11) {
 			throw new IllegalArgumentException("Android app hash must be 11 characters.");
 		}
@@ -57,5 +72,17 @@ public final class SmsWorkflow extends Workflow {
 	@JsonProperty("app_hash")
 	public String getAppHash() {
 		return appHash;
+	}
+
+	/**
+	 * The number or sender ID the message will be sent from.
+	 *
+	 * @return The sender phone number or sender ID, or {@code null} if unspecified.
+	 *
+	 * @since 8.1.0
+	 */
+	@JsonProperty("from")
+	public String getFrom() {
+		return from;
 	}
 }
