@@ -43,10 +43,10 @@ public class ListStreamsEndpointTest {
 	public void testMakeRequestAllParameters() throws Exception {
 		String sessionId = UUID.randomUUID().toString();
 		RequestBuilder builder = endpoint.makeRequest(sessionId);
-		Assertions.assertEquals("GET", builder.getMethod());
+		assertEquals("GET", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/"+applicationId+"/session/"+sessionId+"/stream";
-		Assertions.assertEquals(expectedUri, builder.build().getURI().toString());
-		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		assertEquals(expectedUri, builder.build().getURI().toString());
+		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 	}
 
 	@Test
@@ -72,16 +72,16 @@ public class ListStreamsEndpointTest {
 
 		HttpResponse mockHttpResponse = TestUtils.makeJsonHttpResponse(200, json);
 		ListStreamsResponse response = endpoint.parseResponse(mockHttpResponse);
-		Assertions.assertEquals(count, response.getCount());
+		assertEquals(count, response.getCount());
 		List<GetStreamResponse> streams = response.getItems();
-		Assertions.assertEquals(1, streams.size());
+		assertEquals(1, streams.size());
 		GetStreamResponse stream0 = streams.get(0);
-		Assertions.assertEquals(id0, stream0.getId());
-		Assertions.assertEquals(videoType0, stream0.getVideoType());
-		Assertions.assertEquals(name0, stream0.getName());
+		assertEquals(id0, stream0.getId());
+		assertEquals(videoType0, stream0.getVideoType());
+		assertEquals(name0, stream0.getName());
 		List<String> layoutClassList0 = stream0.getLayoutClassList();
-		Assertions.assertEquals(1, layoutClassList0.size());
-		Assertions.assertEquals(layoutClass0, layoutClassList0.get(0));
+		assertEquals(1, layoutClassList0.size());
+		assertEquals(layoutClass0, layoutClassList0.get(0));
 	}
 
 	@Test

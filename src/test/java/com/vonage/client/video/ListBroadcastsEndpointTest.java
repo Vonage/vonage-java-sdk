@@ -45,24 +45,24 @@ public class ListBroadcastsEndpointTest {
 		ListStreamCompositionsRequest request = ListStreamCompositionsRequest.builder()
 				.offset(6).count(25).sessionId("SESSION_ID").build();
 		RequestBuilder builder = endpoint.makeRequest(request);
-		Assertions.assertEquals("GET", builder.getMethod());
+		assertEquals("GET", builder.getMethod());
 		String expectedUri = "https://video.api.vonage.com/v2/project/"+applicationId +
 				"/broadcast?offset=6&count=25&sessionId=SESSION_ID";
-		Assertions.assertEquals(expectedUri, builder.build().getURI().toString());
-		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		assertEquals(expectedUri, builder.build().getURI().toString());
+		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
 		Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
-		Assertions.assertEquals(3, params.size());
-		Assertions.assertEquals(request.getOffset().toString(), params.get("offset"));
-		Assertions.assertEquals(request.getCount().toString(), params.get("count"));
-		Assertions.assertEquals(request.getSessionId(), params.get("sessionId"));
+		assertEquals(3, params.size());
+		assertEquals(request.getOffset().toString(), params.get("offset"));
+		assertEquals(request.getCount().toString(), params.get("count"));
+		assertEquals(request.getSessionId(), params.get("sessionId"));
 		String expectedResponse = "{\"count\":2,\"items\":[{},{\"applicationId\":\""+applicationId+"\"}]}";
 		HttpResponse mockResponse = TestUtils.makeJsonHttpResponse(200, expectedResponse);
 		ListBroadcastsResponse parsed = endpoint.parseResponse(mockResponse);
-		Assertions.assertNotNull(parsed);
-		Assertions.assertEquals(2, parsed.getCount().intValue());
-		Assertions.assertEquals(2, parsed.getItems().size());
-		Assertions.assertNotNull(parsed.getItems().get(0));
-		Assertions.assertEquals(applicationId, parsed.getItems().get(1).getApplicationId().toString());
+		assertNotNull(parsed);
+		assertEquals(2, parsed.getCount().intValue());
+		assertEquals(2, parsed.getItems().size());
+		assertNotNull(parsed.getItems().get(0));
+		assertEquals(applicationId, parsed.getItems().get(1).getApplicationId().toString());
 	}
 
 	@Test
@@ -76,11 +76,11 @@ public class ListBroadcastsEndpointTest {
 		String expectedUri = baseUri + "/v2/project/"+applicationId+"/broadcast";
 		ListStreamCompositionsRequest request = ListStreamCompositionsRequest.builder().build();
 		RequestBuilder builder = endpoint.makeRequest(request);
-		Assertions.assertEquals(expectedUri, builder.build().getURI().toString());
-		Assertions.assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
-		Assertions.assertEquals("GET", builder.getMethod());
+		assertEquals(expectedUri, builder.build().getURI().toString());
+		assertEquals(ContentType.APPLICATION_JSON.getMimeType(), builder.getFirstHeader("Accept").getValue());
+		assertEquals("GET", builder.getMethod());
 		Map<String, String> params = TestUtils.makeParameterMap(builder.getParameters());
-		Assertions.assertEquals(0, params.size());
+		assertEquals(0, params.size());
 	}
 
 	@Test

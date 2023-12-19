@@ -15,13 +15,17 @@
  */
 package com.vonage.client.video;
 
+import com.vonage.client.DynamicEndpoint;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageClient;
 import com.vonage.client.auth.JWTAuthMethod;
+import com.vonage.client.auth.TokenAuthMethod;
+import com.vonage.client.common.HttpMethod;
 import com.vonage.jwt.Jwt;
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -39,7 +43,7 @@ public class VideoClient {
 	final RestEndpoint<SetStreamLayoutRequest, Void> setStreamLayout;
 	final RestEndpoint<SignalRequest, Void> signal, signalAll;
 	final RestEndpoint<SessionResourceRequestWrapper, Void> forceDisconnect, muteStream;
-	final RestEndpoint<MuteSessionRequest, Void> muteSession;
+	final RestEndpoint<MuteSessionRequest, MuteSessionResponse> muteSession;
 	final RestEndpoint<SipDialRequest, SipDialResponse> sipDial;
 	final RestEndpoint<SendDtmfRequest, Void> sendDtmfToSession, sendDtmfToConnection;
 	final RestEndpoint<ListStreamCompositionsRequest, ListArchivesResponse> listArchives;
@@ -55,35 +59,54 @@ public class VideoClient {
 	/**
 	 * Constructor.
 	 *
-	 * @param httpWrapper (REQUIRED) shared HTTP wrapper object used for making REST calls.
+	 * @param wrapper (REQUIRED) shared HTTP wrapper object used for making REST calls.
 	 */
-	public VideoClient(final HttpWrapper httpWrapper) {
-		newJwtSupplier = () -> httpWrapper.getAuthCollection().getAuth(JWTAuthMethod.class).newJwt();
-		createSession = new CreateSessionEndpoint(httpWrapper);
-		listStreams = new ListStreamsEndpoint(httpWrapper);
-		getStream = new GetStreamEndpoint(httpWrapper);
-		setStreamLayout = new SetStreamLayoutEndpoint(httpWrapper);
-		signalAll = new SignalAllEndpoint(httpWrapper);
-		signal = new SignalEndpoint(httpWrapper);
-		forceDisconnect = new ForceDisconnectEndpoint(httpWrapper);
-		muteStream = new MuteStreamEndpoint(httpWrapper);
-		muteSession = new MuteSessionEndpoint(httpWrapper);
-		sipDial = new SipDialEndpoint(httpWrapper);
-		sendDtmfToSession = new SendDtmfToSessionEndpoint(httpWrapper);
-		sendDtmfToConnection = new SendDtmfToConnectionEndpoint(httpWrapper);
-		listArchives = new ListArchivesEndpoint(httpWrapper);
-		getArchive = new GetArchiveEndpoint(httpWrapper);
-		createArchive = new CreateArchiveEndpoint(httpWrapper);
-		updateArchiveLayout = new UpdateArchiveLayoutEndpoint(httpWrapper);
-		patchArchiveStream = new PatchArchiveStreamEndpoint(httpWrapper);
-		stopArchive = new StopArchiveEndpoint(httpWrapper);
-		deleteArchive = new DeleteArchiveEndpoint(httpWrapper);
-		listBroadcasts = new ListBroadcastsEndpoint(httpWrapper);
-		getBroadcast = new GetBroadcastEndpoint(httpWrapper);
-		createBroadcast = new CreateBroadcastEndpoint(httpWrapper);
-		updateBroadcastLayout = new UpdateBroadcastLayoutEndpoint(httpWrapper);
-		patchBroadcastStream = new PatchBroadcastStreamEndpoint(httpWrapper);
-		stopBroadcast = new StopBroadcastEndpoint(httpWrapper);
+	public VideoClient(HttpWrapper wrapper) {
+		Supplier<JWTAuthMethod> jwtAuthGetter = () -> wrapper.getAuthCollection().getAuth(JWTAuthMethod.class);
+		Supplier<String> appIdGetter = () -> jwtAuthGetter.get().getApplicationId();
+		newJwtSupplier = () -> jwtAuthGetter.get().newJwt();
+
+		@SuppressWarnings("unchecked")
+		class Endpoint<T, R> extends DynamicEndpoint<T, R> {
+			Endpoint(Function<T, String> pathGetter, HttpMethod method, R... type) {
+				super(DynamicEndpoint.<T, R> builder(type)
+						.authMethod(JWTAuthMethod.class, TokenAuthMethod.class)
+						.responseExceptionType(VideoResponseException.class)
+						.requestMethod(method).wrapper(wrapper).pathGetter((de, req) -> {
+							String base = de.getHttpWrapper().getHttpConfig().getVideoBaseUri();
+							String end = pathGetter.apply(req);
+							String mid = end.startsWith("/") ? "" : "/v2/project/" + appIdGetter.get() + "/";
+							return base + mid + end;
+						})
+				);
+			}
+		}
+
+		createSession = new Endpoint<>(req -> "/session/create", HttpMethod.POST);
+		listStreams = new Endpoint<>(req -> "session/"+req+"/stream", HttpMethod.GET);
+		setStreamLayout = new Endpoint<>(req -> "session/"+req.sessionId+"/stream", HttpMethod.PUT);
+		getStream = new Endpoint<>(req -> "session/"+req.sessionId+"/stream/"+req.resourceId, HttpMethod.GET);
+		signalAll = new Endpoint<>(req -> "session/"+req.sessionId+"/signal", HttpMethod.POST);
+		signal = new Endpoint<>(req -> "session/"+req.sessionId+"/connection/"+req.connectionId+"/signal", HttpMethod.POST);
+		forceDisconnect = new Endpoint<>(req -> "session/"+req.sessionId+"/connection/"+req.resourceId, HttpMethod.DELETE);
+		muteStream = new Endpoint<>(req -> "session/"+req.sessionId+"/stream/"+req.resourceId+"/mute", HttpMethod.POST);
+		muteSession = new Endpoint<>(req -> "session/"+req.sessionId+"/mute", HttpMethod.POST);
+		updateArchiveLayout = new Endpoint<>(req -> "archive/"+req.id+"/layout", HttpMethod.PUT);
+		deleteArchive = new Endpoint<>(req -> "archive/"+req, HttpMethod.DELETE);
+		patchArchiveStream = new Endpoint<>(req -> "archive/"+req.id+"/streams", HttpMethod.PATCH);
+		stopArchive = new Endpoint<>(req -> "archive/"+req+"/stop", HttpMethod.POST);
+		createArchive = new Endpoint<>(req -> "archive", HttpMethod.POST);
+		listArchives = new Endpoint<>(req -> "archive", HttpMethod.GET);
+		getArchive = new Endpoint<>(req -> "archive/"+req, HttpMethod.GET);
+		sendDtmfToConnection = new Endpoint<>(req -> "session/"+req.sessionId+"/connection/"+req.connectionId+"/play-dtmf", HttpMethod.POST);
+		sendDtmfToSession = new Endpoint<>(req -> "session/"+req.sessionId+"/play-dtmf", HttpMethod.POST);
+		listBroadcasts = new Endpoint<>(req -> "broadcast", HttpMethod.GET);
+		createBroadcast = new Endpoint<>(req -> "broadcast", HttpMethod.POST);
+		getBroadcast = new Endpoint<>(req -> "broadcast/"+req, HttpMethod.GET);
+		stopBroadcast = new Endpoint<>(req -> "broadcast/"+req+"/stop", HttpMethod.POST);
+		updateBroadcastLayout = new Endpoint<>(req -> "broadcast/"+req.id+"/layout", HttpMethod.POST);
+		patchBroadcastStream = new Endpoint<>(req -> "broadcast/"+req.id+"/streams", HttpMethod.PATCH);
+		sipDial = new Endpoint<>(req -> "dial", HttpMethod.POST);
 	}
 
 	private String validateId(String param, String name, boolean uuid) {
