@@ -159,6 +159,10 @@ If you would like to use the SDK in a multithreaded environment, create a separa
 
 **A:** Currently no, but it is on the roadmap.
 
+**Q: How do I migrate from OpenTok to Vonage?**
+
+**A:** See [this migration guide](src/main/java/com/vonage/client/video/OPENTOK_TO_VONAGE_MIGRATION.md).
+
 ## Contribute!
 
 _We :heart: contributions to this library!_
