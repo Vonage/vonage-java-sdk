@@ -104,7 +104,7 @@ public class VideoClient {
 		createBroadcast = new Endpoint<>(req -> "broadcast", HttpMethod.POST);
 		getBroadcast = new Endpoint<>(req -> "broadcast/"+req, HttpMethod.GET);
 		stopBroadcast = new Endpoint<>(req -> "broadcast/"+req+"/stop", HttpMethod.POST);
-		updateBroadcastLayout = new Endpoint<>(req -> "broadcast/"+req.id+"/layout", HttpMethod.POST);
+		updateBroadcastLayout = new Endpoint<>(req -> "broadcast/"+req.id+"/layout", HttpMethod.PUT);
 		patchBroadcastStream = new Endpoint<>(req -> "broadcast/"+req.id+"/streams", HttpMethod.PATCH);
 		sipDial = new Endpoint<>(req -> "dial", HttpMethod.POST);
 	}

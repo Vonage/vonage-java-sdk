@@ -1666,7 +1666,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 			@Override
 			protected HttpMethod expectedHttpMethod() {
-				return HttpMethod.POST;
+				return HttpMethod.PUT;
 			}
 
 			@Override
