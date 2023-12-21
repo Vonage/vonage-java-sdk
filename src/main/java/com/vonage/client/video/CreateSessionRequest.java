@@ -16,7 +16,6 @@
 package com.vonage.client.video;
 
 import com.vonage.client.QueryParamsRequest;
-import org.apache.http.client.methods.RequestBuilder;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.LinkedHashMap;
@@ -52,11 +51,6 @@ public class CreateSessionRequest implements QueryParamsRequest {
 			params.put("archiveMode", getArchiveMode().toString());
 		}
 		return params;
-	}
-
-	@Deprecated
-	void addParams(RequestBuilder request) {
-		makeParams().forEach(request::addParameter);
 	}
 
 	/**

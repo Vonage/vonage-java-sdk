@@ -16,7 +16,6 @@
 package com.vonage.client.video;
 
 import com.vonage.client.QueryParamsRequest;
-import org.apache.http.client.methods.RequestBuilder;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -51,11 +50,6 @@ public class ListStreamCompositionsRequest implements QueryParamsRequest {
 			params.put("sessionId", sessionId);
 		}
 		return params;
-	}
-
-	@Deprecated
-	void addParams(RequestBuilder request) {
-		makeParams().forEach(request::addParameter);
 	}
 
 	/**
