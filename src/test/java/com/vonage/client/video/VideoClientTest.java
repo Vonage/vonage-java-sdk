@@ -16,11 +16,11 @@
 package com.vonage.client.video;
 
 import com.vonage.client.ClientTest;
+import com.vonage.client.HttpWrapper;
+import com.vonage.client.RestEndpoint;
 import com.vonage.client.TestUtils;
-import com.vonage.client.VonageBadRequestException;
-import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.auth.JWTAuthMethod;
-import org.apache.http.client.HttpResponseException;
+import com.vonage.client.common.HttpMethod;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
@@ -115,13 +115,13 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 					"}",
 			listBroadcastJson = "{\"count\":1,\"items\":["+broadcastJson+"]}";
 
-	void stubResponseAndRun(Runnable invocation) throws Exception {
-		stubResponseAndRun(200, invocation);
+	public VideoClientTest() {
+		wrapper = new HttpWrapper(new JWTAuthMethod(applicationId, new byte[0]));
+		client = new VideoClient(wrapper);
 	}
 
-	void stubResponseAndAssertThrowsHttpResponseException(int statusCode, String response,
-																	Executable invocation) throws Exception {
-		stubResponseAndAssertThrows(statusCode, response, invocation, HttpResponseException.class);
+	void stubResponseAndRun(Runnable invocation) throws Exception {
+		stubResponseAndRun(200, invocation);
 	}
 
 	void stubResponseAndAssertThrowsIAX(int statusCode, Executable invocation) throws Exception {
@@ -140,22 +140,13 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		stubResponseAndAssertThrows(200, invocation, NullPointerException.class);
 	}
 
-	void stubResponseAndAssertThrowsBadRequestException(int statusCode, String response,
+	void stubResponseAndAssertThrowsVideoException(int statusCode, String response,
 																  Executable invocation) throws Exception {
-		stubResponseAndAssertThrows(statusCode, response, invocation, VonageBadRequestException.class);
-	}
-
-	void stubResponseAndAssertThrowsResponseParseException(int statusCode, String response,
-																	 Executable invocation) throws Exception {
-		stubResponseAndAssertThrows(statusCode, response, invocation, VonageResponseParseException.class);
+		assertApiResponseException(statusCode, response, VideoResponseException.class, invocation);
 	}
 	
 	void stubArchiveJsonAndAssertThrows(Executable invocation) throws Exception {
 		stubResponseAndAssertThrowsIAX(archiveJson, invocation);
-	}
-
-	void stubListArchiveJsonAndAssertThrows(Executable invocation) throws Exception {
-		stubResponseAndAssertThrowsIAX(listArchiveJson, invocation);
 	}
 
 	void stubArchiveJsonAndAssertEquals(Supplier<Archive> invocation) throws Exception {
@@ -166,53 +157,49 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 	void stubListArchiveJsonAndAssertEquals(Supplier<List<Archive>> invocation) throws Exception {
 		stubResponse(listArchiveJson);
 		List<Archive> archives = invocation.get();
-		Assertions.assertEquals(1, archives.size());
+		assertEquals(1, archives.size());
 		assertArchiveEqualsExpectedJson(archives.get(0));
 	}
 
 	static void assertArchiveEqualsExpectedJson(Archive response) {
-		Assertions.assertNotNull(response);
-		Assertions.assertEquals("https://tokbox.s3.amazonaws.com/"+connectionId+"/archive.mp4", response.getUrl().toString());
-		Assertions.assertEquals(Long.valueOf(1384221730000L), response.getCreatedAtMillis());
-		Assertions.assertEquals(Instant.ofEpochSecond(1384221730L), response.getCreatedAt());
-		Assertions.assertEquals(Integer.valueOf(5049), response.getDurationSeconds());
-		Assertions.assertEquals(Duration.ofSeconds(5049), response.getDuration());
-		Assertions.assertTrue(response.hasAudio());
-		Assertions.assertTrue(response.hasVideo());
-		Assertions.assertEquals(archiveId, response.getId().toString());
-		Assertions.assertEquals("Foo", response.getName());
-		Assertions.assertEquals("", response.getReason());
-		Assertions.assertEquals(Resolution.HD_LANDSCAPE, response.getResolution());
-		Assertions.assertEquals(sessionId, response.getSessionId());
-		Assertions.assertEquals(applicationId, response.getApplicationId().toString());
-		Assertions.assertEquals(Long.valueOf(247748791L), response.getSize());
-		Assertions.assertEquals(ArchiveStatus.AVAILABLE, response.getStatus());
+		assertNotNull(response);
+		assertEquals("https://tokbox.s3.amazonaws.com/"+connectionId+"/archive.mp4", response.getUrl().toString());
+		assertEquals(Long.valueOf(1384221730000L), response.getCreatedAtMillis());
+		assertEquals(Instant.ofEpochSecond(1384221730L), response.getCreatedAt());
+		assertEquals(Integer.valueOf(5049), response.getDurationSeconds());
+		assertEquals(Duration.ofSeconds(5049), response.getDuration());
+		assertTrue(response.hasAudio());
+		assertTrue(response.hasVideo());
+		assertEquals(archiveId, response.getId().toString());
+		assertEquals("Foo", response.getName());
+		assertEquals("", response.getReason());
+		assertEquals(Resolution.HD_LANDSCAPE, response.getResolution());
+		assertEquals(sessionId, response.getSessionId());
+		assertEquals(applicationId, response.getApplicationId().toString());
+		assertEquals(Long.valueOf(247748791L), response.getSize());
+		assertEquals(ArchiveStatus.AVAILABLE, response.getStatus());
 		assertVideoStreamsEqualsExpectedJson(response);
 	}
 
 	static void assertVideoStreamsEqualsExpectedJson(StreamComposition response) {
-		Assertions.assertEquals(StreamMode.MANUAL, response.getStreamMode());
+		assertEquals(StreamMode.MANUAL, response.getStreamMode());
 		List<VideoStream> streams = response.getStreams();
-		Assertions.assertNotNull(streams);
-		Assertions.assertEquals(2, streams.size());
+		assertNotNull(streams);
+		assertEquals(2, streams.size());
 		VideoStream stream1 = streams.get(0);
-		Assertions.assertNotNull(stream1);
-		Assertions.assertEquals(streamId, stream1.getStreamId().toString());
-		Assertions.assertTrue(stream1.hasAudio());
-		Assertions.assertFalse(stream1.hasVideo());
+		assertNotNull(stream1);
+		assertEquals(streamId, stream1.getStreamId().toString());
+		assertTrue(stream1.hasAudio());
+		assertFalse(stream1.hasVideo());
 		VideoStream stream2 = streams.get(1);
-		Assertions.assertNotNull(stream2);
-		Assertions.assertEquals(UUID.fromString("482bce73-f882-40fd-8ca5-cb74ff416036"), stream2.getStreamId());
-		Assertions.assertTrue(stream2.hasVideo());
-		Assertions.assertFalse(stream2.hasAudio());
+		assertNotNull(stream2);
+		assertEquals(UUID.fromString("482bce73-f882-40fd-8ca5-cb74ff416036"), stream2.getStreamId());
+		assertTrue(stream2.hasVideo());
+		assertFalse(stream2.hasAudio());
 	}
 
 	void stubBroadcastJsonAndAssertThrows(Executable invocation) throws Exception {
 		stubResponseAndAssertThrowsIAX(broadcastJson, invocation);
-	}
-
-	void stubListBroadcastJsonAndAssertThrows(Executable invocation) throws Exception {
-		stubResponseAndAssertThrowsIAX(listBroadcastJson, invocation);
 	}
 
 	void stubBroadcastJsonAndAssertEquals(Supplier<Broadcast> invocation) throws Exception {
@@ -223,47 +210,41 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 	void stubListBroadcastJsonAndAssertEquals(Supplier<List<Broadcast>> invocation) throws Exception {
 		stubResponse(listBroadcastJson);
 		List<Broadcast> broadcasts = invocation.get();
-		Assertions.assertEquals(1, broadcasts.size());
+		assertEquals(1, broadcasts.size());
 		assertBroadcastEqualsExpectedJson(broadcasts.get(0));
 	}
 
 	static void assertBroadcastEqualsExpectedJson(Broadcast response) {
-		Assertions.assertNotNull(response);
-		Assertions.assertEquals(sessionId, response.getSessionId());
-		Assertions.assertEquals(broadcastId, response.getId().toString());
-		Assertions.assertEquals(applicationId, response.getApplicationId().toString());
-		Assertions.assertTrue(response.hasAudio());
-		Assertions.assertTrue(response.hasVideo());
-		Assertions.assertEquals(BroadcastStatus.STARTED, response.getStatus());
-		Assertions.assertEquals(Resolution.HD_PORTRAIT, response.getResolution());
-		Assertions.assertEquals(1437676551000L, response.getCreatedAtMillis().longValue());
-		Assertions.assertEquals(1437876551000L, response.getUpdatedAtMillis().longValue());
-		Assertions.assertEquals("broadcast-1234b", response.getMultiBroadcastTag());
-		Assertions.assertEquals(Duration.ofSeconds(5400), response.getMaxDuration());
-		Assertions.assertEquals(2000000, response.getMaxBitrate().intValue());
+		assertNotNull(response);
+		assertEquals(sessionId, response.getSessionId());
+		assertEquals(broadcastId, response.getId().toString());
+		assertEquals(applicationId, response.getApplicationId().toString());
+		assertTrue(response.hasAudio());
+		assertTrue(response.hasVideo());
+		assertEquals(BroadcastStatus.STARTED, response.getStatus());
+		assertEquals(Resolution.HD_PORTRAIT, response.getResolution());
+		assertEquals(1437676551000L, response.getCreatedAtMillis().longValue());
+		assertEquals(1437876551000L, response.getUpdatedAtMillis().longValue());
+		assertEquals("broadcast-1234b", response.getMultiBroadcastTag());
+		assertEquals(Duration.ofSeconds(5400), response.getMaxDuration());
+		assertEquals(2000000, response.getMaxBitrate().intValue());
 		BroadcastUrls broadcastUrls = response.getBroadcastUrls();
-		Assertions.assertNotNull(broadcastUrls);
-		Assertions.assertEquals("http://server/fakepath/playlist.m3u8", broadcastUrls.getHls().toString());
+		assertNotNull(broadcastUrls);
+		assertEquals("http://server/fakepath/playlist.m3u8", broadcastUrls.getHls().toString());
 		List<Rtmp> rtmps = broadcastUrls.getRtmps();
-		Assertions.assertNotNull(rtmps);
-		Assertions.assertEquals(1, rtmps.size());
+		assertNotNull(rtmps);
+		assertEquals(1, rtmps.size());
 		Rtmp rtmp = rtmps.get(0);
-		Assertions.assertNotNull(rtmp);
-		Assertions.assertEquals("rtmps://myfooserver/myfooapp", rtmp.getServerUrl().toString());
-		Assertions.assertEquals(RtmpStatus.LIVE, rtmp.getStatus());
-		Assertions.assertEquals("foo", rtmp.getId());
-		Assertions.assertEquals("myfoostream", rtmp.getStreamName());
+		assertNotNull(rtmp);
+		assertEquals("rtmps://myfooserver/myfooapp", rtmp.getServerUrl().toString());
+		assertEquals(RtmpStatus.LIVE, rtmp.getStatus());
+		assertEquals("foo", rtmp.getId());
+		assertEquals("myfoostream", rtmp.getStreamName());
 		Hls hls = response.getHlsSettings();
-		Assertions.assertNotNull(hls);
-		Assertions.assertFalse(hls.dvr());
-		Assertions.assertTrue(hls.lowLatency());
+		assertNotNull(hls);
+		assertFalse(hls.dvr());
+		assertTrue(hls.lowLatency());
 		assertVideoStreamsEqualsExpectedJson(response);
-	}
-
-	@BeforeEach
-	public void setUp() {
-		wrapper.getAuthCollection().add(new JWTAuthMethod(applicationId, new byte[0]));
-		client = new VideoClient(wrapper);
 	}
 
 	@Test
@@ -280,24 +261,24 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 		stubResponse(responseJson);
 		CreateSessionResponse response = client.createSession(request);
-		Assertions.assertEquals(sessionId, response.getSessionId());
-		Assertions.assertEquals(applicationId, response.getApplicationId().toString());
-		Assertions.assertEquals(createDt, response.getCreateDt());
-		Assertions.assertEquals(msUrl, response.getMediaServerUrl().toString());
+		assertEquals(sessionId, response.getSessionId());
+		assertEquals(applicationId, response.getApplicationId().toString());
+		assertEquals(createDt, response.getCreateDt());
+		assertEquals(msUrl, response.getMediaServerUrl().toString());
 
 		stubResponse(responseJson);
 		response = client.createSession();
-		Assertions.assertNotNull(response);
-		Assertions.assertEquals(sessionId, response.getSessionId());
-		Assertions.assertEquals(applicationId, response.getApplicationId().toString());
-		Assertions.assertEquals(createDt, response.getCreateDt());
-		Assertions.assertEquals(msUrl, response.getMediaServerUrl().toString());
+		assertNotNull(response);
+		assertEquals(sessionId, response.getSessionId());
+		assertEquals(applicationId, response.getApplicationId().toString());
+		assertEquals(createDt, response.getCreateDt());
+		assertEquals(msUrl, response.getMediaServerUrl().toString());
 
 		responseJson = "{\n" + "  \"code\": 400,\n" + "  \"message\": "+
 				"\"Invalid request. This response may indicate that data in your request data is invalid JSON. "+
 			    "Or it may indicate that you do not pass in a session ID or you passed in an invalid stream ID.\"\n}";
 
-		stubResponseAndAssertThrowsResponseParseException(400, responseJson, () -> client.createSession(null));
+		stubResponseAndAssertThrowsVideoException(400, responseJson, () -> client.createSession(null));
 	}
 
 	@Test
@@ -315,16 +296,16 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 		stubResponse(responseJson);
 		List<GetStreamResponse> response = client.listStreams(sessionId);
-		Assertions.assertEquals(1, response.size());
-		Assertions.assertEquals(VideoType.SCREEN, response.get(0).getVideoType());
-		Assertions.assertEquals("", response.get(0).getName());
+		assertEquals(1, response.size());
+		assertEquals(VideoType.SCREEN, response.get(0).getVideoType());
+		assertEquals("", response.get(0).getName());
 		assertThrows(IllegalArgumentException.class, () -> client.listStreams(null));
 
 		responseJson = "{\n" +
 			  "  \"code\": 404,\n" +
 			  "  \"message\": \"The session exists but has not had any streams added to it yet.\"\n" +
 			  "}";
-		stubResponseAndAssertThrowsResponseParseException(404, responseJson, () -> client.listStreams(sessionId));
+		stubResponseAndAssertThrowsVideoException(404, responseJson, () -> client.listStreams(sessionId));
 	}
 
 	@Test
@@ -340,10 +321,10 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 		stubResponse(200, responseJson);
 		GetStreamResponse response = client.getStream(sessionId, streamId);
-		Assertions.assertEquals(streamId, response.getId().toString());
-		Assertions.assertEquals(VideoType.CUSTOM, response.getVideoType());
-		Assertions.assertEquals(1, response.getLayoutClassList().size());
-		Assertions.assertEquals("full", response.getLayoutClassList().get(0));
+		assertEquals(streamId, response.getId().toString());
+		assertEquals(VideoType.CUSTOM, response.getVideoType());
+		assertEquals(1, response.getLayoutClassList().size());
+		assertEquals("full", response.getLayoutClassList().get(0));
 
 		stubResponseAndAssertThrowsIAX(() -> client.getStream(null, streamId));
 		stubResponseAndAssertThrowsIAX(() -> client.getStream(sessionId, null));
@@ -352,7 +333,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 			  "  \"code\": 408,\n" +
 			  "  \"message\": \"You passed in an invalid stream ID.\"\n" +
 			  "}";
-		stubResponseAndAssertThrowsResponseParseException(408, responseJson,
+		stubResponseAndAssertThrowsVideoException(408, responseJson,
 			  () -> client.getStream(sessionId, streamId)
 		);
 	}
@@ -373,7 +354,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 			  "  \"code\": 403,\n" +
 			  "  \"message\": \"Authentication error\"\n" +
 			  "}";
-		stubResponseAndAssertThrowsBadRequestException(403, responseJson,
+		stubResponseAndAssertThrowsVideoException(403, responseJson,
 			  () -> client.setStreamLayout(sessionId, layoutsList)
 		);
 	}
@@ -388,7 +369,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 		String responseJson = "{\n  \"code\": 413,\n  \"message\": \"The type string exceeds the maximum" +
 			  "length (128 bytes), or the data string exceeds the maximum size (8 kB).\"\n}";
-		stubResponseAndAssertThrowsBadRequestException(413, responseJson,
+		stubResponseAndAssertThrowsVideoException(413, responseJson,
 			  () -> client.signal(sessionId, connectionId, signalRequest)
 		);
 	}
@@ -402,7 +383,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 		String responseJson = "{\n  \"code\": 413,\n  \"message\": \"The type string exceeds the maximum" +
 			  "length (128 bytes), or the data string exceeds the maximum size (8 kB).\"\n}";
-		stubResponseAndAssertThrowsBadRequestException(413, responseJson,
+		stubResponseAndAssertThrowsVideoException(413, responseJson,
 			  () -> client.signalAll(sessionId, signalRequest)
 		);
 	}
@@ -415,7 +396,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 		String responseJson = "{\n  \"code\": 403,\n  \"message\": " +
 			  "\"You are not authorized to forceDisconnect, check your authentication credentials.\"\n}";
-		stubResponseAndAssertThrowsBadRequestException(403, responseJson,
+		stubResponseAndAssertThrowsVideoException(403, responseJson,
 			  () -> client.forceDisconnect(sessionId, connectionId)
 		);
 	}
@@ -430,7 +411,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 			  "  \"code\": 404,\n" +
 			  "  \"message\": \"Not found. The session or stream is not found\"\n" +
 			  "}";
-		stubResponseAndAssertThrowsBadRequestException(404, responseJson,
+		stubResponseAndAssertThrowsVideoException(404, responseJson,
 			  () -> client.muteStream(sessionId, streamId)
 		);
 	}
@@ -459,7 +440,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 			  "  \"code\": 404,\n" +
 			  "  \"message\": \"Not found. The session or stream is not found\"\n" +
 			  "}";
-		stubResponseAndAssertThrowsBadRequestException(404, responseJson,
+		stubResponseAndAssertThrowsVideoException(404, responseJson,
 			  () -> client.muteSession(sessionId, false)
 		);
 	}
@@ -475,7 +456,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 			  "  \"code\": 403,\n" +
 			  "  \"message\": \"Authentication error.\"\n" +
 			  "}";
-		stubResponseAndAssertThrowsBadRequestException(403, responseJson,
+		stubResponseAndAssertThrowsVideoException(403, responseJson,
 			  () -> client.updateArchiveLayout(archiveId, request)
 	    );
 	}
@@ -487,9 +468,9 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 		String responseJson = "{\n" +
 			  "  \"code\": 409,\n" +
-			  "  \"message\": \"Status of the archive is not \"uploaded\", \"available\", or \"deleted\"\"\n" +
+			  "  \"message\": \"Status of the archive is not 'uploaded', 'available', or 'deleted'\"\n" +
 			  "}";
-		stubResponseAndAssertThrowsBadRequestException(409, responseJson, () -> client.deleteArchive(archiveId));
+		stubResponseAndAssertThrowsVideoException(409, responseJson, () -> client.deleteArchive(archiveId));
 	}
 
 	@Test
@@ -505,7 +486,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 			  "  \"code\": 404,\n" +
 			  "  \"message\": \"Archive or stream not found\"\n" +
 			  "}";
-		stubResponseAndAssertThrowsBadRequestException(404, responseJson,
+		stubResponseAndAssertThrowsVideoException(404, responseJson,
 			  () -> client.addArchiveStream(archiveId, streamId)
 		);
 	}
@@ -520,7 +501,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 			  "  \"code\": 404,\n" +
 			  "  \"message\": \"Archive or stream not found\"\n" +
 			  "}";
-		stubResponseAndAssertThrowsBadRequestException(404, responseJson,
+		stubResponseAndAssertThrowsVideoException(404, responseJson,
 			  () -> client.removeArchiveStream(archiveId, streamId)
 		);
 	}
@@ -534,7 +515,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 			  "  \"code\": 409,\n" +
 			  "  \"message\": \"You attempted to stop an archive that was not being recorded\"\n" +
 			  "}";
-		stubResponseAndAssertThrowsResponseParseException(409, responseJson, () -> client.stopArchive(archiveId));
+		stubResponseAndAssertThrowsVideoException(409, responseJson, () -> client.stopArchive(archiveId));
 	}
 
 	@Test
@@ -546,7 +527,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 			  "  \"code\": 403,\n" +
 			  "  \"message\": \"You passed in an invalid JWT token.\"\n" +
 			  "}";
-		stubResponseAndAssertThrowsResponseParseException(403, responseJson, () -> client.getArchive(archiveId));
+		stubResponseAndAssertThrowsVideoException(403, responseJson, () -> client.getArchive(archiveId));
 	}
 
 	@Test
@@ -559,7 +540,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 			  "  \"code\": 403,\n" +
 			  "  \"message\": \"Authentication error\"\n" +
 			  "}";
-		stubResponseAndAssertThrowsResponseParseException(403, responseJson, () -> client.listArchives());
+		stubResponseAndAssertThrowsVideoException(403, responseJson, () -> client.listArchives());
 	}
 
 	@Test
@@ -570,7 +551,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 		String responseJson = "{\n  \"code\": 409,\n  \"message\": \"You attempted to " +
 			  "start an archive for a session that does not use the Vonage Video Media Router.\"\n}";
-		stubResponseAndAssertThrowsResponseParseException(409, responseJson, () -> client.createArchive(request));
+		stubResponseAndAssertThrowsVideoException(409, responseJson, () -> client.createArchive(request));
 	}
 
 	@Test
@@ -584,7 +565,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 				"  \"code\": 403,\n" +
 				"  \"message\": \"Authentication error.\"\n" +
 				"}";
-		stubResponseAndAssertThrowsBadRequestException(403, responseJson,
+		stubResponseAndAssertThrowsVideoException(403, responseJson,
 				() -> client.updateBroadcastLayout(broadcastId, request)
 		);
 	}
@@ -602,7 +583,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 				"  \"code\": 404,\n" +
 				"  \"message\": \"Broadcast or stream not found\"\n" +
 				"}";
-		stubResponseAndAssertThrowsBadRequestException(404, responseJson,
+		stubResponseAndAssertThrowsVideoException(404, responseJson,
 				() -> client.addBroadcastStream(broadcastId, streamId)
 		);
 	}
@@ -617,7 +598,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 				"  \"code\": 404,\n" +
 				"  \"message\": \"Broadcast or stream not found\"\n" +
 				"}";
-		stubResponseAndAssertThrowsBadRequestException(404, responseJson,
+		stubResponseAndAssertThrowsVideoException(404, responseJson,
 				() -> client.removeBroadcastStream(broadcastId, streamId)
 		);
 	}
@@ -631,7 +612,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 				"  \"code\": 409,\n" +
 				"  \"message\": \"You attempted to stop an archive that was not being recorded\"\n" +
 				"}";
-		stubResponseAndAssertThrowsResponseParseException(409, responseJson, () -> client.stopBroadcast(broadcastId));
+		stubResponseAndAssertThrowsVideoException(409, responseJson, () -> client.stopBroadcast(broadcastId));
 	}
 
 	@Test
@@ -643,7 +624,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 				"  \"code\": 403,\n" +
 				"  \"message\": \"You passed in an invalid JWT token.\"\n" +
 				"}";
-		stubResponseAndAssertThrowsResponseParseException(403, responseJson, () -> client.getBroadcast(broadcastId));
+		stubResponseAndAssertThrowsVideoException(403, responseJson, () -> client.getBroadcast(broadcastId));
 	}
 
 	@Test
@@ -656,7 +637,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 				"  \"code\": 403,\n" +
 				"  \"message\": \"Authentication error\"\n" +
 				"}";
-		stubResponseAndAssertThrowsResponseParseException(403, responseJson, () -> client.listBroadcasts());
+		stubResponseAndAssertThrowsVideoException(403, responseJson, () -> client.listBroadcasts());
 	}
 
 	@Test
@@ -675,7 +656,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		String responseJson = "{\n  \"code\": 409,\n  \"message\": \"The broadcast has already started for the" +
 				"session.Or if you attempt to start a simultaneous broadcast for a session without setting a" +
 				"unique multiBroadcastTag value.\"\n}";
-		stubResponseAndAssertThrowsResponseParseException(409, responseJson, () -> client.createBroadcast(request));
+		stubResponseAndAssertThrowsVideoException(409, responseJson, () -> client.createBroadcast(request));
 	}
 
 	@Test
@@ -692,11 +673,11 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		);
 
 		SipDialResponse parsed = client.sipDial(request);
-		Assertions.assertEquals(id, parsed.getId());
-		Assertions.assertEquals(connectionId, parsed.getConnectionId());
-		Assertions.assertEquals(streamId, parsed.getStreamId());
+		assertEquals(id, parsed.getId());
+		assertEquals(connectionId, parsed.getConnectionId());
+		assertEquals(streamId, parsed.getStreamId());
 
-		stubResponseAndAssertThrowsResponseParseException(409, "{\"code\":409}", () -> client.sipDial(request));
+		stubResponseAndAssertThrowsVideoException(409, "{\"code\":409}", () -> client.sipDial(request));
 	}
 
 	@Test
@@ -720,20 +701,20 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		String token = client.generateToken(sessionId);
 		Map<String, String> claims = TestUtils.decodeTokenBody(token);
 
-		Assertions.assertEquals("session.connect", claims.get("scope"));
-		Assertions.assertEquals(sessionId, claims.get("session_id"));
-		Assertions.assertNotNull(claims.get("application_id"));	// TODO test value
+		assertEquals("session.connect", claims.get("scope"));
+		assertEquals(sessionId, claims.get("session_id"));
+		assertNotNull(claims.get("application_id"));	// TODO test value
 		long exp = Long.parseLong(claims.get("exp"));
 		long iat = Long.parseLong(claims.get("iat"));
 		// One minute less than a day = 86340
-		Assertions.assertTrue((iat + 86340) < exp);
-		Assertions.assertTrue((iat + 86401) > exp);
-		Assertions.assertTrue(token.length() > 100);
+		assertTrue((iat + 86340) < exp);
+		assertTrue((iat + 86401) > exp);
+		assertTrue(token.length() > 100);
 
 		token = client.generateToken(sessionId, TokenOptions.builder().build());
-		Assertions.assertEquals(claims.keySet(), TestUtils.decodeTokenBody(token).keySet());
+		assertEquals(claims.keySet(), TestUtils.decodeTokenBody(token).keySet());
 		token = client.generateToken(sessionId, null);
-		Assertions.assertEquals(claims.keySet(), TestUtils.decodeTokenBody(token).keySet());
+		assertEquals(claims.keySet(), TestUtils.decodeTokenBody(token).keySet());
 		assertThrows(IllegalArgumentException.class, () -> client.generateToken(null));
 
 		token = client.generateToken(sessionId,TokenOptions.builder()
@@ -745,15 +726,966 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		        .build()
 		);
 		claims = TestUtils.decodeTokenBody(token);
-		Assertions.assertEquals("subscriber", claims.get("role"));
-		Assertions.assertEquals("foo bar, blah blah", claims.get("connection_data"));
-		Assertions.assertEquals("c1 c2 min full", claims.get("initial_layout_class_list"));
-		Assertions.assertEquals("session.connect", claims.get("scope"));
-		Assertions.assertEquals(sessionId, claims.get("session_id"));
+		assertEquals("subscriber", claims.get("role"));
+		assertEquals("foo bar, blah blah", claims.get("connection_data"));
+		assertEquals("c1 c2 min full", claims.get("initial_layout_class_list"));
+		assertEquals("session.connect", claims.get("scope"));
+		assertEquals(sessionId, claims.get("session_id"));
 		//assertEquals(applicationId, claims.get("application_id")); TODO test value
 		exp = Long.parseLong(claims.get("exp"));
 		iat = Long.parseLong(claims.get("iat"));
-		Assertions.assertTrue((iat + 721) > exp);
-		Assertions.assertTrue((iat + 700) < exp);
+		assertTrue((iat + 721) > exp);
+		assertTrue((iat + 700) < exp);
+	}
+
+	// ENDPOINT TESTS
+
+	@Test
+	public void testCreateArchiveEndpoint() throws Exception {
+		new VideoEndpointTestSpec<Archive, Archive>() {
+
+			@Override
+			protected RestEndpoint<Archive, Archive> endpoint() {
+				return client.createArchive;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.POST;
+			}
+
+			@Override
+			protected String expectedEndpointUri(Archive request) {
+				return "/v2/project/"+applicationId+"/archive";
+			}
+
+			@Override
+			protected Archive sampleRequest() {
+				return Archive.builder(sessionId)
+						.name("My Archive").hasVideo(false).build();
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"sessionId\":\""+sessionId+"\",\"hasVideo\":false,\"name\":\"My Archive\"}";
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testCreateBroadcastEndpoint() throws Exception {
+		new VideoEndpointTestSpec<Broadcast, Broadcast>() {
+
+			@Override
+			protected RestEndpoint<Broadcast, Broadcast> endpoint() {
+				return client.createBroadcast;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.POST;
+			}
+
+			@Override
+			protected String expectedEndpointUri(Broadcast request) {
+				return "/v2/project/"+applicationId+"/broadcast";
+			}
+
+			@Override
+			protected Broadcast sampleRequest() {
+				return Broadcast.builder("SESSION_id123")
+						.addRtmpStream(Rtmp.builder()
+								.streamName("My Test Stream")
+								.serverUrl("rtmps://mytestserver/mytestapp")
+								.build()
+						).build();
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"sessionId\":\"SESSION_id123\",\"outputs\":{\"rtmp\":[{" +
+						"\"streamName\":\"My Test Stream\",\"serverUrl\":\"rtmps://mytestserver/mytestapp\"}]}}";
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testCreateSessionEndpoint() throws Exception {
+		new VideoEndpointTestSpec<CreateSessionRequest, CreateSessionResponse>() {
+
+			@Override
+			protected RestEndpoint<CreateSessionRequest, CreateSessionResponse> endpoint() {
+				return client.createSession;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.POST;
+			}
+
+			@Override
+			protected String expectedEndpointUri(CreateSessionRequest request) {
+				return "/session/create";
+			}
+
+			@Override
+			protected CreateSessionRequest sampleRequest() {
+				return CreateSessionRequest.builder()
+						.mediaMode(MediaMode.ROUTED).location("192.168.1.2")
+						.archiveMode(ArchiveMode.ALWAYS).build();
+			}
+
+			@Override
+			protected Map<String, String> sampleQueryParams() {
+				CreateSessionRequest request = sampleRequest();
+				String mediaMode = request.getMediaMode().toString();
+				assertEquals("disabled", mediaMode);
+				String archiveMode = request.getArchiveMode().toString();
+				assertEquals("always", archiveMode);
+
+				Map<String, String> params = new LinkedHashMap<>(4);
+				params.put("location", request.getLocation().getHostAddress());
+				params.put("p2p.preference", mediaMode);
+				params.put("archiveMode", archiveMode);
+				return params;
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testDeleteArchiveEndpoint() throws Exception {
+		new VideoEndpointTestSpec<String, Void>() {
+
+			@Override
+			protected RestEndpoint<String, Void> endpoint() {
+				return client.deleteArchive;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.DELETE;
+			}
+
+			@Override
+			protected String expectedEndpointUri(String request) {
+				return "/v2/project/"+applicationId+"/archive/"+request;
+			}
+
+			@Override
+			protected String sampleRequest() {
+				return archiveId;
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testForceDisconnectEndpoint() throws Exception {
+		new VideoEndpointTestSpec<SessionResourceRequestWrapper, Void>() {
+
+			@Override
+			protected RestEndpoint<SessionResourceRequestWrapper, Void> endpoint() {
+				return client.forceDisconnect;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.DELETE;
+			}
+
+			@Override
+			protected String expectedEndpointUri(SessionResourceRequestWrapper request) {
+				return "/v2/project/"+applicationId+"/session/"+request.sessionId+"/connection/"+request.resourceId;
+			}
+
+			@Override
+			protected SessionResourceRequestWrapper sampleRequest() {
+				return new SessionResourceRequestWrapper(sessionId, connectionId);
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testGetArchiveEndpoint() throws Exception {
+		new VideoEndpointTestSpec<String, Archive>() {
+
+			@Override
+			protected RestEndpoint<String, Archive> endpoint() {
+				return client.getArchive;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedEndpointUri(String request) {
+				return "/v2/project/"+applicationId+"/archive/"+request;
+			}
+
+			@Override
+			protected String sampleRequest() {
+				return archiveId;
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testGetBroadcastEndpoint() throws Exception {
+		new VideoEndpointTestSpec<String, Broadcast>() {
+
+			@Override
+			protected RestEndpoint<String, Broadcast> endpoint() {
+				return client.getBroadcast;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedEndpointUri(String request) {
+				return "/v2/project/"+applicationId+"/broadcast/"+request;
+			}
+
+			@Override
+			protected String sampleRequest() {
+				return broadcastId;
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testGetStreamEndpoint() throws Exception {
+		new VideoEndpointTestSpec<SessionResourceRequestWrapper, GetStreamResponse>() {
+
+			@Override
+			protected RestEndpoint<SessionResourceRequestWrapper, GetStreamResponse> endpoint() {
+				return client.getStream;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedEndpointUri(SessionResourceRequestWrapper request) {
+				return "/v2/project/"+applicationId+"/session/"+request.sessionId+"/stream/"+request.resourceId;
+			}
+
+			@Override
+			protected SessionResourceRequestWrapper sampleRequest() {
+				return new SessionResourceRequestWrapper(sessionId, streamId);
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testListArchivesEndpoint() throws Exception {
+		new VideoEndpointTestSpec<ListStreamCompositionsRequest, ListArchivesResponse>() {
+
+			@Override
+			protected RestEndpoint<ListStreamCompositionsRequest, ListArchivesResponse> endpoint() {
+				return client.listArchives;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedEndpointUri(ListStreamCompositionsRequest request) {
+				return "/v2/project/"+applicationId+"/archive";
+			}
+
+			@Override
+			protected ListStreamCompositionsRequest sampleRequest() {
+				return ListStreamCompositionsRequest.builder()
+						.offset(2).count(6).sessionId(sessionId).build();
+			}
+
+			@Override
+			protected Map<String, String> sampleQueryParams() {
+				ListStreamCompositionsRequest request = sampleRequest();
+				assertEquals(2, request.getOffset());
+				assertEquals(6, request.getCount());
+				assertEquals(sessionId, request.getSessionId());
+
+				Map<String, String> params = new LinkedHashMap<>(8);
+				params.put("offset", request.getOffset().toString());
+				params.put("count", request.getCount().toString());
+				params.put("sessionId", request.getSessionId());
+				return params;
+			}
+
+			@Override
+			public void runTests() throws Exception {
+				super.runTests();
+				testParseValidResponse();
+			}
+
+			private void testParseValidResponse() throws Exception {
+				String responseJson = "{\"count\":2,\"items\":[{},{\"applicationId\":\""+applicationId+"\"}]}";
+				stubResponse(200, responseJson);
+				ListArchivesResponse parsed = endpoint().execute(ListStreamCompositionsRequest.builder().build());
+				assertNotNull(parsed);
+				assertEquals(2, parsed.getCount().intValue());
+				assertEquals(2, parsed.getItems().size());
+				assertNotNull(parsed.getItems().get(0));
+				assertEquals(applicationId, parsed.getItems().get(1).getApplicationId().toString());
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testListBroadcastsEndpoint() throws Exception {
+		new VideoEndpointTestSpec<ListStreamCompositionsRequest, ListBroadcastsResponse>() {
+
+			@Override
+			protected RestEndpoint<ListStreamCompositionsRequest, ListBroadcastsResponse> endpoint() {
+				return client.listBroadcasts;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedEndpointUri(ListStreamCompositionsRequest request) {
+				return "/v2/project/"+applicationId+"/broadcast";
+			}
+
+			@Override
+			protected ListStreamCompositionsRequest sampleRequest() {
+				return ListStreamCompositionsRequest.builder()
+						.offset(7).count(25).sessionId(sessionId).build();
+			}
+
+			@Override
+			protected Map<String, String> sampleQueryParams() {
+				Map<String, String> params = new LinkedHashMap<>(8);
+				params.put("offset", "7");
+				params.put("count", "25");
+				params.put("sessionId", sessionId);
+				return params;
+			}
+
+			@Override
+			public void runTests() throws Exception {
+				super.runTests();
+				testParseValidResponse();
+			}
+
+			private void testParseValidResponse() throws Exception {
+				String responseJson = "{\"count\":31,\"items\":[{},{},{\"applicationId\":\""+applicationId+"\"},{},{}]}";
+				stubResponse(200, responseJson);
+				ListBroadcastsResponse parsed = endpoint().execute(ListStreamCompositionsRequest.builder().build());
+				assertNotNull(parsed);
+				assertEquals(31, parsed.getCount().intValue());
+				assertEquals(5, parsed.getItems().size());
+				assertNotNull(parsed.getItems().get(0));
+				assertEquals(applicationId, parsed.getItems().get(2).getApplicationId().toString());
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testListStreamsEndpoint() throws Exception {
+		new VideoEndpointTestSpec<String, ListStreamsResponse>() {
+
+			@Override
+			protected RestEndpoint<String, ListStreamsResponse> endpoint() {
+				return client.listStreams;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedEndpointUri(String request) {
+				return "/v2/project/"+applicationId+"/session/"+request+"/stream";
+			}
+
+			@Override
+			protected String sampleRequest() {
+				return sessionId;
+			}
+
+			@Override
+			public void runTests() throws Exception {
+				super.runTests();
+				testParseValidResponse();
+			}
+
+			private void testParseValidResponse() throws Exception {
+				Integer count = 1;
+				VideoType videoType0 = VideoType.CUSTOM;
+				UUID id0 = UUID.randomUUID();
+				String name0 = "My Stream",
+						layoutClass0 = "full",
+						json = "{\n" +
+								"  \"count\": "+count+",\n" +
+								"  \"items\": [\n" +
+								"    {\n" +
+								"      \"id\": \""+id0+"\",\n" +
+								"      \"videoType\": \""+videoType0+"\",\n" +
+								"      \"name\": \""+name0+"\",\n" +
+								"      \"layoutClassList\": [\n" +
+								"        \""+layoutClass0+"\"\n" +
+								"      ]\n" +
+								"    }\n" +
+								"  ]\n" +
+								"}";
+
+				stubResponse(200, json);
+				ListStreamsResponse response = endpoint().execute(sessionId);
+				assertEquals(count, response.getCount());
+				List<GetStreamResponse> streams = response.getItems();
+				assertEquals(1, streams.size());
+				GetStreamResponse stream0 = streams.get(0);
+				assertEquals(id0, stream0.getId());
+				assertEquals(videoType0, stream0.getVideoType());
+				assertEquals(name0, stream0.getName());
+				List<String> layoutClassList0 = stream0.getLayoutClassList();
+				assertEquals(1, layoutClassList0.size());
+				assertEquals(layoutClass0, layoutClassList0.get(0));
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testMuteSessionEndpoint() throws Exception {
+		new VideoEndpointTestSpec<MuteSessionRequest, MuteSessionResponse>() {
+
+			@Override
+			protected RestEndpoint<MuteSessionRequest, MuteSessionResponse> endpoint() {
+				return client.muteSession;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.POST;
+			}
+
+			@Override
+			protected String expectedEndpointUri(MuteSessionRequest request) {
+				return "/v2/project/"+applicationId+"/session/"+request.sessionId+"/mute";
+			}
+
+			@Override
+			protected MuteSessionRequest sampleRequest() {
+				return new MuteSessionRequest(sessionId, true, Arrays.asList("ID_0", "ID_1", "ID_2"));
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"active\":true,\"excludedStreamIds\":[\"ID_0\",\"ID_1\",\"ID_2\"]}";
+			}
+
+			@Override
+			public void runTests() throws Exception {
+				super.runTests();
+				testParseResponse();
+			}
+
+			private void testParseResponse() throws Exception {
+				long createdAt = 1414642898000L;
+				String name = "Joe Montana", responseJson = "{\n" +
+						"   \"applicationId\": \""+applicationId+"\",\n" +
+						"   \"status\": \"ACTIVE\",\n" +
+						"   \"name\": \""+name+"\",\n" +
+						"   \"environment\": \"standard\",\n" +
+						"   \"createdAt\": "+createdAt+"\n" +
+						"}";
+				MuteSessionResponse parsed = stubResponseAndGet(responseJson, this::executeEndpoint);
+				assertNotNull(parsed);
+				assertEquals(applicationId, parsed.getApplicationId());
+				assertEquals(name, parsed.getName());
+				assertEquals(ProjectStatus.ACTIVE, parsed.getStatus());
+				assertEquals(ProjectEnvironment.STANDARD, parsed.getEnvironment());
+				assertEquals(createdAt, parsed.getCreatedAt());
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testMuteStreamEndpoint() throws Exception {
+		new VideoEndpointTestSpec<SessionResourceRequestWrapper, Void>() {
+
+			@Override
+			protected RestEndpoint<SessionResourceRequestWrapper, Void> endpoint() {
+				return client.muteStream;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.POST;
+			}
+
+			@Override
+			protected String expectedEndpointUri(SessionResourceRequestWrapper request) {
+				return "/v2/project/"+applicationId+"/session/"+request.sessionId+"/stream/"+request.resourceId+"/mute";
+			}
+
+			@Override
+			protected SessionResourceRequestWrapper sampleRequest() {
+				return new SessionResourceRequestWrapper(sessionId, streamId);
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testPatchArchiveStreamEndpoint() throws Exception {
+		new VideoEndpointTestSpec<PatchComposedStreamsRequest, Void>() {
+
+			@Override
+			protected RestEndpoint<PatchComposedStreamsRequest, Void> endpoint() {
+				return client.patchArchiveStream;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.PATCH;
+			}
+
+			@Override
+			protected String expectedEndpointUri(PatchComposedStreamsRequest request) {
+				return "/v2/project/"+applicationId+"/archive/"+request.id+"/streams";
+			}
+
+			@Override
+			protected PatchComposedStreamsRequest sampleRequest() {
+				return new PatchComposedStreamsRequest(streamId, true, false);
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"addStream\":\""+streamId+"\",\"hasAudio\":true,\"hasVideo\":false}";
+			}
+
+			@Override
+			public void runTests() throws Exception {
+				super.runTests();
+				testRemoveStream();
+				testAddStreamDefaultOptions();
+			}
+
+			private void testRemoveStream() throws Exception {
+				PatchComposedStreamsRequest request = new PatchComposedStreamsRequest(streamId);
+				request.id = archiveId;
+				assertRequestUriAndBody(request, "{\"removeStream\":\""+streamId+"\"}");
+			}
+
+			private void testAddStreamDefaultOptions() throws Exception {
+				PatchComposedStreamsRequest request = new PatchComposedStreamsRequest(streamId, null, null);
+				request.id = archiveId;
+				assertRequestUriAndBody(request, "{\"addStream\":\""+streamId+"\"}");
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testPatchBroadcastStreamEndpoint() throws Exception {
+		new VideoEndpointTestSpec<PatchComposedStreamsRequest, Void>() {
+
+			@Override
+			protected RestEndpoint<PatchComposedStreamsRequest, Void> endpoint() {
+				return client.patchBroadcastStream;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.PATCH;
+			}
+
+			@Override
+			protected String expectedEndpointUri(PatchComposedStreamsRequest request) {
+				return "/v2/project/"+applicationId+"/broadcast/"+request.id+"/streams";
+			}
+
+			@Override
+			protected PatchComposedStreamsRequest sampleRequest() {
+				return new PatchComposedStreamsRequest(streamId, false, true);
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				PatchComposedStreamsRequest request = sampleRequest();
+				return "{\"addStream\":\"" + request.getAddStream() +
+						"\",\"hasAudio\":" + request.hasAudio() +
+						",\"hasVideo\":" + request.hasVideo() + "}";
+			}
+
+			@Override
+			public void runTests() throws Exception {
+				super.runTests();
+				testRemoveStream();
+				testAddStreamDefaultOptions();
+			}
+
+			private void testRemoveStream() throws Exception {
+				PatchComposedStreamsRequest request = new PatchComposedStreamsRequest(streamId);
+				request.id = broadcastId;
+				assertRequestUriAndBody(request, "{\"removeStream\":\""+streamId+"\"}");
+			}
+
+			private void testAddStreamDefaultOptions() throws Exception {
+				PatchComposedStreamsRequest request = new PatchComposedStreamsRequest(streamId, null, null);
+				request.id = broadcastId;
+				assertRequestUriAndBody(request, "{\"addStream\":\""+streamId+"\"}");
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testSendDtmfToConnectionEndpoint() throws Exception {
+		new VideoEndpointTestSpec<SendDtmfRequest, Void>() {
+
+			@Override
+			protected RestEndpoint<SendDtmfRequest, Void> endpoint() {
+				return client.sendDtmfToConnection;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.POST;
+			}
+
+			@Override
+			protected String expectedEndpointUri(SendDtmfRequest request) {
+				return "/v2/project/" + applicationId + "/session/"+request.sessionId +
+						"/connection/" + request.connectionId + "/play-dtmf";
+			}
+
+			@Override
+			protected SendDtmfRequest sampleRequest() {
+				return new SendDtmfRequest(sessionId, connectionId, "*0123456789#");
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"digits\":\"*0123456789#\"}";
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testSendDtmfToSessionEndpoint() throws Exception {
+		new VideoEndpointTestSpec<SendDtmfRequest, Void>() {
+
+			@Override
+			protected RestEndpoint<SendDtmfRequest, Void> endpoint() {
+				return client.sendDtmfToSession;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.POST;
+			}
+
+			@Override
+			protected String expectedEndpointUri(SendDtmfRequest request) {
+				return "/v2/project/"+applicationId+"/session/"+request.sessionId+"/play-dtmf";
+			}
+
+			@Override
+			protected SendDtmfRequest sampleRequest() {
+				return new SendDtmfRequest(sessionId, null, "p90");
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"digits\":\""+sampleRequest().digits+"\"}";
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testSetStreamLayoutEndpoint() throws Exception {
+		new VideoEndpointTestSpec<SetStreamLayoutRequest, Void>() {
+
+			@Override
+			protected RestEndpoint<SetStreamLayoutRequest, Void> endpoint() {
+				return client.setStreamLayout;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.PUT;
+			}
+
+			@Override
+			protected String expectedEndpointUri(SetStreamLayoutRequest request) {
+				return "/v2/project/"+applicationId+"/session/"+request.sessionId+"/stream";
+			}
+
+			@Override
+			protected SetStreamLayoutRequest sampleRequest() {
+				return new SetStreamLayoutRequest(sessionId, Arrays.asList(
+						SessionStream.builder(streamId).build(),
+						SessionStream.builder(connectionId).layoutClassList(Arrays.asList("min", "full")).build(),
+						SessionStream.builder(broadcastId).layoutClassList().build()
+				));
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"items\":[{\"id\":\""+streamId+"\"},"+
+						"{\"id\":\""+connectionId+"\",\"layoutClassList\":[\"min\",\"full\"]}," +
+						"{\"id\":\""+broadcastId+"\",\"layoutClassList\":[]}]}";
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testSignalAllEndpoint() throws Exception {
+		new VideoEndpointTestSpec<SignalRequest, Void>() {
+			final String data = "The actual payload as a string", type = "Signal channel";
+
+			@Override
+			protected RestEndpoint<SignalRequest, Void> endpoint() {
+				return client.signalAll;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.POST;
+			}
+
+			@Override
+			protected String expectedEndpointUri(SignalRequest request) {
+				return "/v2/project/"+applicationId+"/session/"+request.sessionId+"/signal";
+			}
+
+			@Override
+			protected SignalRequest sampleRequest() {
+				SignalRequest request = SignalRequest.builder().data(data).type(type).build();
+				request.sessionId = sessionId;
+				return request;
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"type\":\""+type+"\",\"data\":\""+data+"\"}";
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testSignalEndpoint() throws Exception {
+		new VideoEndpointTestSpec<SignalRequest, Void>() {
+			final String data = "Payload of the signal", type = "chat";
+
+			@Override
+			protected RestEndpoint<SignalRequest, Void> endpoint() {
+				return client.signal;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.POST;
+			}
+
+			@Override
+			protected String expectedEndpointUri(SignalRequest request) {
+				return "/v2/project/" + applicationId + "/session/" + request.sessionId +
+						"/connection/" + request.connectionId + "/signal";
+			}
+
+			@Override
+			protected SignalRequest sampleRequest() {
+				SignalRequest request = SignalRequest.builder().data(data).type(type).build();
+				request.sessionId = sessionId;
+				request.connectionId = connectionId;
+				return request;
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"type\":\""+type+"\",\"data\":\""+data+"\"}";
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testSipDialEndpoint() throws Exception {
+		new VideoEndpointTestSpec<SipDialRequest, SipDialResponse>() {
+
+			@Override
+			protected RestEndpoint<SipDialRequest, SipDialResponse> endpoint() {
+				return client.sipDial;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.POST;
+			}
+
+			@Override
+			protected String expectedEndpointUri(SipDialRequest request) {
+				return "/v2/project/"+applicationId+"/dial";
+			}
+
+			@Override
+			protected SipDialRequest sampleRequest() {
+				return SipDialRequest.builder().token(token).sessionId(sessionId)
+						.uri(URI.create("sip.example.com"), true).build();
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"sessionId\":\""+sessionId+"\",\"token\":\""+token+"\"," +
+						"\"sip\":{\"uri\":\"sip.example.com;transport=tls\"}}";
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testStopArchiveEndpoint() throws Exception {
+		new VideoEndpointTestSpec<String, Archive>() {
+
+			@Override
+			protected RestEndpoint<String, Archive> endpoint() {
+				return client.stopArchive;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.POST;
+			}
+
+			@Override
+			protected String expectedEndpointUri(String request) {
+				return "/v2/project/"+applicationId+"/archive/"+request+"/stop";
+			}
+
+			@Override
+			protected String sampleRequest() {
+				return archiveId;
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testStopBroadcastEndpoint() throws Exception {
+		new VideoEndpointTestSpec<String, Broadcast>() {
+
+			@Override
+			protected RestEndpoint<String, Broadcast> endpoint() {
+				return client.stopBroadcast;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.POST;
+			}
+
+			@Override
+			protected String expectedEndpointUri(String request) {
+				return "/v2/project/"+applicationId+"/broadcast/"+broadcastId+"/stop";
+			}
+
+			@Override
+			protected String sampleRequest() {
+				return broadcastId;
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testUpdateArchiveLayoutEndpoint() throws Exception {
+		new VideoEndpointTestSpec<StreamCompositionLayout, Void>() {
+
+			@Override
+			protected RestEndpoint<StreamCompositionLayout, Void> endpoint() {
+				return client.updateArchiveLayout;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.PUT;
+			}
+
+			@Override
+			protected String expectedEndpointUri(StreamCompositionLayout request) {
+				return "/v2/project/"+applicationId+"/archive/"+request.id+"/layout";
+			}
+
+			@Override
+			protected StreamCompositionLayout sampleRequest() {
+				StreamCompositionLayout request = StreamCompositionLayout.builder(ScreenLayoutType.VERTICAL).build();
+				request.id = archiveId;
+				return request;
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"type\":\"verticalPresentation\"}";
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testUpdateBroadcastLayoutEndpoint() throws Exception {
+		new VideoEndpointTestSpec<StreamCompositionLayout, Void>() {
+
+			@Override
+			protected RestEndpoint<StreamCompositionLayout, Void> endpoint() {
+				return client.updateBroadcastLayout;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.PUT;
+			}
+
+			@Override
+			protected String expectedEndpointUri(StreamCompositionLayout request) {
+				return "/v2/project/"+applicationId+"/broadcast/"+request.id+"/layout";
+			}
+
+			@Override
+			protected StreamCompositionLayout sampleRequest() {
+				StreamCompositionLayout request = StreamCompositionLayout.builder(ScreenLayoutType.HORIZONTAL).build();
+				request.id = broadcastId;
+				return request;
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"type\":\"horizontalPresentation\"}";
+			}
+		}
+		.runTests();
 	}
 }

@@ -324,7 +324,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
 
     @Test
     public void testTopUpFailed() throws Exception {
-        String json = "{\"error-code\":\"420\",\"error-code-label\":\"topup failed\",\"title\":\"Test reason\"}";
+        String json = "{\"error-code\":\"420\",\"error-code-label\":\"topup failed\"}";
         AccountResponseException ex = assertApiResponseException(401, json, AccountResponseException.class,
                 () -> client.topUp("ABC123")
         );

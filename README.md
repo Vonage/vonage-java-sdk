@@ -51,9 +51,9 @@ See all of our SDKs and integrations on the [Vonage Developer portal](https://de
 
 ## Installation
 
-Releases are published to [Maven Central](https://central.sonatype.com/artifact/com.vonage/server-sdk/8.0.0/snippets).
+Releases are published to [Maven Central](https://central.sonatype.com/artifact/com.vonage/server-sdk/8.1.0/snippets).
 Instructions for your build system can be found in the snippets section.
-They're also available from [here](https://mvnrepository.com/artifact/com.vonage/server-sdk/8.0.0).
+They're also available from [here](https://mvnrepository.com/artifact/com.vonage/server-sdk/8.1.0).
 Release notes can be found in the [changelog](CHANGELOG.md).
 
 ### Build It Yourself
@@ -159,9 +159,9 @@ If you would like to use the SDK in a multithreaded environment, create a separa
 
 **A:** Currently no, but it is on the roadmap.
 
-**Q: How do I migrate from OpenTok to Vonage?**
+**Q: How do I migrate from TokBox to Vonage?**
 
-**A:** See [this migration guide](src/main/java/com/vonage/client/video/OPENTOK_TO_VONAGE_MIGRATION.md).
+**A:** See [the OpenTok migration guide](src/main/java/com/vonage/client/video/OPENTOK_TO_VONAGE_MIGRATION.md).
 
 ## Contribute!
 

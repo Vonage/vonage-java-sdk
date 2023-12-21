@@ -37,6 +37,7 @@ public abstract class ClientTest<T> {
     protected final String applicationId = UUID.randomUUID().toString();
     protected final String apiKey = "a1b2c3d4";
     protected final String apiSecret = "1234567890abcdef";
+    protected final String testReason = "Test reason";
     protected HttpWrapper wrapper;
     protected T client;
 
@@ -63,7 +64,7 @@ public abstract class ClientTest<T> {
         InputStream[] contentsEncoded = Arrays.stream(additionalReturns).map(transformation).toArray(InputStream[]::new);
         when(entity.getContent()).thenReturn(transformation.apply(content), contentsEncoded);
         when(sl.getStatusCode()).thenReturn(statusCode);
-        when(sl.getReasonPhrase()).thenReturn("Test reason");
+        when(sl.getReasonPhrase()).thenReturn(testReason);
         when(response.getStatusLine()).thenReturn(sl);
         when(response.getEntity()).thenReturn(entity);
 
@@ -129,7 +130,6 @@ public abstract class ClientTest<T> {
             int statusCode, String response, Class<E> exClass, Executable invocation) throws Exception {
         E expectedResponse = (E) exClass.getDeclaredMethod("fromJson", String.class).invoke(exClass, response);
         String expectedJson = expectedResponse.toJson();
-        assertTrue(expectedJson.length() > 1 && expectedJson.length() <= response.length());
         wrapper.setHttpClient(stubHttpClient(statusCode, expectedJson));
         java.lang.reflect.Method setStatusCode = exClass.getDeclaredMethod("setStatusCode", int.class);
         setStatusCode.setAccessible(true);
@@ -142,8 +142,12 @@ public abstract class ClientTest<T> {
         }
         catch (Throwable ex) {
             assertEquals(exClass, ex.getClass(), failPrefix + ex.getClass());
+            if (expectedResponse.getTitle() == null) {
+                expectedResponse.title = testReason;
+            }
             assertEquals(expectedResponse, ex);
-            assertEquals(expectedJson, ((E) ex).toJson());
+            String actualJson = ((E) ex).toJson().replace("\"title\":\""+testReason+"\",", "");
+            assertEquals(expectedJson, actualJson);
         }
         return expectedResponse;
     }

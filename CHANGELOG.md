@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+# [8.1.0] - 2024-01-??
+- Added optional `from` parameter to Verify v2 SMS workflow
+- Fixed `length` not being set in `VerifyClient.verify` overload method
+- Fixed incorrect HTTP method for updating Video Broadcast layout
+- Internal refactoring of Video API implementation
+
 # [8.0.0] - 2023-11-30
 - Added `redirect_url` parameter to `SilentAuthWorkflow`
 - Bumped Jackson version to 2.16.0

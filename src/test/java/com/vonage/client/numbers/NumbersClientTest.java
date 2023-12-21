@@ -32,7 +32,6 @@ public class NumbersClientTest extends ClientTest<NumbersClient> {
 
     void assert401ResponseException(Executable invocation) throws Exception {
         String response = "{\n" +
-                "   \"title\": \"Test reason\",\n" +
                 "   \"error-code\": \"401\",\n" +
                 "   \"error-code-label\": \"authentication failed\"\n" +
                 "}";
