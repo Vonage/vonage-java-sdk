@@ -21,7 +21,6 @@ import com.vonage.client.RestEndpoint;
 import com.vonage.client.TestUtils;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.common.HttpMethod;
-import org.apache.http.client.HttpResponseException;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
@@ -125,11 +124,6 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		stubResponseAndRun(200, invocation);
 	}
 
-	void stubResponseAndAssertThrowsHttpResponseException(int statusCode, String response,
-																	Executable invocation) throws Exception {
-		stubResponseAndAssertThrows(statusCode, response, invocation, HttpResponseException.class);
-	}
-
 	void stubResponseAndAssertThrowsIAX(int statusCode, Executable invocation) throws Exception {
 		stubResponseAndAssertThrows(statusCode, invocation, IllegalArgumentException.class);
 	}
@@ -148,15 +142,11 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 	void stubResponseAndAssertThrowsVideoException(int statusCode, String response,
 																  Executable invocation) throws Exception {
-		stubResponseAndAssertThrows(statusCode, response, invocation, VideoResponseException.class);
+		assertApiResponseException(statusCode, response, VideoResponseException.class, invocation);
 	}
 	
 	void stubArchiveJsonAndAssertThrows(Executable invocation) throws Exception {
 		stubResponseAndAssertThrowsIAX(archiveJson, invocation);
-	}
-
-	void stubListArchiveJsonAndAssertThrows(Executable invocation) throws Exception {
-		stubResponseAndAssertThrowsIAX(listArchiveJson, invocation);
 	}
 
 	void stubArchiveJsonAndAssertEquals(Supplier<Archive> invocation) throws Exception {
@@ -210,10 +200,6 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 	void stubBroadcastJsonAndAssertThrows(Executable invocation) throws Exception {
 		stubResponseAndAssertThrowsIAX(broadcastJson, invocation);
-	}
-
-	void stubListBroadcastJsonAndAssertThrows(Executable invocation) throws Exception {
-		stubResponseAndAssertThrowsIAX(listBroadcastJson, invocation);
 	}
 
 	void stubBroadcastJsonAndAssertEquals(Supplier<Broadcast> invocation) throws Exception {
@@ -1212,6 +1198,30 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 			protected String sampleRequestBodyString() {
 				return "{\"active\":true,\"excludedStreamIds\":[\"ID_0\",\"ID_1\",\"ID_2\"]}";
 			}
+
+			@Override
+			public void runTests() throws Exception {
+				super.runTests();
+				testParseResponse();
+			}
+
+			private void testParseResponse() throws Exception {
+				long createdAt = 1414642898000L;
+				String name = "Joe Montana", responseJson = "{\n" +
+						"   \"applicationId\": \""+applicationId+"\",\n" +
+						"   \"status\": \"ACTIVE\",\n" +
+						"   \"name\": \""+name+"\",\n" +
+						"   \"environment\": \"standard\",\n" +
+						"   \"createdAt\": "+createdAt+"\n" +
+						"}";
+				MuteSessionResponse parsed = stubResponseAndGet(responseJson, this::executeEndpoint);
+				assertNotNull(parsed);
+				assertEquals(applicationId, parsed.getApplicationId());
+				assertEquals(name, parsed.getName());
+				assertEquals(ProjectStatus.ACTIVE, parsed.getStatus());
+				assertEquals(ProjectEnvironment.STANDARD, parsed.getEnvironment());
+				assertEquals(createdAt, parsed.getCreatedAt());
+			}
 		}
 		.runTests();
 	}
@@ -1544,13 +1554,13 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 			@Override
 			protected SipDialRequest sampleRequest() {
-				return SipDialRequest.builder().token("eYjwToken").sessionId(sessionId)
+				return SipDialRequest.builder().token(token).sessionId(sessionId)
 						.uri(URI.create("sip.example.com"), true).build();
 			}
 
 			@Override
 			protected String sampleRequestBodyString() {
-				return "{\"sessionId\":\""+sessionId+"\",\"token\":\"eYjwToken\"," +
+				return "{\"sessionId\":\""+sessionId+"\",\"token\":\""+token+"\"," +
 						"\"sip\":{\"uri\":\"sip.example.com;transport=tls\"}}";
 			}
 		}

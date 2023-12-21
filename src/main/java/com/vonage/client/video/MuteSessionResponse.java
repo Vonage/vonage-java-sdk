@@ -18,8 +18,11 @@ package com.vonage.client.video;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vonage.client.Jsonable;
 
+/**
+ * TODO see if this is needed
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MuteSessionResponse implements Jsonable {
+class MuteSessionResponse implements Jsonable {
 	private String applicationId, name;
 	private ProjectStatus status;
 	private ProjectEnvironment environment;
