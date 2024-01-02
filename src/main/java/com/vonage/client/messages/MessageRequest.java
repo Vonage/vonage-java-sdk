@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import com.vonage.client.common.E164;
+import java.net.URI;
 import java.util.Objects;
 
 /**
@@ -36,6 +37,8 @@ public abstract class MessageRequest implements Jsonable {
 	final MessageType messageType;
 	final Channel channel;
 	final String clientRef;
+	final URI webhookUrl;
+	final MessagesVersion webhookVersion;
 	protected String from, to;
 
 	/**
@@ -57,6 +60,8 @@ public abstract class MessageRequest implements Jsonable {
 		clientRef = validateClientReference(builder.clientRef);
 		from = builder.from;
 		to = builder.to;
+		webhookUrl = builder.webhookUrl;
+		webhookVersion = builder.webhookVersion;
 		validateSenderAndRecipient(from, to);
 	}
 
@@ -115,6 +120,16 @@ public abstract class MessageRequest implements Jsonable {
 		return clientRef;
 	}
 
+	@JsonProperty("webhook_url")
+	public URI getWebhookUrl() {
+		return webhookUrl;
+	}
+
+	@JsonProperty("webhook_version")
+	public MessagesVersion getWebhookVersion() {
+		return webhookVersion;
+	}
+
 	@Override
 	public String toString() {
 		return getClass().getSimpleName()+' '+toJson();
@@ -133,6 +148,8 @@ public abstract class MessageRequest implements Jsonable {
 	@SuppressWarnings("unchecked")
 	public abstract static class Builder<M extends MessageRequest, B extends Builder<? extends M, ? extends B>> {
 		protected String from, to, clientRef;
+		protected URI webhookUrl;
+		protected MessagesVersion webhookVersion;
 
 		/**
 		 * Protected constructor to prevent users from explicitly creating this object.
@@ -175,6 +192,54 @@ public abstract class MessageRequest implements Jsonable {
 		 */
 		public B clientRef(String clientRef) {
 			this.clientRef = clientRef;
+			return (B) this;
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * Specifies the URL to which Status Webhook messages will be sent for this particular message.
+		 * Overrides account-level and application-level Status Webhook url settings on a per-message basis.
+		 *
+		 * @param webhookUrl The status webhook URL as a string.
+		 *
+		 * @return This builder.
+		 *
+		 * @since 8.1.0
+		 */
+		public B webhookUrl(String webhookUrl) {
+			return webhookUrl(URI.create(webhookUrl));
+		}
+
+		/**
+		 * (OPTIONAL)
+		 * Specifies the URL to which Status Webhook messages will be sent for this particular message.
+		 * Overrides account-level and application-level Status Webhook url settings on a per-message basis.
+		 *
+		 * @param webhookUrl The status webhook URL.
+		 *
+		 * @return This builder.
+		 *
+		 * @since 8.1.0
+		 */
+		private B webhookUrl(URI webhookUrl) {
+			this.webhookUrl = webhookUrl;
+			return (B) this;
+		}
+
+		/**
+		 * Specifies which version of the Messages API will be used to send Status Webhook messages for
+		 * this particular message. For example, if {@linkplain MessagesVersion#V0_1} is set, then the
+		 * JSON body of Status Webhook messages for this message will be sent in Messages v0.1 format.
+		 * Over-rides account-level and application-level API version settings on a per-message basis.
+		 *
+		 * @param webhookVersion The messages API version enum.
+		 *
+		 * @return This builder.
+		 *
+		 * @since 8.1.0
+		 */
+		public B webhookVersion(MessagesVersion webhookVersion) {
+			this.webhookVersion = webhookVersion;
 			return (B) this;
 		}
 
