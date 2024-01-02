@@ -25,15 +25,24 @@ import com.vonage.client.messages.internal.Text;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class SmsTextRequest extends MessageRequest {
 	final String text;
+	final Integer ttl;
 
 	SmsTextRequest(Builder builder) {
 		super(builder, Channel.SMS, MessageType.TEXT);
 		text = new Text(builder.text, 1000).toString();
+		if ((ttl = builder.ttl) != null && ttl < 1) {
+			throw new IllegalArgumentException("TTL must be positive.");
+		}
 	}
 
 	@JsonProperty("text")
 	public String getText() {
 		return text;
+	}
+
+	@JsonProperty("ttl")
+	public Integer getTtl() {
+		return ttl;
 	}
 
 	public static Builder builder() {
@@ -42,6 +51,7 @@ public final class SmsTextRequest extends MessageRequest {
 
 	public final static class Builder extends MessageRequest.Builder<SmsTextRequest, Builder> {
 		String text;
+		Integer ttl;
 
 		Builder() {}
 
@@ -57,6 +67,21 @@ public final class SmsTextRequest extends MessageRequest {
 		 */
 		public Builder text(String text) {
 			this.text = text;
+			return this;
+		}
+
+		/**
+		 * The duration in milliseconds the delivery of an SMS will be attempted. By default, Vonage attempts
+		 * delivery for 72 hours, however the maximum effective value depends on the operator and is typically
+		 * 24 to 48 hours. We recommend this value should be kept at its default or at least 30 minutes.
+		 *
+		 * @param ttl The time-to-live for this message before abandoning delivery attempts, in milliseconds.
+		 * @return This builder.
+		 *
+		 * @since 8.1.0
+		 */
+		public Builder ttl(int ttl) {
+			this.ttl = ttl;
 			return this;
 		}
 

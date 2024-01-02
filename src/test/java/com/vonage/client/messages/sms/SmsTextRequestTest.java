@@ -19,32 +19,41 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SmsTextRequestTest {
+	final String from = "447900000001", to = "317900000002";
 
 	@Test
 	public void testSerializeValid() {
-		String from = "447900000001", to = "317900000002", msg = "Hello, World!";
-		SmsTextRequest sms = SmsTextRequest.builder().from(from).to(to).text(msg).build();
+		String msg = "Hello, World!";
+		int ttl = 900000;
+		SmsTextRequest sms = SmsTextRequest.builder().from(from).to(to).text(msg).ttl(ttl).build();
 		String json = sms.toJson();
 		assertTrue(json.contains("\"text\":\""+msg+"\""));
 		assertTrue(json.contains("\"from\":\""+from+"\""));
 		assertTrue(json.contains("\"to\":\""+to+"\""));
 		assertTrue(json.contains("\"message_type\":\"text\""));
 		assertTrue(json.contains("\"channel\":\"sms\""));
-
+		assertTrue(json.contains("\"ttl\":"+ttl));
 		assertEquals("SmsTextRequest "+json, sms.toString());
 	}
 
 	@Test
+	public void testTtlTooShort() {
+		assertThrows(IllegalArgumentException.class, () ->
+				SmsTextRequest.builder().from(from).to(to).text("What's up?").ttl(0).build()
+		);
+	}
+
+	@Test
 	public void testNullText() {
-		assertThrows(NullPointerException.class, () -> SmsTextRequest.builder()
-				.from("447900000001").to("317900000002").build()
+		assertThrows(NullPointerException.class, () ->
+				SmsTextRequest.builder().from(from).to(to).build()
 		);
 	}
 
 	@Test
 	public void testEmptyText() {
-		assertThrows(IllegalArgumentException.class, () -> SmsTextRequest.builder()
-				.from("447900000001").to("317900000002").text("").build()
+		assertThrows(IllegalArgumentException.class, () ->
+				SmsTextRequest.builder().from(from).to(to).text("").build()
 		);
 	}
 
@@ -56,11 +65,7 @@ public class SmsTextRequestTest {
 		}
 		assertEquals(999, text.length());
 
-		SmsTextRequest sms = SmsTextRequest.builder()
-				.text(text.toString())
-				.from("447900000001")
-				.to("317900000002")
-				.build();
+		SmsTextRequest sms = SmsTextRequest.builder().text(text.toString()).from(from).to(to).build();
 
 		assertEquals(text.toString(), sms.getText());
 		text.append("xy");
