@@ -37,8 +37,10 @@ public class WhatsappFileRequestTest {
 	@Test
 	public void testSerializeNoCaptionOrName() {
 		String url = "file:///path/to/spec.pdf";
-		String json = WhatsappFileRequest.builder()
-				.url(url).from("447900000002").to("447900000001").build().toJson();
+		WhatsappFileRequest req = WhatsappFileRequest.builder()
+				.url(url).from("447900000002").to("447900000001").build();
+		assertNull(req.getFile().getName());
+		String json = req.toJson();
 		assertTrue(json.contains("\"file\":{\"url\":\""+url+"\"}"));
 		assertTrue(json.contains("\"message_type\":\"file\""));
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));

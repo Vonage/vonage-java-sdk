@@ -30,12 +30,12 @@ public class MessageStatusTest {
 	@Test
 	public void testSerdesAllFields() {
 		UUID messageUuid = UUID.randomUUID();
-		String to = "447700900000", from = "447700900001";
+		String to = "447700900000", from = "447700900001", networkCode = "54321";
 		String timestamp = "2020-01-01T14:00:03.010Z";
 		MessageStatus.Status status = MessageStatus.Status.SUBMITTED;
 		Channel channel = Channel.SMS;
 		URI type = URI.create("https://developer.nexmo.com/api-errors/messages-olympus#1000");
-		int title = 1000;
+		int title = 1000, countTotal = 3;
 		String detail = "Throttled - You have exceeded the submission capacity allowed on this account.";
 		String instance = "bf0ca0bf927b3b52e3cb03217e1a1ddf";
 		Currency currency = Currency.getInstance("EUR");
@@ -48,6 +48,10 @@ public class MessageStatusTest {
 		MessageStatus.Usage usage = new MessageStatus.Usage();
 		usage.price = price;
 		usage.currency = currency;
+		MessageStatus.Sms sms = new MessageStatus.Sms();
+		sms.countTotal = countTotal;
+		MessageStatus.Destination destination = new MessageStatus.Destination();
+		destination.networkCode = networkCode;
 
 		String json = "{\n" +
 				"  \"message_uuid\": \""+messageUuid+"\",\n" +
@@ -65,6 +69,12 @@ public class MessageStatusTest {
 				"  \"usage\": {\n" +
 				"    \"currency\": \""+currency+"\",\n" +
 				"    \"price\": \""+price+"\"\n" +
+				"  },\n" +
+				"  \"sms\": {\n" +
+				"    \"count_total\": \""+countTotal+"\"\n" +
+				"  },\n" +
+				"  \"destination\": {\n" +
+				"    \"network_code\": \""+networkCode+"\"\n" +
 				"  }\n" +
 				"}";
 
@@ -88,6 +98,8 @@ public class MessageStatusTest {
 		assertEquals(error.toString(), ms.getError().toString());
 		assertEquals(usage, ms.getUsage());
 		assertEquals(usage.toString(), ms.getUsage().toString());
+		assertEquals(networkCode, ms.getDestinationNetworkCode());
+		assertEquals(countTotal, ms.getSmsTotalCount());
 		assertNull(ms.getAdditionalProperties());
 	}
 

@@ -186,10 +186,49 @@ public class MessageStatus implements Jsonable {
 		}
 	}
 
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	static class Destination {
+		@JsonProperty("network_code") String networkCode;
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			Destination that = (Destination) o;
+			return Objects.equals(networkCode, that.networkCode);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(networkCode);
+		}
+	}
+
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	static class Sms {
+		@JsonProperty("count_total") Integer countTotal;
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			Sms sms = (Sms) o;
+			return Objects.equals(countTotal, sms.countTotal);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(countTotal);
+		}
+	}
+
 	protected MessageStatus() {
 	}
 
 	@JsonAnySetter protected Map<String, Object> unknownProperties;
+
 	@JsonProperty("timestamp") protected Instant timestamp;
 	@JsonProperty("message_uuid") protected UUID messageUuid;
 	@JsonProperty("to") protected String to;
@@ -199,6 +238,9 @@ public class MessageStatus implements Jsonable {
 	@JsonProperty("client_ref") protected String clientRef;
 	@JsonProperty("error") protected Error error;
 	@JsonProperty("usage") protected Usage usage;
+
+	@JsonProperty("destination") private Destination destination;
+	@JsonProperty("sms") private Sms sms;
 
 
 	/**
@@ -284,6 +326,32 @@ public class MessageStatus implements Jsonable {
 	}
 
 	/**
+	 * If {@linkplain #getChannel()} is {@linkplain Channel#SMS}, returns the network code for the destination.
+	 *
+	 * @return The SMS network code as a string, or {@code null} if not applicable.
+	 *
+	 * @since 8.1.0
+	 */
+	@JsonIgnore
+	public String getDestinationNetworkCode() {
+		return destination != null ? destination.networkCode : null;
+	}
+
+	/**
+	 * {@linkplain #getChannel()} is {@linkplain Channel#SMS}, returns the number of SMS messages concatenated together
+	 * to comprise the submitted message.SMS messages are 160 characters, if a submitted message exceeds that size it
+	 * is sent as multiple SMS messages. This number indicates how many SMS messages are required.
+	 *
+	 * @return The number of SMS messages used for this message, or {@code null} if not applicable.
+	 *
+	 * @since 8.1.0
+	 */
+	@JsonIgnore
+	public Integer getSmsTotalCount() {
+		return sms != null ? sms.countTotal : null;
+	}
+
+	/**
 	 * Catch-all for properties which are not mapped by this class during deserialization.
 	 *
 	 * @return Additional (unknown) properties as a Map, or {@code null} if absent.
@@ -318,11 +386,15 @@ public class MessageStatus implements Jsonable {
 				Objects.equals(to, that.to) && Objects.equals(from, that.from) &&
 				status == that.status && channel == that.channel &&
 				Objects.equals(clientRef, that.clientRef) &&
-				Objects.equals(error, that.error) && Objects.equals(usage, that.usage);
+				Objects.equals(error, that.error) && Objects.equals(usage, that.usage) &&
+				Objects.equals(destination, that.destination) && Objects.equals(sms, that.sms);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(timestamp, messageUuid, to, from, status, channel, clientRef, error, usage);
+		return Objects.hash(
+				timestamp, messageUuid, to, from, status, channel,
+				clientRef, error, usage, destination, sms
+		);
 	}
 }
