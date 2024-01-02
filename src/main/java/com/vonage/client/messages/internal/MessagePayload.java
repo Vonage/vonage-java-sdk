@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class MessagePayload {
 	protected URI url;
-	protected String caption;
+	protected String caption, name;
 
 	public MessagePayload(String url) {
 		this.url = URI.create(url);
@@ -42,6 +42,11 @@ public class MessagePayload {
 		}
 	}
 
+	public MessagePayload(String url, String caption, String name) {
+		this(url, caption);
+		this.name = name;
+	}
+
 	@JsonProperty("url")
 	public URI getUrl() {
 		return url;
@@ -50,6 +55,11 @@ public class MessagePayload {
 	@JsonProperty("caption")
 	public String getCaption() {
 		return caption;
+	}
+
+	@JsonProperty("name")
+	public String getName() {
+		return name;
 	}
 
 	public static void validateExtension(String path, String... allowed) {

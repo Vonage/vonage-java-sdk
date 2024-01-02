@@ -22,22 +22,23 @@ public class WhatsappFileRequestTest {
 
 	@Test
 	public void testSerializeValid() {
-		String url = "file:///path/to/attachment.zip", caption = "Srs bzns";
+		String url = "file:///path/to/attachment.zip", caption = "Srs bzns", name = "Stuff";
 		String json = WhatsappFileRequest.builder()
 				.from("317900000002").to("447900000001")
-				.url(url).caption(caption)
+				.url(url).caption(caption).name(name)
 				.build().toJson();
-		assertTrue(json.contains("\"file\":{\"url\":\""+url+"\",\"caption\":\""+caption+"\"}"));
+		assertTrue(json.contains(
+				"\"file\":{\"url\":\""+url+ "\",\"caption\":\""+caption+"\",\"name\":\""+name+"\"}"
+		));
 		assertTrue(json.contains("\"message_type\":\"file\""));
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
 	}
 
 	@Test
-	public void testSerializeNoCaption() {
+	public void testSerializeNoCaptionOrName() {
 		String url = "file:///path/to/spec.pdf";
 		String json = WhatsappFileRequest.builder()
-				.url(url).from("447900000002").to("447900000001")
-				.build().toJson();
+				.url(url).from("447900000002").to("447900000001").build().toJson();
 		assertTrue(json.contains("\"file\":{\"url\":\""+url+"\"}"));
 		assertTrue(json.contains("\"message_type\":\"file\""));
 		assertTrue(json.contains("\"channel\":\"whatsapp\""));
