@@ -43,6 +43,10 @@ public class InboundMessage implements Jsonable {
 		@JsonProperty("url") protected URI url;
 	}
 
+	protected static class UrlWrapperWithCaption extends UrlWrapper {
+		@JsonProperty("caption") protected String caption;
+	}
+
 	protected InboundMessage() {}
 
 	@JsonAnySetter protected Map<String, Object> unknownProperties;
@@ -57,7 +61,7 @@ public class InboundMessage implements Jsonable {
 	@JsonProperty("provider_message") String providerMessage;
 
 	@JsonProperty("text") protected String text;
-	@JsonProperty("image") protected UrlWrapper image;
+	@JsonProperty("image") protected UrlWrapperWithCaption image;
 	@JsonProperty("audio") protected UrlWrapper audio;
 	@JsonProperty("video") protected UrlWrapper video;
 	@JsonProperty("file") protected UrlWrapper file;
@@ -162,6 +166,17 @@ public class InboundMessage implements Jsonable {
 	 */
 	public URI getImageUrl() {
 		return image != null ? image.url : null;
+	}
+
+	/**
+	 * Additional text accompanying the image. Applicable to MMS image messages only.
+	 *
+	 * @return The image caption if present, or {@code null} if not applicable.
+	 *
+	 * @since 8.1.0
+	 */
+	public String getImageCaption() {
+		return image != null ? image.caption : null;
 	}
 
 	/**

@@ -175,9 +175,11 @@ public class InboundMessageTest {
 	@Test
 	public void testImageOnly() {
 		URI image = URI.create("https://www.example.org/path/to/image.png");
-		String json = "{\"image\": {\"url\":\""+image+"\"}}";
+		String caption = "Alt text accompanying the image";
+		String json = "{\"image\": {\"url\":\""+image+"\",\"caption\":\""+caption+"\"}}";
 		InboundMessage im = InboundMessage.fromJson(json);
 		assertEquals(image, im.getImageUrl());
+		assertEquals(caption, im.getImageCaption());
 	}
 
 	@Test
