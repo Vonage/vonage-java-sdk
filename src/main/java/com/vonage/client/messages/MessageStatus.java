@@ -326,9 +326,10 @@ public class MessageStatus implements Jsonable {
 	}
 
 	/**
-	 * If {@linkplain #getChannel()} is {@linkplain Channel#SMS}, returns the network code for the destination.
+	 * If {@linkplain #getChannel()} is {@linkplain Channel#SMS} or {@linkplain Channel#MMS},
+	 * returns the network code for the destination.
 	 *
-	 * @return The SMS network code as a string, or {@code null} if not applicable.
+	 * @return The mobile network code as a string, or {@code null} if not applicable.
 	 *
 	 * @since 8.1.0
 	 */
@@ -339,7 +340,7 @@ public class MessageStatus implements Jsonable {
 
 	/**
 	 * {@linkplain #getChannel()} is {@linkplain Channel#SMS}, returns the number of SMS messages concatenated together
-	 * to comprise the submitted message.SMS messages are 160 characters, if a submitted message exceeds that size it
+	 * to comprise the submitted message. SMS messages are 160 characters, if a submitted message exceeds that size it
 	 * is sent as multiple SMS messages. This number indicates how many SMS messages are required.
 	 *
 	 * @return The number of SMS messages used for this message, or {@code null} if not applicable.
