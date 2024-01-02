@@ -231,7 +231,7 @@ public class InboundMessageTest {
 
 	@Test
 	public void testWhatsappReplyOnly() {
-		String id = "row1", title = "9am", description = "Select 9am appointmaent time";
+		String id = "row1", title = "9am", description = "Select 9am appointment time";
 		String json = "{\"reply\":{\"id\":\""+id+"\",\"title\":\""+title+"\",\"description\":\""+description+"\"}}";
 		InboundMessage im = InboundMessage.fromJson(json);
 		Reply reply = im.getWhatsappReply();
@@ -276,6 +276,7 @@ public class InboundMessageTest {
 	public void testWhatsappContextForOrderOnly() {
 		UUID messageId = UUID.randomUUID();
 		String cid = "1267260820787549", pid = "r07qei73l7", from = "447700900001", json = "{\n" +
+				"  \"context_status\": \"available\",\n" +
 				"  \"context\": {\n" +
 				"      \"whatsapp_referred_product\": {\n" +
 				"         \"catalog_id\": \""+cid+"\",\n" +
@@ -286,6 +287,7 @@ public class InboundMessageTest {
 				"   }" +
 				"}";
 		InboundMessage im = InboundMessage.fromJson(json);
+		assertEquals(ContextStatus.AVAILABLE, im.getWhatsappContextStatus());
 		Context context = im.getWhatsappContext();
 		assertNotNull(context);
 		assertEquals(messageId, context.getMessageUuid());
@@ -297,10 +299,11 @@ public class InboundMessageTest {
 	}
 
 	@Test
-	public void testWhatsappContextAndProfileOnly() {
+	public void testWhatsappStatusContextAndProfileOnly() {
 		UUID messageId = UUID.randomUUID();
 		String name = "Jane Smith", from = "447700900000", json = "{\n" +
 				"  \"profile\":{\"name\": \""+name+"\"},\n" +
+				"  \"context_status\": \"unavailable\",\n" +
 				"   \"context\": {\n" +
 				"      \"message_uuid\": \""+messageId+"\",\n" +
 				"      \"message_from\": \""+from+"\"\n" +
@@ -310,6 +313,7 @@ public class InboundMessageTest {
 		Profile profile = im.getWhatsappProfile();
 		assertNotNull(profile);
 		assertEquals(name, profile.getName());
+		assertEquals(ContextStatus.UNAVAILABLE.toString(), im.getWhatsappContextStatus().toString());
 		Context context = im.getWhatsappContext();
 		assertNotNull(context);
 		assertEquals(messageId, context.getMessageUuid());

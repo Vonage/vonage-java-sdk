@@ -69,6 +69,7 @@ public class InboundMessage implements Jsonable {
 	@JsonProperty("sticker") protected UrlWrapper sticker;
 
 	@JsonProperty("profile") protected Profile whatsappProfile;
+	@JsonProperty("context_status") protected ContextStatus whatsappContextStatus;
 	@JsonProperty("context") protected Context whatsappContext;
 	@JsonProperty("location") protected Location whatsappLocation;
 	@JsonProperty("reply") protected Reply whatsappReply;
@@ -283,6 +284,20 @@ public class InboundMessage implements Jsonable {
 	 */
 	public Context getWhatsappContext() {
 		return whatsappContext;
+	}
+
+	/**
+	 * If the {@linkplain #getChannel()} is {@linkplain Channel#WHATSAPP}, returns an enum indicating whether there
+	 * is a context for this inbound message. If there is a context, and it is available, the context details will be
+	 * contained in a context object. If there is a context, but it is unavailable,or if there is no context for
+	 * message ({@linkplain ContextStatus#NONE}), then there will be no context object included in the body.
+	 *
+	 * @return The deserialized WhatsApp context status, or {@code null} if not applicable.
+	 *
+	 * @since 8.1.0
+	 */
+	public ContextStatus getWhatsappContextStatus() {
+		return whatsappContextStatus;
 	}
 
 	/**
