@@ -25,7 +25,7 @@ public final class MmsVcardRequest extends MmsRequest {
 
 	MmsVcardRequest(Builder builder) {
 		super(builder, MessageType.VCARD);
-		payload = new MessagePayload(builder.url);
+		payload = new MessagePayload(builder.url, builder.caption);
 		payload.validateUrlExtension("vcf");
 	}
 
@@ -52,10 +52,21 @@ public final class MmsVcardRequest extends MmsRequest {
 			return super.url(url);
 		}
 
+		/**
+		 * (OPTIONAL)
+		 * Additional text to accompany the vCard. Must be between 1 and 2000 characters.
+		 *
+		 * @param caption The caption string.
+		 * @return This builder.
+		 */
+		@Override
+		public Builder caption(String caption) {
+			return super.caption(caption);
+		}
+
 		@Override
 		public MmsVcardRequest build() {
 			return new MmsVcardRequest(this);
 		}
 	}
-
 }

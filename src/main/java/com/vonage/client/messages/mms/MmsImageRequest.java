@@ -40,8 +40,6 @@ public final class MmsImageRequest extends MmsRequest {
 	}
 
 	public static final class Builder extends MmsRequest.Builder<MmsImageRequest, Builder> {
-		String caption;
-
 		Builder() {}
 
 		/**
@@ -52,6 +50,7 @@ public final class MmsImageRequest extends MmsRequest {
 		 * @param url The URL as a string.
 		 * @return This builder.
 		 */
+		@Override
 		public Builder url(String url) {
 			return super.url(url);
 		}
@@ -63,9 +62,9 @@ public final class MmsImageRequest extends MmsRequest {
 		 * @param caption The caption string.
 		 * @return This builder.
 		 */
+		@Override
 		public Builder caption(String caption) {
-			this.caption = caption;
-			return this;
+			return super.caption(caption);
 		}
 
 		@Override
@@ -73,5 +72,4 @@ public final class MmsImageRequest extends MmsRequest {
 			return new MmsImageRequest(this);
 		}
 	}
-
 }
