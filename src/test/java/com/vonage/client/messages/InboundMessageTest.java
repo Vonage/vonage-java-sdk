@@ -17,9 +17,10 @@ package com.vonage.client.messages;
 
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.messages.sms.SmsInboundMetadata;
+import com.vonage.client.messages.whatsapp.Order;
 import com.vonage.client.messages.whatsapp.*;
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Currency;
@@ -89,6 +90,11 @@ public class InboundMessageTest {
 		assertEquals(2, metadata.getNumMessages().intValue());
 		assertEquals(3, metadata.getTotalCount().intValue());
 		assertEquals("HELLO", metadata.getKeyword());
+	}
+
+	@Test
+	public void testFromJsonInvalid() {
+		assertThrows(VonageResponseParseException.class, () -> InboundMessage.fromJson("{malformed]"));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -321,7 +327,29 @@ public class InboundMessageTest {
 	}
 
 	@Test
-	public void testFromJsonInvalid() {
-		assertThrows(VonageResponseParseException.class, () -> InboundMessage.fromJson("{malformed]"));
+	public void testWhatsappReferralOnly() {
+		String body = "Check out our new product offering",
+				headline = "New Products!", sourceId = "212731241638144",
+				sourceType = "post", sourceUrl = "https://fb.me/2ZulEu42P",
+				json = "{\n" +
+				"  \"whatsapp\": {\n" +
+				"      \"referral\": {\n" +
+				"         \"body\": \""+body+"\",\n" +
+				"         \"headline\": \""+headline+"\",\n" +
+				"         \"source_id\": \""+sourceId+"\",\n" +
+				"         \"source_type\": \""+sourceType+"\",\n" +
+				"         \"source_url\": \""+sourceUrl+"\"\n" +
+				"      }\n" +
+				"   }\n" +
+				"}";
+
+		InboundMessage im = InboundMessage.fromJson(json);
+		Referral referral = im.getWhatsappReferral();
+		assertNotNull(referral);
+		assertEquals(body, referral.getBody());
+		assertEquals(headline, referral.getHeadline());
+		assertEquals(sourceId, referral.getSourceId());
+		assertEquals(sourceType, referral.getSourceType());
+		assertEquals(URI.create(sourceUrl), referral.getSourceUrl());
 	}
 }

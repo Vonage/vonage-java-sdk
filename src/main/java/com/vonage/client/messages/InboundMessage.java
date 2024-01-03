@@ -15,10 +15,7 @@
  */
 package com.vonage.client.messages;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.vonage.client.Jsonable;
 import com.vonage.client.messages.sms.SmsInboundMetadata;
 import com.vonage.client.messages.whatsapp.*;
@@ -28,7 +25,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Convenience class representing an inbound message webhook.
+ * Convenience class representing an inbound message webhook. This maps all known fields for all message types.
  * <p>
  * Refer to the
  * <a href=https://developer.vonage.com/api/messages-olympus#webhooks>Messages API Webhook reference</a>
@@ -43,13 +40,21 @@ public class InboundMessage implements Jsonable {
 		@JsonProperty("url") protected URI url;
 	}
 
+	@JsonIgnoreProperties(ignoreUnknown = true)
 	protected static class UrlWrapperWithCaption extends UrlWrapper {
 		@JsonProperty("caption") protected String caption;
+	}
+
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	protected static class Whatsapp {
+		@JsonProperty("referral") protected Referral referral;
 	}
 
 	protected InboundMessage() {}
 
 	@JsonAnySetter protected Map<String, Object> unknownProperties;
+
+	@JsonProperty("whatsapp") private Whatsapp whatsapp;
 
 	@JsonProperty("timestamp") protected Instant timestamp;
 	@JsonProperty("channel") protected Channel channel;
@@ -318,6 +323,19 @@ public class InboundMessage implements Jsonable {
 	 */
 	public SmsInboundMetadata getSmsMetadata() {
 		return smsMetadata;
+	}
+
+	/**
+	 * If the {@linkplain #getChannel()} is {@linkplain Channel#WHATSAPP} and a content referral is present in
+	 * the message, returns the metadata related to the post or advertisement that the user clicked on.
+	 *
+	 * @return The Whatsapp referral object, or {@code null} if not present or applicable.
+	 *
+	 * @since 8.1.0
+	 */
+	@JsonIgnore
+	public Referral getWhatsappReferral() {
+		return whatsapp != null ? whatsapp.referral : null;
 	}
 
 	/**
