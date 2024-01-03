@@ -5,6 +5,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 # [8.1.0] - 2024-01-??
+- Added various missing fields in Messages API:
+  - `webhook_version` and `webhook_url` for all outbound messages
+  - MMS vCard `caption` (outbound)
+  - MMS image `caption` (inbound)
+  - Whatsapp file `name` (outbound)
+  - Whatsapp `context_status` and `referral` (inbound)
+  - SMS `count_total` and `network_code` (inbound)
+  - SMS `ttl`, `encoding_type`, `content_id` and `entity_id` (outbound)
+  - Whatsapp conversation type and ID (status update)
 - Added optional `from` parameter to Verify v2 SMS workflow
 - Fixed `length` not being set in `VerifyClient.verify` overload method
 - Fixed incorrect HTTP method for updating Video Broadcast layout
