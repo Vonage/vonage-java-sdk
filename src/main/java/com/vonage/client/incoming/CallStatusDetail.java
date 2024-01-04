@@ -1,5 +1,5 @@
 /*
- *   Copyright 2023 Vonage
+ *   Copyright 2024 Vonage
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -19,44 +19,44 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum CallStatusDetail {
     /**
-     * no detail field present
-     * **/
+     * No detail field present
+     */
     NO_DETAIL,
     /**
-     * detail present, but has not been mapped to an enum yet
-     * **/
+     * Detail present, but has not been mapped to an enum yet
+     */
     UNMAPPED_DETAIL,
     /**
-     * number invalid
-     * **/
+     * Number invalid
+     */
     INVALID_NUMBER,
     /**
-     * Rejected By Carrier
-     * **/
+     * Rejected by carrier
+     */
     RESTRICTED,
     /**
-     * call rejected by callee
-     * **/
+     * Call rejected by callee
+     */
     DECLINED,
     /**
-     * cannot route to the number
-     * **/
+     * Cannot route to the number
+     */
     CANNOT_ROUTE,
     /**
-     * number is no longer available
-     * **/
+     * Number is no longer available
+     */
     NUMBER_OUT_OF_SERVICE,
     /**
      * Server error or failure
-     * **/
+     */
     INTERNAL_ERROR,
     /**
      * Carrier timed out
-     * **/
+     */
     CARRIER_TIMEOUT,
     /**
      * Callee is temporarily unavailable.
-     * **/
+     */
     UNAVAILABLE;
 
 
