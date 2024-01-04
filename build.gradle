@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    def jacksonVersion = '2.16.0'
+    def jacksonVersion = '2.16.1'
     def httpclientVersion = '4.5.14'
     def junitVersion = '5.10.1'
 
@@ -51,7 +51,6 @@ test {
 }
 
 javadoc {
-    /* info for JavaDoc options https://docs.oracle.com/javase/8/docs/technotes/tools/windows/javadoc.html#overviewcomment */
     title "Vonage Java Server SDK"
     // uncomment this to use a custom javadoc overview
     //options.overview = file("src/main/javadoc/overview.html")
