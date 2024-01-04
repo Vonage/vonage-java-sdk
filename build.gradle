@@ -120,8 +120,8 @@ publishing {
                     }
                 }
                 scm {
-                    connection = "scm:git@github.com:Vonage/vonage-java-sdk"
-                    developerConnection = "scm:git@github.com:Vonage/vonage-java-sdk"
+                    connection = "scm:git@github.com:$githubPath"
+                    developerConnection = "scm:git@github.com:$githubPath"
                     url = "http://github.com:$githubPath"
                 }
                 issueManagement {
