@@ -17,9 +17,10 @@ package com.vonage.client.messages;
 
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.messages.sms.SmsInboundMetadata;
+import com.vonage.client.messages.whatsapp.Order;
 import com.vonage.client.messages.whatsapp.*;
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Currency;
@@ -89,6 +90,11 @@ public class InboundMessageTest {
 		assertEquals(2, metadata.getNumMessages().intValue());
 		assertEquals(3, metadata.getTotalCount().intValue());
 		assertEquals("HELLO", metadata.getKeyword());
+	}
+
+	@Test
+	public void testFromJsonInvalid() {
+		assertThrows(VonageResponseParseException.class, () -> InboundMessage.fromJson("{malformed]"));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -175,9 +181,11 @@ public class InboundMessageTest {
 	@Test
 	public void testImageOnly() {
 		URI image = URI.create("https://www.example.org/path/to/image.png");
-		String json = "{\"image\": {\"url\":\""+image+"\"}}";
+		String caption = "Alt text accompanying the image";
+		String json = "{\"image\": {\"url\":\""+image+"\",\"caption\":\""+caption+"\"}}";
 		InboundMessage im = InboundMessage.fromJson(json);
 		assertEquals(image, im.getImageUrl());
+		assertEquals(caption, im.getImageCaption());
 	}
 
 	@Test
@@ -229,7 +237,7 @@ public class InboundMessageTest {
 
 	@Test
 	public void testWhatsappReplyOnly() {
-		String id = "row1", title = "9am", description = "Select 9am appointmaent time";
+		String id = "row1", title = "9am", description = "Select 9am appointment time";
 		String json = "{\"reply\":{\"id\":\""+id+"\",\"title\":\""+title+"\",\"description\":\""+description+"\"}}";
 		InboundMessage im = InboundMessage.fromJson(json);
 		Reply reply = im.getWhatsappReply();
@@ -274,6 +282,7 @@ public class InboundMessageTest {
 	public void testWhatsappContextForOrderOnly() {
 		UUID messageId = UUID.randomUUID();
 		String cid = "1267260820787549", pid = "r07qei73l7", from = "447700900001", json = "{\n" +
+				"  \"context_status\": \"available\",\n" +
 				"  \"context\": {\n" +
 				"      \"whatsapp_referred_product\": {\n" +
 				"         \"catalog_id\": \""+cid+"\",\n" +
@@ -284,6 +293,7 @@ public class InboundMessageTest {
 				"   }" +
 				"}";
 		InboundMessage im = InboundMessage.fromJson(json);
+		assertEquals(ContextStatus.AVAILABLE, im.getWhatsappContextStatus());
 		Context context = im.getWhatsappContext();
 		assertNotNull(context);
 		assertEquals(messageId, context.getMessageUuid());
@@ -295,10 +305,11 @@ public class InboundMessageTest {
 	}
 
 	@Test
-	public void testWhatsappContextAndProfileOnly() {
+	public void testWhatsappStatusContextAndProfileOnly() {
 		UUID messageId = UUID.randomUUID();
 		String name = "Jane Smith", from = "447700900000", json = "{\n" +
 				"  \"profile\":{\"name\": \""+name+"\"},\n" +
+				"  \"context_status\": \"unavailable\",\n" +
 				"   \"context\": {\n" +
 				"      \"message_uuid\": \""+messageId+"\",\n" +
 				"      \"message_from\": \""+from+"\"\n" +
@@ -308,6 +319,7 @@ public class InboundMessageTest {
 		Profile profile = im.getWhatsappProfile();
 		assertNotNull(profile);
 		assertEquals(name, profile.getName());
+		assertEquals(ContextStatus.UNAVAILABLE.toString(), im.getWhatsappContextStatus().toString());
 		Context context = im.getWhatsappContext();
 		assertNotNull(context);
 		assertEquals(messageId, context.getMessageUuid());
@@ -315,7 +327,29 @@ public class InboundMessageTest {
 	}
 
 	@Test
-	public void testFromJsonInvalid() {
-		assertThrows(VonageResponseParseException.class, () -> InboundMessage.fromJson("{malformed]"));
+	public void testWhatsappReferralOnly() {
+		String body = "Check out our new product offering",
+				headline = "New Products!", sourceId = "212731241638144",
+				sourceType = "post", sourceUrl = "https://fb.me/2ZulEu42P",
+				json = "{\n" +
+				"  \"whatsapp\": {\n" +
+				"      \"referral\": {\n" +
+				"         \"body\": \""+body+"\",\n" +
+				"         \"headline\": \""+headline+"\",\n" +
+				"         \"source_id\": \""+sourceId+"\",\n" +
+				"         \"source_type\": \""+sourceType+"\",\n" +
+				"         \"source_url\": \""+sourceUrl+"\"\n" +
+				"      }\n" +
+				"   }\n" +
+				"}";
+
+		InboundMessage im = InboundMessage.fromJson(json);
+		Referral referral = im.getWhatsappReferral();
+		assertNotNull(referral);
+		assertEquals(body, referral.getBody());
+		assertEquals(headline, referral.getHeadline());
+		assertEquals(sourceId, referral.getSourceId());
+		assertEquals(sourceType, referral.getSourceType());
+		assertEquals(URI.create(sourceUrl), referral.getSourceUrl());
 	}
 }

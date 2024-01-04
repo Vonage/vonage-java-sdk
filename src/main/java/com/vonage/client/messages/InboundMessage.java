@@ -15,10 +15,7 @@
  */
 package com.vonage.client.messages;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.vonage.client.Jsonable;
 import com.vonage.client.messages.sms.SmsInboundMetadata;
 import com.vonage.client.messages.whatsapp.*;
@@ -28,7 +25,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Convenience class representing an inbound message webhook.
+ * Convenience class representing an inbound message webhook. This maps all known fields for all message types.
  * <p>
  * Refer to the
  * <a href=https://developer.vonage.com/api/messages-olympus#webhooks>Messages API Webhook reference</a>
@@ -43,9 +40,21 @@ public class InboundMessage implements Jsonable {
 		@JsonProperty("url") protected URI url;
 	}
 
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	protected static class UrlWrapperWithCaption extends UrlWrapper {
+		@JsonProperty("caption") protected String caption;
+	}
+
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	protected static class Whatsapp {
+		@JsonProperty("referral") protected Referral referral;
+	}
+
 	protected InboundMessage() {}
 
 	@JsonAnySetter protected Map<String, Object> unknownProperties;
+
+	@JsonProperty("whatsapp") private Whatsapp whatsapp;
 
 	@JsonProperty("timestamp") protected Instant timestamp;
 	@JsonProperty("channel") protected Channel channel;
@@ -57,7 +66,7 @@ public class InboundMessage implements Jsonable {
 	@JsonProperty("provider_message") String providerMessage;
 
 	@JsonProperty("text") protected String text;
-	@JsonProperty("image") protected UrlWrapper image;
+	@JsonProperty("image") protected UrlWrapperWithCaption image;
 	@JsonProperty("audio") protected UrlWrapper audio;
 	@JsonProperty("video") protected UrlWrapper video;
 	@JsonProperty("file") protected UrlWrapper file;
@@ -65,6 +74,7 @@ public class InboundMessage implements Jsonable {
 	@JsonProperty("sticker") protected UrlWrapper sticker;
 
 	@JsonProperty("profile") protected Profile whatsappProfile;
+	@JsonProperty("context_status") protected ContextStatus whatsappContextStatus;
 	@JsonProperty("context") protected Context whatsappContext;
 	@JsonProperty("location") protected Location whatsappLocation;
 	@JsonProperty("reply") protected Reply whatsappReply;
@@ -162,6 +172,17 @@ public class InboundMessage implements Jsonable {
 	 */
 	public URI getImageUrl() {
 		return image != null ? image.url : null;
+	}
+
+	/**
+	 * Additional text accompanying the image. Applicable to MMS image messages only.
+	 *
+	 * @return The image caption if present, or {@code null} if not applicable.
+	 *
+	 * @since 8.1.0
+	 */
+	public String getImageCaption() {
+		return image != null ? image.caption : null;
 	}
 
 	/**
@@ -271,6 +292,20 @@ public class InboundMessage implements Jsonable {
 	}
 
 	/**
+	 * If the {@linkplain #getChannel()} is {@linkplain Channel#WHATSAPP}, returns an enum indicating whether there
+	 * is a context for this inbound message. If there is a context, and it is available, the context details will be
+	 * contained in a context object. If there is a context, but it is unavailable,or if there is no context for
+	 * message ({@linkplain ContextStatus#NONE}), then there will be no context object included in the body.
+	 *
+	 * @return The deserialized WhatsApp context status, or {@code null} if not applicable.
+	 *
+	 * @since 8.1.0
+	 */
+	public ContextStatus getWhatsappContextStatus() {
+		return whatsappContextStatus;
+	}
+
+	/**
 	 * If the {@linkplain #getChannel()} is {@linkplain Channel#SMS}, returns the usage
 	 * information (charged incurred for the message).
 	 *
@@ -288,6 +323,19 @@ public class InboundMessage implements Jsonable {
 	 */
 	public SmsInboundMetadata getSmsMetadata() {
 		return smsMetadata;
+	}
+
+	/**
+	 * If the {@linkplain #getChannel()} is {@linkplain Channel#WHATSAPP} and a content referral is present in
+	 * the message, returns the metadata related to the post or advertisement that the user clicked on.
+	 *
+	 * @return The Whatsapp referral object, or {@code null} if not present or applicable.
+	 *
+	 * @since 8.1.0
+	 */
+	@JsonIgnore
+	public Referral getWhatsappReferral() {
+		return whatsapp != null ? whatsapp.referral : null;
 	}
 
 	/**

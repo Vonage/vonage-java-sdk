@@ -26,7 +26,7 @@ public final class WhatsappFileRequest extends WhatsappRequest {
 
 	WhatsappFileRequest(Builder builder) {
 		super(builder, MessageType.FILE);
-		file = new MessagePayload(builder.url, builder.caption);
+		file = new MessagePayload(builder.url, builder.caption, builder.name);
 	}
 
 	@JsonProperty("file")
@@ -39,7 +39,7 @@ public final class WhatsappFileRequest extends WhatsappRequest {
 	}
 
 	public static final class Builder extends WhatsappRequest.Builder<WhatsappFileRequest, Builder> {
-		String url, caption;
+		String url, caption, name;
 
 		Builder() {}
 
@@ -68,10 +68,24 @@ public final class WhatsappFileRequest extends WhatsappRequest {
 			return this;
 		}
 
+		/**
+		 * (OPTIONAL)
+		 * Specifies the name of the file being sent. If not included, the value for caption will be used as
+		 * the file name. If neither name nor caption are included, the file name will be parsed from the url.
+		 *
+		 * @param name The file name.
+		 * @return This builder.
+		 *
+		 * @since 8.1.0
+		 */
+		public Builder name(String name) {
+			this.name = name;
+			return this;
+		}
+
 		@Override
 		public WhatsappFileRequest build() {
 			return new WhatsappFileRequest(this);
 		}
 	}
-
 }

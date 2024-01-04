@@ -19,32 +19,103 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SmsTextRequestTest {
+	final String
+			from = "447900000001", to = "317900000002",  msg = "Hello, World!",
+			contentId = "1107457532145798767", entityId = "1101456324675322134";
 
 	@Test
-	public void testSerializeValid() {
-		String from = "447900000001", to = "317900000002", msg = "Hello, World!";
-		SmsTextRequest sms = SmsTextRequest.builder().from(from).to(to).text(msg).build();
+	public void testSerializeAllParameters() {
+		int ttl = 900000;
+		SmsTextRequest sms = SmsTextRequest.builder()
+				.from(from).to(to).text(msg).ttl(ttl).contentId(contentId)
+				.encodingType(EncodingType.UNICODE).entityId(entityId).build();
+
 		String json = sms.toJson();
 		assertTrue(json.contains("\"text\":\""+msg+"\""));
 		assertTrue(json.contains("\"from\":\""+from+"\""));
 		assertTrue(json.contains("\"to\":\""+to+"\""));
 		assertTrue(json.contains("\"message_type\":\"text\""));
 		assertTrue(json.contains("\"channel\":\"sms\""));
-
+		assertTrue(json.contains("\"ttl\":"+ttl));
+		assertTrue(json.contains("\"sms\":{" +
+				"\"encoding_type\":\"unicode\"," +
+				"\"content_id\":\""+contentId+"\"," +
+				"\"entity_id\":\""+entityId+"\"}"
+		));
 		assertEquals("SmsTextRequest "+json, sms.toString());
 	}
 
 	@Test
+	public void testRequiredParametersOnly() {
+		SmsTextRequest sms = SmsTextRequest.builder().from(from).to(to).text(msg).build();
+
+		String json = sms.toJson();
+		assertTrue(json.contains("\"text\":\""+msg+"\""));
+		assertTrue(json.contains("\"from\":\""+from+"\""));
+		assertTrue(json.contains("\"to\":\""+to+"\""));
+		assertTrue(json.contains("\"message_type\":\"text\""));
+		assertTrue(json.contains("\"channel\":\"sms\""));
+		assertEquals("SmsTextRequest "+json, sms.toString());
+
+		assertNull(sms.getMessageSettings());
+		assertNull(sms.getTtl());
+	}
+
+	@Test
+	public void testEncodingTypeSettingsOnly() {
+		EncodingType encodingType = EncodingType.AUTO;
+		SmsTextRequest sms = SmsTextRequest.builder()
+				.from(from).to(to).text(msg).encodingType(encodingType).build();
+
+		String json = sms.toJson();
+		assertTrue(json.contains("\"text\":\""+msg+"\""));
+		assertTrue(json.contains("\"from\":\""+from+"\""));
+		assertTrue(json.contains("\"to\":\""+to+"\""));
+		assertTrue(json.contains("\"message_type\":\"text\""));
+		assertTrue(json.contains("\"channel\":\"sms\""));
+		assertTrue(json.contains("\"sms\":{\"encoding_type\":\""+encodingType+"\"}"));
+		assertEquals("SmsTextRequest "+json, sms.toString());
+
+		assertNull(sms.getTtl());
+		OutboundSettings settings = sms.getMessageSettings();
+		assertNotNull(settings);
+		assertEquals(encodingType, EncodingType.fromString(settings.getEncodingType().toString()));
+		assertNull(settings.getEntityId());
+		assertNull(settings.getContentId());
+	}
+
+	@Test
+	public void testInvalidContentId() {
+		assertThrows(IllegalArgumentException.class, () ->
+				OutboundSettings.construct(EncodingType.TEXT, " ", entityId)
+		);
+	}
+
+	@Test
+	public void testInvalidEntityId() {
+		assertThrows(IllegalArgumentException.class, () ->
+				OutboundSettings.construct(EncodingType.TEXT, contentId, " ")
+		);
+	}
+
+	@Test
+	public void testTtlTooShort() {
+		assertThrows(IllegalArgumentException.class, () ->
+				SmsTextRequest.builder().from(from).to(to).text(msg).ttl(0).build()
+		);
+	}
+
+	@Test
 	public void testNullText() {
-		assertThrows(NullPointerException.class, () -> SmsTextRequest.builder()
-				.from("447900000001").to("317900000002").build()
+		assertThrows(NullPointerException.class, () ->
+				SmsTextRequest.builder().from(from).to(to).build()
 		);
 	}
 
 	@Test
 	public void testEmptyText() {
-		assertThrows(IllegalArgumentException.class, () -> SmsTextRequest.builder()
-				.from("447900000001").to("317900000002").text("").build()
+		assertThrows(IllegalArgumentException.class, () ->
+				SmsTextRequest.builder().from(from).to(to).text("").build()
 		);
 	}
 
@@ -56,11 +127,7 @@ public class SmsTextRequestTest {
 		}
 		assertEquals(999, text.length());
 
-		SmsTextRequest sms = SmsTextRequest.builder()
-				.text(text.toString())
-				.from("447900000001")
-				.to("317900000002")
-				.build();
+		SmsTextRequest sms = SmsTextRequest.builder().text(text.toString()).from(from).to(to).build();
 
 		assertEquals(text.toString(), sms.getText());
 		text.append("xy");

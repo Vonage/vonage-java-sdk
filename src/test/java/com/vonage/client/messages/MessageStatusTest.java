@@ -17,6 +17,7 @@ package com.vonage.client.messages;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.messages.whatsapp.ConversationType;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import java.net.URI;
@@ -30,12 +31,12 @@ public class MessageStatusTest {
 	@Test
 	public void testSerdesAllFields() {
 		UUID messageUuid = UUID.randomUUID();
-		String to = "447700900000", from = "447700900001";
+		String to = "447700900000", from = "447700900001", networkCode = "54321";
 		String timestamp = "2020-01-01T14:00:03.010Z";
 		MessageStatus.Status status = MessageStatus.Status.SUBMITTED;
 		Channel channel = Channel.SMS;
 		URI type = URI.create("https://developer.nexmo.com/api-errors/messages-olympus#1000");
-		int title = 1000;
+		int title = 1000, countTotal = 3;
 		String detail = "Throttled - You have exceeded the submission capacity allowed on this account.";
 		String instance = "bf0ca0bf927b3b52e3cb03217e1a1ddf";
 		Currency currency = Currency.getInstance("EUR");
@@ -48,6 +49,19 @@ public class MessageStatusTest {
 		MessageStatus.Usage usage = new MessageStatus.Usage();
 		usage.price = price;
 		usage.currency = currency;
+		MessageStatus.Sms sms = new MessageStatus.Sms();
+		sms.countTotal = countTotal;
+		MessageStatus.Destination destination = new MessageStatus.Destination();
+		destination.networkCode = networkCode;
+		MessageStatus.Whatsapp whatsapp = new MessageStatus.Whatsapp();
+		MessageStatus.Whatsapp.Conversation conversation = new MessageStatus.Whatsapp.Conversation();
+		whatsapp.conversation = conversation;
+		MessageStatus.Whatsapp.Conversation.Origin origin = new MessageStatus.Whatsapp.Conversation.Origin();
+		conversation.origin = origin;
+		ConversationType whatsappConversationType = ConversationType.REFERRAL_CONVERSION;
+		origin.type = whatsappConversationType;
+		String whatsappConversationId = "1234567890";
+		conversation.id = whatsappConversationId;
 
 		String json = "{\n" +
 				"  \"message_uuid\": \""+messageUuid+"\",\n" +
@@ -65,7 +79,21 @@ public class MessageStatusTest {
 				"  \"usage\": {\n" +
 				"    \"currency\": \""+currency+"\",\n" +
 				"    \"price\": \""+price+"\"\n" +
-				"  }\n" +
+				"  },\n" +
+				"  \"sms\": {\n" +
+				"    \"count_total\": \""+countTotal+"\"\n" +
+				"  },\n" +
+				"  \"destination\": {\n" +
+				"    \"network_code\": \""+networkCode+"\"\n" +
+				"  },\n" +
+				"  \"whatsapp\": {\n" +
+				"      \"conversation\": {\n" +
+				"         \"id\": \""+whatsappConversationId+"\",\n" +
+				"         \"origin\": {\n" +
+				"            \"type\": \""+whatsappConversationType+"\"\n" +
+				"         }\n" +
+				"      }\n" +
+				"   }\n" +
 				"}";
 
 		MessageStatus ms = MessageStatus.fromJson(json);
@@ -88,6 +116,10 @@ public class MessageStatusTest {
 		assertEquals(error.toString(), ms.getError().toString());
 		assertEquals(usage, ms.getUsage());
 		assertEquals(usage.toString(), ms.getUsage().toString());
+		assertEquals(networkCode, ms.getDestinationNetworkCode());
+		assertEquals(countTotal, ms.getSmsTotalCount());
+		assertEquals(whatsappConversationId, ms.getWhatsappConversationId());
+		assertEquals("referral_conversion", ms.getWhatsappConversationType().toString());
 		assertNull(ms.getAdditionalProperties());
 	}
 
@@ -143,10 +175,10 @@ public class MessageStatusTest {
 				"   },\n" +
 				"   \"client_ref\": \"string\",\n" +
 				"   \"channel\": \"whatsapp\",\n" +
-				"   \"whatsapp\": {\n" +
-				"      \"conversation\": {\n" +
-				"         \"id\": \"1234567890\",\n" +
-				"         \"origin\": {\n" +
+				"   \"wubwub\": {\n" +
+				"      \"Prop0\": {\n" +
+				"         \"id\": \"ab12cdhfgjk3\",\n" +
+				"         \"N3s7ed\": {\n" +
 				"            \"type\": \"user_initiated\"\n" +
 				"         }\n" +
 				"      }\n" +
@@ -156,10 +188,10 @@ public class MessageStatusTest {
 		Map<String, ?> unknown = ms.getAdditionalProperties();
 		assertNotNull(unknown);
 		assertEquals(1, unknown.size());
-		Map<String, ?> whatsapp = (Map<String, ?>) unknown.get("whatsapp");
-		Map<String, ?> conversation = (Map<String, ?>) whatsapp.get("conversation");
-		assertEquals("1234567890", conversation.get("id"));
-		Map<String, ?> origin = (Map<String, ?>) conversation.get("origin");
+		Map<String, ?> whatsapp = (Map<String, ?>) unknown.get("wubwub");
+		Map<String, ?> conversation = (Map<String, ?>) whatsapp.get("Prop0");
+		assertEquals("ab12cdhfgjk3", conversation.get("id"));
+		Map<String, ?> origin = (Map<String, ?>) conversation.get("N3s7ed");
 		assertEquals("user_initiated", origin.get("type"));
 	}
 

@@ -17,6 +17,7 @@ package com.vonage.client.messages;
 
 import com.fasterxml.jackson.annotation.*;
 import com.vonage.client.Jsonable;
+import com.vonage.client.messages.whatsapp.ConversationType;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Currency;
@@ -186,10 +187,36 @@ public class MessageStatus implements Jsonable {
 		}
 	}
 
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	static class Destination {
+		@JsonProperty("network_code") String networkCode;
+	}
+
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	static class Sms {
+		@JsonProperty("count_total") Integer countTotal;
+	}
+
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	static class Whatsapp {
+		static class Conversation {
+			static class Origin {
+				@JsonProperty("type") ConversationType type;
+			}
+			@JsonProperty("id") String id;
+			@JsonProperty("origin") Origin origin;
+		}
+		@JsonProperty("conversation") Conversation conversation;
+	}
+
 	protected MessageStatus() {
 	}
 
 	@JsonAnySetter protected Map<String, Object> unknownProperties;
+
 	@JsonProperty("timestamp") protected Instant timestamp;
 	@JsonProperty("message_uuid") protected UUID messageUuid;
 	@JsonProperty("to") protected String to;
@@ -199,6 +226,10 @@ public class MessageStatus implements Jsonable {
 	@JsonProperty("client_ref") protected String clientRef;
 	@JsonProperty("error") protected Error error;
 	@JsonProperty("usage") protected Usage usage;
+
+	@JsonProperty("destination") private Destination destination;
+	@JsonProperty("sms") private Sms sms;
+	@JsonProperty("whatsapp") private Whatsapp whatsapp;
 
 
 	/**
@@ -284,6 +315,62 @@ public class MessageStatus implements Jsonable {
 	}
 
 	/**
+	 * If {@linkplain #getChannel()} is {@linkplain Channel#SMS} or {@linkplain Channel#MMS},
+	 * returns the network code for the destination.
+	 *
+	 * @return The mobile network code as a string, or {@code null} if not applicable.
+	 *
+	 * @since 8.1.0
+	 */
+	@JsonIgnore
+	public String getDestinationNetworkCode() {
+		return destination != null ? destination.networkCode : null;
+	}
+
+	/**
+	 * {@linkplain #getChannel()} is {@linkplain Channel#SMS}, returns the number of SMS messages concatenated together
+	 * to comprise the submitted message. SMS messages are 160 characters, if a submitted message exceeds that size it
+	 * is sent as multiple SMS messages. This number indicates how many SMS messages are required.
+	 *
+	 * @return The number of SMS messages used for this message, or {@code null} if not applicable.
+	 *
+	 * @since 8.1.0
+	 */
+	@JsonIgnore
+	public Integer getSmsTotalCount() {
+		return sms != null ? sms.countTotal : null;
+	}
+
+	/**
+	 * If the {@linkplain #getChannel()} is {@linkplain Channel#WHATSAPP} and {@linkplain #getStatus()} is
+	 * {@linkplain Status#DELIVERED}, returns the conversation's origin type.
+	 *
+	 * @return The WhatsApp conversation category as an enum, {@code null} if absent or not applicable.
+	 *
+	 * @since 8.1.0
+	 */
+	@JsonIgnore
+	public ConversationType getWhatsappConversationType() {
+		return whatsapp != null &&
+				whatsapp.conversation != null &&
+				whatsapp.conversation.origin != null ?
+				whatsapp.conversation.origin.type : null;
+	}
+
+	/**
+	 * If the {@linkplain #getChannel()} is {@linkplain Channel#WHATSAPP} and {@linkplain #getStatus()} is
+	 * {@linkplain Status#DELIVERED}, returns the conversation ID of the message that triggered this callback.
+	 *
+	 * @return The WhatsApp conversation ID, {@code null} if absent or not applicable.
+	 *
+	 * @since 8.1.0
+	 */
+	@JsonIgnore
+	public String getWhatsappConversationId() {
+        return whatsapp != null && whatsapp.conversation != null ? whatsapp.conversation.id : null;
+    }
+
+	/**
 	 * Catch-all for properties which are not mapped by this class during deserialization.
 	 *
 	 * @return Additional (unknown) properties as a Map, or {@code null} if absent.
@@ -318,11 +405,18 @@ public class MessageStatus implements Jsonable {
 				Objects.equals(to, that.to) && Objects.equals(from, that.from) &&
 				status == that.status && channel == that.channel &&
 				Objects.equals(clientRef, that.clientRef) &&
-				Objects.equals(error, that.error) && Objects.equals(usage, that.usage);
+				Objects.equals(error, that.error) && Objects.equals(usage, that.usage) &&
+				Objects.equals(getDestinationNetworkCode(), that.getDestinationNetworkCode()) &&
+				Objects.equals(getSmsTotalCount(), that.getSmsTotalCount()) &&
+				Objects.equals(getWhatsappConversationId(), that.getWhatsappConversationId()) &&
+				Objects.equals(getWhatsappConversationType(), that.getWhatsappConversationType());
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(timestamp, messageUuid, to, from, status, channel, clientRef, error, usage);
+		return Objects.hash(
+				timestamp, messageUuid, to, from, status, channel,
+				clientRef, error, usage, getDestinationNetworkCode(), getSmsTotalCount()
+		);
 	}
 }

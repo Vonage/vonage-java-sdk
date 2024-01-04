@@ -23,6 +23,20 @@ public class MmsVcardRequestTest {
 	@Test
 	public void testSerializeValid() {
 		String from = "447900000001", to = "317900000002",
+				url = "https://foo.tld/path/to/resource.vcf", caption = "!Alt text";
+
+		MmsVcardRequest mms = MmsVcardRequest.builder().url(url).from(from).to(to).caption(caption).build();
+		String json = mms.toJson();
+		assertTrue(json.contains("\"from\":\""+from+"\""));
+		assertTrue(json.contains("\"to\":\""+to+"\""));
+		assertTrue(json.contains("\"message_type\":\"vcard\""));
+		assertTrue(json.contains("\"channel\":\"mms\""));
+		assertTrue(json.contains("\"vcard\":{\"url\":\""+url+"\",\"caption\":\""+caption+"\"}"));
+	}
+
+	@Test
+	public void testSerializeNoCaption() {
+		String from = "447900000001", to = "317900000002",
 				url = "https://foo.tld/path/to/resource.vcf";
 
 		MmsVcardRequest mms = MmsVcardRequest.builder().url(url).from(from).to(to).build();
@@ -37,7 +51,7 @@ public class MmsVcardRequestTest {
 	@Test
 	public void testConstructNoUrl() {
 		assertThrows(NullPointerException.class, () ->
-				MmsVcardRequest.builder().from("447900000001").to("317900000002").build()
+				MmsVcardRequest.builder().caption("Cap").from("447900000001").to("317900000002").build()
 		);
 	}
 

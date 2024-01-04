@@ -52,10 +52,14 @@ public class MessageRequestTest {
 	public void testSerializeAllFields() {
 		MessageRequest smr = ConcreteMessageRequest.builder(MessageType.VIDEO, Channel.MMS)
 				.from("447900000009").to("12002009000")
-				.clientRef("<40 character string").build();
+				.clientRef("<40 character string")
+				.webhookUrl("https://example.com/status")
+				.webhookVersion(MessagesVersion.V1).build();
 
 		String generatedJson = smr.toJson();
 		assertTrue(generatedJson.contains("\"client_ref\":\"<40 character string\""));
+		assertTrue(generatedJson.contains("\"webhook_url\":\"https://example.com/status\""));
+		assertTrue(generatedJson.contains("\"webhook_version\":\"v1\""));
 		assertTrue(generatedJson.contains("\"from\":\"447900000009\""));
 		assertTrue(generatedJson.contains("\"to\":\"12002009000\""));
 		assertTrue(generatedJson.contains("\"channel\":\"mms\""));
@@ -63,12 +67,14 @@ public class MessageRequestTest {
 	}
 
 	@Test
-	public void testSerializeFieldsWithoutClientRef() {
+	public void testSerializeFieldsRequiredOnly() {
 		MessageRequest smr = ConcreteMessageRequest.builder(MessageType.IMAGE, Channel.VIBER)
 				.from("447900000009").to("12002009000").build();
 
 		String generatedJson = smr.toJson();
 		assertFalse(generatedJson.contains("client_ref"));
+		assertFalse(generatedJson.contains("webhook_url"));
+		assertFalse(generatedJson.contains("webhook_version"));
 		assertTrue(generatedJson.contains("\"from\":\"447900000009\""));
 		assertTrue(generatedJson.contains("\"to\":\"12002009000\""));
 		assertTrue(generatedJson.contains("\"channel\":\"viber_service\""));

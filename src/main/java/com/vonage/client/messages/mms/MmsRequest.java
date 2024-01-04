@@ -31,10 +31,15 @@ public abstract class MmsRequest extends MessageRequest {
 
 	@SuppressWarnings("unchecked")
 	protected abstract static class Builder<M extends MmsRequest, B extends Builder<? extends M, ? extends B>> extends MessageRequest.Builder<M, B> {
-		String url;
+		String url, caption;
 
 		protected B url(String url) {
 			this.url = url;
+			return (B) this;
+		}
+
+		protected B caption(String caption) {
+			this.caption = caption;
 			return (B) this;
 		}
 	}
