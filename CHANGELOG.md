@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-# [8.1.0] - 2024-01-??
+# [8.1.0] - 2024-01-04
 - Added various missing fields in Messages API:
   - `webhook_version` and `webhook_url` for all outbound messages
   - MMS vCard `caption` (outbound)
