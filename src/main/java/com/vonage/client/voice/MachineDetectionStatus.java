@@ -19,24 +19,40 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Represents machine detection behaviour.
+ * Represents event substates for advanced machine detection in {@link EventWebhook#getMachineDetectionSubstate()}.
+ *
+ * @since 8.2.0
  */
-public enum MachineDetection {
-    CONTINUE, HANGUP, UNKNOWN;
+public enum MachineDetectionStatus {
 
-    @JsonValue
-    @Override
-    public String toString() {
-        return name().toLowerCase();
-    }
+	/**
+	 * The beginning of the voice mail beep.
+	 */
+	BEEP_START,
 
-    @JsonCreator
-    public static MachineDetection fromString(String name) {
-        try {
-            return MachineDetection.valueOf(name.toUpperCase());
-        }
-        catch (IllegalArgumentException ex) {
-            return UNKNOWN;
-        }
-    }
+	/**
+	 * Beep wasn't received after waiting for the designated period.
+	 */
+	BEEP_TIMEOUT,
+
+	/**
+	 * Unmapped value.
+	 */
+	UNKNOWN;
+
+	@JsonValue
+	@Override
+	public String toString() {
+		return name().toLowerCase();
+	}
+
+	@JsonCreator
+	public static MachineDetectionStatus fromString(String name) {
+		try {
+			return MachineDetectionStatus.valueOf(name.toUpperCase());
+		}
+		catch (IllegalArgumentException ex) {
+			return UNKNOWN;
+		}
+	}
 }

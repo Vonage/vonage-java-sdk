@@ -13,10 +13,16 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.incoming;
+package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
+/**
+ * Represents the {@code detail} field in {@link EventWebhook#getDetail()}.
+ *
+ * @since 8.2.0
+ */
 public enum CallStatusDetail {
 
     /**
@@ -69,6 +75,11 @@ public enum CallStatusDetail {
      */
     UNAVAILABLE;
 
+    @JsonValue
+    @Override
+    public String toString() {
+        return name().toLowerCase();
+    }
 
     @JsonCreator
     public static CallStatusDetail fromString(String detail) {

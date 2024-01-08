@@ -13,11 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.vonage.client.incoming;
+package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.voice.EventWebhook;
 
 /**
  * Represents the DTMF event results in {@link EventWebhook#getDtmf()}.

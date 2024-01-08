@@ -13,37 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.vonage.client.incoming;
+package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.voice.EventWebhook;
 
 /**
- * Represents the DTMF event results in {@link EventWebhook#getDtmf()}.
+ * Represents speech to text data contained in {@link SpeechResults#getResults()}.
+ *
+ * @since 8.2.0
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DtmfResult {
-    private String digits;
-    private boolean timedOut;
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+public class SpeechTranscript {
+    private String text;
+    private Double confidence;
 
     /**
-     * The button sequence pressed by the user.
+     * Transcript text representing the words that the user spoke.
      *
-     * @return The buttons pressed as a String.
+     * @return The transcript text.
      */
-    @JsonProperty("digits")
-    public String getDigits() {
-        return digits;
+    @JsonProperty("text")
+    public String getText() {
+        return text;
     }
 
     /**
-     * Whether the DTMF input timed out.
+     * The confidence estimate between 0.0 and 1.0. A higher number indicates an estimated greater
+     * likelihood that the recognized words are correct.
      *
-     * @return {@code true} if the DTMF timed out, {@code false} otherwise.
+     * @return The confidence estimate between 0.0 and 1.0 as a Double.
      */
-    @JsonProperty("timed_out")
-    public boolean isTimedOut() {
-        return timedOut;
+    public Double getConfidence() {
+        return confidence;
     }
 }

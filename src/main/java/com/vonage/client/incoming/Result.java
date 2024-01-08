@@ -15,28 +15,44 @@
  */
 package com.vonage.client.incoming;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Result {
     private String text, confidence;
 
     /**
-     * 
-     * @return transcript text
+     * Transcript text representing the words that the user spoke.
+     *
+     * @return The transcript text.
      */
+    @JsonProperty("text")
     public String getText() {
         return text;
     }
 
     /**
      * @param text transcript text representing the words the user spoke.
+     *
+     * @deprecated This setter will be removed in a future release.
      */
+    @Deprecated
     public void setText(String text) {
         this.text = text;
     }
 
     /**
-     * 
-     * @return The confidence estimate between 0.0 and 1.0
+     * The confidence estimate between 0.0 and 1.0. A higher number indicates an estimated greater
+     * likelihood that the recognized words are correct.
+     *
+     * @return The confidence estimate between 0.0 and 1.0 as a String.
+     *
+     * @deprecated This will be converted to a Double in a future release.
      */
+    @Deprecated
     public String getConfidence() {
         return confidence;
     }
@@ -44,7 +60,10 @@ public class Result {
     /**
      * @param confidence The confidence estimate between 0.0 and 1.0. A higher number indicates an estimated greater
      *                   likelihood that the recognized words are correct.
+     *
+     * @deprecated This setter will be removed in a future release.
      */
+    @Deprecated
     public void setConfidence(String confidence) {
         this.confidence = confidence;
     }
