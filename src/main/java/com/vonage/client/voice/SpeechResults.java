@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.vonage.client.incoming;
+package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 import java.net.URI;
-import java.util.Collection;
+import java.util.List;
 
 /**
- * @deprecated Use {@link com.vonage.client.voice.SpeechResults}.
+ * Represents the speech recognition results in {@link EventWebhook#getSpeech()}.
+ *
+ * @since 8.2.0
  */
-@Deprecated
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SpeechResults {
-    private TimeoutReason timeoutReason;
-    private Collection<Result> results;
+    private SpeechTimeoutReason timeoutReason;
+    private List<SpeechTranscript> results;
     private String error;
     private URI recordingUrl;
 
@@ -66,54 +66,18 @@ public class SpeechResults {
      * @return Reason for the timeout as an enum.
      */
     @JsonProperty("timeout_reason")
-    public TimeoutReason getTimeoutReason() {
+    public SpeechTimeoutReason getTimeoutReason() {
         return timeoutReason;
-    }
-
-    /**
-     * @param timeoutReason Indicates whether the input ended when the user stopped speaking, by the max duration
-     *                      timeout, or if the user didn't say anything.
-     *
-     * @deprecated This setter will be removed in a future release.
-     */
-    @Deprecated
-    public void setTimeoutReason(TimeoutReason timeoutReason) {
-        this.timeoutReason = timeoutReason;
     }
 
     /**
      * The recognised text objects.
      *
-     * @return The collection of transcript texts, or {@code null} if there are none.
+     * @return The list of transcript texts, or {@code null} if there are none.
      */
     @JsonProperty("results")
-    public Collection<Result> getResults() {
+    public List<SpeechTranscript> getResults() {
         return results;
     }
 
-    /**
-     * @param results list of speech recognition results that displays the words(s) that the user spoke and the
-     *                likelihood that the recognized word(s) in the list where the actual word(s) that the user spoke.
-     *
-     * @deprecated This setter will be removed in a future release.
-     */
-    @Deprecated
-    public void setResults(Collection<Result> results) {
-        this.results = results;
-    }
-
-    /**
-     * Represents the timeout reason in {@linkplain #getTimeoutReason()}.
-     */
-    public enum TimeoutReason {
-        END_ON_SILENCE_TIMEOUT,
-        MAX_DURATION,
-        START_TIMEOUT;
-
-        @JsonValue
-        @Override
-        public String toString() {
-            return name().toLowerCase();
-        }
-    }
 }

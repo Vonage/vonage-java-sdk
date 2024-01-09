@@ -13,30 +13,7 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.voice;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-
 /**
- * Represents machine detection behaviour.
+ * @deprecated This package will be removed in a future release.
  */
-public enum MachineDetection {
-    CONTINUE, HANGUP, UNKNOWN;
-
-    @JsonValue
-    @Override
-    public String toString() {
-        return name().toLowerCase();
-    }
-
-    @JsonCreator
-    public static MachineDetection fromString(String name) {
-        try {
-            return MachineDetection.valueOf(name.toUpperCase());
-        }
-        catch (IllegalArgumentException ex) {
-            return UNKNOWN;
-        }
-    }
-}
+package com.vonage.client.incoming;

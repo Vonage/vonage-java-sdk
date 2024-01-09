@@ -18,7 +18,9 @@ package com.vonage.client.voice;
 import com.fasterxml.jackson.annotation.*;
 
 /**
- * Configure the behavior of Vonage's advanced machine detection.
+ * Configure the behavior of Vonage's advanced machine detection. See
+ * <a href=https://developer.vonage.com/en/voice/voice-api/concepts/advanced-machine-detection>
+ * the documentation</a> for details.
  *
  * @since 7.4.0
  */
@@ -39,7 +41,14 @@ public class AdvancedMachineDetection {
 		 * Detect machine and send back a status human / machine webhook, but also when machine is detected, attempt
 		 * to detect voice mail beep and send back another status machine webhook with {@code sub_state: beep_start}.
 		 */
-		DETECT_BEEP;
+		DETECT_BEEP,
+
+		/**
+		 * Asynchronously start processing NCCO actions during the detection phase.
+		 *
+		 * @since 8.2.0
+		 */
+		DEFAULT;
 
 		@JsonCreator
 		public static Mode fromString(String value) {
