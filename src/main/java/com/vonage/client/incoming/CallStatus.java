@@ -17,6 +17,10 @@ package com.vonage.client.incoming;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
+/**
+ * @deprecated Use {@link com.vonage.client.voice.CallStatus}.
+ */
+@Deprecated
 public enum CallStatus {
     STARTED,
     RINGING,

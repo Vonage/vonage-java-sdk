@@ -135,6 +135,8 @@ public class TokenOptions {
          *     <a href="https://tokbox.com/developer/guides/moderation/">Moderation developer guide</a>.
          *     </li>
          * </ul>
+         *
+         * @return This builder.
          */
         public Builder role(Role role) {
             this.role = role;
@@ -142,21 +144,25 @@ public class TokenOptions {
         }
 
          /**
-         * Sets the expiration time for the token.
-         *
-         * @param ttl The expiration length (time-to-live) The maximum duration is 30 days. Default is 24 hours.
+          * Sets the expiration time for the token.
+          *
+          * @param ttl The expiration length (time-to-live) The maximum duration is 30 days. Default is 24 hours.
+          *
+          * @return This builder.
          */
-        public Builder expiryLength(Duration ttl) {
+         public Builder expiryLength(Duration ttl) {
             this.ttl = ttl;
             return this;
         }
 
          /**
-         * A string containing connection metadata describing the end-user. For example, you
-         * can pass the user ID, name, or other data describing the end-user. The length of the
-         * string is limited to 1000 characters. This data cannot be updated once it is set.
-         *
-         * @param data The connection metadata.
+          * A string containing connection metadata describing the end-user. For example, you
+          * can pass the user ID, name, or other data describing the end-user. The length of the
+          * string is limited to 1000 characters. This data cannot be updated once it is set.
+          *
+          * @param data The connection metadata.
+          *
+          * @return This builder.
          */
         public Builder data(String data) throws IllegalArgumentException {
             this.data = data;
@@ -164,15 +170,17 @@ public class TokenOptions {
         }
 
         /**
-        * A List of class names (strings) to be used as the initial layout classes
-        * for streams published by the client. Layout classes are used in customizing the layout
-        * of videos in
-        * <a href="https://tokbox.com/developer/guides/broadcast/live-streaming/">live streaming
-        * broadcasts</a> and
-        * <a href="https://tokbox.com/developer/guides/archiving/layout-control.html">composed
-        * archives</a>. 
-        *
-        * @param initialLayoutClassList The initial layout class list.
+         * A List of class names (strings) to be used as the initial layout classes
+         * for streams published by the client. Layout classes are used in customizing the layout
+         * of videos in
+         * <a href="https://tokbox.com/developer/guides/broadcast/live-streaming/">live streaming
+         * broadcasts</a> and
+         * <a href="https://tokbox.com/developer/guides/archiving/layout-control.html">composed
+         * archives</a>.
+         *
+         * @param initialLayoutClassList The initial layout class list.
+         *
+         * @return This builder.
         */
         public Builder initialLayoutClassList (List<String> initialLayoutClassList) {
             this.initialLayoutClassList = initialLayoutClassList;

@@ -13,24 +13,7 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.incoming;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-
 /**
- * @deprecated Use {@link com.vonage.client.voice.CallDirection}.
+ * @deprecated This package will be removed in a future release.
  */
-@Deprecated
-public enum CallDirection {
-    OUTBOUND, INBOUND, UNKNOWN;
-
-    @JsonCreator
-    public static CallDirection fromString(String name) {
-        try {
-            return CallDirection.valueOf(name.toUpperCase());
-        }
-        catch (IllegalArgumentException ex) {
-            return UNKNOWN;
-        }
-    }
-}
+package com.vonage.client.incoming;

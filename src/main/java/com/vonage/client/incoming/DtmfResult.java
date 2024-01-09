@@ -17,11 +17,11 @@ package com.vonage.client.incoming;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.voice.EventWebhook;
 
 /**
- * Represents the DTMF event results in {@link EventWebhook#getDtmf()}.
+ * @deprecated Use {@link com.vonage.client.voice.DtmfResult}.
  */
+@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DtmfResult {
     private String digits;
