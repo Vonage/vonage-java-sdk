@@ -23,6 +23,7 @@ import com.vonage.client.conversion.ConversionClient;
 import com.vonage.client.insight.InsightClient;
 import com.vonage.client.meetings.MeetingsClient;
 import com.vonage.client.messages.MessagesClient;
+import com.vonage.client.numberinsight2.NumberInsight2Client;
 import com.vonage.client.numbers.NumbersClient;
 import com.vonage.client.proactiveconnect.ProactiveConnectClient;
 import com.vonage.client.redact.RedactClient;
@@ -65,6 +66,7 @@ public class VonageClient {
     private final MeetingsClient meetings;
     private final UsersClient users;
     private final VideoClient video;
+    private final NumberInsight2Client numberInsight2;
 
     private VonageClient(Builder builder) {
         httpWrapper = new HttpWrapper(builder.httpConfig, builder.authCollection);
@@ -86,6 +88,7 @@ public class VonageClient {
         meetings = new MeetingsClient(httpWrapper);
         users = new UsersClient(httpWrapper);
         video = new VideoClient(httpWrapper);
+        numberInsight2 = new NumberInsight2Client(httpWrapper);
     }
 
     public AccountClient getAccountClient() {
@@ -188,6 +191,16 @@ public class VonageClient {
      */
     public VideoClient getVideoClient() {
         return video;
+    }
+
+    /**
+     * Returns the Number Insight v2 client.
+     *
+     * @return The NI v2 client.
+     * @since 8.2.0
+     */
+    public NumberInsight2Client getNumberInsight2Client() {
+        return numberInsight2;
     }
 
     /**

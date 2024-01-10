@@ -125,6 +125,17 @@ public abstract class ClientTest<T> {
         return invocation.get();
     }
 
+    protected <E extends VonageApiResponseException> E assert401ApiResponseException(
+            Class<E> exClass, Executable invocation) throws Exception {
+        String responseJson = "{\n" +
+                "   \"type\": \"https://developer.nexmo.com/api-errors#unauthorized\",\n" +
+                "   \"title\": \"Invalid credentials supplied\",\n" +
+                "   \"detail\": \"You did not provide correct credentials\",\n" +
+                "   \"instance\": \"798b8f199c45014ab7b08bfe9cc1c12c\"\n" +
+                "}";
+        return assertApiResponseException(401, responseJson, exClass, invocation);
+    }
+
     @SuppressWarnings("unchecked")
     protected <E extends VonageApiResponseException> E assertApiResponseException(
             int statusCode, String response, Class<E> exClass, Executable invocation) throws Exception {

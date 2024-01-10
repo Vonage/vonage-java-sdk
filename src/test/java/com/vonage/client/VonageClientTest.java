@@ -342,6 +342,7 @@ public class VonageClientTest {
         assertNotNull(client.getInsightClient());
         assertNotNull(client.getMeetingsClient());
         assertNotNull(client.getMessagesClient());
+        assertNotNull(client.getNumberInsight2Client());
         assertNotNull(client.getNumbersClient());
         assertNotNull(client.getProactiveConnectClient());
         assertNotNull(client.getRedactClient());
