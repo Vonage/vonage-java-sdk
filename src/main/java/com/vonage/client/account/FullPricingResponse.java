@@ -17,7 +17,7 @@ package com.vonage.client.account;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import java.util.List;
 
 /**
@@ -26,7 +26,7 @@ import java.util.List;
  * @since 7.9.0
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-class FullPricingResponse implements Jsonable {
+class FullPricingResponse extends JsonableBaseObject {
     private Integer count;
     private List<PricingResponse> countries;
 

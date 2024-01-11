@@ -17,7 +17,7 @@ package com.vonage.client.messages;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.E164;
 import java.net.URI;
 import java.util.Objects;
@@ -33,7 +33,7 @@ import java.util.Objects;
  * being thrown. The documentation on each parameter should provide clarity on parameter restrictions.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public abstract class MessageRequest implements Jsonable {
+public abstract class MessageRequest extends JsonableBaseObject {
 	final MessageType messageType;
 	final Channel channel;
 	final String clientRef;
@@ -128,11 +128,6 @@ public abstract class MessageRequest implements Jsonable {
 	@JsonProperty("webhook_version")
 	public MessagesVersion getWebhookVersion() {
 		return webhookVersion;
-	}
-
-	@Override
-	public String toString() {
-		return getClass().getSimpleName()+' '+toJson();
 	}
 
 	/**

@@ -15,19 +15,22 @@
  */
 package com.vonage.client.meetings;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class ListRecordingsResponse implements Jsonable {
+class ListRecordingsResponse extends JsonableBaseObject {
 	@JsonProperty("_embedded") private Embedded embedded;
 
-	static class Embedded {
+	static class Embedded extends JsonableBaseObject {
 		@JsonProperty("recordings") List<Recording> recordings;
 	}
 
+	@JsonIgnore
 	public List<Recording> getRecordings() {
 		return embedded != null ? embedded.recordings : null;
 	}

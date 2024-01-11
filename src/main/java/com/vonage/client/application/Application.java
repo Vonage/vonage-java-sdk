@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.application.capabilities.*;
 
 /**
@@ -26,7 +27,7 @@ import com.vonage.client.application.capabilities.*;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Application implements Jsonable {
+public class Application extends JsonableBaseObject {
     private String id, name;
     private Keys keys;
     private Capabilities capabilities;
@@ -230,7 +231,7 @@ public class Application implements Jsonable {
      */
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class Privacy {
+    public static class Privacy extends JsonableBaseObject {
         private Boolean improveAi;
 
         /**
@@ -251,7 +252,7 @@ public class Application implements Jsonable {
      */
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class Keys {
+    public static class Keys extends JsonableBaseObject {
         private String publicKey, privateKey;
 
         /**
@@ -277,7 +278,7 @@ public class Application implements Jsonable {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class Capabilities {
+    public static class Capabilities extends JsonableBaseObject {
         private Voice voice;
         private Messages messages;
         private Rtc rtc;

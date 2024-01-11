@@ -17,14 +17,15 @@ package com.vonage.client.common;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 import java.net.URI;
 
 /**
  * Represents a link under the {@code _links} section of a HAL response.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-class UrlContainer {
-	URI href;
+public class UrlContainer extends JsonableBaseObject {
+	protected URI href;
 
 	protected UrlContainer() {
 	}

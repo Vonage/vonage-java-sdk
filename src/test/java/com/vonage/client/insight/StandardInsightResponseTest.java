@@ -15,6 +15,7 @@
  */
 package com.vonage.client.insight;
 
+import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,6 +59,7 @@ public class StandardInsightResponseTest {
                 "    }\n" +
                 "}");
 
+        TestUtils.testJsonableBaseObject(response);
         assertEquals(InsightStatus.LOOKUP_NOT_RETURNED, response.getStatus());
         assertEquals(43, response.getStatus().getInsightStatus());
         assertEquals("Lookup not returned", response.getStatusMessage());

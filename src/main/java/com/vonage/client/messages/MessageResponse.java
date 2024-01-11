@@ -18,6 +18,7 @@ package com.vonage.client.messages;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import java.util.UUID;
 
 /**
@@ -25,7 +26,7 @@ import java.util.UUID;
  * the returned response (HTTP 202 payload) is always the same format.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MessageResponse implements Jsonable {
+public class MessageResponse extends JsonableBaseObject {
 	protected UUID messageUuid;
 
 	/**
@@ -42,11 +43,6 @@ public class MessageResponse implements Jsonable {
 	@JsonProperty("message_uuid")
 	public UUID getMessageUuid() {
 		return messageUuid;
-	}
-
-	@Override
-	public String toString() {
-		return getClass().getSimpleName()+" {messageUuid='"+messageUuid+"'}";
 	}
 
 	/**

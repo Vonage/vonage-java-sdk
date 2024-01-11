@@ -25,7 +25,7 @@ import org.apache.http.client.HttpResponseException;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicStatusLine;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -102,5 +102,22 @@ public class TestUtils {
         catch (JsonProcessingException ex) {
             throw new IllegalArgumentException("Could not decode "+claims, ex);
         }
+    }
+
+    @SafeVarargs
+    public static <T extends JsonableBaseObject> void testJsonableBaseObject(String json, T... typeHack) {
+        testJsonableBaseObject(Jsonable.fromJson(json, typeHack));
+    }
+
+    public static <T extends JsonableBaseObject> void testJsonableBaseObject(T parsed) {
+        assertNotNull(parsed);
+        String toJson = parsed.toJson();
+        Class<? extends JsonableBaseObject> clazz = parsed.getClass();
+        JsonableBaseObject reparsed = Jsonable.fromJson(toJson, clazz);
+        assertEquals(parsed, reparsed);
+        assertEquals(parsed.hashCode(), reparsed.hashCode());
+        String expectedToString = clazz.getSimpleName()+' '+toJson;
+        assertEquals(expectedToString, parsed.toString());
+        assertEquals(expectedToString, reparsed.toString());
     }
 }

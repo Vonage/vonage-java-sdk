@@ -17,9 +17,10 @@ package com.vonage.client.insight;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CallerIdentity {
+public class CallerIdentity extends JsonableBaseObject {
     private CallerType type;
     private String name, firstName, lastName;
 

@@ -18,13 +18,14 @@ package com.vonage.client.account;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import java.time.Instant;
 
 /**
  * Represents metadata about an API account secret.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SecretResponse implements Jsonable {
+public class SecretResponse extends JsonableBaseObject {
     private String id;
     private Instant created;
 

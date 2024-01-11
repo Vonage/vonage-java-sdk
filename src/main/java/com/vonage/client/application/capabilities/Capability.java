@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.common.Webhook;
 import java.util.LinkedHashMap;
@@ -29,7 +30,7 @@ import java.util.Map;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public abstract class Capability {
+public abstract class Capability extends JsonableBaseObject {
     protected Map<Webhook.Type, Webhook> webhooks;
 
     protected Capability() {

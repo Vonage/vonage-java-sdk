@@ -21,13 +21,14 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.vonage.client.JsonableBaseObject;
 import java.io.IOException;
 
 /**
  * Real time data about the number.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RealTimeData {
+public class RealTimeData extends JsonableBaseObject {
 
 	static class ActiveStatusDeserializer extends JsonDeserializer<Boolean> {
 		@Override

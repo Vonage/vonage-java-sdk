@@ -18,12 +18,13 @@ package com.vonage.client.insight;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.vonage.client.JsonableBaseObject;
 
 /**
  * Information about the roaming status for number. This is applicable to mobile numbers only.
  */
 @JsonDeserialize(using = RoamingDeseriazlizer.class)
-public class RoamingDetails {
+public class RoamingDetails extends JsonableBaseObject {
     private final RoamingStatus status;
     private final String roamingCountryCode, roamingNetworkCode, roamingNetworkName;
 

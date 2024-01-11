@@ -18,10 +18,11 @@ package com.vonage.client.meetings;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Application implements Jsonable {
+public class Application extends JsonableBaseObject {
 	private String accountId;
 	private UUID applicationId, defaultThemeId;
 

@@ -16,6 +16,7 @@
 package com.vonage.client.common;
 
 import com.fasterxml.jackson.annotation.*;
+import com.vonage.client.JsonableBaseObject;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
@@ -26,7 +27,7 @@ import java.util.stream.Collectors;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Webhook {
+public class Webhook extends JsonableBaseObject {
     private String address;
     private HttpMethod method;
     private Integer connectionTimeout, socketTimeout;

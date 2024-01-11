@@ -15,6 +15,7 @@
  */
 package com.vonage.client.meetings;
 
+import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -53,7 +54,7 @@ public class MeetingsEventCallbackTest {
 				"}"
 		);
 
-		assertNotNull(event);
+		TestUtils.testJsonableBaseObject(event);
 		assertEquals(EventType.ROOM_EXPIRED, event.getEvent());
 		assertEquals(ROOM_ID, event.getRoomId());
 		assertEquals(ROOM_TYPE, event.getRoomType());
@@ -82,7 +83,7 @@ public class MeetingsEventCallbackTest {
 				"}"
 		);
 
-		assertNotNull(event);
+		TestUtils.testJsonableBaseObject(event);
 		assertEquals(EventType.SESSION_STARTED, event.getEvent());
 		assertEquals(ROOM_ID, event.getRoomId());
 		assertNull(event.getRoomType());
@@ -112,7 +113,7 @@ public class MeetingsEventCallbackTest {
 				"}"
 		);
 
-		assertNotNull(event);
+		TestUtils.testJsonableBaseObject(event);
 		assertEquals(EventType.SESSION_ENDED, event.getEvent());
 		assertEquals(ROOM_ID, event.getRoomId());
 		assertNull(event.getRoomType());
@@ -140,7 +141,7 @@ public class MeetingsEventCallbackTest {
 				"}"
 		);
 
-		assertNotNull(event);
+		TestUtils.testJsonableBaseObject(event);
 		assertEquals(EventType.RECORDING_STARTED, event.getEvent());
 		assertNull(event.getRoomId());
 		assertNull(event.getRoomType());
@@ -171,7 +172,7 @@ public class MeetingsEventCallbackTest {
 				"}"
 		);
 
-		assertNotNull(event);
+		TestUtils.testJsonableBaseObject(event);
 		assertEquals(EventType.RECORDING_ENDED, event.getEvent());
 		assertNull(event.getRoomId());
 		assertNull(event.getRoomType());
@@ -204,7 +205,7 @@ public class MeetingsEventCallbackTest {
 				"}"
 		);
 
-		assertNotNull(event);
+		TestUtils.testJsonableBaseObject(event);
 		assertEquals(EventType.RECORDING_UPLOADED, event.getEvent());
 		assertEquals(ROOM_ID, event.getRoomId());
 		assertNull(event.getRoomType());
@@ -236,7 +237,7 @@ public class MeetingsEventCallbackTest {
 				"}"
 		);
 
-		assertNotNull(event);
+		TestUtils.testJsonableBaseObject(event);
 		assertEquals(EventType.SESSION_PARTICIPANT_JOINED, event.getEvent());
 		assertEquals(ROOM_ID, event.getRoomId());
 		assertNull(event.getRoomType());
@@ -268,7 +269,7 @@ public class MeetingsEventCallbackTest {
 				"}"
 		);
 
-		assertNotNull(event);
+		TestUtils.testJsonableBaseObject(event);
 		assertEquals(EventType.SESSION_PARTICIPANT_LEFT, event.getEvent());
 		assertEquals(ROOM_ID, event.getRoomId());
 		assertNull(event.getRoomType());

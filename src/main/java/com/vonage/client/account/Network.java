@@ -19,10 +19,11 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.JsonableBaseObject;
 import java.math.BigDecimal;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Network {
+public class Network extends JsonableBaseObject {
     private Type type;
     private BigDecimal price;
     private String currency, mcc, mnc, code, name;

@@ -18,8 +18,9 @@ package com.vonage.client.meetings;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.common.UrlContainer;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import java.net.URI;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -81,6 +82,7 @@ public class MeetingRoomTest {
 			.build();
 		
 		String json = request.toJson();
+		assertTrue(request.toString().contains(json));
 		assertTrue(json.contains("\"display_name\":\""+displayName+"\""));
 		assertTrue(json.contains("\"metadata\":\""+metadata+"\""));
 		assertTrue(json.contains("\"type\":\""+type+"\""));
@@ -108,6 +110,10 @@ public class MeetingRoomTest {
 		assertTrue(json.contains("\"expires_at\":\""+request.getExpiresAt()+"\""));
 
 		MeetingRoom response = MeetingRoom.fromJson(json);
+		assertEquals(request, response);
+		assertEquals(request.hashCode(), response.hashCode());
+		assertEquals(request.toString(), response.toString());
+
 		assertEquals(request.getDisplayName(), response.getDisplayName());
 		assertEquals(request.getMetadata(), response.getMetadata());
 		assertEquals(request.getType(), response.getType());
@@ -158,11 +164,16 @@ public class MeetingRoomTest {
 		assertNull(room.getAvailableFeatures().getIsLocaleSwitcherAvailable());
 		assertNull(room.getAvailableFeatures().getIsWhiteboardAvailable());
 
+		int ogHashcode = room.hashCode();
+		String ogToString = room.toString();
+
 		room.updateFromJson("{\"name\":\"Updated name 1\",\"join_approval_level\":\"after_owner_only\"," +
 				"\"is_available\":true,\"type\":\"instant\",\"ui_settings\":{\"language\":\"ca\"}," +
 				"\"expire_after_use\":false,\"initial_join_options\":{},\"callback_urls\":{}," +
 				"\"available_features\":{\"is_locale_switcher_available\":false,\"is_chat_available\":false}}"
 		);
+		assertNotEquals(ogHashcode, room.hashCode());
+		assertNotEquals(ogToString, room.toString());
 
 		assertTrue(room.getIsAvailable());
 		assertFalse(room.getExpireAfterUse());
@@ -238,8 +249,13 @@ public class MeetingRoomTest {
 		String hostUrl = guestUrl + "?participant_token=xyz";
 		Instant createdAt = Instant.now();
 		RoomLinks links = new RoomLinks();
-		(links.guestUrl = new UrlContainer()).href = URI.create(guestUrl);
-		(links.hostUrl = new UrlContainer()).href = URI.create(hostUrl);
+		class TestContainer extends UrlContainer {
+			TestContainer(URI href) {
+				this.href = href;
+			}
+		}
+		links.guestUrl = new TestContainer(URI.create(guestUrl));
+		links.hostUrl = new TestContainer(URI.create(hostUrl));
 	
 		MeetingRoom response = MeetingRoom.fromJson("{\n" +
 				"\"id\":\""+id+"\",\n" +
@@ -300,6 +316,7 @@ public class MeetingRoomTest {
 	@Test
 	public void testFromJsonEmpty() {
 		MeetingRoom response = MeetingRoom.fromJson("{}");
+		assertEquals("MeetingRoom {}", response.toString());
 		assertNull(response.getDisplayName());
 		assertNull(response.getMetadata());
 		assertNull(response.getType());

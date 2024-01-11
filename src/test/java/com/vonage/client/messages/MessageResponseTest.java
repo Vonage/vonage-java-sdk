@@ -15,6 +15,7 @@
  */
 package com.vonage.client.messages;
 
+import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,12 +31,14 @@ public class MessageResponseTest {
 		String toString = response.toString();
 		assertTrue(toString.contains("MessageResponse"));
 		assertTrue(toString.contains(uuid.toString()));
+		TestUtils.testJsonableBaseObject(response);
 	}
 
 	@Test
 	public void testConstructFromEmptyJson() {
 		MessageResponse response = MessageResponse.fromJson("{}");
 		assertNull(response.getMessageUuid());
+		TestUtils.testJsonableBaseObject(response);
 	}
 
 	@Test

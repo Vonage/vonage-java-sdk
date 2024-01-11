@@ -19,13 +19,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MeetingRoom implements Jsonable {
+public class MeetingRoom extends JsonableBaseObject {
 	private Instant createdAt, expiresAt;
 	private UUID id, themeId;
 	private String displayName, metadata, meetingCode;
