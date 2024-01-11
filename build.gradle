@@ -29,6 +29,7 @@ dependencies {
     def junitVersion = '5.10.1'
 
     implementation "commons-codec:commons-codec:1.16.0"
+    implementation 'org.apache.commons:commons-lang3:3.14.0'
     implementation "org.apache.httpcomponents:httpclient:$httpclientVersion"
     implementation "org.apache.httpcomponents:httpmime:$httpclientVersion"
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
