@@ -35,7 +35,7 @@ class FraudCheckRequest implements Jsonable {
 	}
 
 	/**
-	 * Accepted value is “phone” when a phone number is provided.
+	 * Accepted value is "phone" when a phone number is provided.
 	 * 
 	 * @return The request type as a string.
 	 */
