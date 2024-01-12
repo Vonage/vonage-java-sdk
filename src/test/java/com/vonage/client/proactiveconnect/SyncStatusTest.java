@@ -15,6 +15,7 @@
  */
 package com.vonage.client.proactiveconnect;
 
+import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
@@ -34,7 +35,8 @@ public class SyncStatusTest {
 				"\"data_modified\":\""+dataModified+"\",\n" +
 				"\"dirty\":\""+dirty+"\"\n" +
 		"}");
-		
+
+		TestUtils.testJsonableBaseObject(response);
 		assertEquals(value, response.getValue());
 		assertEquals(details, response.getDetails());
 		assertEquals(metadataModified, response.getMetadataModified());
@@ -50,6 +52,7 @@ public class SyncStatusTest {
 	@Test
 	public void testFromJsonEmpty() {
 		SyncStatus response = SyncStatus.fromJson("{}");
+		TestUtils.testJsonableBaseObject(response);
 		assertNull(response.getValue());
 		assertNull(response.getDetails());
 		assertNull(response.getMetadataModified());

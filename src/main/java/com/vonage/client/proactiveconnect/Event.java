@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
@@ -28,7 +29,7 @@ import java.util.UUID;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Event implements Jsonable {
+public class Event extends JsonableBaseObject {
 	private UUID id, actionId, invocationId, runItemId, runId, jobId;
 	private String recipientId, sourceContext;
 	private EventType type;

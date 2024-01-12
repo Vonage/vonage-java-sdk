@@ -18,13 +18,14 @@ package com.vonage.client.proactiveconnect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 
 /**
  * Represents a Proactive Connect list's {@code attributes} property.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ListAttribute {
+public class ListAttribute extends JsonableBaseObject {
 	private String alias, name;
 	private Boolean key;
 

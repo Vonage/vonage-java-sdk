@@ -16,10 +16,7 @@
 package com.vonage.client.proactiveconnect;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.ClientTest;
-import com.vonage.client.RestEndpoint;
-import com.vonage.client.VonageClientException;
-import com.vonage.client.VonageUnexpectedException;
+import com.vonage.client.*;
 import com.vonage.client.common.HalLinks;
 import com.vonage.client.common.HalPageResponse;
 import com.vonage.client.common.HttpMethod;
@@ -152,7 +149,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 	}
 
 	static void assertEqualsSampleHal(HalPageResponse response) {
-		assertNotNull(response);
+		TestUtils.testJsonableBaseObject(response);
 		assertEquals(10, response.getPageSize().intValue());
 		assertEquals(3, response.getPage().intValue());
 		assertEquals(24, response.getTotalPages().intValue());
@@ -167,7 +164,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 	}
 
 	static void assertNullList(ContactsList response) {
-		assertNotNull(response);
+		TestUtils.testJsonableBaseObject(response);
 		assertNull(response.getName());
 		assertNull(response.getDescription());
 		assertNull(response.getTags());
@@ -181,7 +178,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 	}
 
 	static void assertEqualsSampleList(ContactsList parsed) {
-		assertNotNull(parsed);
+		TestUtils.testJsonableBaseObject(parsed);
 		assertEquals("my list", parsed.getName());
 		assertEquals("my description", parsed.getDescription());
 		assertEquals(Arrays.asList("vip", "sport"), parsed.getTags());
@@ -226,7 +223,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 	}
 
 	static void assertNullListItem(ListItem parsed) {
-		assertNotNull(parsed);
+		TestUtils.testJsonableBaseObject(parsed);
 		assertNull(parsed.getId());
 		assertNull(parsed.getListId());
 		assertNull(parsed.getCreatedAt());
@@ -235,7 +232,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 	}
 
 	static void assertEqualsSampleEvent(Event parsed) {
-		assertNotNull(parsed);
+		TestUtils.testJsonableBaseObject(parsed);
 		assertEquals(UUID.fromString("92cc64e5-f62b-464f-ab9c-4376bd05adfc"), parsed.getId());
 		assertEquals(UUID.fromString("e721113d-0948-4edb-b4af-e3f0578d708c"), parsed.getJobId());
 		assertEquals(UUID.fromString("51aca838-2cf6-4100-b0d2-e74ac0e95c88"), parsed.getRunId());
@@ -254,7 +251,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 	}
 
 	static void assertNullEvent(Event response) {
-		assertNotNull(response);
+		TestUtils.testJsonableBaseObject(response);
 		assertNull(response.getId());
 		assertNull(response.getJobId());
 		assertNull(response.getRunId());
