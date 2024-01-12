@@ -16,14 +16,17 @@
 package com.vonage.client.verify2;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 import java.time.Instant;
 
 /**
  * Describes the status of a workflow.
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class WorkflowStatus {
+public class WorkflowStatus extends JsonableBaseObject {
 	protected Channel channel;
 	protected Instant initiatedAt;
 	protected VerificationStatus status;

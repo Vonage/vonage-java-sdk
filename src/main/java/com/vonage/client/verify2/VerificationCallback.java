@@ -17,8 +17,10 @@ package com.vonage.client.verify2;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.VonageResponseParseException;
 import java.net.URI;
 import java.time.Instant;
@@ -29,8 +31,9 @@ import java.util.UUID;
  * Webhook for verification status updates and events. See the
  * <a href=https://developer.vonage.com/en/api/verify.v2#websockets>API reference</a> for details.
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class VerificationCallback implements Jsonable {
+public class VerificationCallback extends JsonableBaseObject {
 	protected Channel channel;
 	protected UUID requestId;
 	protected Instant triggeredAt, finalizedAt, submittedAt;
@@ -41,8 +44,9 @@ public class VerificationCallback implements Jsonable {
 	protected List<WorkflowStatus> workflows;
 	@JsonProperty("action") Action action;
 
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	static class Action {
+	static class Action extends JsonableBaseObject {
 		@JsonProperty("type") String type;
 		@JsonProperty("check_url") URI checkUrl;
 	}
