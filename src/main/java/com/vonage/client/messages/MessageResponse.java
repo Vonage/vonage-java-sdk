@@ -16,6 +16,7 @@
 package com.vonage.client.messages;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
@@ -25,6 +26,7 @@ import java.util.UUID;
  * Response returned when sending a message. Regardless of the channel or message type,
  * the returned response (HTTP 202 payload) is always the same format.
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MessageResponse extends JsonableBaseObject {
 	protected UUID messageUuid;

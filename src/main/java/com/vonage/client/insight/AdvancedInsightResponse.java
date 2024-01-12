@@ -16,6 +16,7 @@
 package com.vonage.client.insight;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 
@@ -23,6 +24,7 @@ import com.vonage.client.Jsonable;
  * Response object constructed from the JSON payload returned for Advanced number insight requests.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class AdvancedInsightResponse extends StandardInsightResponse {
     private Validity validNumber;
     private Reachability reachability;

@@ -17,11 +17,12 @@ package com.vonage.client.messages.whatsapp;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 import java.util.List;
 import java.util.Objects;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class Template {
+public final class Template extends JsonableBaseObject {
 	private final String name;
 	private final List<String> parameters;
 

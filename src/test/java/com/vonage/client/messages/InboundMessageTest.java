@@ -15,6 +15,7 @@
  */
 package com.vonage.client.messages;
 
+import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.messages.sms.SmsInboundMetadata;
 import com.vonage.client.messages.whatsapp.Order;
@@ -104,6 +105,7 @@ public class InboundMessageTest {
 				",\n\"someRandomProp\": {\"int_field\": 19, \"str_field\": \"A value\", \"col\":[]}}";
 
 		InboundMessage im = InboundMessage.fromJson(fullJson);
+		TestUtils.testJsonableBaseObject(im);
 		assertEqualsSmsWithUsageAndMetadata(im);
 
 		Map<String, Object> randomProp = (Map<String, Object>) im.getUnmappedProperties().get("someRandomProp");
@@ -129,7 +131,7 @@ public class InboundMessageTest {
 	public void testMessengerUnsupportedType() {
 		String fullJson = getCommonPartialJsonStub(Channel.MESSENGER, MessageType.UNSUPPORTED) + "\n}";
 		InboundMessage im = InboundMessage.fromJson(fullJson);
-
+		TestUtils.testJsonableBaseObject(im);
 		assertEqualsCommon(im);
 		assertEquals(Channel.MESSENGER, im.getChannel());
 		assertEquals(MessageType.UNSUPPORTED, im.getMessageType());
@@ -158,10 +160,11 @@ public class InboundMessageTest {
 			  "}\n}";
 
 		InboundMessage im = InboundMessage.fromJson(fullJson);
+		TestUtils.testJsonableBaseObject(im);
 		assertEqualsCommon(im);
 		assertEquals(Channel.MMS, im.getChannel());
 		assertEquals(MessageType.VCARD, im.getMessageType());
-		assertEquals(vcard, im.getVcardUrl().toString());
+		assertEquals(URI.create(vcard), im.getVcardUrl());
 
 		assertNull(im.getUnmappedProperties());
 		assertNull(im.getText());
@@ -293,6 +296,7 @@ public class InboundMessageTest {
 				"   }" +
 				"}";
 		InboundMessage im = InboundMessage.fromJson(json);
+		TestUtils.testJsonableBaseObject(im);
 		assertEquals(ContextStatus.AVAILABLE, im.getWhatsappContextStatus());
 		Context context = im.getWhatsappContext();
 		assertNotNull(context);
@@ -316,6 +320,7 @@ public class InboundMessageTest {
 				"   }" +
 				"}";
 		InboundMessage im = InboundMessage.fromJson(json);
+		TestUtils.testJsonableBaseObject(im);
 		Profile profile = im.getWhatsappProfile();
 		assertNotNull(profile);
 		assertEquals(name, profile.getName());
@@ -344,6 +349,7 @@ public class InboundMessageTest {
 				"}";
 
 		InboundMessage im = InboundMessage.fromJson(json);
+		TestUtils.testJsonableBaseObject(im);
 		Referral referral = im.getWhatsappReferral();
 		assertNotNull(referral);
 		assertEquals(body, referral.getBody());

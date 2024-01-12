@@ -16,6 +16,7 @@
 package com.vonage.client.meetings;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * Represents the application domain for a theme.
@@ -32,5 +33,11 @@ public enum ThemeDomain {
 		catch (NullPointerException | IllegalArgumentException ex) {
 			return null;
 		}
+	}
+
+	@JsonValue
+	@Override
+	public String toString() {
+		return name().toLowerCase();
 	}
 }

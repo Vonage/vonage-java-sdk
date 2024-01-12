@@ -26,7 +26,7 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true, value = "theme_id", allowSetters = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Theme extends JsonableBaseObject {
 	static final Pattern COLOR_PATTERN = Pattern.compile("(#[a-fA-F0-9]{6}|[a-fA-F0-9]{3})");
 
@@ -221,12 +221,17 @@ public class Theme extends JsonableBaseObject {
 
 	@Override
 	public String toJson() {
-		String json = super.toJson();
 		if (update) {
-			json = "{\"update_details\":" + json + "}";
+			UUID tempId = themeId;
+			themeId = null;
+			String json = "{\"update_details\":" + super.toJson() + "}";
 			update = false;
+			themeId = tempId;
+			return json;
 		}
-		return json;
+		else {
+			return super.toJson();
+		}
 	}
 
 	/**

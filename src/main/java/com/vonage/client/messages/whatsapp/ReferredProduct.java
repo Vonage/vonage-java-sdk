@@ -17,6 +17,7 @@ package com.vonage.client.messages.whatsapp;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 
 /**
  * Contains details of a product from a product message being quoted or replied to
@@ -25,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @since 7.2.0
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class ReferredProduct {
+public final class ReferredProduct extends JsonableBaseObject {
 	private String productRetailerId, catalogId;
 
 	ReferredProduct() {}

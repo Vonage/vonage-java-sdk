@@ -17,6 +17,7 @@ package com.vonage.client.messages.internal;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 import java.net.URI;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -27,7 +28,7 @@ import java.util.stream.Stream;
  * This class also validates the fields.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class MessagePayload {
+public class MessagePayload extends JsonableBaseObject {
 	protected URI url;
 	protected String caption, name;
 

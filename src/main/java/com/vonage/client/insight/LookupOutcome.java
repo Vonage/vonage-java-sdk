@@ -16,6 +16,7 @@
 package com.vonage.client.insight;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Arrays;
 
 /**
@@ -40,6 +41,7 @@ public enum LookupOutcome {
 	/**
 	 * @return The code used to create this enum.
 	 */
+	@JsonValue
 	public int getCode() {
 		return code;
 	}
