@@ -15,6 +15,7 @@
  */
 package com.vonage.client.verify;
 
+import com.vonage.client.TestUtils;
 import com.vonage.client.VonageUnexpectedException;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
@@ -24,6 +25,7 @@ public class ControlResponseTest {
     @Test
     public void testConstructor() {
         ControlResponse response = new ControlResponse("1", VerifyControlCommand.CANCEL);
+        TestUtils.testJsonableBaseObject(response);
         assertEquals("1", response.getStatus());
         assertEquals(VerifyControlCommand.CANCEL, response.getCommand());
     }

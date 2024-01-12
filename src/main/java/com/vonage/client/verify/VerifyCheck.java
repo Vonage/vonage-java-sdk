@@ -16,11 +16,14 @@
 package com.vonage.client.verify;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 import java.util.Date;
 
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class VerifyCheck {
+public class VerifyCheck extends JsonableBaseObject {
     private final Date date;
     private final String code;
     private final Status status;
@@ -41,17 +44,17 @@ public class VerifyCheck {
      * @return The date and time this check was received
      */
     public Date getDate() {
-        return this.date;
+        return date;
     }
 
     /**
      * @return The code supplied with this check request.
      */
     public String getCode() {
-        return this.code;
+        return code;
     }
 
     public Status getStatus() {
-        return this.status;
+        return status;
     }
 }

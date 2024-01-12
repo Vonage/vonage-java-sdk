@@ -15,6 +15,7 @@
  */
 package com.vonage.client.verify;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Arrays;
 import java.util.Map;
@@ -144,6 +145,7 @@ public enum VerifyStatus {
         this.verifyStatus = verifyStatus;
     }
 
+    @JsonValue
     public int getVerifyStatus() {
         return verifyStatus;
     }
