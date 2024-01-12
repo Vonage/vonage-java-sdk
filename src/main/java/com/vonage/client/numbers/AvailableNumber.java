@@ -16,16 +16,26 @@
 package com.vonage.client.numbers;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.vonage.client.JsonableBaseObject;
 
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AvailableNumber {
+public class AvailableNumber extends JsonableBaseObject {
     private String country, msisdn, cost, type;
     private String[] features;
+
+    /**
+     * @deprecated This will be made package-private in a future release.
+     */
+    @Deprecated
+    public AvailableNumber() {}
 
     public String getCountry() {
         return country;
     }
 
+    @Deprecated
     public void setCountry(String country) {
         this.country = country;
     }
@@ -34,6 +44,7 @@ public class AvailableNumber {
         return msisdn;
     }
 
+    @Deprecated
     public void setMsisdn(String msisdn) {
         this.msisdn = msisdn;
     }
@@ -42,6 +53,7 @@ public class AvailableNumber {
         return cost;
     }
 
+    @Deprecated
     public void setCost(String cost) {
         this.cost = cost;
     }
@@ -50,6 +62,7 @@ public class AvailableNumber {
         return type;
     }
 
+    @Deprecated
     public void setType(String type) {
         this.type = type;
     }
@@ -58,6 +71,7 @@ public class AvailableNumber {
         return features;
     }
 
+    @Deprecated
     public void setFeatures(String[] features) {
         this.features = features;
     }

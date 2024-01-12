@@ -16,10 +16,12 @@
 package com.vonage.client.numbers;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.vonage.client.Jsonable;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.vonage.client.JsonableBaseObject;
 
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OwnedNumber implements Jsonable {
+public class OwnedNumber extends JsonableBaseObject {
     private String country, msisdn, moHttpUrl, type, voiceCallbackType, voiceCallbackValue;
     private String[] features;
 
@@ -27,6 +29,7 @@ public class OwnedNumber implements Jsonable {
         return country;
     }
 
+    @Deprecated
     public void setCountry(String country) {
         this.country = country;
     }
@@ -35,6 +38,7 @@ public class OwnedNumber implements Jsonable {
         return msisdn;
     }
 
+    @Deprecated
     public void setMsisdn(String msisdn) {
         this.msisdn = msisdn;
     }
@@ -43,6 +47,7 @@ public class OwnedNumber implements Jsonable {
         return moHttpUrl;
     }
 
+    @Deprecated
     public void setMoHttpUrl(String moHttpUrl) {
         this.moHttpUrl = moHttpUrl;
     }
@@ -51,6 +56,7 @@ public class OwnedNumber implements Jsonable {
         return type;
     }
 
+    @Deprecated
     public void setType(String type) {
         this.type = type;
     }
@@ -59,6 +65,7 @@ public class OwnedNumber implements Jsonable {
         return features;
     }
 
+    @Deprecated
     public void setFeatures(String[] features) {
         this.features = features;
     }
@@ -67,6 +74,7 @@ public class OwnedNumber implements Jsonable {
         return voiceCallbackType;
     }
 
+    @Deprecated
     public void setVoiceCallbackType(String voiceCallbackType) {
         this.voiceCallbackType = voiceCallbackType;
     }
@@ -75,6 +83,7 @@ public class OwnedNumber implements Jsonable {
         return voiceCallbackValue;
     }
 
+    @Deprecated
     public void setVoiceCallbackValue(String voiceCallbackValue) {
         this.voiceCallbackValue = voiceCallbackValue;
     }

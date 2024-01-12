@@ -17,6 +17,7 @@ package com.vonage.client.numbers;
 
 import com.vonage.client.ClientTest;
 import com.vonage.client.RestEndpoint;
+import com.vonage.client.TestUtils;
 import com.vonage.client.common.HttpMethod;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.*;
@@ -61,6 +62,7 @@ public class NumbersClientTest extends ClientTest<NumbersClient> {
                 "  ]\n" +
                 "}");
         ListNumbersResponse response = client.listNumbers();
+        TestUtils.testJsonableBaseObject(response);
         assertEquals(1, response.getCount());
         assert401ResponseException(client::listNumbers);
     }
