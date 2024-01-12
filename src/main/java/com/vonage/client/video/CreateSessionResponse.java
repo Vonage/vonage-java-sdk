@@ -16,16 +16,18 @@
 package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.VonageResponseParseException;
 import java.io.IOException;
 import java.net.URI;
 import java.util.UUID;
 
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CreateSessionResponse implements Jsonable {
+public class CreateSessionResponse extends JsonableBaseObject {
 	private String sessionId, createDt;
 	private UUID applicationId;
 	private URI mediaServerUrl;

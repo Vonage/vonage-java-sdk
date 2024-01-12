@@ -15,6 +15,7 @@
  */
 package com.vonage.client.video;
 
+import com.vonage.client.TestUtils;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import java.net.URI;
@@ -44,19 +45,20 @@ public class SipDialRequestTest {
 				uri+";transport=tls\",\"from\":\""+from+"\",\"headers\":{\""+h1k+"\":\""+h1v+"\"},\"auth\":{" +
 				"\"username\":\""+username+"\",\"password\":\""+password+"\"},\"secure\":true,\"video\":true," +
 				"\"observeForceMute\":false}}";
-		Assertions.assertEquals(expectedJson, request.toJson());
+		assertEquals(expectedJson, request.toJson());
 
-		Assertions.assertEquals(sessionId, request.getSessionId());
-		Assertions.assertEquals(token, request.getToken());
-		Assertions.assertEquals(uri+";transport=tls", request.getUri());
-		Assertions.assertEquals(from, request.getFrom());
-		Assertions.assertEquals(username, request.getUsername());
-		Assertions.assertEquals(password, request.getPassword());
-		Assertions.assertEquals(1, request.getHeaders().size());
-		Assertions.assertEquals(h1v, request.getHeaders().get(h1k));
-		Assertions.assertTrue(request.getSecure());
-		Assertions.assertTrue(request.getVideo());
-		Assertions.assertFalse(request.getObserveForceMute());
+		TestUtils.testJsonableBaseObject(request);
+		assertEquals(sessionId, request.getSessionId());
+		assertEquals(token, request.getToken());
+		assertEquals(uri+";transport=tls", request.getUri());
+		assertEquals(from, request.getFrom());
+		assertEquals(username, request.getUsername());
+		assertEquals(password, request.getPassword());
+		assertEquals(1, request.getHeaders().size());
+		assertEquals(h1v, request.getHeaders().get(h1k));
+		assertTrue(request.getSecure());
+		assertTrue(request.getVideo());
+		assertFalse(request.getObserveForceMute());
 	}
 
 	@Test
@@ -67,15 +69,15 @@ public class SipDialRequestTest {
 
 		String expectedJson = "{\"sessionId\":\""+sessiondId+"\",\"token\":\""+token+"\"," +
 				"\"sip\":{\"uri\":\""+uri+"\"}}";
-		Assertions.assertEquals(expectedJson, request.toJson());
+		assertEquals(expectedJson, request.toJson());
 
-		Assertions.assertNull(request.getUsername());
-		Assertions.assertNull(request.getPassword());
-		Assertions.assertNull(request.getFrom());
-		Assertions.assertNull(request.getHeaders());
-		Assertions.assertNull(request.getVideo());
-		Assertions.assertNull(request.getSecure());
-		Assertions.assertNull(request.getObserveForceMute());
+		assertNull(request.getUsername());
+		assertNull(request.getPassword());
+		assertNull(request.getFrom());
+		assertNull(request.getHeaders());
+		assertNull(request.getVideo());
+		assertNull(request.getSecure());
+		assertNull(request.getObserveForceMute());
 	}
 
 	@Test
@@ -116,6 +118,6 @@ public class SipDialRequestTest {
 
 		String expectedJson = "{\"sessionId\":\"SESSION_ID\",\"token\":\"TOKEN\"," +
 				"\"sip\":{\"uri\":\"sip://user@example.com\"}}";
-		Assertions.assertEquals(expectedJson, request.toJson());
+		assertEquals(expectedJson, request.toJson());
 	}
 }

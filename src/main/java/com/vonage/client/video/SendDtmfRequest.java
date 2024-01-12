@@ -18,11 +18,11 @@ package com.vonage.client.video;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import java.util.regex.Pattern;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-class SendDtmfRequest implements Jsonable {
+class SendDtmfRequest extends JsonableBaseObject {
 	static final Pattern DTMF_DIGITS_PATTERN = Pattern.compile("[0-9*#p]+");
 
 	@JsonIgnore final String sessionId;

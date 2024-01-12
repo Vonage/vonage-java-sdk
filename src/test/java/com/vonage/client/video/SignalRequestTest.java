@@ -15,6 +15,7 @@
  */
 package com.vonage.client.video;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.*;
 
@@ -24,11 +25,11 @@ public class SignalRequestTest {
 	public void testValidConstruction() {
 		SignalRequest.Builder builder = SignalRequest.builder();
 		SignalRequest sr = builder.data("d").type("t").build();
-		Assertions.assertEquals("d", sr.getData());
-		Assertions.assertEquals("t", sr.getType());
+		assertEquals("d", sr.getData());
+		assertEquals("t", sr.getType());
 		sr = builder.data("").type("").build();
-		Assertions.assertEquals("", sr.getData());
-		Assertions.assertEquals("", sr.getType());
+		assertEquals("", sr.getData());
+		assertEquals("", sr.getType());
 	}
 
 	@Test

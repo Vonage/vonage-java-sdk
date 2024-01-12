@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
@@ -31,7 +31,7 @@ import java.util.UUID;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
-public abstract class StreamComposition implements Jsonable {
+public abstract class StreamComposition extends JsonableBaseObject {
 	@JsonProperty("id") protected UUID id;
 	@JsonProperty("applicationId") protected UUID applicationId;
 	@JsonProperty("sessionId") protected String sessionId;

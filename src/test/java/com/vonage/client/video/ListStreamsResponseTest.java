@@ -15,6 +15,7 @@
  */
 package com.vonage.client.video;
 
+import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
@@ -41,17 +42,18 @@ public class ListStreamsResponseTest {
 				"  \"layoutClassList\": []\n" +
 				"}]}"
 		);
-		
-		Assertions.assertEquals(count, response.getCount());
-		Assertions.assertEquals(count.intValue(), response.getItems().size());
+
+		TestUtils.testJsonableBaseObject(response);
+		assertEquals(count, response.getCount());
+		assertEquals(count.intValue(), response.getItems().size());
 		GetStreamResponse gsr0 = response.getItems().get(0), gsr1 = response.getItems().get(1);
-		Assertions.assertEquals(VideoType.CAMERA, gsr0.getVideoType());
-		Assertions.assertEquals(name0, gsr0.getName());
-		Assertions.assertEquals(1, gsr0.getLayoutClassList().size());
-		Assertions.assertNull(gsr1.getVideoType());
-		Assertions.assertNull(gsr1.getName());
-		Assertions.assertEquals(id1, gsr1.getId());
-		Assertions.assertEquals(0, gsr1.getLayoutClassList().size());
+		assertEquals(VideoType.CAMERA, gsr0.getVideoType());
+		assertEquals(name0, gsr0.getName());
+		assertEquals(1, gsr0.getLayoutClassList().size());
+		assertNull(gsr1.getVideoType());
+		assertNull(gsr1.getName());
+		assertEquals(id1, gsr1.getId());
+		assertEquals(0, gsr1.getLayoutClassList().size());
 	}
 	
 	@Test
@@ -62,7 +64,7 @@ public class ListStreamsResponseTest {
 	@Test
 	public void testFromJsonEmpty() {
 		ListStreamsResponse response = ListStreamsResponse.fromJson("{}");
-		Assertions.assertNull(response.getCount());
-		Assertions.assertNull(response.getItems());
+		assertNull(response.getCount());
+		assertNull(response.getItems());
 	}
 }

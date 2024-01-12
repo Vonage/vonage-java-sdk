@@ -162,7 +162,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 	}
 
 	static void assertArchiveEqualsExpectedJson(Archive response) {
-		assertNotNull(response);
+		TestUtils.testJsonableBaseObject(response);
 		assertEquals("https://tokbox.s3.amazonaws.com/"+connectionId+"/archive.mp4", response.getUrl().toString());
 		assertEquals(Long.valueOf(1384221730000L), response.getCreatedAtMillis());
 		assertEquals(Instant.ofEpochSecond(1384221730L), response.getCreatedAt());

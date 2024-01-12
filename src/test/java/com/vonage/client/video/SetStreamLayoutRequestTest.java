@@ -15,7 +15,8 @@
  */
 package com.vonage.client.video;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.*;
 import java.util.Arrays;
 import java.util.Collections;
@@ -40,6 +41,7 @@ public class SetStreamLayoutRequestTest {
 				SessionStream.builder(id3).layoutClassList().build(),
 				SessionStream.builder(id4).layoutClassList("focus", "min").build()
 		);
+
 		SetStreamLayoutRequest request = new SetStreamLayoutRequest(sessionId, streams);
 		String expectedJson = "{\"items\":[" +
 				"{\"id\":\""+id0+"\",\"layoutClassList\":[]}," +
@@ -48,8 +50,8 @@ public class SetStreamLayoutRequestTest {
 				"{\"id\":\""+id3+"\",\"layoutClassList\":[]}," +
 				"{\"id\":\""+id4+"\",\"layoutClassList\":[\"focus\",\"min\"]}" +
 			"]}";
-		Assertions.assertEquals(expectedJson, request.toJson());
-		Assertions.assertEquals(sessionId, request.sessionId);
+		assertEquals(expectedJson, request.toJson());
+		assertEquals(sessionId, request.sessionId);
 	}
 
 	@Test

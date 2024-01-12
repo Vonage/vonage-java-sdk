@@ -28,9 +28,9 @@ public class ListStreamCompositionsRequestTest {
 	@Test
 	public void testNoParameters() {
 		ListStreamCompositionsRequest request = ListStreamCompositionsRequest.builder().build();
-		Assertions.assertNull(request.getSessionId());
-		Assertions.assertNull(request.getCount());
-		Assertions.assertNull(request.getOffset());
+		assertNull(request.getSessionId());
+		assertNull(request.getCount());
+		assertNull(request.getOffset());
 	}
 
 	@Test
@@ -40,17 +40,17 @@ public class ListStreamCompositionsRequestTest {
 		ListStreamCompositionsRequest request = ListStreamCompositionsRequest.builder()
 				.count(count).offset(offset)
 				.sessionId(sessionId).build();
-		Assertions.assertEquals(sessionId, request.getSessionId());
-		Assertions.assertEquals(count, request.getCount());
-		Assertions.assertEquals(offset, request.getOffset());
+		assertEquals(sessionId, request.getSessionId());
+		assertEquals(count, request.getCount());
+		assertEquals(offset, request.getOffset());
 	}
 
 	@Test
 	public void testNullParameters() {
 		ListStreamCompositionsRequest request = ListStreamCompositionsRequest.builder().sessionId(null).build();
-		Assertions.assertNull(request.getSessionId());
-		Assertions.assertNull(request.getOffset());
-		Assertions.assertNull(request.getCount());
+		assertNull(request.getSessionId());
+		assertNull(request.getOffset());
+		assertNull(request.getCount());
 	}
 
 	@Test

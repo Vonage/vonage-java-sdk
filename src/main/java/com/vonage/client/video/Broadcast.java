@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -59,13 +60,14 @@ public class Broadcast extends StreamComposition {
 		multiBroadcastTag = builder.multiBroadcastTag;
 	}
 
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	static class Settings {
+	static class Settings  extends JsonableBaseObject {
 		@JsonProperty("hls") private Hls hls;
 	}
 
 	@JsonInclude(value = JsonInclude.Include.NON_NULL)
-	static class Outputs {
+	static class Outputs extends JsonableBaseObject {
 		@JsonProperty("rtmp") private List<Rtmp> rtmp;
 		@JsonProperty("hls") private Hls hls;
 	}

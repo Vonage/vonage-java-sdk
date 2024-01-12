@@ -16,15 +16,18 @@
 package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 import java.net.URI;
 import java.util.List;
 
 /**
  * Container for details about the HLS and RTMP broadcasts.
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BroadcastUrls {
+public class BroadcastUrls extends JsonableBaseObject {
 	@JsonProperty("hls") private URI hls;
 	@JsonProperty("rtmp") private List<Rtmp> rtmp;
 

@@ -16,6 +16,7 @@
 package com.vonage.client.video;
 
 import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -29,14 +30,14 @@ public class MuteSessionRequestTest {
 		List<String> excludedStreamIds = Arrays.asList("ID_0", "ID_1", "ID_2");
 		MuteSessionRequest request = new MuteSessionRequest(sessionId, true, excludedStreamIds);
 		String expectedJson = "{\"active\":true,\"excludedStreamIds\":[\"ID_0\",\"ID_1\",\"ID_2\"]}";
-		Assertions.assertEquals(expectedJson, request.toJson());
+		assertEquals(expectedJson, request.toJson());
 	}
 
 	@Test
 	public void testSerializeEmptyList() {
 		MuteSessionRequest request = new MuteSessionRequest(sessionId, false, Collections.emptyList());
 		String expectedJson = "{\"active\":false,\"excludedStreamIds\":[]}";
-		Assertions.assertEquals(expectedJson, request.toJson());
+		assertEquals(expectedJson, request.toJson());
 	}
 
 	@Test
@@ -44,7 +45,7 @@ public class MuteSessionRequestTest {
 		List<String> streamIds = null;
 		MuteSessionRequest request = new MuteSessionRequest(sessionId, false, streamIds);
 		String expectedJson = "{\"active\":false}";
-		Assertions.assertEquals(expectedJson, request.toJson());
+		assertEquals(expectedJson, request.toJson());
 	}
 
 }

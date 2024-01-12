@@ -18,7 +18,7 @@ package com.vonage.client.video;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,12 +28,12 @@ import java.util.Objects;
  * Represents an outbound SIP dial request's properties.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class SipDialRequest implements Jsonable {
-	private final String sessionId, token;
-	@JsonProperty("sip") private final Sip sip = new Sip();
+public class SipDialRequest extends JsonableBaseObject {
+	private String sessionId, token;
+	@JsonProperty("sip") private Sip sip;
 
 	@JsonInclude(value = JsonInclude.Include.NON_NULL)
-	static class Sip {
+	static class Sip extends JsonableBaseObject {
 		@JsonProperty("uri") String uri;
 		@JsonProperty("from") String from;
 		@JsonProperty("headers") Map<String, String> headers;
@@ -43,13 +43,19 @@ public class SipDialRequest implements Jsonable {
 		@JsonProperty("observeForceMute") Boolean observeForceMute;
 
 		@JsonInclude(value = JsonInclude.Include.NON_NULL)
-		static class Auth {
+		static class Auth extends JsonableBaseObject {
 			@JsonProperty("username") String username;
 			@JsonProperty("password") String password;
 		}
 	}
 
+	/**
+     * For tests.
+     */
+	SipDialRequest() {}
+
 	private SipDialRequest(Builder builder) {
+		sip = new Sip();
 		sessionId = Objects.requireNonNull(builder.sessionId, "Session ID is required.");
 		token = Objects.requireNonNull(builder.token, "Token is required.");
 		sip.uri = Objects.requireNonNull(builder.uri, "SIP URI is required.");
