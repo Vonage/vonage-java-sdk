@@ -17,14 +17,14 @@ package com.vonage.client.numberinsight2;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.E164;
 import java.util.EnumSet;
 import java.util.Objects;
 import java.util.Set;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-class FraudCheckRequest implements Jsonable {
+class FraudCheckRequest extends JsonableBaseObject {
 	private final String type, phone;
 	private final Set<Insight> insights;
 

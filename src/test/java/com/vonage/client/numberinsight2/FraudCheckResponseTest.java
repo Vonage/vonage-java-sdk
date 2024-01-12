@@ -15,6 +15,7 @@
  */
 package com.vonage.client.numberinsight2;
 
+import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
@@ -58,7 +59,7 @@ public class FraudCheckResponseTest {
 			"}"
 		);
 
-		assertNotNull(response);
+		TestUtils.testJsonableBaseObject(response);
 		assertEquals("phone", response.getType());
 		assertEquals(UUID.fromString(requestId), response.getRequestId());
 		assertEquals("phone", response.getType());

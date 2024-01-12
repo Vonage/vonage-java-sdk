@@ -15,9 +15,11 @@
  */
 package com.vonage.client.users;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.HalPageResponse;
 import java.util.List;
 
@@ -29,8 +31,9 @@ import java.util.List;
 public class ListUsersResponse extends HalPageResponse {
     @JsonProperty("_embedded") private Embedded embedded;
 
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    static class Embedded {
+    static class Embedded extends JsonableBaseObject {
         @JsonProperty("users") List<BaseUser> users;
     }
 
@@ -40,6 +43,7 @@ public class ListUsersResponse extends HalPageResponse {
      *
      * @return The list of users, or {@code null} if absent.
      */
+    @JsonIgnore
     public List<BaseUser> getUsers() {
         return embedded != null ? embedded.users : null;
     }

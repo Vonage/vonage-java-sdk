@@ -17,6 +17,7 @@ package com.vonage.client.users;
 
 import com.vonage.client.ClientTest;
 import com.vonage.client.RestEndpoint;
+import com.vonage.client.TestUtils;
 import com.vonage.client.common.HalLinks;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.users.channels.*;
@@ -117,7 +118,7 @@ public class UsersClientTest extends ClientTest<UsersClient> {
     }
 
     static void assertEqualsSampleUser(User response) {
-        assertNotNull(response);
+        TestUtils.testJsonableBaseObject(response);
         assertEquals(SAMPLE_USER_ID, response.getId());
         assertEquals("my_user_name", response.getName());
         assertEquals("My User Name", response.getDisplayName());
@@ -355,7 +356,7 @@ public class UsersClientTest extends ClientTest<UsersClient> {
                 "    }\n" +
                 "}");
         ListUsersResponse parsed = client.listUsers(ListUsersRequest.builder().build());
-        assertNotNull(parsed);
+        TestUtils.testJsonableBaseObject(parsed);
         assertNull(parsed.getPageSize());
 
         HalLinks links = parsed.getLinks();
@@ -388,6 +389,7 @@ public class UsersClientTest extends ClientTest<UsersClient> {
         ListUsersResponse hal = stubResponseAndGet(json, () ->
                 client.listUsers(ListUsersRequest.builder().build())
         );
+        TestUtils.testJsonableBaseObject(hal);
         assertNotNull(hal.getUsers());
         assertEquals(0, hal.getUsers().size());
         assertEquals(3, hal.getPageSize().intValue());

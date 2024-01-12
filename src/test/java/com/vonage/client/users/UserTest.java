@@ -16,6 +16,7 @@
 package com.vonage.client.users;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.users.channels.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -53,6 +54,8 @@ public class UserTest {
 
 		User parsed = User.fromJson(json);
 		assertEquals(request, parsed);
+		assertEquals(request.hashCode(), parsed.hashCode());
+		assertEquals(request.toString(), parsed.toString());
 
 		Set<User> userSet = new HashSet<>(2);
 		assertTrue(userSet.add(parsed));
@@ -64,7 +67,7 @@ public class UserTest {
 		User user = User.builder().build();
 		String json = user.toJson();
 		assertEquals("{}", json);
-		assertEquals(user, User.fromJson(json));
+		TestUtils.testJsonableBaseObject(user);
 		assertNull(user.getChannels());
 		assertNull(user.getImageUrl());
 		assertNull(user.getCustomData());
@@ -104,6 +107,7 @@ public class UserTest {
 				)
 		).build();
 
+		TestUtils.testJsonableBaseObject(user);
 		Channels channels = user.getChannels();
 		assertNotNull(channels);
 
@@ -195,13 +199,6 @@ public class UserTest {
 				"{\"number\":\""+viber0.getNumber()+"\"}" +
 				"],\"messenger\":[{\"id\":\""+messenger0.getId()+"\"}" +
 				"]}}";
-
-		String actualJson = user.toJson();
-		assertEquals(expectedJson, actualJson);
-		User parsedUser = User.fromJson(actualJson);
-		assertEquals(user, parsedUser);
-		assertEquals(user.hashCode(), parsedUser.hashCode());
-		assertEquals(channels.hashCode(), parsedUser.getChannels().hashCode());
 	}
 
 	@Test
@@ -220,6 +217,7 @@ public class UserTest {
 				"  }\n" +
 				"}";
 		User parsed = User.fromJson(json);
+		TestUtils.testJsonableBaseObject(parsed);
 		Channels channels = parsed.getChannels();
 		assertNotNull(channels);
 		assertTrue(channels.getPstn().isEmpty());

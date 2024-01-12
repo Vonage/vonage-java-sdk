@@ -77,19 +77,4 @@ public class Sip extends Channel {
 	public String getPassword() {
 		return password;
 	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Sip sip = (Sip) o;
-		return Objects.equals(uri, sip.uri) &&
-				Objects.equals(username, sip.username) &&
-				Objects.equals(password, sip.password);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(uri, username, password);
-	}
 }

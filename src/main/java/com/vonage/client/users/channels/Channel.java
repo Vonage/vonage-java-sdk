@@ -15,10 +15,10 @@
  */
 package com.vonage.client.users.channels;
 
-import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 
 /**
  * Base class for channels.
  */
-public abstract class Channel implements Jsonable {
+public abstract class Channel extends JsonableBaseObject {
 }

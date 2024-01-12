@@ -18,17 +18,17 @@ package com.vonage.client.users.channels;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Represents the "channels" field on {@link com.vonage.client.users.User}.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public final class Channels {
+public final class Channels extends JsonableBaseObject {
 	@JsonProperty("pstn") private List<Pstn> pstn;
 	@JsonProperty("sip") private List<Sip> sip;
 	@JsonProperty("vbc") private List<Vbc> vbc;
@@ -164,26 +164,5 @@ public final class Channels {
 	 */
 	public List<Messenger> getMessenger() {
 		return messenger;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Channels channels = (Channels) o;
-		return Objects.equals(pstn, channels.pstn) &&
-				Objects.equals(sip, channels.sip) &&
-				Objects.equals(vbc, channels.vbc) &&
-				Objects.equals(websocket, channels.websocket) &&
-				Objects.equals(sms, channels.sms) &&
-				Objects.equals(mms, channels.mms) &&
-				Objects.equals(whatsapp, channels.whatsapp) &&
-				Objects.equals(viber, channels.viber) &&
-				Objects.equals(messenger, channels.messenger);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(pstn, sip, vbc, websocket, sms, mms, whatsapp, viber, messenger);
 	}
 }

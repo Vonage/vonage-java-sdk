@@ -16,15 +16,18 @@
 package com.vonage.client.numberinsight2;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import java.util.UUID;
 
 /**
  * Fraud check results as obtained from {@link NumberInsight2Client#fraudCheck(String, Insight, Insight...)}.
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FraudCheckResponse implements Jsonable {
+public class FraudCheckResponse extends JsonableBaseObject {
 	private String type;
 	private UUID requestId;
 	private Phone phone;
