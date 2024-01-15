@@ -17,6 +17,8 @@ package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.voice.TextToSpeechLanguage;
 
 /**
@@ -24,7 +26,7 @@ import com.vonage.client.voice.TextToSpeechLanguage;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TalkAction implements Action {
+public class TalkAction extends JsonableBaseObject implements Action {
     private static final String ACTION = "talk";
 
     private String text;
@@ -51,26 +53,37 @@ public class TalkAction implements Action {
         return ACTION;
     }
 
+    @JsonProperty("text")
     public String getText() {
         return text;
     }
 
+    @JsonProperty("bargeIn")
     public Boolean getBargeIn() {
         return bargeIn;
     }
 
+    @JsonProperty("loop")
     public Integer getLoop() {
         return loop;
     }
 
+    @JsonProperty("level")
     public Float getLevel() {
         return level;
     }
 
-    public TextToSpeechLanguage getLanguage() { return language; }
+    @JsonProperty("language")
+    public TextToSpeechLanguage getLanguage() {
+        return language;
+    }
 
-    public Integer getStyle() { return style; }
+    @JsonProperty("style")
+    public Integer getStyle() {
+        return style;
+    }
 
+    @JsonProperty("premium")
     public Boolean getPremium() {
         return premium;
     }

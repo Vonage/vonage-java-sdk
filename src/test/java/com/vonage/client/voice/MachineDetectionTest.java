@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
 public class MachineDetectionTest {
+
     @Test
     public void testMachineDetectionFromString() {
         assertEquals(MachineDetection.HANGUP, MachineDetection.fromString("hangup"));

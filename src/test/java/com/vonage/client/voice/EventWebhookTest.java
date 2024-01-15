@@ -15,6 +15,7 @@
  */
 package com.vonage.client.voice;
 
+import com.vonage.client.TestUtils;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.net.URI;
@@ -99,7 +100,7 @@ public class EventWebhookTest {
                 "}\n";
 
         EventWebhook event = EventWebhook.fromJson(json);
-        assertNotNull(event);
+        TestUtils.testJsonableBaseObject(event);
         assertEquals(callUuid, event.getCallUuid());
         assertEquals(conversationUuid, event.getConversationUuid());
         assertEquals(conversationUuidFrom, event.getConversationUuidFrom());
@@ -146,7 +147,7 @@ public class EventWebhookTest {
     @Test
     public void testParseEmptyJson() {
         EventWebhook event = EventWebhook.fromJson("{}");
-        assertNotNull(event);
+        TestUtils.testJsonableBaseObject(event);
         assertNull(event.getDetail());
         assertNull(event.getCallUuid());
         assertNull(event.getReason());
@@ -177,7 +178,7 @@ public class EventWebhookTest {
         UUID callUuid = UUID.randomUUID(), uuid = UUID.randomUUID();
         String json = "{\"call_uuid\":\""+callUuid+"\",\"uuid\":\""+uuid+"\"}";
         EventWebhook event = EventWebhook.fromJson(json);
-        assertNotNull(event);
+        TestUtils.testJsonableBaseObject(event);
         assertEquals(uuid, event.getCallUuid());
         assertEquals(uuid, EventWebhook.fromJson("{\"uuid\": \""+uuid+"\"}").getCallUuid());
     }

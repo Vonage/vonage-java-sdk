@@ -17,6 +17,7 @@ package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 
 /**
  * Represents a VBC endpoint used in a {@link ConnectAction}. See
@@ -26,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @since 7.3.0
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class VbcEndpoint implements Endpoint {
+public class VbcEndpoint extends JsonableBaseObject implements Endpoint {
     private static final String TYPE = "vbc";
 
     private final String extension;

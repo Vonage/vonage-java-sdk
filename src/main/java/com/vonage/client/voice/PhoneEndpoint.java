@@ -18,11 +18,11 @@ package com.vonage.client.voice;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Objects;
+import com.vonage.client.JsonableBaseObject;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PhoneEndpoint implements Endpoint {
+public class PhoneEndpoint extends JsonableBaseObject implements Endpoint {
     private static final String TYPE = "phone";
     private String number, dtmfAnswer;
 
@@ -80,19 +80,5 @@ public class PhoneEndpoint implements Endpoint {
     @JsonProperty("dtmfAnswer")
     public String getDtmfAnswer() {
         return dtmfAnswer;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PhoneEndpoint that = (PhoneEndpoint) o;
-        return Objects.equals(number, that.number) &&
-                Objects.equals(dtmfAnswer, that.dtmfAnswer);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(TYPE, number, dtmfAnswer);
     }
 }

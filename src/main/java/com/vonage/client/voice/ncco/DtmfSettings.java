@@ -16,12 +16,13 @@
 package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.vonage.client.JsonableBaseObject;
 
 /**
  * DTMF(Dial Tone Multi Frequency) settings for Input Actions that will be added to a NCCO object.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class DtmfSettings {
+public class DtmfSettings extends JsonableBaseObject {
     private Integer timeOut, maxDigits;
     private Boolean submitOnHash;
 

@@ -15,7 +15,7 @@
  */
 package com.vonage.client.voice;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vonage.client.TestUtils;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.*;
@@ -35,6 +35,7 @@ public class DtmfResponseTest {
 
     @Test
     public void testBasics() {
+        TestUtils.testJsonableBaseObject(response);
         assertEquals("DTMF sent", response.getMessage());
         assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
     }
@@ -44,8 +45,7 @@ public class DtmfResponseTest {
         String json = "{\n" +
                 "    \"unknownProperty\": \"unknown\"\n" +
                 "}";
-        ObjectMapper mapper = new ObjectMapper();
-        DtmfResponse dr = mapper.readValue(json, DtmfResponse.class);
+        DtmfResponse dr = DtmfResponse.fromJson(json);
         assertNull(dr.getUuid());
     }
 }

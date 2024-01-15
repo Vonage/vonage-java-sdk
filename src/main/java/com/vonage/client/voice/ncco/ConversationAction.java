@@ -17,6 +17,7 @@ package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.vonage.client.JsonableBaseObject;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -25,7 +26,7 @@ import java.util.Collection;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ConversationAction implements Action {
+public class ConversationAction extends JsonableBaseObject implements Action {
     private static final String ACTION = "conversation";
 
     private String name;

@@ -15,7 +15,7 @@
  */
 package com.vonage.client.voice;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vonage.client.TestUtils;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.*;
 import java.util.Calendar;
@@ -76,7 +76,8 @@ public class CallInfoTest {
                 "    }\n" +
                 "  }\n" +
                 "}\n";
-        CallInfo record = new ObjectMapper().readValue(json, CallInfo.class);
+        CallInfo record = CallInfo.fromJson(json);
+        TestUtils.testJsonableBaseObject(record, true);
 
         assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", record.getUuid());
         assertEquals("aa17bd11-c895-4225-840d-30dc38c31e50", record.getConversationUuid());
@@ -127,8 +128,8 @@ public class CallInfoTest {
                 "    }\n" +
                 "  }\n" +
                 "}\n";
-        CallInfo record = new ObjectMapper().readValue(json, CallInfo.class);
-
+        CallInfo record = CallInfo.fromJson(json);
+        TestUtils.testJsonableBaseObject(record, true);
         assertEquals(CallStatus.UNKNOWN, record.getStatus());
         assertEquals(CallDirection.UNKNOWN, record.getDirection());
     }
@@ -185,8 +186,8 @@ public class CallInfoTest {
     }
 
     public void testStatus(String value, CallStatus expectedValue) throws Exception {
-        CallInfo record = new ObjectMapper().readValue(jsonWithPlaceholder.replaceFirst("PLACEHOLDER", value),
-                CallInfo.class);
+        CallInfo record = CallInfo.fromJson(jsonWithPlaceholder.replaceFirst("PLACEHOLDER", value));
+        TestUtils.testJsonableBaseObject(record, true);
         assertEquals(record.getStatus(), expectedValue);
     }
 

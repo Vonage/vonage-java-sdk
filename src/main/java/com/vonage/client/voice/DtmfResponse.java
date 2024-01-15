@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 
 /**
  * Response if DTMF tones were successfully sent to an active {@link Call}.
@@ -27,7 +28,7 @@ import com.vonage.client.Jsonable;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DtmfResponse implements Jsonable {
+public class DtmfResponse extends JsonableBaseObject {
     private String uuid, message;
 
     @JsonProperty("uuid")

@@ -17,6 +17,7 @@ package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 
 /**
  * Represents a phone endpoint used in a {@link ConnectAction}. See
@@ -24,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * for an example.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class PhoneEndpoint implements Endpoint {
+public class PhoneEndpoint extends JsonableBaseObject implements Endpoint {
     private static final String TYPE = "phone";
 
     private final String number, dtmfAnswer;

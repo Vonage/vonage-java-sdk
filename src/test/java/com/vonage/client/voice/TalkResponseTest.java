@@ -16,9 +16,11 @@
 package com.vonage.client.voice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import static org.junit.jupiter.api.Assertions.*;
+import com.vonage.client.TestUtils;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.*;
+import java.io.IOException;
 
 
 public class TalkResponseTest {
@@ -34,6 +36,7 @@ public class TalkResponseTest {
 
     @Test
     public void testBasics() {
+        TestUtils.testJsonableBaseObject(response);
         assertEquals("Talk stopped", response.getMessage());
         assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
     }

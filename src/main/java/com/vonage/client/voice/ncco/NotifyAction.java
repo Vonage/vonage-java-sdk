@@ -17,6 +17,8 @@ package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
@@ -26,7 +28,7 @@ import java.util.Map;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class NotifyAction implements Action {
+public class NotifyAction extends JsonableBaseObject implements Action {
     private static final String ACTION = "notify";
 
     private Map<String, ?> payload;
@@ -46,14 +48,17 @@ public class NotifyAction implements Action {
         return ACTION;
     }
 
+    @JsonProperty("payload")
     public Map<String, ?> getPayload() {
         return payload;
     }
 
+    @JsonProperty("eventUrl")
     public Collection<String> getEventUrl() {
         return eventUrl;
     }
 
+    @JsonProperty("eventMethod")
     public EventMethod getEventMethod() {
         return eventMethod;
     }

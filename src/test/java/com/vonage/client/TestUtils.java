@@ -104,20 +104,20 @@ public class TestUtils {
         }
     }
 
-    @SafeVarargs
-    public static <T extends JsonableBaseObject> void testJsonableBaseObject(String json, T... typeHack) {
-        testJsonableBaseObject(Jsonable.fromJson(json, typeHack));
+    public static <T extends JsonableBaseObject> void testJsonableBaseObject(T parsed) {
+        testJsonableBaseObject(parsed, false);
     }
 
-    public static <T extends JsonableBaseObject> void testJsonableBaseObject(T parsed) {
+    public static <T extends JsonableBaseObject> void testJsonableBaseObject(T parsed, boolean customToString) {
         assertNotNull(parsed);
-        String toJson = parsed.toJson();
+        String toJson = parsed.toJson(), toString = parsed.toString();
         Class<? extends JsonableBaseObject> clazz = parsed.getClass();
         JsonableBaseObject reparsed = Jsonable.fromJson(toJson, clazz);
         assertEquals(parsed, reparsed);
         assertEquals(parsed.hashCode(), reparsed.hashCode());
-        String expectedToString = clazz.getSimpleName()+' '+toJson;
-        assertEquals(expectedToString, parsed.toString());
-        assertEquals(expectedToString, reparsed.toString());
+        assertEquals(toString, reparsed.toString());
+        if (!customToString) {
+            assertEquals(toString, clazz.getSimpleName()+' '+toJson);
+        }
     }
 }

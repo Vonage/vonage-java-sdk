@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.voice.ncco.Action;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ import java.util.Collection;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({"_links"})
-public class Call implements Jsonable {
+public class Call extends JsonableBaseObject {
     private Endpoint[] to;
     private Endpoint from;
     private HttpMethod answerMethod = HttpMethod.GET, eventMethod;

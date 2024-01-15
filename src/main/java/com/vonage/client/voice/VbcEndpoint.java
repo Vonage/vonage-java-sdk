@@ -18,6 +18,7 @@ package com.vonage.client.voice;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 
 /**
  * Represents a VBC call type.
@@ -26,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class VbcEndpoint implements Endpoint {
+public class VbcEndpoint extends JsonableBaseObject implements Endpoint {
     private static final String TYPE = "vbc";
     private String extension;
 

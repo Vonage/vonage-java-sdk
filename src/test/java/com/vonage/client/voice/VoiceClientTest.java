@@ -17,6 +17,7 @@ package com.vonage.client.voice;
 
 import com.vonage.client.ClientTest;
 import com.vonage.client.RestEndpoint;
+import com.vonage.client.TestUtils;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.voice.ncco.Ncco;
 import com.vonage.client.voice.ncco.TalkAction;
@@ -58,6 +59,7 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
                         + "  \"status\": \"started\",\n" + "  \"direction\": \"outbound\"\n" + "}"
         );
         CallEvent evt = client.createCall(new Call("447700900903", "447700900904", "http://api.example.com/answer"));
+        TestUtils.testJsonableBaseObject(evt);
         assertEquals("63f61863-4a51-4f6b-86e1-46edebio0391", evt.getConversationUuid());
         assertEquals(SAMPLE_CALL_ID, evt.getUuid());
         assertEquals(CallDirection.OUTBOUND, evt.getDirection());
@@ -74,6 +76,7 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
                         + "  }\n" + "}\n"
         );
         CallInfoPage page = client.listCalls();
+        TestUtils.testJsonableBaseObject(page);
         assertEquals(0, page.getCount());
     }
 
@@ -109,6 +112,7 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
                         + "        }\n" + "      }\n"
         );
         CallInfo call = client.getCallDetails("93137ee3-580e-45f7-a61a-e0b5716000ef");
+        TestUtils.testJsonableBaseObject(call, true);
         assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", call.getUuid());
     }
 
@@ -120,6 +124,7 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
         );
 
         DtmfResponse response = client.sendDtmf("944dd293-ca13-4a58-bc37-6252e11474be", "332393");
+        TestUtils.testJsonableBaseObject(response);
         assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
         assertEquals("DTMF sent", response.getMessage());
         assertThrows(IllegalArgumentException.class, () ->
@@ -223,6 +228,7 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
         );
 
         StreamResponse response = client.stopStream("944dd293-ca13-4a58-bc37-6252e11474be");
+        TestUtils.testJsonableBaseObject(response);
         assertEquals("Stream stopped", response.getMessage());
         assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
     }
@@ -239,6 +245,7 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
                         .style(1).level(-0.5).loop(3).premium(false)
                         .language(TextToSpeechLanguage.FRENCH).build()
         );
+        TestUtils.testJsonableBaseObject(response);
         assertEquals("Talk started", response.getMessage());
         assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
         assertThrows(NullPointerException.class, () ->

@@ -15,6 +15,7 @@
  */
 package com.vonage.client.voice;
 
+import com.vonage.client.TestUtils;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
@@ -24,6 +25,7 @@ public class PhoneEndpointTest {
     @Test
     public void testConstructor() throws Exception {
         PhoneEndpoint e = new PhoneEndpoint("number", "dtmf");
+        TestUtils.testJsonableBaseObject(e);
         assertEquals("number", e.getNumber());
         assertEquals("dtmf", e.getDtmfAnswer());
     }

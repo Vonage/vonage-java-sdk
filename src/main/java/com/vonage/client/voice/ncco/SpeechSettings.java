@@ -17,19 +17,22 @@ package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.vonage.client.JsonableBaseObject;
 import java.util.Collection;
 
 /**
  * ASR(Automatic Speech Recognition) settings for Input Actions that will be added to a NCCO object.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class SpeechSettings {
+public class SpeechSettings extends JsonableBaseObject {
 
     private Collection<String> uuid, context;
     private Integer endOnSilence, startTimeout, maxDuration;
     private Language language;
 
+    @JsonProperty("uuid")
     public Collection<String> getUuid() {
         return uuid;
     }
@@ -38,6 +41,7 @@ public class SpeechSettings {
         this.uuid = uuid;
     }
 
+    @JsonProperty("language")
     public Language getLanguage() {
         return language;
     }
@@ -49,6 +53,7 @@ public class SpeechSettings {
         this.language = language;
     }
 
+    @JsonProperty("endOnSilence")
     public Integer getEndOnSilence() {
         return endOnSilence;
     }
@@ -63,6 +68,7 @@ public class SpeechSettings {
         this.endOnSilence = endOnSilence;
     }
 
+    @JsonProperty("context")
     public Collection<String> getContext() {
         return context;
     }
@@ -76,6 +82,7 @@ public class SpeechSettings {
         this.context = context;
     }
 
+    @JsonProperty("startTimeout")
     public Integer getStartTimeout() {
         return startTimeout;
     }
@@ -90,6 +97,7 @@ public class SpeechSettings {
         this.startTimeout = startTimeout;
     }
 
+    @JsonProperty("maxDuration")
     public Integer getMaxDuration() {
         return maxDuration;
     }

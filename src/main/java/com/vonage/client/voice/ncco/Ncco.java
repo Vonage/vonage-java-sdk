@@ -40,15 +40,18 @@ public class Ncco {
         this(new ObjectMapper().writer(), actions);
     }
 
+    @Deprecated
     public Ncco(ObjectWriter writer) {
         this(writer, Collections.emptyList());
     }
 
+    @Deprecated
     public Ncco(ObjectWriter writer, Collection<? extends Action> actions) {
         this.writer = writer;
         this.actions = actions;
     }
 
+    @Deprecated
     public Ncco(ObjectWriter writer, Action... action) {
         this(writer, Arrays.asList(action));
     }
