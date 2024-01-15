@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import java.net.URI;
 import java.time.Instant;
 import java.util.UUID;
@@ -34,7 +35,7 @@ import java.util.UUID;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EventWebhook implements Jsonable {
+public class EventWebhook extends JsonableBaseObject {
     private CallStatus status;
     private CallDirection direction;
     private CallStatusDetail detail;

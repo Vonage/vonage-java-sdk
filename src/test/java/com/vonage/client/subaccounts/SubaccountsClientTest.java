@@ -17,6 +17,7 @@ package com.vonage.client.subaccounts;
 
 import com.vonage.client.ClientTest;
 import com.vonage.client.RestEndpoint;
+import com.vonage.client.TestUtils;
 import com.vonage.client.common.HttpMethod;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
@@ -61,6 +62,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 	}
 
 	static void assertEqualsExpectedAccount(Account response) {
+		TestUtils.testJsonableBaseObject(response);
 		assertEquals("Password123", response.getSecret());
 		assertEquals("bbe6222f", response.getApiKey());
 		assertEquals("acc6111f", response.getPrimaryAccountApiKey());
@@ -73,7 +75,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 	}
 
 	static void assertEqualsExpectedMoneyTransfer(MoneyTransfer response) {
-		assertNotNull(response);
+		TestUtils.testJsonableBaseObject(response);
 		assertEquals(BigDecimal.valueOf(145.32), response.getAmount());
 		assertEquals("7c9738e6", response.getFrom());
 		assertEquals("ad6dc56f", response.getTo());
@@ -149,7 +151,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 						"}";
 
 				Account parsed = parseResponse(expectedResponse);
-				assertNotNull(parsed);
+				TestUtils.testJsonableBaseObject(parsed);
 				assertEquals("bbe6222f", parsed.getApiKey());
 				assertEquals("Subaccount department A", parsed.getName());
 				assertEquals("Password123", parsed.getSecret());
@@ -162,7 +164,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 
 			void testEmptyResponse() throws Exception {
 				Account parsed = parseResponse("{}");
-				assertNotNull(parsed);
+				TestUtils.testJsonableBaseObject(parsed);
 				assertNull(parsed.getApiKey());
 				assertNull(parsed.getSecret());
 				assertNull(parsed.getPrimaryAccountApiKey());
@@ -484,6 +486,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 				"   \"to\": \"ad6dc56f\"\n" +
 				"}";
 		NumberTransfer response = stubResponseAndGet(responseJson, () -> client.transferNumber(request));
+		TestUtils.testJsonableBaseObject(response);
 		assertEquals("235077036", response.getNumber());
 		assertEquals("DE", response.getCountry());
 		assertEquals("7c9738e6", response.getFrom());

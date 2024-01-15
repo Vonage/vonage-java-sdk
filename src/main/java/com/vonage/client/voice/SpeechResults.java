@@ -18,6 +18,7 @@ package com.vonage.client.voice;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 import java.net.URI;
 import java.util.List;
 
@@ -28,7 +29,7 @@ import java.util.List;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SpeechResults {
+public class SpeechResults extends JsonableBaseObject {
     private SpeechTimeoutReason timeoutReason;
     private List<SpeechTranscript> results;
     private String error;
@@ -79,5 +80,4 @@ public class SpeechResults {
     public List<SpeechTranscript> getResults() {
         return results;
     }
-
 }

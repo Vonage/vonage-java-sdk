@@ -16,6 +16,7 @@
 package com.vonage.client.meetings;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.VonageUnexpectedException;
 import org.junit.jupiter.api.Test;
@@ -86,7 +87,8 @@ public class ThemeTest {
 				"\"brand_image_white_url\":\""+brandImageWhiteUrl+"\",\n" +
 				"\"branded_favicon_url\":\""+brandedFaviconUrl+"\"\n" +
 		"}");
-		
+		TestUtils.testJsonableBaseObject(response);
+
 		assertEquals(themeId, response.getThemeId());
 		assertEquals(themeName, response.getThemeName());
 		assertEquals(domain, response.getDomain());
@@ -110,9 +112,15 @@ public class ThemeTest {
 		assertNull(theme.getThemeName());
 		assertNull(theme.getThemeId());
 
+		int ogHashcode = theme.hashCode();
+		String ogToString = theme.toString();
+
 		theme.updateFromJson("{\"theme_id\":\""+UUID.randomUUID()+"\"," +
 				"\"brand_text\":\"Nexmo\",\"theme_name\":\"test Theme\"}"
 		);
+
+		assertNotEquals(ogHashcode, theme.hashCode());
+		assertNotEquals(ogToString, theme.toString());
 		assertNotNull(theme.getThemeId());
 		assertEquals("#a1b2c3", theme.getMainColor());
 		assertEquals("Nexmo", theme.getBrandText());
@@ -129,6 +137,8 @@ public class ThemeTest {
 	@Test
 	public void testFromJsonEmpty() {
 		Theme response = Theme.fromJson("{}");
+		assertNotNull(response);
+		assertEquals("Theme {}", response.toString());
 		assertNull(response.getThemeId());
 		assertNull(response.getThemeName());
 		assertNull(response.getDomain());

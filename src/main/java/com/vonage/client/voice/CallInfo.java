@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import java.util.Date;
 
 /**
@@ -26,7 +27,7 @@ import java.util.Date;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(value = { "_links" }, ignoreUnknown = true)
-public class CallInfo implements Jsonable {
+public class CallInfo extends JsonableBaseObject {
     Endpoint from, to;
     String conversationUuid, uuid, network, price, rate;
     CallDirection direction;

@@ -15,11 +15,13 @@
  */
 package com.vonage.client.numbers;
 
+import com.vonage.client.TestUtils;
 import com.vonage.client.VonageUnexpectedException;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ListNumbersFilterAndResponseTest {
+
     @Test
     public void testDeserialization() {
         ListNumbersResponse response = ListNumbersResponse.fromJson("{\n" +
@@ -39,6 +41,8 @@ public class ListNumbersFilterAndResponseTest {
                 "    }\n" +
                 "  ]\n" +
                 "}");
+
+        TestUtils.testJsonableBaseObject(response);
         assertEquals(1, response.getCount());
         OwnedNumber number = response.getNumbers()[0];
         assertEquals("GB", number.getCountry());

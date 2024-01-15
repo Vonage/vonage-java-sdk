@@ -15,6 +15,7 @@
  */
 package com.vonage.client.verify2;
 
+import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,6 +38,7 @@ public class VerificationCallbackTest {
 				"   \"client_ref\": \"my-personal-ref\"\n" +
 				"}"
 		);
+		TestUtils.testJsonableBaseObject(webhook);
 		assertEquals(UUID.fromString("c11236f4-00bf-4b89-84ba-88b25df97315"), webhook.getRequestId());
 		assertEquals(Instant.ofEpochMilli(1577887200032L), webhook.getTriggeredAt());
 		assertEquals(CallbackType.EVENT, webhook.getType());
@@ -83,6 +85,7 @@ public class VerificationCallbackTest {
 				"   \"client_ref\": \"my-personal-ref\"\n" +
 				"}"
 		);
+		TestUtils.testJsonableBaseObject(webhook);
 		assertEquals(UUID.fromString("c11236f4-00bf-4b89-84ba-88b25df97325"), webhook.getRequestId());
 		assertEquals(Instant.ofEpochMilli(1577887202000L), webhook.getSubmittedAt());
 		assertEquals(VerificationStatus.FAILED, webhook.getStatus());
@@ -138,6 +141,7 @@ public class VerificationCallbackTest {
 				"    }\n" +
 				"}"
 		);
+		TestUtils.testJsonableBaseObject(webhook);
 		assertEquals(UUID.fromString("c15236f4-00bf-4b89-84ba-88b25df97315"), webhook.getRequestId());
 		assertEquals(Instant.ofEpochMilli(1679485739717L), webhook.getTriggeredAt());
 		assertEquals(CallbackType.EVENT, webhook.getType());

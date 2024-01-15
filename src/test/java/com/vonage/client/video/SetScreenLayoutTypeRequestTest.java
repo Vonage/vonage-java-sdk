@@ -15,29 +15,33 @@
  */
 package com.vonage.client.video;
 
+import com.vonage.client.TestUtils;
 import org.junit.jupiter.api.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SetScreenLayoutTypeRequestTest {
 	
 	@Test
 	public void testSerializeTypeOnly() {
 		StreamCompositionLayout request = StreamCompositionLayout.builder(ScreenLayoutType.HORIZONTAL).build();
-		Assertions.assertEquals("{\"type\":\"horizontalPresentation\"}", request.toJson());
+		assertEquals("{\"type\":\"horizontalPresentation\"}", request.toJson());
+		TestUtils.testJsonableBaseObject(request);
 	}
 
 	@Test
 	public void testCustomTypeWithStylesheet() {
 		String style = "layout.css";
 		StreamCompositionLayout request = StreamCompositionLayout.builder(ScreenLayoutType.CUSTOM).stylesheet(style).build();
-		Assertions.assertEquals("{\"type\":\"custom\",\"stylesheet\":\""+style+"\"}", request.toJson());
+		assertEquals("{\"type\":\"custom\",\"stylesheet\":\""+style+"\"}", request.toJson());
+		TestUtils.testJsonableBaseObject(request);
 	}
 
 	@Test
 	public void testValidScreenshareType() {
 		StreamCompositionLayout request = StreamCompositionLayout.builder(ScreenLayoutType.BEST_FIT)
 				.screenshareType(ScreenLayoutType.PIP).build();
-		Assertions.assertEquals("{\"type\":\"bestFit\",\"screenshareType\":\"pip\"}", request.toJson());
+		assertEquals("{\"type\":\"bestFit\",\"screenshareType\":\"pip\"}", request.toJson());
+		TestUtils.testJsonableBaseObject(request);
 	}
 
 	@Test

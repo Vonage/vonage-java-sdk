@@ -15,6 +15,7 @@
  */
 package com.vonage.client.insight;
 
+import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,6 +37,7 @@ public class BasicInsightResponseTest {
                 "    \"country_prefix\": \"44\"\n" +
                 "}");
 
+        TestUtils.testJsonableBaseObject(response);
         assertEquals(InsightStatus.SUCCESS, response.getStatus());
         assertEquals("Success", response.getStatusMessage());
         assertEquals("d79c3d82-e2ee-46ff-972a-97b76be419cb", response.getRequestId());

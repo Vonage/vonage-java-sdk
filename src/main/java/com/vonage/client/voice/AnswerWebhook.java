@@ -20,9 +20,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import java.net.URI;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -34,7 +34,7 @@ import java.util.UUID;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AnswerWebhook implements Jsonable {
+public class AnswerWebhook extends JsonableBaseObject {
     @JsonProperty("from") private String from;
     @JsonProperty("from_user") private String fromUser;
     @JsonProperty("to") private String to;
@@ -102,22 +102,6 @@ public class AnswerWebhook implements Jsonable {
      */
     public Map<String, ?> getCustomData() {
         return customData;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AnswerWebhook that = (AnswerWebhook) o;
-        return Objects.equals(from, that.from) && Objects.equals(to, that.to) &&
-                Objects.equals(fromUser, that.fromUser) && Objects.equals(uuid, that.uuid) &&
-                Objects.equals(conversationUuid, that.conversationUuid) &&
-                Objects.equals(regionUrl, that.regionUrl) && Objects.equals(customData, that.customData);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(from, fromUser, to, conversationUuid, uuid, regionUrl, customData);
     }
 
     /**

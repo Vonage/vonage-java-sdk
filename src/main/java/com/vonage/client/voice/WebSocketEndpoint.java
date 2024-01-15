@@ -18,11 +18,12 @@ package com.vonage.client.voice;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 import java.util.Map;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class WebSocketEndpoint implements Endpoint {
+public class WebSocketEndpoint extends JsonableBaseObject implements Endpoint {
     private static final String TYPE = "websocket";
     private String uri, contentType;
     @JsonProperty("headers") private Map<String, Object> headers;

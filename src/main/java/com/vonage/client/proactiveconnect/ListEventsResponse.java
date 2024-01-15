@@ -17,14 +17,17 @@ package com.vonage.client.proactiveconnect;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.HalPageResponse;
 import java.util.List;
 
 /**
  * HAL response for {@link ProactiveConnectClient#listEvents(ListEventsFilter)}.
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 final class ListEventsResponse extends HalPageResponse {
 	@JsonProperty("_embedded") private Embedded _embedded;
@@ -32,8 +35,9 @@ final class ListEventsResponse extends HalPageResponse {
 	ListEventsResponse() {
 	}
 
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	static final class Embedded {
+	static final class Embedded extends JsonableBaseObject {
 		@JsonProperty("events") private List<Event> events;
 	}
 

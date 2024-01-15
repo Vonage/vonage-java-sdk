@@ -16,36 +16,44 @@
 package com.vonage.client.account;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import java.math.BigDecimal;
 import java.util.List;
 
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PricingResponse implements Jsonable {
+public class PricingResponse extends JsonableBaseObject {
     private String dialingPrefix;
     private BigDecimal defaultPrice;
     private String currency;
-    @JsonUnwrapped
-    private Country country;
+    @JsonUnwrapped private Country country;
     private List<Network> networks;
 
+    @JsonProperty("dialingPrefix")
     public String getDialingPrefix() {
         return dialingPrefix;
     }
 
+    @JsonProperty("defaultPrice")
     public BigDecimal getDefaultPrice() {
         return defaultPrice;
     }
 
+    @JsonProperty("currency")
     public String getCurrency() {
         return currency;
     }
 
+    @JsonProperty("country")
     public Country getCountry() {
         return country;
     }
 
+    @JsonProperty("networks")
     public List<Network> getNetworks() {
         return networks;
     }

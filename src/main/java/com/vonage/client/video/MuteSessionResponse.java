@@ -16,13 +16,17 @@
 package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 
 /**
  * TODO see if this is needed
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-class MuteSessionResponse implements Jsonable {
+class MuteSessionResponse extends JsonableBaseObject {
 	private String applicationId, name;
 	private ProjectStatus status;
 	private ProjectEnvironment environment;
@@ -35,6 +39,7 @@ class MuteSessionResponse implements Jsonable {
 	 * 
 	 * @return The Vonage application ID.
 	 */
+	@JsonProperty("applicationId")
 	public String getApplicationId() {
 		return applicationId;
 	}
@@ -43,6 +48,7 @@ class MuteSessionResponse implements Jsonable {
 	 * 
 	 * @return Whether the project is active or suspended.
 	 */
+	@JsonProperty("status")
 	public ProjectStatus getStatus() {
 		return status;
 	}
@@ -51,6 +57,7 @@ class MuteSessionResponse implements Jsonable {
 	 * 
 	 * @return The project name, if specified when created.
 	 */
+	@JsonProperty("name")
 	public String getName() {
 		return name;
 	}
@@ -59,6 +66,7 @@ class MuteSessionResponse implements Jsonable {
 	 * 
 	 * @return The environment the project is running on.
 	 */
+	@JsonProperty("environment")
 	public ProjectEnvironment getEnvironment() {
 		return environment;
 	}
@@ -67,6 +75,7 @@ class MuteSessionResponse implements Jsonable {
 	 * 
 	 * @return The time at which the project was created (a UNIX timestamp, in milliseconds).
 	 */
+	@JsonProperty("createdAt")
 	public Long getCreatedAt() {
 		return createdAt;
 	}

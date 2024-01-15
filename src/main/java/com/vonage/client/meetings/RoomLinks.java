@@ -17,10 +17,12 @@ package com.vonage.client.meetings;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
+import com.vonage.client.common.UrlContainer;
 import java.net.URI;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RoomLinks {
+public class RoomLinks extends JsonableBaseObject {
 	@JsonProperty("host_url") UrlContainer hostUrl;
 	@JsonProperty("guest_url") UrlContainer guestUrl;
 

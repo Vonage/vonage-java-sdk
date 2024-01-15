@@ -16,20 +16,26 @@
 package com.vonage.client.numbers;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 
 /**
  * Response from a request to list the numbers currently being rented buy an account.
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ListNumbersResponse implements Jsonable {
+public class ListNumbersResponse extends JsonableBaseObject {
     private int count = 0;
     private OwnedNumber[] numbers = new OwnedNumber[0];
 
+    @JsonProperty("count")
     public int getCount() {
         return count;
     }
 
+    @JsonProperty("numbers")
     public OwnedNumber[] getNumbers() {
         return numbers;
     }

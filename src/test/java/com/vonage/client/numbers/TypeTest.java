@@ -19,6 +19,7 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TypeTest {
+
     @Test
     public void testFromString() {
         assertEquals(Type.LANDLINE, Type.fromString("landline"));

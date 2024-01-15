@@ -17,6 +17,7 @@ package com.vonage.client.account;
 
 import com.vonage.client.ClientTest;
 import com.vonage.client.RestEndpoint;
+import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.common.HttpMethod;
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,6 +39,10 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         BalanceResponse response = client.getBalance();
         assertEquals(10.28, response.getValue(), 0.0001);
         assertTrue(response.isAutoReload());
+        BalanceResponse fromJson = BalanceResponse.fromJson(json);
+        assertEquals(response, fromJson);
+        assertEquals(response.hashCode(), fromJson.hashCode());
+        assertEquals("BalanceResponse "+json.replace(" ", ""), response.toString());
     }
 
     @Test
@@ -90,7 +95,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         assertNotNull(countries);
         assertEquals(3, countries.size());
         PricingResponse canada = countries.get(1);
-        assertNotNull(canada);
+        TestUtils.testJsonableBaseObject(canada);
         assertEquals("Canada", canada.getCountry().getName());
         assertEquals("Canada", canada.getCountry().getDisplayName());
         assertEquals("EUR", canada.getCurrency());
@@ -124,6 +129,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         stubResponse(200, json);
 
         PricingResponse response = client.getSmsPrice("US");
+        TestUtils.testJsonableBaseObject(response);
         assertEquals("1", response.getDialingPrefix());
         assertEquals(new BigDecimal("0.00570000"), response.getDefaultPrice());
         assertEquals("EUR", response.getCurrency());
@@ -141,7 +147,6 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         assertEquals("123", first.getMnc());
         assertEquals("123456", first.getCode());
         assertEquals("Test Mobile", first.getName());
-
 
         Network second = response.getNetworks().get(1);
         assertEquals(Network.Type.fromString("landline"), second.getType());
@@ -169,6 +174,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "    }  \n" + "  ]\n" + "}\n";
         stubResponse(200, json);
         PricingResponse response = client.getVoicePrice("US");
+        TestUtils.testJsonableBaseObject(response);
         assertEquals("1", response.getDialingPrefix());
         assertEquals(new BigDecimal("0.00570000"), response.getDefaultPrice());
         assertEquals("EUR", response.getCurrency());
@@ -185,7 +191,6 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         assertEquals("123", first.getMnc());
         assertEquals("123456", first.getCode());
         assertEquals("Test Mobile", first.getName());
-
 
         Network second = response.getNetworks().get(1);
         assertEquals(Network.Type.LANDLINE, second.getType());
@@ -222,6 +227,12 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 + "}";
         stubResponse(200, json);
         PrefixPricingResponse response = client.getPrefixPrice(ServiceType.VOICE, "1");
+        assertNotNull(response);
+        PrefixPricingResponse fromJson = PrefixPricingResponse.fromJson(json);
+        assertEquals(response, fromJson);
+        assertEquals(response.hashCode(), fromJson.hashCode());
+        assertEquals(response.toString(), "PrefixPricingResponse "+fromJson.toJson());
+
         assertEquals(2, response.getCount());
         assertEquals(2, response.getCountries().size());
 
@@ -242,7 +253,6 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         assertEquals("702", firstResponseFirstNetwork.getMnc());
         assertEquals("302702", firstResponseFirstNetwork.getCode());
         assertEquals("BELL ALIANT REGIONAL Communications LP", firstResponseFirstNetwork.getName());
-
 
         Network firstResponseSecondNetwork = firstResponse.getNetworks().get(1);
         assertEquals(Network.Type.LANDLINE, firstResponseSecondNetwork.getType());
@@ -349,6 +359,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         stubResponse(200, json);
 
         ListSecretsResponse response = client.listSecrets();
+        TestUtils.testJsonableBaseObject(response);
         SecretResponse[] responses = response.getSecrets().toArray(new SecretResponse[0]);
 
         Calendar calendar = new GregorianCalendar(2017, Calendar.MARCH, 2, 16, 34, 49);
@@ -408,7 +419,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
         stubResponse(201, json);
 
         SecretResponse response = client.createSecret( SECRET_ID);
-
+        TestUtils.testJsonableBaseObject(response);
         Calendar calendar = new GregorianCalendar(2017, Calendar.MARCH, 2, 16, 34, 49);
         calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
         assertEquals("secret-id-one", response.getId());
@@ -502,6 +513,7 @@ public class AccountClientTest extends ClientTest<AccountClient> {
                 "}";
         stubResponse(200, json);
         SettingsResponse response = client.updateSmsIncomingUrl("https://example.com/webhooks/inbound-sms");
+        TestUtils.testJsonableBaseObject(response);
 
         assertEquals("https://example.com/webhooks/inbound-sms", response.getIncomingSmsUrl());
         assertEquals("https://example.com/webhooks/delivery-receipt", response.getDeliveryReceiptUrl());

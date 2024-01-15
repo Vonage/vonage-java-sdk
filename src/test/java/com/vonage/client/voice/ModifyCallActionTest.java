@@ -19,9 +19,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
 public class ModifyCallActionTest {
+
     @Test
     public void testDeserializeUnknownEnumsFallbackToUnknown() {
         assertEquals(ModifyCallAction.UNKNOWN, ModifyCallAction.fromString("test unknwon action"));
     }
-
 }

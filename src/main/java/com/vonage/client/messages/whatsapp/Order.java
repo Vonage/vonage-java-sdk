@@ -17,6 +17,7 @@ package com.vonage.client.messages.whatsapp;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ import java.util.List;
  * @since 7.2.0
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class Order {
+public final class Order extends JsonableBaseObject {
 	private String catalogId;
 	private List<ProductItem> productItems;
 

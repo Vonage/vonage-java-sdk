@@ -16,6 +16,7 @@
 package com.vonage.client.proactiveconnect;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -55,7 +56,8 @@ public class EventTest {
 				"\"occurred_at\":\""+occurredAt+"\",\n" +
 				"\"type\":\""+type+"\"\n" +
 		"}");
-		
+
+		TestUtils.testJsonableBaseObject(response);
 		assertEquals(id, response.getId());
 		assertEquals(jobId, response.getJobId());
 		assertEquals(runId, response.getRunId());
@@ -77,7 +79,7 @@ public class EventTest {
 	@Test
 	public void testFromJsonEmpty() {
 		Event response = Event.fromJson("{}");
-		assertNotNull(response);
+		TestUtils.testJsonableBaseObject(response);
 		assertNull(response.getId());
 		assertNull(response.getJobId());
 		assertNull(response.getRunId());

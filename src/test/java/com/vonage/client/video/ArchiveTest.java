@@ -15,6 +15,7 @@
  */
 package com.vonage.client.video;
 
+import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
@@ -35,17 +36,17 @@ public class ArchiveTest {
 				.streamMode(StreamMode.AUTO).layout(layout)
 				.multiArchiveTag(multiArchiveTag).build();
 
+		TestUtils.testJsonableBaseObject(request);
 		String json = request.toJson();
-		Assertions.assertTrue(json.contains("\"name\":\""+name+"\""));
-		Assertions.assertTrue(json.contains("\"multiArchiveTag\":\""+multiArchiveTag+"\""));
-		Assertions.assertTrue(json.contains("\"sessionId\":\""+sessionId+"\""));
-		Assertions.assertTrue(json.contains("\"outputMode\":\"composed\""));
-		Assertions.assertTrue(json.contains("\"streamMode\":\"auto\""));
-		Assertions.assertTrue(json.contains("\"resolution\":\"1280x720\""));
-		Assertions.assertTrue(json.contains("\"layout\":{\"type\":\"verticalPresentation\"}"));
-		Assertions.assertTrue(json.contains("\"hasVideo\":true"));
-		Assertions.assertTrue(json.contains("\"hasAudio\":true"));
-
+		assertTrue(json.contains("\"name\":\""+name+"\""));
+		assertTrue(json.contains("\"multiArchiveTag\":\""+multiArchiveTag+"\""));
+		assertTrue(json.contains("\"sessionId\":\""+sessionId+"\""));
+		assertTrue(json.contains("\"outputMode\":\"composed\""));
+		assertTrue(json.contains("\"streamMode\":\"auto\""));
+		assertTrue(json.contains("\"resolution\":\"1280x720\""));
+		assertTrue(json.contains("\"layout\":{\"type\":\"verticalPresentation\"}"));
+		assertTrue(json.contains("\"hasVideo\":true"));
+		assertTrue(json.contains("\"hasAudio\":true"));
 	}
 
 	@Test
@@ -58,13 +59,14 @@ public class ArchiveTest {
 				.streamMode(StreamMode.MANUAL).layout(layout)
 				.outputMode(OutputMode.COMPOSED).build();
 
+		TestUtils.testJsonableBaseObject(request);
 		String json = request.toJson();
-		Assertions.assertTrue(json.contains("\"outputMode\":\"composed\""));
-		Assertions.assertTrue(json.contains("\"streamMode\":\"manual\""));
-		Assertions.assertTrue(json.contains("\"sessionId\":\"s1\""));
-		Assertions.assertTrue(json.contains("\"resolution\":\"480x640\""));
-		Assertions.assertTrue(json.contains("\"hasAudio\":false"));
-		Assertions.assertTrue(json.contains("\"layout\":{\"type\":\"custom\",\"stylesheet\":\""+style+"\"}"));
+		assertTrue(json.contains("\"outputMode\":\"composed\""));
+		assertTrue(json.contains("\"streamMode\":\"manual\""));
+		assertTrue(json.contains("\"sessionId\":\"s1\""));
+		assertTrue(json.contains("\"resolution\":\"480x640\""));
+		assertTrue(json.contains("\"hasAudio\":false"));
+		assertTrue(json.contains("\"layout\":{\"type\":\"custom\",\"stylesheet\":\""+style+"\"}"));
 	}
 
 	@Test
@@ -79,7 +81,7 @@ public class ArchiveTest {
 	public void testConstructSessionIdOnly() {
 		String sessionId = UUID.randomUUID().toString();
 		String expectedJson = "{\"sessionId\":\""+sessionId+"\"}";
-		Assertions.assertEquals(expectedJson, Archive.builder(sessionId).build().toJson());
+		assertEquals(expectedJson, Archive.builder(sessionId).build().toJson());
 	}
 
 	@Test

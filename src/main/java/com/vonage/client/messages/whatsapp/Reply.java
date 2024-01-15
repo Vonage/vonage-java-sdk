@@ -17,6 +17,7 @@ package com.vonage.client.messages.whatsapp;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 
 /**
  * Used for inbound interactive messages.
@@ -24,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @since 7.2.0
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class Reply {
+public final class Reply extends JsonableBaseObject {
 	private String id, title, description;
 
 	Reply() {}

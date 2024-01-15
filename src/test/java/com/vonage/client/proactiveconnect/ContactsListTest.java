@@ -16,10 +16,11 @@
 package com.vonage.client.proactiveconnect;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.VonageUnexpectedException;
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -47,10 +48,12 @@ public class ContactsListTest {
 				.description(description).tags(tags)
 				.attributes(attribute1, attribute2, attribute3)
 				.datasource(datasource).build();
-		
+
+		TestUtils.testJsonableBaseObject(request);
 		String json = request.toJson();
-	
 		ContactsList response = ContactsList.fromJson(json);
+
+		assertEquals(request, response);
 		assertEquals(request.getName(), response.getName());
 		assertEquals(request.getDescription(), response.getDescription());
 		assertEquals(request.getTags(), response.getTags());
@@ -102,7 +105,8 @@ public class ContactsListTest {
 				"      \"dirty\": true\n" +
 				"}\n" +
 		"}");
-		
+
+		TestUtils.testJsonableBaseObject(response);
 		assertEquals(name, response.getName());
 		assertEquals(description, response.getDescription());
 		assertEquals(0, response.getTags().size());
@@ -129,6 +133,7 @@ public class ContactsListTest {
 	@Test
 	public void testFromJsonEmpty() {
 		ContactsList response = ContactsList.fromJson("{}");
+		TestUtils.testJsonableBaseObject(response);
 		assertNull(response.getName());
 		assertNull(response.getDescription());
 		assertNull(response.getTags());
@@ -157,6 +162,7 @@ public class ContactsListTest {
 	@Test
 	public void testConstructRequiredParameters() {
 		ContactsList minimal = ContactsList.builder("T").build();
+		TestUtils.testJsonableBaseObject(minimal);
 		assertEquals("{\"name\":\"T\"}", minimal.toJson());
 		assertThrows(IllegalArgumentException.class, () -> ContactsList.builder(null).build());
 		assertThrows(IllegalArgumentException.class, () -> ContactsList.builder("").build());

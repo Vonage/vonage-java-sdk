@@ -20,13 +20,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import java.net.URI;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true, value = "theme_id", allowSetters = true)
-public class Theme implements Jsonable {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Theme extends JsonableBaseObject {
 	static final Pattern COLOR_PATTERN = Pattern.compile("(#[a-fA-F0-9]{6}|[a-fA-F0-9]{3})");
 
 	@JsonIgnore private boolean update = false;
@@ -220,12 +221,17 @@ public class Theme implements Jsonable {
 
 	@Override
 	public String toJson() {
-		String json = Jsonable.super.toJson();
 		if (update) {
-			json = "{\"update_details\":" + json + "}";
+			UUID tempId = themeId;
+			themeId = null;
+			String json = "{\"update_details\":" + super.toJson() + "}";
 			update = false;
+			themeId = tempId;
+			return json;
 		}
-		return json;
+		else {
+			return super.toJson();
+		}
 	}
 
 	/**

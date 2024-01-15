@@ -15,25 +15,41 @@
  */
 package com.vonage.client.voice;
 
-public class PageLinks {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
+
+/**
+ * @deprecated Will be replaced by {@link com.vonage.client.common.HalLinks} in a future release.
+ */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Deprecated
+public class PageLinks extends JsonableBaseObject {
     private PageLink self, next, prev, first, last;
 
+    @JsonProperty("self")
     public PageLink getSelf() {
         return self;
     }
 
+    @JsonProperty("next")
     public PageLink getNext() {
         return next;
     }
 
+    @JsonProperty("prev")
     public PageLink getPrev() {
         return prev;
     }
 
+    @JsonProperty("first")
     public PageLink getFirst() {
         return first;
     }
 
+    @JsonProperty("last")
     public PageLink getLast() {
         return last;
     }

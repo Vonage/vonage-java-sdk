@@ -17,6 +17,7 @@ package com.vonage.client.messages;
 
 import com.fasterxml.jackson.annotation.*;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.messages.sms.SmsInboundMetadata;
 import com.vonage.client.messages.whatsapp.*;
 import java.net.URI;
@@ -34,19 +35,24 @@ import java.util.UUID;
  * @since 7.2.0
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class InboundMessage implements Jsonable {
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+public class InboundMessage extends JsonableBaseObject {
+
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	protected static class UrlWrapper {
+	protected static class UrlWrapper extends JsonableBaseObject {
 		@JsonProperty("url") protected URI url;
 	}
 
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	protected static class UrlWrapperWithCaption extends UrlWrapper {
 		@JsonProperty("caption") protected String caption;
 	}
 
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	protected static class Whatsapp {
+	protected static class Whatsapp extends JsonableBaseObject {
 		@JsonProperty("referral") protected Referral referral;
 	}
 
@@ -170,6 +176,7 @@ public class InboundMessage implements Jsonable {
 	 *
 	 * @return The image URL, or {@code null} if not applicable.
 	 */
+	@JsonIgnore
 	public URI getImageUrl() {
 		return image != null ? image.url : null;
 	}
@@ -181,6 +188,7 @@ public class InboundMessage implements Jsonable {
 	 *
 	 * @since 8.1.0
 	 */
+	@JsonIgnore
 	public String getImageCaption() {
 		return image != null ? image.caption : null;
 	}
@@ -190,6 +198,7 @@ public class InboundMessage implements Jsonable {
 	 *
 	 * @return The audio URL, or {@code null} if not applicable.
 	 */
+	@JsonIgnore
 	public URI getAudioUrl() {
 		return audio != null ? audio.url : null;
 	}
@@ -199,6 +208,7 @@ public class InboundMessage implements Jsonable {
 	 *
 	 * @return The video URL, or {@code null} if not applicable.
 	 */
+	@JsonIgnore
 	public URI getVideoUrl() {
 		return video != null ? video.url : null;
 	}
@@ -208,6 +218,7 @@ public class InboundMessage implements Jsonable {
 	 *
 	 * @return The file URL, or {@code null} if not applicable.
 	 */
+	@JsonIgnore
 	public URI getFileUrl() {
 		return file != null ? file.url : null;
 	}
@@ -217,6 +228,7 @@ public class InboundMessage implements Jsonable {
 	 *
 	 * @return The vCard URL, or {@code null} if not applicable.
 	 */
+	@JsonIgnore
 	public URI getVcardUrl() {
 		return vcard != null ? vcard.url : null;
 	}
@@ -226,6 +238,7 @@ public class InboundMessage implements Jsonable {
 	 *
 	 * @return The sticker URL, or {@code null} if not applicable.
 	 */
+	@JsonIgnore
 	public URI getStickerUrl() {
 		return sticker != null ? sticker.url : null;
 	}

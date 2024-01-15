@@ -17,6 +17,7 @@ package com.vonage.client.subaccounts;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -57,7 +58,7 @@ public class ListSubaccountsResponseTest {
 				"   }\n" +
 				"}");
 
-		assertNotNull(parsed);
+		TestUtils.testJsonableBaseObject(parsed);
 		Account primary = parsed.getPrimaryAccount();
 		assertNotNull(primary);
 		assertEquals("bbe6222f", primary.getApiKey());

@@ -17,9 +17,9 @@ package com.vonage.client.account;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 
-class CreateSecretRequest implements Jsonable {
+class CreateSecretRequest extends JsonableBaseObject {
     @JsonIgnore private final String apiKey;
     private final String secret;
 

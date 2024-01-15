@@ -19,14 +19,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 
 /**
  * Defines the text-to-speech properties.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class TalkPayload implements Jsonable {
+public final class TalkPayload extends JsonableBaseObject {
     @JsonIgnore String uuid;
     private final String text;
     private final Integer loop, style;

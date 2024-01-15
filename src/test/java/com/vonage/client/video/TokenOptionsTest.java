@@ -35,7 +35,7 @@ public class TokenOptionsTest {
 	@Test
 	public void testAllValidOptions() {
 		String data = String.join("", Collections.nCopies(100, "myConnData"));
-		Assertions.assertEquals(1000, data.length());
+		assertEquals(1000, data.length());
 		Duration ttl = Duration.ofDays(30).minusMillis(1);
 		List<String> layoutClassList = Arrays.asList("fill", "min");
 		Role role = Role.MODERATOR;
@@ -47,32 +47,32 @@ public class TokenOptionsTest {
 		Jwt jwt = buildJwtWithClaims(options);
 
 		ZonedDateTime expiresAt = jwt.getExpiresAt();
-		Assertions.assertFalse(expiresAt.isAfter(ZonedDateTime.now().plus(ttl)));
-		Assertions.assertTrue(expiresAt.minus(ttl).isBefore(ZonedDateTime.now().plusSeconds(1)));
+		assertFalse(expiresAt.isAfter(ZonedDateTime.now().plus(ttl)));
+		assertTrue(expiresAt.minus(ttl).isBefore(ZonedDateTime.now().plusSeconds(1)));
 
 		Map<String, ?> claims = jwt.getClaims();
-		Assertions.assertEquals(4, claims.size());
-		Assertions.assertEquals(data, claims.get("connection_data"));
-		Assertions.assertEquals(String.join(" ", layoutClassList), claims.get("initial_layout_class_list"));
-		Assertions.assertEquals(role.toString(), claims.get("role"));
+		assertEquals(4, claims.size());
+		assertEquals(data, claims.get("connection_data"));
+		assertEquals(String.join(" ", layoutClassList), claims.get("initial_layout_class_list"));
+		assertEquals(role.toString(), claims.get("role"));
 	}
 
 	@Test
 	public void testMandatoryParameters() {
 		TokenOptions options = TokenOptions.builder().build();
 
-		Assertions.assertEquals(Role.PUBLISHER, options.getRole());
-		Assertions.assertEquals(Duration.ofDays(1), options.getExpiryLength());
-		Assertions.assertNull(options.getInitialLayoutClassList());
-		Assertions.assertNull(options.getData());
+		assertEquals(Role.PUBLISHER, options.getRole());
+		assertEquals(Duration.ofDays(1), options.getExpiryLength());
+		assertNull(options.getInitialLayoutClassList());
+		assertNull(options.getData());
 
 		Jwt jwt = buildJwtWithClaims(options);
 
 		Map<String, ?> claims = jwt.getClaims();
-		Assertions.assertEquals(2, claims.size());
-		Assertions.assertEquals("publisher", claims.get("role").toString());
-		Assertions.assertNull(claims.get("connection_data"));
-		Assertions.assertNull(claims.get("initial_layout_class_list"));
+		assertEquals(2, claims.size());
+		assertEquals("publisher", claims.get("role").toString());
+		assertNull(claims.get("connection_data"));
+		assertNull(claims.get("initial_layout_class_list"));
 	}
 
 	@Test
@@ -84,7 +84,7 @@ public class TokenOptionsTest {
 		assertThrows(IllegalArgumentException.class, () -> TokenOptions.builder().expiryLength(longTtl).build());
 
 		String data1001 = new String(new char[1001]).replace("\0", "d");
-		Assertions.assertEquals(1001, data1001.length());
+		assertEquals(1001, data1001.length());
 		assertThrows(IllegalArgumentException.class, () -> TokenOptions.builder().data(data1001).build());
 	}
 }

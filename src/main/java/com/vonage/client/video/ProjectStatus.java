@@ -16,6 +16,7 @@
 package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * Represents the project status.
@@ -39,5 +40,11 @@ public enum ProjectStatus {
 		catch (NullPointerException | IllegalArgumentException ex) {
 			return null;
 		}
+	}
+
+	@JsonValue
+	@Override
+	public String toString() {
+		return name().toLowerCase();
 	}
 }

@@ -24,7 +24,6 @@ import java.util.Map;
  */
 public class SearchNumbersFilter implements QueryParamsRequest {
     private final String country;
-
     private String pattern;
     private SearchPattern searchPattern;
     private String[] features;

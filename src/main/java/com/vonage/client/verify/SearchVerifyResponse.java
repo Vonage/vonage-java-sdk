@@ -17,17 +17,20 @@ package com.vonage.client.verify;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.VonageResponseParseException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SearchVerifyResponse implements Jsonable {
+public class SearchVerifyResponse extends JsonableBaseObject {
     private VerifyStatus status;
     private List<VerifyDetails> verificationRequests;
     private String errorText;

@@ -15,6 +15,7 @@
  */
 package com.vonage.client.voice;
 
+import com.vonage.client.TestUtils;
 import com.vonage.client.VonageUnexpectedException;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -84,6 +85,7 @@ public class CallInfoPageTest {
 
     @Test
     public void testBasics() {
+        TestUtils.testJsonableBaseObject(page);
         assertEquals("/v1/calls?page_size=10&record_index=20&order=asc", page.getLinks().getSelf().getHref());
         assertEquals("447700900549", page.getEmbedded().getCallInfos()[0].getTo().toLog());
         assertEquals(10, page.getPageSize());

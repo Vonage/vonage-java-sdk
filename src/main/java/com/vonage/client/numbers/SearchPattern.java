@@ -15,6 +15,8 @@
  */
 package com.vonage.client.numbers;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * Provided to calls that match substrings, to indicate which part of the string should be considered a match.
  */
@@ -29,6 +31,7 @@ public enum SearchPattern {
         this.value = value;
     }
 
+    @JsonValue
     public int getValue() {
         return value;
     }

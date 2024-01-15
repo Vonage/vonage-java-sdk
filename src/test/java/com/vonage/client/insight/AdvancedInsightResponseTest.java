@@ -15,6 +15,7 @@
  */
 package com.vonage.client.insight;
 
+import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -65,6 +66,7 @@ public class AdvancedInsightResponseTest {
                 "    \"error_text\": \"Success\"\n" +
                 "}");
 
+        TestUtils.testJsonableBaseObject(response);
         assertEquals(InsightStatus.SUCCESS, response.getStatus());
         assertEquals("Success", response.getStatusMessage());
         assertEquals("0c082a69-85df-4bbc-aae6-ee998e17e5a4", response.getRequestId());

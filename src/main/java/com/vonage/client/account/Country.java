@@ -16,10 +16,13 @@
 package com.vonage.client.account;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Country {
+public class Country extends JsonableBaseObject {
     private String code, displayName, name;
 
     @JsonProperty("countryCode")

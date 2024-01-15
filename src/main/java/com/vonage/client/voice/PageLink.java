@@ -15,9 +15,17 @@
  */
 package com.vonage.client.voice;
 
-public class PageLink {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
+
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class PageLink extends JsonableBaseObject {
     private String href;
 
+    @JsonProperty("href")
     public String getHref() {
         return href;
     }

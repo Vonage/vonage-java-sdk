@@ -17,6 +17,7 @@ package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 import java.net.URI;
 import java.util.Map;
 
@@ -26,7 +27,7 @@ import java.util.Map;
  * for an example.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class WebSocketEndpoint implements Endpoint {
+public class WebSocketEndpoint extends JsonableBaseObject implements Endpoint {
     private static final String TYPE = "websocket";
 
     private final URI uri;

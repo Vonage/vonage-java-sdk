@@ -17,6 +17,7 @@ package com.vonage.client.voice;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vonage.client.TestUtils;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import java.util.Map;
@@ -31,22 +32,18 @@ public class AdvancedMachineDetectionTest {
                 .beepTimeout(90)
                 .build();
 
-        String json = new ObjectMapper().writeValueAsString(amd);
-        Map<String, ?> map = new ObjectMapper().readValue(json, new TypeReference<Map<String, ?>>(){});
+        TestUtils.testJsonableBaseObject(amd);
+        Map<String, ?> map = new ObjectMapper().readValue(amd.toJson(), new TypeReference<Map<String, ?>>(){});
         assertEquals(3, map.size());
         assertEquals("hangup", map.get("behavior"));
         assertEquals("detect", map.get("mode"));
         assertEquals(90, map.get("beep_timeout"));
-
-        AdvancedMachineDetection parsed = new ObjectMapper().readValue(json, AdvancedMachineDetection.class);
-        assertEquals(amd.getBehavior(), parsed.getBehavior());
-        assertEquals(amd.getMode(), parsed.getMode());
-        assertEquals(amd.getBeepTimeout(), parsed.getBeepTimeout());
     }
 
     @Test
     public void testConstructRequiredParams() {
         AdvancedMachineDetection amd = AdvancedMachineDetection.builder().build();
+        TestUtils.testJsonableBaseObject(amd);
         assertNull(amd.getBehavior());
         assertNull(amd.getMode());
         assertNull(amd.getBeepTimeout());

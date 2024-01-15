@@ -16,11 +16,14 @@
 package com.vonage.client.verify;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ControlResponse implements Jsonable {
+public class ControlResponse extends JsonableBaseObject {
     private String status;
     private VerifyControlCommand command;
     private String errorText;

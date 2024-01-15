@@ -17,12 +17,12 @@ package com.vonage.client.messages;
 
 import com.fasterxml.jackson.annotation.*;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.messages.whatsapp.ConversationType;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Currency;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -32,7 +32,7 @@ import java.util.UUID;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class MessageStatus implements Jsonable {
+public class MessageStatus extends JsonableBaseObject {
 
 	public enum Status {
 		SUBMITTED,
@@ -58,7 +58,7 @@ public class MessageStatus implements Jsonable {
 	 * Describes the error that was encountered when sending the message.
 	 */
 	@JsonInclude(value = JsonInclude.Include.NON_NULL)
-	public static final class Error {
+	public static final class Error extends JsonableBaseObject {
 		@JsonProperty("type") URI type;
 		@JsonProperty("title") String title;
 		@JsonProperty("detail") String detail;
@@ -103,31 +103,6 @@ public class MessageStatus implements Jsonable {
 		public String getInstance() {
 			return instance;
 		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-			Error error = (Error) o;
-			return Objects.equals(type, error.type) &&
-					Objects.equals(title, error.title) &&
-					Objects.equals(detail, error.detail) &&
-					Objects.equals(instance, error.instance);
-		}
-
-		@Override
-		public int hashCode() {
-			return Objects.hash(type, title, detail, instance);
-		}
-
-		@Override
-		public String toString() {
-			return getClass().getSimpleName() +
-					" {type='"+type + '\'' +
-					", title='"+title + '\'' +
-					", detail='"+detail + '\'' +
-					", instance='"+instance + "'}";
-		}
 	}
 
 	/**
@@ -135,7 +110,7 @@ public class MessageStatus implements Jsonable {
 	 */
 	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	public static final class Usage {
+	public static final class Usage extends JsonableBaseObject {
 		@JsonProperty("price") double price;
 		@JsonProperty("currency") Currency currency;
 
@@ -164,46 +139,25 @@ public class MessageStatus implements Jsonable {
 		public double getPrice() {
 			return price;
 		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-			Usage usage = (Usage) o;
-			return Double.compare(usage.price, price) == 0 &&
-					Objects.equals(currency, usage.currency);
-		}
-
-		@Override
-		public int hashCode() {
-			return Objects.hash(price, currency);
-		}
-
-		@Override
-		public String toString() {
-			return getClass().getSimpleName() +
-					" {price="+price +
-					", currency="+currency + '}';
-		}
 	}
 
 	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	static class Destination {
+	static class Destination extends JsonableBaseObject {
 		@JsonProperty("network_code") String networkCode;
 	}
 
 	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	static class Sms {
+	static class Sms extends JsonableBaseObject {
 		@JsonProperty("count_total") Integer countTotal;
 	}
 
 	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	static class Whatsapp {
-		static class Conversation {
-			static class Origin {
+	static class Whatsapp extends JsonableBaseObject {
+		static class Conversation extends JsonableBaseObject {
+			static class Origin extends JsonableBaseObject {
 				@JsonProperty("type") ConversationType type;
 			}
 			@JsonProperty("id") String id;
@@ -375,6 +329,7 @@ public class MessageStatus implements Jsonable {
 	 *
 	 * @return Additional (unknown) properties as a Map, or {@code null} if absent.
 	 */
+	@JsonAnyGetter
 	public Map<String, ?> getAdditionalProperties() {
 		return unknownProperties;
 	}
@@ -388,35 +343,5 @@ public class MessageStatus implements Jsonable {
 	 */
 	public static MessageStatus fromJson(String json) {
 		return Jsonable.fromJson(json);
-	}
-
-	@Override
-	public String toString() {
-		return getClass().getSimpleName()+' '+toJson();
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		MessageStatus that = (MessageStatus) o;
-		return Objects.equals(timestamp, that.timestamp) &&
-				Objects.equals(messageUuid, that.messageUuid) &&
-				Objects.equals(to, that.to) && Objects.equals(from, that.from) &&
-				status == that.status && channel == that.channel &&
-				Objects.equals(clientRef, that.clientRef) &&
-				Objects.equals(error, that.error) && Objects.equals(usage, that.usage) &&
-				Objects.equals(getDestinationNetworkCode(), that.getDestinationNetworkCode()) &&
-				Objects.equals(getSmsTotalCount(), that.getSmsTotalCount()) &&
-				Objects.equals(getWhatsappConversationId(), that.getWhatsappConversationId()) &&
-				Objects.equals(getWhatsappConversationType(), that.getWhatsappConversationType());
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(
-				timestamp, messageUuid, to, from, status, channel,
-				clientRef, error, usage, getDestinationNetworkCode(), getSmsTotalCount()
-		);
 	}
 }

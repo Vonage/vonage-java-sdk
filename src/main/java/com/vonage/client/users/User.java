@@ -15,15 +15,18 @@
  */
 package com.vonage.client.users;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.users.channels.Channel;
 import com.vonage.client.users.channels.Channels;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Represents a Vonage User (both request and response).
@@ -100,18 +103,6 @@ public class User extends BaseUser {
         return channels;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        User user = (User) o;
-        return Objects.equals(displayName, user.displayName) &&
-                Objects.equals(imageUrl, user.imageUrl) &&
-                Objects.equals(channels, user.channels) &&
-                Objects.equals(getCustomData(), user.getCustomData());
-    }
-
     /**
      * Constructs a user from the JSON payload.
      *
@@ -119,7 +110,6 @@ public class User extends BaseUser {
      *
      * @return A new User instance.
      */
-    @JsonCreator
     public static User fromJson(String json) {
         return Jsonable.fromJson(json);
     }
@@ -226,7 +216,8 @@ public class User extends BaseUser {
     /**
      * Represents the "properties" field of a User object.
      */
-    public static class Properties {
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
+    public static class Properties extends JsonableBaseObject {
         private Map<String, ?> customData;
 
         /**

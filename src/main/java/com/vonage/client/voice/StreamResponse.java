@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 
 /**
  * Response from successfully streaming an audio file or stopping a stream to an active {@link Call}.
@@ -27,7 +28,7 @@ import com.vonage.client.Jsonable;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class StreamResponse implements Jsonable {
+public class StreamResponse extends JsonableBaseObject {
     private String uuid, message;
 
     @JsonProperty("uuid")

@@ -16,19 +16,24 @@
 package com.vonage.client.numbers;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 
 /**
  * Represents the response to a "searchNumbers" request from the Vonage API.
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SearchNumbersResponse implements Jsonable {
+public class SearchNumbersResponse extends JsonableBaseObject {
     private int count = 0;
     private AvailableNumber[] numbers = new AvailableNumber[]{};
 
     /**
      * @return  the number of responses returned by the Vonage API.
      */
+    @JsonProperty("count")
     public int getCount() {
         return count;
     }
@@ -37,6 +42,7 @@ public class SearchNumbersResponse implements Jsonable {
      * Obtain an array of matching numbers than are available to buy.
      * @return Array of available numbers
      */
+    @JsonProperty("numbers")
     public AvailableNumber[] getNumbers() {
         return numbers;
     }
@@ -44,5 +50,4 @@ public class SearchNumbersResponse implements Jsonable {
     public static SearchNumbersResponse fromJson(String json) {
         return Jsonable.fromJson(json);
     }
-
 }

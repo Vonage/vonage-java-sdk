@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
@@ -28,7 +29,7 @@ import java.util.UUID;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public class ListItem implements Jsonable {
+public class ListItem extends JsonableBaseObject {
 	private Map<String, ?> data;
 	private Instant createdAt, updatedAt;
 	private UUID id, listId;

@@ -17,13 +17,14 @@ package com.vonage.client.meetings;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 import java.util.Locale;
 
 /**
  * Details about a number that that can be used to dial into a meeting.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DialInNumber {
+public class DialInNumber extends JsonableBaseObject {
 	private String number, displayName;
 	private Locale locale;
 

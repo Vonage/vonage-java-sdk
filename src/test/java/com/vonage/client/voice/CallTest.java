@@ -15,6 +15,7 @@
  */
 package com.vonage.client.voice;
 
+import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.voice.ncco.*;
@@ -167,6 +168,8 @@ public class CallTest {
                 "}";
 
         fromJson = Call.fromJson(jsonString);
+        TestUtils.testJsonableBaseObject(fromJson);
+
         assertEquals(4, fromJson.getTo().length);
         assertEquals("phone", fromJson.getTo()[0].getType());
         assertEquals("441632960960", ((PhoneEndpoint) fromJson.getTo()[0]).getNumber());

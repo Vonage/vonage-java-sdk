@@ -19,13 +19,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 
 /**
  * Provides info on list changes compared to the latest sync.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SyncStatus implements Jsonable {
+public class SyncStatus extends JsonableBaseObject {
 	private SyncStatusValue value;
 	private String details;
 	private Boolean metadataModified, dataModified, dirty;

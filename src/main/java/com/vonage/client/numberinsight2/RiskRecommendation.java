@@ -16,6 +16,7 @@
 package com.vonage.client.numberinsight2;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Represents the risk recommendation in {@link FraudScore#getRiskRecommendation()}.
  */

@@ -16,16 +16,19 @@
 package com.vonage.client.subaccounts;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import java.math.BigDecimal;
 import java.time.Instant;
 
 /**
  * Represents a subaccount.
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Account implements Jsonable {
+public class Account extends JsonableBaseObject {
 	private String apiKey, primaryAccountApiKey, name, secret;
 	private Boolean usePrimaryAccountBalance, suspended;
 	private Instant createdAt;

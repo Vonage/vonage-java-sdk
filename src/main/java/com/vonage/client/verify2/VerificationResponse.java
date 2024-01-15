@@ -16,16 +16,18 @@
 package com.vonage.client.verify2;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import java.net.URI;
 import java.util.UUID;
 
 /**
  * Metadata about an outbound verification request.
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class VerificationResponse implements Jsonable {
+public class VerificationResponse extends JsonableBaseObject {
 	protected UUID requestId;
 	protected URI checkUrl;
 
@@ -55,11 +57,6 @@ public class VerificationResponse implements Jsonable {
 	@JsonProperty("check_url")
 	public URI getCheckUrl() {
 		return checkUrl;
-	}
-
-	@Override
-	public String toString() {
-		return getClass().getSimpleName() + "{requestId=" + requestId + ", checkUrl=" + checkUrl + '}';
 	}
 
 	/**

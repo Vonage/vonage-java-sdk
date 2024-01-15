@@ -19,13 +19,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 
 /**
  * Represents metadata about a call.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CallEvent implements Jsonable {
+public class CallEvent extends JsonableBaseObject {
     private String uuid, conversationUuid;
     private CallStatus status;
     private CallDirection direction;

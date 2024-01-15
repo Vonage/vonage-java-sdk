@@ -138,8 +138,6 @@ public class InsightClientTest extends ClientTest<InsightClient> {
         assertAdvancedInsightResponse(response);
     }
 
-  
-
     @Test
     public void testAsyncAdvancedInsight() throws Exception {
         stubResponse(200, ASYNC_ADVANCED_RESPONSE_JSON);

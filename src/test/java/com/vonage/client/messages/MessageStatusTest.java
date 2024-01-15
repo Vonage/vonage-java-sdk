@@ -16,6 +16,7 @@
 package com.vonage.client.messages;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.TestUtils;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.messages.whatsapp.ConversationType;
 import static org.junit.jupiter.api.Assertions.*;
@@ -97,12 +98,7 @@ public class MessageStatusTest {
 				"}";
 
 		MessageStatus ms = MessageStatus.fromJson(json);
-		String generatedJson = ms.toJson();
-		MessageStatus generatedMessageStatus = MessageStatus.fromJson(generatedJson);
-		assertEquals(ms, generatedMessageStatus);
-		assertEquals(ms.hashCode(), generatedMessageStatus.hashCode());
-		assertEquals(generatedJson, generatedMessageStatus.toJson());
-		assertEquals(ms.toString(), generatedMessageStatus.toString());
+		TestUtils.testJsonableBaseObject(ms);
 
 		assertEquals(messageUuid, ms.getMessageUuid());
 		assertEquals(to, ms.getTo());
@@ -141,8 +137,7 @@ public class MessageStatusTest {
 				"}";
 
 		MessageStatus ms = MessageStatus.fromJson(json);
-		String generatedJson = ms.toJson();
-		assertEquals(generatedJson, MessageStatus.fromJson(generatedJson).toJson());
+		TestUtils.testJsonableBaseObject(ms);
 
 		assertEquals(messageUuid, ms.getMessageUuid());
 		assertEquals(to, ms.getTo());
@@ -185,6 +180,8 @@ public class MessageStatusTest {
 				"   }\n" +
 				"}";
 		MessageStatus ms = MessageStatus.fromJson(json);
+		TestUtils.testJsonableBaseObject(ms);
+
 		Map<String, ?> unknown = ms.getAdditionalProperties();
 		assertNotNull(unknown);
 		assertEquals(1, unknown.size());

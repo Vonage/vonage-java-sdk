@@ -17,6 +17,7 @@ package com.vonage.client.messages.sms;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
 
 /**
  * Used to describe inbound SMS metadata.
@@ -24,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @since 7.2.0
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class SmsInboundMetadata {
+public final class SmsInboundMetadata extends JsonableBaseObject {
 	private Integer numMessages, totalCount;
 	private String keyword;
 

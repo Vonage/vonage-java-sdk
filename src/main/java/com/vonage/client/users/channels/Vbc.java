@@ -18,7 +18,6 @@ package com.vonage.client.users.channels;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.Objects;
 
 /**
  * Represents a Vonage Business Cloud (VBC) channel.
@@ -47,18 +46,5 @@ public class Vbc extends Channel {
 	@JsonProperty("extension")
 	public String getExtension() {
 		return extension;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Vbc vbc = (Vbc) o;
-		return Objects.equals(extension, vbc.extension);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(extension);
 	}
 }

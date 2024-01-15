@@ -15,6 +15,7 @@
  */
 package com.vonage.client.voice;
 
+import com.vonage.client.TestUtils;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.net.URI;
@@ -37,30 +38,24 @@ public class AnswerWebhookTest {
                     "  \"uuid\": \""+uuid+"\"\n}";
 
         AnswerWebhook parsed = AnswerWebhook.fromJson(json);
-        assertNotNull(parsed);
+        TestUtils.testJsonableBaseObject(parsed);
         assertEquals(to, parsed.getTo());
         assertEquals(from, parsed.getFrom());
         assertEquals(conversationId, parsed.getConversationUuid());
         assertEquals(UUID.fromString(uuid), parsed.getUuid());
         assertEquals(URI.create(regionUrl), parsed.getRegionUrl());
-
-        AnswerWebhook parsedFromItself = AnswerWebhook.fromJson(parsed.toJson());
-        assertEquals(parsed.hashCode(), parsedFromItself.hashCode());
-        assertEquals(parsed, parsedFromItself);
     }
 
     @Test
     public void testFromUserOnly() {
         String fromUser = "client", json = "{\"from_user\":\""+fromUser+"\"}";
         AnswerWebhook parsed = AnswerWebhook.fromJson(json);
-        assertNotNull(parsed);
+        TestUtils.testJsonableBaseObject(parsed);
         assertEquals(fromUser, parsed.getFrom());
         assertNull(parsed.getTo());
         assertNull(parsed.getUuid());
         assertNull(parsed.getConversationUuid());
         assertNull(parsed.getRegionUrl());
         assertNull(parsed.getCustomData());
-        AnswerWebhook parsedFromItself = AnswerWebhook.fromJson(parsed.toJson());
-        assertEquals(parsed.hashCode(), parsedFromItself.hashCode());
     }
 }

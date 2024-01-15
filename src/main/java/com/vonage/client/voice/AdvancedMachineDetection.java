@@ -16,6 +16,7 @@
 package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.*;
+import com.vonage.client.JsonableBaseObject;
 
 /**
  * Configure the behavior of Vonage's advanced machine detection. See
@@ -26,7 +27,7 @@ import com.fasterxml.jackson.annotation.*;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AdvancedMachineDetection {
+public class AdvancedMachineDetection extends JsonableBaseObject {
 
 	/**
 	 * Represents the beep detection mode.

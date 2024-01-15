@@ -17,6 +17,7 @@ package com.vonage.client.meetings;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.VonageResponseParseException;
 import java.net.URI;
 import java.time.Instant;
@@ -25,7 +26,7 @@ import java.util.UUID;
 /**
  * Represents a deserialized callback response webhook for event updates from the Meetings API.
  */
-public class MeetingsEventCallback implements Jsonable {
+public class MeetingsEventCallback extends JsonableBaseObject {
 	private EventType event;
 	private String sessionId, participantName, participantType;
 	private UUID roomId, recordingId, participantId;
@@ -141,7 +142,7 @@ public class MeetingsEventCallback implements Jsonable {
 	/**
 	 * The date-time when the session started, expressed in ISO 8601 format.
 	 *
-	 * @return , or {@code null} if not applicable.
+	 * @return The start timestamp, or {@code null} if not applicable.
 	 */
 	@JsonProperty("started_at")
 	public Instant getStartedAt() {

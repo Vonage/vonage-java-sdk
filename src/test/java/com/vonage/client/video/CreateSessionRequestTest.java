@@ -32,9 +32,9 @@ public class CreateSessionRequestTest {
 		CreateSessionRequest request = CreateSessionRequest.builder()
 				.mediaMode(MediaMode.ROUTED).archiveMode(ArchiveMode.MANUAL).build();
 
-		Assertions.assertEquals("manual", request.getArchiveMode().toString());
-		Assertions.assertEquals("disabled", request.getMediaMode().toString());
-		Assertions.assertNull(request.getLocation());
+		assertEquals("manual", request.getArchiveMode().toString());
+		assertEquals("disabled", request.getMediaMode().toString());
+		assertNull(request.getLocation());
 	}
 
 	@Test
@@ -42,9 +42,9 @@ public class CreateSessionRequestTest {
 		CreateSessionRequest request = CreateSessionRequest.builder()
 				.mediaMode(MediaMode.RELAYED).archiveMode(ArchiveMode.MANUAL).build();
 
-		Assertions.assertEquals("manual", request.getArchiveMode().toString());
-		Assertions.assertEquals("enabled", request.getMediaMode().toString());
-		Assertions.assertNull(request.getLocation());
+		assertEquals("manual", request.getArchiveMode().toString());
+		assertEquals("enabled", request.getMediaMode().toString());
+		assertNull(request.getLocation());
 	}
 
 	@Test
@@ -52,14 +52,14 @@ public class CreateSessionRequestTest {
 		String ipStr = "188.180.180.180";
 		CreateSessionRequest.Builder builder = CreateSessionRequest.builder();
 		CreateSessionRequest request = builder.location(ipStr).build();
-		Assertions.assertEquals(ipStr, request.getLocation().getHostAddress());
+		assertEquals(ipStr, request.getLocation().getHostAddress());
 		InetAddress localhost = Inet4Address.getLocalHost();
 		request = builder.location(localhost).build();
-		Assertions.assertEquals(localhost, request.getLocation());
+		assertEquals(localhost, request.getLocation());
 		ipStr = "localhost";
 		request = builder.location(ipStr).build();
-		Assertions.assertEquals("localhost", request.getLocation().getHostName());
-		Assertions.assertEquals("127.0.0.1", request.getLocation().getHostAddress());
+		assertEquals("localhost", request.getLocation().getHostName());
+		assertEquals("127.0.0.1", request.getLocation().getHostAddress());
 	}
 
 	@Test

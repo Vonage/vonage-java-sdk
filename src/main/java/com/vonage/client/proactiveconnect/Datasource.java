@@ -18,6 +18,7 @@ package com.vonage.client.proactiveconnect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.vonage.client.JsonableBaseObject;
 
 /**
  * Base class for datasource types used in Proactive Connect lists.
@@ -30,7 +31,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 		@JsonSubTypes.Type(value = ManualDatasource.class, name = "manual"),
 		@JsonSubTypes.Type(value = SalesforceDatasource.class, name = "salesforce")
 })
-public abstract class Datasource {
+public abstract class Datasource extends JsonableBaseObject {
 	protected final String type;
 
 	protected Datasource(String type) {

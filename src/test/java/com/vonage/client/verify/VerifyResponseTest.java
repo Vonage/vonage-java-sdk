@@ -15,6 +15,7 @@
  */
 package com.vonage.client.verify;
 
+import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,6 +37,7 @@ public class VerifyResponseTest {
 			json = "{\"status\":\"7\",\"error_text\":" + "\""+errorText+"\"," + "\"network\":\""+network+"\", \"request_id\":\""+requestId+"\"}";
 
 		VerifyResponse response = VerifyResponse.fromJson(json);
+		TestUtils.testJsonableBaseObject(response);
 		assertEquals(VerifyStatus.NUMBER_BARRED, response.getStatus());
 		assertEquals(7, response.getStatus().getVerifyStatus());
 		assertEquals(errorText, response.getErrorText());

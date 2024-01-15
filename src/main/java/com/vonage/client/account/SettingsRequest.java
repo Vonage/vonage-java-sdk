@@ -18,6 +18,7 @@ package com.vonage.client.account;
 import com.vonage.client.QueryParamsRequest;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
 public class SettingsRequest implements QueryParamsRequest {
     private final String incomingSmsUrl, deliveryReceiptUrl;
 

@@ -20,6 +20,7 @@
  */
 package com.vonage.client.video;
 
+import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
@@ -42,10 +43,11 @@ public class CreateSessionResponseTest {
 				"\"media_server_url\":\""+mediaServerUrl+"\"\n" +
 		"}]");
 
-		Assertions.assertEquals(sessionId, response.getSessionId());
-		Assertions.assertEquals(applicationId, response.getApplicationId());
-		Assertions.assertEquals(createDt, response.getCreateDt());
-		Assertions.assertEquals(mediaServerUrl, response.getMediaServerUrl());
+		TestUtils.testJsonableBaseObject(response);
+		assertEquals(sessionId, response.getSessionId());
+		assertEquals(applicationId, response.getApplicationId());
+		assertEquals(createDt, response.getCreateDt());
+		assertEquals(mediaServerUrl, response.getMediaServerUrl());
 	}
 
 	@Test
@@ -56,16 +58,16 @@ public class CreateSessionResponseTest {
 	@Test
 	public void testFromJsonEmptyObject() {
 		CreateSessionResponse response = CreateSessionResponse.fromJson("[{}]");
-		Assertions.assertNull(response.getApplicationId());
-		Assertions.assertNull(response.getSessionId());
-		Assertions.assertNull(response.getMediaServerUrl());
-		Assertions.assertNull(response.getCreateDt());
+		TestUtils.testJsonableBaseObject(response);
+		assertNull(response.getApplicationId());
+		assertNull(response.getSessionId());
+		assertNull(response.getMediaServerUrl());
+		assertNull(response.getCreateDt());
 	}
 
 	@Test
 	public void testFromJsonEmptyArray() {
-		CreateSessionResponse response = CreateSessionResponse.fromJson("[]");
-		Assertions.assertNotNull(response);
+		TestUtils.testJsonableBaseObject(CreateSessionResponse.fromJson("[]"));
 	}
 
 	@Test
@@ -73,10 +75,10 @@ public class CreateSessionResponseTest {
 		String sessionId = "TheSessionIdYouWant";
 		String json = "[{\"session_id\":\""+sessionId+"\"},{},{\"session_id\":\"fake\"}]";
 		CreateSessionResponse response = CreateSessionResponse.fromJson(json);
-		Assertions.assertNotNull(response);
-		Assertions.assertEquals(sessionId, response.getSessionId());
-		Assertions.assertNull(response.getApplicationId());
-		Assertions.assertNull(response.getMediaServerUrl());
-		Assertions.assertNull(response.getCreateDt());
+		TestUtils.testJsonableBaseObject(response);
+		assertEquals(sessionId, response.getSessionId());
+		assertNull(response.getApplicationId());
+		assertNull(response.getMediaServerUrl());
+		assertNull(response.getCreateDt());
 	}
 }
