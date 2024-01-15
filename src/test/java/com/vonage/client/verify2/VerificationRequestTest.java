@@ -31,7 +31,7 @@ public class VerificationRequestTest {
 	static final String
 			BRAND = "Vonage",
 			TO_NUMBER = "447700900000",
-			FROM_NUMBER = "447900100000",
+			FROM_NUMBER = "447900100002",
 			TO_EMAIL = "alice@example.org",
 			FROM_EMAIL = "bob@example.org",
 			CLIENT_REF = "my-personal-reference",
@@ -185,7 +185,7 @@ public class VerificationRequestTest {
 	@Test
 	public void testAllWorkflowsWithoutRecipient() {
 		for (String invalid : new String[]{"", " ", null}) {
-			assertThrows(RuntimeException.class, () -> new SilentAuthWorkflow(invalid));
+			assertThrows(RuntimeException.class, () -> SilentAuthWorkflow.builder(invalid).build());
 			assertThrows(RuntimeException.class, () -> new SmsWorkflow(invalid));
 			assertThrows(RuntimeException.class, () -> new VoiceWorkflow(invalid));
 			assertThrows(RuntimeException.class, () -> new WhatsappWorkflow(invalid));

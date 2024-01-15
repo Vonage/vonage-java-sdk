@@ -26,8 +26,14 @@ import java.net.URI;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class SilentAuthWorkflow extends AbstractNumberWorkflow {
-	private Boolean sandbox;
-	private URI redirectUrl;
+	private final Boolean sandbox;
+	private final URI redirectUrl;
+
+	SilentAuthWorkflow(Builder builder) {
+		super(builder);
+		sandbox = builder.sandbox;
+		redirectUrl = builder.redirectUrl != null ? URI.create(builder.redirectUrl) : null;
+	}
 
 	/**
 	 * Constructs a new Silent Auth verification workflow.
@@ -35,7 +41,7 @@ public final class SilentAuthWorkflow extends AbstractNumberWorkflow {
 	 * @param to The number to registered to the device on the network to authenticate.
 	 */
 	public SilentAuthWorkflow(String to) {
-		super(Channel.SILENT_AUTH, to);
+		this(builder(to));
 	}
 
 	/**
@@ -47,8 +53,7 @@ public final class SilentAuthWorkflow extends AbstractNumberWorkflow {
 	 * @since 7.10.0
 	 */
 	public SilentAuthWorkflow(String to, boolean sandbox) {
-		this(to);
-		this.sandbox = sandbox;
+		this(builder(to).sandbox(sandbox));
 	}
 
 	/**
@@ -62,8 +67,7 @@ public final class SilentAuthWorkflow extends AbstractNumberWorkflow {
 	 * @since 8.0.0
 	 */
 	public SilentAuthWorkflow(String to, boolean sandbox, String redirectUrl) {
-		this(to, sandbox);
-		this.redirectUrl = URI.create(redirectUrl);
+		this(builder(to).redirectUrl(redirectUrl).sandbox(sandbox));
 	}
 
 	/**
@@ -87,5 +91,62 @@ public final class SilentAuthWorkflow extends AbstractNumberWorkflow {
 	@JsonProperty("redirect_url")
 	public URI getRedirectUrl() {
 		return redirectUrl;
+	}
+
+	/**
+	 * Entrypoint for constructing an instance of this class.
+	 *
+	 * @param to (REQUIRED) The number to registered to the device on the network to authenticate.
+	 *
+	 * @return A new Builder.
+	 *
+	 * @since 8.2.0
+	 */
+	public static Builder builder(String to) {
+		return new Builder(to);
+	}
+
+	/**
+	 * Builder for constructing a Silent Authentication workflow.
+	 *
+	 * @since 8.2.0
+	 */
+	public static final class Builder extends AbstractNumberWorkflow.Builder<SilentAuthWorkflow, Builder> {
+		private Boolean sandbox;
+		private String redirectUrl;
+
+		Builder(String to) {
+			super(Channel.SILENT_AUTH, to);
+		}
+
+		/**
+		 * (OPTIONAL) Whether the Vonage Sandbox should be used (for testing purposes).
+		 *
+		 * @param sandbox {@code true} to use the Vonage sandbox.
+		 *
+		 * @return This builder.
+		 */
+		public Builder sandbox(boolean sandbox) {
+			this.sandbox = sandbox;
+			return this;
+		}
+
+		/**
+		 * (OPTIONAL) Final redirect after {@link VerificationResponse#getCheckUrl()}.
+		 * See the documentation for integrations.
+		 *
+		 * @param redirectUrl The full redirect URL as a string.
+		 *
+		 * @return This builder.
+		 */
+		public Builder redirectUrl(String redirectUrl) {
+			this.redirectUrl = redirectUrl;
+			return this;
+		}
+
+		@Override
+		public SilentAuthWorkflow build() {
+			return new SilentAuthWorkflow(this);
+		}
 	}
 }
