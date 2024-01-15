@@ -23,7 +23,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * In addition to the {@link Jsonable} interface, this class provides reflective implementations
  * of {@code equals}, {@code hashCode} and {@code toString} methods based on the class's fields.
  *
- * @since 8.3.0
+ * @since 8.2.0
  */
 public abstract class JsonableBaseObject implements Jsonable {
 
