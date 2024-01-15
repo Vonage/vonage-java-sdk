@@ -17,7 +17,6 @@ package com.vonage.client.verify2;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.common.E164;
 
 /**
  * Defines properties for sending a verification code to a user over a WhatsApp message.
@@ -26,8 +25,11 @@ import com.vonage.client.common.E164;
  * Please contact sales in order to configure Verify v2 to use your company’s WABA.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class WhatsappWorkflow extends Workflow {
+public final class WhatsappWorkflow extends AbstractNumberWorkflow {
 
+	WhatsappWorkflow(Builder builder) {
+		super(builder);
+	}
 
 	/**
 	 * Constructs a new WhatsApp verification workflow.
@@ -46,7 +48,7 @@ public final class WhatsappWorkflow extends Workflow {
 	 * Note that you will need to get in touch with the Vonage sales team to enable use of the field.
 	 */
 	public WhatsappWorkflow(String to, String from) {
-		super(Channel.WHATSAPP, new E164(to).toString(), from);
+		this(builder(to).from(from));
 	}
 
 	/**
@@ -57,5 +59,21 @@ public final class WhatsappWorkflow extends Workflow {
 	@JsonProperty("from")
 	public String getFrom() {
 		return from;
+	}
+
+	static Builder builder(String to) {
+		return new Builder(to);
+	}
+
+	static class Builder extends AbstractNumberWorkflow.Builder<WhatsappWorkflow, Builder> {
+
+		Builder(String to) {
+			super(Channel.WHATSAPP, to);
+		}
+
+		@Override
+		public WhatsappWorkflow build() {
+			return new WhatsappWorkflow(this);
+		}
 	}
 }

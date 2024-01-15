@@ -25,8 +25,12 @@ import java.util.Objects;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Workflow extends JsonableBaseObject {
-	protected Channel channel;
+	protected final Channel channel;
 	protected String to, from;
+
+	protected Workflow(Builder<?, ?> builder) {
+		this(builder.channel, builder.to, builder.from);
+	}
 
 	protected Workflow(Channel channel, String to) {
 		this(channel, to, null);
@@ -34,12 +38,22 @@ public class Workflow extends JsonableBaseObject {
 
 	protected Workflow(Channel channel, String to, String from) {
 		this.channel = Objects.requireNonNull(channel, "Verification channel is required.");
+		this.to = validateTo(to);
+		this.from = validateFrom(from);
+	}
+
+	protected String validateTo(String to) {
 		if ((this.to = to) == null || to.trim().isEmpty()) {
 			throw new IllegalArgumentException("Recipient is required.");
 		}
-		if ((this.from = from) != null && from.trim().isEmpty()) {
+		return to;
+	}
+
+	protected String validateFrom(String from) {
+		if (from != null && from.trim().isEmpty()) {
 			throw new IllegalArgumentException("Sender cannot be empty.");
 		}
+		return from;
 	}
 
 	/**
@@ -60,5 +74,37 @@ public class Workflow extends JsonableBaseObject {
 	@JsonProperty("to")
 	public String getTo() {
 		return to;
+	}
+
+	/**
+	 * Builder class for an SMS workflow.
+	 *
+	 * @since 8.2.0
+	 */
+	@SuppressWarnings("unchecked")
+	protected abstract static class Builder<W extends Workflow, B extends Builder<? extends W, ? extends B>>  {
+		protected final Channel channel;
+		protected String to, from;
+
+		protected Builder(Channel channel) {
+			this.channel = channel;
+		}
+
+		protected B to(String to) {
+			this.to = to;
+			return (B) this;
+		}
+
+		protected B from(String from) {
+			this.from = from;
+			return (B) this;
+		}
+
+		/**
+		 * Builds the workflow.
+		 *
+		 * @return A new instance of the workflow with this builder's fields.
+		 */
+		public abstract W build();
 	}
 }

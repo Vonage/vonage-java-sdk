@@ -17,7 +17,6 @@ package com.vonage.client.verify2;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.common.E164;
 import java.net.URI;
 
 /**
@@ -26,7 +25,7 @@ import java.net.URI;
  * for an overview of how this works.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class SilentAuthWorkflow extends Workflow {
+public final class SilentAuthWorkflow extends AbstractNumberWorkflow {
 	private Boolean sandbox;
 	private URI redirectUrl;
 
@@ -36,7 +35,7 @@ public final class SilentAuthWorkflow extends Workflow {
 	 * @param to The number to registered to the device on the network to authenticate.
 	 */
 	public SilentAuthWorkflow(String to) {
-		super(Channel.SILENT_AUTH, new E164(to).toString());
+		super(Channel.SILENT_AUTH, to);
 	}
 
 	/**
