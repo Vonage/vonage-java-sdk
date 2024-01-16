@@ -17,14 +17,26 @@ package com.vonage.client.verify2;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.common.E164;
 
 /**
  * Defines workflow properties for sending a verification code to a user via SMS.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class SmsWorkflow extends Workflow {
-	final String appHash;
+public final class SmsWorkflow extends AbstractNumberWorkflow {
+	final String appHash, contentId, entityId;
+
+	SmsWorkflow(Builder builder) {
+		super(builder);
+		if ((this.appHash = builder.appHash) != null && appHash.length() != 11) {
+			throw new IllegalArgumentException("Android app hash must be 11 characters.");
+		}
+		if ((this.contentId = builder.contentId) != null && (contentId.isEmpty() || contentId.length() > 20)) {
+			throw new IllegalArgumentException("content_id must be between 1 and 20 characters long.");
+		}
+		if ((this.entityId = builder.entityId) != null && (entityId.isEmpty() || entityId.length() > 20)) {
+			throw new IllegalArgumentException("entity_id must be between 1 and 20 characters long.");
+		}
+	}
 
 	/**
 	 * Constructs a new SMS verification workflow.
@@ -32,7 +44,7 @@ public final class SmsWorkflow extends Workflow {
 	 * @param to The number to send the message to, in E.164 format.
 	 */
 	public SmsWorkflow(String to) {
-		this(to, null);
+		this(builder(to));
 	}
 
 	/**
@@ -41,11 +53,11 @@ public final class SmsWorkflow extends Workflow {
 	 * @param to The number to send the message to, in E.164 format.
 	 * @param appHash Android Application Hash Key for automatic code detection on a user's device.
 	 *
-	 * @deprecated Use {@linkplain #SmsWorkflow(String, String, String)}.
+	 * @deprecated Use {@linkplain #builder(String)}.
 	 */
 	@Deprecated
 	public SmsWorkflow(String to, String appHash) {
-		this(to, null, appHash);
+		this(builder(to).appHash(appHash));
 	}
 
 	/**
@@ -56,12 +68,11 @@ public final class SmsWorkflow extends Workflow {
 	 * @param appHash Android Application Hash Key for automatic code detection on a user's device.
 	 *
 	 * @since 8.1.0
+	 * @deprecated Use {@linkplain #builder(String)} instead.
 	 */
+	@Deprecated
 	public SmsWorkflow(String to, String from, String appHash) {
-		super(Channel.SMS, new E164(to).toString(), from);
-		if ((this.appHash = appHash) != null && appHash.length() != 11) {
-			throw new IllegalArgumentException("Android app hash must be 11 characters.");
-		}
+		this(builder(to).from(from).appHash(appHash));
 	}
 
 	/**
@@ -84,5 +95,108 @@ public final class SmsWorkflow extends Workflow {
 	@JsonProperty("from")
 	public String getFrom() {
 		return from;
+	}
+
+	/**
+	 * Optional value corresponding to a TemplateID for SMS delivery using Indian Carriers.
+	 *
+	 * @return The content ID, or {@code null} if unspecified.
+	 *
+	 * @since 8.2.0
+	 */
+	@JsonProperty("content_id")
+	public String getContentId() {
+		return contentId;
+	}
+
+	/**
+	 * Optional PEID required for SMS delivery using Indian Carriers.
+	 *
+	 * @return The entity ID, or {@code null} if unspecified.
+	 *
+	 * @since 8.2.0
+	 */
+	@JsonProperty("entity_id")
+	public String getEntityId() {
+		return entityId;
+	}
+
+	/**
+	 * Entrypoint for constructing an instance of this class.
+	 *
+	 * @param to (REQUIRED) The destination phone number in E.164 format.
+	 *
+	 * @return A new Builder.
+	 *
+	 * @since 8.2.0
+	 */
+	public static Builder builder(String to) {
+		return new Builder(to);
+	}
+
+	/**
+	 * Builder class for an SMS workflow.
+	 *
+	 * @since 8.2.0
+	 */
+	public static final class Builder extends AbstractNumberWorkflow.Builder<SmsWorkflow, Builder> {
+		private String from, appHash, contentId, entityId;
+
+		Builder(String to) {
+			super(Channel.SMS, to);
+		}
+
+		/**
+		 * (OPTIONAL) The number or ID to send the SMS from.
+		 *
+		 * @param from The sender number in E.164 format, or an alphanumeric ID (50 characters max).
+		 *
+		 * @return This builder.
+		 */
+		@Override
+		public Builder from(String from) {
+			return super.from(from);
+		}
+
+		/**
+		 * (OPTIONAL) Android Application Hash Key for automatic code detection on a user's device.
+		 *
+		 * @param appHash The 11 character Android app hash.
+		 *
+		 * @return This builder.
+		 */
+		public Builder appHash(String appHash) {
+			this.appHash = appHash;
+			return this;
+		}
+
+		/**
+		 * (OPTIONAL) The TemplateID for SMS delivery using Indian Carriers.
+		 *
+		 * @param contentId The template ID (maximum 20 characters).
+		 *
+		 * @return This builder.
+		 */
+		public Builder contentId(String contentId) {
+			this.contentId = contentId;
+			return this;
+		}
+
+		/**
+		 * (OPTIONAL) PEID field required for SMS delivery using Indian Carriers.
+		 *
+		 * @param entityId The PEID (maximum 20 characters).
+		 *
+		 * @return This builder.
+		 */
+		public Builder entityId(String entityId) {
+			this.entityId = entityId;
+			return this;
+		}
+
+		@Override
+		public SmsWorkflow build() {
+			return new SmsWorkflow(this);
+		}
 	}
 }

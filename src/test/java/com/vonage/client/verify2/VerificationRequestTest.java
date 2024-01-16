@@ -31,11 +31,13 @@ public class VerificationRequestTest {
 	static final String
 			BRAND = "Vonage",
 			TO_NUMBER = "447700900000",
-			FROM_NUMBER = "447900100000",
+			FROM_NUMBER = "447900100002",
 			TO_EMAIL = "alice@example.org",
 			FROM_EMAIL = "bob@example.org",
 			CLIENT_REF = "my-personal-reference",
 			APP_HASH = "kkeid8sksd3",
+			CONTENT_ID = "1107158078772563946",
+			ENTITY_ID = "1101407360000017170",
 			REDIRECT_URL = "https://acme-app.com/sa/redirect";
 
 	Builder newBuilder() {
@@ -70,9 +72,11 @@ public class VerificationRequestTest {
 			case SILENT_AUTH:
 				return new SilentAuthWorkflow(TO_NUMBER, SANDBOX, REDIRECT_URL);
 			case SMS:
-				return new SmsWorkflow(TO_NUMBER, FROM_NUMBER, APP_HASH);
+				return SmsWorkflow.builder(TO_NUMBER)
+						.contentId(CONTENT_ID).entityId(ENTITY_ID)
+						.from(FROM_NUMBER).appHash(APP_HASH).build();
 			case WHATSAPP:
-				return new WhatsappWorkflow(TO_NUMBER, FROM_NUMBER);
+				return WhatsappWorkflow.builder(TO_NUMBER).from(FROM_NUMBER).build();
 			case EMAIL:
 				return new EmailWorkflow(TO_EMAIL, FROM_EMAIL);
 			default:
@@ -104,7 +108,8 @@ public class VerificationRequestTest {
 
 		if (channel == Channel.SMS) {
 			prefix = TO_NUMBER + '"';
-			replacement = prefix + ",\"app_hash\":\""+APP_HASH+"\"";
+			replacement = prefix + ",\"app_hash\":\""+APP_HASH+"\"," +
+					"\"content_id\":\""+CONTENT_ID+"\",\"entity_id\":\""+ENTITY_ID+"\"";
 			expectedJson = expectedJson.replace(prefix, replacement);
 		}
 		if (channel == Channel.WHATSAPP || channel == Channel.SMS) {
@@ -180,7 +185,7 @@ public class VerificationRequestTest {
 	@Test
 	public void testAllWorkflowsWithoutRecipient() {
 		for (String invalid : new String[]{"", " ", null}) {
-			assertThrows(RuntimeException.class, () -> new SilentAuthWorkflow(invalid));
+			assertThrows(RuntimeException.class, () -> SilentAuthWorkflow.builder(invalid).build());
 			assertThrows(RuntimeException.class, () -> new SmsWorkflow(invalid));
 			assertThrows(RuntimeException.class, () -> new VoiceWorkflow(invalid));
 			assertThrows(RuntimeException.class, () -> new WhatsappWorkflow(invalid));
@@ -275,12 +280,38 @@ public class VerificationRequestTest {
 	}
 
 	@Test
-	public void testInvalidAppHash() {
-		assertThrows(IllegalArgumentException.class, () -> new SmsWorkflow(TO_NUMBER, "1234567890"));
-		assertThrows(IllegalArgumentException.class, () -> new SmsWorkflow(TO_NUMBER, "1234567890ab"));
-		String appHash = new SmsWorkflow(TO_NUMBER, "1234567890a").getAppHash();
+	public void testInvalidSmsAppHash() {
+		SmsWorkflow.Builder builder = SmsWorkflow.builder(TO_NUMBER);
+		String valid = "1234567890a";
+		assertThrows(IllegalArgumentException.class, () -> builder.appHash(valid.substring(1)).build());
+		assertThrows(IllegalArgumentException.class, () -> builder.appHash(valid + 'b').build());
+		SmsWorkflow workflow = builder.appHash(valid).build();
+		String appHash = workflow.getAppHash();
 		assertNotNull(appHash);
 		assertEquals(11, appHash.length());
+		assertEquals(workflow, new SmsWorkflow(TO_NUMBER, appHash));
+	}
+
+	@Test
+	public void testInvalidSmsContentId() {
+		SmsWorkflow.Builder builder = SmsWorkflow.builder(TO_NUMBER);
+		String valid = "1234567890abcdefghij";
+		assertThrows(IllegalArgumentException.class, () -> builder.contentId("").build());
+		assertThrows(IllegalArgumentException.class, () -> builder.contentId(valid + 'k').build());
+		String contentId = builder.contentId(valid).build().getContentId();
+		assertNotNull(valid);
+		assertEquals(20, contentId.length());
+	}
+
+	@Test
+	public void testInvalidSmsEntityId() {
+		SmsWorkflow.Builder builder = SmsWorkflow.builder(TO_NUMBER);
+		String valid = "1234567890abcdefghij";
+		assertThrows(IllegalArgumentException.class, () -> builder.entityId("").build());
+		assertThrows(IllegalArgumentException.class, () -> builder.entityId(valid + 'k').build());
+		String entityId = builder.entityId(valid).build().getEntityId();
+		assertNotNull(valid);
+		assertEquals(20, entityId.length());
 	}
 
 	@Test

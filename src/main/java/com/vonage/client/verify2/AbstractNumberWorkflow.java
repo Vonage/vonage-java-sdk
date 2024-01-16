@@ -16,19 +16,37 @@
 package com.vonage.client.verify2;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.vonage.client.common.E164;
 
 /**
- * Defines workflow properties for sending a verification code to a user over a voice call.
+ * Intermediate class for number recipients.
+ *
+ * @since 8.2.0
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class VoiceWorkflow extends AbstractNumberWorkflow {
+abstract class AbstractNumberWorkflow extends Workflow {
 
-	/**
-	 * Constructs a new Voice verification workflow.
-	 *
-	 * @param to The number to call, in E.164 format.
-	 */
-	public VoiceWorkflow(String to) {
-		super(Channel.VOICE, to);
+	protected AbstractNumberWorkflow(Builder<?, ?> builder) {
+		super(builder);
+	}
+
+	protected AbstractNumberWorkflow(Channel channel, String to) {
+		super(channel, to);
+	}
+
+	@Override
+	protected String validateTo(String to) {
+		return new E164(super.validateTo(to)).toString();
+	}
+
+	protected abstract static class Builder<
+				N extends AbstractNumberWorkflow,
+				B extends Builder<? extends N, ? extends B>
+			> extends Workflow.Builder<N, B> {
+
+		protected Builder(Channel channel, String to) {
+			super(channel);
+			to(to);
+		}
 	}
 }

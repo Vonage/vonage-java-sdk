@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Added Number Insight v2 API implementation
 - New webhook deserialisation POJOs for Voice: `AnswerWebhook` and `EventWebhook`
 - `toString`, `equals` and `hashCode` implemented for all domain response objects
+- Added `content_id` and `entity_id` parameters for Verify v2 SMS workflow
+- Added Builder for Verify v2 SMS & Silent Auth workflow requests
 
 # [8.1.0] - 2024-01-04
 - Added various missing fields in Messages API:
