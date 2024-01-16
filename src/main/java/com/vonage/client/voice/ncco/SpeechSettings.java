@@ -15,10 +15,7 @@
  */
 package com.vonage.client.voice.ncco;
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.*;
 import com.vonage.client.JsonableBaseObject;
 import java.util.Collection;
 
@@ -193,6 +190,7 @@ public class SpeechSettings extends JsonableBaseObject {
 
         private final String language;
 
+        @JsonCreator
         Language(String language) {
             this.language = language;
         }

@@ -15,6 +15,7 @@
  */
 package com.vonage.client.voice.ncco;
 
+import com.vonage.client.TestUtils;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import java.util.*;
@@ -30,24 +31,20 @@ public class ConversationActionTest {
     @Test
     public void testAllFields() {
         ConversationAction action = ConversationAction.builder("test-conversation")
-                .name("different-name")
-                .musicOnHoldUrl("http://example.com/music")
-                .startOnEnter(true)
-                .endOnExit(true)
-                .record(true)
-                .mute(true)
-                .eventUrl("https://example.com/event")
-                .eventMethod(EventMethod.GET)
+                .name("different-name").musicOnHoldUrl("http://example.com/music")
+                .startOnEnter(true).endOnExit(true).record(true).mute(true)
+                .eventUrl("https://example.com/event").eventMethod(EventMethod.GET)
                 .addCanSpeak("6a4d6af0-55a6-4667-be90-8614e4c8e83c")
                 .addCanHear("416dfcfc-d86a-41c2-92ad-9a4fe1266898")
-                .build();
+                .transcription(TranscriptionSettings.builder().build()).build();
 
         String expectedJson = "[{\"name\":\"different-name\",\"startOnEnter\":true," +
                 "\"endOnExit\":true,\"record\":true,\"mute\":true,\"eventMethod\":\"GET\"," +
-                "\"musicOnHoldUrl\":[\"http://example.com/music\"],\"eventUrl\":[" +
-                "\"https://example.com/event\"],\"canSpeak\":[\"6a4d6af0-55a6-4667-be90-8614e4c8e83c\"]," +
-                "\"canHear\":[\"416dfcfc-d86a-41c2-92ad-9a4fe1266898\"],\"action\":\"conversation\"}]";
+                "\"musicOnHoldUrl\":[\"http://example.com/music\"],\"eventUrl\":[\"https://example.com/event\"]," +
+                "\"canSpeak\":[\"6a4d6af0-55a6-4667-be90-8614e4c8e83c\"],\"canHear\":[" +
+                "\"416dfcfc-d86a-41c2-92ad-9a4fe1266898\"],\"transcription\":{},\"action\":\"conversation\"}]";
         assertEquals(expectedJson, new Ncco(action).toJson());
+        TestUtils.testJsonableBaseObject(action);
     }
 
     @Test
@@ -129,7 +126,6 @@ public class ConversationActionTest {
         assertEquals(uuid2, iter.next().toString());
         assertTrue(conversation.toJson().contains("\"canSpeak\":[\""+uuid1+"\",\""+uuid2+"\"]"));
 
-
         conversation = builder.canSpeak(Collections.emptyList()).build();
         canSpeak = conversation.getCanSpeak();
         assertNotNull(canSpeak);
@@ -148,7 +144,6 @@ public class ConversationActionTest {
                 .build();
         canSpeak = conversation.getCanSpeak();
         assertNotNull(canSpeak);
-        assertEquals(LinkedHashSet.class, canSpeak.getClass());
         assertEquals(1, canSpeak.size());
         assertTrue(conversation.toJson().contains("\"canSpeak\":[\""+uuid2+"\"]"));
     }
@@ -168,7 +163,6 @@ public class ConversationActionTest {
         assertEquals(uuid2, iter.next().toString());
         assertTrue(conversation.toJson().contains("\"canHear\":[\""+uuid1+"\",\""+uuid2+"\"]"));
 
-
         conversation = builder.canHear(Collections.emptyList()).build();
         canHear = conversation.getCanHear();
         assertNotNull(canHear);
@@ -187,8 +181,29 @@ public class ConversationActionTest {
                 .build();
         canHear = conversation.getCanHear();
         assertNotNull(canHear);
-        assertEquals(LinkedHashSet.class, canHear.getClass());
         assertEquals(1, canHear.size());
         assertTrue(conversation.toJson().contains("\"canHear\":[\""+uuid2+"\"]"));
+    }
+
+    @Test
+    public void testTranscriptionSettings() {
+        TranscriptionSettings transcription = TranscriptionSettings.builder()
+                .eventMethod(EventMethod.GET)
+                .eventUrl("https://example.com/events")
+                .language(SpeechSettings.Language.PERSIAN)
+                .sentimentAnalysis(true).build();
+
+        ConversationAction.Builder builder = newBuilder().transcription(transcription);
+        assertThrows(IllegalStateException.class, builder::build);
+        assertThrows(IllegalStateException.class, () -> builder.record(false).build());
+
+        ConversationAction conversation = builder.record(true).build();
+        TestUtils.testJsonableBaseObject(conversation);
+
+        String expectedJsonFragment = "\"record\":true," +
+                "\"transcription\":{\"language\":\"fa-IR\"," +
+                "\"eventUrl\":[\"https://example.com/events\"]," +
+                "\"eventMethod\":\"GET\",\"sentimentAnalysis\":true}";
+        assertTrue(conversation.toJson().contains(expectedJsonFragment));
     }
 }

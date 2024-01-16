@@ -15,10 +15,13 @@
  */
 package com.vonage.client.voice.ncco;
 
+import com.vonage.client.TestUtils;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import org.junit.jupiter.api.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class RecordActionTest {
+
     @Test
     public void testBuilderMultipleInstances() {
         RecordAction.Builder builder = RecordAction.builder();
@@ -28,17 +31,18 @@ public class RecordActionTest {
     @Test
     public void testAllFields() {
         RecordAction record = RecordAction.builder()
-                .format(RecordingFormat.MP3)
-                .split(SplitRecording.CONVERSATION)
-                .endOnSilence(3)
-                .endOnKey('#')
-                .timeOut(5)
-                .beepStart(true)
-                .eventMethod(EventMethod.POST)
-                .eventUrl("https://example.com").channels(10)
-                .build();
+                .transcription(TranscriptionSettings.builder().sentimentAnalysis(false).build())
+                .format(RecordingFormat.MP3).split(SplitRecording.CONVERSATION)
+                .eventMethod(EventMethod.POST).eventUrl("https://example.com").channels(10)
+                .endOnSilence(3).endOnKey('#').timeOut(5).beepStart(true).build();
 
-        assertEquals("[{\"format\":\"mp3\",\"endOnSilence\":3,\"timeOut\":5,\"channels\":10,\"endOnKey\":\"#\",\"beepStart\":true,\"eventUrl\":[\"https://example.com\"],\"eventMethod\":\"POST\",\"split\":\"conversation\",\"action\":\"record\"}]", new Ncco(record).toJson());
+        TestUtils.testJsonableBaseObject(record);
+        String expectedJson = "[{\"format\":\"mp3\",\"endOnSilence\":3,\"timeOut\":5," +
+                "\"channels\":10,\"endOnKey\":\"#\",\"beepStart\":true,\"eventUrl\":" +
+                "[\"https://example.com\"],\"eventMethod\":\"POST\",\"split\":" +
+                "\"conversation\",\"transcription\":{\"sentimentAnalysis\":false},\"action\":\"record\"}]";
+
+        assertEquals(expectedJson, new Ncco(record).toJson());
     }
 
     @Test

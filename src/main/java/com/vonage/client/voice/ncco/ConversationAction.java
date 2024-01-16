@@ -34,6 +34,7 @@ public class ConversationAction extends JsonableBaseObject implements Action {
     private EventMethod eventMethod;
     private Collection<String> musicOnHoldUrl, eventUrl;
     private Collection<UUID> canSpeak, canHear;
+    private TranscriptionSettings transcription;
 
     ConversationAction() {}
 
@@ -48,6 +49,9 @@ public class ConversationAction extends JsonableBaseObject implements Action {
         eventMethod = builder.eventMethod;
         canSpeak = builder.canSpeak;
         canHear = builder.canHear;
+        if ((transcription = builder.transcription) != null && (record == null || !record)) {
+            throw new IllegalStateException("Recording must be enabled for transcription.");
+        }
     }
 
     @Override
@@ -105,12 +109,17 @@ public class ConversationAction extends JsonableBaseObject implements Action {
         return canHear;
     }
 
+    @JsonProperty("transcription")
+    public TranscriptionSettings getTranscription() {
+        return transcription;
+    }
+
     /**
      * Entrypoint for constructing an instance of this class.
      *
      * @param name The name of the Conversation room.
      *
-     * @return A {@link Builder}.
+     * @return A new Builder.
      */
     public static Builder builder(String name) {
         return new Builder(name);
@@ -121,7 +130,8 @@ public class ConversationAction extends JsonableBaseObject implements Action {
         private EventMethod eventMethod;
         private Boolean startOnEnter, endOnExit, record, mute;
         private Collection<String> musicOnHoldUrl, eventUrl;
-        private LinkedHashSet<UUID> canSpeak, canHear;
+        private Collection<UUID> canSpeak, canHear;
+        private TranscriptionSettings transcription;
 
         Builder(String name) {
             this.name = name;
@@ -327,11 +337,31 @@ public class ConversationAction extends JsonableBaseObject implements Action {
         }
 
         /**
+         * Transcription settings. If present (even if all settings are default), transcription is activated.
+         * The {@linkplain #record(Boolean)} parameter must be set to {@code true}.
+         *
+         * @param transcription The transcriptions settings.
+         *
+         * @return This builder.
+         * @since 8.2.0
+         */
+        public Builder transcription(TranscriptionSettings transcription) {
+            this.transcription = transcription;
+            return this;
+        }
+
+        /**
          * Builds the Conversation NCCO action.
          *
          * @return A new {@link ConversationAction} object from the stored builder options.
          */
         public ConversationAction build() {
+            if (canSpeak != null) {
+                canSpeak = new ArrayList<>(canSpeak);
+            }
+            if (canHear != null) {
+                canHear = new ArrayList<>(canHear);
+            }
             return new ConversationAction(this);
         }
     }
