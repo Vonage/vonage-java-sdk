@@ -39,9 +39,6 @@ public class InputAction extends JsonableBaseObject implements Action {
 
     InputAction() {}
 
-    /**
-     * @param builder  builder to create InputAction object
-     */
     private InputAction(Builder builder) {
         type = builder.type;
         dtmf = builder.dtmf;
@@ -55,22 +52,27 @@ public class InputAction extends JsonableBaseObject implements Action {
         return ACTION;
     }
 
-    public Collection<String> getType(){
+    @JsonProperty("type")
+    public Collection<String> getType() {
         return type;
     }
 
+    @JsonProperty("dtmf")
     public DtmfSettings getDtmf() {
         return dtmf;
     }
 
+    @JsonProperty("eventUrl")
     public Collection<String> getEventUrl() {
         return eventUrl;
     }
 
+    @JsonProperty("eventMethod")
     public EventMethod getEventMethod() {
         return eventMethod;
     }
 
+    @JsonProperty("speech")
     public SpeechSettings getSpeech() {
         return speech;
     }
@@ -86,7 +88,7 @@ public class InputAction extends JsonableBaseObject implements Action {
         private SpeechSettings speech;
         private Collection<String> type;
 
-        Builder() {}
+        private Builder() {}
 
         /**
          * @param dtmf DTMF settings object to enable DTMF input.
@@ -150,7 +152,9 @@ public class InputAction extends JsonableBaseObject implements Action {
         }
 
         /**
-         * @return A new {@link InputAction} object from the stored builder options.
+         * Builds the InputAction.
+         *
+         * @return A new InputAction object from the stored builder options.
          */
         public InputAction build() {
             return new InputAction(this);

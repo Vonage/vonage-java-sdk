@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.voice.AdvancedMachineDetection;
 import com.vonage.client.voice.MachineDetection;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -40,6 +41,8 @@ public class ConnectAction extends JsonableBaseObject implements Action {
     private AdvancedMachineDetection advancedMachineDetection;
     private Collection<String> eventUrl;
     private EventMethod eventMethod;
+    private Boolean randomFromNumber;
+    private URI ringbackTone;
 
     ConnectAction() {}
 
@@ -53,6 +56,10 @@ public class ConnectAction extends JsonableBaseObject implements Action {
         advancedMachineDetection = builder.advancedMachineDetection;
         eventUrl = builder.eventUrl;
         eventMethod = builder.eventMethod;
+        ringbackTone = builder.ringbackTone;
+        if ((randomFromNumber = builder.randomFromNumber) != null && from != null) {
+            throw new IllegalStateException("'randomFromNumber' and 'from' cannot be used together.");
+        }
     }
 
     @JsonProperty("action")
@@ -106,6 +113,16 @@ public class ConnectAction extends JsonableBaseObject implements Action {
         return eventMethod;
     }
 
+    @JsonProperty("randomFromNumber")
+    public Boolean getRandomFromNumber() {
+        return randomFromNumber;
+    }
+
+    @JsonProperty("ringbackTone")
+    public URI getRingbackTone() {
+        return ringbackTone;
+    }
+
     /**
      * Entry point for constructing an instance of this class.
      *
@@ -137,6 +154,8 @@ public class ConnectAction extends JsonableBaseObject implements Action {
         private AdvancedMachineDetection advancedMachineDetection;
         private Collection<String> eventUrl;
         private EventMethod eventMethod;
+        private Boolean randomFromNumber;
+        private URI ringbackTone;
 
         Builder(Collection<Endpoint> endpoint) {
             this.endpoint = endpoint;
@@ -291,6 +310,38 @@ public class ConnectAction extends JsonableBaseObject implements Action {
          */
         public Builder eventMethod(EventMethod eventMethod) {
             this.eventMethod = eventMethod;
+            return this;
+        }
+
+        /**
+         * Use a random phone number as {@code from}. The number will be selected from the list of the
+         * numbers assigned to the current application. The application will try to use number(s) from the
+         * same country as the destination (if available). If set to {@code true}, cannot be used together
+         * with {@linkplain #from(String)}. The default value is {@code false}.
+         *
+         * @param randomFromNumber {@code true} to use a random number instead of {@linkplain #from(String)}.
+         *
+         * @return This builder.
+         * @since 8.2.0
+         */
+        public Builder randomFromNumber(boolean randomFromNumber) {
+            this.randomFromNumber = randomFromNumber;
+            return this;
+        }
+
+        /**
+         * A URL value that points to a ringback tone to be played back on repeat to the caller, so they don't
+         * hear silence. The tone will automatically stop playing when the call is fully connected. It's not
+         * recommended to use this parameter when connecting to a phone endpoint, as the carrier will supply
+         * their own ringback tone.
+         *
+         * @param ringbackTone The ringback tone URL as a string.
+         *
+         * @return This builder.
+         * @since 8.2.0
+         */
+        public Builder ringbackTone(String ringbackTone) {
+            this.ringbackTone = URI.create(ringbackTone);
             return this;
         }
 
