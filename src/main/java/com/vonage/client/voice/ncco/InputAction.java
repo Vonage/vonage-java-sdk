@@ -136,7 +136,7 @@ public class InputAction extends JsonableBaseObject implements Action {
          * @return This builder to keep building the input action.
          * @since 6.0.0
          */
-        public Builder speech(SpeechSettings speech){
+        public Builder speech(SpeechSettings speech) {
             this.speech = speech;
             return this;
         }
@@ -146,7 +146,7 @@ public class InputAction extends JsonableBaseObject implements Action {
          *            or [ "dtmf", "speech" ] for both.
          * @return This builder to keep building the input action.
          */
-        public Builder type(Collection<String> type){
+        public Builder type(Collection<String> type) {
             this.type = type;
             return this;
         }
