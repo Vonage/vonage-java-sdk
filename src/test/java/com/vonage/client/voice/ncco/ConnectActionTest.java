@@ -17,10 +17,11 @@ package com.vonage.client.voice.ncco;
 
 import com.vonage.client.voice.AdvancedMachineDetection;
 import com.vonage.client.voice.MachineDetection;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ConnectActionTest {
+
     @Test
     public void testBuilderMultipleInstances() {
         ConnectAction.Builder builder = ConnectAction.builder(PhoneEndpoint.builder("15554441234").build());
@@ -31,19 +32,16 @@ public class ConnectActionTest {
     public void testAllFieldsWithPhoneEndpoint() {
         PhoneEndpoint endpoint = PhoneEndpoint.builder("15554441234").build();
         ConnectAction connect = ConnectAction.builder(endpoint)
-                .from("15554449876")
-                .eventType(EventType.SYNCHRONOUS)
-                .timeOut(3)
-                .limit(2)
+                .from("15554449876").eventType(EventType.SYNCHRONOUS)
+                .timeOut(3).limit(2).eventUrl("https://example.com")
                 .machineDetection(MachineDetection.CONTINUE)
-                .eventUrl("https://example.com")
-                .eventMethod(EventMethod.POST)
-                .build();
+                .ringbackTone("http://example.com/ringbackTone.wav")
+                .eventMethod(EventMethod.POST).build();
 
         String expectedJson = "[{\"endpoint\":[{\"number\":\"15554441234\",\"type\":\"phone\"}]," +
                 "\"from\":\"15554449876\",\"eventType\":\"synchronous\",\"limit\":2,\"timeout\":3," +
-                "\"machineDetection\":\"continue\",\"eventUrl\":[\"https://example.com\"]," +
-                "\"eventMethod\":\"POST\",\"action\":\"connect\"}]";
+                "\"machineDetection\":\"continue\",\"eventUrl\":[\"https://example.com\"],\"eventMethod\":" +
+                "\"POST\",\"ringbackTone\":\"http://example.com/ringbackTone.wav\",\"action\":\"connect\"}]";
         assertEquals(expectedJson, new Ncco(connect).toJson());
     }
 
@@ -207,8 +205,7 @@ public class ConnectActionTest {
         PhoneEndpoint phone = PhoneEndpoint.builder("15554321234").build();
         AdvancedMachineDetection amd = AdvancedMachineDetection.builder()
                 .mode(AdvancedMachineDetection.Mode.DETECT_BEEP)
-                .behavior(MachineDetection.CONTINUE)
-                .build();
+                .behavior(MachineDetection.CONTINUE).build();
         ConnectAction ca = ConnectAction.builder(phone).advancedMachineDetection(amd).build();
         String expectedJson = "[{\"endpoint\":[{\"number\":\"15554321234\",\"type\":\"phone\"}]," +
                 "\"advancedMachineDetection\":{\"behavior\":\"continue\",\"mode\":\"detect_beep\"}," +
@@ -219,8 +216,7 @@ public class ConnectActionTest {
     @Test
     public void testEventUrl() {
         ConnectAction connect = ConnectAction.builder(PhoneEndpoint.builder("15554441234").build())
-                .eventUrl("https://example.org")
-                .build();
+                .eventUrl("https://example.org").build();
 
         String expectedJson = "[{\"endpoint\":[{\"number\":\"15554441234\",\"type\":\"phone\"}]," +
                 "\"eventUrl\":[\"https://example.org\"],\"action\":\"connect\"}]";
@@ -230,11 +226,25 @@ public class ConnectActionTest {
     @Test
     public void testEventMethod() {
         ConnectAction connect = ConnectAction.builder(PhoneEndpoint.builder("15554441234").build())
-                .eventMethod(EventMethod.POST)
-                .build();
+                .eventMethod(EventMethod.POST).build();
 
         String expectedJson = "[{\"endpoint\":[{\"number\":\"15554441234\",\"type\":\"phone\"}]," +
                 "\"eventMethod\":\"POST\",\"action\":\"connect\"}]";
+        assertEquals(expectedJson, new Ncco(connect).toJson());
+    }
+
+    @Test
+    public void testRandomFromNumber() {
+        ConnectAction.Builder builder = ConnectAction.builder(VbcEndpoint.builder("789").build());
+        ConnectAction connect = builder.randomFromNumber(true).build();
+        String expectedJson = "[{\"endpoint\":[{\"extension\":\"789\",\"type\":\"vbc\"}]," +
+                "\"randomFromNumber\":true,\"action\":\"connect\"}]";
+        assertEquals(expectedJson, new Ncco(connect).toJson());
+
+        assertThrows(IllegalStateException.class, () -> builder.from("447900000001").build());
+        assertThrows(IllegalStateException.class, () -> builder.randomFromNumber(false).build());
+        connect = builder.from(null).build();
+        expectedJson = expectedJson.replace("true", "false");
         assertEquals(expectedJson, new Ncco(connect).toJson());
     }
 }

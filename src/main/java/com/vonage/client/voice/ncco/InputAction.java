@@ -39,9 +39,6 @@ public class InputAction extends JsonableBaseObject implements Action {
 
     InputAction() {}
 
-    /**
-     * @param builder  builder to create InputAction object
-     */
     private InputAction(Builder builder) {
         type = builder.type;
         dtmf = builder.dtmf;
@@ -55,22 +52,27 @@ public class InputAction extends JsonableBaseObject implements Action {
         return ACTION;
     }
 
-    public Collection<String> getType(){
+    @JsonProperty("type")
+    public Collection<String> getType() {
         return type;
     }
 
+    @JsonProperty("dtmf")
     public DtmfSettings getDtmf() {
         return dtmf;
     }
 
+    @JsonProperty("eventUrl")
     public Collection<String> getEventUrl() {
         return eventUrl;
     }
 
+    @JsonProperty("eventMethod")
     public EventMethod getEventMethod() {
         return eventMethod;
     }
 
+    @JsonProperty("speech")
     public SpeechSettings getSpeech() {
         return speech;
     }
@@ -86,7 +88,7 @@ public class InputAction extends JsonableBaseObject implements Action {
         private SpeechSettings speech;
         private Collection<String> type;
 
-        Builder() {}
+        private Builder() {}
 
         /**
          * @param dtmf DTMF settings object to enable DTMF input.
@@ -134,7 +136,7 @@ public class InputAction extends JsonableBaseObject implements Action {
          * @return This builder to keep building the input action.
          * @since 6.0.0
          */
-        public Builder speech(SpeechSettings speech){
+        public Builder speech(SpeechSettings speech) {
             this.speech = speech;
             return this;
         }
@@ -144,13 +146,15 @@ public class InputAction extends JsonableBaseObject implements Action {
          *            or [ "dtmf", "speech" ] for both.
          * @return This builder to keep building the input action.
          */
-        public Builder type(Collection<String> type){
+        public Builder type(Collection<String> type) {
             this.type = type;
             return this;
         }
 
         /**
-         * @return A new {@link InputAction} object from the stored builder options.
+         * Builds the InputAction.
+         *
+         * @return A new InputAction object from the stored builder options.
          */
         public InputAction build() {
             return new InputAction(this);

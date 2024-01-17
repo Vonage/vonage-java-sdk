@@ -38,9 +38,9 @@ public class NotifyAction extends JsonableBaseObject implements Action {
     NotifyAction() {}
 
     private NotifyAction(Builder builder) {
-        this.payload = builder.payload;
-        this.eventUrl = builder.eventUrl;
-        this.eventMethod = builder.eventMethod;
+        payload = builder.payload;
+        eventUrl = builder.eventUrl;
+        eventMethod = builder.eventMethod;
     }
 
     @Override
@@ -80,7 +80,7 @@ public class NotifyAction extends JsonableBaseObject implements Action {
          * @param payload  A Map of String keys and ? values that will be converted to JSON and sent to your event URL.
          * @param eventUrl The URL to send events to.
          */
-        Builder(Map<String, ?> payload, Collection<String> eventUrl) {
+        private Builder(Map<String, ?> payload, Collection<String> eventUrl) {
             this.payload = payload;
             this.eventUrl = eventUrl;
         }
@@ -125,7 +125,9 @@ public class NotifyAction extends JsonableBaseObject implements Action {
         }
 
         /**
-         * @return A new {@link NotifyAction} object from the stored builder options.
+         * Builds the NotifyAction.
+         *
+         * @return A new NotifyAction object from the stored builder options.
          */
         public NotifyAction build() {
             return new NotifyAction(this);

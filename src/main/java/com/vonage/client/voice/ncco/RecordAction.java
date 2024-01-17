@@ -17,16 +17,22 @@ package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.util.Arrays;
 import java.util.Collection;
 
 /**
  * An NCCO record action which allows for the call to be recorded.
+ * <p>
+ *
+ * The record action is asynchronous. Recording starts when the record action is executed in the NCCO and finishes
+ * when the synchronous condition in the action is met. That is, endOnSilence, timeOut or endOnKey. If you do not
+ * set a synchronous condition, the Voice API immediately executes the next NCCO without recording.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RecordAction extends JsonableBaseObject implements Action {
+public final class RecordAction extends JsonableBaseObject implements Action {
     private static final String ACTION = "record";
 
     private RecordingFormat format;
@@ -36,26 +42,23 @@ public class RecordAction extends JsonableBaseObject implements Action {
     private Collection<String> eventUrl;
     private EventMethod eventMethod;
     private SplitRecording split;
+    private TranscriptionSettings transcription;
 
     RecordAction() {}
 
-    /**
-     * @param builder Builder for building the Record Action
-     */
     private RecordAction(Builder builder) {
-        this.format = builder.format;
-        this.endOnSilence = builder.endOnSilence;
-        this.endOnKey = builder.endOnKey;
-        this.timeOut = builder.timeOut;
-        this.beepStart = builder.beepStart;
-        this.eventUrl = builder.eventUrl;
-        this.eventMethod = builder.eventMethod;
-
+        format = builder.format;
+        endOnSilence = builder.endOnSilence;
+        endOnKey = builder.endOnKey;
+        timeOut = builder.timeOut;
+        beepStart = builder.beepStart;
+        eventUrl = builder.eventUrl;
+        eventMethod = builder.eventMethod;
         // Split conversation must be enabled for multiple channels. Checked during construction to avoid
         // method-chaining state confusion.
-        this.split = (builder.channels != null && builder.channels > 1) ? SplitRecording.CONVERSATION : builder.split;
-
-        this.channels = builder.channels;
+        split = (builder.channels != null && builder.channels > 1) ? SplitRecording.CONVERSATION : builder.split;
+        channels = builder.channels;
+        transcription = builder.transcription;
     }
 
     @Override
@@ -63,46 +66,68 @@ public class RecordAction extends JsonableBaseObject implements Action {
         return ACTION;
     }
 
+    @JsonProperty("format")
     public RecordingFormat getFormat() {
         return format;
     }
 
+    @JsonProperty("endOnSilence")
     public Integer getEndOnSilence() {
         return endOnSilence;
     }
 
+    @JsonProperty("endOnKey")
     public Character getEndOnKey() {
         return endOnKey;
     }
 
+    @JsonProperty("timeOut")
     public Integer getTimeOut() {
         return timeOut;
     }
 
+    @JsonProperty("beepStart")
     public Boolean getBeepStart() {
         return beepStart;
     }
 
+    @JsonProperty("eventUrl")
     public Collection<String> getEventUrl() {
         return eventUrl;
     }
 
+    @JsonProperty("eventMethod")
     public EventMethod getEventMethod() {
         return eventMethod;
     }
 
+    @JsonProperty("split")
     public SplitRecording getSplit() {
         return split;
     }
 
+    @JsonProperty("channels")
     public Integer getChannels() {
         return channels;
     }
 
+    @JsonProperty("transcription")
+    public TranscriptionSettings getTranscription() {
+        return transcription;
+    }
+
+    /**
+     * Entrypoint for constructing an instance of this class.
+     *
+     * @return A new Builder.
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * Builder for a RecordAction. All fields are optional.
+     */
     public static class Builder {
         private RecordingFormat format;
         private Character endOnKey;
@@ -111,6 +136,7 @@ public class RecordAction extends JsonableBaseObject implements Action {
         private Collection<String> eventUrl;
         private EventMethod eventMethod;
         private SplitRecording split;
+        private TranscriptionSettings transcription;
 
         Builder() {}
 
@@ -229,7 +255,22 @@ public class RecordAction extends JsonableBaseObject implements Action {
         }
 
         /**
-         * @return A new {@link RecordAction} object from the stored builder options.
+         * Set this parameter to a non-null value to transcribe the recording.
+         *
+         * @param transcription The transcription settings.
+         *
+         * @return This builder.
+         * @since 8.2.0
+         */
+        public Builder transcription(TranscriptionSettings transcription) {
+            this.transcription = transcription;
+            return this;
+        }
+
+        /**
+         * Builds the RecordAction.
+         *
+         * @return A new RecordAction object from the stored builder options.
          */
         public RecordAction build() {
             return new RecordAction(this);

@@ -15,30 +15,54 @@
  */
 package com.vonage.client.voice.ncco;
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.*;
 import com.vonage.client.JsonableBaseObject;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
- * ASR(Automatic Speech Recognition) settings for Input Actions that will be added to a NCCO object.
+ * ASR (Automatic Speech Recognition) settings for Input Actions that will be added to a NCCO object.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SpeechSettings extends JsonableBaseObject {
-
     private Collection<String> uuid, context;
-    private Integer endOnSilence, startTimeout, maxDuration;
+    private Double endOnSilence;
+    private Integer startTimeout, maxDuration, sensitivity;
     private Language language;
+    private Boolean saveAudio;
+
+    /**
+     * @deprecated This will be made private in a future release. Use {@link #builder()}.
+     */
+    @Deprecated
+    public SpeechSettings() {}
+
+    private SpeechSettings(Builder builder) {
+        if (builder.uuid != null) {
+            uuid = Collections.singletonList(builder.uuid);
+        }
+        if ((endOnSilence = builder.endOnSilence) != null && (endOnSilence < 0.4 || endOnSilence > 10)) {
+            throw new IllegalArgumentException("endOnSilence must be between 0.4 and 10.");
+        }
+        if ((startTimeout = builder.startTimeout) != null && (startTimeout < 1 || startTimeout > 60)) {
+            throw new IllegalArgumentException("startTimeout must be between 1 and 60.");
+        }
+        if ((maxDuration = builder.maxDuration) != null && (maxDuration < 1 || maxDuration > 60)) {
+            throw new IllegalArgumentException("maxDuration must be between 1 and 60.");
+        }
+        if ((sensitivity = builder.sensitivity) != null && (sensitivity < 10 || sensitivity > 100)) {
+            throw new IllegalArgumentException("sensitivity must be between 10 and 100.");
+        }
+        context = builder.context;
+        language = builder.language;
+        saveAudio = builder.saveAudio;
+    }
 
     @JsonProperty("uuid")
     public Collection<String> getUuid() {
         return uuid;
-    }
-
-    public void setUuid(Collection<String> uuid) {
-        this.uuid = uuid;
     }
 
     @JsonProperty("language")
@@ -46,40 +70,14 @@ public class SpeechSettings extends JsonableBaseObject {
         return language;
     }
 
-    /**
-     * @param language expected language of the user's speech. If empty, default value is en-US.
-     */
-    public void setLanguage(Language language) {
-        this.language = language;
-    }
-
-    @JsonProperty("endOnSilence")
-    public Integer getEndOnSilence() {
-        return endOnSilence;
-    }
-
-    /**
-     * Controlls how long the system will wait after user stops speaking to decide the input is completed.
-     * Timeout range 1-10 seconds. If empty,Default value is 2
-     *
-     * @param endOnSilence wait time for voice input to complete
-     */
-    public void setEndOnSilence(Integer endOnSilence) {
-        this.endOnSilence = endOnSilence;
-    }
-
     @JsonProperty("context")
     public Collection<String> getContext() {
         return context;
     }
 
-    /**
-     * List of hints to improve recognition quality if certain words are expected from the user.
-     *
-     * @param context list of hints
-     */
-    public void setContext(Collection<String> context) {
-        this.context = context;
+    @JsonProperty("endOnSilence")
+    public Double getEndOnSilence() {
+        return endOnSilence;
     }
 
     @JsonProperty("startTimeout")
@@ -87,28 +85,226 @@ public class SpeechSettings extends JsonableBaseObject {
         return startTimeout;
     }
 
+    @JsonProperty("maxDuration")
+    public Integer getMaxDuration() {
+        return maxDuration;
+    }
+
+    @JsonProperty("sensitivity")
+    public Integer getSensitivity() {
+        return sensitivity;
+    }
+
+    @JsonProperty("saveAudio")
+    public Boolean getSaveAudio() {
+        return saveAudio;
+    }
+
+
+    /**
+     * @param language expected language of the user's speech. If empty, default value is en-US.
+     * @deprecated Use {@link Builder#language(Language)}. This will be removed in a future release.
+     */
+    @Deprecated
+    public void setLanguage(Language language) {
+        this.language = language;
+    }
+
+    /**
+     *
+     * @param uuid The unique ID of the Call leg for the user to capture the speech of, wrapped in a collection.
+     * @deprecated Use {@link Builder#uuid(String)}. This will be removed in a future release.
+     */
+    @Deprecated
+    public void setUuid(Collection<String> uuid) {
+        this.uuid = uuid;
+    }
+
+    /**
+     * List of hints to improve recognition quality if certain words are expected from the user.
+     *
+     * @param context list of hints
+     * @deprecated Use {@link Builder#context(Collection)}. This will be removed in a future release.
+     */
+    @Deprecated
+    public void setContext(Collection<String> context) {
+        this.context = context;
+    }
+
+    /**
+     * Controls how long the system will wait after user stops speaking to decide the input is completed.
+     * Timeout range 1-10 seconds. If empty,Default value is 2
+     *
+     * @param endOnSilence wait time for voice input to complete
+     * @deprecated Use {@link Builder#endOnSilence(double)}. This will be removed in a future release.
+     */
+    @Deprecated
+    public void setEndOnSilence(Integer endOnSilence) {
+        this.endOnSilence = Double.valueOf(endOnSilence);
+    }
+
     /**
      * Controls how long the system will wait for the user to start speaking.
      * Timeout range 1-10 seconds.
      *
      * @param startTimeout timeout for voice input initiation
+     * @deprecated Use {@link Builder#startTimeout(int)}. This will be removed in a future release.
      */
+    @Deprecated
     public void setStartTimeout(Integer startTimeout) {
         this.startTimeout = startTimeout;
-    }
-
-    @JsonProperty("maxDuration")
-    public Integer getMaxDuration() {
-        return maxDuration;
     }
 
     /**
      * Controls maximum speech duration from the moment user starts speaking. Default value is 60
      *
      * @param maxDuration speech duration starting from user's initiation of speech
+     * @deprecated Use {@link Builder#maxDuration(int)}. This will be removed in a future release.
      */
+    @Deprecated
     public void setMaxDuration(Integer maxDuration) {
         this.maxDuration = maxDuration;
+    }
+
+    /**
+     * Entry point for constructing an instance of this class.
+     *
+     * @return A new Builder.
+     * @since 8.2.0
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    /**
+     * Builder for customising SpeechSettings parameters. All fields are optional.
+     *
+     * @since 8.2.0
+     */
+    public static final class Builder {
+        private String uuid;
+        private Collection<String> context;
+        private Integer startTimeout, maxDuration, sensitivity;
+        private Double endOnSilence;
+        private Language language;
+        private Boolean saveAudio;
+
+        private Builder() {}
+
+        /**
+         * The unique ID of the Call leg for the user to capture the speech of.
+         * The first joined leg of the call by default.
+         *
+         * @param uuid The call leg ID to capture as a string.
+         * @return This builder.
+         */
+        public Builder uuid(String uuid) {
+            this.uuid = uuid;
+            return this;
+        }
+
+        /**
+         * Hints to improve recognition quality if certain words are expected from the user.
+         *
+         * @param context The collection of hint strings.
+         * @return This builder.
+         * @see #context(String...)
+         */
+        public Builder context(Collection<String> context) {
+            this.context = context;
+            return this;
+        }
+
+        /**
+         * Hints to improve recognition quality if certain words are expected from the user.
+         *
+         * @param context The hint strings.
+         * @return This builder.
+         * @see #context(Collection)
+         */
+        public Builder context(String... context) {
+            return context(Arrays.asList(context));
+        }
+
+        /**
+         * Controls how long the system will wait after user stops speaking to decide the input is completed.
+         * The default value is 2.0 (seconds). The range of possible values is between 0.4 and 10.0 seconds.
+         *
+         * @param endOnSilence The input completion wait time in seconds as a double.
+         * @return This builder.
+         */
+        public Builder endOnSilence(double endOnSilence) {
+            this.endOnSilence = endOnSilence;
+            return this;
+        }
+
+        /**
+         * Controls how long the system will wait for the user to start speaking. The range of possible values
+         * is between 1 second and 60 seconds. The default value is 10.
+         *
+         * @param startTimeout The initial speech timeout in seconds as an integer.
+         * @return This builder.
+         */
+        public Builder startTimeout(int startTimeout) {
+            this.startTimeout = startTimeout;
+            return this;
+        }
+
+        /**
+         * Controls maximum speech duration (from the moment user starts speaking). The default value is
+         * 60 (seconds). The range of possible values is between 1 and 60 seconds.
+         * 
+         * @param maxDuration The maximum speech duration in seconds as an integer.
+         * @return This builder.
+         */
+        public Builder maxDuration(int maxDuration) {
+            this.maxDuration = maxDuration;
+            return this;
+        }
+
+        /**
+         * Audio sensitivity used to differentiate noise from speech. An integer value where 10 represents
+         * low sensitivity and 100 maximum sensitivity. Default is 90.
+         *
+         * @param sensitivity The audio sensitivity as an integer.
+         * @return This builder.
+         */
+        public Builder sensitivity(int sensitivity) {
+            this.sensitivity = sensitivity;
+            return this;
+        }
+
+        /**
+         * Expected language of the user's speech. Default is {@link Language#ENGLISH_UNITED_STATES}.
+         *
+         * @param language The expected speech language as an enum.
+         * @return This builder.
+         */
+        public Builder language(Language language) {
+            this.language = language;
+            return this;
+        }
+
+        /**
+         * Controls whether the speech input recording ({@code recording_url}) is sent to your webhook
+         * endpoint at {@code eventUrl}. The default value is {@code false}.
+         *
+         * @param saveAudio {@code true} to send the speech input to the event webhook.
+         * @return This builder.
+         */
+        public Builder saveAudio(boolean saveAudio) {
+            this.saveAudio = saveAudio;
+            return this;
+        }
+
+        /**
+         * Builds the SpeechSettings object with this builder's properties.
+         *
+         * @return A new SpeechSettings instance.
+         */
+        public SpeechSettings build() {
+            return new SpeechSettings(this);
+        }
     }
 
     public enum Language {
@@ -193,13 +389,14 @@ public class SpeechSettings extends JsonableBaseObject {
 
         private final String language;
 
+        @JsonCreator
         Language(String language) {
             this.language = language;
         }
 
         @JsonValue
         public String getLanguage() {
-            return this.language;
+            return language;
         }
     }
 }
