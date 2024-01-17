@@ -4,12 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-# [8.2.0] - 2024-01-??
+# [8.2.0] - 2024-01-29
 - Added Number Insight v2 API implementation
 - New webhook deserialisation POJOs for Voice: `AnswerWebhook` and `EventWebhook`
 - `toString`, `equals` and `hashCode` implemented for all domain response objects
 - Added `content_id` and `entity_id` parameters for Verify v2 SMS workflow
 - Added Builder for Verify v2 SMS & Silent Auth workflow requests
+- Updated Voice NCCOs:
+  - Added `mute`, `canSpeak` and `canHear` to `ConversationAction`
+  - Added support for call recording transcription
+  - Added `randomFromNumber` and `ringbackTone` to `ConnectAction`
+  - Improved `SpeechSettings`:
+    - Added `sensitivity` and `saveAudio`
+    - Builder for (setters and constructor are now deprecated)
+    - `endOnSilence` is now a Double instead of Integer
+    - Validation for parameter boundaries
 
 # [8.1.0] - 2024-01-04
 - Added various missing fields in Messages API:
