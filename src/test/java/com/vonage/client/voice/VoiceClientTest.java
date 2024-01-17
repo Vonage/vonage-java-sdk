@@ -23,6 +23,7 @@ import com.vonage.client.voice.ncco.Ncco;
 import com.vonage.client.voice.ncco.TalkAction;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.function.Executable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
@@ -35,6 +36,10 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
 
     public VoiceClientTest() {
         client = new VoiceClient(wrapper);
+    }
+
+    void assert401Response(Executable invocation) throws Exception {
+        assert401ApiResponseException(VoiceResponseException.class, invocation);
     }
 
     @Test
@@ -63,6 +68,7 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
         assertEquals("63f61863-4a51-4f6b-86e1-46edebio0391", evt.getConversationUuid());
         assertEquals(SAMPLE_CALL_ID, evt.getUuid());
         assertEquals(CallDirection.OUTBOUND, evt.getDirection());
+        assert401Response(() -> client.createCall(Call.builder().to(new VbcEndpoint("123")).build()));
     }
 
     @Test
@@ -78,6 +84,7 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
         CallInfoPage page = client.listCalls();
         TestUtils.testJsonableBaseObject(page);
         assertEquals(0, page.getCount());
+        assert401Response(client::listCalls);
     }
 
     @Test
@@ -114,6 +121,7 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
         CallInfo call = client.getCallDetails("93137ee3-580e-45f7-a61a-e0b5716000ef");
         TestUtils.testJsonableBaseObject(call, true);
         assertEquals("93137ee3-580e-45f7-a61a-e0b5716000ef", call.getUuid());
+        assert401Response(() -> client.getCallDetails(SAMPLE_CALL_ID));
     }
 
     @Test
@@ -131,6 +139,7 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
                 client.sendDtmf("944dd293-ca13-4a58-bc37-6252e11474be", null)
         );
         assertThrows(NullPointerException.class, () -> client.sendDtmf(null, "1234"));
+        assert401Response(() -> client.sendDtmf(SAMPLE_CALL_ID, "789#0"));
     }
 
     @Test
@@ -138,6 +147,7 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
         stubResponseAndRun(204, () -> client.terminateCall(SAMPLE_CALL_ID));
         stubResponseAndAssertThrows(204, () -> client.terminateCall(null), NullPointerException.class);
         stubResponseAndAssertThrows(404, () -> client.terminateCall(SAMPLE_CALL_ID), VoiceResponseException.class);
+        assert401Response(() -> client.terminateCall(SAMPLE_CALL_ID));
     }
 
     @Test
@@ -145,6 +155,7 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
         stubResponseAndRun(204, () -> client.muteCall(SAMPLE_CALL_ID));
         stubResponseAndAssertThrows(204, () -> client.muteCall(null), NullPointerException.class);
         stubResponseAndAssertThrows(404, () -> client.muteCall(SAMPLE_CALL_ID), VoiceResponseException.class);
+        assert401Response(() -> client.muteCall(SAMPLE_CALL_ID));
     }
 
     @Test
@@ -152,6 +163,7 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
         stubResponseAndRun(204, () -> client.unmuteCall(SAMPLE_CALL_ID));
         stubResponseAndAssertThrows(204, () -> client.unmuteCall(null), NullPointerException.class);
         stubResponseAndAssertThrows(404, () -> client.unmuteCall(SAMPLE_CALL_ID), VoiceResponseException.class);
+        assert401Response(() -> client.unmuteCall(SAMPLE_CALL_ID));
     }
 
     @Test
@@ -159,6 +171,7 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
         stubResponseAndRun(204, () -> client.earmuffCall(SAMPLE_CALL_ID));
         stubResponseAndAssertThrows(204, () -> client.earmuffCall(null), NullPointerException.class);
         stubResponseAndAssertThrows(404, () -> client.earmuffCall(SAMPLE_CALL_ID), VoiceResponseException.class);
+        assert401Response(() -> client.earmuffCall(SAMPLE_CALL_ID));
     }
 
     @Test
@@ -166,6 +179,7 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
         stubResponseAndRun(204, () -> client.unearmuffCall(SAMPLE_CALL_ID));
         stubResponseAndAssertThrows(204, () -> client.unearmuffCall(null), NullPointerException.class);
         stubResponseAndAssertThrows(404, () -> client.unearmuffCall(SAMPLE_CALL_ID), VoiceResponseException.class);
+        assert401Response(() -> client.unearmuffCall(SAMPLE_CALL_ID));
     }
 
     @Test
@@ -177,6 +191,7 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
                 client.transferCall("93137ee3-580e-45f7-a61a-e0b5716000ef", "';,x^")
         );
         assertThrows(NullPointerException.class, () -> client.transferCall(null, url));
+        assert401Response(() -> client.transferCall(SAMPLE_CALL_ID, url));
     }
 
     @Test
@@ -203,6 +218,7 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
         assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
         assertThrows(NullPointerException.class, () -> client.startStream(null, url));
         assertThrows(IllegalArgumentException.class, () -> client.startStream("944dd293-ca13-4a58-bc37-6252e11474be", null));
+        assert401Response(() -> client.startStream(SAMPLE_CALL_ID, url));
     }
 
     @Test
@@ -231,6 +247,7 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
         TestUtils.testJsonableBaseObject(response);
         assertEquals("Stream stopped", response.getMessage());
         assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
+        assert401Response(() -> client.stopStream(SAMPLE_CALL_ID));
     }
 
     @Test
@@ -254,6 +271,7 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
         assertThrows(NullPointerException.class, () ->
                 client.startTalk("944dd293-ca13-4a58-bc37-6252e11474be", (TalkPayload) null)
         );
+        assert401Response(() -> client.startTalk(SAMPLE_CALL_ID, TalkPayload.builder("Hey up").build()));
     }
 
     @Test
@@ -363,6 +381,7 @@ public class VoiceClientTest extends ClientTest<VoiceClient> {
         assertEquals("Talk stopped", response.getMessage());
         assertEquals("944dd293-ca13-4a58-bc37-6252e11474be", response.getUuid());
         assertThrows(NullPointerException.class, () -> client.stopTalk(null));
+        assert401Response(() -> client.stopTalk(SAMPLE_CALL_ID));
     }
 
     @Test
