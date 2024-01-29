@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Represents properties of a live streaming broadcast.
+ * Represents properties of a live-streaming broadcast.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -260,8 +260,8 @@ public class Broadcast extends StreamComposition {
 		 * For each RTMP stream, specify serverUrl (the RTMP server URL), streamName
 		 * (the stream name, such as the YouTube Live stream name or the Facebook stream key), and
 		 * (optionally) id (a unique ID for the stream). If you specify an ID, it will be included in the REST call
-		 * response and the REST method for getting information about a live streaming broadcast. Vonage streams
-		 * the session to each RTMP URL you specify. Note that Vonage live streaming supports RTMP and RTMPS.
+		 * response and the REST method for getting information about a live-streaming broadcast. Vonage streams
+		 * the session to each RTMP URL you specify. Note that Vonage live-streaming supports RTMP and RTMPS.
 		 *
 		 * @param rtmp The RTMP stream to include in the broadcast.
 		 *
@@ -278,8 +278,8 @@ public class Broadcast extends StreamComposition {
 		 * For each RTMP stream, specify serverUrl (the RTMP server URL), streamName
 		 * (the stream name, such as the YouTube Live stream name or the Facebook stream key), and
 		 * (optionally) id (a unique ID for the stream). If you specify an ID, it will be included in the REST call
-		 * response and the REST method for getting information about a live streaming broadcast. Vonage streams
-		 * the session to each RTMP URL you specify. Note that Vonage live streaming supports RTMP and RTMPS.
+		 * response and the REST method for getting information about a live-streaming broadcast. Vonage streams
+		 * the session to each RTMP URL you specify. Note that Vonage live-streaming supports RTMP and RTMPS.
 		 *
 		 * @param rtmps The RTMP streams to include in the broadcast.
 		 *

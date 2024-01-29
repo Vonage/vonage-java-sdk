@@ -9,9 +9,7 @@ plugins {
 
 group = "com.vonage"
 archivesBaseName = "server-sdk"
-version = "8.1.0"
-sourceCompatibility = "1.8"
-targetCompatibility = "1.8"
+version = "8.2.0"
 
 ext.githubPath = 'Vonage/vonage-java-sdk'
 
@@ -21,6 +19,11 @@ tasks.withType(Javadoc).configureEach {
 
 repositories {
     mavenCentral()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = sourceCompatibility
 }
 
 dependencies {

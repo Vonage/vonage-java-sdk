@@ -35,7 +35,7 @@ public class BinaryMessage extends Message {
      *                          This api, and the Vonage sms service will send this data 'as-is' (in conjunction with the binary UDH) and will not make any corrections.
      *                          so you should ensure that it is a correctly constructed message
      * @param udh  Most binary content will require a UserDataHeader portion of the message containing commands to enable the handset to interpret the binary data
-     *                          (for example, a binary ringtone, a wap-push, OverTheAir configuration, etc).
+     *                          (for example, a binary ringtone, a wap-push, OverTheAir configuration etc.).
      *                          Additionally, if you are sending a long text message as multiple concatenated messages and are performing this operation manually rather than
      *                          using the automated long sms handling in the Vonage sms service, then you will need to construct and include here an appropriate
      *                          UserDataHeader field that describes the segmentation/re-assembly fields required to successfully concatenate multiple short messages.
@@ -61,7 +61,7 @@ public class BinaryMessage extends Message {
 
     /**
      * @return byte[] Most binary content will require a UserDataHeader portion of the message containing commands to enable the handset to interpret the binary data
-     * (for example, a binary ringtone, a wap-push, OverTheAir configuration, etc).
+     * (for example, a binary ringtone, a wap-push, OverTheAir configuration, etc.).
      * Additionally, if you are sending a long text message as multiple concatenated messages and are performing this operation manually rather than
      * using the automated long sms handling in the Vonage sms service, then you will need to construct and include here an appropriate
      * UserDataHeader field that describes the segmentation/re-assembly fields required to successfully concatenate multiple short messages.

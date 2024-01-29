@@ -173,7 +173,7 @@ public class Archive extends StreamComposition {
     }
 
     /**
-     * Used to construct a Archive object.
+     * Used to construct an Archive object.
      *
      * @see Archive
      */

@@ -249,7 +249,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Bumped dependency versions
 
 ## [6.4.0] - 2021-05-28
-- Adding Random From Number Feature for the Voice API, if set to `true`, the from number will be randomly selected from the pool of numbers available to the application making the call.
+- Adding Random From Number Feature for the Voice API, if set to `true`, the `from` number will be randomly selected from the pool of numbers available to the application making the call.
 - adjusting operator used to check json payloads
 - Adding extra parsing for top level Roaming Status in Advanced Number Insights
 
@@ -585,8 +585,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [2.0.1] - 2017-03-18
 ### Changed
-- Made servlet-api an optional dependency so it isn't bundled in war files. (This
-  could result in class conflicts in Tomcat.)
+- Made servlet-api an optional dependency, so it isn't bundled in WAR files. (This could result in class conflicts in Tomcat.)
 
 ## [2.0.0] - 2017-03-16
 ### Added
@@ -630,7 +629,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Correcting some comments and log statements
 - Fix some small things reported by findbugs
-- Re-factor NexmoSmsClient. There are now sub-classes of this client class depending on the level of security required
+- Re-factor NexmoSmsClient. There are now subclasses of this client class depending on the level of security required
   -    `com.nexmo.messaging.sdk.NexmoSmsClient`: The default client
   -    `com.nexmo.messaging.sdk.NexmoSmsClientSSL`: Uses SSL / HTTPS to encrypt the requests
   -    `com.nexmo.messaging.sdk.NexmoSmsClientSignedRequests`: Signs the requests using the secret key assigned to your account

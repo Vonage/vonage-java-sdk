@@ -27,8 +27,8 @@ import com.vonage.client.JsonableBaseObject;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ListNumbersResponse extends JsonableBaseObject {
-    private int count = 0;
-    private OwnedNumber[] numbers = new OwnedNumber[0];
+    private int count;
+    private OwnedNumber[] numbers;
 
     @JsonProperty("count")
     public int getCount() {
@@ -37,7 +37,7 @@ public class ListNumbersResponse extends JsonableBaseObject {
 
     @JsonProperty("numbers")
     public OwnedNumber[] getNumbers() {
-        return numbers;
+        return numbers != null ? numbers : new OwnedNumber[0];
     }
 
     public static ListNumbersResponse fromJson(String json) {

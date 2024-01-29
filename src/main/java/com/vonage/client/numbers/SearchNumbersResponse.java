@@ -27,8 +27,8 @@ import com.vonage.client.JsonableBaseObject;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SearchNumbersResponse extends JsonableBaseObject {
-    private int count = 0;
-    private AvailableNumber[] numbers = new AvailableNumber[]{};
+    private int count;
+    private AvailableNumber[] numbers;
 
     /**
      * @return  the number of responses returned by the Vonage API.
@@ -44,7 +44,7 @@ public class SearchNumbersResponse extends JsonableBaseObject {
      */
     @JsonProperty("numbers")
     public AvailableNumber[] getNumbers() {
-        return numbers;
+        return numbers != null ? numbers : new AvailableNumber[0];
     }
 
     public static SearchNumbersResponse fromJson(String json) {

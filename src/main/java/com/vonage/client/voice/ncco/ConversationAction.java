@@ -149,7 +149,7 @@ public class ConversationAction extends JsonableBaseObject implements Action {
 
         /**
          * @param musicOnHoldUrl A URL to the mp3 file to stream to participants until the conversation starts.
-         *                       By default the conversation starts when the first person calls the virtual number
+         *                       By default, the conversation starts when the first person calls the virtual number
          *                       associated with your Voice app. To stream this mp3 before the moderator joins the
          *                       conversation, set startOnEnter to false for all users other than the moderator.
          *
@@ -162,7 +162,7 @@ public class ConversationAction extends JsonableBaseObject implements Action {
 
         /**
          * @param musicOnHoldUrl A URL to the mp3 file to stream to participants until the conversation starts.
-         *                       By default the conversation starts when the first person calls the virtual number
+         *                       By default, the conversation starts when the first person calls the virtual number
          *                       associated with your Voice app. To stream this mp3 before the moderator joins the
          *                       conversation, set startOnEnter to false for all users other than the moderator.
          *
@@ -203,7 +203,7 @@ public class ConversationAction extends JsonableBaseObject implements Action {
          *               startOnEnter is set to true. When the recording is terminated, the URL you download the
          *               recording from is sent to the event URL.
          *               <p>
-         *               By default audio is recorded in MP3 format. See the <a href="https://developer.nexmo.com/voice/voice-api/guides/recordingfile-formats">recording guide</a> for more details
+         *               By default, audio is recorded in MP3 format. See the <a href="https://developer.nexmo.com/voice/voice-api/guides/recordingfile-formats">recording guide</a> for more details
          *
          * @return This builder.
          */

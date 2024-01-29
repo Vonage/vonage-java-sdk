@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public class HashUtil {
 
-    private static Map<HashType, AbstractHasher> hashTypes = new HashMap<HashType, AbstractHasher>() {{
+    private static final Map<HashType, AbstractHasher> hashTypes = new HashMap<HashType, AbstractHasher>() {{
         put(HashType.MD5, new Md5Hasher());
         put(HashType.HMAC_SHA1, new HmacSha1Hasher());
         put(HashType.HMAC_MD5, new HmacMd5Hasher());
