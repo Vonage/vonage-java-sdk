@@ -26,6 +26,11 @@ java {
     targetCompatibility = sourceCompatibility
 }
 
+compileTestJava {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = sourceCompatibility
+}
+
 dependencies {
     def jacksonVersion = '2.16.1'
     def httpclientVersion = '4.5.14'
@@ -41,7 +46,7 @@ dependencies {
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
-    testImplementation "org.mockito:mockito-inline:4.11.0"
+    testImplementation "org.mockito:mockito-core:5.10.0"
     testImplementation "jakarta.servlet:jakarta.servlet-api:4.0.4"
 }
 

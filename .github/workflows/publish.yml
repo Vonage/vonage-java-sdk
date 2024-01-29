@@ -17,7 +17,7 @@ permissions:
   statuses: write
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repo
