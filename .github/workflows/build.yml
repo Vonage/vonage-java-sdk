@@ -54,7 +54,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: [20]
+        java: [21]
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
       - name: Checkout the repo
