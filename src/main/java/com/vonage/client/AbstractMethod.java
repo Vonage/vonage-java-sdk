@@ -19,7 +19,6 @@ import com.vonage.client.auth.AuthMethod;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.auth.SignatureAuthMethod;
 import com.vonage.client.auth.TokenAuthMethod;
-import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -46,7 +45,10 @@ import java.util.stream.Collectors;
  *                   response
  */
 public abstract class AbstractMethod<RequestT, ResultT> implements RestEndpoint<RequestT, ResultT> {
-    private static final Log LOG = LogFactory.getLog(AbstractMethod.class);
+    static {
+        LogFactory.getLog(AbstractMethod.class);
+    }
+
     protected static final BasicResponseHandler basicResponseHandler = new BasicResponseHandler();
 
     protected final HttpWrapper httpWrapper;

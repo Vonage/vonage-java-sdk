@@ -62,17 +62,17 @@ Many of these are straightforward and your IDE will help you with auto-completio
 ## Supported Features
 The following is a list of Vonage Video API features and whether the Vonage Java SDK currently supports them:
 
-| API   |  Supported?
-|----------|:-------------:|
-| Session Creation | ✅ |
-| Stream Management | ✅ |
-| Signaling | ✅ |
-| Moderation | ✅ |
-| Archiving | ✅ |
-| Live Streaming Broadcasts | ✅ |
-| SIP Interconnect | ✅ |
-| Account Management | ❌ |
-| Experience Composer | ❌ |
-| Audio Connector | ❌ |
-| Live Captions | ❌ |
-| Custom S3/Azure buckets | ❌ |
+| API                       | Supported? |
+|---------------------------|:----------:|
+| Session Creation          |     ✅      |
+| Stream Management         |     ✅      |
+| Signaling                 |     ✅      |
+| Moderation                |     ✅      |
+| Archiving                 |     ✅      |
+| Live Streaming Broadcasts |     ✅      |
+| SIP Interconnect          |     ✅      |
+| Account Management        |     ❌      |
+| Experience Composer       |     ❌      |
+| Audio Connector           |     ❌      |
+| Live Captions             |     ❌      |
+| Custom S3/Azure buckets   |     ❌      |

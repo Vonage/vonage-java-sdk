@@ -74,11 +74,6 @@ class AbstractTransfer extends JsonableBaseObject {
 	public String getTo() {
 		return to;
 	}
-	
-	@Override
-	public String toString() {
-		return getClass().getSimpleName()+' '+toJson();
-	}
 
 	@SuppressWarnings("unchecked")
 	protected abstract static class Builder<T extends AbstractTransfer, B extends Builder<? extends T, ? extends B>> {

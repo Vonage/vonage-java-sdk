@@ -34,23 +34,21 @@ public class NumberInsight2Client {
 	 *
 	 * @param wrapper (REQUIRED) shared HTTP wrapper object used for making REST calls.
 	 */
-	@SuppressWarnings("unchecked")
 	public NumberInsight2Client(HttpWrapper wrapper) {
-	
-		class Endpoint<T, R> extends DynamicEndpoint<T, R> {
-			Endpoint(HttpMethod method, R... type) {
+		@SuppressWarnings("unchecked")
+		final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
+			Endpoint(R... type) {
 				super(DynamicEndpoint.<T, R> builder(type)
 					.authMethod(TokenAuthMethod.class)
 					.responseExceptionType(NumberInsight2ResponseException.class)
-					.requestMethod(method).wrapper(wrapper).pathGetter((de, req) -> {
-						String base = de.getHttpWrapper().getHttpConfig().getApiBaseUri();
-						return base + "/v2/ni";
-					})
+					.requestMethod(HttpMethod.POST).wrapper(wrapper).pathGetter((de, req) ->
+						de.getHttpWrapper().getHttpConfig().getApiBaseUri() + "/v2/ni"
+					)
 				);
 			}
 		}
 		
-		fraudCheck = new Endpoint<>(HttpMethod.POST);
+		fraudCheck = new Endpoint<>();
 	}
 
 	/**

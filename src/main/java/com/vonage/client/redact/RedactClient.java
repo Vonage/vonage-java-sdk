@@ -30,19 +30,18 @@ public class RedactClient {
     public RedactClient(HttpWrapper wrapper) {
         @SuppressWarnings("unchecked")
         final class Endpoint<T, R> extends DynamicEndpoint<T, R> {
-            Endpoint(String path, HttpMethod method, R... type) {
+            Endpoint(R... type) {
                 super(DynamicEndpoint.<T, R> builder(type)
-                        .wrapper(wrapper).requestMethod(method).applyAsBasicAuth()
+                        .wrapper(wrapper).requestMethod(HttpMethod.POST).applyAsBasicAuth()
                         .responseExceptionType(VonageBadRequestException.class)
                         .authMethod(SignatureAuthMethod.class, TokenAuthMethod.class)
-                        .pathGetter((de, req) -> {
-                            String base = de.getHttpWrapper().getHttpConfig().getVersionedApiBaseUri("v1");
-                            return base + path;
-                        })
+                        .pathGetter((de, req) -> de.getHttpWrapper().getHttpConfig()
+                                .getVersionedApiBaseUri("v1") + "/redact/transaction"
+                        )
                 );
             }
         }
-        redactTransaction = new Endpoint<>("/redact/transaction", HttpMethod.POST);
+        redactTransaction = new Endpoint<>();
     }
 
     /**
