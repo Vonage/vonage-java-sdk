@@ -23,11 +23,15 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * Contains utility methods that use HMAC SHA-256 hashing. The class uses STANDARD JVM crypto Hmac SHA-256 algorithm.
+ *
+ * @deprecated This class will be made package-private in the next major release.
  */
+@Deprecated
 public class HmacSha256Hasher extends AbstractHasher {
 
     /**
      * Calculates HMAC SHA-256 hash for string.
+     *
      * @param input string which is going to be encoded into HMAC SHA-256 format
      * @param secretKey The key used for initialization of the algorithm
      * @param encoding character encoding of the string which is going to be encoded into HMAC SHA-256 format
@@ -35,7 +39,8 @@ public class HmacSha256Hasher extends AbstractHasher {
      * @throws NoSuchAlgorithmException if the HMAC SHA-256 algorithm is not available.
      * @throws UnsupportedEncodingException if the specified encoding is unavailable.
      */
-    @Override public String calculate(String input, String secretKey, String encoding) throws NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException {
+    @Override
+    public String calculate(String input, String secretKey, String encoding) throws NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException {
         Mac sha256HMAC = Mac.getInstance("HmacSHA256");
         SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes(encoding), "HmacSHA256");
 
@@ -57,7 +62,8 @@ public class HmacSha256Hasher extends AbstractHasher {
      * @throws UnsupportedEncodingException if the specified encoding is unavailable.
      * @throws InvalidKeyException if key is invalid
      */
-    @Override public String calculate(String input, String encoding) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
+    @Override
+    public String calculate(String input, String encoding) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
         return calculate(input, input, encoding);
     }
 }

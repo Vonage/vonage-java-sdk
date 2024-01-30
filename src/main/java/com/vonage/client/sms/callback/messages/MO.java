@@ -20,7 +20,10 @@ import java.util.Date;
 
 /**
  * This represents an incoming MO callback request.
+ *
+ * @deprecated This class is not maintained and will be removed in the next major release.
  */
+@Deprecated
 public class MO implements java.io.Serializable {
 
     private static final long serialVersionUID = 6978599736439760428L;

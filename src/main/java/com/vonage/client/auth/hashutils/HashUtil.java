@@ -26,16 +26,20 @@ import java.util.Map;
  */
 public class HashUtil {
 
-    private static final Map<HashType, AbstractHasher> hashTypes = new HashMap<HashType, AbstractHasher>() {{
-        put(HashType.MD5, new Md5Hasher());
-        put(HashType.HMAC_SHA1, new HmacSha1Hasher());
-        put(HashType.HMAC_MD5, new HmacMd5Hasher());
-        put(HashType.HMAC_SHA256, new HmacSha256Hasher());
-        put(HashType.HMAC_SHA512, new HmacSha512Hasher());
-    }};
+    private static final Map<HashType, AbstractHasher> HASH_TYPES;
+
+    static {
+        HASH_TYPES = new HashMap<>(8);
+        HASH_TYPES.put(HashType.MD5, new Md5Hasher());
+        HASH_TYPES.put(HashType.HMAC_SHA1, new HmacSha1Hasher());
+        HASH_TYPES.put(HashType.HMAC_MD5, new HmacMd5Hasher());
+        HASH_TYPES.put(HashType.HMAC_SHA256, new HmacSha256Hasher());
+        HASH_TYPES.put(HashType.HMAC_SHA512, new HmacSha512Hasher());
+    }
 
     /**
      * Calculates hash for string. assume string is UTF-8 encoded.
+     *
      * @param input string which is going to be encoded into requested format
      * @param hashType The type of hash to be applied to the input string
      * @return representation of the input string with given hash type
@@ -43,11 +47,12 @@ public class HashUtil {
      * @throws InvalidKeyException Only applicable to HMAC encoding types, when a bad key is provided.
      */
     public static String calculate(String input, HashType hashType) throws NoSuchAlgorithmException, InvalidKeyException {
-        return hashTypes.get(hashType).calculate(input);
+        return HASH_TYPES.get(hashType).calculate(input);
     }
 
     /**
-     * Calculates hash for string. assume string is UTF-8 encoded.
+     * Calculates hash for string.
+     *
      * @param input string which is going to be encoded into requested format
      * @param encoding encoding type of input
      * @param hashType The type of hash to be applied to the input string
@@ -57,7 +62,7 @@ public class HashUtil {
      * @throws UnsupportedEncodingException if the specified encoding is unavailable.
      */
     public static String calculate(String input, String encoding, HashType hashType) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
-        return hashTypes.get(hashType).calculate(input, encoding);
+        return HASH_TYPES.get(hashType).calculate(input, encoding);
     }
 
     /**
@@ -72,7 +77,7 @@ public class HashUtil {
      * @throws InvalidKeyException Only applicable to HMAC encoding types, when a bad key is provided.
      */
     public static String calculate(String input, String secretKey, String encoding, HashType hashType) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
-        return hashTypes.get(hashType).calculate(input, secretKey, encoding);
+        return HASH_TYPES.get(hashType).calculate(input, secretKey, encoding);
     }
 
     public enum HashType {

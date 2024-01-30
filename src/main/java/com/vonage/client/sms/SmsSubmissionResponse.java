@@ -19,13 +19,21 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import java.util.List;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SmsSubmissionResponse implements Jsonable {
+public class SmsSubmissionResponse extends JsonableBaseObject {
     private int messageCount;
     private List<SmsSubmissionResponseMessage> messages;
+
+    /**
+     * @deprecated This will be made private in the next major release.
+     */
+    @Deprecated
+    public SmsSubmissionResponse() {
+    }
 
     public static SmsSubmissionResponse fromJson(String json) {
         return Jsonable.fromJson(json);

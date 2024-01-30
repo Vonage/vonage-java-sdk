@@ -15,7 +15,7 @@
  */
 package com.vonage.client.sms.messages;
 
-import com.vonage.client.sms.HexUtil;
+import org.apache.commons.codec.binary.Hex;
 import java.util.Map;
 
 /**
@@ -84,9 +84,9 @@ public class BinaryMessage extends Message {
     @Override
     public Map<String, String> makeParams() {
         Map<String, String> params = super.makeParams();
-        params.put("udh", HexUtil.bytesToHex(getUdh()));
-        params.put("body", HexUtil.bytesToHex(getMessageBody()));
-        params.put("protocol-id", Integer.toString(protocolId));
+        params.put("udh", Hex.encodeHexString(getUdh()));
+        params.put("body", Hex.encodeHexString(getMessageBody()));
+        params.put("protocol-id", Integer.toString(getProtocolId()));
         return params;
     }
 }
