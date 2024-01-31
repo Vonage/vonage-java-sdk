@@ -21,17 +21,17 @@ import java.io.UnsupportedEncodingException;
 
 /**
  * Static helper methods for working with hex values.
+ *
+ * @deprecated This will be removed in the next major release.
  */
+@Deprecated
 public class HexUtil {
-
-    private static final char[] HEX_CHARS = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', };
-
-    private HexUtil() {
-        // This class may not be instantiated.
-    }
+    private static final char[] HEX_CHARS = {
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
+    };
 
     /**
-     * translate a byte array of raw data into a String with a hex representation of that data
+     * Translate a byte array of raw data into a String with a hex representation of that data
      *
      * @param bytes raw binary data
      *
@@ -42,7 +42,7 @@ public class HexUtil {
     }
 
     /**
-     * translate a byte array of raw data into a String with a hex representation of that data.
+     * Translate a byte array of raw data into a String with a hex representation of that data.
      * Each octet will be separated with a specific separator.
      *
      * @param bytes raw binary data
@@ -57,8 +57,9 @@ public class HexUtil {
                 int b = c;
                 if (b < 0)
                     b += 256;
-                if (separator != null)
+                if (separator != null) {
                     tmpBuffer.append(separator);
+                }
                 tmpBuffer.append(HEX_CHARS[(b & 0xf0) / 0x10]); // note, this benchmarks faster than using >> 4
                 tmpBuffer.append(HEX_CHARS[b & 0x0f]);
             }
@@ -76,21 +77,17 @@ public class HexUtil {
     public static byte[] hexToBytes(String str) {
         if (str == null)
             return null;
-        byte[] hexChars;
+        byte[] hexChars, bytes;
         try {
             hexChars = str.toUpperCase().getBytes("ISO_8859-1");
         } catch (UnsupportedEncodingException e) {
             throw new VonageUnexpectedException("ISO_8859_1 is an unsupported encoding in this JVM");
         }
-        int size = hexChars.length;
-        byte[] bytes = new byte[size / 2];
-        int first;
-        int second;
+        int size = hexChars.length, first, second, rIndex = 0;
+        bytes = new byte[size / 2];
 
-        int rIndex = 0;
         // Convert to bytes.
-        for (int i = 0; i+1 <size; i= i + 2) {
-
+        for (int i = 0; i+1 < size; i += 2) {
             // Convert first
             first = hexChars[i];
             if (first < 58)

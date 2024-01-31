@@ -18,7 +18,9 @@ package com.vonage.client.sms;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+@Deprecated
 public class HexUtilTest {
+
     @Test
     public void testBytesToHex() {
         String result = HexUtil.bytesToHex(new byte[]{0x00, 0x10, 0x7f, 0x70, -1});

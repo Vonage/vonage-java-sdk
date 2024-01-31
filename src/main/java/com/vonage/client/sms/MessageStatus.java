@@ -16,6 +16,7 @@
 package com.vonage.client.sms;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
@@ -192,6 +193,7 @@ public enum MessageStatus {
         this.messageStatus = messageStatus;
     }
 
+    @JsonValue
     public int getMessageStatus() {
         return messageStatus;
     }

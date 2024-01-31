@@ -23,11 +23,15 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * Contains utility methods that use HMAC SHA-1 hashing. The class uses STANDARD JVM crypto Hmac SHA-512 algorithm.
+ *
+ * @deprecated This class will be made package-private in the next major release.
  */
+@Deprecated
 public class HmacSha1Hasher extends AbstractHasher {
 
     /**
      * Calculates HMAC SHA-1 hash for string.
+     *
      * @param input string which is going to be encoded into HMAC SHA-1 format
      * @param secretKey The key used for initialization of the algorithm
      * @param encoding character encoding of the string which is going to be encoded into HMAC SHA-1 format
@@ -35,7 +39,8 @@ public class HmacSha1Hasher extends AbstractHasher {
      * @throws NoSuchAlgorithmException if the HMAC SHA-1 algorithm is not available.
      * @throws UnsupportedEncodingException if the specified encoding is unavailable.
      */
-    @Override public String calculate(String input, String secretKey, String encoding) throws NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException {
+    @Override
+    public String calculate(String input, String secretKey, String encoding) throws NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException {
         Mac sha1HMAC = Mac.getInstance("HmacSHA1");
         SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes(encoding), "HmacSHA1");
 
@@ -57,7 +62,9 @@ public class HmacSha1Hasher extends AbstractHasher {
      * @throws UnsupportedEncodingException if the specified encoding is unavailable.
      * @throws InvalidKeyException if key is invalid
      */
-    @Override public String calculate(String input, String encoding) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
+    @Deprecated
+    @Override
+    public String calculate(String input, String encoding) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
         return calculate(input, input, encoding);
     }
 }

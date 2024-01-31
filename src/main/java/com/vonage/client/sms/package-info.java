@@ -13,25 +13,15 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.sms.callback;
 
 /**
- * @deprecated This class will be removed in the next major release.
+ * This package contains classes and sub-packages to support usage of the
+ * <a href=https://developer.vonage.com/en/api/sms>Vonage SMS API</a>. Please refer to
+ * <a href=https://developer.vonage.com/en/sms/overview> the developer documentation</a>
+ * for an overview of the concepts.
+ * <p>
+ *
+ * For more messaging channels, consider using the Messages API in the {@link com.vonage.client.messages} package,
+ * which also includes SMS and more features, along with better support for webhooks and inbound messages.
  */
-@Deprecated
-public class VonageCallbackRequestValidationException extends Exception {
-    public VonageCallbackRequestValidationException() {
-    }
-
-    public VonageCallbackRequestValidationException(String message) {
-        super(message);
-    }
-
-    public VonageCallbackRequestValidationException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public VonageCallbackRequestValidationException(Throwable cause) {
-        super(cause);
-    }
-}
+package com.vonage.client.sms;

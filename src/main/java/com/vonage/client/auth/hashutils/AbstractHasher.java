@@ -19,6 +19,11 @@ import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ *
+ * @deprecated This class will be made package-private in the next major release.
+ */
+@Deprecated
 public abstract class AbstractHasher {
 
     /**

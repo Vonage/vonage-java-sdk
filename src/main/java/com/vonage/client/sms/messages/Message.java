@@ -15,6 +15,7 @@
  */
 package com.vonage.client.sms.messages;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.vonage.client.QueryParamsRequest;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -103,7 +104,7 @@ public abstract class Message implements QueryParamsRequest {
 
     /**
      * @return String A user definable value that will be stored in the Vonage sms records. It will
-     * be available in detailed reporting &amp; analytics in order to help with reconciliation of messages
+     * be available in detailed reporting and analytics in order to help with reconciliation of messages
      */
     public String getClientReference() {
         return clientReference;
@@ -185,26 +186,26 @@ public abstract class Message implements QueryParamsRequest {
         params.put("from", getFrom());
         params.put("to", getTo());
         params.put("type", getType().toString());
-        if (statusReportRequired) {
+        if (getStatusReportRequired()) {
             params.put("status-report-req", "1");
         }
         if (clientReference != null) {
-            params.put("client-ref", clientReference);
+            params.put("client-ref", getClientReference());
         }
         if (timeToLive != null) {
-            params.put("ttl", timeToLive.toString());
+            params.put("ttl", getTimeToLive().toString());
         }
         if (callbackUrl != null) {
-            params.put("callback", callbackUrl);
+            params.put("callback", getCallbackUrl());
         }
         if (messageClass != null) {
-            params.put("message-class", Integer.toString(messageClass.getMessageClass()));
+            params.put("message-class", Integer.toString(getMessageClass().getMessageClass()));
         }
         if (entityId != null) {
-            params.put("entity-id", entityId);
+            params.put("entity-id", getEntityId());
         }
         if (contentId != null) {
-            params.put("content-id", contentId);
+            params.put("content-id", getContentId());
         }
         return params;
     }
@@ -239,6 +240,7 @@ public abstract class Message implements QueryParamsRequest {
             this.messageClass = messageClass;
         }
 
+        @JsonValue
         public int getMessageClass() {
             return messageClass;
         }

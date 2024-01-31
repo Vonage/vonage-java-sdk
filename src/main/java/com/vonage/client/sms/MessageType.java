@@ -13,25 +13,32 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.sms.callback;
+package com.vonage.client.sms;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * @deprecated This class will be removed in the next major release.
+ * Represents the SMS message type.
+ *
+ * @since 8.3.0
  */
-@Deprecated
-public class VonageCallbackRequestValidationException extends Exception {
-    public VonageCallbackRequestValidationException() {
+public enum MessageType {
+    TEXT, UNICODE, BINARY, UNKNOWN;
+
+    @JsonCreator
+    public static MessageType fromString(String name) {
+        try {
+            return MessageType.valueOf(name.toUpperCase());
+        }
+        catch (IllegalArgumentException | NullPointerException ex) {
+            return UNKNOWN;
+        }
     }
 
-    public VonageCallbackRequestValidationException(String message) {
-        super(message);
-    }
-
-    public VonageCallbackRequestValidationException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public VonageCallbackRequestValidationException(Throwable cause) {
-        super(cause);
+    @JsonValue
+    @Override
+    public String toString() {
+        return name().toLowerCase();
     }
 }

@@ -17,6 +17,7 @@ package com.vonage.client.incoming;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
+@Deprecated
 public enum MessageType {
     TEXT, UNICODE, BINARY, UNKNOWN;
 
