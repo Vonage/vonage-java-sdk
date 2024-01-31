@@ -26,6 +26,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+/**
+ * @deprecated Moved to {@link com.vonage.client.sms.MessageEvent}.
+ */
+@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MessageEvent implements Jsonable {
     private String msisdn, to, messageId, text, keyword, timestamp, nonce, data, udh;

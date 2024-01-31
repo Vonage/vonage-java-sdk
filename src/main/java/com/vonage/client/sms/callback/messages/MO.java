@@ -22,6 +22,7 @@ import java.util.Date;
  * This represents an incoming MO callback request.
  *
  * @deprecated This class is not maintained and will be removed in the next major release.
+ * Please consider using the Messages API instead.
  */
 @Deprecated
 public class MO implements java.io.Serializable {

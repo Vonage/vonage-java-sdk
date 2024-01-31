@@ -13,22 +13,32 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.incoming;
+package com.vonage.client.sms;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-@Deprecated
+/**
+ * Represents the SMS message type.
+ *
+ * @since 8.3.0
+ */
 public enum MessageType {
     TEXT, UNICODE, BINARY, UNKNOWN;
-
 
     @JsonCreator
     public static MessageType fromString(String name) {
         try {
             return MessageType.valueOf(name.toUpperCase());
         }
-        catch (IllegalArgumentException ex) {
+        catch (IllegalArgumentException | NullPointerException ex) {
             return UNKNOWN;
         }
+    }
+
+    @JsonValue
+    @Override
+    public String toString() {
+        return name().toLowerCase();
     }
 }

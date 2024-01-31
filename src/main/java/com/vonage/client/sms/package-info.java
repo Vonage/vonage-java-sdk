@@ -21,7 +21,7 @@
  * for an overview of the concepts.
  * <p>
  *
- * For more messaging channels, consider using the Messages API in the {@link com.vonage.client.messages}
- * package, which also includes SMS and more features.
+ * For more messaging channels, consider using the Messages API in the {@link com.vonage.client.messages} package,
+ * which also includes SMS and more features, along with better support for webhooks and inbound messages.
  */
 package com.vonage.client.sms;

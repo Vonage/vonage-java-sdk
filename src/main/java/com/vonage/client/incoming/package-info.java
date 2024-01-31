@@ -14,6 +14,6 @@
  *   limitations under the License.
  */
 /**
- * @deprecated This package will be removed in a future release.
+ * @deprecated This package will be removed in the next major release.
  */
 package com.vonage.client.incoming;
