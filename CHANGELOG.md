@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+# [8.3.0] - 2024-02-12
+- Made `from` parameter mandatory in Verify v2 WhatsApp workflows
+- Added `com.vonage.client.sms.MessageEvent` for SMS webhooks
+  - Deprecated SMS classes in `com.vonage.client.incoming` package
+
 # [8.2.0] - 2024-01-29
 - Added Number Insight v2 API implementation
 - New webhook deserialisation POJOs for Voice: `AnswerWebhook` and `EventWebhook`
