@@ -23,18 +23,51 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * <a href=https://developer.vonage.com/en/verify/verify-v2/guides/using-whatsapp-interactive>
  * WhatsApp Interactive guide</a> for an overview of how this works.
  * <p>
- * By default, WhatsApp messages will be sent using a Vonage WhatsApp Business Account (WABA).
- * Please contact sales in order to configure Verify v2 to use your company’s WABA.
+ * You must have a WhatsApp Business Account configured to use the {@code from} field, which
+ * is now a requirement for WhatsApp workflows.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class WhatsappCodelessWorkflow extends AbstractNumberWorkflow {
+public final class WhatsappCodelessWorkflow extends AbstractWhatsappWorkflow {
+
+	WhatsappCodelessWorkflow(Builder builder) {
+		super(builder);
+	}
 
 	/**
 	 * Constructs a new WhatsApp interactive verification workflow.
 	 *
 	 * @param to The number to send the verification prompt to, in E.164 format.
+	 * @deprecated This no longer works and will be removed in a future release.
 	 */
+	@Deprecated
 	public WhatsappCodelessWorkflow(String to) {
-		super(Channel.WHATSAPP_INTERACTIVE, to);
+		this(to, null);
+	}
+
+	/**
+	 * Constructs a new WhatsApp interactive verification workflow.
+	 *
+	 * @param to The number to send the verification prompt to, in E.164 format.
+	 * @param from The WhatsApp Business Account number to send the message from, in E.164 format.
+	 * @since 8.3.0
+	 */
+	public WhatsappCodelessWorkflow(String to, String from) {
+		this(builder(to, from));
+	}
+
+	static Builder builder(String to, String from) {
+		return new Builder(to, from);
+	}
+
+	static class Builder extends AbstractWhatsappWorkflow.Builder<WhatsappCodelessWorkflow, Builder> {
+
+		private Builder(String to, String from) {
+			super(Channel.WHATSAPP_INTERACTIVE, to, from);
+		}
+
+		@Override
+		public WhatsappCodelessWorkflow build() {
+			return new WhatsappCodelessWorkflow(this);
+		}
 	}
 }

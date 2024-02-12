@@ -200,7 +200,7 @@ public class VerificationRequest implements Jsonable {
 		Locale locale;
 		List<Workflow> workflows = new ArrayList<>(1);
 
-		Builder() {}
+		private Builder() {}
 
 		/**
 		 * (REQUIRED)
