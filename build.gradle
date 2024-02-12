@@ -34,7 +34,7 @@ compileTestJava {
 dependencies {
     def jacksonVersion = '2.16.1'
     def httpclientVersion = '4.5.14'
-    def junitVersion = '5.10.1'
+    def junitVersion = '5.10.2'
 
     implementation "commons-codec:commons-codec:1.16.1"
     implementation 'org.apache.commons:commons-lang3:3.14.0'
