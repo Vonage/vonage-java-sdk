@@ -16,16 +16,15 @@
 package com.vonage.client.verify2;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Defines properties for sending a verification code to a user over a WhatsApp message.
  * <p>
- * By default, WhatsApp messages will be sent using a Vonage WhatsApp Business Account (WABA).
- * Please contact sales in order to configure Verify v2 to use your company’s WABA.
+ * You must have a WhatsApp Business Account configured to use the {@code from} field, which
+ * is now a requirement for WhatsApp workflows.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
-public final class WhatsappWorkflow extends AbstractNumberWorkflow {
+public final class WhatsappWorkflow extends AbstractWhatsappWorkflow {
 
 	WhatsappWorkflow(Builder builder) {
 		super(builder);
@@ -35,7 +34,9 @@ public final class WhatsappWorkflow extends AbstractNumberWorkflow {
 	 * Constructs a new WhatsApp verification workflow.
 	 *
 	 * @param to The number to send the message to, in E.164 format.
+	 * @deprecated This no longer works and will be removed in a future release.
 	 */
+	@Deprecated
 	public WhatsappWorkflow(String to) {
 		this(to, null);
 	}
@@ -44,31 +45,20 @@ public final class WhatsappWorkflow extends AbstractNumberWorkflow {
 	 * Constructs a new WhatsApp verification workflow with a custom sender number.
 	 *
 	 * @param to The number to send the message to, in E.164 format.
-	 * @param from The number to send the message from, in E.164 format.
-	 * Note that you will need to get in touch with the Vonage sales team to enable use of the field.
+	 * @param from The WhatsApp Business Account number to send the message from, in E.164 format.
 	 */
 	public WhatsappWorkflow(String to, String from) {
-		this(builder(to).from(from));
+		this(builder(to, from));
 	}
 
-	/**
-	 * The number to send the verification request from, if configured.
-	 *
-	 * @return The sender phone number, or {@code null} if unset.
-	 */
-	@JsonProperty("from")
-	public String getFrom() {
-		return from;
+	static Builder builder(String to, String from) {
+		return new Builder(to, from);
 	}
 
-	static Builder builder(String to) {
-		return new Builder(to);
-	}
+	static class Builder extends AbstractWhatsappWorkflow.Builder<WhatsappWorkflow, Builder> {
 
-	static class Builder extends AbstractNumberWorkflow.Builder<WhatsappWorkflow, Builder> {
-
-		Builder(String to) {
-			super(Channel.WHATSAPP, to);
+		Builder(String to, String from) {
+			super(Channel.WHATSAPP, to, from);
 		}
 
 		@Override

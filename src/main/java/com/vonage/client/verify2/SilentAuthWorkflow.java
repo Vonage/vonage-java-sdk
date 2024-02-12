@@ -115,7 +115,7 @@ public final class SilentAuthWorkflow extends AbstractNumberWorkflow {
 		private Boolean sandbox;
 		private String redirectUrl;
 
-		Builder(String to) {
+		private Builder(String to) {
 			super(Channel.SILENT_AUTH, to);
 		}
 

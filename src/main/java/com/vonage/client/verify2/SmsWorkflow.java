@@ -142,7 +142,7 @@ public final class SmsWorkflow extends AbstractNumberWorkflow {
 	public static final class Builder extends AbstractNumberWorkflow.Builder<SmsWorkflow, Builder> {
 		private String from, appHash, contentId, entityId;
 
-		Builder(String to) {
+		private Builder(String to) {
 			super(Channel.SMS, to);
 		}
 

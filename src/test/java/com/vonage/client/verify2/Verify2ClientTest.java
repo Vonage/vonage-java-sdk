@@ -37,12 +37,13 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 	}
 
 	void assert429ResponseException(Executable invocation) throws Exception {
-		String response = "{\n" +
-				"   \"title\": \"Rate Limit Hit\",\n" +
-				"   \"type\": \"https://www.developer.vonage.com/api-errors#throttled\",\n" +
-				"   \"detail\": \"Please wait, then retry your request\",\n" +
-				"   \"instance\": \"bf0ca0bf927b3b52e3cb03217e1a1ddf\"\n" +
-				"}";
+		String response = """
+                {
+                   "title": "Rate Limit Hit",
+                   "type": "https://www.developer.vonage.com/api-errors#throttled",
+                   "detail": "Please wait, then retry your request",
+                   "instance": "bf0ca0bf927b3b52e3cb03217e1a1ddf"
+                }""";
 		assertApiResponseException(429, response, VerifyResponseException.class, invocation);
 	}
 
@@ -55,7 +56,7 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 				new EmailWorkflow(toEmail, fromEmail),
 				new VoiceWorkflow(toNumber),
 				new WhatsappWorkflow(toNumber, fromNumber),
-				new WhatsappCodelessWorkflow(toNumber)
+				new WhatsappCodelessWorkflow(toNumber, fromNumber)
 		);
 		return VerificationRequest.builder()
 				.brand("Nexmo").fraudCheck(false)
@@ -107,7 +108,9 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 			protected VerificationRequest sampleRequest() {
 				return VerificationRequest.builder()
 						.clientRef("my-personal-reference").locale("ar-XA")
-						.addWorkflow(new SmsWorkflow("447700900001", "447900000002", "FA+9qCX9VSu"))
+						.addWorkflow(SmsWorkflow.builder("447700900001")
+								.from("447900000002").appHash("FA+9qCX9VSu").build()
+						)
 						.brand("ACME, Inc").codeLength(6).channelTimeout(320).build();
 			}
 
