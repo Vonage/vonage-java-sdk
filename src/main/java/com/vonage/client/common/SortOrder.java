@@ -13,38 +13,40 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.proactiveconnect;
+package com.vonage.client.common;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Represents the sort order for events.
+ * Represents the sort order for resources returned.
  *
- * @deprecated Replaced by {@link com.vonage.client.common.SortOrder} and will be removed in future release.
+ * @since 8.4.0
  */
-@Deprecated
 public enum SortOrder {
 	/**
-	 * Ascending
+	 * Ascending (asc)
 	 */
-	ASC,
+	ASCENDING,
 
 	/**
-	 * Descending
+	 * Descending (desc)
 	 */
-	DESC;
+	DESCENDING;
+
+	@JsonCreator
+	public static SortOrder fromString(String value) {
+		if (value == null || value.isEmpty()) return null;
+		switch (value.toLowerCase()) {
+			case "asc": case "ascending": return ASCENDING;
+			case "desc": case "descending": return DESCENDING;
+			default: throw new IllegalArgumentException("Unknown SortOrder: "+value);
+		}
+	}
 
 	@JsonValue
 	@Override
 	public String toString() {
-		return name().toLowerCase();
-	}
-
-	com.vonage.client.common.SortOrder toSortOrder() {
-		switch (this) {
-			case ASC: return com.vonage.client.common.SortOrder.ASCENDING;
-			case DESC: return com.vonage.client.common.SortOrder.DESCENDING;
-			default: return null;
-		}
-	}
+        return this == SortOrder.ASCENDING ? "asc" : "desc";
+    }
 }

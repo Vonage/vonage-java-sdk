@@ -13,32 +13,38 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.meetings;
+package com.vonage.client.common;
 
-import com.vonage.client.common.HalFilterRequest;
+import com.vonage.client.QueryParamsRequest;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
 
-class ListRoomsRequest extends HalFilterRequest {
-	final UUID themeId;
-	final Integer pageSize, startId, endId;
+/**
+ * Provides basic filtering parameters for HAL resources.
+ *
+ * @since 8.4.0
+ */
+public abstract class HalFilterRequest implements QueryParamsRequest {
+	protected final Integer page, pageSize;
+	protected final SortOrder order;
 
-	ListRoomsRequest(Integer startId, Integer endId, Integer pageSize, UUID themeId) {
-		super(null, pageSize, null);
-		this.themeId = themeId;
-		this.startId = startId;
-		this.endId = endId;
+	protected HalFilterRequest(Integer page, Integer pageSize, SortOrder order) {
+		this.page = page;
 		this.pageSize = pageSize;
+		this.order = order;
 	}
 
 	@Override
 	public Map<String, String> makeParams() {
-		Map<String, String> params = super.makeParams();
-		if (startId != null) {
-			params.put("start_id", String.valueOf(startId));
+		Map<String, String> params = new LinkedHashMap<>(4);
+		if (page != null) {
+			params.put("page", page.toString());
 		}
-		if (endId != null) {
-			params.put("end_id", String.valueOf(endId));
+		if (pageSize != null) {
+			params.put("page_size", pageSize.toString());
+		}
+		if (order != null) {
+			params.put("order", order.toString());
 		}
 		return params;
 	}

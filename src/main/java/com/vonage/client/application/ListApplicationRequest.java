@@ -15,39 +15,25 @@
  */
 package com.vonage.client.application;
 
-import com.vonage.client.QueryParamsRequest;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.vonage.client.common.HalFilterRequest;
 
 /**
  * Query parameters for {@link ApplicationClient#listApplications(ListApplicationRequest)}.
  */
-public class ListApplicationRequest implements QueryParamsRequest {
-    private final int pageSize, page;
+public class ListApplicationRequest extends HalFilterRequest {
 
     private ListApplicationRequest(Builder builder) {
-        pageSize = builder.pageSize;
-        page = builder.page;
+        super(builder.page, builder.pageSize, null);
     }
 
+    @Deprecated
     public int getPageSize() {
         return pageSize;
     }
 
+    @Deprecated
     public int getPage() {
         return page;
-    }
-
-    @Override
-    public Map<String, String> makeParams() {
-        LinkedHashMap<String, String> params = new LinkedHashMap<>(4);
-        if (page > 0) {
-            params.put("page", String.valueOf(page));
-        }
-        if (pageSize > 0) {
-            params.put("page_size", String.valueOf(pageSize));
-        }
-        return params;
     }
 
     /**
