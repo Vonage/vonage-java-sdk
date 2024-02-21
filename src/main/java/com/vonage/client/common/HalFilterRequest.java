@@ -28,6 +28,10 @@ public abstract class HalFilterRequest implements QueryParamsRequest {
 	protected final Integer page, pageSize;
 	protected final SortOrder order;
 
+	protected HalFilterRequest(Builder<?, ?> builder) {
+		this(builder.page, builder.pageSize, builder.order);
+	}
+
 	protected HalFilterRequest(Integer page, Integer pageSize, SortOrder order) {
 		this.page = page;
 		this.pageSize = pageSize;
@@ -47,5 +51,33 @@ public abstract class HalFilterRequest implements QueryParamsRequest {
 			params.put("order", order.toString());
 		}
 		return params;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected abstract static class Builder<F extends HalFilterRequest, B extends Builder<? extends F, ? extends B>> {
+		protected Integer page, pageSize;
+		protected SortOrder order;
+
+		public B page(int page) {
+			this.page = page;
+			return (B) this;
+		}
+
+		public B pageSize(int pageSize) {
+			this.pageSize = pageSize;
+			return (B) this;
+		}
+
+		public B order(SortOrder order) {
+			this.order = order;
+			return (B) this;
+		}
+
+		/**
+		 * Builds the filter request.
+		 *
+		 * @return A new FilterRequest with this builder's properties.
+		 */
+		public abstract F build();
 	}
 }
