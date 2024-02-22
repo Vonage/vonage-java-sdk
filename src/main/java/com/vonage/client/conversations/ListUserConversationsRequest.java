@@ -18,13 +18,11 @@ package com.vonage.client.conversations;
 import com.vonage.client.common.HalFilterRequest;
 import java.time.Instant;
 import java.util.Map;
-import java.util.Objects;
 
 /**
- * Represents filter options for {@link ConversationsClient#listUserConversations(ListUserConversationsRequest)}.
+ * Represents filter options for {@link ConversationsClient#listUserConversations(String, ListUserConversationsRequest)}.
  */
-public class ListUserConversationsRequest extends HalFilterRequest {
-	private final String userId;
+public final class ListUserConversationsRequest extends AbstractListUserRequest {
 	private final MemberState state;
 	private final OrderBy orderBy;
 	private final Boolean includeCustomData;
@@ -32,7 +30,6 @@ public class ListUserConversationsRequest extends HalFilterRequest {
 
 	ListUserConversationsRequest(Builder builder) {
 		super(builder);
-		userId = Objects.requireNonNull(builder.userId);
 		state = builder.state;
 		orderBy = builder.orderBy;
 		includeCustomData = builder.includeCustomData;
@@ -42,9 +39,6 @@ public class ListUserConversationsRequest extends HalFilterRequest {
 	@Override
 	public Map<String, String> makeParams() {
 		Map<String, String> params = super.makeParams();
-		if (userId != null) {
-            params.put("user_id", userId);
-        }
 		if (state != null) {
             params.put("state", state.toString());
         }
@@ -60,31 +54,21 @@ public class ListUserConversationsRequest extends HalFilterRequest {
 		return params;
 	}
 
-	
-	public String getUserId() {
-		return userId;
-	}
-
-	
 	public MemberState getState() {
 		return state;
 	}
 
-	
 	public OrderBy getOrderBy() {
 		return orderBy;
 	}
 
-	
 	public Boolean getIncludeCustomData() {
 		return includeCustomData;
 	}
 
-	
 	public Instant getStartDate() {
 		return startDate;
 	}
-
 
 	/**
 	 * Entry point for constructing an instance of this class.
@@ -96,25 +80,12 @@ public class ListUserConversationsRequest extends HalFilterRequest {
 	}
 	
 	public static final class Builder extends HalFilterRequest.Builder<ListUserConversationsRequest, Builder> {
-		private String userId;
 		private MemberState state;
 		private OrderBy orderBy;
 		private Boolean includeCustomData;
 		private Instant startDate;
 	
 		Builder() {}
-	
-		/**
-		 * 
-		 *
-		 * @param userId 
-		 *
-		 * @return This builder.
-		 */
-		public Builder userId(String userId) {
-			this.userId = userId;
-			return this;
-		}
 
 		/**
 		 * 

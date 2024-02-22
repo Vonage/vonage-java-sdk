@@ -16,34 +16,15 @@
 package com.vonage.client.conversations;
 
 import com.vonage.client.common.HalFilterRequest;
-import java.util.Map;
-import java.util.Objects;
 
 /**
- * Filters results for {@link ConversationsClient#listUserSessions(ListUserSessionsRequest)}.
+ * Filters results for {@link ConversationsClient#listUserSessions(String, ListUserSessionsRequest)}.
  */
-public class ListUserSessionsRequest extends HalFilterRequest {
-	private final String userId;
+public final class ListUserSessionsRequest extends AbstractListUserRequest {
 
 	ListUserSessionsRequest(Builder builder) {
 		super(builder);
-		userId = Objects.requireNonNull(builder.userId);
 	}
-	
-	@Override
-	public Map<String, String> makeParams() {
-		Map<String, String> params = super.makeParams();
-		if (userId != null) {
-            params.put("user_id", userId);
-        }
-		return params;
-	}
-
-	
-	public String getUserId() {
-		return userId;
-	}
-
 
 	/**
 	 * Entry point for constructing an instance of this class.
@@ -55,23 +36,9 @@ public class ListUserSessionsRequest extends HalFilterRequest {
 	}
 	
 	public static final class Builder extends HalFilterRequest.Builder<ListUserSessionsRequest, Builder> {
-		private String userId;
 	
 		Builder() {}
-	
-		/**
-		 * 
-		 *
-		 * @param userId 
-		 *
-		 * @return This builder.
-		 */
-		public Builder userId(String userId) {
-			this.userId = userId;
-			return this;
-		}
 
-	
 		/**
 		 * Builds the {@linkplain ListUserSessionsRequest}.
 		 *

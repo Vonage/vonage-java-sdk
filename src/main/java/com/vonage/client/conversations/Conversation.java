@@ -27,7 +27,8 @@ import java.util.List;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Conversation extends JsonableBaseObject {
-	private String id, name, displayName;
+	String id;
+	private String name, displayName;
 	private URI imageUrl;
 	private ConversationStatus state;
 	private Integer sequenceNumber;
@@ -40,7 +41,6 @@ public class Conversation extends JsonableBaseObject {
 	}
 
 	Conversation(Builder builder) {
-		id = builder.id;
 		name = builder.name;
 		displayName = builder.displayName;
 		imageUrl = builder.imageUrl;
@@ -62,7 +62,7 @@ public class Conversation extends JsonableBaseObject {
 	/**
 	 * Internal conversation name. Must be unique.
 	 * 
-	 * @return The conversation name, or {@code null} if unespecified.
+	 * @return The conversation name, or {@code null} if unspecified.
 	 */
 	@JsonProperty("name")
 	public String getName() {
@@ -72,7 +72,7 @@ public class Conversation extends JsonableBaseObject {
 	/**
 	 * The public facing name of the conversation.
 	 * 
-	 * @return The display name, or {@code null} if unespecified.
+	 * @return The display name, or {@code null} if unspecified.
 	 */
 	@JsonProperty("display_name")
 	public String getDisplayName() {
@@ -159,7 +159,6 @@ public class Conversation extends JsonableBaseObject {
 		return Jsonable.fromJson(json);
 	}
 
-
 	/**
 	 * Entry point for constructing an instance of this class.
 	 * 
@@ -170,30 +169,18 @@ public class Conversation extends JsonableBaseObject {
 	}
 	
 	public static class Builder {
-		private String id, name, displayName;
+		private String name, displayName;
 		private URI imageUrl;
 		private ConversationProperties properties;
 		private List<Channel> numbers;
 		private Callback callback;
 	
 		Builder() {}
-	
-		/**
-		 * Unique identifier for this conversation.
-		 *
-		 * @param id The conversation ID as a string.
-		 *
-		 * @return This builder.
-		 */
-		public Builder id(String id) {
-			this.id = id;
-			return this;
-		}
 
 		/**
 		 * Internal conversation name. Must be unique.
 		 *
-		 * @param name The conversation name, or {@code null} if unespecified.
+		 * @param name The conversation name.
 		 *
 		 * @return This builder.
 		 */
@@ -205,7 +192,7 @@ public class Conversation extends JsonableBaseObject {
 		/**
 		 * The public facing name of the conversation.
 		 *
-		 * @param displayName The display name, or {@code null} if unespecified.
+		 * @param displayName The display name.
 		 *
 		 * @return This builder.
 		 */
@@ -217,7 +204,7 @@ public class Conversation extends JsonableBaseObject {
 		/**
 		 * An image URL that you associate with the conversation.
 		 *
-		 * @param imageUrl The image URL, or {@code null} if unspecified.
+		 * @param imageUrl The image URL.
 		 *
 		 * @return This builder.
 		 */
@@ -229,7 +216,7 @@ public class Conversation extends JsonableBaseObject {
 		/**
 		 * Properties for this conversation.
 		 *
-		 * @param properties The conversation properties object, or {@code null} if not applicable.
+		 * @param properties The conversation properties object.
 		 *
 		 * @return This builder.
 		 */
@@ -241,7 +228,7 @@ public class Conversation extends JsonableBaseObject {
 		/**
 		 * Channels containing the contact numbers for this conversation.
 		 *
-		 * @param numbers The list of channels associated with this conversation, or {@code null} if unspecified.
+		 * @param numbers The list of channels associated with this conversation.
 		 *
 		 * @return This builder.
 		 */

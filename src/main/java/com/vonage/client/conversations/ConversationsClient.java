@@ -50,7 +50,7 @@ public class ConversationsClient {
 	 */
 	@SuppressWarnings("unchecked")
 	public ConversationsClient(HttpWrapper wrapper) {
-		final String v1c = "/v1/conversations/";
+		final String v1c = "/v1/conversations/", v1u = "/v1/users/", mems = "/members/";
 
 		class Endpoint<T, R> extends DynamicEndpoint<T, R> {
 			Endpoint(Function<T, String> pathGetter, HttpMethod method, R... type) {
@@ -70,12 +70,12 @@ public class ConversationsClient {
 		getConversation = new Endpoint<>(id -> v1c+id, HttpMethod.GET);
 		updateConversation = new Endpoint<>(req -> v1c+req.getId(), HttpMethod.PUT);
 		deleteConversation = new Endpoint<>(id -> v1c+id, HttpMethod.DELETE);
-		listUserConversations = new Endpoint<>(req -> "/v1/users/"+req.getUserId()+"/conversations", HttpMethod.GET);
-		listUserSessions = new Endpoint<>(req -> "/v1/users/"+req.getUserId()+"/sessions", HttpMethod.GET);
-		listMembers = new Endpoint<>(req -> v1c+req.getConversationId()+"/members", HttpMethod.GET);
-		getMember = new Endpoint<>(req -> v1c+req.conversationId+"/members/"+req.resourceId, HttpMethod.GET);
-		createMember = new Endpoint<>(req -> v1c+req.conversationId+"/members", HttpMethod.POST);
-		updateMember = new Endpoint<>(req -> v1c+req.conversationId+"/members/"+req.resourceId, HttpMethod.PATCH);
+		listUserConversations = new Endpoint<>(req -> v1u+req.userId+"/conversations", HttpMethod.GET);
+		listUserSessions = new Endpoint<>(req -> v1u+req.userId+"/sessions", HttpMethod.GET);
+		listMembers = new Endpoint<>(req -> v1c+req.conversationId+mems, HttpMethod.GET);
+		getMember = new Endpoint<>(req -> v1c+req.conversationId+mems+req.resourceId, HttpMethod.GET);
+		createMember = new Endpoint<>(req -> v1c+req.conversationId+mems, HttpMethod.POST);
+		updateMember = new Endpoint<>(req -> v1c+req.conversationId+mems+req.resourceId, HttpMethod.PATCH);
 	}
 
 	// VALIDATION
@@ -135,7 +135,8 @@ public class ConversationsClient {
 		return getConversation.execute(validateConversationId(conversationId));
 	}
 
-	public Conversation updateConversation(Conversation request) {
+	public Conversation updateConversation(String conversationId, Conversation request) {
+		validateRequest(request).id = validateConversationId(conversationId);
 		return updateConversation.execute(request);
 	}
 
@@ -143,20 +144,23 @@ public class ConversationsClient {
 		deleteConversation.execute(validateConversationId(conversationId));
 	}
 
-	public ListConversationsResponse listUserConversations(ListUserConversationsRequest request) {
-		return listUserConversations.execute(request);
+	public ListConversationsResponse listUserConversations(String userId, ListUserConversationsRequest filter) {
+		validateRequest(filter).userId = validateUserId(userId);
+		return listUserConversations.execute(filter);
 	}
 
-	public ListUserSessionsResponse listUserSessions(ListUserSessionsRequest filter) {
-		return listUserSessions.execute(validateRequest(filter));
+	public ListUserSessionsResponse listUserSessions(String userId, ListUserSessionsRequest filter) {
+		validateRequest(filter).userId = validateUserId(userId);
+		return listUserSessions.execute(filter);
 	}
 
-	public List<Member> listMembers() {
-		return listMembers(ListMembersRequest.builder().pageSize(1000).build()).getMembers();
+	public List<Member> listMembers(String conversationId) {
+		return listMembers(conversationId, ListMembersRequest.builder().pageSize(1000).build()).getMembers();
 	}
 
-	public ListMembersResponse listMembers(ListMembersRequest request) {
-		return listMembers.execute(validateRequest(request));
+	public ListMembersResponse listMembers(String conversationId, ListMembersRequest filter) {
+		validateRequest(filter).conversationId = validateConversationId(conversationId);
+		return listMembers.execute(filter);
 	}
 
 	public Member getMember(String conversationId, String memberId) {

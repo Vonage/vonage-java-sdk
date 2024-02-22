@@ -16,30 +16,15 @@
 package com.vonage.client.conversations;
 
 import com.vonage.client.common.HalFilterRequest;
-import java.util.Map;
 
 /**
  * Represents filter options for {@link ConversationsClient#listMembers(ListMembersRequest)}.
  */
-public class ListMembersRequest extends HalFilterRequest {
-	private final String conversationId;
+public final class ListMembersRequest extends HalFilterRequest {
+	String conversationId;
 
 	ListMembersRequest(Builder builder) {
 		super(builder);
-		conversationId = builder.conversationId;
-	}
-	
-	@Override
-	public Map<String, String> makeParams() {
-		Map<String, String> params = super.makeParams();
-		if (conversationId != null) {
-            params.put("conversation_id", conversationId);
-        }
-		return params;
-	}
-
-	public String getConversationId() {
-		return conversationId;
 	}
 
 	/**
@@ -52,22 +37,7 @@ public class ListMembersRequest extends HalFilterRequest {
 	}
 	
 	public static final class Builder extends HalFilterRequest.Builder<ListMembersRequest, Builder> {
-		private String conversationId;
-	
 		Builder() {}
-	
-		/**
-		 * 
-		 *
-		 * @param conversationId 
-		 *
-		 * @return This builder.
-		 */
-		public Builder conversationId(String conversationId) {
-			this.conversationId = conversationId;
-			return this;
-		}
-
 	
 		/**
 		 * Builds the {@linkplain ListMembersRequest}.
