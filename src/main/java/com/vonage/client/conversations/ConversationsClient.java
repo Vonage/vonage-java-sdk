@@ -21,6 +21,9 @@ import com.vonage.client.RestEndpoint;
 import com.vonage.client.VonageClient;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.common.HttpMethod;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.function.Function;
 
 /**
@@ -75,47 +78,98 @@ public class ConversationsClient {
 		updateMember = new Endpoint<>(req -> v1c+req.conversationId+"/members/"+req.resourceId, HttpMethod.PATCH);
 	}
 
-	public ListConversationsResponse listConversations(ListConversationsRequest request) {
-		return listConversations.execute(request);
+	// VALIDATION
+
+	private static String validateId(String prefix, String arg) {
+		final int prefixLength = prefix.length(), expectedLength = prefixLength + 36;
+		if (arg == null || arg.length() != expectedLength) {
+			throw new IllegalArgumentException(
+					"Invalid ID: '"+arg+"' is not "+expectedLength+" characters in length."
+			);
+		}
+		if (!arg.startsWith(prefix)) {
+			String actualPrefix = arg.substring(0, prefixLength);
+			throw new IllegalArgumentException(
+					"Invalid ID: expected prefix '"+prefix+"' but got '"+actualPrefix+"'."
+			);
+		}
+		return prefix + UUID.fromString(arg.substring(prefixLength));
+	}
+
+	private static String validateConversationId(String id) {
+		return validateId("CON-", id);
+	}
+
+	private static String validateMemberId(String id) {
+		return validateId("MEM-", id);
+	}
+
+	private static String validateUserId(String id) {
+		return validateId("USR-", id);
+	}
+
+	private static String validateSessionId(String id) {
+		return validateId("SES-", id);
+	}
+
+	private static <T> T validateRequest(T request) {
+		return Objects.requireNonNull(request, "Request parameter is required.");
+	}
+
+	// ENDPOINTS
+
+
+	public List<Conversation> listConversations() {
+		return listConversations(ListConversationsRequest.builder().pageSize(1000).build()).getConversations();
+	}
+
+	public ListConversationsResponse listConversations(ListConversationsRequest filter) {
+		return listConversations.execute(validateRequest(filter));
 	}
 
 	public Conversation createConversation(Conversation request) {
-		return createConversation.execute(request);
+		return createConversation.execute(validateRequest(request));
 	}
 
-	public Conversation getConversation(String request) {
-		return getConversation.execute(request);
+	public Conversation getConversation(String conversationId) {
+		return getConversation.execute(validateConversationId(conversationId));
 	}
 
 	public Conversation updateConversation(Conversation request) {
 		return updateConversation.execute(request);
 	}
 
-	public void deleteConversation(String request) {
-		deleteConversation.execute(request);
+	public void deleteConversation(String conversationId) {
+		deleteConversation.execute(validateConversationId(conversationId));
 	}
 
 	public ListConversationsResponse listUserConversations(ListUserConversationsRequest request) {
 		return listUserConversations.execute(request);
 	}
 
-	public ListUserSessionsResponse listUserSessions(ListUserSessionsRequest request) {
-		return listUserSessions.execute(request);
+	public ListUserSessionsResponse listUserSessions(ListUserSessionsRequest filter) {
+		return listUserSessions.execute(validateRequest(filter));
+	}
+
+	public List<Member> listMembers() {
+		return listMembers(ListMembersRequest.builder().pageSize(1000).build()).getMembers();
 	}
 
 	public ListMembersResponse listMembers(ListMembersRequest request) {
-		return listMembers.execute(request);
+		return listMembers.execute(validateRequest(request));
 	}
 
 	public Member getMember(String conversationId, String memberId) {
-		return getMember.execute(new ConversationResourceRequestWrapper(conversationId, memberId));
+		return getMember.execute(new ConversationResourceRequestWrapper(
+				validateConversationId(conversationId), validateMemberId(memberId)
+		));
 	}
 
 	public Member createMember(Member request) {
-		return createMember.execute(request);
+		return createMember.execute(validateRequest(request));
 	}
 
 	public Member updateMember(UpdateMemberRequest request) {
-		return updateMember.execute(request);
+		return updateMember.execute(validateRequest(request));
 	}
 }

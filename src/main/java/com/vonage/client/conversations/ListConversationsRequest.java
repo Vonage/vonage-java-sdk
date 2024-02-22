@@ -16,22 +16,51 @@
 package com.vonage.client.conversations;
 
 import com.vonage.client.common.HalFilterRequest;
+import java.time.Instant;
 import java.util.Map;
 
 /**
  * Filters results for {@link ConversationsClient#listConversations(ListConversationsRequest)}.
  */
 public class ListConversationsRequest extends HalFilterRequest {
+	private final Instant startDate, endDate;
 
 	ListConversationsRequest(Builder builder) {
 		super(builder);
+		startDate = builder.startDate;
+		endDate = builder.endDate;
 	}
 	
 	@Override
 	public Map<String, String> makeParams() {
 		Map<String, String> params = super.makeParams();
+		if (startDate != null) {
+            params.put("date_start", startDate.toString());
+        }
+		if (endDate != null) {
+            params.put("date_end", endDate.toString());
+        }
 		return params;
 	}
+
+	/**
+	 * Filter records that occurred after this point in time.
+	 * 
+	 * @return The start timestamp for results, or {@code null} if unspecified.
+	 */
+	public Instant getStartDate() {
+		return startDate;
+	}
+
+	/**
+	 * Filter records that occurred before this point in time.
+	 * 
+	 * @return The end timestamp for results, or {@code null} if unspecified.
+	 */
+	public Instant getEndDate() {
+		return endDate;
+	}
+
 
 	/**
 	 * Entry point for constructing an instance of this class.
@@ -42,11 +71,35 @@ public class ListConversationsRequest extends HalFilterRequest {
 		return new Builder();
 	}
 	
-	public static final class Builder extends HalFilterRequest.Builder<ListConversationsRequest, Builder> {
+	public static class Builder extends HalFilterRequest.Builder<ListConversationsRequest, Builder> {
+		private Instant startDate, endDate;
 	
 		Builder() {}
 	
-	
+		/**
+		 * Filter records that occurred after this point in time.
+		 *
+		 * @param startDate The start timestamp for results, or {@code null} if unspecified.
+		 *
+		 * @return This builder.
+		 */
+		public Builder startDate(Instant startDate) {
+			this.startDate = startDate;
+			return this;
+		}
+
+		/**
+		 * Filter records that occurred before this point in time.
+		 *
+		 * @param endDate The end timestamp for results, or {@code null} if unspecified.
+		 *
+		 * @return This builder.
+		 */
+		public Builder endDate(Instant endDate) {
+			this.endDate = endDate;
+			return this;
+		}
+
 		/**
 		 * Builds the {@linkplain ListConversationsRequest}.
 		 *
