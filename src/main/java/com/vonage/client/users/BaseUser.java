@@ -31,10 +31,6 @@ public class BaseUser extends JsonableBaseObject {
     BaseUser() {
     }
 
-    void setId(String id) {
-        this.id = id;
-    }
-
     /**
      * Unique user ID.
      *

@@ -18,7 +18,7 @@ package com.vonage.client.conversations;
 import com.vonage.client.common.HalFilterRequest;
 
 /**
- * Represents filter options for {@link ConversationsClient#listMembers(ListMembersRequest)}.
+ * Represents filter options for {@link ConversationsClient#listMembers(String, ListMembersRequest)}.
  */
 public final class ListMembersRequest extends HalFilterRequest {
 	String conversationId;

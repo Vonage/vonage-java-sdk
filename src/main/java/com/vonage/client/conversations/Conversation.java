@@ -19,20 +19,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
-import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.users.channels.Channel;
 import java.net.URI;
 import java.util.List;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Conversation extends JsonableBaseObject {
-	String id;
-	private String name, displayName;
-	private URI imageUrl;
+public class Conversation extends BaseConversation {
 	private ConversationStatus state;
 	private Integer sequenceNumber;
-	private Timestamp timestamp;
 	private ConversationProperties properties;
 	private List<Channel> numbers;
 	private Callback callback;
@@ -50,48 +45,8 @@ public class Conversation extends JsonableBaseObject {
 	}
 
 	/**
-	 * Unique identifier for this conversation.
-	 * 
-	 * @return The conversation ID as a string.
-	 */
-	@JsonProperty("id")
-	public String getId() {
-		return id;
-	}
-
-	/**
-	 * Internal conversation name. Must be unique.
-	 * 
-	 * @return The conversation name, or {@code null} if unspecified.
-	 */
-	@JsonProperty("name")
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * The public facing name of the conversation.
-	 * 
-	 * @return The display name, or {@code null} if unspecified.
-	 */
-	@JsonProperty("display_name")
-	public String getDisplayName() {
-		return displayName;
-	}
-
-	/**
-	 * An image URL that you associate with the conversation.
-	 * 
-	 * @return The image URL, or {@code null} if unspecified.
-	 */
-	@JsonProperty("image_url")
-	public URI getImageUrl() {
-		return imageUrl;
-	}
-
-	/**
 	 * The state the conversation is in.
-	 * 
+	 *
 	 * @return The conversation state as an enum, or {@code null} if unknown.
 	 */
 	@JsonProperty("state")
@@ -101,7 +56,7 @@ public class Conversation extends JsonableBaseObject {
 
 	/**
 	 * The last Event ID in this conversation. This ID can be used to retrieve a specific event.
-	 * 
+	 *
 	 * @return The last event ID as an integer, or {@code null} if unknown.
 	 */
 	@JsonProperty("sequence_number")
@@ -110,18 +65,8 @@ public class Conversation extends JsonableBaseObject {
 	}
 
 	/**
-	 * Timestamps for this conversation.
-	 * 
-	 * @return The timestamps object, or {@code null} if unknown.
-	 */
-	@JsonProperty("timestamp")
-	public Timestamp getTimestamp() {
-		return timestamp;
-	}
-
-	/**
 	 * Properties for this conversation.
-	 * 
+	 *
 	 * @return The conversation properties object, or {@code null} if not applicable.
 	 */
 	@JsonProperty("properties")
@@ -131,7 +76,7 @@ public class Conversation extends JsonableBaseObject {
 
 	/**
 	 * Channels containing the contact numbers for this conversation.
-	 * 
+	 *
 	 * @return The list of channels associated with this conversation, or {@code null} if unspecified.
 	 */
 	@JsonProperty("numbers")
@@ -141,7 +86,7 @@ public class Conversation extends JsonableBaseObject {
 
 	/**
 	 * Specifies callback parameters for webhooks.
-	 * 
+	 *
 	 * @return The callback properties, or {@code null} if unspecified.
 	 */
 	@JsonProperty("callback")

@@ -41,7 +41,7 @@ public class UserTest {
 		User request = User.builder().channels()
 				.name(name).displayName(displayName)
 				.imageUrl(imageUrl).customData(customData).build();
-		request.setId(id);
+		request.id = id;
 
 		String json = request.toJson();
 		assertTrue(json.contains("\"id\":\""+id+"\""));

@@ -57,6 +57,7 @@ test {
         events "skipped", "failed"
         exceptionFormat "full"
     }
+    jvmArgs("--enable-preview")
 }
 
 javadoc {
