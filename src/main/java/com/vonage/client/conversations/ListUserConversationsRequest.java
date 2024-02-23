@@ -16,6 +16,7 @@
 package com.vonage.client.conversations;
 
 import com.vonage.client.common.HalFilterRequest;
+import com.vonage.client.common.SortOrder;
 import java.time.Instant;
 import java.util.Map;
 
@@ -89,6 +90,16 @@ public final class ListUserConversationsRequest extends AbstractListUserRequest 
 		private Instant startDate;
 	
 		Builder() {}
+
+		@Override
+		public Builder pageSize(int pageSize) {
+			return super.pageSize(pageSize);
+		}
+
+		@Override
+		public Builder order(SortOrder order) {
+			return super.order(order);
+		}
 
 		/**
 		 * 

@@ -16,7 +16,6 @@
 package com.vonage.client.conversations;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * Repersents the possible HTTP methods for {@link Callback#getMethod()}.
@@ -34,10 +33,4 @@ public enum CallbackHttpMethod {
 			return null;
 		}
 	}
-
-	@JsonValue
-	@Override
-	public String toString() {
-		return name().toLowerCase();
-	}	
 }

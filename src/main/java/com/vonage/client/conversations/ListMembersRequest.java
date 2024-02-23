@@ -16,6 +16,7 @@
 package com.vonage.client.conversations;
 
 import com.vonage.client.common.HalFilterRequest;
+import com.vonage.client.common.SortOrder;
 
 /**
  * Represents filter options for {@link ConversationsClient#listMembers(String, ListMembersRequest)}.
@@ -38,7 +39,17 @@ public final class ListMembersRequest extends HalFilterRequest {
 	
 	public static final class Builder extends HalFilterRequest.Builder<ListMembersRequest, Builder> {
 		Builder() {}
-	
+
+		@Override
+		public Builder pageSize(int pageSize) {
+			return super.pageSize(pageSize);
+		}
+
+		@Override
+		public Builder order(SortOrder order) {
+			return super.order(order);
+		}
+
 		/**
 		 * Builds the {@linkplain ListMembersRequest}.
 		 *

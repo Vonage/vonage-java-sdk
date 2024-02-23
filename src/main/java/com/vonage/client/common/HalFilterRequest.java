@@ -58,17 +58,17 @@ public abstract class HalFilterRequest implements QueryParamsRequest {
 		protected Integer page, pageSize;
 		protected SortOrder order;
 
-		public B page(int page) {
+		protected B page(int page) {
 			this.page = page;
 			return (B) this;
 		}
 
-		public B pageSize(int pageSize) {
+		protected B pageSize(int pageSize) {
 			this.pageSize = pageSize;
 			return (B) this;
 		}
 
-		public B order(SortOrder order) {
+		protected B order(SortOrder order) {
 			this.order = order;
 			return (B) this;
 		}

@@ -16,6 +16,7 @@
 package com.vonage.client.conversations;
 
 import com.vonage.client.common.HalFilterRequest;
+import com.vonage.client.common.SortOrder;
 import java.time.Instant;
 import java.util.Map;
 
@@ -67,7 +68,6 @@ public class ListConversationsRequest extends HalFilterRequest {
 		return endDate;
 	}
 
-
 	/**
 	 * Entry point for constructing an instance of this class.
 	 * 
@@ -81,7 +81,17 @@ public class ListConversationsRequest extends HalFilterRequest {
 		private Instant startDate, endDate;
 	
 		Builder() {}
-	
+
+		@Override
+		public Builder pageSize(int pageSize) {
+			return super.pageSize(pageSize);
+		}
+
+		@Override
+		public Builder order(SortOrder order) {
+			return super.order(order);
+		}
+
 		/**
 		 * Filter records that occurred after this point in time.
 		 *

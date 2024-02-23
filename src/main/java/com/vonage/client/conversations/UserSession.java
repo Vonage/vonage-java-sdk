@@ -15,19 +15,35 @@
  */
 package com.vonage.client.conversations;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
+import com.vonage.client.users.BaseUser;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserSession extends JsonableBaseObject {
-	private String sessionId, userId, userName, apiKey;
-	private Double ttl;
+public final class UserSession extends JsonableBaseObject {
+	@JsonProperty("id") private String sessionId;
+	@JsonProperty("_embedded") private Embedded _embedded;
+	@JsonProperty("properties") private Properties properties;
 
-	protected UserSession() {
+	UserSession() {
+	}
+
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	private static class Embedded extends JsonableBaseObject {
+		@JsonProperty("api_key") String apiKey;
+		@JsonProperty("user") BaseUser user;
+	}
+
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	private static class Properties extends JsonableBaseObject {
+		@JsonProperty("ttl") Double ttl;
 	}
 
 	/**
@@ -35,29 +51,8 @@ public class UserSession extends JsonableBaseObject {
 	 * 
 	 * @return The session ID.
 	 */
-	@JsonProperty("id")
 	public String getSessionId() {
 		return sessionId;
-	}
-
-	/**
-	 * Unique user identifier.
-	 * 
-	 * @return The user ID for this session.
-	 */
-	@JsonProperty("_embedded.user.id")
-	public String getUserId() {
-		return userId;
-	}
-
-	/**
-	 * User's unique name.
-	 * 
-	 * @return The user's name.
-	 */
-	@JsonProperty("_embedded.user.name")
-	public String getUserName() {
-		return userName;
 	}
 
 	/**
@@ -65,9 +60,9 @@ public class UserSession extends JsonableBaseObject {
 	 * 
 	 * @return The API key, or {@code null} if unknown / not applicable.
 	 */
-	@JsonProperty("_embedded.api_key")
+	@JsonIgnore
 	public String getApiKey() {
-		return apiKey;
+		return _embedded != null ? _embedded.apiKey : null;
 	}
 
 	/**
@@ -75,9 +70,19 @@ public class UserSession extends JsonableBaseObject {
 	 * 
 	 * @return The session TTL in minutes, or {@code null} if unknown / unspecified.
 	 */
-	@JsonProperty("properties.ttl")
+	@JsonIgnore
 	public Double getTtl() {
-		return ttl;
+		return properties != null ? properties.ttl : null;
+	}
+
+	/**
+	 * Basic user metadata.
+	 * 
+	 * @return The embedded user object, or {@code null} if absent.
+	 */
+	@JsonIgnore
+	public BaseUser getUser() {
+		return _embedded != null ? _embedded.user : null;
 	}
 	
 	/**

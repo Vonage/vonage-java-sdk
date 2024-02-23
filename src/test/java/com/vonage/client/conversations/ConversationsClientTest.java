@@ -15,6 +15,8 @@
  */
 package com.vonage.client.conversations;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.ClientTest;
 import com.vonage.client.RestEndpoint;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
@@ -26,10 +28,10 @@ import org.junit.jupiter.api.function.Executable;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Map;
-import java.util.UUID;
 
 public class ConversationsClientTest extends ClientTest<ConversationsClient> {
-	static final int PAGE = 2, PAGE_SIZE = 30, SEQUENCE_NUMBER = 159, TTL = 60;
+	static final int PAGE_SIZE = 30, CONVERSATION_SEQUENCE_NUMBER = 159, CONVERSATION_TTL = 60;
+	static final double USER_SESSION_TTL = 1.6;
 	static final SortOrder ORDER = SortOrder.DESCENDING;
 	static final ConversationStatus CONVERSATION_STATE = ConversationStatus.INACTIVE;
 	static final MemberState MEMBER_STATE = MemberState.JOINED;
@@ -40,7 +42,6 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 	static final String
 			INVALID_UUID_STR = "12345678-9abc-defg-hijk-lmnopqrstuvw",
-			APPLICATION_ID_STR = "fa185f5e-2a5a-492c-9e0a-ba3ab6844441",
 			CONVERSATION_ID = "CON-d66d47de-5bcb-4300-94f0-0c9d4b948e9a",
 			MEMBER_ID = "MEM-df8e57d8-1c8e-4573-bf4d-29d5414dcb42",
 			USER_ID = "USR-82e028d9-5201-4f1e-8188-604b2d3471ec",
@@ -50,11 +51,13 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			TIMESTAMP_CREATED_STR = "2019-09-03T18:40:24.324Z",
 			TIMESTAMP_UPDATED_STR = "2019-09-03T18:40:24.324Z",
 			TIMESTAMP_DESTROYED_STR = "2022-02-03T04:58:59.601Z",
+			USER_NAME = "my_user_name",
 			CONVERSATION_NAME = "customer_chat",
 			CONVERSATION_DISPLAY_NAME = "Chat with Customer",
 			CONVERSATION_IMAGE_URL_STR = "https://example.com/image.png",
 			CONVERSATION_STATE_STR = "INACTIVE",
 			MEMBER_STATE_STR = "JOINED",
+			ORDER_STR = "desc",
 			CONVERSATION_TYPE = "quick_chat",
 			CONVERSATION_CUSTOM_SORT_KEY = "CSK_1",
 			CONVERSATION_CUSTOM_DATA_STR = "{\"property1\":\"value1\",\"prop2\":\"Val 2\"}",
@@ -74,9 +77,9 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
                     .substring(0, SAMPLE_BASE_CONVERSATION_RESPONSE_PARTIAL.length() - 1)}\n\t}",
 			SAMPLE_CONVERSATION_RESPONSE_PARTIAL = SAMPLE_BASE_CONVERSATION_RESPONSE_PARTIAL + STR."""
 				   "state": "\{CONVERSATION_STATE_STR}",
-				   "sequence_number": \{SEQUENCE_NUMBER},
+				   "sequence_number": \{CONVERSATION_SEQUENCE_NUMBER},
 				   "properties": {
-					  "ttl": \{TTL},
+					  "ttl": \{CONVERSATION_TTL},
 					  "type": "\{CONVERSATION_TYPE}",
 					  "custom_sort_key": "\{CONVERSATION_CUSTOM_SORT_KEY}",
 					  "custom_data": \{CONVERSATION_CUSTOM_DATA_STR}
@@ -142,9 +145,52 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 					  }
 				   }
 				}
+			""",
+			SAMPLE_USER_SESSION_RESPONSE = STR."""
+   				{
+					"id": "\{SESSION_ID}",
+					"_embedded": {
+					   "user": {
+						  "id": "\{USER_ID}",
+						  "name": "\{USER_NAME}"
+					   },
+					   "api_key": "\{API_KEY}"
+					},
+					"properties": {
+					   "ttl": \{USER_SESSION_TTL}
+					},
+					"_links": {
+					   "self": {
+						  "href": "https://api.nexmo.com/v1/users/\{USER_ID}/sessions"
+					   }
+					}
+			 	}
+			""",
+			SAMPLE_LIST_USER_SESSIONS_RESPONSE = STR."""
+   				{
+				   "page_size": \{PAGE_SIZE},
+				   "_embedded": {
+					  "sessions": [
+						 {}, \{SAMPLE_USER_SESSION_RESPONSE}, {"_embedded":{"user":{}}}
+					  ]
+				   },
+				   "_links": {
+					  "first": {
+						 "href": "https://api.nexmo.com/v1/users/USR-82e028d9-5201-4f1e-8188-604b2d3471ec/sessions?order=desc&page_size=10"
+					  },
+					  "self": {
+						 "href": "https://api.nexmo.com/v1/users/USR-82e028d9-5201-4f1e-8188-604b2d3471ec/sessions?order=desc&page_size=10&cursor=7EjDNQrAcipmOnc0HCzpQRkhBULzY44ljGUX4lXKyUIVfiZay5pv9wg="
+					  },
+					  "next": {
+						 "href": "https://api.nexmo.com/v1/users/USR-82e028d9-5201-4f1e-8188-604b2d3471ec/sessions?order=desc&page_size=10&cursor=7EjDNQrAcipmOnc0HCzpQRkhBULzY44ljGUX4lXKyUIVfiZay5pv9wg="
+					  },
+					  "prev": {
+						 "href": "https://api.nexmo.com/v1/users/USR-82e028d9-5201-4f1e-8188-604b2d3471ec/sessions?order=desc&page_size=10&cursor=7EjDNQrAcipmOnc0HCzpQRkhBULzY44ljGUX4lXKyUIVfiZay5pv9wg="
+					  }
+				   }
+				}
 			""";
 
-	static final UUID APPLICATION_ID = UUID.fromString(APPLICATION_ID_STR);
 	static final URI CONVERSATION_IMAGE_URL = URI.create(CONVERSATION_IMAGE_URL_STR);
 	static final Instant
 			START_DATE = Instant.parse(START_DATE_STR.replace(' ','T')+'Z'),
@@ -178,10 +224,10 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 	static void assertEqualsSampleConversation(Conversation parsed) {
 		assertEqualsSampleBaseConversation(parsed);
 		assertEquals(CONVERSATION_STATE, parsed.getState());
-		assertEquals(SEQUENCE_NUMBER, parsed.getSequenceNumber());
+		assertEquals(CONVERSATION_SEQUENCE_NUMBER, parsed.getSequenceNumber());
 		var properties = parsed.getProperties();
 		assertNotNull(properties);
-		assertEquals(TTL, properties.getTtl());
+		assertEquals(CONVERSATION_TTL, properties.getTtl());
 		assertEquals(CONVERSATION_TYPE, properties.getType());
 		assertEquals(CONVERSATION_CUSTOM_SORT_KEY, properties.getCustomSortKey());
 		assertEquals(CONVERSATION_CUSTOM_DATA, properties.getCustomData());
@@ -206,6 +252,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 	static void assertEqualsSampleListConversations(ListConversationsResponse parsed) {
 		testJsonableBaseObject(parsed);
+		assertEquals(PAGE_SIZE, parsed.getPageSize());
 		var conversations = parsed.getConversations();
 		assertNotNull(conversations);
 		assertEquals(3, conversations.size());
@@ -216,6 +263,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 	static void assertEqualsSampleListUserConversations(ListUserConversationsResponse parsed) {
 		testJsonableBaseObject(parsed);
+		assertEquals(PAGE_SIZE, parsed.getPageSize());
 		var conversations = parsed.getConversations();
 		assertNotNull(conversations);
 		assertEquals(2, conversations.size());
@@ -226,6 +274,37 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 		assertNotNull(member);
 		assertNull(member.getId());
 		assertNull(member.getState());
+	}
+
+	static void assertEqualsSampleUserSession(UserSession parsed) {
+		testJsonableBaseObject(parsed);
+		assertEquals(SESSION_ID, parsed.getSessionId());
+		assertEquals(API_KEY, parsed.getApiKey());
+		assertEquals(USER_SESSION_TTL, parsed.getTtl());
+		var user = parsed.getUser();
+		testJsonableBaseObject(user);
+		assertEquals(USER_ID, user.getId());
+		assertEquals(USER_NAME, user.getName());
+	}
+
+	static void assertEqualsSampleListUserSessions(ListUserSessionsResponse parsed) {
+		testJsonableBaseObject(parsed);
+		assertEquals(PAGE_SIZE, parsed.getPageSize());
+		var sessions = parsed.getSessions();
+		assertNotNull(sessions);
+		assertEquals(3, sessions.size());
+
+		var first = sessions.getFirst();
+		testJsonableBaseObject(first);
+		assertNull(first.getUser());
+		assertNull(first.getSessionId());
+		assertNull(first.getTtl());
+
+		assertEqualsSampleUserSession(sessions.get(1));
+
+		var last = sessions.getLast();
+		testJsonableBaseObject(last);
+		assertNotNull(last.getUser());
 	}
 	
 	// CONVERSATIONS
@@ -269,14 +348,13 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			@Override
 			protected ListConversationsRequest sampleRequest() {
 				return ListConversationsRequest.builder()
-						.page(PAGE).pageSize(PAGE_SIZE).order(ORDER)
+						.pageSize(PAGE_SIZE).order(ORDER)
 						.startDate(START_DATE).endDate(END_DATE).build();
 			}
 
 			@Override
 			protected Map<String, String> sampleQueryParams() {
 				return Map.of(
-						"page", String.valueOf(PAGE),
 						"page_size", String.valueOf(PAGE_SIZE),
 						"order", String.valueOf(ORDER),
 						"date_start", START_DATE_STR,
@@ -334,7 +412,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 						.displayName(CONVERSATION_DISPLAY_NAME)
 						.imageUrl(CONVERSATION_IMAGE_URL_STR)
 						.properties(ConversationProperties.builder()
-							.ttl(TTL).type(CONVERSATION_TYPE)
+							.ttl(CONVERSATION_TTL).type(CONVERSATION_TYPE)
 							.customSortKey(CONVERSATION_CUSTOM_SORT_KEY)
 							.customData(CONVERSATION_CUSTOM_DATA).build()
 						)
@@ -346,7 +424,24 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 			@Override
 			protected String sampleRequestBodyString() {
-				return "{\"name\":\"customer_chat\",\"display_name\":\"Chat with Customer\",\"image_url\":\"https://example.com/image.png\",\"properties\":"+sampleRequest().getProperties().toJson()+",\"numbers\":[],\"callback\":{\"url\":\"http://example.com/callback\",\"event_mask\":\"Test value\",\"method\":\"post\"}}";
+				var request = sampleRequest();
+				var customData = request.getProperties().getCustomData();
+
+				try {
+					return STR."""
+					{"name":"\{request.getName()}","display_name":"\{request.getDisplayName()}",\
+					"image_url":"\{request.getImageUrl()}","properties":{\
+					"ttl":\{request.getProperties().getTtl()},\
+					"type":"\{request.getProperties().getType()}",\
+					"custom_sort_key":"\{request.getProperties().getCustomSortKey()}",\
+					"custom_data":\{new ObjectMapper().writeValueAsString(customData)}},\
+					"numbers":[],"callback":{"url":"\{request.getCallback().getUrl()}",\
+					"event_mask":"\{request.getCallback().getEventMask()}",\
+					"method":"\{request.getCallback().getMethod()}"}}""";
+				}
+				catch (JsonProcessingException impossible) {
+					throw new IllegalStateException(impossible);
+				}
 			}
 		}
 		.runTests();
@@ -459,7 +554,10 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			@Override
 			protected String sampleRequestBodyString() {
 				return STR."""
-{"id":"\{CONVERSATION_ID}","name":"\{CONVERSATION_NAME}","display_name":"\{CONVERSATION_DISPLAY_NAME}","image_url":"\{CONVERSATION_IMAGE_URL_STR}"}""";
+					{"id":"\{CONVERSATION_ID}","name":"\{CONVERSATION_NAME}",\
+					"display_name":"\{CONVERSATION_DISPLAY_NAME}",\
+					"image_url":"\{CONVERSATION_IMAGE_URL_STR}"}\
+					""";
 			}
 		}
 		.runTests();
@@ -578,6 +676,12 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 						.includeCustomData(true)
 						.startDate(START_DATE)
 						.build();
+
+				assertEquals(MemberState.INVITED, request.getState());
+				assertEquals(OrderBy.CUSTOM_SORT_KEY, request.getOrderBy());
+				assertTrue(request.getIncludeCustomData());
+				assertEquals(START_DATE, request.getStartDate());
+
 				request.userId = USER_ID;
 				return request;
 			}
@@ -595,14 +699,30 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 		.runTests();
 	}
 
-	/*@Test
+	@Test
 	public void testListUserSessions() throws Exception {
 		ListUserSessionsRequest request = ListUserSessionsRequest.builder().build();
-		stubResponseAndRun(responseJson, () -> client.listUserSessions(request));
-		stubResponseAndAssertThrows(200, () -> client.listUserSessions(null), NullPointerException.class);
-		stubResponseAndAssertThrows(401, () -> client.listUserSessions(request), ConversationsResponseException.class);
-		assert401ResponseException(() -> client.listUserSessions(request));
-	}*/
+		stubResponse(200, SAMPLE_LIST_USER_SESSIONS_RESPONSE);
+		assertEqualsSampleListUserSessions(client.listUserSessions(USER_ID, request));
+
+		stubResponseAndAssertThrows(200,
+				() -> client.listUserSessions(USER_ID, null),
+				NullPointerException.class
+		);
+		stubResponseAndAssertThrows(200,
+				() -> client.listUserSessions(SESSION_ID),
+				IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(200,
+				() -> client.listUserSessions(CONVERSATION_ID, request),
+				IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(404,
+				() -> client.listUserSessions(USER_ID, request),
+				ConversationsResponseException.class
+		);
+		assert401ResponseException(() -> client.listUserSessions(USER_ID, request));
+	}
 
 	@Test
 	public void testListUserSessionsEndpoint() throws Exception {
@@ -625,14 +745,17 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 			@Override
 			protected ListUserSessionsRequest sampleRequest() {
-				var request = ListUserSessionsRequest.builder().build();
+				var request = ListUserSessionsRequest.builder().pageSize(PAGE_SIZE).order(ORDER).build();
 				request.userId = USER_ID;
 				return request;
 			}
 
 			@Override
 			protected Map<String, String> sampleQueryParams() {
-				return Map.of();
+				return Map.of(
+						"page_size", String.valueOf(PAGE_SIZE),
+						"order", ORDER_STR
+				);
 			}
 		}
 		.runTests();
