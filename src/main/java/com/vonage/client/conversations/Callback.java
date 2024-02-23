@@ -33,13 +33,13 @@ public class Callback extends JsonableBaseObject {
 	private Params params;
 	private CallbackHttpMethod method;
 
-	protected Callback() {}
+	Callback() {}
 
-	protected Callback(URI url, String eventMask, Params params, CallbackHttpMethod method) {
-		this.url = url;
-		this.eventMask = eventMask;
-		this.params = params;
-		this.method = method;
+	Callback(Builder builder) {
+		url = builder.url;
+		eventMask = builder.eventMask;
+		method = builder.method;
+
 	}
 
 	/**
@@ -85,11 +85,6 @@ public class Callback extends JsonableBaseObject {
 
 		protected Params() {}
 
-		protected Params(UUID applicationId, URI nccoUrl) {
-			this.applicationId = applicationId;
-			this.nccoUrl = nccoUrl;
-		}
-
 		/**
 		 * Vonage Application ID.
 		 *
@@ -108,6 +103,95 @@ public class Callback extends JsonableBaseObject {
 		@JsonProperty("ncco_url")
 		public URI getNccoUrl() {
 			return nccoUrl;
+		}
+	}
+
+	/**
+	 * Entry point for constructing an instance of this class.
+	 *
+	 * @return A new Builder.
+	 */
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	public static class Builder {
+		private URI url;
+		private String eventMask;
+		private CallbackHttpMethod method;
+		private Params params;
+
+		Builder() {}
+
+		/**
+		 * Event URL for the callback.
+		 *
+		 * @param url The callback URL as a string.
+		 *
+		 * @return This builder.
+		 */
+		public Builder url(String url) {
+			this.url = URI.create(url);
+			return this;
+		}
+
+		/**
+		 *
+		 *
+		 * @param eventMask
+		 *
+		 * @return This builder.
+		 */
+		public Builder eventMask(String eventMask) {
+			this.eventMask = eventMask;
+			return this;
+		}
+
+		/**
+		 * HTTP method to use for the callback.
+		 *
+		 * @param method The HTTP method as an enum, or {@code null} if unspecified.
+		 *
+		 * @return This builder.
+		 */
+		public Builder method(CallbackHttpMethod method) {
+			this.method = method;
+			return this;
+		}
+
+		/**
+		 * Vonage Application ID.
+		 *
+		 * @param applicationId The application ID as a string.
+		 *
+		 * @return This builder.
+		 */
+		public Builder applicationId(String applicationId) {
+			if (params == null) params = new Params();
+			params.applicationId = UUID.fromString(applicationId);
+			return this;
+		}
+
+		/**
+		 * Call Control Object URL to use for the callback.
+		 *
+		 * @param nccoUrl The NCCO URL as a string.
+		 *
+		 * @return This builder.
+		 */
+		public Builder nccoUrl(String nccoUrl) {
+			if (params == null) params = new Params();
+			params.nccoUrl = URI.create(nccoUrl);
+			return this;
+		}
+
+		/**
+		 * Builds the {@linkplain Callback}.
+		 *
+		 * @return An instance of Callback, populated with all fields from this builder.
+		 */
+		public Callback build() {
+			return new Callback(this);
 		}
 	}
 }

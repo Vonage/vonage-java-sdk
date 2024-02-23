@@ -21,7 +21,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import com.vonage.client.users.channels.Channel;
 import java.net.URI;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -29,7 +31,7 @@ public class Conversation extends BaseConversation {
 	private ConversationStatus state;
 	private Integer sequenceNumber;
 	private ConversationProperties properties;
-	private List<Channel> numbers;
+	private Collection<? extends Channel> numbers;
 	private Callback callback;
 
 	protected Conversation() {
@@ -77,10 +79,10 @@ public class Conversation extends BaseConversation {
 	/**
 	 * Channels containing the contact numbers for this conversation.
 	 *
-	 * @return The list of channels associated with this conversation, or {@code null} if unspecified.
+	 * @return The channels associated with this conversation, or {@code null} if unspecified.
 	 */
 	@JsonProperty("numbers")
-	public List<Channel> getNumbers() {
+	public Collection<? extends Channel> getNumbers() {
 		return numbers;
 	}
 
@@ -117,7 +119,7 @@ public class Conversation extends BaseConversation {
 		private String name, displayName;
 		private URI imageUrl;
 		private ConversationProperties properties;
-		private List<Channel> numbers;
+		private Collection<? extends Channel> numbers;
 		private Callback callback;
 	
 		Builder() {}
@@ -149,12 +151,12 @@ public class Conversation extends BaseConversation {
 		/**
 		 * An image URL that you associate with the conversation.
 		 *
-		 * @param imageUrl The image URL.
+		 * @param imageUrl The image URL as a string.
 		 *
 		 * @return This builder.
 		 */
-		public Builder imageUrl(URI imageUrl) {
-			this.imageUrl = imageUrl;
+		public Builder imageUrl(String imageUrl) {
+			this.imageUrl = URI.create(imageUrl);
 			return this;
 		}
 
@@ -173,12 +175,23 @@ public class Conversation extends BaseConversation {
 		/**
 		 * Channels containing the contact numbers for this conversation.
 		 *
-		 * @param numbers The list of channels associated with this conversation.
+		 * @param numbers The channels associated with this conversation.
 		 *
 		 * @return This builder.
 		 */
-		public Builder numbers(List<Channel> numbers) {
-			this.numbers = numbers;
+		public Builder numbers(Channel... numbers) {
+			return numbers(Arrays.asList(numbers));
+		}
+
+		/**
+		 * Channels containing the contact numbers for this conversation.
+		 *
+		 * @param numbers The channels associated with this conversation.
+		 *
+		 * @return This builder.
+		 */
+		public Builder numbers(Collection<? extends Channel> numbers) {
+			this.numbers = new ArrayList<>(numbers);
 			return this;
 		}
 
@@ -194,7 +207,6 @@ public class Conversation extends BaseConversation {
 			return this;
 		}
 
-	
 		/**
 		 * Builds the {@linkplain Conversation}.
 		 *

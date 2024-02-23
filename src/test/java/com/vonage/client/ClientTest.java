@@ -107,7 +107,11 @@ public abstract class ClientTest<T> {
     }
 
     protected void stubResponseAndRun(String responseJson, Runnable invocation) throws Exception {
-        stubResponse(200, responseJson);
+        stubResponseAndRun(200, responseJson, invocation);
+    }
+
+    protected void stubResponseAndRun(int statusCode, String responseJson, Runnable invocation) throws Exception {
+        stubResponse(statusCode, responseJson);
         invocation.run();
     }
 

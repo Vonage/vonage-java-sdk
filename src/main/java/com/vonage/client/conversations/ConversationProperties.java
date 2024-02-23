@@ -27,17 +27,16 @@ import java.util.Map;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ConversationProperties extends JsonableBaseObject {
-	private Integer ttl;
-	private String type, customSortKey;
-	private Map<String, Object> customData;
+	private final Integer ttl;
+	private final String type;
+	private final String customSortKey;
+	private final Map<String, Object> customData;
 
-	protected ConversationProperties() {}
-
-	protected ConversationProperties(Integer ttl, String type, String customSortKey, Map<String, Object> customData) {
-		this.ttl = ttl;
-		this.type = type;
-		this.customSortKey = customSortKey;
-		this.customData = customData;
+	ConversationProperties(Builder builder) {
+		ttl = builder.ttl;
+		type = builder.type;
+		customSortKey = builder.customSortKey;
+		customData = builder.customData;
 	}
 
 	/**
@@ -78,5 +77,82 @@ public class ConversationProperties extends JsonableBaseObject {
 	@JsonProperty("custom_data")
 	public Map<String, Object> getCustomData() {
 		return customData;
+	}
+	
+
+	/**
+	 * Entry point for constructing an instance of this class.
+	 * 
+	 * @return A new Builder.
+	 */
+	public static Builder builder() {
+		return new Builder();
+	}
+	
+	public static class Builder {
+		private Integer ttl;
+		private String type;
+		private String customSortKey;
+		private Map<String, Object> customData;
+	
+		Builder() {}
+	
+		/**
+		 * Number of seconds after which an empty conversation is deleted.
+		 *
+		 * @param ttl The empty time-to-live in seconds, or {@code null} if unspecified.
+		 *
+		 * @return This builder.
+		 */
+		public Builder ttl(Integer ttl) {
+			this.ttl = ttl;
+			return this;
+		}
+
+		/**
+		 * Conversation type.
+		 *
+		 * @param type The conversation type as a string, or {@code null} if unknown.
+		 *
+		 * @return This builder.
+		 */
+		public Builder type(String type) {
+			this.type = type;
+			return this;
+		}
+
+		/**
+		 * Custom sort key.
+		 *
+		 * @param customSortKey The custom sort key as a string, or {@code null} if unspecified.
+		 *
+		 * @return This builder.
+		 */
+		public Builder customSortKey(String customSortKey) {
+			this.customSortKey = customSortKey;
+			return this;
+		}
+
+		/**
+		 * Custom key-value pairs to be included with conversation data.
+		 *
+		 * @param customData The custom properties as a Map, or {@code null} if unspecified.
+		 *
+		 * @return This builder.
+		 */
+		public Builder customData(Map<String, Object> customData) {
+			this.customData = customData;
+			return this;
+		}
+
+	
+		/**
+		 * Builds the {@linkplain ConversationProperties}.
+		 *
+		 * @return An instance of ConversationProperties, populated with all fields from this builder.
+		 */
+		public ConversationProperties build() {
+			return new ConversationProperties(this);
+		}
 	}
 }

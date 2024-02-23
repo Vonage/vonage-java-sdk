@@ -20,24 +20,26 @@ import com.vonage.client.RestEndpoint;
 import com.vonage.client.TestUtils;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.common.SortOrder;
-import static java.lang.StringTemplate.STR;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Map;
+import java.util.UUID;
 
 public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 	static final int PAGE = 2, PAGE_SIZE = 30, SEQUENCE_NUMBER = 159, TTL = 60;
 	static final SortOrder ORDER = SortOrder.DESCENDING;
 	static final ConversationStatus CONVERSATION_STATE = ConversationStatus.INACTIVE;
-	static final Map<String, ?> CONVERSATION_CUSTOM_DATA = Map.of(
+	static final Map<String, Object> CONVERSATION_CUSTOM_DATA = Map.of(
 			"property1", "value1",
 			"prop2", "Val 2"
 	);
 
 	static final String
+			INVALID_UUID_STR = "12345678-9abc-defg-hijk-lmnopqrstuvw",
+			APPLICATION_ID_STR = "fa185f5e-2a5a-492c-9e0a-ba3ab6844441",
 			CONVERSATION_ID = "CON-d66d47de-5bcb-4300-94f0-0c9d4b948e9a",
 			MEMBER_ID = "MEM-df8e57d8-1c8e-4573-bf4d-29d5414dcb42",
 			USER_ID = "USR-82e028d9-5201-4f1e-8188-604b2d3471ec",
@@ -109,6 +111,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 				}
 			""";
 
+	static final UUID APPLICATION_ID = UUID.fromString(APPLICATION_ID_STR);
 	static final URI CONVERSATION_IMAGE_URL = URI.create(CONVERSATION_IMAGE_URL_STR);
 	static final Instant
 			START_DATE = Instant.parse(START_DATE_STR.replace(' ','T')+'Z'),
@@ -174,10 +177,18 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 	@Test
 	public void testListConversations() throws Exception {
-		ListConversationsRequest request = null;
-		stubResponseAndRun(SAMPLE_LIST_CONVERSATIONS_RESPONSE, () -> client.listConversations(request));
-		stubResponseAndAssertThrows(200, () -> client.listConversations(null), NullPointerException.class);
-		stubResponseAndAssertThrows(401, () -> client.listConversations(request), ConversationsResponseException.class);
+		ListConversationsRequest request = ListConversationsRequest.builder().build();
+		stubResponseAndRun(SAMPLE_LIST_CONVERSATIONS_RESPONSE, client::listConversations);
+		stubResponseAndRun(SAMPLE_LIST_CONVERSATIONS_RESPONSE,
+				() -> client.listConversations(request)
+		);
+		stubResponseAndAssertThrows(200,
+				() -> client.listConversations(null), NullPointerException.class
+		);
+		stubResponseAndAssertThrows(409,
+				() -> client.listConversations(request),
+				ConversationsResponseException.class
+		);
 		assert401ResponseException(() -> client.listConversations(request));
 	}
 
@@ -224,17 +235,27 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 	@Test
 	public void testCreateConversation() throws Exception {
-		Conversation request = null;
-		String responseJson = "{}";
-		stubResponseAndRun(responseJson, () -> client.createConversation(request));
-		stubResponseAndAssertThrows(200, () -> client.createConversation(null), NullPointerException.class);
-		stubResponseAndAssertThrows(401, () -> client.createConversation(request), ConversationsResponseException.class);
+		var request = Conversation.builder().build();
+		stubResponseAndRun(201, SAMPLE_CONVERSATION_RESPONSE, () -> client.createConversation(request));
+		stubResponseAndAssertThrows(201,
+				() -> client.createConversation(null),
+				NullPointerException.class
+		);
+		stubResponseAndAssertThrows(409,
+				() -> client.createConversation(request),
+				ConversationsResponseException.class
+		);
 		assert401ResponseException(() -> client.createConversation(request));
 	}
 
 	@Test
 	public void testCreateConversationEndpoint() throws Exception {
 		new ConversationsEndpointTestSpec<Conversation, Conversation>() {
+			final String
+					eventMask = "Test value",
+					url = "http://example.com/callback",
+					nccoUrl = "http://example.com/ncco";
+			final CallbackHttpMethod method = CallbackHttpMethod.POST;
 
 			@Override
 			protected RestEndpoint<Conversation, Conversation> endpoint() {
@@ -254,13 +275,18 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			@Override
 			protected Conversation sampleRequest() {
 				return Conversation.builder()
-						.name("customer_chat")
-						.displayName("Chat with Customer")
-						.imageUrl(URI.create("https://example.com/image.png"))
-						.properties()
-						.numbers()
-						.callback()
-						.build();
+						.name(CONVERSATION_NAME)
+						.displayName(CONVERSATION_DISPLAY_NAME)
+						.imageUrl(CONVERSATION_IMAGE_URL_STR)
+						.properties(ConversationProperties.builder()
+							.ttl(TTL).type(CONVERSATION_TYPE)
+							.customSortKey(CONVERSATION_CUSTOM_SORT_KEY)
+							.customData(CONVERSATION_CUSTOM_DATA).build()
+						)
+						.callback(Callback.builder().url(url).eventMask(eventMask)
+								.nccoUrl(nccoUrl).method(method).build()
+						)
+						.numbers().build();
 			}
 
 			@Override
@@ -274,12 +300,21 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 	@Test
 	public void testGetConversation() throws Exception {
-		String request = null;
-		String responseJson = "{}";
-		stubResponseAndRun(responseJson, () -> client.getConversation(request));
-		stubResponseAndAssertThrows(200, () -> client.getConversation(null), NullPointerException.class);
-		stubResponseAndAssertThrows(401, () -> client.getConversation(request), ConversationsResponseException.class);
-		assert401ResponseException(() -> client.getConversation(request));
+		stubResponse(200, SAMPLE_CONVERSATION_RESPONSE);
+		assertEqualsSampleBaseConversation(client.getConversation(CONVERSATION_ID));
+		stubResponseAndAssertThrows(200,
+				() -> client.getConversation(null),
+				NullPointerException.class
+		);
+		stubResponseAndAssertThrows(200,
+				() -> client.getConversation(MEMBER_ID),
+				IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(404,
+				() -> client.getConversation(CONVERSATION_ID),
+				ConversationsResponseException.class
+		);
+		assert401ResponseException(() -> client.getConversation(CONVERSATION_ID));
 	}
 
 	@Test
@@ -312,12 +347,29 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 	@Test
 	public void testUpdateConversation() throws Exception {
-		Conversation request = null;
-		String responseJson = "{}";
-		stubResponseAndRun(responseJson, () -> client.updateConversation(request));
-		stubResponseAndAssertThrows(200, () -> client.updateConversation(null), NullPointerException.class);
-		stubResponseAndAssertThrows(401, () -> client.updateConversation(request), ConversationsResponseException.class);
-		assert401ResponseException(() -> client.updateConversation(request));
+		var request = Conversation.builder()
+				.imageUrl("ftp:///path/to/local/image.tiff")
+				.displayName("Support").build();
+		stubResponse(200, SAMPLE_CONVERSATION_RESPONSE);
+		assertEqualsSampleConversation(client.updateConversation(CONVERSATION_ID, request));
+
+		stubResponseAndAssertThrows(200,
+				() -> client.updateConversation(null, request),
+				NullPointerException.class
+		);
+		stubResponseAndAssertThrows(200,
+				() -> client.updateConversation(CONVERSATION_ID, null),
+				NullPointerException.class
+		);
+		stubResponseAndAssertThrows(200,
+				() -> client.updateConversation("CON-"+SESSION_ID, request),
+				IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(404,
+				() -> client.updateConversation(CONVERSATION_ID, request),
+				ConversationsResponseException.class
+		);
+		assert401ResponseException(() -> client.updateConversation(CONVERSATION_ID, request));
 	}
 
 	@Test
@@ -342,10 +394,9 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			@Override
 			protected Conversation sampleRequest() {
 				var request = Conversation.builder()
-						.name("customer_chat")
-						.displayName("Chat with Customer")
-						.imageUrl(URI.create("https://example.com/image.png"))
-						.build();
+						.imageUrl(CONVERSATION_IMAGE_URL_STR)
+						.displayName(CONVERSATION_DISPLAY_NAME)
+						.name(CONVERSATION_NAME).build();
 				request.id = CONVERSATION_ID;
 				return request;
 			}
@@ -361,12 +412,22 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 	@Test
 	public void testDeleteConversation() throws Exception {
-		String request = null;
-		String responseJson = "{}";
-		stubResponseAndRun(responseJson, () -> client.deleteConversation(request));
-		stubResponseAndAssertThrows(200, () -> client.deleteConversation(null), NullPointerException.class);
-		stubResponseAndAssertThrows(401, () -> client.deleteConversation(request), ConversationsResponseException.class);
-		assert401ResponseException(() -> client.deleteConversation(request));
+		stubResponseAndRun(204, SAMPLE_CONVERSATION_RESPONSE,
+				() -> client.deleteConversation(CONVERSATION_ID)
+		);
+		stubResponseAndAssertThrows(204,
+				() -> client.deleteConversation(null),
+				NullPointerException.class
+		);
+		stubResponseAndAssertThrows(204,
+				() -> client.deleteConversation("CON-"+INVALID_UUID_STR),
+				IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(404,
+				() -> client.deleteConversation(CONVERSATION_ID),
+				ConversationsResponseException.class
+		);
+		assert401ResponseException(() -> client.deleteConversation(CONVERSATION_ID));
 	}
 
 	@Test
@@ -392,7 +453,6 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			protected String sampleRequest() {
 				return CONVERSATION_ID;
 			}
-
 		}
 		.runTests();
 	}
@@ -401,7 +461,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 	@Test
 	public void testListUserConversations() throws Exception {
-		ListUserConversationsRequest request = null;
+		var request = ListUserConversationsRequest.builder().build();
 		String responseJson = "{}";
 		stubResponseAndRun(responseJson, () -> client.listUserConversations(request));
 		stubResponseAndAssertThrows(200, () -> client.listUserConversations(null), NullPointerException.class);
