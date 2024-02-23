@@ -27,10 +27,11 @@ import java.util.Map;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ConversationProperties extends JsonableBaseObject {
-	private final Integer ttl;
-	private final String type;
-	private final String customSortKey;
-	private final Map<String, Object> customData;
+	private Integer ttl;
+	private String type, customSortKey;
+	private Map<String, Object> customData;
+
+	ConversationProperties() {}
 
 	ConversationProperties(Builder builder) {
 		ttl = builder.ttl;
@@ -78,7 +79,6 @@ public class ConversationProperties extends JsonableBaseObject {
 	public Map<String, Object> getCustomData() {
 		return customData;
 	}
-	
 
 	/**
 	 * Entry point for constructing an instance of this class.

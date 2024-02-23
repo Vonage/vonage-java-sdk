@@ -16,7 +16,6 @@
 package com.vonage.client.conversations;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * Represents the state of a conversation member.
@@ -36,10 +35,4 @@ public enum MemberState {
 			return null;
 		}
 	}
-
-	@JsonValue
-	@Override
-	public String toString() {
-		return name().toLowerCase();
-	}	
 }

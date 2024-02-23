@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
+import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.HalPageResponse;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public final class ListUserConversationsResponse extends HalPageResponse {
 	}
 
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	static final class Embedded {
+	static final class Embedded extends JsonableBaseObject {
 		private List<UserConversation> conversations;
 
 		@JsonProperty("conversations")

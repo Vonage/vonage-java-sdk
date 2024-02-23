@@ -27,9 +27,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class UserConversation extends Conversation {
 	private BaseMember member;
 
-	protected UserConversation(BaseMember member) {
-		this.member = member;
-	}
+	protected UserConversation() {}
 
 	/**
 	 * Basic metadata about the conversation membership.

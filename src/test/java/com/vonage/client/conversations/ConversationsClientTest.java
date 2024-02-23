@@ -57,7 +57,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			MEMBER_STATE_STR = "JOINED",
 			CONVERSATION_TYPE = "quick_chat",
 			CONVERSATION_CUSTOM_SORT_KEY = "CSK_1",
-			CONVERSATION_CUSTOM_DATA_STR = "{\"property1\":\"value1\",\"prop2\",\"Val 2\"}",
+			CONVERSATION_CUSTOM_DATA_STR = "{\"property1\":\"value1\",\"prop2\":\"Val 2\"}",
 			CONVERSATION_CURSOR = "7EjDNQrAcipmOnc0HCzpQRkhBULzY44ljGUX4lXKyUIVfiZay5pv9wg=",
 			SAMPLE_BASE_CONVERSATION_RESPONSE_PARTIAL = STR."""
 				{
@@ -263,7 +263,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 			@Override
 			protected String expectedEndpointUri(ListConversationsRequest request) {
-				return "/v1/conversations";
+				return "/v1/conversations/";
 			}
 
 			@Override
@@ -324,7 +324,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 			@Override
 			protected String expectedEndpointUri(Conversation request) {
-				return "/v1/conversations";
+				return "/v1/conversations/";
 			}
 
 			@Override
@@ -346,7 +346,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 			@Override
 			protected String sampleRequestBodyString() {
-				return "{}";
+				return "{\"name\":\"customer_chat\",\"display_name\":\"Chat with Customer\",\"image_url\":\"https://example.com/image.png\",\"properties\":"+sampleRequest().getProperties().toJson()+",\"numbers\":[],\"callback\":{\"url\":\"http://example.com/callback\",\"event_mask\":\"Test value\",\"method\":\"post\"}}";
 			}
 		}
 		.runTests();
@@ -359,7 +359,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 		assertEqualsSampleBaseConversation(client.getConversation(CONVERSATION_ID));
 		stubResponseAndAssertThrows(200,
 				() -> client.getConversation(null),
-				NullPointerException.class
+				IllegalArgumentException.class
 		);
 		stubResponseAndAssertThrows(200,
 				() -> client.getConversation(MEMBER_ID),
@@ -410,7 +410,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 		stubResponseAndAssertThrows(200,
 				() -> client.updateConversation(null, request),
-				NullPointerException.class
+				IllegalArgumentException.class
 		);
 		stubResponseAndAssertThrows(200,
 				() -> client.updateConversation(CONVERSATION_ID, null),
@@ -458,7 +458,8 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 			@Override
 			protected String sampleRequestBodyString() {
-				return "{}";
+				return STR."""
+{"id":"\{CONVERSATION_ID}","name":"\{CONVERSATION_NAME}","display_name":"\{CONVERSATION_DISPLAY_NAME}","image_url":"\{CONVERSATION_IMAGE_URL_STR}"}""";
 			}
 		}
 		.runTests();
@@ -472,7 +473,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 		);
 		stubResponseAndAssertThrows(204,
 				() -> client.deleteConversation(null),
-				NullPointerException.class
+				IllegalArgumentException.class
 		);
 		stubResponseAndAssertThrows(204,
 				() -> client.deleteConversation("CON-"+INVALID_UUID_STR),
@@ -529,7 +530,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 		stubResponseAndAssertThrows(200,
 				() -> client.listUserConversations(null, request),
-				NullPointerException.class
+				IllegalArgumentException.class
 		);
 		stubResponseAndAssertThrows(200,
 				() -> client.listUserConversations(INVALID_UUID_STR+"-RUS", request),
@@ -584,7 +585,6 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			@Override
 			protected Map<String, String> sampleQueryParams() {
 				return Map.of(
-						"user_id", USER_ID,
 						"state", "INVITED",
 						"order_by", "custom_sort_key",
 						"include_custom_data", "true",

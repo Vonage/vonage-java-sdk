@@ -39,5 +39,5 @@ public enum OrderBy {
 	@Override
 	public String toString() {
 		return name().toLowerCase();
-	}	
+	}
 }

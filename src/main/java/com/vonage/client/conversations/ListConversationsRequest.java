@@ -35,10 +35,16 @@ public class ListConversationsRequest extends HalFilterRequest {
 	public Map<String, String> makeParams() {
 		Map<String, String> params = super.makeParams();
 		if (startDate != null) {
-            params.put("date_start", startDate.toString());
+            params.put("date_start", startDate.toString()
+					.replace('T', ' ')
+					.replace("Z", "")
+			);
         }
 		if (endDate != null) {
-            params.put("date_end", endDate.toString());
+            params.put("date_end", endDate.toString()
+					.replace('T', ' ')
+					.replace("Z", "")
+			);
         }
 		return params;
 	}

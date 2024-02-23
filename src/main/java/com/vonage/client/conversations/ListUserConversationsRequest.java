@@ -49,7 +49,10 @@ public final class ListUserConversationsRequest extends AbstractListUserRequest 
             params.put("include_custom_data", includeCustomData.toString());
         }
 		if (startDate != null) {
-            params.put("date_start", startDate.toString());
+            params.put("date_start", startDate.toString()
+					.replace('T', ' ')
+					.replace("Z", "")
+			);
         }
 		return params;
 	}
