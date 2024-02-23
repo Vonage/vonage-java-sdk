@@ -13,22 +13,8 @@ version = "8.3.0"
 
 ext.githubPath = 'Vonage/vonage-java-sdk'
 
-tasks.withType(Javadoc).configureEach {
-    options.addStringOption('Xdoclint:all', '-quiet')
-}
-
 repositories {
     mavenCentral()
-}
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = sourceCompatibility
-}
-
-compileTestJava {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = sourceCompatibility
 }
 
 dependencies {
@@ -50,6 +36,21 @@ dependencies {
     testImplementation "jakarta.servlet:jakarta.servlet-api:4.0.4"
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = sourceCompatibility
+}
+
+compileTestJava {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = sourceCompatibility
+    options.compilerArgs += '--enable-preview'
+}
+
+tasks.withType(Javadoc).configureEach {
+    options.addStringOption('Xdoclint:all', '-quiet')
+}
+
 test {
     useJUnitPlatform()
     dependsOn 'cleanTest'
@@ -57,7 +58,7 @@ test {
         events "skipped", "failed"
         exceptionFormat "full"
     }
-    jvmArgs("--enable-preview")
+    jvmArgs "--enable-preview"
 }
 
 javadoc {

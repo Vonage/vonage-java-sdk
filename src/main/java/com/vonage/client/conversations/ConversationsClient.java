@@ -36,7 +36,7 @@ public class ConversationsClient {
 	final RestEndpoint<String, Conversation> getConversation;
 	final RestEndpoint<Conversation, Conversation> updateConversation;
 	final RestEndpoint<String, Void> deleteConversation;
-	final RestEndpoint<ListUserConversationsRequest, ListConversationsResponse> listUserConversations;
+	final RestEndpoint<ListUserConversationsRequest, ListUserConversationsResponse> listUserConversations;
 	final RestEndpoint<ListUserSessionsRequest, ListUserSessionsResponse> listUserSessions;
 	final RestEndpoint<ListMembersRequest, ListMembersResponse> listMembers;
 	final RestEndpoint<ConversationResourceRequestWrapper, Member> getMember;
@@ -144,9 +144,19 @@ public class ConversationsClient {
 		deleteConversation.execute(validateConversationId(conversationId));
 	}
 
-	public ListConversationsResponse listUserConversations(String userId, ListUserConversationsRequest filter) {
+	public List<UserConversation> listUserConversations(String userId) {
+		return listUserConversations(userId,
+				ListUserConversationsRequest.builder().pageSize(1000).build()
+		).getConversations();
+	}
+
+	public ListUserConversationsResponse listUserConversations(String userId, ListUserConversationsRequest filter) {
 		validateRequest(filter).userId = validateUserId(userId);
 		return listUserConversations.execute(filter);
+	}
+
+	public List<UserSession> listUserSessions(String userId) {
+		return listUserSessions(userId, ListUserSessionsRequest.builder().pageSize(1000).build()).getSessions();
 	}
 
 	public ListUserSessionsResponse listUserSessions(String userId, ListUserSessionsRequest filter) {

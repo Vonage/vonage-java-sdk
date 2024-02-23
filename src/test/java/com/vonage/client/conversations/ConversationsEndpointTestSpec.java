@@ -33,7 +33,7 @@ abstract class ConversationsEndpointTestSpec<T, R> extends DynamicEndpointTestSp
 
 	@Override
 	protected String expectedDefaultBaseUri() {
-		return "https://api.nexmo.com/v1/conversations";
+		return "https://api.nexmo.com";
 	}
 }
 
