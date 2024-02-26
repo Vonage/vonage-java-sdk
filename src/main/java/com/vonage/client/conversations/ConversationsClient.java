@@ -120,7 +120,7 @@ public class ConversationsClient {
 
 
 	public List<Conversation> listConversations() {
-		return listConversations(ListConversationsRequest.builder().pageSize(1000).build()).getConversations();
+		return listConversations(ListConversationsRequest.builder().pageSize(100).build()).getConversations();
 	}
 
 	public ListConversationsResponse listConversations(ListConversationsRequest filter) {
@@ -146,7 +146,7 @@ public class ConversationsClient {
 
 	public List<UserConversation> listUserConversations(String userId) {
 		return listUserConversations(userId,
-				ListUserConversationsRequest.builder().pageSize(1000).build()
+				ListUserConversationsRequest.builder().pageSize(100).build()
 		).getConversations();
 	}
 
@@ -156,7 +156,7 @@ public class ConversationsClient {
 	}
 
 	public List<UserSession> listUserSessions(String userId) {
-		return listUserSessions(userId, ListUserSessionsRequest.builder().pageSize(1000).build()).getSessions();
+		return listUserSessions(userId, ListUserSessionsRequest.builder().pageSize(100).build()).getSessions();
 	}
 
 	public ListUserSessionsResponse listUserSessions(String userId, ListUserSessionsRequest filter) {
@@ -165,7 +165,7 @@ public class ConversationsClient {
 	}
 
 	public List<Member> listMembers(String conversationId) {
-		return listMembers(conversationId, ListMembersRequest.builder().pageSize(1000).build()).getMembers();
+		return listMembers(conversationId, ListMembersRequest.builder().pageSize(100).build()).getMembers();
 	}
 
 	public ListMembersResponse listMembers(String conversationId, ListMembersRequest filter) {

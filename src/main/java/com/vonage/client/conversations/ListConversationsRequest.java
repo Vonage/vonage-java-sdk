@@ -15,55 +15,22 @@
  */
 package com.vonage.client.conversations;
 
-import com.vonage.client.common.HalFilterRequest;
-import com.vonage.client.common.SortOrder;
 import java.time.Instant;
-import java.util.Map;
 
 /**
  * Filters results for {@link ConversationsClient#listConversations(ListConversationsRequest)}.
  */
-public class ListConversationsRequest extends HalFilterRequest {
-	private final Instant startDate, endDate;
-
+public final class ListConversationsRequest extends AbstractConversationsFilterRequest {
 	ListConversationsRequest(Builder builder) {
 		super(builder);
-		startDate = builder.startDate;
-		endDate = builder.endDate;
-	}
-	
-	@Override
-	public Map<String, String> makeParams() {
-		Map<String, String> params = super.makeParams();
-		if (startDate != null) {
-            params.put("date_start", startDate.toString()
-					.replace('T', ' ')
-					.replace("Z", "")
-			);
-        }
-		if (endDate != null) {
-            params.put("date_end", endDate.toString()
-					.replace('T', ' ')
-					.replace("Z", "")
-			);
-        }
-		return params;
 	}
 
-	/**
-	 * Filter records that occurred after this point in time.
-	 * 
-	 * @return The start timestamp for results, or {@code null} if unspecified.
-	 */
+	@Override
 	public Instant getStartDate() {
 		return startDate;
 	}
 
-	/**
-	 * Filter records that occurred before this point in time.
-	 * 
-	 * @return The end timestamp for results, or {@code null} if unspecified.
-	 */
+	@Override
 	public Instant getEndDate() {
 		return endDate;
 	}
@@ -77,43 +44,17 @@ public class ListConversationsRequest extends HalFilterRequest {
 		return new Builder();
 	}
 	
-	public static class Builder extends HalFilterRequest.Builder<ListConversationsRequest, Builder> {
-		private Instant startDate, endDate;
-	
+	public static final class Builder extends AbstractConversationsFilterRequest.Builder<ListConversationsRequest, Builder> {
 		Builder() {}
 
 		@Override
-		public Builder pageSize(int pageSize) {
-			return super.pageSize(pageSize);
+		public Builder startDate(Instant startDate) {
+			return super.startDate(startDate);
 		}
 
 		@Override
-		public Builder order(SortOrder order) {
-			return super.order(order);
-		}
-
-		/**
-		 * Filter records that occurred after this point in time.
-		 *
-		 * @param startDate The start timestamp for results, or {@code null} if unspecified.
-		 *
-		 * @return This builder.
-		 */
-		public Builder startDate(Instant startDate) {
-			this.startDate = startDate;
-			return this;
-		}
-
-		/**
-		 * Filter records that occurred before this point in time.
-		 *
-		 * @param endDate The end timestamp for results, or {@code null} if unspecified.
-		 *
-		 * @return This builder.
-		 */
 		public Builder endDate(Instant endDate) {
-			this.endDate = endDate;
-			return this;
+			return super.endDate(endDate);
 		}
 
 		/**

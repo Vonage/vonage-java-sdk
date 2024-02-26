@@ -15,9 +15,7 @@
  */
 package com.vonage.client.conversations;
 
-import com.vonage.client.common.HalFilterRequest;
-
-abstract class AbstractListUserRequest extends HalFilterRequest {
+abstract class AbstractListUserRequest extends AbstractConversationsFilterRequest {
 	protected String userId;
 
 	AbstractListUserRequest(Builder<? extends AbstractListUserRequest, ?> builder) {

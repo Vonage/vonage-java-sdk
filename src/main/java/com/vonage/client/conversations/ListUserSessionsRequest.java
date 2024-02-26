@@ -15,9 +15,6 @@
  */
 package com.vonage.client.conversations;
 
-import com.vonage.client.common.HalFilterRequest;
-import com.vonage.client.common.SortOrder;
-
 /**
  * Filters results for {@link ConversationsClient#listUserSessions(String, ListUserSessionsRequest)}.
  */
@@ -36,19 +33,8 @@ public final class ListUserSessionsRequest extends AbstractListUserRequest {
 		return new Builder();
 	}
 	
-	public static final class Builder extends HalFilterRequest.Builder<ListUserSessionsRequest, Builder> {
-	
+	public static final class Builder extends AbstractConversationsFilterRequest.Builder<ListUserSessionsRequest, Builder> {
 		Builder() {}
-
-		@Override
-		public Builder pageSize(int pageSize) {
-			return super.pageSize(pageSize);
-		}
-
-		@Override
-		public Builder order(SortOrder order) {
-			return super.order(order);
-		}
 
 		/**
 		 * Builds the {@linkplain ListUserSessionsRequest}.

@@ -15,8 +15,6 @@
  */
 package com.vonage.client.conversations;
 
-import com.vonage.client.common.HalFilterRequest;
-import com.vonage.client.common.SortOrder;
 import java.time.Instant;
 import java.util.Map;
 
@@ -27,14 +25,12 @@ public final class ListUserConversationsRequest extends AbstractListUserRequest 
 	private final MemberState state;
 	private final OrderBy orderBy;
 	private final Boolean includeCustomData;
-	private final Instant startDate;
 
 	ListUserConversationsRequest(Builder builder) {
 		super(builder);
 		state = builder.state;
 		orderBy = builder.orderBy;
 		includeCustomData = builder.includeCustomData;
-		startDate = builder.startDate;
 	}
 	
 	@Override
@@ -49,29 +45,40 @@ public final class ListUserConversationsRequest extends AbstractListUserRequest 
 		if (includeCustomData != null) {
             params.put("include_custom_data", includeCustomData.toString());
         }
-		if (startDate != null) {
-            params.put("date_start", startDate.toString()
-					.replace('T', ' ')
-					.replace("Z", "")
-			);
-        }
 		return params;
 	}
 
+
+	@Override
+	public Instant getStartDate() {
+		return startDate;
+	}
+
+	/**
+	 * Only include conversations with this member state.
+	 *
+	 * @return The state to filter by, or {@code null} if not specified.
+	 */
 	public MemberState getState() {
 		return state;
 	}
 
+	/**
+	 * Determines how the results should be compared & ordered.
+	 *
+	 * @return The result ordering strategy, or {@code null} if not specified.
+	 */
 	public OrderBy getOrderBy() {
 		return orderBy;
 	}
 
+	/**
+	 * Whether to include custom data in the responses.
+	 *
+	 * @return {@code true} if custom data should be included, or {@code null} if not specified.
+	 */
 	public Boolean getIncludeCustomData() {
 		return includeCustomData;
-	}
-
-	public Instant getStartDate() {
-		return startDate;
 	}
 
 	/**
@@ -83,28 +90,22 @@ public final class ListUserConversationsRequest extends AbstractListUserRequest 
 		return new Builder();
 	}
 	
-	public static final class Builder extends HalFilterRequest.Builder<ListUserConversationsRequest, Builder> {
+	public static final class Builder extends AbstractConversationsFilterRequest.Builder<ListUserConversationsRequest, Builder> {
 		private MemberState state;
 		private OrderBy orderBy;
 		private Boolean includeCustomData;
-		private Instant startDate;
 	
 		Builder() {}
 
 		@Override
-		public Builder pageSize(int pageSize) {
-			return super.pageSize(pageSize);
-		}
-
-		@Override
-		public Builder order(SortOrder order) {
-			return super.order(order);
+		public Builder startDate(Instant startDate) {
+			return super.startDate(startDate);
 		}
 
 		/**
-		 * 
+		 * Only include conversations with this member state.
 		 *
-		 * @param state 
+		 * @param state The state to filter by..
 		 *
 		 * @return This builder.
 		 */
@@ -114,9 +115,9 @@ public final class ListUserConversationsRequest extends AbstractListUserRequest 
 		}
 
 		/**
-		 * 
+		 * Determines how the results should be compared & ordered.
 		 *
-		 * @param orderBy 
+		 * @param orderBy The result ordering strategy..
 		 *
 		 * @return This builder.
 		 */
@@ -126,9 +127,9 @@ public final class ListUserConversationsRequest extends AbstractListUserRequest 
 		}
 
 		/**
-		 * 
+		 * Whether to include custom data in the responses.
 		 *
-		 * @param includeCustomData 
+		 * @param includeCustomData {@code true} if custom data should be included.
 		 *
 		 * @return This builder.
 		 */
@@ -137,19 +138,8 @@ public final class ListUserConversationsRequest extends AbstractListUserRequest 
 			return this;
 		}
 
-		/**
-		 * 
-		 *
-		 * @param startDate 
-		 *
-		 * @return This builder.
-		 */
-		public Builder startDate(Instant startDate) {
-			this.startDate = startDate;
-			return this;
-		}
 
-	
+
 		/**
 		 * Builds the {@linkplain ListUserConversationsRequest}.
 		 *

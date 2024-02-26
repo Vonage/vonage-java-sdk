@@ -16,6 +16,7 @@
 package com.vonage.client.common;
 
 import com.vonage.client.QueryParamsRequest;
+import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -27,15 +28,36 @@ import java.util.Map;
 public abstract class HalFilterRequest implements QueryParamsRequest {
 	protected final Integer page, pageSize;
 	protected final SortOrder order;
+	protected final Instant startDate, endDate;
 
 	protected HalFilterRequest(Builder<?, ?> builder) {
-		this(builder.page, builder.pageSize, builder.order);
+		page = validatePage(builder.page);
+		pageSize = validatePageSize(builder.pageSize);
+		order = builder.order;
+		startDate = builder.startDate;
+		endDate = builder.endDate;
+	}
+
+	protected Integer validatePage(Integer page) {
+		if (page != null && page < 1) {
+			throw new IllegalArgumentException("Page must be positive.");
+		}
+		return page;
+	}
+
+	protected Integer validatePageSize(Integer pageSize) {
+		if (pageSize != null && pageSize > 1000) {
+			throw new IllegalArgumentException("Page size cannot exceed 1000.");
+		}
+		return pageSize;
 	}
 
 	protected HalFilterRequest(Integer page, Integer pageSize, SortOrder order) {
 		this.page = page;
 		this.pageSize = pageSize;
 		this.order = order;
+		startDate = null;
+		endDate = null;
 	}
 
 	@Override
@@ -53,23 +75,114 @@ public abstract class HalFilterRequest implements QueryParamsRequest {
 		return params;
 	}
 
+	/**
+	 * Page number to navigate to in the response.
+	 *
+	 * @return The page as an integer, or {@code null} if not specified.
+	 */
+	protected Integer getPage() {
+		return page;
+	}
+
+	/**
+	 * Number of results per page.
+	 *
+	 * @return The page size as an integer, or {@code null} if not specified.
+	 */
+	protected Integer getPageSize() {
+		return pageSize;
+	}
+
+	/**
+	 * Order to sort the results by.
+	 *
+	 * @return The result sort order as an enum, or {@code null} if not specified.
+	 */
+	protected SortOrder getOrder() {
+		return order;
+	}
+
+	/**
+	 * Filter records that occurred after this point in time.
+	 *
+	 * @return The start timestamp for results, or {@code null} if unspecified.
+	 */
+	protected Instant getStartDate() {
+		return startDate;
+	}
+
+	/**
+	 * Filter records that occurred before this point in time.
+	 *
+	 * @return The end timestamp for results, or {@code null} if unspecified.
+	 */
+	protected Instant getEndDate() {
+		return endDate;
+	}
+
 	@SuppressWarnings("unchecked")
 	protected abstract static class Builder<F extends HalFilterRequest, B extends Builder<? extends F, ? extends B>> {
 		protected Integer page, pageSize;
 		protected SortOrder order;
+		protected Instant startDate, endDate;
 
+		/**
+		 * Page to navigate to in the response.
+		 *
+		 * @param page The page as an int.
+		 *
+		 * @return This builder.
+		 */
 		protected B page(int page) {
 			this.page = page;
 			return (B) this;
 		}
 
+		/**
+		 * Number of results per page.
+		 *
+		 * @param pageSize he page size as an int.
+		 *
+		 * @return This builder.
+		 */
 		protected B pageSize(int pageSize) {
 			this.pageSize = pageSize;
 			return (B) this;
 		}
 
+		/**
+		 * Order to sort the results by.
+		 *
+		 * @param order The results sort order as an enum.
+		 *
+		 * @return This builder.
+		 */
 		protected B order(SortOrder order) {
 			this.order = order;
+			return (B) this;
+		}
+
+		/**
+		 * Filter records that occurred after this point in time.
+		 *
+		 * @param startDate The start timestamp for results.
+		 *
+		 * @return This builder.
+		 */
+		protected B startDate(Instant startDate) {
+			this.startDate = startDate;
+			return (B) this;
+		}
+
+		/**
+		 * Filter records that occurred before this point in time.
+		 *
+		 * @param endDate The end timestamp for results.
+		 *
+		 * @return This builder.
+		 */
+		protected B endDate(Instant endDate) {
+			this.endDate = endDate;
 			return (B) this;
 		}
 

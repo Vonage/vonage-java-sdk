@@ -91,8 +91,7 @@ public class ConversationProperties extends JsonableBaseObject {
 	
 	public static class Builder {
 		private Integer ttl;
-		private String type;
-		private String customSortKey;
+		private String type, customSortKey;
 		private Map<String, Object> customData;
 	
 		Builder() {}

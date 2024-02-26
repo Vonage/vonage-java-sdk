@@ -23,17 +23,17 @@ import com.vonage.client.common.HalFilterRequest;
 public class ListApplicationRequest extends HalFilterRequest {
 
     private ListApplicationRequest(Builder builder) {
-        super(builder.page, builder.pageSize, null);
+        super(builder);
     }
 
-    @Deprecated
-    public int getPageSize() {
-        return pageSize;
+    @Override
+    public Integer getPage() {
+        return super.getPage();
     }
 
-    @Deprecated
-    public int getPage() {
-        return page;
+    @Override
+    public Integer getPageSize() {
+        return super.getPageSize();
     }
 
     /**
@@ -45,8 +45,11 @@ public class ListApplicationRequest extends HalFilterRequest {
         return new Builder();
     }
 
-    public static class Builder {
-        private int pageSize, page;
+    public static class Builder extends HalFilterRequest.Builder<ListApplicationRequest, Builder> {
+
+        @Deprecated
+        public Builder() {
+        }
 
         /**
          * @param pageSize The number of applications per page.
@@ -54,8 +57,7 @@ public class ListApplicationRequest extends HalFilterRequest {
          * @return This builder.
          */
         public Builder pageSize(long pageSize) {
-            this.pageSize = (int) pageSize;
-            return this;
+            return super.pageSize((int) pageSize);
         }
 
         /**
@@ -64,8 +66,7 @@ public class ListApplicationRequest extends HalFilterRequest {
          * @return This builder.
          */
         public Builder page(long page) {
-            this.page = (int) page;
-            return this;
+            return super.page((int) page);
         }
 
         /**
