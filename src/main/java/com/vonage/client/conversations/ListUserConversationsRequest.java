@@ -138,8 +138,6 @@ public final class ListUserConversationsRequest extends AbstractListUserRequest 
 			return this;
 		}
 
-
-
 		/**
 		 * Builds the {@linkplain ListUserConversationsRequest}.
 		 *

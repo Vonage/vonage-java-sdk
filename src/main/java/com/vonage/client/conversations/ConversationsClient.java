@@ -118,7 +118,6 @@ public class ConversationsClient {
 
 	// ENDPOINTS
 
-
 	public List<Conversation> listConversations() {
 		return listConversations(ListConversationsRequest.builder().pageSize(100).build()).getConversations();
 	}
@@ -164,7 +163,7 @@ public class ConversationsClient {
 		return listUserSessions.execute(filter);
 	}
 
-	public List<Member> listMembers(String conversationId) {
+	public List<BaseMember> listMembers(String conversationId) {
 		return listMembers(conversationId, ListMembersRequest.builder().pageSize(100).build()).getMembers();
 	}
 

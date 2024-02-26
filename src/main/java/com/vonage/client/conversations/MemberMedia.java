@@ -15,53 +15,28 @@
  */
 package com.vonage.client.conversations;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
-import com.vonage.client.common.HalPageResponse;
-import java.util.List;
 
 /**
- * HAL response for {@link ConversationsClient#listMembers(String, ListMembersRequest)}.
+ * Contains the media properties for {@link Member#getMedia()}.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class ListMembersResponse extends HalPageResponse {
-	@JsonProperty("_embedded") private Embedded _embedded;
+public class MemberMedia extends JsonableBaseObject {
 
-	ListMembersResponse() {
+	protected MemberMedia() {
 	}
 
-	@JsonIgnoreProperties(ignoreUnknown = true)
-	static final class Embedded extends JsonableBaseObject {
-		private List<BaseMember> members;
-
-		@JsonProperty("members")
-		public List<BaseMember> getMembers() {
-			return members;
-		}
-	}
-
-	/**
-	 * Gets the members contained in the {@code _embedded} response.
-	 *
-	 * @return The members for this page.
-	 */
-	@JsonIgnore
-	public List<BaseMember> getMembers() {
-		return _embedded != null ? _embedded.getMembers() : null;
-	}
-	
 	/**
 	 * Creates an instance of this class from a JSON payload.
 	 *
 	 * @param json The JSON string to parse.
 	 * @return An instance of this class with the fields populated, if present.
 	 */
-	public static ListMembersResponse fromJson(String json) {
+	public static MemberMedia fromJson(String json) {
 		return Jsonable.fromJson(json);
 	}
 }

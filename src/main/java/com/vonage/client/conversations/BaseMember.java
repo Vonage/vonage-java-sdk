@@ -15,35 +15,55 @@
  */
 package com.vonage.client.conversations;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
+import com.vonage.client.users.BaseUser;
 
 /**
- * Represents the basic conversation member attributes.
+ * Represents the basic conversation member attributes, as returned from {@link ListMembersResponse#getMembers()}.
  */
 public class BaseMember extends JsonableBaseObject {
-	String id;
-	MemberState state;
+	@JsonProperty("id") String id;
+	@JsonProperty("state") MemberState state;
+	@JsonProperty("_embedded") Embedded _embedded;
 
 	protected BaseMember() {}
+
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
+	@JsonIgnoreProperties(ignoreUnknown = true)
+	static final class Embedded extends JsonableBaseObject {
+		@JsonProperty("user") private BaseUser user;
+	}
 
 	/**
 	 * Unique member identifier.
 	 * 
 	 * @return The member ID, or {@code null} if unknown.
 	 */
-	@JsonProperty("id")
 	public String getId() {
 		return id;
 	}
 
 	/**
-	 * The state that the member is in.
+	 * State that the member is in.
 	 * 
 	 * @return The member state as an enum.
 	 */
-	@JsonProperty("state")
 	public MemberState getState() {
 		return state;
+	}
+
+	/**
+	 * User associated with this member.
+	 * Full details can be obtained via {@link com.vonage.client.users.UsersClient#getUserDetails(BaseUser)}.
+	 *
+	 * @return The basic user details, or {@code null} if unknown.
+	 */
+	@JsonIgnore
+	public BaseUser getUser() {
+		return _embedded != null ? _embedded.user : null;
 	}
 }
