@@ -64,7 +64,7 @@ public final class ListUserConversationsRequest extends AbstractListUserRequest 
 	}
 
 	/**
-	 * Determines how the results should be compared & ordered.
+	 * Determines how the results should be compared and ordered.
 	 *
 	 * @return The result ordering strategy, or {@code null} if not specified.
 	 */
@@ -115,9 +115,9 @@ public final class ListUserConversationsRequest extends AbstractListUserRequest 
 		}
 
 		/**
-		 * Determines how the results should be compared & ordered.
+		 * Determines how the results should be compared and ordered.
 		 *
-		 * @param orderBy The result ordering strategy..
+		 * @param orderBy The result ordering strategy.
 		 *
 		 * @return This builder.
 		 */

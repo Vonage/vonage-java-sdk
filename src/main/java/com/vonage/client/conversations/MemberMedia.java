@@ -17,6 +17,7 @@ package com.vonage.client.conversations;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 
@@ -26,10 +27,32 @@ import com.vonage.client.JsonableBaseObject;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MemberMedia extends JsonableBaseObject {
+	private Boolean audio;
+	private MediaAudioSettings audioSettings;
 
 	protected MemberMedia() {
 	}
 
+	/**
+	 * Whether the media has audio.
+	 * 
+	 * @return {@code true} if audio is present, or {@code null} if unspecified.
+	 */
+	@JsonProperty("audio")
+	public Boolean getAudio() {
+		return audio;
+	}
+
+	/**
+	 * Audio-related properties.
+	 * 
+	 * @return The audio settings object, or {@code null} if not applicable.
+	 */
+	@JsonProperty("audio_settings")
+	public MediaAudioSettings getAudioSettings() {
+		return audioSettings;
+	}
+	
 	/**
 	 * Creates an instance of this class from a JSON payload.
 	 *

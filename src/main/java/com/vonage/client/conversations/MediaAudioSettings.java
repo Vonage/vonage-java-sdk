@@ -18,59 +18,45 @@ package com.vonage.client.conversations;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
-import com.vonage.client.users.channels.Channel;
 
 /**
- * Contains the channel properties for {@link Member#getChannel()}.
+ * Represents the audio options in {@link MemberMedia#getAudioSettings}.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MemberChannel extends JsonableBaseObject {
-	private ChannelType type;
-	private Channel from, to;
+public class MediaAudioSettings extends JsonableBaseObject {
+	private Boolean enabled, earmuffed, muted;
 
-	protected MemberChannel() {
-	}
+	protected MediaAudioSettings() {}
 
 	/**
-	 * Channel type.
+	 * Whether audio is enabled.
 	 * 
-	 * @return The channel type as an enum, or {@code null} if unspecified.
+	 * @return {@code true} if enabled, or {@code null} if unspecified.
 	 */
-	@JsonProperty("type")
-	public ChannelType getType() {
-		return type;
+	@JsonProperty("enabled")
+	public Boolean getEnabled() {
+		return enabled;
 	}
 
 	/**
-	 * Sender channel.
+	 * Whether hearing audio is disabled.
 	 * 
-	 * @return The from channel, or {@code null} if unspecified.
+	 * @return {@code true} if earmuffed, or {@code null} if unspecified.
 	 */
-	@JsonProperty("from")
-	public Channel getFrom() {
-		return from;
+	@JsonProperty("earmuffed")
+	public Boolean getEarmuffed() {
+		return earmuffed;
 	}
 
 	/**
-	 * Receiver channel.
+	 * Whether producing audio is disabled.
 	 * 
-	 * @return The to channel, or {@code null} if unspecified.
+	 * @return {@code true} if muted, or {@code null} if unspecified.
 	 */
-	@JsonProperty("to")
-	public Channel getTo() {
-		return to;
-	}
-	
-	/**
-	 * Creates an instance of this class from a JSON payload.
-	 *
-	 * @param json The JSON string to parse.
-	 * @return An instance of this class with the fields populated, if present.
-	 */
-	public static MemberChannel fromJson(String json) {
-		return Jsonable.fromJson(json);
+	@JsonProperty("muted")
+	public Boolean getMuted() {
+		return muted;
 	}
 }

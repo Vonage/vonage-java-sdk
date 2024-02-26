@@ -74,7 +74,7 @@ public class ConversationsClient {
 		listUserSessions = new Endpoint<>(req -> v1u+req.userId+"/sessions", HttpMethod.GET);
 		listMembers = new Endpoint<>(req -> v1c+req.conversationId+mems, HttpMethod.GET);
 		getMember = new Endpoint<>(req -> v1c+req.conversationId+mems+req.resourceId, HttpMethod.GET);
-		createMember = new Endpoint<>(req -> v1c+req.conversationId+mems, HttpMethod.POST);
+		createMember = new Endpoint<>(req -> v1c+req.getConversationId()+mems, HttpMethod.POST);
 		updateMember = new Endpoint<>(req -> v1c+req.conversationId+mems+req.resourceId, HttpMethod.PATCH);
 	}
 

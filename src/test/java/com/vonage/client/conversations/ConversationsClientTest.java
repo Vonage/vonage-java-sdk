@@ -312,10 +312,13 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 	@Test
 	public void testListConversations() throws Exception {
 		ListConversationsRequest request = ListConversationsRequest.builder().build();
-		stubResponseAndRun(SAMPLE_LIST_CONVERSATIONS_RESPONSE, client::listConversations);
-		stubResponseAndRun(SAMPLE_LIST_CONVERSATIONS_RESPONSE,
-				() -> client.listConversations(request)
-		);
+		stubResponse(200, SAMPLE_LIST_CONVERSATIONS_RESPONSE);
+		var response = client.listConversations(request);
+		assertEqualsSampleListConversations(response);
+
+		var listOnly = stubResponseAndGet(SAMPLE_LIST_CONVERSATIONS_RESPONSE, client::listConversations);
+		assertEquals(response.getConversations(), listOnly);
+
 		stubResponseAndAssertThrows(200,
 				() -> client.listConversations(null), NullPointerException.class
 		);
@@ -369,7 +372,8 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 	@Test
 	public void testCreateConversation() throws Exception {
 		var request = Conversation.builder().build();
-		stubResponseAndRun(201, SAMPLE_CONVERSATION_RESPONSE, () -> client.createConversation(request));
+		stubResponse(201, SAMPLE_CONVERSATION_RESPONSE);
+		assertEqualsSampleConversation(client.createConversation(request));
 		stubResponseAndAssertThrows(201,
 				() -> client.createConversation(null),
 				NullPointerException.class
@@ -703,7 +707,12 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 	public void testListUserSessions() throws Exception {
 		ListUserSessionsRequest request = ListUserSessionsRequest.builder().build();
 		stubResponse(200, SAMPLE_LIST_USER_SESSIONS_RESPONSE);
-		assertEqualsSampleListUserSessions(client.listUserSessions(USER_ID, request));
+		var response = client.listUserSessions(USER_ID, request);
+		assertEqualsSampleListUserSessions(response);
+
+		stubResponse(200, SAMPLE_LIST_USER_SESSIONS_RESPONSE);
+		var listOnly = client.listUserSessions(USER_ID);
+		assertEquals(response.getSessions(), listOnly);
 
 		stubResponseAndAssertThrows(200,
 				() -> client.listUserSessions(USER_ID, null),
