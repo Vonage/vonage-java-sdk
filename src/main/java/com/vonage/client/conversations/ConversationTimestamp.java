@@ -31,12 +31,6 @@ public class ConversationTimestamp extends JsonableBaseObject {
 
 	protected ConversationTimestamp() {}
 
-	protected ConversationTimestamp(Instant created, Instant updated, Instant destroyed) {
-		this.created = created;
-		this.updated = updated;
-		this.destroyed = destroyed;
-	}
-
 	/**
 	 * Time that the conversation was created.
 	 * 

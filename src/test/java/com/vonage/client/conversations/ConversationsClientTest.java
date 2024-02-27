@@ -32,12 +32,14 @@ import java.util.Map;
 import java.util.UUID;
 
 public class ConversationsClientTest extends ClientTest<ConversationsClient> {
-	static final boolean AUDIO = true, AUDIO_EARMUFFED = false, AUDIO_MUTED = true, AUDIO_ENABLED = true;
+	static final boolean IS_SYSTEM = false,
+			AUDIO = true, AUDIO_EARMUFFED = false, AUDIO_MUTED = true, AUDIO_ENABLED = true;
 	static final int PAGE_SIZE = 30, CONVERSATION_SEQUENCE_NUMBER = 159, CONVERSATION_TTL = 60;
 	static final double USER_SESSION_TTL = 1.6;
 	static final SortOrder ORDER = SortOrder.DESCENDING;
 	static final ConversationStatus CONVERSATION_STATE = ConversationStatus.INACTIVE;
 	static final MemberState MEMBER_STATE = MemberState.JOINED;
+	static final ChannelType CHANNEL_TYPE = ChannelType.PHONE, CHANNEL_TYPE_TO = ChannelType.MMS;
 	static final Map<String, Object> CONVERSATION_CUSTOM_DATA = Map.of(
 			"property1", "value1",
 			"prop2", "Val 2"
@@ -51,6 +53,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			MEMBER_ID = "MEM-df8e57d8-1c8e-4573-bf4d-29d5414dcb42",
 			CONVERSATION_ID = "CON-d66d47de-5bcb-4300-94f0-0c9d4b948e9a",
 			USER_ID = "USR-82e028d9-5201-4f1e-8188-604b2d3471ec",
+			INVITING_USER_ID = "USR-c051865e-ef59-4533-b58a-22cc6c4e962d",
 			SESSION_ID = "SES-63f61863-4a51-4f6b-86e1-46edebio0391",
 			START_DATE_STR = "2017-12-30 10:08:59",
 			END_DATE_STR = "2018-01-03 12:00:00",
@@ -60,6 +63,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			TIMESTAMP_INVITED_STR = "2019-07-03T18:52:24.301Z",
 			TIMESTAMP_JOINED_STR = "2019-09-03T17:02:01.342Z",
 			TIMESTAMP_LEFT_STR = "2020-10-30T04:59:57.106Z",
+			TO_NUMBER = "447900000001",
 			MEMBER_FROM = "Another member",
 			USER_NAME = "my_user_name",
 			CONVERSATION_NAME = "customer_chat",
@@ -67,6 +71,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			CONVERSATION_IMAGE_URL_STR = "https://example.com/image.png",
 			CONVERSATION_STATE_STR = "INACTIVE",
 			MEMBER_STATE_STR = "JOINED",
+			CHANNEL_TYPE_STR = "phone",
 			ORDER_STR = "desc",
 			CONVERSATION_TYPE = "quick_chat",
 			CONVERSATION_CUSTOM_SORT_KEY = "CSK_1",
@@ -343,10 +348,15 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 		assertEquals(TIMESTAMP_LEFT, timestamp.getLeft());
 		var initiator = parsed.getInitiator();
 		testJsonableBaseObject(initiator);
-		// TODO test initiator
+		assertEquals(IS_SYSTEM, initiator.invitedByAdmin());
+		assertEquals(MEMBER_ID_INVITING, initiator.getMemberId());
+		assertEquals(INVITING_USER_ID, initiator.getUserId());
 		var channel = parsed.getChannel();
 		testJsonableBaseObject(channel);
-		// TODO test channel
+		assertEquals(CHANNEL_TYPE, channel.getType());
+		var chFrom = channel.getFrom();
+		var chTo = channel.getTo();
+		// TODO test to & from
 		var media = parsed.getMedia();
 		testJsonableBaseObject(media);
 		assertEquals(AUDIO, media.getAudio());

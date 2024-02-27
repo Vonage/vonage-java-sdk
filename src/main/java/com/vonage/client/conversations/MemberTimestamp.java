@@ -27,17 +27,9 @@ import java.time.Instant;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MemberTimestamp extends JsonableBaseObject {
-	private Instant invited;
-	private Instant joined;
-	private Instant left;
+	private Instant invited, joined, left;
 
 	protected MemberTimestamp() {}
-
-	protected MemberTimestamp(Instant invited, Instant joined, Instant left) {
-		this.invited = invited;
-		this.joined = joined;
-		this.left = left;
-	}
 
 	/**
 	 * Time that the member was invited.
