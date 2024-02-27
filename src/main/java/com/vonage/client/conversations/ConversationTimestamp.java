@@ -22,23 +22,23 @@ import com.vonage.client.JsonableBaseObject;
 import java.time.Instant;
 
 /**
- * Represents the timestamps in a {@linkplain Conversation}.
+ * Represents the timestamps in {@link BaseConversation#getTimestamp()}.
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Timestamp extends JsonableBaseObject {
+public class ConversationTimestamp extends JsonableBaseObject {
 	private Instant created, updated, destroyed;
 
-	protected Timestamp() {}
+	protected ConversationTimestamp() {}
 
-	protected Timestamp(Instant created, Instant updated, Instant destroyed) {
+	protected ConversationTimestamp(Instant created, Instant updated, Instant destroyed) {
 		this.created = created;
 		this.updated = updated;
 		this.destroyed = destroyed;
 	}
 
 	/**
-	 * The time that the conversation was created.
+	 * Time that the conversation was created.
 	 * 
 	 * @return The conversation creation time as an Instant, or {@code null} if unknown.
 	 */
@@ -48,7 +48,7 @@ public class Timestamp extends JsonableBaseObject {
 	}
 
 	/**
-	 * The time that the conversation was update.
+	 * Time that the conversation was update.
 	 * 
 	 * @return The conversation update time as an Instant, or {@code null} if unknown.
 	 */
@@ -58,7 +58,7 @@ public class Timestamp extends JsonableBaseObject {
 	}
 
 	/**
-	 * The time that the conversation was destroyed.
+	 * Time that the conversation was destroyed.
 	 * 
 	 * @return The conversation deletion time as an Instant, or {@code null} if unknown.
 	 */

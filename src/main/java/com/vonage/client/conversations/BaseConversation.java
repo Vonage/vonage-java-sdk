@@ -30,7 +30,7 @@ import java.net.URI;
 public class BaseConversation extends JsonableBaseObject {
 	String id, name, displayName;
 	URI imageUrl;
-	Timestamp timestamp;
+	ConversationTimestamp timestamp;
 
 	protected BaseConversation() {
 	}
@@ -81,7 +81,7 @@ public class BaseConversation extends JsonableBaseObject {
 	 * @return The timestamps object, or {@code null} if unknown.
 	 */
 	@JsonProperty("timestamp")
-	public Timestamp getTimestamp() {
+	public ConversationTimestamp getTimestamp() {
 		return timestamp;
 	}
 	

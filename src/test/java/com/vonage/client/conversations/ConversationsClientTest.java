@@ -28,8 +28,10 @@ import org.junit.jupiter.api.function.Executable;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Map;
+import java.util.UUID;
 
 public class ConversationsClientTest extends ClientTest<ConversationsClient> {
+	static final boolean AUDIO = true, AUDIO_EARMUFFED = false, AUDIO_MUTED = true, AUDIO_ENABLED = true;
 	static final int PAGE_SIZE = 30, CONVERSATION_SEQUENCE_NUMBER = 159, CONVERSATION_TTL = 60;
 	static final double USER_SESSION_TTL = 1.6;
 	static final SortOrder ORDER = SortOrder.DESCENDING;
@@ -41,16 +43,21 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 	);
 
 	static final String
+			KNOCKING_ID_STR = "ccc86f37-0a18-4f2e-9bee-da5dce04f601",
 			INVALID_UUID_STR = "12345678-9abc-defg-hijk-lmnopqrstuvw",
+			INVITED_BY = "7bda03b5-5d1b-4734-bf7b-bc83e37f2420",
 			CONVERSATION_ID = "CON-d66d47de-5bcb-4300-94f0-0c9d4b948e9a",
 			MEMBER_ID = "MEM-df8e57d8-1c8e-4573-bf4d-29d5414dcb42",
 			USER_ID = "USR-82e028d9-5201-4f1e-8188-604b2d3471ec",
 			SESSION_ID = "SES-63f61863-4a51-4f6b-86e1-46edebio0391",
 			START_DATE_STR = "2017-12-30 10:08:59",
 			END_DATE_STR = "2018-01-03 12:00:00",
-			TIMESTAMP_CREATED_STR = "2019-09-03T18:40:24.324Z",
+			TIMESTAMP_CREATED_STR = "2019-08-10T11:29:24.997Z",
 			TIMESTAMP_UPDATED_STR = "2019-09-03T18:40:24.324Z",
 			TIMESTAMP_DESTROYED_STR = "2022-02-03T04:58:59.601Z",
+			TIMESTAMP_INVITED_STR = "2019-07-03T18:52:24.301Z",
+			TIMESTAMP_JOINED_STR = "2019-09-03T17:02:01.342Z",
+			TIMESTAMP_LEFT_STR = "2020-10-30T04:59:57.106Z",
 			USER_NAME = "my_user_name",
 			CONVERSATION_NAME = "customer_chat",
 			CONVERSATION_DISPLAY_NAME = "Chat with Customer",
@@ -191,13 +198,17 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 				}
 			""";
 
+	static final UUID KNOCKING_ID = UUID.fromString(KNOCKING_ID_STR);
 	static final URI CONVERSATION_IMAGE_URL = URI.create(CONVERSATION_IMAGE_URL_STR);
 	static final Instant
 			START_DATE = Instant.parse(START_DATE_STR.replace(' ','T')+'Z'),
 			END_DATE = Instant.parse(END_DATE_STR.replace(' ','T')+'Z'),
 			TIMESTAMP_CREATED = Instant.parse(TIMESTAMP_CREATED_STR),
 			TIMESTAMP_UPDATED = Instant.parse(TIMESTAMP_UPDATED_STR),
-			TIMESTAMP_DESTROYED = Instant.parse(TIMESTAMP_DESTROYED_STR);
+			TIMESTAMP_DESTROYED = Instant.parse(TIMESTAMP_DESTROYED_STR),
+			TIMESTAMP_INVITED = Instant.parse(TIMESTAMP_INVITED_STR),
+			TIMESTAMP_JOINED = Instant.parse(TIMESTAMP_JOINED_STR),
+			TIMESTAMP_LEFT = Instant.parse(TIMESTAMP_LEFT_STR);
 
 
 	public ConversationsClientTest() {
@@ -774,7 +785,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 	/*@Test
 	public void testListMembers() throws Exception {
-		ListMembersRequest request = null;
+		var request = ListMembersRequest.builder().build();
 		String responseJson = "{}";
 		stubResponseAndRun(responseJson, () -> client.listMembers(request));
 		stubResponseAndAssertThrows(200, () -> client.listMembers(null), NullPointerException.class);

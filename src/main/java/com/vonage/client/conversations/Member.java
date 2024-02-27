@@ -32,6 +32,7 @@ public class Member extends BaseMember {
 	private MemberChannel channel;
 	private MemberMedia media;
 	private MemberInitiator initiator;
+	private MemberTimestamp timestamp;
 
 	protected Member() {
 	}
@@ -123,6 +124,16 @@ public class Member extends BaseMember {
 	@JsonProperty("initiator")
 	public MemberInitiator getInitiator() {
 		return initiator;
+	}
+
+	/**
+	 * Timestamps for this member.
+	 *
+	 * @return The timestamps object, or {@code null} if unknown.
+	 */
+	@JsonProperty("timestamp")
+	public MemberTimestamp getTimestamp() {
+		return timestamp;
 	}
 
 	/**
