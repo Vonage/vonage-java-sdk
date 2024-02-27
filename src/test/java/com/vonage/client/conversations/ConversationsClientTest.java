@@ -22,6 +22,7 @@ import com.vonage.client.RestEndpoint;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.common.SortOrder;
+import com.vonage.client.users.BaseUser;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
@@ -45,9 +46,10 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 	static final String
 			KNOCKING_ID_STR = "ccc86f37-0a18-4f2e-9bee-da5dce04f601",
 			INVALID_UUID_STR = "12345678-9abc-defg-hijk-lmnopqrstuvw",
-			INVITED_BY = "7bda03b5-5d1b-4734-bf7b-bc83e37f2420",
-			CONVERSATION_ID = "CON-d66d47de-5bcb-4300-94f0-0c9d4b948e9a",
+			INVITED_BY = "MEM-7bda03b5-5d1b-4734-bf7b-bc83e37f2420",
+			MEMBER_ID_INVITING = "MEM-7b941a4a-122e-4d9a-868c-d641d185f98c",
 			MEMBER_ID = "MEM-df8e57d8-1c8e-4573-bf4d-29d5414dcb42",
+			CONVERSATION_ID = "CON-d66d47de-5bcb-4300-94f0-0c9d4b948e9a",
 			USER_ID = "USR-82e028d9-5201-4f1e-8188-604b2d3471ec",
 			SESSION_ID = "SES-63f61863-4a51-4f6b-86e1-46edebio0391",
 			START_DATE_STR = "2017-12-30 10:08:59",
@@ -58,6 +60,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			TIMESTAMP_INVITED_STR = "2019-07-03T18:52:24.301Z",
 			TIMESTAMP_JOINED_STR = "2019-09-03T17:02:01.342Z",
 			TIMESTAMP_LEFT_STR = "2020-10-30T04:59:57.106Z",
+			MEMBER_FROM = "Another member",
 			USER_NAME = "my_user_name",
 			CONVERSATION_NAME = "customer_chat",
 			CONVERSATION_DISPLAY_NAME = "Chat with Customer",
@@ -304,18 +307,59 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 		var sessions = parsed.getSessions();
 		assertNotNull(sessions);
 		assertEquals(3, sessions.size());
-
 		var first = sessions.getFirst();
 		testJsonableBaseObject(first);
 		assertNull(first.getUser());
 		assertNull(first.getSessionId());
 		assertNull(first.getTtl());
-
 		assertEqualsSampleUserSession(sessions.get(1));
-
 		var last = sessions.getLast();
 		testJsonableBaseObject(last);
 		assertNotNull(last.getUser());
+	}
+
+	static void assertEqualsBaseUser(BaseUser parsed) {
+		testJsonableBaseObject(parsed);
+		assertEquals(USER_ID, parsed.getId());
+		assertEquals(USER_NAME, parsed.getName());
+	}
+
+	static void assertEqualsSampleBaseMember(BaseMember parsed) {
+		testJsonableBaseObject(parsed);
+		assertEquals(MEMBER_STATE, parsed.getState());
+		assertEquals(MEMBER_ID, parsed.getId());
+		assertEqualsBaseUser(parsed.getUser());
+	}
+
+	static void assertEqualsSampleMember(Member parsed) {
+		assertEqualsSampleBaseMember(parsed);
+		assertEquals(CONVERSATION_ID, parsed.getConversationId());
+		assertEquals(MEMBER_FROM, parsed.getFrom());
+		assertEquals(KNOCKING_ID, parsed.getKnockingId());
+		var timestamp = parsed.getTimestamp();
+		testJsonableBaseObject(timestamp);
+		assertEquals(TIMESTAMP_INVITED, timestamp.getInvited());
+		assertEquals(TIMESTAMP_JOINED, timestamp.getJoined());
+		assertEquals(TIMESTAMP_LEFT, timestamp.getLeft());
+		var initiator = parsed.getInitiator();
+		testJsonableBaseObject(initiator);
+		// TODO test initiator
+		var channel = parsed.getChannel();
+		testJsonableBaseObject(channel);
+		// TODO test channel
+		var media = parsed.getMedia();
+		testJsonableBaseObject(media);
+		assertEquals(AUDIO, media.getAudio());
+		var audioSettings = media.getAudioSettings();
+		testJsonableBaseObject(audioSettings);
+		assertEquals(AUDIO_ENABLED, audioSettings.getEnabled());
+		assertEquals(AUDIO_EARMUFFED, audioSettings.getEarmuffed());
+		assertEquals(AUDIO_MUTED, audioSettings.getMuted());
+		assertEquals(INVITED_BY, parsed.getInvitedBy());
+		var inviting = parsed.getMemberIdInviting();
+		if (inviting != null) {
+			assertEquals(MEMBER_ID_INVITING, inviting);
+		}
 	}
 	
 	// CONVERSATIONS
