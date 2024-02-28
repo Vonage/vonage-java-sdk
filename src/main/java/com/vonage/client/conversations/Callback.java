@@ -39,7 +39,7 @@ public class Callback extends JsonableBaseObject {
 		url = builder.url;
 		eventMask = builder.eventMask;
 		method = builder.method;
-
+		params = builder.params;
 	}
 
 	/**
