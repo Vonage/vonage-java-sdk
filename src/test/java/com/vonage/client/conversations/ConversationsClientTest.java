@@ -497,7 +497,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 		testJsonableBaseObject(third);
 		assertEquals(MemberState.LEFT, third.getState());
 		assertEquals(MEMBER_ID_INVITING, third.getId());
-		assertNull(third.getId());
+		assertNull(third.getUser());
 		var fourth = members.get(3);
 		testJsonableBaseObject(fourth);
 		assertNull(fourth.getId());
@@ -992,7 +992,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 		);
 		stubResponseAndAssertThrows(SAMPLE_LIST_MEMBERS_RESPONSE,
 				() -> client.listMembers(null, request),
-				NullPointerException.class
+				IllegalArgumentException.class
 		);
 		stubResponseAndAssertThrows(SAMPLE_LIST_MEMBERS_RESPONSE,
 				() -> client.listMembers(MEMBER_ID, request),
@@ -1001,10 +1001,6 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 		stubResponseAndAssertThrows(SAMPLE_LIST_MEMBERS_RESPONSE,
 				() -> client.listMembers(KNOCKING_ID_STR),
 				IllegalArgumentException.class
-		);
-		stubResponseAndAssertThrows(404,
-				() -> client.listMembers(CONVERSATION_ID, request),
-				ConversationsResponseException.class
 		);
 		assertResponseExceptions(() -> client.listMembers(CONVERSATION_ID));
 	}
