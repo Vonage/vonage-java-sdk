@@ -25,6 +25,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+/**
+ * Represents a Conversation (request and response).
+ */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Conversation extends BaseConversation {
@@ -114,7 +117,10 @@ public class Conversation extends BaseConversation {
 	public static Builder builder() {
 		return new Builder();
 	}
-	
+
+	/**
+	 * Builder for creating or updating a Conversation. All fields are optional.
+	 */
 	public static class Builder {
 		private String name, displayName;
 		private URI imageUrl;

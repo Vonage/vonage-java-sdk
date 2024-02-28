@@ -17,6 +17,8 @@ package com.vonage.client.conversations;
 
 import com.fasterxml.jackson.annotation.*;
 import com.vonage.client.Jsonable;
+import com.vonage.client.users.BaseUser;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -36,8 +38,9 @@ public class Member extends BaseMember {
 	}
 
 	Member(Builder builder) {
-		state = builder.state;
-		channel = builder.channel;
+		user = Objects.requireNonNull(builder.user, "User is required.");
+		state = Objects.requireNonNull(builder.state, "State is required.");
+		channel = Objects.requireNonNull(builder.channel, "Channel is required.");
 		media = builder.media;
 		knockingId = builder.knockingId;
 		memberIdInviting = builder.memberIdInviting;
@@ -52,7 +55,7 @@ public class Member extends BaseMember {
 	/**
 	 * Unique identifier for this member's conversation.
 	 * 
-	 * @return The conversation ID, or {@code null} if unknown.
+	 * @return The conversation ID, or {@code null} if this is a request.
 	 */
 	@JsonIgnore
 	public String getConversationId() {
@@ -62,7 +65,7 @@ public class Member extends BaseMember {
 	/**
 	 * Channel details for this membership.
 	 * 
-	 * @return The channel, or {@code null} if unspecified.
+	 * @return The channel.
 	 */
 	@JsonProperty("channel")
 	public MemberChannel getChannel() {
@@ -132,7 +135,7 @@ public class Member extends BaseMember {
 	/**
 	 * Timestamps for this member.
 	 *
-	 * @return The timestamps object, or {@code null} if unknown.
+	 * @return The timestamps object, or {@code null} if this is a request.
 	 */
 	@JsonProperty("timestamp")
 	public MemberTimestamp getTimestamp() {
@@ -159,6 +162,7 @@ public class Member extends BaseMember {
 	}
 	
 	public static class Builder {
+		private BaseUser user;
 		private MemberState state;
 		private MemberChannel channel;
 		private MemberMedia media;
@@ -168,7 +172,28 @@ public class Member extends BaseMember {
 		Builder() {}
 
 		/**
-		 * Invite or join a member to a conversation.
+		 * (REQUIRED) Either the user ID or unique name is required. This method will automatically
+		 * determine which is provided. User IDs start with {@code USR-} followed by a UUID.
+		 *
+		 * @param userNameOrId Either the unique user ID, or the name.
+		 *
+		 * @return This builder.
+		 */
+		public Builder user(String userNameOrId) {
+			if (userNameOrId == null || userNameOrId.trim().isEmpty()) {
+				throw new IllegalArgumentException("Invalid user name or ID.");
+			}
+			if (userNameOrId.startsWith("USR-") && userNameOrId.length() == 40) {
+				user = new BaseUser(userNameOrId, null);
+			}
+			else {
+				user = new BaseUser(null, userNameOrId);
+			}
+			return this;
+		}
+
+		/**
+		 * (REQUIRED) Invite or join a member to a conversation.
 		 *
 		 * @param state The state as an enum.
 		 *
@@ -180,7 +205,7 @@ public class Member extends BaseMember {
 		}
 
 		/**
-		 * Channel details for this membership.
+		 * (REQUIRED) Channel details for this membership.
 		 *
 		 * @param channel The channel, or {@code null} if unspecified.
 		 *
@@ -192,7 +217,7 @@ public class Member extends BaseMember {
 		}
 
 		/**
-		 * Media settings for this member.
+		 * (OPTIONAL) Media settings for this member.
 		 *
 		 * @param media The media settings object.
 		 *
@@ -204,19 +229,19 @@ public class Member extends BaseMember {
 		}
 
 		/**
-		 * Unique knocking identifier.
+		 * (OPTIONAL) Unique knocking identifier.
 		 *
-		 * @param knockingId The knocking ID.
+		 * @param knockingId The knocking ID as a string.
 		 *
 		 * @return This builder.
 		 */
-		public Builder knockingId(UUID knockingId) {
-			this.knockingId = knockingId;
+		public Builder knockingId(String knockingId) {
+			this.knockingId = UUID.fromString(knockingId);
 			return this;
 		}
 
 		/**
-		 * Unique member ID to invite.
+		 * (OPTIONAL) Unique member ID to invite.
 		 *
 		 * @param memberIdInviting The inviting member ID, or {@code null} if unspecified.
 		 *
@@ -228,7 +253,7 @@ public class Member extends BaseMember {
 		}
 
 		/**
-		 * TODO document this
+		 * (OPTIONAL) TODO document this
 		 *
 		 * @param from The from field.
 		 *

@@ -39,10 +39,10 @@ public class User extends BaseUser {
     private Channels channels;
     private Properties properties;
 
-    User() {
+    protected User() {
     }
 
-    User(Builder builder) {
+    protected User(Builder builder) {
         name = builder.name;
         displayName = builder.displayName;
         imageUrl = builder.imageUrl;

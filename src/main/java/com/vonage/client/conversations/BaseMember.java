@@ -31,6 +31,7 @@ public class BaseMember extends JsonableBaseObject {
 	@JsonProperty("id") String id;
 	@JsonProperty("state") MemberState state;
 	@JsonProperty("_embedded") Embedded _embedded;
+	@JsonProperty("user") BaseUser user;
 
 	protected BaseMember() {}
 
@@ -66,6 +67,6 @@ public class BaseMember extends JsonableBaseObject {
 	 */
 	@JsonIgnore
 	public BaseUser getUser() {
-		return _embedded != null ? _embedded.user : null;
+		return _embedded != null ? _embedded.user : user;
 	}
 }

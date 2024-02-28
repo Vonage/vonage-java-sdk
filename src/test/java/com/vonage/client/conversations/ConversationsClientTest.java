@@ -506,7 +506,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 		assertEqualsEmptyBaseMember(members.get(4));
 	}
 
-	static void assertEqualsEmptyMember(Member request) {
+	static void assertEqualsMinimalMember(Member request) {
 		assertEqualsEmptyBaseMember(request);
 		assertNull(request.getConversationId());
 		assertNull(request.getFrom());
@@ -1093,9 +1093,11 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 	@Test
 	public void testCreateMember() throws Exception {
-		Supplier<Member> minimalRequestFactory = () -> Member.builder().build();
+		Supplier<Member> minimalRequestFactory = () -> Member.builder()
+				.state(MEMBER_STATE).user(USER_ID)
+				.channel(null).build();
 		var request = minimalRequestFactory.get();
-		assertEqualsEmptyMember(request);
+		assertEqualsMinimalMember(request);
 		stubResponse(201, SAMPLE_MEMBER_RESPONSE);
 		var response = client.createMember(CONVERSATION_ID, request);
 		assertEqualsSampleMember(response);

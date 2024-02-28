@@ -28,7 +28,20 @@ import com.vonage.client.JsonableBaseObject;
 public class BaseUser extends JsonableBaseObject {
     String id, name;
 
-    BaseUser() {
+    protected BaseUser() {
+    }
+
+    /**
+     * Creates a BaseUser with the ID and name fields as specified.
+     *
+     * @param id The unique user ID as a string.
+     * @param name The unique user name.
+     *
+     * @since 8.4.0
+     */
+    public BaseUser(String id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     /**
