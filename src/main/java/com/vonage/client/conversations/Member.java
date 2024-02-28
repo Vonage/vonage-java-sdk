@@ -15,9 +15,7 @@
  */
 package com.vonage.client.conversations;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.vonage.client.Jsonable;
 import java.util.UUID;
 
@@ -38,12 +36,17 @@ public class Member extends BaseMember {
 	}
 
 	Member(Builder builder) {
+		state = builder.state;
 		channel = builder.channel;
 		media = builder.media;
 		knockingId = builder.knockingId;
 		memberIdInviting = builder.memberIdInviting;
 		from = builder.from;
-		initiator = builder.initiator;
+	}
+
+	@JsonSetter("conversation_id")
+	void setConversationId(String conversationId) {
+		this.conversationId = conversationId;
 	}
 
 	/**
@@ -51,7 +54,7 @@ public class Member extends BaseMember {
 	 * 
 	 * @return The conversation ID, or {@code null} if unknown.
 	 */
-	@JsonProperty("conversation_id")
+	@JsonIgnore
 	public String getConversationId() {
 		return conversationId;
 	}
@@ -97,9 +100,9 @@ public class Member extends BaseMember {
 	}
 
 	/**
-	 * From (??)
+	 * TODO document this
 	 * 
-	 * @return The from, or {@code null} if unspecified.
+	 * @return The from field, or {@code null} if unspecified.
 	 */
 	@JsonProperty("from")
 	public String getFrom() {
@@ -156,15 +159,26 @@ public class Member extends BaseMember {
 	}
 	
 	public static class Builder {
+		private MemberState state;
 		private MemberChannel channel;
 		private MemberMedia media;
 		private UUID knockingId;
-		private String memberIdInviting;
-		private String from;
-		private MemberInitiator initiator;
+		private String memberIdInviting, from;
 	
 		Builder() {}
-	
+
+		/**
+		 * Invite or join a member to a conversation.
+		 *
+		 * @param state The state as an enum.
+		 *
+		 * @return This builder.
+		 */
+		public Builder state(MemberState state) {
+			this.state = state;
+			return this;
+		}
+
 		/**
 		 * Channel details for this membership.
 		 *
@@ -180,7 +194,7 @@ public class Member extends BaseMember {
 		/**
 		 * Media settings for this member.
 		 *
-		 * @param media The media settings object, or {@code null} if unspecified.
+		 * @param media The media settings object.
 		 *
 		 * @return This builder.
 		 */
@@ -192,7 +206,7 @@ public class Member extends BaseMember {
 		/**
 		 * Unique knocking identifier.
 		 *
-		 * @param knockingId The knocking ID, or {@code null} if unspecified.
+		 * @param knockingId The knocking ID.
 		 *
 		 * @return This builder.
 		 */
@@ -214,9 +228,9 @@ public class Member extends BaseMember {
 		}
 
 		/**
-		 * From (??)
+		 * TODO document this
 		 *
-		 * @param from The from, or {@code null} if unspecified.
+		 * @param from The from field.
 		 *
 		 * @return This builder.
 		 */
@@ -224,19 +238,6 @@ public class Member extends BaseMember {
 			this.from = from;
 			return this;
 		}
-
-		/**
-		 * Describes how this member was initiated.
-		 *
-		 * @param initiator The initiator details, or {@code null} if unspecified.
-		 *
-		 * @return This builder.
-		 */
-		public Builder initiator(MemberInitiator initiator) {
-			this.initiator = initiator;
-			return this;
-		}
-
 	
 		/**
 		 * Builds the {@linkplain Member}.

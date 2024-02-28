@@ -25,6 +25,8 @@ import com.vonage.client.users.BaseUser;
 /**
  * Represents the basic conversation member attributes, as returned from {@link ListMembersResponse#getMembers()}.
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class BaseMember extends JsonableBaseObject {
 	@JsonProperty("id") String id;
 	@JsonProperty("state") MemberState state;

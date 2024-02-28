@@ -30,6 +30,7 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 	static final boolean IS_SYSTEM = false,
@@ -65,13 +66,18 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			TIMESTAMP_LEFT_STR = "2020-10-30T04:59:57.106Z",
 			TO_NUMBER = "447900000001",
 			MEMBER_FROM = "Another member",
+			REASON_CODE = "test_code",
+			REASON_TEXT = "Because I said so",
 			USER_NAME = "my_user_name",
+			USER_DISPLAY_NAME = "My User Name",
 			CONVERSATION_NAME = "customer_chat",
 			CONVERSATION_DISPLAY_NAME = "Chat with Customer",
 			CONVERSATION_IMAGE_URL_STR = "https://example.com/image.png",
 			CONVERSATION_STATE_STR = "INACTIVE",
 			MEMBER_STATE_STR = "JOINED",
-			CHANNEL_TYPE_STR = "phone",
+			CHANNEL_TYPE_STR = "app",
+			CHANNEL_TYPE_FROM_STR = "sms",
+			CHANNEL_TYPE_TO_STR = "phone",
 			ORDER_STR = "desc",
 			CONVERSATION_TYPE = "quick_chat",
 			CONVERSATION_CUSTOM_SORT_KEY = "CSK_1",
@@ -204,7 +210,92 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 					  }
 				   }
 				}
-			""";
+			""",
+			SAMPLE_BASE_MEMBER_RESPONSE_PARTIAL = STR."""
+				{
+					"id": "\{MEMBER_ID}",
+					"conversation_id": "\{CONVERSATION_ID}",
+					"_embedded": {
+						 "user": {
+							"id": "\{USER_ID}",
+							"name": "\{USER_NAME}",
+							"display_name": "\{USER_DISPLAY_NAME}",
+							"_links": {
+							   "self": {
+								  "href": "https://api.nexmo.com/v1/users/\{USER_ID}"
+							   }
+							}
+						}
+					},
+					"state": "\{MEMBER_STATE_STR}",
+					"_links": {
+					 "href": "https://api.nexmo.com/v1/conversations/\{CONVERSATION_ID}/members/\{MEMBER_ID}"
+					}""",
+			SAMPLE_BASE_MEMBER_RESPONSE = STR."\{SAMPLE_BASE_MEMBER_RESPONSE_PARTIAL}\n\t}",
+			SAMPLE_MEMBER_RESPONSE = SAMPLE_BASE_MEMBER_RESPONSE_PARTIAL + STR."""
+				  ,
+				  "timestamp": {
+					 "invited": "\{TIMESTAMP_INVITED_STR}",
+					 "joined": "\{TIMESTAMP_JOINED_STR}",
+					 "left": "\{TIMESTAMP_LEFT_STR}"
+				  },
+				  "initiator": {
+					 "joined": {
+						"is_system": \{IS_SYSTEM},
+						"user_id": "\{INVITING_USER_ID}",
+						"member_id": "\{MEMBER_ID_INVITING}"
+					 }
+				  },
+				  "channel": {
+					 "type": "\{CHANNEL_TYPE_STR}",
+					 "from": {
+						"type": "\{CHANNEL_TYPE_FROM_STR}"
+					 },
+					 "to": {
+						"type": "\{CHANNEL_TYPE_TO_STR}",
+						"number": "\{TO_NUMBER}"
+					 }
+				  },
+				  "media": {
+					 "audio_settings": {
+						"enabled": \{AUDIO_ENABLED},
+						"earmuffed": \{AUDIO_EARMUFFED},
+						"muted": \{AUDIO_MUTED}
+					 },
+					 "audio": \{AUDIO}
+				  },
+				  "knocking_id": "\{KNOCKING_ID_STR}",
+				  "invited_by": "\{INVITED_BY}"
+			   }
+			""",
+			SAMPLE_LIST_MEMBERS_RESPONSE = STR."""
+               {
+                  "page_size": \{PAGE_SIZE},
+                  "_embedded": {
+                     "members": [
+                        {},
+                        \{SAMPLE_BASE_MEMBER_RESPONSE},
+                        {"state": "LEFT", "id": "\{MEMBER_ID_INVITING}"},
+                        {"_embedded": {"user": {}}},
+                        {"_embedded": {}, "_links": {}}
+                     ]
+                  },
+                  "_links": {
+                     "first": {
+                        "href": "https://api.nexmo.com/v1/conversations/CON-d66d47de-5bcb-4300-94f0-0c9d4b948e9a/members?order=desc&page_size=10"
+                     },
+                     "self": {
+                        "href": "https://api.nexmo.com/v1/conversations/CON-d66d47de-5bcb-4300-94f0-0c9d4b948e9a/members?order=desc&page_size=10&cursor=88b395c167da4d94e929705cbd63b82973771e7d390d274a58e301386d5762600a3ffd799bfb3fc5190c5a0d124cdd0fc72fe6e450506b18e4e2edf9fe84c7a0"
+                     },
+                     "next": {
+                        "href": "https://api.nexmo.com/v1/conversations/CON-d66d47de-5bcb-4300-94f0-0c9d4b948e9a/members?order=desc&page_size=10&cursor=88b395c167da4d94e929705cbd63b829a650e69a39197bfd4c949f4243f60dc4babb696afa404d2f44e7775e32b967f2a1a0bb8fb259c0999ba5a4e501eaab55"
+                     },
+                     "prev": {
+                        "href": "https://api.nexmo.com/v1/conversations/CON-d66d47de-5bcb-4300-94f0-0c9d4b948e9a/members?order=desc&page_size=10&cursor=069626a3de11d2ec900dff5042197bd75f1ce41dafc3f2b2481eb9151086e59aae9dba3e3a8858dc355232d499c310fbfbec43923ff657c0de8d49ffed9f7edb"
+                     }
+                  }
+               }
+            """;
 
 	static final UUID KNOCKING_ID = UUID.fromString(KNOCKING_ID_STR);
 	static final URI CONVERSATION_IMAGE_URL = URI.create(CONVERSATION_IMAGE_URL_STR);
@@ -225,6 +316,15 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 	void assert401ResponseException(Executable invocation) throws Exception {
 		assert401ApiResponseException(ConversationsResponseException.class, invocation);
+	}
+
+	void assert404ResponseException(Executable invocation) throws Exception {
+		stubResponseAndAssertThrows(404, invocation, ConversationsResponseException.class);
+	}
+
+	void assertResponseExceptions(Executable invocation) throws Exception {
+		assert404ResponseException(invocation);
+		assert401ResponseException(invocation);
 	}
 
 	static void assertEqualsSampleBaseConversation(BaseConversation parsed) {
@@ -370,6 +470,53 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 		if (inviting != null) {
 			assertEquals(MEMBER_ID_INVITING, inviting);
 		}
+	}
+
+	static void assertEqualsEmptyBaseMember(BaseMember parsed) {
+		testJsonableBaseObject(parsed);
+		assertNull(parsed.getUser());
+		assertNull(parsed.getId());
+		assertNull(parsed.getState());
+	}
+
+	static void assertEqualsEmptyBaseUser(BaseUser parsed) {
+		testJsonableBaseObject(parsed);
+		assertNull(parsed.getName());
+		assertNull(parsed.getId());
+	}
+
+	static void assertEqualsSampleListMembers(ListMembersResponse parsed) {
+		testJsonableBaseObject(parsed);
+		assertEquals(PAGE_SIZE, parsed.getPageSize());
+		var members = parsed.getMembers();
+		assertNotNull(members);
+		assertEquals(5, members.size());
+		assertEqualsEmptyBaseMember(members.getFirst());
+		assertEqualsSampleBaseMember(members.get(1));
+		var third = members.get(2);
+		testJsonableBaseObject(third);
+		assertEquals(MemberState.LEFT, third.getState());
+		assertEquals(MEMBER_ID_INVITING, third.getId());
+		assertNull(third.getId());
+		var fourth = members.get(3);
+		testJsonableBaseObject(fourth);
+		assertNull(fourth.getId());
+		assertNull(fourth.getState());
+		assertEqualsEmptyBaseUser(fourth.getUser());
+		assertEqualsEmptyBaseMember(members.get(4));
+	}
+
+	static void assertEqualsEmptyMember(Member request) {
+		assertEqualsEmptyBaseMember(request);
+		assertNull(request.getConversationId());
+		assertNull(request.getFrom());
+		assertNull(request.getChannel());
+		assertNull(request.getInvitedBy());
+		assertNull(request.getMemberIdInviting());
+		assertNull(request.getKnockingId());
+		assertNull(request.getInitiator());
+		assertNull(request.getMedia());
+		assertNull(request.getTimestamp());
 	}
 	
 	// CONVERSATIONS
@@ -521,6 +668,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 	public void testGetConversation() throws Exception {
 		stubResponse(200, SAMPLE_CONVERSATION_RESPONSE);
 		assertEqualsSampleBaseConversation(client.getConversation(CONVERSATION_ID));
+
 		stubResponseAndAssertThrows(200,
 				() -> client.getConversation(null),
 				IllegalArgumentException.class
@@ -529,11 +677,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 				() -> client.getConversation(MEMBER_ID),
 				IllegalArgumentException.class
 		);
-		stubResponseAndAssertThrows(404,
-				() -> client.getConversation(CONVERSATION_ID),
-				ConversationsResponseException.class
-		);
-		assert401ResponseException(() -> client.getConversation(CONVERSATION_ID));
+		assertResponseExceptions(() -> client.getConversation(CONVERSATION_ID));
 	}
 
 	@Test
@@ -584,11 +728,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 				() -> client.updateConversation("CON-"+SESSION_ID, request),
 				IllegalArgumentException.class
 		);
-		stubResponseAndAssertThrows(404,
-				() -> client.updateConversation(CONVERSATION_ID, request),
-				ConversationsResponseException.class
-		);
-		assert401ResponseException(() -> client.updateConversation(CONVERSATION_ID, request));
+		assertResponseExceptions(() -> client.updateConversation(CONVERSATION_ID, request));
 	}
 
 	@Test
@@ -650,7 +790,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 				() -> client.deleteConversation(CONVERSATION_ID),
 				ConversationsResponseException.class
 		);
-		assert401ResponseException(() -> client.deleteConversation(CONVERSATION_ID));
+		assertResponseExceptions(() -> client.deleteConversation(CONVERSATION_ID));
 	}
 
 	@Test
@@ -715,7 +855,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 				() -> client.listUserConversations(USER_ID, request),
 				ConversationsResponseException.class
 		);
-		assert401ResponseException(() -> client.listUserConversations(USER_ID, request));
+		assertResponseExceptions(() -> client.listUserConversations(USER_ID, request));
 	}
 
 	@Test
@@ -795,7 +935,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 				() -> client.listUserSessions(USER_ID, request),
 				ConversationsResponseException.class
 		);
-		assert401ResponseException(() -> client.listUserSessions(USER_ID, request));
+		assertResponseExceptions(() -> client.listUserSessions(USER_ID, request));
 	}
 
 	@Test
@@ -837,14 +977,36 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 	// MEMBERS
 
-	/*@Test
+	@Test
 	public void testListMembers() throws Exception {
 		var request = ListMembersRequest.builder().build();
-		String responseJson = "{}";
-		stubResponseAndRun(responseJson, () -> client.listMembers(request));
-		stubResponseAndAssertThrows(200, () -> client.listMembers(null), NullPointerException.class);
-		stubResponseAndAssertThrows(401, () -> client.listMembers(request), ConversationsResponseException.class);
-		assert401ResponseException(() -> client.listMembers(request));
+		stubResponse(200, SAMPLE_LIST_MEMBERS_RESPONSE);
+		var fullResponse = client.listMembers(CONVERSATION_ID, request);
+		assertEqualsSampleListMembers(fullResponse);
+		stubResponse(200, SAMPLE_LIST_MEMBERS_RESPONSE);
+		assertEquals(fullResponse.getMembers(), client.listMembers(CONVERSATION_ID));
+
+		stubResponseAndAssertThrows(SAMPLE_LIST_MEMBERS_RESPONSE,
+				() -> client.listMembers(CONVERSATION_ID, null),
+				NullPointerException.class
+		);
+		stubResponseAndAssertThrows(SAMPLE_LIST_MEMBERS_RESPONSE,
+				() -> client.listMembers(null, request),
+				NullPointerException.class
+		);
+		stubResponseAndAssertThrows(SAMPLE_LIST_MEMBERS_RESPONSE,
+				() -> client.listMembers(MEMBER_ID, request),
+				IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(SAMPLE_LIST_MEMBERS_RESPONSE,
+				() -> client.listMembers(KNOCKING_ID_STR),
+				IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(404,
+				() -> client.listMembers(CONVERSATION_ID, request),
+				ConversationsResponseException.class
+		);
+		assertResponseExceptions(() -> client.listMembers(CONVERSATION_ID));
 	}
 
 	@Test
@@ -863,7 +1025,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 			@Override
 			protected String expectedEndpointUri(ListMembersRequest request) {
-				return "/v1/conversations/"+request.conversationId+"/members";
+				return "/v1/conversations/"+request.conversationId+"/members/";
 			}
 
 			@Override
@@ -884,12 +1046,25 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 	@Test
 	public void testGetMember() throws Exception {
-		ConversationResourceRequestWrapper request = null;
-		String responseJson = "{}";
-		stubResponseAndRun(responseJson, () -> client.getMember(request));
-		stubResponseAndAssertThrows(200, () -> client.getMember(null), NullPointerException.class);
-		stubResponseAndAssertThrows(401, () -> client.getMember(request), ConversationsResponseException.class);
-		assert401ResponseException(() -> client.getMember(request));
+		stubResponse(200, SAMPLE_MEMBER_RESPONSE);
+		assertEqualsSampleMember(client.getMember(CONVERSATION_ID, MEMBER_ID));
+		stubResponseAndAssertThrows(SAMPLE_MEMBER_RESPONSE,
+				() -> client.getMember(MEMBER_ID, CONVERSATION_ID),
+				IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(SAMPLE_MEMBER_RESPONSE,
+				() -> client.getMember(CONVERSATION_ID, MEMBER_ID),
+				IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(SAMPLE_MEMBER_RESPONSE,
+				() -> client.getMember(null, MEMBER_ID),
+				IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(SAMPLE_MEMBER_RESPONSE,
+				() -> client.getMember(CONVERSATION_ID, null),
+				IllegalArgumentException.class
+		);
+		assertResponseExceptions(() -> client.getMember(CONVERSATION_ID, MEMBER_ID));
 	}
 
 	@Test
@@ -922,12 +1097,27 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 	@Test
 	public void testCreateMember() throws Exception {
-		Member request = null;
-		String responseJson = "{}";
-		stubResponseAndRun(responseJson, () -> client.createMember(request));
-		stubResponseAndAssertThrows(200, () -> client.createMember(null), NullPointerException.class);
-		stubResponseAndAssertThrows(401, () -> client.createMember(request), ConversationsResponseException.class);
-		assert401ResponseException(() -> client.createMember(request));
+		Supplier<Member> minimalRequestFactory = () -> Member.builder().build();
+		var request = minimalRequestFactory.get();
+		assertEqualsEmptyMember(request);
+		stubResponse(201, SAMPLE_MEMBER_RESPONSE);
+		var response = client.createMember(CONVERSATION_ID, request);
+		assertEqualsSampleMember(response);
+		assertEquals(request, response);
+
+		stubResponseAndAssertThrows(SAMPLE_MEMBER_RESPONSE,
+				() -> client.createMember(INVALID_UUID_STR, minimalRequestFactory.get()),
+				IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(SAMPLE_MEMBER_RESPONSE,
+				() -> client.createMember(CONVERSATION_ID, null),
+				NullPointerException.class
+		);
+		stubResponseAndAssertThrows(SAMPLE_MEMBER_RESPONSE,
+				() -> client.createMember(MEMBER_ID, minimalRequestFactory.get()),
+				IllegalArgumentException.class
+		);
+		assertResponseExceptions(() -> client.createMember(CONVERSATION_ID, minimalRequestFactory.get()));
 	}
 
 	@Test
@@ -946,13 +1136,14 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 			@Override
 			protected String expectedEndpointUri(Member request) {
-				return "/v1/conversations/"+request.conversationId+"/members";
+				return "/v1/conversations/"+request.getConversationId()+"/members/";
 			}
 
 			@Override
 			protected Member sampleRequest() {
+				// TODO full request
 				var request = Member.builder().build();
-				request.conversationId = CONVERSATION_ID;
+				request.setConversationId(CONVERSATION_ID);
 				return request;
 			}
 
@@ -967,12 +1158,28 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 	@Test
 	public void testUpdateMember() throws Exception {
-		UpdateMemberRequest request = null;
-		String responseJson = "{}";
-		stubResponseAndRun(responseJson, () -> client.updateMember(request));
-		stubResponseAndAssertThrows(200, () -> client.updateMember(null), NullPointerException.class);
-		stubResponseAndAssertThrows(401, () -> client.updateMember(request), ConversationsResponseException.class);
-		assert401ResponseException(() -> client.updateMember(request));
+		final var builder = UpdateMemberRequest.builder()
+				.conversationId(CONVERSATION_ID)
+				.memberId(MEMBER_ID)
+				.state(MemberState.JOINED)
+				.from(MEMBER_FROM);
+
+		stubResponse(200, SAMPLE_MEMBER_RESPONSE);
+		assertEqualsSampleMember(client.updateMember(builder.build()));
+
+		stubResponseAndAssertThrows(SAMPLE_MEMBER_RESPONSE,
+				() -> client.updateMember(null),
+				NullPointerException.class
+		);
+		stubResponseAndAssertThrows(SAMPLE_MEMBER_RESPONSE,
+				() -> client.updateMember(builder.memberId(KNOCKING_ID_STR).build()),
+				IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(SAMPLE_MEMBER_RESPONSE,
+				() -> client.updateMember(builder.conversationId(MEMBER_ID_INVITING).build()),
+				IllegalArgumentException.class
+		);
+		assertResponseExceptions(() -> client.updateMember(builder.build()));
 	}
 
 	@Test
@@ -997,18 +1204,20 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			@Override
 			protected UpdateMemberRequest sampleRequest() {
 				return UpdateMemberRequest.builder()
-						.conversationId(CONVERSATION_ID)
-						.memberId(MEMBER_ID)
-						.state(MemberState.JOINED)
-						.from("")
-						.build();
+						.conversationId(CONVERSATION_ID).memberId(MEMBER_ID)
+						.state(MemberState.LEFT).from(MEMBER_FROM)
+						.code(REASON_CODE).text(REASON_TEXT).build();
 			}
 
 			@Override
 			protected String sampleRequestBodyString() {
-				return "{}";
+				var req = sampleRequest();
+				return STR."""
+					{"state":"LEFT","from":"\{req.getFrom()}",\
+					"reason":{"code":"\{req.getCode()}","text":"\{req.getText()}"}}\
+					""";
 			}
 		}
 		.runTests();
-	}*/
+	}
 }

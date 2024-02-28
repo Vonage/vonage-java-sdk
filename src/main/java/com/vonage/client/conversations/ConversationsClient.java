@@ -178,11 +178,14 @@ public class ConversationsClient {
 		));
 	}
 
-	public Member createMember(Member request) {
-		return createMember.execute(validateRequest(request));
+	public Member createMember(String conversationId, Member request) {
+		validateRequest(request).setConversationId(validateConversationId(conversationId));
+		return createMember.execute(request);
 	}
 
 	public Member updateMember(UpdateMemberRequest request) {
-		return updateMember.execute(validateRequest(request));
+		validateConversationId(validateRequest(request).conversationId);
+		validateMemberId(request.resourceId);
+		return updateMember.execute(request);
 	}
 }
