@@ -41,8 +41,12 @@ public class Conversation extends BaseConversation {
 	}
 
 	Conversation(Builder builder) {
-		name = builder.name;
-		displayName = builder.displayName;
+		if ((name = builder.name) != null && (name.length() > 100 || name.trim().isEmpty())) {
+			throw new IllegalArgumentException("Name must be between 1 and 100 characters.");
+		}
+		if ((displayName = builder.displayName) != null && (displayName.length() > 50 || displayName.trim().isEmpty())) {
+			throw new IllegalArgumentException("Display name must be between 1 and 50 characters.");
+		}
 		imageUrl = builder.imageUrl;
 		properties = builder.properties;
 		numbers = builder.numbers;

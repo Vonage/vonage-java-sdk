@@ -35,8 +35,12 @@ public class ConversationProperties extends JsonableBaseObject {
 
 	ConversationProperties(Builder builder) {
 		ttl = builder.ttl;
-		type = builder.type;
-		customSortKey = builder.customSortKey;
+		if ((type = builder.type) != null && (type.length() > 200 || type.trim().isEmpty())) {
+			throw new IllegalArgumentException("Type must be between 1 and 200 characters.");
+		}
+		if ((customSortKey = builder.customSortKey) != null && (customSortKey.length() > 200 || customSortKey.trim().isEmpty())) {
+			throw new IllegalArgumentException("Custom sort key must be between 1 and 200 characters.");
+		}
 		customData = builder.customData;
 	}
 

@@ -653,6 +653,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 					"custom_data":\{new ObjectMapper().writeValueAsString(customData)}},\
 					"numbers":[],"callback":{"url":"\{request.getCallback().getUrl()}",\
 					"event_mask":"\{request.getCallback().getEventMask()}",\
+					"params":{"ncco_url":"http://example.com/ncco"},\
 					"method":"\{request.getCallback().getMethod()}"}}""";
 				}
 				catch (JsonProcessingException impossible) {

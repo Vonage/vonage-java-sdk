@@ -37,7 +37,9 @@ public class Callback extends JsonableBaseObject {
 
 	Callback(Builder builder) {
 		url = builder.url;
-		eventMask = builder.eventMask;
+		if ((eventMask = builder.eventMask) != null && (eventMask.length() > 200 || eventMask.trim().isEmpty())) {
+			throw new IllegalArgumentException("Event mask must be between 1 and 200 characters");
+		}
 		method = builder.method;
 		params = builder.params;
 	}
