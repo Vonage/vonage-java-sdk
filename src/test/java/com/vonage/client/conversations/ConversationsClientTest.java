@@ -40,7 +40,8 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 	static final SortOrder ORDER = SortOrder.DESCENDING;
 	static final ConversationStatus CONVERSATION_STATE = ConversationStatus.INACTIVE;
 	static final MemberState MEMBER_STATE = MemberState.JOINED;
-	static final ChannelType CHANNEL_TYPE = ChannelType.PHONE, CHANNEL_TYPE_TO = ChannelType.MMS;
+	static final ChannelType CHANNEL_TYPE = ChannelType.PHONE,
+			CHANNEL_TYPE_TO = ChannelType.MMS, CHANNEL_TYPE_FROM = ChannelType.SMS;
 	static final Map<String, Object> CONVERSATION_CUSTOM_DATA = Map.of(
 			"property1", "value1",
 			"prop2", "Val 2"
@@ -65,6 +66,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			TIMESTAMP_JOINED_STR = "2019-09-03T17:02:01.342Z",
 			TIMESTAMP_LEFT_STR = "2020-10-30T04:59:57.106Z",
 			TO_NUMBER = "447900000001",
+			FROM_NUMBER = "491711234567",
 			MEMBER_FROM = "Another member",
 			REASON_CODE = "test_code",
 			REASON_TEXT = "Because I said so",
@@ -455,8 +457,11 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 		testJsonableBaseObject(channel);
 		assertEquals(CHANNEL_TYPE, channel.getType());
 		var chFrom = channel.getFrom();
+		assertEquals(CHANNEL_TYPE_FROM, chFrom.getType());
+		assertEquals(FROM_NUMBER, chFrom.getNumberOrId());
 		var chTo = channel.getTo();
-		// TODO test to & from
+		assertEquals(CHANNEL_TYPE_TO, chTo.getType());
+		assertEquals(TO_NUMBER, chTo.getNumberOrId());
 		var media = parsed.getMedia();
 		testJsonableBaseObject(media);
 		assertEquals(AUDIO, media.getAudio());
@@ -968,8 +973,8 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			@Override
 			protected Map<String, String> sampleQueryParams() {
 				return Map.of(
-						"page_size", String.valueOf(PAGE_SIZE),
-						"order", ORDER_STR
+					"page_size", String.valueOf(PAGE_SIZE),
+					"order", ORDER_STR
 				);
 			}
 		}
@@ -1027,14 +1032,17 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 			@Override
 			protected ListMembersRequest sampleRequest() {
-				var request = ListMembersRequest.builder().build();
+				var request = ListMembersRequest.builder().pageSize(PAGE_SIZE).order(ORDER).build();
 				request.conversationId = CONVERSATION_ID;
 				return request;
 			}
 
 			@Override
 			protected Map<String, String> sampleQueryParams() {
-				return Map.of();
+				return Map.of(
+					"page_size", String.valueOf(PAGE_SIZE),
+					"order", ORDER_STR
+				);
 			}
 		}
 		.runTests();

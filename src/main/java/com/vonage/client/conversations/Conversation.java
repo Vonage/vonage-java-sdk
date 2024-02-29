@@ -19,7 +19,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
-import com.vonage.client.users.channels.Channel;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -129,7 +128,7 @@ public class Conversation extends BaseConversation {
 		private String name, displayName;
 		private URI imageUrl;
 		private ConversationProperties properties;
-		private Collection<? extends Channel> numbers;
+		private Collection<Channel> numbers;
 		private Callback callback;
 	
 		Builder() {}

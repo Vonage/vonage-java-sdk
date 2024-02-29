@@ -28,7 +28,7 @@ public class Pstn extends NumberChannel {
 	protected Pstn() {}
 
 	/**
-	 * Creates a new PSTN channel.
+	 * Creates a new PSTN (phone) channel.
 	 *
 	 * @param number The telephone number in E.164 format.
 	 */
