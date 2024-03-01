@@ -13,27 +13,24 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.conversations;
+package com.vonage.client.common;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Represents the type in {@link MemberChannel#getType()}.
+ * Represents the various available channel types.
+ *
+ * @since 8.4.0
  */
 public enum ChannelType {
-	APP,
-	PHONE,
-	SMS,
-	MMS,
-	WHATSAPP,
-	VIBER,
-	MESSENGER;
+	APP, PHONE, SMS, MMS, SIP, VBC, WEBSOCKET, WHATSAPP, VIBER, MESSENGER;
 
 	@JsonCreator
 	public static ChannelType fromString(String name) {
 		try {
-			return valueOf(name.toUpperCase());
+			String normal = name.toUpperCase();
+			return "PSTN".equals(normal) ? PHONE : valueOf(normal);
 		}
 		catch (NullPointerException | IllegalArgumentException ex) {
 			return null;

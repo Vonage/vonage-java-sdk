@@ -20,9 +20,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.ClientTest;
 import com.vonage.client.RestEndpoint;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
+import com.vonage.client.common.ChannelType;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.common.SortOrder;
 import com.vonage.client.users.BaseUser;
+import com.vonage.client.users.channels.Mms;
+import com.vonage.client.users.channels.Sms;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.function.Executable;
@@ -77,9 +80,9 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			CONVERSATION_IMAGE_URL_STR = "https://example.com/image.png",
 			CONVERSATION_STATE_STR = "INACTIVE",
 			MEMBER_STATE_STR = "JOINED",
-			CHANNEL_TYPE_STR = "app",
+			CHANNEL_TYPE_STR = "phone",
 			CHANNEL_TYPE_FROM_STR = "sms",
-			CHANNEL_TYPE_TO_STR = "phone",
+			CHANNEL_TYPE_TO_STR = "mms",
 			ORDER_STR = "desc",
 			CONVERSATION_TYPE = "quick_chat",
 			CONVERSATION_CUSTOM_SORT_KEY = "CSK_1",
@@ -251,7 +254,8 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 				  "channel": {
 					 "type": "\{CHANNEL_TYPE_STR}",
 					 "from": {
-						"type": "\{CHANNEL_TYPE_FROM_STR}"
+						"type": "\{CHANNEL_TYPE_FROM_STR}",
+						"number": "\{FROM_NUMBER}"
 					 },
 					 "to": {
 						"type": "\{CHANNEL_TYPE_TO_STR}",
@@ -439,29 +443,37 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 	}
 
 	static void assertEqualsSampleMember(Member parsed) {
-		assertEqualsSampleBaseMember(parsed);
+		assertNotNull(parsed);
 		assertEquals(CONVERSATION_ID, parsed.getConversationId());
-		assertEquals(MEMBER_FROM, parsed.getFrom());
-		assertEquals(KNOCKING_ID, parsed.getKnockingId());
+		parsed.setConversationId(null);
+		assertEqualsSampleBaseMember(parsed);
+
 		var timestamp = parsed.getTimestamp();
 		testJsonableBaseObject(timestamp);
 		assertEquals(TIMESTAMP_INVITED, timestamp.getInvited());
 		assertEquals(TIMESTAMP_JOINED, timestamp.getJoined());
 		assertEquals(TIMESTAMP_LEFT, timestamp.getLeft());
+
 		var initiator = parsed.getInitiator();
 		testJsonableBaseObject(initiator);
 		assertEquals(IS_SYSTEM, initiator.invitedByAdmin());
 		assertEquals(MEMBER_ID_INVITING, initiator.getMemberId());
 		assertEquals(INVITING_USER_ID, initiator.getUserId());
+
 		var channel = parsed.getChannel();
 		testJsonableBaseObject(channel);
 		assertEquals(CHANNEL_TYPE, channel.getType());
+
 		var chFrom = channel.getFrom();
 		assertEquals(CHANNEL_TYPE_FROM, chFrom.getType());
-		assertEquals(FROM_NUMBER, chFrom.getNumberOrId());
+		assertEquals(Sms.class, chFrom.getClass());
+		assertEquals(FROM_NUMBER, ((Sms) chFrom).getNumber());
+
 		var chTo = channel.getTo();
+		assertEquals(Mms.class, chFrom.getClass());
 		assertEquals(CHANNEL_TYPE_TO, chTo.getType());
-		assertEquals(TO_NUMBER, chTo.getNumberOrId());
+		assertEquals(TO_NUMBER, ((Mms) chTo).getNumber());
+
 		var media = parsed.getMedia();
 		testJsonableBaseObject(media);
 		assertEquals(AUDIO, media.getAudio());
@@ -470,6 +482,8 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 		assertEquals(AUDIO_ENABLED, audioSettings.getEnabled());
 		assertEquals(AUDIO_EARMUFFED, audioSettings.getEarmuffed());
 		assertEquals(AUDIO_MUTED, audioSettings.getMuted());
+
+		assertEquals(KNOCKING_ID, parsed.getKnockingId());
 		assertEquals(INVITED_BY, parsed.getInvitedBy());
 		var inviting = parsed.getMemberIdInviting();
 		if (inviting != null) {
