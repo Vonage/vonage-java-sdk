@@ -35,10 +35,9 @@ public interface Jsonable {
 	 * @return A new ObjectMapper with appropriate configuration.
 	 */
 	static ObjectMapper createDefaultObjectMapper() {
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.registerModule(new JavaTimeModule());
-		mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-		return mapper;
+		return new ObjectMapper()
+				.registerModule(new JavaTimeModule())
+				.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 	}
 
 	/**
@@ -63,9 +62,7 @@ public interface Jsonable {
 	 * @throws VonageResponseParseException If the JSON was invalid or this class couldn't be updated.
 	 */
 	default void updateFromJson(String json) {
-		if (json == null || json.trim().isEmpty()) {
-			return;
-		}
+		if (json == null || json.trim().isEmpty()) return;
 		try {
 			createDefaultObjectMapper().readerForUpdating(this).readValue(json);
 		}

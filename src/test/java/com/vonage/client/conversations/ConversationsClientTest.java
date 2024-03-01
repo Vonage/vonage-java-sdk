@@ -470,7 +470,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 		assertEquals(FROM_NUMBER, ((Sms) chFrom).getNumber());
 
 		var chTo = channel.getTo();
-		assertEquals(Mms.class, chFrom.getClass());
+		assertEquals(Mms.class, chTo.getClass());
 		assertEquals(CHANNEL_TYPE_TO, chTo.getType());
 		assertEquals(TO_NUMBER, ((Mms) chTo).getNumber());
 
@@ -1072,7 +1072,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 				IllegalArgumentException.class
 		);
 		stubResponseAndAssertThrows(SAMPLE_MEMBER_RESPONSE,
-				() -> client.getMember(CONVERSATION_ID, MEMBER_ID),
+				() -> client.getMember(INVALID_UUID_STR, KNOCKING_ID_STR),
 				IllegalArgumentException.class
 		);
 		stubResponseAndAssertThrows(SAMPLE_MEMBER_RESPONSE,
@@ -1117,8 +1117,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 	@Test
 	public void testCreateMember() throws Exception {
 		Supplier<Member> minimalRequestFactory = () -> Member.builder()
-				.state(MEMBER_STATE).user(USER_ID)
-				.channel(null).build();
+				.state(MEMBER_STATE).user(USER_ID).channel(null).build();
 		var request = minimalRequestFactory.get();
 		assertEqualsMinimalMember(request);
 		stubResponse(201, SAMPLE_MEMBER_RESPONSE);
@@ -1196,10 +1195,12 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 				() -> client.updateMember(builder.memberId(KNOCKING_ID_STR).build()),
 				IllegalArgumentException.class
 		);
+		builder.memberId(MEMBER_ID);
 		stubResponseAndAssertThrows(SAMPLE_MEMBER_RESPONSE,
 				() -> client.updateMember(builder.conversationId(MEMBER_ID_INVITING).build()),
 				IllegalArgumentException.class
 		);
+		builder.conversationId(CONVERSATION_ID);
 		assertResponseExceptions(() -> client.updateMember(builder.build()));
 	}
 

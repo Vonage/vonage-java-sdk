@@ -56,4 +56,28 @@ public abstract class Channel extends JsonableBaseObject {
     public ChannelType getType() {
         return type;
     }
+
+    /**
+     * Finds the corresponding subclass of Channel based on the enum's value.
+     *
+     * @param type The channel type as an enum.
+     *
+     * @return The appropriate concrete Channel class, or {@code null} if there isn't one.
+     * @since 8.4.0
+     */
+    public static Class<? extends Channel> getConcreteClass(ChannelType type) {
+        if (type == null) return null;
+        switch (type) {
+            default: return null;
+            case MESSENGER: return Messenger.class;
+            case MMS: return Mms.class;
+            case PHONE: return Pstn.class;
+            case SIP: return Sip.class;
+            case SMS: return Sms.class;
+            case VBC: return Vbc.class;
+            case VIBER: return Viber.class;
+            case WEBSOCKET: return Websocket.class;
+            case WHATSAPP: return Whatsapp.class;
+        }
+    }
 }
