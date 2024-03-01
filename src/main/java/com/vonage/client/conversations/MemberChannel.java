@@ -37,8 +37,8 @@ import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonDeserialize(using = MemberChannel.Deserializer.class)
 public class MemberChannel extends JsonableBaseObject {
-	private ChannelType type;
-	private Channel from, to;
+	ChannelType type;
+	Channel from, to;
 
 	protected MemberChannel() {
 	}

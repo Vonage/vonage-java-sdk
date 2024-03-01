@@ -17,7 +17,9 @@ package com.vonage.client.conversations;
 
 import com.fasterxml.jackson.annotation.*;
 import com.vonage.client.Jsonable;
+import com.vonage.client.common.ChannelType;
 import com.vonage.client.users.BaseUser;
+import com.vonage.client.users.channels.Channel;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -205,14 +207,45 @@ public class Member extends BaseMember {
 		}
 
 		/**
-		 * (REQUIRED) Channel details for this membership.
+		 * (REQUIRED) Top-level channel type. You should also provide {@linkplain #fromChannel(Channel)} and
+		 * {@linkplain #toChannel(Channel)}. If this is set to anything other than {@linkplain ChannelType#APP},
+		 * then both {@linkplain #fromChannel(Channel)} and {@linkplain #toChannel(Channel)}
+		 * must be of the same type as each other.
 		 *
-		 * @param channel The channel, or {@code null} if unspecified.
+		 * @param channelType The channel type as an enum.
 		 *
 		 * @return This builder.
 		 */
-		public Builder channel(MemberChannel channel) {
-			this.channel = channel;
+		public Builder channelType(ChannelType channelType) {
+			if (channel == null) channel = new MemberChannel();
+			return this;
+		}
+
+		/**
+		 * (OPTIONAL) Concrete channel to use when sending messages.
+		 * See {@linkplain com.vonage.client.users.channels} for options.
+		 *
+		 * @param from The sender channel.
+		 *
+		 * @return This builder.
+		 * @see #channelType(ChannelType)
+		 */
+		public Builder fromChannel(Channel from) {
+			if (channel == null) channel = new MemberChannel();
+			return this;
+		}
+
+		/**
+		 * (OPTIONAL) Concrete channel to use when receiving messages.
+		 * See {@linkplain com.vonage.client.users.channels} for options.
+		 *
+		 * @param to The receiver channel.
+		 *
+		 * @return This builder.
+		 * @see #channelType(ChannelType)
+		 */
+		public Builder toChannel(Channel to) {
+			if (channel == null) channel = new MemberChannel();
 			return this;
 		}
 

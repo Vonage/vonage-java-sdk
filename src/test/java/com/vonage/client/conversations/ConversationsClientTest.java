@@ -24,6 +24,7 @@ import com.vonage.client.common.ChannelType;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.common.SortOrder;
 import com.vonage.client.users.BaseUser;
+import com.vonage.client.users.channels.Channel;
 import com.vonage.client.users.channels.Mms;
 import com.vonage.client.users.channels.Sms;
 import static org.junit.jupiter.api.Assertions.*;
@@ -303,6 +304,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
                }
             """;
 
+	static final Channel CHANNEL_FROM = new Sms(FROM_NUMBER), CHANNEL_TO = new Mms(TO_NUMBER);
 	static final UUID KNOCKING_ID = UUID.fromString(KNOCKING_ID_STR);
 	static final URI CONVERSATION_IMAGE_URL = URI.create(CONVERSATION_IMAGE_URL_STR);
 	static final Instant
@@ -463,16 +465,10 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 		var channel = parsed.getChannel();
 		testJsonableBaseObject(channel);
 		assertEquals(CHANNEL_TYPE, channel.getType());
-
-		var chFrom = channel.getFrom();
-		assertEquals(CHANNEL_TYPE_FROM, chFrom.getType());
-		assertEquals(Sms.class, chFrom.getClass());
-		assertEquals(FROM_NUMBER, ((Sms) chFrom).getNumber());
-
-		var chTo = channel.getTo();
-		assertEquals(Mms.class, chTo.getClass());
-		assertEquals(CHANNEL_TYPE_TO, chTo.getType());
-		assertEquals(TO_NUMBER, ((Mms) chTo).getNumber());
+		assertEquals(CHANNEL_FROM, channel.getFrom());
+		assertEquals(CHANNEL_TYPE_FROM, CHANNEL_FROM.getType());
+		assertEquals(CHANNEL_TO, channel.getTo());
+		assertEquals(CHANNEL_TYPE_TO, CHANNEL_TO.getType());
 
 		var media = parsed.getMedia();
 		testJsonableBaseObject(media);
@@ -1117,7 +1113,11 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 	@Test
 	public void testCreateMember() throws Exception {
 		Supplier<Member> minimalRequestFactory = () -> Member.builder()
-				.state(MEMBER_STATE).user(USER_ID).channel(null).build();
+				.state(MEMBER_STATE).user(USER_ID)
+				.channelType(CHANNEL_TYPE)
+				.fromChannel(CHANNEL_FROM)
+				.toChannel(CHANNEL_TO).build();
+
 		var request = minimalRequestFactory.get();
 		assertEqualsMinimalMember(request);
 		stubResponse(201, SAMPLE_MEMBER_RESPONSE);
