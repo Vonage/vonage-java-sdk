@@ -98,8 +98,10 @@ public class MemberChannel extends JsonableBaseObject {
 		@Override
 		public MemberChannel deserialize(JsonParser p, DeserializationContext ctxt, MemberChannel intoValue) throws IOException {
 			mc = Objects.requireNonNull(intoValue);
-			JsonNode rootNode = p.readValueAsTree();
-			mc.type = ChannelType.fromString(rootNode.get("type").asText());
+			JsonNode rootNode = p.readValueAsTree(), typeNode = rootNode.get("type");
+			if (typeNode != null) {
+				mc.type = ChannelType.fromString(typeNode.asText());
+			}
 			mc.from = inferConcreteChannel(rootNode.get("from"));
 			mc.to = inferConcreteChannel(rootNode.get("to"));
 			return mc;
@@ -107,8 +109,8 @@ public class MemberChannel extends JsonableBaseObject {
 
 		private Channel inferConcreteChannel(JsonNode node) {
 			if (node == null || !node.isObject()) return null;
-			JsonNode nodeType = node.get("type");
-			ChannelType fromType = nodeType != null ? ChannelType.fromString(nodeType.asText()) : mc.type;
+			JsonNode typeNode = node.get("type");
+			ChannelType fromType = typeNode != null ? ChannelType.fromString(typeNode.asText()) : mc.type;
 			Class<? extends Channel> concreteClass = Channel.getConcreteClass(fromType);
 			if (concreteClass == null) {
 				throw new IllegalStateException("Unmapped class for type "+fromType);

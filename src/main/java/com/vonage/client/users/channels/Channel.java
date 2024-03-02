@@ -58,6 +58,21 @@ public abstract class Channel extends JsonableBaseObject {
     }
 
     /**
+     * Sets the {@link #getType()} based on this class's type. This is useful for some API
+     * calls where the type information is expected to be present in the JSON.
+     *
+     * @since 8.4.0
+     */
+    @JsonIgnore
+    public void setTypeField() {
+        String name = getClass().getSimpleName();
+        if (name.equalsIgnoreCase("Pstn")) {
+            name = "Phone";
+        }
+        type = ChannelType.fromString(name);
+    }
+
+    /**
      * Finds the corresponding subclass of Channel based on the enum's value.
      *
      * @param type The channel type as an enum.

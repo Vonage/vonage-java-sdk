@@ -522,10 +522,24 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 	}
 
 	static void assertEqualsMinimalMember(Member request) {
-		assertEqualsEmptyBaseMember(request);
-		assertNull(request.getConversationId());
+		assertNotNull(request);
+		assertEquals(MEMBER_STATE, request.getState());
+		var user = request.getUser();
+		assertNotNull(user);
+		assertEquals(USER_ID, user.getId());
+		var channel = request.getChannel();
+		assertNotNull(channel);
+		assertEquals(CHANNEL_TYPE, channel.getType());
+		var fromChannel = channel.getFrom();
+		assertNotNull(fromChannel);
+		assertEquals(CHANNEL_FROM, fromChannel);
+		assertEquals(CHANNEL_TYPE_FROM, fromChannel.getType());
+		var toChannel = channel.getTo();
+		assertNotNull(toChannel);
+		assertEquals(CHANNEL_TO, toChannel);
+		assertEquals(CHANNEL_TYPE_TO, toChannel.getType());
 		assertNull(request.getFrom());
-		assertNull(request.getChannel());
+		assertNull(request.getConversationId());
 		assertNull(request.getInvitedBy());
 		assertNull(request.getMemberIdInviting());
 		assertNull(request.getKnockingId());
@@ -1112,6 +1126,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 	@Test
 	public void testCreateMember() throws Exception {
+		// This is necessary because the client method sets the conversationId on the Member object
 		Supplier<Member> minimalRequestFactory = () -> Member.builder()
 				.state(MEMBER_STATE).user(USER_ID)
 				.channelType(CHANNEL_TYPE)

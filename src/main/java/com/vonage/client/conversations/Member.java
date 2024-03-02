@@ -173,6 +173,11 @@ public class Member extends BaseMember {
 	
 		Builder() {}
 
+		private MemberChannel initChannel() {
+			if (channel == null) channel = new MemberChannel();
+			return channel;
+		}
+
 		/**
 		 * (REQUIRED) Either the user ID or unique name is required. This method will automatically
 		 * determine which is provided. User IDs start with {@code USR-} followed by a UUID.
@@ -217,7 +222,7 @@ public class Member extends BaseMember {
 		 * @return This builder.
 		 */
 		public Builder channelType(ChannelType channelType) {
-			if (channel == null) channel = new MemberChannel();
+			initChannel().type = channelType;
 			return this;
 		}
 
@@ -231,7 +236,7 @@ public class Member extends BaseMember {
 		 * @see #channelType(ChannelType)
 		 */
 		public Builder fromChannel(Channel from) {
-			if (channel == null) channel = new MemberChannel();
+			(initChannel().from = from).setTypeField();
 			return this;
 		}
 
@@ -245,7 +250,7 @@ public class Member extends BaseMember {
 		 * @see #channelType(ChannelType)
 		 */
 		public Builder toChannel(Channel to) {
-			if (channel == null) channel = new MemberChannel();
+			(initChannel().to = to).setTypeField();
 			return this;
 		}
 
