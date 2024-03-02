@@ -62,6 +62,7 @@ public abstract class Channel extends JsonableBaseObject {
      * calls where the type information is expected to be present in the JSON.
      *
      * @since 8.4.0
+     * @see #removeTypeField()
      */
     @JsonIgnore
     public void setTypeField() {
@@ -70,6 +71,18 @@ public abstract class Channel extends JsonableBaseObject {
             name = "Phone";
         }
         type = ChannelType.fromString(name);
+    }
+
+    /**
+     * This method makes {@link #getType()} return {@code null}; effectively
+     * the opposite of {@linkplain #setTypeField()}. This is useful for some API calls
+     * where the type information should be omitted from the generated JSON.
+     *
+     * @since 8.4.0
+     * @see #setTypeField()
+     */
+    public void removeTypeField() {
+        type = null;
     }
 
     /**
