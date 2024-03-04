@@ -108,10 +108,6 @@ public class ConversationsClient {
 		return validateId("USR-", id);
 	}
 
-	private static String validateSessionId(String id) {
-		return validateId("SES-", id);
-	}
-
 	private static <T> T validateRequest(T request) {
 		return Objects.requireNonNull(request, "Request parameter is required.");
 	}
