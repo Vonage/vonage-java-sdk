@@ -123,7 +123,14 @@ public class Callback extends JsonableBaseObject {
 		private CallbackHttpMethod method;
 		private Params params;
 
-		Builder() {}
+		private Builder() {}
+
+		private Params initParams() {
+			if (params == null) {
+				params = new Params();
+			}
+			return params;
+		}
 
 		/**
 		 * Event URL for the callback.
@@ -169,8 +176,7 @@ public class Callback extends JsonableBaseObject {
 		 * @return This builder.
 		 */
 		public Builder applicationId(String applicationId) {
-			if (params == null) params = new Params();
-			params.applicationId = UUID.fromString(applicationId);
+			initParams().applicationId = UUID.fromString(applicationId);
 			return this;
 		}
 
@@ -182,8 +188,7 @@ public class Callback extends JsonableBaseObject {
 		 * @return This builder.
 		 */
 		public Builder nccoUrl(String nccoUrl) {
-			if (params == null) params = new Params();
-			params.nccoUrl = URI.create(nccoUrl);
+			initParams().nccoUrl = URI.create(nccoUrl);
 			return this;
 		}
 

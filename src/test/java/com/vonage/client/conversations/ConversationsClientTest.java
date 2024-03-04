@@ -664,7 +664,8 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 							.customSortKey(CONVERSATION_CUSTOM_SORT_KEY)
 							.customData(CONVERSATION_CUSTOM_DATA).build()
 						)
-						.callback(Callback.builder().url(url).eventMask(eventMask)
+						.callback(Callback.builder().url(url)
+								.eventMask(eventMask).applicationId(APPLICATION_ID)
 								.nccoUrl(nccoUrl).method(method).build()
 						)
 						.numbers().build();
@@ -684,8 +685,9 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 					"custom_sort_key":"\{request.getProperties().getCustomSortKey()}",\
 					"custom_data":\{new ObjectMapper().writeValueAsString(customData)}},\
 					"numbers":[],"callback":{"url":"\{request.getCallback().getUrl()}",\
-					"event_mask":"\{request.getCallback().getEventMask()}",\
-					"params":{"ncco_url":"http://example.com/ncco"},\
+					"event_mask":"\{request.getCallback().getEventMask()}","params":{\
+					"applicationId":"\{request.getCallback().getParams().getApplicationId()}",\
+					"ncco_url":"\{request.getCallback().getParams().getNccoUrl()}"},\
 					"method":"\{request.getCallback().getMethod()}"}}""";
 				}
 				catch (JsonProcessingException impossible) {
