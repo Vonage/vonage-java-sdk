@@ -317,6 +317,9 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			TIMESTAMP_JOINED = Instant.parse(TIMESTAMP_JOINED_STR),
 			TIMESTAMP_LEFT = Instant.parse(TIMESTAMP_LEFT_STR);
 
+	static final Supplier<Member.Builder> MEMBER_REQUEST_BUILDER_FACTORY = () ->
+			Member.builder().state(MEMBER_STATE).user(USER_ID)
+			.channelType(CHANNEL_TYPE).fromChannel(CHANNEL_FROM).toChannel(CHANNEL_TO);
 
 	public ConversationsClientTest() {
 		client = new ConversationsClient(wrapper);
@@ -1126,14 +1129,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 	@Test
 	public void testCreateMember() throws Exception {
-		// This is necessary because the client method sets the conversationId on the Member object
-		Supplier<Member> minimalRequestFactory = () -> Member.builder()
-				.state(MEMBER_STATE).user(USER_ID)
-				.channelType(CHANNEL_TYPE)
-				.fromChannel(CHANNEL_FROM)
-				.toChannel(CHANNEL_TO).build();
-
-		var request = minimalRequestFactory.get();
+		var request = MEMBER_REQUEST_BUILDER_FACTORY.get().build();
 		assertEqualsMinimalMember(request);
 		stubResponse(201, SAMPLE_MEMBER_RESPONSE);
 		var response = client.createMember(CONVERSATION_ID, request);
@@ -1141,7 +1137,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 		assertEquals(request, response);
 
 		stubResponseAndAssertThrows(SAMPLE_MEMBER_RESPONSE,
-				() -> client.createMember(INVALID_UUID_STR, minimalRequestFactory.get()),
+				() -> client.createMember(INVALID_UUID_STR, MEMBER_REQUEST_BUILDER_FACTORY.get().build()),
 				IllegalArgumentException.class
 		);
 		stubResponseAndAssertThrows(SAMPLE_MEMBER_RESPONSE,
@@ -1149,10 +1145,12 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 				NullPointerException.class
 		);
 		stubResponseAndAssertThrows(SAMPLE_MEMBER_RESPONSE,
-				() -> client.createMember(MEMBER_ID, minimalRequestFactory.get()),
+				() -> client.createMember(MEMBER_ID, MEMBER_REQUEST_BUILDER_FACTORY.get().build()),
 				IllegalArgumentException.class
 		);
-		assertResponseExceptions(() -> client.createMember(CONVERSATION_ID, minimalRequestFactory.get()));
+		assertResponseExceptions(() ->
+				client.createMember(CONVERSATION_ID, MEMBER_REQUEST_BUILDER_FACTORY.get().build())
+		);
 	}
 
 	@Test
@@ -1176,15 +1174,29 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 			@Override
 			protected Member sampleRequest() {
-				// TODO full request
-				var request = Member.builder().build();
+				var request = MEMBER_REQUEST_BUILDER_FACTORY.get()
+						.user(USER_NAME).knockingId(KNOCKING_ID_STR)
+						.memberIdInviting(MEMBER_ID_INVITING).from(MEMBER_FROM)
+						.media(MemberMedia.builder()
+								.audio(AUDIO).audioEnabled(AUDIO_ENABLED)
+								.muted(AUDIO_MUTED).earmuffed(AUDIO_EARMUFFED)
+								.build()
+						)
+						.build();
 				request.setConversationId(CONVERSATION_ID);
 				return request;
 			}
 
 			@Override
 			protected String sampleRequestBodyString() {
-				return "{}";
+				return STR."""
+    				{"state":"\{MEMBER_STATE}","user":{"name":"\{USER_NAME}"},\
+    				"member_id_inviting":"\{MEMBER_ID_INVITING}","from":"\{MEMBER_FROM}",\
+    				"knocking_id":"\{KNOCKING_ID_STR}","channel":{"type":"\{CHANNEL_TYPE_STR}",\
+    				"from":{"type":"\{CHANNEL_TYPE_FROM_STR}","number":"\{FROM_NUMBER}"},\
+    				"to":{"type":"\{CHANNEL_TYPE_TO_STR}","number":"\{TO_NUMBER}"}},\
+    				"media":{"audio":\{AUDIO},"audio_settings":{"enabled":\{AUDIO_ENABLED},\
+    				"earmuffed":\{AUDIO_EARMUFFED},"muted":\{AUDIO_MUTED}}}}""";
 			}
 		}
 		.runTests();
@@ -1251,8 +1263,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 				var req = sampleRequest();
 				return STR."""
 					{"state":"LEFT","from":"\{req.getFrom()}",\
-					"reason":{"code":"\{req.getCode()}","text":"\{req.getText()}"}}\
-					""";
+					"reason":{"code":"\{req.getCode()}","text":"\{req.getText()}"}}""";
 			}
 		}
 		.runTests();

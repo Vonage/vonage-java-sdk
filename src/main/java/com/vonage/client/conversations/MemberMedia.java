@@ -26,11 +26,16 @@ import com.vonage.client.JsonableBaseObject;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MemberMedia extends JsonableBaseObject {
+public final class MemberMedia extends JsonableBaseObject {
 	private Boolean audio;
 	private MediaAudioSettings audioSettings;
 
-	protected MemberMedia() {
+	MemberMedia(Builder builder) {
+		audio = builder.audio;
+		audioSettings = builder.audioSettings;
+	}
+
+	MemberMedia() {
 	}
 
 	/**
@@ -61,5 +66,84 @@ public class MemberMedia extends JsonableBaseObject {
 	 */
 	public static MemberMedia fromJson(String json) {
 		return Jsonable.fromJson(json);
+	}
+
+	/**
+	 * Entry point for constructing an instance of this class.
+	 *
+	 * @return A new Builder.
+	 */
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	/**
+	 * Builder for constructing MemberMedia. All fields are optional.
+	 */
+	public static final class Builder {
+		private Boolean audio;
+		private MediaAudioSettings audioSettings;
+
+		private Builder() {}
+
+		private MediaAudioSettings initAudioSettings() {
+			if (audioSettings == null) {
+				audioSettings = new MediaAudioSettings();
+			}
+			return audioSettings;
+		}
+
+		/**
+		 *
+		 * @param audio
+		 *
+		 * @return This builder.
+		 */
+		public Builder audio(boolean audio) {
+			this.audio = audio;
+			return this;
+		}
+
+		/**
+		 *
+		 * @param enabled
+		 *
+		 * @return This builder.
+		 */
+		public Builder audioEnabled(boolean enabled) {
+			initAudioSettings().enabled = enabled;
+			return this;
+		}
+
+		/**
+		 *
+		 * @param earmuffed
+		 *
+		 * @return This builder.
+		 */
+		public Builder earmuffed(boolean earmuffed) {
+			initAudioSettings().earmuffed = earmuffed;
+			return this;
+		}
+
+		/**
+		 *
+		 * @param muted
+		 *
+		 * @return This builder.
+		 */
+		public Builder muted(boolean muted) {
+			initAudioSettings().muted = muted;
+			return this;
+		}
+
+		/**
+		 * Builds the {@linkplain MemberMedia}.
+		 *
+		 * @return An instance of MemberMedia, populated with all fields from this builder.
+		 */
+		public MemberMedia build() {
+			return new MemberMedia(this);
+		}
 	}
 }

@@ -26,7 +26,7 @@ import com.vonage.client.JsonableBaseObject;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MediaAudioSettings extends JsonableBaseObject {
-	private Boolean enabled, earmuffed, muted;
+	Boolean enabled, earmuffed, muted;
 
 	protected MediaAudioSettings() {}
 
