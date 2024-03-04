@@ -73,16 +73,6 @@ public class MemberChannel extends JsonableBaseObject {
 		return to;
 	}
 
-	/**
-	 * Creates an instance of this class from a JSON payload.
-	 *
-	 * @param json The JSON string to parse.
-	 * @return An instance of this class with the fields populated, if present.
-	 */
-	public static MemberChannel fromJson(String json) {
-		return Jsonable.fromJson(json);
-	}
-
 	static class Deserializer extends StdDeserializer<MemberChannel> {
 		private MemberChannel mc;
 

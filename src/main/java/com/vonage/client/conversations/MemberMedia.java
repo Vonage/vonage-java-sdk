@@ -18,7 +18,6 @@ package com.vonage.client.conversations;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 
 /**
@@ -57,16 +56,7 @@ public final class MemberMedia extends JsonableBaseObject {
 	public MediaAudioSettings getAudioSettings() {
 		return audioSettings;
 	}
-	
-	/**
-	 * Creates an instance of this class from a JSON payload.
-	 *
-	 * @param json The JSON string to parse.
-	 * @return An instance of this class with the fields populated, if present.
-	 */
-	public static MemberMedia fromJson(String json) {
-		return Jsonable.fromJson(json);
-	}
+
 
 	/**
 	 * Entry point for constructing an instance of this class.
