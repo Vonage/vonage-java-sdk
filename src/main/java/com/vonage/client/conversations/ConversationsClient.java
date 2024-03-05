@@ -27,8 +27,8 @@ import java.util.UUID;
 import java.util.function.Function;
 
 /**
- * A client for talking to the Vonage ConversationsClient API. The standard way to obtain an instance of this class is to use
- * {@link VonageClient#getConversationsClient()}.
+ * A client for talking to the Vonage ConversationsClient API. The standard way to obtain an instance
+ * of this class is to use {@link VonageClient#getConversationsClient()}.
  */
 public class ConversationsClient {
 	final RestEndpoint<ListConversationsRequest, ListConversationsResponse> listConversations;
@@ -114,71 +114,193 @@ public class ConversationsClient {
 
 	// ENDPOINTS
 
+	/**
+	 *
+	 * @return
+	 *
+	 * @throws ConversationsResponseException
+	 */
 	public List<Conversation> listConversations() {
 		return listConversations(ListConversationsRequest.builder().pageSize(100).build()).getConversations();
 	}
 
+	/**
+	 *
+	 * @param filter
+	 *
+	 * @return
+	 *
+	 * @throws ConversationsResponseException
+	 */
 	public ListConversationsResponse listConversations(ListConversationsRequest filter) {
 		return listConversations.execute(validateRequest(filter));
 	}
 
+	/**
+	 *
+	 * @param request
+	 *
+	 * @return
+	 *
+	 * @throws ConversationsResponseException
+	 */
 	public Conversation createConversation(Conversation request) {
 		return createConversation.execute(validateRequest(request));
 	}
 
+	/**
+	 *
+	 * @param conversationId
+	 *
+	 * @return
+	 *
+	 * @throws ConversationsResponseException
+	 */
 	public Conversation getConversation(String conversationId) {
 		return getConversation.execute(validateConversationId(conversationId));
 	}
 
+	/**
+	 *
+	 * @param conversationId
+	 * @param request
+	 *
+	 * @return
+	 *
+	 * @throws ConversationsResponseException
+	 */
 	public Conversation updateConversation(String conversationId, Conversation request) {
 		validateRequest(request).id = validateConversationId(conversationId);
 		return updateConversation.execute(request);
 	}
 
+	/**
+	 *
+	 * @param conversationId
+	 *
+	 * @throws ConversationsResponseException
+	 */
 	public void deleteConversation(String conversationId) {
 		deleteConversation.execute(validateConversationId(conversationId));
 	}
 
+	/**
+	 *
+	 * @param userId
+	 *
+	 * @return
+	 *
+	 * @throws ConversationsResponseException
+	 */
 	public List<UserConversation> listUserConversations(String userId) {
 		return listUserConversations(userId,
 				ListUserConversationsRequest.builder().pageSize(100).build()
 		).getConversations();
 	}
 
+	/**
+	 *
+	 * @param userId
+	 * @param filter
+	 *
+	 * @return
+	 *
+	 * @throws ConversationsResponseException
+	 */
 	public ListUserConversationsResponse listUserConversations(String userId, ListUserConversationsRequest filter) {
 		validateRequest(filter).userId = validateUserId(userId);
 		return listUserConversations.execute(filter);
 	}
 
+	/**
+	 *
+	 * @param userId
+	 *
+	 * @return
+	 *
+	 * @throws ConversationsResponseException
+	 */
 	public List<UserSession> listUserSessions(String userId) {
 		return listUserSessions(userId, ListUserSessionsRequest.builder().pageSize(100).build()).getSessions();
 	}
 
+	/**
+	 *
+	 * @param userId
+	 * @param filter
+	 *
+	 * @return
+	 *
+	 * @throws ConversationsResponseException
+	 */
 	public ListUserSessionsResponse listUserSessions(String userId, ListUserSessionsRequest filter) {
 		validateRequest(filter).userId = validateUserId(userId);
 		return listUserSessions.execute(filter);
 	}
 
+	/**
+	 *
+	 * @param conversationId
+	 *
+	 * @return
+	 *
+	 * @throws ConversationsResponseException
+	 */
 	public List<BaseMember> listMembers(String conversationId) {
 		return listMembers(conversationId, ListMembersRequest.builder().pageSize(100).build()).getMembers();
 	}
 
+	/**
+	 *
+	 * @param conversationId
+	 * @param filter
+	 *
+	 * @return
+	 *
+	 * @throws ConversationsResponseException
+	 */
 	public ListMembersResponse listMembers(String conversationId, ListMembersRequest filter) {
 		validateRequest(filter).conversationId = validateConversationId(conversationId);
 		return listMembers.execute(filter);
 	}
 
+	/**
+	 *
+	 * @param conversationId
+	 * @param memberId
+	 *
+	 * @return
+	 *
+	 * @throws ConversationsResponseException
+	 */
 	public Member getMember(String conversationId, String memberId) {
 		return getMember.execute(new ConversationResourceRequestWrapper(
 				validateConversationId(conversationId), validateMemberId(memberId)
 		));
 	}
 
+	/**
+	 *
+	 * @param conversationId
+	 * @param request
+	 *
+	 * @return
+	 *
+	 * @throws ConversationsResponseException
+	 */
 	public Member createMember(String conversationId, Member request) {
 		validateRequest(request).setConversationId(validateConversationId(conversationId));
 		return createMember.execute(request);
 	}
 
+	/**
+	 *
+	 * @param request
+	 *
+	 * @return
+	 *
+	 * @throws ConversationsResponseException
+	 */
 	public Member updateMember(UpdateMemberRequest request) {
 		validateConversationId(validateRequest(request).conversationId);
 		validateMemberId(request.resourceId);

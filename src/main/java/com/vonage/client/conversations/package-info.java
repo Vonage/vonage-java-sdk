@@ -13,4 +13,9 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
+/**
+ * Implementation of the <a href=https://developer.vonage.com/en/conversation/overview>Conversation API</a>.
+ *
+ * @since 8.4.0
+ */
 package com.vonage.client.conversations;
