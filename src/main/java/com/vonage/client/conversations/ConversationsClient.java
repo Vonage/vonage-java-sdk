@@ -112,6 +112,11 @@ public class ConversationsClient {
 		return Objects.requireNonNull(request, "Request parameter is required.");
 	}
 
+	private static <F extends AbstractConversationsFilterRequest, B extends
+			AbstractConversationsFilterRequest.Builder<? extends F, ?>> F defaultFilterParams(B builder) {
+		return builder.pageSize(100).build();
+	}
+
 	// ENDPOINTS
 
 	/**
@@ -121,7 +126,7 @@ public class ConversationsClient {
 	 * @throws ConversationsResponseException
 	 */
 	public List<Conversation> listConversations() {
-		return listConversations(ListConversationsRequest.builder().pageSize(100).build()).getConversations();
+		return listConversations(defaultFilterParams(ListConversationsRequest.builder())).getConversations();
 	}
 
 	/**
@@ -194,7 +199,7 @@ public class ConversationsClient {
 	 */
 	public List<UserConversation> listUserConversations(String userId) {
 		return listUserConversations(userId,
-				ListUserConversationsRequest.builder().pageSize(100).build()
+				defaultFilterParams(ListUserConversationsRequest.builder())
 		).getConversations();
 	}
 
@@ -221,7 +226,7 @@ public class ConversationsClient {
 	 * @throws ConversationsResponseException
 	 */
 	public List<UserSession> listUserSessions(String userId) {
-		return listUserSessions(userId, ListUserSessionsRequest.builder().pageSize(100).build()).getSessions();
+		return listUserSessions(userId, defaultFilterParams(ListUserSessionsRequest.builder())).getSessions();
 	}
 
 	/**
