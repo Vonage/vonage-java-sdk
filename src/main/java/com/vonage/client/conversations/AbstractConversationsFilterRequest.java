@@ -30,8 +30,8 @@ abstract class AbstractConversationsFilterRequest extends HalFilterRequest {
 
     @Override
     protected Integer validatePageSize(Integer pageSize) {
-        if (pageSize != null && pageSize > 100) {
-            throw new IllegalArgumentException("Page size cannot exceed 100.");
+        if (pageSize != null && (pageSize < 1 || pageSize > 100)) {
+            throw new IllegalArgumentException("Page size must be between 1 and 100.");
         }
         return pageSize;
     }

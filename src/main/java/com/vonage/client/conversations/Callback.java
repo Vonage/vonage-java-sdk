@@ -28,7 +28,7 @@ import java.util.UUID;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Callback extends JsonableBaseObject {
+public final class Callback extends JsonableBaseObject {
 	private URI url;
 	private String eventMask;
 	private Params params;
@@ -120,7 +120,10 @@ public class Callback extends JsonableBaseObject {
 		return new Builder();
 	}
 
-	public static class Builder {
+	/**
+	 * Builder for creating Callback settings. All parameters are optional.
+	 */
+	public static final class Builder {
 		private URI url;
 		private String eventMask;
 		private HttpMethod method;
@@ -148,9 +151,9 @@ public class Callback extends JsonableBaseObject {
 		}
 
 		/**
+		 * Callback event mask.
 		 *
-		 *
-		 * @param eventMask
+		 * @param eventMask The event mask as a string.
 		 *
 		 * @return This builder.
 		 */
