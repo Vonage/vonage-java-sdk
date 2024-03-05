@@ -1246,6 +1246,26 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 		catch (VonageResponseParseException ex) {
 			assertEquals(IllegalStateException.class, ex.getCause().getCause().getClass());
 		}
+
+		for (var ct : ChannelType.values()) {
+			stubResponse(200, STR."{\"channel\":{\"type\":\"\{ct}\",\"from\":{}}}");
+			try {
+				var member = client.getMember(CONVERSATION_ID, MEMBER_ID);
+				var fromChannel = member.getChannel().getFrom();
+				assertEquals(fromChannel.getClass(), Channel.getConcreteClass(ct));
+				assertNull(fromChannel.getType());
+				fromChannel.setTypeField();
+				assertEquals(ct, fromChannel.getType());
+				fromChannel.removeTypeField();
+				assertNull(fromChannel.getType());
+			}
+			catch (VonageResponseParseException ex) {
+                if (ct != ChannelType.APP) {
+                    fail(ex);
+                }
+				assertEquals(IllegalStateException.class, ex.getCause().getCause().getClass());
+            }
+		}
 	}
 
 	@Test
