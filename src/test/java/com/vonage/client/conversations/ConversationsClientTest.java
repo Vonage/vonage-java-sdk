@@ -594,9 +594,15 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 			@Override
 			protected ListConversationsRequest sampleRequest() {
-				return ListConversationsRequest.builder()
+				var request =  ListConversationsRequest.builder()
 						.pageSize(PAGE_SIZE).order(ORDER)
 						.startDate(START_DATE).endDate(END_DATE).build();
+
+				// For maximum coverage
+				assertEquals(START_DATE, request.getStartDate());
+				assertEquals(END_DATE, request.getEndDate());
+				assertEquals(PAGE_SIZE, request.getPageSize());
+				return request;
 			}
 
 			@Override
@@ -632,11 +638,11 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 	@Test
 	public void testCreateConversationEndpoint() throws Exception {
 		new ConversationsEndpointTestSpec<Conversation, Conversation>() {
+			final HttpMethod method = HttpMethod.POST;
 			final String
 					eventMask = "Test value",
 					url = "http://example.com/callback",
 					nccoUrl = "http://example.com/ncco";
-			final CallbackHttpMethod method = CallbackHttpMethod.POST;
 
 			@Override
 			protected RestEndpoint<Conversation, Conversation> endpoint() {

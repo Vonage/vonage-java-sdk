@@ -15,7 +15,6 @@
  */
 package com.vonage.client.conversations;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
@@ -24,16 +23,6 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum OrderBy {
 	CREATED,
 	CUSTOM_SORT_KEY;
-
-	@JsonCreator
-	public static OrderBy fromString(String name) {
-		try {
-			return valueOf(name.toUpperCase());
-		}
-		catch (NullPointerException | IllegalArgumentException ex) {
-			return null;
-		}
-	}
 
 	@JsonValue
 	@Override

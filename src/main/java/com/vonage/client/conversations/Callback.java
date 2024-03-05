@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
+import com.vonage.client.common.HttpMethod;
 import java.net.URI;
 import java.util.UUID;
 
@@ -31,7 +32,7 @@ public class Callback extends JsonableBaseObject {
 	private URI url;
 	private String eventMask;
 	private Params params;
-	private CallbackHttpMethod method;
+	private HttpMethod method;
 
 	Callback() {}
 
@@ -40,7 +41,9 @@ public class Callback extends JsonableBaseObject {
 		if ((eventMask = builder.eventMask) != null && (eventMask.length() > 200 || eventMask.trim().isEmpty())) {
 			throw new IllegalArgumentException("Event mask must be between 1 and 200 characters");
 		}
-		method = builder.method;
+		if ((method = builder.method) != null && !(method == HttpMethod.POST || method == HttpMethod.GET)) {
+			throw new IllegalArgumentException("Callback HTTP method must be either POST or GET, not "+method);
+		}
 		params = builder.params;
 	}
 
@@ -70,12 +73,12 @@ public class Callback extends JsonableBaseObject {
 	}
 
 	/**
-	 * HTTP method to use for the callback.
+	 * Method to use for the callback, either {@linkplain HttpMethod#GET} or {@linkplain HttpMethod#POST}.
 	 * 
 	 * @return The HTTP method as an enum, or {@code null} if unspecified.
 	 */
 	@JsonProperty("method")
-	public CallbackHttpMethod getMethod() {
+	public HttpMethod getMethod() {
 		return method;
 	}
 
@@ -120,7 +123,7 @@ public class Callback extends JsonableBaseObject {
 	public static class Builder {
 		private URI url;
 		private String eventMask;
-		private CallbackHttpMethod method;
+		private HttpMethod method;
 		private Params params;
 
 		private Builder() {}
@@ -158,12 +161,13 @@ public class Callback extends JsonableBaseObject {
 
 		/**
 		 * HTTP method to use for the callback.
+		 * Must be either {@linkplain HttpMethod#GET} or {@linkplain HttpMethod#POST}.
 		 *
 		 * @param method The HTTP method as an enum, or {@code null} if unspecified.
 		 *
 		 * @return This builder.
 		 */
-		public Builder method(CallbackHttpMethod method) {
+		public Builder method(HttpMethod method) {
 			this.method = method;
 			return this;
 		}
