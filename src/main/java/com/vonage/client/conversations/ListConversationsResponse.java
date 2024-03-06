@@ -37,10 +37,10 @@ public final class ListConversationsResponse extends HalPageResponse {
 
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	static final class Embedded extends JsonableBaseObject {
-		private List<Conversation> conversations;
+		private List<BaseConversation> conversations;
 
 		@JsonProperty("conversations")
-		public List<Conversation> getConversations() {
+		public List<BaseConversation> getConversations() {
 			return conversations;
 		}
 	}
@@ -51,7 +51,7 @@ public final class ListConversationsResponse extends HalPageResponse {
 	 * @return The conversations for this page.
 	 */
 	@JsonIgnore
-	public List<Conversation> getConversations() {
+	public List<BaseConversation> getConversations() {
 		return _embedded != null ? _embedded.getConversations() : null;
 	}
 	

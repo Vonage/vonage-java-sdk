@@ -120,22 +120,30 @@ public class ConversationsClient {
 	// ENDPOINTS
 
 	/**
+	 * Retrieve the first 100 Conversations in the application. Note that the returned conversations are
+	 * incomplete, hence of type {@linkplain BaseConversation}. To get the full data, use the
+	 * {@link #getConversation(String)} method, passing in the ID from {@linkplain BaseConversation#getId()}.
 	 *
-	 * @return
+	 * @return A list of the first 100 conversations returned from the API, in default (ascending) order.
 	 *
-	 * @throws ConversationsResponseException
+	 * @throws ConversationsResponseException If the API call fails due to a bad request or internal server error.
+	 * @see #listConversations(ListConversationsRequest)
 	 */
-	public List<Conversation> listConversations() {
+	public List<BaseConversation> listConversations() {
 		return listConversations(defaultFilterParams(ListConversationsRequest.builder())).getConversations();
 	}
 
 	/**
+	 * Retrieve conversations in the application which match the specified filter criteria. Note that the
+	 * returned conversations in {@linkplain ListConversationsResponse#getConversations()} are incomplete,
+	 * hence type of {@linkplain BaseConversation}. To get the full data, use {@link #getConversation(String)}
+	 * method, passing in the ID from {@linkplain BaseConversation#getId()}.
 	 *
-	 * @param filter
+	 * @param filter Filter options to narrow down the results.
 	 *
-	 * @return
+	 * @return The search results along with HAL metadata.
 	 *
-	 * @throws ConversationsResponseException
+	 * @throws ConversationsResponseException If the API call fails due to a bad request or internal server error.
 	 */
 	public ListConversationsResponse listConversations(ListConversationsRequest filter) {
 		return listConversations.execute(validateRequest(filter));
