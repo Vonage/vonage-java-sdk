@@ -21,6 +21,7 @@ import com.vonage.client.Jsonable;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
+import java.util.Objects;
 
 /**
  * Options for updating a membership using {@link ConversationsClient#updateMember(UpdateMemberRequest)}.
@@ -34,7 +35,7 @@ public final class UpdateMemberRequest extends ConversationResourceRequestWrappe
 
 	UpdateMemberRequest(Builder builder) {
 		super(builder.conversationId, builder.memberId);
-		state = builder.state;
+		state = Objects.requireNonNull(builder.state, "State is required.");
 		from = builder.from;
 		reason = builder.reason;
 	}
@@ -43,7 +44,12 @@ public final class UpdateMemberRequest extends ConversationResourceRequestWrappe
 		@JsonProperty("code") String code;
 		@JsonProperty("text") String text;
 	}
-	
+
+	/**
+	 * State to transition the member into.
+	 *
+	 * @return The updated state as an enum.
+	 */
 	@JsonProperty("state")
 	public MemberState getState() {
 		return state;
@@ -64,11 +70,21 @@ public final class UpdateMemberRequest extends ConversationResourceRequestWrappe
 		return reason != null ? reason.text : null;
 	}
 
+	/**
+	 * Unique Conversation identifier.
+	 *
+	 * @return The conversation ID.
+	 */
 	@JsonIgnore
 	public String getConversationId() {
 		return conversationId;
 	}
 
+	/**
+	 * Unique Member identifier.
+	 *
+	 * @return The member ID.
+	 */
 	@JsonIgnore
 	public String getMemberId() {
 		return resourceId;
@@ -118,9 +134,9 @@ public final class UpdateMemberRequest extends ConversationResourceRequestWrappe
 		}
 
 		/**
-		 * 
+		 * (REQUIRED) State to transition the member into.
 		 *
-		 * @param state 
+		 * @param state The updated state as an enum.
 		 *
 		 * @return This builder.
 		 */
