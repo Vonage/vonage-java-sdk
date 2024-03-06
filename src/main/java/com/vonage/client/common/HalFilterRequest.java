@@ -65,7 +65,7 @@ public abstract class HalFilterRequest implements QueryParamsRequest {
 
 	@Override
 	public Map<String, String> makeParams() {
-		Map<String, String> params = new LinkedHashMap<>(8);
+		Map<String, String> params = new LinkedHashMap<>();
 		if (cursor != null) {
 			params.put("cursor", cursor);
 		}

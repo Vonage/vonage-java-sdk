@@ -27,7 +27,7 @@ import java.util.UUID;
 import java.util.function.Function;
 
 /**
- * A client for talking to the Vonage ConversationsClient API. The standard way to obtain an instance
+ * A client for communicating with the Vonage Conversations API. The standard way to obtain an instance
  * of this class is to use {@link VonageClient#getConversationsClient()}.
  */
 public class ConversationsClient {
@@ -126,7 +126,7 @@ public class ConversationsClient {
 	 *
 	 * @return A list of the first 100 conversations returned from the API, in default (ascending) order.
 	 *
-	 * @throws ConversationsResponseException If the API call fails due to a bad request or internal server error.
+	 * @throws ConversationsResponseException If the API call fails due to a bad request (400).
 	 * @see #listConversations(ListConversationsRequest)
 	 */
 	public List<BaseConversation> listConversations() {
@@ -139,11 +139,11 @@ public class ConversationsClient {
 	 * hence type of {@linkplain BaseConversation}. To get the full data, use {@link #getConversation(String)}
 	 * method, passing in the ID from {@linkplain BaseConversation#getId()}.
 	 *
-	 * @param filter Filter options to narrow down the results.
+	 * @param filter Filter options to narrow down the search results.
 	 *
 	 * @return The search results along with HAL metadata.
 	 *
-	 * @throws ConversationsResponseException If the API call fails due to a bad request or internal server error.
+	 * @throws ConversationsResponseException If the API call fails due to a bad request (400).
 	 */
 	public ListConversationsResponse listConversations(ListConversationsRequest filter) {
 		return listConversations.execute(validateRequest(filter));
@@ -176,6 +176,7 @@ public class ConversationsClient {
 	}
 
 	/**
+	 * Update an existing conversation's settings / parameters.
 	 *
 	 * @param conversationId Unique conversation identifier.
 	 * @param request Conversation object with the updated parameters. Any fields not set will be unchanged.
@@ -202,12 +203,16 @@ public class ConversationsClient {
 	}
 
 	/**
+	 * List the first 100 conversations for a given user.
 	 *
-	 * @param userId
+	 * @param userId Unique identifier for the user.
 	 *
-	 * @return
+	 * @return The list of conversations the specified user is in, with default (ascending) order.
 	 *
-	 * @throws ConversationsResponseException
+	 * @throws ConversationsResponseException If the user was not found (404), or any other API error.
+	 *
+	 * @see #listUserConversations(String, ListUserConversationsRequest)
+	 * @see com.vonage.client.users
 	 */
 	public List<UserConversation> listUserConversations(String userId) {
 		return listUserConversations(userId,
@@ -216,13 +221,17 @@ public class ConversationsClient {
 	}
 
 	/**
+	 * List the first 100 conversations for a given user.
 	 *
-	 * @param userId
-	 * @param filter
+	 * @param userId Unique identifier for the user.
+	 * @param filter Filter options to narrow down the search results.
 	 *
-	 * @return
+	 * @return The wrapped list of user conversations, along with HAL metadata.
 	 *
-	 * @throws ConversationsResponseException
+	 * @throws ConversationsResponseException If the user was not found (404),
+	 * the filter options were invalid (400) or any other API error.
+	 *
+	 * @see com.vonage.client.users
 	 */
 	public ListUserConversationsResponse listUserConversations(String userId, ListUserConversationsRequest filter) {
 		validateRequest(filter).userId = validateUserId(userId);
@@ -230,25 +239,33 @@ public class ConversationsClient {
 	}
 
 	/**
+	 * List the first 100 sessions for a given user.
 	 *
-	 * @param userId
+	 * @param userId Unique identifier for the user.
 	 *
-	 * @return
+	 * @return The list of sessions pertaining to the specified user in default (ascending) order.
 	 *
-	 * @throws ConversationsResponseException
+	 * @throws ConversationsResponseException If the user was not found (404), or any other API error.
+	 *
+	 * @see #listUserSessions(String, ListUserSessionsRequest)
+	 * @see com.vonage.client.users
 	 */
 	public List<UserSession> listUserSessions(String userId) {
 		return listUserSessions(userId, defaultFilterParams(ListUserSessionsRequest.builder())).getSessions();
 	}
 
 	/**
+	 * Retrieve Sessions associated with a particular User which match the specified filter criteria.
 	 *
-	 * @param userId
-	 * @param filter
+	 * @param userId Unique identifier for the user.
+	 * @param filter Filter options to narrow down the search results.
 	 *
-	 * @return
+	 * @return The wrapped list of user sessions, along with HAL metadata.
 	 *
-	 * @throws ConversationsResponseException
+	 * @throws ConversationsResponseException If the user was not found (404),
+	 * the filter options were invalid (400) or any other API error.
+	 *
+	 * @see com.vonage.client.users
 	 */
 	public ListUserSessionsResponse listUserSessions(String userId, ListUserSessionsRequest filter) {
 		validateRequest(filter).userId = validateUserId(userId);
@@ -256,25 +273,34 @@ public class ConversationsClient {
 	}
 
 	/**
+	 * List the first 100 Members for a given Conversation. Note that the returned members are
+	 * incomplete, hence of type {@linkplain BaseMember}. To get the full data, use the
+	 * {@link #getMember(String, String)} method, passing in the ID from {@linkplain BaseMember#getId()}.
 	 *
-	 * @param conversationId
+	 * @param conversationId Unique conversation identifier.
 	 *
-	 * @return
+	 * @return The list of members
 	 *
-	 * @throws ConversationsResponseException
+	 * @throws ConversationsResponseException If the conversation was not found (404), or any other API error.
+	 *
+	 * @see #listMembers(String, ListMembersRequest)
 	 */
 	public List<BaseMember> listMembers(String conversationId) {
 		return listMembers(conversationId, ListMembersRequest.builder().pageSize(100).build()).getMembers();
 	}
 
 	/**
+	 * Retrieve Members associated with a particular Conversation which match the specified filter criteria. Note
+	 * that the returned members are incomplete, hence of type {@linkplain BaseMember}. To get the full data, use
+	 * the {@link #getMember(String, String)} method, passing in the ID from {@linkplain BaseMember#getId()}.
 	 *
-	 * @param conversationId
-	 * @param filter
+	 * @param conversationId Unique conversation identifier.
+	 * @param filter Filter options to narrow down the search results.
 	 *
-	 * @return
+	 * @return The wrapped list of Members, along with HAL metadata.
 	 *
-	 * @throws ConversationsResponseException
+	 * @throws ConversationsResponseException If the conversation was not found (404),
+	 * the filter options were invalid (400) or any other API error.
 	 */
 	public ListMembersResponse listMembers(String conversationId, ListMembersRequest filter) {
 		validateRequest(filter).conversationId = validateConversationId(conversationId);
@@ -282,13 +308,14 @@ public class ConversationsClient {
 	}
 
 	/**
+	 * Retrieve a conversation Member by its ID.
 	 *
-	 * @param conversationId
-	 * @param memberId
+	 * @param conversationId Unique conversation identifier.
+	 * @param memberId Unique identifier for the member.
 	 *
-	 * @return
+	 * @return Details of the member corresponding to the specified ID.
 	 *
-	 * @throws ConversationsResponseException
+	 * @throws ConversationsResponseException If the conversation or member was not found (404), or any other API error.
 	 */
 	public Member getMember(String conversationId, String memberId) {
 		return getMember.execute(new ConversationResourceRequestWrapper(
@@ -297,13 +324,15 @@ public class ConversationsClient {
 	}
 
 	/**
+	 * Creates a new Member for the specified conversation.
 	 *
-	 * @param conversationId
-	 * @param request
+	 * @param conversationId Unique conversation identifier.
+	 * @param request The Members parameters. Use {@link Member#builder()}, remember to set the mandatory parameters.
 	 *
-	 * @return
+	 * @return The created Member response with additional fields populated.
 	 *
-	 * @throws ConversationsResponseException
+	 * @throws ConversationsResponseException If the conversation was not found (404),
+	 * the request parameters were invalid (400) or any other API error.
 	 */
 	public Member createMember(String conversationId, Member request) {
 		validateRequest(request).setConversationId(validateConversationId(conversationId));
@@ -311,12 +340,15 @@ public class ConversationsClient {
 	}
 
 	/**
+	 * Update an existing member's state.
 	 *
-	 * @param request
+	 * @param request Details of the member to update. Use {@link UpdateMemberRequest#builder()},
+	 *                remember to set the mandatory parameters, including the conversation and member IDs.
 	 *
-	 * @return
+	 * @return The updated Member object response.
 	 *
-	 * @throws ConversationsResponseException
+	 * @throws ConversationsResponseException If the conversation or member were not found (404),
+	 * the request parameters were invalid (400) or any other API error.
 	 */
 	public Member updateMember(UpdateMemberRequest request) {
 		validateConversationId(validateRequest(request).conversationId);

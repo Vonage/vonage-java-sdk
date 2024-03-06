@@ -64,6 +64,16 @@ public final class UpdateMemberRequest extends ConversationResourceRequestWrappe
 		return reason != null ? reason.text : null;
 	}
 
+	@JsonIgnore
+	public String getConversationId() {
+		return conversationId;
+	}
+
+	@JsonIgnore
+	public String getMemberId() {
+		return resourceId;
+	}
+
 	/**
 	 * Entry point for constructing an instance of this class.
 	 * 
@@ -72,20 +82,36 @@ public final class UpdateMemberRequest extends ConversationResourceRequestWrappe
 	public static Builder builder() {
 		return new Builder();
 	}
-	
+
+	/**
+	 * Builder for constructing an UpdateMemberRequest. Note the mandatory parameters.
+	 */
 	public static final class Builder {
-		private String conversationId, memberId;
+		private String conversationId, memberId, from;
 		private MemberState state;
-		private String from;
 		private Reason reason;
 	
 		Builder() {}
 
+		/**
+		 * (REQUIRED) Unique conversation identifier.
+		 *
+		 * @param conversationId The conversation ID.
+		 *
+		 * @return This builder.
+		 */
 		public Builder conversationId(String conversationId) {
 			this.conversationId = conversationId;
 			return this;
 		}
 
+		/**
+		 * (REQUIRED) Unique member identifier.
+		 *
+		 * @param memberId The member ID.
+		 *
+		 * @return This builder.
+		 */
 		public Builder memberId(String memberId) {
 			this.memberId = memberId;
 			return this;

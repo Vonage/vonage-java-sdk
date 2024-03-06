@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+# [8.4.0] - 2024-03-??
+- Added Conversations API implementation
+- Type inference for User channels (`com.vonage.client.users.channels`)
+  - Added `com.vonage.client.common.ChannelType` enum
+  - Added `@JsonSubTypes` for improved deserialisation support
+  - Added `type` field to `Channel`
+    - Methods `setTypeField()` and `removeTypeField()` for automatically setting / unsetting based on the class
+- New class `com.vonage.client.common.HalFilterRequest`
+  - Added `com.vonage.client.common.SortOrder`
+  - Used for grouping common "List*Request" fields
+
 # [8.3.0] - 2024-02-12
 - Made `from` parameter mandatory in Verify v2 WhatsApp workflows
 - Added `com.vonage.client.sms.MessageEvent` for SMS webhooks
