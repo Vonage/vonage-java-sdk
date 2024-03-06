@@ -26,11 +26,13 @@ import java.util.Map;
  * @since 8.4.0
  */
 public abstract class HalFilterRequest implements QueryParamsRequest {
+	protected final String cursor;
 	protected final Integer page, pageSize;
 	protected final SortOrder order;
 	protected final Instant startDate, endDate;
 
 	protected HalFilterRequest(Builder<?, ?> builder) {
+		cursor = builder.cursor;
 		page = validatePage(builder.page);
 		pageSize = validatePageSize(builder.pageSize);
 		order = builder.order;
@@ -46,8 +48,8 @@ public abstract class HalFilterRequest implements QueryParamsRequest {
 	}
 
 	protected Integer validatePageSize(Integer pageSize) {
-		if (pageSize != null && pageSize > 1000) {
-			throw new IllegalArgumentException("Page size cannot exceed 1000.");
+		if (pageSize != null && (pageSize < 1 || pageSize > 1000)) {
+			throw new IllegalArgumentException("Page size must be between 1 and 1000.");
 		}
 		return pageSize;
 	}
@@ -56,13 +58,17 @@ public abstract class HalFilterRequest implements QueryParamsRequest {
 		this.page = page;
 		this.pageSize = pageSize;
 		this.order = order;
+		cursor = null;
 		startDate = null;
 		endDate = null;
 	}
 
 	@Override
 	public Map<String, String> makeParams() {
-		Map<String, String> params = new LinkedHashMap<>(4);
+		Map<String, String> params = new LinkedHashMap<>(8);
+		if (cursor != null) {
+			params.put("cursor", cursor);
+		}
 		if (page != null) {
 			params.put("page", page.toString());
 		}
@@ -120,11 +126,35 @@ public abstract class HalFilterRequest implements QueryParamsRequest {
 		return endDate;
 	}
 
+	/**
+	 * The cursor to start returning results from. This can be obtained from
+	 * the URL in the relevant section from {@link HalPageResponse#getLinks()}.
+	 *
+	 * @return The page navigation cursor as a string, or {@code null} if unspecified.
+	 */
+	protected String getCursor() {
+		return cursor;
+	}
+
 	@SuppressWarnings("unchecked")
 	protected abstract static class Builder<F extends HalFilterRequest, B extends Builder<? extends F, ? extends B>> {
+		protected String cursor;
 		protected Integer page, pageSize;
 		protected SortOrder order;
 		protected Instant startDate, endDate;
+
+		/**
+		 * The cursor to start returning results from. This can be obtained from the URL in the
+		 * relevant section from {@link HalPageResponse#getLinks()}.
+		 *
+		 * @param cursor The page navigation cursor as a string.
+		 *
+		 * @return This builder.
+		 */
+		protected B cursor(String cursor) {
+			this.cursor = cursor;
+			return (B) this;
+		}
 
 		/**
 		 * Page to navigate to in the response.

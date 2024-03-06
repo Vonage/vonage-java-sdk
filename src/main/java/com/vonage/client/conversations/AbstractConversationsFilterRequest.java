@@ -43,6 +43,11 @@ abstract class AbstractConversationsFilterRequest extends HalFilterRequest {
     }
 
     @Override
+    public String getCursor() {
+        return super.getCursor();
+    }
+
+    @Override
     public Map<String, String> makeParams() {
         Map<String, String> params = super.makeParams();
         if (startDate != null) {
@@ -78,6 +83,11 @@ abstract class AbstractConversationsFilterRequest extends HalFilterRequest {
         @Override
         public B order(SortOrder order) {
             return super.order(order);
+        }
+
+        @Override
+        public B cursor(String cursor) {
+            return super.cursor(cursor);
         }
     }
 }

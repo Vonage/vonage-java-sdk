@@ -150,24 +150,26 @@ public class ConversationsClient {
 	}
 
 	/**
+	 * Creates a new Conversation within the application.
 	 *
-	 * @param request
+	 * @param request The Conversation parameters. Use {@code Conversation.builder().build()} for default settings.
 	 *
-	 * @return
+	 * @return The created Conversation response with additional fields populated.
 	 *
-	 * @throws ConversationsResponseException
+	 * @throws ConversationsResponseException If the Conversation name already exists (409), or any other API error.
 	 */
 	public Conversation createConversation(Conversation request) {
 		return createConversation.execute(validateRequest(request));
 	}
 
 	/**
+	 * Retrieve a conversation by its ID.
 	 *
-	 * @param conversationId
+	 * @param conversationId Unique identifier of the conversation to look up.
 	 *
-	 * @return
+	 * @return Details of the conversation corresponding to the specified ID.
 	 *
-	 * @throws ConversationsResponseException
+	 * @throws ConversationsResponseException If the conversation was not found (404), or any other API error.
 	 */
 	public Conversation getConversation(String conversationId) {
 		return getConversation.execute(validateConversationId(conversationId));
@@ -175,12 +177,13 @@ public class ConversationsClient {
 
 	/**
 	 *
-	 * @param conversationId
-	 * @param request
+	 * @param conversationId Unique conversation identifier.
+	 * @param request Conversation object with the updated parameters. Any fields not set will be unchanged.
 	 *
-	 * @return
+	 * @return The full updated conversation details.
 	 *
-	 * @throws ConversationsResponseException
+	 * @throws ConversationsResponseException If the conversation was not found (404)
+	 * or the parameters are invalid (400), e.g. the updated name already exists (409).
 	 */
 	public Conversation updateConversation(String conversationId, Conversation request) {
 		validateRequest(request).id = validateConversationId(conversationId);
@@ -188,10 +191,11 @@ public class ConversationsClient {
 	}
 
 	/**
+	 * Delete an existing conversation by ID.
 	 *
-	 * @param conversationId
+	 * @param conversationId Unique conversation identifier.
 	 *
-	 * @throws ConversationsResponseException
+	 * @throws ConversationsResponseException If the conversation was not found (404), or any other API error.
 	 */
 	public void deleteConversation(String conversationId) {
 		deleteConversation.execute(validateConversationId(conversationId));

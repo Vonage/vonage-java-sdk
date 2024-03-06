@@ -89,7 +89,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			CONVERSATION_TYPE = "quick_chat",
 			CONVERSATION_CUSTOM_SORT_KEY = "CSK_1",
 			CONVERSATION_CUSTOM_DATA_STR = "{\"property1\":\"value1\",\"prop2\":\"Val 2\"}",
-			CONVERSATION_CURSOR = "7EjDNQrAcipmOnc0HCzpQRkhBULzY44ljGUX4lXKyUIVfiZay5pv9wg=",
+			REQUEST_CURSOR = "7EjDNQrAcipmOnc0HCzpQRkhBULzY44ljGUX4lXKyUIVfiZay5pv9wg=",
 			SAMPLE_BASE_CONVERSATION_RESPONSE_PARTIAL = STR."""
 				{
 				   "id": "\{CONVERSATION_ID}",
@@ -623,13 +623,14 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			@Override
 			protected ListConversationsRequest sampleRequest() {
 				return ListConversationsRequest.builder()
-						.pageSize(PAGE_SIZE).order(ORDER)
+						.pageSize(PAGE_SIZE).order(ORDER).cursor(REQUEST_CURSOR)
 						.startDate(START_DATE).endDate(END_DATE).build();
 			}
 
 			@Override
 			protected Map<String, String> sampleQueryParams() {
 				return Map.of(
+						"cursor", REQUEST_CURSOR,
 						"page_size", String.valueOf(PAGE_SIZE),
 						"order", String.valueOf(ORDER),
 						"date_start", START_DATE_STR,
@@ -647,6 +648,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 			void testSampleRequestGetters() {
 				var request = sampleRequest();
+				assertEquals(REQUEST_CURSOR, request.getCursor());
 				assertEquals(START_DATE, request.getStartDate());
 				assertEquals(END_DATE, request.getEndDate());
 				assertEquals(PAGE_SIZE, request.getPageSize());
@@ -655,10 +657,14 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 			void testEmptyRequest() {
 				var request =  ListConversationsRequest.builder().build();
+				assertNull(request.getCursor());
 				assertNull(request.getPageSize());
 				assertNull(request.getOrder());
 				assertNull(request.getStartDate());
 				assertNull(request.getEndDate());
+				var toMap = request.makeParams();
+				assertNotNull(toMap);
+				assertEquals(0, toMap.size());
 			}
 
 			void testPageSizeLimit() {
@@ -1051,12 +1057,11 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			@Override
 			protected ListUserConversationsRequest sampleRequest() {
 				var request = ListUserConversationsRequest.builder()
-						.state(MemberState.INVITED)
-						.orderBy(OrderBy.CUSTOM_SORT_KEY)
-						.includeCustomData(true)
-						.startDate(START_DATE)
-						.build();
+						.state(MemberState.INVITED).includeCustomData(true)
+						.orderBy(OrderBy.CUSTOM_SORT_KEY).startDate(START_DATE)
+						.cursor(REQUEST_CURSOR).build();
 
+				assertEquals(REQUEST_CURSOR, request.getCursor());
 				assertEquals(MemberState.INVITED, request.getState());
 				assertEquals(OrderBy.CUSTOM_SORT_KEY, request.getOrderBy());
 				assertTrue(request.getIncludeCustomData());
@@ -1069,6 +1074,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			@Override
 			protected Map<String, String> sampleQueryParams() {
 				return Map.of(
+						"cursor", REQUEST_CURSOR,
 						"state", "INVITED",
 						"order_by", "custom_sort_key",
 						"include_custom_data", "true",
@@ -1197,7 +1203,8 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 			@Override
 			protected ListMembersRequest sampleRequest() {
-				var request = ListMembersRequest.builder().pageSize(PAGE_SIZE).order(ORDER).build();
+				var request = ListMembersRequest.builder()
+						.pageSize(PAGE_SIZE).order(ORDER).cursor(REQUEST_CURSOR).build();
 				request.conversationId = CONVERSATION_ID;
 				return request;
 			}
@@ -1205,6 +1212,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			@Override
 			protected Map<String, String> sampleQueryParams() {
 				return Map.of(
+					"cursor", REQUEST_CURSOR,
 					"page_size", String.valueOf(PAGE_SIZE),
 					"order", ORDER_STR
 				);
