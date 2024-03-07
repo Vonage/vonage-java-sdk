@@ -35,9 +35,14 @@ public final class UpdateMemberRequest extends ConversationResourceRequestWrappe
 
 	UpdateMemberRequest(Builder builder) {
 		super(builder.conversationId, builder.memberId);
-		state = Objects.requireNonNull(builder.state, "State is required.");
+		switch (state = Objects.requireNonNull(builder.state, "State is required.")) {
+			case JOINED: case LEFT: break;
+			default: throw new IllegalArgumentException("Invalid state: "+state);
+		}
+		if ((reason = builder.reason) != null && state != MemberState.LEFT) {
+			throw new IllegalStateException("Reason is only applicable when leaving.");
+		}
 		from = builder.from;
-		reason = builder.reason;
 	}
 
 	static final class Reason extends JsonableBaseObject {
@@ -55,16 +60,31 @@ public final class UpdateMemberRequest extends ConversationResourceRequestWrappe
 		return state;
 	}
 
+	/**
+	 * TODO document this.
+	 *
+	 * @return The from, or {@code null} if unspecified.
+	 */
 	@JsonProperty("from")
 	public String getFrom() {
 		return from;
 	}
 
+	/**
+	 * Reason code for leaving. Only applicable when {@linkplain #getState()} is {@linkplain MemberState#LEFT}.
+	 *
+	 * @return The reason code, or {@code null} if unspecified / not applicable.
+	 */
 	@JsonIgnore
 	public String getCode() {
 		return reason != null ? reason.code : null;
 	}
 
+	/**
+	 * Reason text for leaving. Only applicable when {@linkplain #getState()} is {@linkplain MemberState#LEFT}.
+	 *
+	 * @return The reason text, or {@code null} if unspecified / not applicable.
+	 */
 	@JsonIgnore
 	public String getText() {
 		return reason != null ? reason.text : null;
@@ -146,9 +166,9 @@ public final class UpdateMemberRequest extends ConversationResourceRequestWrappe
 		}
 
 		/**
-		 * 
+		 * TODO document this
 		 *
-		 * @param from 
+		 * @param from The from (??)
 		 *
 		 * @return This builder.
 		 */
@@ -158,9 +178,10 @@ public final class UpdateMemberRequest extends ConversationResourceRequestWrappe
 		}
 
 		/**
+		 * Reason code for leaving.
+		 * Only applicable when {@linkplain #state(MemberState)} is {@linkplain MemberState#LEFT}.
 		 *
-		 *
-		 * @param code
+		 * @param code The reason code as a string.
 		 *
 		 * @return This builder.
 		 */
@@ -171,9 +192,10 @@ public final class UpdateMemberRequest extends ConversationResourceRequestWrappe
 		}
 
 		/**
+		 * Reason text for leaving.
+		 * Only applicable when {@linkplain #state(MemberState)} is {@linkplain MemberState#LEFT}.
 		 *
-		 *
-		 * @param text
+		 * @param text The reason text.
 		 *
 		 * @return This builder.
 		 */

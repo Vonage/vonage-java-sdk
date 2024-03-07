@@ -1447,6 +1447,8 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 	@Test
 	public void testUpdateMemberEndpoint() throws Exception {
 		new ConversationsEndpointTestSpec<UpdateMemberRequest, Member>() {
+			final Supplier<UpdateMemberRequest.Builder> builderFactoryNoState = () ->
+					UpdateMemberRequest.builder().conversationId(CONVERSATION_ID).memberId(MEMBER_ID);
 
 			@Override
 			protected RestEndpoint<UpdateMemberRequest, Member> endpoint() {
@@ -1465,8 +1467,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 			@Override
 			protected UpdateMemberRequest sampleRequest() {
-				return UpdateMemberRequest.builder()
-						.conversationId(CONVERSATION_ID).memberId(MEMBER_ID)
+				return builderFactoryNoState.get()
 						.state(MemberState.LEFT).from(MEMBER_FROM)
 						.code(REASON_CODE).text(REASON_TEXT).build();
 			}
@@ -1477,6 +1478,52 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 				return STR."""
 					{"state":"LEFT","from":"\{req.getFrom()}",\
 					"reason":{"code":"\{req.getCode()}","text":"\{req.getText()}"}}""";
+			}
+
+			@Override
+			public void runTests() throws Exception {
+				super.runTests();
+				testInvalidState();
+				testReasonCodeIsValidForLeftStateOnly();
+				testReasonTextIsValidForLeftStateOnly();
+			}
+
+			void testInvalidState() {
+				for (var state : MemberState.values()) {
+					var builder = builderFactoryNoState.get().state(state);
+					switch (state) {
+						case LEFT, JOINED -> assertEquals(state, builder.build().getState());
+						default -> assertThrows(IllegalArgumentException.class, builder::build);
+					}
+				}
+			}
+
+			void testReasonCodeIsValidForLeftStateOnly() {
+				var builder = builderFactoryNoState.get().code(REASON_CODE);
+				assertThrows(NullPointerException.class, builder::build);
+				var valid = builder.state(MemberState.LEFT).build();
+				assertEquals(REASON_CODE, valid.getCode());
+				assertEquals(MemberState.LEFT, valid.getState());
+				assertEquals(MEMBER_ID, valid.getMemberId());
+				assertEquals(CONVERSATION_ID, valid.getConversationId());
+				assertNull(valid.getFrom());
+				assertNull(valid.getText());
+				builder.state(MemberState.JOINED);
+				assertThrows(IllegalStateException.class, builder::build);
+			}
+
+			void testReasonTextIsValidForLeftStateOnly() {
+				var builder = builderFactoryNoState.get().text(REASON_TEXT);
+				assertThrows(NullPointerException.class, builder::build);
+				var valid = builder.state(MemberState.LEFT).build();
+				assertEquals(REASON_TEXT, valid.getText());
+				assertEquals(MemberState.LEFT, valid.getState());
+				assertEquals(MEMBER_ID, valid.getMemberId());
+				assertEquals(CONVERSATION_ID, valid.getConversationId());
+				assertNull(valid.getFrom());
+				assertNull(valid.getCode());
+				builder.state(MemberState.JOINED);
+				assertThrows(IllegalStateException.class, builder::build);
 			}
 		}
 		.runTests();
