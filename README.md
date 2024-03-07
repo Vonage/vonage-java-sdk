@@ -51,9 +51,9 @@ See all of our SDKs and integrations on the [Vonage Developer portal](https://de
 
 ## Installation
 
-Releases are published to [Maven Central](https://central.sonatype.com/artifact/com.vonage/server-sdk/8.3.0/snippets).
+Releases are published to [Maven Central](https://central.sonatype.com/artifact/com.vonage/server-sdk/8.4.0/snippets).
 Instructions for your build system can be found in the snippets section.
-They're also available from [here](https://mvnrepository.com/artifact/com.vonage/server-sdk/8.3.0).
+They're also available from [here](https://mvnrepository.com/artifact/com.vonage/server-sdk/8.4.0).
 Release notes can be found in the [changelog](CHANGELOG.md).
 
 ### Build It Yourself
