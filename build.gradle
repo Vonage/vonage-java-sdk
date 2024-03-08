@@ -28,7 +28,7 @@ dependencies {
     implementation "org.apache.httpcomponents:httpmime:$httpclientVersion"
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion"
-    implementation "com.vonage:jwt:1.1.0"
+    implementation "com.vonage:jwt:1.1.1"
 
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
