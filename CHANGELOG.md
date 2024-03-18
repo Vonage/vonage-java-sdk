@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - New class `com.vonage.client.common.HalFilterRequest`
   - Added `com.vonage.client.common.SortOrder`
   - Used for grouping common "List*Request" fields
+- Bumped Jackson version to 2.17.0
+- Bumped JWT library version to 1.1.1
 
 # [8.3.0] - 2024-02-12
 - Made `from` parameter mandatory in Verify v2 WhatsApp workflows

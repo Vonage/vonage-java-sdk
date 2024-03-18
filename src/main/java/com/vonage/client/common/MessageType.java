@@ -13,19 +13,19 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.messages;
+package com.vonage.client.common;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * Represents the media type of the message.
+ * Represents a message media type.
  *
- * @deprecated Will be replaced by {@link com.vonage.client.common.MessageType} in the next major release.
+ * @since 8.4.0
  */
-@Deprecated
 public enum MessageType {
-	TEXT, IMAGE, AUDIO, VIDEO, FILE, VCARD, TEMPLATE, CUSTOM, LOCATION, STICKER, UNSUPPORTED, REPLY, ORDER;
+	TEXT, IMAGE, AUDIO, VIDEO, FILE, VCARD, TEMPLATE, CUSTOM,
+	LOCATION, STICKER, UNSUPPORTED, REPLY, ORDER, RANDOM;
 
 	@JsonCreator
 	public static MessageType fromString(String value) {
