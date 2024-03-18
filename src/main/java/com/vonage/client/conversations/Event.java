@@ -19,7 +19,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.users.User;
 import java.time.Instant;
@@ -29,14 +28,14 @@ import java.time.Instant;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Event {
+public abstract class Event extends JsonableBaseObject {
 	@JsonIgnore String conversationId;
 	@JsonProperty("id") private Integer id;
 	@JsonProperty("type") private EventType type;
 	@JsonProperty("from") private String from;
 	@JsonProperty("timestamp") private Instant timestamp;
 	@JsonProperty("_embedded") private Embedded _embedded;
-	@JsonProperty("body") private AbstractEventBody body;
+	@JsonProperty("body") private Object body;
 
 	private static class Embedded extends JsonableBaseObject {
 		@JsonProperty("from_user") User fromUser;
@@ -46,7 +45,7 @@ public class Event {
 	protected Event() {
 	}
 
-	Event(Builder builder) {
+	Event(Builder<?, ?> builder) {
 		type = builder.type;
 		from = builder.from;
 		body = builder.body;
@@ -113,46 +112,23 @@ public class Event {
 	 * 
 	 * @return The event body object, or {@code null} if absent
 	 */
-	public AbstractEventBody getBody() {
+	public Object getBody() {
 		return body;
 	}
 
-	/**
-	 * Creates an instance of this class from a JSON payload.
-	 *
-	 * @param json The JSON string to parse.
-	 * @return An instance of this class with the fields populated, if present.
-	 */
-	public static Event fromJson(String json) {
-		return Jsonable.fromJson(json);
-	}
-
-	/**
-	 * Entry point for constructing an instance of this class.
-	 * 
-	 * @return A new Builder.
-	 */
-	public static Builder builder() {
-		return new Builder();
-	}
-	
-	public static class Builder {
-		private EventType type;
+	@SuppressWarnings("unchecked")
+	public abstract static class Builder<E extends Event, B extends Builder<? extends E, ? extends B>> {
+		private final EventType type;
 		private String from;
 		private AbstractEventBody body;
-	
-		Builder() {}
-	
+
 		/**
-		 * Type of event.
+		 * Construct a new builder for a given event type.
 		 *
 		 * @param type The event type as an enum.
-		 *
-		 * @return This builder.
 		 */
-		public Builder type(EventType type) {
+		protected Builder(EventType type) {
 			this.type = type;
-			return this;
 		}
 
 		/**
@@ -162,9 +138,9 @@ public class Event {
 		 *
 		 * @return This builder.
 		 */
-		public Builder from(String from) {
+		public B from(String from) {
 			this.from = from;
-			return this;
+			return (B) this;
 		}
 
 		/**
@@ -174,9 +150,9 @@ public class Event {
 		 *
 		 * @return This builder.
 		 */
-		public Builder body(AbstractEventBody body) {
+		public B body(AbstractEventBody body) {
 			this.body = body;
-			return this;
+			return (B) this;
 		}
 
 		/**
@@ -184,8 +160,6 @@ public class Event {
 		 *
 		 * @return An instance of Event, populated with all fields from this builder.
 		 */
-		public Event build() {
-			return new Event(this);
-		}
+		public abstract E build();
 	}
 }
