@@ -19,7 +19,6 @@ package com.vonage.client.conversations;
  * Represents filter options for {@link ConversationsClient#listMembers(String, ListMembersRequest)}.
  */
 public final class ListMembersRequest extends AbstractConversationsFilterRequest {
-	String conversationId;
 
 	ListMembersRequest(Builder builder) {
 		super(builder);

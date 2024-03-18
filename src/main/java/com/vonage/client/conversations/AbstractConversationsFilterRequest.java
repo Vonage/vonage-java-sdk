@@ -21,6 +21,7 @@ import java.time.Instant;
 import java.util.Map;
 
 abstract class AbstractConversationsFilterRequest extends HalFilterRequest {
+    String conversationId;
 
     protected AbstractConversationsFilterRequest(Builder<
             ? extends AbstractConversationsFilterRequest,

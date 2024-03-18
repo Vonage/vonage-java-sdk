@@ -42,6 +42,10 @@ public class ConversationsClient {
 	final RestEndpoint<ConversationResourceRequestWrapper, Member> getMember;
 	final RestEndpoint<Member, Member> createMember;
 	final RestEndpoint<UpdateMemberRequest, Member> updateMember;
+	final RestEndpoint<ConversationResourceRequestWrapper, Void> deleteEvent;
+	final RestEndpoint<ConversationResourceRequestWrapper, Event> getEvent;
+	final RestEndpoint<ListEventsRequest, ListEventsResponse> listEvents;
+	final RestEndpoint<Event, Event> createEvent;
 
 	/**
 	 * Constructor.
@@ -50,7 +54,7 @@ public class ConversationsClient {
 	 */
 	@SuppressWarnings("unchecked")
 	public ConversationsClient(HttpWrapper wrapper) {
-		final String v1c = "/v1/conversations/", v1u = "/v1/users/", mems = "/members/";
+		final String v1c = "/v1/conversations/", v1u = "/v1/users/", mems = "/members/", events = "/events/";
 
 		class Endpoint<T, R> extends DynamicEndpoint<T, R> {
 			Endpoint(Function<T, String> pathGetter, HttpMethod method, R... type) {
@@ -76,6 +80,10 @@ public class ConversationsClient {
 		getMember = new Endpoint<>(req -> v1c+req.conversationId+mems+req.resourceId, HttpMethod.GET);
 		createMember = new Endpoint<>(req -> v1c+req.getConversationId()+mems, HttpMethod.POST);
 		updateMember = new Endpoint<>(req -> v1c+req.conversationId+mems+req.resourceId, HttpMethod.PATCH);
+		deleteEvent = new Endpoint<>(req -> v1c+req.conversationId+events+req.resourceId, HttpMethod.DELETE);
+		getEvent = new Endpoint<>(req -> v1c+req.conversationId+events+req.resourceId, HttpMethod.GET);
+		listEvents = new Endpoint<>(req -> v1c+req.conversationId+events, HttpMethod.GET);
+		createEvent = new Endpoint<>(req -> v1c+req+events, HttpMethod.POST);
 	}
 
 	// VALIDATION
@@ -354,5 +362,59 @@ public class ConversationsClient {
 		validateConversationId(validateRequest(request).conversationId);
 		validateMemberId(request.resourceId);
 		return updateMember.execute(request);
+	}
+
+	/**
+	 *
+	 * @param conversationId
+	 * @return
+	 */
+	public List<Event> listEvents(String conversationId) {
+		return listEvents(conversationId, ListEventsRequest.builder().pageSize(100).build()).getEvents();
+	}
+
+	/**
+	 *
+	 * @param conversationId
+	 * @param request
+	 * @return
+	 */
+	public ListEventsResponse listEvents(String conversationId, ListEventsRequest request) {
+		validateRequest(request).conversationId = validateConversationId(conversationId);
+		return listEvents.execute(request);
+	}
+
+	/**
+	 *
+	 * @param conversationId
+	 * @param eventId
+	 * @return
+	 */
+	public Event getEvent(String conversationId, int eventId) {
+		return getEvent.execute(new ConversationResourceRequestWrapper(
+				validateConversationId(conversationId), String.valueOf(eventId)
+		));
+	}
+
+	/**
+	 *
+	 * @param conversationId
+	 * @param request
+	 * @return
+	 */
+	public Event createEvent(String conversationId, Event request) {
+		validateRequest(request).conversationId = validateConversationId(conversationId);
+		return createEvent.execute(request);
+	}
+
+	/**
+	 *
+	 * @param conversationId
+	 * @param eventId
+	 */
+	public void deleteEvent(String conversationId, int eventId) {
+		deleteEvent.execute(new ConversationResourceRequestWrapper(
+				validateConversationId(conversationId), String.valueOf(eventId)
+		));
 	}
 }
