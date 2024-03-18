@@ -15,25 +15,25 @@
  */
 package com.vonage.client.conversations;
 
+import java.util.Map;
+
 /**
- * Represents an Ephemeral event.
+ * Represents a Custom event.
  */
-public final class EphemeralEvent extends GenericEvent {
+abstract class GenericEvent extends Event<Map<String, Object>> {
 
-    private EphemeralEvent() {}
+    GenericEvent() {}
 
-    private EphemeralEvent(Builder builder) {
+    GenericEvent(Builder builder) {
         super(builder);
     }
 
-    public static final class Builder extends GenericEvent.Builder<EphemeralEvent, Builder> {
-        Builder() {
-            super(EventType.EPHEMERAL);
-        }
+    static abstract class Builder<E extends GenericEvent,
+            B extends Builder<? extends E, ? extends  B>>
+            extends Event.Builder<Map<String, Object>, GenericEvent, Builder<E, B>> {
 
-        @Override
-        public EphemeralEvent build() {
-            return new EphemeralEvent(this);
+        Builder(EventType type) {
+            super(type);
         }
     }
 }

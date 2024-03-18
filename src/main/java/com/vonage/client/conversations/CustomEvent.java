@@ -16,24 +16,24 @@
 package com.vonage.client.conversations;
 
 /**
- * Represents an Ephemeral event.
+ * Represents a Custom event.
  */
-public final class EphemeralEvent extends GenericEvent {
+public final class CustomEvent extends GenericEvent {
 
-    private EphemeralEvent() {}
+    private CustomEvent() {}
 
-    private EphemeralEvent(Builder builder) {
+    private CustomEvent(Builder builder) {
         super(builder);
     }
 
-    public static final class Builder extends GenericEvent.Builder<EphemeralEvent, Builder> {
+    public static final class Builder extends GenericEvent.Builder<CustomEvent, Builder> {
         Builder() {
-            super(EventType.EPHEMERAL);
+            super(EventType.CUSTOM);
         }
 
         @Override
-        public EphemeralEvent build() {
-            return new EphemeralEvent(this);
+        public CustomEvent build() {
+            return new CustomEvent(this);
         }
     }
 }
