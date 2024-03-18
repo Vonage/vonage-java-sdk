@@ -18,7 +18,7 @@ package com.vonage.client.conversations;
 import java.util.Map;
 
 /**
- * Filters results for {@link ConversationsClient#listEvents(ListEventsRequest)}.
+ * Filters results for {@link ConversationsClient#listEvents(String, ListEventsRequest)}.
  */
 public class ListEventsRequest extends AbstractConversationsFilterRequest {
 	private final Boolean excludeDeletedEvents;

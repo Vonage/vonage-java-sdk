@@ -287,7 +287,7 @@ public class ConversationsClient {
 	 *
 	 * @param conversationId Unique conversation identifier.
 	 *
-	 * @return The list of members
+	 * @return The list of members in default (ascending) order.
 	 *
 	 * @throws ConversationsResponseException If the conversation was not found (404), or any other API error.
 	 *
@@ -365,19 +365,27 @@ public class ConversationsClient {
 	}
 
 	/**
+	 * List the first 100 events for a given Conversation.
 	 *
-	 * @param conversationId
-	 * @return
+	 * @param conversationId Unique conversation identifier.
+	 *
+	 * @return The list of events in default (ascending) order.
+	 *
+	 * @throws ConversationsResponseException If the conversation was not found (404), or any other API error.
 	 */
 	public List<Event> listEvents(String conversationId) {
 		return listEvents(conversationId, ListEventsRequest.builder().pageSize(100).build()).getEvents();
 	}
 
 	/**
+	 * Retrieve Events associated with a particular Conversation which match the specified filter criteria.
 	 *
-	 * @param conversationId
-	 * @param request
-	 * @return
+	 * @param conversationId Unique conversation identifier.
+	 * @param request Filter options to narrow down the search results.
+	 *
+	 * @return The wrapped list of Events, along with HAL metadata.
+	 *
+	 * @throws ConversationsResponseException If the conversation was not found (404), or any other API error.
 	 */
 	public ListEventsResponse listEvents(String conversationId, ListEventsRequest request) {
 		validateRequest(request).conversationId = validateConversationId(conversationId);
@@ -385,10 +393,14 @@ public class ConversationsClient {
 	}
 
 	/**
+	 * Retrieve a conversation Event by its ID.
 	 *
-	 * @param conversationId
-	 * @param eventId
-	 * @return
+	 * @param conversationId Unique conversation identifier.
+	 * @param eventId Sequence ID of the event to retrieve as an integer.
+	 *
+	 * @return Details of the event corresponding to the specified ID.
+	 *
+	 * @throws ConversationsResponseException If the conversation or event was not found (404), or any other API error.
 	 */
 	public Event getEvent(String conversationId, int eventId) {
 		return getEvent.execute(new ConversationResourceRequestWrapper(
@@ -397,10 +409,14 @@ public class ConversationsClient {
 	}
 
 	/**
+	 * Creates a new Event for the specified conversation.
 	 *
-	 * @param conversationId
-	 * @param request
-	 * @return
+	 * @param conversationId Unique conversation identifier.
+	 * @param request Details of the event to create.
+	 *
+	 * @return The created Event response with additional fields populated.
+	 *
+	 * @throws ConversationsResponseException If the conversation was not found (404), or any other API error.
 	 */
 	public Event createEvent(String conversationId, Event request) {
 		validateRequest(request).conversationId = validateConversationId(conversationId);
@@ -408,9 +424,13 @@ public class ConversationsClient {
 	}
 
 	/**
+	 * Deletes an event. Only message and custom events can be deleted.
 	 *
-	 * @param conversationId
-	 * @param eventId
+	 * @param conversationId Unique conversation identifier.
+	 * @param eventId Sequence ID of the event to retrieve as an integer.
+	 *
+	 * @throws ConversationsResponseException If the conversation or event was not found (404),
+	 * the event could not be deleted, or any other API error.
 	 */
 	public void deleteEvent(String conversationId, int eventId) {
 		deleteEvent.execute(new ConversationResourceRequestWrapper(
