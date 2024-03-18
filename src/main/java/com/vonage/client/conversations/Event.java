@@ -28,14 +28,14 @@ import java.time.Instant;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public abstract class Event extends JsonableBaseObject {
+public abstract class Event<T> extends JsonableBaseObject {
 	@JsonIgnore String conversationId;
 	@JsonProperty("id") private Integer id;
 	@JsonProperty("type") private EventType type;
 	@JsonProperty("from") private String from;
 	@JsonProperty("timestamp") private Instant timestamp;
 	@JsonProperty("_embedded") private Embedded _embedded;
-	@JsonProperty("body") private Object body;
+	@JsonProperty("body") private T body;
 
 	private static class Embedded extends JsonableBaseObject {
 		@JsonProperty("from_user") User fromUser;
@@ -45,7 +45,7 @@ public abstract class Event extends JsonableBaseObject {
 	protected Event() {
 	}
 
-	Event(Builder<?, ?> builder) {
+	Event(Builder<? extends T, ?, ?> builder) {
 		type = builder.type;
 		from = builder.from;
 		body = builder.body;
@@ -110,17 +110,17 @@ public abstract class Event extends JsonableBaseObject {
 	/**
 	 * Event-specific data.
 	 * 
-	 * @return The event body object, or {@code null} if absent
+	 * @return The event body object, or {@code null} if absent.
 	 */
 	public Object getBody() {
 		return body;
 	}
 
 	@SuppressWarnings("unchecked")
-	public abstract static class Builder<E extends Event, B extends Builder<? extends E, ? extends B>> {
+	public abstract static class Builder<T, E extends Event<T>, B extends Builder<T, ? extends E, ? extends B>> {
 		private final EventType type;
 		private String from;
-		private AbstractEventBody body;
+		private T body;
 
 		/**
 		 * Construct a new builder for a given event type.
@@ -150,7 +150,7 @@ public abstract class Event extends JsonableBaseObject {
 		 *
 		 * @return This builder.
 		 */
-		public B body(AbstractEventBody body) {
+		public B body(T body) {
 			this.body = body;
 			return (B) this;
 		}
