@@ -17,7 +17,7 @@ package com.vonage.client.conversations;
 
 import java.util.Map;
 
-abstract class GenericEvent extends Event<Map<String, Object>> {
+abstract class GenericEvent extends EventWithBody<Map<String, Object>> {
 
     GenericEvent() {}
 
@@ -27,7 +27,7 @@ abstract class GenericEvent extends Event<Map<String, Object>> {
 
     static abstract class Builder<E extends GenericEvent,
             B extends Builder<? extends E, ? extends  B>>
-            extends Event.Builder<Map<String, Object>, GenericEvent, Builder<E, B>> {
+            extends EventWithBody.Builder<Map<String, Object>, GenericEvent, Builder<E, B>> {
 
         Builder(EventType type) {
             super(type);

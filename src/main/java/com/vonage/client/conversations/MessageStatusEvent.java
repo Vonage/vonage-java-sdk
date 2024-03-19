@@ -23,7 +23,7 @@ import com.vonage.client.JsonableBaseObject;
 /**
  * Represents a Message Status event.
  */
-public abstract class MessageStatusEvent extends Event<MessageStatusEvent.Body> {
+public abstract class MessageStatusEvent extends EventWithBody<MessageStatusEvent.Body> {
 
     MessageStatusEvent() {}
 
@@ -52,7 +52,7 @@ public abstract class MessageStatusEvent extends Event<MessageStatusEvent.Body> 
 
     static abstract class Builder<E extends MessageStatusEvent,
             B extends Builder<? extends E, ? extends  B>>
-            extends Event.Builder<Body, MessageStatusEvent, Builder<E, B>> {
+            extends EventWithBody.Builder<Body, MessageStatusEvent, Builder<E, B>> {
 
         Builder(EventType type) {
             super(type);

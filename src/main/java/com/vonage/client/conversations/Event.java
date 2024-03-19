@@ -28,14 +28,13 @@ import java.time.Instant;
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public abstract class Event<T> extends JsonableBaseObject {
+public abstract class Event extends JsonableBaseObject {
 	@JsonIgnore String conversationId;
-	@JsonProperty("id") private Integer id;
-	@JsonProperty("type") private EventType type;
-	@JsonProperty("from") private String from;
-	@JsonProperty("timestamp") private Instant timestamp;
-	@JsonProperty("_embedded") private Embedded _embedded;
-	@JsonProperty("body") private T body;
+	@JsonProperty("id") Integer id;
+	@JsonProperty("type") EventType type;
+	@JsonProperty("from") String from;
+	@JsonProperty("timestamp") Instant timestamp;
+	@JsonProperty("_embedded") Embedded _embedded;
 
 	private static class Embedded extends JsonableBaseObject {
 		@JsonProperty("from_user") User fromUser;
@@ -43,12 +42,6 @@ public abstract class Event<T> extends JsonableBaseObject {
 	}
 
 	protected Event() {
-	}
-
-	Event(Builder<? extends T, ?, ?> builder) {
-		type = builder.type;
-		from = builder.from;
-		body = builder.body;
 	}
 
 	/**
@@ -105,61 +98,5 @@ public abstract class Event<T> extends JsonableBaseObject {
 	@JsonIgnore
 	public BaseMember getFromMember() {
 		return _embedded != null ? _embedded.fromMember : null;
-	}
-
-	/**
-	 * Event-specific data.
-	 * 
-	 * @return The event body object, or {@code null} if absent.
-	 */
-	public Object getBody() {
-		return body;
-	}
-
-	@SuppressWarnings("unchecked")
-	public abstract static class Builder<T, E extends Event<T>, B extends Builder<T, ? extends E, ? extends B>> {
-		private final EventType type;
-		private String from;
-		private T body;
-
-		/**
-		 * Construct a new builder for a given event type.
-		 *
-		 * @param type The event type as an enum.
-		 */
-		protected Builder(EventType type) {
-			this.type = type;
-		}
-
-		/**
-		 * Member ID this event was sent from.
-		 *
-		 * @param from The member ID, or {@code null} if unspecified.
-		 *
-		 * @return This builder.
-		 */
-		public B from(String from) {
-			this.from = from;
-			return (B) this;
-		}
-
-		/**
-		 * Event-specific data.
-		 *
-		 * @param body The event body object, or {@code null} if absent
-		 *
-		 * @return This builder.
-		 */
-		public B body(T body) {
-			this.body = body;
-			return (B) this;
-		}
-
-		/**
-		 * Builds the {@linkplain Event}.
-		 *
-		 * @return An instance of Event, populated with all fields from this builder.
-		 */
-		public abstract E build();
 	}
 }
