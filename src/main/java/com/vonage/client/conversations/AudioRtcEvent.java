@@ -21,51 +21,52 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
-public abstract class MessageStatusEvent extends EventWithBody<MessageStatusEvent.Body> {
+abstract class AudioRtcEvent extends EventWithBody<AudioRtcEvent.Body> {
 
-    MessageStatusEvent() {}
+    AudioRtcEvent() {}
 
-    MessageStatusEvent(Builder<?, ?> builder) {
+    AudioRtcEvent(Builder<?, ?> builder) {
         super(builder);
-        (body = new Body()).eventId = builder.eventId;
-    }
-
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    static class Body extends JsonableBaseObject {
-        @JsonProperty("event_id") private Integer eventId;
+        (body = new Body()).rtcId = builder.rtcId;
     }
 
     /**
-     * ID of the event.
+     * Main body object for Audio events with {@code rtc_id}.
+     */
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    static class Body extends JsonableBaseObject {
+        @JsonProperty("rtc_id") private String rtcId;
+    }
+
+    /**
      *
-     * @return The event ID as an Integer.
+     * @return
      */
     @JsonIgnore
-    public Integer getEventId() {
-        return body != null ? body.eventId : null;
+    public String getRtcId() {
+        return body != null ? body.rtcId : null;
     }
 
     @SuppressWarnings("unchecked")
-    static abstract class Builder<E extends MessageStatusEvent,
+    static abstract class Builder<E extends AudioRtcEvent,
             B extends Builder<? extends E, ? extends  B>>
-            extends EventWithBody.Builder<MessageStatusEvent, Builder<E, B>> {
+            extends EventWithBody.Builder<AudioRtcEvent, Builder<E, B>> {
 
-        private Integer eventId;
+        private String rtcId;
+
+        /**
+         *
+         * @param rtcId
+         *
+         * @return This builder.
+         */
+        public B rtcId(String rtcId) {
+            return (B) this;
+        }
 
         Builder(EventType type) {
             super(type);
-        }
-
-        /**
-         * ID of the event.
-         *
-         * @param eventId The event ID as an Integer.
-         * @return This builder.
-         */
-        public B eventId(int eventId) {
-            this.eventId = eventId;
-            return (B) this;
         }
     }
 }

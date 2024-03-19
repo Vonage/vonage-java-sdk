@@ -44,6 +44,11 @@ public abstract class Event extends JsonableBaseObject {
 	protected Event() {
 	}
 
+	Event(Builder<?, ?> builder) {
+		type = builder.type;
+		from = builder.from;
+	}
+
 	/**
 	 * Event id. This is a progressive integer.
 	 * 
@@ -98,5 +103,45 @@ public abstract class Event extends JsonableBaseObject {
 	@JsonIgnore
 	public BaseMember getFromMember() {
 		return _embedded != null ? _embedded.fromMember : null;
+	}
+
+	/**
+	 * Builder for constructing an event request's parameters.
+	 *
+	 * @param <E> The event type.
+	 * @param <B> The builder type.
+	 */
+	@SuppressWarnings("unchecked")
+	public abstract static class Builder<E extends Event, B extends Builder<? extends E, ? extends B>> {
+		private final EventType type;
+		private String from;
+
+		/**
+		 * Construct a new builder for a given event type.
+		 *
+		 * @param type The event type as an enum.
+		 */
+		protected Builder(EventType type) {
+			this.type = type;
+		}
+
+		/**
+		 * Member ID this event was sent from.
+		 *
+		 * @param from The member ID, or {@code null} if unspecified.
+		 *
+		 * @return This builder.
+		 */
+		public B from(String from) {
+			this.from = from;
+			return (B) this;
+		}
+
+		/**
+		 * Builds the {@linkplain EventWithBody}.
+		 *
+		 * @return An instance of Event, populated with all fields from this builder.
+		 */
+		public abstract E build();
 	}
 }
