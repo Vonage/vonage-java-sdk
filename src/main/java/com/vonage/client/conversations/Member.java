@@ -95,9 +95,11 @@ public class Member extends BaseMember {
 	}
 
 	/**
-	 * Unique member ID to invite.
+	 * Unique member ID this member was invited by.
+	 * This will be set when the invite has been created but not accepted.
 	 * 
 	 * @return The inviting member ID, or {@code null} if unspecified.
+	 * @see #getInvitedBy()
 	 */
 	@JsonProperty("member_id_inviting")
 	public String getMemberIdInviting() {
@@ -116,8 +118,10 @@ public class Member extends BaseMember {
 
 	/**
 	 * Unique member ID this member was invited by.
+	 * This will be set when the invite has been accepted.
 	 * 
 	 * @return The inviting member ID, or {@code null} if unknown / not applicable.
+	 * @see #getMemberIdInviting()
 	 */
 	@JsonProperty("invited_by")
 	public String getInvitedBy() {
