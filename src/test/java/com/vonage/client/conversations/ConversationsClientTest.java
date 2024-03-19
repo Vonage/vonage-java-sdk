@@ -432,23 +432,6 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 		assertEquals(USER_NAME, user.getName());
 	}
 
-	static void assertEqualsSampleListUserSessions(ListUserSessionsResponse parsed) {
-		testJsonableBaseObject(parsed);
-		assertEquals(PAGE_SIZE, parsed.getPageSize());
-		var sessions = parsed.getSessions();
-		assertNotNull(sessions);
-		assertEquals(3, sessions.size());
-		var first = sessions.getFirst();
-		testJsonableBaseObject(first);
-		assertNull(first.getUser());
-		assertNull(first.getSessionId());
-		assertNull(first.getTtl());
-		assertEqualsSampleUserSession(sessions.get(1));
-		var last = sessions.getLast();
-		testJsonableBaseObject(last);
-		assertNotNull(last.getUser());
-	}
-
 	static void assertEqualsBaseUser(BaseUser parsed) {
 		testJsonableBaseObject(parsed);
 		assertEquals(USER_ID, parsed.getId());
@@ -1079,73 +1062,6 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 						"order_by", "custom_sort_key",
 						"include_custom_data", "true",
 						"date_start", START_DATE_STR
-				);
-			}
-		}
-		.runTests();
-	}
-
-	@Test
-	public void testListUserSessions() throws Exception {
-		ListUserSessionsRequest request = ListUserSessionsRequest.builder().build();
-		stubResponse(200, SAMPLE_LIST_USER_SESSIONS_RESPONSE);
-		var response = client.listUserSessions(USER_ID, request);
-		assertEqualsSampleListUserSessions(response);
-
-		stubResponse(200, SAMPLE_LIST_USER_SESSIONS_RESPONSE);
-		var listOnly = client.listUserSessions(USER_ID);
-		assertEquals(response.getSessions(), listOnly);
-
-		stubResponseAndAssertThrows(200,
-				() -> client.listUserSessions(USER_ID, null),
-				NullPointerException.class
-		);
-		stubResponseAndAssertThrows(200,
-				() -> client.listUserSessions(SESSION_ID),
-				IllegalArgumentException.class
-		);
-		stubResponseAndAssertThrows(200,
-				() -> client.listUserSessions(CONVERSATION_ID, request),
-				IllegalArgumentException.class
-		);
-		stubResponseAndAssertThrows(404,
-				() -> client.listUserSessions(USER_ID, request),
-				ConversationsResponseException.class
-		);
-		assertResponseExceptions(() -> client.listUserSessions(USER_ID, request));
-	}
-
-	@Test
-	public void testListUserSessionsEndpoint() throws Exception {
-		new ConversationsEndpointTestSpec<ListUserSessionsRequest, ListUserSessionsResponse>() {
-
-			@Override
-			protected RestEndpoint<ListUserSessionsRequest, ListUserSessionsResponse> endpoint() {
-				return client.listUserSessions;
-			}
-
-			@Override
-			protected HttpMethod expectedHttpMethod() {
-				return HttpMethod.GET;
-			}
-
-			@Override
-			protected String expectedEndpointUri(ListUserSessionsRequest request) {
-				return "/v1/users/"+request.userId+"/sessions";
-			}
-
-			@Override
-			protected ListUserSessionsRequest sampleRequest() {
-				var request = ListUserSessionsRequest.builder().pageSize(PAGE_SIZE).order(ORDER).build();
-				request.userId = USER_ID;
-				return request;
-			}
-
-			@Override
-			protected Map<String, String> sampleQueryParams() {
-				return Map.of(
-					"page_size", String.valueOf(PAGE_SIZE),
-					"order", ORDER_STR
 				);
 			}
 		}

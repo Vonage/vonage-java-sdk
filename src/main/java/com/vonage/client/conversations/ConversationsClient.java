@@ -37,7 +37,6 @@ public class ConversationsClient {
 	final RestEndpoint<Conversation, Conversation> updateConversation;
 	final RestEndpoint<String, Void> deleteConversation;
 	final RestEndpoint<ListUserConversationsRequest, ListUserConversationsResponse> listUserConversations;
-	final RestEndpoint<ListUserSessionsRequest, ListUserSessionsResponse> listUserSessions;
 	final RestEndpoint<ListMembersRequest, ListMembersResponse> listMembers;
 	final RestEndpoint<ConversationResourceRequestWrapper, Member> getMember;
 	final RestEndpoint<Member, Member> createMember;
@@ -75,7 +74,6 @@ public class ConversationsClient {
 		updateConversation = new Endpoint<>(req -> v1c+req.getId(), HttpMethod.PUT);
 		deleteConversation = new Endpoint<>(id -> v1c+id, HttpMethod.DELETE);
 		listUserConversations = new Endpoint<>(req -> v1u+req.userId+"/conversations", HttpMethod.GET);
-		listUserSessions = new Endpoint<>(req -> v1u+req.userId+"/sessions", HttpMethod.GET);
 		listMembers = new Endpoint<>(req -> v1c+req.conversationId+mems, HttpMethod.GET);
 		getMember = new Endpoint<>(req -> v1c+req.conversationId+mems+req.resourceId, HttpMethod.GET);
 		createMember = new Endpoint<>(req -> v1c+req.getConversationId()+mems, HttpMethod.POST);
@@ -247,40 +245,6 @@ public class ConversationsClient {
 	}
 
 	/**
-	 * List the first 100 sessions for a given user.
-	 *
-	 * @param userId Unique identifier for the user.
-	 *
-	 * @return The list of sessions pertaining to the specified user in default (ascending) order.
-	 *
-	 * @throws ConversationsResponseException If the user was not found (404), or any other API error.
-	 *
-	 * @see #listUserSessions(String, ListUserSessionsRequest)
-	 * @see com.vonage.client.users
-	 */
-	public List<UserSession> listUserSessions(String userId) {
-		return listUserSessions(userId, defaultFilterParams(ListUserSessionsRequest.builder())).getSessions();
-	}
-
-	/**
-	 * Retrieve Sessions associated with a particular User which match the specified filter criteria.
-	 *
-	 * @param userId Unique identifier for the user.
-	 * @param filter Filter options to narrow down the search results.
-	 *
-	 * @return The wrapped list of user sessions, along with HAL metadata.
-	 *
-	 * @throws ConversationsResponseException If the user was not found (404),
-	 * the filter options were invalid (400) or any other API error.
-	 *
-	 * @see com.vonage.client.users
-	 */
-	public ListUserSessionsResponse listUserSessions(String userId, ListUserSessionsRequest filter) {
-		validateRequest(filter).userId = validateUserId(userId);
-		return listUserSessions.execute(filter);
-	}
-
-	/**
 	 * List the first 100 Members for a given Conversation. Note that the returned members are
 	 * incomplete, hence of type {@linkplain BaseMember}. To get the full data, use the
 	 * {@link #getMember(String, String)} method, passing in the ID from {@linkplain BaseMember#getId()}.
@@ -402,8 +366,9 @@ public class ConversationsClient {
 	 *
 	 * @throws ConversationsResponseException If the conversation or event was not found (404), or any other API error.
 	 */
-	public Event getEvent(String conversationId, int eventId) {
-		return getEvent.execute(new ConversationResourceRequestWrapper(
+	@SuppressWarnings("unchecked")
+	public <T> Event<T> getEvent(String conversationId, int eventId) {
+		return (Event<T>) getEvent.execute(new ConversationResourceRequestWrapper(
 				validateConversationId(conversationId), String.valueOf(eventId)
 		));
 	}
@@ -418,9 +383,10 @@ public class ConversationsClient {
 	 *
 	 * @throws ConversationsResponseException If the conversation was not found (404), or any other API error.
 	 */
-	public Event createEvent(String conversationId, Event request) {
+	@SuppressWarnings("unchecked")
+	public <T> Event<T> createEvent(String conversationId, Event<T> request) {
 		validateRequest(request).conversationId = validateConversationId(conversationId);
-		return createEvent.execute(request);
+		return (Event<T>) createEvent.execute(request);
 	}
 
 	/**
