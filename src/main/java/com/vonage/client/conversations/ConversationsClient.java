@@ -43,9 +43,9 @@ public class ConversationsClient {
 	final RestEndpoint<Member, Member> createMember;
 	final RestEndpoint<UpdateMemberRequest, Member> updateMember;
 	final RestEndpoint<ConversationResourceRequestWrapper, Void> deleteEvent;
-	final RestEndpoint<ConversationResourceRequestWrapper, Event> getEvent;
+	final RestEndpoint<ConversationResourceRequestWrapper, Event<?>> getEvent;
 	final RestEndpoint<ListEventsRequest, ListEventsResponse> listEvents;
-	final RestEndpoint<Event, Event> createEvent;
+	final RestEndpoint<Event<?>, Event<?>> createEvent;
 
 	/**
 	 * Constructor.
@@ -373,7 +373,7 @@ public class ConversationsClient {
 	 *
 	 * @throws ConversationsResponseException If the conversation was not found (404), or any other API error.
 	 */
-	public List<Event> listEvents(String conversationId) {
+	public List<Event<?>> listEvents(String conversationId) {
 		return listEvents(conversationId, ListEventsRequest.builder().pageSize(100).build()).getEvents();
 	}
 

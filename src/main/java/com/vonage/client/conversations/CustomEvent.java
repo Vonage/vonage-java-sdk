@@ -26,6 +26,15 @@ public final class CustomEvent extends GenericEvent {
         super(builder);
     }
 
+    /**
+     * Entry point for constructing an instance of this class.
+     *
+     * @return A new Builder.
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public static final class Builder extends GenericEvent.Builder<CustomEvent, Builder> {
         Builder() {
             super(EventType.CUSTOM);

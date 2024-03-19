@@ -17,14 +17,11 @@ package com.vonage.client.conversations;
 
 import java.util.Map;
 
-/**
- * Represents a Custom event.
- */
 abstract class GenericEvent extends Event<Map<String, Object>> {
 
     GenericEvent() {}
 
-    GenericEvent(Builder builder) {
+    GenericEvent(Builder<?, ?> builder) {
         super(builder);
     }
 

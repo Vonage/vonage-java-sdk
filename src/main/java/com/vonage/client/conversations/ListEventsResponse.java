@@ -38,10 +38,10 @@ public final class ListEventsResponse extends HalPageResponse {
 	@JsonInclude(value = JsonInclude.Include.NON_NULL)
 	@JsonIgnoreProperties(ignoreUnknown = true)
 	static final class Embedded extends JsonableBaseObject {
-		private List<Event> events;
+		private List<Event<?>> events;
 
 		@JsonProperty("events")
-		public List<Event> getEvents() {
+		public List<Event<?>> getEvents() {
 			return events;
 		}
 	}
@@ -52,7 +52,7 @@ public final class ListEventsResponse extends HalPageResponse {
 	 * @return The events for this page.
 	 */
 	@JsonIgnore
-	public List<Event> getEvents() {
+	public List<Event<?>> getEvents() {
 		return _embedded != null ? _embedded.getEvents() : null;
 	}
 	

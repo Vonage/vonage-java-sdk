@@ -16,13 +16,13 @@
 package com.vonage.client.conversations;
 
 /**
- * Represents an Ephemeral event.
+ * Represents a {@link EventType#MESSAGE_REJECTED} event.
  */
-public final class EphemeralEvent extends GenericEvent {
+public final class MessageRejectedEvent extends MessageStatusEvent {
 
-    private EphemeralEvent() {}
+    MessageRejectedEvent() {}
 
-    private EphemeralEvent(Builder builder) {
+    MessageRejectedEvent(Builder builder) {
         super(builder);
     }
 
@@ -35,14 +35,18 @@ public final class EphemeralEvent extends GenericEvent {
         return new Builder();
     }
 
-    public static final class Builder extends GenericEvent.Builder<EphemeralEvent, Builder> {
+    /**
+     * Builder for configuring parameters of the event request.
+     */
+    public static class Builder extends MessageStatusEvent.Builder<MessageRejectedEvent, Builder> {
+
         Builder() {
-            super(EventType.EPHEMERAL);
+            super(EventType.MESSAGE_REJECTED);
         }
 
         @Override
-        public EphemeralEvent build() {
-            return new EphemeralEvent(this);
+        public MessageStatusEvent build() {
+            return new MessageRejectedEvent(this);
         }
     }
 }
