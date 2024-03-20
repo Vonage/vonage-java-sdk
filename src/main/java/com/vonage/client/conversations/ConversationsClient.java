@@ -81,7 +81,7 @@ public class ConversationsClient {
 		deleteEvent = new Endpoint<>(req -> v1c+req.conversationId+events+req.resourceId, HttpMethod.DELETE);
 		getEvent = new Endpoint<>(req -> v1c+req.conversationId+events+req.resourceId, HttpMethod.GET);
 		listEvents = new Endpoint<>(req -> v1c+req.conversationId+events, HttpMethod.GET);
-		createEvent = new Endpoint<>(req -> v1c+req+events, HttpMethod.POST);
+		createEvent = new Endpoint<>(req -> v1c+req.conversationId+events, HttpMethod.POST);
 	}
 
 	// VALIDATION
@@ -382,9 +382,10 @@ public class ConversationsClient {
 	 *
 	 * @throws ConversationsResponseException If the conversation was not found (404), or any other API error.
 	 */
-	public Event createEvent(String conversationId, Event request) {
+	@SuppressWarnings("unchecked")
+	public <E extends Event> E createEvent(String conversationId, E request) {
 		validateRequest(request).conversationId = validateConversationId(conversationId);
-		return createEvent.execute(request);
+		return (E) createEvent.execute(request);
 	}
 
 	/**

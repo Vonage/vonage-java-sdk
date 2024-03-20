@@ -15,10 +15,7 @@
  */
 package com.vonage.client.conversations;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.users.User;
 import java.time.Instant;
@@ -26,6 +23,30 @@ import java.time.Instant;
 /**
  * Events are actions that occur within a conversation.
  */
+@JsonTypeInfo(
+		use = JsonTypeInfo.Id.NAME,
+		include = JsonTypeInfo.As.EXISTING_PROPERTY,
+		property = "type"
+)
+@JsonSubTypes({
+		@JsonSubTypes.Type(value = MessageSeenEvent.class, name = "message:seen"),
+		@JsonSubTypes.Type(value = MessageSubmittedEvent.class, name = "message:submitted"),
+		@JsonSubTypes.Type(value = MessageDeliveredEvent.class, name = "message:delivered"),
+		@JsonSubTypes.Type(value = MessageUndeliverableEvent.class, name = "message:undeliverable"),
+		@JsonSubTypes.Type(value = MessageRejectedEvent.class, name = "message:rejected"),
+		@JsonSubTypes.Type(value = AudioPlayEvent.class, name = "audio:play"),
+		@JsonSubTypes.Type(value = AudioSayEvent.class, name = "audio:say"),
+		@JsonSubTypes.Type(value = AudioPlayStopEvent.class, name = "audio:play:stop"),
+		@JsonSubTypes.Type(value = AudioSayStopEvent.class, name = "audio:say:stop"),
+		@JsonSubTypes.Type(value = AudioRecordEvent.class, name = "audio:record"),
+		@JsonSubTypes.Type(value = AudioRecordStopEvent.class, name = "audio:record:stop"),
+		@JsonSubTypes.Type(value = AudioMuteOnEvent.class, name = "audio:mute:on"),
+		@JsonSubTypes.Type(value = AudioMuteOffEvent.class, name = "audio:mute:off"),
+		@JsonSubTypes.Type(value = AudioEarmuffOnEvent.class, name = "audio:earmuff:on"),
+		@JsonSubTypes.Type(value = AudioEarmuffOffEvent.class, name = "audio:earmuff:off"),
+		@JsonSubTypes.Type(value = EphemeralEvent.class, name = "ephemeral"),
+		@JsonSubTypes.Type(value = CustomEvent.class, name = "custom")
+})
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class Event extends JsonableBaseObject {

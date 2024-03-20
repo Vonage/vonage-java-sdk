@@ -15,22 +15,34 @@
  */
 package com.vonage.client.conversations;
 
-import java.util.Map;
+/**
+ * Represents an {@link EventType#AUDIO_EARMUFF_ON} event.
+ */
+public final class AudioEarmuffOnEvent extends AudioRtcEvent {
 
-abstract class GenericEvent extends EventWithBody<Map<String, Object>> {
+    AudioEarmuffOnEvent() {}
 
-    GenericEvent() {}
-
-    GenericEvent(Builder<?, ?> builder) {
+    private AudioEarmuffOnEvent(Builder builder) {
         super(builder);
     }
 
-    static abstract class Builder<E extends GenericEvent,
-            B extends Builder<? extends E, ? extends  B>>
-            extends EventWithBody.Builder<GenericEvent, Builder<E, B>> {
+    /**
+     * Entry point for constructing an instance of this class.
+     *
+     * @return A new Builder.
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
 
-        Builder(EventType type) {
-            super(type);
+    public static final class Builder extends AudioRtcEvent.Builder<AudioEarmuffOnEvent, Builder> {
+        Builder() {
+            super(EventType.AUDIO_EARMUFF_ON);
+        }
+
+        @Override
+        public AudioEarmuffOnEvent build() {
+            return new AudioEarmuffOnEvent(this);
         }
     }
 }

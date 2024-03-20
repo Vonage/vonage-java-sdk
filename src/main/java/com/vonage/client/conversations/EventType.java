@@ -56,5 +56,5 @@ public enum EventType {
 	@Override
 	public String toString() {
 		return name().toLowerCase().replace('_', ':');
-	}	
+	}
 }

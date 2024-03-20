@@ -198,7 +198,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 
 	@Override
 	public final RequestBuilder makeRequest(T requestBody) {
-		if (requestBody instanceof Jsonable && requestBody.getClass().equals(responseType)) {
+		if (requestBody instanceof Jsonable && responseType.isAssignableFrom(requestBody.getClass())) {
 			cachedRequestBody = requestBody;
 		}
 		RequestBuilder rqb = createRequestBuilderFromRequestMethod(requestMethod);
