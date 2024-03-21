@@ -46,9 +46,9 @@ public final class AudioSayEvent extends AudioOutEvent<AudioSayEvent.Body> {
 
 
     /**
+     * Unique audio say identifier.
      *
-     *
-     * @return
+     * @return The say ID, or {@code null} if unknown.
      */
     public UUID getSayId() {
         return body != null ? body.sayId : null;

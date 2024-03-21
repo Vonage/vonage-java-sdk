@@ -15,7 +15,6 @@
  */
 package com.vonage.client.conversations;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -41,10 +40,10 @@ public final class AudioSayStopEvent extends EventWithBody<AudioSayStopEvent.Bod
     }
 
     /**
+     * Unique audio say identifier.
      *
-     * @return
+     * @return The say ID, or {@code null} if unknown.
      */
-    @JsonIgnore
     public UUID getSayId() {
         return body != null ? body.sayId : null;
     }
@@ -66,13 +65,25 @@ public final class AudioSayStopEvent extends EventWithBody<AudioSayStopEvent.Bod
         }
 
         /**
+         * Unique audio say identifier.
          *
-         * @param sayId
+         * @param sayId The say ID as a string.
          *
          * @return This builder.
          */
         public Builder sayId(String sayId) {
-            this.sayId = UUID.fromString(sayId);
+            return sayId(UUID.fromString(sayId));
+        }
+
+        /**
+         * Unique audio say identifier.
+         *
+         * @param sayId The say ID
+         *
+         * @return This builder.
+         */
+        public Builder sayId(UUID sayId) {
+            this.sayId = sayId;
             return this;
         }
 

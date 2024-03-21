@@ -49,9 +49,9 @@ abstract class AudioOutEvent<T extends AudioOutEvent.Body> extends EventWithBody
     }
 
     /**
+     * Whether to queue the audio.
      *
-     *
-     * @return
+     * @return {@code true} if queuing is enabled, or {@code null} if unspecified.
      */
     @JsonIgnore
     public Boolean getQueue() {
@@ -59,9 +59,9 @@ abstract class AudioOutEvent<T extends AudioOutEvent.Body> extends EventWithBody
     }
 
     /**
+     * Audio volume level, with -1 being quietest, +1 being loudest and 0 the default.
      *
-     *
-     * @return
+     * @return The volume as a Double, or {@code null} if unspecified.
      */
     @JsonIgnore
     public Double getLevel() {
@@ -69,9 +69,9 @@ abstract class AudioOutEvent<T extends AudioOutEvent.Body> extends EventWithBody
     }
 
     /**
+     * Number of times to repeat the audio.
      *
-     *
-     * @return
+     * @return The loop count as an Integer, or {@code null} if unspecified.
      */
     @JsonIgnore
     public Integer getLoop() {
@@ -91,9 +91,9 @@ abstract class AudioOutEvent<T extends AudioOutEvent.Body> extends EventWithBody
         Integer loop;
 
         /**
+         * Whether to queue the audio.
          *
-         *
-         * @param queue
+         * @param queue {@code true} to enable queuing, {@code false} otherwise.
          *
          * @return This builder.
          */
@@ -103,9 +103,9 @@ abstract class AudioOutEvent<T extends AudioOutEvent.Body> extends EventWithBody
         }
 
         /**
+         * Audio volume level, with -1 being quietest, +1 being loudest and 0 the default.
          *
-         *
-         * @param level
+         * @param level The volume as a double.
          *
          * @return This builder.
          */
@@ -115,9 +115,9 @@ abstract class AudioOutEvent<T extends AudioOutEvent.Body> extends EventWithBody
         }
 
         /**
+         * Number of times to repeat the audio. Default is 1.
          *
-         *
-         * @param loop
+         * @param loop The loop count as an int.
          *
          * @return This builder.
          */

@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.net.URI;
 import java.util.UUID;
 
 /**
@@ -37,7 +38,7 @@ public final class AudioPlayEvent extends AudioOutEvent<AudioPlayEvent.Body> {
     @JsonIgnoreProperties(ignoreUnknown = true)
     static final class Body extends AudioOutEvent.Body {
         @JsonProperty("play_id") private UUID playId;
-        @JsonProperty("stream_url") private String[] streamUrl;
+        @JsonProperty("stream_url") private URI[] streamUrl;
 
         Body() {}
 
@@ -48,21 +49,21 @@ public final class AudioPlayEvent extends AudioOutEvent<AudioPlayEvent.Body> {
     }
 
     /**
+     * Unique audio play identifier.
      *
-     *
-     * @return
+     * @return The say ID, or {@code null} if unknown.
      */
     public UUID getPlayId() {
         return body != null ? body.playId : null;
     }
 
     /**
+     * Source URL of the audio to play.
      *
-     *
-     * @return
+     * @return The stream URL, or {@code null} if unspecified.
      */
     @JsonIgnore
-    public String getStreamUrl() {
+    public URI getStreamUrl() {
         return body != null && body.streamUrl != null && body.streamUrl.length > 0 ? body.streamUrl[0] : null;
     }
 
@@ -76,20 +77,32 @@ public final class AudioPlayEvent extends AudioOutEvent<AudioPlayEvent.Body> {
     }
 
     public static final class Builder extends AudioOutEvent.Builder<AudioPlayEvent, Builder> {
-        private String[] streamUrl;
+        private URI[] streamUrl;
 
         Builder() {
             super(EventType.AUDIO_PLAY);
         }
 
         /**
+         * Source URL of the audio to play.
          *
-         * @param streamUrl
+         * @param streamUrl The stream URL as a string.
          *
          * @return This builder.
          */
         public Builder streamUrl(String streamUrl) {
-            this.streamUrl = new String[]{streamUrl};
+            return streamUrl(URI.create(streamUrl));
+        }
+
+        /**
+         * Source URL of the audio to play.
+         *
+         * @param streamUrl The stream URL.
+         *
+         * @return This builder.
+         */
+        public Builder streamUrl(URI streamUrl) {
+            this.streamUrl = new URI[]{streamUrl};
             return this;
         }
 

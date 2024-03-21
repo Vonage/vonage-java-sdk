@@ -20,21 +20,21 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 /**
- * Represents a WhatsApp channel.
+ * Represents a WhatsApp Voice channel.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NONE, visible = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Whatsapp extends NumberChannel {
+public class WhatsappVoice extends NumberChannel {
 
-	protected Whatsapp() {}
+	protected WhatsappVoice() {}
 
 	/**
-	 * Creates a new WhatsApp channel.
+	 * Creates a new WhatsApp Voice channel.
 	 *
 	 * @param number The phone number in E.164 format.
 	 */
-	public Whatsapp(String number) {
+	public WhatsappVoice(String number) {
 		super(number);
 	}
 }

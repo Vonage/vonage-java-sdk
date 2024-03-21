@@ -24,12 +24,12 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * @since 8.4.0
  */
 public enum ChannelType {
-	APP, PHONE, SMS, MMS, SIP, VBC, WEBSOCKET, WHATSAPP, VIBER, MESSENGER;
+	APP, PHONE, SMS, MMS, SIP, VBC, WEBSOCKET, VIBER, MESSENGER, WHATSAPP, WHATSAPP_VOICE;
 
 	@JsonCreator
 	public static ChannelType fromString(String name) {
 		try {
-			String normal = name.toUpperCase();
+			String normal = name.toUpperCase().replace('-', '_');
 			return "PSTN".equals(normal) ? PHONE : valueOf(normal);
 		}
 		catch (NullPointerException | IllegalArgumentException ex) {
@@ -40,6 +40,6 @@ public enum ChannelType {
 	@JsonValue
 	@Override
 	public String toString() {
-		return name().toLowerCase();
+		return name().toLowerCase().replace('_', '-');
 	}
 }

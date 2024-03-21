@@ -17,20 +17,45 @@ package com.vonage.client.conversations;
 
 import java.util.Map;
 
-abstract class GenericEvent extends EventWithBody<Map<String, Object>> {
+abstract class GenericEvent extends EventWithBody<Map<String, ?>> {
 
     GenericEvent() {}
 
     GenericEvent(Builder<?, ?> builder) {
         super(builder);
+        body = builder.body;
     }
 
+    /**
+     * Custom event data as key-value pairs.
+     *
+     * @return The custom data as a Map.
+     */
+    public Map<String, ?> getBody() {
+        return body;
+    }
+
+    @SuppressWarnings("unchecked")
     static abstract class Builder<E extends GenericEvent,
             B extends Builder<? extends E, ? extends  B>>
             extends EventWithBody.Builder<GenericEvent, Builder<E, B>> {
 
+        Map<String, ?> body;
+
         Builder(EventType type) {
             super(type);
+        }
+
+        /**
+         * Custom data send in the body.
+         *
+         * @param body The custom data as key-value pairs.
+         *
+         * @return This builder.
+         */
+        public B body(Map<String, ?> body) {
+            this.body = body;
+            return (B) this;
         }
     }
 }

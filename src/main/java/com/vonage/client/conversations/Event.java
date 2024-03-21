@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.*;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.users.User;
 import java.time.Instant;
+import java.util.Objects;
 
 /**
  * Events are actions that occur within a conversation.
@@ -66,8 +67,8 @@ public abstract class Event extends JsonableBaseObject {
 	}
 
 	Event(Builder<?, ?> builder) {
-		type = builder.type;
-		from = builder.from;
+		type = Objects.requireNonNull(builder.type, "Event type is required.");
+		from = ConversationsClient.validateMemberId(builder.from);
 	}
 
 	/**

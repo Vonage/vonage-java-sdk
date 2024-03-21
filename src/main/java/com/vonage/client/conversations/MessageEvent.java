@@ -34,9 +34,9 @@ public final class MessageEvent extends EventWithBody<MessageEventBody> {
     }
 
     /**
+     * Describes the media type for this event.
      *
-     *
-     * @return
+     * @return The message type as an enum.
      */
     @JsonIgnore
     public MessageType getMessageType() {
@@ -44,9 +44,9 @@ public final class MessageEvent extends EventWithBody<MessageEventBody> {
     }
 
     /**
+     * If {@linkplain #getMessageType()} is {@linkplain MessageType#TEXT}, returns the text.
      *
-     *
-     * @return
+     * @return The message text, or {@code null} if not applicable.
      */
     @JsonIgnore
     public String getText() {
@@ -54,9 +54,9 @@ public final class MessageEvent extends EventWithBody<MessageEventBody> {
     }
 
     /**
+     * If {@linkplain #getMessageType()} is multimedia, returns the URL of the media.
      *
-     *
-     * @return
+     * @return The absolute media URL, or {@code null} if not applicable.
      */
     @JsonIgnore
     public URI getUrl() {
@@ -71,9 +71,9 @@ public final class MessageEvent extends EventWithBody<MessageEventBody> {
     }
 
     /**
+     * If {@linkplain #getMessageType()} is {@linkplain MessageType#LOCATION}, returns the location.
      *
-     *
-     * @return
+     * @return The location details, or {@code null} if not applicable.
      */
     @JsonIgnore
     public Location getLocation() {
@@ -82,6 +82,8 @@ public final class MessageEvent extends EventWithBody<MessageEventBody> {
 
     /**
      * Entry point for constructing an instance of this class.
+     *
+     * @param messageType The type of message for this event.
      *
      * @return A new Builder.
      */
@@ -104,9 +106,9 @@ public final class MessageEvent extends EventWithBody<MessageEventBody> {
         }
 
         /**
+         * Sets the message text, if the type is {@linkplain MessageType#TEXT}.
          *
-         *
-         * @param text
+         * @param text The message text.
          *
          * @return This builder.
          */
@@ -116,9 +118,9 @@ public final class MessageEvent extends EventWithBody<MessageEventBody> {
         }
 
         /**
+         * Sets the URL, if appropriate for the type.
          *
-         *
-         * @param url
+         * @param url The absolute media URL as a string.
          *
          * @return This builder.
          */
@@ -128,9 +130,9 @@ public final class MessageEvent extends EventWithBody<MessageEventBody> {
         }
 
         /**
+         * Sets the message location, if the type is {@linkplain MessageType#LOCATION}.
          *
-         *
-         * @param location
+         * @param location The location details.
          *
          * @return This builder.
          */

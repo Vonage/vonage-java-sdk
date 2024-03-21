@@ -1,3 +1,18 @@
+/*
+ *   Copyright 2024 Vonage
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
 package com.vonage.client.conversations;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -11,7 +26,8 @@ import com.vonage.client.JsonableBaseObject;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class Location extends JsonableBaseObject {
-    private String longitude, latitude, name, address;
+    private Double longitude, latitude;
+    private String name, address;
 
     Location() {}
 
@@ -23,29 +39,29 @@ public final class Location extends JsonableBaseObject {
     }
 
     /**
+     * Longitude of the location.
      *
-     *
-     * @return
+     * @return The longitude as a Double, or {@code null} if unspecified.
      */
     @JsonProperty("longitude")
-    public String getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
     /**
+     * Latitude of the location.
      *
-     *
-     * @return
+     * @return The latitude as a Double, or {@code null} if unspecified.
      */
     @JsonProperty("latitude")
-    public String getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
     /**
+     * Name of the location.
      *
-     *
-     * @return
+     * @return The name, or {@code null} if unspecified.
      */
     @JsonProperty("name")
     public String getName() {
@@ -53,9 +69,9 @@ public final class Location extends JsonableBaseObject {
     }
 
     /**
+     * Full location address.
      *
-     *
-     * @return
+     * @return The address as a string, or {@code null} if unspecified.
      */
     @JsonProperty("address")
     public String getAddress() {
@@ -71,39 +87,43 @@ public final class Location extends JsonableBaseObject {
         return new Builder();
     }
 
+    /**
+     * Builder for setting Location parameters.
+     */
     public static final class Builder {
-        private String longitude, latitude, name, address;
+        private Double longitude, latitude;
+        private String name, address;
 
         private Builder() {}
 
         /**
+         * Longitude of the location.
          *
-         *
-         * @param longitude
+         * @param longitude The longitude as a double.
          *
          * @return This builder.
          */
-        public Builder longitude(String longitude) {
+        public Builder longitude(double longitude) {
             this.longitude = longitude;
             return this;
         }
 
         /**
+         * Latitude of the location.
          *
-         *
-         * @param latitude
+         * @param latitude The latitude as a double.
          *
          * @return This builder.
          */
-        public Builder latitude(String latitude) {
+        public Builder latitude(double latitude) {
             this.latitude = latitude;
             return this;
         }
 
         /**
+         * Name of the location.
          *
-         *
-         * @param name
+         * @param name The name.
          *
          * @return This builder.
          */
@@ -113,9 +133,9 @@ public final class Location extends JsonableBaseObject {
         }
 
         /**
+         * Full address.
          *
-         *
-         * @param address
+         * @param address The address as a string.
          *
          * @return This builder.
          */
@@ -125,9 +145,9 @@ public final class Location extends JsonableBaseObject {
         }
 
         /**
+         * Builds the {@linkplain Location}.
          *
-         *
-         * @return
+         * @return A new Location instance, populated with all fields from this builder.
          */
         public Location build() {
             return new Location(this);

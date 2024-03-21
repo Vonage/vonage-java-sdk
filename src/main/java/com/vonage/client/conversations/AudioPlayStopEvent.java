@@ -40,9 +40,9 @@ public final class AudioPlayStopEvent extends EventWithBody<AudioPlayStopEvent.B
     }
 
     /**
+     * Unique audio play identifier.
      *
-     *
-     * @return
+     * @return The play ID, or {@code null} if unknown.
      */
     public UUID getPlayId() {
         return body != null ? body.playId : null;
@@ -65,13 +65,25 @@ public final class AudioPlayStopEvent extends EventWithBody<AudioPlayStopEvent.B
         }
 
         /**
+         * Unique audio play identifier.
          *
-         * @param playId
+         * @param playId Unique audio play identifier as a string.
          *
          * @return This builder.
          */
         public Builder playId(String playId) {
-            this.playId = UUID.fromString(playId);
+            return playId(UUID.fromString(playId));
+        }
+
+        /**
+         * Unique audio play identifier.
+         *
+         * @param playId Unique audio play identifier.
+         *
+         * @return This builder.
+         */
+        public Builder playId(UUID playId) {
+            this.playId = playId;
             return this;
         }
 

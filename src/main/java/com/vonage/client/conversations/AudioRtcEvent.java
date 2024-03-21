@@ -41,8 +41,9 @@ abstract class AudioRtcEvent extends EventWithBody<AudioRtcEvent.Body> {
     }
 
     /**
+     * Unique audio RTC identifier.
      *
-     * @return
+     * @return The RTC ID, or {@code null} if unknown.
      */
     @JsonIgnore
     public UUID getRtcId() {
@@ -61,13 +62,25 @@ abstract class AudioRtcEvent extends EventWithBody<AudioRtcEvent.Body> {
         }
 
         /**
+         * Unique audio RTC identifier.
          *
-         * @param rtcId
+         * @param rtcId The RTC ID as a string.
          *
          * @return This builder.
          */
         public B rtcId(String rtcId) {
-            this.rtcId = UUID.fromString(rtcId);
+            return rtcId(UUID.fromString(rtcId));
+        }
+
+        /**
+         * Unique audio RTC identifier.
+         *
+         * @param rtcId The RTC ID.
+         *
+         * @return This builder.
+         */
+        public B rtcId(UUID rtcId) {
+            this.rtcId = rtcId;
             return (B) this;
         }
     }

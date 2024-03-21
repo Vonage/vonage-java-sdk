@@ -106,7 +106,7 @@ public class ConversationsClient {
 		return validateId("CON-", id);
 	}
 
-	private static String validateMemberId(String id) {
+	static String validateMemberId(String id) {
 		return validateId("MEM-", id);
 	}
 

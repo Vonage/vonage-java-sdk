@@ -36,7 +36,8 @@ import com.vonage.client.common.ChannelType;
         @JsonSubTypes.Type(value = Vbc.class, name = "vbc"),
         @JsonSubTypes.Type(value = Viber.class, name = "viber"),
         @JsonSubTypes.Type(value = Websocket.class, name = "websocket"),
-        @JsonSubTypes.Type(value = Whatsapp.class, name = "whatsapp")
+        @JsonSubTypes.Type(value = Whatsapp.class, name = "whatsapp"),
+        @JsonSubTypes.Type(value = WhatsappVoice.class, name = "whatsapp-voice")
 })
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -106,6 +107,7 @@ public abstract class Channel extends JsonableBaseObject {
             case VIBER: return Viber.class;
             case WEBSOCKET: return Websocket.class;
             case WHATSAPP: return Whatsapp.class;
+            case WHATSAPP_VOICE: return WhatsappVoice.class;
         }
     }
 }
