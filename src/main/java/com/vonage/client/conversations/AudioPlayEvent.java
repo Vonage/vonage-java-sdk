@@ -35,6 +35,7 @@ public final class AudioPlayEvent extends AudioOutEvent<AudioPlayEvent.Body> {
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     static final class Body extends AudioOutEvent.Body {
+
         @JsonProperty("stream_url") private String[] streamUrl;
 
         Body() {}

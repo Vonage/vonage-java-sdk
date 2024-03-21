@@ -34,7 +34,7 @@ abstract class AudioOutEvent<T extends AudioOutEvent.Body> extends EventWithBody
 
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public abstract static class Body extends JsonableBaseObject {
+    public static class Body extends JsonableBaseObject {
         @JsonProperty("queue") Boolean queue;
         @JsonProperty("level") Double level;
         @JsonProperty("loop") Integer loop;

@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
+import java.util.UUID;
 
 abstract class AudioRtcEvent extends EventWithBody<AudioRtcEvent.Body> {
 
@@ -36,7 +37,7 @@ abstract class AudioRtcEvent extends EventWithBody<AudioRtcEvent.Body> {
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     static class Body extends JsonableBaseObject {
-        @JsonProperty("rtc_id") private String rtcId;
+        @JsonProperty("rtc_id") private UUID rtcId;
     }
 
     /**
@@ -44,7 +45,7 @@ abstract class AudioRtcEvent extends EventWithBody<AudioRtcEvent.Body> {
      * @return
      */
     @JsonIgnore
-    public String getRtcId() {
+    public UUID getRtcId() {
         return body != null ? body.rtcId : null;
     }
 
@@ -53,7 +54,11 @@ abstract class AudioRtcEvent extends EventWithBody<AudioRtcEvent.Body> {
             B extends Builder<? extends E, ? extends  B>>
             extends EventWithBody.Builder<AudioRtcEvent, Builder<E, B>> {
 
-        private String rtcId;
+        private UUID rtcId;
+
+        Builder(EventType type) {
+            super(type);
+        }
 
         /**
          *
@@ -62,11 +67,8 @@ abstract class AudioRtcEvent extends EventWithBody<AudioRtcEvent.Body> {
          * @return This builder.
          */
         public B rtcId(String rtcId) {
+            this.rtcId = UUID.fromString(rtcId);
             return (B) this;
-        }
-
-        Builder(EventType type) {
-            super(type);
         }
     }
 }

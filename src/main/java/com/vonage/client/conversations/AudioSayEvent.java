@@ -17,6 +17,8 @@ package com.vonage.client.conversations;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.UUID;
 
 /**
  * Represents an {@link EventType#AUDIO_SAY} event.
@@ -33,12 +35,23 @@ public final class AudioSayEvent extends AudioOutEvent<AudioSayEvent.Body> {
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     static final class Body extends AudioOutEvent.Body {
+        @JsonProperty("say_id") private UUID sayId;
 
         Body() {}
 
         Body(Builder builder) {
             super(builder);
         }
+    }
+
+
+    /**
+     *
+     *
+     * @return
+     */
+    public UUID getSayId() {
+        return body != null ? body.sayId : null;
     }
 
     /**
@@ -55,7 +68,6 @@ public final class AudioSayEvent extends AudioOutEvent<AudioSayEvent.Body> {
         Builder() {
             super(EventType.AUDIO_SAY);
         }
-
 
         @Override
         public AudioSayEvent build() {
