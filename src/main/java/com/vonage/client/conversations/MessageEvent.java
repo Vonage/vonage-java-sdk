@@ -30,6 +30,7 @@ public final class MessageEvent extends EventWithBody<MessageEventBody> {
 
     MessageEvent(Builder builder) {
         super(builder);
+        body = new MessageEventBody(builder);
     }
 
     /**
@@ -84,17 +85,58 @@ public final class MessageEvent extends EventWithBody<MessageEventBody> {
      *
      * @return A new Builder.
      */
-    public static Builder builder() {
-        return new Builder();
+    public static Builder builder(MessageType messageType) {
+        return new Builder(messageType);
     }
 
     /**
      * Builder for configuring parameters of the event request.
      */
-    public static class Builder extends EventWithBody.Builder<MessageEvent, Builder> {
+    public static final class Builder extends EventWithBody.Builder<MessageEvent, Builder> {
+        final MessageType messageType;
+        String text;
+        URI url;
+        Location location;
 
-        Builder() {
+        Builder(MessageType messageType) {
             super(EventType.MESSAGE);
+            this.messageType = messageType;
+        }
+
+        /**
+         *
+         *
+         * @param text
+         *
+         * @return This builder.
+         */
+        public Builder text(String text) {
+            this.text = text;
+            return this;
+        }
+
+        /**
+         *
+         *
+         * @param url
+         *
+         * @return This builder.
+         */
+        public Builder url(String url) {
+            this.url = URI.create(url);
+            return this;
+        }
+
+        /**
+         *
+         *
+         * @param location
+         *
+         * @return This builder.
+         */
+        public Builder location(Location location) {
+            this.location = location;
+            return this;
         }
 
         @Override

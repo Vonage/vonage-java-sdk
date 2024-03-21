@@ -67,8 +67,8 @@ public final class Location extends JsonableBaseObject {
      *
      * @return A new Builder.
      */
-    public static MessageEvent.Builder builder() {
-        return new MessageEvent.Builder();
+    public static Builder builder() {
+        return new Builder();
     }
 
     public static final class Builder {

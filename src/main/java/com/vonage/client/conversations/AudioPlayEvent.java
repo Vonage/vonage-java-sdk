@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.UUID;
 
 /**
  * Represents an {@link EventType#AUDIO_PLAY} event.
@@ -35,7 +36,7 @@ public final class AudioPlayEvent extends AudioOutEvent<AudioPlayEvent.Body> {
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
     @JsonIgnoreProperties(ignoreUnknown = true)
     static final class Body extends AudioOutEvent.Body {
-
+        @JsonProperty("play_id") private UUID playId;
         @JsonProperty("stream_url") private String[] streamUrl;
 
         Body() {}
@@ -44,6 +45,15 @@ public final class AudioPlayEvent extends AudioOutEvent<AudioPlayEvent.Body> {
             super(builder);
             streamUrl = builder.streamUrl;
         }
+    }
+
+    /**
+     *
+     *
+     * @return
+     */
+    public UUID getPlayId() {
+        return body != null ? body.playId : null;
     }
 
     /**
