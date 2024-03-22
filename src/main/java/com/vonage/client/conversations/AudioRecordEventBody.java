@@ -13,30 +13,19 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.vonage.client.users.channels;
+package com.vonage.client.conversations;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.vonage.client.JsonableBaseObject;
 
-/**
- * Represents a WhatsApp Voice channel.
- *
- * @since 8.4.0
- */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NONE, visible = true)
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class WhatsappVoice extends NumberChannel {
+class RecordEventBody extends JsonableBaseObject {
 
-	protected WhatsappVoice() {}
+    RecordEventBody() {}
 
-	/**
-	 * Creates a new WhatsApp Voice channel.
-	 *
-	 * @param number The phone number in E.164 format.
-	 */
-	public WhatsappVoice(String number) {
-		super(number);
-	}
+    RecordEventBody(AudioRecordEvent.Builder builder) {
+
+    }
 }

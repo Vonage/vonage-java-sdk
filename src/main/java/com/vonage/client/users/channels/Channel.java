@@ -68,8 +68,11 @@ public abstract class Channel extends JsonableBaseObject {
     @JsonIgnore
     public void setTypeField() {
         String name = getClass().getSimpleName();
-        if (name.equalsIgnoreCase("Pstn")) {
+        if (name.equals("Pstn")) {
             name = "Phone";
+        }
+        if (name.equals("WhatsappVoice")) {
+            name = "whatsapp-voice";
         }
         type = ChannelType.fromString(name);
     }
