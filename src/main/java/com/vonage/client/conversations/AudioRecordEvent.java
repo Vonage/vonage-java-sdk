@@ -31,7 +31,9 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
     }
 
     /**
-     * @return The language, or {@code null} if absent / unknown / not applicable.
+     * Text-to-speech transcription language.
+     *
+     * @return The transcription language as an enum, or {@code null} if unspecified.
      */
     @JsonIgnore
     public TextToSpeechLanguage getLanguage() {
@@ -39,7 +41,10 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
     }
 
     /**
-     * @return The sentimentAnalysis, or {@code null} if absent / unknown / not applicable.
+     * Whether sentiment analysis is enabled.
+     *
+     * @return {@code true} if sentiment analysis is enabled,
+     * or {@code null} if transcription is not enabled.
      */
     @JsonIgnore
     public Boolean getSentimentAnalysis() {
@@ -47,7 +52,18 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
     }
 
     /**
-     * @return The validity, or {@code null} if absent / unknown / not applicable.
+     * File format for the recording.
+     *
+     * @return The recording format as a string, or {@code null} if unspecified.
+     */
+    public String getFormat() {
+        return body.format;
+    }
+
+    /**
+     * The validity parameter.
+     *
+     * @return The validity as an integer, or {@code null} if unspecified.
      */
     @JsonIgnore
     public Integer getValidity() {
@@ -55,7 +71,9 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
     }
 
     /**
-     * @return The channels, or {@code null} if absent / unknown / not applicable.
+     * Number of channels for the recording.
+     *
+     * @return The number of channels as an Integer, or {@code null} if unspecified.
      */
     @JsonIgnore
     public Integer getChannels() {
@@ -63,7 +81,9 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
     }
 
     /**
-     * @return The streamed, or {@code null} if absent / unknown / not applicable.
+     * Whether the audio recording is streamed.
+     *
+     * @return {@code true} if the recording is streamed, or {@code null} if unspecified.
      */
     @JsonIgnore
     public Boolean getStreamed() {
@@ -71,7 +91,9 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
     }
 
     /**
-     * @return The split, or {@code null} if absent / unknown / not applicable.
+     * Whether the audio is split.
+     *
+     * @return {@code true} if the recording is split, or {@code null} if unspecified.
      */
     @JsonIgnore
     public Boolean getSplit() {
@@ -79,7 +101,9 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
     }
 
     /**
-     * @return The multitrack, or {@code null} if absent / unknown / not applicable.
+     * Whether the audio has multiple tracks.
+     *
+     * @return {@code true} if the recording is multi-track, or {@code null} if unspecified.
      */
     @JsonIgnore
     public Boolean getMultitrack() {
@@ -87,7 +111,9 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
     }
 
     /**
-     * @return The detectSpeech, or {@code null} if absent / unknown / not applicable.
+     * Whether to detect speech in the recording.
+     *
+     * @return {@code true} if speech detection is enabled, or {@code null} if unspecified.
      */
     @JsonIgnore
     public Boolean getDetectSpeech() {
@@ -95,7 +121,9 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
     }
 
     /**
-     * @return The beepStart, or {@code null} if absent / unknown / not applicable.
+     * Whether to enable beep start.
+     *
+     * @return {@code true} if beep start, or {@code null} if unspecified.
      */
     @JsonIgnore
     public Boolean getBeepStart() {
@@ -103,7 +131,9 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
     }
 
     /**
-     * @return The beepStop, or {@code null} if absent / unknown / not applicable.
+     * Whether to enable beep stop.
+     *
+     * @return {@code true} if beep stop, or {@code null} if unspecified.
      */
     @JsonIgnore
     public Boolean getBeepStop() {
@@ -119,6 +149,9 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
         return new Builder();
     }
 
+    /**
+     * Builder for setting the Audio Record event parameters.
+     */
     public static final class Builder extends EventWithBody.Builder<AudioRecordEvent, Builder> {
         String format;
         Integer validity, channels;
@@ -130,8 +163,9 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
         }
 
         /**
+         * File format for the recording.
          *
-         * @param format
+         * @param format The format as a string.
          *
          * @return This builder.
          */
@@ -141,8 +175,9 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
         }
 
         /**
+         * Audio recording validity parameter.
          *
-         * @param validity
+         * @param validity The validity as an int.
          *
          * @return This builder.
          */
@@ -152,8 +187,9 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
         }
 
         /**
+         * Number of channels for the recording.
          *
-         * @param channels
+         * @param channels The number of channels as an int.
          *
          * @return This builder.
          */
@@ -163,8 +199,9 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
         }
 
         /**
+         * Whether the audio recording is streamed.
          *
-         * @param streamed
+         * @param streamed {@code true} if the recording should be streamed.
          *
          * @return This builder.
          */
@@ -174,8 +211,9 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
         }
 
         /**
+         * Whether the recording should be split.
          *
-         * @param split
+         * @param split {@code true} if the audio should be split.
          *
          * @return This builder.
          */
@@ -185,8 +223,9 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
         }
 
         /**
+         * Whether the audio should have multiple tracks.
          *
-         * @param multitrack
+         * @param multitrack {@code true} if the recording should be multi-track.
          *
          * @return This builder.
          */
@@ -196,8 +235,9 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
         }
 
         /**
+         * Whether speech detection is enabled.
          *
-         * @param detectSpeech
+         * @param detectSpeech {@code true} to enable speech detection.
          *
          * @return This builder.
          */
@@ -207,8 +247,9 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
         }
 
         /**
+         * Whether to set the {@code beep_start} flag.
          *
-         * @param beepStart
+         * @param beepStart {@code true} to enable beep start.
          *
          * @return This builder.
          */
@@ -218,8 +259,9 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
         }
 
         /**
+         * Whether to set the {@code beep_stop} flag.
          *
-         * @param beepStop
+         * @param beepStop {@code true} to enable beep stop.
          *
          * @return This builder.
          */
@@ -229,8 +271,9 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
         }
 
         /**
+         * Whether to enable sentiment analysis in the recording transcription.
          *
-         * @param sentimentAnalysis
+         * @param sentimentAnalysis {@code true} to enable transcription sentiment analysis.
          *
          * @return This builder.
          */
@@ -240,8 +283,9 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
         }
 
         /**
+         * Text-to-speech transcription language. Setting this will enable recording transcription.
          *
-         * @param language
+         * @param language The transcription language as an enum.
          *
          * @return This builder.
          */
