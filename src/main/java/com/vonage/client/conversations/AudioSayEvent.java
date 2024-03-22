@@ -15,35 +15,21 @@
  */
 package com.vonage.client.conversations;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.vonage.client.voice.TextToSpeechLanguage;
 import java.util.UUID;
 
 /**
  * Represents an {@link EventType#AUDIO_SAY} event.
  */
-public final class AudioSayEvent extends AudioOutEvent<AudioSayEvent.Body> {
+public final class AudioSayEvent extends AudioOutEvent<AudioSayEventBody> {
 
     AudioSayEvent() {}
 
     private AudioSayEvent(Builder builder) {
         super(builder);
-        body = new Body(builder);
+        body = new AudioSayEventBody(builder);
     }
-
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    static final class Body extends AudioOutEvent.Body {
-        @JsonProperty("say_id") private UUID sayId;
-
-        Body() {}
-
-        Body(Builder builder) {
-            super(builder);
-        }
-    }
-
 
     /**
      * Unique audio say identifier.
@@ -52,6 +38,58 @@ public final class AudioSayEvent extends AudioOutEvent<AudioSayEvent.Body> {
      */
     public UUID getSayId() {
         return body != null ? body.sayId : null;
+    }
+
+    /**
+     * Text to be spoken.
+     *
+     * @return The speech text.
+     */
+    @JsonIgnore
+    public String getText() {
+        return body.text;
+    }
+
+    /**
+     * Text-to-speech voice style. See the
+     * <a href=https://developer.vonage.com/en/voice/voice-api/concepts/text-to-speech#supported-languagesVoice>
+     * Voice API documentation</a> for valid options.
+     *
+     * @return The TTS style as an Integer, or {@code null} if unspecified.
+     */
+    @JsonIgnore
+    public Integer getStyle() {
+        return body.style;
+    }
+
+    /**
+     * Language for the spoken text.
+     *
+     * @return The TTS language as an enum, or {@code null} if unspecified.
+     */
+    @JsonIgnore
+    public TextToSpeechLanguage getLanguage() {
+        return body.language;
+    }
+
+    /**
+     * Whether to use the premium version of the text-to-speech voice.
+     *
+     * @return {@code true} to use Premium TTS, or {@code null} if unspecified.
+     */
+    @JsonIgnore
+    public Boolean getPremium() {
+        return body.premium;
+    }
+
+    /**
+     * Whether to enable Synthesized Speech Markup Language (SSML).
+     *
+     * @return {@code true} to use SSML, or {@code null} if unspecified.
+     */
+    @JsonIgnore
+    public Boolean getSsml() {
+        return body.ssml;
     }
 
     /**
@@ -64,9 +102,70 @@ public final class AudioSayEvent extends AudioOutEvent<AudioSayEvent.Body> {
     }
 
     public static final class Builder extends AudioOutEvent.Builder<AudioSayEvent, Builder> {
+        String text;
+        Integer style;
+        TextToSpeechLanguage language;
+        Boolean premium, ssml;
 
         Builder() {
             super(EventType.AUDIO_SAY);
+        }
+
+        /**
+         * (REQUIRED) Text to be spoken.
+         *
+         * @param text The speech text.
+         * @return This builder.
+         */
+        public Builder text(String text) {
+            this.text = text;
+            return this;
+        }
+
+        /**
+         * Text-to-speech voice style. See the
+         * <a href=https://developer.vonage.com/en/voice/voice-api/concepts/text-to-speech#supported-languagesVoice>
+         * Voice API documentation</a> for valid options.
+         *
+         * @param style The TTS style as an int.
+         * @return This builder.
+         */
+        public Builder style(int style) {
+            this.style = style;
+            return this;
+        }
+
+        /**
+         * Language for the spoken text.
+         *
+         * @param language The TTS language as an enum.
+         * @return This builder.
+         */
+        public Builder language(TextToSpeechLanguage language) {
+            this.language = language;
+            return this;
+        }
+
+        /**
+         * Whether to use the premium version of the text-to-speech voice.
+         *
+         * @param premium {@code true} to use Premium TTS.
+         * @return This builder.
+         */
+        public Builder premium(boolean premium) {
+            this.premium = premium;
+            return this;
+        }
+
+        /**
+         * Whether to enable Synthesized Speech Markup Language (SSML).
+         *
+         * @param ssml {@code true} to use SSML.
+         * @return This builder.
+         */
+        public Builder ssml(boolean ssml) {
+            this.ssml = ssml;
+            return this;
         }
 
         @Override
