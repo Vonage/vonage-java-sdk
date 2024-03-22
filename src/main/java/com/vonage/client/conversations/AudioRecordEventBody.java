@@ -17,15 +17,47 @@ package com.vonage.client.conversations;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
+import com.vonage.client.voice.TextToSpeechLanguage;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-class RecordEventBody extends JsonableBaseObject {
+class AudioRecordEventBody extends JsonableBaseObject {
+    @JsonProperty("transcription") Transcription transcription;
+    @JsonProperty("format") String format;
+    @JsonProperty("validity") Integer validity;
+    @JsonProperty("channels") Integer channels;
+    @JsonProperty("streamed") Boolean streamed;
+    @JsonProperty("split") Boolean split;
+    @JsonProperty("multitrack") Boolean multitrack;
+    @JsonProperty("detect_speech") Boolean detectSpeech;
+    @JsonProperty("beep_start") Boolean beepStart;
+    @JsonProperty("beep_stop") Boolean beepStop;
 
-    RecordEventBody() {}
+    @JsonInclude(value = JsonInclude.Include.NON_NULL)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    static class Transcription extends JsonableBaseObject {
+       @JsonProperty("language") TextToSpeechLanguage language;
+       @JsonProperty("sentiment_analysis") Boolean sentimentAnalysis;
+    }
 
-    RecordEventBody(AudioRecordEvent.Builder builder) {
+    AudioRecordEventBody() {}
 
+    AudioRecordEventBody(AudioRecordEvent.Builder builder) {
+        if (builder.language != null || builder.sentimentAnalysis != null) {
+            transcription = new Transcription();
+            transcription.language = builder.language;
+            transcription.sentimentAnalysis = builder.sentimentAnalysis;
+        }
+        format = builder.format;
+        validity = builder.validity;
+        channels = builder.channels;
+        streamed = builder.streamed;
+        split = builder.split;
+        multitrack = builder.multitrack;
+        detectSpeech = builder.detectSpeech;
+        beepStart = builder.beepStart;
+        beepStop = builder.beepStop;
     }
 }
