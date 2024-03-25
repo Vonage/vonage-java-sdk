@@ -18,34 +18,24 @@ package com.vonage.client.conversations;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.voice.TextToSpeechLanguage;
+import java.net.URI;
 import java.util.UUID;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-class AudioSayEventBody extends AudioOutEvent.Body {
-    @JsonProperty("say_id") UUID sayId;
-    @JsonProperty("text") String text;
-    @JsonProperty("style") Integer style;
-    @JsonProperty("language") TextToSpeechLanguage language;
-    @JsonProperty("premium") Boolean premium;
-    @JsonProperty("ssml") Boolean ssml;
+final class AudioPlayEventBody extends AudioOutEvent.Body {
+    @JsonProperty("play_id") UUID playId;
+    @JsonProperty("stream_url") URI[] streamUrl;
 
-    AudioSayEventBody() {
+    AudioPlayEventBody() {
     }
 
-    AudioSayEventBody(UUID sayId) {
-        this.sayId = sayId;
+    AudioPlayEventBody(UUID playId) {
+        this.playId = playId;
     }
 
-    AudioSayEventBody(AudioSayEvent.Builder builder) {
+    AudioPlayEventBody(AudioPlayEvent.Builder builder) {
         super(builder);
-        if ((text = builder.text) == null || text.trim().isEmpty()) {
-            throw new IllegalArgumentException("Speech text is required and cannot be empty.");
-        }
-        style = builder.style;
-        language = builder.language;
-        premium = builder.premium;
-        ssml = builder.ssml;
+        streamUrl = builder.streamUrl;
     }
 }

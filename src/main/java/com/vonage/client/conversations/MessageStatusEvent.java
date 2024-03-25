@@ -21,7 +21,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
-public abstract class MessageStatusEvent extends EventWithBody<MessageStatusEvent.Body> {
+abstract class MessageStatusEvent extends EventWithBody<MessageStatusEvent.Body> {
 
     MessageStatusEvent() {}
 

@@ -16,42 +16,25 @@
 package com.vonage.client.conversations;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.net.URI;
 import java.util.UUID;
 
 /**
  * Represents an {@link EventType#AUDIO_PLAY} event.
  */
-public final class AudioPlayEvent extends AudioOutEvent<AudioPlayEvent.Body> {
+public final class AudioPlayEvent extends AudioOutEvent<AudioPlayEventBody> {
 
     AudioPlayEvent() {}
 
     private AudioPlayEvent(Builder builder) {
         super(builder);
-        body = new Body(builder);
-    }
-
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    static final class Body extends AudioOutEvent.Body {
-        @JsonProperty("play_id") private UUID playId;
-        @JsonProperty("stream_url") private URI[] streamUrl;
-
-        Body() {}
-
-        Body(Builder builder) {
-            super(builder);
-            streamUrl = builder.streamUrl;
-        }
+        body = new AudioPlayEventBody(builder);
     }
 
     /**
      * Unique audio play identifier.
      *
-     * @return The say ID, or {@code null} if unknown.
+     * @return The play ID, or {@code null} if unknown.
      */
     public UUID getPlayId() {
         return body != null ? body.playId : null;
@@ -77,7 +60,7 @@ public final class AudioPlayEvent extends AudioOutEvent<AudioPlayEvent.Body> {
     }
 
     public static final class Builder extends AudioOutEvent.Builder<AudioPlayEvent, Builder> {
-        private URI[] streamUrl;
+        URI[] streamUrl;
 
         Builder() {
             super(EventType.AUDIO_PLAY);

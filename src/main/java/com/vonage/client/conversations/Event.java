@@ -30,6 +30,8 @@ import java.util.Objects;
 		property = "type"
 )
 @JsonSubTypes({
+		@JsonSubTypes.Type(value = EventDeleteEvent.class, name = "event:delete"),
+		@JsonSubTypes.Type(value = ConversationUpdatedEvent.class, name = "conversation:updated"),
 		@JsonSubTypes.Type(value = MessageSeenEvent.class, name = "message:seen"),
 		@JsonSubTypes.Type(value = MessageSubmittedEvent.class, name = "message:submitted"),
 		@JsonSubTypes.Type(value = MessageDeliveredEvent.class, name = "message:delivered"),

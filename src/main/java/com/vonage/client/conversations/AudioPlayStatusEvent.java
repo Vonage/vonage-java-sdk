@@ -17,30 +17,34 @@ package com.vonage.client.conversations;
 
 import java.util.UUID;
 
-/**
- * Represents an {@link EventType#AUDIO_PLAY_STOP} event.
- */
-public final class AudioPlayStopEvent extends AudioPlayStatusEvent {
+abstract class AudioPlayStatusEvent extends EventWithBody<AudioPlayEventBody> {
 
-    AudioPlayStopEvent() {}
+    AudioPlayStatusEvent() {}
 
-    private AudioPlayStopEvent(Builder builder) {
+    AudioPlayStatusEvent(Builder<?, ?> builder) {
         super(builder);
+        body = new AudioPlayEventBody(builder.playId);
     }
 
     /**
-     * Entry point for constructing an instance of this class.
+     * Unique audio play identifier.
      *
-     * @return A new Builder.
+     * @return The play ID, or {@code null} if unknown.
      */
-    public static Builder builder() {
-        return new Builder();
+    public UUID getPlayId() {
+        return body != null ? body.playId : null;
     }
 
-    public static final class Builder extends AudioPlayStatusEvent.Builder<AudioPlayStopEvent, Builder> {
 
-        Builder() {
-            super(EventType.AUDIO_PLAY_STOP);
+    @SuppressWarnings("unchecked")
+    static abstract class Builder<E extends AudioPlayStatusEvent,
+            B extends AudioPlayStatusEvent.Builder<? extends E, ? extends  B>>
+            extends EventWithBody.Builder<AudioPlayStatusEvent, AudioPlayStatusEvent.Builder<E, B>> {
+
+        UUID playId;
+
+        Builder(EventType type) {
+            super(type);
         }
 
         /**
@@ -50,7 +54,7 @@ public final class AudioPlayStopEvent extends AudioPlayStatusEvent {
          *
          * @return This builder.
          */
-        public Builder playId(String playId) {
+        public B playId(String playId) {
             return playId(UUID.fromString(playId));
         }
 
@@ -61,14 +65,9 @@ public final class AudioPlayStopEvent extends AudioPlayStatusEvent {
          *
          * @return This builder.
          */
-        public Builder playId(UUID playId) {
+        public B playId(UUID playId) {
             this.playId = playId;
-            return this;
-        }
-
-        @Override
-        public AudioPlayStopEvent build() {
-            return new AudioPlayStopEvent(this);
+            return (B) this;
         }
     }
 }

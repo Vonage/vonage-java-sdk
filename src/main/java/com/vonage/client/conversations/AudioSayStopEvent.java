@@ -15,37 +15,15 @@
  */
 package com.vonage.client.conversations;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.JsonableBaseObject;
-import java.util.UUID;
-
 /**
  * Represents an {@link EventType#AUDIO_SAY_STOP} event.
  */
-public final class AudioSayStopEvent extends EventWithBody<AudioSayStopEvent.Body> {
+public final class AudioSayStopEvent extends AudioSayStatusEvent {
 
     AudioSayStopEvent() {}
 
     private AudioSayStopEvent(Builder builder) {
         super(builder);
-        (body = new Body()).sayId = builder.sayId;
-    }
-
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    static class Body extends JsonableBaseObject {
-        @JsonProperty("say_id") private UUID sayId;
-    }
-
-    /**
-     * Unique audio say identifier.
-     *
-     * @return The say ID, or {@code null} if unknown.
-     */
-    public UUID getSayId() {
-        return body != null ? body.sayId : null;
     }
 
     /**
@@ -57,34 +35,9 @@ public final class AudioSayStopEvent extends EventWithBody<AudioSayStopEvent.Bod
         return new Builder();
     }
 
-    public static final class Builder extends EventWithBody.Builder<AudioSayStopEvent, Builder> {
-        private UUID sayId;
-
+    public static final class Builder extends AudioSayStatusEvent.Builder<AudioSayStopEvent, Builder> {
         Builder() {
-            super(EventType.AUDIO_RECORD_STOP);
-        }
-
-        /**
-         * Unique audio say identifier.
-         *
-         * @param sayId The say ID as a string.
-         *
-         * @return This builder.
-         */
-        public Builder sayId(String sayId) {
-            return sayId(UUID.fromString(sayId));
-        }
-
-        /**
-         * Unique audio say identifier.
-         *
-         * @param sayId The say ID
-         *
-         * @return This builder.
-         */
-        public Builder sayId(UUID sayId) {
-            this.sayId = sayId;
-            return this;
+            super(EventType.AUDIO_SAY_STOP);
         }
 
         @Override
