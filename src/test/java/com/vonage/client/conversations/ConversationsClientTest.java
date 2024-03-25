@@ -40,7 +40,8 @@ import java.util.function.Supplier;
 public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 	static final boolean IS_SYSTEM = false,
 			AUDIO = true, AUDIO_EARMUFFED = false, AUDIO_MUTED = true, AUDIO_ENABLED = true;
-	static final int PAGE_SIZE = 30, CONVERSATION_SEQUENCE_NUMBER = 159, CONVERSATION_TTL = 60;
+	static final int PAGE_SIZE = 30, EVENT_ID = (int) (Math.random() * 10),
+			CONVERSATION_SEQUENCE_NUMBER = 159, CONVERSATION_TTL = 60;
 	static final double USER_SESSION_TTL = 1.6;
 	static final SortOrder ORDER = SortOrder.DESCENDING;
 	static final ConversationStatus CONVERSATION_STATE = ConversationStatus.INACTIVE;
@@ -77,6 +78,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			REASON_TEXT = "Because I said so",
 			USER_NAME = "my_user_name",
 			USER_DISPLAY_NAME = "My User Name",
+			USER_IMAGE_URL_STR = "https://example.com/profile.jpg",
 			CONVERSATION_NAME = "customer_chat",
 			CONVERSATION_DISPLAY_NAME = "Chat with Customer",
 			CONVERSATION_IMAGE_URL_STR = "https://example.com/image.png",
@@ -86,6 +88,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			CHANNEL_TYPE_FROM_STR = "sms",
 			CHANNEL_TYPE_TO_STR = "mms",
 			ORDER_STR = "desc",
+			EVENT_TYPE_STR = "custom:test",
 			CONVERSATION_TYPE = "quick_chat",
 			CONVERSATION_CUSTOM_SORT_KEY = "CSK_1",
 			CONVERSATION_CUSTOM_DATA_STR = "{\"property1\":\"value1\",\"prop2\":\"Val 2\"}",
@@ -303,11 +306,39 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
                      }
                   }
                }
-            """;
+            """,
+			SAMPLE_EVENT_RESPONSE = STR."""
+   				{
+   					"id": \{EVENT_ID},
+					"type": "\{EVENT_TYPE_STR}",
+				    "from": "\{MEMBER_ID}",
+				    "body": \{CONVERSATION_CUSTOM_DATA_STR},
+				    "timestamp": "\{TIMESTAMP_CREATED_STR}",
+				    "_embedded": {
+				 	  "from_user": {
+				 		 "id": "\{USER_ID}",
+				 		 "name": "\{USER_NAME}",
+				 		 "display_name": "\{USER_DISPLAY_NAME}",
+				 		 "image_url": "\{USER_IMAGE_URL_STR}",
+				 		 "custom_data": {}
+				 	  },
+				 	  "from_member": {
+				 		 "id": "\{MEMBER_ID_INVITING}"
+				 	  }
+				    },
+				    "_links": {
+				 	  "self": {
+				 		 "href": "https://api.nexmo.com/v1/conversations/\{CONVERSATION_ID}/events/\{EVENT_ID}"
+				 	  }
+				    }
+				}
+			""";
 
 	static final Channel CHANNEL_FROM = new Sms(FROM_NUMBER), CHANNEL_TO = new Mms(TO_NUMBER);
 	static final UUID KNOCKING_ID = UUID.fromString(KNOCKING_ID_STR);
-	static final URI CONVERSATION_IMAGE_URL = URI.create(CONVERSATION_IMAGE_URL_STR);
+	static final URI
+			CONVERSATION_IMAGE_URL = URI.create(CONVERSATION_IMAGE_URL_STR),
+			USER_IMAGE_URL = URI.create(USER_IMAGE_URL_STR);
 	static final Instant
 			START_DATE = Instant.parse(START_DATE_STR.replace(' ','T')+'Z'),
 			END_DATE = Instant.parse(END_DATE_STR.replace(' ','T')+'Z'),
@@ -560,6 +591,11 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 		assertNull(request.getInitiator());
 		assertNull(request.getMedia());
 		assertNull(request.getTimestamp());
+	}
+
+	static void assertEqualsSampleEvent(Event parsed) {
+		testJsonableBaseObject(parsed);
+		// TODO
 	}
 	
 	// CONVERSATIONS
@@ -1444,4 +1480,99 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 		}
 		.runTests();
 	}
+
+
+	@Test
+	public void testDeleteEvent() throws Exception {
+		stubResponseAndRun(204, () -> client.deleteEvent(CONVERSATION_ID, EVENT_ID));
+		stubResponseAndAssertThrows(204,
+				() -> client.deleteEvent(null, EVENT_ID),
+				IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(204,
+				() -> client.deleteEvent(MEMBER_ID, EVENT_ID),
+				IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(204,
+				() -> client.deleteEvent(CONVERSATION_ID, -1),
+				IllegalArgumentException.class
+		);
+		assert401ResponseException(() -> client.deleteEvent(CONVERSATION_ID, EVENT_ID));
+	}
+
+	@Test
+	public void testDeleteEventEndpoint() throws Exception {
+		new ConversationsEndpointTestSpec<ConversationResourceRequestWrapper, Void>() {
+
+			@Override
+			protected RestEndpoint<ConversationResourceRequestWrapper, Void> endpoint() {
+				return client.deleteEvent;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.DELETE;
+			}
+
+			@Override
+			protected String expectedEndpointUri(ConversationResourceRequestWrapper request) {
+				return "/v1/conversations/"+request.conversationId+"/events/"+request.resourceId;
+			}
+
+			@Override
+			protected ConversationResourceRequestWrapper sampleRequest() {
+				return new ConversationResourceRequestWrapper(CONVERSATION_ID, String.valueOf(EVENT_ID));
+			}
+		}
+		.runTests();
+	}
+
+
+	@Test
+	public void testGetEvent() throws Exception {
+		stubResponse(200, SAMPLE_EVENT_RESPONSE);
+		assertEqualsSampleEvent(client.getEvent(CONVERSATION_ID, EVENT_ID));
+		stubResponseAndAssertThrows(200,
+				() -> client.getEvent(null, EVENT_ID),
+				IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(200,
+				() -> client.getEvent(USER_ID, EVENT_ID),
+				IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(200,
+				() -> client.getEvent(CONVERSATION_ID, -EVENT_ID),
+				IllegalArgumentException.class
+		);
+		assert401ResponseException(() -> client.getEvent(CONVERSATION_ID, EVENT_ID));
+	}
+
+	@Test
+	public void testGetEventEndpoint() throws Exception {
+		new ConversationsEndpointTestSpec<ConversationResourceRequestWrapper, Event>() {
+
+			@Override
+			protected RestEndpoint<ConversationResourceRequestWrapper, Event> endpoint() {
+				return client.getEvent;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedEndpointUri(ConversationResourceRequestWrapper request) {
+				return "/v1/conversations/"+request.conversationId+"/events/"+request.resourceId;
+			}
+
+			@Override
+			protected ConversationResourceRequestWrapper sampleRequest() {
+				return new ConversationResourceRequestWrapper(CONVERSATION_ID, String.valueOf(EVENT_ID));
+			}
+		}
+		.runTests();
+	}
+
+	// TODO List / Create
 }

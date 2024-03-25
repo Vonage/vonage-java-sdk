@@ -114,6 +114,13 @@ public class ConversationsClient {
 		return validateId("USR-", id);
 	}
 
+	private static String validateEventId(int id) {
+		if (id < 0) {
+			throw new IllegalArgumentException("Event ID cannot be negative.");
+		}
+		return String.valueOf(id);
+	}
+
 	private static <T> T validateRequest(T request) {
 		return Objects.requireNonNull(request, "Request parameter is required.");
 	}
@@ -368,7 +375,7 @@ public class ConversationsClient {
 	 */
 	public Event getEvent(String conversationId, int eventId) {
 		return getEvent.execute(new ConversationResourceRequestWrapper(
-				validateConversationId(conversationId), String.valueOf(eventId)
+				validateConversationId(conversationId), validateEventId(eventId)
 		));
 	}
 
@@ -399,7 +406,7 @@ public class ConversationsClient {
 	 */
 	public void deleteEvent(String conversationId, int eventId) {
 		deleteEvent.execute(new ConversationResourceRequestWrapper(
-				validateConversationId(conversationId), String.valueOf(eventId)
+				validateConversationId(conversationId), validateEventId(eventId)
 		));
 	}
 }

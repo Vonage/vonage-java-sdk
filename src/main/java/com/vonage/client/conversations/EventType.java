@@ -23,7 +23,12 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum EventType {
 	/**
-	 * Ephemeral.
+	 * Event type is not defined in this enum.
+	 */
+	UNKNOWN,
+
+	/**
+	 * Ephemeral (temporary) event.
 	 */
 	EPHEMERAL,
 
@@ -255,17 +260,27 @@ public enum EventType {
 
 	@JsonCreator
 	public static EventType fromString(String name) {
-		try {
-			return valueOf(name.toUpperCase().replace(':', '_'));
-		}
-		catch (NullPointerException | IllegalArgumentException ex) {
+		if (name == null || name.trim().isEmpty()) {
 			return null;
+		}
+		String upper = name.toUpperCase();
+		if (upper.startsWith("CUSTOM:")) {
+			return CUSTOM;
+		}
+		try {
+			return valueOf(upper.replace(':', '_'));
+		}
+		catch (IllegalArgumentException ex) {
+			return EventType.UNKNOWN;
 		}
 	}
 
 	@JsonValue
 	@Override
 	public String toString() {
+		if (this == SIP_AMD_MACHINE) {
+			return "sip:amd_machine";
+		}
 		return name().toLowerCase().replace('_', ':');
 	}
 }

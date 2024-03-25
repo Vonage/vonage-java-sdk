@@ -27,7 +27,8 @@ import java.util.Objects;
 @JsonTypeInfo(
 		use = JsonTypeInfo.Id.NAME,
 		include = JsonTypeInfo.As.EXISTING_PROPERTY,
-		property = "type"
+		property = "type",
+		defaultImpl = GenericEvent.class
 )
 @JsonSubTypes({
 		@JsonSubTypes.Type(value = EventDeleteEvent.class, name = "event:delete"),
@@ -38,9 +39,11 @@ import java.util.Objects;
 		@JsonSubTypes.Type(value = MessageUndeliverableEvent.class, name = "message:undeliverable"),
 		@JsonSubTypes.Type(value = MessageRejectedEvent.class, name = "message:rejected"),
 		@JsonSubTypes.Type(value = AudioPlayEvent.class, name = "audio:play"),
-		@JsonSubTypes.Type(value = AudioSayEvent.class, name = "audio:say"),
 		@JsonSubTypes.Type(value = AudioPlayStopEvent.class, name = "audio:play:stop"),
+		@JsonSubTypes.Type(value = AudioPlayDoneEvent.class, name = "audio:play:done"),
+		@JsonSubTypes.Type(value = AudioSayEvent.class, name = "audio:say"),
 		@JsonSubTypes.Type(value = AudioSayStopEvent.class, name = "audio:say:stop"),
+		@JsonSubTypes.Type(value = AudioSayDoneEvent.class, name = "audio:say:done"),
 		@JsonSubTypes.Type(value = AudioRecordEvent.class, name = "audio:record"),
 		@JsonSubTypes.Type(value = AudioRecordStopEvent.class, name = "audio:record:stop"),
 		@JsonSubTypes.Type(value = AudioMuteOnEvent.class, name = "audio:mute:on"),
