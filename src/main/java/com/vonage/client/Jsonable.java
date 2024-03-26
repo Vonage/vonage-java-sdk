@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 
 /**
  * Indicates that a class can be serialized to and parsed from JSON.
@@ -105,6 +106,9 @@ public interface Jsonable {
 	 */
 	static <J extends Jsonable> J fromJson(String json, Class<? extends J> jsonable) {
 		try {
+			if (Modifier.isAbstract(jsonable.getModifiers())) {
+				return createDefaultObjectMapper().readValue(json, jsonable);
+			}
 			Constructor<? extends J> constructor = jsonable.getDeclaredConstructor();
 			if (!(constructor.isAccessible())) {
 				constructor.setAccessible(true);
@@ -113,8 +117,8 @@ public interface Jsonable {
 			instance.updateFromJson(json);
 			return instance;
 		}
-		catch (ReflectiveOperationException ex) {
+		catch (ReflectiveOperationException | JsonProcessingException ex) {
 			throw new VonageUnexpectedException(ex);
 		}
-	}
+    }
 }

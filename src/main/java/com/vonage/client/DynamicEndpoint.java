@@ -26,7 +26,6 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -292,25 +291,11 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 				return (R) cachedRequestBody;
 			}
 
-			for (java.lang.reflect.Method method : responseType.getDeclaredMethods()) {
-				boolean matching = Modifier.isStatic(method.getModifiers()) &&
-						method.getName().equals("fromJson") &&
-						responseType.isAssignableFrom(method.getReturnType());
-				if (matching) {
-					Class<?>[] params = method.getParameterTypes();
-					if (params.length == 1 && params[0].equals(String.class)) {
-						if (!method.isAccessible()) {
-							method.setAccessible(true);
-						}
-						return (R) method.invoke(responseType, deser);
-					}
-				}
-			}
-
 			if (Jsonable.class.isAssignableFrom(responseType)) {
 				return (R) Jsonable.fromJson(deser, (Class<? extends Jsonable>) responseType);
 			}
-			else if (Collection.class.isAssignableFrom(responseType)) {
+			else if (Collection.class.isAssignableFrom(responseType) ||
+					(responseType.isArray() && Jsonable.class.isAssignableFrom(responseType.getComponentType()))) {
 				return Jsonable.createDefaultObjectMapper().readValue(deser, responseType);
 			}
 			else {

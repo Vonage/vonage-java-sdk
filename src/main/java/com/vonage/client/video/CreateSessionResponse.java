@@ -18,7 +18,7 @@ package com.vonage.client.video;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.VonageResponseParseException;
 import java.io.IOException;
@@ -75,8 +75,8 @@ public class CreateSessionResponse extends JsonableBaseObject {
 	 */
 	public static CreateSessionResponse fromJson(String json) {
 		try {
-			ObjectMapper mapper = new ObjectMapper();
-			CreateSessionResponse[] array = mapper.readValue(json, CreateSessionResponse[].class);
+			CreateSessionResponse[] array = Jsonable.createDefaultObjectMapper()
+					.readValue(json, CreateSessionResponse[].class);
 			if (array == null || array.length == 0) {
 				return new CreateSessionResponse();
 			}
