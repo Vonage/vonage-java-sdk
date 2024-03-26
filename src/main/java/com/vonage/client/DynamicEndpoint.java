@@ -314,17 +314,9 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		String exMessage = EntityUtils.toString(response.getEntity());
 		if (responseExceptionType != null) {
 			if (VonageApiResponseException.class.isAssignableFrom(responseExceptionType)) {
-				Constructor<? extends Exception> constructor = responseExceptionType.getDeclaredConstructor();
-				if (!constructor.isAccessible()) {
-					constructor.setAccessible(true);
-				}
-				VonageApiResponseException varex = (VonageApiResponseException) constructor.newInstance();
-				try {
-					varex.updateFromJson(exMessage);
-				}
-				catch (VonageResponseParseException ex) {
-					throw new VonageUnexpectedException(exMessage);
-				}
+				VonageApiResponseException varex = Jsonable.fromJson(exMessage,
+						(Class<? extends VonageApiResponseException>) responseExceptionType
+				);
 				if (varex.title == null) {
 					varex.title = response.getStatusLine().getReasonPhrase();
 				}
