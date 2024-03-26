@@ -17,3 +17,4 @@ valid_application_key.pem
 *.iml
 out/
 .DS_Store
+gradle/wrapper/gradle-wrapper.jar

@@ -4,8 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-# [8.4.0] - 2024-03-??
-- Added Conversations API implementation
+# [8.4.0] - 2024-04-??
+- Added Conversation API implementation
 - Type inference for User channels (`com.vonage.client.users.channels`)
   - Added `com.vonage.client.common.ChannelType` enum
   - Added `@JsonSubTypes` for improved deserialisation support
