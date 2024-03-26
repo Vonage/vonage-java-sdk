@@ -16,7 +16,11 @@
 package com.vonage.client.conversations;
 
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
+import com.vonage.client.VonageResponseParseException;
 import com.vonage.client.users.User;
 import java.time.Instant;
 import java.util.Objects;
@@ -131,6 +135,22 @@ public abstract class Event extends JsonableBaseObject {
 	public BaseMember getFromMember() {
 		return _embedded != null ? _embedded.fromMember : null;
 	}
+
+	/**
+	 * Parses the JSON into the appropriate Event subclass.
+	 *
+	 * @param json The JSON string to parse.
+	 * @return The most suitable Event instance with known fields populated, if present.
+	 * @param <E> The type of Event to parse, if known in advance. This is for type casting convenience.
+	 */
+	public static <E extends Event> E fromJson(String json) {
+        try {
+            return Jsonable.createDefaultObjectMapper().readValue(json, new TypeReference<E>(){});
+        }
+        catch (JsonProcessingException ex) {
+            throw new VonageResponseParseException("Failed to produce Event from JSON.", ex);
+        }
+    }
 
 	/**
 	 * Builder for constructing an event request's parameters.

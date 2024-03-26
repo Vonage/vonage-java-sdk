@@ -308,13 +308,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			}
 
 			if (Jsonable.class.isAssignableFrom(responseType)) {
-				Constructor<R> constructor = responseType.getDeclaredConstructor();
-				if (!constructor.isAccessible()) {
-					constructor.setAccessible(true);
-				}
-				R responseBody = constructor.newInstance();
-				((Jsonable) responseBody).updateFromJson(deser);
-				return responseBody;
+				return (R) Jsonable.fromJson(deser, (Class<? extends Jsonable>) responseType);
 			}
 			else if (Collection.class.isAssignableFrom(responseType)) {
 				return Jsonable.createDefaultObjectMapper().readValue(deser, responseType);

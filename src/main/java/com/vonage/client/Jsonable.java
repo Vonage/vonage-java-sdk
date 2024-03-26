@@ -67,7 +67,7 @@ public interface Jsonable {
 			createDefaultObjectMapper().readerForUpdating(this).readValue(json);
 		}
 		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to produce "+getClass().getSimpleName()+" from json.", ex);
+			throw new VonageResponseParseException("Failed to produce "+getClass().getSimpleName()+" from JSON.", ex);
 		}
 	}
 
