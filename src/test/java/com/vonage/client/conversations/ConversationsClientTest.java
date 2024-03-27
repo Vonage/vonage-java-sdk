@@ -46,6 +46,8 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 	static final SortOrder ORDER = SortOrder.DESCENDING;
 	static final ConversationStatus CONVERSATION_STATE = ConversationStatus.INACTIVE;
 	static final MemberState MEMBER_STATE = MemberState.JOINED;
+	static final Class<? extends Event> KNOWN_EVENT_CLASS = AudioSayDoneEvent.class;
+	static final EventType KNOWN_EVENT_TYPE = EventType.AUDIO_SAY_DONE, CUSTOM_EVENT_TYPE = EventType.CUSTOM;
 	static final ChannelType CHANNEL_TYPE = ChannelType.PHONE,
 			CHANNEL_TYPE_TO = ChannelType.MMS, CHANNEL_TYPE_FROM = ChannelType.SMS;
 	static final Map<String, Object> CONVERSATION_CUSTOM_DATA = Map.of(
@@ -88,7 +90,8 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			CHANNEL_TYPE_FROM_STR = "sms",
 			CHANNEL_TYPE_TO_STR = "mms",
 			ORDER_STR = "desc",
-			EVENT_TYPE_STR = "custom:test",
+			CUSTOM_EVENT_TYPE_STR = "custom:test",
+			KNOWN_EVENT_TYPE_STR = "audio:say:done",
 			CONVERSATION_TYPE = "quick_chat",
 			CONVERSATION_CUSTOM_SORT_KEY = "CSK_1",
 			CONVERSATION_CUSTOM_DATA_STR = "{\"property1\":\"value1\",\"prop2\":\"Val 2\"}",
@@ -310,7 +313,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			SAMPLE_EVENT_RESPONSE = STR."""
    				{
    					"id": \{EVENT_ID},
-					"type": "\{EVENT_TYPE_STR}",
+					"type": "\{CUSTOM_EVENT_TYPE_STR}",
 				    "from": "\{MEMBER_ID}",
 				    "body": \{CONVERSATION_CUSTOM_DATA_STR},
 				    "timestamp": "\{TIMESTAMP_CREATED_STR}",
@@ -332,6 +335,18 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 				 	  }
 				    }
 				}
+			""",
+			SAMPLE_LIST_EVENTS_RESPONSE = STR."""
+   				{
+					"page_size": \{PAGE_SIZE},
+					"_links": {
+					  "first": {},"self": {},"next": {},"prev": {}
+					},
+					"_embedded": [
+						\{SAMPLE_EVENT_RESPONSE},
+						{}, {"type": "\{KNOWN_EVENT_TYPE_STR}"}
+					]
+			   }
 			""";
 
 	static final Channel CHANNEL_FROM = new Sms(FROM_NUMBER), CHANNEL_TO = new Mms(TO_NUMBER);
@@ -595,7 +610,50 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 	static void assertEqualsSampleEvent(Event parsed) {
 		testJsonableBaseObject(parsed);
-		// TODO
+		assertEquals(CUSTOM_EVENT_TYPE, parsed.getType());
+		assertEquals(CustomEvent.class, parsed.getClass());
+		assertEquals(CONVERSATION_CUSTOM_DATA, ((CustomEvent) parsed).getBody());
+		assertEquals(EVENT_ID, parsed.getId());
+		assertEquals(MEMBER_ID, parsed.getFrom());
+		assertEquals(TIMESTAMP_CREATED, parsed.getTimestamp());
+		var fromMember = parsed.getFromMember();
+		testJsonableBaseObject(fromMember);
+		assertEquals(MEMBER_ID_INVITING, fromMember.getId());
+		assertNull(fromMember.getUser());
+		assertNull(fromMember.getState());
+		var fromUser = parsed.getFromUser();
+		testJsonableBaseObject(fromUser);
+		assertEquals(USER_ID, fromUser.getId());
+		assertEquals(USER_NAME, fromUser.getName());
+		assertEquals(USER_DISPLAY_NAME, fromUser.getDisplayName());
+		assertEquals(USER_IMAGE_URL, fromUser.getImageUrl());
+		assertEquals(Map.of(), fromUser.getCustomData());
+	}
+
+	static void assertEqualsEmptyEvent(Event parsed) {
+		testJsonableBaseObject(parsed);
+		assertEquals(GenericEvent.class, parsed.getClass());
+		assertNull(parsed.getType());
+		assertNull(parsed.getId());
+		assertNull(parsed.getTimestamp());
+		assertNull(parsed.getFrom());
+		assertNull(parsed.getFromMember());
+		assertNull(parsed.getFromUser());
+	}
+
+	static void assertEqualsSampleListEvents(ListEventsResponse parsed) {
+		testJsonableBaseObject(parsed);
+		assertEquals(PAGE_SIZE, parsed.getPageSize());
+		assertNotNull(parsed.getLinks());
+		var events = parsed.getEvents();
+		assertNotNull(events);
+		assertEquals(3, events.size());
+		assertEqualsSampleEvent(events.getFirst());
+		assertEqualsEmptyEvent(events.get(1));
+		var last = events.getLast();
+		testJsonableBaseObject(last);
+		assertEquals(KNOWN_EVENT_TYPE, last.getType());
+		assertEquals(KNOWN_EVENT_CLASS, last.getClass());
 	}
 	
 	// CONVERSATIONS
