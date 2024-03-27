@@ -15,12 +15,10 @@
  */
 package com.vonage.client.conversations;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
-import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.HalPageResponse;
 import java.util.List;
 
@@ -30,20 +28,9 @@ import java.util.List;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class ListEventsResponse extends HalPageResponse {
-	@JsonProperty("_embedded") private Embedded _embedded;
+	@JsonProperty("_embedded") private List<Event> events;
 
 	ListEventsResponse() {
-	}
-
-	@JsonInclude(value = JsonInclude.Include.NON_NULL)
-	@JsonIgnoreProperties(ignoreUnknown = true)
-	static final class Embedded extends JsonableBaseObject {
-		private List<Event> events;
-
-		@JsonProperty("events")
-		public List<Event> getEvents() {
-			return events;
-		}
 	}
 
 	/**
@@ -51,9 +38,9 @@ public final class ListEventsResponse extends HalPageResponse {
 	 *
 	 * @return The events for this page.
 	 */
-	@JsonIgnore
+	@JsonProperty("_embedded")
 	public List<Event> getEvents() {
-		return _embedded != null ? _embedded.getEvents() : null;
+		return events;
 	}
 	
 	/**

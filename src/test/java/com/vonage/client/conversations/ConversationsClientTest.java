@@ -34,13 +34,18 @@ import org.junit.jupiter.api.function.Executable;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 import java.util.function.Supplier;
 
 public class ConversationsClientTest extends ClientTest<ConversationsClient> {
-	static final boolean IS_SYSTEM = false,
+	static final Random RANDOM = new Random();
+	static final boolean IS_SYSTEM = false, EXCLUDE_DELETED_EVENTS = true,
 			AUDIO = true, AUDIO_EARMUFFED = false, AUDIO_MUTED = true, AUDIO_ENABLED = true;
-	static final int PAGE_SIZE = 30, EVENT_ID = (int) (Math.random() * 10),
+	static final int PAGE_SIZE = 30,
+			EVENT_ID = RANDOM.nextInt(100),
+			EVENT_START_ID = RANDOM.nextInt(EVENT_ID),
+			EVENT_END_ID = RANDOM.nextInt(EVENT_ID, EVENT_ID * 12),
 			CONVERSATION_SEQUENCE_NUMBER = 159, CONVERSATION_TTL = 60;
 	static final double USER_SESSION_TTL = 1.6;
 	static final SortOrder ORDER = SortOrder.DESCENDING;
@@ -75,7 +80,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			TIMESTAMP_LEFT_STR = "2020-10-30T04:59:57.106Z",
 			TO_NUMBER = "447900000001",
 			FROM_NUMBER = "491711234567",
-			MEMBER_FROM = "Another member",
+			MEMBER_FROM = "MEM-67bf6977-3eb8-40b8-b581-204fb4df33b1",
 			REASON_CODE = "test_code",
 			REASON_TEXT = "Because I said so",
 			USER_NAME = "my_user_name",
@@ -90,7 +95,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			CHANNEL_TYPE_FROM_STR = "sms",
 			CHANNEL_TYPE_TO_STR = "mms",
 			ORDER_STR = "desc",
-			CUSTOM_EVENT_TYPE_STR = "custom:test",
+			CUSTOM_EVENT_TYPE_STR = "custom",
 			KNOWN_EVENT_TYPE_STR = "audio:say:done",
 			CONVERSATION_TYPE = "quick_chat",
 			CONVERSATION_CUSTOM_SORT_KEY = "CSK_1",
@@ -350,7 +355,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			""";
 
 	static final Channel CHANNEL_FROM = new Sms(FROM_NUMBER), CHANNEL_TO = new Mms(TO_NUMBER);
-	static final UUID KNOCKING_ID = UUID.fromString(KNOCKING_ID_STR);
+	static final UUID KNOCKING_ID = UUID.fromString(KNOCKING_ID_STR), RANDOM_UUID = UUID.randomUUID();
 	static final URI
 			CONVERSATION_IMAGE_URL = URI.create(CONVERSATION_IMAGE_URL_STR),
 			USER_IMAGE_URL = URI.create(USER_IMAGE_URL_STR);
@@ -1632,5 +1637,119 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 		.runTests();
 	}
 
-	// TODO List / Create
+	@Test
+	public void testListEvents() throws Exception {
+		var request = ListEventsRequest.builder().build();
+		stubResponse(200, SAMPLE_LIST_EVENTS_RESPONSE);
+		var response = client.listEvents(CONVERSATION_ID, request);
+		assertEqualsSampleListEvents(response);
+		stubResponse(200, SAMPLE_LIST_EVENTS_RESPONSE);
+		var events = client.listEvents(CONVERSATION_ID);
+		assertEquals(response.getEvents(), events);
+
+		stubResponseAndAssertThrows(200, SAMPLE_LIST_EVENTS_RESPONSE,
+				() -> client.listEvents(null, request),
+				NullPointerException.class
+		);
+		stubResponseAndAssertThrows(200, SAMPLE_LIST_EVENTS_RESPONSE,
+				() -> client.listEvents(CONVERSATION_ID, null),
+				NullPointerException.class
+		);
+		stubResponseAndAssertThrows(200, SAMPLE_LIST_EVENTS_RESPONSE,
+				() -> client.listEvents(MEMBER_ID_INVITING, request),
+				IllegalArgumentException.class
+		);
+		assert401ResponseException(() -> client.listEvents(CONVERSATION_ID));
+	}
+
+	@Test
+	public void testListEventsEndpoint() throws Exception {
+		new ConversationsEndpointTestSpec<ListEventsRequest, ListEventsResponse>() {
+
+			@Override
+			protected RestEndpoint<ListEventsRequest, ListEventsResponse> endpoint() {
+				return client.listEvents;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedEndpointUri(ListEventsRequest request) {
+				return "/v1/conversations/"+request.conversationId+"/events/";
+			}
+
+			@Override
+			protected ListEventsRequest sampleRequest() {
+				return ListEventsRequest.builder()
+						.excludeDeletedEvents(EXCLUDE_DELETED_EVENTS)
+						.startId(EVENT_START_ID).endId(EVENT_END_ID)
+						.eventType(KNOWN_EVENT_TYPE).build();
+			}
+
+			@Override
+			protected Map<String, String> sampleQueryParams() {
+				return Map.of(
+					"exclude_deleted_events", String.valueOf(EXCLUDE_DELETED_EVENTS),
+					"start_id", String.valueOf(EVENT_START_ID),
+					"end_id", String.valueOf(EVENT_END_ID),
+					"event_type", String.valueOf(KNOWN_EVENT_TYPE_STR)
+				);
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testCreateEvent() throws Exception {
+		Event request = AudioPlayStopEvent.builder()
+				.from(MEMBER_FROM)
+				.playId(RANDOM_UUID).build();
+		stubResponse(201, SAMPLE_EVENT_RESPONSE);
+		assertEqualsSampleEvent(client.createEvent(CONVERSATION_ID, request));
+
+		stubResponseAndAssertThrows(201, SAMPLE_EVENT_RESPONSE,
+				() -> client.createEvent(USER_ID, request),
+				IllegalArgumentException.class
+		);
+		stubResponseAndAssertThrows(201, SAMPLE_EVENT_RESPONSE,
+				() -> client.createEvent(CONVERSATION_ID, null),
+				NullPointerException.class
+		);
+		assert401ResponseException(() -> client.createEvent(CONVERSATION_ID, request));
+	}
+
+	/*@Test
+	public void testCreateEventEndpoint() throws Exception {
+		new ConversationsEndpointTestSpec<Event, Event>() {
+
+			@Override
+			protected RestEndpoint<Event, Event> endpoint() {
+				return client.createEvent;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.POST;
+			}
+
+			@Override
+			protected String expectedEndpointUri(Event request) {
+				return "/v1/conversations/"+request.conversationId+"/events/";
+			}
+
+			@Override
+			protected Event sampleRequest() {
+				return null;
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{}";
+			}
+		}
+		.runTests();
+	}*/
 }

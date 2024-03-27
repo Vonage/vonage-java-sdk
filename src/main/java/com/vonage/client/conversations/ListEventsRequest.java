@@ -22,7 +22,7 @@ import java.util.Map;
  */
 public class ListEventsRequest extends AbstractConversationsFilterRequest {
 	private final Boolean excludeDeletedEvents;
-	private final String startId, endId;
+	private final Integer startId, endId;
 	private final EventType eventType;
 
 	ListEventsRequest(Builder builder) {
@@ -40,10 +40,10 @@ public class ListEventsRequest extends AbstractConversationsFilterRequest {
             params.put("exclude_deleted_events", excludeDeletedEvents.toString());
         }
 		if (startId != null) {
-            params.put("start_id", startId);
+            params.put("start_id", String.valueOf(startId));
         }
 		if (endId != null) {
-            params.put("end_id", endId);
+            params.put("end_id", String.valueOf(endId));
         }
 		if (eventType != null) {
             params.put("event_type", eventType.toString());
@@ -63,18 +63,18 @@ public class ListEventsRequest extends AbstractConversationsFilterRequest {
 	/**
 	 * The ID to start returning events at.
 	 * 
-	 * @return The start ID, or {@code null} if unspecified.
+	 * @return The start ID as an Integer, or {@code null} if unspecified.
 	 */
-	public String getStartId() {
+	public Integer getStartId() {
 		return startId;
 	}
 
 	/**
 	 * The ID to stop returning events at.
 	 * 
-	 * @return The end ID, or {@code null} if unspecified.
+	 * @return The end ID as an Integer, or {@code null} if unspecified.
 	 */
-	public String getEndId() {
+	public Integer getEndId() {
 		return endId;
 	}
 
@@ -99,7 +99,7 @@ public class ListEventsRequest extends AbstractConversationsFilterRequest {
 	
 	public static final class Builder extends AbstractConversationsFilterRequest.Builder<ListEventsRequest, Builder> {
 		private Boolean excludeDeletedEvents;
-		private String startId, endId;
+		private Integer startId, endId;
 		private EventType eventType;
 	
 		Builder() {}
@@ -111,7 +111,7 @@ public class ListEventsRequest extends AbstractConversationsFilterRequest {
 		 *
 		 * @return This builder.
 		 */
-		public Builder excludeDeletedEvents(Boolean excludeDeletedEvents) {
+		public Builder excludeDeletedEvents(boolean excludeDeletedEvents) {
 			this.excludeDeletedEvents = excludeDeletedEvents;
 			return this;
 		}
@@ -119,11 +119,11 @@ public class ListEventsRequest extends AbstractConversationsFilterRequest {
 		/**
 		 * The ID to start returning events at.
 		 *
-		 * @param startId The start ID, or {@code null} if unspecified.
+		 * @param startId The start ID as an int.
 		 *
 		 * @return This builder.
 		 */
-		public Builder startId(String startId) {
+		public Builder startId(int startId) {
 			this.startId = startId;
 			return this;
 		}
@@ -131,11 +131,11 @@ public class ListEventsRequest extends AbstractConversationsFilterRequest {
 		/**
 		 * The ID to stop returning events at.
 		 *
-		 * @param endId The end ID, or {@code null} if unspecified.
+		 * @param endId The end ID as an int.
 		 *
 		 * @return This builder.
 		 */
-		public Builder endId(String endId) {
+		public Builder endId(int endId) {
 			this.endId = endId;
 			return this;
 		}
@@ -143,7 +143,7 @@ public class ListEventsRequest extends AbstractConversationsFilterRequest {
 		/**
 		 * The type of event to search for. Does not currently support custom events.
 		 *
-		 * @param eventType The event type to search for, or {@code null} if unspecified.
+		 * @param eventType The event type to search for as an enum.
 		 *
 		 * @return This builder.
 		 */
