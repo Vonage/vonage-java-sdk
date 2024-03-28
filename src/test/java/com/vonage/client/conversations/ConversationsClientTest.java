@@ -472,17 +472,6 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 		assertNull(member.getState());
 	}
 
-	static void assertEqualsSampleUserSession(UserSession parsed) {
-		testJsonableBaseObject(parsed);
-		assertEquals(SESSION_ID, parsed.getSessionId());
-		assertEquals(API_KEY, parsed.getApiKey());
-		assertEquals(USER_SESSION_TTL, parsed.getTtl());
-		var user = parsed.getUser();
-		testJsonableBaseObject(user);
-		assertEquals(USER_ID, user.getId());
-		assertEquals(USER_NAME, user.getName());
-	}
-
 	static void assertEqualsBaseUser(BaseUser parsed) {
 		testJsonableBaseObject(parsed);
 		assertEquals(USER_ID, parsed.getId());

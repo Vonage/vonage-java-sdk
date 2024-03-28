@@ -17,7 +17,6 @@ package com.vonage.client.meetings;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.common.HalPageResponse;
 import java.util.List;
 
@@ -35,15 +34,5 @@ class ListRoomsResponse extends HalPageResponse {
 	 */
 	public List<MeetingRoom> getMeetingRooms() {
 		return rooms;
-	}
-	
-	/**
-	 * Creates an instance of this class from a JSON payload.
-	 *
-	 * @param json The JSON string to parse.
-	 * @return An instance of this class with the fields populated, if present.
-	 */
-	public static ListRoomsResponse fromJson(String json) {
-		return Jsonable.fromJson(json);
 	}
 }
