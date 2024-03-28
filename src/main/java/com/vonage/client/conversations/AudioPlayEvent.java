@@ -36,6 +36,7 @@ public final class AudioPlayEvent extends AudioOutEvent<AudioPlayEventBody> {
      *
      * @return The play ID, or {@code null} if unknown.
      */
+    @JsonIgnore
     public UUID getPlayId() {
         return body != null ? body.playId : null;
     }

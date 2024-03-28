@@ -36,6 +36,7 @@ public final class AudioSayEvent extends AudioOutEvent<AudioSayEventBody> {
      *
      * @return The say ID, or {@code null} if unknown.
      */
+    @JsonIgnore
     public UUID getSayId() {
         return body != null ? body.sayId : null;
     }
