@@ -614,7 +614,11 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 	}
 
 	static void assertEqualsSampleEvent(Event parsed) {
+		assertNotNull(parsed);
+		String convId = parsed.conversationId;
+		parsed.conversationId = null;
 		testJsonableBaseObject(parsed);
+		parsed.conversationId = convId;
 		assertEquals(CUSTOM_EVENT_TYPE, parsed.getType());
 		assertEquals(CustomEvent.class, parsed.getClass());
 		assertEquals(CONVERSATION_CUSTOM_DATA, ((CustomEvent) parsed).getBody());
@@ -1649,7 +1653,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 		stubResponseAndAssertThrows(200, SAMPLE_LIST_EVENTS_RESPONSE,
 				() -> client.listEvents(null, request),
-				NullPointerException.class
+				IllegalArgumentException.class
 		);
 		stubResponseAndAssertThrows(200, SAMPLE_LIST_EVENTS_RESPONSE,
 				() -> client.listEvents(CONVERSATION_ID, null),
@@ -1704,9 +1708,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 	@Test
 	public void testCreateEvent() throws Exception {
-		Event request = AudioPlayStopEvent.builder()
-				.from(MEMBER_FROM)
-				.playId(RANDOM_UUID).build();
+		Event request = CustomEvent.builder().from(MEMBER_FROM).body(CONVERSATION_CUSTOM_DATA).build();
 		stubResponse(201, SAMPLE_EVENT_RESPONSE);
 		assertEqualsSampleEvent(client.createEvent(CONVERSATION_ID, request));
 
@@ -1721,7 +1723,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 		assert401ResponseException(() -> client.createEvent(CONVERSATION_ID, request));
 	}
 
-	/*@Test
+	@Test
 	public void testCreateEventEndpoint() throws Exception {
 		new ConversationsEndpointTestSpec<Event, Event>() {
 
@@ -1741,15 +1743,19 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			}
 
 			@Override
-			protected Event sampleRequest() {
-				return null;
+			protected AudioPlayStopEvent sampleRequest() {
+				return AudioPlayStopEvent.builder().from(MEMBER_FROM).playId(RANDOM_UUID).build();
 			}
 
 			@Override
 			protected String sampleRequestBodyString() {
-				return "{}";
+				var request = sampleRequest();
+				return STR."""
+					{"type":"\{request.getType()}","from":"\{request.getFrom()}","body":\
+					{"play_id":"\{request.getPlayId()}"}}\
+					""";
 			}
 		}
 		.runTests();
-	}*/
+	}
 }

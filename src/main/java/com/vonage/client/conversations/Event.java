@@ -28,6 +28,7 @@ import java.util.Objects;
 		use = JsonTypeInfo.Id.NAME,
 		include = JsonTypeInfo.As.EXISTING_PROPERTY,
 		property = "type",
+		visible = true,
 		defaultImpl = GenericEvent.class
 )
 @JsonSubTypes({
@@ -57,8 +58,8 @@ import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class Event extends JsonableBaseObject {
 	@JsonIgnore String conversationId;
-	@JsonProperty("id") Integer id;
 	@JsonProperty("type") EventType type;
+	@JsonProperty("id") Integer id;
 	@JsonProperty("from") String from;
 	@JsonProperty("timestamp") Instant timestamp;
 	@JsonProperty("_embedded") Embedded _embedded;

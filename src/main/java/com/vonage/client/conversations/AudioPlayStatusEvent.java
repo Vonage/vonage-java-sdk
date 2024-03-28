@@ -15,6 +15,7 @@
  */
 package com.vonage.client.conversations;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.UUID;
 
 abstract class AudioPlayStatusEvent extends EventWithBody<AudioPlayEventBody> {
@@ -31,6 +32,7 @@ abstract class AudioPlayStatusEvent extends EventWithBody<AudioPlayEventBody> {
      *
      * @return The play ID, or {@code null} if unknown.
      */
+    @JsonIgnore
     public UUID getPlayId() {
         return body != null ? body.playId : null;
     }
