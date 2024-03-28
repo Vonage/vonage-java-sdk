@@ -19,7 +19,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.HalPageResponse;
 import java.util.List;
@@ -53,15 +52,5 @@ public final class ListConversationsResponse extends HalPageResponse {
 	@JsonIgnore
 	public List<BaseConversation> getConversations() {
 		return _embedded != null ? _embedded.getConversations() : null;
-	}
-	
-	/**
-	 * Creates an instance of this class from a JSON payload.
-	 *
-	 * @param json The JSON string to parse.
-	 * @return An instance of this class with the fields populated, if present.
-	 */
-	public static ListConversationsResponse fromJson(String json) {
-		return Jsonable.fromJson(json);
 	}
 }

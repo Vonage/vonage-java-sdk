@@ -45,7 +45,7 @@ public final class MessageSubmittedEvent extends MessageStatusEvent {
         }
 
         @Override
-        public MessageStatusEvent build() {
+        public MessageSubmittedEvent build() {
             return new MessageSubmittedEvent(this);
         }
     }

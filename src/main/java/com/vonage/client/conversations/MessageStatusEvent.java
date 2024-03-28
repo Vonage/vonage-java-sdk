@@ -49,7 +49,7 @@ abstract class MessageStatusEvent extends EventWithBody<MessageStatusEvent.Body>
     @SuppressWarnings("unchecked")
     static abstract class Builder<E extends MessageStatusEvent,
             B extends Builder<? extends E, ? extends  B>>
-            extends EventWithBody.Builder<MessageStatusEvent, Builder<E, B>> {
+            extends EventWithBody.Builder<E, Builder<E, B>> {
 
         private Integer eventId;
 

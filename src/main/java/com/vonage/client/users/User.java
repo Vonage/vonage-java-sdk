@@ -217,6 +217,7 @@ public class User extends BaseUser {
      * Represents the "properties" field of a User object.
      */
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Properties extends JsonableBaseObject {
         private Map<String, ?> customData;
 

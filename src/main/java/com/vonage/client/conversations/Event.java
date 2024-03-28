@@ -63,6 +63,8 @@ public abstract class Event extends JsonableBaseObject {
 	@JsonProperty("timestamp") Instant timestamp;
 	@JsonProperty("_embedded") Embedded _embedded;
 
+	@JsonInclude(value = JsonInclude.Include.NON_NULL)
+	@JsonIgnoreProperties(ignoreUnknown = true)
 	private static class Embedded extends JsonableBaseObject {
 		@JsonProperty("from_user") User fromUser;
 		@JsonProperty("from_member") BaseMember fromMember;

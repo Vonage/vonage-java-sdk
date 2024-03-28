@@ -16,7 +16,6 @@
 package com.vonage.client.conversations;
 
 import com.fasterxml.jackson.annotation.*;
-import com.vonage.client.Jsonable;
 import com.vonage.client.common.ChannelType;
 import com.vonage.client.users.BaseUser;
 import com.vonage.client.users.channels.Channel;
@@ -146,16 +145,6 @@ public class Member extends BaseMember {
 	@JsonProperty("timestamp")
 	public MemberTimestamp getTimestamp() {
 		return timestamp;
-	}
-
-	/**
-	 * Creates an instance of this class from a JSON payload.
-	 *
-	 * @param json The JSON string to parse.
-	 * @return An instance of this class with the fields populated, if present.
-	 */
-	public static Member fromJson(String json) {
-		return Jsonable.fromJson(json);
 	}
 
 	/**

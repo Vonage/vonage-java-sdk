@@ -18,7 +18,6 @@ package com.vonage.client.conversations;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.users.channels.Channel;
 import java.net.URI;
 import java.util.ArrayList;
@@ -101,16 +100,6 @@ public class Conversation extends BaseConversation {
 	@JsonProperty("callback")
 	public Callback getCallback() {
 		return callback;
-	}
-
-	/**
-	 * Creates an instance of this class from a JSON payload.
-	 *
-	 * @param json The JSON string to parse.
-	 * @return An instance of this class with the fields populated, if present.
-	 */
-	public static Conversation fromJson(String json) {
-		return Jsonable.fromJson(json);
 	}
 
 	/**

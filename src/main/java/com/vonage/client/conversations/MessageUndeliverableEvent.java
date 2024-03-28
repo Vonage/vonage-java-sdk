@@ -45,7 +45,7 @@ public final class MessageUndeliverableEvent extends MessageStatusEvent {
         }
 
         @Override
-        public MessageStatusEvent build() {
+        public MessageUndeliverableEvent build() {
             return new MessageUndeliverableEvent(this);
         }
     }

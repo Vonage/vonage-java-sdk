@@ -18,7 +18,6 @@ package com.vonage.client.conversations;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.common.HalPageResponse;
 import java.util.List;
 
@@ -41,15 +40,5 @@ public final class ListEventsResponse extends HalPageResponse {
 	@JsonProperty("_embedded")
 	public List<Event> getEvents() {
 		return events;
-	}
-	
-	/**
-	 * Creates an instance of this class from a JSON payload.
-	 *
-	 * @param json The JSON string to parse.
-	 * @return An instance of this class with the fields populated, if present.
-	 */
-	public static ListEventsResponse fromJson(String json) {
-		return Jsonable.fromJson(json);
 	}
 }

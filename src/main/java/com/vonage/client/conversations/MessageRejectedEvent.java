@@ -45,7 +45,7 @@ public final class MessageRejectedEvent extends MessageStatusEvent {
         }
 
         @Override
-        public MessageStatusEvent build() {
+        public MessageRejectedEvent build() {
             return new MessageRejectedEvent(this);
         }
     }
