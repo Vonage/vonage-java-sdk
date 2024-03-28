@@ -813,10 +813,10 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 	@Test
 	public void testCreateSessionEndpoint() throws Exception {
-		new VideoEndpointTestSpec<CreateSessionRequest, CreateSessionResponse>() {
+		new VideoEndpointTestSpec<CreateSessionRequest, CreateSessionResponse[]>() {
 
 			@Override
-			protected RestEndpoint<CreateSessionRequest, CreateSessionResponse> endpoint() {
+			protected RestEndpoint<CreateSessionRequest, CreateSessionResponse[]> endpoint() {
 				return client.createSession;
 			}
 

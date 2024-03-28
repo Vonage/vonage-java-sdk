@@ -732,7 +732,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 
 			@Override
 			protected HalRequestWrapper sampleRequest() {
-				return new HalRequestWrapper(3, 25, SortOrder.ASC, null);
+				return new HalRequestWrapper(3, 25, com.vonage.client.common.SortOrder.ASCENDING, null);
 			}
 
 			@Override
@@ -1029,7 +1029,7 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 
 			@Override
 			protected HalRequestWrapper sampleRequest() {
-				return new HalRequestWrapper(7, 30, SortOrder.DESC, SAMPLE_LIST_ID.toString());
+				return new HalRequestWrapper(7, 30, com.vonage.client.common.SortOrder.DESCENDING, SAMPLE_LIST_ID.toString());
 			}
 
 			@Override

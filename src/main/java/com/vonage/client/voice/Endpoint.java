@@ -43,6 +43,8 @@ public interface Endpoint {
      * Description of the endpoint.
      *
      * @return String representation of the object.
+     * @deprecated This method will be removed in the next major release.
      */
+    @Deprecated
     String toLog();
 }

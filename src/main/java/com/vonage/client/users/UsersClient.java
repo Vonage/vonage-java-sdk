@@ -101,7 +101,7 @@ public class UsersClient {
      * @throws UsersResponseException If there was an error processing the request.
      */
     public User updateUser(String userId, User user) throws UsersResponseException {
-        validateUser(user).setId(validateUserId(userId));
+        validateUser(user).id = validateUserId(userId);
         return updateUser.execute(user);
     }
 

@@ -18,6 +18,7 @@ package com.vonage.client.verify;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.VonageResponseParseException;
 import java.math.BigDecimal;
@@ -100,6 +101,14 @@ public class CheckResponse extends JsonableBaseObject {
         return estimatedPriceMessagesSent;
     }
 
+    @Override
+    public void updateFromJson(String json) {
+        super.updateFromJson(json);
+        if (status == null) {
+            throw new VonageResponseParseException("Response status is missing.");
+        }
+    }
+
     /**
      * Constructs a CheckResponse with the fields populated from the JSON payload.
      *
@@ -108,11 +117,6 @@ public class CheckResponse extends JsonableBaseObject {
      * @return A new instance of this class.
      */
     public static CheckResponse fromJson(String json) {
-        CheckResponse response = new CheckResponse();
-        response.updateFromJson(json);
-        if (response.status == null) {
-            throw new VonageResponseParseException("Response status is missing.");
-        }
-        return response;
+        return Jsonable.fromJson(json);
     }
 }

@@ -34,17 +34,18 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public abstract class ClientTest<T> {
-    protected final String applicationId = UUID.randomUUID().toString();
-    protected final String apiKey = "a1b2c3d4";
-    protected final String apiSecret = "1234567890abcdef";
-    protected final String testReason = "Test reason";
+    protected static final String
+            APPLICATION_ID = UUID.randomUUID().toString(),
+            API_KEY = "a1b2c3d4", API_SECRET = "1234567890abcdef",
+            TEST_REASON = "Test reason";
+
     protected HttpWrapper wrapper;
     protected T client;
 
     protected ClientTest() {
         wrapper = new HttpWrapper(
-                new TokenAuthMethod(apiKey, apiSecret),
-                new JWTAuthMethod(applicationId, new byte[0])
+                new TokenAuthMethod(API_KEY, API_SECRET),
+                new JWTAuthMethod(APPLICATION_ID, new byte[0])
         );
     }
 
@@ -64,7 +65,7 @@ public abstract class ClientTest<T> {
         InputStream[] contentsEncoded = Arrays.stream(additionalReturns).map(transformation).toArray(InputStream[]::new);
         when(entity.getContent()).thenReturn(transformation.apply(content), contentsEncoded);
         when(sl.getStatusCode()).thenReturn(statusCode);
-        when(sl.getReasonPhrase()).thenReturn(testReason);
+        when(sl.getReasonPhrase()).thenReturn(TEST_REASON);
         when(response.getStatusLine()).thenReturn(sl);
         when(response.getEntity()).thenReturn(entity);
 
@@ -107,7 +108,11 @@ public abstract class ClientTest<T> {
     }
 
     protected void stubResponseAndRun(String responseJson, Runnable invocation) throws Exception {
-        stubResponse(200, responseJson);
+        stubResponseAndRun(200, responseJson, invocation);
+    }
+
+    protected void stubResponseAndRun(int statusCode, String responseJson, Runnable invocation) throws Exception {
+        stubResponse(statusCode, responseJson);
         invocation.run();
     }
 
@@ -154,10 +159,10 @@ public abstract class ClientTest<T> {
         catch (Throwable ex) {
             assertEquals(exClass, ex.getClass(), failPrefix + ex.getClass());
             if (expectedResponse.getTitle() == null) {
-                expectedResponse.title = testReason;
+                expectedResponse.title = TEST_REASON;
             }
             assertEquals(expectedResponse, ex);
-            String actualJson = ((E) ex).toJson().replace("\"title\":\""+testReason+"\",", "");
+            String actualJson = ((E) ex).toJson().replace("\"title\":\""+ TEST_REASON +"\",", "");
             assertEquals(expectedJson, actualJson);
         }
         return expectedResponse;

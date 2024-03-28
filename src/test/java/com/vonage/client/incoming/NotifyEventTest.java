@@ -49,7 +49,7 @@ public class NotifyEventTest {
         try {
             NotifyEvent.fromJson(json);
         } catch (VonageUnexpectedException e) {
-            assertEquals("Failed to produce NotifyEvent from json.", e.getMessage());
+            assertEquals("Failed to produce NotifyEvent from JSON.", e.getMessage());
         }
     }
 

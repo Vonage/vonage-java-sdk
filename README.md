@@ -23,6 +23,7 @@ need a Vonage account. You'll need to have [created a Vonage account](https://da
 
 - [Account](https://developer.vonage.com/en/account/overview)
 - [Application](https://developer.vonage.com/en/application/overview)
+- [Conversation](https://developer.vonage.com/conversation/overview)
 - [Conversion](https://developer.vonage.com/messaging/conversion-api/overview)
 - [Meetings](https://developer.vonage.com/en/meetings/overview)
 - [Messages](https://developer.vonage.com/en/messages/overview)
@@ -51,9 +52,9 @@ See all of our SDKs and integrations on the [Vonage Developer portal](https://de
 
 ## Installation
 
-Releases are published to [Maven Central](https://central.sonatype.com/artifact/com.vonage/server-sdk/8.3.0/snippets).
+Releases are published to [Maven Central](https://central.sonatype.com/artifact/com.vonage/server-sdk/8.4.0/snippets).
 Instructions for your build system can be found in the snippets section.
-They're also available from [here](https://mvnrepository.com/artifact/com.vonage/server-sdk/8.3.0).
+They're also available from [here](https://mvnrepository.com/artifact/com.vonage/server-sdk/8.4.0).
 Release notes can be found in the [changelog](CHANGELOG.md).
 
 ### Build It Yourself

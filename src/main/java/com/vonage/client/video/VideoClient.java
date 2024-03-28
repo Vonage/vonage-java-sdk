@@ -37,7 +37,7 @@ import java.util.function.Supplier;
 public class VideoClient {
 	final Supplier<? extends Jwt.Builder> newJwtSupplier;
 
-	final RestEndpoint<CreateSessionRequest, CreateSessionResponse> createSession;
+	final RestEndpoint<CreateSessionRequest, CreateSessionResponse[]> createSession;
 	final RestEndpoint<String, ListStreamsResponse> listStreams;
 	final RestEndpoint<SessionResourceRequestWrapper, GetStreamResponse> getStream;
 	final RestEndpoint<SetStreamLayoutRequest, Void> setStreamLayout;
@@ -201,7 +201,8 @@ public class VideoClient {
 	 * @return Details of the created session.
 	 */
 	public CreateSessionResponse createSession(CreateSessionRequest request) {
-		return createSession.execute(request);
+		CreateSessionResponse[] response = createSession.execute(request);
+        return response == null || response.length == 0 ? new CreateSessionResponse() : response[0];
 	}
 
 	/**

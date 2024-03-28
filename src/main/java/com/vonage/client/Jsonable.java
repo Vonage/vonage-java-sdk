@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 
 /**
  * Indicates that a class can be serialized to and parsed from JSON.
@@ -35,10 +36,9 @@ public interface Jsonable {
 	 * @return A new ObjectMapper with appropriate configuration.
 	 */
 	static ObjectMapper createDefaultObjectMapper() {
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.registerModule(new JavaTimeModule());
-		mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-		return mapper;
+		return new ObjectMapper()
+				.registerModule(new JavaTimeModule())
+				.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 	}
 
 	/**
@@ -63,14 +63,12 @@ public interface Jsonable {
 	 * @throws VonageResponseParseException If the JSON was invalid or this class couldn't be updated.
 	 */
 	default void updateFromJson(String json) {
-		if (json == null || json.trim().isEmpty()) {
-			return;
-		}
+		if (json == null || json.trim().isEmpty()) return;
 		try {
 			createDefaultObjectMapper().readerForUpdating(this).readValue(json);
 		}
 		catch (IOException ex) {
-			throw new VonageResponseParseException("Failed to produce "+getClass().getSimpleName()+" from json.", ex);
+			throw new VonageResponseParseException("Failed to produce "+getClass().getSimpleName()+" from JSON.", ex);
 		}
 	}
 
@@ -108,6 +106,9 @@ public interface Jsonable {
 	 */
 	static <J extends Jsonable> J fromJson(String json, Class<? extends J> jsonable) {
 		try {
+			if (Modifier.isAbstract(jsonable.getModifiers())) {
+				return createDefaultObjectMapper().readValue(json, jsonable);
+			}
 			Constructor<? extends J> constructor = jsonable.getDeclaredConstructor();
 			if (!(constructor.isAccessible())) {
 				constructor.setAccessible(true);
@@ -116,8 +117,8 @@ public interface Jsonable {
 			instance.updateFromJson(json);
 			return instance;
 		}
-		catch (ReflectiveOperationException ex) {
+		catch (ReflectiveOperationException | JsonProcessingException ex) {
 			throw new VonageUnexpectedException(ex);
 		}
-	}
+    }
 }

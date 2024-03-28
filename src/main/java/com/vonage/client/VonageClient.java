@@ -19,6 +19,7 @@ import com.vonage.client.account.AccountClient;
 import com.vonage.client.application.ApplicationClient;
 import com.vonage.client.auth.*;
 import com.vonage.client.auth.hashutils.HashUtil;
+import com.vonage.client.conversations.ConversationsClient;
 import com.vonage.client.conversion.ConversionClient;
 import com.vonage.client.insight.InsightClient;
 import com.vonage.client.meetings.MeetingsClient;
@@ -67,6 +68,7 @@ public class VonageClient {
     private final UsersClient users;
     private final VideoClient video;
     private final NumberInsight2Client numberInsight2;
+    private final ConversationsClient conversations;
 
     private VonageClient(Builder builder) {
         httpWrapper = new HttpWrapper(builder.httpConfig, builder.authCollection);
@@ -89,6 +91,7 @@ public class VonageClient {
         users = new UsersClient(httpWrapper);
         video = new VideoClient(httpWrapper);
         numberInsight2 = new NumberInsight2Client(httpWrapper);
+        conversations = new ConversationsClient(httpWrapper);
     }
 
     public AccountClient getAccountClient() {
@@ -201,6 +204,16 @@ public class VonageClient {
      */
     public NumberInsight2Client getNumberInsight2Client() {
         return numberInsight2;
+    }
+
+    /**
+     * Returns the Conversations v1 client.
+     *
+     * @return The Conversation client.
+     * @since 8.4.0
+     */
+    public ConversationsClient getConversationsClient() {
+        return conversations;
     }
 
     /**

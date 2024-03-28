@@ -21,6 +21,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
 /**
+ * Whatsapp Location message parameters.
+ *
  * @since 7.2.0
  */
 @JsonInclude(value = JsonInclude.Include.NON_NULL)

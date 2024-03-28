@@ -24,7 +24,10 @@ import java.util.stream.Collectors;
 
 /**
  * Represents the "webhooks" field used in Application capabilities.
+ *
+ * @deprecated Will be moved to the {@code com.vonage.client.application} package.
  */
+@Deprecated
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Webhook extends JsonableBaseObject {

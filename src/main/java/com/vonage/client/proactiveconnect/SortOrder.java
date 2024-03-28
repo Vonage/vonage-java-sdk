@@ -19,7 +19,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * Represents the sort order for events.
+ *
+ * @deprecated Replaced by {@link com.vonage.client.common.SortOrder} and will be removed in future release.
  */
+@Deprecated
 public enum SortOrder {
 	/**
 	 * Ascending
@@ -35,5 +38,13 @@ public enum SortOrder {
 	@Override
 	public String toString() {
 		return name().toLowerCase();
-	}	
+	}
+
+	com.vonage.client.common.SortOrder toSortOrder() {
+		switch (this) {
+			case ASC: return com.vonage.client.common.SortOrder.ASCENDING;
+			case DESC: return com.vonage.client.common.SortOrder.DESCENDING;
+			default: return null;
+		}
+	}
 }

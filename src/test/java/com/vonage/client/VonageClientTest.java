@@ -337,6 +337,7 @@ public class VonageClientTest {
         VonageClient client = VonageClient.builder().build();
         assertNotNull(client.getAccountClient());
         assertNotNull(client.getApplicationClient());
+        assertNotNull(client.getConversationsClient());
         assertNotNull(client.getConversionClient());
         assertNotNull(client.getVoiceClient());
         assertNotNull(client.getInsightClient());

@@ -202,7 +202,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 
 			@Override
 			protected String expectedEndpointUri(UpdateSubaccountRequest request) {
-				return "/accounts/"+apiKey+"/subaccounts/"+request.subaccountApiKey;
+				return "/accounts/"+ API_KEY +"/subaccounts/"+request.subaccountApiKey;
 			}
 
 			@Override
@@ -251,7 +251,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 
 			@Override
 			protected String expectedEndpointUri(Void request) {
-				return "/accounts/"+apiKey+"/subaccounts";
+				return "/accounts/"+ API_KEY +"/subaccounts";
 			}
 
 			@Override
@@ -284,7 +284,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 
 			@Override
 			protected String expectedEndpointUri(String request) {
-				return "/accounts/"+apiKey+"/subaccounts/"+request;
+				return "/accounts/"+ API_KEY +"/subaccounts/"+request;
 			}
 
 			@Override
@@ -332,7 +332,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 			protected String expectedEndpointUri(ListTransfersFilter request) {
 				assertNotNull(request.getStartDate());
 				assertNotNull(request.getEndDate());
-				return "/accounts/"+apiKey+"/credit-transfers";
+				return "/accounts/"+ API_KEY +"/credit-transfers";
 			}
 
 			@Override
@@ -377,7 +377,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 				assertNotNull(request.getStartDate());
 				assertNull(request.getEndDate());
 				assertNull(request.getSubaccount());
-				return "/accounts/"+apiKey+"/balance-transfers";
+				return "/accounts/"+ API_KEY +"/balance-transfers";
 			}
 
 			@Override
@@ -400,7 +400,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 
 		@Override
 		protected String expectedEndpointUri(MoneyTransfer request) {
-			return "/accounts/"+apiKey+"/"+name()+"-transfers";
+			return "/accounts/"+ API_KEY +"/"+name()+"-transfers";
 		}
 
 		@Override
@@ -514,7 +514,7 @@ public class SubaccountsClientTest extends ClientTest<SubaccountsClient> {
 
 			@Override
 			protected String expectedEndpointUri(NumberTransfer request) {
-				return "/accounts/"+apiKey+"/transfer-number";
+				return "/accounts/"+ API_KEY +"/transfer-number";
 			}
 
 			@Override
