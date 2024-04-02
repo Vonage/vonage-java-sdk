@@ -56,6 +56,7 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
      *
      * @return The recording format as a string, or {@code null} if unspecified.
      */
+    @JsonIgnore
     public String getFormat() {
         return body.format;
     }

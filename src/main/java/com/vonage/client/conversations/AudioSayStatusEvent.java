@@ -41,7 +41,7 @@ abstract class AudioSayStatusEvent extends EventWithBody<AudioSayEventBody> {
     @SuppressWarnings("unchecked")
     static abstract class Builder<E extends AudioSayStatusEvent,
             B extends AudioSayStatusEvent.Builder<? extends E, ? extends  B>>
-            extends EventWithBody.Builder<AudioSayStatusEvent, AudioSayStatusEvent.Builder<E, B>> {
+            extends EventWithBody.Builder<E, B> {
 
         UUID sayId;
 

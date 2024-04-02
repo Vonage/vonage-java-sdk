@@ -53,7 +53,7 @@ abstract class AudioRtcEvent extends EventWithBody<AudioRtcEvent.Body> {
     @SuppressWarnings("unchecked")
     static abstract class Builder<E extends AudioRtcEvent,
             B extends Builder<? extends E, ? extends  B>>
-            extends EventWithBody.Builder<AudioRtcEvent, Builder<E, B>> {
+            extends EventWithBody.Builder<E, Builder<E, B>> {
 
         private UUID rtcId;
 

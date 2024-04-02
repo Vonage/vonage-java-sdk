@@ -41,8 +41,9 @@ public final class AudioRecordStopEvent extends EventWithBody<AudioRecordStopEve
     }
 
     /**
+     * Unique recording identifier.
      *
-     * @return
+     * @return The recording ID, or {@code null} if unknown.
      */
     @JsonIgnore
     public UUID getRecordId() {
@@ -66,13 +67,25 @@ public final class AudioRecordStopEvent extends EventWithBody<AudioRecordStopEve
         }
 
         /**
+         * Unique recording identifier.
          *
-         * @param recordId
+         * @param recordId The recording ID as a string.
          *
          * @return This builder.
          */
         public Builder recordId(String recordId) {
-            this.recordId = UUID.fromString(recordId);
+            return recordId(UUID.fromString(recordId));
+        }
+
+        /**
+         * Unique recording identifier.
+         *
+         * @param recordId The recording ID.
+         *
+         * @return This builder.
+         */
+        public Builder recordId(UUID recordId) {
+            this.recordId = recordId;
             return this;
         }
 

@@ -15,8 +15,6 @@
  */
 package com.vonage.client.conversations;
 
-import java.util.UUID;
-
 /**
  * Represents an {@link EventType#AUDIO_PLAY_STOP} event.
  */
@@ -41,29 +39,6 @@ public final class AudioPlayStopEvent extends AudioPlayStatusEvent {
 
         Builder() {
             super(EventType.AUDIO_PLAY_STOP);
-        }
-
-        /**
-         * Unique audio play identifier.
-         *
-         * @param playId Unique audio play identifier as a string.
-         *
-         * @return This builder.
-         */
-        public Builder playId(String playId) {
-            return playId(UUID.fromString(playId));
-        }
-
-        /**
-         * Unique audio play identifier.
-         *
-         * @param playId Unique audio play identifier.
-         *
-         * @return This builder.
-         */
-        public Builder playId(UUID playId) {
-            this.playId = playId;
-            return this;
         }
 
         @Override
