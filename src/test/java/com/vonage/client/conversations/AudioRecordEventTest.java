@@ -19,10 +19,13 @@ import com.vonage.client.OrderedJsonMap;
 import static com.vonage.client.OrderedJsonMap.entry;
 import com.vonage.client.voice.TextToSpeechLanguage;
 import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import java.util.Map;
 
 public class AudioRecordEventTest extends AbstractEventTest {
 
+    private final String format = "ogg";
     private final boolean
             beepStart = true, beepStop = true,
             detectSpeech = false, multitrack = false, split = true,
@@ -32,11 +35,11 @@ public class AudioRecordEventTest extends AbstractEventTest {
 
     @Test
     public void testAllFields() {
-        testBaseEvent(EventType.AUDIO_RECORD,
+        var event = testBaseEvent(EventType.AUDIO_RECORD,
                 AudioRecordEvent.builder()
                     .beepStart(beepStart).beepStop(beepStop).split(split)
                     .sentimentAnalysis(sentimentAnalysis).streamed(streamed)
-                    .detectSpeech(detectSpeech).multitrack(multitrack)
+                    .detectSpeech(detectSpeech).multitrack(multitrack).format(format)
                     .channels(channels).validity(validity).language(language),
 
                 new OrderedJsonMap(
@@ -44,6 +47,7 @@ public class AudioRecordEventTest extends AbstractEventTest {
                             entry("language", language.getLanguage()),
                             entry("sentiment_analysis", sentimentAnalysis)
                         )),
+                        entry("format", format),
                         entry("validity", validity),
                         entry("channels", channels),
                         entry("streamed", streamed),
@@ -54,10 +58,32 @@ public class AudioRecordEventTest extends AbstractEventTest {
                         entry("beep_stop", beepStop)
                 )
         );
+        assertEquals(language, event.getLanguage());
+        assertEquals(sentimentAnalysis, event.getSentimentAnalysis());
+        assertEquals(format, event.getFormat());
+        assertEquals(validity, event.getValidity());
+        assertEquals(channels, event.getChannels());
+        assertEquals(streamed, event.getStreamed());
+        assertEquals(split, event.getSplit());
+        assertEquals(multitrack, event.getMultitrack());
+        assertEquals(detectSpeech, event.getDetectSpeech());
+        assertEquals(beepStart, event.getBeepStart());
+        assertEquals(beepStop, event.getBeepStop());
     }
 
     @Test
     public void testRequiredFields() {
-        testBaseEvent(EventType.AUDIO_RECORD, AudioRecordEvent.builder(), Map.of());
+        var event = testBaseEvent(EventType.AUDIO_RECORD, AudioRecordEvent.builder(), Map.of());
+        assertNull(event.getLanguage());
+        assertNull(event.getSentimentAnalysis());
+        assertNull(event.getFormat());
+        assertNull(event.getValidity());
+        assertNull(event.getChannels());
+        assertNull(event.getStreamed());
+        assertNull(event.getSplit());
+        assertNull(event.getMultitrack());
+        assertNull(event.getDetectSpeech());
+        assertNull(event.getBeepStart());
+        assertNull(event.getBeepStop());
     }
 }

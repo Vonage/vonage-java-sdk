@@ -17,6 +17,7 @@ package com.vonage.client;
 
 import java.util.LinkedHashMap;
 
+import java.util.Map;
 import java.util.Map.Entry;
 
 public class OrderedJsonMap extends LinkedHashMap<String, Object> {
@@ -26,7 +27,7 @@ public class OrderedJsonMap extends LinkedHashMap<String, Object> {
     }
 
     @SafeVarargs
-    public OrderedJsonMap(Entry<String, Object>... entries) {
+    public OrderedJsonMap(Entry<String, ?>... entries) {
         super(entries.length);
         for (var entry : entries) {
             put(entry.getKey(), entry.getValue());
@@ -35,6 +36,11 @@ public class OrderedJsonMap extends LinkedHashMap<String, Object> {
 
     public OrderedJsonMap add(String key, Object value) {
         put(key, value);
+        return this;
+    }
+
+    public OrderedJsonMap addAll(Map<String, ?> other) {
+        putAll(other);
         return this;
     }
 
