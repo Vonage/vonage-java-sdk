@@ -17,14 +17,19 @@ package com.vonage.client.conversations;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.*;
+import java.util.Map;
 
 public class MessageStatusEventTest extends AbstractEventTest {
 
-    <E extends MessageStatusEvent, B extends MessageStatusEvent.Builder<E, B>> E testMessageEvent(B builder, EventType type) {
-        var event = testBaseEvent(builder.eventId(randomEventId));
+    <E extends MessageStatusEvent, B extends MessageStatusEvent.Builder<E, B>> void testMessageEvent(
+            B builder, EventType type) {
+
+        var event = testBaseEvent(
+                builder.eventId(randomEventId),
+                Map.of("event_id", randomEventId)
+        );
         assertEquals(type, event.getType());
         assertEquals(randomEventId, event.getEventId());
-        return event;
     }
 
     @Test

@@ -17,12 +17,16 @@ package com.vonage.client.conversations;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.*;
+import java.util.Map;
 
 public class AudioRecordStopEventTest extends AbstractEventTest {
 
     @Test
     public void testAudioRecordStopEvent() {
-        var event = testBaseEvent(AudioRecordStopEvent.builder().recordId(randomIdStr));
+        var event = testBaseEvent(
+                AudioRecordStopEvent.builder().recordId(randomIdStr),
+                Map.of("record_id", randomId)
+        );
         assertEquals(EventType.AUDIO_RECORD_STOP, event.getType());
         assertEquals(randomId, event.getRecordId());
     }

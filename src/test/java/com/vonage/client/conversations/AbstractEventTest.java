@@ -15,8 +15,11 @@
  */
 package com.vonage.client.conversations;
 
+import com.vonage.client.Jsonable;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.Map;
 import java.util.UUID;
 
 abstract class AbstractEventTest {
@@ -30,10 +33,34 @@ abstract class AbstractEventTest {
         return builder.from(FROM);
     }
 
-    <E extends EventWithBody<?>, B extends EventWithBody.Builder<E, B>> E testBaseEvent(B builder) {
+    <E extends EventWithBody<?>, B extends EventWithBody.Builder<E, B>> E testBaseEvent(
+            B builder, Map<String, ?> bodyFields) {
+
         var event = applyBaseFields(builder).build();
         testJsonableBaseObject(event);
         assertEquals(FROM, event.getFrom());
+        var json = event.toJson();
+        assertTrue(json.contains("\"from\":\""+FROM+"\""));
+        if (bodyFields != null && !bodyFields.isEmpty()) {
+            var bodyPartialJson = new StringBuilder("\"body\":{");
+            for (var entryIter = bodyFields.entrySet().iterator(); entryIter.hasNext();) {
+                var entry = entryIter.next();
+                var value = entry.getValue();
+                bodyPartialJson.append('"').append(entry.getKey()).append("\":").append(
+                    switch (value) {
+                        case Jsonable jsonable -> jsonable.toJson();
+                        case Number num -> num;
+                        case Boolean bool -> bool;
+                        case null, default -> "\""+value+"\"";
+                    }
+                );
+                if (entryIter.hasNext()) {
+                    bodyPartialJson.append(',');
+                }
+            }
+            bodyPartialJson.append('}');
+            assertTrue(json.contains(bodyPartialJson.toString()));
+        }
         return event;
     }
 }
