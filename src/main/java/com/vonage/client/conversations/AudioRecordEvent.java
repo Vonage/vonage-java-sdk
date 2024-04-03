@@ -27,7 +27,7 @@ public final class AudioRecordEvent extends EventWithBody<AudioRecordEventBody> 
 
     private AudioRecordEvent(Builder builder) {
         super(builder);
-        body = new AudioRecordEventBody();
+        body = new AudioRecordEventBody(builder);
     }
 
     /**

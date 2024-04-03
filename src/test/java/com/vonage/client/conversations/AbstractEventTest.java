@@ -15,7 +15,7 @@
  */
 package com.vonage.client.conversations;
 
-import com.vonage.client.Jsonable;
+import com.vonage.client.TestUtils;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -42,24 +42,8 @@ abstract class AbstractEventTest {
         var json = event.toJson();
         assertTrue(json.contains("\"from\":\""+FROM+"\""));
         if (bodyFields != null && !bodyFields.isEmpty()) {
-            var bodyPartialJson = new StringBuilder("\"body\":{");
-            for (var entryIter = bodyFields.entrySet().iterator(); entryIter.hasNext();) {
-                var entry = entryIter.next();
-                var value = entry.getValue();
-                bodyPartialJson.append('"').append(entry.getKey()).append("\":").append(
-                    switch (value) {
-                        case Jsonable jsonable -> jsonable.toJson();
-                        case Number num -> num;
-                        case Boolean bool -> bool;
-                        case null, default -> "\""+value+"\"";
-                    }
-                );
-                if (entryIter.hasNext()) {
-                    bodyPartialJson.append(',');
-                }
-            }
-            bodyPartialJson.append('}');
-            assertTrue(json.contains(bodyPartialJson.toString()));
+            var bodyPartialJson = "\"body\":" + TestUtils.mapToJson(bodyFields);
+            assertTrue(json.contains(bodyPartialJson));
         }
         return event;
     }

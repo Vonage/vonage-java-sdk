@@ -120,4 +120,14 @@ public class TestUtils {
             assertEquals(toString, clazz.getSimpleName()+' '+toJson);
         }
     }
+
+    public static String mapToJson(Map<String, ?> expected) {
+        try {
+            return Jsonable.createDefaultObjectMapper().writeValueAsString(expected);
+        }
+        catch (JsonProcessingException ex) {
+            fail(ex);
+            return null;
+        }
+    }
 }
