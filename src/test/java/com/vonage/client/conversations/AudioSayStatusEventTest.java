@@ -24,11 +24,10 @@ public class AudioSayStatusEventTest extends AbstractEventTest {
     <E extends AudioSayStatusEvent, B extends AudioSayStatusEvent.Builder<E, B>> void testStatusEvent(
             B builder, EventType type) {
 
-        var event = testBaseEvent(
+        var event = testBaseEvent(type,
                 builder.sayId(randomIdStr),
                 Map.of("say_id", randomId)
         );
-        assertEquals(type, event.getType());
         assertEquals(randomId, event.getSayId());
     }
 

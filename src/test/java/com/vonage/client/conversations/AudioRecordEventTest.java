@@ -18,8 +18,8 @@ package com.vonage.client.conversations;
 import com.vonage.client.OrderedJsonMap;
 import static com.vonage.client.OrderedJsonMap.entry;
 import com.vonage.client.voice.TextToSpeechLanguage;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.*;
+import java.util.Map;
 
 public class AudioRecordEventTest extends AbstractEventTest {
 
@@ -32,7 +32,8 @@ public class AudioRecordEventTest extends AbstractEventTest {
 
     @Test
     public void testAllFields() {
-        var event = testBaseEvent(AudioRecordEvent.builder()
+        testBaseEvent(EventType.AUDIO_RECORD,
+                AudioRecordEvent.builder()
                     .beepStart(beepStart).beepStop(beepStop).split(split)
                     .sentimentAnalysis(sentimentAnalysis).streamed(streamed)
                     .detectSpeech(detectSpeech).multitrack(multitrack)
@@ -53,6 +54,10 @@ public class AudioRecordEventTest extends AbstractEventTest {
                         entry("beep_stop", beepStop)
                 )
         );
-        assertEquals(EventType.AUDIO_RECORD, event.getType());
+    }
+
+    @Test
+    public void testRequiredFields() {
+        testBaseEvent(EventType.AUDIO_RECORD, AudioRecordEvent.builder(), Map.of());
     }
 }

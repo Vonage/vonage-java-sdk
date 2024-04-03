@@ -23,11 +23,10 @@ public class AudioRecordStopEventTest extends AbstractEventTest {
 
     @Test
     public void testAudioRecordStopEvent() {
-        var event = testBaseEvent(
+        var event = testBaseEvent(EventType.AUDIO_RECORD_STOP,
                 AudioRecordStopEvent.builder().recordId(randomIdStr),
                 Map.of("record_id", randomId)
         );
-        assertEquals(EventType.AUDIO_RECORD_STOP, event.getType());
         assertEquals(randomId, event.getRecordId());
     }
 }

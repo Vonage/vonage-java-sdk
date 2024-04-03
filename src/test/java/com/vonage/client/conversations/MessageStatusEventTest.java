@@ -24,11 +24,10 @@ public class MessageStatusEventTest extends AbstractEventTest {
     <E extends MessageStatusEvent, B extends MessageStatusEvent.Builder<E, B>> void testMessageEvent(
             B builder, EventType type) {
 
-        var event = testBaseEvent(
+        var event = testBaseEvent(type,
                 builder.eventId(randomEventId),
                 Map.of("event_id", randomEventId)
         );
-        assertEquals(type, event.getType());
         assertEquals(randomEventId, event.getEventId());
     }
 

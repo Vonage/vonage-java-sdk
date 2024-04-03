@@ -24,11 +24,10 @@ public class AudioRtcEventTest extends AbstractEventTest {
     <E extends AudioRtcEvent, B extends AudioRtcEvent.Builder<E, B>> void testRtcEvent(
             B builder, EventType type) {
 
-        var event = testBaseEvent(
+        var event = testBaseEvent(type,
                 builder.rtcId(randomIdStr),
                 Map.of("rtc_id", randomId)
         );
-        assertEquals(type, event.getType());
         assertEquals(randomId, event.getRtcId());
     }
 

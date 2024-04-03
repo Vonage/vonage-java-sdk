@@ -34,10 +34,11 @@ abstract class AbstractEventTest {
     }
 
     <E extends EventWithBody<?>, B extends EventWithBody.Builder<E, B>> E testBaseEvent(
-            B builder, Map<String, ?> bodyFields) {
+            EventType eventType, B builder, Map<String, ?> bodyFields) {
 
         var event = applyBaseFields(builder).build();
         testJsonableBaseObject(event);
+        assertEquals(eventType, event.getType());
         assertEquals(FROM, event.getFrom());
         var json = event.toJson();
         assertTrue(json.contains("\"from\":\""+FROM+"\""));
