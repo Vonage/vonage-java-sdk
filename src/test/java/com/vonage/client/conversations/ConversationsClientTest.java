@@ -1676,10 +1676,17 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 
 			@Override
 			protected ListEventsRequest sampleRequest() {
-				return ListEventsRequest.builder()
+				var request = ListEventsRequest.builder()
 						.excludeDeletedEvents(EXCLUDE_DELETED_EVENTS)
 						.startId(EVENT_START_ID).endId(EVENT_END_ID)
 						.eventType(KNOWN_EVENT_TYPE).build();
+
+				assertEquals(EXCLUDE_DELETED_EVENTS, request.getExcludeDeletedEvents());
+				assertEquals(EVENT_START_ID, request.getStartId());
+				assertEquals(EVENT_END_ID, request.getEndId());
+				assertEquals(KNOWN_EVENT_TYPE, request.getEventType());
+
+				return request;
 			}
 
 			@Override
@@ -1688,7 +1695,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 					"exclude_deleted_events", String.valueOf(EXCLUDE_DELETED_EVENTS),
 					"start_id", String.valueOf(EVENT_START_ID),
 					"end_id", String.valueOf(EVENT_END_ID),
-					"event_type", String.valueOf(KNOWN_EVENT_TYPE_STR)
+					"event_type", KNOWN_EVENT_TYPE_STR
 				);
 			}
 		}

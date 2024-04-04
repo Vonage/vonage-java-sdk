@@ -31,8 +31,32 @@ public class AudioPlayStatusEventTest extends AbstractEventTest {
         assertEquals(randomId, event.getPlayId());
     }
 
+    <E extends AudioPlayStatusEvent> void testStatusEvent(
+            EventType eventType, String eventTypeStr, Class<E> eventClass) {
+
+        E event = parseEvent(eventType, eventClass, STR."""
+            {
+                "id": \{randomEventId},
+                "type": "audio:play:\{eventTypeStr}",
+                "body": {
+                   "play_id": "\{randomIdStr}"
+                },
+                "_links": {}
+            }
+            """
+        );
+        assertEquals(randomId, event.getPlayId());
+        assertEquals(randomEventId, event.getId());
+    }
+
     @Test
     public void testAudioPlayStopEvent() {
         testStatusEvent(AudioPlayStopEvent.builder(), EventType.AUDIO_PLAY_STOP);
+        testStatusEvent(EventType.AUDIO_PLAY_STOP, "stop", AudioPlayStopEvent.class);
+    }
+
+    @Test
+    public void testAudioPlayDoneEvent() {
+        testStatusEvent(EventType.AUDIO_PLAY_DONE, "done", AudioPlayDoneEvent.class);
     }
 }

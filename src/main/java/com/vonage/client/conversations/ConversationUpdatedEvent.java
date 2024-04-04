@@ -16,9 +16,18 @@
 package com.vonage.client.conversations;
 
 /**
- * Represents an {@link EventType#CONVERSATION_UPDATED} event.
+ * Represents a {@link EventType#CONVERSATION_UPDATED} event.
  */
 public final class ConversationUpdatedEvent extends EventWithBody<Conversation> {
 
     ConversationUpdatedEvent() {}
+
+    /**
+     * Basic details of the updated conversation.
+     *
+     * @return The main Conversation object properties.
+     */
+    public BaseConversation getConversation() {
+        return body;
+    }
 }

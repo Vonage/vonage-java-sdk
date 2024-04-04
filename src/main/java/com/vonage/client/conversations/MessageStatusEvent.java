@@ -37,9 +37,10 @@ abstract class MessageStatusEvent extends EventWithBody<MessageStatusEvent.Body>
     }
 
     /**
-     * ID of the event.
+     * ID of the event. Note that this is the body for the event status update,
+     * so may be different from {@link #getId()}.
      *
-     * @return The event ID as an Integer.
+     * @return The event ID pointer as an Integer.
      */
     @JsonIgnore
     public Integer getEventId() {

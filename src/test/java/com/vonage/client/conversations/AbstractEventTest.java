@@ -15,6 +15,7 @@
  */
 package com.vonage.client.conversations;
 
+import com.vonage.client.Jsonable;
 import com.vonage.client.TestUtils;
 import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,14 +24,12 @@ import java.util.Map;
 import java.util.UUID;
 
 abstract class AbstractEventTest {
-    private static final String FROM = STR."MEM-\{UUID.randomUUID()}";
-
     final int randomEventId = ConversationsClientTest.EVENT_ID;
     final UUID randomId = UUID.randomUUID();
-    final String randomIdStr = randomId.toString();
+    final String randomIdStr = randomId.toString(), from = STR."MEM-\{UUID.randomUUID()}";
 
     <E extends EventWithBody<?>, B extends EventWithBody.Builder<? extends E, B>> B applyBaseFields(B builder) {
-        return builder.from(FROM);
+        return builder.from(from);
     }
 
     <E extends EventWithBody<?>, B extends EventWithBody.Builder<E, B>> E testBaseEvent(
@@ -39,13 +38,22 @@ abstract class AbstractEventTest {
         var event = applyBaseFields(builder).build();
         testJsonableBaseObject(event);
         assertEquals(eventType, event.getType());
-        assertEquals(FROM, event.getFrom());
+        assertEquals(from, event.getFrom());
         var json = event.toJson();
-        assertTrue(json.contains("\"from\":\""+FROM+"\""));
+        assertTrue(json.contains("\"from\":\""+from+"\""));
         if (bodyFields != null && !bodyFields.isEmpty()) {
             var bodyPartialJson = "\"body\":" + TestUtils.mapToJson(bodyFields);
             assertTrue(json.contains(bodyPartialJson));
         }
         return event;
+    }
+
+    @SuppressWarnings("unchecked")
+    <E extends EventWithBody<?>> E parseEvent(EventType eventType, Class<E> expectedClass, String json) {
+        Event event = Jsonable.fromJson(json);
+        testJsonableBaseObject(event);
+        assertEquals(eventType, event.getType());
+        assertEquals(expectedClass, event.getClass());
+        return (E) event;
     }
 }
