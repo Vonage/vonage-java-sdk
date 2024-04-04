@@ -17,10 +17,12 @@ package com.vonage.client.conversations;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import java.util.Map;
 
 public class MessageStatusEventTest extends AbstractEventTest {
 
+    @SuppressWarnings("unchecked")
     <E extends MessageStatusEvent, B extends MessageStatusEvent.Builder<E, B>> void testMessageEvent(
             B builder, EventType type) {
 
@@ -29,6 +31,20 @@ public class MessageStatusEventTest extends AbstractEventTest {
                 Map.of("event_id", randomEventId)
         );
         assertEquals(randomEventId, event.getEventId());
+        var eventClass = (Class<E>) builder.getClass().getEnclosingClass();
+        E parsed = parseEvent(type, eventClass, STR."""
+            {
+                "id": 123,
+                "body": {},
+                "type": "\{type}"
+            }
+            """
+        );
+        assertEquals(123, parsed.getId());
+        assertNull(parsed.getEventId());
+        assertNull(parsed.getFrom());
+        assertNull(parsed.getFromMember());
+        assertNull(parsed.getTimestamp());
     }
 
     @Test
