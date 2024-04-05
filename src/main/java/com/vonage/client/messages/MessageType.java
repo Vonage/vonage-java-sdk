@@ -20,7 +20,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * Represents the media type of the message.
+ *
+ * @deprecated Will be replaced by {@link com.vonage.client.common.MessageType} in the next major release.
  */
+@Deprecated
 public enum MessageType {
 	TEXT, IMAGE, AUDIO, VIDEO, FILE, VCARD, TEMPLATE, CUSTOM, LOCATION, STICKER, UNSUPPORTED, REPLY, ORDER;
 

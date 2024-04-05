@@ -18,7 +18,6 @@ package com.vonage.client.meetings;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import java.util.List;
 
@@ -33,9 +32,5 @@ class ListRecordingsResponse extends JsonableBaseObject {
 	@JsonIgnore
 	public List<Recording> getRecordings() {
 		return embedded != null ? embedded.recordings : null;
-	}
-
-	public static ListRecordingsResponse fromJson(String json) {
-		return Jsonable.fromJson(json);
 	}
 }

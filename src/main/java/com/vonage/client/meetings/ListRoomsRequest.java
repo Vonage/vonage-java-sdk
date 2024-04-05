@@ -15,16 +15,16 @@
  */
 package com.vonage.client.meetings;
 
-import com.vonage.client.QueryParamsRequest;
-import java.util.LinkedHashMap;
+import com.vonage.client.common.HalFilterRequest;
 import java.util.Map;
 import java.util.UUID;
 
-class ListRoomsRequest implements QueryParamsRequest {
+class ListRoomsRequest extends HalFilterRequest {
 	final UUID themeId;
 	final Integer pageSize, startId, endId;
 
 	ListRoomsRequest(Integer startId, Integer endId, Integer pageSize, UUID themeId) {
+		super(null, pageSize, null);
 		this.themeId = themeId;
 		this.startId = startId;
 		this.endId = endId;
@@ -33,15 +33,12 @@ class ListRoomsRequest implements QueryParamsRequest {
 
 	@Override
 	public Map<String, String> makeParams() {
-		Map<String, String> params = new LinkedHashMap<>(4);
+		Map<String, String> params = super.makeParams();
 		if (startId != null) {
 			params.put("start_id", String.valueOf(startId));
 		}
 		if (endId != null) {
 			params.put("end_id", String.valueOf(endId));
-		}
-		if (pageSize != null) {
-			params.put("page_size", String.valueOf(pageSize));
 		}
 		return params;
 	}

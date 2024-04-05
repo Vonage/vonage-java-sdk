@@ -9,16 +9,31 @@ plugins {
 
 group = "com.vonage"
 archivesBaseName = "server-sdk"
-version = "8.3.0"
+version = "8.4.0"
 
 ext.githubPath = 'Vonage/vonage-java-sdk'
 
-tasks.withType(Javadoc).configureEach {
-    options.addStringOption('Xdoclint:all', '-quiet')
-}
-
 repositories {
     mavenCentral()
+}
+
+dependencies {
+    def jacksonVersion = '2.17.0'
+    def httpclientVersion = '4.5.14'
+    def junitVersion = '5.10.2'
+
+    implementation "commons-codec:commons-codec:1.16.1"
+    implementation 'org.apache.commons:commons-lang3:3.14.0'
+    implementation "org.apache.httpcomponents:httpclient:$httpclientVersion"
+    implementation "org.apache.httpcomponents:httpmime:$httpclientVersion"
+    implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion"
+    implementation "com.vonage:jwt:1.1.1"
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
+    testImplementation "org.mockito:mockito-core:5.11.0"
+    testImplementation "jakarta.servlet:jakarta.servlet-api:4.0.4"
 }
 
 java {
@@ -29,25 +44,11 @@ java {
 compileTestJava {
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = sourceCompatibility
+    options.compilerArgs += '--enable-preview'
 }
 
-dependencies {
-    def jacksonVersion = '2.16.1'
-    def httpclientVersion = '4.5.14'
-    def junitVersion = '5.10.2'
-
-    implementation "commons-codec:commons-codec:1.16.1"
-    implementation 'org.apache.commons:commons-lang3:3.14.0'
-    implementation "org.apache.httpcomponents:httpclient:$httpclientVersion"
-    implementation "org.apache.httpcomponents:httpmime:$httpclientVersion"
-    implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
-    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion"
-    implementation "com.vonage:jwt:1.1.0"
-
-    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
-    testImplementation "org.mockito:mockito-core:5.10.0"
-    testImplementation "jakarta.servlet:jakarta.servlet-api:4.0.4"
+tasks.withType(Javadoc).configureEach {
+    options.addStringOption('Xdoclint:all', '-quiet')
 }
 
 test {
@@ -57,6 +58,7 @@ test {
         events "skipped", "failed"
         exceptionFormat "full"
     }
+    jvmArgs "--enable-preview"
 }
 
 javadoc {

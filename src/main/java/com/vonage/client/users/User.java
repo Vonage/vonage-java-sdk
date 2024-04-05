@@ -34,15 +34,16 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class User extends BaseUser {
-    private String displayName;
-    private URI imageUrl;
-    private Channels channels;
-    private Properties properties;
+    @JsonProperty("display_name") private String displayName;
+    @JsonProperty("image_url") private URI imageUrl;
+    @JsonProperty("channels") private Channels channels;
+    @JsonProperty("properties") private Properties properties;
+    @JsonProperty("custom_data") private Map<String, ?> customData;
 
-    User() {
+    protected User() {
     }
 
-    User(Builder builder) {
+    protected User(Builder builder) {
         name = builder.name;
         displayName = builder.displayName;
         imageUrl = builder.imageUrl;
@@ -58,7 +59,6 @@ public class User extends BaseUser {
      *
      * @return The user's friendly name.
      */
-    @JsonProperty("display_name")
     public String getDisplayName() {
         return displayName;
     }
@@ -68,19 +68,8 @@ public class User extends BaseUser {
      *
      * @return The image URL, or {@code null} if not specified.
      */
-    @JsonProperty("image_url")
     public URI getImageUrl() {
         return imageUrl;
-    }
-
-    /**
-     * Additional properties for the user.
-     *
-     * @return The properties object, or {@code null} if not applicable.
-     */
-    @JsonProperty("properties")
-    private Properties getProperties() {
-        return properties;
     }
 
     /**
@@ -90,7 +79,7 @@ public class User extends BaseUser {
      */
     @JsonIgnore
     public Map<String, ?> getCustomData() {
-        return getProperties() != null ? properties.getCustomData() : null;
+        return properties != null ? properties.customData : customData;
     }
 
     /**
@@ -98,7 +87,6 @@ public class User extends BaseUser {
      *
      * @return The channels object, or {@code null} if unknown.
      */
-    @JsonProperty("channels")
     public Channels getChannels() {
         return channels;
     }
@@ -217,17 +205,8 @@ public class User extends BaseUser {
      * Represents the "properties" field of a User object.
      */
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    public static class Properties extends JsonableBaseObject {
-        private Map<String, ?> customData;
-
-        /**
-         * Custom key/value pairs to associate with the user.
-         *
-         * @return The custom data as a Map, or {@code null} if not specified.
-         */
-        @JsonProperty("custom_data")
-        public Map<String, ?> getCustomData() {
-            return customData;
-        }
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    static class Properties extends JsonableBaseObject {
+        @JsonProperty("custom_data") Map<String, ?> customData;
     }
 }

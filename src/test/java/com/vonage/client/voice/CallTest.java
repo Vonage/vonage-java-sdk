@@ -231,7 +231,7 @@ public class CallTest {
             Call.fromJson("{\n" + "    \"unknownProperty\": \"unknown\"\n" + "}");
             fail("Expected a VonageUnexpectedException to be thrown");
         } catch (VonageResponseParseException e) {
-            assertEquals("Failed to produce Call from json.", e.getMessage());
+            assertEquals("Failed to produce Call from JSON.", e.getMessage());
         }
     }
 

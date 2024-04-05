@@ -17,10 +17,12 @@ package com.vonage.client.users.channels;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 /**
  * Represents a WhatsApp channel.
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.NONE, visible = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Whatsapp extends NumberChannel {
@@ -28,7 +30,7 @@ public class Whatsapp extends NumberChannel {
 	protected Whatsapp() {}
 
 	/**
-	 * Creates a new Whatsapp channel.
+	 * Creates a new WhatsApp channel.
 	 *
 	 * @param number The phone number in E.164 format.
 	 */

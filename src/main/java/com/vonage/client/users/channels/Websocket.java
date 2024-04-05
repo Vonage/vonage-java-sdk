@@ -23,6 +23,7 @@ import java.util.Objects;
 /**
  * Represents a Websocket channel.
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.NONE, visible = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Websocket extends Channel {

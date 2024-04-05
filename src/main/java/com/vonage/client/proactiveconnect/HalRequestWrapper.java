@@ -15,34 +15,13 @@
  */
 package com.vonage.client.proactiveconnect;
 
-import com.vonage.client.QueryParamsRequest;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.vonage.client.common.HalFilterRequest;
 
-class HalRequestWrapper implements QueryParamsRequest {
-	final Integer page, pageSize;
-	final SortOrder order;
+class HalRequestWrapper extends HalFilterRequest {
 	final String id;
 
-	HalRequestWrapper(Integer page, Integer pageSize, SortOrder order, String id) {
-		this.page = page;
-		this.pageSize = pageSize;
-		this.order = order;
+	HalRequestWrapper(Integer page, Integer pageSize, com.vonage.client.common.SortOrder order, String id) {
+		super(page, pageSize, order);
 		this.id = id;
-	}
-
-	@Override
-	public Map<String, String> makeParams() {
-		Map<String, String> params = new LinkedHashMap<>(4);
-		if (page != null) {
-			params.put("page", page.toString());
-		}
-		if (pageSize != null) {
-			params.put("page_size", pageSize.toString());
-		}
-		if (order != null) {
-			params.put("order", order.toString());
-		}
-		return params;
 	}
 }

@@ -26,7 +26,6 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -198,7 +197,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 
 	@Override
 	public final RequestBuilder makeRequest(T requestBody) {
-		if (requestBody instanceof Jsonable && requestBody.getClass().equals(responseType)) {
+		if (requestBody instanceof Jsonable && responseType.isAssignableFrom(requestBody.getClass())) {
 			cachedRequestBody = requestBody;
 		}
 		RequestBuilder rqb = createRequestBuilderFromRequestMethod(requestMethod);
@@ -292,31 +291,11 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 				return (R) cachedRequestBody;
 			}
 
-			for (java.lang.reflect.Method method : responseType.getDeclaredMethods()) {
-				boolean matching = Modifier.isStatic(method.getModifiers()) &&
-						method.getName().equals("fromJson") &&
-						responseType.isAssignableFrom(method.getReturnType());
-				if (matching) {
-					Class<?>[] params = method.getParameterTypes();
-					if (params.length == 1 && params[0].equals(String.class)) {
-						if (!method.isAccessible()) {
-							method.setAccessible(true);
-						}
-						return (R) method.invoke(responseType, deser);
-					}
-				}
-			}
-
 			if (Jsonable.class.isAssignableFrom(responseType)) {
-				Constructor<R> constructor = responseType.getDeclaredConstructor();
-				if (!constructor.isAccessible()) {
-					constructor.setAccessible(true);
-				}
-				R responseBody = constructor.newInstance();
-				((Jsonable) responseBody).updateFromJson(deser);
-				return responseBody;
+				return (R) Jsonable.fromJson(deser, (Class<? extends Jsonable>) responseType);
 			}
-			else if (Collection.class.isAssignableFrom(responseType)) {
+			else if (Collection.class.isAssignableFrom(responseType) ||
+					(responseType.isArray() && Jsonable.class.isAssignableFrom(responseType.getComponentType()))) {
 				return Jsonable.createDefaultObjectMapper().readValue(deser, responseType);
 			}
 			else {
@@ -335,17 +314,9 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		String exMessage = EntityUtils.toString(response.getEntity());
 		if (responseExceptionType != null) {
 			if (VonageApiResponseException.class.isAssignableFrom(responseExceptionType)) {
-				Constructor<? extends Exception> constructor = responseExceptionType.getDeclaredConstructor();
-				if (!constructor.isAccessible()) {
-					constructor.setAccessible(true);
-				}
-				VonageApiResponseException varex = (VonageApiResponseException) constructor.newInstance();
-				try {
-					varex.updateFromJson(exMessage);
-				}
-				catch (VonageResponseParseException ex) {
-					throw new VonageUnexpectedException(exMessage);
-				}
+				VonageApiResponseException varex = Jsonable.fromJson(exMessage,
+						(Class<? extends VonageApiResponseException>) responseExceptionType
+				);
 				if (varex.title == null) {
 					varex.title = response.getStatusLine().getReasonPhrase();
 				}

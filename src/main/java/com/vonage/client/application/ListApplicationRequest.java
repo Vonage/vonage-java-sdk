@@ -15,39 +15,25 @@
  */
 package com.vonage.client.application;
 
-import com.vonage.client.QueryParamsRequest;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.vonage.client.common.HalFilterRequest;
 
 /**
  * Query parameters for {@link ApplicationClient#listApplications(ListApplicationRequest)}.
  */
-public class ListApplicationRequest implements QueryParamsRequest {
-    private final int pageSize, page;
+public class ListApplicationRequest extends HalFilterRequest {
 
     private ListApplicationRequest(Builder builder) {
-        pageSize = builder.pageSize;
-        page = builder.page;
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public int getPage() {
-        return page;
+        super(builder);
     }
 
     @Override
-    public Map<String, String> makeParams() {
-        LinkedHashMap<String, String> params = new LinkedHashMap<>(4);
-        if (page > 0) {
-            params.put("page", String.valueOf(page));
-        }
-        if (pageSize > 0) {
-            params.put("page_size", String.valueOf(pageSize));
-        }
-        return params;
+    public Integer getPage() {
+        return super.getPage();
+    }
+
+    @Override
+    public Integer getPageSize() {
+        return super.getPageSize();
     }
 
     /**
@@ -59,8 +45,11 @@ public class ListApplicationRequest implements QueryParamsRequest {
         return new Builder();
     }
 
-    public static class Builder {
-        private int pageSize, page;
+    public static class Builder extends HalFilterRequest.Builder<ListApplicationRequest, Builder> {
+
+        @Deprecated
+        public Builder() {
+        }
 
         /**
          * @param pageSize The number of applications per page.
@@ -68,8 +57,7 @@ public class ListApplicationRequest implements QueryParamsRequest {
          * @return This builder.
          */
         public Builder pageSize(long pageSize) {
-            this.pageSize = (int) pageSize;
-            return this;
+            return super.pageSize((int) pageSize);
         }
 
         /**
@@ -78,8 +66,7 @@ public class ListApplicationRequest implements QueryParamsRequest {
          * @return This builder.
          */
         public Builder page(long page) {
-            this.page = (int) page;
-            return this;
+            return super.page((int) page);
         }
 
         /**

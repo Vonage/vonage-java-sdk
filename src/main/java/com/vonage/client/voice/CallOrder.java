@@ -15,6 +15,10 @@
  */
 package com.vonage.client.voice;
 
+/**
+ * @deprecated Replaced by {@link com.vonage.client.common.SortOrder}.
+ */
+@Deprecated
 public enum CallOrder {
     ASCENDING("asc"), DESCENDING("desc");
 

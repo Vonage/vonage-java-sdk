@@ -41,7 +41,7 @@ public class UserTest {
 		User request = User.builder().channels()
 				.name(name).displayName(displayName)
 				.imageUrl(imageUrl).customData(customData).build();
-		request.setId(id);
+		request.id = id;
 
 		String json = request.toJson();
 		assertTrue(json.contains("\"id\":\""+id+"\""));
@@ -203,19 +203,20 @@ public class UserTest {
 
 	@Test
 	public void testAllChannelsEmpty() {
-		String json = "{\n" +
-				"  \"channels\": {\n" +
-				"    \"pstn\": [],\n" +
-				"    \"sip\": [],\n" +
-				"    \"vbc\": [],\n" +
-				"    \"websocket\": [],\n" +
-				"    \"sms\": [],\n" +
-				"    \"mms\": [],\n" +
-				"    \"whatsapp\": [],\n" +
-				"    \"viber\": [],\n" +
-				"    \"messenger\": []\n" +
-				"  }\n" +
-				"}";
+		String json = """
+                {
+                  "channels": {
+                    "pstn": [],
+                    "sip": [],
+                    "vbc": [],
+                    "websocket": [],
+                    "sms": [],
+                    "mms": [],
+                    "whatsapp": [],
+                    "viber": [],
+                    "messenger": []
+                  }
+                }""";
 		User parsed = User.fromJson(json);
 		TestUtils.testJsonableBaseObject(parsed);
 		Channels channels = parsed.getChannels();

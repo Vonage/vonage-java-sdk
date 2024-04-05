@@ -15,7 +15,9 @@
  */
 package com.vonage.client.common;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.net.URI;
@@ -23,6 +25,7 @@ import java.net.URI;
 /**
  * Represents the {@code _links} section of a HAL response.
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class HalLinks extends JsonableBaseObject {
 	@JsonProperty("first") UrlContainer first;
@@ -39,6 +42,7 @@ public class HalLinks extends JsonableBaseObject {
 	 *
 	 * @return URL of the first page, or {@code null} if absent.
 	 */
+	@JsonIgnore
 	public URI getFirstUrl() {
 		return first != null ? first.getHref() : null;
 	}
@@ -48,6 +52,7 @@ public class HalLinks extends JsonableBaseObject {
 	 *
 	 * @return URL of the current page, or {@code null} if absent.
 	 */
+	@JsonIgnore
 	public URI getSelfUrl() {
 		return self != null ? self.getHref() : null;
 	}
@@ -57,6 +62,7 @@ public class HalLinks extends JsonableBaseObject {
 	 *
 	 * @return URL of the previous page, or {@code null} if absent.
 	 */
+	@JsonIgnore
 	public URI getPrevUrl() {
 		return prev != null ? prev.getHref() : null;
 	}
@@ -66,6 +72,7 @@ public class HalLinks extends JsonableBaseObject {
 	 *
 	 * @return URL of the next page, or {@code null} if absent.
 	 */
+	@JsonIgnore
 	public URI getNextUrl() {
 		return next != null ? next.getHref() : null;
 	}
@@ -75,6 +82,7 @@ public class HalLinks extends JsonableBaseObject {
 	 *
 	 * @return URL of the last page, or {@code null} if absent.
 	 */
+	@JsonIgnore
 	public URI getLastUrl() {
 		return last != null ? last.getHref() : null;
 	}

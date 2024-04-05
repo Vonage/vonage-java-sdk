@@ -93,7 +93,7 @@ public class ProactiveConnectClient {
 		if (pageSize != null && pageSize < 1) {
 			throw new IllegalArgumentException("Page size must be positive.");
 		}
-		return endpoint.execute(new HalRequestWrapper(page, pageSize, order, id));
+		return endpoint.execute(new HalRequestWrapper(page, pageSize, order != null ? order.toSortOrder() : null, id));
 	}
 
 	/**
