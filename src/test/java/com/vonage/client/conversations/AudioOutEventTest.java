@@ -71,10 +71,10 @@ public class AudioOutEventTest extends AbstractEventTest {
     @Test
     public void testAudioPlayEventRequiredFields() {
         var event = testAudioOutEventRequiredFields(EventType.AUDIO_PLAY,
-                AudioPlayEvent.builder(), new OrderedJsonMap()
+                AudioPlayEvent.builder().streamUrl(streamUrl), new OrderedJsonMap()
         );
+        assertEquals(URI.create(streamUrl), event.getStreamUrl());
         assertNull(event.getPlayId());
-        assertNull(event.getStreamUrl());
     }
 
     @Test

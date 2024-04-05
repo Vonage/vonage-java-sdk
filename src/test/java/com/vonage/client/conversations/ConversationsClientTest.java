@@ -823,8 +823,9 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 					"type":"\{request.getProperties().getType()}",\
 					"custom_sort_key":"\{request.getProperties().getCustomSortKey()}",\
 					"custom_data":\{new ObjectMapper().writeValueAsString(customData)}},\
-					"numbers":[],"callback":{"url":"\{request.getCallback().getUrl()}",\
-					"event_mask":"\{request.getCallback().getEventMask()}","params":{\
+					"numbers":[{"type":"phone","number":"\{PHONE_NUMBER}"}],"callback":{\
+					"url":"\{request.getCallback().getUrl()}","event_mask":\
+					"\{request.getCallback().getEventMask()}","params":{\
 					"applicationId":"\{request.getCallback().getParams().getApplicationId()}",\
 					"ncco_url":"\{request.getCallback().getParams().getNccoUrl()}"},\
 					"method":"\{request.getCallback().getMethod()}"}}""";
