@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.users.channels.Channel;
+import com.vonage.client.users.channels.Pstn;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,8 +49,10 @@ public class Conversation extends BaseConversation {
 		}
 		imageUrl = builder.imageUrl;
 		properties = builder.properties;
-		numbers = builder.numbers;
 		callback = builder.callback;
+		if ((numbers = builder.numbers) != null) {
+			numbers.forEach(Channel::setTypeField);
+		}
 	}
 
 	/**
@@ -84,6 +87,7 @@ public class Conversation extends BaseConversation {
 
 	/**
 	 * Channels containing the contact numbers for this conversation.
+	 * Currently, only {@link Pstn} (Phone) type is supported.
 	 *
 	 * @return The channels associated with this conversation, or {@code null} if unspecified.
 	 */
@@ -118,7 +122,7 @@ public class Conversation extends BaseConversation {
 		private String name, displayName;
 		private URI imageUrl;
 		private ConversationProperties properties;
-		private Collection<Channel> numbers;
+		private Collection<? extends Channel> numbers;
 		private Callback callback;
 	
 		Builder() {}
@@ -172,13 +176,24 @@ public class Conversation extends BaseConversation {
 		}
 
 		/**
+		 * Sets the PSTN numbers for this conversation.
+		 *
+		 * @param phoneNumber The telephone or mobile number(s) for this conversation in E.164 format.
+		 *
+		 * @return This builder.
+		 */
+		public Builder phone(String... phoneNumber) {
+			return numbers(Arrays.stream(phoneNumber).map(Pstn::new).toArray(Channel[]::new));
+		}
+
+		/**
 		 * Channels containing the contact numbers for this conversation.
 		 *
 		 * @param numbers The channels associated with this conversation.
 		 *
 		 * @return This builder.
 		 */
-		public Builder numbers(Channel... numbers) {
+		Builder numbers(Channel... numbers) {
 			return numbers(Arrays.asList(numbers));
 		}
 
@@ -189,7 +204,7 @@ public class Conversation extends BaseConversation {
 		 *
 		 * @return This builder.
 		 */
-		public Builder numbers(Collection<? extends Channel> numbers) {
+		Builder numbers(Collection<? extends Channel> numbers) {
 			this.numbers = new ArrayList<>(numbers);
 			return this;
 		}

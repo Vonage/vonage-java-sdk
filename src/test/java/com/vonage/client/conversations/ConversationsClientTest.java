@@ -83,6 +83,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 			MEMBER_FROM = "MEM-67bf6977-3eb8-40b8-b581-204fb4df33b1",
 			REASON_CODE = "test_code",
 			REASON_TEXT = "Because I said so",
+			PHONE_NUMBER = "447900000001",
 			USER_NAME = "my_user_name",
 			USER_DISPLAY_NAME = "My User Name",
 			USER_IMAGE_URL_STR = "https://example.com/profile.jpg",
@@ -806,8 +807,7 @@ public class ConversationsClientTest extends ClientTest<ConversationsClient> {
 							.customSortKey(CONVERSATION_CUSTOM_SORT_KEY)
 							.customData(CONVERSATION_CUSTOM_DATA).build()
 						)
-						.callback(callback)
-						.numbers().build();
+						.callback(callback).phone(PHONE_NUMBER).build();
 			}
 
 			@Override
