@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.net.URI;
+import java.util.Objects;
 import java.util.UUID;
 
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
@@ -36,6 +37,6 @@ final class AudioPlayEventBody extends AudioOutEvent.Body {
 
     AudioPlayEventBody(AudioPlayEvent.Builder builder) {
         super(builder);
-        streamUrl = builder.streamUrl;
+        streamUrl = Objects.requireNonNull(builder.streamUrl, "Stream URL is required.");
     }
 }

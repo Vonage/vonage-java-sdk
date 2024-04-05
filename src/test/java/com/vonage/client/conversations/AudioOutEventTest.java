@@ -18,13 +18,14 @@ package com.vonage.client.conversations;
 import com.vonage.client.OrderedJsonMap;
 import static com.vonage.client.OrderedJsonMap.entry;
 import com.vonage.client.voice.TextToSpeechLanguage;
-import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import java.net.URI;
 import java.util.List;
+import java.util.function.Function;
 
 public class AudioOutEventTest extends AbstractEventTest {
-    private final String text = "Hello, hi testing";
+    private final String text = "Hello, hi testing", streamUrl = "ftp://example.com/path/to/audio.mp3";
 
     <E extends AudioOutEvent<?>, B extends AudioOutEvent.Builder<E, B>> E testAudioOutEventAllFields(
             EventType type, B builder, OrderedJsonMap bodyFields) {
@@ -59,7 +60,6 @@ public class AudioOutEventTest extends AbstractEventTest {
 
     @Test
     public void testAudioPlayEventAllFields() {
-        String streamUrl = "ftp://example.com/path/to/audio.mp3";
         var event = testAudioOutEventAllFields(EventType.AUDIO_PLAY,
                 AudioPlayEvent.builder().streamUrl(streamUrl),
                 new OrderedJsonMap(entry("stream_url", List.of(streamUrl)))
@@ -119,5 +119,26 @@ public class AudioOutEventTest extends AbstractEventTest {
     @Test
     public void testAudioSayEventNoText() {
         assertThrows(IllegalArgumentException.class, () -> applyBaseFields(AudioSayEvent.builder()).build());
+    }
+
+    @Test
+    public void testAudioOutLevelBounds() {
+        Function<Double, AudioPlayEvent> buildFunction =
+                d -> applyBaseFields(AudioPlayEvent.builder().streamUrl(streamUrl).level(d)).build();
+
+        assertThrows(IllegalArgumentException.class, () -> buildFunction.apply(-1.01));
+        assertThrows(IllegalArgumentException.class, () -> buildFunction.apply(1.01));
+    }
+
+    @Test
+    public void testAudioOutLoopBounds() {
+        assertThrows(IllegalArgumentException.class, () ->
+                applyBaseFields(AudioPlayEvent.builder().streamUrl(streamUrl).loop(-1)).build()
+        );
+    }
+
+    @Test
+    public void testAudioPlayStreamRequired() {
+        assertThrows(NullPointerException.class, () -> applyBaseFields(AudioPlayEvent.builder()).build());
     }
 }

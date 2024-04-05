@@ -43,8 +43,12 @@ abstract class AudioOutEvent<T extends AudioOutEvent.Body> extends EventWithBody
 
         Body(Builder<?, ?> builder) {
             queue = builder.queue;
-            level = builder.level;
-            loop = builder.loop;
+            if ((level = builder.level) != null && (level > 1.0 || level < -1.0)) {
+                throw new IllegalArgumentException("Level must be between -1 and 1.");
+            }
+            if ((loop = builder.loop) != null && loop < 0) {
+                throw new IllegalArgumentException("Loop cannot be negative.");
+            }
         }
     }
 
