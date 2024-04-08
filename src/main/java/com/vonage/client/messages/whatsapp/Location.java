@@ -25,8 +25,6 @@ import com.vonage.client.JsonableBaseObject;
  *
  * @since 7.2.0
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public final class Location extends JsonableBaseObject {
 	private double latitude, longitude;
 	private String name, address;

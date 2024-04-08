@@ -34,8 +34,6 @@ public final class AudioRecordStopEvent extends EventWithBody<AudioRecordStopEve
         (body = new Body()).recordId = builder.recordId;
     }
 
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    @JsonIgnoreProperties(ignoreUnknown = true)
     static class Body extends JsonableBaseObject {
         @JsonProperty("record_id") private UUID recordId;
     }

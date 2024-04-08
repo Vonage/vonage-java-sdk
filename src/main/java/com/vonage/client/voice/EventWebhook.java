@@ -33,8 +33,6 @@ import java.util.UUID;
  *
  * @since 8.2.0
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class EventWebhook extends JsonableBaseObject {
     private CallStatus status;
     private CallDirection direction;

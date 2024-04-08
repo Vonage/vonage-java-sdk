@@ -23,8 +23,6 @@ import com.vonage.client.JsonableBaseObject;
 /**
  * Represents HTTP Live Streaming (HLS) options for a {@link Broadcast}.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Hls extends JsonableBaseObject {
 	private Boolean dvr, lowLatency;
 

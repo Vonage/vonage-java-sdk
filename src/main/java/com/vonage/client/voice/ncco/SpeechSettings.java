@@ -24,8 +24,6 @@ import java.util.Collections;
 /**
  * ASR (Automatic Speech Recognition) settings for Input Actions that will be added to a NCCO object.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class SpeechSettings extends JsonableBaseObject {
     private Collection<String> uuid, context;
     private Double endOnSilence;

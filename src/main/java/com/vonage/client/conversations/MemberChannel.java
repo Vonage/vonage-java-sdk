@@ -33,8 +33,6 @@ import java.util.Objects;
 /**
  * Contains the channel properties for {@link Member#getChannel()}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonDeserialize(using = MemberChannel.Deserializer.class)
 public class MemberChannel extends JsonableBaseObject {
 	ChannelType type;

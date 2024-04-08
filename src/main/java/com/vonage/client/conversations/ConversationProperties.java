@@ -24,8 +24,6 @@ import java.util.Map;
 /**
  * Additional properties for a {@linkplain Conversation}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ConversationProperties extends JsonableBaseObject {
 	private Integer ttl;
 	private String type, customSortKey;

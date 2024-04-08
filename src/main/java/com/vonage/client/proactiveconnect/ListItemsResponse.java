@@ -28,16 +28,12 @@ import java.util.UUID;
 /**
  * HAL response for {@link ProactiveConnectClient#listItems(UUID, int, int, SortOrder)}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public final class ListItemsResponse extends HalPageResponse {
 	@JsonProperty("_embedded") private Embedded _embedded;
 
 	ListItemsResponse() {
 	}
 
-	@JsonInclude(value = JsonInclude.Include.NON_NULL)
-	@JsonIgnoreProperties(ignoreUnknown = true)
 	static final class Embedded extends JsonableBaseObject {
 		private List<ListItem> items;
 

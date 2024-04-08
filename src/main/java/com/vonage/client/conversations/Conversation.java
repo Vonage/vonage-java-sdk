@@ -28,8 +28,6 @@ import java.util.Collection;
 /**
  * Represents a Conversation (request and response).
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Conversation extends BaseConversation {
 	private ConversationStatus state;
 	private Integer sequenceNumber;

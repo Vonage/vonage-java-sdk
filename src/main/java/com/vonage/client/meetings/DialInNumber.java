@@ -23,7 +23,6 @@ import java.util.Locale;
 /**
  * Details about a number that that can be used to dial into a meeting.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class DialInNumber extends JsonableBaseObject {
 	private String number, displayName;
 	private Locale locale;

@@ -22,8 +22,6 @@ import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import java.util.List;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class PrefixPricingResponse extends JsonableBaseObject {
     private int count;
     private List<PricingResponse> countries;

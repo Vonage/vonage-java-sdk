@@ -27,8 +27,6 @@ import com.vonage.client.JsonableBaseObject;
  * {@code streamUrl}: An array containing a single URL to an mp3 or wav (16-bit) audio file.
  * {@code loop}: The number of times the audio file at {@code streamUrl} is repeated before the stream ends. Set to 0 to loop infinitely
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 class StreamPayload extends JsonableBaseObject {
     @JsonIgnore final String uuid;
     private final String[] streamUrl;

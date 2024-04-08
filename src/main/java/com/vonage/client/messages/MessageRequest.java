@@ -32,7 +32,6 @@ import java.util.Objects;
  * invalid (i.e. have malformed values, such as empty strings) will result in {@link IllegalArgumentException}
  * being thrown. The documentation on each parameter should provide clarity on parameter restrictions.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class MessageRequest extends JsonableBaseObject {
 	final MessageType messageType;
 	final Channel channel;

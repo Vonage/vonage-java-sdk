@@ -28,8 +28,6 @@ import java.util.Map;
 /**
  * Represents a capability of a Vonage Application
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class Capability extends JsonableBaseObject {
     protected Map<Webhook.Type, Webhook> webhooks;
 

@@ -23,8 +23,6 @@ import com.vonage.client.JsonableBaseObject;
 /**
  * Represents details of the phone number in {@link FraudCheckResponse#getPhone()}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Phone extends JsonableBaseObject {
 	private String number, carrier;
 	private PhoneType type;

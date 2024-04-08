@@ -31,8 +31,6 @@ import java.util.Map;
 /**
  * Represents a Vonage User (both request and response).
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User extends BaseUser {
     @JsonProperty("display_name") private String displayName;
     @JsonProperty("image_url") private URI imageUrl;
@@ -204,8 +202,6 @@ public class User extends BaseUser {
     /**
      * Represents the "properties" field of a User object.
      */
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    @JsonIgnoreProperties(ignoreUnknown = true)
     static class Properties extends JsonableBaseObject {
         @JsonProperty("custom_data") Map<String, ?> customData;
     }

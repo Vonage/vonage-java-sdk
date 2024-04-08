@@ -23,8 +23,6 @@ import com.vonage.client.VonageApiResponseException;
 /**
  * Response returned when an error is encountered (i.e. the API returns a non-2xx status code).
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public final class SubaccountsResponseException extends VonageApiResponseException {
 
 	void setStatusCode(int statusCode) {

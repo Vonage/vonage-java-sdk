@@ -21,7 +21,6 @@ import com.vonage.client.messages.internal.MessagePayload;
 import java.net.URI;
 import java.util.Objects;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Video extends MessagePayload {
 	protected URI thumbUrl;
 

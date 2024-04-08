@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.vonage.client.Jsonable;
 import com.vonage.client.VonageUnexpectedException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -27,7 +28,7 @@ import java.util.Collections;
 /**
  * Vonage Call Control Object for controlling the flow of a Voice API call.
  */
-public class Ncco {
+public class Ncco implements Jsonable {
     @JsonValue
     private Collection<? extends Action> actions;
     private ObjectWriter writer;
@@ -37,7 +38,7 @@ public class Ncco {
     }
 
     public Ncco(Collection<Action> actions) {
-        this(new ObjectMapper().writer(), actions);
+        this(Jsonable.createDefaultObjectMapper().writer(), actions);
     }
 
     @Deprecated
@@ -64,6 +65,7 @@ public class Ncco {
         return this.actions;
     }
 
+    @Override
     public String toJson() {
         try {
             return this.writer.writeValueAsString(this.actions);

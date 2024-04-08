@@ -25,8 +25,6 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class VerifyDetails extends JsonableBaseObject {
     private String requestId, accountId, number, senderId, currency;
     private Date dateSubmitted, dateFinalized, firstEventDate, lastEventDate;

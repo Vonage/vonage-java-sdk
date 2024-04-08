@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.util.regex.Pattern;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 class SendDtmfRequest extends JsonableBaseObject {
 	static final Pattern DTMF_DIGITS_PATTERN = Pattern.compile("[0-9*#p]+");
 

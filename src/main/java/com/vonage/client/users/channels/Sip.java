@@ -26,8 +26,6 @@ import java.util.Objects;
  * Represents a Session Initiation Protocol (SIP) channel.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NONE, visible = true)
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Sip extends Channel {
 	private URI uri;
 	private String username, password;

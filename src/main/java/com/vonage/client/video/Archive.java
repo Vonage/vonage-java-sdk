@@ -16,8 +16,6 @@
 package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import java.net.URI;
@@ -26,12 +24,10 @@ import java.time.Duration;
 /**
 * Represents an archive of a video session.
 */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Archive extends StreamComposition {
     private Long size;
     @JsonProperty("duration") private Integer duration;
-    private String name,reason, multiArchiveTag;
+    private String name, reason, multiArchiveTag;
     private URI url;
     private ArchiveStatus status;
     private OutputMode outputMode;

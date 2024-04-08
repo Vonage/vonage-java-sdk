@@ -21,7 +21,6 @@ import com.vonage.client.messages.MessageRequest;
 import com.vonage.client.messages.MessageType;
 import com.vonage.client.messages.internal.MessagePayload;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class MmsRequest extends MessageRequest {
 	MessagePayload payload;
 

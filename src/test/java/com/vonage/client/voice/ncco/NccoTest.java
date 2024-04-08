@@ -16,12 +16,12 @@
 package com.vonage.client.voice.ncco;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.vonage.client.Jsonable;
 import com.vonage.client.VonageUnexpectedException;
 import com.vonage.client.voice.TextToSpeechLanguage;
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -91,7 +91,7 @@ public class NccoTest {
 
     @Test
     public void testObjectWriterAndActionConstruction() {
-        ObjectWriter writer = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        ObjectWriter writer = Jsonable.createDefaultObjectMapper().writer().withDefaultPrettyPrinter();
         TalkAction talk = TalkAction.builder("Test message").build();
 
         Ncco ncco = new Ncco(writer, talk);

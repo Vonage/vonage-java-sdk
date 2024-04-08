@@ -27,8 +27,6 @@ import java.util.UUID;
 /**
  * Represents a credit or balance transfer between accounts.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class MoneyTransfer extends AbstractTransfer {
 	private UUID id;
 	private Instant createdAt;

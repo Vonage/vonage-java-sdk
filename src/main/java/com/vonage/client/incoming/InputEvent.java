@@ -24,7 +24,6 @@ import java.util.Date;
  * @deprecated Use {@link com.vonage.client.voice.EventWebhook}.
  */
 @Deprecated
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class InputEvent implements Jsonable {
     private String uuid, conversationUuid, to, from;
     private DtmfResult dtmf;

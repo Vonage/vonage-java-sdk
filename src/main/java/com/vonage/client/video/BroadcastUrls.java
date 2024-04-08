@@ -25,8 +25,6 @@ import java.util.List;
 /**
  * Container for details about the HLS and RTMP broadcasts.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class BroadcastUrls extends JsonableBaseObject {
 	@JsonProperty("hls") private URI hls;
 	@JsonProperty("rtmp") private List<Rtmp> rtmp;

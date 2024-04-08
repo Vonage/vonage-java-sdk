@@ -23,7 +23,6 @@ import java.net.URI;
 /**
  * @since 7.2.0
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class Action extends JsonableBaseObject {
 	private final URI url;
 	private final String text;

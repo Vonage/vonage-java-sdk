@@ -28,8 +28,6 @@ import java.time.Instant;
  *
  * @since 8.3.0
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public final class MessageEvent extends JsonableBaseObject {
     private String msisdn, to, messageId, text, keyword, nonce, data, udh;
     private MessageType type;

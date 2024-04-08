@@ -24,8 +24,6 @@ import java.util.*;
 /**
  * An NCCO conversation action which enables the ability to host conference calls.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ConversationAction extends JsonableBaseObject implements Action {
     private static final String ACTION = "conversation";
 

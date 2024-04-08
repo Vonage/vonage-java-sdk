@@ -24,8 +24,6 @@ import com.vonage.client.JsonableBaseObject;
 /**
  * Represents metadata about a call.
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class CallEvent extends JsonableBaseObject {
     private String uuid, conversationUuid;
     private CallStatus status;

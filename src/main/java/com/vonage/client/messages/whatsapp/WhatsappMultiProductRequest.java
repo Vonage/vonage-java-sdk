@@ -26,7 +26,6 @@ import java.util.*;
  *
  * @since 7.2.0
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class WhatsappMultiProductRequest extends WhatsappRequest {
 	final Map<String, Object> custom;
 

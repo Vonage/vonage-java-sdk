@@ -25,8 +25,6 @@ import java.net.URI;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Theme extends JsonableBaseObject {
 	static final Pattern COLOR_PATTERN = Pattern.compile("(#[a-fA-F0-9]{6}|[a-fA-F0-9]{3})");
 

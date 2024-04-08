@@ -21,8 +21,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.math.BigDecimal;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class SmsSubmissionResponseMessage extends JsonableBaseObject {
     private MessageStatus status;
     private String to, id, network, errorText, clientRef, accountRef;

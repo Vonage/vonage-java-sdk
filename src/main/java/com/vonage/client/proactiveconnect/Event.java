@@ -27,8 +27,6 @@ import java.util.UUID;
 /**
  * Represents an event in the Proactive Connect API.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Event extends JsonableBaseObject {
 	private UUID id, actionId, invocationId, runItemId, runId, jobId;
 	private String recipientId, sourceContext;

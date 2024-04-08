@@ -22,8 +22,6 @@ import com.vonage.client.JsonableBaseObject;
 
 import java.util.Objects;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public final class Whatsapp extends JsonableBaseObject {
 	private final Policy policy;
 	private final Locale locale;

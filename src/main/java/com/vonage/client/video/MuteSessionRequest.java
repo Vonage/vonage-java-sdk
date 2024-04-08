@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.util.Collection;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 class MuteSessionRequest extends JsonableBaseObject {
 	final boolean active;
 	final Collection<String> excludedStreamIds;

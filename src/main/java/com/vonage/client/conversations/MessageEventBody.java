@@ -24,8 +24,6 @@ import java.util.Objects;
 /**
  * Main body container for {@link MessageEvent}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 class MessageEventBody extends JsonableBaseObject {
     @JsonProperty("message_type") MessageType messageType;
     @JsonProperty("text") String text;
@@ -36,8 +34,6 @@ class MessageEventBody extends JsonableBaseObject {
     @JsonProperty("vcard") UrlContainer vcard;
     @JsonProperty("location") Location location;
 
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    @JsonIgnoreProperties(ignoreUnknown = true)
     static class UrlContainer extends JsonableBaseObject {
         @JsonProperty("url") URI url;
     }

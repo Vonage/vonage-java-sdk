@@ -25,8 +25,6 @@ import java.util.Collection;
 /**
  * An NCCO input action which allows for the collection of digits and automatic speech recognition from a person.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class InputAction extends JsonableBaseObject implements Action {
     private static final String ACTION = "input";
 

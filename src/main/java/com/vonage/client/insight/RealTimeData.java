@@ -28,8 +28,6 @@ import java.io.IOException;
 /**
  * Real time data about the number.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class RealTimeData extends JsonableBaseObject {
 
 	static class ActiveStatusDeserializer extends JsonDeserializer<Boolean> {

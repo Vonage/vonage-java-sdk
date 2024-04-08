@@ -25,8 +25,6 @@ import java.util.Objects;
  * Extension of ModifyCallPayload which adds an NCCO destination to the serialized form.
  *
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 class TransferCallPayload extends ModifyCallPayload {
     private final TransferDestination destination;
 

@@ -15,17 +15,12 @@
  */
 package com.vonage.client.video;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 
 /**
  * TODO see if this is needed
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 class MuteSessionResponse extends JsonableBaseObject {
 	private String applicationId, name;
 	private ProjectStatus status;
@@ -78,15 +73,5 @@ class MuteSessionResponse extends JsonableBaseObject {
 	@JsonProperty("createdAt")
 	public Long getCreatedAt() {
 		return createdAt;
-	}
-	
-	/**
-	 * Creates an instance of this class from a JSON payload.
-	 *
-	 * @param json The JSON string to parse.
-	 * @return An instance of this class with the fields populated, if present.
-	 */
-	public static MuteSessionResponse fromJson(String json) {
-		return Jsonable.fromJson(json, MuteSessionResponse.class);
 	}
 }

@@ -23,7 +23,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class UpdateRoomRequest implements Jsonable {
 	@JsonIgnore UUID roomId;
 

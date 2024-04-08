@@ -28,8 +28,6 @@ import java.util.stream.Collectors;
  * @deprecated Will be moved to the {@code com.vonage.client.application} package.
  */
 @Deprecated
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Webhook extends JsonableBaseObject {
     private String address;
     private HttpMethod method;

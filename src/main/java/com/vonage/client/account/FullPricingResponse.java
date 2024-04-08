@@ -26,9 +26,7 @@ import java.util.List;
  *
  * @since 7.9.0
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 class FullPricingResponse extends JsonableBaseObject {
     private Integer count;
     private List<PricingResponse> countries;

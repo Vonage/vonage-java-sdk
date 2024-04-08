@@ -21,7 +21,6 @@ import com.vonage.client.messages.MessageRequest;
 import com.vonage.client.messages.Channel;
 import com.vonage.client.messages.MessageType;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class MessengerRequest extends MessageRequest {
 	protected final Messenger messenger;
 

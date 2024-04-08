@@ -24,8 +24,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * Represents a Vonage Business Cloud (VBC) channel.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NONE, visible = true)
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Vbc extends Channel {
 	private String extension;
 

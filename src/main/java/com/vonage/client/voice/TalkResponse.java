@@ -26,8 +26,6 @@ import com.vonage.client.JsonableBaseObject;
  * <p>
  * This would be returned by {@link VoiceClient#startTalk(String, TalkPayload)} or {@link VoiceClient#stopTalk(String)}
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class TalkResponse extends JsonableBaseObject {
     private String uuid, message;
 

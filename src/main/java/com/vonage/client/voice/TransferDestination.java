@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.voice.ncco.Ncco;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 class TransferDestination extends JsonableBaseObject {
     private final Type type;
     private final String[] urls;

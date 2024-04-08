@@ -28,8 +28,6 @@ import java.util.UUID;
 /**
  * Represents a Proactive Connect list.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ContactsList extends JsonableBaseObject {
 	UUID id;
 	private String name, description;

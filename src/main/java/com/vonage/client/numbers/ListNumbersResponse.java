@@ -24,8 +24,6 @@ import com.vonage.client.JsonableBaseObject;
 /**
  * Response from a request to list the numbers currently being rented buy an account.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ListNumbersResponse extends JsonableBaseObject {
     private int count;
     private OwnedNumber[] numbers;

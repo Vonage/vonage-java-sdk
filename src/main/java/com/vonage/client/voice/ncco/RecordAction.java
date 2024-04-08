@@ -30,8 +30,6 @@ import java.util.Collection;
  * when the synchronous condition in the action is met. That is, endOnSilence, timeOut or endOnKey. If you do not
  * set a synchronous condition, the Voice API immediately executes the next NCCO without recording.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public final class RecordAction extends JsonableBaseObject implements Action {
     private static final String ACTION = "record";
 

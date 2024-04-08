@@ -26,8 +26,6 @@ import java.net.URI;
  *
  * @deprecated This class will be made package-private in the next major release.
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Deprecated
 public class UrlContainer extends JsonableBaseObject {
 	protected URI href;

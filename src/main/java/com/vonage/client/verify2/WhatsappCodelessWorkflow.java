@@ -26,7 +26,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * You must have a WhatsApp Business Account configured to use the {@code from} field, which
  * is now a requirement for WhatsApp workflows.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class WhatsappCodelessWorkflow extends AbstractWhatsappWorkflow {
 
 	WhatsappCodelessWorkflow(Builder builder) {

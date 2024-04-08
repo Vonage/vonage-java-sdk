@@ -25,13 +25,10 @@ import java.util.List;
 /**
  * HAL response returned from {@link ApplicationClient#listApplications(ListApplicationRequest)}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ApplicationList extends HalPageResponse {
     @JsonProperty("_embedded") private Embedded embedded;
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    static class Embedded {
+        static class Embedded {
         @JsonProperty("applications") List<Application> applications;
     }
 

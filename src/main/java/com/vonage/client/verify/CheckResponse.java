@@ -23,8 +23,6 @@ import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.VonageResponseParseException;
 import java.math.BigDecimal;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class CheckResponse extends JsonableBaseObject {
     private VerifyStatus status;
     private String requestId, eventId, currency, errorText;

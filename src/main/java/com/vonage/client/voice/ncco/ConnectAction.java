@@ -28,8 +28,6 @@ import java.util.Collection;
 /**
  * An NCCO connect action that allows for the establishment of a connection to various {@link Endpoint}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ConnectAction extends JsonableBaseObject implements Action {
     private static final String ACTION = "connect";
 

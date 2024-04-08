@@ -22,8 +22,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Response object when querying a user's conversations.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserConversation extends Conversation {
 	private BaseMember member;
 

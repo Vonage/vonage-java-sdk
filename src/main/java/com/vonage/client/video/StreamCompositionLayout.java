@@ -25,8 +25,6 @@ import java.util.Objects;
 /**
  * Defines the properties used for {@link VideoClient#updateArchiveLayout(String, StreamCompositionLayout)}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class StreamCompositionLayout extends JsonableBaseObject {
 	@JsonIgnore String id;
 	private ScreenLayoutType type, screenshareType;

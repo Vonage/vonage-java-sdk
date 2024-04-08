@@ -27,8 +27,6 @@ import java.util.Objects;
  *
  * @since 7.2.0
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public final class ProductItem extends JsonableBaseObject {
 	private String productRetailerId;
 	private Integer quantity;

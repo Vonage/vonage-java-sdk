@@ -25,8 +25,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.UUID;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class CreateSessionResponse extends JsonableBaseObject {
 	private String sessionId, createDt;
 	private UUID applicationId;

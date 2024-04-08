@@ -16,13 +16,11 @@
 package com.vonage.client.proactiveconnect;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import java.util.Map;
 import java.util.UUID;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 final class ListItemRequestWrapper implements Jsonable {
 	@JsonIgnore final UUID listId, itemId;
 	@JsonProperty("data") final Map<String, ?> data;

@@ -24,7 +24,6 @@ import com.vonage.client.JsonableBaseObject;
  *
  * @since 7.2.0
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public final class Reply extends JsonableBaseObject {
 	private String id, title, description;
 

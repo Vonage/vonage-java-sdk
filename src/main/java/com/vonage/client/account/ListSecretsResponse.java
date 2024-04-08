@@ -27,15 +27,11 @@ import java.util.List;
 /**
  * HAL response for {@link AccountClient#listSecrets(String)}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ListSecretsResponse extends HalPageResponse {
     @JsonProperty("_embedded") private Embedded _embedded;
 
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    static final class Embedded extends JsonableBaseObject {
+    
+        static final class Embedded extends JsonableBaseObject {
         @JsonProperty("secrets") private List<SecretResponse> secrets;
     }
 

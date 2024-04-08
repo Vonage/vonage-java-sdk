@@ -22,7 +22,6 @@ import com.vonage.client.messages.MessageRequest;
 import com.vonage.client.messages.MessageType;
 import com.vonage.client.messages.internal.Text;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class SmsTextRequest extends MessageRequest {
 	final String text;
 	final Integer ttl;

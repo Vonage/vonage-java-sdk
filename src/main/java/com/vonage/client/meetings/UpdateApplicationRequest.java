@@ -21,7 +21,6 @@ import com.vonage.client.Jsonable;
 import java.util.Objects;
 import java.util.UUID;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class UpdateApplicationRequest implements Jsonable {
 	private final UUID defaultThemeId;
 

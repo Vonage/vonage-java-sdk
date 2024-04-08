@@ -23,7 +23,6 @@ import com.vonage.client.common.Webhook;
 /**
  * Voice capability configuration settings.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 public class Voice extends Capability {
     private Region region;

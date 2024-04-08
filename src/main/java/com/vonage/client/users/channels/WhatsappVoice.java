@@ -25,8 +25,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * @since 8.4.0
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NONE, visible = true)
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class WhatsappVoice extends NumberChannel {
 
 	protected WhatsappVoice() {}

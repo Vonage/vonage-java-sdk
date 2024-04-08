@@ -29,7 +29,6 @@ import java.util.Collection;
 /**
  * Call encapsulates the information required to create a call using {@link VoiceClient#createCall(Call)}
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties({"_links"})
 public class Call extends JsonableBaseObject {
     private Endpoint[] to;

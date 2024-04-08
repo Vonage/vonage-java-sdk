@@ -27,8 +27,6 @@ import java.util.List;
  *
  * @since 8.2.0
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class SpeechResults extends JsonableBaseObject {
     private SpeechTimeoutReason timeoutReason;
     private List<SpeechTranscript> results;

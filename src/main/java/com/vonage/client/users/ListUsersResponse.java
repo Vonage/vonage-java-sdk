@@ -26,13 +26,9 @@ import java.util.List;
 /**
  * Paginated HAL response for {@link UsersClient#listUsers(ListUsersRequest)}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ListUsersResponse extends HalPageResponse {
     @JsonProperty("_embedded") private Embedded embedded;
 
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    @JsonIgnoreProperties(ignoreUnknown = true)
     static class Embedded extends JsonableBaseObject {
         @JsonProperty("users") List<BaseUser> users;
     }

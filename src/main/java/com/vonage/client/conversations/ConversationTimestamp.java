@@ -24,8 +24,6 @@ import java.time.Instant;
 /**
  * Represents the timestamps in {@link BaseConversation#getTimestamp()}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ConversationTimestamp extends JsonableBaseObject {
 	private Instant created, updated, destroyed;
 

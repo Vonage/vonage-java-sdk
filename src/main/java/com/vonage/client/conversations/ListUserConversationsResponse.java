@@ -26,16 +26,12 @@ import java.util.List;
 /**
  * HAL response for {@link ConversationsClient#listUserConversations(String)}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public final class ListUserConversationsResponse extends HalPageResponse {
 	@JsonProperty("_embedded") private Embedded _embedded;
 
 	ListUserConversationsResponse() {
 	}
 
-	@JsonInclude(value = JsonInclude.Include.NON_NULL)
-	@JsonIgnoreProperties(ignoreUnknown = true)
 	static final class Embedded extends JsonableBaseObject {
 		private List<UserConversation> conversations;
 

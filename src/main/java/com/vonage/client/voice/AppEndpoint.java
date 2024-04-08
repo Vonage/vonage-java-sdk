@@ -25,8 +25,6 @@ import com.vonage.client.JsonableBaseObject;
  *
  * @since 7.3.0
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class AppEndpoint extends JsonableBaseObject implements Endpoint {
     private static final String TYPE = "app";
     private String user;

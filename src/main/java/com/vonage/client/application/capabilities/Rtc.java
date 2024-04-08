@@ -22,7 +22,6 @@ import com.vonage.client.common.Webhook;
 /**
  * Rtc capability configuration settings.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 public class Rtc extends Capability {
 

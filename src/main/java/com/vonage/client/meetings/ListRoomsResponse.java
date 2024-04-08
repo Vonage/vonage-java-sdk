@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.common.HalPageResponse;
 import java.util.List;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 class ListRoomsResponse extends HalPageResponse {
 	@JsonProperty("_embedded") private List<MeetingRoom> rooms;
 

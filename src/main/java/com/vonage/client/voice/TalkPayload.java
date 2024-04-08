@@ -24,8 +24,6 @@ import com.vonage.client.JsonableBaseObject;
 /**
  * Defines the text-to-speech properties.
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public final class TalkPayload extends JsonableBaseObject {
     @JsonIgnore String uuid;
     private final String text;

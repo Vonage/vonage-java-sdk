@@ -24,8 +24,6 @@ import java.util.Objects;
 /**
  * Base class for number and balance / credit transfers.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 class AbstractTransfer extends JsonableBaseObject {
 	private String from, to, primaryAccountId;
 

@@ -23,8 +23,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  * Represents a Multimedia Messaging Service (MMS) channel.
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NONE, visible = true)
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Mms extends NumberChannel {
 
 	protected Mms() {}

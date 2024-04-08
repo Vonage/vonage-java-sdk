@@ -26,8 +26,6 @@ import java.io.IOException;
 /**
  * Represents properties of a video project.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ProjectDetails extends JsonableBaseObject {
 	private String applicationId, name;
 	private ProjectStatus status;

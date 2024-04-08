@@ -32,8 +32,6 @@ import java.util.UUID;
  *
  * @since 8.2.0
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class AnswerWebhook extends JsonableBaseObject {
     @JsonProperty("from") private String from;
     @JsonProperty("from_user") private String fromUser;

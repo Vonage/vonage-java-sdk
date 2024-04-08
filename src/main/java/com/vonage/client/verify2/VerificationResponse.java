@@ -25,8 +25,6 @@ import java.util.UUID;
 /**
  * Metadata about an outbound verification request.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class VerificationResponse extends JsonableBaseObject {
 	protected UUID requestId;
 	protected URI checkUrl;

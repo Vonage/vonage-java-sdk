@@ -23,7 +23,6 @@ import java.util.EnumSet;
 import java.util.Objects;
 import java.util.Set;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 class FraudCheckRequest extends JsonableBaseObject {
 	private final String type, phone;
 	private final Set<Insight> insights;

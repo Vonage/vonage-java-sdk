@@ -26,8 +26,6 @@ import java.util.UUID;
 /**
  * Callback properties for a {@link Conversation}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public final class Callback extends JsonableBaseObject {
 	private URI url;
 	private String eventMask;
@@ -82,8 +80,6 @@ public final class Callback extends JsonableBaseObject {
 		return method;
 	}
 
-	@JsonInclude(value = JsonInclude.Include.NON_NULL)
-	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class Params extends JsonableBaseObject {
 		private UUID applicationId;
 		private URI nccoUrl;

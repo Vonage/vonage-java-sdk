@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 /**
  * VBC capability configuration settings.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_ABSENT)
 public class Vbc extends Capability {
 

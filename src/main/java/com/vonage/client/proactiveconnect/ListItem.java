@@ -27,8 +27,6 @@ import java.util.UUID;
 /**
  * Represents a list item in the Proactive Connect API.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class ListItem extends JsonableBaseObject {
 	private Map<String, ?> data;
 	private Instant createdAt, updatedAt;

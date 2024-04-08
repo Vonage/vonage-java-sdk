@@ -24,8 +24,6 @@ import com.vonage.client.JsonableBaseObject;
 /**
  * Results from list upload.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class UploadListItemsResponse extends JsonableBaseObject {
 	private Integer inserted, updated, deleted;
 

@@ -24,8 +24,6 @@ import com.vonage.client.JsonableBaseObject;
 /**
  * Response object constructed from the JSON payload returned for Basic number insight requests.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class BasicInsightResponse extends JsonableBaseObject {
     private InsightStatus status;
     private String statusMessage, requestId, internationalFormatNumber, nationalFormatNumber,

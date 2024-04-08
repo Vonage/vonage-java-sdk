@@ -23,8 +23,6 @@ import com.vonage.client.VonageApiResponseException;
  *
  * @since 7.8.0
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public final class NumbersResponseException extends VonageApiResponseException {
 
 	void setStatusCode(int statusCode) {

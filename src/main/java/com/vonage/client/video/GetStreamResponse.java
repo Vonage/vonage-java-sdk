@@ -23,8 +23,6 @@ import com.vonage.client.Jsonable;
 /**
  * Represents details of a stream, as returned from {@link VideoClient#getStream(String, String)}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class GetStreamResponse extends SessionStream {
 	private VideoType videoType;
 	private String name;

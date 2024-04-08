@@ -25,8 +25,6 @@ import java.time.Instant;
 /**
  * Represents metadata about an API account secret.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class SecretResponse extends JsonableBaseObject {
     private String id;
     private Instant created;

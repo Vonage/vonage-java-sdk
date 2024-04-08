@@ -25,7 +25,6 @@ import com.vonage.client.messages.MessageType;
  *
  * @since 7.2.0
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class WhatsappStickerRequest extends WhatsappRequest {
 	final Sticker sticker;
 

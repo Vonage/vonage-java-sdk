@@ -15,9 +15,10 @@
  */
 package com.vonage.client;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import java.net.URI;
@@ -28,8 +29,6 @@ import java.util.Objects;
  * Base class for exceptions which represent an error API response conforming to
  * <a href=https://www.rfc-editor.org/rfc/rfc7807>RFC 7807</a> standard.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class VonageApiResponseException extends VonageClientException implements Jsonable {
 	protected URI type;
 	protected String title, detail, instance, code, errorCodeLabel, errorCode;
@@ -198,9 +197,9 @@ public class VonageApiResponseException extends VonageClientException implements
 	@Override
 	public String toJson() {
 		try {
-			ObjectMapper mapper = new ObjectMapper();
-			mapper.setAnnotationIntrospector(new IgnoreInheritedIntrospector());
-			return mapper.writeValueAsString(this);
+			return Jsonable.createDefaultObjectMapper()
+					.setAnnotationIntrospector(new IgnoreInheritedIntrospector())
+					.writeValueAsString(this);
 		}
 		catch (JsonProcessingException e) {
 			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName(), e);

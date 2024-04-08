@@ -23,8 +23,6 @@ import com.vonage.client.JsonableBaseObject;
 /**
  * Represents the DTMF event results in {@link EventWebhook#getDtmf()}.
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class DtmfResult extends JsonableBaseObject {
     private String digits;
     private boolean timedOut;

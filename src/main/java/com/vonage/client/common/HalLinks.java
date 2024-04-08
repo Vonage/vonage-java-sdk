@@ -25,8 +25,6 @@ import java.net.URI;
 /**
  * Represents the {@code _links} section of a HAL response.
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class HalLinks extends JsonableBaseObject {
 	@JsonProperty("first") UrlContainer first;
 	@JsonProperty("self") UrlContainer self;

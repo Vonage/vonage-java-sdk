@@ -25,8 +25,6 @@ import java.util.Objects;
 /**
  * Represents an RTMP stream in a video session.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Rtmp extends JsonableBaseObject {
     private String id, streamName;
     private URI serverUrl;

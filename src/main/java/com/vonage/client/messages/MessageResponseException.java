@@ -25,8 +25,6 @@ import com.vonage.client.VonageApiResponseException;
  * Since this is an unchecked exception, users are advised to catch it when calling
  * {@link MessagesClient#sendMessage(MessageRequest)} to handle failures.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public final class MessageResponseException extends VonageApiResponseException {
 
 	void setStatusCode(int statusCode) {

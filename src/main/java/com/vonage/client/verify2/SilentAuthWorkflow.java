@@ -24,7 +24,6 @@ import java.net.URI;
  * <a href=https://developer.vonage.com/en/verify/verify-v2/guides/silent-authentication>Silent Auth guide</a>
  * for an overview of how this works.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class SilentAuthWorkflow extends AbstractNumberWorkflow {
 	private final Boolean sandbox;
 	private final URI redirectUrl;

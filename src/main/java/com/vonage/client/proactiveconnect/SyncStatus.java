@@ -24,8 +24,6 @@ import com.vonage.client.JsonableBaseObject;
 /**
  * Provides info on list changes compared to the latest sync.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class SyncStatus extends JsonableBaseObject {
 	private SyncStatusValue value;
 	private String details;

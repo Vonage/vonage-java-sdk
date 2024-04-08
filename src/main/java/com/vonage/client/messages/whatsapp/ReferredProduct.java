@@ -25,7 +25,6 @@ import com.vonage.client.JsonableBaseObject;
  *
  * @since 7.2.0
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public final class ReferredProduct extends JsonableBaseObject {
 	private String productRetailerId, catalogId;
 

@@ -21,8 +21,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.net.URI;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class CallbackUrls extends JsonableBaseObject {
 	private URI roomsCallbackUrl, sessionsCallbackUrl, recordingsCallbackUrl;
 

@@ -31,8 +31,6 @@ import java.util.UUID;
  * Webhook for verification status updates and events. See the
  * <a href=https://developer.vonage.com/en/api/verify.v2#websockets>API reference</a> for details.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class VerificationCallback extends JsonableBaseObject {
 	protected Channel channel;
 	protected UUID requestId;
@@ -44,8 +42,6 @@ public class VerificationCallback extends JsonableBaseObject {
 	protected List<WorkflowStatus> workflows;
 	@JsonProperty("action") Action action;
 
-	@JsonInclude(value = JsonInclude.Include.NON_NULL)
-	@JsonIgnoreProperties(ignoreUnknown = true)
 	static class Action extends JsonableBaseObject {
 		@JsonProperty("type") String type;
 		@JsonProperty("check_url") URI checkUrl;

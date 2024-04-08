@@ -26,8 +26,6 @@ import com.vonage.client.JsonableBaseObject;
  * <p>
  * Returned by {@link VoiceClient#sendDtmf(String, String)}
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class DtmfResponse extends JsonableBaseObject {
     private String uuid, message;
 

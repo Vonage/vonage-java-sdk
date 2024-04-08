@@ -26,16 +26,12 @@ import java.util.List;
 /**
  * HAL response for {@link ProactiveConnectClient#listEvents(ListEventsFilter)}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 final class ListEventsResponse extends HalPageResponse {
 	@JsonProperty("_embedded") private Embedded _embedded;
 
 	ListEventsResponse() {
 	}
 
-	@JsonInclude(value = JsonInclude.Include.NON_NULL)
-	@JsonIgnoreProperties(ignoreUnknown = true)
 	static final class Embedded extends JsonableBaseObject {
 		@JsonProperty("events") private List<Event> events;
 	}

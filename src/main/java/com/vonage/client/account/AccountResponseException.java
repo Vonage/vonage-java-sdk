@@ -25,8 +25,6 @@ import com.vonage.client.VonageApiResponseException;
  *
  * @since 7.9.0
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public final class AccountResponseException extends VonageApiResponseException {
 
 	void setStatusCode(int statusCode) {

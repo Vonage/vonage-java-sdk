@@ -27,8 +27,6 @@ import java.util.UUID;
  * Represents a stream's metadata in a Vonage Video session.
  * Used for updating the stream layout in {@link VideoClient#setStreamLayout(String, List)}.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class SessionStream extends JsonableBaseObject {
 	private UUID id;
 	private List<String> layoutClassList;

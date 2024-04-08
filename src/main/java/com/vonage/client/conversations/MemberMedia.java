@@ -23,8 +23,6 @@ import com.vonage.client.JsonableBaseObject;
 /**
  * Contains the media properties for {@link Member#getMedia()}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public final class MemberMedia extends JsonableBaseObject {
 	private Boolean audio;
 	private MediaAudioSettings audioSettings;

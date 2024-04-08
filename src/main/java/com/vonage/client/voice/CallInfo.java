@@ -25,7 +25,6 @@ import java.util.Date;
 /**
  * CallInfo holds the information related to a call. It is obtained using {@link VoiceClient#listCalls()}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(value = { "_links" }, ignoreUnknown = true)
 public class CallInfo extends JsonableBaseObject {
     Endpoint from, to;

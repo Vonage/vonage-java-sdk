@@ -24,7 +24,6 @@ import com.vonage.client.JsonableBaseObject;
 /**
  * Information about the roaming status for number. This is applicable to mobile numbers only.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonDeserialize(using = RoamingDeseriazlizer.class)
 public class RoamingDetails extends JsonableBaseObject {
     private final RoamingStatus status;

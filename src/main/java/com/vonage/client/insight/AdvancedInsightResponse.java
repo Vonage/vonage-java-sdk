@@ -23,8 +23,6 @@ import com.vonage.client.Jsonable;
 /**
  * Response object constructed from the JSON payload returned for Advanced number insight requests.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class AdvancedInsightResponse extends StandardInsightResponse {
     private Validity validNumber;
     private Reachability reachability;

@@ -39,8 +39,6 @@ import com.vonage.client.common.ChannelType;
         @JsonSubTypes.Type(value = Whatsapp.class, name = "whatsapp"),
         @JsonSubTypes.Type(value = WhatsappVoice.class, name = "whatsapp-voice")
 })
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class Channel extends JsonableBaseObject {
     protected ChannelType type;
 

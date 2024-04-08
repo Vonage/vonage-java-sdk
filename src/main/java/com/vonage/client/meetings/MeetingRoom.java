@@ -24,8 +24,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class MeetingRoom extends JsonableBaseObject {
 	private Instant createdAt, expiresAt;
 	private UUID id, themeId;

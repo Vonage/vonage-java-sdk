@@ -21,7 +21,6 @@ import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.UrlContainer;
 import java.net.URI;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class RoomLinks extends JsonableBaseObject {
 	@JsonProperty("host_url") UrlContainer hostUrl;
 	@JsonProperty("guest_url") UrlContainer guestUrl;

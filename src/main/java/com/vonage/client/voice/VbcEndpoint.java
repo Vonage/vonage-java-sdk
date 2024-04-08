@@ -25,8 +25,6 @@ import com.vonage.client.JsonableBaseObject;
  *
  * @since 7.3.0
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class VbcEndpoint extends JsonableBaseObject implements Endpoint {
     private static final String TYPE = "vbc";
     private String extension;

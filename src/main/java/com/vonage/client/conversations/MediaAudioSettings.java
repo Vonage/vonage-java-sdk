@@ -23,8 +23,6 @@ import com.vonage.client.JsonableBaseObject;
 /**
  * Represents the audio options in {@link MemberMedia#getAudioSettings}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class MediaAudioSettings extends JsonableBaseObject {
 	Boolean enabled, earmuffed, muted;
 

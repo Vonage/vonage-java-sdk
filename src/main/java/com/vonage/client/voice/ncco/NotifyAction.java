@@ -26,8 +26,6 @@ import java.util.Map;
 /**
  * An NCCO notify action which allows for custom events to be sent to a configured webhook.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class NotifyAction extends JsonableBaseObject implements Action {
     private static final String ACTION = "notify";
 

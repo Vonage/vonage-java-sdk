@@ -24,7 +24,6 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.UUID;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Recording extends JsonableBaseObject {
 	private UUID id;
 	private String sessionId;

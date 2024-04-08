@@ -21,7 +21,6 @@ import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import java.util.UUID;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Application extends JsonableBaseObject {
 	private String accountId;
 	private UUID applicationId, defaultThemeId;

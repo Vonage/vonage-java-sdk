@@ -26,8 +26,6 @@ import java.time.Instant;
 /**
  * Represents a subaccount.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Account extends JsonableBaseObject {
 	private String apiKey, primaryAccountApiKey, name, secret;
 	private Boolean usePrimaryAccountBalance, suspended;

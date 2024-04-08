@@ -23,8 +23,6 @@ import com.vonage.client.common.E164;
 /**
  * Base class for channels with an E.164 phone number.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 abstract class NumberChannel extends Channel {
 	private String number;
 

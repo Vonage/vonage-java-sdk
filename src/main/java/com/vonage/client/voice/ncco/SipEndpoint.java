@@ -26,7 +26,6 @@ import java.util.Map;
  * <a href=https://developer.vonage.com/voice/voice-api/ncco-reference#sip-endpoint>the documentation</a>
  * for an example.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class SipEndpoint extends JsonableBaseObject implements Endpoint {
     private static final String TYPE = "sip";
 

@@ -24,7 +24,6 @@ import com.vonage.client.JsonableBaseObject;
  * <a href=https://developer.vonage.com/voice/voice-api/ncco-reference#phone-endpoint>the documentation</a>
  * for an example.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class PhoneEndpoint extends JsonableBaseObject implements Endpoint {
     private static final String TYPE = "phone";
 
@@ -113,8 +112,7 @@ public class PhoneEndpoint extends JsonableBaseObject implements Endpoint {
      * just silence. The ringbackTone will automatically stop playing when the call is fully connected. Please note,
      * the key ringback is still supported.
      */
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    public static class OnAnswer {
+        public static class OnAnswer {
         private final String url, ringback;
 
         private OnAnswer(String url, String ringback) {

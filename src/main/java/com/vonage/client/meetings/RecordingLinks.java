@@ -21,7 +21,6 @@ import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.UrlContainer;
 import java.net.URI;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 class RecordingLinks extends JsonableBaseObject {
 	private UrlContainer url;
 

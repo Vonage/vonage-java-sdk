@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import java.util.List;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 class SetStreamLayoutRequest implements Jsonable {
 	private final List<SessionStream> items;
 	@JsonIgnore final String sessionId;

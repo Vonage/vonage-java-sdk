@@ -25,8 +25,6 @@ import java.util.UUID;
 /**
  * Fraud check results as obtained from {@link NumberInsight2Client#fraudCheck(String, Insight, Insight...)}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class FraudCheckResponse extends JsonableBaseObject {
 	private String type;
 	private UUID requestId;

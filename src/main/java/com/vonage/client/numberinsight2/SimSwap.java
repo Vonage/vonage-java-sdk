@@ -23,8 +23,6 @@ import com.vonage.client.JsonableBaseObject;
 /**
  * Represents the sim swap insight results in {@link FraudCheckResponse#getSimSwap()}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class SimSwap extends JsonableBaseObject {
 	private SimSwapStatus status;
 	private Boolean swapped;

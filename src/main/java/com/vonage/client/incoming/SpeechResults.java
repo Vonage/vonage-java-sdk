@@ -26,8 +26,6 @@ import java.util.Collection;
  * @deprecated Use {@link com.vonage.client.voice.SpeechResults}.
  */
 @Deprecated
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class SpeechResults {
     private TimeoutReason timeoutReason;
     private Collection<Result> results;

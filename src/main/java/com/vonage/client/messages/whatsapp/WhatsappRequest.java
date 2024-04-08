@@ -21,7 +21,6 @@ import com.vonage.client.messages.MessageRequest;
 import com.vonage.client.messages.MessageType;
 import com.vonage.client.common.E164;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class WhatsappRequest extends MessageRequest {
 
 	protected WhatsappRequest(Builder<?, ?> builder, MessageType messageType) {

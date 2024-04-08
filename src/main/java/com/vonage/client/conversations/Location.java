@@ -23,8 +23,6 @@ import com.vonage.client.JsonableBaseObject;
 /**
  * Describes parameters for a Location message in {@link MessageEvent#getLocation()}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public final class Location extends JsonableBaseObject {
     private Double longitude, latitude;
     private String name, address;

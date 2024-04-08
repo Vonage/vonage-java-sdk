@@ -24,8 +24,6 @@ import com.vonage.client.JsonableBaseObject;
 import java.math.BigDecimal;
 import java.util.List;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class PricingResponse extends JsonableBaseObject {
     private String dialingPrefix;
     private BigDecimal defaultPrice;

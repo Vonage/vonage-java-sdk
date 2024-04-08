@@ -23,7 +23,6 @@ import java.util.Objects;
 /**
  * Base workflow.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Workflow extends JsonableBaseObject {
 	protected final Channel channel;
 	protected String to, from;

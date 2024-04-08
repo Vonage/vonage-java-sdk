@@ -23,8 +23,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @deprecated Use {@link com.vonage.client.voice.SpeechTranscript}.
  */
 @Deprecated
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Result {
     private String text, confidence;
 

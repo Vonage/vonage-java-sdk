@@ -24,7 +24,6 @@ import com.vonage.client.JsonableBaseObject;
  *
  * @since 7.2.0
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public final class SmsInboundMetadata extends JsonableBaseObject {
 	private Integer numMessages, totalCount;
 	private String keyword;

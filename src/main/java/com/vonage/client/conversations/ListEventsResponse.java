@@ -24,8 +24,6 @@ import java.util.List;
 /**
  * HAL response for {@link ConversationsClient#listEvents(String, ListEventsRequest)}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public final class ListEventsResponse extends HalPageResponse {
 	@JsonProperty("_embedded") private List<Event> events;
 

@@ -41,6 +41,7 @@ public interface Jsonable {
 		return new ObjectMapper()
 				.registerModule(new JavaTimeModule())
 				.setSerializationInclusion(JsonInclude.Include.NON_NULL)
+				.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false)
 				.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 				.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 	}

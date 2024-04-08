@@ -15,12 +15,9 @@
  */
 package com.vonage.client.voice;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.TestUtils;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.*;
-import java.io.IOException;
 
 public class StreamResponseTest {
     private StreamResponse response;
@@ -38,15 +35,5 @@ public class StreamResponseTest {
         TestUtils.testJsonableBaseObject(response);
         assertEquals("Stream started", response.getMessage());
         assertEquals("ssf61863-4a51-ef6b-11e1-w6edebcf93bb", response.getUuid());
-    }
-
-    @Test
-    public void testUnknownJson() throws IOException {
-        String json = "{\n" +
-                "    \"unknownProperty\": \"unknown\"\n" +
-                "}";
-        ObjectMapper mapper = new ObjectMapper();
-        StreamResponse sr = mapper.readValue(json, StreamResponse.class);
-        assertNull(sr.getUuid());
     }
 }

@@ -833,13 +833,13 @@ public class ProactiveConnectClientTest extends ClientTest<ProactiveConnectClien
 				data.put("foo", "bar");
 				data.put("bar", 2);
 				data.put("BAZ", false);
-				data.put("quX", null);
+				data.put("quX", "");
 				return new ListItemRequestWrapper(SAMPLE_LIST_ID, SAMPLE_ITEM_ID, data);
 			}
 
 			@Override
 			protected String sampleRequestBodyString() {
-				return "{\"data\":{\"foo\":\"bar\",\"bar\":2,\"BAZ\":false,\"quX\":null}}";
+				return "{\"data\":{\"foo\":\"bar\",\"bar\":2,\"BAZ\":false,\"quX\":\"\"}}";
 			}
 
 			@Override

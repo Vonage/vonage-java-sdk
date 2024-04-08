@@ -23,7 +23,6 @@ import com.vonage.client.common.E164;
  *
  * @since 8.2.0
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 abstract class AbstractNumberWorkflow extends Workflow {
 
 	protected AbstractNumberWorkflow(Builder<?, ?> builder) {

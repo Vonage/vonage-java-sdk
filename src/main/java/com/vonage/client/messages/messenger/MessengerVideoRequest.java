@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.internal.MessagePayload;
 import com.vonage.client.messages.MessageType;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class MessengerVideoRequest extends MessengerRequest {
 	final MessagePayload video;
 

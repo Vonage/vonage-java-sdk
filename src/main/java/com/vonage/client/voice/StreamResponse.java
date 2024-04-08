@@ -26,8 +26,6 @@ import com.vonage.client.JsonableBaseObject;
  * <p>
  * This would be returned by {@link VoiceClient#startStream(String, String)} or {@link VoiceClient#stopStream(String)}
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class StreamResponse extends JsonableBaseObject {
     private String uuid, message;
 

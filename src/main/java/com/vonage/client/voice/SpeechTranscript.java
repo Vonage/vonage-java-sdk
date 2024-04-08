@@ -25,8 +25,6 @@ import com.vonage.client.JsonableBaseObject;
  *
  * @since 8.2.0
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class SpeechTranscript extends JsonableBaseObject {
     private String text;
     private Double confidence;

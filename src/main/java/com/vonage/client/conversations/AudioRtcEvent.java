@@ -34,8 +34,6 @@ abstract class AudioRtcEvent extends EventWithBody<AudioRtcEvent.Body> {
     /**
      * Main body object for Audio events with {@code rtc_id}.
      */
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    @JsonIgnoreProperties(ignoreUnknown = true)
     static class Body extends JsonableBaseObject {
         @JsonProperty("rtc_id") private UUID rtcId;
     }

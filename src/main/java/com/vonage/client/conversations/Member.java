@@ -25,8 +25,6 @@ import java.util.UUID;
 /**
  * Represents a conversation membership.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Member extends BaseMember {
 	private String conversationId, memberIdInviting, from, invitedBy;
 	private UUID knockingId;

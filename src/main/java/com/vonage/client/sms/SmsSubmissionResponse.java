@@ -22,8 +22,6 @@ import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import java.util.List;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class SmsSubmissionResponse extends JsonableBaseObject {
     private int messageCount;
     private List<SmsSubmissionResponseMessage> messages;

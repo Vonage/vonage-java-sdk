@@ -24,8 +24,6 @@ import java.math.BigDecimal;
 /**
  * Response object constructed from the JSON payload returned for Standard number insight requests.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class StandardInsightResponse extends BasicInsightResponse {
     private BigDecimal requestPrice, remainingBalance, refundPrice;
     private CarrierDetails originalCarrier, currentCarrier;

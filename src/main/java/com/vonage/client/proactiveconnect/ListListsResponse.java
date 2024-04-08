@@ -27,15 +27,11 @@ import java.util.List;
 /**
  * HAL response for {@link ProactiveConnectClient#listLists(int, int, SortOrder)}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public final class ListListsResponse extends HalPageResponse {
 	@JsonProperty("_embedded") private Embedded _embedded;
 
 	ListListsResponse() {}
 
-	@JsonInclude(value = JsonInclude.Include.NON_NULL)
-	@JsonIgnoreProperties(ignoreUnknown = true)
 	static final class Embedded extends JsonableBaseObject {
 		private List<ContactsList> lists;
 

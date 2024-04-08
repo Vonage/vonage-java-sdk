@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 /**
  * @since 7.2.0
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 final class ProductSection extends JsonableBaseObject {
 	@JsonProperty("title") final String title;
 	@JsonProperty("product_items") final List<ProductItem> products;

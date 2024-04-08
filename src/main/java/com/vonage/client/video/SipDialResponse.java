@@ -24,8 +24,6 @@ import com.vonage.client.JsonableBaseObject;
 /**
  * Represents a Vonage Video SIP call.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class SipDialResponse extends JsonableBaseObject {
     private String id, connectionId, streamId;
 

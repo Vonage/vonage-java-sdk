@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class UpdateSubaccountRequest extends JsonableBaseObject {
 	@JsonIgnore final String subaccountApiKey;
 	private final String name;

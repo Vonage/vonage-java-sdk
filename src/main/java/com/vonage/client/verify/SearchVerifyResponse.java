@@ -16,8 +16,6 @@
 package com.vonage.client.verify;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -28,8 +26,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class SearchVerifyResponse extends JsonableBaseObject {
     private VerifyStatus status;
     private List<VerifyDetails> verificationRequests;
@@ -71,7 +67,7 @@ public class SearchVerifyResponse extends JsonableBaseObject {
     @Override
     public void updateFromJson(String json) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
+            ObjectMapper mapper = Jsonable.createDefaultObjectMapper();
             mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
             SimpleModule module = new SimpleModule();
             module.addDeserializer(SearchVerifyResponse.class, new SearchVerifyResponseDeserializer());

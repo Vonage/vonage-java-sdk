@@ -23,7 +23,6 @@ import java.util.Objects;
 /**
  * @since 7.2.0
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class ViberVideoRequest extends ViberRequest {
 	final Video video;
 

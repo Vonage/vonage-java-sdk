@@ -25,8 +25,6 @@ import com.vonage.client.JsonableBaseObject;
  *
  * @since 7.4.0
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class AdvancedMachineDetection extends JsonableBaseObject {
 
 	/**

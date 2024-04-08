@@ -24,8 +24,6 @@ import java.time.Instant;
 /**
  * Describes the status of a workflow.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class WorkflowStatus extends JsonableBaseObject {
 	protected Channel channel;
 	protected Instant initiatedAt;

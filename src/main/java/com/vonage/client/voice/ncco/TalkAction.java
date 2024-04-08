@@ -24,8 +24,6 @@ import com.vonage.client.voice.TextToSpeechLanguage;
 /**
  * An NCCO talk action which allows for synthesized speech to be sent to a call.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class TalkAction extends JsonableBaseObject implements Action {
     private static final String ACTION = "talk";
 
