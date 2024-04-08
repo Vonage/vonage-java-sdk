@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 # [8.5.0] - 2024-04-2?
 - Added Verify v2 "Next Workflow" endpoint
-- Updated validation logic for Verify v2 SMS `from` parameter
+- Updated validation logic for Verify v2 `brand` and SMS `from` parameters
 
 # [8.4.0] - 2024-04-05
 - Added Conversation API implementation

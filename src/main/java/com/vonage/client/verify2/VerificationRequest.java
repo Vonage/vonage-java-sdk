@@ -47,8 +47,11 @@ public class VerificationRequest implements Jsonable {
 		locale = builder.locale;
 		clientRef = builder.clientRef;
 		fraudCheck = builder.fraudCheck != null && !builder.fraudCheck ? false : null;
-		if ((brand = builder.brand) == null || brand.isEmpty()) {
+		if ((brand = builder.brand) == null || brand.trim().isEmpty()) {
 			throw new IllegalArgumentException("Brand name is required.");
+		}
+		if (brand.length() > 16) {
+			throw new IllegalArgumentException("Brand cannot exceed 16 characters in length.");
 		}
 		if ((channelTimeout = builder.timeout) != null && (channelTimeout < 60 || channelTimeout > 900)) {
 			throw new IllegalArgumentException("Delivery wait timeout must be between 60 and 900 seconds.");

@@ -161,15 +161,16 @@ public class VerificationRequestTest {
 	}
 
 	@Test
-	public void testWithoutBrand() {
+	public void testInvalidBrand() {
 		for (Channel channel : Channel.values()) {
 			Builder builder = getBuilderRequiredParamsSingleWorkflow(channel);
 			assertEquals(BRAND, builder.build().getBrand());
 			builder.brand(null);
-			assertNull(builder.brand);
 			assertThrows(IllegalArgumentException.class, builder::build);
-			builder.brand("");
-			assertTrue(builder.brand.isEmpty());
+			builder.brand("  ");
+			assertThrows(IllegalArgumentException.class, builder::build);
+			assertEquals(16, builder.brand("ABCDEFGHIJKLMNOP").build().getBrand().length());
+			assertEquals(17, builder.brand(builder.brand + 'Q').brand.length());
 			assertThrows(IllegalArgumentException.class, builder::build);
 		}
 	}
