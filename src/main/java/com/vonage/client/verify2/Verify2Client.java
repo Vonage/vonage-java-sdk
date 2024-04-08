@@ -29,7 +29,7 @@ public class Verify2Client {
 	final boolean hasJwtAuthMethod;
 	final RestEndpoint<VerificationRequest, VerificationResponse> verifyUser;
 	final RestEndpoint<VerifyCodeRequestWrapper, Void> verifyRequest;
-	final RestEndpoint<UUID, Void> cancel;
+	final RestEndpoint<UUID, Void> cancel, nextWorkflow;
 
 	/**
 	 * Create a new Verify2Client.
@@ -37,6 +37,7 @@ public class Verify2Client {
 	 * @param wrapper Http Wrapper used to create verification requests.
 	 */
 	public Verify2Client(HttpWrapper wrapper) {
+		super();
 		hasJwtAuthMethod = wrapper.getAuthCollection().hasAuthMethod(JWTAuthMethod.class);
 
 		@SuppressWarnings("unchecked")
@@ -57,6 +58,7 @@ public class Verify2Client {
 		verifyUser = new Endpoint<>(null, HttpMethod.POST);
 		verifyRequest = new Endpoint<>(req -> req.requestId, HttpMethod.POST);
 		cancel = new Endpoint<>(UUID::toString, HttpMethod.DELETE);
+		nextWorkflow = new Endpoint<>(req -> req + "/next-workflow", HttpMethod.POST);
 	}
 
 	private UUID validateRequestId(UUID requestId) {
@@ -125,13 +127,31 @@ public class Verify2Client {
 	/**
 	 * Attempts to abort an active verification workflow.
 	 * If successful (HTTP status 204), this method will return normally.
-	 * Otherwise, an exception will be thrown indicating a 404 response.
+	 * Otherwise, a {@link VerifyResponseException} exception will be thrown, indicating a 404 response.
 	 *
 	 * @param requestId ID of the verify request, obtained from {@link VerificationResponse#getRequestId()}.
 	 *
-	 * @throws VerifyResponseException If the request ID was not found or it has been verified already.
+	 * @throws VerifyResponseException If the request ID was not found, or it has been verified already.
 	 */
 	public void cancelVerification(UUID requestId) {
 		cancel.execute(validateRequestId(requestId));
+	}
+
+	/**
+	 * Move the request onto the next workflow, if available. If successful, this method will return normally.
+	 * Otherwise, a {@link VerifyResponseException} will be thrown with the following status and reasons:
+	 *
+	 * <ul>
+	 *      <li><b>404</b>: Request ID was not found or it has been verified already.</li>
+	 *      <li><b>409</b>: There are no more events left to trigger.</li>
+	 * </ul>
+	 *
+	 * @param requestId ID of the verify request, obtained from {@link VerificationResponse#getRequestId()}.
+	 *
+	 * @throws VerifyResponseException If the request ID was not found.
+	 * @since 8.5.0
+	 */
+	public void nextWorkflow(UUID requestId) {
+		nextWorkflow.execute(validateRequestId(requestId));
 	}
 }
