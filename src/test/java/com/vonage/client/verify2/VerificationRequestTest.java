@@ -274,7 +274,7 @@ public class VerificationRequestTest {
 
 	@Test
 	public void testInvalidSmsAppHash() {
-		SmsWorkflow.Builder builder = SmsWorkflow.builder(TO_NUMBER);
+		var builder = SmsWorkflow.builder(TO_NUMBER);
 		String valid = "1234567890a";
 		assertThrows(IllegalArgumentException.class, () -> builder.appHash(valid.substring(1)).build());
 		assertThrows(IllegalArgumentException.class, () -> builder.appHash(valid + 'b').build());
@@ -283,6 +283,18 @@ public class VerificationRequestTest {
 		assertNotNull(appHash);
 		assertEquals(11, appHash.length());
 		assertEquals(workflow, SmsWorkflow.builder(TO_NUMBER).appHash(valid).build());
+	}
+
+	@Test
+	public void testInvalidSmsFrom() {
+		SmsWorkflow.Builder builder = SmsWorkflow.builder(TO_NUMBER).from(FROM_NUMBER);
+		assertEquals(FROM_NUMBER, builder.build().getFrom());
+		assertNotNull(builder.from("Abc").build().getFrom());
+		assertNotNull(builder.from("AbcDefGhk12").build().getFrom());
+		assertNotNull(builder.from("1-800-123-4567890").build().getFrom());
+		assertThrows(IllegalArgumentException.class, () -> builder.from("Ab").build());
+		assertThrows(IllegalArgumentException.class, () -> builder.from("1800123456789102").build());
+		assertThrows(IllegalArgumentException.class, () -> builder.from("AbcDefGhk123").build());
 	}
 
 	@Test

@@ -48,8 +48,8 @@ public class Workflow extends JsonableBaseObject {
 	}
 
 	protected String validateFrom(String from) {
-		if (from != null && from.trim().isEmpty()) {
-			throw new IllegalArgumentException("Sender cannot be empty.");
+		if (from != null && from.trim().length() < 3) {
+			throw new IllegalArgumentException("Sender must be at least 3 characters long.");
 		}
 		return from;
 	}
