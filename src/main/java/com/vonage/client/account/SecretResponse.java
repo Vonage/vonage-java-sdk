@@ -37,6 +37,7 @@ public class SecretResponse extends JsonableBaseObject {
         return created;
     }
 
+    @Deprecated
     public static SecretResponse fromJson(String json) {
         return Jsonable.fromJson(json);
     }

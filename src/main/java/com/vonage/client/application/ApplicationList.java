@@ -39,6 +39,7 @@ public class ApplicationList extends HalPageResponse {
         return embedded != null ? embedded.applications : null;
     }
 
+    @Deprecated
     public static ApplicationList fromJson(String json) {
         return Jsonable.fromJson(json);
     }

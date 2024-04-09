@@ -43,6 +43,7 @@ public class ListSecretsResponse extends HalPageResponse {
         return _embedded != null ? _embedded.secrets: null;
     }
 
+    @Deprecated
     public static ListSecretsResponse fromJson(String json) {
         return Jsonable.fromJson(json);
     }

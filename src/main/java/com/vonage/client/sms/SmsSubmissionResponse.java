@@ -31,10 +31,6 @@ public class SmsSubmissionResponse extends JsonableBaseObject {
     public SmsSubmissionResponse() {
     }
 
-    public static SmsSubmissionResponse fromJson(String json) {
-        return Jsonable.fromJson(json);
-    }
-
     /**
      * Message count.
      *
@@ -53,5 +49,9 @@ public class SmsSubmissionResponse extends JsonableBaseObject {
     @JsonProperty("messages")
     public List<SmsSubmissionResponseMessage> getMessages() {
         return messages;
+    }
+
+    public static SmsSubmissionResponse fromJson(String json) {
+        return Jsonable.fromJson(json);
     }
 }

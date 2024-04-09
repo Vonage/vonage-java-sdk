@@ -65,6 +65,7 @@ public class SettingsResponse extends JsonableBaseObject {
         return maxApiCallsPerSecond;
     }
 
+    @Deprecated
     public static SettingsResponse fromJson(String json) {
         return Jsonable.fromJson(json);
     }

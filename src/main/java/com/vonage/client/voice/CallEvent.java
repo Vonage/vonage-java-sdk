@@ -74,7 +74,9 @@ public class CallEvent extends JsonableBaseObject {
      * @param json The JSON string to parse.
      *
      * @return An instance of this class with the fields populated, if present.
+     * @deprecated Use {@link Jsonable#fromJson(String, Class)}.
      */
+    @Deprecated
     public static CallEvent fromJson(String json) {
         return Jsonable.fromJson(json);
     }
