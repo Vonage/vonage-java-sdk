@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 # [8.5.0] - 2024-04-2?
 - Added Verify v2 "Next Workflow" endpoint
 - Updated validation logic for Verify v2 `brand` and SMS `from` parameters
+- Removed `com.vonage.client.sms.HexUtil`
+- Global configuration for Jackson in `Jsonable#createDefaultObjectMapper()`
+  - Removed annotations on domain classes
+  - Added `createJsonObjectMapper()` configuration override mechanism to `JsonableBaseObject`
 
 # [8.4.0] - 2024-04-05
 - Added Conversation API implementation
