@@ -15,13 +15,10 @@
  */
 package com.vonage.client.application.capabilities;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * VBC capability configuration settings.
  */
-@JsonInclude(JsonInclude.Include.NON_ABSENT)
 public class Vbc extends Capability {
 
     private Vbc() {

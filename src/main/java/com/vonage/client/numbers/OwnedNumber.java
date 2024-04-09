@@ -15,8 +15,6 @@
  */
 package com.vonage.client.numbers;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vonage.client.JsonableBaseObject;
 
 public class OwnedNumber extends JsonableBaseObject {

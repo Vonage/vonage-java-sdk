@@ -16,8 +16,6 @@
 package com.vonage.client.numberinsight2;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vonage.client.Jsonable;
 import com.vonage.client.VonageApiResponseException;
 

@@ -15,14 +15,11 @@
  */
 package com.vonage.client.application.capabilities;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vonage.client.common.Webhook;
 
 /**
  * Messages capability configuration settings.
  */
-@JsonInclude(JsonInclude.Include.NON_ABSENT)
 public class Messages extends Capability {
 
     private Messages() {

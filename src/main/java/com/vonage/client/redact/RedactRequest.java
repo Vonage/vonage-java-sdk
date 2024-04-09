@@ -15,7 +15,6 @@
  */
 package com.vonage.client.redact;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.vonage.client.Jsonable;
 

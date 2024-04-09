@@ -15,8 +15,6 @@
  */
 package com.vonage.client.voice;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
@@ -25,7 +23,6 @@ import java.util.Date;
 /**
  * CallInfo holds the information related to a call. It is obtained using {@link VoiceClient#listCalls()}.
  */
-@JsonIgnoreProperties(value = { "_links" }, ignoreUnknown = true)
 public class CallInfo extends JsonableBaseObject {
     Endpoint from, to;
     String conversationUuid, uuid, network, price, rate;

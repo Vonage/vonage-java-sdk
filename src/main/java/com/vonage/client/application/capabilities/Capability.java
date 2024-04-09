@@ -16,9 +16,9 @@
 package com.vonage.client.application.capabilities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.HttpMethod;
 import com.vonage.client.common.Webhook;
@@ -32,6 +32,11 @@ public abstract class Capability extends JsonableBaseObject {
     protected Map<Webhook.Type, Webhook> webhooks;
 
     protected Capability() {
+    }
+
+    @Override
+    protected ObjectMapper createJsonObjectMapper() {
+        return super.createJsonObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_ABSENT);
     }
 
     /**

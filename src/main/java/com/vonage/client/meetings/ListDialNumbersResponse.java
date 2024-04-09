@@ -15,7 +15,6 @@
  */
 package com.vonage.client.meetings;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.ArrayList;
 
 final class ListDialNumbersResponse extends ArrayList<DialInNumber> {

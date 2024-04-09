@@ -15,8 +15,6 @@
  */
 package com.vonage.client.proactiveconnect;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * Represents the {@code manual} datasource type for a Proactive Connect list.

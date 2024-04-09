@@ -15,8 +15,6 @@
  */
 package com.vonage.client.voice;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
@@ -29,7 +27,6 @@ import java.util.Collection;
 /**
  * Call encapsulates the information required to create a call using {@link VoiceClient#createCall(Call)}
  */
-@JsonIgnoreProperties({"_links"})
 public class Call extends JsonableBaseObject {
     private Endpoint[] to;
     private Endpoint from;

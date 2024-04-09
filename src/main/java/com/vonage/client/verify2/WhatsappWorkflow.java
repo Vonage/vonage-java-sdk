@@ -15,7 +15,6 @@
  */
 package com.vonage.client.verify2;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * Defines properties for sending a verification code to a user over a WhatsApp message.

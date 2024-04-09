@@ -15,7 +15,6 @@
  */
 package com.vonage.client.voice.ncco;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vonage.client.JsonableBaseObject;
 
 /**
