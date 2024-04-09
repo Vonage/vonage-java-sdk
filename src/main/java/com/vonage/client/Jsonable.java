@@ -53,7 +53,10 @@ public interface Jsonable {
 	 */
 	default String toJson() {
 		try {
-			return createDefaultObjectMapper().writeValueAsString(this);
+			ObjectMapper mapper = this instanceof JsonableBaseObject ?
+					((JsonableBaseObject) this).createJsonObjectMapper() : createDefaultObjectMapper();
+
+			return mapper.writeValueAsString(this);
 		}
 		catch (JsonProcessingException jpe) {
 			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
@@ -70,7 +73,10 @@ public interface Jsonable {
 	default void updateFromJson(String json) {
 		if (json == null || json.trim().isEmpty()) return;
 		try {
-			createDefaultObjectMapper().readerForUpdating(this).readValue(json);
+			ObjectMapper mapper = this instanceof JsonableBaseObject ?
+					((JsonableBaseObject) this).createJsonObjectMapper() : createDefaultObjectMapper();
+
+			mapper.readerForUpdating(this).readValue(json);
 		}
 		catch (IOException ex) {
 			throw new VonageResponseParseException("Failed to produce "+getClass().getSimpleName()+" from JSON.", ex);
