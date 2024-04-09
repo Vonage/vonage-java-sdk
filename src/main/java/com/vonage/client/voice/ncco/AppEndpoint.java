@@ -15,7 +15,6 @@
  */
 package com.vonage.client.voice.ncco;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
@@ -26,7 +25,6 @@ import com.vonage.client.JsonableBaseObject;
  *
  * @since 5.4.0
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class AppEndpoint extends JsonableBaseObject implements Endpoint {
     private static final String TYPE = "app";
 

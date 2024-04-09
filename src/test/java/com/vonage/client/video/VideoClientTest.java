@@ -532,7 +532,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 	@Test
 	public void testListArchives() throws Exception {
-		stubListArchiveJsonAndAssertEquals(() -> client.listArchives());
+		stubListArchiveJsonAndAssertEquals(client::listArchives);
 		stubListArchiveJsonAndAssertEquals(() -> client.listArchives(ListStreamCompositionsRequest.builder().build()));
 		stubListArchiveJsonAndAssertEquals(() -> client.listArchives(null));
 

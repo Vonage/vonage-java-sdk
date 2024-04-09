@@ -15,7 +15,6 @@
  */
 package com.vonage.client.messages.whatsapp;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.messages.internal.MessagePayload;
@@ -25,7 +24,6 @@ import java.util.UUID;
 /**
  * @since 7.2.0
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class Sticker extends JsonableBaseObject {
 	private final URI url;
 	private final UUID id;

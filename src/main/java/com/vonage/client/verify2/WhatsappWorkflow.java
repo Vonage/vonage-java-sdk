@@ -15,7 +15,6 @@
  */
 package com.vonage.client.verify2;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * Defines properties for sending a verification code to a user over a WhatsApp message.
@@ -23,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * You must have a WhatsApp Business Account configured to use the {@code from} field, which
  * is now a requirement for WhatsApp workflows.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class WhatsappWorkflow extends AbstractWhatsappWorkflow {
 
 	WhatsappWorkflow(Builder builder) {

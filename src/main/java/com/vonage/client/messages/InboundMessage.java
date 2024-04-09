@@ -34,24 +34,16 @@ import java.util.UUID;
  *
  * @since 7.2.0
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class InboundMessage extends JsonableBaseObject {
 
-	@JsonInclude(value = JsonInclude.Include.NON_NULL)
-	@JsonIgnoreProperties(ignoreUnknown = true)
 	protected static class UrlWrapper extends JsonableBaseObject {
 		@JsonProperty("url") protected URI url;
 	}
 
-	@JsonInclude(value = JsonInclude.Include.NON_NULL)
-	@JsonIgnoreProperties(ignoreUnknown = true)
 	protected static class UrlWrapperWithCaption extends UrlWrapper {
 		@JsonProperty("caption") protected String caption;
 	}
 
-	@JsonInclude(value = JsonInclude.Include.NON_NULL)
-	@JsonIgnoreProperties(ignoreUnknown = true)
 	protected static class Whatsapp extends JsonableBaseObject {
 		@JsonProperty("referral") protected Referral referral;
 	}

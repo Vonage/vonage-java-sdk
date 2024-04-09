@@ -15,14 +15,10 @@
  */
 package com.vonage.client.conversations;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.voice.TextToSpeechLanguage;
 import java.util.UUID;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 class AudioSayEventBody extends AudioOutEvent.Body {
     @JsonProperty("say_id") UUID sayId;
     @JsonProperty("text") String text;

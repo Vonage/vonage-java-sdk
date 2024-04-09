@@ -15,12 +15,10 @@
  */
 package com.vonage.client.meetings;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.net.URI;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class LogoUploadsUrlResponse extends JsonableBaseObject {
 	private URI url;
 	private Fields fields;
@@ -48,8 +46,7 @@ public class LogoUploadsUrlResponse extends JsonableBaseObject {
 		return fields;
 	}
 
-	@JsonIgnoreProperties(ignoreUnknown = true)
-	public static class Fields extends JsonableBaseObject {
+		public static class Fields extends JsonableBaseObject {
 		private LogoType logoType;
 		private String contentType, key, bucket, policy,
 				amzDate, amzAlgorithm, amzCredential, amzSecurityToken, amzSignature;

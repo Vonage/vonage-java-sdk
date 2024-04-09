@@ -16,16 +16,12 @@
 package com.vonage.client.conversations;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vonage.client.Jsonable;
 import com.vonage.client.VonageApiResponseException;
 
 /**
  * Response returned when an error is encountered (i.e. the API returns a non-2xx status code).
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public final class ConversationsResponseException extends VonageApiResponseException {
 
 	void setStatusCode(int statusCode) {

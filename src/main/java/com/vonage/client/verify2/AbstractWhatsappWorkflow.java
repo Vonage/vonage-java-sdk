@@ -15,7 +15,6 @@
  */
 package com.vonage.client.verify2;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.common.E164;
 
@@ -24,7 +23,6 @@ import com.vonage.client.common.E164;
  *
  * @since 8.3.0
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 abstract class AbstractWhatsappWorkflow extends AbstractNumberWorkflow {
 
 	protected AbstractWhatsappWorkflow(Builder<?, ?> builder) {

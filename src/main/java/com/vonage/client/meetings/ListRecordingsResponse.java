@@ -16,12 +16,10 @@
 package com.vonage.client.meetings;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.util.List;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 class ListRecordingsResponse extends JsonableBaseObject {
 	@JsonProperty("_embedded") private Embedded embedded;
 

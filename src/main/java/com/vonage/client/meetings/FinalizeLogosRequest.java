@@ -16,13 +16,11 @@
 package com.vonage.client.meetings;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import java.util.List;
 import java.util.UUID;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 class FinalizeLogosRequest implements Jsonable {
 	@JsonProperty("keys") List<String> keys;
 	@JsonIgnore UUID themeId;

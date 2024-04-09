@@ -15,7 +15,6 @@
  */
 package com.vonage.client.messages;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.E164;
@@ -32,7 +31,6 @@ import java.util.Objects;
  * invalid (i.e. have malformed values, such as empty strings) will result in {@link IllegalArgumentException}
  * being thrown. The documentation on each parameter should provide clarity on parameter restrictions.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public abstract class MessageRequest extends JsonableBaseObject {
 	final MessageType messageType;
 	final Channel channel;

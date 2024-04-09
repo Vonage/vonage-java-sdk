@@ -15,8 +15,6 @@
  */
 package com.vonage.client.incoming;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.net.URI;
@@ -26,8 +24,6 @@ import java.util.Collection;
  * @deprecated Use {@link com.vonage.client.voice.SpeechResults}.
  */
 @Deprecated
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class SpeechResults {
     private TimeoutReason timeoutReason;
     private Collection<Result> results;

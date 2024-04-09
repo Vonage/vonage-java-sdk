@@ -15,13 +15,11 @@
  */
 package com.vonage.client.messages.viber;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.internal.MessagePayload;
 import java.net.URI;
 import java.util.Objects;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Video extends MessagePayload {
 	protected URI thumbUrl;
 

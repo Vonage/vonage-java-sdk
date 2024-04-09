@@ -15,8 +15,6 @@
  */
 package com.vonage.client.voice.ncco;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.util.Arrays;
@@ -30,8 +28,6 @@ import java.util.Collection;
  * when the synchronous condition in the action is met. That is, endOnSilence, timeOut or endOnKey. If you do not
  * set a synchronous condition, the Voice API immediately executes the next NCCO without recording.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public final class RecordAction extends JsonableBaseObject implements Action {
     private static final String ACTION = "record";
 

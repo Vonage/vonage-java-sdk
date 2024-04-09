@@ -16,8 +16,6 @@
 package com.vonage.client.conversations;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
@@ -32,8 +30,6 @@ abstract class AudioOutEvent<T extends AudioOutEvent.Body> extends EventWithBody
         super(builder);
     }
 
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Body extends JsonableBaseObject {
         @JsonProperty("queue") Boolean queue;
         @JsonProperty("level") Double level;

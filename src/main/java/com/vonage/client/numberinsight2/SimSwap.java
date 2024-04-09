@@ -15,16 +15,12 @@
  */
 package com.vonage.client.numberinsight2;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
 /**
  * Represents the sim swap insight results in {@link FraudCheckResponse#getSimSwap()}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class SimSwap extends JsonableBaseObject {
 	private SimSwapStatus status;
 	private Boolean swapped;

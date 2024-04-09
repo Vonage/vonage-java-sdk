@@ -15,12 +15,10 @@
  */
 package com.vonage.client.messages.whatsapp;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.MessageType;
 import java.util.List;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class WhatsappTemplateRequest extends WhatsappRequest {
 	final Template template;
 	final Whatsapp whatsapp;

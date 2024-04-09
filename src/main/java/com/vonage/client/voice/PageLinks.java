@@ -15,16 +15,12 @@
  */
 package com.vonage.client.voice;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
 /**
  * @deprecated Will be replaced by {@link com.vonage.client.common.HalLinks} in a future release.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Deprecated
 public class PageLinks extends JsonableBaseObject {
     private PageLink self, next, prev, first, last;

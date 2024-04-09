@@ -15,16 +15,12 @@
  */
 package com.vonage.client.users;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
 /**
  * Represents the main attributes of a User.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BaseUser extends JsonableBaseObject {
     String id, name;
 

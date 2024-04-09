@@ -15,8 +15,6 @@
  */
 package com.vonage.client.common;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.net.URI;
@@ -26,8 +24,6 @@ import java.net.URI;
  *
  * @deprecated This class will be made package-private in the next major release.
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 @Deprecated
 public class UrlContainer extends JsonableBaseObject {
 	protected URI href;

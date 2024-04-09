@@ -15,8 +15,6 @@
  */
 package com.vonage.client.common;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
@@ -24,8 +22,6 @@ import com.vonage.client.JsonableBaseObject;
  * Abstract base class for responses that conform to the
  * <a href=https://datatracker.ietf.org/doc/html/draft-kelly-json-hal-07>HAL specification</a>.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class HalPageResponse extends JsonableBaseObject {
 	protected Integer page, pageSize, totalItems, totalPages;
 	private HalLinks links;

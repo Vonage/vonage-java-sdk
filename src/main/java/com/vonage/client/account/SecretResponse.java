@@ -15,8 +15,6 @@
  */
 package com.vonage.client.account;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
@@ -25,8 +23,6 @@ import java.time.Instant;
 /**
  * Represents metadata about an API account secret.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class SecretResponse extends JsonableBaseObject {
     private String id;
     private Instant created;
@@ -41,6 +37,7 @@ public class SecretResponse extends JsonableBaseObject {
         return created;
     }
 
+    @Deprecated
     public static SecretResponse fromJson(String json) {
         return Jsonable.fromJson(json);
     }

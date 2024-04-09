@@ -15,8 +15,6 @@
  */
 package com.vonage.client.voice.ncco;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.util.Arrays;
@@ -26,8 +24,6 @@ import java.util.Map;
 /**
  * An NCCO notify action which allows for custom events to be sent to a configured webhook.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class NotifyAction extends JsonableBaseObject implements Action {
     private static final String ACTION = "notify";
 

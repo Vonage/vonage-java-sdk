@@ -16,8 +16,6 @@
 package com.vonage.client.conversations;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.util.UUID;
@@ -34,8 +32,6 @@ abstract class AudioRtcEvent extends EventWithBody<AudioRtcEvent.Body> {
     /**
      * Main body object for Audio events with {@code rtc_id}.
      */
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    @JsonIgnoreProperties(ignoreUnknown = true)
     static class Body extends JsonableBaseObject {
         @JsonProperty("rtc_id") private UUID rtcId;
     }

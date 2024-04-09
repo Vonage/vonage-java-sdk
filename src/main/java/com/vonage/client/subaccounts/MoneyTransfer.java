@@ -15,8 +15,6 @@
  */
 package com.vonage.client.subaccounts;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import java.math.BigDecimal;
@@ -27,8 +25,6 @@ import java.util.UUID;
 /**
  * Represents a credit or balance transfer between accounts.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class MoneyTransfer extends AbstractTransfer {
 	private UUID id;
 	private Instant createdAt;

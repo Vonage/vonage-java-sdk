@@ -15,16 +15,12 @@
  */
 package com.vonage.client.proactiveconnect;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
 /**
  * Represents the {@code salesforce} datasource type for a Proactive Connect list.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class SalesforceDatasource extends Datasource {
 	private String integrationId, soql;
 

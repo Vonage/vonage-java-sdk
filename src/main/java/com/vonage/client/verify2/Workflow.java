@@ -15,7 +15,6 @@
  */
 package com.vonage.client.verify2;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.util.Objects;
@@ -23,7 +22,6 @@ import java.util.Objects;
 /**
  * Base workflow.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Workflow extends JsonableBaseObject {
 	protected final Channel channel;
 	protected String to, from;

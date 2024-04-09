@@ -15,7 +15,6 @@
  */
 package com.vonage.client.verify2;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -24,7 +23,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Our email solution supports domain registration, if you plan to scale email verification to high
  * volumes with Verify v2, please contact Sales in order to get your account configured properly.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class EmailWorkflow extends Workflow {
 
 	/**

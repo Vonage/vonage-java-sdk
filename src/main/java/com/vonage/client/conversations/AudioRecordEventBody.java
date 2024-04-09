@@ -15,14 +15,10 @@
  */
 package com.vonage.client.conversations;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.voice.TextToSpeechLanguage;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 class AudioRecordEventBody extends JsonableBaseObject {
     @JsonProperty("transcription") Transcription transcription;
     @JsonProperty("format") String format;
@@ -35,8 +31,6 @@ class AudioRecordEventBody extends JsonableBaseObject {
     @JsonProperty("beep_start") Boolean beepStart;
     @JsonProperty("beep_stop") Boolean beepStop;
 
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    @JsonIgnoreProperties(ignoreUnknown = true)
     static class Transcription extends JsonableBaseObject {
        @JsonProperty("language") TextToSpeechLanguage language;
        @JsonProperty("sentiment_analysis") Boolean sentimentAnalysis;

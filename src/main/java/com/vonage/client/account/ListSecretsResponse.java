@@ -16,8 +16,6 @@
 package com.vonage.client.account;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
@@ -27,15 +25,11 @@ import java.util.List;
 /**
  * HAL response for {@link AccountClient#listSecrets(String)}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ListSecretsResponse extends HalPageResponse {
     @JsonProperty("_embedded") private Embedded _embedded;
 
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    static final class Embedded extends JsonableBaseObject {
+    
+    private static final class Embedded extends JsonableBaseObject {
         @JsonProperty("secrets") private List<SecretResponse> secrets;
     }
 
@@ -49,6 +43,7 @@ public class ListSecretsResponse extends HalPageResponse {
         return _embedded != null ? _embedded.secrets: null;
     }
 
+    @Deprecated
     public static ListSecretsResponse fromJson(String json) {
         return Jsonable.fromJson(json);
     }

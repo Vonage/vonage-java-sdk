@@ -16,12 +16,10 @@
 package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import java.util.List;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 class SetStreamLayoutRequest implements Jsonable {
 	private final List<SessionStream> items;
 	@JsonIgnore final String sessionId;

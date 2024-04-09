@@ -15,7 +15,6 @@
  */
 package com.vonage.client.incoming;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import java.util.Date;
@@ -25,7 +24,6 @@ import java.util.Map;
  * @deprecated Use {@link com.vonage.client.voice.EventWebhook}.
  */
 @Deprecated
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class NotifyEvent implements Jsonable {
     @JsonProperty(value = "conversation_uuid")
     private String conversationUuid;

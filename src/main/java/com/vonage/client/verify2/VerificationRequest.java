@@ -34,8 +34,6 @@ import java.util.regex.Pattern;
  * be aborted. This flexibility exists as a fallback / backup verification. A different communication
  * channel and/or number can be contacted if desired.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class VerificationRequest implements Jsonable {
 	static final Pattern CODE_REGEX = Pattern.compile("[a-zA-Z0-9]{4,10}");
 

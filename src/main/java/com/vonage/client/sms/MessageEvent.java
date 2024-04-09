@@ -16,8 +16,6 @@
 package com.vonage.client.sms;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
@@ -28,8 +26,6 @@ import java.time.Instant;
  *
  * @since 8.3.0
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public final class MessageEvent extends JsonableBaseObject {
     private String msisdn, to, messageId, text, keyword, nonce, data, udh;
     private MessageType type;

@@ -18,12 +18,12 @@ package com.vonage.client.proactiveconnect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vonage.client.JsonableBaseObject;
 import java.util.Map;
 import java.util.UUID;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-final class ListItemRequestWrapper implements Jsonable {
+final class ListItemRequestWrapper extends JsonableBaseObject {
 	@JsonIgnore final UUID listId, itemId;
 	@JsonProperty("data") final Map<String, ?> data;
 
@@ -31,5 +31,10 @@ final class ListItemRequestWrapper implements Jsonable {
 		this.listId = listId;
 		this.itemId = itemId;
 		this.data = data;
+	}
+
+	@Override
+	protected ObjectMapper createJsonObjectMapper() {
+		return super.createJsonObjectMapper().setSerializationInclusion(JsonInclude.Include.ALWAYS);
 	}
 }

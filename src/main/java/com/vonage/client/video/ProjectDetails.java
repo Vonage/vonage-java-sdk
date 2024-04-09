@@ -15,8 +15,6 @@
  */
 package com.vonage.client.video;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vonage.client.JsonableBaseObject;
@@ -26,8 +24,6 @@ import java.io.IOException;
 /**
  * Represents properties of a video project.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ProjectDetails extends JsonableBaseObject {
 	private String applicationId, name;
 	private ProjectStatus status;

@@ -16,8 +16,6 @@
 package com.vonage.client.voice;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
@@ -33,8 +31,6 @@ import java.util.UUID;
  *
  * @since 8.2.0
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class EventWebhook extends JsonableBaseObject {
     private CallStatus status;
     private CallDirection direction;

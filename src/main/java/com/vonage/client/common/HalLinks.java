@@ -16,8 +16,6 @@
 package com.vonage.client.common;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.net.URI;
@@ -25,8 +23,6 @@ import java.net.URI;
 /**
  * Represents the {@code _links} section of a HAL response.
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class HalLinks extends JsonableBaseObject {
 	@JsonProperty("first") UrlContainer first;
 	@JsonProperty("self") UrlContainer self;

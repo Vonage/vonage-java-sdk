@@ -16,20 +16,17 @@
 package com.vonage.client.subaccounts;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import java.util.List;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 class ListTransfersResponseWrapper implements Jsonable {
 
 	ListTransfersResponseWrapper() {}
 
 	@JsonProperty("_embedded") private Embedded embedded;
 
-	@JsonIgnoreProperties(ignoreUnknown = true)
-	private static final class Embedded {
+		private static final class Embedded {
 		@JsonProperty("balance_transfers") private List<MoneyTransfer> balanceTransfers;
 		@JsonProperty("credit_transfers") private List<MoneyTransfer> creditTransfers;
 	}

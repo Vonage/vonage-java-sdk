@@ -15,8 +15,6 @@
  */
 package com.vonage.client.voice.ncco;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.voice.AdvancedMachineDetection;
@@ -28,8 +26,6 @@ import java.util.Collection;
 /**
  * An NCCO connect action that allows for the establishment of a connection to various {@link Endpoint}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ConnectAction extends JsonableBaseObject implements Action {
     private static final String ACTION = "connect";
 

@@ -15,7 +15,6 @@
  */
 package com.vonage.client.messages.whatsapp;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.messages.InboundMessage;
@@ -29,7 +28,6 @@ import java.net.URI;
  *
  * @since 8.1.0
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public final class Referral extends JsonableBaseObject {
 	private String body, headline, sourceId, sourceType;
 	private URI sourceUrl;

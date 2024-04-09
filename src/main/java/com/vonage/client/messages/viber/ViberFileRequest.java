@@ -15,14 +15,12 @@
  */
 package com.vonage.client.messages.viber;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.MessageType;
 
 /**
  * @since 7.2.0
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class ViberFileRequest extends ViberRequest {
 	final File file;
 

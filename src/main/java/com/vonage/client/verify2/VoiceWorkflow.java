@@ -15,12 +15,10 @@
  */
 package com.vonage.client.verify2;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * Defines workflow properties for sending a verification code to a user over a voice call.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class VoiceWorkflow extends AbstractNumberWorkflow {
 
 	/**

@@ -15,8 +15,6 @@
  */
 package com.vonage.client.conversations;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.users.channels.Channel;
 import com.vonage.client.users.channels.Pstn;
@@ -28,8 +26,6 @@ import java.util.Collection;
 /**
  * Represents a Conversation (request and response).
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Conversation extends BaseConversation {
 	private ConversationStatus state;
 	private Integer sequenceNumber;

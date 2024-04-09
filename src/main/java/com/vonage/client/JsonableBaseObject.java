@@ -15,6 +15,7 @@
  */
 package com.vonage.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -26,6 +27,16 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * @since 8.2.0
  */
 public abstract class JsonableBaseObject implements Jsonable {
+
+    /**
+     * Provides a mechanism for overriding the Jackson configuration options for this class.
+     *
+     * @return A new ObjectMapper with the desired serialisation options to use.
+     * @since 8.5.0
+     */
+    protected ObjectMapper createJsonObjectMapper() {
+        return Jsonable.createDefaultObjectMapper();
+    }
 
     @Override
     public int hashCode() {

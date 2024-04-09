@@ -15,7 +15,6 @@
  */
 package com.vonage.client.messages.whatsapp;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.util.UUID;
@@ -26,7 +25,6 @@ import java.util.UUID;
  *
  * @since 7.2.0
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public final class Context extends JsonableBaseObject {
 	private String messageFrom;
 	private UUID messageUuid;

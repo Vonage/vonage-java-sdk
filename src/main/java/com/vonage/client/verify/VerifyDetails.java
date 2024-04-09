@@ -15,8 +15,6 @@
  */
 package com.vonage.client.verify;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.vonage.client.JsonableBaseObject;
@@ -25,8 +23,6 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class VerifyDetails extends JsonableBaseObject {
     private String requestId, accountId, number, senderId, currency;
     private Date dateSubmitted, dateFinalized, firstEventDate, lastEventDate;

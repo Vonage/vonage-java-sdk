@@ -15,8 +15,6 @@
  */
 package com.vonage.client.application;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import com.vonage.client.common.HalPageResponse;
@@ -25,13 +23,10 @@ import java.util.List;
 /**
  * HAL response returned from {@link ApplicationClient#listApplications(ListApplicationRequest)}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ApplicationList extends HalPageResponse {
     @JsonProperty("_embedded") private Embedded embedded;
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    static class Embedded {
+    private static class Embedded {
         @JsonProperty("applications") List<Application> applications;
     }
 
@@ -44,6 +39,7 @@ public class ApplicationList extends HalPageResponse {
         return embedded != null ? embedded.applications : null;
     }
 
+    @Deprecated
     public static ApplicationList fromJson(String json) {
         return Jsonable.fromJson(json);
     }

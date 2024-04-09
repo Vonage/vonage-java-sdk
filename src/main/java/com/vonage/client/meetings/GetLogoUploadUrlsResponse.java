@@ -15,9 +15,7 @@
  */
 package com.vonage.client.meetings;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.ArrayList;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 final class GetLogoUploadUrlsResponse extends ArrayList<LogoUploadsUrlResponse> {
 }

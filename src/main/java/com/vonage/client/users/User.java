@@ -16,8 +16,6 @@
 package com.vonage.client.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
@@ -31,8 +29,6 @@ import java.util.Map;
 /**
  * Represents a Vonage User (both request and response).
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User extends BaseUser {
     @JsonProperty("display_name") private String displayName;
     @JsonProperty("image_url") private URI imageUrl;
@@ -204,8 +200,6 @@ public class User extends BaseUser {
     /**
      * Represents the "properties" field of a User object.
      */
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    @JsonIgnoreProperties(ignoreUnknown = true)
     static class Properties extends JsonableBaseObject {
         @JsonProperty("custom_data") Map<String, ?> customData;
     }

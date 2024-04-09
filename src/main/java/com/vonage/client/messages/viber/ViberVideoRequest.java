@@ -15,7 +15,6 @@
  */
 package com.vonage.client.messages.viber;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.MessageType;
 import java.util.Objects;
@@ -23,7 +22,6 @@ import java.util.Objects;
 /**
  * @since 7.2.0
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class ViberVideoRequest extends ViberRequest {
 	final Video video;
 

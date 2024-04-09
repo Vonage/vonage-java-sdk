@@ -15,7 +15,6 @@
  */
 package com.vonage.client.messages.internal;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.net.URI;
@@ -27,7 +26,6 @@ import java.util.stream.Stream;
  * Container object for audio, video, image and file message payload contents.
  * This class also validates the fields.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class MessagePayload extends JsonableBaseObject {
 	protected URI url;
 	protected String caption, name;

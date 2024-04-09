@@ -15,8 +15,6 @@
  */
 package com.vonage.client.conversations;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.util.Map;
@@ -24,8 +22,6 @@ import java.util.Map;
 /**
  * Additional properties for a {@linkplain Conversation}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ConversationProperties extends JsonableBaseObject {
 	private Integer ttl;
 	private String type, customSortKey;

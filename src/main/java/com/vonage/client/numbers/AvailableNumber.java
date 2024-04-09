@@ -15,12 +15,8 @@
  */
 package com.vonage.client.numbers;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vonage.client.JsonableBaseObject;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class AvailableNumber extends JsonableBaseObject {
     private String country, msisdn, cost, type;
     private String[] features;

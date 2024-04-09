@@ -16,7 +16,6 @@
 package com.vonage.client.meetings;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
@@ -24,7 +23,6 @@ import java.net.URI;
 import java.time.Instant;
 import java.util.UUID;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Recording extends JsonableBaseObject {
 	private UUID id;
 	private String sessionId;

@@ -46,4 +46,4 @@ jobs:
         run: |
           OSS_USERNAME=$OSS_USERNAME OSS_PASSWORD=$OSS_PASSWORD
           signingKey=$signingKey signingPassword=$signingPassword
-          gradle publishToSonatype closeAndReleaseSonatypeStagingRepository --info
+          gradle publishToSonatype closeAndReleaseStagingRepositories --info

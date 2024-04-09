@@ -15,16 +15,12 @@
  */
 package com.vonage.client.conversations;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
 /**
  * Represents the audio options in {@link MemberMedia#getAudioSettings}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class MediaAudioSettings extends JsonableBaseObject {
 	Boolean enabled, earmuffed, muted;
 

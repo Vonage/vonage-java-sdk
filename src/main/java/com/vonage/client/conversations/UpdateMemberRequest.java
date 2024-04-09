@@ -16,9 +16,7 @@
 package com.vonage.client.conversations;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.vonage.client.Jsonable;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.util.Objects;
@@ -26,8 +24,6 @@ import java.util.Objects;
 /**
  * Options for updating a membership using {@link ConversationsClient#updateMember(UpdateMemberRequest)}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public final class UpdateMemberRequest extends ConversationResourceRequestWrapper implements Jsonable {
 	private final MemberState state;
 	private final String from;

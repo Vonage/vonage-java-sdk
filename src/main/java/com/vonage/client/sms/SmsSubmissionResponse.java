@@ -15,15 +15,11 @@
  */
 package com.vonage.client.sms;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import java.util.List;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class SmsSubmissionResponse extends JsonableBaseObject {
     private int messageCount;
     private List<SmsSubmissionResponseMessage> messages;
@@ -33,10 +29,6 @@ public class SmsSubmissionResponse extends JsonableBaseObject {
      */
     @Deprecated
     public SmsSubmissionResponse() {
-    }
-
-    public static SmsSubmissionResponse fromJson(String json) {
-        return Jsonable.fromJson(json);
     }
 
     /**
@@ -57,5 +49,9 @@ public class SmsSubmissionResponse extends JsonableBaseObject {
     @JsonProperty("messages")
     public List<SmsSubmissionResponseMessage> getMessages() {
         return messages;
+    }
+
+    public static SmsSubmissionResponse fromJson(String json) {
+        return Jsonable.fromJson(json);
     }
 }

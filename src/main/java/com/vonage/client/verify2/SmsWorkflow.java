@@ -15,13 +15,11 @@
  */
 package com.vonage.client.verify2;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Defines workflow properties for sending a verification code to a user via SMS.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class SmsWorkflow extends AbstractNumberWorkflow {
 	final String appHash, contentId, entityId;
 

@@ -15,14 +15,12 @@
  */
 package com.vonage.client.messages.sms;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.Channel;
 import com.vonage.client.messages.MessageRequest;
 import com.vonage.client.messages.MessageType;
 import com.vonage.client.messages.internal.Text;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class SmsTextRequest extends MessageRequest {
 	final String text;
 	final Integer ttl;

@@ -15,8 +15,6 @@
  */
 package com.vonage.client.conversations;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.time.Instant;
@@ -24,8 +22,6 @@ import java.time.Instant;
 /**
  * Represents the timestamps in {@link Member#getTimestamp()}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class MemberTimestamp extends JsonableBaseObject {
 	private Instant invited, joined, left;
 

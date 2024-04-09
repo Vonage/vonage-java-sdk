@@ -16,12 +16,10 @@
 package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.util.Objects;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class SignalRequest extends JsonableBaseObject {
 	private final String type, data;
 	@JsonIgnore String sessionId;

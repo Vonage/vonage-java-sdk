@@ -15,8 +15,6 @@
  */
 package com.vonage.client.voice;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
@@ -26,8 +24,6 @@ import com.vonage.client.JsonableBaseObject;
  * <p>
  * This would be returned by {@link VoiceClient#startTalk(String, TalkPayload)} or {@link VoiceClient#stopTalk(String)}
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class TalkResponse extends JsonableBaseObject {
     private String uuid, message;
 

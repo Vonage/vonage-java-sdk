@@ -15,8 +15,6 @@
  */
 package com.vonage.client.video;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.net.URI;
@@ -25,8 +23,6 @@ import java.util.Objects;
 /**
  * Represents an RTMP stream in a video session.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class Rtmp extends JsonableBaseObject {
     private String id, streamName;
     private URI serverUrl;

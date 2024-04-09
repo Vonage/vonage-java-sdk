@@ -15,7 +15,9 @@
  */
 package com.vonage.client;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -38,6 +40,9 @@ public interface Jsonable {
 	static ObjectMapper createDefaultObjectMapper() {
 		return new ObjectMapper()
 				.registerModule(new JavaTimeModule())
+				.setSerializationInclusion(JsonInclude.Include.NON_NULL)
+				.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false)
+				.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 				.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 	}
 
@@ -48,7 +53,10 @@ public interface Jsonable {
 	 */
 	default String toJson() {
 		try {
-			return createDefaultObjectMapper().writeValueAsString(this);
+			ObjectMapper mapper = this instanceof JsonableBaseObject ?
+					((JsonableBaseObject) this).createJsonObjectMapper() : createDefaultObjectMapper();
+
+			return mapper.writeValueAsString(this);
 		}
 		catch (JsonProcessingException jpe) {
 			throw new VonageUnexpectedException("Failed to produce JSON from "+getClass().getSimpleName()+" object.", jpe);
@@ -65,7 +73,10 @@ public interface Jsonable {
 	default void updateFromJson(String json) {
 		if (json == null || json.trim().isEmpty()) return;
 		try {
-			createDefaultObjectMapper().readerForUpdating(this).readValue(json);
+			ObjectMapper mapper = this instanceof JsonableBaseObject ?
+					((JsonableBaseObject) this).createJsonObjectMapper() : createDefaultObjectMapper();
+
+			mapper.readerForUpdating(this).readValue(json);
 		}
 		catch (IOException ex) {
 			throw new VonageResponseParseException("Failed to produce "+getClass().getSimpleName()+" from JSON.", ex);

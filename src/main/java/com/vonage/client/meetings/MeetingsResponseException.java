@@ -21,8 +21,6 @@ import com.vonage.client.VonageApiResponseException;
 /**
  * Response returned when an error is encountered (i.e. the API returns a non-2xx status code).
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public final class MeetingsResponseException extends VonageApiResponseException {
 	@JsonProperty("status") private Integer status;
 	@JsonProperty("name") private String name;

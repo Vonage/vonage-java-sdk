@@ -15,8 +15,6 @@
  */
 package com.vonage.client.conversations;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.HttpMethod;
@@ -26,8 +24,6 @@ import java.util.UUID;
 /**
  * Callback properties for a {@link Conversation}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public final class Callback extends JsonableBaseObject {
 	private URI url;
 	private String eventMask;
@@ -82,8 +78,6 @@ public final class Callback extends JsonableBaseObject {
 		return method;
 	}
 
-	@JsonInclude(value = JsonInclude.Include.NON_NULL)
-	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static class Params extends JsonableBaseObject {
 		private UUID applicationId;
 		private URI nccoUrl;

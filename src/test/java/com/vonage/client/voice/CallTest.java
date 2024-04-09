@@ -228,7 +228,7 @@ public class CallTest {
     @Test
     public void testMalformedJson() throws Exception {
         try {
-            Call.fromJson("{\n" + "    \"unknownProperty\": \"unknown\"\n" + "}");
+            Call.fromJson("{ bad Jason: \"unknown\"\n" + "}");
             fail("Expected a VonageUnexpectedException to be thrown");
         } catch (VonageResponseParseException e) {
             assertEquals("Failed to produce Call from JSON.", e.getMessage());

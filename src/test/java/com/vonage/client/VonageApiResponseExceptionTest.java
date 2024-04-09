@@ -15,29 +15,21 @@
  */
 package com.vonage.client;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 
 public class VonageApiResponseExceptionTest {
 
-	static class ConcreteVonageApiResponseException extends VonageApiResponseException {
-	}
+	static class ConcreteVonageApiResponseException extends VonageApiResponseException {}
 
-	@JsonIgnoreProperties(ignoreUnknown = true)
-	@JsonInclude(JsonInclude.Include.NON_NULL)
 	static class VARXWithoutNoArgs extends VonageApiResponseException {
-		public VARXWithoutNoArgs(boolean dummy) {
-		}
+		public VARXWithoutNoArgs(boolean dummy) {}
 	}
 
-	@JsonIgnoreProperties(ignoreUnknown = true)
-	@JsonInclude(JsonInclude.Include.NON_NULL)
 	static class VARXWithField extends VonageApiResponseException {
 		@JsonProperty boolean dummy;
 	}

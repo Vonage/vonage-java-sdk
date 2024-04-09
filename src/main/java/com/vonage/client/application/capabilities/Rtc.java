@@ -15,15 +15,11 @@
  */
 package com.vonage.client.application.capabilities;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vonage.client.common.Webhook;
 
 /**
  * Rtc capability configuration settings.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_ABSENT)
 public class Rtc extends Capability {
 
     private Rtc() {

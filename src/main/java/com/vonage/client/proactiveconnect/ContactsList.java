@@ -15,8 +15,6 @@
  */
 package com.vonage.client.proactiveconnect;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
@@ -28,8 +26,6 @@ import java.util.UUID;
 /**
  * Represents a Proactive Connect list.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ContactsList extends JsonableBaseObject {
 	UUID id;
 	private String name, description;

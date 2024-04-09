@@ -15,16 +15,12 @@
  */
 package com.vonage.client.voice;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.util.ArrayIterator;
 import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
 import java.util.Iterator;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class CallInfoPage extends JsonableBaseObject implements Iterable<CallInfo> {
     private int count, pageSize, recordIndex;
     private PageLinks links;

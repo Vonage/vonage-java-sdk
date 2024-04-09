@@ -16,11 +16,9 @@
 package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 class PatchComposedStreamsRequest implements Jsonable {
 	@JsonIgnore String id;
 	private String addStream, removeStream;

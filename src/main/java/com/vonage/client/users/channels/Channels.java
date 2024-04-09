@@ -15,8 +15,6 @@
  */
 package com.vonage.client.users.channels;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.util.ArrayList;
@@ -26,8 +24,6 @@ import java.util.List;
 /**
  * Represents the "channels" field on {@link com.vonage.client.users.User}.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public final class Channels extends JsonableBaseObject {
 	@JsonProperty("pstn") private List<Pstn> pstn;
 	@JsonProperty("sip") private List<Sip> sip;

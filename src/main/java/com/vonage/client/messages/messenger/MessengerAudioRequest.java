@@ -15,12 +15,10 @@
  */
 package com.vonage.client.messages.messenger;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.messages.internal.MessagePayload;
 import com.vonage.client.messages.MessageType;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class MessengerAudioRequest extends MessengerRequest {
 	final MessagePayload audio;
 

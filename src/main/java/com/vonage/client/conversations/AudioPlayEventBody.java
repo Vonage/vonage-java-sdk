@@ -15,15 +15,11 @@
  */
 package com.vonage.client.conversations;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.net.URI;
 import java.util.Objects;
 import java.util.UUID;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 final class AudioPlayEventBody extends AudioOutEvent.Body {
     @JsonProperty("play_id") UUID playId;
     @JsonProperty("stream_url") URI[] streamUrl;

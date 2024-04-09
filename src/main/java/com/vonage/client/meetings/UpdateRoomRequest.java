@@ -16,14 +16,12 @@
 package com.vonage.client.meetings;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class UpdateRoomRequest implements Jsonable {
 	@JsonIgnore UUID roomId;
 

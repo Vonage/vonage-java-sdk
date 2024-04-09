@@ -16,8 +16,6 @@
 package com.vonage.client.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import com.vonage.client.common.HalPageResponse;
@@ -26,13 +24,9 @@ import java.util.List;
 /**
  * Paginated HAL response for {@link UsersClient#listUsers(ListUsersRequest)}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ListUsersResponse extends HalPageResponse {
     @JsonProperty("_embedded") private Embedded embedded;
 
-    @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    @JsonIgnoreProperties(ignoreUnknown = true)
     static class Embedded extends JsonableBaseObject {
         @JsonProperty("users") List<BaseUser> users;
     }

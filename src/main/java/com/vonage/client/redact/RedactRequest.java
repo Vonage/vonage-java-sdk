@@ -15,14 +15,12 @@
  */
 package com.vonage.client.redact;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.vonage.client.Jsonable;
 
 /**
  * Represents a request to the Redact API.
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RedactRequest implements Jsonable {
     private final String id;
     private final Product product;

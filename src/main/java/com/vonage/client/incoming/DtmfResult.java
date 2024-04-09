@@ -15,14 +15,12 @@
  */
 package com.vonage.client.incoming;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @deprecated Use {@link com.vonage.client.voice.DtmfResult}.
  */
 @Deprecated
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class DtmfResult {
     private String digits;
     private boolean timedOut;

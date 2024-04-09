@@ -30,8 +30,6 @@ import java.util.UUID;
  * It provides metadata about the message, such as its status, how much it cost, when it was sent,
  * what service (channel) it was sent via, sender and recipient, message response ID, client reference etc.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class MessageStatus extends JsonableBaseObject {
 
 	public enum Status {
@@ -57,8 +55,7 @@ public class MessageStatus extends JsonableBaseObject {
 	/**
 	 * Describes the error that was encountered when sending the message.
 	 */
-	@JsonInclude(value = JsonInclude.Include.NON_NULL)
-	public static final class Error extends JsonableBaseObject {
+		public static final class Error extends JsonableBaseObject {
 		@JsonProperty("type") URI type;
 		@JsonProperty("title") String title;
 		@JsonProperty("detail") String detail;
@@ -108,8 +105,6 @@ public class MessageStatus extends JsonableBaseObject {
 	/**
 	 * Describes the charge incurred for sending the message.
 	 */
-	@JsonInclude(value = JsonInclude.Include.NON_NULL)
-	@JsonIgnoreProperties(ignoreUnknown = true)
 	public static final class Usage extends JsonableBaseObject {
 		@JsonProperty("price") double price;
 		@JsonProperty("currency") Currency currency;
@@ -141,20 +136,14 @@ public class MessageStatus extends JsonableBaseObject {
 		}
 	}
 
-	@JsonInclude(value = JsonInclude.Include.NON_NULL)
-	@JsonIgnoreProperties(ignoreUnknown = true)
 	static class Destination extends JsonableBaseObject {
 		@JsonProperty("network_code") String networkCode;
 	}
 
-	@JsonInclude(value = JsonInclude.Include.NON_NULL)
-	@JsonIgnoreProperties(ignoreUnknown = true)
 	static class Sms extends JsonableBaseObject {
 		@JsonProperty("count_total") Integer countTotal;
 	}
 
-	@JsonInclude(value = JsonInclude.Include.NON_NULL)
-	@JsonIgnoreProperties(ignoreUnknown = true)
 	static class Whatsapp extends JsonableBaseObject {
 		static class Conversation extends JsonableBaseObject {
 			static class Origin extends JsonableBaseObject {

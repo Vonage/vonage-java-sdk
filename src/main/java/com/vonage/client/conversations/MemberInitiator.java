@@ -18,8 +18,6 @@ package com.vonage.client.conversations;
 import com.fasterxml.jackson.annotation.*;
 import com.vonage.client.JsonableBaseObject;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class MemberInitiator extends JsonableBaseObject {
 	@JsonProperty("invited") private Invited invited;
 	@JsonProperty("joined") private Joined joined;
@@ -27,14 +25,10 @@ public class MemberInitiator extends JsonableBaseObject {
 	protected MemberInitiator() {
 	}
 
-	@JsonInclude(value = JsonInclude.Include.NON_NULL)
-	@JsonIgnoreProperties(ignoreUnknown = true)
 	private static class Invited extends JsonableBaseObject {
 		@JsonProperty("is_system") Boolean isSystem;
 	}
 
-	@JsonInclude(value = JsonInclude.Include.NON_NULL)
-	@JsonIgnoreProperties(ignoreUnknown = true)
 	private static class Joined extends Invited {
 		@JsonProperty("user_id") String userId;
 		@JsonProperty("member_id") String memberId;

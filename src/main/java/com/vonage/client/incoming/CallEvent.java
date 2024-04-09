@@ -16,7 +16,6 @@
 package com.vonage.client.incoming;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import java.util.Date;
@@ -25,7 +24,6 @@ import java.util.Date;
  * @deprecated Use {@link com.vonage.client.voice.EventWebhook}.
  */
 @Deprecated
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class CallEvent implements Jsonable {
     private String conversationUuid, callUuid, from, to, uuid, detail;
     private CallDirection direction;

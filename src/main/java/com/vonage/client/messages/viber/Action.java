@@ -15,7 +15,6 @@
  */
 package com.vonage.client.messages.viber;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.net.URI;
@@ -23,7 +22,6 @@ import java.net.URI;
 /**
  * @since 7.2.0
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class Action extends JsonableBaseObject {
 	private final URI url;
 	private final String text;

@@ -15,11 +15,9 @@
  */
 package com.vonage.client.messages.viber;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class ViberService extends JsonableBaseObject {
 	private final Category category;
 	private final Integer ttl, duration, fileSize;

@@ -15,8 +15,6 @@
  */
 package com.vonage.client.voice;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
@@ -25,8 +23,6 @@ import com.vonage.client.JsonableBaseObject;
  *
  * @since 8.2.0
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class SpeechTranscript extends JsonableBaseObject {
     private String text;
     private Double confidence;

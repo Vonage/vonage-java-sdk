@@ -16,7 +16,6 @@
 package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.net.URI;
@@ -27,13 +26,11 @@ import java.util.Objects;
 /**
  * Represents an outbound SIP dial request's properties.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class SipDialRequest extends JsonableBaseObject {
 	private String sessionId, token;
 	@JsonProperty("sip") private Sip sip;
 
-	@JsonInclude(value = JsonInclude.Include.NON_NULL)
-	static class Sip extends JsonableBaseObject {
+		static class Sip extends JsonableBaseObject {
 		@JsonProperty("uri") String uri;
 		@JsonProperty("from") String from;
 		@JsonProperty("headers") Map<String, String> headers;
@@ -42,8 +39,7 @@ public class SipDialRequest extends JsonableBaseObject {
 		@JsonProperty("video") Boolean video;
 		@JsonProperty("observeForceMute") Boolean observeForceMute;
 
-		@JsonInclude(value = JsonInclude.Include.NON_NULL)
-		static class Auth extends JsonableBaseObject {
+				static class Auth extends JsonableBaseObject {
 			@JsonProperty("username") String username;
 			@JsonProperty("password") String password;
 		}

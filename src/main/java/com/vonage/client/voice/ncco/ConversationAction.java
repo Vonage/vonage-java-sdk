@@ -15,8 +15,6 @@
  */
 package com.vonage.client.voice.ncco;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.util.*;
@@ -24,8 +22,6 @@ import java.util.*;
 /**
  * An NCCO conversation action which enables the ability to host conference calls.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ConversationAction extends JsonableBaseObject implements Action {
     private static final String ACTION = "conversation";
 

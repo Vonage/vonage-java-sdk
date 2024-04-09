@@ -16,8 +16,6 @@
 package com.vonage.client.proactiveconnect;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
@@ -28,16 +26,12 @@ import java.util.UUID;
 /**
  * HAL response for {@link ProactiveConnectClient#listItems(UUID, int, int, SortOrder)}.
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public final class ListItemsResponse extends HalPageResponse {
 	@JsonProperty("_embedded") private Embedded _embedded;
 
 	ListItemsResponse() {
 	}
 
-	@JsonInclude(value = JsonInclude.Include.NON_NULL)
-	@JsonIgnoreProperties(ignoreUnknown = true)
 	static final class Embedded extends JsonableBaseObject {
 		private List<ListItem> items;
 

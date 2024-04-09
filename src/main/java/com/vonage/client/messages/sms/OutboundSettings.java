@@ -15,7 +15,6 @@
  */
 package com.vonage.client.messages.sms;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 
@@ -24,7 +23,6 @@ import com.vonage.client.JsonableBaseObject;
  *
  * @since 8.1.0
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public final class OutboundSettings extends JsonableBaseObject {
     final EncodingType encodingType;
     final String contentId, entityId;

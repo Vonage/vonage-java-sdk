@@ -16,8 +16,6 @@
 package com.vonage.client.verify2;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.VonageApiResponseException;
 import java.util.UUID;
@@ -25,8 +23,6 @@ import java.util.UUID;
 /**
  * Response returned when verification fails (i.e. returns a non-2xx status code).
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public final class VerifyResponseException extends VonageApiResponseException {
 	UUID requestId;
 

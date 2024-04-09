@@ -16,8 +16,6 @@
 package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.time.Instant;
@@ -29,8 +27,6 @@ import java.util.UUID;
  * Base class for {@link Broadcast} and {@link Archive}.
  * Represents the common features of a video call consisting of multiple streams.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 public abstract class StreamComposition extends JsonableBaseObject {
 	@JsonProperty("id") protected UUID id;
 	@JsonProperty("applicationId") protected UUID applicationId;

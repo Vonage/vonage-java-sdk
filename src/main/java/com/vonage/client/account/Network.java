@@ -19,8 +19,6 @@ import com.fasterxml.jackson.annotation.*;
 import com.vonage.client.JsonableBaseObject;
 import java.math.BigDecimal;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Network extends JsonableBaseObject {
     private Type type;
     private BigDecimal price;

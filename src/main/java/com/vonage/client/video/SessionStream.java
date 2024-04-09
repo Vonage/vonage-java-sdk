@@ -15,8 +15,6 @@
  */
 package com.vonage.client.video;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.util.Arrays;
@@ -27,8 +25,6 @@ import java.util.UUID;
  * Represents a stream's metadata in a Vonage Video session.
  * Used for updating the stream layout in {@link VideoClient#setStreamLayout(String, List)}.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class SessionStream extends JsonableBaseObject {
 	private UUID id;
 	private List<String> layoutClassList;

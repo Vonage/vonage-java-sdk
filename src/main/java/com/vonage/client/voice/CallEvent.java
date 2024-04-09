@@ -15,8 +15,6 @@
  */
 package com.vonage.client.voice;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
@@ -24,8 +22,6 @@ import com.vonage.client.JsonableBaseObject;
 /**
  * Represents metadata about a call.
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class CallEvent extends JsonableBaseObject {
     private String uuid, conversationUuid;
     private CallStatus status;
@@ -78,7 +74,9 @@ public class CallEvent extends JsonableBaseObject {
      * @param json The JSON string to parse.
      *
      * @return An instance of this class with the fields populated, if present.
+     * @deprecated Use {@link Jsonable#fromJson(String, Class)}.
      */
+    @Deprecated
     public static CallEvent fromJson(String json) {
         return Jsonable.fromJson(json);
     }

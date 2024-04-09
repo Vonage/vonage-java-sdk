@@ -16,8 +16,6 @@
 package com.vonage.client.users;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vonage.client.VonageApiResponseException;
 
 /**
@@ -25,8 +23,6 @@ import com.vonage.client.VonageApiResponseException;
  *
  * @since 7.7.0
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public final class UsersResponseException extends VonageApiResponseException {
 
 	void setStatusCode(int statusCode) {

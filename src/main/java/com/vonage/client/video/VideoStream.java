@@ -15,14 +15,10 @@
  */
 package com.vonage.client.video;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.JsonableBaseObject;
 import java.util.UUID;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class VideoStream extends JsonableBaseObject {
 	private UUID streamId;
 	private Boolean hasAudio, hasVideo;

@@ -15,8 +15,6 @@
  */
 package com.vonage.client.voice;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.voice.ncco.Ncco;
 import java.util.Objects;
@@ -25,8 +23,6 @@ import java.util.Objects;
  * Extension of ModifyCallPayload which adds an NCCO destination to the serialized form.
  *
  */
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
-@JsonIgnoreProperties(ignoreUnknown = true)
 class TransferCallPayload extends ModifyCallPayload {
     private final TransferDestination destination;
 

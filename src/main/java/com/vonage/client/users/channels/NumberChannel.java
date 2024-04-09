@@ -15,16 +15,12 @@
  */
 package com.vonage.client.users.channels;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.common.E164;
 
 /**
  * Base class for channels with an E.164 phone number.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 abstract class NumberChannel extends Channel {
 	private String number;
 

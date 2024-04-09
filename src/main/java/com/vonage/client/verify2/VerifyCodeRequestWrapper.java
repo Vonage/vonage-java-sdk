@@ -16,11 +16,9 @@
 package com.vonage.client.verify2;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vonage.client.Jsonable;
 
-@JsonInclude(value = JsonInclude.Include.NON_NULL)
 class VerifyCodeRequestWrapper implements Jsonable {
 	@JsonIgnore final String requestId;
 	@JsonProperty("code") final String code;
