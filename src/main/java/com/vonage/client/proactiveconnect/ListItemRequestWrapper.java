@@ -23,7 +23,6 @@ import com.vonage.client.JsonableBaseObject;
 import java.util.Map;
 import java.util.UUID;
 
-@JsonInclude(JsonInclude.Include.CUSTOM)
 final class ListItemRequestWrapper extends JsonableBaseObject {
 	@JsonIgnore final UUID listId, itemId;
 	@JsonProperty("data") final Map<String, ?> data;
