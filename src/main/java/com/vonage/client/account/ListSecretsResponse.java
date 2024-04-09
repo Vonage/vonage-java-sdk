@@ -29,7 +29,7 @@ public class ListSecretsResponse extends HalPageResponse {
     @JsonProperty("_embedded") private Embedded _embedded;
 
     
-        static final class Embedded extends JsonableBaseObject {
+    private static final class Embedded extends JsonableBaseObject {
         @JsonProperty("secrets") private List<SecretResponse> secrets;
     }
 

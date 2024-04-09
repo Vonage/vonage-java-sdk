@@ -24,15 +24,13 @@ import java.util.List;
 
 public class VonageApiResponseExceptionTest {
 
-	static class ConcreteVonageApiResponseException extends VonageApiResponseException {
+	static class ConcreteVonageApiResponseException extends VonageApiResponseException {}
+
+	static class VARXWithoutNoArgs extends VonageApiResponseException {
+		public VARXWithoutNoArgs(boolean dummy) {}
 	}
 
-			static class VARXWithoutNoArgs extends VonageApiResponseException {
-		public VARXWithoutNoArgs(boolean dummy) {
-		}
-	}
-
-			static class VARXWithField extends VonageApiResponseException {
+	static class VARXWithField extends VonageApiResponseException {
 		@JsonProperty boolean dummy;
 	}
 
