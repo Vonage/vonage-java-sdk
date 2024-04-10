@@ -51,10 +51,11 @@ public class VideoClient {
 	final RestEndpoint<Archive, Archive> createArchive;
 	final RestEndpoint<StreamCompositionLayout, Void> updateArchiveLayout, updateBroadcastLayout;
 	final RestEndpoint<PatchComposedStreamsRequest, Void> patchArchiveStream, patchBroadcastStream;
-	final RestEndpoint<String, Void> deleteArchive;
+	final RestEndpoint<String, Void> deleteArchive, stopCaptions;
 	final RestEndpoint<ListStreamCompositionsRequest, ListBroadcastsResponse> listBroadcasts;
 	final RestEndpoint<String, Broadcast> getBroadcast, stopBroadcast;
 	final RestEndpoint<Broadcast, Broadcast> createBroadcast;
+	final RestEndpoint<StartCaptionsRequest, StartCaptionsResponse> startCaptions;
 
 	/**
 	 * Constructor.
@@ -62,6 +63,7 @@ public class VideoClient {
 	 * @param wrapper (REQUIRED) shared HTTP wrapper object used for making REST calls.
 	 */
 	public VideoClient(HttpWrapper wrapper) {
+		super();
 		Supplier<JWTAuthMethod> jwtAuthGetter = () -> wrapper.getAuthCollection().getAuth(JWTAuthMethod.class);
 		Supplier<String> appIdGetter = () -> jwtAuthGetter.get().getApplicationId();
 		newJwtSupplier = () -> jwtAuthGetter.get().newJwt();
@@ -107,6 +109,8 @@ public class VideoClient {
 		updateBroadcastLayout = new Endpoint<>(req -> "broadcast/"+req.id+"/layout", HttpMethod.PUT);
 		patchBroadcastStream = new Endpoint<>(req -> "broadcast/"+req.id+"/streams", HttpMethod.PATCH);
 		sipDial = new Endpoint<>(req -> "dial", HttpMethod.POST);
+		startCaptions = new Endpoint<>(req -> "captions", HttpMethod.POST);
+		stopCaptions = new Endpoint<>(req -> "captions/"+req+"/stop", HttpMethod.POST);
 	}
 
 	private String validateId(String param, String name, boolean uuid) {
@@ -686,5 +690,33 @@ public class VideoClient {
 	 */
 	public Broadcast stopBroadcast(String broadcastId) {
 		return stopBroadcast.execute(validateBroadcastId(broadcastId));
+	}
+
+	/**
+	 * Use this method to start real-time Live Captions for a Vonage Video Session.
+	 * <p>
+	 * The maximum allowed duration is 4 hours, after which the audio captioning will stop without any
+	 * effect on the ongoing Vonage Video Session. An event will be posted to your callback URL if provided
+	 * when starting the captions. Each Vonage Video Session supports only one audio captioning session.
+	 *
+	 * @param request Properties of the live captioning.
+	 *
+	 * @return Live captioning metadata.
+	 *
+	 * @since 8.5.0
+	 */
+	public StartCaptionsResponse startCaptions(StartCaptionsRequest request) {
+		return startCaptions.execute(validateRequest(request));
+	}
+
+	/**
+	 * Stop live captions for a session.
+	 *
+	 * @param captionsId ID of the live captions to stop.
+	 *
+	 * @since 8.5.0
+	 */
+	public void stopCaptions(String captionsId) {
+		stopCaptions.execute(validateId(captionsId, "Captions", true));
 	}
 }

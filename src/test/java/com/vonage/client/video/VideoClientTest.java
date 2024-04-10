@@ -18,7 +18,8 @@ package com.vonage.client.video;
 import com.vonage.client.ClientTest;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.RestEndpoint;
-import com.vonage.client.TestUtils;
+import static com.vonage.client.TestUtils.decodeTokenBody;
+import static com.vonage.client.TestUtils.testJsonableBaseObject;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,6 +41,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 			archiveId = "b40ef09b-3811-4726-b508-e41a0f96c68f",
 			broadcastId = "1748b707-0a81-464c-9759-c46ad10d3734",
 			connectionId = "09141e29-8770-439b-b180-337d7e637545",
+			captionsId = "7c0680fc-6274-4de5-a66f-d0648e8d3ac2",
 			archiveJson = "{\n" +
 					"  \"createdAt\": 1384221730000,\n" +
 					"  \"duration\": 5049,\n" +
@@ -162,7 +164,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 	}
 
 	static void assertArchiveEqualsExpectedJson(Archive response) {
-		TestUtils.testJsonableBaseObject(response);
+		testJsonableBaseObject(response);
 		assertEquals("https://tokbox.s3.amazonaws.com/"+connectionId+"/archive.mp4", response.getUrl().toString());
 		assertEquals(Long.valueOf(1384221730000L), response.getCreatedAtMillis());
 		assertEquals(Instant.ofEpochSecond(1384221730L), response.getCreatedAt());
@@ -694,16 +696,49 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		stubResponseAndAssertThrowsIAX(() -> client.sendDtmf(sessionId, connectionId, "1abc#"));
 		stubResponseAndAssertThrowsIAX(() -> client.sendDtmf(sessionId, connectionId, null));
 		stubResponseAndAssertThrowsIAX(() -> client.sendDtmf(null, digits));
+
+		stubResponseAndAssertThrowsVideoException(403, "{\"code\":403}",
+				() -> client.sendDtmf(sessionId, connectionId, digits)
+		);
+	}
+
+	@Test
+	public void testStartLiveCaptions() throws Exception {
+		var request = StartCaptionsRequest.builder().token(token).sessionId(sessionId).build();
+		var response = stubResponseAndGet(202,
+				"{\"captionsId\": \""+captionsId+"\"}",
+				() -> client.startCaptions(request)
+		);
+		testJsonableBaseObject(response);
+		assertEquals(UUID.fromString(captionsId), response.getCaptionsId());
+
+		stubResponseAndAssertThrowsIAX(202, () -> client.startCaptions(null));
+
+		stubResponseAndAssertThrowsVideoException(409, "{\"code\":409}",
+				() -> client.startCaptions(request)
+		);
+	}
+
+	@Test
+	public void testStopLiveCaptions() throws Exception {
+		stubResponseAndRun(202, () -> client.stopCaptions(captionsId));
+
+		stubResponseAndAssertThrowsIAX(202, () -> client.stopCaptions(null));
+		stubResponseAndAssertThrowsIAX(202, () -> client.stopCaptions(sessionId));
+
+		stubResponseAndAssertThrowsVideoException(404, "{\"code\":404}",
+				() -> client.stopCaptions(captionsId)
+		);
 	}
 
 	@Test
 	public void testGenerateToken() {
 		String token = client.generateToken(sessionId);
-		Map<String, String> claims = TestUtils.decodeTokenBody(token);
+		Map<String, String> claims = decodeTokenBody(token);
 
 		assertEquals("session.connect", claims.get("scope"));
 		assertEquals(sessionId, claims.get("session_id"));
-		assertNotNull(claims.get("application_id"));	// TODO test value
+		assertNotNull(claims.get("application_id"));
 		long exp = Long.parseLong(claims.get("exp"));
 		long iat = Long.parseLong(claims.get("iat"));
 		// One minute less than a day = 86340
@@ -712,9 +747,9 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		assertTrue(token.length() > 100);
 
 		token = client.generateToken(sessionId, TokenOptions.builder().build());
-		assertEquals(claims.keySet(), TestUtils.decodeTokenBody(token).keySet());
+		assertEquals(claims.keySet(), decodeTokenBody(token).keySet());
 		token = client.generateToken(sessionId, null);
-		assertEquals(claims.keySet(), TestUtils.decodeTokenBody(token).keySet());
+		assertEquals(claims.keySet(), decodeTokenBody(token).keySet());
 		assertThrows(IllegalArgumentException.class, () -> client.generateToken(null));
 
 		token = client.generateToken(sessionId,TokenOptions.builder()
@@ -725,7 +760,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 				.initialLayoutClassList(Arrays.asList("c1", "c2", "min", "full"))
 		        .build()
 		);
-		claims = TestUtils.decodeTokenBody(token);
+		claims = decodeTokenBody(token);
 		assertEquals("subscriber", claims.get("role"));
 		assertEquals("foo bar, blah blah", claims.get("connection_data"));
 		assertEquals("c1 c2 min full", claims.get("initial_layout_class_list"));
@@ -1684,6 +1719,75 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 			@Override
 			protected String sampleRequestBodyString() {
 				return "{\"type\":\"horizontalPresentation\"}";
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testStartLiveCaptionsEndpoint() throws Exception {
+		new VideoEndpointTestSpec<StartCaptionsRequest, StartCaptionsResponse>() {
+			final String statusCallbackUrl = "https://send-status-to.me";
+
+			@Override
+			protected RestEndpoint<StartCaptionsRequest, StartCaptionsResponse> endpoint() {
+				return client.startCaptions;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.POST;
+			}
+
+			@Override
+			protected String expectedEndpointUri(StartCaptionsRequest request) {
+				return "/v2/project/"+applicationId+"/captions";
+			}
+
+			@Override
+			protected StartCaptionsRequest sampleRequest() {
+				return StartCaptionsRequest.builder()
+						.token(token).partialCaptions(true)
+						.statusCallbackUrl(statusCallbackUrl)
+						.sessionId(sessionId).maxDuration(1800)
+						.languageCode(Language.EN_AU).build();
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"sessionId\":\""+sessionId+"\"," +
+						"\"token\":\""+token+"\"," +
+						"\"languageCode\":\"en-AU\"," +
+						"\"maxDuration\":1800," +
+						"\"partialCaptions\":true," +
+						"\"statusCallbackUrl\":\""+statusCallbackUrl+"\"}";
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testStopLiveCaptionsEndpoint() throws Exception {
+		new VideoEndpointTestSpec<String, Void>() {
+
+			@Override
+			protected RestEndpoint<String, Void> endpoint() {
+				return client.stopCaptions;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.POST;
+			}
+
+			@Override
+			protected String expectedEndpointUri(String request) {
+				return "/v2/project/"+applicationId+"/captions/"+request+"/stop";
+			}
+
+			@Override
+			protected String sampleRequest() {
+				return captionsId;
 			}
 		}
 		.runTests();
