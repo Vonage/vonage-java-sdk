@@ -26,11 +26,10 @@ import java.util.Objects;
 /**
  * Represents an outbound SIP dial request's properties.
  */
-public class SipDialRequest extends JsonableBaseObject {
-	private String sessionId, token;
+public class SipDialRequest extends AbstractSessionTokenRequest {
 	@JsonProperty("sip") private Sip sip;
 
-		static class Sip extends JsonableBaseObject {
+	static class Sip extends JsonableBaseObject {
 		@JsonProperty("uri") String uri;
 		@JsonProperty("from") String from;
 		@JsonProperty("headers") Map<String, String> headers;
@@ -39,7 +38,7 @@ public class SipDialRequest extends JsonableBaseObject {
 		@JsonProperty("video") Boolean video;
 		@JsonProperty("observeForceMute") Boolean observeForceMute;
 
-				static class Auth extends JsonableBaseObject {
+		static class Auth extends JsonableBaseObject {
 			@JsonProperty("username") String username;
 			@JsonProperty("password") String password;
 		}
@@ -51,9 +50,8 @@ public class SipDialRequest extends JsonableBaseObject {
 	SipDialRequest() {}
 
 	private SipDialRequest(Builder builder) {
+		super(builder);
 		sip = new Sip();
-		sessionId = Objects.requireNonNull(builder.sessionId, "Session ID is required.");
-		token = Objects.requireNonNull(builder.token, "Token is required.");
 		sip.uri = Objects.requireNonNull(builder.uri, "SIP URI is required.");
 		sip.from = builder.from;
 		sip.secure = builder.secure;
@@ -72,16 +70,6 @@ public class SipDialRequest extends JsonableBaseObject {
 		else if (builder.password != null) {
 			throw new IllegalStateException("SIP Auth username is required if password is provided.");
 		}
-	}
-
-	@JsonProperty("sessionId")
-	public String getSessionId() {
-		return sessionId;
-	}
-
-	@JsonProperty("token")
-	public String getToken() {
-		return token;
 	}
 
 	@JsonIgnore
@@ -138,38 +126,10 @@ public class SipDialRequest extends JsonableBaseObject {
 	 *
 	 * @see SipDialRequest
 	 */
-	public static class Builder {
+	public static class Builder extends AbstractSessionTokenRequest.Builder<SipDialRequest, Builder> {
 		private final Map<String, String> headers = new HashMap<>();
-		private String sessionId, token, from, uri, username, password;
+		private String from, uri, username, password;
 		private Boolean secure, video, observeForceMute;
-
-		/**
-		 * (REQUIRED)
-		 * Video session ID for the SIP call to join.
-		 *
-		 * @param sessionId The session ID as a string.
-		 * @return This builder.
-		 */
-		public Builder sessionId(String sessionId) {
-			this.sessionId = sessionId;
-			return this;
-		}
-
-		/**
-		 * (REQUIRED)
-		 * The video token to be used for the participant being called.
-		 * You can add token data to identify that the participant is on a SIP endpoint or for other identifying data,
-		 * such as phone numbers. The video client libraries include properties for inspecting the connection data
-		 * for a client connected to a session. See the Token Creation developer guide for more info.
-		 *
-		 * @param token The token as a string.
-		 *
-		 * @return This builder.
-		 */
-		public Builder token(String token) {
-			this.token = token;
-			return this;
-		}
 
 		/**
 		 * (REQUIRED)
@@ -318,6 +278,7 @@ public class SipDialRequest extends JsonableBaseObject {
 		 *
 		 * @return A new {@link SipDialRequest} instance.
 		 */
+		@Override
 		public SipDialRequest build() {
 			return new SipDialRequest(this);
 		}
