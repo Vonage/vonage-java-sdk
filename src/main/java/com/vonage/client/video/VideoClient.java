@@ -56,6 +56,7 @@ public class VideoClient {
 	final RestEndpoint<String, Broadcast> getBroadcast, stopBroadcast;
 	final RestEndpoint<Broadcast, Broadcast> createBroadcast;
 	final RestEndpoint<StartCaptionsRequest, StartCaptionsResponse> startCaptions;
+	final RestEndpoint<ConnectRequest, ConnectResponse> connect;
 
 	/**
 	 * Constructor.
@@ -111,6 +112,7 @@ public class VideoClient {
 		sipDial = new Endpoint<>(req -> "dial", HttpMethod.POST);
 		startCaptions = new Endpoint<>(req -> "captions", HttpMethod.POST);
 		stopCaptions = new Endpoint<>(req -> "captions/"+req+"/stop", HttpMethod.POST);
+		connect = new Endpoint<>(req -> "connect", HttpMethod.POST);
 	}
 
 	private String validateId(String param, String name, boolean uuid) {
@@ -718,5 +720,18 @@ public class VideoClient {
 	 */
 	public void stopCaptions(String captionsId) {
 		stopCaptions.execute(validateId(captionsId, "Captions", true));
+	}
+
+	/**
+	 * TODO
+	 *
+	 * @param request
+	 *
+	 * @return
+	 *
+	 * @since 8.5.0
+	 */
+	public ConnectResponse connectToWebsocket(ConnectRequest request) {
+		return connect.execute(validateRequest(request));
 	}
 }

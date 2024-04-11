@@ -24,10 +24,20 @@ import java.util.UUID;
  *
  * @since 8.5.0
  */
-public final class StartCaptionsResponse extends JsonableBaseObject {
-    private UUID captionsId;
+public final class ConnectResponse extends JsonableBaseObject {
+    private UUID id, captionsId;
 
-    StartCaptionsResponse() {}
+    ConnectResponse() {}
+
+    /**
+     * A unique identifier for the Audio Connector WebSocket connection.
+     *
+     * @return The connection ID.
+     */
+    @JsonProperty("id")
+    public UUID getId() {
+        return id;
+    }
 
     /**
      * Unique identifier for the audio captioning session.

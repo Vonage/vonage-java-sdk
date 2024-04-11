@@ -18,8 +18,7 @@ package com.vonage.client.video;
 import com.vonage.client.ClientTest;
 import com.vonage.client.HttpWrapper;
 import com.vonage.client.RestEndpoint;
-import static com.vonage.client.TestUtils.decodeTokenBody;
-import static com.vonage.client.TestUtils.testJsonableBaseObject;
+import static com.vonage.client.TestUtils.*;
 import com.vonage.client.auth.JWTAuthMethod;
 import com.vonage.client.common.HttpMethod;
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,6 +41,8 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 			broadcastId = "1748b707-0a81-464c-9759-c46ad10d3734",
 			connectionId = "09141e29-8770-439b-b180-337d7e637545",
 			captionsId = "7c0680fc-6274-4de5-a66f-d0648e8d3ac2",
+			randomId = UUID.randomUUID().toString(),
+			wssUri = "wss://example.com/ws-endpoint",
 			archiveJson = "{\n" +
 					"  \"createdAt\": 1384221730000,\n" +
 					"  \"duration\": 5049,\n" +
@@ -732,6 +733,24 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 	}
 
 	@Test
+	public void testAudioConnector() throws Exception {
+		var request = ConnectRequest.builder().token(token).sessionId(sessionId).uri(wssUri).build();
+		var response = stubResponseAndGet(202,
+				"{\"id\":\""+connectionId+"\",\"captionsId\": \""+captionsId+"\"}",
+				() -> client.connectToWebsocket(request)
+		);
+		testJsonableBaseObject(response);
+		assertEquals(UUID.fromString(connectionId), response.getId());
+		assertEquals(UUID.fromString(captionsId), response.getCaptionsId());
+
+		stubResponseAndAssertThrowsIAX(202, () -> client.startCaptions(null));
+
+		stubResponseAndAssertThrowsVideoException(409, "{\"code\":409}",
+				() -> client.connectToWebsocket(request)
+		);
+	}
+
+	@Test
 	public void testGenerateToken() {
 		String token = client.generateToken(sessionId);
 		Map<String, String> claims = decodeTokenBody(token);
@@ -766,7 +785,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		assertEquals("c1 c2 min full", claims.get("initial_layout_class_list"));
 		assertEquals("session.connect", claims.get("scope"));
 		assertEquals(sessionId, claims.get("session_id"));
-		//assertEquals(applicationId, claims.get("application_id")); TODO test value
+		assertEquals(applicationId, claims.get("application_id"));
 		exp = Long.parseLong(claims.get("exp"));
 		iat = Long.parseLong(claims.get("iat"));
 		assertTrue((iat + 721) > exp);
@@ -1788,6 +1807,48 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 			@Override
 			protected String sampleRequest() {
 				return captionsId;
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testConnectEndpoint() throws Exception {
+		new VideoEndpointTestSpec<ConnectRequest, ConnectResponse>() {
+			final Map<String, String> headers = Map.of(
+					"prop1", "value",
+					"Another Property", "Custom string"
+			);
+
+			@Override
+			protected RestEndpoint<ConnectRequest, ConnectResponse> endpoint() {
+				return client.connect;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.POST;
+			}
+
+			@Override
+			protected String expectedEndpointUri(ConnectRequest request) {
+				return "/v2/project/"+applicationId+"/connect";
+			}
+
+			@Override
+			protected ConnectRequest sampleRequest() {
+				return ConnectRequest.builder()
+						.sessionId(sessionId).token(token)
+						.uri(wssUri).streams(streamId)
+						.audioRate(Websocket.AudioRate.L16_8K)
+						.headers(headers).build();
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"sessionId\":\""+sessionId+"\",\"token\":\""+token+"\",\"websocket\":{" +
+						"\"uri\":\""+wssUri+"\",\"streams\":[\""+streamId+"\"]," +
+						"\"headers\":"+mapToJson(headers)+",\"audioRate\":8000}}";
 			}
 		}
 		.runTests();
