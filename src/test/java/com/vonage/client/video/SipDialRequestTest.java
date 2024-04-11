@@ -63,11 +63,11 @@ public class SipDialRequestTest {
 
 	@Test
 	public void testSerializeRequiredParams() {
-		String uri = "sip:name@sip.example.org", sessiondId = "SESSION", token = "TOKEN";
+		String uri = "sip:name@sip.example.org", sessionId = "SESSION", token = "TOKEN";
 		SipDialRequest request = SipDialRequest.builder().uri(URI.create(uri), false)
-				.sessionId(sessiondId).token(token).build();
+				.sessionId(sessionId).token(token).build();
 
-		String expectedJson = "{\"sessionId\":\""+sessiondId+"\",\"token\":\""+token+"\"," +
+		String expectedJson = "{\"sessionId\":\""+sessionId+"\",\"token\":\""+token+"\"," +
 				"\"sip\":{\"uri\":\""+uri+"\"}}";
 		assertEquals(expectedJson, request.toJson());
 

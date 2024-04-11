@@ -35,8 +35,9 @@ abstract class AbstractSessionTokenRequest extends JsonableBaseObject {
 	}
 
 	/**
+	 * Unique identifier of the Vonage Video session.
 	 *
-	 * @return
+	 * @return The session ID as a string.
 	 */
 	@JsonProperty("sessionId")
 	public String getSessionId() {
@@ -44,8 +45,9 @@ abstract class AbstractSessionTokenRequest extends JsonableBaseObject {
 	}
 
 	/**
+	 * JSON Web Token with the appropriate roles for this request.
 	 *
-	 * @return
+	 * @return The Base64-encoded JWT as a string.
 	 */
 	@JsonProperty("token")
 	public String getToken() {

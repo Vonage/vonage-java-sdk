@@ -24,17 +24,64 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * @since 8.5.0
  */
 public enum Language {
+	/**
+	 * American English
+	 */
 	EN_US,
+
+	/**
+	 * Australian English
+	 */
 	EN_AU,
+
+	/**
+	 * British English
+	 */
 	EN_GB,
+
+	/**
+	 * Simplified Chinese
+	 */
 	ZH_CN,
+
+	/**
+	 * French
+	 */
 	FR_FR,
+
+	/**
+	 * German
+	 */
 	DE_DE,
+
+	/**
+	 * Hindi
+	 */
 	HI_IN,
+
+	/**
+	 * Italian
+	 */
 	IT_IT,
+
+	/**
+	 * Japanese
+	 */
 	JA_JP,
+
+	/**
+	 * Korean
+	 */
 	KO_KR,
+
+	/**
+	 * Brazilian Portuguese
+	 */
 	PT_BR,
+
+	/**
+	 * Thai
+	 */
 	TH_TH;
 
 	@JsonCreator
