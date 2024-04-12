@@ -20,7 +20,7 @@ import com.vonage.client.JsonableBaseObject;
 import java.util.UUID;
 
 /**
- * Represents the response from {@link VideoClient#startCaptions(StartCaptionsRequest)}.
+ * Represents the response from {@link VideoClient#startCaptions(CaptionsRequest)}.
  *
  * @since 8.5.0
  */

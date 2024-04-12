@@ -19,19 +19,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.net.URI;
 
 /**
- * Defines the captioning properties used in {@link VideoClient#startCaptions(StartCaptionsRequest)}.
+ * Defines the captioning properties used in {@link VideoClient#startCaptions(CaptionsRequest)}.
  *
  * @since 8.5.0
  */
-public final class StartCaptionsRequest extends AbstractSessionTokenRequest {
+public final class CaptionsRequest extends AbstractSessionTokenRequest {
     private Language languageCode;
     private Integer maxDuration;
     private Boolean partialCaptions;
     private URI statusCallbackUrl;
 
-    private StartCaptionsRequest() {}
+    private CaptionsRequest() {}
 
-    private StartCaptionsRequest(Builder builder) {
+    private CaptionsRequest(Builder builder) {
         super(builder);
         statusCallbackUrl = builder.statusCallbackUrl;
         languageCode = builder.languageCode;
@@ -94,7 +94,7 @@ public final class StartCaptionsRequest extends AbstractSessionTokenRequest {
     /**
      * Builder for defining the fields in a StartCaptionsRequest object.
      */
-    public static final class Builder extends AbstractSessionTokenRequest.Builder<StartCaptionsRequest, Builder> {
+    public static final class Builder extends AbstractSessionTokenRequest.Builder<CaptionsRequest, Builder> {
         private URI statusCallbackUrl;
         private Language languageCode;
         private Integer maxDuration;
@@ -165,8 +165,8 @@ public final class StartCaptionsRequest extends AbstractSessionTokenRequest {
          * @return The StartCaptionsRequest object with this builder's settings.
          */
         @Override
-        public StartCaptionsRequest build() {
-            return new StartCaptionsRequest(this);
+        public CaptionsRequest build() {
+            return new CaptionsRequest(this);
         }
     }
 }

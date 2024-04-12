@@ -20,14 +20,14 @@ import com.vonage.client.JsonableBaseObject;
 import java.util.UUID;
 
 /**
- * Represents the response from {@link VideoClient#startCaptions(StartCaptionsRequest)}.
+ * Represents the response from {@link VideoClient#startCaptions(CaptionsRequest)}.
  *
  * @since 8.5.0
  */
-public final class StartCaptionsResponse extends JsonableBaseObject {
+public final class CaptionsResponse extends JsonableBaseObject {
     private UUID captionsId;
 
-    StartCaptionsResponse() {}
+    CaptionsResponse() {}
 
     /**
      * Unique identifier for the audio captioning session.

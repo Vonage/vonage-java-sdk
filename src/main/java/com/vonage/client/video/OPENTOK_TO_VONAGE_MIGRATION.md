@@ -2,7 +2,7 @@
 
 ## Installation
 See [README.md](https://github.com/Vonage/vonage-java-sdk?tab=readme-ov-file#installation) for how to add the SDK as a dependency to your project.
-You need to use the `com.vonage:server-sdk:[8.0.0,9.0.0)` co-ordinates from [Maven Central](https://search.maven.org/artifact/com.vonage/server-sdk).
+You need to use the `com.vonage:server-sdk:[8.0.0,)` co-ordinates from [Maven Central](https://search.maven.org/artifact/com.vonage/server-sdk).
 
 ## Client Initialisation
 See [README.md](https://github.com/Vonage/vonage-java-sdk?tab=readme-ov-file#typical-instantiation) for setup instructions.
@@ -42,7 +42,7 @@ For more detailed usage instructions, see the [Java Sever SDK video guide](https
 There are a few small changes to be aware of when migrating to Vonage from OpenTok.
 Many of these are straightforward and your IDE will help you with auto-completion, but for clarity, consider the following:
 
-- `sendDTMF` renamed to `playDtmf`
+- `playDTMF` renamed to `sendDtmf` for all applicable DTMF endpoints.
 - `OpenTok#disableForceMute(String)` replaced by `VideoClient#muteSession(String, boolean, String...)`. You need to set the `active` boolean parameter to `false` to achieve the same effect.
 - The `MuteAllProperties` class and parameter in `OpenTok` has been replaced by using the `excludedStreamIds` directly in the method parameter of `VideoClient#muteSession(String, boolean, Collection<String>)` (or `VideoClient#muteSession(String, boolean, String...) for convenience`). These methods replace `OpenTok#forceMuteAll(String, MuteAllProperties)`.
 - `ArchiveProperties` and `BroadcastProperties` - as used in request parameters in OpenTok - have been replaced by `Archive` and `Broadcast` respectively. Both use the builder pattern for construction.

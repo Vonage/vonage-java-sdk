@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import java.net.URI;
 
-public class StartCaptionsRequestTest {
+public class CaptionsRequestTest {
 	private final String sessionId = "flR1ZSBPY3QgMjkgMTI6MTM6MjMgUERUIDIwMTN", token = "X.Y.Z";
 
 	@Test
@@ -30,7 +30,7 @@ public class StartCaptionsRequestTest {
 		Language language = Language.JA_JP;
 		String statusCallbackUrl = "https://example.org/video/cb/status";
 
-		var request = StartCaptionsRequest.builder()
+		var request = CaptionsRequest.builder()
 				.partialCaptions(partialCaptions)
 				.maxDuration(maxDuration)
 				.sessionId(sessionId)
@@ -56,7 +56,7 @@ public class StartCaptionsRequestTest {
 
 	@Test
 	public void testSerializeRequiredParams() {
-		var request = StartCaptionsRequest.builder().sessionId(sessionId).token(token).build();
+		var request = CaptionsRequest.builder().sessionId(sessionId).token(token).build();
 
 		String expectedJson = "{\"sessionId\":\""+sessionId+"\",\"token\":\""+token+"\"}";
 		assertEquals(expectedJson, request.toJson());
@@ -71,7 +71,7 @@ public class StartCaptionsRequestTest {
 
 	@Test
 	public void testMaxDurationBounds() {
-		var builder = StartCaptionsRequest.builder().sessionId(sessionId).token(token);
+		var builder = CaptionsRequest.builder().sessionId(sessionId).token(token);
 		int min = 300, max = 14400;
 		assertEquals(min, builder.maxDuration(min).build().getMaxDuration());
 		assertEquals(max, builder.maxDuration(max).build().getMaxDuration());
@@ -81,7 +81,7 @@ public class StartCaptionsRequestTest {
 
 	@Test
 	public void testStatusCallbackUriLength() {
-		var builder = StartCaptionsRequest.builder().sessionId(sessionId).token(token);
+		var builder = CaptionsRequest.builder().sessionId(sessionId).token(token);
 		String fourteen = "https://t.co/b";
 		assertEquals(14, fourteen.length());
 		assertThrows(IllegalArgumentException.class, () -> builder.statusCallbackUrl(fourteen).build());
@@ -103,14 +103,14 @@ public class StartCaptionsRequestTest {
 	@Test
 	public void testConstructMissingSessionId() {
 		assertThrows(NullPointerException.class,
-				() -> StartCaptionsRequest.builder().token(token).build()
+				() -> CaptionsRequest.builder().token(token).build()
 		);
 	}
 
 	@Test
 	public void testConstructMissingToken() {
 		assertThrows(NullPointerException.class,
-				() -> StartCaptionsRequest.builder().sessionId(sessionId).build()
+				() -> CaptionsRequest.builder().sessionId(sessionId).build()
 		);
 	}
 

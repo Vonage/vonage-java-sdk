@@ -705,7 +705,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 	@Test
 	public void testStartLiveCaptions() throws Exception {
-		var request = StartCaptionsRequest.builder().token(token).sessionId(sessionId).build();
+		var request = CaptionsRequest.builder().token(token).sessionId(sessionId).build();
 		var response = stubResponseAndGet(202,
 				"{\"captionsId\": \""+captionsId+"\"}",
 				() -> client.startCaptions(request)
@@ -1744,11 +1744,11 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 	@Test
 	public void testStartLiveCaptionsEndpoint() throws Exception {
-		new VideoEndpointTestSpec<StartCaptionsRequest, StartCaptionsResponse>() {
+		new VideoEndpointTestSpec<CaptionsRequest, CaptionsResponse>() {
 			final String statusCallbackUrl = "https://send-status-to.me";
 
 			@Override
-			protected RestEndpoint<StartCaptionsRequest, StartCaptionsResponse> endpoint() {
+			protected RestEndpoint<CaptionsRequest, CaptionsResponse> endpoint() {
 				return client.startCaptions;
 			}
 
@@ -1758,13 +1758,13 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 			}
 
 			@Override
-			protected String expectedEndpointUri(StartCaptionsRequest request) {
+			protected String expectedEndpointUri(CaptionsRequest request) {
 				return "/v2/project/"+applicationId+"/captions";
 			}
 
 			@Override
-			protected StartCaptionsRequest sampleRequest() {
-				return StartCaptionsRequest.builder()
+			protected CaptionsRequest sampleRequest() {
+				return CaptionsRequest.builder()
 						.token(token).partialCaptions(true)
 						.statusCallbackUrl(statusCallbackUrl)
 						.sessionId(sessionId).maxDuration(1800)
