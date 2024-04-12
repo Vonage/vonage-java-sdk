@@ -57,7 +57,14 @@ Many of these are straightforward and your IDE will help you with auto-completio
 - `OpenTok#setStreamLayouts(String, StreamListProperties)` replaced by `VideoClient#setStreamLayout(String, List<SessionStream>)` (or `VideoClient#setStreamLayout(String, SessionStream...)` for convenience).
 - `OpenTok#signal(String, String, SignalProperties)` and `OpenTok#signal(String, SignalProperties)` replaced by `VideoClient#signal(String, String, SignalRequest)` and `VideoClient#signalAll(String, SignalRequest)`, respectively.
 - The structure of tokens obtained used the `generateToken` methods in `OpenTok` and `VideoClient` are different. Vonage uses JWTs, whereas OpenTok uses a custom solution.
-- Not all features in `OpenTok` are supported in `VideoClient` yet - see below.
+- `OpenTok#startCaptions(String, String, CaptionProperties)` replaced by `VideoClient#startCaptions(CaptionsRequest)`.
+  - `CaptionProperties` replaced with`CaptionsRequest`.
+  - `Caption` replaced with `CaptionsResponse`.
+    - `CaptionsRequest` uses an enum for the `languageCode` instead of a plain string.
+    - The `token` and `sessionId` are still required and set on the `CaptionsRequest.Builder` object.
+- `OpenTok#connectAudioStream(String sessionId, String token, AudioConnectorProperties properties)` replaced by `VideoClient#connectToWebsocket(ConnectRequest request)`
+  - `AudioConnectorProperties` replaced with `ConnectRequest`
+  - `AudioConnector` replaced with `ConnectResponse`
 
 ## Supported Features
 The following is a list of Vonage Video API features and whether the Vonage Java SDK currently supports them:
@@ -71,8 +78,8 @@ The following is a list of Vonage Video API features and whether the Vonage Java
 | Archiving                 |     ✅      |
 | Live Streaming Broadcasts |     ✅      |
 | SIP Interconnect          |     ✅      |
-| Account Management        |     ❌      |
 | Experience Composer       |     ❌      |
-| Audio Connector           |     ❌      |
-| Live Captions             |     ❌      |
+| Audio Connector           |     ✅      |
+| Live Captions             |     ✅      |
+| Account Management        |     ❌      |
 | Custom S3/Azure buckets   |     ❌      |

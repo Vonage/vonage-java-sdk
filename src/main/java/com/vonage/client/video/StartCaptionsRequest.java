@@ -19,8 +19,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.net.URI;
 
 /**
- * Defines values for the <code>properties</code> parameter of the
- * {@link VideoClient#startCaptions(StartCaptionsRequest)} method.
+ * Defines the captioning properties used in {@link VideoClient#startCaptions(StartCaptionsRequest)}.
  *
  * @since 8.5.0
  */
