@@ -736,12 +736,12 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 	public void testAudioConnector() throws Exception {
 		var request = ConnectRequest.builder().token(token).sessionId(sessionId).uri(wssUri).build();
 		var response = stubResponseAndGet(202,
-				"{\"id\":\""+connectionId+"\",\"captionsId\": \""+captionsId+"\"}",
+				"{\"id\":\""+id+"\",\"connectionId\": \""+connectionId+"\"}",
 				() -> client.connectToWebsocket(request)
 		);
 		testJsonableBaseObject(response);
-		assertEquals(UUID.fromString(connectionId), response.getId());
-		assertEquals(UUID.fromString(captionsId), response.getCaptionsId());
+		assertEquals(UUID.fromString(id), response.getId());
+		assertEquals(UUID.fromString(connectionId), response.getConnectionId());
 
 		stubResponseAndAssertThrowsIAX(202, () -> client.startCaptions(null));
 
