@@ -302,8 +302,8 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 
 	@Test
 	public void testCancelVerificationFailure() throws Exception {
-		stubResponseAndAssertThrows(404, () ->
-				client.cancelVerification(REQUEST_ID),
+		stubResponseAndAssertThrows(404,
+				() -> client.cancelVerification(REQUEST_ID),
 				VerifyResponseException.class
 		);
 	}
@@ -364,6 +364,46 @@ public class Verify2ClientTest extends ClientTest<Verify2Client> {
 					assertEquals(detail, vrx.getDetail());
 					assertEquals(instance, vrx.getInstance());
 				}
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testNextWorkflowSuccess() throws Exception {
+		stubResponseAndRun(200, () -> client.nextWorkflow(REQUEST_ID));
+	}
+
+	@Test
+	public void testNextWorkflowFailure() throws Exception {
+		stubResponseAndAssertThrows(409,
+				() -> client.nextWorkflow(REQUEST_ID),
+				VerifyResponseException.class
+		);
+	}
+
+	@Test
+	public void testNextWorkflowEndpoint() throws Exception {
+		new Verify2EndpointTestSpec<UUID, Void>() {
+
+			@Override
+			protected RestEndpoint<UUID, Void> endpoint() {
+				return client.nextWorkflow;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.POST;
+			}
+
+			@Override
+			protected String expectedEndpointUri(UUID request) {
+				return "/v2/verify/"+request+"/next-workflow";
+			}
+
+			@Override
+			protected UUID sampleRequest() {
+				return REQUEST_ID;
 			}
 		}
 		.runTests();

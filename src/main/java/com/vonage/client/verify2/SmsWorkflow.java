@@ -16,6 +16,7 @@
 package com.vonage.client.verify2;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.common.E164;
 
 /**
  * Defines workflow properties for sending a verification code to a user via SMS.
@@ -71,6 +72,19 @@ public final class SmsWorkflow extends AbstractNumberWorkflow {
 	@Deprecated
 	public SmsWorkflow(String to, String from, String appHash) {
 		this(builder(to).from(from).appHash(appHash));
+	}
+
+	@Override
+	protected String validateFrom(String from) {
+		if ((from = super.validateFrom(from)) == null) {
+			return null;
+		}
+		else if (from.length() > 11) {
+			return new E164(from).toString();
+		}
+		else {
+			return from;
+		}
 	}
 
 	/**
