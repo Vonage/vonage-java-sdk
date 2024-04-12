@@ -77,7 +77,7 @@ abstract class AbstractSessionTokenRequest extends JsonableBaseObject {
 		 * such as phone numbers. The video client libraries include properties for inspecting the connection data
 		 * for a client connected to a session. See the Token Creation developer guide for more info.
 		 *
-		 * @param token The token as a string.
+		 * @param token The Base64-encoded JWT as a string.
 		 *
 		 * @return This builder.
 		 */

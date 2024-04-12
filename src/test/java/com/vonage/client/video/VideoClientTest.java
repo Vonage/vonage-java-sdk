@@ -1850,6 +1850,12 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 						"\"uri\":\""+wssUri+"\",\"streams\":[\""+streamId+"\"]," +
 						"\"headers\":"+mapToJson(headers)+",\"audioRate\":8000}}";
 			}
+
+			@Override
+			public void runTests() throws Exception {
+				super.runTests();
+				testJsonableBaseObject(sampleRequest());
+			}
 		}
 		.runTests();
 	}

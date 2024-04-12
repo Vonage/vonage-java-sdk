@@ -16,12 +16,12 @@
 package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.net.URI;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 
 /**
+ * Defines properties used for Audio Connector.
  *
  * @since 8.5.0
  */
@@ -36,7 +36,9 @@ public final class ConnectRequest extends AbstractSessionTokenRequest {
     }
 
     /**
-     * @return The websocket, or {@code null} if absent / unknown / not applicable.
+     * WebSocket parameters.
+     *
+     * @return The websocket properties.
      */
     @JsonProperty("websocket")
     public Websocket getWebsocket() {
@@ -56,8 +58,8 @@ public final class ConnectRequest extends AbstractSessionTokenRequest {
      * Builder for defining the fields in a ConnectRequest object.
      */
     public static final class Builder extends AbstractSessionTokenRequest.Builder<ConnectRequest, Builder> {
-        URI uri;
-        List<String> streams;
+        String uri;
+        Collection<String> streams;
         Map<String, String> headers;
         Websocket.AudioRate audioRate;
 
@@ -65,20 +67,54 @@ public final class ConnectRequest extends AbstractSessionTokenRequest {
         }
 
         /**
-         * TODO description
+         * (REQUIRED)
+         * A valid Vonage Video token for the Audio Connector connection to the Vonage Video Session.
+         * You can add additional data to the JWT to identify that the connection is the Audio Connector
+         * endpoint or for any other identifying data.
          *
-         * @param uri The TODO.
+         * @param token The Base64-encoded JWT as a string.
+         *
+         * @return This builder.
+         */
+        @Override
+        public Builder token(String token) {
+            return super.token(token);
+        }
+
+        /**
+         * The Vonage Video session ID that includes the Vonage Video streams you want to include in the
+         * WebSocket stream. The Audio Connector feature is only supported in routed sessions.
+         *
+         * @param sessionId The session ID as a string.
+         *
+         * @return This builder.
+         */
+        @Override
+        public Builder sessionId(String sessionId) {
+            return super.sessionId(sessionId);
+        }
+
+        /**
+         * (REQUIRED)
+         * A publicly reachable WebSocket URI to be used for the destination of the audio stream.
+         * This must start with the {@code ws://} or {@code wss://} protocol.
+         *
+         * @param uri The WebSocket URI as a string.
+         *
          * @return This builder.
          */
         public Builder uri(String uri) {
-            this.uri = URI.create(uri);
+            this.uri = uri;
             return this;
         }
 
         /**
-         * TODO description
+         * (OPTIONAL)
+         * An array of stream IDs for the Vonage Video streams you want to include in the WebSocket audio.
+         * If you omit this property, all streams in the session will be included.
          *
-         * @param streams The TODO.
+         * @param streams The stream IDs to include in the audio.
+         *
          * @return This builder.
          */
         public Builder streams(String... streams) {
@@ -86,20 +122,24 @@ public final class ConnectRequest extends AbstractSessionTokenRequest {
         }
 
         /**
-         * TODO description
+         * A collection of stream IDs for the Vonage Video streams you want to include in the WebSocket audio.
+         * If you omit this property, all streams in the session will be included.
          *
-         * @param streams The TODO.
+         * @param streams The stream IDs to include in the audio connection.
+         *
          * @return This builder.
          */
-        public Builder streams(List<String> streams) {
+        public Builder streams(Collection<String> streams) {
             this.streams = streams;
             return this;
         }
 
         /**
-         * TODO description
+         * Key-value pairs of headers to be sent to your WebSocket server with each message,
+         * with a maximum length of 512 bytes.
          *
-         * @param headers The TODO.
+         * @param headers The custom request headers as a Map.
+         *
          * @return This builder.
          */
         public Builder headers(Map<String, String> headers) {
@@ -108,9 +148,10 @@ public final class ConnectRequest extends AbstractSessionTokenRequest {
         }
 
         /**
-         * TODO description
+         * A number representing the audio sampling rate in Hz.
          *
-         * @param audioRate The TODO.
+         * @param audioRate The sampling rate as an enum.
+         *
          * @return This builder.
          */
         public Builder audioRate(Websocket.AudioRate audioRate) {

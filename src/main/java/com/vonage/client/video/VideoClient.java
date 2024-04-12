@@ -723,11 +723,11 @@ public class VideoClient {
 	}
 
 	/**
-	 * TODO
+	 * Use this method to send audio from a Vonage Video API session to a WebSocket.
 	 *
-	 * @param request
+	 * @param request Properties of the WebSocket connection.
 	 *
-	 * @return
+	 * @return The connection metadata.
 	 *
 	 * @since 8.5.0
 	 */
