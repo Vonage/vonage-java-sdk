@@ -20,12 +20,12 @@ import com.vonage.client.JsonableBaseObject;
 import java.util.UUID;
 
 /**
- * Represents the response from {@link VideoClient#startCaptions(StartCaptionsRequest)}.
+ * Represents the response from {@link VideoClient#startCaptions(CaptionsRequest)}.
  *
  * @since 8.5.0
  */
 public final class ConnectResponse extends JsonableBaseObject {
-    private UUID id, captionsId;
+    private UUID id, connectionId;
 
     ConnectResponse() {}
 
@@ -40,12 +40,12 @@ public final class ConnectResponse extends JsonableBaseObject {
     }
 
     /**
-     * Unique identifier for the audio captioning session.
+     * The connection ID for the Audio Connector WebSocket connection in the Vonage Video session.
      *
-     * @return The captions UUID.
+     * @return The connection UUID.
      */
-    @JsonProperty("captionsId")
-    public UUID getCaptionsId() {
-        return captionsId;
+    @JsonProperty("connectionId")
+    public UUID getConnectionId() {
+        return connectionId;
     }
 }

@@ -87,4 +87,16 @@ public class TokenOptionsTest {
 		assertEquals(1001, data1001.length());
 		assertThrows(IllegalArgumentException.class, () -> TokenOptions.builder().data(data1001).build());
 	}
+
+	@Test
+	public void testPublisherOnlyRole() {
+		TokenOptions options = TokenOptions.builder().role(Role.PUBLISHER_ONLY).build();
+		assertEquals(Role.PUBLISHER_ONLY, options.getRole());
+
+		Jwt jwt = buildJwtWithClaims(options);
+
+		Map<String, ?> claims = jwt.getClaims();
+		assertEquals(2, claims.size());
+		assertEquals("publisheronly", claims.get("role").toString());
+	}
 }

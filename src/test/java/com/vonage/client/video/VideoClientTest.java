@@ -705,7 +705,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 	@Test
 	public void testStartLiveCaptions() throws Exception {
-		var request = StartCaptionsRequest.builder().token(token).sessionId(sessionId).build();
+		var request = CaptionsRequest.builder().token(token).sessionId(sessionId).build();
 		var response = stubResponseAndGet(202,
 				"{\"captionsId\": \""+captionsId+"\"}",
 				() -> client.startCaptions(request)
@@ -736,12 +736,12 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 	public void testAudioConnector() throws Exception {
 		var request = ConnectRequest.builder().token(token).sessionId(sessionId).uri(wssUri).build();
 		var response = stubResponseAndGet(202,
-				"{\"id\":\""+connectionId+"\",\"captionsId\": \""+captionsId+"\"}",
+				"{\"id\":\""+id+"\",\"connectionId\": \""+connectionId+"\"}",
 				() -> client.connectToWebsocket(request)
 		);
 		testJsonableBaseObject(response);
-		assertEquals(UUID.fromString(connectionId), response.getId());
-		assertEquals(UUID.fromString(captionsId), response.getCaptionsId());
+		assertEquals(UUID.fromString(id), response.getId());
+		assertEquals(UUID.fromString(connectionId), response.getConnectionId());
 
 		stubResponseAndAssertThrowsIAX(202, () -> client.startCaptions(null));
 
@@ -773,8 +773,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 		token = client.generateToken(sessionId,TokenOptions.builder()
 				.role(Role.SUBSCRIBER)
-				.expiryLength(Duration
-			    .ofMinutes(12))
+				.expiryLength(Duration.ofMinutes(12))
 				.data("foo bar, blah blah")
 				.initialLayoutClassList(Arrays.asList("c1", "c2", "min", "full"))
 		        .build()
@@ -1745,11 +1744,11 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 	@Test
 	public void testStartLiveCaptionsEndpoint() throws Exception {
-		new VideoEndpointTestSpec<StartCaptionsRequest, StartCaptionsResponse>() {
+		new VideoEndpointTestSpec<CaptionsRequest, CaptionsResponse>() {
 			final String statusCallbackUrl = "https://send-status-to.me";
 
 			@Override
-			protected RestEndpoint<StartCaptionsRequest, StartCaptionsResponse> endpoint() {
+			protected RestEndpoint<CaptionsRequest, CaptionsResponse> endpoint() {
 				return client.startCaptions;
 			}
 
@@ -1759,13 +1758,13 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 			}
 
 			@Override
-			protected String expectedEndpointUri(StartCaptionsRequest request) {
+			protected String expectedEndpointUri(CaptionsRequest request) {
 				return "/v2/project/"+applicationId+"/captions";
 			}
 
 			@Override
-			protected StartCaptionsRequest sampleRequest() {
-				return StartCaptionsRequest.builder()
+			protected CaptionsRequest sampleRequest() {
+				return CaptionsRequest.builder()
 						.token(token).partialCaptions(true)
 						.statusCallbackUrl(statusCallbackUrl)
 						.sessionId(sessionId).maxDuration(1800)

@@ -4,7 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-# [8.5.0] - 2024-04-2?
+# [8.5.0] - 2024-04-12
+- Added Live Captions and Audio Connector endpoints to Video API
+- Added `publisheronly` role to Video API
 - Added Verify v2 "Next Workflow" endpoint
 - Updated validation logic for Verify v2 `brand` and SMS `from` parameters
 - Removed `com.vonage.client.sms.HexUtil`

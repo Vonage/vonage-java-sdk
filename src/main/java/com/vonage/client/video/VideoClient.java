@@ -55,7 +55,7 @@ public class VideoClient {
 	final RestEndpoint<ListStreamCompositionsRequest, ListBroadcastsResponse> listBroadcasts;
 	final RestEndpoint<String, Broadcast> getBroadcast, stopBroadcast;
 	final RestEndpoint<Broadcast, Broadcast> createBroadcast;
-	final RestEndpoint<StartCaptionsRequest, StartCaptionsResponse> startCaptions;
+	final RestEndpoint<CaptionsRequest, CaptionsResponse> startCaptions;
 	final RestEndpoint<ConnectRequest, ConnectResponse> connect;
 
 	/**
@@ -707,7 +707,7 @@ public class VideoClient {
 	 *
 	 * @since 8.5.0
 	 */
-	public StartCaptionsResponse startCaptions(StartCaptionsRequest request) {
+	public CaptionsResponse startCaptions(CaptionsRequest request) {
 		return startCaptions.execute(validateRequest(request));
 	}
 
