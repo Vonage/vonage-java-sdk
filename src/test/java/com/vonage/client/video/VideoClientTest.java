@@ -773,8 +773,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 		token = client.generateToken(sessionId,TokenOptions.builder()
 				.role(Role.SUBSCRIBER)
-				.expiryLength(Duration
-			    .ofMinutes(12))
+				.expiryLength(Duration.ofMinutes(12))
 				.data("foo bar, blah blah")
 				.initialLayoutClassList(Arrays.asList("c1", "c2", "min", "full"))
 		        .build()

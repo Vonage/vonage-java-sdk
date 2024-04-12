@@ -16,29 +16,40 @@
 package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * Defines values for the role parameter of the {@link TokenOptions.Builder#role(Role role)} method.
  */
 public enum Role {
+
 	/**
 	 * A subscriber can only subscribe to streams.
 	 */
 	SUBSCRIBER,
+
 	/**
-	 * A publisher can publish streams, subscribe to streams, and signal. (This is the default value if you do not set a
-	 * role by calling the {@link TokenOptions.Builder#role(Role role)} method.
+	 * A publisher can publish streams, subscribe to streams, and signal. This is the default value
+	 * if you do not set a role by calling the {@link TokenOptions.Builder#role(Role role)} method.
 	 */
 	PUBLISHER,
+
 	/**
 	 * In addition to the privileges granted to a publisher, a moderator can perform moderation functions, such as
 	 * forcing clients to disconnect, to stop publishing streams, or to mute audio in published streams. See the
 	 * <a href="https://tokbox.com/developer/guides/moderation/">Moderation developer guide</a>.
 	 */
-	MODERATOR;
+	MODERATOR,
+
+	/**
+	 * A publisher-only role can publish streams, but not signal.
+	 *
+	 * @since 8.5.0
+	 */
+	PUBLISHER_ONLY;
 
 	@JsonValue
 	@Override
 	public String toString() {
-		return name().toLowerCase();
+		return name().toLowerCase().replace("_", "");
 	}
 }
