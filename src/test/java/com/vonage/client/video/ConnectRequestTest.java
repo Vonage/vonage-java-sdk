@@ -39,7 +39,6 @@ public class ConnectRequestTest {
 				uri+"\",\"streams\":[\""+randomId+"\"],\"headers\":{\"k1\":\"v1\"},\"audioRate\":16000}}";
 
 		assertEquals(expectedJson, request.toJson());
-
 		testJsonableBaseObject(request);
 	}
 
@@ -62,7 +61,6 @@ public class ConnectRequestTest {
 				"\",\"websocket\":{\"uri\":\""+uri+"\",\"streams\":[],\"headers\":{}}}";
 
 		assertEquals(expectedJson, request.toJson());
-
 		testJsonableBaseObject(request);
 	}
 

@@ -17,6 +17,8 @@ package com.vonage.client.video;
 
 import com.vonage.client.ClientTest;
 import com.vonage.client.HttpWrapper;
+import com.vonage.client.OrderedJsonMap;
+import static com.vonage.client.OrderedJsonMap.entry;
 import com.vonage.client.RestEndpoint;
 import static com.vonage.client.TestUtils.*;
 import com.vonage.client.auth.JWTAuthMethod;
@@ -41,6 +43,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 			broadcastId = "1748b707-0a81-464c-9759-c46ad10d3734",
 			connectionId = "09141e29-8770-439b-b180-337d7e637545",
 			captionsId = "7c0680fc-6274-4de5-a66f-d0648e8d3ac2",
+			renderId = "1248e707-0b81-464c-9789-f46ad10e7764",
 			randomId = UUID.randomUUID().toString(),
 			wssUri = "wss://example.com/ws-endpoint",
 			archiveJson = "{\n" +
@@ -116,7 +119,24 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 					"    }\n" +
 					"  ]\n" +
 					"}",
-			listBroadcastJson = "{\"count\":1,\"items\":["+broadcastJson+"]}";
+			listBroadcastJson = "{\"count\":1,\"items\":["+broadcastJson+"]}",
+			renderName = "Composed stream for Live event #1",
+			renderUrl = "https://example.com/", renderCallbackUrl = renderUrl + "video/events",
+			renderJson = "{\n" +
+					"   \"id\": \""+renderId+"\",\n" +
+					"   \"sessionId\": \""+sessionId+"\",\n" +
+					"   \"applicationId\": \""+applicationId+"\",\n" +
+					"   \"createdAt\": 1437676551000,\n" +
+					"   \"callbackUrl\": \""+renderCallbackUrl+"\",\n" +
+					"   \"updatedAt\": 1437676582000,\n" +
+					"   \"name\": \""+renderName+"\",\n" +
+					"   \"url\": \""+renderUrl+"\",\n" +
+					"   \"resolution\": \"640x480\",\n" +
+					"   \"status\": \"starting\",\n" +
+					"   \"streamId\": \""+streamId+"\",\n" +
+					"   \"reason\": \"Could not load URL\"\n" +
+					"}",
+			listRenderJson = "{\"count\":2,\"items\":["+renderJson+",{}]}";
 
 	public VideoClientTest() {
 		wrapper = new HttpWrapper(new JWTAuthMethod(applicationId, new byte[0]));
@@ -218,7 +238,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 	}
 
 	static void assertBroadcastEqualsExpectedJson(Broadcast response) {
-		assertNotNull(response);
+		testJsonableBaseObject(response);
 		assertEquals(sessionId, response.getSessionId());
 		assertEquals(broadcastId, response.getId().toString());
 		assertEquals(applicationId, response.getApplicationId().toString());
@@ -248,6 +268,46 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		assertFalse(hls.dvr());
 		assertTrue(hls.lowLatency());
 		assertVideoStreamsEqualsExpectedJson(response);
+	}
+
+	static void assertRenderEqualsExpectedJson(RenderResponse response) {
+		testJsonableBaseObject(response);
+		assertEquals(sessionId, response.getSessionId());
+		assertEquals(UUID.fromString(renderId), response.getId());
+		assertEquals(UUID.fromString(streamId), response.getStreamId());
+		assertEquals(UUID.fromString(applicationId), response.getApplicationId());
+		assertEquals(RenderStatus.STARTING, response.getStatus());
+		assertEquals(Resolution.SD_LANDSCAPE, response.getResolution());
+		assertEquals(1437676551000L, response.getCreatedAt());
+		assertEquals(1437676582000L, response.getUpdatedAt());
+		assertEquals(URI.create(renderUrl), response.getUrl());
+		assertEquals(URI.create(renderCallbackUrl), response.getCallbackUrl());
+	}
+
+	static void assertEmptyRender(RenderResponse response) throws Exception {
+		testJsonableBaseObject(response);
+		assertNull(response.getUpdatedAt());
+		assertNull(response.getCreatedAt());
+		assertNull(response.getId());
+		assertNull(response.getStatus());
+		assertNull(response.getResolution());
+		assertNull(response.getStreamId());
+		assertNull(response.getCallbackUrl());
+		assertNull(response.getUrl());
+		assertNull(response.getApplicationId());
+	}
+
+	void stubListRenderJsonAndAssertEquals(Supplier<List<RenderResponse>> invocation) throws Exception {
+		stubResponse(200, listRenderJson);
+		var renders = invocation.get();
+		assertEquals(2, renders.size());
+		assertRenderEqualsExpectedJson(renders.getFirst());
+		assertEmptyRender(renders.getLast());
+	}
+
+	void stubRenderJsonAndAssertEquals(Supplier<RenderResponse> invocation) throws Exception {
+		stubResponse(200, renderJson);
+		assertRenderEqualsExpectedJson(invocation.get());
 	}
 
 	@Test
@@ -668,17 +728,20 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 				.uri(URI.create("sip:user@sip.partner.com"), false)
 				.sessionId(sessionId).token(token).build();
 
-		stubResponse(200, "{\n" +
+		String json = "{\n" +
 				"  \"id\": \""+id+"\",\n" +
 				"  \"connectionId\": \""+connectionId+"\",\n" +
 				"  \"streamId\": \""+streamId+"\"\n" +
-				"}"
-		);
+				"}";
+
+		stubResponse(200, json);
 
 		SipDialResponse parsed = client.sipDial(request);
 		assertEquals(id, parsed.getId());
 		assertEquals(connectionId, parsed.getConnectionId());
 		assertEquals(streamId, parsed.getStreamId());
+
+		assertEquals(parsed, SipDialResponse.fromJson(json));
 
 		stubResponseAndAssertThrowsVideoException(409, "{\"code\":409}", () -> client.sipDial(request));
 	}
@@ -748,6 +811,44 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		stubResponseAndAssertThrowsVideoException(409, "{\"code\":409}",
 				() -> client.connectToWebsocket(request)
 		);
+	}
+
+	@Test
+	public void testStartRender() throws Exception {
+		var request = RenderRequest.builder().sessionId(sessionId)
+				.name(renderName).url(renderUrl).token(token).build();
+
+		stubRenderJsonAndAssertEquals(() -> client.startRender(request));
+		stubResponseAndAssertThrowsIAX(renderJson, () -> client.startRender(null));
+		stubResponseAndAssertThrowsVideoException(400, """
+                        {
+                           "code": 50005,
+                           "message": "Invalid maxDuration provided."
+                        }""",
+				() -> client.startRender(request)
+		);
+	}
+
+	@Test
+	public void testListRenders() throws Exception {
+		stubListRenderJsonAndAssertEquals(client::listRenders);
+		stubListRenderJsonAndAssertEquals(() -> client.listRenders(null));
+	}
+
+	@Test
+	public void testGetRender() throws Exception {
+		stubRenderJsonAndAssertEquals(() -> client.getRender(renderId));
+		stubResponseAndAssertThrowsIAX(200, () -> client.getRender(null));
+		stubResponseAndAssertThrowsIAX(renderJson, () -> client.getRender(token));
+		stubResponseAndAssertThrowsVideoException(404, "{\"code\":404}", () -> client.getRender(renderId));
+	}
+
+	@Test
+	public void testStopRender() throws Exception {
+		stubResponseAndRun(204, () -> client.stopRender(renderId));
+		stubResponseAndAssertThrowsIAX(204, () -> client.stopRender(null));
+		stubResponseAndAssertThrowsIAX(204, () -> client.stopRender(token));
+		stubResponseAndAssertThrowsVideoException(404, "{\"code\":404}", () -> client.stopRender(renderId));
 	}
 
 	@Test
@@ -1854,6 +1955,132 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 			public void runTests() throws Exception {
 				super.runTests();
 				testJsonableBaseObject(sampleRequest());
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testStartRenderEndpoint() throws Exception {
+		new VideoEndpointTestSpec<RenderRequest, RenderResponse>() {
+
+			@Override
+			protected RestEndpoint<RenderRequest, RenderResponse> endpoint() {
+				return client.startRender;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.POST;
+			}
+
+			@Override
+			protected String expectedEndpointUri(RenderRequest request) {
+				return "/v2/project/"+applicationId+"/render";
+			}
+
+			@Override
+			protected RenderRequest sampleRequest() {
+				return RenderRequest.builder().url(renderUrl)
+						.sessionId(sessionId).token(token)
+						.name(renderName).maxDuration(1800)
+						.resolution(Resolution.HD_PORTRAIT).build();
+			}
+
+			@Override
+			protected String sampleRequestBodyString() {
+				return "{\"sessionId\":\""+sessionId+"\",\"token\":\""+token+"\",\"url\":\"" +
+						renderUrl + "\",\"maxDuration\":1800,\"resolution\":\"720x1280\"," +
+						"\"properties\":{\"name\":\""+renderName+"\"}}";
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testListRendersEndpoint() throws Exception {
+		new VideoEndpointTestSpec<ListStreamCompositionsRequest, ListRendersResponse>() {
+
+			@Override
+			protected RestEndpoint<ListStreamCompositionsRequest, ListRendersResponse> endpoint() {
+				return client.listRenders;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedEndpointUri(ListStreamCompositionsRequest request) {
+				return "/v2/project/"+applicationId+"/render";
+			}
+
+			@Override
+			protected ListStreamCompositionsRequest sampleRequest() {
+				return ListStreamCompositionsRequest.builder().count(25).offset(78).build();
+			}
+
+			@Override
+			protected Map<String, ?> sampleQueryParams() {
+				return new OrderedJsonMap(
+						entry("offset", "78"),
+						entry("count", "25")
+				);
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testGetRenderEndpoint() throws Exception {
+		new VideoEndpointTestSpec<String, RenderResponse>() {
+
+			@Override
+			protected RestEndpoint<String, RenderResponse> endpoint() {
+				return client.getRender;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.GET;
+			}
+
+			@Override
+			protected String expectedEndpointUri(String request) {
+				return "/v2/project/"+applicationId+"/render/"+request;
+			}
+
+			@Override
+			protected String sampleRequest() {
+				return renderId;
+			}
+		}
+		.runTests();
+	}
+
+	@Test
+	public void testStopRenderEndpoint() throws Exception {
+		new VideoEndpointTestSpec<String, Void>() {
+
+			@Override
+			protected RestEndpoint<String, Void> endpoint() {
+				return client.stopRender;
+			}
+
+			@Override
+			protected HttpMethod expectedHttpMethod() {
+				return HttpMethod.DELETE;
+			}
+
+			@Override
+			protected String expectedEndpointUri(String request) {
+				return "/v2/project/"+applicationId+"/render/"+request;
+			}
+
+			@Override
+			protected String sampleRequest() {
+				return renderId;
 			}
 		}
 		.runTests();

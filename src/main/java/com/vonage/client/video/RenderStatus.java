@@ -33,7 +33,7 @@ public enum RenderStatus {
 
 	/**
 	 * The Vonage Video API platform has successfully connected to the remote application server, and is
-	 * publishing the web view to an OpenTok stream.
+	 * publishing the web view to a Vonage Video stream.
 	 */
 	STARTED,
 
@@ -43,7 +43,7 @@ public enum RenderStatus {
 	STOPPED,
 
 	/**
-	 * An error occurred and the Experience Composer could not proceed. It may occur at startup if the OpenTok server
+	 * An error occurred and the Experience Composer could not proceed. It may occur at startup if the Vonage server
 	 * cannot connect to the remote application server or republish the stream. It may also occur at any point during
 	 * the process due to an error in the Vonage Video API platform.
 	 */

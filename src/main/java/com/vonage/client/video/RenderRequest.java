@@ -34,7 +34,12 @@ public final class RenderRequest extends AbstractSessionTokenRequest {
 	private RenderRequest() {}
 
 	private RenderRequest(Builder builder) {
-		url = Objects.requireNonNull(builder.url, "URL is required.");
+		super(builder);
+		int urlLength = Objects.requireNonNull(builder.url, "URL is required.").length();
+		if (urlLength < 15 || urlLength > 2048) {
+			throw new IllegalArgumentException("URL must be between 15 and 2048 characters long.");
+		}
+		url = URI.create(builder.url);
 		properties = new Properties(builder.name);
 		if ((maxDuration = builder.maxDuration) != null && (maxDuration < 60 || maxDuration > 36000)) {
 			throw new IllegalArgumentException("Max duration must be between 60 and 36000 seconds.");
@@ -48,11 +53,13 @@ public final class RenderRequest extends AbstractSessionTokenRequest {
 	/**
 	 * Publisher initial configuration properties for the composed output stream.
 	 */
-	public static class Properties extends JsonableBaseObject {
-		private final String name;
+	public static final class Properties extends JsonableBaseObject {
+		private String name;
 
-		public Properties(String name) {
-			if ((this.name = name) == null || name.isEmpty()) {
+		private Properties() {}
+
+		private Properties(String name) {
+			if ((this.name = name) == null || name.trim().isEmpty()) {
 				throw new IllegalArgumentException("Name is required.");
 			}
 			if (name.length() > 200) {
@@ -120,7 +127,7 @@ public final class RenderRequest extends AbstractSessionTokenRequest {
 	 *
 	 * @return A new Builder instance.
 	 */
-	public static Builder Builder() {
+	public static Builder builder() {
 		return new Builder();
 	}
 
@@ -128,10 +135,9 @@ public final class RenderRequest extends AbstractSessionTokenRequest {
 	 * Builder for defining the parameters of {@link RenderRequest}.
 	 */
 	public static class Builder extends AbstractSessionTokenRequest.Builder<RenderRequest, Builder> {
-		private URI url;
+		private String name, url;
 		private Integer maxDuration;
 		private Resolution resolution;
-		private String name;
 
 		/**
 		 * (REQUIRED)
@@ -148,22 +154,12 @@ public final class RenderRequest extends AbstractSessionTokenRequest {
 		/**
 		 * (REQUIRED)
 		 * URL of the customer service where the callbacks will be received.
+		 * This must be between 15 and 2048 characters in length.
 		 *
 		 * @param url The URL as a string.
 		 * @return This builder.
 		 */
 		public Builder url(String url) {
-			return url(URI.create(url));
-		}
-
-		/**
-		 * (REQUIRED)
-		 * URL of the customer service where the callbacks will be received.
-		 *
-		 * @param url The URL as a URI.
-		 * @return This builder.
-		 */
-		public Builder url(URI url) {
 			this.url = url;
 			return this;
 		}
