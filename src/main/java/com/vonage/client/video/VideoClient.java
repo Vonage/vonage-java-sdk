@@ -51,12 +51,15 @@ public class VideoClient {
 	final RestEndpoint<Archive, Archive> createArchive;
 	final RestEndpoint<StreamCompositionLayout, Void> updateArchiveLayout, updateBroadcastLayout;
 	final RestEndpoint<PatchComposedStreamsRequest, Void> patchArchiveStream, patchBroadcastStream;
-	final RestEndpoint<String, Void> deleteArchive, stopCaptions;
+	final RestEndpoint<String, Void> deleteArchive, stopCaptions, stopRender;
 	final RestEndpoint<ListStreamCompositionsRequest, ListBroadcastsResponse> listBroadcasts;
 	final RestEndpoint<String, Broadcast> getBroadcast, stopBroadcast;
 	final RestEndpoint<Broadcast, Broadcast> createBroadcast;
 	final RestEndpoint<CaptionsRequest, CaptionsResponse> startCaptions;
 	final RestEndpoint<ConnectRequest, ConnectResponse> connect;
+	final RestEndpoint<RenderRequest, RenderResponse> startRender;
+	final RestEndpoint<String, RenderResponse> getRender;
+	final RestEndpoint<ListStreamCompositionsRequest, ListRendersResponse> listRenders;
 
 	/**
 	 * Constructor.
@@ -113,6 +116,10 @@ public class VideoClient {
 		startCaptions = new Endpoint<>(req -> "captions", HttpMethod.POST);
 		stopCaptions = new Endpoint<>(req -> "captions/"+req+"/stop", HttpMethod.POST);
 		connect = new Endpoint<>(req -> "connect", HttpMethod.POST);
+		startRender = new Endpoint<>(req -> "render", HttpMethod.POST);
+		listRenders = new Endpoint<>(req -> "render", HttpMethod.GET);
+		getRender = new Endpoint<>(req -> "render/"+req, HttpMethod.GET);
+		stopRender = new Endpoint<>(req -> "render/"+req, HttpMethod.DELETE);
 	}
 
 	private String validateId(String param, String name, boolean uuid) {
@@ -144,6 +151,10 @@ public class VideoClient {
 
 	private String validateBroadcastId(String broadcastId) {
 		return validateId(broadcastId, "Broadcast", true);
+	}
+
+	private String validateRenderId(String renderId) {
+		return validateId(renderId, "Render", true);
 	}
 
 	private <T> T validateRequest(T request) {
@@ -437,7 +448,7 @@ public class VideoClient {
 	 * @see #listArchives(ListStreamCompositionsRequest)
 	 */
 	public List<Archive> listArchives() {
-		return listArchives(ListStreamCompositionsRequest.builder().count(1000).build());
+		return listArchives(ListStreamCompositionsRequest.maxResults());
 	}
 
 	/**
@@ -566,7 +577,7 @@ public class VideoClient {
 	 * @since 8.0.0-beta4
 	 */
 	public List<Broadcast> listBroadcasts() {
-		return listBroadcasts(ListStreamCompositionsRequest.builder().count(1000).build());
+		return listBroadcasts(ListStreamCompositionsRequest.maxResults());
 	}
 
 	/**
@@ -695,7 +706,7 @@ public class VideoClient {
 	}
 
 	/**
-	 * Use this method to start real-time Live Captions for a Vonage Video Session.
+	 * Start real-time Live Captions for a Vonage Video Session.
 	 * <p>
 	 * The maximum allowed duration is 4 hours, after which the audio captioning will stop without any
 	 * effect on the ongoing Vonage Video Session. An event will be posted to your callback URL if provided
@@ -723,7 +734,7 @@ public class VideoClient {
 	}
 
 	/**
-	 * Use this method to send audio from a Vonage Video API session to a WebSocket.
+	 * Send audio from a Vonage Video API session to a WebSocket.
 	 *
 	 * @param request Properties of the WebSocket connection.
 	 *
@@ -733,5 +744,69 @@ public class VideoClient {
 	 */
 	public ConnectResponse connectToWebsocket(ConnectRequest request) {
 		return connect.execute(validateRequest(request));
+	}
+
+	/**
+	 * List all Experience Composers in the application.
+	 *
+	 * @return The list of Experience Composers up to the first 1000, in order from newest to oldest.
+	 *
+	 * @since 8.6.0
+	 * @see #listRenders(ListStreamCompositionsRequest)
+	 */
+	public List<RenderResponse> listRenders() {
+		return listRenders(ListStreamCompositionsRequest.maxResults());
+	}
+
+	/**
+	 * List Experience Composers in the application, with the specified offset and number of results.
+	 *
+	 * @param request (OPTIONAL) Filter properties of the request.
+	 * Note that only {@code offset} and {@code count} are applicable here.
+	 *
+	 * @return The list of broadcasts matching the filter criteria, in order from newest to oldest.
+	 *
+	 * @since 8.6.0
+	 * @see #listRenders()
+	 */
+	public List<RenderResponse> listRenders(ListStreamCompositionsRequest request) {
+		return listRenders.execute(request).getItems();
+	}
+
+	/**
+	 * Retrieve details on an Experience Composer.
+	 *
+	 * @param renderId ID of the Experience Composer instance.
+	 *
+	 * @return The Experience Composer corresponding to the specified renderId.
+	 *
+	 * @since 8.6.0
+	 */
+	public RenderResponse getRender(String renderId) {
+		return getRender.execute(validateRenderId(renderId));
+	}
+
+	/**
+	 * Create an Experience Composer for a Vonage Video session.
+	 *
+	 * @param request Properties of the Experience Composer.
+	 *
+	 * @return Details of the created Experience Composer.
+	 *
+	 * @since 8.6.0
+	 */
+	public RenderResponse startRender(RenderRequest request) {
+		return startRender.execute(validateRequest(request));
+	}
+
+	/**
+	 * Stop an active Experience Composer.
+	 *
+	 * @param renderId ID of the Experience Composer instance.
+	 *
+	 * @since 8.6.0
+	 */
+	public void stopRender(String renderId) {
+		stopRender.execute(validateRenderId(renderId));
 	}
 }

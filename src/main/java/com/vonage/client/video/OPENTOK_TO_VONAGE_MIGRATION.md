@@ -42,6 +42,8 @@ For more detailed usage instructions, see the [Java Sever SDK video guide](https
 There are a few small changes to be aware of when migrating to Vonage from OpenTok.
 Many of these are straightforward and your IDE will help you with auto-completion, but for clarity, consider the following:
 
+- `projectId` is now `applicationId` where applicable.
+- Stronger typing used where applicable (e.g. `UUID` and `URI` instead of `String`)
 - `playDTMF` renamed to `sendDtmf` for all applicable DTMF endpoints.
 - `OpenTok#disableForceMute(String)` replaced by `VideoClient#muteSession(String, boolean, String...)`. You need to set the `active` boolean parameter to `false` to achieve the same effect.
 - The `MuteAllProperties` class and parameter in `OpenTok` has been replaced by using the `excludedStreamIds` directly in the method parameter of `VideoClient#muteSession(String, boolean, Collection<String>)` (or `VideoClient#muteSession(String, boolean, String...) for convenience`). These methods replace `OpenTok#forceMuteAll(String, MuteAllProperties)`.
@@ -62,9 +64,16 @@ Many of these are straightforward and your IDE will help you with auto-completio
   - `Caption` replaced with `CaptionsResponse`.
     - `CaptionsRequest` uses an enum for the `languageCode` instead of a plain string.
     - The `token` and `sessionId` are still required and set on the `CaptionsRequest.Builder` object.
-- `OpenTok#connectAudioStream(String sessionId, String token, AudioConnectorProperties properties)` replaced by `VideoClient#connectToWebsocket(ConnectRequest request)`
-  - `AudioConnectorProperties` replaced with `ConnectRequest`
-  - `AudioConnector` replaced with `ConnectResponse`
+- `OpenTok#connectAudioStream(String, String, AudioConnectorProperties)` replaced by `VideoClient#connectToWebsocket(ConnectRequest)`.
+  - `AudioConnectorProperties` replaced with `ConnectRequest`.
+  - `AudioConnector` replaced with `ConnectResponse`.
+- `OpenTok#startRender(String, String, RenderProperties)` replaced by `VideoClient#startRender(RenderRequest)`.
+  - `RenderProperties` replaced by `RenderRequest`.
+    - `name` parameter in the inner `Properties` class is set on the top-level `RenderRequest.Builder`.
+  - `Render` replaced by `RenderResponse`.
+    - `resolution` is now an enum instead of a plain string.
+- `OpenTok#listRenders(Integer, Integer)` replaced by `VideoClient#listRenders(ListStreamCompositionsRequest)`.
+  - This works similarly to the updated `listBroadcasts` and `listArchives` methods (see above).
 
 ## Supported Features
 The following is a list of Vonage Video API features and whether the Vonage Java SDK currently supports them:
@@ -78,7 +87,7 @@ The following is a list of Vonage Video API features and whether the Vonage Java
 | Archiving                 |     ✅      |
 | Live Streaming Broadcasts |     ✅      |
 | SIP Interconnect          |     ✅      |
-| Experience Composer       |     ❌      |
+| Experience Composer       |     ✅      |
 | Audio Connector           |     ✅      |
 | Live Captions             |     ✅      |
 | Account Management        |     ❌      |

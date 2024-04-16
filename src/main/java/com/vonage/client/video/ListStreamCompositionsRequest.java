@@ -71,12 +71,23 @@ public class ListStreamCompositionsRequest implements QueryParamsRequest {
 	}
 
 	/**
-	 * Retrive only compositions for a given session ID.
+	 * Retrieve only compositions for a given session ID.
 	 *
 	 * @return The session ID to filter by.
 	 */
 	public String getSessionId() {
 		return sessionId;
+	}
+
+	/**
+	 * Used in {@linkplain VideoClient} for default retrieval (no-args).
+	 *
+	 * @return A new filter for returning the maximum number of results.
+	 *
+	 * @since 8.6.0
+	 */
+	static ListStreamCompositionsRequest maxResults() {
+		return builder().count(1000).build();
 	}
 
 	/**
@@ -126,7 +137,7 @@ public class ListStreamCompositionsRequest implements QueryParamsRequest {
 
 		/**
 		 * Set a sessionId query parameter to list compositions for a specific session ID. This is useful
-		 * 	when listing multiple compositions for sessions with {@link StreamMode#AUTO}.
+		 * when listing multiple compositions for sessions with {@link StreamMode#AUTO}.
 		 *
 		 * @param sessionId The session ID to filter by.
 		 *
