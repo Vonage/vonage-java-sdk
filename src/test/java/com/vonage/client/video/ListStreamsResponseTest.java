@@ -15,6 +15,7 @@
  */
 package com.vonage.client.video;
 
+import com.vonage.client.Jsonable;
 import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,7 +29,7 @@ public class ListStreamsResponseTest {
 		UUID id1 = UUID.randomUUID();
 		String name0 = "LiveStream 1";
 		Integer count = 2;
-		ListStreamsResponse response = ListStreamsResponse.fromJson("{\n" +
+		ListStreamsResponse response = Jsonable.fromJson("{\n" +
 				"\"count\":\""+count+"\",\n" +
 				"\"items\":[{\n" +
 				"  \"id\": \"8b732909-0a06-46a2-8ea8-074e64d43422\",\n" +
@@ -58,12 +59,14 @@ public class ListStreamsResponseTest {
 	
 	@Test
 	public void testFromJsonInvalid() {
-		assertThrows(VonageResponseParseException.class, () -> ListStreamsResponse.fromJson("{malformed]"));
+		assertThrows(VonageResponseParseException.class,
+				() -> Jsonable.fromJson("{malformed]", ListStreamsResponse.class)
+		);
 	}
 
 	@Test
 	public void testFromJsonEmpty() {
-		ListStreamsResponse response = ListStreamsResponse.fromJson("{}");
+		ListStreamsResponse response = Jsonable.fromJson("{}");
 		assertNull(response.getCount());
 		assertNull(response.getItems());
 	}

@@ -15,31 +15,5 @@
  */
 package com.vonage.client.video;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.JsonableBaseObject;
-import java.util.List;
-
-class ListBroadcastsResponse extends JsonableBaseObject {
-	private Integer count;
-	private List<Broadcast> items;
-
-	protected ListBroadcastsResponse() {
-	}
-
-	/**
-	 * @return The total number of broadcasts in the results.
-	 */
-	@JsonProperty("count")
-	public Integer getCount() {
-		return count;
-	}
-
-	/**
-	 * @return List of objects defining each broadcast retrieved.
-	 * Broadcasts are listed from the newest to the oldest in the return set.
-	 */
-	@JsonProperty("items")
-	public List<Broadcast> getItems() {
-		return items;
-	}
+final class ListBroadcastsResponse extends ListResourceResponse<Broadcast> {
 }

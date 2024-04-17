@@ -15,5 +15,24 @@
  */
 package com.vonage.client.video;
 
-final class ListStreamsResponse extends ListResourceResponse<GetStreamResponse> {
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vonage.client.JsonableBaseObject;
+import java.util.List;
+
+class ListResourceResponse<T> extends JsonableBaseObject {
+	private Integer count;
+	private List<T> items;
+
+	protected ListResourceResponse() {
+	}
+
+	@JsonProperty("count")
+	public Integer getCount() {
+		return count;
+	}
+
+	@JsonProperty("items")
+	public List<T> getItems() {
+		return items;
+	}
 }

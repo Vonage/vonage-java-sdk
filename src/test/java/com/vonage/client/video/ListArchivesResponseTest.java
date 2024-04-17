@@ -15,6 +15,7 @@
  */
 package com.vonage.client.video;
 
+import com.vonage.client.Jsonable;
 import com.vonage.client.TestUtils;
 import com.vonage.client.VonageResponseParseException;
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,7 +36,7 @@ public class ListArchivesResponseTest {
 						"\"streamMode\":\"s\",\"hasVideo\":false,\"hasAudio\":true,\"name\":\"n\"}";
 		List<String> archiveListJson = Arrays.asList(archive0Json, archive1Json, archive2Json, archive3Json);
 	
-		ListArchivesResponse response = ListArchivesResponse.fromJson("{\n" +
+		ListArchivesResponse response = Jsonable.fromJson("{\n" +
 				"\"count\":"+count+",\n" +
 				"\"items\":"+archiveListJson+"\n" +
 		"}");
@@ -69,12 +70,14 @@ public class ListArchivesResponseTest {
 	
 	@Test
 	public void testFromJsonInvalid() {
-		assertThrows(VonageResponseParseException.class, () -> ListArchivesResponse.fromJson("{malformed]"));
+		assertThrows(VonageResponseParseException.class,
+				() -> Jsonable.fromJson("{malformed]", ListArchivesResponse.class)
+		);
 	}
 
 	@Test
 	public void testFromJsonEmpty() {
-		ListArchivesResponse response = ListArchivesResponse.fromJson("{}");
+		ListArchivesResponse response = Jsonable.fromJson("{}");
 		TestUtils.testJsonableBaseObject(response);
 		assertNull(response.getCount());
 		assertNull(response.getItems());
@@ -82,7 +85,7 @@ public class ListArchivesResponseTest {
 
 	@Test
 	public void testFromJsonZeroItems() {
-		ListArchivesResponse response = ListArchivesResponse.fromJson("{\"count\":0,\"items\":[]}");
+		ListArchivesResponse response = Jsonable.fromJson("{\"count\":0,\"items\":[]}");
 		TestUtils.testJsonableBaseObject(response);
 		assertEquals(0, response.getCount().intValue());
 		assertTrue(response.getItems().isEmpty());

@@ -15,29 +15,5 @@
  */
 package com.vonage.client.video;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vonage.client.Jsonable;
-import com.vonage.client.JsonableBaseObject;
-import java.util.List;
-
-class ListArchivesResponse extends JsonableBaseObject {
-	private Integer count;
-	private List<Archive> items;
-
-	protected ListArchivesResponse() {
-	}
-
-	@JsonProperty("count")
-	public Integer getCount() {
-		return count;
-	}
-
-	@JsonProperty("items")
-	public List<Archive> getItems() {
-		return items;
-	}
-
-	public static ListArchivesResponse fromJson(String json) {
-		return Jsonable.fromJson(json);
-	}
+final class ListArchivesResponse extends ListResourceResponse<Archive> {
 }
