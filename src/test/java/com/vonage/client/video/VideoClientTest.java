@@ -282,6 +282,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		assertEquals(1437676582000L, response.getUpdatedAt());
 		assertEquals(URI.create(renderUrl), response.getUrl());
 		assertEquals(URI.create(renderCallbackUrl), response.getCallbackUrl());
+		assertEquals("Could not load URL", response.getReason());
 	}
 
 	static void assertEmptyRender(RenderResponse response) throws Exception {
@@ -295,6 +296,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 		assertNull(response.getCallbackUrl());
 		assertNull(response.getUrl());
 		assertNull(response.getApplicationId());
+		assertNull(response.getReason());
 	}
 
 	void stubListRenderJsonAndAssertEquals(Supplier<List<RenderResponse>> invocation) throws Exception {

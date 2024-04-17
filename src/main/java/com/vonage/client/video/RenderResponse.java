@@ -28,7 +28,7 @@ import java.util.UUID;
  */
 public class RenderResponse extends JsonableBaseObject {
 	private UUID id, applicationId, streamId;
-	private String sessionId;
+	private String sessionId, reason;
 	private Long createdAt, updatedAt;
 	private URI url, callbackUrl;
 	private Resolution resolution;
@@ -138,5 +138,18 @@ public class RenderResponse extends JsonableBaseObject {
 	@JsonProperty("streamId")
 	public UUID getStreamId() {
 		return streamId;
+	}
+
+	/**
+	 * The reason field is only available when the status is either {@linkplain RenderStatus#STOPPED} or
+	 * {@linkplain RenderStatus#FAILED}. If the status is "stopped", the reason field will contain either
+	 * "Max Duration Exceeded" or "Stop Requested." If the status is "failed", the reason will contain a
+	 * more specific error message.
+	 *
+	 * @return The reason, or {@code null} if not applicable.
+	 */
+	@JsonProperty("reason")
+	public String getReason() {
+		return reason;
 	}
 }
