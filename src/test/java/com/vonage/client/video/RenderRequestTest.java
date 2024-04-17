@@ -112,23 +112,6 @@ public class RenderRequestTest {
 	}
 
 	@Test
-	public void testSupportedResolutions() {
-		var builder = RenderRequest.builder().sessionId(sessionId).token(token).name(renderName).url(renderUrl);
-		for (var resolution : Resolution.values()) {
-			builder.resolution(resolution);
-			switch (resolution) {
-				case HD_LANDSCAPE: case HD_PORTRAIT:
-				case SD_LANDSCAPE: case SD_PORTRAIT:
-					assertEquals(resolution, builder.build().getResolution());
-					break;
-				case FHD_LANDSCAPE: case FHD_PORTRAIT:
-					assertThrows(IllegalArgumentException.class, builder::build);
-					break;
-			}
-		}
-	}
-
-	@Test
 	public void testUnknownRenderStatus() {
 		assertNull(RenderStatus.fromString("rendering"));
 	}

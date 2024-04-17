@@ -44,10 +44,7 @@ public final class RenderRequest extends AbstractSessionTokenRequest {
 		if ((maxDuration = builder.maxDuration) != null && (maxDuration < 60 || maxDuration > 36000)) {
 			throw new IllegalArgumentException("Max duration must be between 60 and 36000 seconds.");
 		}
-		if ((resolution = builder.resolution) != null) switch (resolution) {
-			default: throw new IllegalArgumentException("Unsupported resolution: "+resolution);
-			case HD_PORTRAIT: case SD_PORTRAIT: case HD_LANDSCAPE: case SD_LANDSCAPE: break;
-		}
+		resolution = builder.resolution;
 	}
 
 	/**
@@ -182,8 +179,7 @@ public final class RenderRequest extends AbstractSessionTokenRequest {
 
 		/**
 		 * (OPTIONAL)
-		 * Resolution of the display area for the composition. Must be either "640x480", "1280x720",
-		 * "480x640", or "720x1280". 640x480 is the default. 1080p is not supported.
+		 * Resolution of the display area for the composition. 1280x720 is the default.
 		 *
 		 * @param resolution The resolution as an enum.
 		 * @return This builder.

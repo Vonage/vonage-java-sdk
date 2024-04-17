@@ -59,7 +59,9 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		responseExceptionType = builder.responseExceptionType;
 		responseType = builder.responseType;
 		contentType = builder.contentType;
-		if ((accept = builder.accept) == null && Jsonable.class.isAssignableFrom(responseType)) {
+		if ((accept = builder.accept) == null &&
+				(Jsonable.class.isAssignableFrom(responseType) || isJsonableArrayResponse())
+		) {
 			accept = ContentType.APPLICATION_JSON.getMimeType();
 		}
 	}
@@ -185,6 +187,10 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 		}
 	}
 
+	private boolean isJsonableArrayResponse() {
+		return responseType.isArray() && Jsonable.class.isAssignableFrom(responseType.getComponentType());
+	}
+
 	private String getRequestHeader(T requestBody) {
 		if (contentType != null)
 			return contentType;
@@ -294,8 +300,7 @@ public class DynamicEndpoint<T, R> extends AbstractMethod<T, R> {
 			if (Jsonable.class.isAssignableFrom(responseType)) {
 				return (R) Jsonable.fromJson(deser, (Class<? extends Jsonable>) responseType);
 			}
-			else if (Collection.class.isAssignableFrom(responseType) ||
-					(responseType.isArray() && Jsonable.class.isAssignableFrom(responseType.getComponentType()))) {
+			else if (Collection.class.isAssignableFrom(responseType) || isJsonableArrayResponse()) {
 				return Jsonable.createDefaultObjectMapper().readValue(deser, responseType);
 			}
 			else {
