@@ -268,7 +268,7 @@ public class Application extends JsonableBaseObject {
         }
     }
 
-            public static class Capabilities extends JsonableBaseObject {
+    public static class Capabilities extends JsonableBaseObject {
         private Voice voice;
         private Messages messages;
         private Rtc rtc;
