@@ -1328,10 +1328,10 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 
 	@Test
 	public void testMuteSessionEndpoint() throws Exception {
-		new VideoEndpointTestSpec<MuteSessionRequest, MuteSessionResponse>() {
+		new VideoEndpointTestSpec<MuteSessionRequest, ProjectDetails>() {
 
 			@Override
-			protected RestEndpoint<MuteSessionRequest, MuteSessionResponse> endpoint() {
+			protected RestEndpoint<MuteSessionRequest, ProjectDetails> endpoint() {
 				return client.muteSession;
 			}
 
@@ -1370,7 +1370,7 @@ public class VideoClientTest extends ClientTest<VideoClient> {
 						"   \"environment\": \"standard\",\n" +
 						"   \"createdAt\": "+createdAt+"\n" +
 						"}";
-				MuteSessionResponse parsed = stubResponseAndGet(responseJson, this::executeEndpoint);
+				ProjectDetails parsed = stubResponseAndGet(responseJson, this::executeEndpoint);
 				assertNotNull(parsed);
 				assertEquals(applicationId, parsed.getApplicationId());
 				assertEquals(name, parsed.getName());

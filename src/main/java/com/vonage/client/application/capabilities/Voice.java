@@ -21,7 +21,7 @@ import com.vonage.client.common.Webhook;
 /**
  * Voice capability configuration settings.
  */
-public class Voice extends Capability {
+public final class Voice extends Capability {
     private Region region;
     private Boolean signedCallbacks;
     private Integer conversationsTtl;
@@ -30,7 +30,7 @@ public class Voice extends Capability {
     }
 
     private Voice(Builder builder) {
-        webhooks = builder.webhooks;
+        super(builder);
         region = builder.region;
         signedCallbacks = builder.signedCallbacks;
         if ((conversationsTtl = builder.conversationsTtl) != null && (conversationsTtl < 0 || conversationsTtl > 744)) {

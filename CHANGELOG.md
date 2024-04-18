@@ -4,9 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-# [8.6.0] - 2024-04-19
+# [8.6.0] - 2024-04-18
 - Added Experience Composer to Video API
-- Fixed regression in `createSession` endpoint which caused the API to return XML instead of JSON.
+- Fixed regression in `createSession` Video endpoint
+- `muteSession` Video endpoint now returns `ProjectDetails`
+- Added Verify capability to Application API
 
 # [8.5.0] - 2024-04-12
 - Added Live Captions and Audio Connector endpoints to Video API

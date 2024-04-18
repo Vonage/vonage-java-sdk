@@ -43,7 +43,7 @@ public class VideoClient {
 	final RestEndpoint<SetStreamLayoutRequest, Void> setStreamLayout;
 	final RestEndpoint<SignalRequest, Void> signal, signalAll;
 	final RestEndpoint<SessionResourceRequestWrapper, Void> forceDisconnect, muteStream;
-	final RestEndpoint<MuteSessionRequest, MuteSessionResponse> muteSession;
+	final RestEndpoint<MuteSessionRequest, ProjectDetails> muteSession;
 	final RestEndpoint<SipDialRequest, SipDialResponse> sipDial;
 	final RestEndpoint<SendDtmfRequest, Void> sendDtmfToSession, sendDtmfToConnection;
 	final RestEndpoint<ListStreamCompositionsRequest, ListArchivesResponse> listArchives;
@@ -341,9 +341,11 @@ public class VideoClient {
 	 * @param excludedStreamIds (OPTIONAL) The stream IDs for streams that should not be muted.
 	 * If you omit this, all streams in the session will be muted. This only applies when the "active" property is set
 	 * {@code true}. When the "active" property is set to {@code false}, it is ignored.
+	 *
+	 * @return Details about the Vonage Video project.
 	 */
-	public void muteSession(String sessionId, boolean active, Collection<String> excludedStreamIds) {
-		muteSession.execute(new MuteSessionRequest(
+	public ProjectDetails muteSession(String sessionId, boolean active, Collection<String> excludedStreamIds) {
+		return muteSession.execute(new MuteSessionRequest(
 				validateSessionId(sessionId),
 				active,
 				excludedStreamIds

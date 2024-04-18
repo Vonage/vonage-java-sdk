@@ -18,20 +18,22 @@ package com.vonage.client.application.capabilities;
 import com.vonage.client.common.Webhook;
 
 /**
- * Messages capability configuration settings.
+ * Verify capability configuration settings.
+ *
+ * @since 8.6.0
  */
-public final class Messages extends Capability {
+public final class Verify extends Capability {
 
-    private Messages() {
+    private Verify() {
     }
 
-    private Messages(Builder builder) {
+    private Verify(Builder builder) {
         super(builder);
     }
 
     @Override
     public Type getType() {
-        return Type.MESSAGES;
+        return Type.VERIFY;
     }
 
     /**
@@ -43,26 +45,23 @@ public final class Messages extends Capability {
         return new Builder();
     }
 
-    public static class Builder extends Capability.Builder<Messages, Builder> {
+    public static final class Builder extends Capability.Builder<Verify, Builder> {
+
+        private Builder() {}
 
         @Override
         public Builder addWebhook(Webhook.Type type, Webhook webhook) {
             return super.addWebhook(type, webhook);
         }
 
-        @Override
-        public Builder removeWebhook(Webhook.Type type) {
-            return super.removeWebhook(type);
-        }
-
         /**
-         * Builds the Messages object.
+         * Builds the Verify object with this builder's properties.
          *
-         * @return A new Messages capability containing the configured properties.
+         * @return A new Verify capability.
          */
         @Override
-        public Messages build() {
-            return new Messages(this);
+        public Verify build() {
+            return new Verify(this);
         }
     }
 }

@@ -225,7 +225,7 @@ public class Application extends JsonableBaseObject {
      *
      * @since 7.7.0
      */
-            public static class Privacy extends JsonableBaseObject {
+    public static class Privacy extends JsonableBaseObject {
         private Boolean improveAi;
 
         /**
@@ -244,7 +244,7 @@ public class Application extends JsonableBaseObject {
     /**
      * Represents the cryptographic keys of an Application.
      */
-            public static class Keys extends JsonableBaseObject {
+    public static class Keys extends JsonableBaseObject {
         private String publicKey, privateKey;
 
         /**
@@ -273,6 +273,7 @@ public class Application extends JsonableBaseObject {
         private Messages messages;
         private Rtc rtc;
         private Vbc vbc;
+        private Verify verify;
 
         /**
          * Voice capability.
@@ -314,6 +315,18 @@ public class Application extends JsonableBaseObject {
             return vbc;
         }
 
+        /**
+         * Verify capability.
+         *
+         * @return The Verify capability, or {@code null} if absent.
+         *
+         * @since 8.6.0
+         */
+        @JsonProperty("verify")
+        public Verify getVerify() {
+            return verify;
+        }
+
         private void setCapability(Capability.Type type, Capability capability) {
             switch (type) {
                 case VOICE:
@@ -327,6 +340,9 @@ public class Application extends JsonableBaseObject {
                     break;
                 case VBC:
                     vbc = (Vbc) capability;
+                    break;
+                case VERIFY:
+                    verify = (Verify) capability;
                     break;
             }
         }
