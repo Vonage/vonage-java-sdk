@@ -16,10 +16,8 @@
 package com.vonage.client.video;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vonage.client.Jsonable;
 import com.vonage.client.JsonableBaseObject;
-import com.vonage.client.VonageUnexpectedException;
-import java.io.IOException;
 
 /**
  * Represents properties of a video project.
@@ -72,7 +70,7 @@ public class ProjectDetails extends JsonableBaseObject {
 	public Long getCreatedAt() {
 		return createdAt;
 	}
-	
+
 	/**
 	 * Creates an instance of this class from a JSON payload.
 	 *
@@ -83,12 +81,6 @@ public class ProjectDetails extends JsonableBaseObject {
 		if (json == null || json.trim().isEmpty()) {
 			return new ProjectDetails();
 		}
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.readValue(json, ProjectDetails.class);
-		}
-		catch (IOException ex) {
-			throw new VonageUnexpectedException("Failed to produce MuteResponse from json.", ex);
-		}
+		return Jsonable.fromJson(json);
 	}
 }
